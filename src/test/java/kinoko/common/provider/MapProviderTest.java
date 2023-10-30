@@ -17,7 +17,7 @@ public class MapProviderTest {
     public void readMapWz() {
         try (WzReader reader = WzReader.build("Map.wz", new WzReaderConfig(GameConstants.WZ_GMS_IV, 101))) {
             long start = System.currentTimeMillis();
-            Map<Integer, MapInfo> mapInfos = MapProvider.fromReader(reader).resolve(reader.readPackage());
+            Map<Integer, MapInfo> mapInfos = MapProvider.resolveMapInfos(reader.readPackage());
             System.out.printf("%d ms%n", System.currentTimeMillis() - start);
             System.out.println(mapInfos.get(100000000));
         } catch (IOException e) {

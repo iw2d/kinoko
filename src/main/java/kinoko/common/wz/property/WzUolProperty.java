@@ -1,15 +1,13 @@
 package kinoko.common.wz.property;
 
-import kinoko.common.wz.WzString;
-
 public class WzUolProperty extends WzProperty {
-    private final WzString uol;
+    private final String uol;
 
-    public WzUolProperty(WzString uol) {
+    public WzUolProperty(String uol) {
         this.uol = uol;
     }
 
-    public WzString getUol() {
+    public String getUol() {
         return uol;
     }
 }

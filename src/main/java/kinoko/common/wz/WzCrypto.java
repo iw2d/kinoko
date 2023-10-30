@@ -1,7 +1,6 @@
 package kinoko.common.wz;
 
 import kinoko.common.GameConstants;
-import kinoko.common.wz.property.WzPropertyType;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -9,33 +8,19 @@ import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class WzCrypto {
     private static final int BATCH_SIZE = 1024;
-    private final Map<WzString, WzPropertyType> propertyTypes = new HashMap<>();
     private final Cipher cipher;
     private byte[] cipherMask;
 
     public WzCrypto(Cipher cipher) {
         this.cipher = cipher;
         this.cipherMask = new byte[]{};
-
-        // Initialize property types
-        for (WzPropertyType type : WzPropertyType.values()) {
-            final byte[] data = type.getId().getBytes(StandardCharsets.US_ASCII);
-            cryptAscii(data);
-            WzString propertyType = new WzString(WzStringType.ASCII, ByteBuffer.wrap(data));
-            propertyTypes.put(propertyType, type);
-        }
     }
 
     public static WzCrypto fromIv(byte[] iv) {
@@ -109,9 +94,5 @@ public class WzCrypto {
         }
 
         this.cipherMask = newMask;
-    }
-
-    public WzPropertyType getPropertyType(WzString typeName) {
-        return propertyTypes.get(typeName);
     }
 }

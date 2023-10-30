@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public final class WzReader implements AutoCloseable {
         return result;
     }
 
-    private static WzString readString(ByteBuffer buffer) {
+    private String readString(ByteBuffer buffer) {
         int length = buffer.get();
         if (length < 0) {
             if (length == Byte.MIN_VALUE) {
@@ -81,9 +82,10 @@ public final class WzReader implements AutoCloseable {
                 length = -length;
             }
             if (length > 0) {
-                ByteBuffer slice = buffer.slice(buffer.position(), length);
-                buffer.position(buffer.position() + length);
-                return new WzString(WzStringType.ASCII, slice);
+                final byte[] data = new byte[length];
+                buffer.get(data);
+                crypto.cryptAscii(data);
+                return new String(data, StandardCharsets.US_ASCII);
             }
         } else if (length > 0) {
             if (length == Byte.MAX_VALUE) {
@@ -91,15 +93,16 @@ public final class WzReader implements AutoCloseable {
             }
             if (length > 0) {
                 length = length * 2; // UTF16
-                ByteBuffer slice = buffer.slice(buffer.position(), length);
-                buffer.position(buffer.position() + length);
-                return new WzString(WzStringType.UNICODE, slice);
+                final byte[] data = new byte[length];
+                buffer.get(data);
+                crypto.cryptUnicode(data);
+                return new String(data, StandardCharsets.UTF_16LE);
             }
         }
-        return new WzString();
+        return "";
     }
 
-    private static WzString readStringBlock(WzImage image, ByteBuffer buffer) throws WzReaderError {
+    private String readStringBlock(WzImage image, ByteBuffer buffer) throws WzReaderError {
         final byte stringType = buffer.get();
         switch (stringType) {
             case 0x00, 0x73 -> {
@@ -109,7 +112,7 @@ public final class WzReader implements AutoCloseable {
                 int stringOffset = buffer.getInt();
                 int originalPosition = buffer.position();
                 buffer.position(image.getOffset() + stringOffset);
-                WzString string = readString(buffer);
+                final String string = readString(buffer);
                 buffer.position(originalPosition);
                 return string;
             }
@@ -158,11 +161,11 @@ public final class WzReader implements AutoCloseable {
     }
 
     public WzDirectory readDirectory(WzPackage parent, ByteBuffer buffer) throws WzReaderError {
-        final Map<WzString, WzDirectory> directories = new HashMap<>();
-        final Map<WzString, WzImage> images = new HashMap<>();
+        final Map<String, WzDirectory> directories = new HashMap<>();
+        final Map<String, WzImage> images = new HashMap<>();
         final int size = readCompressedInt(buffer);
         for (int i = 0; i < size; i++) {
-            final WzString childName;
+            final String childName;
             byte childType = buffer.get();
             switch (childType) {
                 case 1 -> {
@@ -209,10 +212,10 @@ public final class WzReader implements AutoCloseable {
     }
 
     public WzProperty readProperty(WzImage image, ByteBuffer buffer) throws WzReaderError {
-        final WzString propertyTypeName = readStringBlock(image, buffer);
-        final WzPropertyType propertyType = getCrypto().getPropertyType(propertyTypeName);
+        final String propertyTypeId = readStringBlock(image, buffer);
+        final WzPropertyType propertyType = WzPropertyType.getById(propertyTypeId);
         if (propertyType == null) {
-            throw new WzReaderError("Unknown property type : %s", propertyTypeName.toString(getCrypto()));
+            throw new WzReaderError("Unknown property type : %s", propertyTypeId);
         }
         switch (propertyType) {
             case LIST -> {
@@ -272,18 +275,18 @@ public final class WzReader implements AutoCloseable {
             }
             case UOL -> {
                 buffer.position(buffer.position() + 1);
-                final WzString uol = readStringBlock(image, buffer);
+                final String uol = readStringBlock(image, buffer);
                 return new WzUolProperty(uol);
             }
             default -> throw new WzReaderError("Unhandled property type : %s", propertyType.name());
         }
     }
 
-    public Map<WzString, Object> readListItems(WzImage image, ByteBuffer buffer) throws WzReaderError {
-        final Map<WzString, Object> items = new HashMap<>();
+    public Map<String, Object> readListItems(WzImage image, ByteBuffer buffer) throws WzReaderError {
+        final Map<String, Object> items = new HashMap<>();
         final int size = readCompressedInt(buffer);
         for (int i = 0; i < size; i++) {
-            final WzString itemName = readStringBlock(image, buffer);
+            final String itemName = readStringBlock(image, buffer);
             final byte itemType = buffer.get();
             switch (itemType) {
                 case 0 -> {
@@ -317,7 +320,7 @@ public final class WzReader implements AutoCloseable {
                     items.put(itemName, doubleValue);
                 }
                 case 8 -> {
-                    final WzString stringValue = readStringBlock(image, buffer);
+                    final String stringValue = readStringBlock(image, buffer);
                     items.put(itemName, stringValue);
                 }
                 case 9 -> {

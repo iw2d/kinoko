@@ -3,19 +3,19 @@ package kinoko.common.wz;
 import java.util.Map;
 
 public class WzDirectory {
-    private final Map<WzString, WzDirectory> directories;
-    private final Map<WzString, WzImage> images;
+    private final Map<String, WzDirectory> directories;
+    private final Map<String, WzImage> images;
 
-    public WzDirectory(Map<WzString, WzDirectory> directories, Map<WzString, WzImage> images) {
+    public WzDirectory(Map<String, WzDirectory> directories, Map<String, WzImage> images) {
         this.directories = directories;
         this.images = images;
     }
 
-    public Map<WzString, WzDirectory> getDirectories() {
+    public Map<String, WzDirectory> getDirectories() {
         return directories;
     }
 
-    public Map<WzString, WzImage> getImages() {
+    public Map<String, WzImage> getImages() {
         return images;
     }
 }
