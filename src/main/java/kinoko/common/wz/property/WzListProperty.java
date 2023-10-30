@@ -5,13 +5,13 @@ import kinoko.common.wz.WzString;
 import java.util.Map;
 
 public class WzListProperty extends WzProperty {
-    private final Map<WzString, WzListItem<?>> items;
+    private final Map<WzString, Object> items;
 
-    public WzListProperty(Map<WzString, WzListItem<?>> items) {
+    public WzListProperty(Map<WzString, Object> items) {
         this.items = items;
     }
 
-    public Map<WzString, WzListItem<?>> getItems() {
+    public Map<WzString, Object> getItems() {
         return items;
     }
 }

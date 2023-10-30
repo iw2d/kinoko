@@ -197,7 +197,10 @@ public final class WzReader implements AutoCloseable {
                 directories.put(childName, readDirectory(parent, buffer));
             } else if (childType == 4) {
                 final WzImage image = new WzImage(childOffset);
-                image.setProperty(readProperty(image, buffer));
+                if (!(readProperty(image, buffer) instanceof WzListProperty listProperty)) {
+                    throw new WzReaderError("Image property is not a list");
+                }
+                image.setProperty(listProperty);
                 images.put(childName, image);
             }
             buffer.position(originalPosition);
@@ -276,53 +279,53 @@ public final class WzReader implements AutoCloseable {
         }
     }
 
-    public Map<WzString, WzListItem<?>> readListItems(WzImage image, ByteBuffer buffer) throws WzReaderError {
-        final Map<WzString, WzListItem<?>> items = new HashMap<>();
+    public Map<WzString, Object> readListItems(WzImage image, ByteBuffer buffer) throws WzReaderError {
+        final Map<WzString, Object> items = new HashMap<>();
         final int size = readCompressedInt(buffer);
         for (int i = 0; i < size; i++) {
             final WzString itemName = readStringBlock(image, buffer);
             final byte itemType = buffer.get();
             switch (itemType) {
                 case 0 -> {
-                    items.put(itemName, new WzListItem<>(null));
+                    items.put(itemName, null);
                 }
                 case 2, 11 -> {
                     final short shortValue = buffer.getShort();
-                    items.put(itemName, new WzListItem<>(shortValue));
+                    items.put(itemName, shortValue);
                 }
                 case 3, 19 -> {
                     final int intValue = readCompressedInt(buffer);
-                    items.put(itemName, new WzListItem<>(intValue));
+                    items.put(itemName, intValue);
                 }
                 case 20 -> {
                     final long longValue = buffer.getLong();
-                    items.put(itemName, new WzListItem<>(longValue));
+                    items.put(itemName, longValue);
                 }
                 case 4 -> {
                     final byte floatType = buffer.get();
                     switch (floatType) {
-                        case 0x00 -> items.put(itemName, new WzListItem<>(0f));
+                        case 0x00 -> items.put(itemName, 0f);
                         case (byte) 0x80 -> {
                             final float floatValue = buffer.getFloat();
-                            items.put(itemName, new WzListItem<>(floatValue));
+                            items.put(itemName, floatValue);
                         }
                         default -> throw new WzReaderError("Unknown float type : %d", floatType);
                     }
                 }
                 case 5 -> {
                     final double doubleValue = buffer.getDouble();
-                    items.put(itemName, new WzListItem<>(doubleValue));
+                    items.put(itemName, doubleValue);
                 }
                 case 8 -> {
                     final WzString stringValue = readStringBlock(image, buffer);
-                    items.put(itemName, new WzListItem<>(stringValue));
+                    items.put(itemName, stringValue);
                 }
                 case 9 -> {
                     final int propertySize = buffer.getInt();
                     final int propertyOffset = buffer.position();
                     buffer.position(propertyOffset);
                     final WzProperty property = readProperty(image, buffer);
-                    items.put(itemName, new WzListItem<>(property));
+                    items.put(itemName, property);
                     buffer.position(propertyOffset + propertySize);
                 }
                 default -> throw new WzReaderError("Unknown property item type : %d", itemType);

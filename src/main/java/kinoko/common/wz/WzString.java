@@ -11,15 +11,35 @@ import java.util.Objects;
  */
 public class WzString {
     private final WzStringType type;
-    private final ByteBuffer data;
+    private final ByteBuffer buffer;
 
     public WzString() {
         this(WzStringType.EMPTY, null);
     }
 
-    public WzString(WzStringType type, ByteBuffer data) {
+    public WzString(WzStringType type, ByteBuffer buffer) {
         this.type = type;
-        this.data = data;
+        this.buffer = buffer;
+    }
+
+    public static WzString fromString(String string, WzCrypto crypto) {
+        return fromString(WzStringType.ASCII, string, crypto);
+    }
+
+    public static WzString fromString(WzStringType type, String string, WzCrypto crypto) {
+        switch (type) {
+            case ASCII -> {
+                byte[] data = string.getBytes(StandardCharsets.US_ASCII);
+                crypto.cryptAscii(data);
+                return new WzString(type, ByteBuffer.wrap(data));
+            }
+            case UNICODE -> {
+                byte[] data = string.getBytes(StandardCharsets.UTF_16LE);
+                crypto.cryptUnicode(data);
+                return new WzString(type, ByteBuffer.wrap(data));
+            }
+        }
+        return new WzString();
     }
 
     /**
@@ -28,16 +48,16 @@ public class WzString {
      * @return Decrypted {@link String}.
      */
     public String toString(WzCrypto crypto) {
-        switch (this.type) {
+        switch (type) {
             case ASCII -> {
-                byte[] data = new byte[this.data.limit()];
-                this.data.get(data);
+                byte[] data = new byte[buffer.limit()];
+                buffer.get(data);
                 crypto.cryptAscii(data);
                 return new String(data, StandardCharsets.US_ASCII);
             }
             case UNICODE -> {
-                byte[] data = new byte[this.data.limit()];
-                this.data.get(data);
+                byte[] data = new byte[buffer.limit()];
+                buffer.get(data);
                 crypto.cryptUnicode(data);
                 return new String(data, StandardCharsets.UTF_16LE);
             }
@@ -51,12 +71,12 @@ public class WzString {
             return true;
         if (!(o instanceof WzString other))
             return false;
-        return this.type == other.type && Objects.equals(this.data, other.data);
+        return this.type == other.type && Objects.equals(this.buffer, other.buffer);
     }
 
     @Override
     public int hashCode() {
-        return 31 * type.hashCode() + Objects.hashCode(this.data);
+        return 31 * type.hashCode() + Objects.hashCode(this.buffer);
     }
 
 }

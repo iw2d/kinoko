@@ -1,10 +1,10 @@
 package kinoko.common.wz;
 
-import kinoko.common.wz.property.WzProperty;
+import kinoko.common.wz.property.WzListProperty;
 
 public final class WzImage {
     private final int offset;
-    private WzProperty property;
+    private WzListProperty property;
 
     public WzImage(int offset) {
         this.offset = offset;
@@ -14,11 +14,11 @@ public final class WzImage {
         return offset;
     }
 
-    public WzProperty getProperty() {
+    public WzListProperty getProperty() {
         return property;
     }
 
-    public void setProperty(WzProperty property) {
+    public void setProperty(WzListProperty property) {
         this.property = property;
     }
 }
