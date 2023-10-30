@@ -1,4 +1,4 @@
 module kinoko.common {
-    exports kinoko.common.wz;
-    exports kinoko.common.wz.property;
+    exports kinoko.provider.wz;
+    exports kinoko.provider.wz.property;
 }
