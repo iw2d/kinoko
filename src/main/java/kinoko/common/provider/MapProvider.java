@@ -1,7 +1,9 @@
 package kinoko.common.provider;
 
 import kinoko.common.map.*;
-import kinoko.common.wz.*;
+import kinoko.common.wz.WzDirectory;
+import kinoko.common.wz.WzImage;
+import kinoko.common.wz.WzPackage;
 import kinoko.common.wz.property.WzListProperty;
 import kinoko.common.wz.property.WzProperty;
 
@@ -31,18 +33,17 @@ public final class MapProvider {
                 }
                 for (var footholdEntry : footholdList.getItems().entrySet()) {
                     final int footholdId = Integer.parseInt(footholdEntry.getKey());
-                    if (!(footholdEntry.getValue() instanceof WzListProperty footholdProperty)) {
+                    if (!(footholdEntry.getValue() instanceof WzListProperty footholdProp)) {
                         throw new ProviderError("Failed to resolve foothold property");
                     }
-                    final Map<String, Object> propItems = footholdProperty.getItems();
                     foothold.add(new Foothold(
                             layerId,
                             groupId,
                             footholdId,
-                            (int) propItems.getOrDefault("x1", 0),
-                            (int) propItems.getOrDefault("y1", 0),
-                            (int) propItems.getOrDefault("x2", 0),
-                            (int) propItems.getOrDefault("y2", 0)
+                            footholdProp.getOrDefault("x1", 0),
+                            footholdProp.getOrDefault("y1", 0),
+                            footholdProp.getOrDefault("x2", 0),
+                            footholdProp.getOrDefault("y2", 0)
                     ));
                 }
             }
@@ -59,26 +60,25 @@ public final class MapProvider {
         }
         List<LifeInfo> life = new ArrayList<>();
         for (var lifeEntry : layerList.getItems().entrySet()) {
-            if (!(lifeEntry.getValue() instanceof WzListProperty lifeProperty)) {
+            if (!(lifeEntry.getValue() instanceof WzListProperty lifeProp)) {
                 throw new ProviderError("Failed to resolve life property");
             }
-            final Map<String, Object> propItems = lifeProperty.getItems();
-            final LifeType lifeType = LifeType.fromString((String) propItems.get("type"));
+            final LifeType lifeType = LifeType.fromString(lifeProp.get("type"));
             if (lifeType == null) {
-                throw new ProviderError("Unknown life type : %s", propItems.get("type"));
+                throw new ProviderError("Unknown life type : %s", lifeProp.get("type"));
             }
             life.add(new LifeInfo(
                     lifeType,
-                    Integer.parseInt((String) propItems.get("id")),
-                    (int) propItems.get("x"),
-                    (int) propItems.get("y"),
-                    (int) propItems.get("rx0"),
-                    (int) propItems.get("rx1"),
-                    (int) propItems.get("cy"),
-                    (int) propItems.get("fh"),
-                    ((int) propItems.getOrDefault("f", 0) != 0),
-                    ((int) propItems.getOrDefault("hide", 0) != 0),
-                    (int) propItems.getOrDefault("mobTime", 0)
+                    Integer.parseInt(lifeProp.get("id")),
+                    lifeProp.get("x"),
+                    lifeProp.get("y"),
+                    lifeProp.get("rx0"),
+                    lifeProp.get("rx1"),
+                    lifeProp.get("cy"),
+                    lifeProp.get("fh"),
+                    lifeProp.getOrDefault("f", 0) != 0,
+                    lifeProp.getOrDefault("hide", 0) != 0,
+                    lifeProp.getOrDefault("mobTime", 0)
             ));
         }
         return life;
@@ -93,22 +93,21 @@ public final class MapProvider {
         }
         List<PortalInfo> portal = new ArrayList<>();
         for (var portalEntry : layerList.getItems().entrySet()) {
-            if (!(portalEntry.getValue() instanceof WzListProperty portalProperty)) {
+            if (!(portalEntry.getValue() instanceof WzListProperty portalProp)) {
                 throw new ProviderError("Failed to resolve portal property");
             }
-            final Map<String, Object> propItems = portalProperty.getItems();
-            final PortalType portalType = PortalType.fromInt((int) propItems.get("pt"));
+            final PortalType portalType = PortalType.fromInt(portalProp.get("pt"));
             if (portalType == null) {
-                throw new ProviderError("Unknown portal type : %d", propItems.get("pt"));
+                throw new ProviderError("Unknown portal type : %d", portalProp.get("pt"));
             }
             portal.add(new PortalInfo(
                     portalType,
-                    (String) propItems.get("pn"),
-                    (int) propItems.get("tm"),
-                    (String) propItems.get("tn"),
-                    (int) propItems.get("x"),
-                    (int) propItems.get("y"),
-                    (String) propItems.get("script")
+                    portalProp.get("pn"),
+                    portalProp.get("tm"),
+                    portalProp.get("tn"),
+                    portalProp.get("x"),
+                    portalProp.get("y"),
+                    portalProp.get("script")
             ));
         }
         return portal;
@@ -123,17 +122,16 @@ public final class MapProvider {
         }
         List<ReactorInfo> reactor = new ArrayList<>();
         for (var reactorEntry : layerList.getItems().entrySet()) {
-            if (!(reactorEntry.getValue() instanceof WzListProperty reactorProperty)) {
+            if (!(reactorEntry.getValue() instanceof WzListProperty reactorProp)) {
                 throw new ProviderError("Failed to resolve reactor property");
             }
-            final Map<String, Object> propItems = reactorProperty.getItems();
             reactor.add(new ReactorInfo(
-                    Integer.parseInt((String) propItems.get("id")),
-                    (String) propItems.get("name"),
-                    (int) propItems.get("x"),
-                    (int) propItems.get("y"),
-                    ((int) propItems.getOrDefault("f", 0) != 0),
-                    (int) propItems.get("reactorTime")
+                    Integer.parseInt(reactorProp.get("id")),
+                    reactorProp.get("name"),
+                    reactorProp.get("x"),
+                    reactorProp.get("y"),
+                    reactorProp.getOrDefault("f", 0) != 0,
+                    reactorProp.get("reactorTime")
             ));
         }
         return reactor;
@@ -150,28 +148,27 @@ public final class MapProvider {
         if (!(props.get("info") instanceof WzListProperty infoProp)) {
             throw new ProviderError("Failed to resolve info property");
         }
-        final Map<String, Object> propItems = infoProp.getItems();
         return new MapInfo(
                 mapId,
                 foothold,
                 life,
                 portal,
                 reactor,
-                (String) propItems.get("bgm"),
-                (int) propItems.get("version"),
-                ((int) propItems.get("town") != 0),
-                ((int) propItems.getOrDefault("swim", 0) != 0),
-                ((int) propItems.getOrDefault("fly", 0) != 0),
-                (int) propItems.get("returnMap"),
-                (int) propItems.get("forcedReturn"),
-                (int) propItems.getOrDefault("fieldLimit", 0),
-                (float) propItems.get("mobRate"),
-                (String) propItems.get("onFirstUserEnter"),
-                (String) propItems.get("onUserEnter"),
-                (int) propItems.getOrDefault("VRTop", 0),
-                (int) propItems.getOrDefault("VRLeft", 0),
-                (int) propItems.getOrDefault("VRBottom", 0),
-                (int) propItems.getOrDefault("VRRight", 0)
+                infoProp.get("bgm"),
+                infoProp.get("version"),
+                ((int) infoProp.get("town")) != 0,
+                infoProp.getOrDefault("swim", 0) != 0,
+                infoProp.getOrDefault("fly", 0) != 0,
+                infoProp.get("returnMap"),
+                infoProp.get("forcedReturn"),
+                infoProp.getOrDefault("fieldLimit", 0),
+                infoProp.get("mobRate"),
+                infoProp.get("onFirstUserEnter"),
+                infoProp.get("onUserEnter"),
+                infoProp.getOrDefault("VRTop", 0),
+                infoProp.getOrDefault("VRLeft", 0),
+                infoProp.getOrDefault("VRBottom", 0),
+                infoProp.getOrDefault("VRRight", 0)
         );
     }
 
