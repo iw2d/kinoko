@@ -2,7 +2,7 @@ package kinoko.provider.wz.property;
 
 import java.util.Map;
 
-public class WzListProperty extends WzProperty {
+public final class WzListProperty extends WzProperty {
     private final Map<String, Object> items;
 
     public WzListProperty(Map<String, Object> items) {

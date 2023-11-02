@@ -12,8 +12,8 @@ public final class WzConstants {
             0x52, 0x00, 0x00, 0x00, (byte) 0xDE, 0x00, 0x00, 0x00, (byte) 0xC7, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00,
     };
 
-    public static final byte[] WZ_GMS_IV = new byte[]{0x4D, 0x23, (byte) 0xC7, 0x2B};
-    public static final byte[] WZ_MSEA_IV = new byte[]{(byte) 0xB9, 0x7D, 0x63, (byte) 0xE9};
+    public static final byte[] WZ_GMS_IV = new byte[]{ 0x4D, 0x23, (byte) 0xC7, 0x2B };
+    public static final byte[] WZ_MSEA_IV = new byte[]{ (byte) 0xB9, 0x7D, 0x63, (byte) 0xE9 };
     public static final byte[] WZ_EMPTY_IV = new byte[4];
 
     public static final int WZ_OFFSET_CONSTANT = 0x581C3F6D;

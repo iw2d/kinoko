@@ -93,6 +93,7 @@ public final class MapProvider {
         }
         List<PortalInfo> portal = new ArrayList<>();
         for (var portalEntry : layerList.getItems().entrySet()) {
+            final int portalId = Integer.parseInt(portalEntry.getKey());
             if (!(portalEntry.getValue() instanceof WzListProperty portalProp)) {
                 throw new ProviderError("Failed to resolve portal property");
             }
@@ -102,6 +103,7 @@ public final class MapProvider {
             }
             portal.add(new PortalInfo(
                     portalType,
+                    portalId,
                     portalProp.get("pn"),
                     portalProp.get("tm"),
                     portalProp.get("tn"),

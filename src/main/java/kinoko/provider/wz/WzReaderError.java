@@ -1,6 +1,6 @@
 package kinoko.provider.wz;
 
-public class WzReaderError extends Error {
+public final class WzReaderError extends Error {
     public WzReaderError(String message) {
         super(message);
     }

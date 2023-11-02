@@ -2,7 +2,7 @@ package kinoko.provider.wz;
 
 import java.util.Map;
 
-public class WzDirectory {
+public final class WzDirectory {
     private final Map<String, WzDirectory> directories;
     private final Map<String, WzImage> images;
 

@@ -2,7 +2,7 @@ package kinoko.provider.wz.property;
 
 import java.nio.ByteBuffer;
 
-public class WzSoundProperty extends WzProperty {
+public final class WzSoundProperty extends WzProperty {
     public static final byte[] SOUND_HEADER = new byte[]{
             0x02,
             (byte) 0x83, (byte) 0xEB, 0x36, (byte) 0xE4, 0x4F, 0x52, (byte) 0xCE, 0x11, (byte) 0x9F, 0x53, 0x00, 0x20, (byte) 0xAF, 0x0B, (byte) 0xA7, 0x70,

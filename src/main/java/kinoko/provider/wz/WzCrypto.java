@@ -11,7 +11,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class WzCrypto {
+public final class WzCrypto {
     private static final int BATCH_SIZE = 1024;
     private final Cipher cipher;
     private byte[] cipherMask;
@@ -28,22 +28,22 @@ public class WzCrypto {
         }
 
         // Initialize key
-        byte[] trimmedKey = new byte[32];
+        final byte[] trimmedKey = new byte[32];
         for (int i = 0; i < 128; i += 16) {
             trimmedKey[i / 4] = WzConstants.AES_USER_KEY[i];
         }
         SecretKey key = new SecretKeySpec(trimmedKey, "AES");
 
         // Initialize IV
-        byte[] expandedIv = new byte[16];
-        for (int i = 0; i < 16; i++) {
-            expandedIv[i] = iv[i % iv.length];
+        final byte[] expandedIv = new byte[16];
+        for (int i = 0; i < expandedIv.length; i += iv.length) {
+            System.arraycopy(iv, 0, expandedIv, i, iv.length);
         }
         IvParameterSpec ivParam = new IvParameterSpec(expandedIv);
 
         // Create cipher and return WzCrypto object
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            final Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, key, ivParam);
             return new WzCrypto(cipher);
         } catch (InvalidAlgorithmParameterException | NoSuchPaddingException |

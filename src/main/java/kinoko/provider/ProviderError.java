@@ -1,6 +1,6 @@
 package kinoko.provider;
 
-public class ProviderError extends Error {
+public final class ProviderError extends Error {
     public ProviderError(String message) {
         super(message);
     }

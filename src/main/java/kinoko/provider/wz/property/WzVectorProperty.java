@@ -1,6 +1,6 @@
 package kinoko.provider.wz.property;
 
-public class WzVectorProperty extends WzProperty {
+public final class WzVectorProperty extends WzProperty {
     private final int x;
     private final int y;
 

@@ -2,7 +2,7 @@ package kinoko.provider.wz.property;
 
 import java.nio.ByteBuffer;
 
-public class WzCanvasProperty extends WzProperty {
+public final class WzCanvasProperty extends WzProperty {
     private final WzListProperty properties;
     private final int width;
     private final int height;
