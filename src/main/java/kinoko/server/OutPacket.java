@@ -1,14 +1,17 @@
 package kinoko.server;
 
 import kinoko.server.netty.NioBufferOutPacket;
+import kinoko.util.FileTime;
+
+import java.time.Instant;
 
 public interface OutPacket {
-    static OutPacket create() {
+    static OutPacket of() {
         return new NioBufferOutPacket();
     }
 
-    static OutPacket create(OutHeader op) {
-        final OutPacket outPacket = create();
+    static OutPacket of(OutHeader op) {
+        final OutPacket outPacket = of();
         outPacket.encodeShort(op.getValue());
         return outPacket;
     }
@@ -36,6 +39,15 @@ public interface OutPacket {
     void encodeInt(int value);
 
     void encodeLong(long value);
+
+    default void encodeFT(FileTime ft) {
+        encodeInt(ft.getHighDateTime());
+        encodeInt(ft.getLowDateTime());
+    }
+
+    default void encodeFT(Instant timestamp) {
+        encodeFT(FileTime.from(timestamp));
+    }
 
     void encodeArray(byte[] value);
 

@@ -1,12 +1,16 @@
 package kinoko.packet.stage;
 
 import kinoko.server.*;
-import kinoko.world.character.AvatarLook;
-import kinoko.world.character.CharacterStat;
+import kinoko.world.Account;
+import kinoko.world.Channel;
+import kinoko.world.World;
+import kinoko.world.user.CharacterData;
+
+import java.util.List;
 
 public final class LoginPacket {
     public static OutPacket connect(Client c) {
-        OutPacket outPacket = OutPacket.create();
+        OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(0x0E);
         outPacket.encodeShort(ServerConstants.GAME_VERSION);
         outPacket.encodeString(ServerConstants.PATCH);
@@ -17,16 +21,16 @@ public final class LoginPacket {
     }
 
     public static OutPacket aliveReq() {
-        return OutPacket.create(OutHeader.ALIVE_REQ);
+        return OutPacket.of(OutHeader.ALIVE_REQ);
     }
 
-    public static OutPacket checkPasswordResult() {
-        OutPacket outPacket = OutPacket.create(OutHeader.CHECK_PASSWORD_RESULT);
+    public static OutPacket checkPasswordResultSuccess(Account account) {
+        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(0); // Success
-        outPacket.encodeByte(0);
+        outPacket.encodeByte(0); // 0 or 1
         outPacket.encodeInt(0);
 
-        outPacket.encodeInt(1); // dwAccountId
+        outPacket.encodeInt(account.getId()); // dwAccountId
         outPacket.encodeByte(0); // nGender
         outPacket.encodeByte(0); // nGradeCode
         outPacket.encodeShort(0); // nSubGradeCode | bTesterAccount
@@ -44,42 +48,53 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket worldInformation() {
-        OutPacket outPacket = OutPacket.create(OutHeader.WORLD_INFORMATION);
-        outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
-        outPacket.encodeString(ServerConfig.WORLD_NAME);
+    public static OutPacket checkPasswordResultFail(int failureType) {
+        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        outPacket.encodeByte(failureType);
+        outPacket.encodeByte(0);
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket worldInformation(World world) {
+        OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
+        outPacket.encodeByte(world.getId()); // nWorldID
+        outPacket.encodeString(world.getName());
         outPacket.encodeByte(0); // nWorldState
         outPacket.encodeString(""); // sWorldEventDesc
-        outPacket.encodeShort(0); // nWorldEventEXP_WSE
-        outPacket.encodeShort(0); // nWorldEventDrop_WSE
+        outPacket.encodeShort(100); // nWorldEventEXP_WSE
+        outPacket.encodeShort(100); // nWorldEventDrop_WSE
         outPacket.encodeByte(0); // nBlockCharCreation
 
-        outPacket.encodeByte(1); // channels.size()
-        outPacket.encodeString("Channel 1"); // sName
-        outPacket.encodeInt(0); // nUserNo
-        outPacket.encodeByte(0); // nWorldID
-        outPacket.encodeByte(0); // nChannelID
-        outPacket.encodeByte(false); // bAdultChannel
+        final List<Channel> channels = world.getChannels();
+        outPacket.encodeByte(channels.size());
+        for (Channel channel : channels) {
+            outPacket.encodeString(channel.getChannelName()); // sName
+            outPacket.encodeInt(channel.getUserNo()); // nUserNo
+            outPacket.encodeByte(channel.getWorldId()); // nWorldID
+            outPacket.encodeByte(channel.getChannelId()); // nChannelID
+            outPacket.encodeByte(false); // bAdultChannel
+        }
 
         outPacket.encodeShort(0); // nBalloonCount
         return outPacket;
     }
 
     public static OutPacket worldInformationEnd() {
-        OutPacket outPacket = OutPacket.create(OutHeader.WORLD_INFORMATION);
+        OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
         outPacket.encodeByte(-1); // nWorldID
         return outPacket;
     }
 
     public static OutPacket checkUserLimitResult() {
-        OutPacket outPacket = OutPacket.create(OutHeader.CHECK_USER_LIMIT_RESULT);
+        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_USER_LIMIT_RESULT);
         outPacket.encodeByte(false); // bOverUserLimit
         outPacket.encodeByte(0); // bPopulateLevel (0 = Normal, 1 = Populated, 2 = Full)
         return outPacket;
     }
 
     public static OutPacket selectWorldResult() {
-        OutPacket outPacket = OutPacket.create(OutHeader.SELECT_WORLD_RESULT);
+        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
         outPacket.encodeByte(0); // Success
 
         outPacket.encodeByte(0); // characters.size();
@@ -91,17 +106,16 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkDuplicatedIdResult(String name) {
-        OutPacket outPacket = OutPacket.create(OutHeader.CHECK_DUPLICATED_ID_RESULT);
+        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_DUPLICATED_ID_RESULT);
         outPacket.encodeString(name);
         outPacket.encodeByte(0); // Success
         return outPacket;
     }
 
-    public static OutPacket createNewCharacterResult() {
-        OutPacket outPacket = OutPacket.create(OutHeader.CREATE_NEW_CHARACTER_RESULT);
+    public static OutPacket createNewCharacterResult(CharacterData cd) {
+        OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
         outPacket.encodeByte(0); // Success
-        new CharacterStat().encode(outPacket);
-        new AvatarLook().encode(outPacket);
+        cd.encodeAvatarData(outPacket);
         return outPacket;
     }
 }

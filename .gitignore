@@ -39,3 +39,7 @@ build/
 
 ### IntelliJ ###
 .idea/
+
+### Project ###
+wz/
+generated/

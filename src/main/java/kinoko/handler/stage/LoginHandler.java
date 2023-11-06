@@ -1,14 +1,21 @@
 package kinoko.handler.stage;
 
+import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
-import kinoko.server.Client;
-import kinoko.server.InHeader;
-import kinoko.server.InPacket;
-import kinoko.server.OutHeader;
+import kinoko.provider.EtcProvider;
+import kinoko.server.*;
 import kinoko.util.Util;
+import kinoko.world.Account;
+import kinoko.world.World;
+import kinoko.world.user.CharacterData;
+import kinoko.world.user.CharacterStat;
+import kinoko.world.job.Job;
+import kinoko.world.job.LoginJob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public final class LoginHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
@@ -23,12 +30,23 @@ public final class LoginHandler {
         final int worldId = inPacket.decodeByte();
         final int channelId = inPacket.decodeByte();
         final byte[] address = inPacket.decodeArray(4);
-        c.write(LoginPacket.checkPasswordResult());
+
+        if (ServerConfig.AUTO_CREATE_ACCOUNT) {
+            DatabaseManager.accountAccessor().newAccount(username, password);
+        }
+        final Optional<Account> result = DatabaseManager.accountAccessor().getAccountByPassword(username, password);
+        if (result.isEmpty()) {
+            c.write(LoginPacket.checkPasswordResultFail(4)); // Incorrect Password
+            return;
+        }
+        c.write(LoginPacket.checkPasswordResultSuccess(result.get()));
     }
 
     @Handler({ InHeader.WORLD_INFORMATION, InHeader.VIEW_WORLD_SELECT })
     public static void handleViewWorldSelect(Client c, InPacket inPacket) {
-        c.write(LoginPacket.worldInformation());
+        for (World world : Server.getInstance().getWorlds()) {
+            c.write(LoginPacket.worldInformation(world));
+        }
         c.write(LoginPacket.worldInformationEnd());
     }
 
@@ -59,12 +77,52 @@ public final class LoginHandler {
     public static void handleNewChar(Client c, InPacket inPacket) {
         final String name = inPacket.decodeString();
         final int selectedRace = inPacket.decodeInt();
-        final int selectedSubJob = inPacket.decodeShort();
-        for (int i = 0; i < 8; i++) {
-            inPacket.decodeInt(); // AL
+        final short selectedSubJob = inPacket.decodeShort();
+        final int[] selectedAL = new int[]{
+                inPacket.decodeInt(), // face
+                inPacket.decodeInt(), // hair
+                inPacket.decodeInt(), // hair color
+                inPacket.decodeInt(), // skin
+                inPacket.decodeInt(), // coat
+                inPacket.decodeInt(), // pants
+                inPacket.decodeInt(), // shoes
+                inPacket.decodeInt(), // weapon
+        };
+        final byte gender = inPacket.decodeByte();
+
+        // validate character
+        Optional<LoginJob> loginJob = LoginJob.getByRace(selectedRace);
+        if (loginJob.isEmpty()) {
+            // invalid
+            return;
         }
-        final int gender = inPacket.decodeByte();
-        c.write(LoginPacket.createNewCharacterResult());
+        Job job = loginJob.get().getJob();
+        if (selectedSubJob != 0 && job != Job.BEGINNER) {
+            // invalid
+            return;
+        }
+        for (int i = 0; i < selectedAL.length; i++) {
+            if (!EtcProvider.isValidStartingItem(i, selectedAL[i])) {
+                // invalid
+                return;
+            }
+        }
+        if (gender < 0 || gender > 2) {
+            // invalid
+            return;
+        }
+
+        // create character
+        final CharacterData cd = new CharacterData(1);
+        final CharacterStat cs = CharacterStat.getDefault(cd, name, selectedAL, gender);
+        cs.setJob(job.getJobId());
+        cs.setSubJob(selectedSubJob);
+        cs.setPosMap(10000);
+        cd.setCharacterStat(cs);
+
+        // save character
+        DatabaseManager.characterAccessor().newCharacter(cd);
+        c.write(LoginPacket.createNewCharacterResult(cd));
     }
 
     @Handler(InHeader.ALIVE_ACK)

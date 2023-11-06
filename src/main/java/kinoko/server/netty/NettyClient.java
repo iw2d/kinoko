@@ -7,7 +7,7 @@ import kinoko.server.OutPacket;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class NettyClient {
+public abstract class NettyClient {
     public static final AttributeKey<NettyClient> CLIENT_KEY = AttributeKey.valueOf("C");
     private final Lock encoderLock = new ReentrantLock();
     private final Channel channel;

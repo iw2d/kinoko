@@ -6,4 +6,5 @@ public final class ServerConstants {
     public static final byte LOCALE = 8;
 
     public static final int LOGIN_PORT = 8484;
+    public static final int CHANNEL_PORT = 8585;
 }
