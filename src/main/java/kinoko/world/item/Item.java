@@ -7,9 +7,10 @@ import lombok.Data;
 
 @Data
 public class Item implements Encodable {
-    private long itemSn;
-    private int itemId;
-    private boolean cash;
+    private final long itemSn;
+    private final int itemId;
+    private final int itemType;
+    private final boolean cash;
     private short quantity;
     private short attribute;
     private String title;
@@ -26,7 +27,8 @@ public class Item implements Encodable {
 
     @Override
     public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(2); // nType
+        assert getItemType() == 2;
+        outPacket.encodeByte(getItemType()); // nType
         encodeBase(outPacket);
 
         // GW_ItemSlotBundle::RawDecode

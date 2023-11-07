@@ -59,28 +59,7 @@ public final class MapProvider {
         if (!(props.get("info") instanceof WzListProperty infoProp)) {
             throw new ProviderError("Failed to resolve info property");
         }
-        return new MapInfo(
-                mapId,
-                Collections.unmodifiableList(foothold),
-                Collections.unmodifiableList(life),
-                Collections.unmodifiableList(portal),
-                Collections.unmodifiableList(reactor),
-                infoProp.get("bgm"),
-                infoProp.get("version"),
-                infoProp.getOrDefault("town", 0) != 0,
-                infoProp.getOrDefault("swim", 0) != 0,
-                infoProp.getOrDefault("fly", 0) != 0,
-                infoProp.get("returnMap"),
-                infoProp.get("forcedReturn"),
-                infoProp.getOrDefault("fieldLimit", 0),
-                infoProp.get("mobRate"),
-                infoProp.get("onFirstUserEnter"),
-                infoProp.get("onUserEnter"),
-                infoProp.getOrDefault("VRTop", 0),
-                infoProp.getOrDefault("VRLeft", 0),
-                infoProp.getOrDefault("VRBottom", 0),
-                infoProp.getOrDefault("VRRight", 0)
-        );
+        return MapInfo.from(mapId, foothold, life, portal, reactor, infoProp);
     }
 
     private static List<Foothold> resolveFoothold(WzProperty property) throws ProviderError {
@@ -106,15 +85,7 @@ public final class MapProvider {
                     if (!(footholdEntry.getValue() instanceof WzListProperty footholdProp)) {
                         throw new ProviderError("Failed to resolve foothold property");
                     }
-                    foothold.add(new Foothold(
-                            layerId,
-                            groupId,
-                            footholdId,
-                            footholdProp.getOrDefault("x1", 0),
-                            footholdProp.getOrDefault("y1", 0),
-                            footholdProp.getOrDefault("x2", 0),
-                            footholdProp.getOrDefault("y2", 0)
-                    ));
+                    foothold.add(Foothold.from(layerId, groupId, footholdId, footholdProp));
                 }
             }
         }
@@ -137,19 +108,7 @@ public final class MapProvider {
             if (lifeType == null) {
                 throw new ProviderError("Unknown life type : %s", lifeProp.get("type"));
             }
-            life.add(new LifeInfo(
-                    lifeType,
-                    Integer.parseInt(lifeProp.get("id")),
-                    lifeProp.get("x"),
-                    lifeProp.get("y"),
-                    lifeProp.get("rx0"),
-                    lifeProp.get("rx1"),
-                    lifeProp.get("cy"),
-                    lifeProp.get("fh"),
-                    lifeProp.getOrDefault("f", 0) != 0,
-                    lifeProp.getOrDefault("hide", 0) != 0,
-                    lifeProp.getOrDefault("mobTime", 0)
-            ));
+            life.add(LifeInfo.from(lifeType, lifeProp));
         }
         return life;
     }
@@ -171,16 +130,7 @@ public final class MapProvider {
             if (portalType == null) {
                 throw new ProviderError("Unknown portal type : %d", portalProp.get("pt"));
             }
-            portal.add(new PortalInfo(
-                    portalType,
-                    portalId,
-                    portalProp.get("pn"),
-                    portalProp.get("tm"),
-                    portalProp.get("tn"),
-                    portalProp.get("x"),
-                    portalProp.get("y"),
-                    portalProp.get("script")
-            ));
+            portal.add(PortalInfo.from(portalType, portalId, portalProp));
         }
         return portal;
     }
@@ -197,14 +147,7 @@ public final class MapProvider {
             if (!(reactorEntry.getValue() instanceof WzListProperty reactorProp)) {
                 throw new ProviderError("Failed to resolve reactor property");
             }
-            reactor.add(new ReactorInfo(
-                    Integer.parseInt(reactorProp.get("id")),
-                    reactorProp.get("name"),
-                    reactorProp.get("x"),
-                    reactorProp.get("y"),
-                    reactorProp.getOrDefault("f", 0) != 0,
-                    reactorProp.get("reactorTime")
-            ));
+            reactor.add(ReactorInfo.from(reactorProp));
         }
         return reactor;
     }

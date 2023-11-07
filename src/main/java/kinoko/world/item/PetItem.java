@@ -6,7 +6,7 @@ import kinoko.world.Encodable;
 import lombok.Data;
 
 @Data
-public final class PetItem extends Item implements Encodable {
+public final class PetItem extends Item {
     private String petName;
 
     private byte level;
@@ -20,7 +20,8 @@ public final class PetItem extends Item implements Encodable {
 
     @Override
     public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(3); // nType
+        assert getItemType() == 3;
+        outPacket.encodeByte(getItemType()); // nType
         encodeBase(outPacket);
 
         // GW_ItemSlotPet::RawDecode

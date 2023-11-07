@@ -511,7 +511,7 @@ public enum OutHeader {
         this.value = (short) value;
     }
 
-    public short getValue() {
+    public final short getValue() {
         return value;
     }
 

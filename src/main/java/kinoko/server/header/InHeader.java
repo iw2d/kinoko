@@ -264,7 +264,7 @@ public enum InHeader {
         this.value = (short) value;
     }
 
-    public short getValue() {
+    public final short getValue() {
         return value;
     }
 

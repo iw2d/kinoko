@@ -18,7 +18,7 @@ public enum PortalType {
     PORTAL_COLLISION_INVISIBLE_CHANGEABLE(14),
     PORTAL_UNK_15(15);
 
-    private int type;
+    private final int type;
 
     PortalType(int type) {
         this.type = type;

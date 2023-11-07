@@ -8,7 +8,10 @@ import kinoko.server.ServerConstants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public final class EtcProvider {
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();

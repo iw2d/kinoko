@@ -182,6 +182,7 @@ public final class CharacterData implements Encodable {
         }
         if (flag.hasFlag(DBChar.MINIGAME_RECORD)) { // TODO
             outPacket.encodeShort(0); // short * (int, int, int, int, int)
+            // GW_MiniGameRecord { nGameID, nWin, nDraw, nLose, nScore }
         }
         if (flag.hasFlag(DBChar.COUPLE_RECORD)) { // TODO
             outPacket.encodeShort(0); // short * GW_CoupleRecord::Decode

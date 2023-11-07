@@ -1,8 +1,8 @@
 package kinoko.database;
 
 import kinoko.database.postgres.PostgresAccountAccessor;
-import kinoko.database.postgres.PostgresConnectionPool;
 import kinoko.database.postgres.PostgresCharacterAccessor;
+import kinoko.database.postgres.PostgresConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

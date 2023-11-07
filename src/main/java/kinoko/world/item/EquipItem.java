@@ -6,7 +6,7 @@ import kinoko.world.Encodable;
 import lombok.Data;
 
 @Data
-public final class EquipItem extends Item implements Encodable {
+public final class EquipItem extends Item {
     private short incStr;
     private short incDex;
     private short incInt;
@@ -43,7 +43,8 @@ public final class EquipItem extends Item implements Encodable {
 
     @Override
     public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(1); // nType
+        assert getItemType() == 1;
+        outPacket.encodeByte(getItemType()); // nType
         encodeBase(outPacket);
 
         // GW_ItemSlotEquip::RawDecode

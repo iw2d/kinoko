@@ -9,17 +9,17 @@ public final class WzListProperty extends WzProperty {
         this.items = items;
     }
 
-    public final Map<String, Object> getItems() {
+    public Map<String, Object> getItems() {
         return items;
     }
 
     @SuppressWarnings("unchecked")
-    public final <T> T get(String key) {
+    public <T> T get(String key) {
         return (T) items.get(key);
     }
 
     @SuppressWarnings("unchecked")
-    public final <T> T getOrDefault(String key, T defaultValue) {
+    public <T> T getOrDefault(String key, T defaultValue) {
         if (!items.containsKey(key)) {
             return defaultValue;
         }

@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public final class NioBufferOutPacket implements OutPacket {
     private static final Logger log = LogManager.getLogger(OutPacket.class);
-    private ByteBuffer[] buffers;
+    private final ByteBuffer[] buffers;
     private int bufferIndex;
 
     public NioBufferOutPacket() {
