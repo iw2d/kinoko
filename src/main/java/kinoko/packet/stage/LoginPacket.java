@@ -1,6 +1,9 @@
 package kinoko.packet.stage;
 
-import kinoko.server.*;
+import kinoko.server.Client;
+import kinoko.server.ServerConstants;
+import kinoko.server.header.OutHeader;
+import kinoko.server.packet.OutPacket;
 import kinoko.world.Account;
 import kinoko.world.Channel;
 import kinoko.world.World;
@@ -115,7 +118,8 @@ public final class LoginPacket {
     public static OutPacket createNewCharacterResult(CharacterData cd) {
         OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
         outPacket.encodeByte(0); // Success
-        cd.encodeAvatarData(outPacket);
+        cd.getCharacterStat().encode(outPacket);
+        cd.getAvatarLook().encode(outPacket);
         return outPacket;
     }
 }

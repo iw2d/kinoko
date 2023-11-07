@@ -1,7 +1,5 @@
 package kinoko.util;
 
-import kinoko.server.OutPacket;
-
 import java.time.Instant;
 
 public final class FileTime {

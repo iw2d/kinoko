@@ -1,6 +1,6 @@
-package kinoko.server;
+package kinoko.server.packet;
 
-import kinoko.server.netty.NioBufferOutPacket;
+import kinoko.server.header.OutHeader;
 import kinoko.util.FileTime;
 
 import java.time.Instant;

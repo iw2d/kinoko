@@ -1,6 +1,4 @@
-package kinoko.server;
-
-import kinoko.util.Util;
+package kinoko.server.packet;
 
 public interface InPacket {
     byte decodeByte();

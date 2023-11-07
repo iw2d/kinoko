@@ -12,7 +12,7 @@ public final class Channel {
     private final int channelPort;
     private final String channelName;
 
-    private final Map<Integer, User> users  = new ConcurrentHashMap<>();
+    private final Map<Integer, User> users = new ConcurrentHashMap<>();
     private ChannelServer channelServer;
 
     public Channel(int worldId, int channelId, int channelPort, String channelName) {

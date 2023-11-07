@@ -7,6 +7,7 @@ import kinoko.server.ServerConstants;
 import kinoko.server.crypto.IGCipher;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.crypto.ShandaCrypto;
+import kinoko.server.packet.NioBufferInPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

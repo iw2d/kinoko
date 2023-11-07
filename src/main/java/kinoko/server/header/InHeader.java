@@ -1,4 +1,4 @@
-package kinoko.server;
+package kinoko.server.header;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -252,6 +252,7 @@ public enum InHeader {
 
     private final short value;
     private final static Map<Short, InHeader> HEADER_MAP;
+
     static {
         HEADER_MAP = new HashMap<>();
         for (InHeader header : values()) {

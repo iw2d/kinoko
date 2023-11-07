@@ -1,6 +1,6 @@
 package kinoko.handler;
 
-import kinoko.server.InHeader;
+import kinoko.server.header.InHeader;
 
 import java.lang.annotation.*;
 

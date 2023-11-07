@@ -2,7 +2,7 @@ package kinoko.server.netty;
 
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
-import kinoko.server.OutPacket;
+import kinoko.server.packet.OutPacket;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

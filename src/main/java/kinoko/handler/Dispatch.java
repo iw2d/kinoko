@@ -1,8 +1,8 @@
 package kinoko.handler;
 
 import kinoko.server.Client;
-import kinoko.server.InHeader;
-import kinoko.server.InPacket;
+import kinoko.server.header.InHeader;
+import kinoko.server.packet.InPacket;
 
 import java.io.File;
 import java.lang.reflect.Method;

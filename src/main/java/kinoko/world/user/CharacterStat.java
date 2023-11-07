@@ -1,6 +1,6 @@
 package kinoko.world.user;
 
-import kinoko.server.OutPacket;
+import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 import lombok.Data;
 

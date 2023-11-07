@@ -1,6 +1,5 @@
-package kinoko.server.netty;
+package kinoko.server.packet;
 
-import kinoko.server.InPacket;
 import kinoko.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

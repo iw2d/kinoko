@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 public final class PostgresConnectionPool implements kinoko.database.ConnectionPool {
     private final HikariDataSource dataSource;
+
     public PostgresConnectionPool(HikariConfig config) {
         this.dataSource = new HikariDataSource(config);
     }

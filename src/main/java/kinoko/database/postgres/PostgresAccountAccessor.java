@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static kinoko.database.generated.public_.Tables.*;
+import static kinoko.database.generated.public_.Tables.ACCOUNT;
 
 public final class PostgresAccountAccessor extends PostgresAccessor implements AccountAccessor {
     public PostgresAccountAccessor(ConnectionPool connectionPool) {
@@ -68,12 +68,11 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
             // already exists
             return false;
         }
-        final String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         try (final Connection conn = getConnection()) {
             final DSLContext context = DSL.using(conn, SQLDialect.POSTGRES);
             final int inserted = context.insertInto(ACCOUNT)
                     .set(ACCOUNT.USERNAME, username)
-                    .set(ACCOUNT.PASSWORD, hashedPassword)
+                    .set(ACCOUNT.PASSWORD, BCrypt.hashpw(password, BCrypt.gensalt()))
                     .onDuplicateKeyIgnore()
                     .execute();
             return inserted > 0;
