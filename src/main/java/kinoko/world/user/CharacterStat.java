@@ -23,10 +23,9 @@ public final class CharacterStat implements Encodable {
     private int mp;
     private int maxMp;
     private short ap;
-    private ExtendSP extendSP;
+    private ExtendSP sp;
     private int exp;
     private short pop;
-    private int money;
     private int posMap;
     private byte portal;
 
@@ -55,7 +54,7 @@ public final class CharacterStat implements Encodable {
         outPacket.encodeInt(getMp()); // nMP
         outPacket.encodeInt(getMaxMp()); // nMMP
         outPacket.encodeShort(getAp()); // nAP
-        getExtendSP().encode(outPacket);
+        getSp().encode(outPacket);
 
         outPacket.encodeInt(getExp()); // nEXP
         outPacket.encodeShort(getPop()); // nPOP
@@ -84,7 +83,7 @@ public final class CharacterStat implements Encodable {
         cs.setMp(5);
         cs.setMaxMp(5);
         cs.setAp((short) 0);
-        cs.setExtendSP(ExtendSP.getDefault(cs));
+        cs.setSp(ExtendSP.getDefault(cs));
 
         cs.setExp(0);
         cs.setPop((short) 0);

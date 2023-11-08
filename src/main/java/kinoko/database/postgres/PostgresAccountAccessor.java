@@ -25,7 +25,8 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
     public Optional<Account> getAccountByUsername(String username) {
         try (final Connection conn = getConnection()) {
             final DSLContext context = DSL.using(conn, SQLDialect.POSTGRES);
-            final Result<Record> result = context.select().from(ACCOUNT)
+            final Result<Record> result = context.select()
+                    .from(ACCOUNT)
                     .where(ACCOUNT.USERNAME.eq(username))
                     .fetch();
             for (Record r : result) {
@@ -44,7 +45,8 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
     public Optional<Account> getAccountByPassword(String username, String password) {
         try (final Connection conn = getConnection()) {
             final DSLContext context = DSL.using(conn, SQLDialect.POSTGRES);
-            final Result<Record> result = context.select().from(ACCOUNT)
+            final Result<Record> result = context.select()
+                    .from(ACCOUNT)
                     .where(ACCOUNT.USERNAME.eq(username))
                     .fetch();
             for (Record r : result) {

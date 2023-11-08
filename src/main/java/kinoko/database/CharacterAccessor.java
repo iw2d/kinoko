@@ -12,5 +12,5 @@ public interface CharacterAccessor {
 
     Optional<List<CharacterData>> getCharactersByAccountId(int accountId);
 
-    void newCharacter(CharacterData characterData);
+    boolean newCharacter(CharacterData characterData);
 }

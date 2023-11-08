@@ -19,7 +19,6 @@ CREATE TABLE account
 CREATE TABLE character_stat
 (
     id       SERIAL PRIMARY KEY,
-    name     VARCHAR(255),
     gender   INT,
     skin     INT,
     face     INT,
@@ -39,7 +38,6 @@ CREATE TABLE character_stat
     sp       INT[],
     exp      INT,
     pop      INT,
-    money    INT,
     pos_map  INT,
     portal   INT
 );
@@ -87,6 +85,7 @@ CREATE TABLE character_inventory
 CREATE TABLE character_data
 (
     id                  SERIAL PRIMARY KEY,
+    name                VARCHAR(255) UNIQUE,
     account_id          INT,
     character_stat      INT,
     character_inventory INT,
@@ -119,8 +118,8 @@ CREATE TABLE quest_record
 
 CREATE TABLE wild_hunter_info
 (
-    character_id INT,
-    riding_type INT,
+    character_id  INT,
+    riding_type   INT,
     captured_mobs INT[],
     PRIMARY KEY (character_id),
     FOREIGN KEY (character_id) references character_data (id)
