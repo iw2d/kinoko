@@ -13,10 +13,13 @@ import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.Account;
 import kinoko.world.World;
+import kinoko.world.item.Inventory;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
 import kinoko.world.user.CharacterData;
+import kinoko.world.user.CharacterInventory;
 import kinoko.world.user.CharacterStat;
+import kinoko.world.user.ExtendSP;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +42,8 @@ public final class LoginHandler {
         if (ServerConfig.AUTO_CREATE_ACCOUNT) {
             DatabaseManager.accountAccessor().newAccount(username, password);
         }
-        final Optional<Account> result = DatabaseManager.accountAccessor().getAccountByPassword(username, password);
+
+        Optional<Account> result = DatabaseManager.accountAccessor().getAccountByPassword(username, password);
         if (result.isEmpty()) {
             c.write(LoginPacket.checkPasswordResultFail(4)); // Incorrect Password
             return;
@@ -95,7 +99,7 @@ public final class LoginHandler {
         };
         final byte gender = inPacket.decodeByte();
 
-        // validate character
+        // Validate character
         Optional<LoginJob> loginJob = LoginJob.getByRace(selectedRace);
         if (loginJob.isEmpty()) {
             // invalid
@@ -117,17 +121,52 @@ public final class LoginHandler {
             return;
         }
 
-        // create character
-        final CharacterData cd = new CharacterData(1);
-        final CharacterStat cs = CharacterStat.getDefault(cd, name, selectedAL, gender);
-        cs.setJob(job.getJobId());
-        cs.setSubJob(selectedSubJob);
-        cs.setPosMap(10000);
-        cd.setCharacterStat(cs);
+        // Create character
+        final Optional<Integer> characterId = DatabaseManager.characterAccessor().nextCharacterId();
+        if (characterId.isEmpty()) {
+            // error
+            return;
+        }
+        final CharacterData characterData = new CharacterData(characterId.get());
 
-        // save character
-        DatabaseManager.characterAccessor().newCharacter(cd);
-        c.write(LoginPacket.createNewCharacterResult(cd));
+        final CharacterStat characterStat = new CharacterStat();
+        characterStat.setCharacterData(characterData);
+        characterStat.setGender(gender);
+        characterStat.setSkin((byte) selectedAL[3]);
+        characterStat.setFace(selectedAL[0]);
+        characterStat.setHair(selectedAL[1] + selectedAL[2]);
+        characterStat.setLevel((byte) 1);
+        characterStat.setJob(job.getJobId());
+        characterStat.setSubJob(selectedSubJob);
+        characterStat.setBaseStr((short) 12);
+        characterStat.setBaseDex((short) 5);
+        characterStat.setBaseInt((short) 4);
+        characterStat.setBaseLuk((short) 4);
+        characterStat.setHp(50);
+        characterStat.setMaxHp(50);
+        characterStat.setMp(5);
+        characterStat.setMaxMp(5);
+        characterStat.setAp((short) 0);
+        characterStat.setSp(ExtendSP.getDefault(characterStat));
+        characterStat.setExp(0);
+        characterStat.setPop((short) 0);
+        characterStat.setPosMap(10000);
+        characterStat.setPortal((byte) 0);
+        characterData.setCharacterStat(characterStat);
+
+        final CharacterInventory characterInventory = new CharacterInventory();
+        characterInventory.setEquipped(new Inventory(Integer.MAX_VALUE));
+        characterInventory.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        characterInventory.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        characterInventory.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        characterInventory.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        characterInventory.setCashInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        characterInventory.setMoney(0);
+        characterData.setCharacterInventory(characterInventory);
+
+        // Save character
+        DatabaseManager.characterAccessor().saveCharacter(characterData);
+        c.write(LoginPacket.createNewCharacterResult(characterData));
     }
 
     @Handler(InHeader.ALIVE_ACK)

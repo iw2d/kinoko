@@ -175,7 +175,7 @@ public final class WzReader implements AutoCloseable {
                     continue;
                 }
                 case 2 -> {
-                    // string getDefault offset
+                    // string offset
                     int stringOffset = buffer.getInt();
                     int originalPosition = buffer.position();
                     buffer.position(parent.getStart() + stringOffset);

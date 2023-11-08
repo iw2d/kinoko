@@ -3,6 +3,7 @@ package kinoko.world.item;
 import kinoko.world.user.BodyPart;
 
 public final class ItemConstants {
+    public static final int INVENTORY_MAX_SLOTS = 96;
 
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {

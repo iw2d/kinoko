@@ -2,10 +2,12 @@ package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public final class ExtendSP implements Encodable {
     private final CharacterStat cs;
     private final List<Integer> spList;
@@ -13,14 +15,6 @@ public final class ExtendSP implements Encodable {
     public ExtendSP(CharacterStat cs, List<Integer> spList) {
         this.cs = cs;
         this.spList = spList;
-    }
-
-    public Integer[] toArray() {
-        final Integer[] array = new Integer[spList.size()];
-        for (int i = 0; i < spList.size(); i++) {
-            array[i] = spList.get(i);
-        }
-        return array;
     }
 
     @Override

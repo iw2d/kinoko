@@ -2,11 +2,10 @@ package kinoko.world.item;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
-import kinoko.world.Encodable;
 import lombok.Data;
 
 @Data
-public final class EquipItem extends Item {
+public final class EquipInfo {
     private short incStr;
     private short incDex;
     private short incInt;
@@ -23,10 +22,10 @@ public final class EquipItem extends Item {
     private short incSpeed;
     private short incJump;
 
-    private byte remainingUpgradeCount;
-    private byte currentUpgradeCount;
-    private int increaseUpgradeCount;
-    private byte currentHyperUpgradeCount;
+    private byte ruc; // Remaining Upgrade Count
+    private byte cuc; // Current Upgrade Count
+    private int iuc; // Increase Upgrade Count
+    private byte chuc; // Current Hyper Upgrade Count
 
     private byte grade;
     private short option1;
@@ -39,17 +38,10 @@ public final class EquipItem extends Item {
     private byte level;
     private int exp;
     private int durability;
-    private String title;
 
-    @Override
-    public void encode(OutPacket outPacket) {
-        assert getItemType() == 1;
-        outPacket.encodeByte(getItemType()); // nType
-        encodeBase(outPacket);
-
-        // GW_ItemSlotEquip::RawDecode
-        outPacket.encodeByte(getRemainingUpgradeCount()); // nRUC
-        outPacket.encodeByte(getCurrentUpgradeCount()); // nCUC
+    public void encode(Item item, OutPacket outPacket) {
+        outPacket.encodeByte(getRuc()); // nRUC
+        outPacket.encodeByte(getCuc()); // nCUC
 
         outPacket.encodeShort(getIncStr()); // iSTR
         outPacket.encodeShort(getIncDex()); // iDEX
@@ -67,17 +59,17 @@ public final class EquipItem extends Item {
         outPacket.encodeShort(getIncSpeed()); // iSpeed
         outPacket.encodeShort(getIncJump()); // iJump
 
-        outPacket.encodeString(getTitle()); // sTitle
+        outPacket.encodeString(item.getTitle()); // sTitle
 
-        outPacket.encodeShort(getAttribute()); // nAttribute
+        outPacket.encodeShort(item.getAttribute()); // nAttribute
         outPacket.encodeByte(getLevelUpType()); // nLevelUpType
         outPacket.encodeByte(getLevel()); // nLevel
         outPacket.encodeInt(getExp()); // nEXP
         outPacket.encodeInt(getDurability()); // nDurability
 
-        outPacket.encodeInt(getIncreaseUpgradeCount()); // nIUC
+        outPacket.encodeInt(getIuc()); // nIUC
         outPacket.encodeByte(getGrade()); // nGrade
-        outPacket.encodeByte(getCurrentHyperUpgradeCount()); // nCHUC
+        outPacket.encodeByte(getChuc()); // nCHUC
 
         outPacket.encodeShort(getOption1()); // nOption1
         outPacket.encodeShort(getOption2()); // nOption2
@@ -85,8 +77,8 @@ public final class EquipItem extends Item {
         outPacket.encodeShort(getSocket1()); // nSocket1
         outPacket.encodeShort(getSocket2()); // nSocket2
 
-        if (!isCash()) {
-            outPacket.encodeLong(getItemSn()); // liSN
+        if (!item.isCash()) {
+            outPacket.encodeLong(item.getItemSn()); // liSN
         }
 
         outPacket.encodeFT(FileTime.ZERO_TIME); //ftEquipped

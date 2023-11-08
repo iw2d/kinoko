@@ -20,7 +20,6 @@ import java.util.Map;
 
 @Data
 public final class CharacterData implements Encodable {
-    private final int accountId;
     private final int id;
     private String name;
     private CharacterStat characterStat;

@@ -16,9 +16,7 @@
         <mainClass>kinoko.server.Server</mainClass>
 
         <netty.version>4.1.100.Final</netty.version>
-        <jooq.version>3.18.7</jooq.version>
-        <driver.version>42.6.0</driver.version>
-        <hikari.version>5.1.0</hikari.version>
+        <driver.version>4.17.0</driver.version>
         <slfj4.version>2.0.9</slfj4.version>
         <log4j.version>2.20.0</log4j.version>
         <junit.version>5.10.0</junit.version>
@@ -32,34 +30,14 @@
             <version>${netty.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-postgres-extensions</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-core</artifactId>
             <version>${driver.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${hikari.version}</version>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-query-builder</artifactId>
+            <version>${driver.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mindrot</groupId>
@@ -94,47 +72,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>${jooq.version}</version>
-                <executions>
-                    <execution>
-                        <id>jooq-codegen</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jdbc>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://127.0.0.1:5432/kinoko</url>
-                        <user>postgres</user>
-                        <password>password</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <excludes>
-                                UNUSED_TABLE # This table (unqualified name) should not be generated
-                                | PREFIX_.* # Objects with a given prefix should not be generated
-                                | SECRET_SCHEMA\.SECRET_TABLE # This table (qualified name) should not be generated
-                                | SECRET_ROUTINE # This routine (unqualified name) ...
-                            </excludes>
-                        </database>
-                        <target>
-                            <packageName>kinoko.database.generated</packageName>
-                            <directory>src/main/java</directory>
-                        </target>
-                    </generator>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public final class CharacterStat implements Encodable {
-    private final CharacterData characterData;
+    private CharacterData characterData;
     private byte gender;
     private byte skin;
     private int face;
@@ -63,30 +63,5 @@ public final class CharacterStat implements Encodable {
         outPacket.encodeByte(getPortal()); // nPortal
         outPacket.encodeInt(0); // nPlayTime
         outPacket.encodeShort(getSubJob()); // nSubJob
-    }
-
-    public static CharacterStat getDefault(CharacterData cd, String name, int[] selectedAL, byte gender) {
-        final CharacterStat cs = new CharacterStat(cd);
-        cs.setLevel((byte) 1);
-        cs.setGender(gender);
-        cs.setSkin((byte) selectedAL[3]);
-        cs.setFace(selectedAL[0]);
-        cs.setHair(selectedAL[1] + selectedAL[2]);
-
-        cs.setBaseStr((short) 12);
-        cs.setBaseDex((short) 5);
-        cs.setBaseInt((short) 4);
-        cs.setBaseLuk((short) 4);
-
-        cs.setHp(50);
-        cs.setMaxHp(50);
-        cs.setMp(5);
-        cs.setMaxMp(5);
-        cs.setAp((short) 0);
-        cs.setSp(ExtendSP.getDefault(cs));
-
-        cs.setExp(0);
-        cs.setPop((short) 0);
-        return cs;
     }
 }
