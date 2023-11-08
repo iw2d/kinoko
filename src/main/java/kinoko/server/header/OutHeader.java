@@ -497,7 +497,6 @@ public enum OutHeader {
     ITC_NORMAL_ITEM_RESULT(412);
 
 
-    private final short value;
     private final static Map<Short, OutHeader> HEADER_MAP;
 
     static {
@@ -506,6 +505,8 @@ public enum OutHeader {
             HEADER_MAP.put(header.getValue(), header);
         }
     }
+
+    private final short value;
 
     OutHeader(int value) {
         this.value = (short) value;

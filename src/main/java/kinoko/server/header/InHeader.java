@@ -250,7 +250,6 @@ public enum InHeader {
     LOGOUT_GIFT(313);
 
 
-    private final short value;
     private final static Map<Short, InHeader> HEADER_MAP;
 
     static {
@@ -259,6 +258,8 @@ public enum InHeader {
             HEADER_MAP.put(header.getValue(), header);
         }
     }
+
+    private final short value;
 
     InHeader(int value) {
         this.value = (short) value;

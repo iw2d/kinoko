@@ -1,7 +1,5 @@
 package kinoko.world.item;
 
-import java.util.Arrays;
-
 public enum ItemType {
     EQUIP(1),
     BUNDLE(2),

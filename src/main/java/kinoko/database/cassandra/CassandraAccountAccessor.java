@@ -44,9 +44,9 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     @Override
     public Optional<Account> getAccountByPassword(String username, String password) {
         final ResultSet selectResult = getSession().execute(
-            selectFrom(getKeyspace(), TABLE_NAME).all()
-                    .whereColumn("username").isEqualTo(literal(username))
-                    .build()
+                selectFrom(getKeyspace(), TABLE_NAME).all()
+                        .whereColumn("username").isEqualTo(literal(username))
+                        .build()
         );
         for (Row row : selectResult) {
             final String hashedPassword = row.getString("password");

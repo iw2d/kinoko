@@ -26,14 +26,6 @@ public enum Server {
     private LoginServer loginServer;
     private List<World> worlds;
 
-    public static void main(String[] args) {
-        Server.getInstance().start();
-    }
-
-    public static Server getInstance() {
-        return INSTANCE;
-    }
-
     public List<World> getWorlds() {
         return worlds;
     }
@@ -93,5 +85,13 @@ public enum Server {
         }
         log.info("Shutting down DatabaseManager");
         DatabaseManager.shutdown();
+    }
+
+    public static void main(String[] args) {
+        Server.getInstance().start();
+    }
+
+    public static Server getInstance() {
+        return INSTANCE;
     }
 }

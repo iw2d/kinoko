@@ -6,16 +6,6 @@ import kinoko.util.FileTime;
 import java.time.Instant;
 
 public interface OutPacket {
-    static OutPacket of() {
-        return new NioBufferOutPacket();
-    }
-
-    static OutPacket of(OutHeader op) {
-        final OutPacket outPacket = of();
-        outPacket.encodeShort(op.getValue());
-        return outPacket;
-    }
-
     void encodeByte(byte value);
 
     default void encodeByte(boolean value) {
@@ -58,4 +48,14 @@ public interface OutPacket {
     int getSize();
 
     byte[] getData();
+
+    static OutPacket of() {
+        return new NioBufferOutPacket();
+    }
+
+    static OutPacket of(OutHeader op) {
+        final OutPacket outPacket = of();
+        outPacket.encodeShort(op.getValue());
+        return outPacket;
+    }
 }

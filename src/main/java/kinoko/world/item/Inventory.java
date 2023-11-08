@@ -1,7 +1,5 @@
 package kinoko.world.item;
 
-import lombok.Data;
-
 import java.util.SortedMap;
 import java.util.TreeMap;
 

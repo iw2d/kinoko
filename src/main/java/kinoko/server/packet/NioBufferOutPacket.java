@@ -21,12 +21,6 @@ public final class NioBufferOutPacket implements OutPacket {
         buffers[0] = newBuffer(16);
     }
 
-    private static ByteBuffer newBuffer(int capacity) {
-        final ByteBuffer buffer = ByteBuffer.allocate(capacity);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        return buffer;
-    }
-
     private void ensureSize(int size) {
         final ByteBuffer current = getBuffer();
         if (current.limit() - current.position() >= size) {
@@ -121,5 +115,11 @@ public final class NioBufferOutPacket implements OutPacket {
         final short op = buffers[0].getShort(0);
         return String.format("%s(%s) | %s", OutHeader.getByValue(op), Util.opToString(op),
                 Util.readableByteArray(Arrays.copyOfRange(getData(), 2, getSize())));
+    }
+
+    private static ByteBuffer newBuffer(int capacity) {
+        final ByteBuffer buffer = ByteBuffer.allocate(capacity);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        return buffer;
     }
 }

@@ -18,12 +18,6 @@ public abstract class NettyServer {
     protected static final Logger log = LogManager.getLogger(NettyServer.class);
     private CompletableFuture<Channel> channelFuture;
 
-    protected static byte[] getNewIv() {
-        final byte[] iv = new byte[4];
-        ThreadLocalRandom.current().nextBytes(iv);
-        return iv;
-    }
-
     public abstract int getPort();
 
     public CompletableFuture<Channel> getFuture() {
@@ -85,5 +79,11 @@ public abstract class NettyServer {
             }
         });
         return stopFuture;
+    }
+
+    protected static byte[] getNewIv() {
+        final byte[] iv = new byte[4];
+        ThreadLocalRandom.current().nextBytes(iv);
+        return iv;
     }
 }

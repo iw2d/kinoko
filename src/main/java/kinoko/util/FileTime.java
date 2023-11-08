@@ -14,6 +14,14 @@ public final class FileTime {
         this.highDateTime = highDateTime;
     }
 
+    public int getLowDateTime() {
+        return lowDateTime;
+    }
+
+    public int getHighDateTime() {
+        return highDateTime;
+    }
+
     public static FileTime now() {
         return from(Instant.now());
     }
@@ -24,13 +32,5 @@ public final class FileTime {
 
     public static FileTime from(long value) {
         return new FileTime((int) value, (int) (value >>> 32));
-    }
-
-    public int getLowDateTime() {
-        return lowDateTime;
-    }
-
-    public int getHighDateTime() {
-        return highDateTime;
     }
 }

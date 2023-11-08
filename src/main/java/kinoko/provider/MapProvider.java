@@ -10,7 +10,10 @@ import kinoko.server.ServerConstants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class MapProvider {
     private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
