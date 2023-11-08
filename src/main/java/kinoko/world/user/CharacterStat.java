@@ -31,8 +31,8 @@ public final class CharacterStat implements Encodable {
 
     @Override
     public void encode(OutPacket outPacket) {
-        outPacket.encodeInt(getCharacterData().getId()); // dwCharacterID
-        outPacket.encodeString(getCharacterData().getName(), 13); // sCharacterName
+        outPacket.encodeInt(getCharacterData().getCharacterId()); // dwCharacterID
+        outPacket.encodeString(getCharacterData().getCharacterName(), 13); // sCharacterName
         outPacket.encodeByte(getGender()); // nGender
         outPacket.encodeByte(getSkin()); // nSkin
         outPacket.encodeInt(getFace()); // nFace

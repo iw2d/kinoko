@@ -9,6 +9,6 @@ public final class User {
     }
 
     public int getId() {
-        return characterData.getId();
+        return characterData.getCharacterId();
     }
 }

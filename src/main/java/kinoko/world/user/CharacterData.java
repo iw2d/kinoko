@@ -20,14 +20,20 @@ import java.util.Map;
 
 @Data
 public final class CharacterData implements Encodable {
-    private final int id;
-    private String name;
+    private final int accountId;
+    private final int characterId;
+    private String characterName;
     private CharacterStat characterStat;
     private CharacterInventory characterInventory;
     private SkillManager skillManager;
     private QuestManager questManager;
     private WildHunterInfo wildHunterInfo;
     private int friendMax;
+
+    public CharacterData(int accountId, int characterId) {
+        this.accountId = accountId;
+        this.characterId = characterId;
+    }
 
     public AvatarLook getAvatarLook() {
         return AvatarLook.from(getCharacterStat(), getCharacterInventory().getEquipped());

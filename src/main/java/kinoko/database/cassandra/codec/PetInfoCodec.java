@@ -7,11 +7,11 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.world.item.PetInfo;
 
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.*;
 import static kinoko.database.cassandra.model.PetInfoModel.*;
 
 public final class PetInfoCodec extends MappingCodec<UdtValue, PetInfo> {
@@ -60,7 +60,7 @@ public final class PetInfoCodec extends MappingCodec<UdtValue, PetInfo> {
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {
         session.execute(
-                SchemaBuilder.createType(keyspace, TYPE_NAME)
+                createType(keyspace, TYPE_NAME)
                         .ifNotExists()
                         .withField(PET_NAME.getName(), DataTypes.TEXT)
                         .withField(LEVEL.getName(), DataTypes.TINYINT)

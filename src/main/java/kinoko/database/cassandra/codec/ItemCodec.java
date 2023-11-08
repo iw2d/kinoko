@@ -7,7 +7,6 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.model.EquipInfoModel;
@@ -17,6 +16,7 @@ import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
 import kinoko.world.item.PetInfo;
 
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.*;
 import static kinoko.database.cassandra.model.ItemModel.*;
 
 public final class ItemCodec extends MappingCodec<UdtValue, Item> {
@@ -79,7 +79,7 @@ public final class ItemCodec extends MappingCodec<UdtValue, Item> {
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {
         session.execute(
-                SchemaBuilder.createType(keyspace, TYPE_NAME).ifNotExists()
+                createType(keyspace, TYPE_NAME).ifNotExists()
                         .withField(ITEM_TYPE.getName(), DataTypes.INT)
                         .withField(ITEM_SN.getName(), DataTypes.BIGINT)
                         .withField(ITEM_ID.getName(), DataTypes.INT)
@@ -87,8 +87,8 @@ public final class ItemCodec extends MappingCodec<UdtValue, Item> {
                         .withField(QUANTITY.getName(), DataTypes.SMALLINT)
                         .withField(ATTRIBUTE.getName(), DataTypes.SMALLINT)
                         .withField(TITLE.getName(), DataTypes.TEXT)
-                        .withField(EQUIP_INFO.getName(), SchemaBuilder.udt(EquipInfoModel.TYPE_NAME, true))
-                        .withField(PET_INFO.getName(), SchemaBuilder.udt(PetInfoModel.TYPE_NAME, true))
+                        .withField(EQUIP_INFO.getName(), udt(EquipInfoModel.TYPE_NAME, true))
+                        .withField(PET_INFO.getName(), udt(PetInfoModel.TYPE_NAME, true))
                         .build()
         );
     }

@@ -4,9 +4,10 @@ import lombok.Data;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 public final class SkillManager {
-    private Map<Integer, SkillRecord> skillRecords;
-    private Map<Integer, Instant> skillCooltimes;
+    private final Map<Integer, SkillRecord> skillRecords = new ConcurrentHashMap<>();
+    private final Map<Integer, Instant> skillCooltimes = new ConcurrentHashMap<>();
 }

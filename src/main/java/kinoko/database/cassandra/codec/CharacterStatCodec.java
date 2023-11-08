@@ -7,12 +7,12 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.world.user.CharacterStat;
 import kinoko.world.user.ExtendSP;
 
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.*;
 import static kinoko.database.cassandra.model.CharacterStatModel.*;
 
 public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterStat> {
@@ -89,7 +89,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {
         session.execute(
-                SchemaBuilder.createType(keyspace, TYPE_NAME)
+                createType(keyspace, TYPE_NAME)
                         .ifNotExists()
                         .withField(GENDER.getName(), DataTypes.TINYINT)
                         .withField(SKIN.getName(), DataTypes.TINYINT)

@@ -127,7 +127,7 @@ public final class LoginHandler {
             // error
             return;
         }
-        final CharacterData characterData = new CharacterData(characterId.get());
+        final CharacterData characterData = new CharacterData(c.getAccount().getId(), characterId.get());
 
         final CharacterStat characterStat = new CharacterStat();
         characterStat.setCharacterData(characterData);

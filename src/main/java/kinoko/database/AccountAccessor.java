@@ -11,5 +11,5 @@ public interface AccountAccessor {
 
     boolean newAccount(String username, String password);
 
-    boolean updateAccount(Account account);
+    boolean saveAccount(Account account);
 }

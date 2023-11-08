@@ -12,10 +12,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import kinoko.database.cassandra.CassandraAccessor;
 import kinoko.database.cassandra.CassandraAccountAccessor;
 import kinoko.database.cassandra.CassandraCharacterAccessor;
-import kinoko.database.cassandra.codec.CharacterStatCodec;
-import kinoko.database.cassandra.codec.EquipInfoCodec;
-import kinoko.database.cassandra.codec.ItemCodec;
-import kinoko.database.cassandra.codec.PetInfoCodec;
+import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.model.CharacterStatModel;
 import kinoko.database.cassandra.model.EquipInfoModel;
 import kinoko.database.cassandra.model.ItemModel;
@@ -74,10 +71,10 @@ public final class DatabaseManager {
         EquipInfoCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         PetInfoCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ItemCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        InventoryCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
         // Create Tables
-        CassandraAccessor.createIdTable(cqlSession, DATABASE_KEYSPACE);
         CassandraAccountAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
         CassandraCharacterAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
 
@@ -87,7 +84,7 @@ public final class DatabaseManager {
         registerCodec(cqlSession, ItemModel.TYPE_NAME, (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
         registerCodec(cqlSession, CharacterStatModel.TYPE_NAME, (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
-        // Register Accessors
+        // Create Accessors
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
     }
