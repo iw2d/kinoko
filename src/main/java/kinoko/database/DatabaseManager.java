@@ -9,15 +9,16 @@ import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import com.datastax.oss.driver.api.core.type.codec.registry.MutableCodecRegistry;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import kinoko.database.cassandra.CassandraAccessor;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.CassandraAccountAccessor;
 import kinoko.database.cassandra.CassandraCharacterAccessor;
 import kinoko.database.cassandra.codec.*;
-import kinoko.database.cassandra.model.CharacterStatModel;
-import kinoko.database.cassandra.model.EquipInfoModel;
-import kinoko.database.cassandra.model.ItemModel;
-import kinoko.database.cassandra.model.PetInfoModel;
+import kinoko.database.cassandra.table.AccountTable;
+import kinoko.database.cassandra.table.CharacterTable;
+import kinoko.database.cassandra.table.IdTable;
+import kinoko.database.cassandra.type.*;
 import kinoko.world.item.EquipInfo;
+import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
 import kinoko.world.item.PetInfo;
 import kinoko.world.user.CharacterStat;
@@ -44,6 +45,15 @@ public final class DatabaseManager {
         return characterAccessor;
     }
 
+    public static void createKeyspace(CqlSession session, String keyspace) {
+        session.execute(
+                SchemaBuilder.createKeyspace(keyspace)
+                        .ifNotExists()
+                        .withSimpleStrategy(1)
+                        .build()
+        );
+    }
+
     private static UserDefinedType getUserDefinedType(CqlSession session, String typeName) {
         return session.getMetadata()
                 .getKeyspace(DATABASE_KEYSPACE)
@@ -65,24 +75,26 @@ public final class DatabaseManager {
                 .build();
 
         // Create Keyspace
-        CassandraAccessor.createKeyspace(cqlSession, DATABASE_KEYSPACE);
+        createKeyspace(cqlSession, DATABASE_KEYSPACE);
 
         // Create UDTs
-        EquipInfoCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        PetInfoCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        ItemCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        InventoryCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        CharacterStatCodec.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        EquipInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        PetInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
         // Create Tables
-        CassandraAccountAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
-        CassandraCharacterAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+        IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
         // Register Codecs
-        registerCodec(cqlSession, EquipInfoModel.TYPE_NAME, (ic) -> new EquipInfoCodec(ic, GenericType.of(EquipInfo.class)));
-        registerCodec(cqlSession, PetInfoModel.TYPE_NAME, (ic) -> new PetInfoCodec(ic, GenericType.of(PetInfo.class)));
-        registerCodec(cqlSession, ItemModel.TYPE_NAME, (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
-        registerCodec(cqlSession, CharacterStatModel.TYPE_NAME, (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
+        registerCodec(cqlSession, EquipInfoUDT.getTypeName(), (ic) -> new EquipInfoCodec(ic, GenericType.of(EquipInfo.class)));
+        registerCodec(cqlSession, PetInfoUDT.getTypeName(), (ic) -> new PetInfoCodec(ic, GenericType.of(PetInfo.class)));
+        registerCodec(cqlSession, ItemUDT.getTypeName(), (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
+        registerCodec(cqlSession, InventoryUDT.getTypeName(), (ic) -> new InventoryCodec(ic, GenericType.of(Inventory.class)));
+        registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
         // Create Accessors
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);

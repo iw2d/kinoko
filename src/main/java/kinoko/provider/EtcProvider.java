@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class EtcProvider {
+    private static final Set<String> forbiddenName = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
 
     public static void initialize() {
@@ -24,6 +25,10 @@ public final class EtcProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean isForbiddenName(String name) {
+        return forbiddenName.contains(name.toLowerCase());
     }
 
     public static boolean isValidStartingItem(int index, int id) {

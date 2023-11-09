@@ -3,9 +3,7 @@ package kinoko.world.item;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Encodable;
-import lombok.Data;
 
-@Data
 public class Item implements Encodable {
     private final ItemType itemType;
     private long itemSn;
@@ -54,5 +52,73 @@ public class Item implements Encodable {
                 }
             }
         }
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public long getItemSn() {
+        return itemSn;
+    }
+
+    public void setItemSn(long itemSn) {
+        this.itemSn = itemSn;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+
+    public boolean isCash() {
+        return cash;
+    }
+
+    public void setCash(boolean cash) {
+        this.cash = cash;
+    }
+
+    public short getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(short quantity) {
+        this.quantity = quantity;
+    }
+
+    public short getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(short attribute) {
+        this.attribute = attribute;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public EquipInfo getEquipInfo() {
+        return equipInfo;
+    }
+
+    public void setEquipInfo(EquipInfo equipInfo) {
+        this.equipInfo = equipInfo;
+    }
+
+    public PetInfo getPetInfo() {
+        return petInfo;
+    }
+
+    public void setPetInfo(PetInfo petInfo) {
+        this.petInfo = petInfo;
     }
 }

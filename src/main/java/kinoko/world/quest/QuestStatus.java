@@ -1,6 +1,6 @@
 package kinoko.world.quest;
 
-public enum QuestType {
+public enum QuestStatus {
     NOT_STARTED(0),
     STARTED(1),
     COMPLETED(2),
@@ -8,7 +8,7 @@ public enum QuestType {
 
     private final int value;
 
-    QuestType(int value) {
+    QuestStatus(int value) {
         this.value = value;
     }
 

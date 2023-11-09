@@ -1,12 +1,15 @@
 package kinoko.packet.stage;
 
 import kinoko.server.Client;
+import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.FileTime;
 import kinoko.world.Account;
 import kinoko.world.Channel;
 import kinoko.world.World;
+import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 
 import java.util.List;
@@ -29,7 +32,7 @@ public final class LoginPacket {
 
     public static OutPacket checkPasswordResultSuccess(Account account) {
         OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
-        outPacket.encodeByte(0); // Success
+        outPacket.encodeByte(LoginResult.SUCCESS.getValue());
         outPacket.encodeByte(0); // 0 or 1
         outPacket.encodeInt(0);
 
@@ -43,19 +46,29 @@ public final class LoginPacket {
         outPacket.encodeByte(0); // nChatBlockReason
         outPacket.encodeLong(0); // dtChatUnblockDate
         outPacket.encodeLong(0); // dtRegisterDate
-        outPacket.encodeInt(1); // nNumOfCharacter
+        outPacket.encodeInt(account.getSlotCount()); // nNumOfCharacter
 
         outPacket.encodeByte(true); // true ? VIEW_WORLD_SELECT : CHECK_PIN_CODE
-        outPacket.encodeByte(false); // bLoginOpt
+        outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt
         outPacket.encodeLong(0);
         return outPacket;
     }
 
-    public static OutPacket checkPasswordResultFail(int failureType) {
+    public static OutPacket checkPasswordResultFail(LoginResult failType) {
         OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
-        outPacket.encodeByte(failureType);
+        outPacket.encodeByte(failType.getValue());
         outPacket.encodeByte(0);
         outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket checkPasswordResultBlocked(int blockedType, FileTime unblockDate) {
+        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        outPacket.encodeByte(LoginResult.BLOCKED.getValue());
+        outPacket.encodeByte(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeByte(blockedType);
+        outPacket.encodeFT(unblockDate);
         return outPacket;
     }
 
@@ -96,30 +109,78 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectWorldResult() {
+    public static OutPacket selectWorldResult(Account account) {
         OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
-        outPacket.encodeByte(0); // Success
+        outPacket.encodeByte(LoginResult.SUCCESS.getValue());
 
-        outPacket.encodeByte(0); // characters.size();
+        outPacket.encodeByte(account.getCharacterList().size());
+        for (AvatarData avatarData : account.getCharacterList()) {
+            avatarData.encode(outPacket);
+            outPacket.encodeByte(false); // m_abOnFamily
+            outPacket.encodeByte(false); // bool -> CLogin::RANK
+        }
 
-        outPacket.encodeByte(2); // bLoginOpt
-        outPacket.encodeInt(1); // nSlotCount
+        outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt
+        outPacket.encodeInt(account.getSlotCount()); // nSlotCount
         outPacket.encodeInt(0); // nBuyCharCount
         return outPacket;
     }
 
-    public static OutPacket checkDuplicatedIdResult(String name) {
+    public static OutPacket checkDuplicatedIdResult(String name, int resultType) {
         OutPacket outPacket = OutPacket.of(OutHeader.CHECK_DUPLICATED_ID_RESULT);
         outPacket.encodeString(name);
-        outPacket.encodeByte(0); // Success
+        outPacket.encodeByte(resultType);
+        // 0: Success
+        // 1: This name is currently being used.
+        // 2: You cannot use this name.
+        // default: Failed due to unknown reason
         return outPacket;
     }
 
-    public static OutPacket createNewCharacterResult(CharacterData cd) {
+    public static OutPacket createNewCharacterResultSuccess(CharacterData characterData) {
         OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
-        outPacket.encodeByte(0); // Success
-        cd.getCharacterStat().encode(outPacket);
-        cd.getAvatarLook().encode(outPacket);
+        outPacket.encodeByte(LoginResult.SUCCESS.getValue());
+        AvatarData.from(characterData).encode(outPacket);
         return outPacket;
+    }
+
+    public static OutPacket createNewCharacterResultFail(LoginResult failType) {
+        OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
+        outPacket.encodeByte(failType.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket latestConnectedWorld(int worldId) {
+        OutPacket outPacket = OutPacket.of(OutHeader.LATEST_CONNECTED_WORLD);
+        outPacket.encodeInt(worldId);
+        return outPacket;
+    }
+
+    public enum LoginOpt {
+        INITIALIZE_SECONDARY_PASSWORD(0),
+        CHECK_SECONDARY_PASSWORD(1),
+        NO_SECONDARY_PASSWORD(2);
+
+        private final int value;
+
+        LoginOpt(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static final LoginOpt getLoginOpt(Account account) {
+            if (!ServerConfig.REQUIRE_SECONDARY_PASSWORD) {
+                return NO_SECONDARY_PASSWORD;
+            }
+
+            if (account.hasSecondaryPassword()) {
+                return CHECK_SECONDARY_PASSWORD;
+            } else {
+                return INITIALIZE_SECONDARY_PASSWORD;
+            }
+        }
     }
 }

@@ -48,6 +48,7 @@ public final class AvatarLook implements Encodable {
             outPacket.encodeByte(entry.getKey());
             outPacket.encodeInt(entry.getValue());
         }
+        outPacket.encodeByte(-1);
 
         // anUnseenEquip
         outPacket.encodeByte(-1);

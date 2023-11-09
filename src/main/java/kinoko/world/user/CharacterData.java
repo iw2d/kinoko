@@ -11,14 +11,12 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import lombok.Data;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
 public final class CharacterData implements Encodable {
     private final int accountId;
     private final int characterId;
@@ -50,7 +48,7 @@ public final class CharacterData implements Encodable {
         outPacket.encodeByte(false); // bool -> byte, int * FT, int * FT
 
         if (flag.hasFlag(DBChar.CHARACTER)) {
-            getCharacterStat().encode(outPacket);
+            getCharacterStat().encode(getCharacterId(), getCharacterName(), outPacket);
             outPacket.encodeByte(getFriendMax()); // nFriendMax
             outPacket.encodeByte(false); // sLinkedCharacter: bool -> str
         }
@@ -225,5 +223,69 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.VISITOR_QUEST_LOG)) {
             outPacket.encodeShort(0); // short * (short, short)
         }
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public int getCharacterId() {
+        return characterId;
+    }
+
+    public String getCharacterName() {
+        return characterName;
+    }
+
+    public void setCharacterName(String characterName) {
+        this.characterName = characterName;
+    }
+
+    public CharacterStat getCharacterStat() {
+        return characterStat;
+    }
+
+    public void setCharacterStat(CharacterStat characterStat) {
+        this.characterStat = characterStat;
+    }
+
+    public CharacterInventory getCharacterInventory() {
+        return characterInventory;
+    }
+
+    public void setCharacterInventory(CharacterInventory characterInventory) {
+        this.characterInventory = characterInventory;
+    }
+
+    public SkillManager getSkillManager() {
+        return skillManager;
+    }
+
+    public void setSkillManager(SkillManager skillManager) {
+        this.skillManager = skillManager;
+    }
+
+    public QuestManager getQuestManager() {
+        return questManager;
+    }
+
+    public void setQuestManager(QuestManager questManager) {
+        this.questManager = questManager;
+    }
+
+    public WildHunterInfo getWildHunterInfo() {
+        return wildHunterInfo;
+    }
+
+    public void setWildHunterInfo(WildHunterInfo wildHunterInfo) {
+        this.wildHunterInfo = wildHunterInfo;
+    }
+
+    public int getFriendMax() {
+        return friendMax;
+    }
+
+    public void setFriendMax(int friendMax) {
+        this.friendMax = friendMax;
     }
 }

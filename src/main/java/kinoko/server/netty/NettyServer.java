@@ -39,7 +39,7 @@ public abstract class NettyServer {
             public void initChannel(SocketChannel ch) {
                 ch.pipeline().addLast(new PacketDecoder(), new PacketHandler(), new PacketEncoder());
 
-                Client c = new Client(ch);
+                final Client c = new Client(ch);
                 c.setSendIv(getNewIv());
                 c.setRecvIv(getNewIv());
                 c.write(LoginPacket.connect(c));

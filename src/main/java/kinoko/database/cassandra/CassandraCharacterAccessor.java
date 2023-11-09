@@ -3,13 +3,9 @@ package kinoko.database.cassandra;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
-import com.datastax.oss.driver.api.core.data.UdtValue;
-import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
-import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
-import kinoko.database.cassandra.model.CharacterStatModel;
-import kinoko.database.cassandra.model.InventoryModel;
+import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.world.item.Inventory;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
@@ -22,32 +18,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
-import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.udt;
-import static kinoko.database.cassandra.model.CharacterDataModel.*;
+import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
 
 public class CassandraCharacterAccessor extends CassandraAccessor implements CharacterAccessor {
-    public static final String TABLE_NAME = "character";
 
     public CassandraCharacterAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
     }
 
     private CharacterData loadCharacterData(Row row) {
-        final int accountId = row.getInt(ACCOUNT_ID.getName());
-        final int characterId = row.getInt(CHARACTER_ID.getName());
+        final int accountId = row.getInt(CharacterTable.ACCOUNT_ID);
+        final int characterId = row.getInt(CharacterTable.CHARACTER_ID);
         final CharacterData cd = new CharacterData(accountId, characterId);
-        cd.setCharacterName(row.getString(CHARACTER_NAME.getName()));
-        cd.setCharacterStat(row.get(CHARACTER_STAT.getName(), CharacterStat.class));
+        cd.setCharacterName(row.getString(CharacterTable.CHARACTER_NAME));
+        cd.setCharacterStat(row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class));
 
         final CharacterInventory ci = new CharacterInventory();
-        ci.setEquipped(row.get(CHARACTER_EQUIPPED.getName(), Inventory.class));
-        ci.setEquipInventory(row.get(EQUIP_INVENTORY.getName(), Inventory.class));
-        ci.setConsumeInventory(row.get(CONSUME_INVENTORY.getName(), Inventory.class));
-        ci.setInstallInventory(row.get(INSTALL_INVENTORY.getName(), Inventory.class));
-        ci.setEtcInventory(row.get(ETC_INVENTORY.getName(), Inventory.class));
-        ci.setCashInventory(row.get(CASH_INVENTORY.getName(), Inventory.class));
-        ci.setMoney(row.getInt(MONEY.getName()));
+        ci.setEquipped(row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class));
+        ci.setEquipInventory(row.get(CharacterTable.EQUIP_INVENTORY, Inventory.class));
+        ci.setConsumeInventory(row.get(CharacterTable.CONSUME_INVENTORY, Inventory.class));
+        ci.setInstallInventory(row.get(CharacterTable.INSTALL_INVENTORY, Inventory.class));
+        ci.setEtcInventory(row.get(CharacterTable.ETC_INVENTORY, Inventory.class));
+        ci.setCashInventory(row.get(CharacterTable.CASH_INVENTORY, Inventory.class));
+        ci.setMoney(row.getInt(CharacterTable.MONEY));
 
         final SkillManager sm = new SkillManager();
         cd.setSkillManager(sm);
@@ -55,20 +48,44 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
         final QuestManager qm = new QuestManager();
         cd.setQuestManager(qm);
 
-        cd.setFriendMax(row.getInt(FRIEND_MAX.getName()));
+        cd.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
         return cd;
+    }
+
+    private String lowerName(String name) {
+        return name.toLowerCase();
     }
 
     @Override
     public Optional<Integer> nextCharacterId() {
-        return getNextId(TABLE_NAME);
+        return getNextId(CharacterTable.getTableName());
+    }
+
+    @Override
+    public boolean checkCharacterNameAvailable(String name) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), CharacterTable.getTableName()).all()
+                        .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            if (row.getInt(CharacterTable.ACCOUNT_ID) <= 0) {
+                // Deleted
+                continue;
+            }
+            final String existingName = row.getString(CharacterTable.CHARACTER_NAME);
+            if (existingName != null && existingName.equalsIgnoreCase(name)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public Optional<CharacterData> getCharacterById(int characterId) {
         final ResultSet selectResult = getSession().execute(
-                QueryBuilder.selectFrom(getKeyspace(), TABLE_NAME).all()
-                        .whereColumn(CHARACTER_ID.getName()).isEqualTo(literal(characterId))
+                selectFrom(getKeyspace(), CharacterTable.getTableName()).all()
+                        .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterId))
                         .build()
         );
         for (Row row : selectResult) {
@@ -78,10 +95,11 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
     }
 
     @Override
-    public Optional<CharacterData> getCharacterByName(String characterName) {
+    public Optional<CharacterData> getCharacterByName(String name) {
         final ResultSet selectResult = getSession().execute(
-                QueryBuilder.selectFrom(getKeyspace(), TABLE_NAME).all()
-                        .whereColumn(CHARACTER_NAME.getName()).isEqualTo(literal(characterName))
+                selectFrom(getKeyspace(), CharacterTable.getTableName()).all()
+                        .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
+                        .allowFiltering()
                         .build()
         );
         for (Row row : selectResult) {
@@ -94,57 +112,54 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
     public List<AvatarData> getAvatarDataByAccount(int accountId) {
         final List<AvatarData> avatarDataList = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
-                QueryBuilder.selectFrom(getKeyspace(), TABLE_NAME)
-                        .columns(CHARACTER_STAT.getName(), CHARACTER_EQUIPPED.getName())
-                        .whereColumn(ACCOUNT_ID.getName()).isEqualTo(literal(accountId))
+                selectFrom(getKeyspace(), CharacterTable.getTableName())
+                        .columns(
+                                CharacterTable.CHARACTER_ID,
+                                CharacterTable.CHARACTER_NAME,
+                                CharacterTable.CHARACTER_STAT,
+                                CharacterTable.CHARACTER_EQUIPPED
+                        )
+                        .whereColumn(CharacterTable.ACCOUNT_ID).isEqualTo(literal(accountId))
                         .build()
         );
         for (Row row : selectResult) {
-            final CharacterStat characterStat = row.get(CHARACTER_STAT.getName(), CharacterStat.class);
-            final Inventory equipped = row.get(CHARACTER_EQUIPPED.getName(), Inventory.class);
-            avatarDataList.add(new AvatarData(characterStat, equipped));
+            final int characterId = row.getInt(CharacterTable.CHARACTER_ID);
+            final String characterName = row.getString(CharacterTable.CHARACTER_NAME);
+            final CharacterStat characterStat = row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class);
+            final Inventory equipped = row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class);
+            avatarDataList.add(AvatarData.from(characterId, characterName, characterStat, equipped));
         }
         return avatarDataList;
     }
 
     @Override
+    public synchronized boolean newCharacter(CharacterData characterData) {
+        if (!checkCharacterNameAvailable(characterData.getCharacterName())) {
+            return false;
+        }
+        return saveCharacter(characterData);
+    }
+
+    @Override
     public boolean saveCharacter(CharacterData characterData) {
+        final CodecRegistry registry = getSession().getContext().getCodecRegistry();
         final ResultSet updateResult = getSession().execute(
-                QueryBuilder.update(getKeyspace(), TABLE_NAME)
-                        .setColumn(ACCOUNT_ID.getName(), literal(characterData.getAccountId()))
-                        .setColumn(CHARACTER_NAME.getName(), literal(characterData.getCharacterName()))
-                        .setColumn(CHARACTER_STAT.getName(), literal(characterData.getCharacterStat()))
-                        .setColumn(CHARACTER_EQUIPPED.getName(), literal(characterData.getCharacterInventory().getEquipped()))
-                        .setColumn(EQUIP_INVENTORY.getName(), literal(characterData.getCharacterInventory().getEquipInventory()))
-                        .setColumn(CONSUME_INVENTORY.getName(), literal(characterData.getCharacterInventory().getConsumeInventory()))
-                        .setColumn(INSTALL_INVENTORY.getName(), literal(characterData.getCharacterInventory().getInstallInventory()))
-                        .setColumn(CASH_INVENTORY.getName(), literal(characterData.getCharacterInventory().getEtcInventory()))
-                        .setColumn(ETC_INVENTORY.getName(), literal(characterData.getCharacterInventory().getCashInventory()))
-                        .setColumn(MONEY.getName(), literal(characterData.getCharacterInventory().getMoney()))
-                        .setColumn(FRIEND_MAX.getName(), literal(characterData.getFriendMax()))
-                        .whereColumn(CHARACTER_ID.getName()).isEqualTo(literal(characterData.getCharacterId()))
+                update(getKeyspace(), CharacterTable.getTableName())
+                        .setColumn(CharacterTable.ACCOUNT_ID, literal(characterData.getAccountId()))
+                        .setColumn(CharacterTable.CHARACTER_NAME, literal(characterData.getCharacterName()))
+                        .setColumn(CharacterTable.CHARACTER_NAME_INDEX, literal(lowerName(characterData.getCharacterName())))
+                        .setColumn(CharacterTable.CHARACTER_STAT, literal(characterData.getCharacterStat(), registry))
+                        .setColumn(CharacterTable.CHARACTER_EQUIPPED, literal(characterData.getCharacterInventory().getEquipped(), registry))
+                        .setColumn(CharacterTable.EQUIP_INVENTORY, literal(characterData.getCharacterInventory().getEquipInventory(), registry))
+                        .setColumn(CharacterTable.CONSUME_INVENTORY, literal(characterData.getCharacterInventory().getConsumeInventory(), registry))
+                        .setColumn(CharacterTable.INSTALL_INVENTORY, literal(characterData.getCharacterInventory().getInstallInventory(), registry))
+                        .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getCharacterInventory().getEtcInventory(), registry))
+                        .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getCharacterInventory().getCashInventory(), registry))
+                        .setColumn(CharacterTable.MONEY, literal(characterData.getCharacterInventory().getMoney()))
+                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
+                        .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
                         .build()
         );
         return updateResult.wasApplied();
-    }
-
-    public static void createTable(CqlSession session, String keyspace) {
-        session.execute(
-                SchemaBuilder.createTable(keyspace, TABLE_NAME)
-                        .ifNotExists()
-                        .withPartitionKey(CHARACTER_ID.getName(), DataTypes.INT)
-                        .withClusteringColumn(ACCOUNT_ID.getName(), DataTypes.INT)
-                        .withClusteringColumn(CHARACTER_NAME.getName(), DataTypes.TEXT)
-                        .withColumn(CHARACTER_STAT.getName(), udt(CharacterStatModel.TYPE_NAME, true))
-                        .withColumn(CHARACTER_EQUIPPED.getName(), udt(InventoryModel.TYPE_NAME, true))
-                        .withColumn(EQUIP_INVENTORY.getName(), udt(InventoryModel.TYPE_NAME, true))
-                        .withColumn(CONSUME_INVENTORY.getName(), udt(InventoryModel.TYPE_NAME, true))
-                        .withColumn(INSTALL_INVENTORY.getName(), udt(InventoryModel.TYPE_NAME, true))
-                        .withColumn(ETC_INVENTORY.getName(), udt(InventoryModel.TYPE_NAME, true))
-                        .withColumn(CASH_INVENTORY.getName(), udt(InventoryModel.TYPE_NAME, true))
-                        .withColumn(MONEY.getName(), DataTypes.INT)
-                        .withColumn(FRIEND_MAX.getName(), DataTypes.INT)
-                        .build()
-        );
     }
 }

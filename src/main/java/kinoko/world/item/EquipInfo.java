@@ -2,9 +2,7 @@ package kinoko.world.item;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
-import lombok.Data;
 
-@Data
 public final class EquipInfo {
     private short incStr;
     private short incDex;
@@ -83,5 +81,237 @@ public final class EquipInfo {
 
         outPacket.encodeFT(FileTime.ZERO_TIME); //ftEquipped
         outPacket.encodeInt(0); // nPrevBonusExpRate
+    }
+
+    public short getIncStr() {
+        return incStr;
+    }
+
+    public void setIncStr(short incStr) {
+        this.incStr = incStr;
+    }
+
+    public short getIncDex() {
+        return incDex;
+    }
+
+    public void setIncDex(short incDex) {
+        this.incDex = incDex;
+    }
+
+    public short getIncInt() {
+        return incInt;
+    }
+
+    public void setIncInt(short incInt) {
+        this.incInt = incInt;
+    }
+
+    public short getIncLuk() {
+        return incLuk;
+    }
+
+    public void setIncLuk(short incLuk) {
+        this.incLuk = incLuk;
+    }
+
+    public short getIncMaxHp() {
+        return incMaxHp;
+    }
+
+    public void setIncMaxHp(short incMaxHp) {
+        this.incMaxHp = incMaxHp;
+    }
+
+    public short getIncMaxMp() {
+        return incMaxMp;
+    }
+
+    public void setIncMaxMp(short incMaxMp) {
+        this.incMaxMp = incMaxMp;
+    }
+
+    public short getIncPad() {
+        return incPad;
+    }
+
+    public void setIncPad(short incPad) {
+        this.incPad = incPad;
+    }
+
+    public short getIncMad() {
+        return incMad;
+    }
+
+    public void setIncMad(short incMad) {
+        this.incMad = incMad;
+    }
+
+    public short getIncPdd() {
+        return incPdd;
+    }
+
+    public void setIncPdd(short incPdd) {
+        this.incPdd = incPdd;
+    }
+
+    public short getIncMdd() {
+        return incMdd;
+    }
+
+    public void setIncMdd(short incMdd) {
+        this.incMdd = incMdd;
+    }
+
+    public short getIncAcc() {
+        return incAcc;
+    }
+
+    public void setIncAcc(short incAcc) {
+        this.incAcc = incAcc;
+    }
+
+    public short getIncEva() {
+        return incEva;
+    }
+
+    public void setIncEva(short incEva) {
+        this.incEva = incEva;
+    }
+
+    public short getIncCraft() {
+        return incCraft;
+    }
+
+    public void setIncCraft(short incCraft) {
+        this.incCraft = incCraft;
+    }
+
+    public short getIncSpeed() {
+        return incSpeed;
+    }
+
+    public void setIncSpeed(short incSpeed) {
+        this.incSpeed = incSpeed;
+    }
+
+    public short getIncJump() {
+        return incJump;
+    }
+
+    public void setIncJump(short incJump) {
+        this.incJump = incJump;
+    }
+
+    public byte getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(byte ruc) {
+        this.ruc = ruc;
+    }
+
+    public byte getCuc() {
+        return cuc;
+    }
+
+    public void setCuc(byte cuc) {
+        this.cuc = cuc;
+    }
+
+    public int getIuc() {
+        return iuc;
+    }
+
+    public void setIuc(int iuc) {
+        this.iuc = iuc;
+    }
+
+    public byte getChuc() {
+        return chuc;
+    }
+
+    public void setChuc(byte chuc) {
+        this.chuc = chuc;
+    }
+
+    public byte getGrade() {
+        return grade;
+    }
+
+    public void setGrade(byte grade) {
+        this.grade = grade;
+    }
+
+    public short getOption1() {
+        return option1;
+    }
+
+    public void setOption1(short option1) {
+        this.option1 = option1;
+    }
+
+    public short getOption2() {
+        return option2;
+    }
+
+    public void setOption2(short option2) {
+        this.option2 = option2;
+    }
+
+    public short getOption3() {
+        return option3;
+    }
+
+    public void setOption3(short option3) {
+        this.option3 = option3;
+    }
+
+    public short getSocket1() {
+        return socket1;
+    }
+
+    public void setSocket1(short socket1) {
+        this.socket1 = socket1;
+    }
+
+    public short getSocket2() {
+        return socket2;
+    }
+
+    public void setSocket2(short socket2) {
+        this.socket2 = socket2;
+    }
+
+    public byte getLevelUpType() {
+        return levelUpType;
+    }
+
+    public void setLevelUpType(byte levelUpType) {
+        this.levelUpType = levelUpType;
+    }
+
+    public byte getLevel() {
+        return level;
+    }
+
+    public void setLevel(byte level) {
+        this.level = level;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public int getDurability() {
+        return durability;
+    }
+
+    public void setDurability(int durability) {
+        this.durability = durability;
     }
 }

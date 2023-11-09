@@ -3,40 +3,52 @@ package kinoko.database.cassandra;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
-import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
-import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.AccountAccessor;
+import kinoko.database.cassandra.table.AccountTable;
+import kinoko.server.ServerConfig;
 import kinoko.world.Account;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
-import static kinoko.database.cassandra.model.AccountModel.*;
 
 public final class CassandraAccountAccessor extends CassandraAccessor implements AccountAccessor {
-    public static final String TABLE_NAME = "account";
-
     public CassandraAccountAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
     }
 
     private Account loadAccount(Row row) {
-        final int accountId = row.getInt(ACCOUNT_ID.getName());
-        final String username = row.getString(USERNAME.getName());
+        final int accountId = row.getInt(AccountTable.ACCOUNT_ID);
+        final String username = row.getString(AccountTable.USERNAME);
+        final String secondaryPassword = row.getString(AccountTable.SECONDARY_PASSWORD);
+
         final Account account = new Account(accountId, username);
-        account.setNxCredit(row.getInt(NX_CREDIT.getName()));
-        account.setNxPrepaid(row.getInt(NX_PREPAID.getName()));
-        account.setMaplePoint(row.getInt(MAPLE_POINT.getName()));
+        account.setHasSecondaryPassword(secondaryPassword != null && !secondaryPassword.isEmpty());
+        account.setSlotCount(row.getInt(AccountTable.SLOT_COUNT));
+        account.setNxCredit(row.getInt(AccountTable.NX_CREDIT));
+        account.setNxPrepaid(row.getInt(AccountTable.NX_PREPAID));
+        account.setMaplePoint(row.getInt(AccountTable.MAPLE_POINT));
         return account;
+    }
+
+    private String lowerUsername(String username) {
+        return username.toLowerCase();
+    }
+
+    private String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    private boolean checkHashedPassword(String password, String hashedPassword) {
+        return BCrypt.checkpw(password, hashedPassword);
     }
 
     @Override
     public Optional<Account> getAccountByUsername(String username) {
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), TABLE_NAME).all()
-                        .whereColumn(USERNAME.getName()).isEqualTo(literal(username))
+                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                        .whereColumn(AccountTable.USERNAME).isEqualTo(literal(lowerUsername(username)))
                         .build()
         );
         for (Row row : selectResult) {
@@ -46,39 +58,69 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     }
 
     @Override
-    public Optional<Account> getAccountByPassword(String username, String password) {
+    public boolean checkPassword(Account account, String password, boolean secondary) {
+        final String columnName = secondary ? AccountTable.SECONDARY_PASSWORD : AccountTable.PASSWORD;
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), TABLE_NAME).all()
-                        .whereColumn(USERNAME.getName()).isEqualTo(literal(username))
+                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                        .column(columnName)
+                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
         );
         for (Row row : selectResult) {
-            final String hashedPassword = row.getString(PASSWORD.getName());
+            final String hashedPassword = row.getString(columnName);
             if (hashedPassword == null) {
                 continue;
             }
-            if (BCrypt.checkpw(password, hashedPassword)) {
-                return Optional.of(loadAccount(row));
+            if (checkHashedPassword(password, hashedPassword)) {
+                return true;
             }
         }
-        return Optional.empty();
+        return false;
     }
 
     @Override
-    public boolean newAccount(String username, String password) {
-        final Optional<Integer> accountId = getNextId(TABLE_NAME);
+    public boolean savePassword(Account account, String oldPassword, String newPassword, boolean secondary) {
+        final String columnName = secondary ? AccountTable.SECONDARY_PASSWORD : AccountTable.PASSWORD;
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                        .column(columnName)
+                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            final String hashedOldPassword = row.getString(columnName);
+            if (hashedOldPassword == null || checkHashedPassword(oldPassword, hashedOldPassword)) {
+                final ResultSet updateResult = getSession().execute(
+                        update(getKeyspace(), AccountTable.getTableName())
+                                .setColumn(columnName, literal(hashPassword(newPassword)))
+                                .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
+                                .build()
+                );
+                return updateResult.wasApplied();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public synchronized boolean newAccount(String username, String password) {
+        final Optional<Integer> accountId = getNextId(AccountTable.getTableName());
         if (accountId.isEmpty()) {
             return false;
         }
-        final String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        if (getAccountByUsername(username).isPresent()) {
+            return false;
+        }
         final ResultSet insertResult = getSession().execute(
-                insertInto(getKeyspace(), TABLE_NAME)
-                        .value(USERNAME.getName(), literal(username))
-                        .value(ACCOUNT_ID.getName(), literal(accountId.get()))
-                        .value(PASSWORD.getName(), literal(hashedPassword))
-                        .value(NX_CREDIT.getName(), literal(0))
-                        .value(NX_PREPAID.getName(), literal(0))
-                        .value(MAPLE_POINT.getName(), literal(0))
+                insertInto(getKeyspace(), AccountTable.getTableName())
+                        .value(AccountTable.ACCOUNT_ID, literal(accountId.get()))
+                        .value(AccountTable.USERNAME, literal(lowerUsername(username)))
+                        .value(AccountTable.PASSWORD, literal(hashPassword(password)))
+                        .value(AccountTable.SLOT_COUNT, literal(ServerConfig.CHARACTER_BASE_SLOTS))
+                        .value(AccountTable.NX_CREDIT, literal(0))
+                        .value(AccountTable.NX_PREPAID, literal(0))
+                        .value(AccountTable.MAPLE_POINT, literal(0))
+                        .ifNotExists()
                         .build()
         );
         return insertResult.wasApplied();
@@ -87,27 +129,14 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     @Override
     public boolean saveAccount(Account account) {
         final ResultSet updateResult = getSession().execute(
-                QueryBuilder.update(getKeyspace(), TABLE_NAME)
-                        .setColumn(NX_CREDIT.getName(), literal(account.getNxCredit()))
-                        .setColumn(NX_PREPAID.getName(), literal(account.getNxPrepaid()))
-                        .setColumn(MAPLE_POINT.getName(), literal(account.getMaplePoint()))
-                        .whereColumn(USERNAME.getName()).isEqualTo(literal(account.getUsername()))
+                update(getKeyspace(), AccountTable.getTableName())
+                        .setColumn(AccountTable.SLOT_COUNT, literal(account.getSlotCount()))
+                        .setColumn(AccountTable.NX_CREDIT, literal(account.getNxCredit()))
+                        .setColumn(AccountTable.NX_PREPAID, literal(account.getNxPrepaid()))
+                        .setColumn(AccountTable.MAPLE_POINT, literal(account.getMaplePoint()))
+                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
         );
         return updateResult.wasApplied();
-    }
-
-    public static void createTable(CqlSession session, String keyspace) {
-        session.execute(
-                SchemaBuilder.createTable(keyspace, TABLE_NAME)
-                        .ifNotExists()
-                        .withPartitionKey(USERNAME.getName(), DataTypes.TEXT)
-                        .withClusteringColumn(ACCOUNT_ID.getName(), DataTypes.INT)
-                        .withColumn(PASSWORD.getName(), DataTypes.TEXT)
-                        .withColumn(NX_CREDIT.getName(), DataTypes.INT)
-                        .withColumn(NX_PREPAID.getName(), DataTypes.INT)
-                        .withColumn(MAPLE_POINT.getName(), DataTypes.INT)
-                        .build()
-        );
     }
 }

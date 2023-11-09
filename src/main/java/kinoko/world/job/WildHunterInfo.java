@@ -2,11 +2,9 @@ package kinoko.world.job;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
-import lombok.Data;
 
 import java.util.List;
 
-@Data
 public final class WildHunterInfo implements Encodable {
     private int ridingType;
     private List<Integer> capturedMobs;
@@ -21,5 +19,21 @@ public final class WildHunterInfo implements Encodable {
                 outPacket.encodeInt(0);
             }
         }
+    }
+
+    public int getRidingType() {
+        return ridingType;
+    }
+
+    public void setRidingType(int ridingType) {
+        this.ridingType = ridingType;
+    }
+
+    public List<Integer> getCapturedMobs() {
+        return capturedMobs;
+    }
+
+    public void setCapturedMobs(List<Integer> capturedMobs) {
+        this.capturedMobs = capturedMobs;
     }
 }
