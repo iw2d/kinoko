@@ -4,9 +4,6 @@ import io.netty.channel.Channel;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.netty.NettyClient;
 import kinoko.world.Account;
-import kinoko.world.user.AvatarData;
-
-import java.util.List;
 
 public final class Client extends NettyClient {
     private Account account;

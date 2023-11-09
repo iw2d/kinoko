@@ -28,21 +28,7 @@ public final class WzReader implements AutoCloseable {
         this.crypto = crypto;
     }
 
-    public static WzReader build(String path, WzReaderConfig config) throws FileNotFoundException {
-        return build(new File(path), config);
-    }
-
-    public static WzReader build(File file, WzReaderConfig config) throws FileNotFoundException {
-        return build(file, config, config.buildEncryptor());
-    }
-
-    public static WzReader build(File file, WzReaderConfig config, WzCrypto crypto) throws FileNotFoundException {
-        final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-        final FileChannel fileChannel = randomAccessFile.getChannel();
-        return new WzReader(randomAccessFile, fileChannel, config, crypto);
-    }
-
-    private static int computeVersionHash(int version) {
+    private int computeVersionHash(int version) {
         int versionHash = 0;
         for (final byte c : String.valueOf(version).getBytes()) {
             versionHash = (versionHash * 32) + c + 1;
@@ -50,7 +36,7 @@ public final class WzReader implements AutoCloseable {
         return versionHash;
     }
 
-    private static int readCompressedInt(ByteBuffer buffer) {
+    private int readCompressedInt(ByteBuffer buffer) {
         final byte value = buffer.get();
         if (value == Byte.MIN_VALUE) {
             return buffer.getInt();
@@ -59,7 +45,7 @@ public final class WzReader implements AutoCloseable {
         }
     }
 
-    private static int readOffset(WzPackage parent, ByteBuffer buffer) {
+    private int readOffset(WzPackage parent, ByteBuffer buffer) {
         final int start = parent.getStart();
         final int hash = parent.getHash();
         int result = buffer.position();
@@ -340,5 +326,19 @@ public final class WzReader implements AutoCloseable {
     public void close() throws IOException {
         file.close();
         channel.close();
+    }
+
+    public static WzReader build(String path, WzReaderConfig config) throws FileNotFoundException {
+        return build(new File(path), config);
+    }
+
+    public static WzReader build(File file, WzReaderConfig config) throws FileNotFoundException {
+        return build(file, config, config.buildEncryptor());
+    }
+
+    public static WzReader build(File file, WzReaderConfig config, WzCrypto crypto) throws FileNotFoundException {
+        final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+        final FileChannel fileChannel = randomAccessFile.getChannel();
+        return new WzReader(randomAccessFile, fileChannel, config, crypto);
     }
 }

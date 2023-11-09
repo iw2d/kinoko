@@ -6,8 +6,6 @@ import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.type.CharacterStatUDT;
 import kinoko.database.cassandra.type.InventoryUDT;
 
-import java.util.Map;
-
 public final class CharacterTable {
     public static final String CHARACTER_ID = "character_id";
     public static final String ACCOUNT_ID = "account_id";

@@ -21,37 +21,6 @@ public final class WzCrypto {
         this.cipherMask = new byte[]{};
     }
 
-    public static WzCrypto fromIv(byte[] iv) {
-        // Empty IV
-        if (Arrays.equals(iv, WzConstants.WZ_EMPTY_IV)) {
-            return new WzCrypto(null);
-        }
-
-        // Initialize key
-        final byte[] trimmedKey = new byte[32];
-        for (int i = 0; i < 128; i += 16) {
-            trimmedKey[i / 4] = WzConstants.AES_USER_KEY[i];
-        }
-        SecretKey key = new SecretKeySpec(trimmedKey, "AES");
-
-        // Initialize IV
-        final byte[] expandedIv = new byte[16];
-        for (int i = 0; i < expandedIv.length; i += iv.length) {
-            System.arraycopy(iv, 0, expandedIv, i, iv.length);
-        }
-        IvParameterSpec ivParam = new IvParameterSpec(expandedIv);
-
-        // Create cipher and return WzCrypto object
-        try {
-            final Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-            cipher.init(Cipher.ENCRYPT_MODE, key, ivParam);
-            return new WzCrypto(cipher);
-        } catch (InvalidAlgorithmParameterException | NoSuchPaddingException |
-                 NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void cryptAscii(byte[] data) {
         ensureSize(data.length);
         byte mask = (byte) 0xAA;
@@ -92,5 +61,36 @@ public final class WzCrypto {
         }
 
         this.cipherMask = newMask;
+    }
+
+    public static WzCrypto fromIv(byte[] iv) {
+        // Empty IV
+        if (Arrays.equals(iv, WzConstants.WZ_EMPTY_IV)) {
+            return new WzCrypto(null);
+        }
+
+        // Initialize key
+        final byte[] trimmedKey = new byte[32];
+        for (int i = 0; i < 128; i += 16) {
+            trimmedKey[i / 4] = WzConstants.AES_USER_KEY[i];
+        }
+        SecretKey key = new SecretKeySpec(trimmedKey, "AES");
+
+        // Initialize IV
+        final byte[] expandedIv = new byte[16];
+        for (int i = 0; i < expandedIv.length; i += iv.length) {
+            System.arraycopy(iv, 0, expandedIv, i, iv.length);
+        }
+        IvParameterSpec ivParam = new IvParameterSpec(expandedIv);
+
+        // Create cipher and return WzCrypto object
+        try {
+            final Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivParam);
+            return new WzCrypto(cipher);
+        } catch (InvalidAlgorithmParameterException | NoSuchPaddingException |
+                 NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -4,8 +4,6 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 
-import java.util.Map;
-
 public final class AccountTable {
     public static final String ACCOUNT_ID = "account_id";
     public static final String USERNAME = "username";

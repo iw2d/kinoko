@@ -14,13 +14,14 @@ import java.util.Map;
 import java.util.Set;
 
 public final class EtcProvider {
-    private static final Set<String> forbiddenName = new HashSet<>();
+    private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
 
     public static void initialize() {
         final File wzFile = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz").toFile();
         try (final WzReader reader = WzReader.build(wzFile, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
+            loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -28,11 +29,23 @@ public final class EtcProvider {
     }
 
     public static boolean isForbiddenName(String name) {
-        return forbiddenName.contains(name.toLowerCase());
+        return forbiddenNames.contains(name.toLowerCase());
     }
 
     public static boolean isValidStartingItem(int index, int id) {
         return makeCharInfo.getOrDefault(index, Set.of()).contains(id);
+    }
+
+    private static void loadForbiddenNames(WzPackage source) throws ProviderError {
+        final WzImage nameImage = source.getDirectory().getImages().get("ForbiddenName.img");
+        if (nameImage == null) {
+            throw new ProviderError("Could not resolve Etc.wz/ForbiddenName.img");
+        }
+        for (var entry : nameImage.getProperty().getItems().entrySet()) {
+            if (entry.getValue() instanceof String name) {
+                forbiddenNames.add(name);
+            }
+        }
     }
 
     private static void loadMakeCharInfo(WzPackage source) throws ProviderError {

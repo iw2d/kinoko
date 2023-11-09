@@ -19,7 +19,10 @@ import kinoko.world.World;
 import kinoko.world.item.Inventory;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
-import kinoko.world.user.*;
+import kinoko.world.user.CharacterData;
+import kinoko.world.user.CharacterInventory;
+import kinoko.world.user.CharacterStat;
+import kinoko.world.user.ExtendSP;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -269,7 +272,7 @@ public final class LoginHandler {
     @Handler(InHeader.EXCEPTION_LOG)
     public static void handleExceptionLog(Client c, InPacket inPacket) {
         final String data = inPacket.decodeString();
-        log.error("Exception log | {}", data);
+        log.error("Exception log : {}", data);
     }
 
     @Handler(InHeader.CLIENT_ERROR)

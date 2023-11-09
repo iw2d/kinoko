@@ -10,6 +10,7 @@ public final class InventoryUDT {
 
 
     private static final String TYPE_NAME = "inventory_type";
+
     public static String getTypeName() {
         return TYPE_NAME;
     }
