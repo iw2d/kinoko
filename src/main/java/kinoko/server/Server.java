@@ -26,6 +26,10 @@ public enum Server {
     private LoginServer loginServer;
     private List<World> worlds;
 
+    public LoginServer getLoginServer() {
+        return loginServer;
+    }
+
     public List<World> getWorlds() {
         return worlds;
     }

@@ -7,6 +7,7 @@ import kinoko.world.Account;
 
 public final class Client extends NettyClient {
     private Account account;
+    private byte[] machineId;
 
     public Client(Channel channel) {
         super(channel);
@@ -18,6 +19,14 @@ public final class Client extends NettyClient {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public byte[] getMachineId() {
+        return machineId;
+    }
+
+    public void setMachineId(byte[] machineId) {
+        this.machineId = machineId;
     }
 
     public void sendPing() {

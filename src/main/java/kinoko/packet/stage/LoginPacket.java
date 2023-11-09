@@ -109,7 +109,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectWorldResult(Account account) {
+    public static OutPacket selectWorldResultSuccess(Account account) {
         OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
         outPacket.encodeByte(LoginResult.SUCCESS.getValue());
 
@@ -126,10 +126,37 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket checkDuplicatedIdResult(String name, int resultType) {
+    public static OutPacket selectWorldResultFail(LoginResult failType) {
+        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
+        outPacket.encodeByte(failType.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket selectCharacterResultSuccess(int characterId) {
+        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
+        outPacket.encodeByte(LoginResult.SUCCESS.getValue());
+        outPacket.encodeByte(0);
+
+        // TODO - create MigrationHandler
+        outPacket.encodeArray(new byte[]{ 127, 0, 0, 1 }); // sin_addr
+        outPacket.encodeShort(8585); // uPort
+        outPacket.encodeInt(characterId);
+        outPacket.encodeByte(0); // bAuthenCode
+        outPacket.encodeInt(0); // ulPremiumArgument
+        return outPacket;
+    }
+
+    public static OutPacket selectCharacterResultFail(LoginResult resultType, int errorType) {
+        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
+        outPacket.encodeByte(resultType.getValue());
+        outPacket.encodeByte(errorType);
+        return outPacket;
+    }
+
+    public static OutPacket checkDuplicatedIdResult(String name, int idResultType) {
         OutPacket outPacket = OutPacket.of(OutHeader.CHECK_DUPLICATED_ID_RESULT);
         outPacket.encodeString(name);
-        outPacket.encodeByte(resultType);
+        outPacket.encodeByte(idResultType);
         // 0: Success
         // 1: This name is currently being used.
         // 2: You cannot use this name.
@@ -150,9 +177,22 @@ public final class LoginPacket {
         return outPacket;
     }
 
+    public static OutPacket deleteCharacterResult(LoginResult resultType, int characterId) {
+        OutPacket outPacket = OutPacket.of(OutHeader.DELETE_CHARACTER_RESULT);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeByte(resultType.getValue());
+        return outPacket;
+    }
+
     public static OutPacket latestConnectedWorld(int worldId) {
         OutPacket outPacket = OutPacket.of(OutHeader.LATEST_CONNECTED_WORLD);
         outPacket.encodeInt(worldId);
+        return outPacket;
+    }
+
+    public static OutPacket checkSecondaryPasswordResult() {
+        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_SPW_RESULT);
+        outPacket.encodeByte(-1); // ignored
         return outPacket;
     }
 

@@ -23,6 +23,14 @@ public final class AvatarData implements Encodable {
         AvatarLook.from(characterStat, equipped).encode(outPacket);
     }
 
+    public int getCharacterId() {
+        return characterId;
+    }
+
+    public String getCharacterName() {
+        return characterName;
+    }
+
     public static AvatarData from(int characterId, String characterName, CharacterStat characterStat, Inventory equipped) {
         return new AvatarData(characterId, characterName, characterStat, equipped);
     }

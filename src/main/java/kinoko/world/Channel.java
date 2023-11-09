@@ -1,18 +1,12 @@
 package kinoko.world;
 
 import kinoko.server.netty.ChannelServer;
-import kinoko.world.user.User;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class Channel {
     private final int worldId;
     private final int channelId;
     private final int channelPort;
     private final String channelName;
-
-    private final Map<Integer, User> users = new ConcurrentHashMap<>();
     private ChannelServer channelServer;
 
     public Channel(int worldId, int channelId, int channelPort, String channelName) {
@@ -38,12 +32,9 @@ public final class Channel {
         return channelName;
     }
 
-    public void addUser(User user) {
-        users.put(user.getId(), user);
-    }
-
     public int getUserNo() {
-        return users.size();
+        // TODO
+        return 0;
     }
 
     public ChannelServer getChannelServer() {

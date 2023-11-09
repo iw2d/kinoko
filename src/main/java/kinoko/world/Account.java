@@ -7,13 +7,14 @@ import java.util.List;
 public final class Account {
     private final int id;
     private final String username;
-    private boolean hasSecondaryPassword;
     private int slotCount;
     private int nxCredit;
     private int nxPrepaid;
     private int maplePoint;
 
-    // Transient
+    // TRANSIENT
+    private boolean hasSecondaryPassword;
+    private Channel selectedChannel;
     private List<AvatarData> characterList;
 
     public Account(int id, String username) {
@@ -27,14 +28,6 @@ public final class Account {
 
     public String getUsername() {
         return username;
-    }
-
-    public boolean hasSecondaryPassword() {
-        return hasSecondaryPassword;
-    }
-
-    public void setHasSecondaryPassword(boolean hasSecondaryPassword) {
-        this.hasSecondaryPassword = hasSecondaryPassword;
     }
 
     public int getSlotCount() {
@@ -69,11 +62,34 @@ public final class Account {
         this.maplePoint = maplePoint;
     }
 
+    // TRANSIENT -------------------------------------------------------------------------------------------------------
+
+    public boolean hasSecondaryPassword() {
+        return hasSecondaryPassword;
+    }
+
+    public void setHasSecondaryPassword(boolean hasSecondaryPassword) {
+        this.hasSecondaryPassword = hasSecondaryPassword;
+    }
+
+    public Channel getSelectedChannel() {
+        return selectedChannel;
+    }
+
+    public void setSelectedChannel(Channel selectedChannel) {
+        this.selectedChannel = selectedChannel;
+    }
+
     public List<AvatarData> getCharacterList() {
         return characterList;
     }
 
     public void setCharacterList(List<AvatarData> characterList) {
         this.characterList = characterList;
+    }
+
+    public boolean canSelectCharacter(int characterId) {
+        return getCharacterList() != null &&
+                getCharacterList().stream().anyMatch(avatarData -> avatarData.getCharacterId() == characterId);
     }
 }

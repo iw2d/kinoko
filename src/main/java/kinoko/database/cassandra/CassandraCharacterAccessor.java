@@ -162,4 +162,16 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
         );
         return updateResult.wasApplied();
     }
+
+    @Override
+    public boolean deleteCharacter(int accountId, int characterId) {
+        final ResultSet updateResult = getSession().execute(
+                update(getKeyspace(), CharacterTable.getTableName())
+                        .setColumn(CharacterTable.ACCOUNT_ID, literal(-accountId))
+                        .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterId))
+                        .ifColumn(CharacterTable.ACCOUNT_ID).isEqualTo(literal(accountId))
+                        .build()
+        );
+        return updateResult.wasApplied();
+    }
 }

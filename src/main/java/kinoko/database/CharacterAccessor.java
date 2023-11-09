@@ -20,4 +20,6 @@ public interface CharacterAccessor {
     boolean newCharacter(CharacterData characterData);
 
     boolean saveCharacter(CharacterData characterData);
+
+    boolean deleteCharacter(int accountId, int characterId);
 }

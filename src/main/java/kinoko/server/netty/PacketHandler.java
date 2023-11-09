@@ -4,9 +4,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.handler.Dispatch;
 import kinoko.server.Client;
+import kinoko.server.Server;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
+import kinoko.world.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,10 +41,17 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.debug("[ChannelHandler] | Channel inactive.");
-        NettyClient c = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (c != null) {
+            final Account account = c.getAccount();
+            if (account != null) {
+                Server.getInstance().getLoginServer().removeAccount(account);
+                c.setAccount(null);
+            }
+            c.setMachineId(null);
             c.close();
         }
+        ctx.channel().close();
     }
 
     @Override
