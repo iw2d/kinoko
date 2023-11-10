@@ -1,5 +1,6 @@
 package kinoko.world.item;
 
+import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 
@@ -78,5 +79,13 @@ public final class PetData {
 
     public void setRemainLife(int remainLife) {
         this.remainLife = remainLife;
+    }
+
+    public static PetData from(ItemInfo itemInfo) {
+        final PetData petData = new PetData();
+        petData.setPetName(String.valueOf(itemInfo.itemId())); // TODO: StringProvider
+        petData.setLevel((byte) 1);
+        petData.setFullness((byte) 100);
+        return petData;
     }
 }

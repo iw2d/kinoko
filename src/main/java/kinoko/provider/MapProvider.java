@@ -4,27 +4,30 @@ import io.fury.Fury;
 import io.fury.ThreadLocalFury;
 import io.fury.ThreadSafeFury;
 import io.fury.config.Language;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.*;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.provider.wz.property.WzProperty;
+import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public final class MapProvider {
-    private static final String MAP_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "map").toString();
+    private static final Logger log = LogManager.getLogger(Server.class);
+    private static final Path MAP_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "map");
     private static final ThreadSafeFury FURY = new ThreadLocalFury(classLoader -> {
         Fury f = Fury.builder().withLanguage(Language.JAVA)
-                .withClassLoader(classLoader).build();
+                .withClassLoader(classLoader)
+                .build();
         f.register(MapInfo.class);
         f.register(Foothold.class);
         f.register(LifeType.class);
@@ -36,18 +39,17 @@ public final class MapProvider {
     });
 
     public static void initialize(boolean reset) {
-        final Path mapDataDirectory = Path.of(MAP_DIRECTORY);
-        if (!Files.isDirectory(mapDataDirectory) || reset) {
+        if (!Files.isDirectory(MAP_DIRECTORY) || reset) {
             try {
-                if (Files.isDirectory(mapDataDirectory)) {
-                    try (final Stream<Path> walk = Files.walk(mapDataDirectory)) {
+                if (Files.isDirectory(MAP_DIRECTORY)) {
+                    try (final Stream<Path> walk = Files.walk(MAP_DIRECTORY)) {
                         walk.sorted(Comparator.reverseOrder())
                                 .map(Path::toFile)
                                 .forEach(File::delete);
                     }
                 }
-                Files.deleteIfExists(mapDataDirectory);
-                Files.createDirectories(mapDataDirectory);
+                Files.deleteIfExists(MAP_DIRECTORY);
+                Files.createDirectories(MAP_DIRECTORY);
                 final File wzFile = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz").toFile();
                 try (final WzReader reader = WzReader.build(wzFile, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
                     final WzPackage wzPackage = reader.readPackage();
@@ -61,17 +63,18 @@ public final class MapProvider {
         }
     }
 
-    public static MapInfo getMapInfo(int mapId) {
+    public static Optional<MapInfo> getMapInfo(int mapId) {
         try {
             final byte[] data = Files.readAllBytes(getPath(mapId));
-            return FURY.deserializeJavaObject(data, MapInfo.class);
+            return Optional.of(FURY.deserializeJavaObject(data, MapInfo.class));
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            log.error(e);
         }
+        return Optional.empty();
     }
 
     private static Path getPath(int mapId) {
-        return Path.of(MAP_DIRECTORY, String.format("%d.dat", mapId));
+        return Path.of(MAP_DIRECTORY.toString(), String.format("%d.dat", mapId));
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError, IOException {

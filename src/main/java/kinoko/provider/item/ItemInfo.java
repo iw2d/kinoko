@@ -7,6 +7,14 @@ import java.util.*;
 
 public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecType, Object> spec) {
 
+    public int getInfo(ItemInfoType infoType) {
+        return (int) info.getOrDefault(infoType, 0);
+    }
+
+    public boolean isCash() {
+        return getInfo(ItemInfoType.CASH) != 0;
+    }
+
     public static ItemInfo from(int itemId, WzListProperty itemProp) throws ProviderError {
         final Map<ItemInfoType, Object> info = new EnumMap<>(ItemInfoType.class);
         final Map<ItemSpecType, Object> spec = new EnumMap<>(ItemSpecType.class);

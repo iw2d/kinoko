@@ -30,7 +30,7 @@ public final class LoginServer extends NettyServer {
     }
 
     public boolean isAuthenticated(Client c, Account account) {
-        final var tuple = connectedAccounts.get(account.getId());
+        final Tuple<Client, Account> tuple = connectedAccounts.get(account.getId());
         if (tuple == null) {
             return false;
         }

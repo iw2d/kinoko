@@ -22,6 +22,7 @@ public final class CharacterTable {
     public static final String SKILL_RECORDS = "skill_records";
     public static final String SKILL_COOLTIMES = "skill_cooltimes";
     public static final String QUEST_RECORDS = "quest_records";
+    public static final String ITEM_SN_COUNTER = "item_sn_counter";
     public static final String FRIEND_MAX = "friend_max";
 
 
@@ -47,6 +48,7 @@ public final class CharacterTable {
                         .withColumn(ETC_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(CASH_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(MONEY, DataTypes.INT)
+                        .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
                         .withColumn(FRIEND_MAX, DataTypes.INT)
                         .build()
         );

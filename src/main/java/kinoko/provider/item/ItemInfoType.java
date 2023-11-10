@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ItemInfoType {
+    CASH,
     PRICE,
     UNIT_PRICE,
     SLOT_MAX,

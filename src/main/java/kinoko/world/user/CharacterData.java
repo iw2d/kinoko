@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CharacterData implements Encodable {
     private final int accountId;
@@ -26,6 +27,7 @@ public final class CharacterData implements Encodable {
     private SkillManager skillManager;
     private QuestManager questManager;
     private WildHunterInfo wildHunterInfo;
+    private AtomicInteger itemSnCounter;
     private int friendMax;
 
     public CharacterData(int accountId, int characterId) {
@@ -281,11 +283,25 @@ public final class CharacterData implements Encodable {
         this.wildHunterInfo = wildHunterInfo;
     }
 
+    public AtomicInteger getItemSnCounter() {
+        return itemSnCounter;
+    }
+
+    public void setItemSnCounter(AtomicInteger itemSnCounter) {
+        this.itemSnCounter = itemSnCounter;
+    }
+
     public int getFriendMax() {
         return friendMax;
     }
 
     public void setFriendMax(int friendMax) {
         this.friendMax = friendMax;
+    }
+
+    // UTILITY ---------------------------------------------------------------------------------------------------------
+
+    public long nextItemSn() {
+        return ((long) getItemSnCounter().getAndIncrement()) | (((long) getCharacterId()) << 32);
     }
 }

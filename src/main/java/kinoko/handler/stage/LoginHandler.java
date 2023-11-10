@@ -17,16 +17,16 @@ import kinoko.world.Channel;
 import kinoko.world.GameConstants;
 import kinoko.world.World;
 import kinoko.world.item.Inventory;
+import kinoko.world.item.Item;
+import kinoko.world.item.ItemConstants;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
-import kinoko.world.user.CharacterData;
-import kinoko.world.user.CharacterInventory;
-import kinoko.world.user.CharacterStat;
-import kinoko.world.user.ExtendSP;
+import kinoko.world.user.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class LoginHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
@@ -37,9 +37,9 @@ public final class LoginHandler {
         final String password = inPacket.decodeString();
         final byte[] machineId = inPacket.decodeArray(16);
         final int gameRoomClient = inPacket.decodeInt();
-        final int gameStartMode = inPacket.decodeByte();
-        final int worldId = inPacket.decodeByte();
-        final int channelId = inPacket.decodeByte();
+        final byte gameStartMode = inPacket.decodeByte();
+        final byte worldId = inPacket.decodeByte();
+        final byte channelId = inPacket.decodeByte();
         final byte[] address = inPacket.decodeArray(4);
 
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
@@ -76,8 +76,13 @@ public final class LoginHandler {
         c.write(LoginPacket.latestConnectedWorld(ServerConfig.WORLD_ID));
     }
 
+    @Handler(InHeader.VIEW_ALL_CHAR)
+    public static void handleViewAllChar(Client c, InPacket inPacket) {
+        c.write(LoginPacket.viewAllCharResult());
+    }
+
     @Handler(InHeader.CHECK_USER_LIMIT)
-    public static void handlerCheckUserLimit(Client c, InPacket inPacket) {
+    public static void handleCheckUserLimit(Client c, InPacket inPacket) {
         final int worldId = inPacket.decodeShort();
         c.write(LoginPacket.checkUserLimitResult());
     }
@@ -223,6 +228,25 @@ public final class LoginHandler {
         characterInventory.setMoney(0);
         characterData.setCharacterInventory(characterInventory);
 
+        characterData.setItemSnCounter(new AtomicInteger(1));
+
+        // Add Starting Equips
+        for (int i = 4; i < selectedAL.length; i++) {
+            final int itemId = selectedAL[i];
+            if (itemId == 0) {
+                continue;
+            }
+            final BodyPart bodyPart = BodyPart.getBySelectedAL(i);
+            if (!ItemConstants.isCorrectBodyPart(itemId, bodyPart, gender)) {
+                continue;
+            }
+            final Optional<Item> startingEquip = Item.createById(characterData.nextItemSn(), itemId);
+            if (startingEquip.isEmpty()) {
+                continue;
+            }
+            characterInventory.getEquipped().getItems().put(bodyPart.getValue(), startingEquip.get());
+        }
+
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {
             c.write(LoginPacket.createNewCharacterResultSuccess(characterData));
@@ -238,7 +262,8 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         final Account account = c.getAccount();
-        if (account == null || !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
+        if (account == null || account.getSelectedChannel() == null ||
+                !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
                 ServerConfig.REQUIRE_SECONDARY_PASSWORD || !account.canSelectCharacter(characterId)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
@@ -281,13 +306,11 @@ public final class LoginHandler {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
 
         final Account account = c.getAccount();
-        if (account == null || !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
-                !account.canSelectCharacter(characterId) || account.hasSecondaryPassword()) {
+        if (account == null || account.getSelectedChannel() == null ||
+                !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
+                !account.canSelectCharacter(characterId) || account.hasSecondaryPassword() ||
+                !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
-            return;
-        }
-        if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
-            c.write(LoginPacket.checkSecondaryPasswordResult());
             return;
         }
         c.write(LoginPacket.selectCharacterResultSuccess(characterId));
@@ -301,7 +324,8 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         final Account account = c.getAccount();
-        if (account == null || !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
+        if (account == null || account.getSelectedChannel() == null ||
+                !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
                 !account.canSelectCharacter(characterId) || !account.hasSecondaryPassword()) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;

@@ -1,8 +1,13 @@
 package kinoko.world.item;
 
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Encodable;
+import kinoko.world.user.User;
+
+import java.util.Optional;
 
 public final class Item implements Encodable {
     private final ItemType itemType;
@@ -120,5 +125,25 @@ public final class Item implements Encodable {
 
     public void setPetData(PetData petData) {
         this.petData = petData;
+    }
+
+    public static Optional<Item> createById(long itemSn, int itemId) {
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final ItemInfo ii = itemInfoResult.get();
+        final ItemType type = ItemType.getById(itemId);
+        final Item item = new Item(type);
+        item.setItemSn(itemSn);
+        item.setItemId(itemId);
+        item.setCash(ii.isCash());
+        item.setQuantity((short) 1);
+        if (type == ItemType.EQUIP) {
+            item.setEquipData(EquipData.from(ii));
+        } else if (type == ItemType.PET) {
+            item.setPetData(PetData.from(ii));
+        }
+        return Optional.of(item);
     }
 }

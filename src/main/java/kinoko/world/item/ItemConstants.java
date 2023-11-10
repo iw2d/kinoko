@@ -3,6 +3,10 @@ package kinoko.world.item;
 import kinoko.world.user.BodyPart;
 
 public final class ItemConstants {
+    public static int getItemPrefix(int itemId) {
+        return itemId / 10000;
+    }
+
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {
             return 2;
@@ -20,12 +24,37 @@ public final class ItemConstants {
         }
     }
 
+    public static boolean isEquip(int itemId) {
+        return itemId / 1000000 == 1;
+    }
+
+    public static boolean isConsume(int itemId) {
+        return itemId / 1000000 == 2;
+    }
+
+    public static boolean isInstall(int itemId) {
+        return itemId / 1000000 == 3;
+    }
+
+    public static boolean isEtc(int itemId) {
+        return itemId / 1000000 == 4;
+    }
+
+    public static boolean isWeapon(int itemId) {
+        final int prefix = itemId / 100000;
+        return prefix == 13 || prefix == 14 || prefix == 16 || prefix == 17;
+    }
+
+    public static boolean isPet(int itemId) {
+        return getItemPrefix(itemId) == 500;
+    }
+
     public static boolean isCorrectBodyPart(int itemId, BodyPart bodyPart, int gender) {
         final int genderFromId = getGenderFromId(itemId);
         if (gender != 2 && genderFromId != 2 && genderFromId != gender) {
             return false;
         }
-        switch (itemId / 10000) {
+        switch (getItemPrefix(itemId)) {
             case 100 -> {
                 return bodyPart == BodyPart.CAP;
             }
@@ -175,8 +204,7 @@ public final class ItemConstants {
                 return bodyPart == BodyPart.DRAGON_TAIL;
             }
             default -> {
-                final int prefix = itemId / 100000;
-                if (prefix != 13 && prefix != 14 && prefix != 16 && prefix != 17) {
+                if (!isWeapon(itemId)) {
                     return false;
                 }
                 return bodyPart == BodyPart.WEAPON;

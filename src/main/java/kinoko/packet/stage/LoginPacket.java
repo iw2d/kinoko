@@ -72,6 +72,14 @@ public final class LoginPacket {
         return outPacket;
     }
 
+    public static OutPacket viewAllCharResult() {
+        OutPacket outPacket = OutPacket.of(OutHeader.VIEW_ALL_CHAR_RESULT);
+        outPacket.encodeByte(6);
+        outPacket.encodeByte(true);
+        outPacket.encodeString("This feature is disabled");
+        return outPacket;
+    }
+
     public static OutPacket worldInformation(World world) {
         OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
         outPacket.encodeByte(world.getId()); // nWorldID

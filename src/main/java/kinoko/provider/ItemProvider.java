@@ -7,11 +7,13 @@ import io.fury.config.Language;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemSpecType;
-import kinoko.provider.map.MapInfo;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,15 +21,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public final class ItemProvider {
+    private static final Logger log = LogManager.getLogger(Server.class);
     private static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
     private static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
-    private static final String ITEM_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "item").toString();
+    private static final Path ITEM_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "item");
     private static final ThreadSafeFury FURY = new ThreadLocalFury(classLoader -> {
         Fury f = Fury.builder().withLanguage(Language.JAVA)
-                .withClassLoader(classLoader).build();
+                .withClassLoader(classLoader)
+                .build();
         f.register(ItemInfo.class);
         f.register(ItemInfoType.class);
         f.register(ItemSpecType.class);
@@ -35,18 +40,17 @@ public final class ItemProvider {
     });
 
     public static void initialize(boolean reset) {
-        final Path itemDataDirectory = Path.of(ITEM_DIRECTORY);
-        if (!Files.isDirectory(itemDataDirectory) || reset) {
+        if (!Files.isDirectory(ITEM_DIRECTORY) || reset) {
             try {
-                if (Files.isDirectory(itemDataDirectory)) {
-                    try (final Stream<Path> walk = Files.walk(itemDataDirectory)) {
+                if (Files.isDirectory(ITEM_DIRECTORY)) {
+                    try (final Stream<Path> walk = Files.walk(ITEM_DIRECTORY)) {
                         walk.sorted(Comparator.reverseOrder())
                                 .map(Path::toFile)
                                 .forEach(File::delete);
                     }
                 }
-                Files.deleteIfExists(itemDataDirectory);
-                Files.createDirectories(itemDataDirectory);
+                Files.deleteIfExists(ITEM_DIRECTORY);
+                Files.createDirectories(ITEM_DIRECTORY);
                 final File characterFile = Path.of(ServerConfig.WZ_DIRECTORY, "Character.wz").toFile();
                 try (final WzReader reader = WzReader.build(characterFile, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
                     final WzPackage wzPackage = reader.readPackage();
@@ -68,17 +72,18 @@ public final class ItemProvider {
         }
     }
 
-    public static ItemInfo getItemInfo(int itemId) {
+    public static Optional<ItemInfo> getItemInfo(int itemId) {
         try {
             final byte[] data = Files.readAllBytes(getPath(itemId));
-            return FURY.deserializeJavaObject(data, ItemInfo.class);
+            return Optional.of(FURY.deserializeJavaObject(data, ItemInfo.class));
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            log.error(e);
         }
+        return Optional.empty();
     }
 
     private static Path getPath(int itemId) {
-        return Path.of(ITEM_DIRECTORY, String.format("%d.dat", itemId));
+        return Path.of(ITEM_DIRECTORY.toString(), String.format("%d.dat", itemId));
     }
 
     private static void loadEquipInfos(WzPackage source) throws ProviderError, IOException {

@@ -1,6 +1,7 @@
 package kinoko.world.user;
 
 import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryType;
 
 public final class CharacterInventory {
     private Inventory equipped;
@@ -65,5 +66,31 @@ public final class CharacterInventory {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+
+    public Inventory getInventoryByItemId(int itemId) {
+        return getInventoryByType(InventoryType.getByItemId(itemId));
+    }
+
+    public Inventory getInventoryByType(InventoryType inventoryType) {
+        switch (inventoryType) {
+            case EQUIP -> {
+                return getEquipInventory();
+            }
+            case CONSUME -> {
+                return getConsumeInventory();
+            }
+            case INSTALL -> {
+                return getInstallInventory();
+            }
+            case ETC -> {
+                return getEtcInventory();
+            }
+            case CASH -> {
+                return getCashInventory();
+            }
+        }
+        return null;
     }
 }

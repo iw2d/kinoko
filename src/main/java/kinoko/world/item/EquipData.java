@@ -1,5 +1,7 @@
 package kinoko.world.item;
 
+import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemInfoType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 
@@ -313,5 +315,65 @@ public final class EquipData {
 
     public void setDurability(int durability) {
         this.durability = durability;
+    }
+
+    public static EquipData from(ItemInfo itemInfo) {
+        final EquipData equipData = new EquipData();
+        for (ItemInfoType infoType : itemInfo.info().keySet()) {
+            switch (infoType) {
+                case INC_STR -> {
+                    equipData.setIncStr((short) itemInfo.getInfo(infoType));
+                }
+                case INC_DEX -> {
+                    equipData.setIncDex((short) itemInfo.getInfo(infoType));
+                }
+                case INC_INT -> {
+                    equipData.setIncInt((short) itemInfo.getInfo(infoType));
+                }
+                case INC_LUK -> {
+                    equipData.setIncLuk((short) itemInfo.getInfo(infoType));
+                }
+                case INC_MHP, INC_MAX_HP -> {
+                    equipData.setIncMaxHp((short) itemInfo.getInfo(infoType));
+                }
+                case INC_MMP, INC_MAX_MP -> {
+                    equipData.setIncMaxMp((short) itemInfo.getInfo(infoType));
+                }
+                case INC_PAD -> {
+                    equipData.setIncPad((short) itemInfo.getInfo(infoType));
+                }
+                case INC_MAD -> {
+                    equipData.setIncMad((short) itemInfo.getInfo(infoType));
+                }
+                case INC_PDD -> {
+                    equipData.setIncPdd((short) itemInfo.getInfo(infoType));
+                }
+                case INC_MDD -> {
+                    equipData.setIncMdd((short) itemInfo.getInfo(infoType));
+                }
+                case INC_ACC -> {
+                    equipData.setIncAcc((short) itemInfo.getInfo(infoType));
+                }
+                case INC_EVA -> {
+                    equipData.setIncEva((short) itemInfo.getInfo(infoType));
+                }
+                case INC_CRAFT -> {
+                    equipData.setIncCraft((short) itemInfo.getInfo(infoType));
+                }
+                case INC_SPEED -> {
+                    equipData.setIncSpeed((short) itemInfo.getInfo(infoType));
+                }
+                case INC_JUMP -> {
+                    equipData.setIncJump((short) itemInfo.getInfo(infoType));
+                }
+                case TUC -> {
+                    equipData.setRuc((byte) itemInfo.getInfo(infoType));
+                }
+                case DURABILITY -> {
+                    equipData.setDurability((int) itemInfo.getInfo(infoType));
+                }
+            }
+        }
+        return equipData;
     }
 }

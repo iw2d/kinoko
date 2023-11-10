@@ -90,7 +90,6 @@ public enum Server {
                 channel.getChannelServer().stop().join();
             }
         }
-        log.info("Shutting down DatabaseManager");
         DatabaseManager.shutdown();
     }
 

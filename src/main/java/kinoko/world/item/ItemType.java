@@ -23,4 +23,13 @@ public enum ItemType {
         }
         return null;
     }
+
+    public static ItemType getById(int itemId) {
+        if (ItemConstants.isEquip(itemId)) {
+            return EQUIP;
+        } else if (ItemConstants.isPet(itemId)) {
+            return PET;
+        }
+        return BUNDLE;
+    }
 }
