@@ -253,7 +253,7 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
-                    !Server.getInstance().getLoginServer().isAuthenticated(c, account)) {
+                !Server.getInstance().getLoginServer().isAuthenticated(c, account)) {
             c.write(LoginPacket.deleteCharacterResult(LoginResult.UNKNOWN, characterId));
             return;
         }

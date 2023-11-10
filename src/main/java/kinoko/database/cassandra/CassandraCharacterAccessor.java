@@ -69,10 +69,6 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
                         .build()
         );
         for (Row row : selectResult) {
-            if (row.getInt(CharacterTable.ACCOUNT_ID) <= 0) {
-                // Deleted
-                continue;
-            }
             final String existingName = row.getString(CharacterTable.CHARACTER_NAME);
             if (existingName != null && existingName.equalsIgnoreCase(name)) {
                 return false;
@@ -99,7 +95,6 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), CharacterTable.getTableName()).all()
                         .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
-                        .allowFiltering()
                         .build()
         );
         for (Row row : selectResult) {
@@ -153,8 +148,8 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
                         .setColumn(CharacterTable.EQUIP_INVENTORY, literal(characterData.getCharacterInventory().getEquipInventory(), registry))
                         .setColumn(CharacterTable.CONSUME_INVENTORY, literal(characterData.getCharacterInventory().getConsumeInventory(), registry))
                         .setColumn(CharacterTable.INSTALL_INVENTORY, literal(characterData.getCharacterInventory().getInstallInventory(), registry))
-                        .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getCharacterInventory().getEtcInventory(), registry))
-                        .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getCharacterInventory().getCashInventory(), registry))
+                        .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getCharacterInventory().getEtcInventory(), registry))
+                        .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getCharacterInventory().getCashInventory(), registry))
                         .setColumn(CharacterTable.MONEY, literal(characterData.getCharacterInventory().getMoney()))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
@@ -166,8 +161,7 @@ public class CassandraCharacterAccessor extends CassandraAccessor implements Cha
     @Override
     public boolean deleteCharacter(int accountId, int characterId) {
         final ResultSet updateResult = getSession().execute(
-                update(getKeyspace(), CharacterTable.getTableName())
-                        .setColumn(CharacterTable.ACCOUNT_ID, literal(-accountId))
+                deleteFrom(getKeyspace(), CharacterTable.getTableName())
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterId))
                         .ifColumn(CharacterTable.ACCOUNT_ID).isEqualTo(literal(accountId))
                         .build()
