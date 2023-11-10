@@ -6,6 +6,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import java.util.*;
 
 public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecType, Object> spec) {
+
     public static ItemInfo from(int itemId, WzListProperty itemProp) throws ProviderError {
         final Map<ItemInfoType, Object> info = new EnumMap<>(ItemInfoType.class);
         final Map<ItemSpecType, Object> spec = new EnumMap<>(ItemSpecType.class);
@@ -18,7 +19,7 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
                     }
                     for (var infoEntry : infoProp.getItems().entrySet()) {
                         final ItemInfoType type = ItemInfoType.fromName(infoEntry.getKey());
-                        if (type == null) {
+                        if (type == null || type == ItemInfoType.LEVEL) {
                             // System.out.printf("Unhandled info %s in item %d%n", entry.getKey(), itemId);
                             continue;
                         }
@@ -31,7 +32,7 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
                     }
                     for (var specEntry : specProp.getItems().entrySet()) {
                         final ItemSpecType type = ItemSpecType.fromName(specEntry.getKey());
-                        if (type == null) {
+                        if (type == null || type == ItemSpecType.MORPH_RANDOM || type == ItemSpecType.CON || type == ItemSpecType.MOB) {
                             // System.out.printf("Unhandled spec %s in item %d%n", entry.getKey(), itemId);
                             continue;
                         }

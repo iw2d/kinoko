@@ -10,6 +10,7 @@ public final class ServerConfig {
     public static final boolean AUTO_CREATE_ACCOUNT = true;
     public static final boolean REQUIRE_SECONDARY_PASSWORD = true;
     public static final String WZ_DIRECTORY = "wz";
+    public static final String DAT_DIRECTORY = "dat";
 
     public static final int CHARACTER_BASE_SLOTS = 3;
     public static final int INVENTORY_BASE_SLOTS = 24;

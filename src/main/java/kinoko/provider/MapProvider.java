@@ -1,5 +1,9 @@
 package kinoko.provider;
 
+import io.fury.Fury;
+import io.fury.ThreadLocalFury;
+import io.fury.ThreadSafeFury;
+import io.fury.config.Language;
 import kinoko.provider.map.*;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
@@ -7,32 +11,70 @@ import kinoko.provider.wz.property.WzProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public final class MapProvider {
-    private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
+    private static final String MAP_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "map").toString();
+    private static final ThreadSafeFury FURY = new ThreadLocalFury(classLoader -> {
+        Fury f = Fury.builder().withLanguage(Language.JAVA)
+                .withClassLoader(classLoader).build();
+        f.register(MapInfo.class);
+        f.register(Foothold.class);
+        f.register(LifeType.class);
+        f.register(LifeInfo.class);
+        f.register(PortalType.class);
+        f.register(PortalInfo.class);
+        f.register(ReactorInfo.class);
+        return f;
+    });
 
-    public static void initialize() {
-        final File wzFile = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz").toFile();
-        try (final WzReader reader = WzReader.build(wzFile, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadMapInfos(wzPackage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public static void initialize(boolean reset) {
+        final Path mapDataDirectory = Path.of(MAP_DIRECTORY);
+        if (!Files.isDirectory(mapDataDirectory) || reset) {
+            try {
+                if (Files.isDirectory(mapDataDirectory)) {
+                    try (final Stream<Path> walk = Files.walk(mapDataDirectory)) {
+                        walk.sorted(Comparator.reverseOrder())
+                                .map(Path::toFile)
+                                .forEach(File::delete);
+                    }
+                }
+                Files.deleteIfExists(mapDataDirectory);
+                Files.createDirectories(mapDataDirectory);
+                final File wzFile = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz").toFile();
+                try (final WzReader reader = WzReader.build(wzFile, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+                    final WzPackage wzPackage = reader.readPackage();
+                    loadMapInfos(wzPackage);
+                } catch (ProviderError e) {
+                    throw new IllegalArgumentException(e);
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
     }
 
-    public static MapInfo getMapInfo(int id) {
-        return mapInfos.get(id);
+    public static MapInfo getMapInfo(int mapId) {
+        try {
+            final byte[] data = Files.readAllBytes(getPath(mapId));
+            return FURY.deserializeJavaObject(data, MapInfo.class);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    private static void loadMapInfos(WzPackage source) throws ProviderError {
+    private static Path getPath(int mapId) {
+        return Path.of(MAP_DIRECTORY, String.format("%d.dat", mapId));
+    }
+
+    private static void loadMapInfos(WzPackage source) throws ProviderError, IOException {
         final WzDirectory mapDirectory = source.getDirectory().getDirectories().get("Map");
         if (mapDirectory == null) {
             throw new ProviderError("Could not resolve Map.wz/Map");
@@ -46,7 +88,9 @@ public final class MapProvider {
                 final String imageName = mapEntry.getKey();
                 final int mapId = Integer.parseInt(imageName.replace(".img", ""));
                 final MapInfo mapInfo = resolveMapInfo(mapId, mapEntry.getValue());
-                mapInfos.put(mapId, mapInfo);
+
+                final byte[] data = FURY.serializeJavaObject(mapInfo);
+                Files.write(getPath(mapId), data);
             }
         }
     }

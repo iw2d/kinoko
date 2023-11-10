@@ -38,9 +38,10 @@ public enum Server {
     public void start() {
         // Load Providers
         Instant start = Instant.now();
-        ItemProvider.initialize();
-        MapProvider.initialize();
+        ItemProvider.initialize(false);
+        MapProvider.initialize(false);
         EtcProvider.initialize();
+        System.gc();
         log.info("Loaded providers in {} milliseconds.", Duration.between(start, Instant.now()).toMillis());
 
         // Load Database
