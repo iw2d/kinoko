@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
 
-public class CassandraCharacterAccessor extends CassandraAccessor implements CharacterAccessor {
+public final class CassandraCharacterAccessor extends CassandraAccessor implements CharacterAccessor {
 
     public CassandraCharacterAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);

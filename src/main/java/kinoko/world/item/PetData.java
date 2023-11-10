@@ -3,7 +3,7 @@ package kinoko.world.item;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 
-public final class PetInfo {
+public final class PetData {
     private String petName;
     private byte level;
     private byte fullness;

@@ -3,7 +3,7 @@ package kinoko.world.item;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 
-public final class EquipInfo {
+public final class EquipData {
     private short incStr;
     private short incDex;
     private short incInt;

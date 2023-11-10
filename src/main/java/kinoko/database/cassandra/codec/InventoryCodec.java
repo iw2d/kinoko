@@ -34,9 +34,11 @@ public final class InventoryCodec extends MappingCodec<UdtValue, Inventory> {
         final Inventory inventory = new Inventory(size);
 
         final Map<Integer, Item> items = value.getMap(InventoryUDT.ITEMS, Integer.class, Item.class);
-        items.forEach((bagIndex, item) -> {
-            inventory.getItems().put(bagIndex, item);
-        });
+        if (items != null) {
+            for (var entry : items.entrySet()) {
+                inventory.getItems().put(entry.getKey(), entry.getValue());
+            }
+        }
 
         return inventory;
     }

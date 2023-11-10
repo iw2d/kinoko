@@ -4,7 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 
-public final class PetInfoUDT {
+public final class PetDataUDT {
     public static final String PET_NAME = "pet_name";
     public static final String LEVEL = "level";
     public static final String FULLNESS = "fullness";
@@ -23,13 +23,13 @@ public final class PetInfoUDT {
         session.execute(
                 SchemaBuilder.createType(keyspace, getTypeName())
                         .ifNotExists()
-                        .withField(PetInfoUDT.PET_NAME, DataTypes.TEXT)
-                        .withField(PetInfoUDT.LEVEL, DataTypes.TINYINT)
-                        .withField(PetInfoUDT.FULLNESS, DataTypes.TINYINT)
-                        .withField(PetInfoUDT.TAMENESS, DataTypes.SMALLINT)
-                        .withField(PetInfoUDT.PET_SKILL, DataTypes.SMALLINT)
-                        .withField(PetInfoUDT.PET_ATTRIBUTE, DataTypes.SMALLINT)
-                        .withField(PetInfoUDT.REMAIN_LIFE, DataTypes.INT)
+                        .withField(PetDataUDT.PET_NAME, DataTypes.TEXT)
+                        .withField(PetDataUDT.LEVEL, DataTypes.TINYINT)
+                        .withField(PetDataUDT.FULLNESS, DataTypes.TINYINT)
+                        .withField(PetDataUDT.TAMENESS, DataTypes.SMALLINT)
+                        .withField(PetDataUDT.PET_SKILL, DataTypes.SMALLINT)
+                        .withField(PetDataUDT.PET_ATTRIBUTE, DataTypes.SMALLINT)
+                        .withField(PetDataUDT.REMAIN_LIFE, DataTypes.INT)
                         .build()
         );
     }

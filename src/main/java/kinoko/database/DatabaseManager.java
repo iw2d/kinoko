@@ -17,10 +17,10 @@ import kinoko.database.cassandra.table.AccountTable;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.database.cassandra.type.*;
-import kinoko.world.item.EquipInfo;
+import kinoko.world.item.EquipData;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
-import kinoko.world.item.PetInfo;
+import kinoko.world.item.PetData;
 import kinoko.world.user.CharacterStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,8 +78,8 @@ public final class DatabaseManager {
         createKeyspace(cqlSession, DATABASE_KEYSPACE);
 
         // Create UDTs
-        EquipInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        PetInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        EquipDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        PetDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
@@ -90,8 +90,8 @@ public final class DatabaseManager {
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
         // Register Codecs
-        registerCodec(cqlSession, EquipInfoUDT.getTypeName(), (ic) -> new EquipInfoCodec(ic, GenericType.of(EquipInfo.class)));
-        registerCodec(cqlSession, PetInfoUDT.getTypeName(), (ic) -> new PetInfoCodec(ic, GenericType.of(PetInfo.class)));
+        registerCodec(cqlSession, EquipDataUDT.getTypeName(), (ic) -> new EquipDataCodec(ic, GenericType.of(EquipData.class)));
+        registerCodec(cqlSession, PetDataUDT.getTypeName(), (ic) -> new PetDataCodec(ic, GenericType.of(PetData.class)));
         registerCodec(cqlSession, ItemUDT.getTypeName(), (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
         registerCodec(cqlSession, InventoryUDT.getTypeName(), (ic) -> new InventoryCodec(ic, GenericType.of(Inventory.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));

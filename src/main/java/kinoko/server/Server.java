@@ -3,6 +3,7 @@ package kinoko.server;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Dispatch;
 import kinoko.provider.EtcProvider;
+import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.netty.ChannelServer;
@@ -37,6 +38,7 @@ public enum Server {
     public void start() {
         // Load Providers
         Instant start = Instant.now();
+        ItemProvider.initialize();
         MapProvider.initialize();
         EtcProvider.initialize();
         log.info("Loaded providers in {} milliseconds.", Duration.between(start, Instant.now()).toMillis());

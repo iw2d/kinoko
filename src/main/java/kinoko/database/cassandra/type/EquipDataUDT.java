@@ -4,7 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 
-public final class EquipInfoUDT {
+public final class EquipDataUDT {
     public static final String INC_STR = "inc_str";
     public static final String INC_DEX = "inc_dex";
     public static final String INC_INT = "inc_int";

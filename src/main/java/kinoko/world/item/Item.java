@@ -4,7 +4,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Encodable;
 
-public class Item implements Encodable {
+public final class Item implements Encodable {
     private final ItemType itemType;
     private long itemSn;
     private int itemId;
@@ -12,8 +12,8 @@ public class Item implements Encodable {
     private short quantity;
     private short attribute;
     private String title;
-    private EquipInfo equipInfo;
-    private PetInfo petInfo;
+    private EquipData equipData;
+    private PetData petData;
 
     public Item(ItemType itemType) {
         this.itemType = itemType;
@@ -34,11 +34,11 @@ public class Item implements Encodable {
         switch (getItemType()) {
             case EQUIP -> {
                 // GW_ItemSlotEquip::RawDecode
-                equipInfo.encode(this, outPacket);
+                equipData.encode(this, outPacket);
             }
             case PET -> {
                 // GW_ItemSlotPet::RawDecode
-                petInfo.encode(this, outPacket);
+                petData.encode(this, outPacket);
             }
             default -> {
                 // GW_ItemSlotBundle::RawDecode
@@ -106,19 +106,19 @@ public class Item implements Encodable {
         this.title = title;
     }
 
-    public EquipInfo getEquipInfo() {
-        return equipInfo;
+    public EquipData getEquipData() {
+        return equipData;
     }
 
-    public void setEquipInfo(EquipInfo equipInfo) {
-        this.equipInfo = equipInfo;
+    public void setEquipData(EquipData equipData) {
+        this.equipData = equipData;
     }
 
-    public PetInfo getPetInfo() {
-        return petInfo;
+    public PetData getPetData() {
+        return petData;
     }
 
-    public void setPetInfo(PetInfo petInfo) {
-        this.petInfo = petInfo;
+    public void setPetData(PetData petData) {
+        this.petData = petData;
     }
 }

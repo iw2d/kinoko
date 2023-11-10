@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class WzReaderTest {
+public final class WzReaderTest {
 
     private void readWzFile(String fileName, byte[] iv, int version) {
         File file = Path.of("src", "test", "resources", "wz", fileName).toFile();

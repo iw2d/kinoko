@@ -34,8 +34,8 @@ public final class ItemUDT {
                         .withField(QUANTITY, DataTypes.SMALLINT)
                         .withField(ATTRIBUTE, DataTypes.SMALLINT)
                         .withField(TITLE, DataTypes.TEXT)
-                        .withField(EQUIP_INFO, udt(EquipInfoUDT.getTypeName(), true))
-                        .withField(PET_INFO, udt(PetInfoUDT.getTypeName(), true))
+                        .withField(EQUIP_INFO, udt(EquipDataUDT.getTypeName(), true))
+                        .withField(PET_INFO, udt(PetDataUDT.getTypeName(), true))
                         .build()
         );
     }
