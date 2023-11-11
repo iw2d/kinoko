@@ -2,26 +2,35 @@ package kinoko.world;
 
 import kinoko.server.netty.ChannelServer;
 
+import java.net.InetAddress;
+
 public final class Channel {
-    private final int worldId;
-    private final int channelId;
+    private final byte worldId;
+    private final byte channelId;
+    private final byte[] channelAddress;
     private final int channelPort;
     private final String channelName;
+
     private ChannelServer channelServer;
 
-    public Channel(int worldId, int channelId, int channelPort, String channelName) {
+    public Channel(byte worldId, byte channelId, byte[] channelAddress, int channelPort, String channelName) {
         this.worldId = worldId;
         this.channelId = channelId;
+        this.channelAddress = channelAddress;
         this.channelPort = channelPort;
         this.channelName = channelName;
     }
 
-    public int getWorldId() {
+    public byte getWorldId() {
         return worldId;
     }
 
-    public int getChannelId() {
+    public byte getChannelId() {
         return channelId;
+    }
+
+    public byte[] getChannelAddress() {
+        return channelAddress;
     }
 
     public int getChannelPort() {
@@ -43,5 +52,10 @@ public final class Channel {
 
     public void setChannelServer(ChannelServer channelServer) {
         this.channelServer = channelServer;
+    }
+
+    public boolean isConnected(Account account) {
+        // TODO
+        return false;
     }
 }

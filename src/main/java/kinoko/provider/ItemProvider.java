@@ -77,7 +77,7 @@ public final class ItemProvider {
             final byte[] data = Files.readAllBytes(getPath(itemId));
             return Optional.of(FURY.deserializeJavaObject(data, ItemInfo.class));
         } catch (IOException e) {
-            log.error(e);
+            log.error("Exception caught while loading ItemInfo", e);
         }
         return Optional.empty();
     }

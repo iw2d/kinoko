@@ -20,10 +20,10 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
-        Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        short op = inPacket.decodeShort();
-        InHeader header = InHeader.getByValue(op);
-        Method handler = Dispatch.getHandler(header);
+        final Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        final short op = inPacket.decodeShort();
+        final InHeader header = InHeader.getByValue(op);
+        final Method handler = Dispatch.getHandler(header);
         if (header == null) {
             log.warn("[PacketHandler] Unknown opcode {} | {}", Util.opToString(op), inPacket);
         } else if (handler == null) {
@@ -33,29 +33,27 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
             try {
                 handler.invoke(this, c, inPacket);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                log.error("Exception caught while handling packet", e);
             }
         }
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.debug("[ChannelHandler] | Channel inactive.");
-        Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        log.debug("[PacketHandler] | Channel inactive");
+        final Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (c != null) {
             final Account account = c.getAccount();
             if (account != null) {
-                Server.getInstance().getLoginServer().removeAccount(account);
-                c.setAccount(null);
+                Server.loginServer().removeAccount(account);
             }
-            c.setMachineId(null);
             c.close();
         }
-        ctx.channel().close();
+        ctx.fireChannelInactive();
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        log.error(cause);
     }
 }

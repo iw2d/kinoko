@@ -8,59 +8,214 @@ import kinoko.provider.MapProvider;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.netty.ChannelServer;
 import kinoko.server.netty.LoginServer;
+import kinoko.world.Account;
 import kinoko.world.Channel;
 import kinoko.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetAddress;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public enum Server {
-    INSTANCE;
-
+public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
-    private LoginServer loginServer;
-    private List<World> worlds;
+    private static final Lock migrationLock = new ReentrantLock();
+    private static final List<MigrationRequest> migrations = new ArrayList<>();
+    private static List<World> worlds;
+    private static LoginServer loginServer;
 
-    public LoginServer getLoginServer() {
-        return loginServer;
-    }
-
-    public List<World> getWorlds() {
+    public static List<World> getWorlds() {
         return worlds;
     }
 
-    public void start() {
+    public static Optional<World> getWorldById(int worldId) {
+        return getWorlds().stream()
+                .filter(w -> w.getId() == worldId)
+                .findFirst();
+    }
+
+    public static Optional<Channel> getChannelById(int worldId, int channelId) {
+        final Optional<World> worldResult = Server.getWorldById(worldId);
+        if (worldResult.isEmpty()) {
+            return Optional.empty();
+        }
+        return worldResult.get().getChannels().stream()
+                .filter(ch -> ch.getWorldId() == worldId && ch.getChannelId() == channelId)
+                .findFirst();
+    }
+
+    public static LoginServer loginServer() {
+        return loginServer;
+    }
+
+    /**
+     * Check whether an {@link Account} instance is associated with a client. In order to prevent multiple clients
+     * logging into the same account, this should return true if: - {@link Account} is authenticated on the
+     * {@link LoginServer}, or - {@link MigrationRequest} exists for the account, or - {@link Account} is connected to a
+     * {@link ChannelServer} instance.
+     *
+     * @param account {@link Account} instance to check.
+     * @return true if {@link Account} is currently associated with a client.
+     */
+    public static boolean isConnected(Account account) {
+        if (loginServer.isConnected(account)) {
+            return true;
+        }
+        migrationLock.lock();
+        try {
+            final Instant now = Instant.now();
+            final var iter = migrations.iterator();
+            while (iter.hasNext()) {
+                final MigrationRequest mr = iter.next();
+                // Check expiry
+                if (now.isAfter(mr.expireTime())) {
+                    iter.remove();
+                    continue;
+                }
+                if (mr.accountId() == account.getId()) {
+                    return true;
+                }
+            }
+        } finally {
+            migrationLock.unlock();
+        }
+        for (World world : getWorlds()) {
+            for (Channel channel : world.getChannels()) {
+                if (channel.isConnected(account)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Start migration process, an empty result is returned if migration cannot be performed due to incorrect
+     * initialization () or due to existing migrations.
+     *
+     * Migrations are stored in an arraylist, and its synchronization is done with a simple lock. Could upgrade to a
+     * more efficient implementation, e.g. using Caffeine to handle concurrent access and expiry.
+     *
+     * @param c           {@link Client} instance attempting to start migration.
+     * @param characterId The target character for migration.
+     * @return Empty result is returned if migration cannot be performed, result with {@link MigrationRequest} if
+     * migration was successfully queued.
+     */
+    public static Optional<MigrationRequest> startMigration(Client c, int characterId) {
+        // Account not initialized
+        if (c == null || c.getAccount() == null) {
+            return Optional.empty();
+        }
+        // Account not authenticated
+        final Account account = c.getAccount();
+        if (!account.canSelectCharacter(characterId) || !loginServer.isAuthenticated(c, account)) {
+            return Optional.empty();
+        }
+        // World and Channel not selected
+        final Optional<Channel> channelResult = getChannelById(account.getWorldId(), account.getChannelId());
+        if (channelResult.isEmpty()) {
+            return Optional.empty();
+        }
+        // Create Migration Request
+        final MigrationRequest migrationRequest = new MigrationRequest(
+                account.getId(), characterId, c.getMachineId(), c.getRemoteAddress(), channelResult.get(),
+                Instant.now().plusMillis(ServerConfig.MIGRATION_EXPIRY)
+        );
+        // Check for possible existing Migration Requests for the client / account / character
+        migrationLock.lock();
+        try {
+            final Instant now = Instant.now();
+            final var iter = migrations.iterator();
+            while (iter.hasNext()) {
+                final MigrationRequest mr = iter.next();
+                // Check expiry
+                if (now.isAfter(mr.expireTime())) {
+                    iter.remove();
+                    continue;
+                }
+                if (mr.looseMatch(migrationRequest)) {
+                    return Optional.empty();
+                }
+            }
+            migrations.add(migrationRequest);
+            return Optional.of(migrationRequest);
+        } finally {
+            migrationLock.unlock();
+        }
+    }
+
+    /**
+     * Check whether a client migration is valid. There should be a {@link MigrationRequest} that matches the requested
+     * character ID, the client's machine ID and remote address. This method also handles expiry of migration requests,
+     * see {@link Server#startMigration} for more efficient implementation.
+     *
+     * @param c           {@link Client} instance attempting to migrate to channel server.
+     * @param characterId Target character ID attempting to migrate to channel server.
+     * @return {@link MigrationRequest} instance that matches the request.
+     */
+    public static Optional<MigrationRequest> handleMigration(Client c, int characterId) {
+        migrationLock.lock();
+        try {
+            final Instant now = Instant.now();
+            final var iter = migrations.iterator();
+            while (iter.hasNext()) {
+                final MigrationRequest mr = iter.next();
+                // Check expiry
+                if (now.isAfter(mr.expireTime())) {
+                    iter.remove();
+                    continue;
+                }
+                // Migration Request must match the client and character ID
+                if (mr.strictMatch(c, characterId)) {
+                    iter.remove();
+                    return Optional.of(mr);
+                }
+            }
+        } finally {
+            migrationLock.unlock();
+        }
+        return Optional.empty();
+    }
+
+    public static void main(String[] args) {
+        Server.start();
+    }
+
+    private static void start() {
         // Load Providers
         Instant start = Instant.now();
         ItemProvider.initialize(false);
         MapProvider.initialize(false);
         EtcProvider.initialize();
         System.gc();
-        log.info("Loaded providers in {} milliseconds.", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Load Database
         start = Instant.now();
         DatabaseManager.initialize();
-        log.info("Loaded database connection in {} milliseconds.", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Load World
         start = Instant.now();
         MapleCrypto.initialize();
         Dispatch.registerHandlers();
-        loginServer = new LoginServer(ServerConstants.LOGIN_PORT);
+        loginServer = new LoginServer();
         loginServer.start().join();
         log.info("Login server listening on port {}", loginServer.getPort());
         final List<Channel> channels = new ArrayList<>();
         for (int channelId = 0; channelId < ServerConfig.CHANNELS_PER_WORLD; channelId++) {
             final Channel channel = new Channel(
-                    ServerConfig.WORLD_ID,
-                    channelId,
+                    (byte) ServerConfig.WORLD_ID,
+                    (byte) channelId,
+                    ServerConstants.SERVER_ADDRESS,
                     ServerConstants.CHANNEL_PORT + channelId,
                     String.format("%s - %d", ServerConfig.WORLD_NAME, channelId + 1)
             );
@@ -71,18 +226,19 @@ public enum Server {
             channels.add(channel);
         }
         worlds = List.of(new World(ServerConfig.WORLD_ID, ServerConfig.WORLD_NAME, Collections.unmodifiableList(channels)));
-        log.info("Loaded world in {} milliseconds.", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded world in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                stop();
+                Server.stop();
             } catch (ExecutionException | InterruptedException e) {
+                log.error("Exception caught while shutting down Server", e);
                 throw new RuntimeException(e);
             }
         }));
     }
 
-    public void stop() throws ExecutionException, InterruptedException {
+    private static void stop() throws ExecutionException, InterruptedException {
         log.info("Shutting down Server");
         loginServer.stop().join();
         for (World world : getWorlds()) {
@@ -91,13 +247,5 @@ public enum Server {
             }
         }
         DatabaseManager.shutdown();
-    }
-
-    public static void main(String[] args) {
-        Server.getInstance().start();
-    }
-
-    public static Server getInstance() {
-        return INSTANCE;
     }
 }

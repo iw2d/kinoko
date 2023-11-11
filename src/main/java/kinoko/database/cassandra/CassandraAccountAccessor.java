@@ -45,6 +45,19 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     }
 
     @Override
+    public Optional<Account> getAccountById(int accountId) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(accountId))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            return Optional.of(loadAccount(row));
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Account> getAccountByUsername(String username) {
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), AccountTable.getTableName()).all()

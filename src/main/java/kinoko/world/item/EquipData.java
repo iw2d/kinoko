@@ -81,7 +81,7 @@ public final class EquipData {
             outPacket.encodeLong(item.getItemSn()); // liSN
         }
 
-        outPacket.encodeFT(FileTime.ZERO_TIME); //ftEquipped
+        outPacket.encodeFT(FileTime.ZERO_TIME); // ftEquipped
         outPacket.encodeInt(0); // nPrevBonusExpRate
     }
 

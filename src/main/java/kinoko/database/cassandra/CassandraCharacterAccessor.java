@@ -42,6 +42,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         ci.setEtcInventory(row.get(CharacterTable.ETC_INVENTORY, Inventory.class));
         ci.setCashInventory(row.get(CharacterTable.CASH_INVENTORY, Inventory.class));
         ci.setMoney(row.getInt(CharacterTable.MONEY));
+        cd.setCharacterInventory(ci);
 
         final SkillManager sm = new SkillManager();
         cd.setSkillManager(sm);

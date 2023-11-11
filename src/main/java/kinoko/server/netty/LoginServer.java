@@ -1,6 +1,7 @@
 package kinoko.server.netty;
 
 import kinoko.server.Client;
+import kinoko.server.ServerConstants;
 import kinoko.util.Tuple;
 import kinoko.world.Account;
 
@@ -10,15 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class LoginServer extends NettyServer {
     private final Map<Integer, Tuple<Client, Account>> connectedAccounts = new ConcurrentHashMap<>();
-    private final int port;
-
-    public LoginServer(int port) {
-        this.port = port;
-    }
 
     @Override
     public int getPort() {
-        return port;
+        return ServerConstants.LOGIN_PORT;
     }
 
     public boolean isConnected(Account account) {

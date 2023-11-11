@@ -68,7 +68,7 @@ public final class MapProvider {
             final byte[] data = Files.readAllBytes(getPath(mapId));
             return Optional.of(FURY.deserializeJavaObject(data, MapInfo.class));
         } catch (IOException e) {
-            log.error(e);
+            log.error("Exception caught while loading MapInfo", e);
         }
         return Optional.empty();
     }

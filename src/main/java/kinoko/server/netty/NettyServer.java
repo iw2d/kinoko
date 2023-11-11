@@ -7,6 +7,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.Client;
+import kinoko.server.header.InHeader;
+import kinoko.server.packet.InPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,11 +26,12 @@ public abstract class NettyServer {
         return channelFuture;
     }
 
-    protected void setFuture(CompletableFuture<Channel> channelFuture) {
+    private void setFuture(CompletableFuture<Channel> channelFuture) {
         this.channelFuture = channelFuture;
     }
 
     public CompletableFuture<Channel> start() {
+        final NettyServer server = this;
         final EventLoopGroup bossGroup = new NioEventLoopGroup();
         final EventLoopGroup workerGroup = new NioEventLoopGroup();
         final ServerBootstrap b = new ServerBootstrap();
@@ -39,7 +42,7 @@ public abstract class NettyServer {
             public void initChannel(SocketChannel ch) {
                 ch.pipeline().addLast(new PacketDecoder(), new PacketHandler(), new PacketEncoder());
 
-                final Client c = new Client(ch);
+                final Client c = new Client(server, ch);
                 c.setSendIv(getNewIv());
                 c.setRecvIv(getNewIv());
                 c.write(LoginPacket.connect(c));
@@ -66,7 +69,7 @@ public abstract class NettyServer {
 
     public CompletableFuture<Void> stop() throws ExecutionException, InterruptedException {
         if (getFuture() == null) {
-            throw new IllegalStateException("Tried to stop server before starting.");
+            throw new IllegalStateException("Tried to stop server before starting");
         }
         final CompletableFuture<Void> stopFuture = new CompletableFuture<>();
         getFuture().get().close().addListener((listenerFuture) -> {

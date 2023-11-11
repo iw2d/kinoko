@@ -6,21 +6,20 @@ import kinoko.packet.stage.LoginPacket;
 import kinoko.packet.stage.LoginResult;
 import kinoko.provider.EtcProvider;
 import kinoko.server.Client;
+import kinoko.server.MigrationRequest;
 import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
-import kinoko.world.Account;
-import kinoko.world.Channel;
-import kinoko.world.GameConstants;
-import kinoko.world.World;
+import kinoko.world.*;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
+import kinoko.world.user.CharacterData;
 import kinoko.world.user.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,24 +51,24 @@ public final class LoginHandler {
         }
 
         final Account account = accountResult.get();
-        if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginResult.INCORRECT_PASSWORD));
+        if (Server.isConnected(account)) {
+            c.write(LoginPacket.checkPasswordResultFail(LoginResult.ALREADY_CONNECTED));
             return;
         }
-        if (Server.getInstance().getLoginServer().isConnected(account)) {
-            c.write(LoginPacket.selectWorldResultFail(LoginResult.ALREADY_CONNECTED));
+        if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
+            c.write(LoginPacket.checkPasswordResultFail(LoginResult.INCORRECT_PASSWORD));
             return;
         }
 
         c.setAccount(account);
         c.setMachineId(machineId);
-        Server.getInstance().getLoginServer().setAuthenticated(c, account);
+        Server.loginServer().setAuthenticated(c, account);
         c.write(LoginPacket.checkPasswordResultSuccess(account));
     }
 
     @Handler({ InHeader.WORLD_INFORMATION, InHeader.VIEW_WORLD_SELECT })
     public static void handleViewWorldSelect(Client c, InPacket inPacket) {
-        for (World world : Server.getInstance().getWorlds()) {
+        for (World world : Server.getWorlds()) {
             c.write(LoginPacket.worldInformation(world));
         }
         c.write(LoginPacket.worldInformationEnd());
@@ -95,21 +94,12 @@ public final class LoginHandler {
             return;
         }
 
-        final int worldId = inPacket.decodeByte();
-        final int channelId = inPacket.decodeByte();
+        final byte worldId = inPacket.decodeByte();
+        final byte channelId = inPacket.decodeByte();
         inPacket.decodeInt(); // unk
 
         // Check World ID and Channel ID
-        final Optional<World> worldResult = Server.getInstance().getWorlds().stream()
-                .filter(w -> w.getId() == worldId)
-                .findFirst();
-        if (worldResult.isEmpty()) {
-            c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
-            return;
-        }
-        final Optional<Channel> channelResult = worldResult.get().getChannels().stream()
-                .filter(ch -> ch.getWorldId() == worldId && ch.getChannelId() == channelId)
-                .findFirst();
+        final Optional<Channel> channelResult = Server.getChannelById(worldId, channelId);
         if (channelResult.isEmpty()) {
             c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
             return;
@@ -121,12 +111,13 @@ public final class LoginHandler {
             c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
             return;
         }
-        if (!Server.getInstance().getLoginServer().isAuthenticated(c, account)) {
+        if (!Server.loginServer().isAuthenticated(c, account)) {
             c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
             return;
         }
 
-        account.setSelectedChannel(channelResult.get());
+        account.setWorldId(worldId);
+        account.setChannelId(channelId);
         account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccount(account.getId()));
         c.write(LoginPacket.selectWorldResultSuccess(account));
     }
@@ -261,14 +252,16 @@ public final class LoginHandler {
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
-        final Account account = c.getAccount();
-        if (account == null || account.getSelectedChannel() == null ||
-                !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
-                ServerConfig.REQUIRE_SECONDARY_PASSWORD || !account.canSelectCharacter(characterId)) {
+        if (ServerConfig.REQUIRE_SECONDARY_PASSWORD) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        c.write(LoginPacket.selectCharacterResultSuccess(characterId));
+        Optional<MigrationRequest> mr = Server.startMigration(c, characterId);
+        if (mr.isEmpty()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            return;
+        }
+        c.write(LoginPacket.selectCharacterResultSuccess(mr.get()));
     }
 
     @Handler(InHeader.DELETE_CHAR)
@@ -278,7 +271,7 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
-                !Server.getInstance().getLoginServer().isAuthenticated(c, account)) {
+                !Server.loginServer().isAuthenticated(c, account)) {
             c.write(LoginPacket.deleteCharacterResult(LoginResult.UNKNOWN, characterId));
             return;
         }
@@ -306,14 +299,17 @@ public final class LoginHandler {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
 
         final Account account = c.getAccount();
-        if (account == null || account.getSelectedChannel() == null ||
-                !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
-                !account.canSelectCharacter(characterId) || account.hasSecondaryPassword() ||
+        if (account == null || account.hasSecondaryPassword() ||
                 !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        c.write(LoginPacket.selectCharacterResultSuccess(characterId));
+        Optional<MigrationRequest> mr = Server.startMigration(c, characterId);
+        if (mr.isEmpty()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            return;
+        }
+        c.write(LoginPacket.selectCharacterResultSuccess(mr.get()));
     }
 
     @Handler(InHeader.CHECK_SPW)
@@ -324,17 +320,17 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         final Account account = c.getAccount();
-        if (account == null || account.getSelectedChannel() == null ||
-                !Server.getInstance().getLoginServer().isAuthenticated(c, account) ||
-                !account.canSelectCharacter(characterId) || !account.hasSecondaryPassword()) {
+        if (account == null || !account.hasSecondaryPassword() ||
+                !DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
-            c.write(LoginPacket.checkSecondaryPasswordResult());
+        Optional<MigrationRequest> mr = Server.startMigration(c, characterId);
+        if (mr.isEmpty()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        c.write(LoginPacket.selectCharacterResultSuccess(characterId));
+        c.write(LoginPacket.selectCharacterResultSuccess(mr.get()));
     }
 
     @Handler(InHeader.EXCEPTION_LOG)
@@ -355,7 +351,7 @@ public final class LoginHandler {
         c.close();
     }
 
-    @Handler(InHeader.UPDATE_CLIENT_ENVIRONMENT)
-    public static void handleUpdateClientEnvironment(Client c, InPacket inPacket) {
+    @Handler({ InHeader.LOGIN_INIT, InHeader.UPDATE_CLIENT_ENVIRONMENT })
+    public static void ignore(Client c, InPacket inPacket) {
     }
 }

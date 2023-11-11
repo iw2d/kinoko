@@ -5,6 +5,8 @@ import kinoko.world.Account;
 import java.util.Optional;
 
 public interface AccountAccessor {
+    Optional<Account> getAccountById(int accountId);
+
     Optional<Account> getAccountByUsername(String username);
 
     boolean checkPassword(Account account, String password, boolean secondary);

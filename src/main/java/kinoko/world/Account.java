@@ -13,8 +13,9 @@ public final class Account {
     private int maplePoint;
 
     // TRANSIENT
-    private boolean hasSecondaryPassword;
-    private Channel selectedChannel;
+    private boolean hasSecondaryPassword = false;
+    private byte worldId = -1;
+    private byte channelId = -1;
     private List<AvatarData> characterList;
 
     public Account(int id, String username) {
@@ -72,12 +73,20 @@ public final class Account {
         this.hasSecondaryPassword = hasSecondaryPassword;
     }
 
-    public Channel getSelectedChannel() {
-        return selectedChannel;
+    public byte getWorldId() {
+        return worldId;
     }
 
-    public void setSelectedChannel(Channel selectedChannel) {
-        this.selectedChannel = selectedChannel;
+    public void setWorldId(byte worldId) {
+        this.worldId = worldId;
+    }
+
+    public byte getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(byte channelId) {
+        this.channelId = channelId;
     }
 
     public List<AvatarData> getCharacterList() {

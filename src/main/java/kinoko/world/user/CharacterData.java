@@ -82,7 +82,7 @@ public final class CharacterData implements Encodable {
             for (var entry : equippedItems.entrySet()) {
                 final int bodyPart = entry.getKey();
                 if (bodyPart >= BodyPart.CASH_BASE.getValue() && bodyPart < BodyPart.CASH_END.getValue()) {
-                    outPacket.encodeShort(bodyPart);
+                    outPacket.encodeShort(bodyPart - BodyPart.CASH_BASE.getValue());
                     entry.getValue().encode(outPacket);
                 }
             }

@@ -6,6 +6,7 @@ public final class ServerConfig {
     public static final int WORLD_ID = 0;
     public static final String WORLD_NAME = "Kinoko";
     public static final int CHANNELS_PER_WORLD = 5;
+    public static final long MIGRATION_EXPIRY = 5000;
 
     public static final boolean AUTO_CREATE_ACCOUNT = true;
     public static final boolean REQUIRE_SECONDARY_PASSWORD = true;

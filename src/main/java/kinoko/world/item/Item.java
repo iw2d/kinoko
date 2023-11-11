@@ -16,7 +16,7 @@ public final class Item implements Encodable {
     private boolean cash;
     private short quantity;
     private short attribute;
-    private String title;
+    private String title = "";
     private EquipData equipData;
     private PetData petData;
 
@@ -104,7 +104,7 @@ public final class Item implements Encodable {
     }
 
     public String getTitle() {
-        return title;
+        return title != null ? title : "";
     }
 
     public void setTitle(String title) {
