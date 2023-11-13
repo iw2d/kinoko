@@ -1,10 +1,7 @@
 package kinoko.server;
 
 import kinoko.server.netty.ChannelServer;
-import kinoko.world.Channel;
 
-import java.net.InetAddress;
-import java.time.Instant;
 import java.util.Arrays;
 
 public record MigrationRequest(int accountId, int channelId, int characterId, byte[] machineId, byte[] remoteAddress) {

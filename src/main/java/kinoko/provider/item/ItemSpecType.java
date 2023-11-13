@@ -92,6 +92,7 @@ public enum ItemSpecType {
     BF_SKILL;
 
     private static final Map<String, ItemSpecType> nameMap = new HashMap<>();
+
     static {
         for (ItemSpecType type : values()) {
             final String name = normalizeName(type.name());

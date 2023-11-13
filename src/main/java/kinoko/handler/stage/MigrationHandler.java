@@ -8,6 +8,7 @@ import kinoko.server.MigrationRequest;
 import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.header.InHeader;
+import kinoko.server.netty.ChannelServer;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
 import kinoko.world.Channel;
@@ -39,19 +40,20 @@ public final class MigrationHandler {
         final MigrationRequest mr = migrationResult.get();
 
         // Check Channel
-        final Optional<Channel> channelResult = Server.getChannelById(ServerConfig.WORLD_ID, mr.channelId());
-        if (channelResult.isEmpty()) {
-            log.error("[MigrationHandler] Could not find channel with ID : {}", mr.channelId());
+        if (!(c.getConnectedServer() instanceof ChannelServer channelServer)) {
+            log.error("[MigrationHandler] Migration not supported for {}", c.getConnectedServer());
             c.close();
             return;
         }
-        final Channel channel = channelResult.get();
+        if (channelServer.getChannel().getChannelId() != mr.channelId()) {
+            log.error("[MigrationHandler] Incorrect channel ID : {}", mr.channelId());
+        }
+        final Channel channel = channelServer.getChannel();
 
         // Check Account
-        final int accountId = mr.accountId();
-        final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(accountId);
+        final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(mr.accountId());
         if (accountResult.isEmpty()) {
-            log.error("[MigrationHandler] Could not retrieve account with ID : {}", accountId);
+            log.error("[MigrationHandler] Could not retrieve account with ID : {}", mr.accountId());
             c.close();
             return;
         }
@@ -69,8 +71,8 @@ public final class MigrationHandler {
             return;
         }
         final CharacterData characterData = characterResult.get();
-        if (characterData.getAccountId() != accountId) {
-            log.error("[MigrationHandler] attempted to log into character with ID {} that belongs to account with ID {} using account with ID {}", characterId, characterData.getAccountId(), accountId);
+        if (characterData.getAccountId() != mr.accountId()) {
+            log.error("[MigrationHandler] attempted to log into character with ID {} that belongs to account with ID {} using account with ID {}", characterId, characterData.getAccountId(), mr.accountId());
             c.close();
             return;
         }

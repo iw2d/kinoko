@@ -5,7 +5,6 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Encodable;
-import kinoko.world.user.User;
 
 import java.util.Optional;
 

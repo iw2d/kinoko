@@ -370,7 +370,7 @@ public final class EquipData {
                     equipData.setRuc((byte) itemInfo.getInfo(infoType));
                 }
                 case DURABILITY -> {
-                    equipData.setDurability((int) itemInfo.getInfo(infoType));
+                    equipData.setDurability(itemInfo.getInfo(infoType));
                 }
             }
         }

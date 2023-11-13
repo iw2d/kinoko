@@ -3,7 +3,9 @@ package kinoko.provider.item;
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 
 public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecType, Object> spec) {
 

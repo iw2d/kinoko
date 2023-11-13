@@ -78,6 +78,7 @@ public enum ItemInfoType {
     RECOVERY_MP;
 
     private static final Map<String, ItemInfoType> nameMap = new HashMap<>();
+
     static {
         for (ItemInfoType type : values()) {
             final String name = normalizeName(type.name());

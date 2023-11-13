@@ -7,8 +7,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.Client;
-import kinoko.server.header.InHeader;
-import kinoko.server.packet.InPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

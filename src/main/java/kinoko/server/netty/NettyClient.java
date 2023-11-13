@@ -4,7 +4,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.util.AttributeKey;
 import kinoko.server.packet.OutPacket;
 
-import java.net.InetAddress;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -66,7 +65,7 @@ public abstract class NettyClient {
         nettyChannel.writeAndFlush(outPacket);
     }
 
-    public final void close() {
+    public void close() {
         nettyChannel.close();
     }
 }

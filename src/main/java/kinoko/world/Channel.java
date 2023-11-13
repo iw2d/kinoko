@@ -2,8 +2,6 @@ package kinoko.world;
 
 import kinoko.server.netty.ChannelServer;
 
-import java.net.InetAddress;
-
 public final class Channel {
     private final byte worldId;
     private final byte channelId;

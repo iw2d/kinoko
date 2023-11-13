@@ -43,4 +43,12 @@ public final class Client extends NettyClient {
     public void sendPing() {
         write(LoginPacket.aliveReq());
     }
+
+    @Override
+    public void close() {
+        super.close();
+        this.account = null;
+        this.user = null;
+        this.machineId = null;
+    }
 }
