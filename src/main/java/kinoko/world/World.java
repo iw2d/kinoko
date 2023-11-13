@@ -5,12 +5,12 @@ import java.util.List;
 public final class World {
     private final int id;
     private final String name;
-    private final List<Channel> channels;
+    private final List<ChannelServer> channelServers;
 
-    public World(int id, String name, List<Channel> channels) {
+    public World(int id, String name, List<ChannelServer> channelServers) {
         this.id = id;
         this.name = name;
-        this.channels = channels;
+        this.channelServers = channelServers;
     }
 
     public int getId() {
@@ -21,7 +21,7 @@ public final class World {
         return name;
     }
 
-    public List<Channel> getChannels() {
-        return channels;
+    public List<ChannelServer> getChannels() {
+        return channelServers;
     }
 }

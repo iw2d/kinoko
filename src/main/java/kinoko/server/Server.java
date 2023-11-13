@@ -6,10 +6,9 @@ import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
 import kinoko.server.crypto.MapleCrypto;
-import kinoko.server.netty.ChannelServer;
 import kinoko.server.netty.LoginServer;
 import kinoko.world.Account;
-import kinoko.world.Channel;
+import kinoko.world.ChannelServer;
 import kinoko.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +23,12 @@ import java.util.concurrent.ExecutionException;
 
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
-    private static List<World> worlds;
     private static LoginServer loginServer;
+    private static List<World> worlds;
+
+    public static LoginServer loginServer() {
+        return loginServer;
+    }
 
     public static List<World> getWorlds() {
         return worlds;
@@ -37,7 +40,7 @@ public final class Server {
                 .findFirst();
     }
 
-    public static Optional<Channel> getChannelById(int worldId, int channelId) {
+    public static Optional<ChannelServer> getChannelServerById(int worldId, int channelId) {
         final Optional<World> worldResult = Server.getWorldById(worldId);
         if (worldResult.isEmpty()) {
             return Optional.empty();
@@ -45,10 +48,6 @@ public final class Server {
         return worldResult.get().getChannels().stream()
                 .filter(ch -> ch.getWorldId() == worldId && ch.getChannelId() == channelId)
                 .findFirst();
-    }
-
-    public static LoginServer loginServer() {
-        return loginServer;
     }
 
     /**
@@ -64,15 +63,15 @@ public final class Server {
      * @return true if {@link Account} is currently associated with a client.
      */
     public static boolean isConnected(Account account) {
-        if (loginServer.isConnected(account)) {
+        if (loginServer.getPlayerStorage().isConnected(account)) {
             return true;
         }
         if (DatabaseManager.migrationAccessor().hasMigrationRequest(account.getId())) {
             return true;
         }
         for (World world : getWorlds()) {
-            for (Channel channel : world.getChannels()) {
-                if (channel.isConnected(account)) {
+            for (ChannelServer channelServer : world.getChannels()) {
+                if (channelServer.getPlayerStorage().isConnected(account)) {
                     return true;
                 }
             }
@@ -96,11 +95,11 @@ public final class Server {
         }
         // Account not authenticated
         final Account account = c.getAccount();
-        if (!account.canSelectCharacter(characterId) || !loginServer.isAuthenticated(c, account)) {
+        if (!account.canSelectCharacter(characterId) || !loginServer.getPlayerStorage().isConnected(account)) {
             return Optional.empty();
         }
         // World and Channel not selected
-        final Optional<Channel> channelResult = getChannelById(account.getWorldId(), account.getChannelId());
+        final Optional<ChannelServer> channelResult = getChannelServerById(account.getWorldId(), account.getChannelId());
         if (channelResult.isEmpty()) {
             return Optional.empty();
         }
@@ -116,15 +115,15 @@ public final class Server {
 
     /**
      * Check whether a client migration is valid. There should be a {@link MigrationRequest} that matches the requested
-     * character ID, the client's machine ID and remote address.
+     * channel ID, character ID, the client's machine ID, and remote address.
      *
-     * @param c           {@link Client} instance attempting to migrate to channel server.
+     * @param client           {@link Client} instance attempting to migrate to channel server.
      * @param characterId Target character ID attempting to migrate to channel server.
      * @return {@link MigrationRequest} instance that matches the request.
      */
-    public static Optional<MigrationRequest> fetchMigrationRequest(Client c, int characterId) {
+    public static Optional<MigrationRequest> fetchMigrationRequest(Client client, int characterId) {
         final Optional<MigrationRequest> mrResult = DatabaseManager.migrationAccessor().fetchMigrationRequest(characterId);
-        if (mrResult.isEmpty() || !mrResult.get().strictMatch(c, characterId)) {
+        if (mrResult.isEmpty() || !mrResult.get().strictMatch(client, characterId)) {
             return Optional.empty();
         }
         return mrResult;
@@ -155,22 +154,18 @@ public final class Server {
         loginServer = new LoginServer();
         loginServer.start().join();
         log.info("Login server listening on port {}", loginServer.getPort());
-        final List<Channel> channels = new ArrayList<>();
+        final List<ChannelServer> channelServers = new ArrayList<>();
         for (int channelId = 0; channelId < ServerConfig.CHANNELS_PER_WORLD; channelId++) {
-            final Channel channel = new Channel(
-                    (byte) ServerConfig.WORLD_ID,
-                    (byte) channelId,
-                    ServerConstants.SERVER_ADDRESS,
-                    ServerConstants.CHANNEL_PORT + channelId,
-                    String.format("%s - %d", ServerConfig.WORLD_NAME, channelId + 1)
+            final ChannelServer channelServer = new ChannelServer(
+                    ServerConfig.WORLD_ID,
+                    channelId,
+                    ServerConstants.CHANNEL_PORT + channelId
             );
-            final ChannelServer channelServer = new ChannelServer(channel);
             channelServer.start().join();
-            log.info("Channel {} listening on port {}", channelId + 1, channel.getChannelPort());
-            channel.setChannelServer(channelServer);
-            channels.add(channel);
+            channelServers.add(channelServer);
+            log.info("Channel {} listening on port {}", channelId + 1, channelServer.getPort());
         }
-        worlds = List.of(new World(ServerConfig.WORLD_ID, ServerConfig.WORLD_NAME, Collections.unmodifiableList(channels)));
+        worlds = List.of(new World(ServerConfig.WORLD_ID, ServerConfig.WORLD_NAME, Collections.unmodifiableList(channelServers)));
         log.info("Loaded world in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -187,8 +182,8 @@ public final class Server {
         log.info("Shutting down Server");
         loginServer.stop().join();
         for (World world : getWorlds()) {
-            for (Channel channel : world.getChannels()) {
-                channel.getChannelServer().stop().join();
+            for (ChannelServer channelServer : world.getChannels()) {
+                channelServer.stop().join();
             }
         }
         DatabaseManager.shutdown();

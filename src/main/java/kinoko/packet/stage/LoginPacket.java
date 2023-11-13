@@ -7,7 +7,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Account;
-import kinoko.world.Channel;
+import kinoko.world.ChannelServer;
 import kinoko.world.World;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
@@ -90,13 +90,13 @@ public final class LoginPacket {
         outPacket.encodeShort(100); // nWorldEventDrop_WSE
         outPacket.encodeByte(0); // nBlockCharCreation
 
-        final List<Channel> channels = world.getChannels();
-        outPacket.encodeByte(channels.size());
-        for (Channel channel : channels) {
-            outPacket.encodeString(channel.getChannelName()); // sName
-            outPacket.encodeInt(channel.getUserNo()); // nUserNo
-            outPacket.encodeByte(channel.getWorldId()); // nWorldID
-            outPacket.encodeByte(channel.getChannelId()); // nChannelID
+        final List<ChannelServer> channelServers = world.getChannels();
+        outPacket.encodeByte(channelServers.size());
+        for (ChannelServer channelServer : channelServers) {
+            outPacket.encodeString(channelServer.getName()); // sName
+            outPacket.encodeInt(channelServer.getUserNo()); // nUserNo
+            outPacket.encodeByte(channelServer.getWorldId()); // nWorldID
+            outPacket.encodeByte(channelServer.getChannelId()); // nChannelID
             outPacket.encodeByte(false); // bAdultChannel
         }
 

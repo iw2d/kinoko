@@ -14,7 +14,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.Account;
-import kinoko.world.Channel;
+import kinoko.world.ChannelServer;
 import kinoko.world.GameConstants;
 import kinoko.world.World;
 import kinoko.world.item.Inventory;
@@ -65,7 +65,7 @@ public final class LoginHandler {
 
         c.setAccount(account);
         c.setMachineId(machineId);
-        Server.loginServer().setAuthenticated(c, account);
+        c.getConnectedServer().getPlayerStorage().addPlayer(c);
         c.write(LoginPacket.checkPasswordResultSuccess(account));
     }
 
@@ -102,7 +102,7 @@ public final class LoginHandler {
         inPacket.decodeInt(); // unk
 
         // Check World ID and Channel ID
-        final Optional<Channel> channelResult = Server.getChannelById(worldId, channelId);
+        final Optional<ChannelServer> channelResult = Server.getChannelServerById(worldId, channelId);
         if (channelResult.isEmpty()) {
             c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
             return;
@@ -114,7 +114,7 @@ public final class LoginHandler {
             c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
             return;
         }
-        if (!Server.loginServer().isAuthenticated(c, account)) {
+        if (!c.getConnectedServer().getPlayerStorage().isConnected(account)) {
             c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
             return;
         }
@@ -269,7 +269,7 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
-                !Server.loginServer().isAuthenticated(c, account)) {
+                !c.getConnectedServer().getPlayerStorage().isConnected(account)) {
             c.write(LoginPacket.deleteCharacterResult(LoginResult.UNKNOWN, characterId));
             return;
         }
@@ -350,13 +350,12 @@ public final class LoginHandler {
             return;
         }
         final MigrationRequest mr = mrResult.get();
-        final Optional<Channel> channelResult = Server.getChannelById(ServerConfig.WORLD_ID, mr.channelId());
+        final Optional<ChannelServer> channelResult = Server.getChannelServerById(ServerConfig.WORLD_ID, mr.channelId());
         if (channelResult.isEmpty()) {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        final Channel channel = channelResult.get();
-        c.write(LoginPacket.selectCharacterResultSuccess(channel.getChannelAddress(), channel.getChannelPort(),
-                mr.characterId()));
+        final ChannelServer channelServer = channelResult.get();
+        c.write(LoginPacket.selectCharacterResultSuccess(channelServer.getAddress(), channelServer.getPort(), mr.characterId()));
     }
 }

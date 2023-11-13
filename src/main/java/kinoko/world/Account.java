@@ -14,8 +14,8 @@ public final class Account {
 
     // TRANSIENT
     private boolean hasSecondaryPassword = false;
-    private byte worldId = -1;
-    private byte channelId = -1;
+    private int worldId = -1;
+    private int channelId = -1;
     private List<AvatarData> characterList;
 
     public Account(int id, String username) {
@@ -73,19 +73,19 @@ public final class Account {
         this.hasSecondaryPassword = hasSecondaryPassword;
     }
 
-    public byte getWorldId() {
+    public int getWorldId() {
         return worldId;
     }
 
-    public void setWorldId(byte worldId) {
+    public void setWorldId(int worldId) {
         this.worldId = worldId;
     }
 
-    public byte getChannelId() {
+    public int getChannelId() {
         return channelId;
     }
 
-    public void setChannelId(byte channelId) {
+    public void setChannelId(int channelId) {
         this.channelId = channelId;
     }
 

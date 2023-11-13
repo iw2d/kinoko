@@ -4,11 +4,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.handler.Dispatch;
 import kinoko.server.Client;
-import kinoko.server.Server;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
-import kinoko.world.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,10 +15,15 @@ import java.lang.reflect.Method;
 
 public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(PacketHandler.class);
+    private final NettyServer server;
+
+    public PacketHandler(NettyServer server) {
+        this.server = server;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
-        final Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         final short op = inPacket.decodeShort();
         final InHeader header = InHeader.getByValue(op);
         final Method handler = Dispatch.getHandler(header);
@@ -31,7 +34,7 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
         } else {
             log.debug("[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
             try {
-                handler.invoke(this, c, inPacket);
+                handler.invoke(this, client, inPacket);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 log.error("Exception caught while handling packet", e);
             }
@@ -41,13 +44,9 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.debug("[PacketHandler] | Channel inactive");
-        final Client c = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        if (c != null) {
-            final Account account = c.getAccount();
-            if (account != null) {
-                Server.loginServer().removeAccount(account);
-            }
-            c.close();
+        final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        if (client != null) {
+            client.close();
         }
         ctx.fireChannelInactive();
     }

@@ -6,12 +6,10 @@ import kinoko.packet.stage.StagePacket;
 import kinoko.server.Client;
 import kinoko.server.MigrationRequest;
 import kinoko.server.Server;
-import kinoko.server.ServerConfig;
 import kinoko.server.header.InHeader;
-import kinoko.server.netty.ChannelServer;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
-import kinoko.world.Channel;
+import kinoko.world.ChannelServer;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
@@ -40,15 +38,12 @@ public final class MigrationHandler {
         final MigrationRequest mr = migrationResult.get();
 
         // Check Channel
-        if (!(c.getConnectedServer() instanceof ChannelServer channelServer)) {
-            log.error("[MigrationHandler] Migration not supported for {}", c.getConnectedServer());
+        if (!(c.getConnectedServer() instanceof final ChannelServer channelServer) ||
+                channelServer.getChannelId() != mr.channelId()) {
+            log.error("[MigrationHandler] Tried to migrate to incorrect channel.");
             c.close();
             return;
         }
-        if (channelServer.getChannel().getChannelId() != mr.channelId()) {
-            log.error("[MigrationHandler] Incorrect channel ID : {}", mr.channelId());
-        }
-        final Channel channel = channelServer.getChannel();
 
         // Check Account
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(mr.accountId());
@@ -57,10 +52,14 @@ public final class MigrationHandler {
             c.close();
             return;
         }
-
         final Account account = accountResult.get();
-        account.setWorldId(channel.getWorldId());
-        account.setChannelId(channel.getChannelId());
+        if (channelServer.getPlayerStorage().isConnected(account)) {
+            log.error("[MigrationHandler] Tried to connect to channel server while already connected");
+            c.close();
+            return;
+        }
+        account.setWorldId(channelServer.getWorldId());
+        account.setChannelId(channelServer.getChannelId());
         c.setAccount(account);
 
         // Check Character
@@ -72,15 +71,20 @@ public final class MigrationHandler {
         }
         final CharacterData characterData = characterResult.get();
         if (characterData.getAccountId() != mr.accountId()) {
-            log.error("[MigrationHandler] attempted to log into character with ID {} that belongs to account with ID {} using account with ID {}", characterId, characterData.getAccountId(), mr.accountId());
+            log.error("[MigrationHandler] Mismatching account IDs {}, {}", characterData.getAccountId(), mr.accountId());
             c.close();
             return;
         }
-        final User user = new User(c, characterData, CalcDamage.using(ThreadLocalRandom.current()));
+        final User user = new User(characterData, CalcDamage.using(ThreadLocalRandom.current()));
+        if (channelServer.getPlayerStorage().isConnected(user)) {
+            log.error("[MigrationHandler] Tried to connect to channel server while already connected");
+            c.close();
+            return;
+        }
         c.setUser(user);
+        channelServer.getPlayerStorage().addPlayer(c);
 
-        // TODO: add User to channel
-        c.write(StagePacket.setField(user, account.getChannelId(), true, false));
+        c.write(StagePacket.setField(user, channelServer.getChannelId(), true, false));
 
         // TODO: keymap, quickslot, macros
 

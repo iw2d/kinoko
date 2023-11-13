@@ -7,6 +7,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.Client;
+import kinoko.server.PlayerStorage;
+import kinoko.world.Account;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,19 +19,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class NettyServer {
     protected static final Logger log = LogManager.getLogger(NettyServer.class);
+    private final PlayerStorage playerStorage = new PlayerStorage();
     private CompletableFuture<Channel> channelFuture;
 
     public abstract int getPort();
 
-    public CompletableFuture<Channel> getFuture() {
+    public final PlayerStorage getPlayerStorage() {
+        return playerStorage;
+    }
+
+    public final CompletableFuture<Channel> getFuture() {
         return channelFuture;
     }
 
-    private void setFuture(CompletableFuture<Channel> channelFuture) {
-        this.channelFuture = channelFuture;
-    }
-
-    public CompletableFuture<Channel> start() {
+    public final CompletableFuture<Channel> start() {
         final NettyServer server = this;
         final EventLoopGroup bossGroup = new NioEventLoopGroup();
         final EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -38,7 +42,7 @@ public abstract class NettyServer {
         b.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) {
-                ch.pipeline().addLast(new PacketDecoder(), new PacketHandler(), new PacketEncoder());
+                ch.pipeline().addLast(new PacketDecoder(), new PacketHandler(server), new PacketEncoder());
 
                 final Client c = new Client(server, ch);
                 c.setSendIv(getNewIv());
@@ -61,12 +65,12 @@ public abstract class NettyServer {
                 startFuture.completeExceptionally(listenerFuture.cause());
             }
         });
-        setFuture(startFuture);
+        this.channelFuture = startFuture;
         return startFuture;
     }
 
-    public CompletableFuture<Void> stop() throws ExecutionException, InterruptedException {
-        if (getFuture() == null) {
+    public final CompletableFuture<Void> stop() throws ExecutionException, InterruptedException {
+        if (getFuture() == null || !getFuture().isDone()) {
             throw new IllegalStateException("Tried to stop server before starting");
         }
         final CompletableFuture<Void> stopFuture = new CompletableFuture<>();

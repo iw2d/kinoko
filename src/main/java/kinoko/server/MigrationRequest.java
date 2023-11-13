@@ -1,6 +1,6 @@
 package kinoko.server;
 
-import kinoko.server.netty.ChannelServer;
+import kinoko.world.ChannelServer;
 
 import java.util.Arrays;
 
@@ -11,15 +11,8 @@ public record MigrationRequest(int accountId, int channelId, int characterId, by
                 Arrays.equals(this.machineId, mr.machineId) || Arrays.equals(this.remoteAddress, mr.remoteAddress);
     }
 
-    public boolean strictMatch(Client c, int characterId) {
-        if (this.characterId != characterId || !Arrays.equals(this.machineId, c.getMachineId()) ||
-                !Arrays.equals(this.remoteAddress, c.getRemoteAddress())) {
-            return false;
-        }
-        // Check correct channel, this could be removed if migrations are refactored to ChannelServer
-        if (!(c.getConnectedServer() instanceof final ChannelServer connectedServer)) {
-            return false;
-        }
-        return this.channelId == connectedServer.getChannel().getChannelId();
+    public boolean strictMatch(Client client, int characterId) {
+        return this.characterId == characterId && Arrays.equals(this.machineId, client.getMachineId()) &&
+                Arrays.equals(this.remoteAddress, client.getRemoteAddress());
     }
 }
