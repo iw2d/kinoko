@@ -41,8 +41,8 @@ public final class EtcProvider {
         if (nameImage == null) {
             throw new ProviderError("Could not resolve Etc.wz/ForbiddenName.img");
         }
-        for (var entry : nameImage.getProperty().getItems().entrySet()) {
-            if (entry.getValue() instanceof String name) {
+        for (var value : nameImage.getProperty().getItems().values()) {
+            if (value instanceof String name) {
                 forbiddenNames.add(name);
             }
         }

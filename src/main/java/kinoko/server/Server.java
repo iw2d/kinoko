@@ -14,7 +14,6 @@ import kinoko.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.InetAddress;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,13 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
-    private static final Lock migrationLock = new ReentrantLock();
-    private static final List<MigrationRequest> migrations = new ArrayList<>();
     private static List<World> worlds;
     private static LoginServer loginServer;
 
@@ -58,9 +53,12 @@ public final class Server {
 
     /**
      * Check whether an {@link Account} instance is associated with a client. In order to prevent multiple clients
-     * logging into the same account, this should return true if: - {@link Account} is authenticated on the
-     * {@link LoginServer}, or - {@link MigrationRequest} exists for the account, or - {@link Account} is connected to a
-     * {@link ChannelServer} instance.
+     * logging into the same account, this should return true if:
+     * <ul>
+     *     <li>{@link Account} is authenticated on the {@link LoginServer}, or</li>
+     *     <li>{@link MigrationRequest} exists for the account, or</li>
+     *     <li>{@link Account} is connected to a {@link ChannelServer} instance.</li>
+     * </ul>
      *
      * @param account {@link Account} instance to check.
      * @return true if {@link Account} is currently associated with a client.
@@ -69,23 +67,8 @@ public final class Server {
         if (loginServer.isConnected(account)) {
             return true;
         }
-        migrationLock.lock();
-        try {
-            final Instant now = Instant.now();
-            final var iter = migrations.iterator();
-            while (iter.hasNext()) {
-                final MigrationRequest mr = iter.next();
-                // Check expiry
-                if (now.isAfter(mr.expireTime())) {
-                    iter.remove();
-                    continue;
-                }
-                if (mr.accountId() == account.getId()) {
-                    return true;
-                }
-            }
-        } finally {
-            migrationLock.unlock();
+        if (DatabaseManager.migrationAccessor().hasMigrationRequest(account.getId())) {
+            return true;
         }
         for (World world : getWorlds()) {
             for (Channel channel : world.getChannels()) {
@@ -101,15 +84,12 @@ public final class Server {
      * Start migration process, an empty result is returned if migration cannot be performed due to incorrect
      * initialization () or due to existing migrations.
      *
-     * Migrations are stored in an arraylist, and its synchronization is done with a simple lock. Could upgrade to a
-     * more efficient implementation, e.g. using Caffeine to handle concurrent access and expiry.
-     *
      * @param c           {@link Client} instance attempting to start migration.
      * @param characterId The target character for migration.
      * @return Empty result is returned if migration cannot be performed, result with {@link MigrationRequest} if
      * migration was successfully queued.
      */
-    public static Optional<MigrationRequest> startMigration(Client c, int characterId) {
+    public static Optional<MigrationRequest> submitMigrationRequest(Client c, int characterId) {
         // Account not initialized
         if (c == null || c.getAccount() == null) {
             return Optional.empty();
@@ -124,65 +104,30 @@ public final class Server {
         if (channelResult.isEmpty()) {
             return Optional.empty();
         }
-        // Create Migration Request
+        // Create and Submit MigrationRequest
         final MigrationRequest migrationRequest = new MigrationRequest(
-                account.getId(), characterId, c.getMachineId(), c.getRemoteAddress(), channelResult.get(),
-                Instant.now().plusMillis(ServerConfig.MIGRATION_EXPIRY)
+                account.getId(), channelResult.get().getChannelId(), characterId, c.getMachineId(), c.getRemoteAddress()
         );
-        // Check for possible existing Migration Requests for the client / account / character
-        migrationLock.lock();
-        try {
-            final Instant now = Instant.now();
-            final var iter = migrations.iterator();
-            while (iter.hasNext()) {
-                final MigrationRequest mr = iter.next();
-                // Check expiry
-                if (now.isAfter(mr.expireTime())) {
-                    iter.remove();
-                    continue;
-                }
-                if (mr.looseMatch(migrationRequest)) {
-                    return Optional.empty();
-                }
-            }
-            migrations.add(migrationRequest);
-            return Optional.of(migrationRequest);
-        } finally {
-            migrationLock.unlock();
+        if (!DatabaseManager.migrationAccessor().submitMigrationRequest(migrationRequest)) {
+            return Optional.empty();
         }
+        return Optional.of(migrationRequest);
     }
 
     /**
      * Check whether a client migration is valid. There should be a {@link MigrationRequest} that matches the requested
-     * character ID, the client's machine ID and remote address. This method also handles expiry of migration requests,
-     * see {@link Server#startMigration} for more efficient implementation.
+     * character ID, the client's machine ID and remote address.
      *
      * @param c           {@link Client} instance attempting to migrate to channel server.
      * @param characterId Target character ID attempting to migrate to channel server.
      * @return {@link MigrationRequest} instance that matches the request.
      */
-    public static Optional<MigrationRequest> handleMigration(Client c, int characterId) {
-        migrationLock.lock();
-        try {
-            final Instant now = Instant.now();
-            final var iter = migrations.iterator();
-            while (iter.hasNext()) {
-                final MigrationRequest mr = iter.next();
-                // Check expiry
-                if (now.isAfter(mr.expireTime())) {
-                    iter.remove();
-                    continue;
-                }
-                // Migration Request must match the client and character ID
-                if (mr.strictMatch(c, characterId)) {
-                    iter.remove();
-                    return Optional.of(mr);
-                }
-            }
-        } finally {
-            migrationLock.unlock();
+    public static Optional<MigrationRequest> fetchMigrationRequest(Client c, int characterId) {
+        final Optional<MigrationRequest> mrResult = DatabaseManager.migrationAccessor().fetchMigrationRequest(characterId);
+        if (mrResult.isEmpty() || !mrResult.get().strictMatch(c, characterId)) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return mrResult;
     }
 
     public static void main(String[] args) {

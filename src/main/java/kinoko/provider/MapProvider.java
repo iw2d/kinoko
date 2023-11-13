@@ -4,7 +4,6 @@ import io.fury.Fury;
 import io.fury.ThreadLocalFury;
 import io.fury.ThreadSafeFury;
 import io.fury.config.Language;
-import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.*;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
@@ -22,10 +21,10 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public final class MapProvider {
+    public static final Path MAP_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "map");
     private static final Logger log = LogManager.getLogger(Server.class);
-    private static final Path MAP_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "map");
     private static final ThreadSafeFury FURY = new ThreadLocalFury(classLoader -> {
-        Fury f = Fury.builder().withLanguage(Language.JAVA)
+        final Fury f = Fury.builder().withLanguage(Language.JAVA)
                 .withClassLoader(classLoader)
                 .build();
         f.register(MapInfo.class);

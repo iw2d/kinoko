@@ -25,12 +25,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public final class ItemProvider {
+    public static final Path ITEM_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "item");
+    public static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
+    public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Logger log = LogManager.getLogger(Server.class);
-    private static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
-    private static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
-    private static final Path ITEM_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "item");
-    private static final ThreadSafeFury FURY = new ThreadLocalFury(classLoader -> {
-        Fury f = Fury.builder().withLanguage(Language.JAVA)
+    private static final ThreadSafeFury fury = new ThreadLocalFury(classLoader -> {
+        final Fury f = Fury.builder().withLanguage(Language.JAVA)
                 .withClassLoader(classLoader)
                 .build();
         f.register(ItemInfo.class);
@@ -75,7 +75,7 @@ public final class ItemProvider {
     public static Optional<ItemInfo> getItemInfo(int itemId) {
         try {
             final byte[] data = Files.readAllBytes(getPath(itemId));
-            return Optional.of(FURY.deserializeJavaObject(data, ItemInfo.class));
+            return Optional.of(fury.deserializeJavaObject(data, ItemInfo.class));
         } catch (IOException e) {
             log.error("Exception caught while loading ItemInfo", e);
         }
@@ -96,7 +96,7 @@ public final class ItemProvider {
                 final int itemId = Integer.parseInt(entry.getKey().replace(".img", ""));
                 final ItemInfo itemInfo = ItemInfo.from(itemId, entry.getValue().getProperty());
 
-                final byte[] data = FURY.serializeJavaObject(itemInfo);
+                final byte[] data = fury.serializeJavaObject(itemInfo);
                 Files.write(getPath(itemId), data);
             }
         }
@@ -116,7 +116,7 @@ public final class ItemProvider {
                     }
                     final ItemInfo itemInfo = ItemInfo.from(itemId, itemProp);
 
-                    final byte[] data = FURY.serializeJavaObject(itemInfo);
+                    final byte[] data = fury.serializeJavaObject(itemInfo);
                     Files.write(getPath(itemId), data);
                 }
             }

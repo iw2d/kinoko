@@ -256,12 +256,7 @@ public final class LoginHandler {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        Optional<MigrationRequest> mr = Server.startMigration(c, characterId);
-        if (mr.isEmpty()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
-            return;
-        }
-        c.write(LoginPacket.selectCharacterResultSuccess(mr.get()));
+        tryMigration(c, characterId);
     }
 
     @Handler(InHeader.DELETE_CHAR)
@@ -304,12 +299,7 @@ public final class LoginHandler {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        Optional<MigrationRequest> mr = Server.startMigration(c, characterId);
-        if (mr.isEmpty()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
-            return;
-        }
-        c.write(LoginPacket.selectCharacterResultSuccess(mr.get()));
+        tryMigration(c, characterId);
     }
 
     @Handler(InHeader.CHECK_SPW)
@@ -325,12 +315,7 @@ public final class LoginHandler {
             c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
             return;
         }
-        Optional<MigrationRequest> mr = Server.startMigration(c, characterId);
-        if (mr.isEmpty()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
-            return;
-        }
-        c.write(LoginPacket.selectCharacterResultSuccess(mr.get()));
+        tryMigration(c, characterId);
     }
 
     @Handler(InHeader.EXCEPTION_LOG)
@@ -353,5 +338,22 @@ public final class LoginHandler {
 
     @Handler({ InHeader.LOGIN_INIT, InHeader.UPDATE_CLIENT_ENVIRONMENT })
     public static void ignore(Client c, InPacket inPacket) {
+    }
+
+    private static void tryMigration(Client c, int characterId) {
+        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, characterId);
+        if (mrResult.isEmpty()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            return;
+        }
+        final MigrationRequest mr = mrResult.get();
+        final Optional<Channel> channelResult = Server.getChannelById(ServerConfig.WORLD_ID, mr.channelId());
+        if (channelResult.isEmpty()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            return;
+        }
+        final Channel channel = channelResult.get();
+        c.write(LoginPacket.selectCharacterResultSuccess(channel.getChannelAddress(), channel.getChannelPort(),
+                mr.characterId()));
     }
 }

@@ -12,10 +12,12 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.CassandraAccountAccessor;
 import kinoko.database.cassandra.CassandraCharacterAccessor;
+import kinoko.database.cassandra.CassandraMigrationAccessor;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.AccountTable;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
+import kinoko.database.cassandra.table.MigrationTable;
 import kinoko.database.cassandra.type.*;
 import kinoko.world.item.EquipData;
 import kinoko.world.item.Inventory;
@@ -36,6 +38,7 @@ public final class DatabaseManager {
     private static CqlSession cqlSession;
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
+    private static MigrationAccessor migrationAccessor;
 
     public static AccountAccessor accountAccessor() {
         return accountAccessor;
@@ -43,6 +46,10 @@ public final class DatabaseManager {
 
     public static CharacterAccessor characterAccessor() {
         return characterAccessor;
+    }
+
+    public static MigrationAccessor migrationAccessor() {
+        return migrationAccessor;
     }
 
     public static void createKeyspace(CqlSession session, String keyspace) {
@@ -88,6 +95,7 @@ public final class DatabaseManager {
         IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
         AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        MigrationTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
         // Register Codecs
         registerCodec(cqlSession, EquipDataUDT.getTypeName(), (ic) -> new EquipDataCodec(ic, GenericType.of(EquipData.class)));
@@ -99,6 +107,7 @@ public final class DatabaseManager {
         // Create Accessors
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
+        migrationAccessor = new CassandraMigrationAccessor(cqlSession, DATABASE_KEYSPACE);
     }
 
     public static void shutdown() {

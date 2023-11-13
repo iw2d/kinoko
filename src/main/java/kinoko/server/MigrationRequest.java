@@ -7,8 +7,7 @@ import java.net.InetAddress;
 import java.time.Instant;
 import java.util.Arrays;
 
-public record MigrationRequest(int accountId, int characterId, byte[] machineId, byte[] remoteAddress,
-                               Channel selectedChannel, Instant expireTime) {
+public record MigrationRequest(int accountId, int channelId, int characterId, byte[] machineId, byte[] remoteAddress) {
 
     public boolean looseMatch(MigrationRequest mr) {
         return this.accountId == mr.accountId || this.characterId == mr.characterId ||
@@ -24,6 +23,6 @@ public record MigrationRequest(int accountId, int characterId, byte[] machineId,
         if (!(c.getConnectedServer() instanceof final ChannelServer connectedServer)) {
             return false;
         }
-        return this.selectedChannel.getChannelId() == connectedServer.getChannel().getChannelId();
+        return this.channelId == connectedServer.getChannel().getChannelId();
     }
 }

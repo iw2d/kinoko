@@ -6,9 +6,11 @@ import kinoko.packet.stage.StagePacket;
 import kinoko.server.Client;
 import kinoko.server.MigrationRequest;
 import kinoko.server.Server;
+import kinoko.server.ServerConfig;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
+import kinoko.world.Channel;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
@@ -28,28 +30,36 @@ public final class MigrationHandler {
         c.setMachineId(machineId);
 
         // Check Migration Request
-        final Optional<MigrationRequest> migrationResult = Server.handleMigration(c, characterId);
+        final Optional<MigrationRequest> migrationResult = Server.fetchMigrationRequest(c, characterId);
         if (migrationResult.isEmpty()) {
             log.error("[MigrationHandler] Migration failed for character ID : {}", characterId);
             c.close();
             return;
         }
-        final MigrationRequest migrationRequest = migrationResult.get();
+        final MigrationRequest mr = migrationResult.get();
+
+        // Check Channel
+        final Optional<Channel> channelResult = Server.getChannelById(ServerConfig.WORLD_ID, mr.channelId());
+        if (channelResult.isEmpty()) {
+            log.error("[MigrationHandler] Could not find channel with ID : {}", mr.channelId());
+            c.close();
+            return;
+        }
+        final Channel channel = channelResult.get();
 
         // Check Account
-        final int accountId = migrationRequest.accountId();
+        final int accountId = mr.accountId();
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(accountId);
         if (accountResult.isEmpty()) {
             log.error("[MigrationHandler] Could not retrieve account with ID : {}", accountId);
             c.close();
             return;
         }
-        final Account account = accountResult.get();
-        account.setWorldId(migrationRequest.selectedChannel().getWorldId());
-        account.setChannelId(migrationRequest.selectedChannel().getChannelId());
-        c.setAccount(account);
 
-        // TODO: load AvatarDatas and check character belongs to account (also for initializing blessing)
+        final Account account = accountResult.get();
+        account.setWorldId(channel.getWorldId());
+        account.setChannelId(channel.getChannelId());
+        c.setAccount(account);
 
         // Check Character
         final Optional<CharacterData> characterResult = DatabaseManager.characterAccessor().getCharacterById(characterId);

@@ -8,7 +8,6 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Account;
 import kinoko.world.Channel;
-import kinoko.server.MigrationRequest;
 import kinoko.world.World;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
@@ -141,14 +140,14 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultSuccess(MigrationRequest mr) {
+    public static OutPacket selectCharacterResultSuccess(byte[] channelAddress, int port, int characterId) {
         OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
         outPacket.encodeByte(LoginResult.SUCCESS.getValue());
         outPacket.encodeByte(0);
 
-        outPacket.encodeArray(mr.selectedChannel().getChannelAddress()); // sin_addr
-        outPacket.encodeShort(mr.selectedChannel().getChannelPort()); // uPort
-        outPacket.encodeInt(mr.characterId());
+        outPacket.encodeArray(channelAddress); // sin_addr
+        outPacket.encodeShort(port); // uPort
+        outPacket.encodeInt(characterId);
         outPacket.encodeByte(0); // bAuthenCode
         outPacket.encodeInt(0); // ulPremiumArgument
         return outPacket;
