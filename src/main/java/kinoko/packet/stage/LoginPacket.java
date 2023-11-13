@@ -16,7 +16,7 @@ import java.util.List;
 
 public final class LoginPacket {
     public static OutPacket connect(Client c) {
-        OutPacket outPacket = OutPacket.of();
+        final OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(0x0E);
         outPacket.encodeShort(ServerConstants.GAME_VERSION);
         outPacket.encodeString(ServerConstants.PATCH);
@@ -31,7 +31,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkPasswordResultSuccess(Account account) {
-        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(LoginResult.SUCCESS.getValue());
         outPacket.encodeByte(0); // 0 or 1
         outPacket.encodeInt(0);
@@ -55,7 +55,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkPasswordResultFail(LoginResult failType) {
-        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(failType.getValue());
         outPacket.encodeByte(0);
         outPacket.encodeInt(0);
@@ -63,7 +63,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkPasswordResultBlocked(int blockedType, FileTime unblockDate) {
-        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(LoginResult.BLOCKED.getValue());
         outPacket.encodeByte(0);
         outPacket.encodeInt(0);
@@ -73,7 +73,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket viewAllCharResult() {
-        OutPacket outPacket = OutPacket.of(OutHeader.VIEW_ALL_CHAR_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.VIEW_ALL_CHAR_RESULT);
         outPacket.encodeByte(6);
         outPacket.encodeByte(true);
         outPacket.encodeString("This feature is disabled");
@@ -81,7 +81,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket worldInformation(World world) {
-        OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
+        final OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
         outPacket.encodeByte(world.getId()); // nWorldID
         outPacket.encodeString(world.getName());
         outPacket.encodeByte(0); // nWorldState
@@ -105,20 +105,20 @@ public final class LoginPacket {
     }
 
     public static OutPacket worldInformationEnd() {
-        OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
+        final OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
         outPacket.encodeByte(-1); // nWorldID
         return outPacket;
     }
 
     public static OutPacket checkUserLimitResult() {
-        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_USER_LIMIT_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_USER_LIMIT_RESULT);
         outPacket.encodeByte(false); // bOverUserLimit
         outPacket.encodeByte(0); // bPopulateLevel (0 = Normal, 1 = Populated, 2 = Full)
         return outPacket;
     }
 
     public static OutPacket selectWorldResultSuccess(Account account) {
-        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
         outPacket.encodeByte(LoginResult.SUCCESS.getValue());
 
         outPacket.encodeByte(account.getCharacterList().size());
@@ -135,13 +135,13 @@ public final class LoginPacket {
     }
 
     public static OutPacket selectWorldResultFail(LoginResult failType) {
-        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
         outPacket.encodeByte(failType.getValue());
         return outPacket;
     }
 
     public static OutPacket selectCharacterResultSuccess(byte[] channelAddress, int port, int characterId) {
-        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
         outPacket.encodeByte(LoginResult.SUCCESS.getValue());
         outPacket.encodeByte(0);
 
@@ -154,14 +154,14 @@ public final class LoginPacket {
     }
 
     public static OutPacket selectCharacterResultFail(LoginResult resultType, int errorType) {
-        OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
         outPacket.encodeByte(resultType.getValue());
         outPacket.encodeByte(errorType);
         return outPacket;
     }
 
     public static OutPacket checkDuplicatedIdResult(String name, int idResultType) {
-        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_DUPLICATED_ID_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_DUPLICATED_ID_RESULT);
         outPacket.encodeString(name);
         outPacket.encodeByte(idResultType);
         // 0: Success
@@ -172,33 +172,33 @@ public final class LoginPacket {
     }
 
     public static OutPacket createNewCharacterResultSuccess(CharacterData characterData) {
-        OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
         outPacket.encodeByte(LoginResult.SUCCESS.getValue());
         AvatarData.from(characterData).encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket createNewCharacterResultFail(LoginResult failType) {
-        OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
         outPacket.encodeByte(failType.getValue());
         return outPacket;
     }
 
     public static OutPacket deleteCharacterResult(LoginResult resultType, int characterId) {
-        OutPacket outPacket = OutPacket.of(OutHeader.DELETE_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.DELETE_CHARACTER_RESULT);
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(resultType.getValue());
         return outPacket;
     }
 
     public static OutPacket latestConnectedWorld(int worldId) {
-        OutPacket outPacket = OutPacket.of(OutHeader.LATEST_CONNECTED_WORLD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.LATEST_CONNECTED_WORLD);
         outPacket.encodeInt(worldId);
         return outPacket;
     }
 
     public static OutPacket checkSecondaryPasswordResult() {
-        OutPacket outPacket = OutPacket.of(OutHeader.CHECK_SPW_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_SPW_RESULT);
         outPacket.encodeByte(-1); // ignored
         return outPacket;
     }

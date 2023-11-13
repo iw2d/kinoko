@@ -9,7 +9,7 @@ import java.time.Instant;
 public final class StagePacket {
 
     public static OutPacket setField(User user, int channelId, boolean isMigrate, boolean isRevive) {
-        OutPacket outPacket = OutPacket.of(OutHeader.SET_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SET_FIELD);
         outPacket.encodeShort(0); // CClientOptMan::DecodeOpt
         outPacket.encodeInt(channelId); // nChannelID
         outPacket.encodeInt(0); // dwOldDriverID

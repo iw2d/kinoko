@@ -16,7 +16,6 @@ public final class CalcDamage implements Encodable {
         this.seed3 = seed3;
     }
 
-
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(seed1);
