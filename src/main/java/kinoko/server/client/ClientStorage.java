@@ -1,4 +1,4 @@
-package kinoko.server;
+package kinoko.server.client;
 
 import kinoko.world.Account;
 import kinoko.world.user.User;
@@ -6,7 +6,7 @@ import kinoko.world.user.User;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class PlayerStorage {
+public final class ClientStorage {
     private final Map<Integer, Client> connectedAccounts = new ConcurrentHashMap<>(); // accountId -> Client
     private final Map<Integer, Client> connectedUsers = new ConcurrentHashMap<>(); // characterId -> Client
 

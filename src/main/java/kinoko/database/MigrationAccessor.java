@@ -1,6 +1,6 @@
 package kinoko.database;
 
-import kinoko.server.MigrationRequest;
+import kinoko.server.client.MigrationRequest;
 
 import java.util.Optional;
 

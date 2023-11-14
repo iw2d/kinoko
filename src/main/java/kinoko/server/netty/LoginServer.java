@@ -9,6 +9,7 @@ import java.util.Map;
 
 public final class LoginServer extends NettyServer {
     private static final Map<InHeader, Method> handlerMap = loadHandlers(LoginHandler.class);
+
     @Override
     public int getPort() {
         return ServerConstants.LOGIN_PORT;

@@ -5,8 +5,8 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import kinoko.database.MigrationAccessor;
 import kinoko.database.cassandra.table.MigrationTable;
-import kinoko.server.MigrationRequest;
 import kinoko.server.ServerConfig;
+import kinoko.server.client.MigrationRequest;
 
 import java.nio.ByteBuffer;
 import java.util.Optional;

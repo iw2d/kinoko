@@ -1,7 +1,7 @@
 package kinoko.server.command;
 
-import kinoko.server.Client;
 import kinoko.server.ServerConfig;
+import kinoko.server.client.Client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +15,7 @@ public final class CommandProcessor {
     private static final Map<String, Method> commandMap = new HashMap<>();
 
     public static void initialize() {
-        for (Class<?> clazz : new Class[]{AdminCommands.class}) {
+        for (Class<?> clazz : new Class[]{ AdminCommands.class }) {
             for (Method method : clazz.getDeclaredMethods()) {
                 if (!method.isAnnotationPresent(Command.class)) {
                     continue;

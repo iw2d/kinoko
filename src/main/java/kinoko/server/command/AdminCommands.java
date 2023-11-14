@@ -3,7 +3,7 @@ package kinoko.server.command;
 import kinoko.packet.world.StatFlag;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
-import kinoko.server.Client;
+import kinoko.server.client.Client;
 
 public final class AdminCommands {
     @Command("dispose")

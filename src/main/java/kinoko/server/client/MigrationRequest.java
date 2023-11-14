@@ -1,4 +1,4 @@
-package kinoko.server;
+package kinoko.server.client;
 
 import java.util.Arrays;
 

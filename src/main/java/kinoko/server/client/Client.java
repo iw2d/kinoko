@@ -1,4 +1,4 @@
-package kinoko.server;
+package kinoko.server.client;
 
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.stage.LoginPacket;

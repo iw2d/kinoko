@@ -7,8 +7,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
-import kinoko.server.Client;
-import kinoko.server.PlayerStorage;
+import kinoko.server.client.Client;
+import kinoko.server.client.ClientStorage;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import org.apache.logging.log4j.LogManager;
@@ -23,15 +23,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class NettyServer {
     protected static final Logger log = LogManager.getLogger(NettyServer.class);
-    private final PlayerStorage playerStorage = new PlayerStorage();
+    private final ClientStorage clientStorage = new ClientStorage();
     private CompletableFuture<Channel> channelFuture;
 
     public abstract int getPort();
 
     public abstract Method getHandler(InHeader header);
 
-    public final PlayerStorage getPlayerStorage() {
-        return playerStorage;
+    public final ClientStorage getPlayerStorage() {
+        return clientStorage;
     }
 
     public final CompletableFuture<Channel> getFuture() {

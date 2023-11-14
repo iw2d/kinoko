@@ -2,8 +2,8 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserCommonPacket;
-import kinoko.server.Client;
 import kinoko.server.ServerConfig;
+import kinoko.server.client.Client;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;

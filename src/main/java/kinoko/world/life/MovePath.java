@@ -88,7 +88,7 @@ public final class MovePath implements Encodable {
                     outPacket.encodeShort(elem.getVx()); // vx
                     outPacket.encodeShort(elem.getVy()); // vy
                 }
-                case 20, 21, 22,23, 24, 25, 26, 27, 28, 29, 30 -> {
+                case 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 -> {
                     // noop
                 }
             }
@@ -154,7 +154,7 @@ public final class MovePath implements Encodable {
                     elem.setVx(inPacket.decodeShort()); // vx
                     elem.setVy(inPacket.decodeShort()); // vy
                 }
-                case 20, 21, 22,23, 24, 25, 26, 27, 28, 29, 30 -> {
+                case 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 -> {
                     elem.setX(x);
                     elem.setY(y);
                     elem.setVy(vx);
