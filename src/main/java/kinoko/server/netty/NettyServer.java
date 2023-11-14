@@ -5,14 +5,18 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.Client;
 import kinoko.server.PlayerStorage;
-import kinoko.world.Account;
-import kinoko.world.user.User;
+import kinoko.server.header.InHeader;
+import kinoko.server.packet.InPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Method;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -23,6 +27,8 @@ public abstract class NettyServer {
     private CompletableFuture<Channel> channelFuture;
 
     public abstract int getPort();
+
+    public abstract Method getHandler(InHeader header);
 
     public final PlayerStorage getPlayerStorage() {
         return playerStorage;
@@ -86,7 +92,29 @@ public abstract class NettyServer {
         return stopFuture;
     }
 
-    protected static byte[] getNewIv() {
+    protected static Map<InHeader, Method> loadHandlers(Class<?>... handlerClasses) {
+        final Map<InHeader, Method> handlerMap = new EnumMap<>(InHeader.class);
+        for (Class<?> clazz : handlerClasses) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (!method.isAnnotationPresent(Handler.class)) {
+                    continue;
+                }
+                if (method.getParameterCount() != 2 || method.getParameterTypes()[0] != Client.class || method.getParameterTypes()[1] != InPacket.class) {
+                    throw new RuntimeException(String.format("Incorrect parameters for handler method \"%s\"", method.getName()));
+                }
+                Handler annotation = method.getAnnotation(Handler.class);
+                for (InHeader header : annotation.value()) {
+                    if (handlerMap.containsKey(header)) {
+                        throw new RuntimeException(String.format("Multiple handlers found for InHeader \"%s\"", header.name()));
+                    }
+                    handlerMap.put(header, method);
+                }
+            }
+        }
+        return handlerMap;
+    }
+
+    private static byte[] getNewIv() {
         final byte[] iv = new byte[4];
         ThreadLocalRandom.current().nextBytes(iv);
         return iv;

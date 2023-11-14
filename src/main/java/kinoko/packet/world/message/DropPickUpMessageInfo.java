@@ -14,6 +14,22 @@ public final class DropPickUpMessageInfo implements Encodable {
         this.type = type;
     }
 
+    public void setPortionNotFound(boolean portionNotFound) {
+        this.portionNotFound = portionNotFound;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());

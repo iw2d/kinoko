@@ -1,6 +1,6 @@
 package kinoko.packet.stage;
 
-public enum LoginResult {
+public enum LoginType {
     SUCCESS(0),
     TEMP_BLOCKED(1),
     BLOCKED(2),
@@ -45,7 +45,7 @@ public enum LoginResult {
 
     private final int value;
 
-    LoginResult(int value) {
+    LoginType(int value) {
         this.value = value;
     }
 

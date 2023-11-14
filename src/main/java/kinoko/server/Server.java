@@ -1,10 +1,10 @@
 package kinoko.server;
 
 import kinoko.database.DatabaseManager;
-import kinoko.handler.Dispatch;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
+import kinoko.server.command.CommandProcessor;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.netty.LoginServer;
 import kinoko.world.Account;
@@ -117,7 +117,7 @@ public final class Server {
      * Check whether a client migration is valid. There should be a {@link MigrationRequest} that matches the requested
      * channel ID, character ID, the client's machine ID, and remote address.
      *
-     * @param client           {@link Client} instance attempting to migrate to channel server.
+     * @param client      {@link Client} instance attempting to migrate to channel server.
      * @param characterId Target character ID attempting to migrate to channel server.
      * @return {@link MigrationRequest} instance that matches the request.
      */
@@ -147,10 +147,12 @@ public final class Server {
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
+        // Load Commands
+        CommandProcessor.initialize();
+
         // Load World
         start = Instant.now();
         MapleCrypto.initialize();
-        Dispatch.registerHandlers();
         loginServer = new LoginServer();
         loginServer.start().join();
         log.info("Login server listening on port {}", loginServer.getPort());

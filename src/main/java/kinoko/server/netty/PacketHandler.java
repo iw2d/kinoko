@@ -2,7 +2,6 @@ package kinoko.server.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import kinoko.handler.Dispatch;
 import kinoko.server.Client;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -26,7 +25,7 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         final short op = inPacket.decodeShort();
         final InHeader header = InHeader.getByValue(op);
-        final Method handler = Dispatch.getHandler(header);
+        final Method handler = server.getHandler(header);
         if (header == null) {
             log.warn("[PacketHandler] Unknown opcode {} | {}", Util.opToString(op), inPacket);
         } else if (handler == null) {

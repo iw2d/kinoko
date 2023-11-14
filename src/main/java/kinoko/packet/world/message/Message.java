@@ -6,12 +6,13 @@ import kinoko.world.quest.QuestRecord;
 
 public final class Message implements Encodable {
     private final MessageType type;
+    private boolean bool1;
+    private boolean bool2;
     private int int1;
     private int int2;
     private String string1;
-    private QuestRecord questRecord;
     private DropPickUpMessageInfo dropPickUpMessageInfo;
-    private IncExpMessageInfo incExpMessageInfo;
+    private QuestRecord questRecord;
 
     public Message(MessageType type) {
         this.type = type;
@@ -43,7 +44,22 @@ public final class Message implements Encodable {
                 outPacket.encodeInt(int1); // nItemID
             }
             case INC_EXP -> {
-                incExpMessageInfo.encode(outPacket);
+                outPacket.encodeByte(bool1); // white
+                outPacket.encodeInt(int1); // exp
+                outPacket.encodeByte(bool2); // bOnQuest
+                outPacket.encodeInt(0); // bonus event exp
+                outPacket.encodeByte(0); // nMobEventBonusPercentage
+                outPacket.encodeByte(0); // ignored
+                outPacket.encodeInt(0); // nWeddingBonusEXP
+                // outPacket.encodeByte(0); // nPlayTimeHour (if nMobEventBonusPercentage > 0)
+                outPacket.encodeByte(0); // nQuestBonusRemainCount (or spirit week bonus exp)
+                outPacket.encodeByte(0); // nPartyBonusEventRate
+                outPacket.encodeInt(0); // nPartyBonusExp
+                outPacket.encodeInt(0); // nItemBonusEXP
+                outPacket.encodeInt(0); // nPremiumIPEXP
+                outPacket.encodeInt(0); // nRainbowWeekEventEXP
+                outPacket.encodeInt(0); // nPartyEXPRingEXP
+                outPacket.encodeInt(0); // nCakePieEventBonus
             }
             case INC_SP -> {
                 outPacket.encodeShort(int1); // nJob
@@ -65,5 +81,50 @@ public final class Message implements Encodable {
                 outPacket.encodeString(string1); // sChat
             }
         }
+    }
+
+    public static Message dropPickUp(DropPickUpMessageInfo info) {
+        final Message message = new Message(MessageType.DROP_PICK_UP);
+        message.dropPickUpMessageInfo = info;
+        return message;
+    }
+
+    public static Message dropPickUp(DropPickUpMessageType type) {
+        return dropPickUp(new DropPickUpMessageInfo(type));
+    }
+
+    public static Message dropPickUpMoney(int money, boolean portionNotFound) {
+        final DropPickUpMessageInfo info = new DropPickUpMessageInfo(DropPickUpMessageType.MONEY);
+        info.setMoney(money);
+        info.setPortionNotFound(portionNotFound);
+        return dropPickUp(info);
+    }
+
+    public static Message dropPickUpItem(int itemId, int itemCount) {
+        final DropPickUpMessageInfo info = new DropPickUpMessageInfo(DropPickUpMessageType.ITEM_BUNDLE);
+        info.setItemId(itemId);
+        info.setItemCount(itemCount);
+        return dropPickUp(info);
+    }
+
+    public static Message incExp(int exp, boolean white, boolean quest) {
+        final Message message = new Message(MessageType.INC_EXP);
+        message.int1 = exp;
+        message.bool1 = white;
+        message.bool2 = quest;
+        return message;
+    }
+
+    public static Message incSp(int job, int sp) {
+        final Message message = new Message(MessageType.INC_SP);
+        message.int1 = job;
+        message.int2 = sp;
+        return message;
+    }
+
+    public static Message system(String text) {
+        final Message message = new Message(MessageType.SYSTEM);
+        message.string1 = text;
+        return message;
     }
 }

@@ -3,7 +3,7 @@ package kinoko.handler.stage;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
-import kinoko.packet.stage.LoginResult;
+import kinoko.packet.stage.LoginType;
 import kinoko.provider.EtcProvider;
 import kinoko.server.Client;
 import kinoko.server.MigrationRequest;
@@ -49,17 +49,17 @@ public final class LoginHandler {
             if (ServerConfig.AUTO_CREATE_ACCOUNT) {
                 DatabaseManager.accountAccessor().newAccount(username, password);
             }
-            c.write(LoginPacket.checkPasswordResultFail(LoginResult.NOT_REGISTERED));
+            c.write(LoginPacket.checkPasswordResultFail(LoginType.NOT_REGISTERED));
             return;
         }
 
         final Account account = accountResult.get();
         if (Server.isConnected(account)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginResult.ALREADY_CONNECTED));
+            c.write(LoginPacket.checkPasswordResultFail(LoginType.ALREADY_CONNECTED));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginResult.INCORRECT_PASSWORD));
+            c.write(LoginPacket.checkPasswordResultFail(LoginType.INCORRECT_PASSWORD));
             return;
         }
 
@@ -93,7 +93,7 @@ public final class LoginHandler {
     public static void handleSelectWorld(Client c, InPacket inPacket) {
         final byte gameStartMode = inPacket.decodeByte();
         if (gameStartMode != 2) {
-            c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
 
@@ -104,18 +104,18 @@ public final class LoginHandler {
         // Check World ID and Channel ID
         final Optional<ChannelServer> channelResult = Server.getChannelServerById(worldId, channelId);
         if (channelResult.isEmpty()) {
-            c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
 
         // Check Account
         final Account account = c.getAccount();
         if (account == null) {
-            c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
         if (!c.getConnectedServer().getPlayerStorage().isConnected(account)) {
-            c.write(LoginPacket.selectWorldResultFail(LoginResult.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
 
@@ -155,7 +155,7 @@ public final class LoginHandler {
 
         // Validate character
         if (!GameConstants.isValidCharacterName(name) || EtcProvider.isForbiddenName(name)) {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginResult.INVALID_CHARACTER_NAME));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginType.INVALID_CHARACTER_NAME));
             return;
         }
         Optional<LoginJob> loginJob = LoginJob.getByRace(selectedRace);
@@ -182,7 +182,7 @@ public final class LoginHandler {
         // Create character
         final Optional<Integer> characterIdResult = DatabaseManager.characterAccessor().nextCharacterId();
         if (characterIdResult.isEmpty()) {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginResult.TIMEOUT));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginType.TIMEOUT));
             return;
         }
         final CharacterData characterData = new CharacterData(c.getAccount().getId(), characterIdResult.get());
@@ -245,7 +245,7 @@ public final class LoginHandler {
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {
             c.write(LoginPacket.createNewCharacterResultSuccess(characterData));
         } else {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginResult.TIMEOUT));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginType.TIMEOUT));
         }
     }
 
@@ -256,7 +256,7 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         if (ServerConfig.REQUIRE_SECONDARY_PASSWORD) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         tryMigration(c, characterId);
@@ -270,18 +270,18 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
                 !c.getConnectedServer().getPlayerStorage().isConnected(account)) {
-            c.write(LoginPacket.deleteCharacterResult(LoginResult.UNKNOWN, characterId));
+            c.write(LoginPacket.deleteCharacterResult(LoginType.UNKNOWN, characterId));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
-            c.write(LoginPacket.deleteCharacterResult(LoginResult.INCORRECT_SPW, characterId));
+            c.write(LoginPacket.deleteCharacterResult(LoginType.INCORRECT_SPW, characterId));
             return;
         }
         if (!DatabaseManager.characterAccessor().deleteCharacter(account.getId(), characterId)) {
-            c.write(LoginPacket.deleteCharacterResult(LoginResult.DB_FAIL, characterId));
+            c.write(LoginPacket.deleteCharacterResult(LoginType.DB_FAIL, characterId));
             return;
         }
-        c.write(LoginPacket.deleteCharacterResult(LoginResult.SUCCESS, characterId));
+        c.write(LoginPacket.deleteCharacterResult(LoginType.SUCCESS, characterId));
     }
 
     @Handler(InHeader.ALIVE_ACK)
@@ -299,7 +299,7 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || account.hasSecondaryPassword() ||
                 !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         tryMigration(c, characterId);
@@ -315,7 +315,7 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.hasSecondaryPassword() ||
                 !DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         tryMigration(c, characterId);
@@ -346,13 +346,13 @@ public final class LoginHandler {
     private static void tryMigration(Client c, int characterId) {
         final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, characterId);
         if (mrResult.isEmpty()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         final MigrationRequest mr = mrResult.get();
         final Optional<ChannelServer> channelResult = Server.getChannelServerById(ServerConfig.WORLD_ID, mr.channelId());
         if (channelResult.isEmpty()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResult.UNKNOWN, 2));
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         final ChannelServer channelServer = channelResult.get();

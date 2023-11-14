@@ -1,7 +1,5 @@
 package kinoko.server;
 
-import kinoko.world.ChannelServer;
-
 import java.util.Arrays;
 
 public record MigrationRequest(int accountId, int channelId, int characterId, byte[] machineId, byte[] remoteAddress) {
