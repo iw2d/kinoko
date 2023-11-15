@@ -1,9 +1,5 @@
 package kinoko.provider;
 
-import io.fury.Fury;
-import io.fury.ThreadLocalFury;
-import io.fury.ThreadSafeFury;
-import io.fury.config.Language;
 import kinoko.provider.map.*;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
@@ -12,67 +8,29 @@ import kinoko.server.ServerConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Stream;
 
 public final class MapProvider {
     public static final Path MAP_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz");
-    public static final Path MAP_DIRECTORY = Path.of(ServerConfig.DAT_DIRECTORY, "map");
     private static final Logger log = LogManager.getLogger(MapProvider.class);
-    private static final ThreadSafeFury fury = new ThreadLocalFury(classLoader -> {
-        final Fury f = Fury.builder().withLanguage(Language.JAVA)
-                .withClassLoader(classLoader)
-                .build();
-        f.register(MapInfo.class);
-        f.register(Foothold.class);
-        f.register(LifeType.class);
-        f.register(LifeInfo.class);
-        f.register(PortalType.class);
-        f.register(PortalInfo.class);
-        f.register(ReactorInfo.class);
-        return f;
-    });
+    private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
 
     public static void initialize(boolean reset) {
-        if (!Files.isDirectory(MAP_DIRECTORY) || reset) {
-            try {
-                if (Files.isDirectory(MAP_DIRECTORY)) {
-                    try (final Stream<Path> walk = Files.walk(MAP_DIRECTORY)) {
-                        walk.sorted(Comparator.reverseOrder())
-                                .map(Path::toFile)
-                                .forEach(File::delete);
-                    }
-                }
-                Files.deleteIfExists(MAP_DIRECTORY);
-                Files.createDirectories(MAP_DIRECTORY);
-                try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-                    final WzPackage wzPackage = reader.readPackage();
-                    loadMapInfos(wzPackage);
-                } catch (ProviderError e) {
-                    log.error("Exception caught while loading Map.wz", e);
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+        try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+            final WzPackage wzPackage = reader.readPackage();
+            loadMapInfos(wzPackage);
+        } catch (IOException | ProviderError e) {
+            log.error("Exception caught while loading Map.wz", e);
         }
     }
 
     public static Optional<MapInfo> getMapInfo(int mapId) {
-        try {
-            final byte[] data = Files.readAllBytes(getPath(mapId));
-            return Optional.of(fury.deserializeJavaObject(data, MapInfo.class));
-        } catch (IOException e) {
-            log.error("Exception caught while loading MapInfo for map ID : {}", mapId, e);
+        if (!mapInfos.containsKey(mapId)) {
+            return Optional.empty();
         }
-        return Optional.empty();
-    }
-
-    private static Path getPath(int mapId) {
-        return Path.of(MAP_DIRECTORY.toString(), String.format("%d.dat", mapId));
+        return Optional.of(mapInfos.get(mapId));
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError, IOException {
@@ -88,10 +46,7 @@ public final class MapProvider {
             for (var mapEntry : dirEntry.getValue().getImages().entrySet()) {
                 final String imageName = mapEntry.getKey();
                 final int mapId = Integer.parseInt(imageName.replace(".img", ""));
-                final MapInfo mapInfo = resolveMapInfo(mapId, mapEntry.getValue());
-
-                final byte[] data = fury.serializeJavaObject(mapInfo);
-                Files.write(getPath(mapId), data);
+                mapInfos.put(mapId, resolveMapInfo(mapId, mapEntry.getValue()));
             }
         }
     }
@@ -110,9 +65,12 @@ public final class MapProvider {
         return MapInfo.from(mapId, foothold, life, portal, reactor, infoProp);
     }
 
-    private static List<Foothold> resolveFoothold(WzListProperty layerList) throws ProviderError {
+    private static List<Foothold> resolveFoothold(WzListProperty listProp) throws ProviderError {
+        if (listProp == null) {
+            return List.of();
+        }
         final List<Foothold> foothold = new ArrayList<>();
-        for (var layerEntry : layerList.getItems().entrySet()) {
+        for (var layerEntry : listProp.getItems().entrySet()) {
             final int layerId = Integer.parseInt(layerEntry.getKey());
             if (!(layerEntry.getValue() instanceof WzListProperty groupList)) {
                 throw new ProviderError("Failed to resolve foothold property");
@@ -134,9 +92,12 @@ public final class MapProvider {
         return foothold;
     }
 
-    private static List<LifeInfo> resolveLife(WzListProperty lifeList) throws ProviderError {
+    private static List<LifeInfo> resolveLife(WzListProperty listProp) throws ProviderError {
+        if (listProp == null) {
+            return List.of();
+        }
         final List<LifeInfo> life = new ArrayList<>();
-        for (var lifeEntry : lifeList.getItems().entrySet()) {
+        for (var lifeEntry : listProp.getItems().entrySet()) {
             if (!(lifeEntry.getValue() instanceof WzListProperty lifeProp)) {
                 throw new ProviderError("Failed to resolve life property");
             }
@@ -149,9 +110,12 @@ public final class MapProvider {
         return life;
     }
 
-    private static List<PortalInfo> resolvePortal(WzListProperty portalList) throws ProviderError {
+    private static List<PortalInfo> resolvePortal(WzListProperty listProp) throws ProviderError {
+        if (listProp == null) {
+            return List.of();
+        }
         final List<PortalInfo> portal = new ArrayList<>();
-        for (var portalEntry : portalList.getItems().entrySet()) {
+        for (var portalEntry : listProp.getItems().entrySet()) {
             final int portalId = Integer.parseInt(portalEntry.getKey());
             if (!(portalEntry.getValue() instanceof WzListProperty portalProp)) {
                 throw new ProviderError("Failed to resolve portal property");
@@ -165,9 +129,12 @@ public final class MapProvider {
         return portal;
     }
 
-    private static List<ReactorInfo> resolveReactor(WzListProperty reactorList) throws ProviderError {
+    private static List<ReactorInfo> resolveReactor(WzListProperty listProp) throws ProviderError {
+        if (listProp == null) {
+            return List.of();
+        }
         final List<ReactorInfo> reactor = new ArrayList<>();
-        for (var reactorEntry : reactorList.getItems().entrySet()) {
+        for (var reactorEntry : listProp.getItems().entrySet()) {
             if (!(reactorEntry.getValue() instanceof WzListProperty reactorProp)) {
                 throw new ProviderError("Failed to resolve reactor property");
             }
