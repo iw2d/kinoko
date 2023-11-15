@@ -7,6 +7,7 @@ import kinoko.packet.stage.LoginType;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.server.ChannelServer;
 import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.client.Client;
@@ -14,7 +15,6 @@ import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
-import kinoko.world.ChannelServer;
 import kinoko.world.GameConstants;
 import kinoko.world.World;
 import kinoko.world.item.Inventory;
@@ -22,6 +22,7 @@ import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
+import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.*;
@@ -232,6 +233,9 @@ public final class LoginHandler {
             skillManager.addSkill(skillInfo);
         }
         characterData.setSkillManager(skillManager);
+
+        final QuestManager questManager = new QuestManager();
+        characterData.setQuestManager(questManager);
 
         // Add Starting Equips
         for (int i = 4; i < selectedAL.length; i++) {

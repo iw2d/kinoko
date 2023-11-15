@@ -1,9 +1,9 @@
-package kinoko.server.netty;
+package kinoko.server;
 
 import kinoko.handler.ClientHandler;
 import kinoko.handler.stage.LoginHandler;
-import kinoko.server.ServerConstants;
 import kinoko.server.header.InHeader;
+import kinoko.server.netty.NettyServer;
 
 import java.lang.reflect.Method;
 import java.util.Map;

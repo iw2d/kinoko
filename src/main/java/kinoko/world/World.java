@@ -1,5 +1,7 @@
 package kinoko.world;
 
+import kinoko.server.ChannelServer;
+
 import java.util.List;
 
 public final class World {

@@ -1,11 +1,9 @@
-package kinoko.world;
+package kinoko.server;
 
 import kinoko.handler.ClientHandler;
 import kinoko.handler.field.FieldHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.UserHandler;
-import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 import kinoko.server.header.InHeader;
 import kinoko.server.netty.NettyServer;
 

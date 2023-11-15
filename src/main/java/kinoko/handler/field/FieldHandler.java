@@ -3,13 +3,13 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.server.ChannelServer;
 import kinoko.server.Server;
 import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
-import kinoko.world.ChannelServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

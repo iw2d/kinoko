@@ -1,5 +1,6 @@
 package kinoko.packet.stage;
 
+import kinoko.server.ChannelServer;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.client.Client;
@@ -7,7 +8,6 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.Account;
-import kinoko.world.ChannelServer;
 import kinoko.world.World;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
