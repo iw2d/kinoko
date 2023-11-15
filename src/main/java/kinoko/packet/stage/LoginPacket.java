@@ -90,7 +90,7 @@ public final class LoginPacket {
         outPacket.encodeByte(channelServers.size());
         for (ChannelServer channelServer : channelServers) {
             outPacket.encodeString(channelServer.getName()); // sName
-            outPacket.encodeInt(channelServer.getUserNo()); // nUserNo
+            outPacket.encodeInt(channelServer.getClientStorage().getUserCount()); // nUserNo
             outPacket.encodeByte(channelServer.getWorldId()); // nWorldID
             outPacket.encodeByte(channelServer.getChannelId()); // nChannelID
             outPacket.encodeByte(false); // bAdultChannel

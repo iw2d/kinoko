@@ -53,7 +53,7 @@ public final class MigrationHandler {
             return;
         }
         final Account account = accountResult.get();
-        if (channelServer.getPlayerStorage().isConnected(account)) {
+        if (channelServer.getClientStorage().isConnected(account)) {
             log.error("[MigrationHandler] Tried to connect to channel server while already connected");
             c.close();
             return;
@@ -76,13 +76,13 @@ public final class MigrationHandler {
             return;
         }
         final User user = new User(characterData, CalcDamage.using(ThreadLocalRandom.current()));
-        if (channelServer.getPlayerStorage().isConnected(user)) {
+        if (channelServer.getClientStorage().isConnected(user)) {
             log.error("[MigrationHandler] Tried to connect to channel server while already connected");
             c.close();
             return;
         }
         c.setUser(user);
-        channelServer.getPlayerStorage().addPlayer(c);
+        channelServer.getClientStorage().addPlayer(c);
 
         c.write(StagePacket.setField(user, channelServer.getChannelId(), true, false));
 

@@ -64,7 +64,7 @@ public final class Server {
      * @return true if {@link Account} is currently associated with a client.
      */
     public static boolean isConnected(Account account) {
-        if (loginServer.getPlayerStorage().isConnected(account)) {
+        if (loginServer.getClientStorage().isConnected(account)) {
             return true;
         }
         if (DatabaseManager.migrationAccessor().hasMigrationRequest(account.getId())) {
@@ -72,7 +72,7 @@ public final class Server {
         }
         for (World world : getWorlds()) {
             for (ChannelServer channelServer : world.getChannels()) {
-                if (channelServer.getPlayerStorage().isConnected(account)) {
+                if (channelServer.getClientStorage().isConnected(account)) {
                     return true;
                 }
             }
@@ -97,7 +97,7 @@ public final class Server {
         }
         // Account not authenticated
         final Account account = c.getAccount();
-        if (!c.getConnectedServer().getPlayerStorage().isConnected(account)) {
+        if (!c.getConnectedServer().getClientStorage().isConnected(account)) {
             return Optional.empty();
         }
         // Create and Submit MigrationRequest

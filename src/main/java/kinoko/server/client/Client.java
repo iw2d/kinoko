@@ -47,6 +47,6 @@ public final class Client extends NettyClient {
     @Override
     public void close() {
         super.close();
-        getConnectedServer().getPlayerStorage().removePlayer(this);
+        getConnectedServer().getClientStorage().removePlayer(this);
     }
 }

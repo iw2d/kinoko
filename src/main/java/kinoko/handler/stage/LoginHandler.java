@@ -67,7 +67,7 @@ public final class LoginHandler {
 
         c.setAccount(account);
         c.setMachineId(machineId);
-        c.getConnectedServer().getPlayerStorage().addPlayer(c);
+        c.getConnectedServer().getClientStorage().addPlayer(c);
         c.write(LoginPacket.checkPasswordResultSuccess(account));
     }
 
@@ -116,7 +116,7 @@ public final class LoginHandler {
             c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
-        if (!c.getConnectedServer().getPlayerStorage().isConnected(account)) {
+        if (!c.getConnectedServer().getClientStorage().isConnected(account)) {
             c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
@@ -284,7 +284,7 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
-                !c.getConnectedServer().getPlayerStorage().isConnected(account)) {
+                !c.getConnectedServer().getClientStorage().isConnected(account)) {
             c.write(LoginPacket.deleteCharacterResult(LoginType.UNKNOWN, characterId));
             return;
         }

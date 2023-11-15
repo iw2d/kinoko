@@ -42,4 +42,8 @@ public final class ClientStorage {
             DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
         }
     }
+
+    public int getUserCount() {
+        return connectedUsers.size();
+    }
 }

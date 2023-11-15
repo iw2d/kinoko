@@ -30,7 +30,7 @@ public abstract class NettyServer {
 
     public abstract Method getHandler(InHeader header);
 
-    public final ClientStorage getPlayerStorage() {
+    public final ClientStorage getClientStorage() {
         return clientStorage;
     }
 
