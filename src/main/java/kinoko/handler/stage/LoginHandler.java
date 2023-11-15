@@ -12,9 +12,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
-import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.util.Util;
 import kinoko.world.Account;
 import kinoko.world.ChannelServer;
 import kinoko.world.GameConstants;
@@ -267,11 +265,12 @@ public final class LoginHandler {
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
-        if (ServerConfig.REQUIRE_SECONDARY_PASSWORD) {
+        final Account account = c.getAccount();
+        if (ServerConfig.REQUIRE_SECONDARY_PASSWORD || account == null || !account.canSelectCharacter(characterId)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
-        tryMigration(c, characterId);
+        tryMigration(c, account, characterId);
     }
 
     @Handler(InHeader.DELETE_CHAR)
@@ -298,10 +297,6 @@ public final class LoginHandler {
         c.write(LoginPacket.deleteCharacterResult(LoginType.SUCCESS, characterId));
     }
 
-    @Handler(InHeader.ALIVE_ACK)
-    public static void handleAliveAck(Client c, InPacket inPacket) {
-    }
-
     @Handler(InHeader.INITIALIZE_SPW)
     public static void handleInitializeSecondaryPassword(Client c, InPacket inPacket) {
         inPacket.decodeByte(); // 1
@@ -311,12 +306,12 @@ public final class LoginHandler {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
 
         final Account account = c.getAccount();
-        if (account == null || account.hasSecondaryPassword() ||
+        if (account == null || !account.canSelectCharacter(characterId) || account.hasSecondaryPassword() ||
                 !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
-        tryMigration(c, characterId);
+        tryMigration(c, account, characterId);
     }
 
     @Handler(InHeader.CHECK_SPW)
@@ -327,34 +322,12 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         final Account account = c.getAccount();
-        if (account == null || !account.hasSecondaryPassword() ||
+        if (account == null || !account.canSelectCharacter(characterId) || !account.hasSecondaryPassword() ||
                 !DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
-        tryMigration(c, characterId);
-    }
-
-    @Handler(InHeader.EXCEPTION_LOG)
-    public static void handleExceptionLog(Client c, InPacket inPacket) {
-        final String data = inPacket.decodeString();
-        log.error("Exception log : {}", data);
-    }
-
-    @Handler(InHeader.CLIENT_ERROR)
-    public static void handleClientError(Client c, InPacket inPacket) {
-        final short callType = inPacket.decodeShort();
-        final int errorType = inPacket.decodeInt();
-        final int bufferSize = inPacket.decodeShort();
-        inPacket.decodeInt(); // unk
-
-        final short op = inPacket.decodeShort();
-        log.error("[Error {}] {}({}) | {}", errorType, OutHeader.getByValue(op), Util.opToString(op), inPacket);
-        c.close();
-    }
-
-    @Handler({ InHeader.LOGIN_INIT, InHeader.UPDATE_CLIENT_ENVIRONMENT })
-    public static void ignore(Client c, InPacket inPacket) {
+        tryMigration(c, account, characterId);
     }
 
     private static void loadCharacterList(Client c) {
@@ -362,20 +335,20 @@ public final class LoginHandler {
         account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccount(account.getId()));
     }
 
-    private static void tryMigration(Client c, int characterId) {
-        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, characterId);
+    private static void tryMigration(Client c, Account account, int characterId) {
+        final Optional<ChannelServer> channelResult = Server.getChannelServerById(account.getWorldId(), account.getChannelId());
+        if (channelResult.isEmpty()) {
+            log.debug("Failed to submit migration request for character ID : {}", characterId);
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+            return;
+        }
+        final ChannelServer channelServer = channelResult.get();
+        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, characterId);
         if (mrResult.isEmpty()) {
             log.debug("Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
-        final MigrationRequest mr = mrResult.get();
-        final Optional<ChannelServer> channelResult = Server.getChannelServerById(ServerConfig.WORLD_ID, mr.getChannelId());
-        if (channelResult.isEmpty()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
-            return;
-        }
-        final ChannelServer channelServer = channelResult.get();
-        c.write(LoginPacket.selectCharacterResultSuccess(channelServer.getAddress(), channelServer.getPort(), mr.getCharacterId()));
+        c.write(LoginPacket.selectCharacterResultSuccess(channelServer.getAddress(), channelServer.getPort(), characterId));
     }
 }

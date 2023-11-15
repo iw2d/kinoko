@@ -1,5 +1,7 @@
 package kinoko.world;
 
+import kinoko.handler.ClientHandler;
+import kinoko.handler.field.FieldHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.UserHandler;
 import kinoko.server.ServerConfig;
@@ -12,7 +14,9 @@ import java.util.Map;
 
 public final class ChannelServer extends NettyServer {
     private static final Map<InHeader, Method> handlerMap = loadHandlers(
+            ClientHandler.class,
             MigrationHandler.class,
+            FieldHandler.class,
             UserHandler.class
     );
     private final int worldId;

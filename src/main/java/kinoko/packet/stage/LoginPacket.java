@@ -26,10 +26,6 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket aliveReq() {
-        return OutPacket.of(OutHeader.ALIVE_REQ);
-    }
-
     public static OutPacket checkPasswordResultSuccess(Account account) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(LoginType.SUCCESS.getValue());

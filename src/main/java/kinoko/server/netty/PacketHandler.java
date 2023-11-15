@@ -29,9 +29,13 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
         if (header == null) {
             log.warn("[PacketHandler] Unknown opcode {} | {}", Util.opToString(op), inPacket);
         } else if (handler == null) {
-            log.warn("[PacketHandler] Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+            if (!header.isIgnoreHeader()) {
+                log.warn("[PacketHandler] Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+            }
         } else {
-            log.debug("[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
+            if (!header.isIgnoreHeader()) {
+                log.debug("[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
+            }
             try {
                 handler.invoke(this, client, inPacket);
             } catch (IllegalAccessException | InvocationTargetException e) {

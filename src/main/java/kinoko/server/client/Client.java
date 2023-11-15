@@ -1,7 +1,7 @@
 package kinoko.server.client;
 
 import io.netty.channel.socket.SocketChannel;
-import kinoko.packet.stage.LoginPacket;
+import kinoko.packet.ClientPacket;
 import kinoko.server.netty.NettyClient;
 import kinoko.server.netty.NettyServer;
 import kinoko.world.Account;
@@ -41,7 +41,7 @@ public final class Client extends NettyClient {
     }
 
     public void sendPing() {
-        write(LoginPacket.aliveReq());
+        write(ClientPacket.aliveReq());
     }
 
     @Override

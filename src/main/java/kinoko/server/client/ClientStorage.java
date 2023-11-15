@@ -1,5 +1,6 @@
 package kinoko.server.client;
 
+import kinoko.database.DatabaseManager;
 import kinoko.world.Account;
 import kinoko.world.user.User;
 
@@ -33,10 +34,12 @@ public final class ClientStorage {
         final Account account = client.getAccount();
         if (account != null) {
             connectedAccounts.remove(account.getId());
+            DatabaseManager.accountAccessor().saveAccount(account);
         }
         final User user = client.getUser();
         if (user != null) {
             connectedUsers.remove(user.getId());
+            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
         }
     }
 }

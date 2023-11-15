@@ -2,6 +2,7 @@ package kinoko.server.header;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public enum InHeader {
     CHECK_PASSWORD(1),
@@ -251,12 +252,17 @@ public enum InHeader {
 
 
     private static final Map<Short, InHeader> headerMap;
+    private static final Set<InHeader> ignoreHeaders;
 
     static {
         headerMap = new HashMap<>();
         for (InHeader header : values()) {
             headerMap.put(header.getValue(), header);
         }
+        ignoreHeaders = Set.of(
+                UPDATE_CLIENT_ENVIRONMENT,
+                USER_MOVE
+        );
     }
 
     private final short value;
@@ -267,6 +273,10 @@ public enum InHeader {
 
     public final short getValue() {
         return value;
+    }
+
+    public final boolean isIgnoreHeader() {
+        return ignoreHeaders.contains(this);
     }
 
     public static InHeader getByValue(short op) {

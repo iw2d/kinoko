@@ -47,6 +47,8 @@ public interface OutPacket {
 
     int getSize();
 
+    OutHeader getHeader();
+
     byte[] getData();
 
     static OutPacket of() {

@@ -27,7 +27,9 @@ public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
         }
         c.acquireEncoderState();
         try {
-            log.debug("[Out] | {}", outPacket);
+            if (!outPacket.getHeader().isIgnoreHeader()) {
+                log.debug("[Out] | {}", outPacket);
+            }
             final byte[] iv = c.getSendIv();
             final int rawSeq = ((iv[2] & 0xFF) | ((iv[3] << 8) & 0xFF00)) ^ SEND_VERSION;
             final int dataLen = data.length ^ rawSeq;

@@ -2,6 +2,7 @@ package kinoko.server.header;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public enum OutHeader {
     // CClientSocket::ProcessPacket
@@ -498,12 +499,14 @@ public enum OutHeader {
 
 
     private static final Map<Short, OutHeader> headerMap;
+    private static final Set<OutHeader> ignoreHeaders;
 
     static {
         headerMap = new HashMap<>();
         for (OutHeader header : values()) {
             headerMap.put(header.getValue(), header);
         }
+        ignoreHeaders = Set.of();
     }
 
     private final short value;
@@ -514,6 +517,10 @@ public enum OutHeader {
 
     public final short getValue() {
         return value;
+    }
+
+    public final boolean isIgnoreHeader() {
+        return ignoreHeaders.contains(this);
     }
 
     public static OutHeader getByValue(short op) {

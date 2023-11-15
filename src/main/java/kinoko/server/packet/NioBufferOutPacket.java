@@ -99,6 +99,12 @@ public final class NioBufferOutPacket implements OutPacket {
     }
 
     @Override
+    public OutHeader getHeader() {
+        final short op = buffers[0].getShort(0);
+        return OutHeader.getByValue(op);
+    }
+
+    @Override
     public byte[] getData() {
         final byte[] data = new byte[getSize()];
         int position = 0;
@@ -112,8 +118,8 @@ public final class NioBufferOutPacket implements OutPacket {
 
     @Override
     public String toString() {
-        final short op = buffers[0].getShort(0);
-        return String.format("%s(%s) | %s", OutHeader.getByValue(op), Util.opToString(op),
+        final OutHeader header = getHeader();
+        return String.format("%s(%s) | %s", header, Util.opToString(header.getValue()),
                 Util.readableByteArray(Arrays.copyOfRange(getData(), 2, getSize())));
     }
 

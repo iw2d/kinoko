@@ -84,31 +84,27 @@ public final class Server {
 
     /**
      * Start migration process, an empty result is returned if migration cannot be performed due to incorrect
-     * initialization () or due to existing migrations.
+     * initialization or due to existing migrations.
      *
-     * @param c           {@link Client} instance attempting to start migration.
-     * @param characterId The target character for migration.
+     * @param c             {@link Client} instance attempting to start migration.
+     * @param channelServer The target channel to migrate to.
+     * @param characterId   The target character for migration.
      * @return Empty result is returned if migration cannot be performed, result with {@link MigrationRequest} if
      * migration was successfully queued.
      */
-    public static Optional<MigrationRequest> submitMigrationRequest(Client c, int characterId) {
+    public static Optional<MigrationRequest> submitMigrationRequest(Client c, ChannelServer channelServer, int characterId) {
         // Account not initialized
         if (c == null || c.getAccount() == null) {
             return Optional.empty();
         }
         // Account not authenticated
         final Account account = c.getAccount();
-        if (!account.canSelectCharacter(characterId) || !loginServer.getPlayerStorage().isConnected(account)) {
-            return Optional.empty();
-        }
-        // World and Channel not selected
-        final Optional<ChannelServer> channelResult = getChannelServerById(account.getWorldId(), account.getChannelId());
-        if (channelResult.isEmpty()) {
+        if (!c.getConnectedServer().getPlayerStorage().isConnected(account)) {
             return Optional.empty();
         }
         // Create and Submit MigrationRequest
         final MigrationRequest migrationRequest = new MigrationRequest(
-                account.getId(), channelResult.get().getChannelId(), characterId, c.getMachineId(), c.getRemoteAddress()
+                account.getId(), channelServer.getChannelId(), characterId, c.getMachineId(), c.getRemoteAddress()
         );
         if (!DatabaseManager.migrationAccessor().submitMigrationRequest(migrationRequest)) {
             return Optional.empty();
