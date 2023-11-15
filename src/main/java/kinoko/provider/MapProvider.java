@@ -17,7 +17,7 @@ public final class MapProvider {
     private static final Logger log = LogManager.getLogger(MapProvider.class);
     private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
 
-    public static void initialize(boolean reset) {
+    public static void initialize() {
         try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadMapInfos(wzPackage);

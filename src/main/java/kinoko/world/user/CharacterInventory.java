@@ -68,7 +68,6 @@ public final class CharacterInventory {
         this.money = money;
     }
 
-
     public Inventory getInventoryByItemId(int itemId) {
         return getInventoryByType(InventoryType.getByItemId(itemId));
     }

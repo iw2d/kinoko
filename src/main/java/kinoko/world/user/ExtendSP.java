@@ -12,6 +12,10 @@ public final class ExtendSP {
         this.spList = spList;
     }
 
+    public List<Integer> getSpList() {
+        return spList;
+    }
+
     public void encode(short job, OutPacket outPacket) {
         if (job / 1000 == 3 || job / 100 == 22 || job == 2001) {
             outPacket.encodeByte(spList.size());
@@ -26,10 +30,6 @@ public final class ExtendSP {
                 outPacket.encodeShort(spList.get(0));
             }
         }
-    }
-
-    public List<Integer> getSpList() {
-        return spList;
     }
 
     public static ExtendSP getDefault() {

@@ -23,7 +23,7 @@ public final class ItemProvider {
     private static final Logger log = LogManager.getLogger(ItemProvider.class);
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
 
-    public static void initialize(boolean reset) {
+    public static void initialize() {
         // Character.wz
         try (final WzReader reader = WzReader.build(CHARACTER_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();

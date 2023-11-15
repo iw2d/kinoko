@@ -133,8 +133,8 @@ public final class Server {
     private static void start() {
         // Load Providers
         Instant start = Instant.now();
-        ItemProvider.initialize(false);
-        MapProvider.initialize(false);
+        ItemProvider.initialize();
+        MapProvider.initialize();
         SkillProvider.initialize();
         EtcProvider.initialize();
         System.gc();
