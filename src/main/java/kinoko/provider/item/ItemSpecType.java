@@ -5,106 +5,104 @@ import java.util.Map;
 
 public enum ItemSpecType {
     // HEAL ------------------------------------------------------------------------------------------------------------
-    HP,
-    MP,
-    HPR,
-    MPR,
-    INC, // Pet Food
-    INC_FATIGUE, // Revitalizer (TamedMob)
-    SEAL,
-    CURSE,
-    WEAKNESS,
-    POISON,
-    DARKNESS,
+    hp,
+    mp,
+    hpR,
+    mpR,
+    inc, // Pet Food
+    incFatigue, // Revitalizer (TamedMob)
+    seal,
+    curse,
+    weakness,
+    poison,
+    darkness,
 
     // BUFF ------------------------------------------------------------------------------------------------------------
-    TIME,
-    STR,
-    DEX,
-    INT,
-    LUK,
-    MHPR,
-    MMPR,
-    PAD,
-    MAD,
-    PDD,
-    MDD,
-    ACC,
-    EVA,
-    SPEED,
-    JUMP,
-    BOOSTER,
-    EXP,
-    EXP_BUFF,
-    ITEM_UP_BY_ITEM,
-    MESO_UP_BY_ITEM,
+    time,
+    str,
+    dex,
+    int_,
+    luk,
+    mhpR,
+    mmpR,
+    pad,
+    mad,
+    pdd,
+    mdd,
+    acc,
+    eva,
+    speed,
+    jump,
+    booster,
+    exp,
+    expinc,
+    expBuff,
+    itemupbyitem,
+    mesoupbyitem,
 
-    MHPR_RATE,
-    MMPR_RATE,
-    PAD_RATE,
-    MAD_RATE,
-    PDD_RATE,
-    MDD_RATE,
-    ACC_RATE,
-    EVA_RATE,
-    SPEED_RATE,
-    EVENT_RATE,
-    EVENT_POINT,
-    BARRIER,
-    BERSERK,
+    mhpRRate,
+    mmpRRate,
+    padRate,
+    madRate,
+    pddRate,
+    mddRate,
+    accRate,
+    evaRate,
+    speedRate,
+    eventRate,
+    eventPoint,
+    barrier,
+    berserk,
 
     // SCRIPT ----------------------------------------------------------------------------------------------------------
-    NPC,
-    SCRIPT,
-    MOVE_TO,
-    IGNORE_CONTINENT,
-    RETURN_MAP_QR,
-    ONLY_PICKUP,
-    RUN_ON_PICKUP,
-    CONSUME_ON_PICKUP,
-    REPEAT_EFFECT,
-    UI_NUMBER,
-    MORPH,
-    MORPH_RANDOM,
-    GHOST,
-    RANDOM_MOVE_IN_FIELD_SET,
+    npc,
+    script,
+    moveTo,
+    ignoreContinent,
+    returnMapQR,
+    onlyPickup,
+    runOnPickup,
+    consumeOnPickup,
+    repeatEffect,
+    uiNumber,
+    morph,
+    morphRandom,
+    ghost,
+    screenMsg,
+    randomMoveInFieldSet,
 
-    CP,
-    PARTY,
-    OTHER_PARTY,
-    NUFF_SKILL, // One of the members in the opposing party will have their buffs nullified
-    RESPECT_FS,
-    RESPECT_PIMMUNE,
-    RESPECT_MIMMUNE,
-    DEFENSE_ATT,
-    DEFENSE_STATE,
-    CON,
-    THAW,
-    PROB,
-    ITEM_CODE,
-    ITEM_RANGE,
-    MOB,
-    MOB_ID,
-    MOB_HP,
-    ATTACK_MOB_ID,
-    ATTACK_INDEX,
-    DOJANG_SHIELD,
-    BF_SKILL;
+    cp,
+    party,
+    otherParty,
+    nuffSkill, // One of the members in the opposing party will have their buffs nullified
+    respectFS,
+    respectPimmune,
+    respectMimmune,
+    defenseAtt,
+    defenseState,
+    con,
+    thaw,
+    prob,
+    itemCode,
+    itemRange,
+    mob,
+    mobID,
+    mobHp,
+    attackMobID,
+    attackIndex,
+    dojangshield,
+    BFSkill;
 
-    private static final Map<String, ItemSpecType> nameMap = new HashMap<>();
+    private static final Map<String, ItemSpecType> nameMap;
 
     static {
+        nameMap = new HashMap<>();
         for (ItemSpecType type : values()) {
-            final String name = normalizeName(type.name());
-            nameMap.put(name, type);
+            nameMap.put(type == int_ ? "int" : type.name(), type);
         }
     }
 
-    private static String normalizeName(String name) {
-        return name.replace("_", "").toLowerCase();
-    }
-
     public static ItemSpecType fromName(String name) {
-        return nameMap.get(normalizeName(name));
+        return nameMap.get(name);
     }
 }

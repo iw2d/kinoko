@@ -9,7 +9,6 @@ import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import org.apache.logging.log4j.LogManager;

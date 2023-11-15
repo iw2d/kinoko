@@ -2,19 +2,23 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.property.WzProperty;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecType, Object> spec) {
+    private static final Set<String> seen = new HashSet<>();
 
     public int getInfo(ItemInfoType infoType) {
         return (int) info.getOrDefault(infoType, 0);
     }
 
     public boolean isCash() {
-        return getInfo(ItemInfoType.CASH) != 0;
+        return getInfo(ItemInfoType.cash) != 0;
+    }
+
+    public boolean isTradeBlock() {
+        return getInfo(ItemInfoType.tradBlock) != 0 || getInfo(ItemInfoType.tradeBlock) != 0;
     }
 
     public static ItemInfo from(int itemId, WzListProperty itemProp) throws ProviderError {
@@ -29,8 +33,8 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
                     }
                     for (var infoEntry : infoProp.getItems().entrySet()) {
                         final ItemInfoType type = ItemInfoType.fromName(infoEntry.getKey());
-                        if (type == null || type == ItemInfoType.LEVEL) {
-                            // System.out.printf("Unhandled info %s in item %d%n", entry.getKey(), itemId);
+                        if (type == null) {
+                            // System.err.printf("Unhandled info %s in item %d%n", entry.getKey(), itemId);
                             continue;
                         }
                         info.put(type, infoEntry.getValue());
@@ -42,8 +46,8 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
                     }
                     for (var specEntry : specProp.getItems().entrySet()) {
                         final ItemSpecType type = ItemSpecType.fromName(specEntry.getKey());
-                        if (type == null || type == ItemSpecType.MORPH_RANDOM || type == ItemSpecType.CON || type == ItemSpecType.MOB) {
-                            // System.out.printf("Unhandled spec %s in item %d%n", entry.getKey(), itemId);
+                        if (type == null || type == ItemSpecType.morphRandom || type == ItemSpecType.con || type == ItemSpecType.mob) {
+                            // System.err.printf("Unhandled spec %s in item %d%n", entry.getKey(), itemId);
                             continue;
                         }
                         spec.put(type, specEntry.getValue());

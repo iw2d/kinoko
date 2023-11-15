@@ -4,93 +4,97 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ItemInfoType {
-    CASH,
-    PRICE,
-    UNIT_PRICE,
-    SLOT_MAX,
-    DURABILITY,
-    ONLY,
-    TRAD_BLOCK,
-    DROP_BLOCK,
-    TRADE_BLOCK,
-    TRADE_AVAILABLE,
-    EQUIP_TRADE_BLOCK,
-    SCAN_TRADE_BLOCK,
-    TIME_LIMITED,
-    NOT_EXTEND,
-    NOT_SALE,
-    ONLY_EQUIP,
-    QUEST,
-    QUEST_ID,
-    UI_DATA,
-    MOB_POTION,
-    MAX_LEVEL,
-    SET_ITEM_ID,
+    cash,
+    price,
+    unitPrice,
+    slotMax,
+    durability,
+    only,
+    tradBlock, // (sic)
+    dropBlock,
+    tradeBlock,
+    tragetBlock, // (sic)
+    pickUpBlock,
+    tradeAvailable,
+    equipTradeBlock,
+    scanTradeBlock,
+    timeLimited,
+    noExpend,
+    notExtend,
+    notSale,
+    onlyEquip,
+    quest,
+    questId,
+    uiData,
+    mobPotion,
+    maxLevel,
+    setItemID,
 
-    INC_STR,
-    INC_DEX,
-    INC_INT,
-    INC_LUK,
-    INC_HP,
-    INC_MP,
-    INC_MHP,
-    INC_MHPR,
-    INC_MMP,
-    INC_MMPR,
-    INC_MAX_HP,
-    INC_MAX_MP,
-    INC_PAD,
-    INC_MAD,
-    INC_PDD,
-    INC_MDD,
-    INC_ACC,
-    INC_EVA,
-    INC_CRAFT,
-    INC_SPEED,
-    INC_JUMP,
-    INC_SWIM,
-    INC_FATIGUE,
-    INC_IUC,
+    incSTR,
+    incDEX,
+    incINT,
+    incLUK,
+    incHP,
+    incMP,
+    incMHP,
+    incMHPr,
+    incMMP,
+    incMMPr,
+    incMaxHP,
+    incMaxMP,
+    incPAD,
+    incMAD,
+    incPDD,
+    incMDD,
+    incACC,
+    incEVA,
+    incCraft,
+    incSpeed,
+    incJump,
+    incSwim,
+    incFatigue,
+    incIUC,
+    incLEV,
+    incReqLevel,
+    incRandVol,
+    incPERIOD,
 
     // Elemental Wand/Staff
-    ELEM_DEFAULT,
-    INC_RMAF,
-    INC_RMAI,
-    INC_RMAL,
-    INC_RMAS,
+    elemDefault,
+    incRMAF,
+    incRMAI,
+    incRMAL,
+    incRMAS,
 
-    LEVEL,
-    REQ,
-    REQ_STR,
-    REQ_DEX,
-    REQ_INT,
-    REQ_LUK,
-    REQ_LEVEL,
-    REQ_POP,
-    REQ_CUC,
-    REQ_RUC,
-    REQ_SKILL_LEVEL,
-    ENCHANT_CATEGORY,
-    TUC,
-    IUC_MAX,
+    reqSTR,
+    reqDEX,
+    reqINT,
+    reqLUK,
+    reqLEVEL,
+    reqPOP,
+    reqCUC,
+    reqRUC,
+    reqJob,
+    reqLevel,
+    reqSkillLevel,
+    reqQuestOnProgress,
+    enchantCategory,
+    tuc,
+    IUCMax,
 
-    RECOVERY_HP,
-    RECOVERY_MP;
+    recoveryHP,
+    recoveryMP;
 
-    private static final Map<String, ItemInfoType> nameMap = new HashMap<>();
+    private static final Map<String, ItemInfoType> nameMap;
 
     static {
+        nameMap = new HashMap<>();
         for (ItemInfoType type : values()) {
-            final String name = normalizeName(type.name());
-            nameMap.put(name, type);
+            nameMap.put(type.name(), type);
         }
     }
 
-    private static String normalizeName(String name) {
-        return name.replace("_", "").toLowerCase();
-    }
-
     public static ItemInfoType fromName(String name) {
-        return nameMap.get(normalizeName(name));
+        return nameMap.get(name);
     }
 }

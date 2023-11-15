@@ -7,8 +7,6 @@ import io.fury.config.Language;
 import kinoko.provider.map.*;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzProperty;
-import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import org.apache.logging.log4j.LogManager;

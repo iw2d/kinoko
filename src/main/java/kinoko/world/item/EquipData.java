@@ -321,55 +321,55 @@ public final class EquipData {
         final EquipData equipData = new EquipData();
         for (ItemInfoType infoType : itemInfo.info().keySet()) {
             switch (infoType) {
-                case INC_STR -> {
+                case incSTR -> {
                     equipData.setIncStr((short) itemInfo.getInfo(infoType));
                 }
-                case INC_DEX -> {
+                case incDEX -> {
                     equipData.setIncDex((short) itemInfo.getInfo(infoType));
                 }
-                case INC_INT -> {
+                case incINT -> {
                     equipData.setIncInt((short) itemInfo.getInfo(infoType));
                 }
-                case INC_LUK -> {
+                case incLUK -> {
                     equipData.setIncLuk((short) itemInfo.getInfo(infoType));
                 }
-                case INC_MHP, INC_MAX_HP -> {
+                case incMHP, incMaxHP -> {
                     equipData.setIncMaxHp((short) itemInfo.getInfo(infoType));
                 }
-                case INC_MMP, INC_MAX_MP -> {
+                case incMMP, incMaxMP -> {
                     equipData.setIncMaxMp((short) itemInfo.getInfo(infoType));
                 }
-                case INC_PAD -> {
+                case incPAD -> {
                     equipData.setIncPad((short) itemInfo.getInfo(infoType));
                 }
-                case INC_MAD -> {
+                case incMAD -> {
                     equipData.setIncMad((short) itemInfo.getInfo(infoType));
                 }
-                case INC_PDD -> {
+                case incPDD -> {
                     equipData.setIncPdd((short) itemInfo.getInfo(infoType));
                 }
-                case INC_MDD -> {
+                case incMDD -> {
                     equipData.setIncMdd((short) itemInfo.getInfo(infoType));
                 }
-                case INC_ACC -> {
+                case incACC -> {
                     equipData.setIncAcc((short) itemInfo.getInfo(infoType));
                 }
-                case INC_EVA -> {
+                case incEVA -> {
                     equipData.setIncEva((short) itemInfo.getInfo(infoType));
                 }
-                case INC_CRAFT -> {
+                case incCraft -> {
                     equipData.setIncCraft((short) itemInfo.getInfo(infoType));
                 }
-                case INC_SPEED -> {
+                case incSpeed -> {
                     equipData.setIncSpeed((short) itemInfo.getInfo(infoType));
                 }
-                case INC_JUMP -> {
+                case incJump -> {
                     equipData.setIncJump((short) itemInfo.getInfo(infoType));
                 }
-                case TUC -> {
+                case tuc -> {
                     equipData.setRuc((byte) itemInfo.getInfo(infoType));
                 }
-                case DURABILITY -> {
+                case durability -> {
                     equipData.setDurability(itemInfo.getInfo(infoType));
                 }
             }

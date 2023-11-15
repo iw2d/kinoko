@@ -44,8 +44,8 @@ public record SkillInfo(int id, Map<SkillStat, Expression> stats, List<Rect> rec
                         maxLevel = getInteger(entry.getValue());
                     }
                     case lt -> {
-                        final WzVectorProperty lt = (WzVectorProperty) commonProps.get("lt");
-                        final WzVectorProperty rb = (WzVectorProperty) commonProps.get("rb");
+                        final WzVectorProperty lt = commonProps.get("lt");
+                        final WzVectorProperty rb = commonProps.get("rb");
                         rects.add(new Rect(
                                 lt.getX(),
                                 lt.getY(),
