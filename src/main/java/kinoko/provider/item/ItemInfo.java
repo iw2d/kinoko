@@ -2,7 +2,6 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzProperty;
 
 import java.util.*;
 

@@ -5,6 +5,8 @@ import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.packet.stage.LoginType;
 import kinoko.provider.EtcProvider;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.client.Client;
@@ -22,6 +24,7 @@ import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
+import kinoko.world.skill.SkillManager;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.*;
 import org.apache.logging.log4j.LogManager;
@@ -119,9 +122,9 @@ public final class LoginHandler {
             return;
         }
 
+        loadCharacterList(c);
         account.setWorldId(worldId);
         account.setChannelId(channelId);
-        account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccount(account.getId()));
         c.write(LoginPacket.selectWorldResultSuccess(account));
     }
 
@@ -187,6 +190,7 @@ public final class LoginHandler {
         }
         final CharacterData characterData = new CharacterData(c.getAccount().getId(), characterIdResult.get());
         characterData.setCharacterName(name);
+        characterData.setItemSnCounter(new AtomicInteger(1));
 
         final CharacterStat characterStat = new CharacterStat();
         characterStat.setGender(gender);
@@ -222,7 +226,14 @@ public final class LoginHandler {
         characterInventory.setMoney(0);
         characterData.setCharacterInventory(characterInventory);
 
-        characterData.setItemSnCounter(new AtomicInteger(1));
+        final SkillManager skillManager = new SkillManager();
+        for (SkillInfo skillInfo : SkillProvider.getSkillsForJob(job)) {
+            if (skillInfo.isInvisible()) {
+                continue;
+            }
+            skillManager.addSkill(skillInfo);
+        }
+        characterData.setSkillManager(skillManager);
 
         // Add Starting Equips
         for (int i = 4; i < selectedAL.length; i++) {
@@ -243,6 +254,7 @@ public final class LoginHandler {
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {
+            loadCharacterList(c);
             c.write(LoginPacket.createNewCharacterResultSuccess(characterData));
         } else {
             c.write(LoginPacket.createNewCharacterResultFail(LoginType.TIMEOUT));
@@ -281,6 +293,8 @@ public final class LoginHandler {
             c.write(LoginPacket.deleteCharacterResult(LoginType.DB_FAIL, characterId));
             return;
         }
+
+        loadCharacterList(c);
         c.write(LoginPacket.deleteCharacterResult(LoginType.SUCCESS, characterId));
     }
 
@@ -343,9 +357,15 @@ public final class LoginHandler {
     public static void ignore(Client c, InPacket inPacket) {
     }
 
+    private static void loadCharacterList(Client c) {
+        final Account account = c.getAccount();
+        account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccount(account.getId()));
+    }
+
     private static void tryMigration(Client c, int characterId) {
         final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, characterId);
         if (mrResult.isEmpty()) {
+            log.debug("Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }

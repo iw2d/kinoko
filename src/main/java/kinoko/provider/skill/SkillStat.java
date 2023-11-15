@@ -19,6 +19,8 @@ public enum SkillStat {
     cooltime,
     range,
     damage,
+    damagepc,
+    fixdamage,
     attackCount,
     mobCount,
     dot,
@@ -73,9 +75,13 @@ public enum SkillStat {
     expR,
 
     // SPECIAL ---------------------------------------------------------------------------------------------------------
-    action,
     lt,
     rb,
+    hs,
+    hit,
+    ball,
+    action,
+    dateExpire,
     maxLevel;
 
     private static final Map<String, SkillStat> nameMap = new HashMap<>();
