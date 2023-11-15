@@ -6,7 +6,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public final class MapleCrypto {
-    private static final byte[] AES_USER_KEY = new byte[]{
+    public static final byte[] AES_USER_KEY = new byte[]{
             0x13, 0x00, 0x00, 0x00,
             0x08, 0x00, 0x00, 0x00,
             0x06, 0x00, 0x00, 0x00,
@@ -16,14 +16,14 @@ public final class MapleCrypto {
             0x33, 0x00, 0x00, 0x00,
             0x52, 0x00, 0x00, 0x00
     };
-    private static final int BLOCK_SIZE = 16;
-    private static final Cipher CIPHER;
+    public static final int BLOCK_SIZE = 16;
+    private static final Cipher cipher;
 
     static {
         SecretKey key = new SecretKeySpec(AES_USER_KEY, "AES");
         try {
-            CIPHER = Cipher.getInstance("AES/ECB/NoPadding");
-            CIPHER.init(Cipher.ENCRYPT_MODE, key);
+            cipher = Cipher.getInstance("AES/ECB/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
         } catch (NoSuchPaddingException |
                  NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);
@@ -46,7 +46,7 @@ public final class MapleCrypto {
             for (int i = c; i < (c + b); i++) {
                 if ((i - c) % BLOCK_SIZE == 0) {
                     try {
-                        final byte[] cipher = CIPHER.doFinal(block);
+                        final byte[] cipher = MapleCrypto.cipher.doFinal(block);
                         System.arraycopy(cipher, 0, block, 0, BLOCK_SIZE);
                     } catch (IllegalBlockSizeException | BadPaddingException e) {
                         throw new RuntimeException(e);

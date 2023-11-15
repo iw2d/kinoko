@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public final class WzCrypto {
-    private static final int BATCH_SIZE = 1024;
+    public static final int BATCH_SIZE = 1024;
     private final Cipher cipher;
     private byte[] cipherMask;
 

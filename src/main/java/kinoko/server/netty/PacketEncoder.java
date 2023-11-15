@@ -13,8 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
+    public static final short SEND_VERSION = (short) (0xFFFF - ServerConstants.GAME_VERSION);
     private static final Logger log = LogManager.getLogger(PacketEncoder.class);
-    private static final short SEND_VERSION = (short) (0xFFFF - ServerConstants.GAME_VERSION);
 
     @Override
     protected void encode(ChannelHandlerContext ctx, OutPacket outPacket, ByteBuf out) {

@@ -250,12 +250,12 @@ public enum InHeader {
     LOGOUT_GIFT(313);
 
 
-    private final static Map<Short, InHeader> HEADER_MAP;
+    private static final Map<Short, InHeader> headerMap;
 
     static {
-        HEADER_MAP = new HashMap<>();
+        headerMap = new HashMap<>();
         for (InHeader header : values()) {
-            HEADER_MAP.put(header.getValue(), header);
+            headerMap.put(header.getValue(), header);
         }
     }
 
@@ -270,6 +270,6 @@ public enum InHeader {
     }
 
     public static InHeader getByValue(short op) {
-        return HEADER_MAP.get(op);
+        return headerMap.get(op);
     }
 }

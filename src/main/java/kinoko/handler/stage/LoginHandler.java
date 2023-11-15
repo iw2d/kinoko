@@ -350,12 +350,12 @@ public final class LoginHandler {
             return;
         }
         final MigrationRequest mr = mrResult.get();
-        final Optional<ChannelServer> channelResult = Server.getChannelServerById(ServerConfig.WORLD_ID, mr.channelId());
+        final Optional<ChannelServer> channelResult = Server.getChannelServerById(ServerConfig.WORLD_ID, mr.getChannelId());
         if (channelResult.isEmpty()) {
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         final ChannelServer channelServer = channelResult.get();
-        c.write(LoginPacket.selectCharacterResultSuccess(channelServer.getAddress(), channelServer.getPort(), mr.characterId()));
+        c.write(LoginPacket.selectCharacterResultSuccess(channelServer.getAddress(), channelServer.getPort(), mr.getCharacterId()));
     }
 }

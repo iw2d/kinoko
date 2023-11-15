@@ -46,11 +46,11 @@ public final class CassandraMigrationAccessor extends CassandraAccessor implemen
     public boolean submitMigrationRequest(MigrationRequest mr) {
         final ResultSet insertResult = getSession().execute(
                 insertInto(getKeyspace(), MigrationTable.getTableName())
-                        .value(MigrationTable.ACCOUNT_ID, literal(mr.accountId()))
-                        .value(MigrationTable.CHANNEL_ID, literal(mr.channelId()))
-                        .value(MigrationTable.CHARACTER_ID, literal(mr.characterId()))
-                        .value(MigrationTable.MACHINE_ID, literal(ByteBuffer.wrap(mr.machineId())))
-                        .value(MigrationTable.REMOTE_ADDRESS, literal(ByteBuffer.wrap(mr.remoteAddress())))
+                        .value(MigrationTable.ACCOUNT_ID, literal(mr.getAccountId()))
+                        .value(MigrationTable.CHANNEL_ID, literal(mr.getChannelId()))
+                        .value(MigrationTable.CHARACTER_ID, literal(mr.getCharacterId()))
+                        .value(MigrationTable.MACHINE_ID, literal(ByteBuffer.wrap(mr.getMachineId())))
+                        .value(MigrationTable.REMOTE_ADDRESS, literal(ByteBuffer.wrap(mr.getRemoteAddress())))
                         .usingTtl(ServerConfig.MIGRATION_REQUEST_TTL)
                         .build()
         );

@@ -14,11 +14,10 @@ public final class AccountTable {
     public static final String NX_PREPAID = "nx_prepaid";
     public static final String MAPLE_POINT = "maple_point";
 
-    private static final String TABLE_NAME = "account";
-    private static final String USERNAME_INDEX = "account_username_index";
+    private static final String tableName = "account";
 
     public static String getTableName() {
-        return TABLE_NAME;
+        return tableName;
     }
 
     public static void createTable(CqlSession session, String keyspace) {

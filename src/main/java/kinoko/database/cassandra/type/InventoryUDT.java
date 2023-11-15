@@ -9,15 +9,15 @@ public final class InventoryUDT {
     public static final String SIZE = "size";
 
 
-    private static final String TYPE_NAME = "inventory_type";
+    private static final String typeName = "inventory_type";
 
     public static String getTypeName() {
-        return TYPE_NAME;
+        return typeName;
     }
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {
         session.execute(
-                SchemaBuilder.createType(keyspace, TYPE_NAME)
+                SchemaBuilder.createType(keyspace, getTypeName())
                         .ifNotExists()
                         .withField(ITEMS, DataTypes.frozenMapOf(DataTypes.INT, SchemaBuilder.udt(ItemUDT.getTypeName(), true)))
                         .withField(SIZE, DataTypes.INT)

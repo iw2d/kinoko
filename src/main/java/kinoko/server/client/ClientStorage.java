@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ClientStorage {
-    private final Map<Integer, Client> connectedAccounts = new ConcurrentHashMap<>(); // accountId -> Client
-    private final Map<Integer, Client> connectedUsers = new ConcurrentHashMap<>(); // characterId -> Client
+    private final Map<Integer, Client> connectedAccounts = new ConcurrentHashMap<>(); // getAccountId -> Client
+    private final Map<Integer, Client> connectedUsers = new ConcurrentHashMap<>(); // getCharacterId -> Client
 
     public boolean isConnected(Account account) {
         return connectedAccounts.containsKey(account.getId());

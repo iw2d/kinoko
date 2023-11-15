@@ -27,10 +27,10 @@ public final class CharacterStatUDT {
     public static final String POS_MAP = "pos_map";
     public static final String PORTAL = "portal";
 
-    private static final String TYPE_NAME = "character_stat_type";
+    private static final String typeName = "character_stat_type";
 
     public static String getTypeName() {
-        return TYPE_NAME;
+        return typeName;
     }
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {

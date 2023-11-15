@@ -38,16 +38,16 @@ public final class EquipDataUDT {
     public static final String EXP = "exp";
     public static final String DURABILITY = "durability";
 
-    private static final String TYPE_NAME = "equip_info_type";
+    private static final String typeName = "equip_info_type";
 
     public static String getTypeName() {
-        return TYPE_NAME;
+        return typeName;
     }
 
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {
         session.execute(
-                SchemaBuilder.createType(keyspace, TYPE_NAME)
+                SchemaBuilder.createType(keyspace, getTypeName())
                         .ifNotExists()
                         .withField(INC_STR, DataTypes.SMALLINT)
                         .withField(INC_DEX, DataTypes.SMALLINT)

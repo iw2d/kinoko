@@ -17,10 +17,10 @@ public final class ItemUDT {
     public static final String EQUIP_INFO = "equip_info";
     public static final String PET_INFO = "pet_info";
 
-    private static final String TYPE_NAME = "item_type";
+    private static final String typeName = "item_type";
 
     public static String getTypeName() {
-        return TYPE_NAME;
+        return typeName;
     }
 
     public static void createUserDefinedType(CqlSession session, String keyspace) {

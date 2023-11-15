@@ -11,10 +11,10 @@ public final class IdTable {
     public static final String NEXT_ID = "next_id";
 
 
-    private static final String TABLE_NAME = "id_table";
+    private static final String tableName = "id_table";
 
     public static String getTableName() {
-        return TABLE_NAME;
+        return tableName;
     }
 
     public static void createTable(CqlSession session, String keyspace) {

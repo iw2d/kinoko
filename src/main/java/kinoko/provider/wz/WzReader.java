@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -224,7 +225,7 @@ public final class WzReader implements AutoCloseable {
                 final int format2 = readCompressedInt(buffer);
                 buffer.position(buffer.position() + 4);
                 // Canvas data
-                final int dataSize = buffer.getInt();
+                final int dataSize = buffer.getInt() - 1;
                 buffer.position(buffer.position() + 1);
                 ByteBuffer dataSlice = buffer.slice(buffer.position(), dataSize);
                 buffer.position(buffer.position() + dataSize);
@@ -330,6 +331,10 @@ public final class WzReader implements AutoCloseable {
 
     public static WzReader build(String path, WzReaderConfig config) throws FileNotFoundException {
         return build(new File(path), config);
+    }
+
+    public static WzReader build(Path path, WzReaderConfig config) throws FileNotFoundException {
+        return build(path.toFile(), config);
     }
 
     public static WzReader build(File file, WzReaderConfig config) throws FileNotFoundException {

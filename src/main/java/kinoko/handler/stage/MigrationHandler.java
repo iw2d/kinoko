@@ -39,16 +39,16 @@ public final class MigrationHandler {
 
         // Check Channel
         if (!(c.getConnectedServer() instanceof final ChannelServer channelServer) ||
-                channelServer.getChannelId() != mr.channelId()) {
+                channelServer.getChannelId() != mr.getChannelId()) {
             log.error("[MigrationHandler] Tried to migrate to incorrect channel.");
             c.close();
             return;
         }
 
         // Check Account
-        final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(mr.accountId());
+        final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(mr.getAccountId());
         if (accountResult.isEmpty()) {
-            log.error("[MigrationHandler] Could not retrieve account with ID : {}", mr.accountId());
+            log.error("[MigrationHandler] Could not retrieve account with ID : {}", mr.getAccountId());
             c.close();
             return;
         }
@@ -70,8 +70,8 @@ public final class MigrationHandler {
             return;
         }
         final CharacterData characterData = characterResult.get();
-        if (characterData.getAccountId() != mr.accountId()) {
-            log.error("[MigrationHandler] Mismatching account IDs {}, {}", characterData.getAccountId(), mr.accountId());
+        if (characterData.getAccountId() != mr.getAccountId()) {
+            log.error("[MigrationHandler] Mismatching account IDs {}, {}", characterData.getAccountId(), mr.getAccountId());
             c.close();
             return;
         }

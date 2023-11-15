@@ -14,8 +14,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public final class PacketDecoder extends ByteToMessageDecoder {
+    public static final short RECV_VERSION = ServerConstants.GAME_VERSION;
     private static final Logger log = LogManager.getLogger(PacketDecoder.class);
-    private static final short RECV_VERSION = ServerConstants.GAME_VERSION;
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {

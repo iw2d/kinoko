@@ -4,6 +4,7 @@ import kinoko.database.DatabaseManager;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
+import kinoko.provider.SkillProvider;
 import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.command.CommandProcessor;
@@ -140,6 +141,7 @@ public final class Server {
         Instant start = Instant.now();
         ItemProvider.initialize(false);
         MapProvider.initialize(false);
+        SkillProvider.initialize();
         EtcProvider.initialize();
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());

@@ -497,12 +497,12 @@ public enum OutHeader {
     ITC_NORMAL_ITEM_RESULT(412);
 
 
-    private final static Map<Short, OutHeader> HEADER_MAP;
+    private static final Map<Short, OutHeader> headerMap;
 
     static {
-        HEADER_MAP = new HashMap<>();
+        headerMap = new HashMap<>();
         for (OutHeader header : values()) {
-            HEADER_MAP.put(header.getValue(), header);
+            headerMap.put(header.getValue(), header);
         }
     }
 
@@ -517,6 +517,6 @@ public enum OutHeader {
     }
 
     public static OutHeader getByValue(short op) {
-        return HEADER_MAP.get(op);
+        return headerMap.get(op);
     }
 }

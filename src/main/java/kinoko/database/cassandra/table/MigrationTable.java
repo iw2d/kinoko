@@ -13,10 +13,10 @@ public final class MigrationTable {
     public static final String REMOTE_ADDRESS = "remote_address";
 
 
-    private static final String TABLE_NAME = "migration";
+    private static final String tableName = "migration";
 
     public static String getTableName() {
-        return TABLE_NAME;
+        return tableName;
     }
 
     public static void createTable(CqlSession session, String keyspace) {

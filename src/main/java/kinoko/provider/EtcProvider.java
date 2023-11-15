@@ -4,6 +4,8 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,17 +16,18 @@ import java.util.Map;
 import java.util.Set;
 
 public final class EtcProvider {
+    public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
+    private static final Logger log = LogManager.getLogger(EtcProvider.class);
     private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
 
     public static void initialize() {
-        final File wzFile = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz").toFile();
-        try (final WzReader reader = WzReader.build(wzFile, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzReader reader = WzReader.build(ETC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | ProviderError e) {
+            log.error("Exception caught while loading Etc.wz", e);
         }
     }
 

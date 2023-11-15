@@ -26,10 +26,10 @@ public final class CharacterTable {
     public static final String FRIEND_MAX = "friend_max";
 
 
-    private static final String TABLE_NAME = "character";
+    private static final String tableName = "character";
 
     public static String getTableName() {
-        return TABLE_NAME;
+        return tableName;
     }
 
     public static void createTable(CqlSession session, String keyspace) {

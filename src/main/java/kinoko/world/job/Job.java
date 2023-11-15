@@ -1,7 +1,10 @@
 package kinoko.world.job;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Job {
-    // EXPLORERS --------------------------------------------------------------
+    // EXPLORERS -------------------------------------------------------------------------------------------------------
     BEGINNER(0),
     WARRIOR(100),
     FIGHTER(110),
@@ -50,7 +53,7 @@ public enum Job {
     OUTLAW(521),
     CORSAIR(522),
 
-    // CYGNUS KNIGHTS ---------------------------------------------------------
+    // CYGNUS KNIGHTS --------------------------------------------------------------------------------------------------
     NOBLESSE(1000),
     DAWN_WARRIOR_1(1100),
     DAWN_WARRIOR_2(1110),
@@ -75,20 +78,20 @@ public enum Job {
     ARAN_3(2111),
     ARAN_4(2112),
 
-    // EVAN -------------------------------------------------------------------
+    // EVAN ------------------------------------------------------------------------------------------------------------
     EVEN_BEGINNER(2001),
     EVAN_1(2200),
     EVAN_2(2210),
-    EVAN_3(2111),
-    EVAN_4(2112),
-    EVAN_5(2113),
-    EVAN_6(2114),
-    EVAN_7(2115),
-    EVAN_8(2116),
-    EVAN_9(2117),
-    EVAN_10(2118),
+    EVAN_3(2211),
+    EVAN_4(2212),
+    EVAN_5(2213),
+    EVAN_6(2214),
+    EVAN_7(2215),
+    EVAN_8(2216),
+    EVAN_9(2217),
+    EVAN_10(2218),
 
-    // RESISTANCE -------------------------------------------------------------
+    // RESISTANCE ------------------------------------------------------------------------------------------------------
     CITIZEN(3000),
     BATTLE_MAGE_1(3200),
     BATTLE_MAGE_2(3210),
@@ -101,7 +104,22 @@ public enum Job {
     MECHANIC_1(3500),
     MECHANIC_2(3510),
     MECHANIC_3(3511),
-    MECHANIC_4(3512);
+    MECHANIC_4(3512),
+
+    // MISC ------------------------------------------------------------------------------------------------------------
+    MANAGER(800),
+    GM(900),
+    SUPER_GM(910),
+    ADDITIONAL_SKILLS(9000);
+
+    private static final Map<Short, Job> jobMap;
+
+    static {
+        jobMap = new HashMap<>();
+        for (Job job : values()) {
+            jobMap.put(job.getJobId(), job);
+        }
+    }
 
     private final short jobId;
 
@@ -109,7 +127,15 @@ public enum Job {
         this.jobId = (short) jobId;
     }
 
-    public short getJobId() {
+    public final short getJobId() {
         return jobId;
+    }
+
+    public static Job getById(short jobId) {
+        return jobMap.get(jobId);
+    }
+
+    public static Job getById(int jobId) {
+        return getById((short) jobId);
     }
 }
