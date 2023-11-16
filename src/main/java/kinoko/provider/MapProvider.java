@@ -33,7 +33,7 @@ public final class MapProvider {
         return Optional.of(mapInfos.get(mapId));
     }
 
-    private static void loadMapInfos(WzPackage source) throws ProviderError, IOException {
+    private static void loadMapInfos(WzPackage source) throws ProviderError {
         final WzDirectory mapDirectory = source.getDirectory().getDirectories().get("Map");
         if (mapDirectory == null) {
             throw new ProviderError("Could not resolve Map.wz/Map");
