@@ -132,8 +132,10 @@ public final class Server {
         Instant start = Instant.now();
         ItemProvider.initialize();
         MapProvider.initialize();
+        MobProvider.initialize();
         NpcProvider.initialize();
         SkillProvider.initialize();
+        QuestProvider.initialize();
         EtcProvider.initialize();
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());

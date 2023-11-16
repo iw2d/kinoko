@@ -10,6 +10,8 @@ import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
+import kinoko.world.field.Field;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +19,26 @@ import java.util.Optional;
 
 public final class FieldHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
+
+    @Handler(InHeader.TRANSFER_FIELD)
+    public static void handleTransferField(Client c, InPacket inPacket) {
+        final byte fieldKey = inPacket.decodeByte();
+        final int targetField = inPacket.decodeInt(); // dwTargetField
+        final String portalName = inPacket.decodeString(); // sPortal
+        if (!portalName.isEmpty()) {
+            final short x = inPacket.decodeShort();
+            final short y = inPacket.decodeShort();
+        }
+        inPacket.decodeByte(); // 0
+        inPacket.decodeByte(); // bPremium
+        inPacket.decodeByte(); // bChase -> int, int
+
+        final User user = c.getUser();
+        final Field field = user.getField();
+
+        log.info(portalName);
+        field.getFieldId();
+    }
 
     @Handler(InHeader.TRANSFER_CHANNEL)
     public static void handleTransferChannel(Client c, InPacket inPacket) {
