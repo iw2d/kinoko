@@ -3,8 +3,8 @@ package kinoko.provider.npc;
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
 
-public record NpcInfo(int id, String script, int trunkPut, int trunkGet) {
-    public static NpcInfo from(int npcId, WzListProperty infoProp) throws ProviderError {
+public record NpcInfo(int id, boolean move, String script, int trunkPut, int trunkGet) {
+    public static NpcInfo from(int npcId, boolean move, WzListProperty infoProp) throws ProviderError {
         String script = null;
         int trunkPut = 0;
         int trunkGet = 0;
@@ -36,6 +36,6 @@ public record NpcInfo(int id, String script, int trunkPut, int trunkGet) {
                 }
             }
         }
-        return new NpcInfo(npcId, script, trunkPut, trunkGet);
+        return new NpcInfo(npcId, move, script, trunkPut, trunkGet);
     }
 }

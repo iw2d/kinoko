@@ -261,7 +261,8 @@ public enum InHeader {
         }
         ignoreHeaders = Set.of(
                 UPDATE_CLIENT_ENVIRONMENT,
-                USER_MOVE
+                USER_MOVE,
+                NPC_MOVE
         );
     }
 

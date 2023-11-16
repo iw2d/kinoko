@@ -1,20 +1,32 @@
 package kinoko.world.life;
 
+import kinoko.packet.life.NpcPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.npc.NpcInfo;
-import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.ControlledObject;
+import kinoko.world.field.Field;
+import kinoko.world.user.User;
 
 import java.util.Optional;
 
 public final class Npc extends Life implements ControlledObject {
     private final LifeInfo lifeInfo;
     private final NpcInfo npcInfo;
+    private User controller;
 
-    public Npc(LifeInfo lifeInfo, NpcInfo npcInfo) {
+    public Npc(Field field, LifeInfo lifeInfo, NpcInfo npcInfo) {
+        super(field);
         this.lifeInfo = lifeInfo;
         this.npcInfo = npcInfo;
+    }
+
+    public int getTemplateId() {
+        return lifeInfo.id();
+    }
+
+    public boolean isMove() {
+        return npcInfo.move();
     }
 
     public Optional<String> getScript() {
@@ -25,34 +37,31 @@ public final class Npc extends Life implements ControlledObject {
     }
 
     @Override
+    public User getController() {
+        return controller;
+    }
+
+    @Override
+    public void setController(User controller) {
+        this.controller = controller;
+    }
+
+    @Override
     public OutPacket enterFieldPacket() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_ENTER_FIELD);
-        outPacket.encodeInt(getLifeId()); // dwNpcID
-        outPacket.encodeInt(lifeInfo.id()); // dwTemplateID
-        encodeInit(outPacket);
-        return outPacket;
+        return NpcPacket.npcEnterField(this);
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_LEAVE_FIELD);
-        outPacket.encodeInt(getLifeId()); // dwNpcID
-        return outPacket;
+        return NpcPacket.npcLeaveField(this);
     }
 
     @Override
     public OutPacket changeControllerPacket(boolean forController) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_CHANGE_CONTROLLER);
-        outPacket.encodeByte(forController);
-        outPacket.encodeInt(getLifeId()); // dwNpcID
-        if (forController) {
-            outPacket.encodeInt(lifeInfo.id()); // dwTemplateID
-            encodeInit(outPacket);
-        }
-        return outPacket;
+        return NpcPacket.npcChangeController(this, forController);
     }
 
-    private void encodeInit(OutPacket outPacket) {
+    public void encodeInit(OutPacket outPacket) {
         // CNpc::Init
         outPacket.encodeShort(lifeInfo.x()); // ptPos.x
         outPacket.encodeShort(lifeInfo.y()); // ptPos.y

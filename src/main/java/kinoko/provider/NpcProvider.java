@@ -44,7 +44,8 @@ public final class NpcProvider {
             if (!(npcEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
                 throw new ProviderError("Failed to resolve info property");
             }
-            npcInfos.put(npcId, NpcInfo.from(npcId, infoProp));
+            final boolean move = npcEntry.getValue().getProperty().get("move") instanceof WzListProperty;
+            npcInfos.put(npcId, NpcInfo.from(npcId, move, infoProp));
         }
     }
 }

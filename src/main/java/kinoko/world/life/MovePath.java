@@ -164,6 +164,7 @@ public final class MovePath implements Encodable {
             elem.setMoveAction(inPacket.decodeByte()); // bMoveAction
             elem.setElapse(inPacket.decodeShort()); // tElapse
             // if (CClientOptMan::GetOpt(2)) short (usRandCnt), short (usActualRandCnt)
+            moveElems.add(elem);
         }
         return new MovePath(moveElems, x, y, vx, vy);
     }

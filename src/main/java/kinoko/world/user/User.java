@@ -1,14 +1,17 @@
 package kinoko.world.user;
 
+import kinoko.packet.user.UserPacket;
 import kinoko.server.client.Client;
-import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.field.Field;
 import kinoko.world.field.FieldObject;
 
 public final class User implements FieldObject {
     private final Client client;
     private final CharacterData characterData;
     private final CalcDamage calcDamage;
+
+    private Field field;
 
     public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
         this.client = client;
@@ -29,27 +32,32 @@ public final class User implements FieldObject {
     }
 
     public int getCharacterId() {
-        return characterData.getCharacterId();
+        return getCharacterData().getCharacterId();
     }
 
-    public int getFieldId() {
-        return characterData.getCharacterStat().getPosMap();
+
+    public int getPosMap() {
+        return getCharacterData().getCharacterStat().getPosMap();
     }
 
-    public void setFieldId(int fieldId) {
-        characterData.getCharacterStat().setPosMap(fieldId);
+    @Override
+    public Field getField() {
+        return field;
+    }
+
+    @Override
+    public void setField(Field field) {
+        this.field = field;
+        getCharacterData().getCharacterStat().setPosMap(field.getFieldId());
     }
 
     @Override
     public OutPacket enterFieldPacket() {
-        // TODO
-        return OutPacket.of(OutHeader.USER_ENTER_FIELD);
+        return UserPacket.userEnterField(this);
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_LEAVE_FIELD);
-        outPacket.encodeInt(getCharacterId()); // dwCharacterId
-        return outPacket;
+        return UserPacket.userLeaveField(this);
     }
 }

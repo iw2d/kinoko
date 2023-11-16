@@ -2,6 +2,7 @@ package kinoko.server;
 
 import kinoko.handler.ClientHandler;
 import kinoko.handler.field.FieldHandler;
+import kinoko.handler.life.NpcHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.UserHandler;
 import kinoko.provider.MapProvider;
@@ -20,6 +21,7 @@ public final class ChannelServer extends NettyServer {
             ClientHandler.class,
             MigrationHandler.class,
             FieldHandler.class,
+            NpcHandler.class,
             UserHandler.class
     );
     private final int worldId;
@@ -55,7 +57,7 @@ public final class ChannelServer extends NettyServer {
             if (mapInfoResult.isEmpty()) {
                 return Optional.empty();
             }
-            fields.put(mapId, new Field(mapInfoResult.get()));
+            fields.put(mapId, Field.from(mapInfoResult.get()));
         }
         return Optional.of(fields.get(mapId));
     }

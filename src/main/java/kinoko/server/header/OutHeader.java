@@ -506,7 +506,11 @@ public enum OutHeader {
         for (OutHeader header : values()) {
             headerMap.put(header.getValue(), header);
         }
-        ignoreHeaders = Set.of();
+        ignoreHeaders = Set.of(
+                NPC_ENTER_FIELD,
+                NPC_CHANGE_CONTROLLER,
+                NPC_MOVE
+        );
     }
 
     private final short value;
