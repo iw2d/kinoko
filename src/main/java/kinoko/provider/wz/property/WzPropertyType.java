@@ -29,6 +29,9 @@ public enum WzPropertyType {
     }
 
     public static WzPropertyType getById(String name) {
+        if (!types.containsKey(name)) {
+            throw new IllegalArgumentException("Unknown WzPropertyType : " + name);
+        }
         return types.get(name);
     }
 }

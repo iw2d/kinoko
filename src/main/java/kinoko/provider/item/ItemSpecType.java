@@ -2,6 +2,7 @@ package kinoko.provider.item;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public enum ItemSpecType {
     // HEAL ------------------------------------------------------------------------------------------------------------
@@ -94,12 +95,22 @@ public enum ItemSpecType {
     BFSkill;
 
     private static final Map<String, ItemSpecType> nameMap;
+    private static final Set<String> ignoredTypes;
 
     static {
         nameMap = new HashMap<>();
         for (ItemSpecType type : values()) {
             nameMap.put(type == int_ ? "int" : type.name(), type);
         }
+        ignoredTypes = Set.of(
+                con.name(),
+                mob.name(),
+                morphRandom.name()
+        );
+    }
+
+    public static boolean isIgnored(String name) {
+        return name.matches("[0-9]+") || ignoredTypes.contains(name);
     }
 
     public static ItemSpecType fromName(String name) {

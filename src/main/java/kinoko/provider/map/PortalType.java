@@ -34,6 +34,6 @@ public enum PortalType {
                 return pt;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown PortalType : " + type);
     }
 }

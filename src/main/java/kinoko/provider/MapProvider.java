@@ -34,8 +34,7 @@ public final class MapProvider {
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {
-        final WzDirectory mapDirectory = source.getDirectory().getDirectories().get("Map");
-        if (mapDirectory == null) {
+        if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
             throw new ProviderError("Could not resolve Map.wz/Map");
         }
         for (var dirEntry : mapDirectory.getDirectories().entrySet()) {
@@ -52,21 +51,19 @@ public final class MapProvider {
     }
 
     private static MapInfo resolveMapInfo(int mapId, WzImage image) throws ProviderError {
-        final Map<String, Object> props = image.getProperty().getItems();
+        final List<Foothold> foothold = resolveFoothold(image.getProperty());
+        final List<LifeInfo> life = resolveLife(image.getProperty());
+        final List<PortalInfo> portal = resolvePortal(image.getProperty());
+        final List<ReactorInfo> reactor = resolveReactor(image.getProperty());
 
-        final List<Foothold> foothold = resolveFoothold((WzListProperty) props.get("foothold"));
-        final List<LifeInfo> life = resolveLife((WzListProperty) props.get("life"));
-        final List<PortalInfo> portal = resolvePortal((WzListProperty) props.get("portal"));
-        final List<ReactorInfo> reactor = resolveReactor((WzListProperty) props.get("reactor"));
-
-        if (!(props.get("info") instanceof WzListProperty infoProp)) {
+        if (!(image.getProperty().get("info") instanceof WzListProperty infoProp)) {
             throw new ProviderError("Failed to resolve info property");
         }
         return MapInfo.from(mapId, foothold, life, portal, reactor, infoProp);
     }
 
-    private static List<Foothold> resolveFoothold(WzListProperty listProp) throws ProviderError {
-        if (listProp == null) {
+    private static List<Foothold> resolveFoothold(WzListProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("foothold") instanceof WzListProperty listProp)) {
             return List.of();
         }
         final List<Foothold> foothold = new ArrayList<>();
@@ -92,8 +89,8 @@ public final class MapProvider {
         return foothold;
     }
 
-    private static List<LifeInfo> resolveLife(WzListProperty listProp) throws ProviderError {
-        if (listProp == null) {
+    private static List<LifeInfo> resolveLife(WzListProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("life") instanceof WzListProperty listProp)) {
             return List.of();
         }
         final List<LifeInfo> life = new ArrayList<>();
@@ -102,16 +99,13 @@ public final class MapProvider {
                 throw new ProviderError("Failed to resolve life property");
             }
             final LifeType lifeType = LifeType.fromString(lifeProp.get("type"));
-            if (lifeType == null) {
-                throw new ProviderError("Unknown life type : %s", lifeProp.get("type"));
-            }
             life.add(LifeInfo.from(lifeType, lifeProp));
         }
         return life;
     }
 
-    private static List<PortalInfo> resolvePortal(WzListProperty listProp) throws ProviderError {
-        if (listProp == null) {
+    private static List<PortalInfo> resolvePortal(WzListProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("portal") instanceof WzListProperty listProp)) {
             return List.of();
         }
         final List<PortalInfo> portal = new ArrayList<>();
@@ -121,16 +115,13 @@ public final class MapProvider {
                 throw new ProviderError("Failed to resolve portal property");
             }
             final PortalType portalType = PortalType.fromInt(portalProp.get("pt"));
-            if (portalType == null) {
-                throw new ProviderError("Unknown portal type : %d", portalProp.get("pt"));
-            }
             portal.add(PortalInfo.from(portalType, portalId, portalProp));
         }
         return portal;
     }
 
-    private static List<ReactorInfo> resolveReactor(WzListProperty listProp) throws ProviderError {
-        if (listProp == null) {
+    private static List<ReactorInfo> resolveReactor(WzListProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("reactor") instanceof WzListProperty listProp)) {
             return List.of();
         }
         final List<ReactorInfo> reactor = new ArrayList<>();

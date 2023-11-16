@@ -200,9 +200,6 @@ public final class WzReader implements AutoCloseable {
     public WzProperty readProperty(WzImage image, ByteBuffer buffer) throws WzReaderError {
         final String propertyTypeId = readStringBlock(image, buffer);
         final WzPropertyType propertyType = WzPropertyType.getById(propertyTypeId);
-        if (propertyType == null) {
-            throw new WzReaderError("Unknown property type : %s", propertyTypeId);
-        }
         switch (propertyType) {
             case LIST -> {
                 buffer.getShort(); // reserved

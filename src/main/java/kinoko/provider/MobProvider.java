@@ -41,10 +41,7 @@ public final class MobProvider {
     private static void loadMobInfos(WzPackage source) throws ProviderError {
         for (var mobEntry : source.getDirectory().getImages().entrySet()) {
             final int mobId = Integer.parseInt(mobEntry.getKey().replace(".img", ""));
-            if (!(mobEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
-                throw new ProviderError("Failed to resolve info property");
-            }
-            mobInfos.put(mobId, new MobInfo(mobId));
+            mobInfos.put(mobId, MobInfo.from(mobId, mobEntry.getValue().getProperty().get("info")));
         }
     }
 }

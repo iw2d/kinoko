@@ -31,11 +31,10 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
                         throw new ProviderError("Failed to resolve item info property");
                     }
                     for (var infoEntry : infoProp.getItems().entrySet()) {
-                        final ItemInfoType type = ItemInfoType.fromName(infoEntry.getKey());
-                        if (type == null) {
-                            // System.err.printf("Unhandled info %s in item %d%n", entry.getKey(), itemId);
+                        if (ItemInfoType.isIgnored(infoEntry.getKey())) {
                             continue;
                         }
+                        final ItemInfoType type = ItemInfoType.fromName(infoEntry.getKey());
                         info.put(type, infoEntry.getValue());
                     }
                 }
@@ -44,11 +43,10 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
                         throw new ProviderError("Failed to resolve item spec property");
                     }
                     for (var specEntry : specProp.getItems().entrySet()) {
-                        final ItemSpecType type = ItemSpecType.fromName(specEntry.getKey());
-                        if (type == null || type == ItemSpecType.morphRandom || type == ItemSpecType.con || type == ItemSpecType.mob) {
-                            // System.err.printf("Unhandled spec %s in item %d%n", entry.getKey(), itemId);
+                        if (ItemSpecType.isIgnored(specEntry.getKey())) {
                             continue;
                         }
+                        final ItemSpecType type = ItemSpecType.fromName(specEntry.getKey());
                         spec.put(type, specEntry.getValue());
                     }
                 }

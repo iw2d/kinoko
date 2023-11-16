@@ -20,6 +20,6 @@ public enum LifeType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Unknown LifeType " + id);
+        throw new IllegalArgumentException("Unknown LifeType : " + id);
     }
 }

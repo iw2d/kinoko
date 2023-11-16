@@ -39,8 +39,7 @@ public final class EtcProvider {
     }
 
     private static void loadForbiddenNames(WzPackage source) throws ProviderError {
-        final WzImage nameImage = source.getDirectory().getImages().get("ForbiddenName.img");
-        if (nameImage == null) {
+        if (!(source.getDirectory().getImages().get("ForbiddenName.img") instanceof WzImage nameImage)) {
             throw new ProviderError("Could not resolve Etc.wz/ForbiddenName.img");
         }
         for (var value : nameImage.getProperty().getItems().values()) {
@@ -51,8 +50,7 @@ public final class EtcProvider {
     }
 
     private static void loadMakeCharInfo(WzPackage source) throws ProviderError {
-        final WzImage infoImage = source.getDirectory().getImages().get("MakeCharInfo.img");
-        if (infoImage == null) {
+        if (!(source.getDirectory().getImages().get("MakeCharInfo.img") instanceof WzImage infoImage)) {
             throw new ProviderError("Could not resolve Etc.wz/MakeCharInfo.img");
         }
         for (var entry : infoImage.getProperty().getItems().entrySet()) {

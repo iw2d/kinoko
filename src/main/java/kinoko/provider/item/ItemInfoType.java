@@ -94,6 +94,10 @@ public enum ItemInfoType {
         }
     }
 
+    public static boolean isIgnored(String name) {
+        return !nameMap.containsKey(name);
+    }
+
     public static ItemInfoType fromName(String name) {
         return nameMap.get(name);
     }
