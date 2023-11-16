@@ -26,7 +26,7 @@ public final class EtcProvider {
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Etc.wz", e);
+            log.error("[EtcProvider] Exception caught while loading Etc.wz", e);
         }
     }
 

@@ -71,15 +71,15 @@ public final class Field {
         users.put(user.getCharacterId(), user);
         // Set controller
         for (Life life : lifes.values()) {
-            user.getClient().write(life.enterFieldPacket());
+            user.write(life.enterFieldPacket());
             if (!(life instanceof ControlledObject controlledLife)) {
                 continue;
             }
             if (controlledLife.getController() == null) {
                 controlledLife.setController(user);
-                user.getClient().write(controlledLife.changeControllerPacket(true));
+                user.write(controlledLife.changeControllerPacket(true));
             } else {
-                user.getClient().write(controlledLife.changeControllerPacket(false));
+                user.write(controlledLife.changeControllerPacket(false));
             }
         }
     }
@@ -119,7 +119,7 @@ public final class Field {
             if (except != null && user.getCharacterId() == except.getCharacterId()) {
                 continue;
             }
-            user.getClient().write(outPacket);
+            user.write(outPacket);
         }
     }
 

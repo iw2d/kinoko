@@ -24,7 +24,7 @@ public final class QuestProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadQuestInfos(wzPackage);
         } catch (IOException e) {
-            log.error("Exception caught while loading Npc.wz", e);
+            log.error("[QuestProvider] Exception caught while loading Quest.wz", e);
         }
     }
 
@@ -35,15 +35,18 @@ public final class QuestProvider {
         return Optional.of(questInfos.get(questId));
     }
 
-    private static void loadQuestInfos(WzPackage source) {
+    private static void loadQuestInfos(WzPackage source) throws ProviderError {
         final WzImage infoImage = source.getDirectory().getImages().get("QuestInfo.img");
         final WzImage actImage = source.getDirectory().getImages().get("Act.img");
         final WzImage checkImage = source.getDirectory().getImages().get("Check.img");
         for (var entry : infoImage.getProperty().getItems().entrySet()) {
             final int questId = Integer.parseInt(entry.getKey());
+            if (!(entry.getValue() instanceof WzListProperty infoProp)) {
+                throw new ProviderError("Failed to resolve quest info");
+            }
             final QuestInfo questInfo = QuestInfo.from(
                     questId,
-                    (WzListProperty) entry.getValue(),
+                    infoProp,
                     actImage.getProperty().get(entry.getKey()),
                     checkImage.getProperty().get(entry.getKey())
             );

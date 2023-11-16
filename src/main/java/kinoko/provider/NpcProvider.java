@@ -27,7 +27,7 @@ public final class NpcProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadNpcInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Npc.wz", e);
+            log.error("[NpcProvider] Exception caught while loading Npc.wz", e);
         }
     }
 

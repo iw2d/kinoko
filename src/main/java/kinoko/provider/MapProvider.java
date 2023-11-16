@@ -22,7 +22,7 @@ public final class MapProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadMapInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Map.wz", e);
+            log.error("[MapProvider] Exception caught while loading Map.wz", e);
         }
     }
 

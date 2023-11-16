@@ -329,9 +329,12 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         final Account account = c.getAccount();
-        if (account == null || !account.canSelectCharacter(characterId) || !account.hasSecondaryPassword() ||
-                !DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
+        if (account == null || !account.canSelectCharacter(characterId) || !account.hasSecondaryPassword()) {
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+            return;
+        }
+        if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
+            c.write(LoginPacket.checkSecondaryPasswordResult());
             return;
         }
         tryMigration(c, account, characterId);
@@ -345,14 +348,14 @@ public final class LoginHandler {
     private static void tryMigration(Client c, Account account, int characterId) {
         final Optional<ChannelServer> channelResult = Server.getChannelServerById(account.getWorldId(), account.getChannelId());
         if (channelResult.isEmpty()) {
-            log.debug("Failed to submit migration request for character ID : {}", characterId);
+            log.error("[LoginHandler] Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         final ChannelServer channelServer = channelResult.get();
         final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, characterId);
         if (mrResult.isEmpty()) {
-            log.debug("Failed to submit migration request for character ID : {}", characterId);
+            log.error("[LoginHandler] Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }

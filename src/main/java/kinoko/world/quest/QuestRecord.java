@@ -8,7 +8,6 @@ public final class QuestRecord {
     private String questInfo;
     private FileTime completedTime;
 
-
     public QuestRecord(int questId) {
         this.questId = questId;
     }

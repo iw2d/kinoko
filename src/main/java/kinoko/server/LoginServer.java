@@ -4,12 +4,16 @@ import kinoko.handler.ClientHandler;
 import kinoko.handler.stage.LoginHandler;
 import kinoko.server.header.InHeader;
 import kinoko.server.netty.NettyServer;
+import kinoko.server.netty.PacketHandler;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
 public final class LoginServer extends NettyServer {
-    private static final Map<InHeader, Method> handlerMap = loadHandlers(ClientHandler.class, LoginHandler.class);
+    private static final Map<InHeader, Method> handlerMap = PacketHandler.loadHandlers(
+            ClientHandler.class,
+            LoginHandler.class
+    );
 
     @Override
     public int getPort() {

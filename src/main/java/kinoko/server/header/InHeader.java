@@ -260,6 +260,7 @@ public enum InHeader {
             headerMap.put(header.getValue(), header);
         }
         ignoreHeaders = Set.of(
+                LOGIN_INIT,
                 UPDATE_CLIENT_ENVIRONMENT,
                 USER_MOVE,
                 NPC_MOVE

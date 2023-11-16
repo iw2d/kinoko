@@ -9,6 +9,7 @@ import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.netty.NettyServer;
+import kinoko.server.netty.PacketHandler;
 import kinoko.world.field.Field;
 
 import java.lang.reflect.Method;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ChannelServer extends NettyServer {
-    private static final Map<InHeader, Method> handlerMap = loadHandlers(
+    private static final Map<InHeader, Method> handlerMap = PacketHandler.loadHandlers(
             ClientHandler.class,
             MigrationHandler.class,
             FieldHandler.class,

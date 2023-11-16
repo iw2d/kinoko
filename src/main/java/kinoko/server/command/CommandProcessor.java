@@ -1,7 +1,7 @@
 package kinoko.server.command;
 
 import kinoko.server.ServerConfig;
-import kinoko.server.client.Client;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,7 @@ public final class CommandProcessor {
                 if (!method.isAnnotationPresent(Command.class)) {
                     continue;
                 }
-                if (method.getParameterCount() != 2 || method.getParameterTypes()[0] != Client.class || method.getParameterTypes()[1] != String[].class) {
+                if (method.getParameterCount() != 2 || method.getParameterTypes()[0] != User.class || method.getParameterTypes()[1] != String[].class) {
                     throw new RuntimeException(String.format("Incorrect parameters for command method \"%s\"", method.getName()));
                 }
                 Command annotation = method.getAnnotation(Command.class);
@@ -34,15 +34,15 @@ public final class CommandProcessor {
         }
     }
 
-    public static boolean tryProcessCommand(Client c, String text) {
+    public static boolean tryProcessCommand(User user, String text) {
         final String[] args = text.replaceFirst(ServerConfig.COMMAND_PREFIX, "").split(" ");
         if (!commandMap.containsKey(args[0])) {
             return false;
         }
         try {
-            commandMap.get(args[0]).invoke(null, c, args);
+            commandMap.get(args[0]).invoke(null, user, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            log.error("Exception caught while processing command {}", args[0], e);
+            log.error("[CommandProcessor] Exception caught while processing command {}", args[0], e);
         }
         return true;
     }

@@ -31,14 +31,21 @@ public final class User implements FieldObject {
         return calcDamage;
     }
 
+    // CONVENIENCE FUNCTIONS -------------------------------------------------------------------------------------------
+
+    public void write(OutPacket outPacket) {
+        getClient().write(outPacket);
+    }
+
     public int getCharacterId() {
         return getCharacterData().getCharacterId();
     }
 
-
     public int getPosMap() {
         return getCharacterData().getCharacterStat().getPosMap();
     }
+
+    // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
     public Field getField() {

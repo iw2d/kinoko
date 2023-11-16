@@ -94,7 +94,7 @@ public final class MigrationHandler {
             field = fieldResult.get();
         } else {
             final int henesys = 100000000;
-            log.error("[MigrationHandler] Could not get field ID : {} for character ID : {}, moving to {}", user.getPosMap(), user.getCharacterId(), henesys);
+            log.error("[MigrationHandler] Could not retrieve field ID : {} for character ID : {}, moving to {}", user.getPosMap(), user.getCharacterId(), henesys);
             field = channelServer.getFieldById(henesys).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
         }
         field.addUser(user);

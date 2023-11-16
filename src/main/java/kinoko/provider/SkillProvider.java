@@ -27,7 +27,7 @@ public final class SkillProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadSkillInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Skill.wz", e);
+            log.error("[SkillProvider] Exception caught while loading Skill.wz", e);
         }
     }
 

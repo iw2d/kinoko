@@ -5,7 +5,6 @@ import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.WzReader;
 import kinoko.provider.wz.WzReaderConfig;
-import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +26,7 @@ public final class MobProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadMobInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Npc.wz", e);
+            log.error("[MobProvider] Exception caught while loading Mob.wz", e);
         }
     }
 

@@ -21,7 +21,7 @@ public final class FieldHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
 
     @Handler(InHeader.TRANSFER_FIELD)
-    public static void handleTransferField(Client c, InPacket inPacket) {
+    public static void handleTransferField(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte();
         final int targetField = inPacket.decodeInt(); // dwTargetField
         final String portalName = inPacket.decodeString(); // sPortal
@@ -33,11 +33,8 @@ public final class FieldHandler {
         inPacket.decodeByte(); // bPremium
         inPacket.decodeByte(); // bChase -> int, int
 
-        final User user = c.getUser();
         final Field field = user.getField();
-
-        log.info(portalName);
-        field.getFieldId();
+        log.info("[FieldHandler] Using portal : {} on field ID : {}", portalName, field.getFieldId());
     }
 
     @Handler(InHeader.TRANSFER_CHANNEL)
@@ -54,7 +51,7 @@ public final class FieldHandler {
         final ChannelServer channelServer = channelResult.get();
         final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getCharacterId());
         if (mrResult.isEmpty()) {
-            log.debug("Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
+            log.error("[FieldHandler] Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
             c.write(FieldPacket.transferChannelReqIgnored(1));
             return;
         }

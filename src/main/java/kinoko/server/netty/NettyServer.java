@@ -5,19 +5,15 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.client.Client;
 import kinoko.server.client.ClientStorage;
 import kinoko.server.header.InHeader;
-import kinoko.server.packet.InPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.security.SecureRandom;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -92,28 +88,6 @@ public abstract class NettyServer {
             }
         });
         return stopFuture;
-    }
-
-    protected static Map<InHeader, Method> loadHandlers(Class<?>... handlerClasses) {
-        final Map<InHeader, Method> handlerMap = new EnumMap<>(InHeader.class);
-        for (Class<?> clazz : handlerClasses) {
-            for (Method method : clazz.getDeclaredMethods()) {
-                if (!method.isAnnotationPresent(Handler.class)) {
-                    continue;
-                }
-                if (method.getParameterCount() != 2 || method.getParameterTypes()[0] != Client.class || method.getParameterTypes()[1] != InPacket.class) {
-                    throw new RuntimeException(String.format("Incorrect parameters for handler method \"%s\"", method.getName()));
-                }
-                Handler annotation = method.getAnnotation(Handler.class);
-                for (InHeader header : annotation.value()) {
-                    if (handlerMap.containsKey(header)) {
-                        throw new RuntimeException(String.format("Multiple handlers found for InHeader \"%s\"", header.name()));
-                    }
-                    handlerMap.put(header, method);
-                }
-            }
-        }
-        return handlerMap;
     }
 
     private static byte[] getNewIv() {

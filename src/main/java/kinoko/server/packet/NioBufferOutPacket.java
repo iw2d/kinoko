@@ -69,7 +69,7 @@ public final class NioBufferOutPacket implements OutPacket {
     public void encodeString(String value, int length) {
         ensureSize(length);
         if (value.length() > length) {
-            log.error("Encoding a string that is too long, string will be truncated");
+            log.error("[NioBufferOutPacket] Encoding a string that is too long, string will be truncated");
             getBuffer().put(value.substring(0, length).getBytes());
         } else {
             getBuffer().put(value.getBytes());
@@ -80,7 +80,7 @@ public final class NioBufferOutPacket implements OutPacket {
     @Override
     public void encodeString(String value) {
         if (value.length() > Short.MAX_VALUE) {
-            log.error("Encoding a string that is too long, string will be truncated");
+            log.error("[NioBufferOutPacket] Encoding a string that is too long, string will be truncated");
         }
         final int length = Math.min(value.length(), Short.MAX_VALUE);
         ensureSize(2 + length);
