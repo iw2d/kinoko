@@ -10,6 +10,7 @@ import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
+import kinoko.world.field.Field;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
@@ -17,7 +18,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class MigrationHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
@@ -75,16 +75,31 @@ public final class MigrationHandler {
             c.close();
             return;
         }
-        final User user = new User(characterData, CalcDamage.using(ThreadLocalRandom.current()));
+        final User user = new User(c, characterData, CalcDamage.getDefault());
         if (channelServer.getClientStorage().isConnected(user)) {
             log.error("[MigrationHandler] Tried to connect to channel server while already connected");
             c.close();
             return;
         }
+
+        // Initialize User
         c.setUser(user);
         channelServer.getClientStorage().addPlayer(c);
-
         c.write(StagePacket.setField(user, channelServer.getChannelId(), true, false));
+
+        // Add User to Field
+        final Field field;
+        final Optional<Field> fieldResult = channelServer.getFieldById(user.getFieldId());
+        if (fieldResult.isPresent()) {
+            field = fieldResult.get();
+        } else {
+            final int henesys = 100000000;
+            log.error("[MigrationHandler] Could not get field ID : {} for character ID : {}, moving to {}", user.getFieldId(), user.getCharacterId(), henesys);
+            field = channelServer.getFieldById(henesys).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
+        }
+        user.setFieldId(field.getFieldId());
+        field.addUser(user);
+
 
         // TODO: keymap, quickslot, macros
 

@@ -18,7 +18,7 @@ public final class StagePacket {
         outPacket.encodeShort(0); // nNotifierCheck
 
         if (isMigrate) {
-            user.getCalcDamage().encode(outPacket); // m_CalcDamage
+            user.getCalcDamage().encodeSeeds(outPacket); // m_CalcDamage
             user.getCharacterData().encode(outPacket); // CharacterData::Decode
 
             // CWvsContext::OnSetLogoutGiftConfig

@@ -191,6 +191,7 @@ public final class LoginHandler {
         characterData.setCharacterName(name);
         characterData.setItemSnCounter(new AtomicInteger(1));
 
+        // Initial Stats
         final CharacterStat characterStat = new CharacterStat();
         characterStat.setGender(gender);
         characterStat.setSkin((byte) selectedAL[3]);
@@ -215,6 +216,7 @@ public final class LoginHandler {
         characterStat.setPortal((byte) 0);
         characterData.setCharacterStat(characterStat);
 
+        // Initialize Inventory and Add Starting Equips
         final CharacterInventory characterInventory = new CharacterInventory();
         characterInventory.setEquipped(new Inventory(Short.MAX_VALUE));
         characterInventory.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
@@ -225,19 +227,6 @@ public final class LoginHandler {
         characterInventory.setMoney(0);
         characterData.setCharacterInventory(characterInventory);
 
-        final SkillManager skillManager = new SkillManager();
-        for (SkillInfo skillInfo : SkillProvider.getSkillsForJob(job)) {
-            if (skillInfo.isInvisible()) {
-                continue;
-            }
-            skillManager.addSkill(skillInfo);
-        }
-        characterData.setSkillManager(skillManager);
-
-        final QuestManager questManager = new QuestManager();
-        characterData.setQuestManager(questManager);
-
-        // Add Starting Equips
         for (int i = 4; i < selectedAL.length; i++) {
             final int itemId = selectedAL[i];
             if (itemId == 0) {
@@ -253,6 +242,20 @@ public final class LoginHandler {
             }
             characterInventory.getEquipped().getItems().put(bodyPart.getValue(), startingEquip.get());
         }
+
+        // Initialize Skills
+        final SkillManager skillManager = new SkillManager();
+        for (SkillInfo skillInfo : SkillProvider.getSkillsForJob(job)) {
+            if (skillInfo.isInvisible()) {
+                continue;
+            }
+            skillManager.addSkill(skillInfo);
+        }
+        characterData.setSkillManager(skillManager);
+
+        // Initialize Quest Manager
+        final QuestManager questManager = new QuestManager();
+        characterData.setQuestManager(questManager);
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {

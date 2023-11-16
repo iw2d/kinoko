@@ -25,8 +25,7 @@ public final class UserHandler {
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // Crc32
 
-        final MovePath movePath = MovePath.decode(inPacket);
-        log.info(movePath);
+        MovePath.decode(inPacket);
     }
 
     @Handler(InHeader.USER_CHAT)
@@ -39,6 +38,6 @@ public final class UserHandler {
             return;
         }
 
-        c.write(UserCommonPacket.userChat(c.getUser().getId(), 0, text, onlyBalloon));
+        c.write(UserCommonPacket.userChat(c.getUser().getCharacterId(), 0, text, onlyBalloon));
     }
 }

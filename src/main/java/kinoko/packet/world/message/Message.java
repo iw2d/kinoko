@@ -11,7 +11,7 @@ public final class Message implements Encodable {
     private int int1;
     private int int2;
     private String string1;
-    private DropPickUpMessageInfo dropPickUpMessageInfo;
+    private DropPickUpMessageInfo dropPickUpInfo;
     private QuestRecord questRecord;
 
     public Message(MessageType type) {
@@ -23,7 +23,21 @@ public final class Message implements Encodable {
         outPacket.encodeByte(type.getValue());
         switch (type) {
             case DROP_PICK_UP -> {
-                dropPickUpMessageInfo.encode(outPacket);
+                outPacket.encodeByte(dropPickUpInfo.getType().getValue());
+                switch (dropPickUpInfo.getType()) {
+                    case MONEY -> {
+                        outPacket.encodeByte(dropPickUpInfo.isPortionNotFound());
+                        outPacket.encodeInt(dropPickUpInfo.getMoney());
+                        outPacket.encodeShort(0); // Internet Cafe Meso Bonus
+                    }
+                    case ITEM_BUNDLE -> {
+                        outPacket.encodeInt(dropPickUpInfo.getItemId()); // nItemID
+                        outPacket.encodeInt(dropPickUpInfo.getItemCount());
+                    }
+                    case ITEM_SINGLE -> {
+                        outPacket.encodeInt(dropPickUpInfo.getItemId());
+                    }
+                }
             }
             case QUEST_RECORD -> {
                 outPacket.encodeShort(questRecord.getQuestId()); // nQuestID
@@ -85,7 +99,7 @@ public final class Message implements Encodable {
 
     public static Message dropPickUp(DropPickUpMessageInfo info) {
         final Message message = new Message(MessageType.DROP_PICK_UP);
-        message.dropPickUpMessageInfo = info;
+        message.dropPickUpInfo = info;
         return message;
     }
 

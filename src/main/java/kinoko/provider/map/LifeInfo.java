@@ -11,7 +11,7 @@ public record LifeInfo(
         int rx1,
         int cy,
         int fh,
-        boolean f,
+        boolean f, // flip
         boolean hide,
         int mobTime
 ) {

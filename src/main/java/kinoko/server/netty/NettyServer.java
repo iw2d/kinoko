@@ -15,14 +15,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
+import java.security.SecureRandom;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class NettyServer {
     protected static final Logger log = LogManager.getLogger(NettyServer.class);
+    private static final Random random = new SecureRandom();
     private final ClientStorage clientStorage = new ClientStorage();
     private CompletableFuture<Channel> channelFuture;
 
@@ -116,7 +118,7 @@ public abstract class NettyServer {
 
     private static byte[] getNewIv() {
         final byte[] iv = new byte[4];
-        ThreadLocalRandom.current().nextBytes(iv);
+        random.nextBytes(iv);
         return iv;
     }
 }

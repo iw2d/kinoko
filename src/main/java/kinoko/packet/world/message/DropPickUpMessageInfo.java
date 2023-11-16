@@ -1,9 +1,6 @@
 package kinoko.packet.world.message;
 
-import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
-
-public final class DropPickUpMessageInfo implements Encodable {
+public final class DropPickUpMessageInfo {
     private final DropPickUpMessageType type;
     private boolean portionNotFound;
     private int money;
@@ -14,39 +11,39 @@ public final class DropPickUpMessageInfo implements Encodable {
         this.type = type;
     }
 
+    public DropPickUpMessageType getType() {
+        return type;
+    }
+
+    public boolean isPortionNotFound() {
+        return portionNotFound;
+    }
+
     public void setPortionNotFound(boolean portionNotFound) {
         this.portionNotFound = portionNotFound;
+    }
+
+    public int getMoney() {
+        return money;
     }
 
     public void setMoney(int money) {
         this.money = money;
     }
 
+    public int getItemId() {
+        return itemId;
+    }
+
     public void setItemId(int itemId) {
         this.itemId = itemId;
+    }
+
+    public int getItemCount() {
+        return itemCount;
     }
 
     public void setItemCount(int itemCount) {
         this.itemCount = itemCount;
     }
-
-    @Override
-    public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(type.getValue());
-        switch (type) {
-            case MONEY -> {
-                outPacket.encodeByte(portionNotFound);
-                outPacket.encodeInt(money);
-                outPacket.encodeShort(0); // Internet Cafe Meso Bonus
-            }
-            case ITEM_BUNDLE -> {
-                outPacket.encodeInt(itemId); // nItemID
-                outPacket.encodeInt(itemCount);
-            }
-            case ITEM_SINGLE -> {
-                outPacket.encodeInt(itemId);
-            }
-        }
-    }
-
 }

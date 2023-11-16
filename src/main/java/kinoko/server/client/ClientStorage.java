@@ -16,7 +16,7 @@ public final class ClientStorage {
     }
 
     public boolean isConnected(User user) {
-        return connectedUsers.containsKey(user.getId());
+        return connectedUsers.containsKey(user.getCharacterId());
     }
 
     public void addPlayer(Client client) {
@@ -26,7 +26,7 @@ public final class ClientStorage {
         }
         final User user = client.getUser();
         if (user != null) {
-            connectedUsers.put(user.getId(), client);
+            connectedUsers.put(user.getCharacterId(), client);
         }
     }
 
@@ -38,7 +38,7 @@ public final class ClientStorage {
         }
         final User user = client.getUser();
         if (user != null) {
-            connectedUsers.remove(user.getId());
+            connectedUsers.remove(user.getCharacterId());
             DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
         }
     }
