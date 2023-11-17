@@ -8,8 +8,6 @@ import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,7 +17,6 @@ import java.util.Optional;
 
 public final class NpcProvider {
     public static final Path NPC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Npc.wz");
-    private static final Logger log = LogManager.getLogger(NpcProvider.class);
     private static final Map<Integer, NpcInfo> npcInfos = new HashMap<>();
 
     public static void initialize() {
@@ -27,7 +24,7 @@ public final class NpcProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadNpcInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("[NpcProvider] Exception caught while loading Npc.wz", e);
+            throw new IllegalArgumentException("Exception caught while loading Npc.wz", e);
         }
     }
 

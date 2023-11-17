@@ -2,8 +2,6 @@ package kinoko.provider.map;
 
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.Objects;
-
 public final class LifeInfo {
     private final LifeType lifeType;
     private final int templateId;

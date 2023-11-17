@@ -9,8 +9,6 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.world.job.Job;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,7 +16,6 @@ import java.util.*;
 
 public final class SkillProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
-    private static final Logger log = LogManager.getLogger(SkillProvider.class);
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
 
@@ -27,7 +24,7 @@ public final class SkillProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadSkillInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("[SkillProvider] Exception caught while loading Skill.wz", e);
+            throw new IllegalArgumentException("Exception caught while loading Skill.wz", e);
         }
     }
 

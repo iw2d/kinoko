@@ -2,8 +2,6 @@ package kinoko.provider.map;
 
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.Objects;
-
 public final class PortalInfo {
     private final PortalType portalType;
     private final int portalId;
@@ -61,19 +59,6 @@ public final class PortalInfo {
         return script;
     }
 
-    public static PortalInfo from(PortalType portalType, int portalId, WzListProperty portalProp) {
-        return new PortalInfo(
-                portalType,
-                portalId,
-                portalProp.get("pn"),
-                portalProp.get("tm"),
-                portalProp.get("tn"),
-                portalProp.get("x"),
-                portalProp.get("y"),
-                portalProp.get("script")
-        );
-    }
-
     @Override
     public String toString() {
         return "PortalInfo[" +
@@ -85,6 +70,19 @@ public final class PortalInfo {
                 "x=" + x + ", " +
                 "y=" + y + ", " +
                 "script=" + script + ']';
+    }
+
+    public static PortalInfo from(PortalType portalType, int portalId, WzListProperty portalProp) {
+        return new PortalInfo(
+                portalType,
+                portalId,
+                portalProp.get("pn"),
+                portalProp.get("tm"),
+                portalProp.get("tn"),
+                portalProp.get("x"),
+                portalProp.get("y"),
+                portalProp.get("script")
+        );
     }
 
 }

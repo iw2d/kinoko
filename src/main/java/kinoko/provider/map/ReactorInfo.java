@@ -2,8 +2,6 @@ package kinoko.provider.map;
 
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.Objects;
-
 public final class ReactorInfo {
     private final int reactorId;
     private final String reactorName;
@@ -19,17 +17,6 @@ public final class ReactorInfo {
         this.y = y;
         this.flip = flip;
         this.reactorTime = reactorTime;
-    }
-
-    public static ReactorInfo from(WzListProperty reactorProp) {
-        return new ReactorInfo(
-                Integer.parseInt(reactorProp.get("id")),
-                reactorProp.get("name"),
-                reactorProp.get("x"),
-                reactorProp.get("y"),
-                reactorProp.getOrDefault("f", 0) != 0,
-                reactorProp.get("reactorTime")
-        );
     }
 
     public int getReactorId() {
@@ -65,6 +52,17 @@ public final class ReactorInfo {
                 "y=" + y + ", " +
                 "f=" + flip + ", " +
                 "reactorTime=" + reactorTime + ']';
+    }
+
+    public static ReactorInfo from(WzListProperty reactorProp) {
+        return new ReactorInfo(
+                Integer.parseInt(reactorProp.get("id")),
+                reactorProp.get("name"),
+                reactorProp.get("x"),
+                reactorProp.get("y"),
+                reactorProp.getOrDefault("f", 0) != 0,
+                reactorProp.get("reactorTime")
+        );
     }
 
 }

@@ -5,8 +5,6 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,15 +14,14 @@ import java.util.Optional;
 
 public final class QuestProvider {
     public static final Path QUEST_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Quest.wz");
-    private static final Logger log = LogManager.getLogger(NpcProvider.class);
     private static final Map<Integer, QuestInfo> questInfos = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadQuestInfos(wzPackage);
-        } catch (IOException e) {
-            log.error("[QuestProvider] Exception caught while loading Quest.wz", e);
+        } catch (IOException | ProviderError e) {
+            throw new IllegalArgumentException("Exception caught while loading Quest.wz", e);
         }
     }
 

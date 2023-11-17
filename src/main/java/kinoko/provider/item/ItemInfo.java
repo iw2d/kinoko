@@ -6,7 +6,6 @@ import kinoko.provider.wz.property.WzListProperty;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Objects;
 
 public final class ItemInfo {
     private final int itemId;

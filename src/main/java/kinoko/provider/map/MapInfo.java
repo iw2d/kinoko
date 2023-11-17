@@ -4,7 +4,6 @@ import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public final class MapInfo {

@@ -5,8 +5,6 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -20,7 +18,6 @@ public final class ItemProvider {
     public static final Path ITEM_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Item.wz");
     public static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
-    private static final Logger log = LogManager.getLogger(ItemProvider.class);
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
 
     public static void initialize() {
@@ -29,14 +26,14 @@ public final class ItemProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadEquipInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Character.wz", e);
+            throw new IllegalArgumentException("Exception caught while loading Character.wz", e);
         }
         // Item.wz
         try (final WzReader reader = WzReader.build(ITEM_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadItemInfos(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("Exception caught while loading Item.wz", e);
+            throw new IllegalArgumentException("Exception caught while loading Item.wz", e);
         }
     }
 

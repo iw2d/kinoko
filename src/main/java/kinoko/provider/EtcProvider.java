@@ -4,8 +4,6 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,7 +14,6 @@ import java.util.Set;
 
 public final class EtcProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
-    private static final Logger log = LogManager.getLogger(EtcProvider.class);
     private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
 
@@ -26,7 +23,7 @@ public final class EtcProvider {
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
         } catch (IOException | ProviderError e) {
-            log.error("[EtcProvider] Exception caught while loading Etc.wz", e);
+            throw new IllegalArgumentException("Exception caught while loading Etc.wz", e);
         }
     }
 
