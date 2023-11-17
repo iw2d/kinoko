@@ -9,6 +9,7 @@ import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.crypto.ShandaCrypto;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,9 +28,7 @@ public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
         }
         c.acquireEncoderState();
         try {
-            if (!outPacket.getHeader().isIgnoreHeader()) {
-                log.debug("[Out] | {}", outPacket);
-            }
+            log.log(outPacket.getHeader().isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[Out] | {}", outPacket);
             final byte[] iv = c.getSendIv();
             final int rawSeq = ((iv[2] & 0xFF) | ((iv[3] << 8) & 0xFF00)) ^ SEND_VERSION;
             final int dataLen = data.length ^ rawSeq;

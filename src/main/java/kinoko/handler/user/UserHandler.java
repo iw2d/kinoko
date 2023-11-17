@@ -2,6 +2,8 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserCommonPacket;
+import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.UserRemotePacket;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.ServerConfig;
@@ -30,7 +32,14 @@ public final class UserHandler {
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // Crc32
 
-        MovePath.decode(inPacket);
+        final MovePath movePath = MovePath.decode(inPacket);
+        user.getField().broadcastPacket(UserRemotePacket.userMove(user.getCharacterId(), movePath), user);
+    }
+
+    @Handler(InHeader.USER_SIT)
+    public static void handleUserSit(User user, InPacket inPacket) {
+        final short fieldSeatId = inPacket.decodeShort();
+        user.write(UserLocalPacket.sitResult(fieldSeatId != -1, fieldSeatId));
     }
 
     @Handler(InHeader.USER_CHAT)

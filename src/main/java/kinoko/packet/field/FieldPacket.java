@@ -4,6 +4,21 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 
 public final class FieldPacket {
+    public static OutPacket transferFieldReqIgnored(int failureType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TRANSFER_FIELD_REQ_IGNORED);
+        outPacket.encodeByte(failureType);
+        // 1 : The portal is closed for now
+        // 2 : You cannot go to that place
+        // 3 : Unable to approach due to the force of the ground
+        // 4 : You cannot teleport to or on this map
+        // 5 : Unable to approach due to the force of the ground
+        // 6 : This map can only be entered by party members
+        // 7 : Only members of an expedition can enter this map
+        // 8 : The Cash Shop is currently not available
+        // default : no message
+        return outPacket;
+    }
+
     public static OutPacket transferChannelReqIgnored(int failureType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TRANSFER_CHANNEL_REQ_IGNORED);
         outPacket.encodeByte(failureType);

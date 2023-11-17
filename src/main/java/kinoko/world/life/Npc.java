@@ -22,7 +22,7 @@ public final class Npc extends Life implements ControlledObject {
     }
 
     public int getTemplateId() {
-        return lifeInfo.id();
+        return lifeInfo.getTemplateId();
     }
 
     public boolean isMove() {
@@ -63,12 +63,12 @@ public final class Npc extends Life implements ControlledObject {
 
     public void encodeInit(OutPacket outPacket) {
         // CNpc::Init
-        outPacket.encodeShort(lifeInfo.x()); // ptPos.x
-        outPacket.encodeShort(lifeInfo.y()); // ptPos.y
-        outPacket.encodeByte(lifeInfo.f()); // nMoveAction
-        outPacket.encodeShort(lifeInfo.fh()); // Foothold
-        outPacket.encodeShort(lifeInfo.rx0()); // rgHorz.low
-        outPacket.encodeShort(lifeInfo.rx1()); // rgHorz.high
+        outPacket.encodeShort(lifeInfo.getX()); // ptPos.x
+        outPacket.encodeShort(lifeInfo.getY()); // ptPos.y
+        outPacket.encodeByte(lifeInfo.isFlip()); // nMoveAction
+        outPacket.encodeShort(lifeInfo.getFh()); // Foothold
+        outPacket.encodeShort(lifeInfo.getRx0()); // rgHorz.low
+        outPacket.encodeShort(lifeInfo.getRx1()); // rgHorz.high
         outPacket.encodeByte(true);
     }
 }

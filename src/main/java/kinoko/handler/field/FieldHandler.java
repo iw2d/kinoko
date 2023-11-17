@@ -3,6 +3,7 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
 import kinoko.server.client.Client;
@@ -33,8 +34,30 @@ public final class FieldHandler {
         inPacket.decodeByte(); // bPremium
         inPacket.decodeByte(); // bChase -> int, int
 
-        final Field field = user.getField();
-        log.info("[FieldHandler] Using portal : {} on field ID : {}", portalName, field.getFieldId());
+        final Field currentField = user.getField();
+        final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
+        if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
+            log.error("[FieldHandler] Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
+            user.write(FieldPacket.transferFieldReqIgnored(2));
+            return;
+        }
+
+        // Move User to Field
+        final int nextFieldId = portalResult.get().getDestinationFieldId();
+        final String nextPortalName = portalResult.get().getDestinationPortalName();
+        final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(nextFieldId);
+        if (nextFieldResult.isEmpty()) {
+            user.write(FieldPacket.transferFieldReqIgnored(2));
+            return;
+        }
+        final Field nextField = nextFieldResult.get();
+        final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(nextPortalName);
+        if (nextPortalResult.isEmpty()) {
+            log.error("[FieldHandler] Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
+            user.write(FieldPacket.transferFieldReqIgnored(2));
+            return;
+        }
+        user.warp(nextField, nextPortalResult.get().getPortalId(), false, false);
     }
 
     @Handler(InHeader.TRANSFER_CHANNEL)

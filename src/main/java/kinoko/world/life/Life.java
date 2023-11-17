@@ -16,11 +16,6 @@ public abstract class Life implements FieldObject {
         return field;
     }
 
-    @Override
-    public void setField(Field field) {
-        throw new UnsupportedOperationException("Cannot assign new field for Life");
-    }
-
     public int getLifeId() {
         return lifeId;
     }

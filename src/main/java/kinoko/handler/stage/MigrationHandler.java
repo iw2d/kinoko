@@ -88,16 +88,16 @@ public final class MigrationHandler {
         c.write(StagePacket.setField(user, channelServer.getChannelId(), true, false));
 
         // Add User to Field
+        final int fieldId = user.getCharacterData().getCharacterStat().getPosMap();
         final Field field;
-        final Optional<Field> fieldResult = channelServer.getFieldById(user.getCharacterData().getCharacterStat().getPosMap());
+        final Optional<Field> fieldResult = channelServer.getFieldById(fieldId);
         if (fieldResult.isPresent()) {
             field = fieldResult.get();
         } else {
-            final int henesys = 100000000;
-            log.error("[MigrationHandler] Could not retrieve field ID : {} for character ID : {}, moving to {}", user.getPosMap(), user.getCharacterId(), henesys);
-            field = channelServer.getFieldById(henesys).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
+            log.error("[MigrationHandler] Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
+            field = channelServer.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
         }
-        field.addUser(user);
+        user.warp(field, true, false);
 
 
         // TODO: keymap, quickslot, macros

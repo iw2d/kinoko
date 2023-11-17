@@ -3,6 +3,7 @@ package kinoko.world.field;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.MapInfo;
+import kinoko.provider.map.PortalInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
@@ -27,6 +28,14 @@ public final class Field {
 
     public int getFieldId() {
         return mapInfo.id();
+    }
+
+    public Optional<PortalInfo> getPortalById(int portalId) {
+        return mapInfo.getPortalById(portalId);
+    }
+
+    public Optional<PortalInfo> getPortalByName(String name) {
+        return mapInfo.getPortalByName(name);
     }
 
     public int getNewLifeId() {
@@ -67,7 +76,6 @@ public final class Field {
     }
 
     public void addUser(User user) {
-        user.setField(this);
         users.put(user.getCharacterId(), user);
         // Set controller
         for (Life life : lifes.values()) {
@@ -126,9 +134,9 @@ public final class Field {
     public static Field from(MapInfo mapInfo) {
         final Field field = new Field(mapInfo);
         for (LifeInfo lifeInfo : mapInfo.life()) {
-            switch (lifeInfo.type()) {
+            switch (lifeInfo.getLifeType()) {
                 case NPC -> {
-                    final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.id());
+                    final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.getTemplateId());
                     final Npc npc = new Npc(field, lifeInfo, npcInfoResult.orElse(null));
                     field.addLife(npc);
                 }

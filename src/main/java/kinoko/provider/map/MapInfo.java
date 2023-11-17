@@ -4,6 +4,7 @@ import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public record MapInfo(
         int id,
@@ -29,6 +30,18 @@ public record MapInfo(
         int VRBottom,
         int VRRight
 ) {
+    public Optional<PortalInfo> getPortalById(int portalId) {
+        return portal.stream()
+                .filter(pi -> pi.getPortalId() == portalId)
+                .findFirst();
+    }
+
+    public Optional<PortalInfo> getPortalByName(String name) {
+        return portal.stream()
+                .filter(pi -> pi.getDestinationPortalName().equals(name))
+                .findFirst();
+    }
+
     public static MapInfo from(int mapId, List<Foothold> foothold, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, WzListProperty infoProp) {
         return new MapInfo(
                 mapId,

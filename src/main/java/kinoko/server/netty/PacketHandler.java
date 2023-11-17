@@ -8,6 +8,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.user.User;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,9 +38,7 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
                 log.warn("[PacketHandler] Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
             }
         } else {
-            if (!header.isIgnoreHeader()) {
-                log.debug("[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
-            }
+            log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
             try {
                 if (handler.getParameterTypes()[0] == Client.class) {
                     handler.invoke(this, client, inPacket);
