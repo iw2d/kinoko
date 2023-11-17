@@ -4,7 +4,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.User;
 
-public final class UserPacket {
+public final class UserPoolPacket {
     public static OutPacket userEnterField(User user) {
         // TODO
         return OutPacket.of(OutHeader.USER_ENTER_FIELD);

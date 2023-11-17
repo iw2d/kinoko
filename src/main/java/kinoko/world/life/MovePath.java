@@ -8,22 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MovePath implements Encodable {
-    private final List<MoveElem> moveElems;
     private final short x;
     private final short y;
     private final short vx;
     private final short vy;
+    private final List<MoveElem> moveElems;
 
-    public MovePath(List<MoveElem> moveElems, short x, short y, short vx, short vy) {
-        this.moveElems = moveElems;
+    public MovePath(short x, short y, short vx, short vy, List<MoveElem> moveElems) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
-    }
-
-    public List<MoveElem> getElems() {
-        return moveElems;
+        this.moveElems = moveElems;
     }
 
     public short getX() {
@@ -40,6 +36,10 @@ public final class MovePath implements Encodable {
 
     public short getVy() {
         return vy;
+    }
+
+    public List<MoveElem> getElems() {
+        return moveElems;
     }
 
     @Override
@@ -166,6 +166,6 @@ public final class MovePath implements Encodable {
             // if (CClientOptMan::GetOpt(2)) short (usRandCnt), short (usActualRandCnt)
             moveElems.add(elem);
         }
-        return new MovePath(moveElems, x, y, vx, vy);
+        return new MovePath(x, y, vx, vy, moveElems);
     }
 }

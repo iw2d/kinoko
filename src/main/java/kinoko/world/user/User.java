@@ -1,7 +1,7 @@
 package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
-import kinoko.packet.user.UserPacket;
+import kinoko.packet.user.UserPoolPacket;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
@@ -78,11 +78,11 @@ public final class User implements FieldObject {
 
     @Override
     public OutPacket enterFieldPacket() {
-        return UserPacket.userEnterField(this);
+        return UserPoolPacket.userEnterField(this);
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        return UserPacket.userLeaveField(this);
+        return UserPoolPacket.userLeaveField(this);
     }
 }

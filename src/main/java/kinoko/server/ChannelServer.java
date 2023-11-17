@@ -3,6 +3,7 @@ package kinoko.server;
 import kinoko.handler.ClientHandler;
 import kinoko.handler.field.FieldHandler;
 import kinoko.handler.life.NpcHandler;
+import kinoko.handler.script.ScriptHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.UserHandler;
 import kinoko.provider.MapProvider;
@@ -23,7 +24,8 @@ public final class ChannelServer extends NettyServer {
             MigrationHandler.class,
             FieldHandler.class,
             NpcHandler.class,
-            UserHandler.class
+            UserHandler.class,
+            ScriptHandler.class
     );
     private final int worldId;
     private final int channelId;
