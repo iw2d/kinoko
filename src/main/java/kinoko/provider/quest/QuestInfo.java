@@ -4,12 +4,71 @@ import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-public record QuestInfo(int id, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs,
-                        Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
+public final class QuestInfo {
+    private final int questId;
+    private final boolean autoStart;
+    private final boolean autoComplete;
+    private final Set<QuestAct> startActs;
+    private final Set<QuestAct> completeActs;
+    private final Set<QuestCheck> startChecks;
+    private final Set<QuestCheck> completeChecks;
+
+    public QuestInfo(int questId, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs,
+                     Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
+        this.questId = questId;
+        this.autoStart = autoStart;
+        this.autoComplete = autoComplete;
+        this.startActs = startActs;
+        this.completeActs = completeActs;
+        this.startChecks = startChecks;
+        this.completeChecks = completeChecks;
+    }
+
+    public int getQuestId() {
+        return questId;
+    }
+
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public boolean isAutoComplete() {
+        return autoComplete;
+    }
+
+    public Set<QuestAct> getStartActs() {
+        return startActs;
+    }
+
+    public Set<QuestAct> getCompleteActs() {
+        return completeActs;
+    }
+
+    public Set<QuestCheck> getStartChecks() {
+        return startChecks;
+    }
+
+    public Set<QuestCheck> getCompleteChecks() {
+        return completeChecks;
+    }
+
     public boolean isAutoAlert() {
         return autoStart || autoComplete;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestInfo[" +
+                "id=" + questId + ", " +
+                "autoStart=" + autoStart + ", " +
+                "autoComplete=" + autoComplete + ", " +
+                "startActs=" + startActs + ", " +
+                "completeActs=" + completeActs + ", " +
+                "startChecks=" + startChecks + ", " +
+                "completeChecks=" + completeChecks + ']';
     }
 
     public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) {
@@ -51,4 +110,5 @@ public record QuestInfo(int id, boolean autoStart, boolean autoComplete, Set<Que
         }
         return questChecks;
     }
+
 }

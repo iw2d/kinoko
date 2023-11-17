@@ -83,7 +83,7 @@ public final class PetData {
 
     public static PetData from(ItemInfo itemInfo) {
         final PetData petData = new PetData();
-        petData.setPetName(String.valueOf(itemInfo.itemId())); // TODO: StringProvider
+        petData.setPetName(String.valueOf(itemInfo.getItemId())); // TODO: StringProvider
         petData.setLevel((byte) 1);
         petData.setFullness((byte) 100);
         return petData;

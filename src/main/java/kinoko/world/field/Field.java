@@ -27,7 +27,7 @@ public final class Field {
     }
 
     public int getFieldId() {
-        return mapInfo.id();
+        return mapInfo.getMapId();
     }
 
     public Optional<PortalInfo> getPortalById(int portalId) {
@@ -133,7 +133,7 @@ public final class Field {
 
     public static Field from(MapInfo mapInfo) {
         final Field field = new Field(mapInfo);
-        for (LifeInfo lifeInfo : mapInfo.life()) {
+        for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
             switch (lifeInfo.getLifeType()) {
                 case NPC -> {
                     final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.getTemplateId());

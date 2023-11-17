@@ -51,15 +51,14 @@ public final class MapProvider {
     }
 
     private static MapInfo resolveMapInfo(int mapId, WzImage image) throws ProviderError {
+        if (!(image.getProperty().get("info") instanceof WzListProperty infoProp)) {
+            throw new ProviderError("Failed to resolve info property");
+        }
         final List<Foothold> foothold = resolveFoothold(image.getProperty());
         final List<LifeInfo> life = resolveLife(image.getProperty());
         final List<PortalInfo> portal = resolvePortal(image.getProperty());
         final List<ReactorInfo> reactor = resolveReactor(image.getProperty());
-
-        if (!(image.getProperty().get("info") instanceof WzListProperty infoProp)) {
-            throw new ProviderError("Failed to resolve info property");
-        }
-        return MapInfo.from(mapId, foothold, life, portal, reactor, infoProp);
+        return MapInfo.from(mapId, infoProp, foothold, life, portal, reactor);
     }
 
     private static List<Foothold> resolveFoothold(WzListProperty imageProp) throws ProviderError {

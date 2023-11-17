@@ -3,13 +3,36 @@ package kinoko.provider.item;
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
 
-public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecType, Object> spec) {
-    private static final Set<String> seen = new HashSet<>();
+public final class ItemInfo {
+    private final int itemId;
+    private final Map<ItemInfoType, Object> itemInfos;
+    private final Map<ItemSpecType, Object> itemSpecs;
+
+    public ItemInfo(int itemId, Map<ItemInfoType, Object> itemInfos, Map<ItemSpecType, Object> itemSpecs) {
+        this.itemId = itemId;
+        this.itemInfos = itemInfos;
+        this.itemSpecs = itemSpecs;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public Map<ItemInfoType, Object> getItemInfos() {
+        return itemInfos;
+    }
+
+    public Map<ItemSpecType, Object> getItemSpecs() {
+        return itemSpecs;
+    }
 
     public int getInfo(ItemInfoType infoType) {
-        return (int) info.getOrDefault(infoType, 0);
+        return (int) itemInfos.getOrDefault(infoType, 0);
     }
 
     public boolean isCash() {
@@ -18,6 +41,14 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
 
     public boolean isTradeBlock() {
         return getInfo(ItemInfoType.tradBlock) != 0 || getInfo(ItemInfoType.tradeBlock) != 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemInfo[" +
+                "itemId=" + itemId + ", " +
+                "info=" + itemInfos + ", " +
+                "spec=" + itemSpecs + ']';
     }
 
     public static ItemInfo from(int itemId, WzListProperty itemProp) throws ProviderError {
@@ -57,4 +88,5 @@ public record ItemInfo(int itemId, Map<ItemInfoType, Object> info, Map<ItemSpecT
         }
         return new ItemInfo(itemId, Collections.unmodifiableMap(info), Collections.unmodifiableMap(spec));
     }
+
 }

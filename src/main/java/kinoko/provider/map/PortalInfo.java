@@ -75,11 +75,6 @@ public final class PortalInfo {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(portalType, portalId, portalName, destinationFieldId, destinationPortalName, x, y, script);
-    }
-
-    @Override
     public String toString() {
         return "PortalInfo[" +
                 "pt=" + portalType + ", " +

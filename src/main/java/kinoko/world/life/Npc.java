@@ -26,14 +26,14 @@ public final class Npc extends Life implements ControlledObject {
     }
 
     public boolean isMove() {
-        return npcInfo.move();
+        return npcInfo.isMove();
     }
 
     public Optional<String> getScript() {
-        if (npcInfo == null || npcInfo.script() == null || npcInfo.script().isEmpty()) {
+        if (npcInfo == null || npcInfo.getScript() == null || npcInfo.getScript().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(npcInfo.script());
+        return Optional.of(npcInfo.getScript());
     }
 
     @Override

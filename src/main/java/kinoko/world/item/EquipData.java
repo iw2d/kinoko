@@ -319,7 +319,7 @@ public final class EquipData {
 
     public static EquipData from(ItemInfo itemInfo) {
         final EquipData equipData = new EquipData();
-        for (ItemInfoType infoType : itemInfo.info().keySet()) {
+        for (ItemInfoType infoType : itemInfo.getItemInfos().keySet()) {
             switch (infoType) {
                 case incSTR -> {
                     equipData.setIncStr((short) itemInfo.getInfo(infoType));

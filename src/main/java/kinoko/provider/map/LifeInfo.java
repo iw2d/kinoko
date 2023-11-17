@@ -76,11 +76,6 @@ public final class LifeInfo {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(lifeType, templateId, x, y, rx0, rx1, cy, fh, flip, hide, mobTime);
-    }
-
-    @Override
     public String toString() {
         return "LifeInfo[" +
                 "type=" + lifeType + ", " +
