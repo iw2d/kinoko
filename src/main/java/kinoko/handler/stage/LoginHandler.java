@@ -348,14 +348,14 @@ public final class LoginHandler {
     private static void tryMigration(Client c, Account account, int characterId) {
         final Optional<ChannelServer> channelResult = Server.getChannelServerById(account.getWorldId(), account.getChannelId());
         if (channelResult.isEmpty()) {
-            log.error("[LoginHandler] Failed to submit migration request for character ID : {}", characterId);
+            log.error("Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }
         final ChannelServer channelServer = channelResult.get();
         final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, characterId);
         if (mrResult.isEmpty()) {
-            log.error("[LoginHandler] Failed to submit migration request for character ID : {}", characterId);
+            log.error("Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
             return;
         }

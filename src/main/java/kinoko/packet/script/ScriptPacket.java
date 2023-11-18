@@ -9,4 +9,10 @@ public final class ScriptPacket {
         questResult.encode(outPacket);
         return outPacket;
     }
+
+    public static OutPacket scriptMessage(ScriptMessage scriptMessage) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SCRIPT_MESSAGE);
+        scriptMessage.encode(outPacket);
+        return outPacket;
+    }
 }

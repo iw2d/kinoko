@@ -22,7 +22,7 @@ public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
         final NettyClient c = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         final byte[] data = outPacket.getData();
         if (c == null) {
-            log.debug("[PacketEncoder] Plain sending " + Util.readableByteArray(data));
+            log.debug("[Out] | Plain sending " + Util.readableByteArray(data));
             out.writeBytes(data);
             return;
         }

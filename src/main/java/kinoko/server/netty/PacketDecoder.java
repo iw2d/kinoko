@@ -33,7 +33,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
 
             final int version = ((header[0] ^ iv[2]) & 0xFF) | (((header[1] ^ iv[3]) << 8) & 0xFF00);
             if (version != RECV_VERSION) {
-                log.warn("[PacketDecoder] Incorrect packet seq, dropping client");
+                log.warn("Incorrect packet seq, dropping client");
                 c.close();
                 return;
             }

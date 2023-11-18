@@ -37,7 +37,7 @@ public final class FieldHandler {
         final Field currentField = user.getField();
         final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
         if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
-            log.error("[FieldHandler] Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
+            log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
             user.write(FieldPacket.transferFieldReqIgnored(2));
             return;
         }
@@ -53,7 +53,7 @@ public final class FieldHandler {
         final Field nextField = nextFieldResult.get();
         final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(nextPortalName);
         if (nextPortalResult.isEmpty()) {
-            log.error("[FieldHandler] Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
+            log.error("Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
             user.write(FieldPacket.transferFieldReqIgnored(2));
             return;
         }
@@ -74,7 +74,7 @@ public final class FieldHandler {
         final ChannelServer channelServer = channelResult.get();
         final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getCharacterId());
         if (mrResult.isEmpty()) {
-            log.error("[FieldHandler] Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
+            log.error("Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
             c.write(FieldPacket.transferChannelReqIgnored(1));
             return;
         }

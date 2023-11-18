@@ -21,7 +21,7 @@ public final class ScriptHandler {
 
         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
-            log.error("[UserHandler] Could not retrieve quest ID : {}", questId);
+            log.error("Could not retrieve quest ID : {}", questId);
             return;
         }
         final QuestInfo questInfo = questInfoResult.get();

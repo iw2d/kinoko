@@ -31,7 +31,7 @@ public final class MigrationHandler {
         // Check Migration Request
         final Optional<MigrationRequest> migrationResult = Server.fetchMigrationRequest(c, characterId);
         if (migrationResult.isEmpty()) {
-            log.error("[MigrationHandler] Migration failed for character ID : {}", characterId);
+            log.error("Migration failed for character ID : {}", characterId);
             c.close();
             return;
         }
@@ -40,7 +40,7 @@ public final class MigrationHandler {
         // Check Channel
         if (!(c.getConnectedServer() instanceof final ChannelServer channelServer) ||
                 channelServer.getChannelId() != mr.getChannelId()) {
-            log.error("[MigrationHandler] Tried to migrate to incorrect channel.");
+            log.error("Tried to migrate to incorrect channel.");
             c.close();
             return;
         }
@@ -48,13 +48,13 @@ public final class MigrationHandler {
         // Check Account
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(mr.getAccountId());
         if (accountResult.isEmpty()) {
-            log.error("[MigrationHandler] Could not retrieve account with ID : {}", mr.getAccountId());
+            log.error("Could not retrieve account with ID : {}", mr.getAccountId());
             c.close();
             return;
         }
         final Account account = accountResult.get();
         if (channelServer.getClientStorage().isConnected(account)) {
-            log.error("[MigrationHandler] Tried to connect to channel server while already connected");
+            log.error("Tried to connect to channel server while already connected");
             c.close();
             return;
         }
@@ -65,19 +65,19 @@ public final class MigrationHandler {
         // Check Character
         final Optional<CharacterData> characterResult = DatabaseManager.characterAccessor().getCharacterById(characterId);
         if (characterResult.isEmpty()) {
-            log.error("[MigrationHandler] Could not retrieve character with ID : {}", characterId);
+            log.error("Could not retrieve character with ID : {}", characterId);
             c.close();
             return;
         }
         final CharacterData characterData = characterResult.get();
         if (characterData.getAccountId() != mr.getAccountId()) {
-            log.error("[MigrationHandler] Mismatching account IDs {}, {}", characterData.getAccountId(), mr.getAccountId());
+            log.error("Mismatching account IDs {}, {}", characterData.getAccountId(), mr.getAccountId());
             c.close();
             return;
         }
         final User user = new User(c, characterData, CalcDamage.getDefault());
         if (channelServer.getClientStorage().isConnected(user)) {
-            log.error("[MigrationHandler] Tried to connect to channel server while already connected");
+            log.error("Tried to connect to channel server while already connected");
             c.close();
             return;
         }
@@ -94,7 +94,7 @@ public final class MigrationHandler {
         if (fieldResult.isPresent()) {
             field = fieldResult.get();
         } else {
-            log.error("[MigrationHandler] Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
+            log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
             field = channelServer.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
         }
         user.warp(field, true, false);

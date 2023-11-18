@@ -32,10 +32,10 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
         final InHeader header = InHeader.getByValue(op);
         final Method handler = server.getHandler(header);
         if (header == null) {
-            log.warn("[PacketHandler] Unknown opcode {} | {}", Util.opToString(op), inPacket);
+            log.debug("Unknown opcode {} | {}", Util.opToString(op), inPacket);
         } else if (handler == null) {
             if (!header.isIgnoreHeader()) {
-                log.warn("[PacketHandler] Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+                log.debug("Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
             }
         } else {
             log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
@@ -48,14 +48,14 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
                     throw new IllegalStateException("Handler with incorrect parameter types.");
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
-                log.error("[PacketHandler] Exception caught while handling packet", e);
+                log.error("Exception caught while handling packet", e);
             }
         }
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.debug("[PacketHandler] Channel inactive");
+        log.debug("Channel inactive");
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (client != null) {
             client.close();
@@ -65,7 +65,7 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("[PacketHandler] Exception caught", cause);
+        log.error("Exception caught", cause);
     }
 
     public static Map<InHeader, Method> loadHandlers(Class<?>... handlerClasses) {

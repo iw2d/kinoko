@@ -18,7 +18,7 @@ public final class ClientHandler {
     @Handler(InHeader.EXCEPTION_LOG)
     public static void handleExceptionLog(Client c, InPacket inPacket) {
         final String data = inPacket.decodeString();
-        log.error("[ClientHandler] Exception log : {}", data);
+        log.error("Exception log : {}", data);
     }
 
     @Handler(InHeader.CLIENT_ERROR)
@@ -29,7 +29,7 @@ public final class ClientHandler {
         inPacket.decodeInt(); // unk
 
         final short op = inPacket.decodeShort();
-        log.error("[ClientHandler] Error {} | {}({}) | {}", errorType, OutHeader.getByValue(op), Util.opToString(op), inPacket);
+        log.error("Error {} | {}({}) | {}", errorType, OutHeader.getByValue(op), Util.opToString(op), inPacket);
         c.close();
     }
 }
