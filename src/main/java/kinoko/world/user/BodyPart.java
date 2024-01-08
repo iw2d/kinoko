@@ -1,7 +1,5 @@
 package kinoko.world.user;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 public enum BodyPart {
     EQUIPPED_BASE(0),
     HAIR(0),
@@ -95,7 +93,6 @@ public enum BodyPart {
         return value;
     }
 
-    @NonNull
     public static BodyPart getBySelectedAL(int i) {
         if (i == 4) {
             return COAT;

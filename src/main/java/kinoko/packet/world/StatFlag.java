@@ -3,7 +3,6 @@ package kinoko.packet.world;
 import java.util.Set;
 
 public enum StatFlag {
-    NONE(0),
     SKIN(0x1),
     FACE(0x2),
     HAIR(0x4),
@@ -37,15 +36,9 @@ public enum StatFlag {
         return value;
     }
 
-    public final boolean hasFlag(StatFlag other) {
-        return (getValue() & other.getValue()) != 0;
-    }
-
     public static int from(Set<StatFlag> flags) {
-        int value = 0;
-        for (StatFlag flag : flags) {
-            value |= flag.getValue();
-        }
-        return value;
+        return flags.stream()
+                .mapToInt(StatFlag::getValue)
+                .reduce(0, (a, b) -> a | b);
     }
 }

@@ -5,6 +5,7 @@ import kinoko.packet.user.UserPoolPacket;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.script.ScriptContext;
 import kinoko.world.field.Field;
 import kinoko.world.field.FieldObject;
 
@@ -14,6 +15,7 @@ public final class User implements FieldObject {
     private final CalcDamage calcDamage;
 
     private Field field;
+    private ScriptContext scriptContext;
 
     public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
         this.client = client;
@@ -31,6 +33,14 @@ public final class User implements FieldObject {
 
     public CalcDamage getCalcDamage() {
         return calcDamage;
+    }
+
+    public ScriptContext getScriptContext() {
+        return scriptContext;
+    }
+
+    public void setScriptContext(ScriptContext scriptContext) {
+        this.scriptContext = scriptContext;
     }
 
     // CONVENIENCE METHODS ---------------------------------------------------------------------------------------------

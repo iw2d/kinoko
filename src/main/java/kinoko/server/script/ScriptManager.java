@@ -6,6 +6,7 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
 
 public final class ScriptManager {
+    public static final String CONTEXT_VARIABLE = "ctx";
     public static final String SCRIPT_LANGUAGE = "python";
     private static Engine graalEngine;
 
@@ -15,10 +16,16 @@ public final class ScriptManager {
                 .build();
     }
 
-    public static ScriptContext createContext(User user) {
+    private static ScriptContext createContext(User user) {
         final Context graalContext = Context.newBuilder(SCRIPT_LANGUAGE)
                 .engine(graalEngine)
+                .allowHostAccess(HostAccess.EXPLICIT)
                 .build();
-        return new ScriptContext(graalContext, user);
+        final ScriptContext scriptContext = new ScriptContext(user);
+        graalContext.getBindings(SCRIPT_LANGUAGE).putMember(CONTEXT_VARIABLE, scriptContext);
+        return scriptContext;
+    }
+
+    public static void startQuestScript(User user, int questId, int templateId) {
     }
 }

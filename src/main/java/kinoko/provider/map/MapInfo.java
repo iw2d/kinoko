@@ -130,7 +130,7 @@ public final class MapInfo {
 
     public Optional<PortalInfo> getPortalByName(String name) {
         return portalInfos.stream()
-                .filter(pi -> pi.getDestinationPortalName().equals(name))
+                .filter(pi -> pi.getPortalName().equals(name))
                 .findFirst();
     }
 
