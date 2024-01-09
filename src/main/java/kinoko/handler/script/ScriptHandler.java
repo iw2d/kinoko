@@ -19,8 +19,54 @@ import java.util.Set;
 public final class ScriptHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
 
-    @Handler(InHeader.QUEST_ACTION)
-    public static void handleUserQuestAction(User user, InPacket inPacket) {
+    @Handler(InHeader.USER_SELECT_NPC)
+    public static void handleUserSelectNpc(User user, InPacket inPacket) {
+        final int npcId = inPacket.decodeInt(); // dwNpcId
+        final short x = inPacket.decodeShort(); // ptUserPos.x
+        final short y = inPacket.decodeShort(); // ptUserPos.y
+
+        user.write(ScriptPacket.scriptMessage(ScriptMessage.say(npcId, Set.of(), "hi", false, false)));
+    }
+
+    @Handler(InHeader.USER_SCRIPT_MESSAGE_ANSWER)
+    public static void handleUserScriptMessageAnswer(User user, InPacket inPacket) {
+        final byte type = inPacket.decodeByte(); // nMsgType
+        final ScriptMessageType lastMessageType = ScriptMessageType.getByValue(type);
+        switch (lastMessageType) {
+            case SAY, SAY_IMAGE, ASK_YES_NO, ASK_YES_NO_QUEST -> {
+                final byte action = inPacket.decodeByte();
+            }
+            case ASK_TEXT, ASK_BOX_TEXT -> {
+                if (inPacket.decodeByte() == 1) {
+                    final String answer = inPacket.decodeString(); // sInputStr_Result
+                }
+            }
+            case ASK_NUMBER -> {
+                if (inPacket.decodeByte() == 1) {
+                    final int answer = inPacket.decodeInt(); // nInputNo_Result
+                }
+            }
+            case ASK_MENU, ASK_SLIDE_MENU -> {
+                if (inPacket.decodeByte() == 1) {
+                    final int selection = inPacket.decodeInt(); // nSelect
+                }
+            }
+            case ASK_AVATAR, ASK_MEMBER_SHOP_AVATAR -> {
+                if (inPacket.decodeByte() == 1) {
+                    final byte selection = inPacket.decodeByte(); // nAvatarIndex
+                }
+            }
+            case null -> {
+                log.error("Unknown script message type {}", type);
+            }
+            default -> {
+                log.error("Unhandled script message type {}", lastMessageType);
+            }
+        }
+    }
+
+    @Handler(InHeader.USER_QUEST_REQUEST)
+    public static void handleUserQuestRequest(User user, InPacket inPacket) {
         final byte actionType = inPacket.decodeByte();
         final int questId = Short.toUnsignedInt(inPacket.decodeShort()); // usQuestID
 
@@ -68,52 +114,6 @@ public final class ScriptHandler {
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
                 ScriptManager.startQuestScript(user, questId, templateId);
-            }
-        }
-    }
-
-    @Handler(InHeader.SCRIPT_START)
-    public static void handleScriptStart(User user, InPacket inPacket) {
-        final int npcId = inPacket.decodeInt(); // dwNpcId
-        final short x = inPacket.decodeShort(); // ptUserPos.x
-        final short y = inPacket.decodeShort(); // ptUserPos.y
-
-        user.write(ScriptPacket.scriptMessage(ScriptMessage.say(npcId, Set.of(), "hi", false, false)));
-    }
-
-    @Handler(InHeader.SCRIPT_ACTION)
-    public static void handleScriptAction(User user, InPacket inPacket) {
-        final byte type = inPacket.decodeByte(); // nMsgType
-        final ScriptMessageType lastMessageType = ScriptMessageType.getByValue(type);
-        switch (lastMessageType) {
-            case SAY, SAY_IMAGE, ASK_YES_NO, ASK_YES_NO_QUEST -> {
-                final byte action = inPacket.decodeByte();
-            }
-            case ASK_TEXT, ASK_BOX_TEXT -> {
-                if (inPacket.decodeByte() == 1) {
-                    final String answer = inPacket.decodeString(); // sInputStr_Result
-                }
-            }
-            case ASK_NUMBER -> {
-                if (inPacket.decodeByte() == 1) {
-                    final int answer = inPacket.decodeInt(); // nInputNo_Result
-                }
-            }
-            case ASK_MENU, ASK_SLIDE_MENU -> {
-                if (inPacket.decodeByte() == 1) {
-                    final int selection = inPacket.decodeInt(); // nSelect
-                }
-            }
-            case ASK_AVATAR, ASK_MEMBER_SHOP_AVATAR -> {
-                if (inPacket.decodeByte() == 1) {
-                    final byte selection = inPacket.decodeByte(); // nAvatarIndex
-                }
-            }
-            case null -> {
-                log.error("Unknown script message type {}", type);
-            }
-            default -> {
-                log.error("Unhandled script message type {}", lastMessageType);
             }
         }
     }

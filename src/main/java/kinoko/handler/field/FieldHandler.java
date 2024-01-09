@@ -21,8 +21,8 @@ import java.util.Optional;
 public final class FieldHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
 
-    @Handler(InHeader.TRANSFER_FIELD)
-    public static void handleTransferField(User user, InPacket inPacket) {
+    @Handler(InHeader.USER_TRANSFER_FIELD_REQUEST)
+    public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte();
         final int targetField = inPacket.decodeInt(); // dwTargetField
         final String portalName = inPacket.decodeString(); // sPortal
@@ -60,8 +60,8 @@ public final class FieldHandler {
         user.warp(nextField, nextPortalResult.get().getPortalId(), false, false);
     }
 
-    @Handler(InHeader.TRANSFER_CHANNEL)
-    public static void handleTransferChannel(Client c, InPacket inPacket) {
+    @Handler(InHeader.USER_TRANSFER_CHANNEL_REQUEST)
+    public static void handleUserTransferChannelRequest(Client c, InPacket inPacket) {
         final byte channelId = inPacket.decodeByte();
         inPacket.decodeInt(); // update_time
 

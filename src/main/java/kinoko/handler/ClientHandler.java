@@ -21,8 +21,8 @@ public final class ClientHandler {
         log.error("Exception log : {}", data);
     }
 
-    @Handler(InHeader.CLIENT_ERROR)
-    public static void handleClientError(Client c, InPacket inPacket) {
+    @Handler(InHeader.CLIENT_DUMP_LOG)
+    public static void handleClientDumpLog(Client c, InPacket inPacket) {
         final short callType = inPacket.decodeShort();
         final int errorType = inPacket.decodeInt();
         final int bufferSize = inPacket.decodeShort();

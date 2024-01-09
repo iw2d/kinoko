@@ -31,10 +31,10 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserRemotePacket.userMove(user.getCharacterId(), movePath), user);
     }
 
-    @Handler(InHeader.USER_SIT)
-    public static void handleUserSit(User user, InPacket inPacket) {
+    @Handler(InHeader.USER_SIT_REQUEST)
+    public static void handleUserSitRequest(User user, InPacket inPacket) {
         final short fieldSeatId = inPacket.decodeShort();
-        user.write(UserLocalPacket.sitResult(fieldSeatId != -1, fieldSeatId));
+        user.write(UserLocalPacket.userSitResult(fieldSeatId != -1, fieldSeatId));
     }
 
     @Handler(InHeader.USER_CHAT)

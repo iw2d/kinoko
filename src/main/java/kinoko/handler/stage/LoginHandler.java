@@ -71,8 +71,8 @@ public final class LoginHandler {
         c.write(LoginPacket.checkPasswordResultSuccess(account));
     }
 
-    @Handler({ InHeader.WORLD_INFORMATION, InHeader.VIEW_WORLD_SELECT })
-    public static void handleViewWorldSelect(Client c, InPacket inPacket) {
+    @Handler({ InHeader.WORLD_INFO_REQUEST, InHeader.WORLD_REQUEST })
+    public static void handleWorldRequest(Client c, InPacket inPacket) {
         for (World world : Server.getWorlds()) {
             c.write(LoginPacket.worldInformation(world));
         }
@@ -127,8 +127,8 @@ public final class LoginHandler {
         c.write(LoginPacket.selectWorldResultSuccess(account));
     }
 
-    @Handler(InHeader.CHECK_DUPLICATE_ID)
-    public static void handleCheckDuplicateId(Client c, InPacket inPacket) {
+    @Handler(InHeader.CHECK_DUPLICATED_ID)
+    public static void handleCheckDuplicatedId(Client c, InPacket inPacket) {
         final String name = inPacket.decodeString();
         // Validation done on client side, server side validation in NEW_CHAR handler
         if (DatabaseManager.characterAccessor().checkCharacterNameAvailable(name)) {
@@ -138,8 +138,8 @@ public final class LoginHandler {
         }
     }
 
-    @Handler(InHeader.NEW_CHAR)
-    public static void handleNewChar(Client c, InPacket inPacket) {
+    @Handler(InHeader.CREATE_NEW_CHARACTER)
+    public static void handleCreateNewCharacter(Client c, InPacket inPacket) {
         final String name = inPacket.decodeString();
         final int selectedRace = inPacket.decodeInt();
         final short selectedSubJob = inPacket.decodeShort();
@@ -266,8 +266,8 @@ public final class LoginHandler {
         }
     }
 
-    @Handler(InHeader.SELECT_CHAR)
-    public static void handleSelectChar(Client c, InPacket inPacket) {
+    @Handler(InHeader.SELECT_CHARACTER)
+    public static void handleSelectCharacter(Client c, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
@@ -280,8 +280,8 @@ public final class LoginHandler {
         tryMigration(c, account, characterId);
     }
 
-    @Handler(InHeader.DELETE_CHAR)
-    public static void handleDeleteChar(Client c, InPacket inPacket) {
+    @Handler(InHeader.DELETE_CHARACTER)
+    public static void handleDeleteCharacter(Client c, InPacket inPacket) {
         final String secondaryPassword = inPacket.decodeString();
         final int characterId = inPacket.decodeInt();
 
@@ -304,8 +304,8 @@ public final class LoginHandler {
         c.write(LoginPacket.deleteCharacterResult(LoginType.SUCCESS, characterId));
     }
 
-    @Handler(InHeader.INITIALIZE_SPW)
-    public static void handleInitializeSecondaryPassword(Client c, InPacket inPacket) {
+    @Handler(InHeader.ENABLE_SPW_REQUEST)
+    public static void handleEnableSpwRequest(Client c, InPacket inPacket) {
         inPacket.decodeByte(); // 1
         final int characterId = inPacket.decodeInt(); // dwCharacterID
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
@@ -321,8 +321,8 @@ public final class LoginHandler {
         tryMigration(c, account, characterId);
     }
 
-    @Handler(InHeader.CHECK_SPW)
-    public static void handleCheckSecondaryPassword(Client c, InPacket inPacket) {
+    @Handler(InHeader.CHECK_SPW_REQUEST)
+    public static void handleCheckSpwRequest(Client c, InPacket inPacket) {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
         final int characterId = inPacket.decodeInt(); // dwCharacterID
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress

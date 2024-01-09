@@ -4,8 +4,8 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 
 public final class UserLocalPacket {
-    public static OutPacket sitResult(boolean sit, short fieldSeatId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SIT_RESULT);
+    public static OutPacket userSitResult(boolean sit, short fieldSeatId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_SIT_RESULT);
         outPacket.encodeByte(sit);
         if (sit) {
             outPacket.encodeShort(fieldSeatId);
@@ -13,8 +13,8 @@ public final class UserLocalPacket {
         return outPacket;
     }
 
-    public static OutPacket chatMsg(int type, String text) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHAT_MSG);
+    public static OutPacket userChatMsg(int type, String text) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT_MSG);
         outPacket.encodeShort(type); // lType
         outPacket.encodeString(text); // sChat
         return outPacket;
