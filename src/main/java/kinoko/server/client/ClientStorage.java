@@ -19,7 +19,7 @@ public final class ClientStorage {
         return connectedUsers.containsKey(user.getCharacterId());
     }
 
-    public void addPlayer(Client client) {
+    public void addClient(Client client) {
         final Account account = client.getAccount();
         if (account != null) {
             connectedAccounts.put(account.getId(), client);
@@ -30,16 +30,14 @@ public final class ClientStorage {
         }
     }
 
-    public void removePlayer(Client client) {
+    public void removeClient(Client client) {
         final Account account = client.getAccount();
         if (account != null) {
             connectedAccounts.remove(account.getId());
-            DatabaseManager.accountAccessor().saveAccount(account);
         }
         final User user = client.getUser();
         if (user != null) {
             connectedUsers.remove(user.getCharacterId());
-            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
         }
     }
 

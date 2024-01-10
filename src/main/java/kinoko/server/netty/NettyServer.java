@@ -51,6 +51,7 @@ public abstract class NettyServer {
                 final Client c = new Client(server, ch);
                 c.setSendIv(getNewIv());
                 c.setRecvIv(getNewIv());
+                c.setClientKey(getNewClientKey());
                 c.write(LoginPacket.connect(c));
 
                 ch.attr(NettyClient.CLIENT_KEY).set(c);
@@ -94,5 +95,11 @@ public abstract class NettyServer {
         final byte[] iv = new byte[4];
         random.nextBytes(iv);
         return iv;
+    }
+
+    private static byte[] getNewClientKey() {
+        final byte[] clientKey = new byte[8];
+        random.nextBytes(clientKey);
+        return clientKey;
     }
 }

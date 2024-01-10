@@ -9,7 +9,7 @@ import java.util.Set;
 public final class AdminCommands {
     @Command("dispose")
     public static void dispose(User user, String[] args) {
-        user.write(WvsContext.statChanged(Set.of(), user.getCharacterData()));
+        user.dispose();
         user.write(WvsContext.message(Message.system("You have been disposed.")));
     }
 }

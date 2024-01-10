@@ -1,18 +1,22 @@
 package kinoko.server.client;
 
+import kinoko.util.Util;
+
 import java.util.Arrays;
 
 public final class MigrationRequest {
     private final int accountId;
     private final int channelId;
     private final int characterId;
+    private final byte[] clientKey;
     private final byte[] machineId;
     private final byte[] remoteAddress;
 
-    public MigrationRequest(int accountId, int channelId, int characterId, byte[] machineId, byte[] remoteAddress) {
+    public MigrationRequest(int accountId, int channelId, int characterId, byte[] clientKey, byte[] machineId, byte[] remoteAddress) {
         this.accountId = accountId;
         this.channelId = channelId;
         this.characterId = characterId;
+        this.clientKey = clientKey;
         this.machineId = machineId;
         this.remoteAddress = remoteAddress;
     }
@@ -29,6 +33,10 @@ public final class MigrationRequest {
         return characterId;
     }
 
+    public byte[] getClientKey() {
+        return clientKey;
+    }
+
     public byte[] getMachineId() {
         return machineId;
     }
@@ -37,13 +45,10 @@ public final class MigrationRequest {
         return remoteAddress;
     }
 
-    public boolean looseMatch(MigrationRequest mr) {
-        return this.accountId == mr.accountId || this.characterId == mr.characterId ||
-                Arrays.equals(this.machineId, mr.machineId) || Arrays.equals(this.remoteAddress, mr.remoteAddress);
-    }
-
     public boolean strictMatch(Client client, int characterId) {
-        return this.characterId == characterId && Arrays.equals(this.machineId, client.getMachineId()) &&
+        return this.characterId == characterId &&
+                Arrays.equals(this.clientKey, client.getClientKey()) &&
+                Arrays.equals(this.machineId, client.getMachineId()) &&
                 Arrays.equals(this.remoteAddress, client.getRemoteAddress());
     }
 }

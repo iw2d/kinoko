@@ -16,14 +16,14 @@ public final class ShandaCrypto {
             int a = data.length;
             byte b = 0;
             for (int j = 0; j < data.length; j++) {
-                b ^= a + rotateLeft(data[j], 3);
+                b ^= (byte) (a + rotateLeft(data[j], 3));
                 data[j] = (byte) (0x47 - rotateRight(b, a));
                 a -= 1;
             }
             a = data.length;
             b = 0;
             for (int j = data.length - 1; j >= 0; j--) {
-                b ^= a + rotateLeft(data[j], 4);
+                b ^= (byte) (a + rotateLeft(data[j], 4));
                 data[j] = rotateRight((byte) (b ^ 0x13), 3);
                 a -= 1;
             }

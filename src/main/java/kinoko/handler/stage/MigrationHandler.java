@@ -9,6 +9,7 @@ import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Util;
 import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.user.CalcDamage;
@@ -26,7 +27,11 @@ public final class MigrationHandler {
     public static void handleMigrateIn(Client c, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final byte[] machineId = inPacket.decodeArray(16);
+        inPacket.decodeShort(); // unk
+        final byte[] clientKey = inPacket.decodeArray(8);
+
         c.setMachineId(machineId);
+        c.setClientKey(clientKey);
 
         // Check Migration Request
         final Optional<MigrationRequest> migrationResult = Server.fetchMigrationRequest(c, characterId);
@@ -84,11 +89,11 @@ public final class MigrationHandler {
 
         // Initialize User
         c.setUser(user);
-        channelServer.getClientStorage().addPlayer(c);
-        c.write(StagePacket.setField(user, channelServer.getChannelId(), true, false));
+        channelServer.getClientStorage().addClient(c);
 
         // Add User to Field
         final int fieldId = user.getCharacterData().getCharacterStat().getPosMap();
+        final byte portalId = user.getCharacterData().getCharacterStat().getPortal();
         final Field field;
         final Optional<Field> fieldResult = channelServer.getFieldById(fieldId);
         if (fieldResult.isPresent()) {
@@ -97,7 +102,7 @@ public final class MigrationHandler {
             log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
             field = channelServer.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
         }
-        user.warp(field, true, false);
+        user.warp(field, portalId, true, false);
 
 
         // TODO: keymap, quickslot, macros

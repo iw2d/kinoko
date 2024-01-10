@@ -2,12 +2,15 @@ package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserPoolPacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
-import kinoko.server.script.ScriptContext;
+import kinoko.server.script.ScriptManager;
 import kinoko.world.field.Field;
 import kinoko.world.field.FieldObject;
+
+import java.util.Set;
 
 public final class User implements FieldObject {
     private final Client client;
@@ -15,7 +18,6 @@ public final class User implements FieldObject {
     private final CalcDamage calcDamage;
 
     private Field field;
-    private ScriptContext scriptContext;
 
     public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
         this.client = client;
@@ -33,14 +35,6 @@ public final class User implements FieldObject {
 
     public CalcDamage getCalcDamage() {
         return calcDamage;
-    }
-
-    public ScriptContext getScriptContext() {
-        return scriptContext;
-    }
-
-    public void setScriptContext(ScriptContext scriptContext) {
-        this.scriptContext = scriptContext;
     }
 
     // CONVENIENCE METHODS ---------------------------------------------------------------------------------------------
@@ -63,10 +57,6 @@ public final class User implements FieldObject {
         getClient().write(outPacket);
     }
 
-    public void warp(Field destination, boolean isMigrate, boolean isRevive) {
-        warp(destination, 0, isMigrate, isRevive);
-    }
-
     public void warp(Field destination, int portalId, boolean isMigrate, boolean isRevive) {
         if (this.field != null) {
             this.field.removeUser(getCharacterId());
@@ -76,6 +66,16 @@ public final class User implements FieldObject {
         getCharacterData().getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
+    }
+
+    public void dispose() {
+        write(WvsContext.statChanged(Set.of(), getCharacterData()));
+    }
+
+    public void logout() {
+        if (this.field != null) {
+            this.field.removeUser(getCharacterId());
+        }
     }
 
 

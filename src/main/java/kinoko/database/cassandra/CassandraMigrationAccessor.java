@@ -19,14 +19,17 @@ public final class CassandraMigrationAccessor extends CassandraAccessor implemen
     }
 
     private MigrationRequest loadMigrationRequest(Row row) {
+        final byte[] clientKey = new byte[8];
         final byte[] machineId = new byte[16];
         final byte[] remoteAddress = new byte[4];
+        row.getByteBuffer(MigrationTable.CLIENT_KEY).get(clientKey);
         row.getByteBuffer(MigrationTable.MACHINE_ID).get(machineId);
         row.getByteBuffer(MigrationTable.REMOTE_ADDRESS).get(remoteAddress);
         return new MigrationRequest(
                 row.getInt(MigrationTable.ACCOUNT_ID),
                 row.getInt(MigrationTable.CHANNEL_ID),
                 row.getInt(MigrationTable.CHARACTER_ID),
+                clientKey,
                 machineId,
                 remoteAddress
         );
@@ -49,6 +52,7 @@ public final class CassandraMigrationAccessor extends CassandraAccessor implemen
                         .value(MigrationTable.ACCOUNT_ID, literal(mr.getAccountId()))
                         .value(MigrationTable.CHANNEL_ID, literal(mr.getChannelId()))
                         .value(MigrationTable.CHARACTER_ID, literal(mr.getCharacterId()))
+                        .value(MigrationTable.CLIENT_KEY, literal(ByteBuffer.wrap(mr.getClientKey())))
                         .value(MigrationTable.MACHINE_ID, literal(ByteBuffer.wrap(mr.getMachineId())))
                         .value(MigrationTable.REMOTE_ADDRESS, literal(ByteBuffer.wrap(mr.getRemoteAddress())))
                         .usingTtl(ServerConfig.MIGRATION_REQUEST_TTL)

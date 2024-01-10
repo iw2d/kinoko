@@ -67,8 +67,8 @@ public final class LoginHandler {
 
         c.setAccount(account);
         c.setMachineId(machineId);
-        c.getConnectedServer().getClientStorage().addPlayer(c);
-        c.write(LoginPacket.checkPasswordResultSuccess(account));
+        c.getConnectedServer().getClientStorage().addClient(c);
+        c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
     }
 
     @Handler({ InHeader.WORLD_INFO_REQUEST, InHeader.WORLD_REQUEST })

@@ -99,7 +99,7 @@ public final class Server {
         }
         // Create and Submit MigrationRequest
         final MigrationRequest migrationRequest = new MigrationRequest(
-                account.getId(), channelServer.getChannelId(), characterId, c.getMachineId(), c.getRemoteAddress()
+                account.getId(), channelServer.getChannelId(), characterId, c.getClientKey(), c.getMachineId(), c.getRemoteAddress()
         );
         if (!DatabaseManager.migrationAccessor().submitMigrationRequest(migrationRequest)) {
             return Optional.empty();

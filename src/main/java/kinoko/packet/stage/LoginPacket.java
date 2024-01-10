@@ -26,7 +26,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket checkPasswordResultSuccess(Account account) {
+    public static OutPacket checkPasswordResultSuccess(Account account, byte[] clientKey) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(LoginType.SUCCESS.getValue());
         outPacket.encodeByte(0); // 0 or 1
@@ -46,7 +46,7 @@ public final class LoginPacket {
 
         outPacket.encodeByte(true); // true ? VIEW_WORLD_SELECT : CHECK_PIN_CODE
         outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt
-        outPacket.encodeLong(0);
+        outPacket.encodeArray(clientKey);
         return outPacket;
     }
 

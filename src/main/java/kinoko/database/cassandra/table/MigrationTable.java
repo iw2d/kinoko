@@ -9,6 +9,7 @@ public final class MigrationTable {
     public static final String ACCOUNT_ID = "account_id";
     public static final String CHANNEL_ID = "channel_id";
     public static final String CHARACTER_ID = "character_id";
+    public static final String CLIENT_KEY = "client_key";
     public static final String MACHINE_ID = "machine_id";
     public static final String REMOTE_ADDRESS = "remote_address";
 
@@ -26,6 +27,7 @@ public final class MigrationTable {
                         .withPartitionKey(ACCOUNT_ID, DataTypes.INT)
                         .withColumn(CHANNEL_ID, DataTypes.INT)
                         .withColumn(CHARACTER_ID, DataTypes.INT)
+                        .withColumn(CLIENT_KEY, DataTypes.BLOB)
                         .withColumn(MACHINE_ID, DataTypes.BLOB)
                         .withColumn(REMOTE_ADDRESS, DataTypes.BLOB)
                         .withDefaultTimeToLiveSeconds(ServerConfig.MIGRATION_REQUEST_TTL)

@@ -1,6 +1,7 @@
 package kinoko.server.client;
 
 import io.netty.channel.socket.SocketChannel;
+import kinoko.database.DatabaseManager;
 import kinoko.packet.ClientPacket;
 import kinoko.server.netty.NettyClient;
 import kinoko.server.netty.NettyServer;
@@ -11,6 +12,7 @@ public final class Client extends NettyClient {
     private Account account;
     private User user;
     private byte[] machineId;
+    private byte[] clientKey;
 
     public Client(NettyServer nettyServer, SocketChannel nettyChannel) {
         super(nettyServer, nettyChannel);
@@ -40,6 +42,14 @@ public final class Client extends NettyClient {
         this.machineId = machineId;
     }
 
+    public byte[] getClientKey() {
+        return clientKey;
+    }
+
+    public void setClientKey(byte[] clientKey) {
+        this.clientKey = clientKey;
+    }
+
     public void sendPing() {
         write(ClientPacket.aliveReq());
     }
@@ -47,6 +57,13 @@ public final class Client extends NettyClient {
     @Override
     public void close() {
         super.close();
-        getConnectedServer().getClientStorage().removePlayer(this);
+        if (user != null) {
+            user.logout();
+            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
+        }
+        if (account != null) {
+            DatabaseManager.accountAccessor().saveAccount(account);
+        }
+        getConnectedServer().getClientStorage().removeClient(this);
     }
 }
