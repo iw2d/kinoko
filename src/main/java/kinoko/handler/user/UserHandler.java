@@ -28,6 +28,7 @@ public final class UserHandler {
         inPacket.decodeInt(); // Crc32
 
         final MovePath movePath = MovePath.decode(inPacket);
+        movePath.applyTo(user);
         user.getField().broadcastPacket(UserRemotePacket.userMove(user.getCharacterId(), movePath), user);
     }
 

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Field {
     private final MapInfo mapInfo;
-    private final AtomicInteger lifeIdCounter = new AtomicInteger(1);
+    private final AtomicInteger objectIdCounter = new AtomicInteger(1);
     private final Map<Integer, Life> lifes = new ConcurrentHashMap<>(); // lifeId -> Life
     private final Map<Integer, User> users = new ConcurrentHashMap<>(); // characterId -> User
 
@@ -38,8 +38,8 @@ public final class Field {
         return mapInfo.getPortalByName(name);
     }
 
-    public int getNewLifeId() {
-        return lifeIdCounter.getAndIncrement();
+    public int getNewObjectId() {
+        return objectIdCounter.getAndIncrement();
     }
 
     public Optional<Life> getLifeById(int lifeId) {
@@ -50,8 +50,8 @@ public final class Field {
     }
 
     public void addLife(Life life) {
-        life.setLifeId(getNewLifeId());
-        lifes.put(life.getLifeId(), life);
+        life.setObjectId(getNewObjectId());
+        lifes.put(life.getObjectId(), life);
         broadcastPacket(life.enterFieldPacket());
         // Handle controller
         if (!(life instanceof ControlledObject controlledLife)) {
@@ -137,7 +137,8 @@ public final class Field {
             switch (lifeInfo.getLifeType()) {
                 case NPC -> {
                     final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.getTemplateId());
-                    final Npc npc = new Npc(field, lifeInfo, npcInfoResult.orElse(null));
+                    final Npc npc = new Npc(lifeInfo, npcInfoResult.orElse(null));
+                    npc.setField(field);
                     field.addLife(npc);
                 }
                 case MOB -> {

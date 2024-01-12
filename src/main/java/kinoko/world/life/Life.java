@@ -4,11 +4,60 @@ import kinoko.world.field.Field;
 import kinoko.world.field.FieldObject;
 
 public abstract class Life implements FieldObject {
-    private final Field field;
-    private int lifeId = -1;
+    private int objectId = -1;
 
-    protected Life(Field field) {
-        this.field = field;
+    private int x;
+    private int y;
+    private int fh;
+    private int moveAction;
+    private Field field;
+
+    public int getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(int objectId) {
+        this.objectId = objectId;
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    @Override
+    public int getFh() {
+        return fh;
+    }
+
+    @Override
+    public void setFh(int fh) {
+        this.fh = fh;
+    }
+
+    @Override
+    public int getMoveAction() {
+        return moveAction;
+    }
+
+    @Override
+    public void setMoveAction(int moveAction) {
+        this.moveAction = moveAction;
     }
 
     @Override
@@ -16,11 +65,8 @@ public abstract class Life implements FieldObject {
         return field;
     }
 
-    public int getLifeId() {
-        return lifeId;
-    }
-
-    public void setLifeId(int lifeId) {
-        this.lifeId = lifeId;
+    @Override
+    public void setField(Field field) {
+        this.field = field;
     }
 }

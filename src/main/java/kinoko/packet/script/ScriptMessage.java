@@ -12,7 +12,6 @@ public final class ScriptMessage implements Encodable {
     private final Set<ScriptMessageParam> messageParams;
 
     // SAY
-    private int speakerTemplateId;
     private String text;
     private boolean hasPrev;
     private boolean hasNext;
@@ -46,13 +45,13 @@ public final class ScriptMessage implements Encodable {
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(0); // nSpeakerTypeID, unused?
-        outPacket.encodeInt(speakerId); // nSpeakerTemplateId
+        outPacket.encodeInt(speakerId); // nSpeakerTemplateID
         outPacket.encodeByte(messageType.getValue()); // nMsgType
         outPacket.encodeByte(ScriptMessageParam.from(messageParams)); // bParam
         switch (messageType) {
             case SAY -> {
                 if (messageParams.contains(ScriptMessageParam.OVERRIDE_SPEAKER_ID)) {
-                    outPacket.encodeInt(speakerTemplateId); // nSpeakerTemplateID
+                    outPacket.encodeInt(speakerId); // nSpeakerTemplateID
                 }
                 outPacket.encodeString(text); // sText
                 outPacket.encodeByte(hasPrev); // bPrev

@@ -1,5 +1,7 @@
 package kinoko.world.life;
 
+import kinoko.world.field.FieldObject;
+
 public class MoveElem {
     private final short attr;
     private short x;
@@ -108,5 +110,9 @@ public class MoveElem {
 
     public void setElapse(short elapse) {
         this.elapse = elapse;
+    }
+
+    public void applyTo(FieldObject fieldObject) {
+        // TODO
     }
 }

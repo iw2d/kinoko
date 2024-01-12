@@ -6,6 +6,7 @@ import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.crypto.MapleCrypto;
+import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.Account;
 import kinoko.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -147,6 +148,9 @@ public final class Server {
 
         // Load Commands
         CommandProcessor.initialize();
+
+        // Load ScriptDispatcher
+        ScriptDispatcher.initialize();
 
         // Load World
         start = Instant.now();

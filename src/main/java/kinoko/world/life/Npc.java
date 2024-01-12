@@ -5,7 +5,6 @@ import kinoko.provider.map.LifeInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.ControlledObject;
-import kinoko.world.field.Field;
 import kinoko.world.user.User;
 
 import java.util.Optional;
@@ -15,10 +14,15 @@ public final class Npc extends Life implements ControlledObject {
     private final NpcInfo npcInfo;
     private User controller;
 
-    public Npc(Field field, LifeInfo lifeInfo, NpcInfo npcInfo) {
-        super(field);
+    public Npc(LifeInfo lifeInfo, NpcInfo npcInfo) {
         this.lifeInfo = lifeInfo;
         this.npcInfo = npcInfo;
+
+        // Initialization
+        setX(lifeInfo.getX());
+        setY(lifeInfo.getY());
+        setFh(lifeInfo.getFh());
+        setMoveAction(lifeInfo.isFlip() ? 1 : 0);
     }
 
     public int getTemplateId() {
@@ -63,12 +67,12 @@ public final class Npc extends Life implements ControlledObject {
 
     public void encodeInit(OutPacket outPacket) {
         // CNpc::Init
-        outPacket.encodeShort(lifeInfo.getX()); // ptPos.x
-        outPacket.encodeShort(lifeInfo.getY()); // ptPos.y
-        outPacket.encodeByte(lifeInfo.isFlip()); // nMoveAction
-        outPacket.encodeShort(lifeInfo.getFh()); // Foothold
+        outPacket.encodeShort(getX()); // ptPos.x
+        outPacket.encodeShort(getY()); // ptPos.y
+        outPacket.encodeByte(getMoveAction()); // nMoveAction
+        outPacket.encodeShort(getFh()); // Foothold
         outPacket.encodeShort(lifeInfo.getRx0()); // rgHorz.low
         outPacket.encodeShort(lifeInfo.getRx1()); // rgHorz.high
-        outPacket.encodeByte(true);
+        outPacket.encodeByte(true); // bEnabled
     }
 }

@@ -34,4 +34,8 @@ public final class Util {
                 .skip(getRandom(collection.size()))
                 .findFirst();
     }
+
+    public static boolean isInteger(String string) {
+        return string != null && string.matches("^-?\\d+$");
+    }
 }

@@ -9,15 +9,14 @@ import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptManager;
 import kinoko.world.field.Field;
 import kinoko.world.field.FieldObject;
+import kinoko.world.life.Life;
 
 import java.util.Set;
 
-public final class User implements FieldObject {
+public final class User extends Life {
     private final Client client;
     private final CharacterData characterData;
     private final CalcDamage calcDamage;
-
-    private Field field;
 
     public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
         this.client = client;
@@ -58,10 +57,10 @@ public final class User implements FieldObject {
     }
 
     public void warp(Field destination, int portalId, boolean isMigrate, boolean isRevive) {
-        if (this.field != null) {
-            this.field.removeUser(getCharacterId());
+        if (getField() != null) {
+            getField().removeUser(getCharacterId());
         }
-        this.field = destination;
+        setField(destination);
         getCharacterData().getCharacterStat().setPosMap(destination.getFieldId());
         getCharacterData().getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
@@ -73,18 +72,13 @@ public final class User implements FieldObject {
     }
 
     public void logout() {
-        if (this.field != null) {
-            this.field.removeUser(getCharacterId());
+        if (getField() != null) {
+            getField().removeUser(getCharacterId());
         }
     }
 
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public Field getField() {
-        return field;
-    }
 
     @Override
     public OutPacket enterFieldPacket() {

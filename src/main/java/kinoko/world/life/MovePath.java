@@ -3,6 +3,7 @@ package kinoko.world.life;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
+import kinoko.world.field.FieldObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,10 @@ public final class MovePath implements Encodable {
 
     public List<MoveElem> getElems() {
         return moveElems;
+    }
+
+    public void applyTo(FieldObject fieldObject) {
+        getElems().forEach(elem -> elem.applyTo(fieldObject));
     }
 
     @Override
