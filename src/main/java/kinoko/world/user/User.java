@@ -6,9 +6,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
-import kinoko.server.script.ScriptManager;
 import kinoko.world.field.Field;
-import kinoko.world.field.FieldObject;
 import kinoko.world.life.Life;
 
 import java.util.Set;

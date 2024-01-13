@@ -1,7 +1,5 @@
 package kinoko.server.script;
 
-import kinoko.packet.script.ScriptMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,7 @@ public final class ScriptMemory {
     private int messageIndex = -1;
 
     public void recordMessage(ScriptMessage scriptMessage) {
-        assert(messageIndex == messageMemory.size() - 1); // assert current position
+        assert (messageIndex == messageMemory.size() - 1); // assert current position
         messageMemory.add(scriptMessage);
         messageIndex++;
     }

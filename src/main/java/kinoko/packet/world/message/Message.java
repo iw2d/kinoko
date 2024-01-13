@@ -121,6 +121,19 @@ public final class Message implements Encodable {
         return dropPickUp(info);
     }
 
+    public static Message questRecord(QuestRecord questRecord) {
+        final Message message = new Message(MessageType.QUEST_RECORD);
+        message.questRecord = questRecord;
+        return message;
+    }
+
+    public static Message questRecordEx(int questId, String value) {
+        final Message message = new Message(MessageType.QUEST_RECORD_EX);
+        message.int1 = questId;
+        message.string1 = value;
+        return message;
+    }
+
     public static Message incExp(int exp, boolean white, boolean quest) {
         final Message message = new Message(MessageType.INC_EXP);
         message.int1 = exp;
@@ -140,5 +153,100 @@ public final class Message implements Encodable {
         final Message message = new Message(MessageType.SYSTEM);
         message.string1 = text;
         return message;
+    }
+
+    private enum MessageType {
+        DROP_PICK_UP(0),
+        QUEST_RECORD(1),
+        CASH_ITEM_EXPIRE(2),
+        INC_EXP(3),
+        INC_SP(4),
+        INC_POP(5),
+        INC_MONEY(6),
+        INC_GP(7),
+        GIVE_BUFF(8),
+        GENERAL_ITEM_EXPIRE(9),
+        SYSTEM(10),
+        QUEST_RECORD_EX(11),
+        ITEM_PROTECT_EXPIRE(12),
+        ITEM_EXPIRE_REPLACE(13),
+        SKILL_EXPIRE(14);
+
+        private final byte value;
+
+        MessageType(int value) {
+            this.value = (byte) value;
+        }
+
+        public byte getValue() {
+            return value;
+        }
+    }
+
+    private enum DropPickUpMessageType {
+        CANNOT_ACQUIRE_ANY_ITEMS(-3),
+        UNAVAILABLE_FOR_PICK_UP(-2),
+        CANNOT_GET_ANYMORE_ITEMS(-1),
+        ITEM_BUNDLE(0),
+        MONEY(1),
+        ITEM_SINGLE(2);
+
+        private final byte value;
+
+        DropPickUpMessageType(int value) {
+            this.value = (byte) value;
+        }
+
+        public final byte getValue() {
+            return value;
+        }
+    }
+
+    private static final class DropPickUpMessageInfo {
+        private final DropPickUpMessageType type;
+        private boolean portionNotFound;
+        private int money;
+        private int itemId;
+        private int itemCount;
+
+        public DropPickUpMessageInfo(DropPickUpMessageType type) {
+            this.type = type;
+        }
+
+        public DropPickUpMessageType getType() {
+            return type;
+        }
+
+        public boolean isPortionNotFound() {
+            return portionNotFound;
+        }
+
+        public void setPortionNotFound(boolean portionNotFound) {
+            this.portionNotFound = portionNotFound;
+        }
+
+        public int getMoney() {
+            return money;
+        }
+
+        public void setMoney(int money) {
+            this.money = money;
+        }
+
+        public int getItemId() {
+            return itemId;
+        }
+
+        public void setItemId(int itemId) {
+            this.itemId = itemId;
+        }
+
+        public int getItemCount() {
+            return itemCount;
+        }
+
+        public void setItemCount(int itemCount) {
+            this.itemCount = itemCount;
+        }
     }
 }

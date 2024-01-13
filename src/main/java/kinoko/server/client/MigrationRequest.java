@@ -1,7 +1,5 @@
 package kinoko.server.client;
 
-import kinoko.util.Util;
-
 import java.util.Arrays;
 
 public final class MigrationRequest {

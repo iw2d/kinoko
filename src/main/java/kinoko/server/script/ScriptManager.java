@@ -1,8 +1,5 @@
 package kinoko.server.script;
 
-import kinoko.packet.script.ScriptMessage;
-import kinoko.packet.script.ScriptMessageParam;
-import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
 import kinoko.world.user.User;
 

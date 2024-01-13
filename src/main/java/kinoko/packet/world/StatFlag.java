@@ -2,6 +2,7 @@ package kinoko.packet.world;
 
 import java.util.Set;
 
+// TODO: refactor into CharacterStat?
 public enum StatFlag {
     SKIN(0x1),
     FACE(0x2),

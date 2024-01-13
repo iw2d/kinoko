@@ -1,6 +1,5 @@
 package kinoko.server.client;
 
-import kinoko.database.DatabaseManager;
 import kinoko.world.Account;
 import kinoko.world.user.User;
 

@@ -1,4 +1,4 @@
-package kinoko.packet.script;
+package kinoko.world.quest;
 
 public enum QuestResultType {
     ADD_QUEST_TIMER(6),

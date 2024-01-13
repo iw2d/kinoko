@@ -1,4 +1,4 @@
-package kinoko.handler.script;
+package kinoko.world.quest;
 
 public enum QuestAction {
     LOST_ITEM(0),

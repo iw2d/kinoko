@@ -1,4 +1,4 @@
-package kinoko.packet.script;
+package kinoko.world.quest;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;

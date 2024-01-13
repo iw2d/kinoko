@@ -1,6 +1,5 @@
 package kinoko.server.command;
 
-import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.NpcProvider;
@@ -11,7 +10,6 @@ import kinoko.world.field.Field;
 import kinoko.world.user.User;
 
 import java.util.Optional;
-import java.util.Set;
 
 public final class AdminCommands {
     @Command("dispose")
