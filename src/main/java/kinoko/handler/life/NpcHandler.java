@@ -19,18 +19,18 @@ public final class NpcHandler {
 
     @Handler(InHeader.NPC_MOVE)
     public static void handleNpcMove(User user, InPacket inPacket) {
-        final int lifeId = inPacket.decodeInt(); // dwNpcId
+        final int objectId = inPacket.decodeInt(); // dwNpcId
         final byte oneTimeAction = inPacket.decodeByte(); // nOneTimeAction
         final byte chatIndex = inPacket.decodeByte(); // nChatIdx
 
         final Field field = user.getField();
-        final Optional<Life> lifeResult = field.getLifeById(lifeId);
+        final Optional<Life> lifeResult = field.getLifeById(objectId);
         if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Npc npc)) {
-            log.error("Received NPC_MOVE for invalid life with ID : {}", lifeId);
+            log.error("Received NPC_MOVE for invalid life with ID : {}", objectId);
             return;
         }
 
         final MovePath movePath = npc.isMove() ? MovePath.decode(inPacket) : null;
-        field.broadcastPacket(NpcPacket.npcMove(lifeId, oneTimeAction, chatIndex, movePath));
+        field.broadcastPacket(NpcPacket.npcMove(objectId, oneTimeAction, chatIndex, movePath));
     }
 }

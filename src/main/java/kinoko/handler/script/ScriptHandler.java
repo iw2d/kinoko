@@ -1,9 +1,7 @@
 package kinoko.handler.script;
 
 import kinoko.handler.Handler;
-import kinoko.packet.script.ScriptMessage;
 import kinoko.packet.script.ScriptMessageType;
-import kinoko.packet.script.ScriptPacket;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
@@ -18,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
-import java.util.Set;
 
 public final class ScriptHandler {
     private static final Logger log = LogManager.getLogger(Handler.class);
@@ -31,12 +28,12 @@ public final class ScriptHandler {
 
         final Optional<Life> lifeResult = user.getField().getLifeById(npcId);
         if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Npc npc)) {
-            log.error("Tried to select invalid NPC ID : {}", npcId);
+            log.error("Tried to select invalid npc ID : {}", npcId);
             return;
         }
 
         if (npc.getScript().isEmpty()) {
-            log.error("NPC template ID {} does not have an associated script", npc.getTemplateId());
+            log.error("Npc template ID {} does not have an associated script", npc.getTemplateId());
             return;
         }
 
@@ -46,9 +43,11 @@ public final class ScriptHandler {
     @Handler(InHeader.USER_SCRIPT_MESSAGE_ANSWER)
     public static void handleUserScriptMessageAnswer(User user, InPacket inPacket) {
         final byte type = inPacket.decodeByte(); // nMsgType
+        final byte action = inPacket.decodeByte();
+
         final ScriptMessageType lastMessageType = ScriptMessageType.getByValue(type);
 
-        final Optional<ScriptManager> scriptManagerResult = ScriptDispatcher.getUserScriptManager(user);
+        final Optional<ScriptManager> scriptManagerResult = ScriptDispatcher.getScriptManager(user);
         if (scriptManagerResult.isEmpty()) {
             log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getCharacterId());
             return;
@@ -56,31 +55,25 @@ public final class ScriptHandler {
         final ScriptManager scriptManager = scriptManagerResult.get();
         switch (lastMessageType) {
             case SAY, SAY_IMAGE, ASK_YES_NO, ASK_YES_NO_QUEST -> {
-                final byte action = inPacket.decodeByte();
                 scriptManager.submitAnswer(ScriptAnswer.withAction(action));
             }
             case ASK_TEXT, ASK_BOX_TEXT -> {
-                if (inPacket.decodeByte() == 1) {
+                if (action == 1) {
                     final String answer = inPacket.decodeString(); // sInputStr_Result
-                    scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(answer));
+                    scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
                 }
             }
-            case ASK_NUMBER -> {
-                if (inPacket.decodeByte() == 1) {
-                    final int answer = inPacket.decodeInt(); // nInputNo_Result
-                    scriptManager.submitAnswer(ScriptAnswer.withNumberAnswer(answer));
+            case ASK_NUMBER, ASK_MENU, ASK_SLIDE_MENU -> {
+                if (action == 1) {
+                    final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
+                    scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
                 }
             }
-            case ASK_MENU, ASK_SLIDE_MENU -> {
-                if (inPacket.decodeByte() == 1) {
-                    final int selection = inPacket.decodeInt(); // nSelect
-                    scriptManager.submitAnswer(ScriptAnswer.withSelection(selection));
-                }
-            }
+            // nSelect
             case ASK_AVATAR, ASK_MEMBER_SHOP_AVATAR -> {
-                if (inPacket.decodeByte() == 1) {
-                    final byte selection = inPacket.decodeByte(); // nAvatarIndex
-                    scriptManager.submitAnswer(ScriptAnswer.withSelection(selection));
+                if (action == 1) {
+                    final byte answer = inPacket.decodeByte(); // nAvatarIndex
+                    scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
                 }
             }
             case null -> {
@@ -90,6 +83,11 @@ public final class ScriptHandler {
                 log.error("Unhandled script message type {}", lastMessageType);
             }
         }
+    }
+
+    @Handler(InHeader.USER_PORTAL_SCRIPT_REQUEST)
+    public static void handleUserPortalScriptRequest(User user, InPacket inPacket) {
+        user.dispose(); // TODO
     }
 
     @Handler(InHeader.USER_QUEST_REQUEST)

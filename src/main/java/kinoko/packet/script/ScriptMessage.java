@@ -42,6 +42,10 @@ public final class ScriptMessage implements Encodable {
         this.messageParams = messageParams;
     }
 
+    public boolean isPrevPossible() {
+        return messageType == ScriptMessageType.SAY && hasPrev;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(0); // nSpeakerTypeID, unused?

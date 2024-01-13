@@ -1,6 +1,7 @@
 package kinoko.server.script;
 
 import kinoko.server.ServerConfig;
+import kinoko.util.Tuple;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +25,7 @@ public final class ScriptDispatcher {
     public static final String SCRIPT_LANGUAGE = "python";
 
     private static final Logger log = LogManager.getLogger(ScriptManager.class);
-    private static final Map<Integer, ScriptManager> userScriptManagers = new ConcurrentHashMap<>();
+    private static final Map<Integer, Tuple<ScriptManager, Context>> scriptManagers = new ConcurrentHashMap<>();
 
     private static ExecutorService executor;
     private static Engine engine;
@@ -39,35 +40,47 @@ public final class ScriptDispatcher {
     public static void startNpcScript(User user, int templateId, String scriptName) {
         final File scriptFile = Path.of(NPC_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile();
         if (!scriptFile.isFile()) {
-            log.error("NPC script file not found : {}", scriptName);
+            log.error("Npc script file not found : {}", scriptName);
             return;
         }
+        // Create ScriptManager instance and polyglot Context
+        final ScriptManager scriptManager = new ScriptManager(user);
+        scriptManager.setSpeakerId(templateId);
+        final Context context = Context.newBuilder(SCRIPT_LANGUAGE)
+                .engine(engine)
+                .allowHostAccess(HostAccess.ALL)
+                .build();
+        context.getBindings(SCRIPT_LANGUAGE).putMember("user", user);
+        context.getBindings(SCRIPT_LANGUAGE).putMember("sm", scriptManager);
+        scriptManagers.put(user.getCharacterId(), new Tuple<>(scriptManager, context));
+        // Evaluate script with virtual thread executor
         executor.submit(() -> {
-            final ScriptManager scriptManager = new UserScriptManager(user);
-            scriptManager.setSpeakerId(templateId);
-            userScriptManagers.put(user.getCharacterId(), scriptManager);
-            final Context context = Context.newBuilder(SCRIPT_LANGUAGE)
-                    .engine(engine)
-                    .allowHostAccess(HostAccess.ALL)
-                    .build();
-            context.getBindings(SCRIPT_LANGUAGE).putMember("sm", scriptManager);
-            log.debug("Evaluating script file : {}", scriptFile.getName());
             try {
+                log.debug("Evaluating script file : {}", scriptFile.getName());
                 context.eval(
                         Source.newBuilder(SCRIPT_LANGUAGE, scriptFile)
                                 .cached(true)
                                 .build()
                 );
+                removeScriptManager(user);
             } catch (IOException e) {
                 log.error("Error while loading script file : {}", scriptFile.getName());
             }
         });
     }
 
-    public static Optional<ScriptManager> getUserScriptManager(User user) {
-        if (!userScriptManagers.containsKey(user.getCharacterId())) {
+    public static Optional<ScriptManager> getScriptManager(User user) {
+        final Tuple<ScriptManager, Context> tuple = scriptManagers.get(user.getCharacterId());
+        if (tuple == null) {
             return Optional.empty();
         }
-        return Optional.of(userScriptManagers.get(user.getCharacterId()));
+        return Optional.of(tuple.getLeft());
+    }
+
+    public static void removeScriptManager(User user) {
+        final Tuple<ScriptManager, Context> tuple = scriptManagers.remove(user.getCharacterId());
+        if (tuple != null) {
+            tuple.getRight().close(true);
+        }
     }
 }

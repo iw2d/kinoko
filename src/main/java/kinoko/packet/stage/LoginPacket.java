@@ -199,7 +199,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public enum LoginOpt {
+    private enum LoginOpt {
         INITIALIZE_SECONDARY_PASSWORD(0),
         CHECK_SECONDARY_PASSWORD(1),
         NO_SECONDARY_PASSWORD(2);

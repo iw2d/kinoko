@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class Field {
     private final MapInfo mapInfo;
     private final AtomicInteger objectIdCounter = new AtomicInteger(1);
-    private final Map<Integer, Life> lifes = new ConcurrentHashMap<>(); // lifeId -> Life
+    private final Map<Integer, Life> lifes = new ConcurrentHashMap<>(); // objectId -> Life
     private final Map<Integer, User> users = new ConcurrentHashMap<>(); // characterId -> User
 
     public Field(MapInfo mapInfo) {
@@ -42,11 +42,11 @@ public final class Field {
         return objectIdCounter.getAndIncrement();
     }
 
-    public Optional<Life> getLifeById(int lifeId) {
-        if (!lifes.containsKey(lifeId)) {
+    public Optional<Life> getLifeById(int objectId) {
+        if (!lifes.containsKey(objectId)) {
             return Optional.empty();
         }
-        return Optional.of(lifes.get(lifeId));
+        return Optional.of(lifes.get(objectId));
     }
 
     public void addLife(Life life) {
@@ -67,8 +67,8 @@ public final class Field {
         broadcastPacket(controlledLife.changeControllerPacket(false), controller);
     }
 
-    public void removeLife(int lifeId) {
-        final Life removed = lifes.remove(lifeId);
+    public void removeLife(int objectId) {
+        final Life removed = lifes.remove(objectId);
         if (removed == null) {
             return;
         }
