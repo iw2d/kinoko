@@ -5,23 +5,17 @@ import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class ScriptManager {
-    private static final Logger log = LogManager.getLogger(ScriptManager.class);
-
-    private final List<ScriptMessage> messageMemory = new ArrayList<>();
     private final Set<ScriptMessageParam> messageParams = EnumSet.noneOf(ScriptMessageParam.class);
+    private final ScriptMemory scriptMemory = new ScriptMemory();
     private final User user;
 
-    private int memoryIndex = -1;
     private int speakerId;
     private CompletableFuture<ScriptAnswer> answerFuture;
 
@@ -38,8 +32,7 @@ public final class ScriptManager {
     }
 
     private void sendMessage(ScriptMessage scriptMessage) {
-        messageMemory.add(scriptMessage);
-        memoryIndex++;
+        scriptMemory.recordMessage(scriptMessage);
         user.write(ScriptPacket.scriptMessage(scriptMessage));
     }
 
@@ -48,18 +41,13 @@ public final class ScriptManager {
         final ScriptAnswer answer = answerFuture.join();
         if (answer.getAction() == -1 || answer.getAction() == 5) {
             dispose();
-        } else if (answer.getAction() == 0 && memoryIndex >= 1 && messageMemory.size() > memoryIndex &&
-                messageMemory.get(memoryIndex).isPrevPossible()) {
+        } else if (answer.getAction() == 0 && scriptMemory.isPrevPossible()) {
             // prev message in memory
-            memoryIndex--;
-            final ScriptMessage prevMessage = messageMemory.get(memoryIndex);
-            user.write(ScriptPacket.scriptMessage(prevMessage));
+            user.write(ScriptPacket.scriptMessage(scriptMemory.prevMessage()));
             return handleAnswer();
-        } else if (memoryIndex >= 0 && memoryIndex < messageMemory.size() - 1) {
+        } else if (scriptMemory.isInMemory()) {
             // next message in memory
-            memoryIndex++;
-            final ScriptMessage nextMessage = messageMemory.get(memoryIndex);
-            user.write(ScriptPacket.scriptMessage(nextMessage));
+            user.write(ScriptPacket.scriptMessage(scriptMemory.nextMessage()));
             return handleAnswer();
         }
         return answer;
