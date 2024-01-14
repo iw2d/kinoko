@@ -3,7 +3,7 @@ package kinoko.world.life;
 import kinoko.world.field.FieldObject;
 
 public class MoveElem {
-    private final short attr;
+    private final byte attr;
     private short x;
     private short y;
     private short vx;
@@ -16,11 +16,11 @@ public class MoveElem {
     private byte moveAction;
     private short elapse;
 
-    public MoveElem(short attr) {
+    public MoveElem(byte attr) {
         this.attr = attr;
     }
 
-    public short getAttr() {
+    public byte getAttr() {
         return attr;
     }
 
@@ -110,9 +110,5 @@ public class MoveElem {
 
     public void setElapse(short elapse) {
         this.elapse = elapse;
-    }
-
-    public void applyTo(FieldObject fieldObject) {
-        // TODO
     }
 }

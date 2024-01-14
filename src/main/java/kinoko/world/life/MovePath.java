@@ -44,7 +44,26 @@ public final class MovePath implements Encodable {
     }
 
     public void applyTo(FieldObject fieldObject) {
-        getElems().forEach(elem -> elem.applyTo(fieldObject));
+        for (MoveElem elem : getElems()) {
+            switch (MoveType.fromAttr(elem.getAttr())) {
+                case NORMAL, TELEPORT -> {
+                    fieldObject.setX(elem.getX());
+                    fieldObject.setY(elem.getY());
+                    fieldObject.setFh(elem.getFh());
+                }
+                case JUMP, START_FALL_DOWN, FLYING_BLOCK -> {
+                    fieldObject.setX(elem.getX());
+                    fieldObject.setY(elem.getY());
+                }
+                case STAT_CHANGE -> {
+                    continue;
+                }
+                case ACTION -> {
+                    // noop
+                }
+            }
+            fieldObject.setMoveAction(elem.getMoveAction());
+        }
     }
 
     @Override
@@ -56,44 +75,44 @@ public final class MovePath implements Encodable {
         outPacket.encodeByte(getElems().size());
         for (MoveElem elem : getElems()) {
             outPacket.encodeByte(elem.getAttr());
-            switch (elem.getAttr()) {
-                case 0, 5, 12, 14, 35, 36 -> {
+            switch (MoveType.fromAttr(elem.getAttr())) {
+                case NORMAL -> {
                     outPacket.encodeShort(elem.getX()); // x
                     outPacket.encodeShort(elem.getY()); // y
                     outPacket.encodeShort(elem.getVx()); // vx
                     outPacket.encodeShort(elem.getVy()); // vy
                     outPacket.encodeShort(elem.getFh()); // fh
-                    if (elem.getAttr() == 12) {
+                    if (elem.getAttr() == 12) { // FALL_DOWN
                         outPacket.encodeShort(elem.getFhFallStart()); // fhFallStart
                     }
                     outPacket.encodeShort(elem.getXOffset()); // xOffset
                     outPacket.encodeShort(elem.getYOffset()); // yOffset
                 }
-                case 1, 2, 13, 16, 18, 31, 32, 33, 34 -> {
+                case JUMP -> {
                     outPacket.encodeShort(elem.getVx()); // vx
                     outPacket.encodeShort(elem.getVy()); // vy
                 }
-                case 3, 4, 6, 7, 8, 10 -> {
+                case TELEPORT -> {
                     outPacket.encodeShort(elem.getX()); // x
                     outPacket.encodeShort(elem.getY()); // y
                     outPacket.encodeShort(elem.getFh()); // fh
                 }
-                case 9 -> {
+                case STAT_CHANGE -> {
                     outPacket.encodeByte(elem.getStat()); // bStat
                     continue; // moveAction and elapse not encoded
                 }
-                case 11 -> {
+                case START_FALL_DOWN -> {
                     outPacket.encodeShort(elem.getVx()); // vx
                     outPacket.encodeShort(elem.getVy()); // vy
                     outPacket.encodeShort(elem.getFhFallStart()); // fhFallStart
                 }
-                case 17 -> {
+                case FLYING_BLOCK -> {
                     outPacket.encodeShort(elem.getX()); // x
                     outPacket.encodeShort(elem.getY()); // y
                     outPacket.encodeShort(elem.getVx()); // vx
                     outPacket.encodeShort(elem.getVy()); // vy
                 }
-                case 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 -> {
+                case ACTION -> {
                     // noop
                 }
             }
@@ -115,8 +134,8 @@ public final class MovePath implements Encodable {
         for (int i = 0; i < count; i++) {
             final byte attr = inPacket.decodeByte(); // nAttr
             final MoveElem elem = new MoveElem(attr);
-            switch (attr) {
-                case 0, 5, 12, 14, 35, 36 -> {
+            switch (MoveType.fromAttr(attr)) {
+                case NORMAL -> {
                     elem.setX(inPacket.decodeShort()); // x
                     elem.setY(inPacket.decodeShort()); // y
                     elem.setVx(inPacket.decodeShort()); // vx
@@ -128,38 +147,38 @@ public final class MovePath implements Encodable {
                     elem.setXOffset(inPacket.decodeShort()); // xOffset
                     elem.setYOffset(inPacket.decodeShort()); // yOffset
                 }
-                case 1, 2, 13, 16, 18, 31, 32, 33, 34 -> {
+                case JUMP -> {
                     elem.setX(x);
                     elem.setY(y);
                     elem.setVx(inPacket.decodeShort()); // vx
                     elem.setVy(inPacket.decodeShort()); // vy
                 }
-                case 3, 4, 6, 7, 8, 10 -> {
+                case TELEPORT -> {
                     elem.setX(inPacket.decodeShort()); // x
                     elem.setY(inPacket.decodeShort()); // y
                     elem.setFh(inPacket.decodeShort()); // fh
                 }
-                case 9 -> {
+                case STAT_CHANGE -> {
                     elem.setStat(inPacket.decodeByte()); // bStat
                     elem.setX(x);
                     elem.setY(y);
                     moveElems.add(elem);
                     continue; // moveAction and elapse not decoded
                 }
-                case 11 -> {
+                case START_FALL_DOWN -> {
                     elem.setX(x);
                     elem.setY(y);
                     elem.setVx(inPacket.decodeShort()); // vx
                     elem.setVy(inPacket.decodeShort()); // vy
                     elem.setFhFallStart(inPacket.decodeShort()); // fhFallStart
                 }
-                case 17 -> {
+                case FLYING_BLOCK -> {
                     elem.setX(inPacket.decodeShort()); // x
                     elem.setY(inPacket.decodeShort()); // y
                     elem.setVx(inPacket.decodeShort()); // vx
                     elem.setVy(inPacket.decodeShort()); // vy
                 }
-                case 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 -> {
+                case ACTION -> {
                     elem.setX(x);
                     elem.setY(y);
                     elem.setVy(vx);
@@ -172,5 +191,44 @@ public final class MovePath implements Encodable {
             moveElems.add(elem);
         }
         return new MovePath(x, y, vx, vy, moveElems);
+    }
+
+    private enum MoveType {
+        NORMAL,
+        JUMP,
+        TELEPORT,
+        STAT_CHANGE,
+        START_FALL_DOWN,
+        FLYING_BLOCK,
+        ACTION;
+
+        private static MoveType fromAttr(byte attr) {
+            switch (attr) {
+                case 0, 5, 12, 14, 35, 36 -> {
+                    return NORMAL;
+                }
+                case 1, 2, 13, 16, 18, 31, 32, 33, 34 -> {
+                    return JUMP;
+                }
+                case 3, 4, 6, 7, 8, 10 -> {
+                    return TELEPORT;
+                }
+                case 9 -> {
+                    return STAT_CHANGE;
+                }
+                case 11 -> {
+                    return START_FALL_DOWN;
+                }
+                case 17 -> {
+                    return FLYING_BLOCK;
+                }
+                case 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 -> {
+                    return ACTION;
+                }
+                default -> {
+                    throw new IllegalStateException("Unknown attr " + attr);
+                }
+            }
+        }
     }
 }
