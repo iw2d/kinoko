@@ -1,6 +1,9 @@
 package kinoko.world.user;
 
+import kinoko.packet.world.StatFlag;
 import kinoko.server.packet.OutPacket;
+
+import java.util.Set;
 
 public final class CharacterStat {
     private byte gender;
@@ -226,5 +229,76 @@ public final class CharacterStat {
         outPacket.encodeByte(getPortal()); // nPortal
         outPacket.encodeInt(0); // nPlayTime
         outPacket.encodeShort(getSubJob()); // nSubJob
+    }
+
+    public void encodeChangeStat(Set<StatFlag> flags, int money, OutPacket outPacket) {
+        // GW_CharacterStat::DecodeChangeStat
+        outPacket.encodeInt(StatFlag.from(flags));
+        if (flags.contains(StatFlag.SKIN)) {
+            outPacket.encodeByte(getSkin());
+        }
+        if (flags.contains(StatFlag.FACE)) {
+            outPacket.encodeInt(getFace());
+        }
+        if (flags.contains(StatFlag.HAIR)) {
+            outPacket.encodeInt(getHair());
+        }
+        if (flags.contains(StatFlag.PET_1)) {
+            outPacket.encodeLong(0);
+        }
+        if (flags.contains(StatFlag.PET_2)) {
+            outPacket.encodeLong(0);
+        }
+        if (flags.contains(StatFlag.PET_3)) {
+            outPacket.encodeLong(0);
+        }
+        if (flags.contains(StatFlag.LEVEL)) {
+            outPacket.encodeByte(getLevel());
+        }
+        if (flags.contains(StatFlag.JOB)) {
+            outPacket.encodeShort(getJob());
+        }
+        if (flags.contains(StatFlag.STR)) {
+            outPacket.encodeShort(getBaseStr());
+        }
+        if (flags.contains(StatFlag.DEX)) {
+            outPacket.encodeShort(getBaseDex());
+        }
+        if (flags.contains(StatFlag.INT)) {
+            outPacket.encodeShort(getBaseInt());
+        }
+        if (flags.contains(StatFlag.LUK)) {
+            outPacket.encodeShort(getBaseLuk());
+        }
+        if (flags.contains(StatFlag.HP)) {
+            outPacket.encodeInt(getHp());
+        }
+        if (flags.contains(StatFlag.MAX_HP)) {
+            outPacket.encodeInt(getMaxHp());
+        }
+        if (flags.contains(StatFlag.MP)) {
+            outPacket.encodeInt(getMp());
+        }
+        if (flags.contains(StatFlag.MAX_MP)) {
+            outPacket.encodeInt(getMaxMp());
+        }
+        if (flags.contains(StatFlag.AP)) {
+            outPacket.encodeShort(getAp());
+        }
+        if (flags.contains(StatFlag.SP)) {
+            getSp().encode(getJob(), outPacket);
+        }
+        if (flags.contains(StatFlag.EXP)) {
+            outPacket.encodeInt(getExp());
+        }
+        if (flags.contains(StatFlag.POP)) {
+            outPacket.encodeShort(getPop());
+        }
+        if (flags.contains(StatFlag.MONEY)) {
+            outPacket.encodeInt(money);
+        }
+        if (flags.contains(StatFlag.TEMP_EXP)) {
+            outPacket.encodeInt(0);
+        }
     }
 }

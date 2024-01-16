@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public final class NpcProvider {
+public final class NpcProvider implements WzProvider {
     public static final Path NPC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Npc.wz");
     private static final Map<Integer, NpcInfo> npcInfos = new HashMap<>();
 

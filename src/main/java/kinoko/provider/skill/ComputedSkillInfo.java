@@ -1,6 +1,7 @@
 package kinoko.provider.skill;
 
 import kinoko.provider.ProviderError;
+import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.util.Rect;
@@ -83,7 +84,7 @@ public final class ComputedSkillInfo implements SkillInfo {
                 final SkillStat stat = SkillStat.fromName(entry.getKey());
                 switch (stat) {
                     case maxLevel -> {
-                        maxLevel = SkillInfo.getInteger(entry.getValue());
+                        maxLevel = WzProvider.getInteger(entry.getValue());
                     }
                     case lt -> {
                         final WzVectorProperty lt = commonProps.get("lt");
@@ -99,7 +100,7 @@ public final class ComputedSkillInfo implements SkillInfo {
                         // skip; rb is handled by lt
                     }
                     default -> {
-                        final Expression expression = new ExpressionBuilder(SkillInfo.getString(entry.getValue()))
+                        final Expression expression = new ExpressionBuilder(WzProvider.getString(entry.getValue()))
                                 .functions(ceil, floor)
                                 .variables("x")
                                 .build();
@@ -111,8 +112,8 @@ public final class ComputedSkillInfo implements SkillInfo {
         return new ComputedSkillInfo(
                 skillId,
                 maxLevel,
-                SkillInfo.getInteger(skillProp.get("psd")) != 0,
-                SkillInfo.getInteger(skillProp.get("invisible")) != 0,
+                WzProvider.getInteger(skillProp.get("psd")) != 0,
+                WzProvider.getInteger(skillProp.get("invisible")) != 0,
                 Collections.unmodifiableMap(stats),
                 rect
         );

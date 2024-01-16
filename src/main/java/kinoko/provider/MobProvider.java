@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public final class MobProvider {
+public final class MobProvider implements WzProvider {
     public static final Path MOB_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Mob.wz");
     private static final Map<Integer, MobInfo> mobInfos = new HashMap<>();
 

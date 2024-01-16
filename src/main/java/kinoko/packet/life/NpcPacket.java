@@ -3,7 +3,7 @@ package kinoko.packet.life;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.life.MovePath;
-import kinoko.world.life.Npc;
+import kinoko.world.life.npc.Npc;
 
 public final class NpcPacket {
 

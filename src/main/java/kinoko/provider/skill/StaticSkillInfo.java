@@ -1,6 +1,7 @@
 package kinoko.provider.skill;
 
 import kinoko.provider.ProviderError;
+import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.util.Rect;
@@ -71,7 +72,7 @@ public final class StaticSkillInfo implements SkillInfo {
                     final SkillStat stat = SkillStat.fromName(entry.getKey());
                     switch (stat) {
                         case maxLevel -> {
-                            maxLevel = SkillInfo.getInteger(entry.getValue());
+                            maxLevel = WzProvider.getInteger(entry.getValue());
                         }
                         case lt -> {
                             final WzVectorProperty lt = statProp.get("lt");
@@ -90,7 +91,7 @@ public final class StaticSkillInfo implements SkillInfo {
                             if (!stats.containsKey(stat)) {
                                 stats.put(stat, new ArrayList<>());
                             }
-                            stats.get(stat).add(SkillInfo.getInteger(entry.getValue()));
+                            stats.get(stat).add(WzProvider.getInteger(entry.getValue()));
                         }
                     }
                 }
@@ -99,8 +100,8 @@ public final class StaticSkillInfo implements SkillInfo {
         return new StaticSkillInfo(
                 skillId,
                 maxLevel,
-                SkillInfo.getInteger(skillProp.get("psd")) != 0,
-                SkillInfo.getInteger(skillProp.get("invisible")) != 0,
+                WzProvider.getInteger(skillProp.get("psd")) != 0,
+                WzProvider.getInteger(skillProp.get("invisible")) != 0,
                 stats,
                 rect
         );

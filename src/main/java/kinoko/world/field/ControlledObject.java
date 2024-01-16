@@ -6,7 +6,7 @@ import kinoko.world.user.User;
 public interface ControlledObject {
     User getController();
 
-    void setController(User user);
+    void setController(User controller);
 
     OutPacket changeControllerPacket(boolean forController);
 }

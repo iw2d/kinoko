@@ -7,7 +7,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.field.Field;
 import kinoko.world.life.Life;
 import kinoko.world.life.MovePath;
-import kinoko.world.life.Npc;
+import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,14 +1,17 @@
 package kinoko.world.field;
 
+import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.life.Life;
-import kinoko.world.life.Npc;
+import kinoko.world.life.mob.Mob;
+import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 
 import java.util.Map;
@@ -142,7 +145,10 @@ public final class Field {
                     field.addLife(npc);
                 }
                 case MOB -> {
-                    // TODO
+                    final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(lifeInfo.getTemplateId());
+                    final Mob mob = new Mob(lifeInfo, mobInfoResult.orElse(null));
+                    mob.setField(field);
+                    field.addLife(mob);
                 }
             }
         }

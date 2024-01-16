@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-public final class MapProvider {
+public final class MapProvider implements WzProvider {
     public static final Path MAP_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz");
     private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
 

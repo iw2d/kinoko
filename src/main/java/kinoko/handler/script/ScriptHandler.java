@@ -10,7 +10,7 @@ import kinoko.server.script.ScriptDispatcher;
 import kinoko.server.script.ScriptManager;
 import kinoko.server.script.ScriptMessageType;
 import kinoko.world.life.Life;
-import kinoko.world.life.Npc;
+import kinoko.world.life.npc.Npc;
 import kinoko.world.quest.QuestAction;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;

@@ -48,6 +48,10 @@ public final class User extends Life {
         return getCharacterData().getCharacterId();
     }
 
+    public int getLevel() {
+        return getCharacterData().getCharacterStat().getLevel();
+    }
+
     // PACKET WRITES ---------------------------------------------------------------------------------------------------
 
     public void write(OutPacket outPacket) {

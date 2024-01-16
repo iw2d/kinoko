@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-public final class SkillProvider {
+public final class SkillProvider implements WzProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
