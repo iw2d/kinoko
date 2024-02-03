@@ -12,6 +12,7 @@ public final class Mob extends Life implements ControlledObject {
     private final MobStatManager mobStatManager = new MobStatManager();
     private final LifeInfo lifeInfo;
     private final MobInfo mobInfo;
+    private AppearType appearType;
     private User controller;
 
     public Mob(LifeInfo lifeInfo, MobInfo mobInfo) {
@@ -22,7 +23,8 @@ public final class Mob extends Life implements ControlledObject {
         setX(lifeInfo.getX());
         setY(lifeInfo.getY());
         setFh(lifeInfo.getFh());
-        setMoveAction(lifeInfo.isFlip() ? 1 : 0);
+        setMoveAction(5); // idk
+        setAppearType(AppearType.NORMAL);
     }
 
     public MobStatManager getMobStatManager() {
@@ -31,6 +33,14 @@ public final class Mob extends Life implements ControlledObject {
 
     public int getTemplateId() {
         return this.mobInfo.templateId();
+    }
+
+    public AppearType getAppearType() {
+        return appearType;
+    }
+
+    public void setAppearType(AppearType appearType) {
+        this.appearType = appearType;
     }
 
     @Override
@@ -65,7 +75,10 @@ public final class Mob extends Life implements ControlledObject {
         outPacket.encodeByte(getMoveAction()); // nMoveAction
         outPacket.encodeShort(getFh()); // pvcMobActiveObj (current foothold)
         outPacket.encodeShort(lifeInfo.getFh()); // Foothold (start foothold)
-        outPacket.encodeByte(-2); // nAppearType
+        outPacket.encodeByte(getAppearType().getValue()); // nAppearType
+        if (getAppearType() == AppearType.REVIVED || getAppearType().getValue() >= 0) {
+            outPacket.encodeInt(0); // dwOption
+        }
         outPacket.encodeByte(0); // nTeamForMCarnival
         outPacket.encodeInt(0); // nEffectItemID
         outPacket.encodeInt(0); // nPhase
