@@ -537,7 +537,13 @@ public enum OutHeader {
             headerMap.put(header.getValue(), header);
         }
         ignoreHeaders = Set.of(
+                MOB_ENTER_FIELD,
+                MOB_LEAVE_FIELD,
+                MOB_CHANGE_CONTROLLER,
+                MOB_MOVE,
+                MOB_CTRL_ACK,
                 NPC_ENTER_FIELD,
+                NPC_LEAVE_FIELD,
                 NPC_CHANGE_CONTROLLER,
                 NPC_MOVE
         );
