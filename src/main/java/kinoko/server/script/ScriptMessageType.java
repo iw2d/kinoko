@@ -13,9 +13,11 @@ public enum ScriptMessageType {
     ASK_MEMBER_SHOP_AVATAR(9),
     ASK_PET(10),
     ASK_PET_ALL(11),
-    ASK_YES_NO_QUEST(13),
+    SCRIPT(12),
+    ASK_ACCEPT(13),
     ASK_BOX_TEXT(14),
-    ASK_SLIDE_MENU(15);
+    ASK_SLIDE_MENU(15),
+    ASK_CENTER(16);
 
     private final byte value;
 

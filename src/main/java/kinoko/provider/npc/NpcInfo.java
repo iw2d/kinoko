@@ -66,7 +66,7 @@ public final class NpcInfo {
                         throw new ProviderError("Failed to resolve script property");
                     }
                     if (scriptProp.getItems().size() > 1) {
-                        throw new ProviderError("\"Multiple scripts found for npc {}", npcId);
+                        throw new ProviderError("Multiple scripts found for npc {}", npcId);
                     }
                     if ((scriptProp.get("script")) instanceof String) {
                         script = scriptProp.get("script");

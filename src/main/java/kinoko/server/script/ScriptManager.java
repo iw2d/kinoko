@@ -103,8 +103,8 @@ public final class ScriptManager {
         handleAnswer();
     }
 
-    public void askYesNoQuest(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_YES_NO_QUEST, text));
+    public void askAccept(String text) {
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_ACCEPT, text));
         handleAnswer();
     }
 

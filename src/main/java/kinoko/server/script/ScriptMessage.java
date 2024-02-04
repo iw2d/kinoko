@@ -67,7 +67,7 @@ public final class ScriptMessage implements Encodable {
                     outPacket.encodeString(image); // sPath
                 }
             }
-            case ASK_YES_NO, ASK_YES_NO_QUEST, ASK_MENU -> {
+            case ASK_YES_NO, ASK_ACCEPT, ASK_MENU -> {
                 outPacket.encodeString(text); // sText
             }
             case ASK_TEXT -> {

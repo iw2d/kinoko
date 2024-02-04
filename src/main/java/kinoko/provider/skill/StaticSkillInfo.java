@@ -70,6 +70,10 @@ public final class StaticSkillInfo implements SkillInfo {
                 }
                 for (var entry : statProp.getItems().entrySet()) {
                     final SkillStat stat = SkillStat.fromName(entry.getKey());
+                    if (stat == null) {
+                        // unhandled SkillStats in MobSkill.img
+                        continue;
+                    }
                     switch (stat) {
                         case maxLevel -> {
                             maxLevel = WzProvider.getInteger(entry.getValue());

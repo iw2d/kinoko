@@ -41,12 +41,12 @@ public final class Message implements Encodable {
             }
             case QUEST_RECORD -> {
                 outPacket.encodeShort(questRecord.getQuestId()); // nQuestID
-                outPacket.encodeByte(questRecord.getQuestStatus().getValue());
-                switch (questRecord.getQuestStatus()) {
-                    case STARTED -> {
+                outPacket.encodeByte(questRecord.getQuestState().getValue());
+                switch (questRecord.getQuestState()) {
+                    case NONE -> {
                         outPacket.encodeString(questRecord.getQuestInfo());
                     }
-                    case COMPLETED -> {
+                    case COMPLETE -> {
                         outPacket.encodeFT(questRecord.getCompletedTime());
                     }
                     default -> {

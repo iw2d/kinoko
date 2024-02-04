@@ -232,7 +232,16 @@ public final class LoginHandler {
             if (itemId == 0) {
                 continue;
             }
-            final BodyPart bodyPart = BodyPart.getBySelectedAL(i);
+            final BodyPart bodyPart;
+            if (i == 4) {
+                bodyPart = BodyPart.COAT;
+            } else if (i == 5) {
+                bodyPart = BodyPart.PANTS;
+            } else if (i == 6) {
+                bodyPart = BodyPart.SHOES;
+            } else { // i == 7
+                bodyPart = BodyPart.WEAPON;
+            }
             if (!ItemConstants.isCorrectBodyPart(itemId, bodyPart, gender)) {
                 continue;
             }

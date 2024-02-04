@@ -1,8 +1,6 @@
 package kinoko.world.life;
 
-import kinoko.world.field.FieldObject;
-
-public class MoveElem {
+public final class MoveElem {
     private final byte attr;
     private short x;
     private short y;

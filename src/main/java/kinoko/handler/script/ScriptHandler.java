@@ -55,7 +55,7 @@ public final class ScriptHandler {
         }
         final ScriptManager scriptManager = scriptManagerResult.get();
         switch (lastMessageType) {
-            case SAY, SAY_IMAGE, ASK_YES_NO, ASK_YES_NO_QUEST -> {
+            case SAY, SAY_IMAGE, ASK_YES_NO, ASK_ACCEPT -> {
                 scriptManager.submitAnswer(ScriptAnswer.withAction(action));
             }
             case ASK_TEXT, ASK_BOX_TEXT -> {
@@ -131,7 +131,7 @@ public final class ScriptHandler {
                 // TODO
                 // user.getCharacterData().getQuestManager().resignQuest(questId);
             }
-            case START_SCRIPT, COMPLETE_SCRIPT -> {
+            case OPENING_SCRIPT, COMPLETE_SCRIPT -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y

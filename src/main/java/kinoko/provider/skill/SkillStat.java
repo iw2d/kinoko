@@ -82,7 +82,8 @@ public enum SkillStat {
     ball,
     action,
     dateExpire,
-    maxLevel;
+    maxLevel,
+    interval;
 
     private static final Map<String, SkillStat> nameMap = new HashMap<>();
 

@@ -92,17 +92,4 @@ public enum BodyPart {
     public final int getValue() {
         return value;
     }
-
-    public static BodyPart getBySelectedAL(int i) {
-        if (i == 4) {
-            return COAT;
-        } else if (i == 5) {
-            return PANTS;
-        } else if (i == 6) {
-            return SHOES;
-        } else if (i == 7) {
-            return WEAPON;
-        }
-        throw new IllegalArgumentException();
-    }
 }

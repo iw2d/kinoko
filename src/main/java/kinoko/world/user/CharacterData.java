@@ -140,7 +140,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeByte(getCharacterInventory().getEtcInventory().getSize());
             outPacket.encodeByte(getCharacterInventory().getCashInventory().getSize());
         }
-        if (flag.hasFlag(DBChar.EQUIP_EXT_EXPIRE)) {
+        if (flag.hasFlag(DBChar.EQUIP_EXT)) {
             outPacket.encodeFT(FileTime.MAX_TIME); // aEquipExtExpire
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_EQUIP)) {
@@ -298,7 +298,7 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.QUEST_COMPLETE_OLD)) {
             outPacket.encodeShort(0); // short * (short, FT)
         }
-        if (flag.hasFlag(DBChar.VISITOR_QUEST_LOG)) {
+        if (flag.hasFlag(DBChar.VISITOR_LOG)) {
             outPacket.encodeShort(0); // short * (short, short)
         }
     }

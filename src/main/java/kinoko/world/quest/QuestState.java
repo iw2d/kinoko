@@ -1,14 +1,15 @@
 package kinoko.world.quest;
 
-public enum QuestStatus {
-    NOT_STARTED(0),
-    STARTED(1),
-    COMPLETED(2),
-    EX(3);
+public enum QuestState {
+    NONE(0),
+    PERFORM(1),
+    COMPLETE(2),
+    PARTYQUEST(3),
+    NO(4);
 
     private final int value;
 
-    QuestStatus(int value) {
+    QuestState(int value) {
         this.value = value;
     }
 

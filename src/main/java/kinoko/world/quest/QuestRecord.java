@@ -4,7 +4,7 @@ import kinoko.util.FileTime;
 
 public final class QuestRecord {
     private final int questId;
-    private QuestStatus questStatus;
+    private QuestState questState;
     private String questInfo;
     private FileTime completedTime;
 
@@ -16,12 +16,12 @@ public final class QuestRecord {
         return questId;
     }
 
-    public QuestStatus getQuestStatus() {
-        return questStatus;
+    public QuestState getQuestState() {
+        return questState;
     }
 
-    public void setQuestStatus(QuestStatus questStatus) {
-        this.questStatus = questStatus;
+    public void setQuestState(QuestState questState) {
+        this.questState = questState;
     }
 
     public String getQuestInfo() {

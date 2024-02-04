@@ -2,8 +2,11 @@ package kinoko.packet.life;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Tuple;
 import kinoko.world.life.MovePath;
 import kinoko.world.life.mob.Mob;
+
+import java.util.List;
 
 public final class MobPacket {
     public static OutPacket mobEnterField(Mob mob) {
@@ -38,27 +41,35 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobMove(Mob mob, MovePath movePath) {
+    public static OutPacket mobMove(int objectId, byte actionAndDir, int targetInfo, List<Tuple<Integer, Integer>> multiTargetForBall, List<Integer> randTimeForAreaAttack, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_MOVE);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobId
+        outPacket.encodeInt(objectId); // dwMobId
         outPacket.encodeByte(false); // bNotForceLandingWhenDiscard
-        outPacket.encodeByte(false); // bNotChangeActrion
+        outPacket.encodeByte(false); // bNotChangeAction
         outPacket.encodeByte(false); // bNextAttackPossible
-        outPacket.encodeByte(false); // bLeft
-        outPacket.encodeInt(0); // aMultiTargetForBall
-        outPacket.encodeInt(0); // aRandTimeforAreaAttack
+        outPacket.encodeByte(actionAndDir); // bLeft (actionAndDir)
+        outPacket.encodeInt(targetInfo); // sEffect (CMob::TARGETINFO)
+        outPacket.encodeInt(multiTargetForBall.size()); // aMultiTargetForBall
+        for (var target : multiTargetForBall) {
+            outPacket.encodeInt(target.getLeft()); // x
+            outPacket.encodeInt(target.getRight()); // y
+        }
+        outPacket.encodeInt(randTimeForAreaAttack.size()); // aRandTimeforAreaAttack
+        for (int value : randTimeForAreaAttack) {
+            outPacket.encodeInt(value);
+        }
         movePath.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean isNextAttackPossible) {
+    public static OutPacket mobCtrlAck(int objectId, int mobCtrlSn, boolean isNextAttackPossible, int mobMp, int skillId, int slv) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CTRL_ACK);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobId
+        outPacket.encodeInt(objectId); // dwMobId
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
         outPacket.encodeByte(isNextAttackPossible); // bNextAttackPossible
-        outPacket.encodeShort(0); // nMP
-        outPacket.encodeByte(0); // nSkillCommand
-        outPacket.encodeByte(0); // nSLV
+        outPacket.encodeShort(mobMp); // nMP
+        outPacket.encodeByte(skillId); // nSkillCommand
+        outPacket.encodeByte(slv); // nSLV
         return outPacket;
     }
 }

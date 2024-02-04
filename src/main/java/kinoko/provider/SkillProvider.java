@@ -1,5 +1,6 @@
 package kinoko.provider;
 
+import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
@@ -17,12 +18,14 @@ import java.util.*;
 public final class SkillProvider implements WzProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
+    private static final Map<MobSkillType, SkillInfo> mobSkills = new EnumMap<>(MobSkillType.class);
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadSkillInfos(wzPackage);
+            loadMobSkills(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Skill.wz", e);
         }
@@ -30,6 +33,10 @@ public final class SkillProvider implements WzProvider {
 
     public static Set<SkillInfo> getSkillsForJob(Job job) {
         return jobSkills.getOrDefault(job, Set.of());
+    }
+
+    public static SkillInfo getMobSkill(MobSkillType type) {
+        return mobSkills.get(type);
     }
 
     public static Optional<SkillInfo> getSkillInfoById(int skillId) {
@@ -61,9 +68,25 @@ public final class SkillProvider implements WzProvider {
                     jobSkills.put(job, new HashSet<>());
                 }
                 jobSkills.get(job).add(skillInfo);
-
                 skillInfos.put(skillId, skillInfo);
             }
+        }
+    }
+
+    private static void loadMobSkills(WzPackage source) throws ProviderError {
+        if (!source.getDirectory().getImages().containsKey("MobSkill.img")) {
+            throw new ProviderError("Failed to resolve MobSkill.img");
+        }
+        for (var entry : source.getDirectory().getImages().get("MobSkill.img").getProperty().getItems().entrySet()) {
+            if (!(entry.getValue() instanceof WzListProperty skillProp)) {
+                throw new ProviderError("Failed to resolve mob skill property");
+            }
+            final int skillId = Integer.parseInt(entry.getKey());
+            final MobSkillType type = MobSkillType.getByValue(skillId);
+            if (type == null) {
+                throw new ProviderError("Failed to resolve mob skill type : {}", skillId);
+            }
+            mobSkills.put(type, SkillInfo.from(skillId, skillProp));
         }
     }
 }
