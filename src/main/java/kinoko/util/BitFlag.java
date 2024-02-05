@@ -3,6 +3,8 @@ package kinoko.util;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 
+import java.util.Set;
+
 public final class BitFlag<T extends BitIndex> implements Encodable {
     private final int[] flags;
 
@@ -24,5 +26,13 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
         for (int flag : flags) {
             outPacket.encodeInt(flag);
         }
+    }
+
+    public static <T extends BitIndex> BitFlag<T> from(Set<T> flagSet, int size) {
+        final BitFlag<T> bitFlag = new BitFlag<>(size);
+        for (T flag : flagSet) {
+            bitFlag.setFlag(flag);
+        }
+        return bitFlag;
     }
 }

@@ -333,6 +333,7 @@ public enum InHeader {
                 CREATE_SECURITY_HANDLE,
                 UPDATE_SCREEN_SETTING,
                 USER_MOVE,
+                USER_EMOTION,
                 MOB_MOVE,
                 MOB_APPLY_CTRL,
                 NPC_MOVE

@@ -15,11 +15,13 @@ public final class User extends Life {
     private final Client client;
     private final CharacterData characterData;
     private final CalcDamage calcDamage;
+    private final TemporaryStatManager temporaryStatManager;
 
-    public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
+    public User(Client client, CharacterData characterData, CalcDamage calcDamage, TemporaryStatManager temporaryStatManager) {
         this.client = client;
         this.characterData = characterData;
         this.calcDamage = calcDamage;
+        this.temporaryStatManager = temporaryStatManager;
     }
 
     public Client getClient() {
@@ -32,6 +34,10 @@ public final class User extends Life {
 
     public CalcDamage getCalcDamage() {
         return calcDamage;
+    }
+
+    public TemporaryStatManager getTemporaryStatManager() {
+        return temporaryStatManager;
     }
 
     // CONVENIENCE METHODS ---------------------------------------------------------------------------------------------
@@ -50,6 +56,14 @@ public final class User extends Life {
 
     public int getLevel() {
         return getCharacterData().getCharacterStat().getLevel();
+    }
+
+    public short getJob() {
+        return getCharacterData().getCharacterStat().getJob();
+    }
+
+    public String getName() {
+        return getCharacterData().getCharacterName();
     }
 
     // PACKET WRITES ---------------------------------------------------------------------------------------------------

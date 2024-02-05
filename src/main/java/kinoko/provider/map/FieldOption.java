@@ -1,5 +1,8 @@
 package kinoko.provider.map;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public enum FieldOption {
     MOVE_LIMIT(0x1),
     SKILL_LIMIT(0x2),
@@ -34,5 +37,15 @@ public enum FieldOption {
 
     public final int getValue() {
         return value;
+    }
+
+    public static Set<FieldOption> getFromLimit(int fieldLimit) {
+        final Set<FieldOption> fieldOptions = new HashSet<>();
+        for (FieldOption option : values()) {
+            if ((fieldLimit & option.getValue()) != 0) {
+                fieldOptions.add(option);
+            }
+        }
+        return fieldOptions;
     }
 }

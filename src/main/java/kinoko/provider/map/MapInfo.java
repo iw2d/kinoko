@@ -1,10 +1,12 @@
 package kinoko.provider.map;
 
+import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public final class MapInfo {
     private final int mapId;
@@ -13,7 +15,8 @@ public final class MapInfo {
     private final boolean fly;
     private final int returnMap;
     private final int forcedReturn;
-    private final int fieldLimit;
+    private final Set<FieldOption> fieldOptions;
+    private final FieldType fieldType;
     private final float mobRate;
     private final String onFirstUserEnter;
     private final String onUserEnter;
@@ -26,8 +29,8 @@ public final class MapInfo {
     private final List<PortalInfo> portalInfos;
     private final List<ReactorInfo> reactorInfos;
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, int returnMap, int forcedReturn, int fieldLimit,
-                   float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom,
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions,
+                   FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom,
                    int vrRight, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos,
                    List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
@@ -36,7 +39,8 @@ public final class MapInfo {
         this.fly = fly;
         this.returnMap = returnMap;
         this.forcedReturn = forcedReturn;
-        this.fieldLimit = fieldLimit;
+        this.fieldOptions = fieldOptions;
+        this.fieldType = fieldType;
         this.mobRate = mobRate;
         this.onFirstUserEnter = onFirstUserEnter;
         this.onUserEnter = onUserEnter;
@@ -74,8 +78,12 @@ public final class MapInfo {
         return forcedReturn;
     }
 
-    public int getFieldLimit() {
-        return fieldLimit;
+    public Set<FieldOption> getFieldOptions() {
+        return fieldOptions;
+    }
+
+    public FieldType getFieldType() {
+        return fieldType;
     }
 
     public float getMobRate() {
@@ -143,7 +151,8 @@ public final class MapInfo {
                 "fly=" + fly + ", " +
                 "returnMap=" + returnMap + ", " +
                 "forcedReturn=" + forcedReturn + ", " +
-                "fieldLimit=" + fieldLimit + ", " +
+                "fieldOptions=" + fieldOptions + ", " +
+                "fieldType=" + fieldType + ", " +
                 "mobRate=" + mobRate + ", " +
                 "onFirstUserEnter=" + onFirstUserEnter + ", " +
                 "onUserEnter=" + onUserEnter + ", " +
@@ -165,7 +174,8 @@ public final class MapInfo {
                 infoProp.getOrDefault("fly", 0) != 0,
                 infoProp.get("returnMap"),
                 infoProp.get("forcedReturn"),
-                infoProp.getOrDefault("fieldLimit", 0),
+                FieldOption.getFromLimit(infoProp.getOrDefault("fieldLimit", 0)),
+                FieldType.getFromValue(WzProvider.getInteger(infoProp.getOrDefault("fieldType", 0))),
                 infoProp.get("mobRate"),
                 infoProp.get("onFirstUserEnter"),
                 infoProp.get("onUserEnter"),

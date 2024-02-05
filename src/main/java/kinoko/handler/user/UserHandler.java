@@ -50,4 +50,13 @@ public final class UserHandler {
 
         user.getField().broadcastPacket(UserCommonPacket.userChat(user.getCharacterId(), 0, text, onlyBalloon));
     }
+
+    @Handler(InHeader.USER_EMOTION)
+    public static void handleUserEmotion(User user, InPacket inPacket) {
+        final int emotion = inPacket.decodeInt(); // nEmotion
+        final int duration = inPacket.decodeInt(); // nDuration
+        final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
+
+        user.getField().broadcastPacket(UserRemotePacket.userEmotion(user.getCharacterId(), emotion, duration, isByItemOption), user);
+    }
 }

@@ -11,4 +11,13 @@ public final class UserRemotePacket {
         movePath.encode(outPacket);
         return outPacket;
     }
+
+    public static OutPacket userEmotion(int characterId, int emotion, int duration, boolean isByItemOption) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_EMOTION);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(emotion);
+        outPacket.encodeInt(duration);
+        outPacket.encodeByte(isByItemOption); // bEmotionByItemOption
+        return outPacket;
+    }
 }

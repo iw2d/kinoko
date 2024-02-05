@@ -2,9 +2,7 @@ package kinoko.world.field;
 
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
-import kinoko.provider.map.LifeInfo;
-import kinoko.provider.map.MapInfo;
-import kinoko.provider.map.PortalInfo;
+import kinoko.provider.map.*;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
@@ -16,6 +14,7 @@ import kinoko.world.user.User;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -31,6 +30,14 @@ public final class Field {
 
     public int getFieldId() {
         return mapInfo.getMapId();
+    }
+
+    public Set<FieldOption> getFieldOptions() {
+        return mapInfo.getFieldOptions();
+    }
+
+    public FieldType getFieldType() {
+        return mapInfo.getFieldType();
     }
 
     public Optional<PortalInfo> getPortalById(int portalId) {

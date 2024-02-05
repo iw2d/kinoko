@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Mob extends Life implements ControlledObject {
     private final MobStatManager mobStatManager = new MobStatManager();
-    private final Map<MobSkill, Instant> skillCooltimes = new ConcurrentHashMap<>();
+    private final Map<MobSkill, Instant> skillCooltimes = new ConcurrentHashMap<>(); // TODO: use a lock
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final MobInfo mobInfo;
     private final MobAppearType appearType;

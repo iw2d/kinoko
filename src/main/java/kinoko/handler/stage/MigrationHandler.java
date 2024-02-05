@@ -12,6 +12,7 @@ import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
+import kinoko.world.user.TemporaryStatManager;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,7 +79,7 @@ public final class MigrationHandler {
             c.close();
             return;
         }
-        final User user = new User(c, characterData, CalcDamage.getDefault());
+        final User user = new User(c, characterData, CalcDamage.getDefault(), new TemporaryStatManager()); // TODO: persist tsm across channels
         if (channelServer.getClientStorage().isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
             c.close();
