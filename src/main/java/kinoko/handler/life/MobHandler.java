@@ -2,24 +2,34 @@ package kinoko.handler.life;
 
 import kinoko.handler.Handler;
 import kinoko.packet.life.MobPacket;
-import kinoko.provider.mob.MobSkillType;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.mob.MobActionType;
+import kinoko.provider.mob.MobAttack;
+import kinoko.provider.mob.MobSkill;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Tuple;
+import kinoko.util.Util;
+import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.life.Life;
 import kinoko.world.life.MovePath;
 import kinoko.world.life.mob.Mob;
+import kinoko.world.life.mob.MobAttackInfo;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public final class MobHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(MobHandler.class);
 
     @Handler(InHeader.MOB_MOVE)
     public static void handleMobMove(User user, InPacket inPacket) {
@@ -66,17 +76,83 @@ public final class MobHandler {
         inPacket.decodeByte(); // pvcActive->bChasingHack
         inPacket.decodeInt(); // pvcActive->tChaseDuration
 
-        // handle mob skill
-        int skillId = targetInfo & 0xFF;
-        int slv = (targetInfo >> 8) & 0xFF;
-        int option = (targetInfo >> 16) & 0xFFFF;
 
-        if (skillId >= MobSkillType.POWER_UP.getValue() && skillId <= MobSkillType.SUMMON_CUBE.getValue()) {
-            final MobSkillType skillType = MobSkillType.getByValue(skillId);
+        // handle mob attack / skill
+        final MobAttackInfo mai = new MobAttackInfo();
+        mai.actionMask = actionMask;
+        mai.actionAndDir = actionAndDir;
+        mai.targetInfo = targetInfo;
+        mai.multiTargetForBall = multiTargetForBall;
+        mai.randTimeForAreaAttack = randTimeForAreaAttack;
+
+        final int action = mai.actionAndDir >> 1;
+        mai.isAttack = action >= MobActionType.ATTACK1.getValue() && action <= MobActionType.ATTACKF.getValue();
+        mai.isSkill = action >= MobActionType.SKILL1.getValue() && action <= MobActionType.SKILLF.getValue();
+
+        if (mai.isAttack) {
+            final int attackIndex = action - MobActionType.ATTACK1.getValue();
+            final Optional<MobAttack> mobAttackResult = mob.getAttack(attackIndex);
+            if (mobAttackResult.isEmpty()) {
+                log.error("{} : Could not resolve mob attack for index : {}", mob, attackIndex);
+                return;
+            }
+            final MobAttack ma = mobAttackResult.get();
+
+            log.debug("{} : Using mob attack index {}", mob, attackIndex);
+            mob.setMp(Math.max(mob.getMp() - ma.getConMp(), 0));
+            mob.setAttackCounter(Util.getRandom(
+                    GameConstants.MOB_ATTACK_COOLTIME_MIN,
+                    mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
+            ));
+        } else if (mai.isSkill) {
+            final int skillIndex = action - MobActionType.SKILL1.getValue();
+            final Optional<MobSkill> mobSkillResult = mob.getSkill(skillIndex);
+            if (mobSkillResult.isEmpty()) {
+                log.error("{} : Could not resolve mob skill for index : {}", mob, skillIndex);
+                return;
+            }
+            final MobSkill ms = mobSkillResult.get();
+
+            mai.skillId = targetInfo & 0xFF;
+            mai.slv = (targetInfo >> 8) & 0xFF;
+            mai.option = (targetInfo >> 16) & 0xFFFF;
+            if (mai.skillId != ms.getSkillId() || mai.slv != ms.getLevel()) {
+                log.error("{} : Mismatching skill ID or level for mob skill index : {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
+                return;
+            }
+
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillById(mai.skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("{} : Could not resolve skill info for mob skill : {}", mob, mai.skillId);
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            if (mob.isSkillAvailable(ms)) {
+                log.debug("{} : Using mob skill index {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
+                mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
+                mob.setSkillOnCooltime(ms, Instant.now().plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
+                // TODO: apply effect
+            } else {
+                log.error("{} : Mob skill ({}, {}) not available", mob, mai.skillId, mai.slv);
+                mai.skillId = 0;
+                mai.slv = 0;
+                mai.option = 0;
+            }
         }
 
+
+        // update mob position and write response
+        final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
         movePath.applyTo(mob);
-        user.write(MobPacket.mobCtrlAck(mob.getObjectId(), mobCtrlSn, false, mob.getMp(), skillId, slv));
-        field.broadcastPacket(MobPacket.mobMove(mob.getObjectId(), actionAndDir, targetInfo, multiTargetForBall, randTimeForAreaAttack, movePath), user);
+        user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, mai)); // TODO: create lock for mob
+        field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
+    }
+
+    @Handler(InHeader.MOB_APPLY_CTRL)
+    public static void handleMobApplyCtrl(User user, InPacket inPacket) {
+        // CMob::ApplyControl
+        inPacket.decodeInt(); // dwMobID
+        inPacket.decodeInt(); // unk
+        // do nothing, since the controller logic is handled elsewhere
     }
 }

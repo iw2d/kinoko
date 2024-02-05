@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class LoginHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(LoginHandler.class);
 
     @Handler(InHeader.CHECK_PASSWORD)
     public static void handleCheckPassword(Client c, InPacket inPacket) {

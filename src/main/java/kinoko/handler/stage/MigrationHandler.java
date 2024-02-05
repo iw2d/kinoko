@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public final class MigrationHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(MigrationHandler.class);
 
     @Handler(InHeader.MIGRATE_IN)
     public static void handleMigrateIn(Client c, InPacket inPacket) {

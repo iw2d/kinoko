@@ -2,50 +2,96 @@ package kinoko.world.life.mob;
 
 import kinoko.packet.life.MobPacket;
 import kinoko.provider.map.LifeInfo;
+import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobInfo;
-import kinoko.provider.mob.MobSkillInfo;
+import kinoko.provider.mob.MobSkill;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.life.Life;
 import kinoko.world.user.User;
 
-import java.util.List;
+import java.time.Instant;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Mob extends Life implements ControlledObject {
     private final MobStatManager mobStatManager = new MobStatManager();
-    private final LifeInfo lifeInfo;
+    private final Map<MobSkill, Instant> skillCooltimes = new ConcurrentHashMap<>();
+    private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final MobInfo mobInfo;
     private final AppearType appearType;
-    private User controller;
 
+    private User controller;
+    private int currentFh;
     private int hp;
     private int mp;
 
-    public Mob(LifeInfo lifeInfo, MobInfo mobInfo) {
-        this.lifeInfo = lifeInfo;
+    public Mob(int x, int y, int fh, MobInfo mobInfo, AppearType appearType) {
         this.mobInfo = mobInfo;
-        this.appearType = AppearType.NORMAL;
+        this.appearType = appearType;
 
-        // Initialization
-        setX(lifeInfo.getX());
-        setY(lifeInfo.getY());
-        setFh(lifeInfo.getFh());
+        // Life initialization
+        setX(x);
+        setY(y);
+        setFh(fh);
         setMoveAction(5); // idk
 
-        setHp(mobInfo.maxHP());
-        setMp(mobInfo.maxMP());
+        // Mob initialization
+        setCurrentFh(fh);
+        setHp(mobInfo.getMaxHp());
+        setMp(mobInfo.getMaxMp());
+    }
+
+    public int getTemplateId() {
+        return this.mobInfo.getTemplateId();
+    }
+
+    public boolean isBoss() {
+        return mobInfo.isBoss();
     }
 
     public MobStatManager getMobStatManager() {
         return mobStatManager;
     }
 
-    public int getTemplateId() {
-        return this.mobInfo.templateId();
+    public Optional<MobAttack> getAttack(int attackIndex) {
+        if (!mobInfo.getAttacks().containsKey(attackIndex)) {
+            return Optional.empty();
+        }
+        return Optional.of(mobInfo.getAttacks().get(attackIndex));
     }
 
-    public List<MobSkillInfo> getSkills() {
-        return mobInfo.skills();
+    public Optional<MobSkill> getSkill(int skillIndex) {
+        if (!mobInfo.getSkills().containsKey(skillIndex)) {
+            return Optional.empty();
+        }
+        return Optional.of(mobInfo.getSkills().get(skillIndex));
+    }
+
+    public boolean isSkillAvailable(MobSkill mobSkill) {
+        return skillCooltimes.getOrDefault(mobSkill, Instant.MIN).isBefore(Instant.now());
+    }
+
+    public void setSkillOnCooltime(MobSkill mobSkill, Instant nextAvailableTime) {
+        skillCooltimes.put(mobSkill, nextAvailableTime);
+    }
+
+    public int getAndDecrementAttackCounter() {
+        return attackCounter.getAndDecrement();
+    }
+
+    public void setAttackCounter(int value) {
+        attackCounter.set(value);
+    }
+
+    public int getCurrentFh() {
+        return currentFh;
+    }
+
+    public void setCurrentFh(int currentFh) {
+        this.currentFh = currentFh;
     }
 
     public int getHp() {
@@ -89,13 +135,18 @@ public final class Mob extends Life implements ControlledObject {
         return MobPacket.mobLeaveField(this);
     }
 
+    @Override
+    public String toString() {
+        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d }", getTemplateId(), getObjectId(), getHp(), getMp());
+    }
+
     public void encodeInit(OutPacket outPacket) {
         // CMob::Init
         outPacket.encodeShort(getX()); // ptPosPrev.x
         outPacket.encodeShort(getY()); // ptPosPrev.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
-        outPacket.encodeShort(getFh()); // pvcMobActiveObj (current foothold)
-        outPacket.encodeShort(lifeInfo.getFh()); // Foothold (start foothold)
+        outPacket.encodeShort(getCurrentFh()); // pvcMobActiveObj (current foothold)
+        outPacket.encodeShort(getFh()); // Foothold (start foothold)
         outPacket.encodeByte(appearType.getValue()); // nAppearType
         if (appearType == AppearType.REVIVED || appearType.getValue() >= 0) {
             outPacket.encodeInt(0); // dwOption
@@ -103,5 +154,15 @@ public final class Mob extends Life implements ControlledObject {
         outPacket.encodeByte(0); // nTeamForMCarnival
         outPacket.encodeInt(0); // nEffectItemID
         outPacket.encodeInt(0); // nPhase
+    }
+
+    public static Mob from(LifeInfo lifeInfo, MobInfo mobInfo) {
+        return new Mob(
+                lifeInfo.getX(),
+                lifeInfo.getY(),
+                lifeInfo.getFh(),
+                mobInfo,
+                AppearType.NORMAL
+        );
     }
 }

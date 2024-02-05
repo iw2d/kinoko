@@ -3,7 +3,7 @@ package kinoko.provider.quest;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum QuestActType {
+public enum QuestActionType {
     item,
     money,
     exp,
@@ -14,10 +14,10 @@ public enum QuestActType {
     interval,
     quest;
 
-    private static final Map<String, QuestActType> nameMap = new HashMap<>();
+    private static final Map<String, QuestActionType> nameMap = new HashMap<>();
 
     static {
-        for (QuestActType type : values()) {
+        for (QuestActionType type : values()) {
             nameMap.put(type.name(), type);
         }
     }
@@ -26,7 +26,7 @@ public enum QuestActType {
         return !nameMap.containsKey(name);
     }
 
-    public static QuestActType fromName(String name) {
+    public static QuestActionType fromName(String name) {
         return nameMap.get(name);
     }
 }

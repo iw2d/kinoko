@@ -48,7 +48,7 @@ public final class ItemProvider implements WzProvider {
         for (String directoryName : EQUIP_TYPES) {
             final WzDirectory directory = source.getDirectory().getDirectories().get(directoryName);
             if (directory == null) {
-                throw new ProviderError("Could not resolve Character.wz/{}", directoryName);
+                throw new ProviderError("Could not resolve Character.wz/%s", directoryName);
             }
             for (var entry : directory.getImages().entrySet()) {
                 final int itemId = Integer.parseInt(entry.getKey().replace(".img", ""));
@@ -61,7 +61,7 @@ public final class ItemProvider implements WzProvider {
         for (String directoryName : ITEM_TYPES) {
             final WzDirectory directory = source.getDirectory().getDirectories().get(directoryName);
             if (directory == null) {
-                throw new ProviderError("Could not resolve Item.wz/{}", directoryName);
+                throw new ProviderError("Could not resolve Item.wz/%s", directoryName);
             }
             for (var image : directory.getImages().values()) {
                 for (var entry : image.getProperty().getItems().entrySet()) {

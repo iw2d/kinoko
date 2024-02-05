@@ -26,6 +26,14 @@ public final class Util {
         return random.nextInt(origin, bound);
     }
 
+    public static boolean succeedProp(int chance, int max) {
+        return random.nextInt(max) < chance;
+    }
+
+    public static boolean succeedProp(int chance) {
+        return succeedProp(chance, 100);
+    }
+
     public static <T> Optional<T> getRandomFromCollection(Collection<T> collection) {
         if (collection.isEmpty()) {
             return Optional.empty();

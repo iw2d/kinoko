@@ -1,6 +1,5 @@
 package kinoko.provider;
 
-import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
@@ -18,7 +17,7 @@ import java.util.*;
 public final class SkillProvider implements WzProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
-    private static final Map<MobSkillType, SkillInfo> mobSkills = new EnumMap<>(MobSkillType.class);
+    private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
 
     public static void initialize() {
@@ -35,8 +34,11 @@ public final class SkillProvider implements WzProvider {
         return jobSkills.getOrDefault(job, Set.of());
     }
 
-    public static SkillInfo getMobSkill(MobSkillType type) {
-        return mobSkills.get(type);
+    public static Optional<SkillInfo> getMobSkillById(int skillId) {
+        if (!mobSkills.containsKey(skillId)) {
+            return Optional.empty();
+        }
+        return Optional.of(mobSkills.get(skillId));
     }
 
     public static Optional<SkillInfo> getSkillInfoById(int skillId) {
@@ -55,7 +57,7 @@ public final class SkillProvider implements WzProvider {
             final short jobId = Short.parseShort(imageName);
             final Job job = Job.getById(jobId);
             if (!(imageEntry.getValue().getProperty().get("skill") instanceof WzListProperty skillList)) {
-                throw new ProviderError("Failed to resolve skills for job ID : {}", jobId);
+                throw new ProviderError("Failed to resolve skills for job ID : %d", jobId);
             }
             for (var skillEntry : skillList.getItems().entrySet()) {
                 final int skillId = Integer.parseInt(skillEntry.getKey());
@@ -82,11 +84,7 @@ public final class SkillProvider implements WzProvider {
                 throw new ProviderError("Failed to resolve mob skill property");
             }
             final int skillId = Integer.parseInt(entry.getKey());
-            final MobSkillType type = MobSkillType.getByValue(skillId);
-            if (type == null) {
-                throw new ProviderError("Failed to resolve mob skill type : {}", skillId);
-            }
-            mobSkills.put(type, SkillInfo.from(skillId, skillProp));
+            mobSkills.put(skillId, SkillInfo.from(skillId, skillProp));
         }
     }
 }

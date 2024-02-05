@@ -37,7 +37,7 @@ public final class MobProvider implements WzProvider {
     private static void loadMobInfos(WzPackage source) throws ProviderError {
         for (var mobEntry : source.getDirectory().getImages().entrySet()) {
             final int mobId = Integer.parseInt(mobEntry.getKey().replace(".img", ""));
-            mobInfos.put(mobId, MobInfo.from(mobId, mobEntry.getValue().getProperty().get("info")));
+            mobInfos.put(mobId, MobInfo.from(mobId, mobEntry.getValue().getProperty()));
         }
     }
 }

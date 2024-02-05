@@ -11,7 +11,7 @@ import kinoko.server.script.ScriptManager;
 import kinoko.server.script.ScriptMessageType;
 import kinoko.world.life.Life;
 import kinoko.world.life.npc.Npc;
-import kinoko.world.quest.QuestAction;
+import kinoko.world.quest.QuestRequestType;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public final class ScriptHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(ScriptHandler.class);
 
     @Handler(InHeader.USER_SELECT_NPC)
     public static void handleUserSelectNpc(User user, InPacket inPacket) {
@@ -103,8 +103,8 @@ public final class ScriptHandler {
         }
         final QuestInfo questInfo = questInfoResult.get();
 
-        final QuestAction questAction = QuestAction.getByValue(action);
-        switch (questAction) {
+        final QuestRequestType questRequestType = QuestRequestType.getByValue(action);
+        switch (questRequestType) {
             case LOST_ITEM -> {
                 // TODO
             }
@@ -141,7 +141,7 @@ public final class ScriptHandler {
                 log.error("Unknown quest action type : {}", action);
             }
             default -> {
-                log.error("Unhandled quest action type : {}", questAction);
+                log.error("Unhandled quest action type : {}", questRequestType);
             }
         }
     }

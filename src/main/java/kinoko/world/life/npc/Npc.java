@@ -11,23 +11,25 @@ import kinoko.world.user.User;
 import java.util.Optional;
 
 public final class Npc extends Life implements ControlledObject {
-    private final LifeInfo lifeInfo;
     private final NpcInfo npcInfo;
+    private final int rx0;
+    private final int rx1;
     private User controller;
 
-    public Npc(LifeInfo lifeInfo, NpcInfo npcInfo) {
-        this.lifeInfo = lifeInfo;
+    public Npc(int x, int y, int rx0, int rx1, int fh, boolean isFlip, NpcInfo npcInfo) {
         this.npcInfo = npcInfo;
+        this.rx0 = rx0;
+        this.rx1 = rx1;
 
-        // Initialization
-        setX(lifeInfo.getX());
-        setY(lifeInfo.getY());
-        setFh(lifeInfo.getFh());
-        setMoveAction(lifeInfo.isFlip() ? 1 : 0);
+        // Life initialization
+        setX(x);
+        setY(y);
+        setFh(fh);
+        setMoveAction(isFlip ? 1 : 0);
     }
 
     public int getTemplateId() {
-        return lifeInfo.getTemplateId();
+        return npcInfo.getTemplateId();
     }
 
     public boolean isMove() {
@@ -66,14 +68,31 @@ public final class Npc extends Life implements ControlledObject {
         return NpcPacket.npcChangeController(this, forController);
     }
 
+    @Override
+    public String toString() {
+        return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getObjectId(), getScript().orElse("-"));
+    }
+
     public void encodeInit(OutPacket outPacket) {
         // CNpc::Init
         outPacket.encodeShort(getX()); // ptPos.x
         outPacket.encodeShort(getY()); // ptPos.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
         outPacket.encodeShort(getFh()); // Foothold
-        outPacket.encodeShort(lifeInfo.getRx0()); // rgHorz.low
-        outPacket.encodeShort(lifeInfo.getRx1()); // rgHorz.high
+        outPacket.encodeShort(rx0); // rgHorz.low
+        outPacket.encodeShort(rx1); // rgHorz.high
         outPacket.encodeByte(true); // bEnabled
+    }
+
+    public static Npc from(LifeInfo lifeInfo, NpcInfo npcINfo) {
+        return new Npc(
+                lifeInfo.getX(),
+                lifeInfo.getY(),
+                lifeInfo.getRx0(),
+                lifeInfo.getRx1(),
+                lifeInfo.getFh(),
+                lifeInfo.isFlip(),
+                npcINfo
+        );
     }
 }

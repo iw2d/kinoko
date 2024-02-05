@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class ClientHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(ClientHandler.class);
 
     @Handler(InHeader.ALIVE_ACK)
     public static void handleAliveAck(Client c, InPacket inPacket) {

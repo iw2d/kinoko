@@ -66,14 +66,14 @@ public final class NpcInfo {
                         throw new ProviderError("Failed to resolve script property");
                     }
                     if (scriptProp.getItems().size() > 1) {
-                        throw new ProviderError("Multiple scripts found for npc {}", npcId);
+                        throw new ProviderError("Multiple scripts found for npc %d", npcId);
                     }
                     if ((scriptProp.get("script")) instanceof String) {
                         script = scriptProp.get("script");
                     } else if (scriptProp.get("0") instanceof WzListProperty scriptList) {
                         script = scriptList.get("script");
                     } else {
-                        throw new ProviderError("Could not resolve script for npc {}", npcId);
+                        throw new ProviderError("Could not resolve script for npc %d", npcId);
                     }
                 }
                 case "trunkPut" -> {

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class UserHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(UserHandler.class);
 
     @Handler(InHeader.USER_MOVE)
     public static void handleUserMove(User user, InPacket inPacket) {

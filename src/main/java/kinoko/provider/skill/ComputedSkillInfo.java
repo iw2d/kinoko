@@ -75,6 +75,15 @@ public final class ComputedSkillInfo implements SkillInfo {
         return rect;
     }
 
+    @Override
+    public String toString() {
+        return "ComputedSkillInfo[" +
+                "id=" + id + ", " +
+                "maxLevel=" + maxLevel + ", " +
+                "psd=" + psd + ", " +
+                "invisible=" + invisible + ']';
+    }
+
     public static ComputedSkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {
         final Map<SkillStat, Expression> stats = new EnumMap<>(SkillStat.class);
         Rect rect = null;

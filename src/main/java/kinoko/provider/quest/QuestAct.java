@@ -1,9 +1,9 @@
 package kinoko.provider.quest;
 
 public abstract class QuestAct {
-    private final QuestActType type;
+    private final QuestActionType type;
 
-    public QuestAct(QuestActType type) {
+    public QuestAct(QuestActionType type) {
         this.type = type;
     }
 }

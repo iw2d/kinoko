@@ -1,14 +1,6 @@
 package kinoko.world.quest;
 
-public enum QuestAction {
-    // QuestReq
-    LOST_ITEM(0),
-    ACCEPT_QUEST(1),
-    COMPLETE_QUEST(2),
-    RESIGN_QUEST(3),
-    OPENING_SCRIPT(4),
-    COMPLETE_SCRIPT(5),
-
+public enum QuestResultType {
     // QuestRes
     START_QUEST_TIMER(6),
     END_QUEST_TIMER(7),
@@ -27,7 +19,7 @@ public enum QuestAction {
 
     private final byte value;
 
-    QuestAction(int value) {
+    QuestResultType(int value) {
         this.value = (byte) value;
     }
 
@@ -35,8 +27,8 @@ public enum QuestAction {
         return value;
     }
 
-    public static QuestAction getByValue(int value) {
-        for (QuestAction action : values()) {
+    public static QuestResultType getByValue(int value) {
+        for (QuestResultType action : values()) {
             if (action.getValue() == value) {
                 return action;
             }

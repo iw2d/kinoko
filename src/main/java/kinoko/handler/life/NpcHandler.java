@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public final class NpcHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(NpcHandler.class);
 
     @Handler(InHeader.NPC_MOVE)
     public static void handleNpcMove(User user, InPacket inPacket) {

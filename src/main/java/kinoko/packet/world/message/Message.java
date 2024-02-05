@@ -155,6 +155,12 @@ public final class Message implements Encodable {
         return message;
     }
 
+    public static Message system(String format, Object... args) {
+        final Message message = new Message(MessageType.SYSTEM);
+        message.string1 = String.format(format, args);
+        return message;
+    }
+
     private enum MessageType {
         DROP_PICK_UP(0),
         QUEST_RECORD(1),

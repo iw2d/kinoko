@@ -59,18 +59,18 @@ public enum MobSkillType {
     static {
         typeMap = new HashMap<>();
         for (MobSkillType type : values()) {
-            typeMap.put(type.getValue(), type);
+            typeMap.put(type.getId(), type);
         }
     }
 
-    private int value;
+    private final int id;
 
-    MobSkillType(int value) {
-        this.value = value;
+    MobSkillType(int id) {
+        this.id = id;
     }
 
-    public int getValue() {
-        return value;
+    public int getId() {
+        return id;
     }
 
     public static MobSkillType getByValue(int value) {

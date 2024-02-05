@@ -334,6 +334,7 @@ public enum InHeader {
                 UPDATE_SCREEN_SETTING,
                 USER_MOVE,
                 MOB_MOVE,
+                MOB_APPLY_CTRL,
                 NPC_MOVE
         );
     }

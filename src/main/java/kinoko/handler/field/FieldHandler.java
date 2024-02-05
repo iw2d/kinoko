@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public final class FieldHandler {
-    private static final Logger log = LogManager.getLogger(Handler.class);
+    private static final Logger log = LogManager.getLogger(FieldHandler.class);
 
     @Handler(InHeader.USER_TRANSFER_FIELD_REQUEST)
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {

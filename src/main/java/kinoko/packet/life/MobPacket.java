@@ -2,11 +2,9 @@ package kinoko.packet.life;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Tuple;
 import kinoko.world.life.MovePath;
 import kinoko.world.life.mob.Mob;
-
-import java.util.List;
+import kinoko.world.life.mob.MobAttackInfo;
 
 public final class MobPacket {
     public static OutPacket mobEnterField(Mob mob) {
@@ -41,35 +39,45 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobMove(int objectId, byte actionAndDir, int targetInfo, List<Tuple<Integer, Integer>> multiTargetForBall, List<Integer> randTimeForAreaAttack, MovePath movePath) {
+    public static OutPacket mobMove(Mob mob, MobAttackInfo mai, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_MOVE);
-        outPacket.encodeInt(objectId); // dwMobId
+        outPacket.encodeInt(mob.getObjectId()); // dwMobId
         outPacket.encodeByte(false); // bNotForceLandingWhenDiscard
         outPacket.encodeByte(false); // bNotChangeAction
-        outPacket.encodeByte(false); // bNextAttackPossible
-        outPacket.encodeByte(actionAndDir); // bLeft (actionAndDir)
-        outPacket.encodeInt(targetInfo); // sEffect (CMob::TARGETINFO)
-        outPacket.encodeInt(multiTargetForBall.size()); // aMultiTargetForBall
-        for (var target : multiTargetForBall) {
+        outPacket.encodeByte(mai.actionMask);
+        outPacket.encodeByte(mai.actionAndDir);
+        // CMob::TARGETINFO
+        if (mai.isSkill) {
+            outPacket.encodeByte(mai.skillId);
+            outPacket.encodeByte(mai.slv);
+            outPacket.encodeByte(mai.option);
+        } else {
+            outPacket.encodeInt(mai.targetInfo);
+        }
+        // aMultiTargetForBall
+        outPacket.encodeInt(mai.multiTargetForBall.size());
+        for (var target : mai.multiTargetForBall) {
             outPacket.encodeInt(target.getLeft()); // x
             outPacket.encodeInt(target.getRight()); // y
         }
-        outPacket.encodeInt(randTimeForAreaAttack.size()); // aRandTimeforAreaAttack
-        for (int value : randTimeForAreaAttack) {
+        // aRandTimeforAreaAttack
+        outPacket.encodeInt(mai.randTimeForAreaAttack.size());
+        for (int value : mai.randTimeForAreaAttack) {
             outPacket.encodeInt(value);
         }
+        // CMovePath::OnMovePacket
         movePath.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket mobCtrlAck(int objectId, int mobCtrlSn, boolean isNextAttackPossible, int mobMp, int skillId, int slv) {
+    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CTRL_ACK);
-        outPacket.encodeInt(objectId); // dwMobId
+        outPacket.encodeInt(mob.getObjectId()); // dwMobId
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
-        outPacket.encodeByte(isNextAttackPossible); // bNextAttackPossible
-        outPacket.encodeShort(mobMp); // nMP
-        outPacket.encodeByte(skillId); // nSkillCommand
-        outPacket.encodeByte(slv); // nSLV
+        outPacket.encodeByte(nextAttackPossible); // bNextAttackPossible
+        outPacket.encodeShort(mob.getMp()); // nMP
+        outPacket.encodeByte(mai.skillId); // nSkillCommand
+        outPacket.encodeByte(mai.slv); // nSLV
         return outPacket;
     }
 }

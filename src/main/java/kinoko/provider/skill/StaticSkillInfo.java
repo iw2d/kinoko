@@ -58,6 +58,15 @@ public final class StaticSkillInfo implements SkillInfo {
         return rect;
     }
 
+    @Override
+    public String toString() {
+        return "StaticSkillInfo[" +
+                "id=" + id + ", " +
+                "maxLevel=" + maxLevel + ", " +
+                "psd=" + psd + ", " +
+                "invisible=" + invisible + ']';
+    }
+
     public static StaticSkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {
         final Map<SkillStat, List<Integer>> stats = new EnumMap<>(SkillStat.class);
         int maxLevel = 0;

@@ -140,13 +140,13 @@ public final class Field {
             switch (lifeInfo.getLifeType()) {
                 case NPC -> {
                     final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.getTemplateId());
-                    final Npc npc = new Npc(lifeInfo, npcInfoResult.orElse(null));
+                    final Npc npc = Npc.from(lifeInfo, npcInfoResult.orElseThrow());
                     npc.setField(field);
                     field.addLife(npc);
                 }
                 case MOB -> {
                     final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(lifeInfo.getTemplateId());
-                    final Mob mob = new Mob(lifeInfo, mobInfoResult.orElse(null));
+                    final Mob mob = Mob.from(lifeInfo, mobInfoResult.orElseThrow());
                     mob.setField(field);
                     field.addLife(mob);
                 }

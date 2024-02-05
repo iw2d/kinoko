@@ -7,7 +7,7 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
     private final int[] flags;
 
     public BitFlag(int size) {
-        assert(size % 32 == 0);
+        assert (size % 32 == 0);
         this.flags = new int[size / 32];
     }
 

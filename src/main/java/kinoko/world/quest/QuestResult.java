@@ -4,20 +4,20 @@ import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 
 public final class QuestResult implements Encodable {
-    private final QuestAction questAction;
+    private final QuestResultType questResultType;
     private int questId;
     private int nextQuestId;
     private int templateId;
     private int time;
 
-    public QuestResult(QuestAction questAction) {
-        this.questAction = questAction;
+    public QuestResult(QuestResultType questResultType) {
+        this.questResultType = questResultType;
     }
 
     @Override
     public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(questAction.getValue());
-        switch (questAction) {
+        outPacket.encodeByte(questResultType.getValue());
+        switch (questResultType) {
             case START_QUEST_TIMER -> {
                 outPacket.encodeShort(1);
                 outPacket.encodeShort(questId);
