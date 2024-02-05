@@ -3,6 +3,7 @@ package kinoko.provider.mob;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.world.life.mob.MobSkillType;
 
 import java.util.HashMap;
 import java.util.Map;

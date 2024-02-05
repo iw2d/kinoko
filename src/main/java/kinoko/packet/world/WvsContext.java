@@ -1,6 +1,5 @@
 package kinoko.packet.world;
 
-import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.CharacterData;

@@ -1,6 +1,7 @@
 package kinoko.handler.script;
 
 import kinoko.handler.Handler;
+import kinoko.packet.script.ScriptMessageType;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
@@ -8,7 +9,6 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.server.script.ScriptManager;
-import kinoko.server.script.ScriptMessageType;
 import kinoko.world.life.Life;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.quest.QuestRequestType;

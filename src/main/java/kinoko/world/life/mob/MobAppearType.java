@@ -1,6 +1,6 @@
 package kinoko.world.life.mob;
 
-public enum AppearType {
+public enum MobAppearType {
     NORMAL(-1),
     REGEN(-2),
     REVIVED(-3),
@@ -10,7 +10,7 @@ public enum AppearType {
 
     private final byte value;
 
-    AppearType(int value) {
+    MobAppearType(int value) {
         this.value = (byte) value;
     }
 

@@ -10,12 +10,12 @@ public final class QuestInfo {
     private final int questId;
     private final boolean autoStart;
     private final boolean autoComplete;
-    private final Set<QuestAct> startActs;
-    private final Set<QuestAct> completeActs;
+    private final Set<QuestAction> startActs;
+    private final Set<QuestAction> completeActs;
     private final Set<QuestCheck> startChecks;
     private final Set<QuestCheck> completeChecks;
 
-    public QuestInfo(int questId, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs,
+    public QuestInfo(int questId, boolean autoStart, boolean autoComplete, Set<QuestAction> startActs, Set<QuestAction> completeActs,
                      Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
         this.questId = questId;
         this.autoStart = autoStart;
@@ -38,11 +38,11 @@ public final class QuestInfo {
         return autoComplete;
     }
 
-    public Set<QuestAct> getStartActs() {
+    public Set<QuestAction> getStartActs() {
         return startActs;
     }
 
-    public Set<QuestAct> getCompleteActs() {
+    public Set<QuestAction> getCompleteActs() {
         return completeActs;
     }
 
@@ -94,12 +94,12 @@ public final class QuestInfo {
         );
     }
 
-    private static Set<QuestAct> resolveQuestActs(WzListProperty actProps) {
-        final Set<QuestAct> questActs = new HashSet<>();
+    private static Set<QuestAction> resolveQuestActs(WzListProperty actProps) {
+        final Set<QuestAction> questActions = new HashSet<>();
         for (var entry : actProps.getItems().entrySet()) {
             // TODO
         }
-        return questActs;
+        return questActions;
     }
 
     private static Set<QuestCheck> resolveQuestChecks(WzListProperty checkProps) {

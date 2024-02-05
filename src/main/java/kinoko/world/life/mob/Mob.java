@@ -21,14 +21,14 @@ public final class Mob extends Life implements ControlledObject {
     private final Map<MobSkill, Instant> skillCooltimes = new ConcurrentHashMap<>();
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final MobInfo mobInfo;
-    private final AppearType appearType;
+    private final MobAppearType appearType;
 
     private User controller;
     private int currentFh;
     private int hp;
     private int mp;
 
-    public Mob(int x, int y, int fh, MobInfo mobInfo, AppearType appearType) {
+    public Mob(int x, int y, int fh, MobInfo mobInfo, MobAppearType appearType) {
         this.mobInfo = mobInfo;
         this.appearType = appearType;
 
@@ -148,7 +148,7 @@ public final class Mob extends Life implements ControlledObject {
         outPacket.encodeShort(getCurrentFh()); // pvcMobActiveObj (current foothold)
         outPacket.encodeShort(getFh()); // Foothold (start foothold)
         outPacket.encodeByte(appearType.getValue()); // nAppearType
-        if (appearType == AppearType.REVIVED || appearType.getValue() >= 0) {
+        if (appearType == MobAppearType.REVIVED || appearType.getValue() >= 0) {
             outPacket.encodeInt(0); // dwOption
         }
         outPacket.encodeByte(0); // nTeamForMCarnival
@@ -162,7 +162,7 @@ public final class Mob extends Life implements ControlledObject {
                 lifeInfo.getY(),
                 lifeInfo.getFh(),
                 mobInfo,
-                AppearType.NORMAL
+                MobAppearType.NORMAL
         );
     }
 }

@@ -1,7 +1,7 @@
 package kinoko.server.command;
 
+import kinoko.packet.world.Message;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.mob.MobInfo;
@@ -10,8 +10,8 @@ import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
-import kinoko.world.life.mob.AppearType;
 import kinoko.world.life.mob.Mob;
+import kinoko.world.life.mob.MobAppearType;
 import kinoko.world.user.User;
 
 import java.util.Optional;
@@ -83,7 +83,7 @@ public final class AdminCommands {
                 user.getY(),
                 user.getFh(),
                 mobInfoResult.get(),
-                AppearType.NORMAL
+                MobAppearType.NORMAL
         );
         mob.setField(user.getField());
         user.getField().addLife(mob);

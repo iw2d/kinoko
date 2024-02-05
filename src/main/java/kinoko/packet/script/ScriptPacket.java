@@ -2,7 +2,6 @@ package kinoko.packet.script;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.server.script.ScriptMessage;
 import kinoko.world.quest.QuestResult;
 
 public final class ScriptPacket {
