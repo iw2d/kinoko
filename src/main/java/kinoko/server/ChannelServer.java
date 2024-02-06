@@ -6,7 +6,9 @@ import kinoko.handler.life.MobHandler;
 import kinoko.handler.life.NpcHandler;
 import kinoko.handler.script.ScriptHandler;
 import kinoko.handler.stage.MigrationHandler;
+import kinoko.handler.user.AttackHandler;
 import kinoko.handler.user.UserHandler;
+import kinoko.handler.user.SkillHandler;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;
 import kinoko.server.header.InHeader;
@@ -27,6 +29,8 @@ public final class ChannelServer extends NettyServer {
             MobHandler.class,
             NpcHandler.class,
             UserHandler.class,
+            AttackHandler.class,
+            SkillHandler.class,
             ScriptHandler.class
     );
     private final int worldId;

@@ -49,6 +49,7 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 log.error("Exception caught while handling packet", e);
+                e.printStackTrace();
             }
         }
     }

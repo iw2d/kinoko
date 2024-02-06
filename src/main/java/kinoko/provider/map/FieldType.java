@@ -71,7 +71,7 @@ public enum FieldType {
         return value;
     }
 
-    public static FieldType getFromValue(int value) {
+    public static FieldType getByValue(int value) {
         for (FieldType type : values()) {
             if (type.getValue() == value) {
                 return type;

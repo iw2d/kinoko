@@ -39,7 +39,7 @@ public enum FieldOption {
         return value;
     }
 
-    public static Set<FieldOption> getFromLimit(int fieldLimit) {
+    public static Set<FieldOption> getByLimit(int fieldLimit) {
         final Set<FieldOption> fieldOptions = new HashSet<>();
         for (FieldOption option : values()) {
             if ((fieldLimit & option.getValue()) != 0) {

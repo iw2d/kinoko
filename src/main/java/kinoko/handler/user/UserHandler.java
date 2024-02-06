@@ -9,6 +9,8 @@ import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.life.MovePath;
+import kinoko.world.user.HitInfo;
+import kinoko.world.user.HitType;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,8 +36,67 @@ public final class UserHandler {
 
     @Handler(InHeader.USER_SIT_REQUEST)
     public static void handleUserSitRequest(User user, InPacket inPacket) {
+        // CUserLocal::HandleXKeyDown, CWvsContext::SendGetUpFromChairRequest
         final short fieldSeatId = inPacket.decodeShort();
-        user.write(UserLocalPacket.userSitResult(fieldSeatId != -1, fieldSeatId));
+        user.write(UserLocalPacket.userSitResult(fieldSeatId != -1, fieldSeatId)); // broadcast not required
+    }
+
+    @Handler(InHeader.USER_PORTABLE_CHAIR_SIT_REQUEST)
+    public static void handleUserPortableChairSitRequest(User user, InPacket inPacket) {
+        // CWvsContext::SendSitOnPortableChairRequest
+        final int itemId = inPacket.decodeInt(); // nItemID
+        user.getField().broadcastPacket(UserRemotePacket.userSetActivePortableChair(user.getCharacterId(), itemId), user); // self-cast not required
+    }
+
+    @Handler(InHeader.USER_HIT)
+    public static void handleUserHit(User user, InPacket inPacket) {
+        // CUserLocal::SetDamaged, CUserLocal::Update
+        inPacket.decodeInt(); // get_update_time()
+
+        final int attackIndex = inPacket.decodeByte(); // nAttackIdx
+        final HitType hitType = HitType.getByValue(attackIndex);
+        if (hitType == null) {
+            log.error("Unknown hit type (attack index) received : {}", attackIndex);
+            return;
+        }
+        final HitInfo hitInfo = new HitInfo(hitType);
+        switch (hitType) {
+            case MOB_PHYSICAL, MOB_MAGIC -> {
+                hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
+                hitInfo.damage = inPacket.decodeInt(); // nDamage
+                hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
+                hitInfo.mobId = inPacket.decodeInt(); // MobID
+                hitInfo.dir = inPacket.decodeByte(); // nDir
+                hitInfo.reflect = inPacket.decodeByte(); // nX = 0
+                hitInfo.guard = inPacket.decodeByte(); // bGuard
+                final byte knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
+                if (knockback > 0 || hitInfo.reflect != 0) {
+                    hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
+                    hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
+                    hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction
+                    hitInfo.reflectMobX = inPacket.decodeShort(); // ptHit.x
+                    hitInfo.reflectMobY = inPacket.decodeShort(); // ptHit.y
+                    inPacket.decodeShort(); // this->GetPos()->x
+                    inPacket.decodeShort(); // this->GetPos()->y
+                }
+                hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
+            }
+            case COUNTER, OBSTACLE -> {
+                inPacket.decodeByte(); // 0
+                hitInfo.damage = inPacket.decodeInt(); // nDamage
+                hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
+                inPacket.decodeByte(); // 0
+            }
+            case STAT -> {
+                hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
+                hitInfo.damage = inPacket.decodeInt(); // nDamage
+                hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
+                hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
+            }
+        }
+
+        // TODO: update stats
+        user.getField().broadcastPacket(UserRemotePacket.userHit(user.getCharacterId(), hitInfo), user);
     }
 
     @Handler(InHeader.USER_CHAT)

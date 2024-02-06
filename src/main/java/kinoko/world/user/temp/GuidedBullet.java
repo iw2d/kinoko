@@ -2,7 +2,7 @@ package kinoko.world.user.temp;
 
 import kinoko.server.packet.OutPacket;
 
-public class GuidedBullet extends TwoStateTemporaryStat {
+public final class GuidedBullet extends TwoStateTemporaryStat {
     private int mobId;
 
     public GuidedBullet() {
