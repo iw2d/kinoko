@@ -4,6 +4,32 @@ import kinoko.world.job.JobConstants;
 
 public final class SkillConstants {
 
+    public static boolean isKeydownSkill(int skillId) {
+        switch (skillId) {
+            case 2121001:
+            case 2221001:
+            case 2321001:
+            case 3121004:
+            case 3221001:
+            case 4341002:
+            case 4341003:
+            case 5101004:
+            case 5201002:
+            case 5221004:
+            case 13111002:
+            case 14111006:
+            case 15101003:
+            case 22121000:
+            case 22151001:
+            case 33101005:
+            case 33121009:
+            case 35001001:
+            case 35101009:
+                return true;
+        }
+        return false;
+    }
+
     public static boolean isIgnoreMasterLevelForCommon(int skillId) {
         switch (skillId) {
             case 1120012:

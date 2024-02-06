@@ -3,13 +3,64 @@ package kinoko.packet.user;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.life.MovePath;
+import kinoko.world.user.Attack;
+import kinoko.world.user.AttackInfo;
 import kinoko.world.user.HitInfo;
+import kinoko.world.user.User;
 
 public final class UserRemotePacket {
-    public static OutPacket userMove(int characterId, MovePath movePath) {
+    public static OutPacket userMove(User user, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT);
-        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(user.getCharacterId());
         movePath.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket userAttack(User user, Attack a) {
+        final OutPacket outPacket = OutPacket.of(a.getHeaderType());
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(a.mask); // nDamagePerMob | (16 * nMobCount)
+        outPacket.encodeByte(user.getLevel()); // nLevel
+        outPacket.encodeByte(a.slv);
+        if (a.slv != 0) {
+            outPacket.encodeInt(a.skillId);
+        }
+        if (a.skillId == 3211006) {
+            outPacket.encodeByte(0); // nPassiveSLV
+            if (false) {
+                outPacket.encodeInt(0); // nSkillID
+            }
+        }
+        outPacket.encodeByte(a.flag);
+        outPacket.encodeShort(a.actionAndDir);
+        if (a.getAction() <= 0x110) {
+            outPacket.encodeByte(a.attackSpeed);
+            outPacket.encodeByte(a.mastery);
+            outPacket.encodeInt(a.bulletItemId);
+            for (AttackInfo ai : a.getAttackInfo()) {
+                outPacket.encodeInt(ai.mobId);
+                if (ai.mobId == 0) {
+                    continue;
+                }
+                if (a.skillId == 4211006) {
+
+                } else if (a.getDamagePerMob() > 0) {
+                    for (int i = 0; i < a.getDamagePerMob(); i++) {
+                        outPacket.encodeByte(ai.critical[i]);
+                        outPacket.encodeInt(ai.damage[i]);
+                    }
+                }
+            }
+            if (a.getHeaderType() == OutHeader.USER_SHOOT_ATTACK) { // nType == 212
+                outPacket.encodeShort(0); // ptBallStart.x
+                outPacket.encodeShort(0); // ptBallStart.y
+            }
+            if (a.skillId == 2121001 || a.skillId == 2221001 || a.skillId == 2321001 || a.skillId == 22121000 || a.skillId == 22151001) {
+                outPacket.encodeInt(a.keyDown); // tKeyDown
+            } else if (a.skillId == 33101007) {
+                outPacket.encodeInt(0); // dwSwallowMobTemplateID
+            }
+        }
         return outPacket;
     }
 
@@ -41,18 +92,18 @@ public final class UserRemotePacket {
         return outPacket;
     }
 
-    public static OutPacket userEmotion(int characterId, int emotion, int duration, boolean isByItemOption) {
+    public static OutPacket userEmotion(User user, int emotion, int duration, boolean isByItemOption) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_EMOTION);
-        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(emotion);
         outPacket.encodeInt(duration);
         outPacket.encodeByte(isByItemOption); // bEmotionByItemOption
         return outPacket;
     }
 
-    public static OutPacket userSetActivePortableChair(int characterId, int itemId) {
+    public static OutPacket userSetActivePortableChair(User user, int itemId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
-        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(itemId); // nPortableChairID
         return outPacket;
     }

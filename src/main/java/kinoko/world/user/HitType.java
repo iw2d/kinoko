@@ -1,7 +1,5 @@
 package kinoko.world.user;
 
-import kinoko.world.item.ItemType;
-
 /**
  * Enum AttackIndex.
  */
@@ -12,7 +10,7 @@ public enum HitType {
     OBSTACLE(-3),
     STAT(-4);
 
-    private int value;
+    private final int value;
 
     HitType(int value) {
         this.value = value;

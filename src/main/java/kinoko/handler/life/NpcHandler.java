@@ -31,6 +31,6 @@ public final class NpcHandler {
         }
 
         final MovePath movePath = npc.isMove() ? MovePath.decode(inPacket) : null;
-        field.broadcastPacket(NpcPacket.npcMove(objectId, oneTimeAction, chatIndex, movePath));
+        field.broadcastPacket(NpcPacket.npcMove(npc, oneTimeAction, chatIndex, movePath));
     }
 }

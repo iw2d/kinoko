@@ -31,7 +31,7 @@ public final class UserHandler {
 
         final MovePath movePath = MovePath.decode(inPacket);
         movePath.applyTo(user);
-        user.getField().broadcastPacket(UserRemotePacket.userMove(user.getCharacterId(), movePath), user);
+        user.getField().broadcastPacket(UserRemotePacket.userMove(user, movePath), user);
     }
 
     @Handler(InHeader.USER_SIT_REQUEST)
@@ -45,7 +45,7 @@ public final class UserHandler {
     public static void handleUserPortableChairSitRequest(User user, InPacket inPacket) {
         // CWvsContext::SendSitOnPortableChairRequest
         final int itemId = inPacket.decodeInt(); // nItemID
-        user.getField().broadcastPacket(UserRemotePacket.userSetActivePortableChair(user.getCharacterId(), itemId), user); // self-cast not required
+        user.getField().broadcastPacket(UserRemotePacket.userSetActivePortableChair(user, itemId), user); // self-cast not required
     }
 
     @Handler(InHeader.USER_HIT)
@@ -109,7 +109,7 @@ public final class UserHandler {
             return;
         }
 
-        user.getField().broadcastPacket(UserCommonPacket.userChat(user.getCharacterId(), 0, text, onlyBalloon));
+        user.getField().broadcastPacket(UserCommonPacket.userChat(user, 0, text, onlyBalloon));
     }
 
     @Handler(InHeader.USER_EMOTION)
@@ -118,6 +118,6 @@ public final class UserHandler {
         final int duration = inPacket.decodeInt(); // nDuration
         final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
 
-        user.getField().broadcastPacket(UserRemotePacket.userEmotion(user.getCharacterId(), emotion, duration, isByItemOption), user);
+        user.getField().broadcastPacket(UserRemotePacket.userEmotion(user, emotion, duration, isByItemOption), user);
     }
 }

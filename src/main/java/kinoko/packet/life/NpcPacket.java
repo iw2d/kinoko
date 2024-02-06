@@ -32,9 +32,9 @@ public final class NpcPacket {
         return outPacket;
     }
 
-    public static OutPacket npcMove(int objectId, byte oneTimeAction, byte chatIndex, MovePath movePath) {
+    public static OutPacket npcMove(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_MOVE);
-        outPacket.encodeInt(objectId);
+        outPacket.encodeInt(npc.getObjectId());
         outPacket.encodeByte(oneTimeAction);
         outPacket.encodeByte(chatIndex);
         if (movePath != null) {
