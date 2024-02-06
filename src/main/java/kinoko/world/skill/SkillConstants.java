@@ -4,6 +4,18 @@ import kinoko.world.job.JobConstants;
 
 public final class SkillConstants {
 
+    public static boolean isMagicKeydownSkill(int skillId) {
+        switch (skillId) {
+            case 2121001:
+            case 2221001:
+            case 2321001:
+            case 22121000:
+            case 22151000:
+                return true;
+        }
+        return false;
+    }
+
     public static boolean isKeydownSkill(int skillId) {
         switch (skillId) {
             case 2121001:

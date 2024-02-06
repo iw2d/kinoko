@@ -20,6 +20,13 @@ public final class Attack {
     public byte mastery;
     public int bulletItemId;
 
+    public short userX;
+    public short userY;
+    public short grenadeX;
+    public short grenadeY;
+    public short dragonX;
+    public short dragonY;
+
     public Attack(OutHeader headerType) {
         this.headerType = headerType;
     }
@@ -73,6 +80,6 @@ public final class Attack {
     }
 
     public boolean isLeft() {
-        return ((actionAndDir >> 15) & 1) != 0;
+        return (actionAndDir & 0x8000) != 0;
     }
 }

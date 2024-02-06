@@ -3,6 +3,7 @@ package kinoko.packet.user;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.life.MovePath;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Attack;
 import kinoko.world.user.AttackInfo;
 import kinoko.world.user.HitInfo;
@@ -55,7 +56,7 @@ public final class UserRemotePacket {
                 outPacket.encodeShort(0); // ptBallStart.x
                 outPacket.encodeShort(0); // ptBallStart.y
             }
-            if (a.skillId == 2121001 || a.skillId == 2221001 || a.skillId == 2321001 || a.skillId == 22121000 || a.skillId == 22151001) {
+            if (SkillConstants.isMagicKeydownSkill(a.skillId)) {
                 outPacket.encodeInt(a.keyDown); // tKeyDown
             } else if (a.skillId == 33101007) {
                 outPacket.encodeInt(0); // dwSwallowMobTemplateID
