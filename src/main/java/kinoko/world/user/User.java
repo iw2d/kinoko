@@ -8,6 +8,7 @@ import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
 import kinoko.world.life.Life;
+import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.Set;
 

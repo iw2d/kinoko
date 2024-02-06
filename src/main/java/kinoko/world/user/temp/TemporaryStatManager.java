@@ -1,8 +1,7 @@
-package kinoko.world.user;
+package kinoko.world.user.temp;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
-import kinoko.util.Option;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -19,9 +18,7 @@ public final class TemporaryStatManager {
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.LOCAL_ENCODE_ORDER) {
             if (statFlag.hasFlag(cts)) {
-                outPacket.encodeShort(stats.get(cts).nOption);
-                outPacket.encodeInt(stats.get(cts).rOption);
-                outPacket.encodeInt(stats.get(cts).tOption);
+                stats.get(cts).encode(outPacket);
             }
         }
 
@@ -44,6 +41,12 @@ public final class TemporaryStatManager {
 
         if (statFlag.hasFlag(CharacterTemporaryStat.BlessingArmor)) {
             outPacket.encodeInt(stats.get(CharacterTemporaryStat.BlessingArmor).nOption); // nBlessingArmorIncPAD
+        }
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
+            if (statFlag.hasFlag(cts)) {
+                stats.get(cts).encode(outPacket);
+            }
         }
     }
 
@@ -76,5 +79,11 @@ public final class TemporaryStatManager {
 
         outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt, new Option()).nOption);
         outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState, new Option()).nOption);
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
+            if (statFlag.hasFlag(cts)) {
+                stats.get(cts).encode(outPacket);
+            }
+        }
     }
 }

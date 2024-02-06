@@ -12,8 +12,8 @@ import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.TemporaryStatManager;
 import kinoko.world.user.User;
+import kinoko.world.user.temp.TemporaryStatManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

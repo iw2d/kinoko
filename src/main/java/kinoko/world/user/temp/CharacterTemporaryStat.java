@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.user.temp;
 
 import kinoko.util.BitIndex;
 
@@ -158,6 +158,9 @@ public enum CharacterTemporaryStat implements BitIndex {
             RespectPImmune, RespectMImmune, DefenseAtt, DefenseState, DojangBerserk, DojangInvincible, WindWalk,
             RepeatEffect, StopPortion, StopMotion, Fear, MagicShield, Flying, Frozen, SuddenDeath, FinalCut, Cyclone,
             Sneak, MorewildDamageUp, Mechanic, DarkAura, BlueAura, YellowAura, BlessingArmor
+    );
+    public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
+            EnergyCharged, DashSpeed, DashJump, RideVehicle, PartyBooster, GuidedBullet, Undead
     );
     public static final List<CharacterTemporaryStat> SWALLOW_BUFF = List.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion

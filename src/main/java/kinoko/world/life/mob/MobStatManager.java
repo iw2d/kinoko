@@ -2,7 +2,6 @@ package kinoko.world.life.mob;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
-import kinoko.util.Option;
 import kinoko.util.Tuple;
 
 import java.util.EnumMap;
@@ -10,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class MobStatManager {
-    private final Map<MobStat, Option> stats = new EnumMap<>(MobStat.class);
+    private final Map<MobStat, MobStatOption> stats = new EnumMap<>(MobStat.class);
     private final Map<Tuple<Integer, Integer>, BurnedInfo> burnedInfos = new HashMap<>();
     // TODO: scheduler and lock
     private final BitFlag<MobStat> setStatFlag = new BitFlag<>(MobStat.FLAG_SIZE);
@@ -25,9 +24,7 @@ public final class MobStatManager {
         // MobStat::DecodeTemporary
         for (MobStat ms : MobStat.ENCODE_ORDER) {
             if (statFlag.hasFlag(ms)) {
-                outPacket.encodeShort(stats.get(ms).nOption);
-                outPacket.encodeInt(stats.get(ms).rOption);
-                outPacket.encodeShort(stats.get(ms).tOption);
+                stats.get(ms).encode(outPacket);
             }
         }
         if (statFlag.hasFlag(MobStat.Burned)) {
