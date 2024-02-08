@@ -1,5 +1,6 @@
 package kinoko.world.quest;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -31,15 +32,6 @@ public final class QuestManager {
         questRecords.put(questRecord.getQuestId(), questRecord);
     }
 
-    public Optional<QuestRecord> newQuestRecord(int questId) {
-        final Optional<QuestRecord> questRecordResult = QuestRecord.createById(questId);
-        if (questRecordResult.isEmpty()) {
-            return Optional.empty();
-        }
-        addQuestRecord(questRecordResult.get());
-        return questRecordResult;
-    }
-
     public Optional<QuestRecord> getQuestRecord(int questId) {
         if (questRecords.containsKey(questId)) {
             return Optional.empty();
@@ -49,5 +41,34 @@ public final class QuestManager {
 
     public Set<QuestRecord> getQuestRecords() {
         return questRecords.values().stream().collect(Collectors.toUnmodifiableSet());
+    }
+
+    public Optional<QuestRecord> startQuest(int questId) {
+        final Optional<QuestRecord> questRecordResult = QuestRecord.createById(questId);
+        if (questRecordResult.isEmpty()) {
+            return Optional.empty();
+        }
+        addQuestRecord(questRecordResult.get());
+        return questRecordResult;
+    }
+
+    public Optional<QuestRecord> completeQuest(int questId) {
+        final QuestRecord questRecord = questRecords.get(questId);
+        if (questRecord == null) {
+            return Optional.empty();
+        }
+        questRecord.setQuestState(QuestState.COMPLETE);
+        questRecord.setCompletedTime(Instant.now());
+        return Optional.of(questRecord);
+    }
+
+    public Optional<QuestRecord> resignQuest(int questId) {
+        final QuestRecord questRecord = questRecords.get(questId);
+        if (questRecord == null || questRecord.getQuestState() != QuestState.PERFORM) {
+            return Optional.empty();
+        }
+        questRecords.remove(questId);
+        questRecord.setQuestState(QuestState.NONE);
+        return Optional.of(questRecord);
     }
 }

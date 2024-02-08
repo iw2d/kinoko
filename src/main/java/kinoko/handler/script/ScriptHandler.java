@@ -15,6 +15,7 @@ import kinoko.world.life.Life;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
+import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -118,7 +119,7 @@ public final class ScriptHandler {
                     final short x = inPacket.decodeShort(); // ptUserPos.x
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
-                final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().newQuestRecord(questId);
+                final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().startQuest(questId);
                 if (questRecordResult.isEmpty()) {
                     log.error("Failed to accept quest : {}", questId);
                     return;
@@ -133,11 +134,20 @@ public final class ScriptHandler {
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
                 final int index = inPacket.decodeInt(); // nIdx
-                // user.getCharacterData().getQuestManager().completeQuest(questId);
+                final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().completeQuest(questId);
+                if (questRecordResult.isEmpty()) {
+                    log.error("Failed to complete quest : {}", questId);
+                    return;
+                }
+                user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
             }
             case RESIGN_QUEST -> {
-                // TODO
-                // user.getCharacterData().getQuestManager().resignQuest(questId);
+                final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().resignQuest(questId);
+                if (questRecordResult.isEmpty()) {
+                    log.error("Failed to resign quest : {}", questId);
+                    return;
+                }
+                user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
             }
             case OPENING_SCRIPT, COMPLETE_SCRIPT -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID

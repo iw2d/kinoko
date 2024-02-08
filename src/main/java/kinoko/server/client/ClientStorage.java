@@ -4,7 +4,9 @@ import kinoko.world.Account;
 import kinoko.world.user.User;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public final class ClientStorage {
     private final Map<Integer, Client> connectedAccounts = new ConcurrentHashMap<>(); // getAccountId -> Client
@@ -38,6 +40,10 @@ public final class ClientStorage {
         if (user != null) {
             connectedUsers.remove(user.getCharacterId());
         }
+    }
+
+    public Set<Client> getConnectedClients() {
+        return connectedAccounts.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 
     public int getUserCount() {

@@ -187,6 +187,9 @@ public final class Server {
         loginServer.stop().join();
         for (World world : getWorlds()) {
             for (ChannelServer channelServer : world.getChannels()) {
+                for (Client client : channelServer.getClientStorage().getConnectedClients()) {
+                    client.close();
+                }
                 channelServer.stop().join();
             }
         }
