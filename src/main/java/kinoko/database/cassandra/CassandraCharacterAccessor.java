@@ -8,6 +8,7 @@ import kinoko.database.CharacterAccessor;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.world.item.Inventory;
 import kinoko.world.quest.QuestManager;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
@@ -17,6 +18,7 @@ import kinoko.world.user.CharacterStat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
@@ -48,6 +50,12 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setSkillManager(sm);
 
         final QuestManager qm = new QuestManager();
+        final Set<QuestRecord> questRecords = row.getSet(CharacterTable.QUEST_RECORDS, QuestRecord.class);
+        if (questRecords != null) {
+            for (QuestRecord qr : questRecords) {
+                qm.addQuestRecord(qr);
+            }
+        }
         cd.setQuestManager(qm);
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(CharacterTable.ITEM_SN_COUNTER)));
@@ -154,6 +162,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getCharacterInventory().getEtcInventory(), registry))
                         .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getCharacterInventory().getCashInventory(), registry))
                         .setColumn(CharacterTable.MONEY, literal(characterData.getCharacterInventory().getMoney()))
+                        .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))

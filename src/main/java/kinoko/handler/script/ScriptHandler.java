@@ -2,6 +2,8 @@ package kinoko.handler.script;
 
 import kinoko.handler.Handler;
 import kinoko.packet.script.ScriptMessageType;
+import kinoko.packet.world.Message;
+import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
@@ -11,6 +13,7 @@ import kinoko.server.script.ScriptDispatcher;
 import kinoko.server.script.ScriptManager;
 import kinoko.world.life.Life;
 import kinoko.world.life.npc.Npc;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -115,7 +118,12 @@ public final class ScriptHandler {
                     final short x = inPacket.decodeShort(); // ptUserPos.x
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
-                // user.getCharacterData().getQuestManager().acceptQuest(questId);
+                final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().newQuestRecord(questId);
+                if (questRecordResult.isEmpty()) {
+                    log.error("Failed to accept quest : {}", questId);
+                    return;
+                }
+                user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
             }
             case COMPLETE_QUEST -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID

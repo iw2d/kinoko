@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CharacterData implements Encodable {
@@ -249,15 +250,17 @@ public final class CharacterData implements Encodable {
             }
         }
         if (flag.hasFlag(DBChar.QUEST_RECORD)) {
-            outPacket.encodeShort(getQuestManager().getStartedQuests().size());
-            for (QuestRecord qr : getQuestManager().getStartedQuests().values()) {
+            final Set<QuestRecord> questRecords = getQuestManager().getStartedQuests();
+            outPacket.encodeShort(questRecords.size());
+            for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
                 outPacket.encodeString(qr.getQuestInfo());
             }
         }
         if (flag.hasFlag(DBChar.QUEST_COMPLETE)) {
-            outPacket.encodeShort(getQuestManager().getCompletedQuests().size());
-            for (QuestRecord qr : getQuestManager().getCompletedQuests().values()) {
+            final Set<QuestRecord> questRecords = getQuestManager().getCompletedQuests();
+            outPacket.encodeShort(questRecords.size());
+            for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
                 outPacket.encodeFT(qr.getCompletedTime());
             }
@@ -285,8 +288,9 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord
         }
         if (flag.hasFlag(DBChar.QUEST_RECORD_EX)) {
-            outPacket.encodeShort(getQuestManager().getExQuests().size());
-            for (QuestRecord qr : getQuestManager().getExQuests().values()) {
+            final Set<QuestRecord> questRecords = getQuestManager().getExQuests();
+            outPacket.encodeShort(questRecords.size());
+            for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
                 outPacket.encodeString(qr.getQuestInfo());
             }

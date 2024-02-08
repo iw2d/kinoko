@@ -23,13 +23,13 @@ public final class PetDataUDT {
         session.execute(
                 SchemaBuilder.createType(keyspace, getTypeName())
                         .ifNotExists()
-                        .withField(PetDataUDT.PET_NAME, DataTypes.TEXT)
-                        .withField(PetDataUDT.LEVEL, DataTypes.TINYINT)
-                        .withField(PetDataUDT.FULLNESS, DataTypes.TINYINT)
-                        .withField(PetDataUDT.TAMENESS, DataTypes.SMALLINT)
-                        .withField(PetDataUDT.PET_SKILL, DataTypes.SMALLINT)
-                        .withField(PetDataUDT.PET_ATTRIBUTE, DataTypes.SMALLINT)
-                        .withField(PetDataUDT.REMAIN_LIFE, DataTypes.INT)
+                        .withField(PET_NAME, DataTypes.TEXT)
+                        .withField(LEVEL, DataTypes.TINYINT)
+                        .withField(FULLNESS, DataTypes.TINYINT)
+                        .withField(TAMENESS, DataTypes.SMALLINT)
+                        .withField(PET_SKILL, DataTypes.SMALLINT)
+                        .withField(PET_ATTRIBUTE, DataTypes.SMALLINT)
+                        .withField(REMAIN_LIFE, DataTypes.INT)
                         .build()
         );
     }

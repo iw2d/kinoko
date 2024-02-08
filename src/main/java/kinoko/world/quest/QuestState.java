@@ -16,4 +16,13 @@ public enum QuestState {
     public final int getValue() {
         return value;
     }
+
+    public static QuestState getByValue(int value) {
+        for (QuestState state : values()) {
+            if (state.getValue() == value) {
+                return state;
+            }
+        }
+        return null;
+    }
 }

@@ -24,7 +24,7 @@ public enum ItemType {
         return null;
     }
 
-    public static ItemType getById(int itemId) {
+    public static ItemType getByItemId(int itemId) {
         if (ItemConstants.isEquip(itemId)) {
             return EQUIP;
         } else if (ItemConstants.isPet(itemId)) {

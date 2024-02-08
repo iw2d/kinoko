@@ -44,13 +44,13 @@ public final class Message implements Encodable {
                 outPacket.encodeByte(questRecord.getQuestState().getValue());
                 switch (questRecord.getQuestState()) {
                     case NONE -> {
+                        outPacket.encodeByte(true); // delete quest
+                    }
+                    case PERFORM -> {
                         outPacket.encodeString(questRecord.getQuestInfo());
                     }
                     case COMPLETE -> {
                         outPacket.encodeFT(questRecord.getCompletedTime());
-                    }
-                    default -> {
-                        outPacket.encodeByte(true); // delete quest
                     }
                 }
             }

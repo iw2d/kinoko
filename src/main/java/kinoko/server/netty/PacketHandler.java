@@ -67,6 +67,7 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("Exception caught", cause);
+        cause.printStackTrace();
     }
 
     public static Map<InHeader, Method> loadHandlers(Class<?>... handlerClasses) {

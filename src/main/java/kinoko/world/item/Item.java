@@ -132,7 +132,7 @@ public final class Item implements Encodable {
             return Optional.empty();
         }
         final ItemInfo ii = itemInfoResult.get();
-        final ItemType type = ItemType.getById(itemId);
+        final ItemType type = ItemType.getByItemId(itemId);
         final Item item = new Item(type);
         item.setItemSn(itemSn);
         item.setItemId(itemId);
