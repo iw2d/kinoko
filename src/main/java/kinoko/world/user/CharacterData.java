@@ -5,7 +5,6 @@ import kinoko.util.FileTime;
 import kinoko.world.Encodable;
 import kinoko.world.item.Item;
 import kinoko.world.job.JobConstants;
-import kinoko.world.job.WildHunterInfo;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;

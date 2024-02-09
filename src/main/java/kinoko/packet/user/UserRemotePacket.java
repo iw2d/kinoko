@@ -3,10 +3,10 @@ package kinoko.packet.user;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.life.MovePath;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.AttackInfo;
+import kinoko.world.skill.HitInfo;
 import kinoko.world.skill.SkillConstants;
-import kinoko.world.user.Attack;
-import kinoko.world.user.AttackInfo;
-import kinoko.world.user.HitInfo;
 import kinoko.world.user.User;
 
 public final class UserRemotePacket {

@@ -137,6 +137,7 @@ public final class Server {
         NpcProvider.initialize();
         SkillProvider.initialize();
         QuestProvider.initialize();
+        StringProvider.initialize();
         EtcProvider.initialize();
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());

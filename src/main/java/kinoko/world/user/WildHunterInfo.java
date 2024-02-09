@@ -1,4 +1,4 @@
-package kinoko.world.job;
+package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;

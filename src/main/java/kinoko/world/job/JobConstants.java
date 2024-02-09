@@ -1,32 +1,36 @@
 package kinoko.world.job;
 
 public final class JobConstants {
-    public static int getJobLevel(int job) {
-        if (job % 100 != 0 || job == 2001) {
+    public static int getJobLevel(int jobId) {
+        if (jobId % 100 != 0 || jobId == 2001) {
             return 1;
         }
         int jobLevel;
-        if (job / 10 == 43) {
-            jobLevel = (job - 430) / 2;
+        if (jobId / 10 == 43) {
+            jobLevel = (jobId - 430) / 2;
         } else {
-            jobLevel = job % 10;
+            jobLevel = jobId % 10;
         }
         jobLevel += 2;
-        if (jobLevel >= 2 && (jobLevel <= 4 || jobLevel <= 10 && isEvanJob(job))) {
+        if (jobLevel >= 2 && (jobLevel <= 4 || jobLevel <= 10 && isEvanJob(jobId))) {
             return jobLevel;
         }
         return 0;
     }
 
-    public static boolean isEvanJob(int job) {
-        return job / 100 == 22 || job == 2001;
+    public static boolean isAranJob(int jobId) {
+        return jobId / 100 == 21 || jobId == 2000;
     }
 
-    public static boolean isDualJob(int job) {
-        return job / 10 == 43;
+    public static boolean isEvanJob(int jobId) {
+        return jobId / 100 == 22 || jobId == 2001;
     }
 
-    public static boolean isWildHunterJob(int job) {
-        return job / 100 == 33;
+    public static boolean isDualJob(int jobId) {
+        return jobId / 10 == 43;
+    }
+
+    public static boolean isWildHunterJob(int jobId) {
+        return jobId / 100 == 33;
     }
 }

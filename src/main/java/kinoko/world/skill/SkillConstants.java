@@ -3,7 +3,6 @@ package kinoko.world.skill;
 import kinoko.world.job.JobConstants;
 
 public final class SkillConstants {
-
     public static boolean isMagicKeydownSkill(int skillId) {
         switch (skillId) {
             case 2121001:
@@ -70,21 +69,21 @@ public final class SkillConstants {
         if (isIgnoreMasterLevelForCommon(skillId)) {
             return false;
         }
-        final int job = skillId / 10000;
-        if (JobConstants.isEvanJob(job)) {
-            final int jobLevel = JobConstants.getJobLevel(job);
+        final int jobId = skillId / 10000;
+        if (JobConstants.isEvanJob(jobId)) {
+            final int jobLevel = JobConstants.getJobLevel(jobId);
             return jobLevel == 0 || jobLevel == 10 || jobLevel == 22111001 || jobLevel == 22141002 || jobLevel == 22140000;
         }
-        if (JobConstants.isDualJob(job)) {
-            return JobConstants.getJobLevel(job) == 4 ||
+        if (JobConstants.isDualJob(jobId)) {
+            return JobConstants.getJobLevel(jobId) == 4 ||
                     skillId == 4311003 ||
                     skillId == 4321000 ||
                     skillId == 4331002 ||
                     skillId == 4331005;
         }
-        if (job == 100 * (job / 100)) {
+        if (jobId == 100 * (jobId / 100)) {
             return false;
         }
-        return job % 10 == 2;
+        return jobId % 10 == 2;
     }
 }

@@ -15,7 +15,6 @@ import kinoko.world.life.Life;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
-import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

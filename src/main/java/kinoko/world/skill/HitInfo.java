@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.skill;
 
 public final class HitInfo {
     public final HitType hitType;

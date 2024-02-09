@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.skill;
 
 import kinoko.server.header.OutHeader;
 

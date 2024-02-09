@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.skill;
 
 public final class AttackInfo {
     public int mobId;
