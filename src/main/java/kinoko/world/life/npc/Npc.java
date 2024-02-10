@@ -25,7 +25,7 @@ public final class Npc extends Life implements ControlledObject {
         setX(x);
         setY(y);
         setFh(fh);
-        setMoveAction(isFlip ? 1 : 0);
+        setMoveAction(isFlip ? 0 : 1);
     }
 
     public int getTemplateId() {
@@ -84,7 +84,7 @@ public final class Npc extends Life implements ControlledObject {
         outPacket.encodeByte(true); // bEnabled
     }
 
-    public static Npc from(LifeInfo lifeInfo, NpcInfo npcINfo) {
+    public static Npc from(LifeInfo lifeInfo, NpcInfo npcInfo) {
         return new Npc(
                 lifeInfo.getX(),
                 lifeInfo.getY(),
@@ -92,7 +92,7 @@ public final class Npc extends Life implements ControlledObject {
                 lifeInfo.getRx1(),
                 lifeInfo.getFh(),
                 lifeInfo.isFlip(),
-                npcINfo
+                npcInfo
         );
     }
 }
