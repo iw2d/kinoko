@@ -3,7 +3,6 @@ package kinoko.packet.stage;
 import kinoko.server.ChannelServer;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.server.client.Client;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
@@ -15,13 +14,13 @@ import kinoko.world.user.CharacterData;
 import java.util.List;
 
 public final class LoginPacket {
-    public static OutPacket connect(Client c) {
+    public static OutPacket connect(byte[] sendIv, byte[] recvIv) {
         final OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(0x0E);
         outPacket.encodeShort(ServerConstants.GAME_VERSION);
         outPacket.encodeString(ServerConstants.PATCH);
-        outPacket.encodeArray(c.getRecvIv());
-        outPacket.encodeArray(c.getSendIv());
+        outPacket.encodeArray(sendIv); // sendIv for client (recvIv for server)
+        outPacket.encodeArray(recvIv); // recvIv for client (sendIv for server)
         outPacket.encodeByte(ServerConstants.LOCALE);
         return outPacket;
     }

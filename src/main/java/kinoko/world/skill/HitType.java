@@ -21,9 +21,9 @@ public enum HitType {
     }
 
     public static HitType getByValue(int value) {
-        for (HitType hitType : values()) {
-            if (hitType.getValue() == value) {
-                return hitType;
+        for (HitType type : values()) {
+            if (type.getValue() == value) {
+                return type;
             }
         }
         return null;

@@ -52,7 +52,7 @@ public abstract class NettyServer {
                 c.setSendIv(getNewIv());
                 c.setRecvIv(getNewIv());
                 c.setClientKey(getNewClientKey());
-                c.write(LoginPacket.connect(c));
+                c.write(LoginPacket.connect(c.getRecvIv(), c.getSendIv()));
 
                 ch.attr(NettyClient.CLIENT_KEY).set(c);
             }

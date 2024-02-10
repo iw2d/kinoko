@@ -18,6 +18,10 @@ public final class JobConstants {
         return 0;
     }
 
+    public static boolean isBeginnerJob(int jobId) {
+        return jobId % 1000 == 0 || jobId == 2001;
+    }
+
     public static boolean isAranJob(int jobId) {
         return jobId / 100 == 21 || jobId == 2000;
     }
