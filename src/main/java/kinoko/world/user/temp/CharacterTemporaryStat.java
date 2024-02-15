@@ -39,7 +39,6 @@ public enum CharacterTemporaryStat implements BitIndex {
     Curse(31),
     Slow(32),
     Morph(33),
-    Ghost(49),
     Regen(34),
     BasicStatUp(35),
     Stance(36),
@@ -48,16 +47,16 @@ public enum CharacterTemporaryStat implements BitIndex {
     Attract(39),
     SpiritJavelin(40),
     Infinity(41),
-    HolyShield(42),
+    Holyshield(42),
     HamString(43),
     Blind(44),
     Concentration(45),
     BanMap(46),
     MaxLevelBuff(47),
-    Barrier(50),
-    DojangShield(62),
-    ReverseInput(51),
     MesoUpByItem(48),
+    Ghost(49),
+    Barrier(50),
+    ReverseInput(51),
     ItemUpByItem(52),
     RespectPImmune(53),
     RespectMImmune(54),
@@ -68,6 +67,7 @@ public enum CharacterTemporaryStat implements BitIndex {
     DojangBerserk(59),
     DojangInvincible(60),
     Spark(61),
+    DojangShield(62),
     SoulMasterFinal(63),
     WindBreakerFinal(64),
     ElementalReset(65),
@@ -128,8 +128,8 @@ public enum CharacterTemporaryStat implements BitIndex {
     CombatOrders(120),
     Beholder(121),
     EnergyCharged(122),
-    DashSpeed(123),
-    DashJump(124),
+    Dash_Speed(123),
+    Dash_Jump(124),
     RideVehicle(125),
     PartyBooster(126),
     GuidedBullet(127),
@@ -142,7 +142,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             Booster, PowerGuard, Guard, SafetyDamage, SafetyAbsorb, MaxHP, MaxMP, Invincible, SoulArrow, Stun, Poison,
             Seal, Darkness, ComboCounter, WeaponCharge, DragonBlood, HolySymbol, MesoUp, ShadowPartner, PickPocket,
             MesoGuard, Thaw, Weakness, Curse, Slow, Morph, Ghost, Regen, BasicStatUp, Stance, SharpEyes, ManaReflection,
-            Attract, SpiritJavelin, Infinity, HolyShield, HamString, Blind, Concentration, BanMap, MaxLevelBuff,
+            Attract, SpiritJavelin, Infinity, Holyshield, HamString, Blind, Concentration, BanMap, MaxLevelBuff,
             Barrier, DojangShield, ReverseInput, MesoUpByItem, ItemUpByItem, RespectPImmune, RespectMImmune, DefenseAtt,
             DefenseState, DojangBerserk, DojangInvincible, Spark, SoulMasterFinal, WindBreakerFinal, ElementalReset,
             WindWalk, EventRate, ComboAbilityBuff, ComboDrain, ComboBarrier, BodyPressure, SmartKnockback, RepeatEffect,
@@ -160,7 +160,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             Sneak, MorewildDamageUp, Mechanic, DarkAura, BlueAura, YellowAura, BlessingArmor
     );
     public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
-            EnergyCharged, DashSpeed, DashJump, RideVehicle, PartyBooster, GuidedBullet, Undead
+            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet, Undead
     );
     public static final List<CharacterTemporaryStat> SWALLOW_BUFF = List.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion
