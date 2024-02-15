@@ -18,6 +18,10 @@ public final class Util {
         return String.format("%d/0x%X", op, op);
     }
 
+    public static Random getRandom() {
+        return random;
+    }
+
     public static int getRandom(int bound) {
         return random.nextInt(bound);
     }

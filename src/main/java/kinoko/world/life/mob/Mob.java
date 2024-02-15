@@ -52,6 +52,18 @@ public final class Mob extends Life implements ControlledObject {
         return mobInfo.isBoss();
     }
 
+    public int getMaxHp() {
+        return mobInfo.getMaxHp();
+    }
+
+    public int getLevel() {
+        return mobInfo.getLevel();
+    }
+
+    public int getEva() {
+        return mobInfo.getEva();
+    }
+
     public MobStatManager getMobStatManager() {
         return mobStatManager;
     }

@@ -41,6 +41,18 @@ public final class SkillConstants {
         return false;
     }
 
+    public static boolean isJaguarMeleeAttackSkill(int skillId) {
+        switch (skillId) {
+            case 33101002:
+            case 33101007:
+            case 33111002:
+            case 33111006:
+            case 33121002:
+                return true;
+        }
+        return false;
+    }
+
     public static boolean isIgnoreMasterLevelForCommon(int skillId) {
         switch (skillId) {
             case 1120012:

@@ -11,6 +11,8 @@ import java.util.Map;
 public final class MobInfo {
     private final int templateId;
     private final int level;
+    private final int acc;
+    private final int eva;
     private final int maxHp;
     private final int maxMp;
     private final int hpRecovery;
@@ -19,10 +21,12 @@ public final class MobInfo {
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
 
-    public MobInfo(int templateId, int level, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
+    public MobInfo(int templateId, int level, int acc, int eva, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
         // TODO linked mobs
         this.templateId = templateId;
         this.level = level;
+        this.acc = acc;
+        this.eva = eva;
         this.maxHp = maxHp;
         this.maxMp = maxMp;
         this.hpRecovery = hpRecovery;
@@ -38,6 +42,14 @@ public final class MobInfo {
 
     public int getLevel() {
         return level;
+    }
+
+    public int getAcc() {
+        return acc;
+    }
+
+    public int getEva() {
+        return eva;
     }
 
     public int getMaxHp() {
@@ -73,6 +85,8 @@ public final class MobInfo {
         return "MobInfo[" +
                 "id=" + templateId + ", " +
                 "level=" + level + ", " +
+                "acc=" + acc +", " +
+                "eva=" + eva +", " +
                 "maxHp=" + maxHp + ", " +
                 "maxMp=" + maxMp + ", " +
                 "hpRecovery=" + hpRecovery + ", " +
@@ -82,6 +96,8 @@ public final class MobInfo {
 
     public static MobInfo from(int mobId, WzListProperty mobProperty) throws ProviderError {
         int level = 0;
+        int acc = 0;
+        int eva = 0;
         int maxHP = 0;
         int maxMP = 0;
         int hpRecovery = 0;
@@ -98,6 +114,12 @@ public final class MobInfo {
                     switch (infoEntry.getKey()) {
                         case "level" -> {
                             level = WzProvider.getInteger(infoEntry.getValue());
+                        }
+                        case "acc" -> {
+                            acc = WzProvider.getInteger(infoEntry.getValue());
+                        }
+                        case "eva" -> {
+                            eva = WzProvider.getInteger(infoEntry.getValue());
                         }
                         case "maxHP" -> {
                             maxHP = WzProvider.getInteger(infoEntry.getValue());
@@ -171,6 +193,6 @@ public final class MobInfo {
                 ));
             }
         }
-        return new MobInfo(mobId, level, maxHP, maxMP, hpRecovery, mpRecovery, boss, attacks, skills);
+        return new MobInfo(mobId, level, acc, eva, maxHP, maxMP, hpRecovery, mpRecovery, boss, attacks, skills);
     }
 }

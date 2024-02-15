@@ -42,4 +42,19 @@ public enum WeaponType {
         }
         return null;
     }
+
+    public static WeaponType getByItemId(int itemId) {
+        if (!ItemConstants.isWeapon(itemId)) {
+            return NONE;
+        }
+        final int value = itemId / 10000 % 100;
+        switch (value) {
+            case 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 -> {
+                return getByValue(value);
+            }
+            default -> {
+                return NONE;
+            }
+        }
+    }
 }

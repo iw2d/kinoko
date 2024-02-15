@@ -2,6 +2,7 @@ package kinoko.packet.stage;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Util;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -18,8 +19,16 @@ public final class StagePacket {
         outPacket.encodeShort(0); // nNotifierCheck
 
         if (isMigrate) {
-            user.getCalcDamage().encodeSeeds(outPacket); // m_CalcDamage
-            user.getCharacterData().encode(outPacket); // CharacterData::Decode
+            // m_CalcDamage
+            final int s1 = Util.getRandom().nextInt();
+            final int s2 = Util.getRandom().nextInt();
+            final int s3 = Util.getRandom().nextInt();
+            outPacket.encodeInt(s1);
+            outPacket.encodeInt(s2);
+            outPacket.encodeInt(s3);
+
+            // CharacterData::Decode
+            user.getCharacterData().encode(outPacket);
 
             // CWvsContext::OnSetLogoutGiftConfig
             outPacket.encodeInt(0); // bPredictQuit

@@ -79,7 +79,7 @@ public final class MigrationHandler {
             c.close();
             return;
         }
-        final User user = new User(c, characterData, CalcDamage.getDefault(), new TemporaryStatManager()); // TODO: persist tsm across channels
+        final User user = new User(c, characterData, new CalcDamage(), new TemporaryStatManager()); // TODO: persist tsm across channels
         if (channelServer.getClientStorage().isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
             c.close();

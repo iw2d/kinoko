@@ -4,6 +4,8 @@ public final class GameConstants {
     public static final int CHARACTER_MAX_SLOTS = 15;
     public static final int INVENTORY_MAX_SLOTS = 96;
 
+    public static final int MAX_DAMAGE = 999_999;
+
     public static final int MOB_ATTACK_CHANCE = 75;
     public static final int MOB_ATTACK_COOLTIME_MIN = 3;
     public static final int MOB_ATTACK_COOLTIME_MAX = 13;

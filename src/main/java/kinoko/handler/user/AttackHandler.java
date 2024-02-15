@@ -54,7 +54,7 @@ public final class AttackHandler {
             attack.grenadeY = inPacket.decodeShort(); // pGrenade->GetPos()->y
         }
 
-        SkillProcessor.handleActiveSkill(user, attack);
+        SkillProcessor.processAttack(user, attack);
     }
 
     @Handler(InHeader.USER_SHOOT_ATTACK)
@@ -106,7 +106,7 @@ public final class AttackHandler {
             attack.dragonY = inPacket.decodeShort();
         }
 
-        SkillProcessor.handleActiveSkill(user, attack);
+        SkillProcessor.processAttack(user, attack);
     }
 
     private static void decodeMobAttackInfo(InPacket inPacket, Attack attack) {
