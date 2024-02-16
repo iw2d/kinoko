@@ -1,17 +1,27 @@
 package kinoko.server.script;
 
+import kinoko.handler.field.FieldHandler;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.script.ScriptMessage;
 import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
+import kinoko.packet.world.Message;
+import kinoko.packet.world.WvsContext;
+import kinoko.provider.map.PortalInfo;
+import kinoko.world.field.Field;
 import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class ScriptManager {
+    private static final Logger log = LogManager.getLogger(FieldHandler.class);
     private final Set<ScriptMessageParam> messageParams = EnumSet.noneOf(ScriptMessageParam.class);
     private final ScriptMemory scriptMemory = new ScriptMemory();
     private final User user;
@@ -76,6 +86,9 @@ public final class ScriptManager {
         toggleParam(ScriptMessageParam.FLIP_SPEAKER, isFlipSpeaker);
     }
 
+
+    // CONVERSATION METHODS --------------------------------------------------------------------------------------------
+
     public void sayOk(String text) {
         sendMessage(ScriptMessage.say(speakerId, messageParams, text, false, false));
         handleAnswer();
@@ -101,14 +114,14 @@ public final class ScriptManager {
         handleAnswer();
     }
 
-    public void askYesNo(String text) {
+    public boolean askYesNo(String text) {
         sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_YES_NO, text));
-        handleAnswer();
+        return handleAnswer().getAction() != 0;
     }
 
-    public void askAccept(String text) {
+    public boolean askAccept(String text) {
         sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_ACCEPT, text));
-        handleAnswer();
+        return handleAnswer().getAction() != 0;
     }
 
     public int askMenu(String text) {
@@ -141,8 +154,46 @@ public final class ScriptManager {
         return handleAnswer().getTextAnswer();
     }
 
+
+    // UTILITY METHODS --------------------------------------------------------------------------------------------
+
     public void dispose() {
         ScriptDispatcher.removeScriptManager(user);
         user.dispose();
+    }
+
+    public void warp(int fieldId) {
+        final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
+        if (fieldResult.isEmpty()) {
+            log.error("Could not resolve field ID : {}", fieldId);
+            dispose();
+            return;
+        }
+        user.warp(fieldResult.get(), 0, false, false);
+    }
+
+    public void warpToPortal(int fieldId, String portalName) {
+        final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
+        if (fieldResult.isEmpty()) {
+            log.error("Could not resolve field ID : {}", fieldId);
+            dispose();
+            return;
+        }
+        final Field targetField = fieldResult.get();
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
+        if (portalResult.isEmpty()) {
+            log.error("Tried to warp to portal : {} on field ID : {}", portalName, targetField.getFieldId());
+            dispose();
+            return;
+        }
+        user.warp(targetField, portalResult.get().getPortalId(), false, false);
+    }
+
+    public boolean addMoney(int money) {
+        if (!user.addMoney(money)) {
+            return false;
+        }
+        user.write(WvsContext.message(Message.incMoney(money)));
+        return true;
     }
 }

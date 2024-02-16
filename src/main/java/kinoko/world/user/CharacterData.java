@@ -108,11 +108,11 @@ public final class CharacterData implements Encodable {
     }
 
     public long nextItemSn() {
-        return ((long) getItemSnCounter().getAndIncrement()) | (((long) getCharacterId()) << 32);
+        return ((long) itemSnCounter.getAndIncrement()) | (((long) getCharacterId()) << 32);
     }
 
     public AvatarLook getAvatarLook() {
-        return AvatarLook.from(getCharacterStat(), getCharacterInventory().getEquipped());
+        return AvatarLook.from(characterStat, characterInventory.getEquipped());
     }
 
     @Override
@@ -126,25 +126,25 @@ public final class CharacterData implements Encodable {
         outPacket.encodeByte(false); // bool -> byte, int * FT, int * FT
 
         if (flag.hasFlag(DBChar.CHARACTER)) {
-            getCharacterStat().encode(getCharacterId(), getCharacterName(), outPacket);
-            outPacket.encodeByte(getFriendMax()); // nFriendMax
+            characterStat.encode(characterId, characterName, outPacket);
+            outPacket.encodeByte(friendMax); // nFriendMax
             outPacket.encodeByte(false); // sLinkedCharacter: bool -> str
         }
         if (flag.hasFlag(DBChar.MONEY)) {
-            outPacket.encodeInt(getCharacterInventory().getMoney()); // nMoney
+            outPacket.encodeInt(characterInventory.getMoney()); // nMoney
         }
         if (flag.hasFlag(DBChar.INVENTORY_SIZE)) {
-            outPacket.encodeByte(getCharacterInventory().getEquipInventory().getSize());
-            outPacket.encodeByte(getCharacterInventory().getConsumeInventory().getSize());
-            outPacket.encodeByte(getCharacterInventory().getInstallInventory().getSize());
-            outPacket.encodeByte(getCharacterInventory().getEtcInventory().getSize());
-            outPacket.encodeByte(getCharacterInventory().getCashInventory().getSize());
+            outPacket.encodeByte(characterInventory.getEquipInventory().getSize());
+            outPacket.encodeByte(characterInventory.getConsumeInventory().getSize());
+            outPacket.encodeByte(characterInventory.getInstallInventory().getSize());
+            outPacket.encodeByte(characterInventory.getEtcInventory().getSize());
+            outPacket.encodeByte(characterInventory.getCashInventory().getSize());
         }
         if (flag.hasFlag(DBChar.EQUIP_EXT)) {
             outPacket.encodeFT(FileTime.MAX_TIME); // aEquipExtExpire
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_EQUIP)) {
-            final Map<Integer, Item> equippedItems = getCharacterInventory().getEquipped().getItems();
+            final Map<Integer, Item> equippedItems = characterInventory.getEquipped().getItems();
             // Normal Equipped Items
             for (var entry : equippedItems.entrySet()) {
                 final int bodyPart = entry.getKey();
@@ -165,7 +165,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0);
 
             // Equip Inventory
-            for (var entry : getCharacterInventory().getEquipInventory().getItems().entrySet()) {
+            for (var entry : characterInventory.getEquipInventory().getItems().entrySet()) {
                 outPacket.encodeShort(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
@@ -191,36 +191,36 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_CONSUME)) {
-            for (var entry : getCharacterInventory().getConsumeInventory().getItems().entrySet()) {
+            for (var entry : characterInventory.getConsumeInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_INSTALL)) {
-            for (var entry : getCharacterInventory().getInstallInventory().getItems().entrySet()) {
+            for (var entry : characterInventory.getInstallInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_ETC)) {
-            for (var entry : getCharacterInventory().getEtcInventory().getItems().entrySet()) {
+            for (var entry : characterInventory.getEtcInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_CASH)) {
-            for (var entry : getCharacterInventory().getCashInventory().getItems().entrySet()) {
+            for (var entry : characterInventory.getCashInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.SKILL_RECORD)) {
-            outPacket.encodeShort(getSkillManager().getSkillRecords().size());
-            for (SkillRecord sr : getSkillManager().getSkillRecords().values()) {
+            outPacket.encodeShort(skillManager.getSkillRecords().size());
+            for (SkillRecord sr : skillManager.getSkillRecords().values()) {
                 outPacket.encodeInt(sr.getSkillId());
                 outPacket.encodeInt(sr.getSkillLevel());
                 outPacket.encodeFT(FileTime.MAX_TIME); // mSkillExpired
@@ -232,7 +232,7 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.SKILL_COOLTIME)) {
             final Map<Integer, Long> cooltimes = new HashMap<>();
             final Instant now = Instant.now();
-            final var iter = getSkillManager().getSkillCooltimes().entrySet().iterator();
+            final var iter = skillManager.getSkillCooltimes().entrySet().iterator();
             while (iter.hasNext()) {
                 final var entry = iter.next();
                 final Instant end = entry.getValue();
@@ -249,7 +249,7 @@ public final class CharacterData implements Encodable {
             }
         }
         if (flag.hasFlag(DBChar.QUEST_RECORD)) {
-            final Set<QuestRecord> questRecords = getQuestManager().getStartedQuests();
+            final Set<QuestRecord> questRecords = questManager.getStartedQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
@@ -257,7 +257,7 @@ public final class CharacterData implements Encodable {
             }
         }
         if (flag.hasFlag(DBChar.QUEST_COMPLETE)) {
-            final Set<QuestRecord> questRecords = getQuestManager().getCompletedQuests();
+            final Set<QuestRecord> questRecords = questManager.getCompletedQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
@@ -287,7 +287,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord
         }
         if (flag.hasFlag(DBChar.QUEST_RECORD_EX)) {
-            final Set<QuestRecord> questRecords = getQuestManager().getExQuests();
+            final Set<QuestRecord> questRecords = questManager.getExQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
@@ -295,8 +295,8 @@ public final class CharacterData implements Encodable {
             }
         }
         if (flag.hasFlag(DBChar.WILD_HUNTER_INFO) &&
-                JobConstants.isWildHunterJob(getCharacterStat().getJob())) {
-            getWildHunterInfo().encode(outPacket);
+                JobConstants.isWildHunterJob(characterStat.getJob())) {
+            wildHunterInfo.encode(outPacket);
         }
         if (flag.hasFlag(DBChar.QUEST_COMPLETE_OLD)) {
             outPacket.encodeShort(0); // short * (short, FT)

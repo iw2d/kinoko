@@ -17,12 +17,6 @@ import kinoko.world.user.User;
 import java.util.Optional;
 
 public final class AdminCommands {
-    @Command("check")
-    public static void check(User user, String[] args) {
-        user.dispose();
-        user.write(WvsContext.message(Message.system("Field ID : %d", user.getField().getFieldId())));
-    }
-
     @Command("dispose")
     public static void dispose(User user, String[] args) {
         user.dispose();
@@ -93,5 +87,11 @@ public final class AdminCommands {
         );
         mob.setField(user.getField());
         user.getField().addLife(mob);
+    }
+
+    @Command("meso")
+    public static void check(User user, String[] args) {
+        user.addMoney(1_000_000);
+        user.write(WvsContext.message(Message.system("Money : %d", user.getMoney())));
     }
 }

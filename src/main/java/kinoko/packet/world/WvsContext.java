@@ -4,6 +4,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.CharacterStat;
+import kinoko.world.user.StatFlag;
 
 import java.util.Set;
 

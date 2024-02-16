@@ -41,10 +41,11 @@ public final class User extends Life {
         return temporaryStatManager;
     }
 
+
     // CONVENIENCE METHODS ---------------------------------------------------------------------------------------------
 
     public ChannelServer getConnectedServer() {
-        return (ChannelServer) getClient().getConnectedServer();
+        return (ChannelServer) client.getConnectedServer();
     }
 
     public int getChannelId() {
@@ -52,20 +53,25 @@ public final class User extends Life {
     }
 
     public int getCharacterId() {
-        return getCharacterData().getCharacterId();
+        return characterData.getCharacterId();
     }
 
     public int getLevel() {
-        return getCharacterData().getCharacterStat().getLevel();
+        return characterData.getCharacterStat().getLevel();
     }
 
     public short getJob() {
-        return getCharacterData().getCharacterStat().getJob();
+        return characterData.getCharacterStat().getJob();
     }
 
     public String getName() {
-        return getCharacterData().getCharacterName();
+        return characterData.getCharacterName();
     }
+
+    public int getMoney() {
+        return characterData.getCharacterInventory().getMoney();
+    }
+
 
     // PACKET WRITES ---------------------------------------------------------------------------------------------------
 
@@ -92,6 +98,19 @@ public final class User extends Life {
         if (getField() != null) {
             getField().removeUser(getCharacterId());
         }
+    }
+
+
+    // UTILITY METHODS -------------------------------------------------------------------------------------------------
+
+    public boolean addMoney(int money) {
+        final long newMoney = ((long) getMoney()) + money;
+        if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
+            return false;
+        }
+        getCharacterData().getCharacterInventory().setMoney((int) newMoney);
+        write(WvsContext.statChanged(Set.of(StatFlag.MONEY), characterData));
+        return true;
     }
 
 

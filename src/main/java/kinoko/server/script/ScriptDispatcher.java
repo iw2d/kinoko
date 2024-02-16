@@ -5,10 +5,7 @@ import kinoko.util.Tuple;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Engine;
-import org.graalvm.polyglot.HostAccess;
-import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +35,10 @@ public final class ScriptDispatcher {
     }
 
     public static void startNpcScript(User user, int templateId, String scriptName) {
+        if (scriptManagers.containsKey(user.getCharacterId())) {
+            log.error("Script already being evaluated.");
+            return;
+        }
         final File scriptFile = Path.of(NPC_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile();
         if (!scriptFile.isFile()) {
             log.error("Npc script file not found : {}", scriptName);
@@ -63,6 +64,11 @@ public final class ScriptDispatcher {
                                 .build()
                 );
                 removeScriptManager(user);
+            } catch (PolyglotException e) {
+                if (!e.isCancelled()) {
+                    log.error("Error while evaluating script file : {}", scriptFile.getName(), e);
+                    e.printStackTrace();
+                }
             } catch (IOException e) {
                 log.error("Error while loading script file : {}", scriptFile.getName());
             }

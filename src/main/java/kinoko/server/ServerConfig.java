@@ -12,6 +12,7 @@ public final class ServerConfig {
     public static final boolean REQUIRE_SECONDARY_PASSWORD = true;
     public static final String WZ_DIRECTORY = "wz";
     public static final String SCRIPT_DIRECTORY = "scripts";
+    public static final int SCRIPT_DEFAULT_SPEAKER = 2007; // Maple Administrator
 
     public static final int CHARACTER_BASE_SLOTS = 3;
     public static final int INVENTORY_BASE_SLOTS = 24;

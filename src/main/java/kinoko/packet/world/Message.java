@@ -134,6 +134,18 @@ public final class Message implements Encodable {
         return message;
     }
 
+    public static Message incPop(int pop) {
+        final Message message = new Message(MessageType.INC_POP);
+        message.int1 = pop;
+        return message;
+    }
+
+    public static Message incMoney(int money) {
+        final Message message = new Message(MessageType.INC_MONEY);
+        message.int1 = money;
+        return message;
+    }
+
     public static Message incExp(int exp, boolean white, boolean quest) {
         final Message message = new Message(MessageType.INC_EXP);
         message.int1 = exp;

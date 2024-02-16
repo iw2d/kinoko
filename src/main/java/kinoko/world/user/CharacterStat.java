@@ -1,6 +1,5 @@
 package kinoko.world.user;
 
-import kinoko.packet.world.StatFlag;
 import kinoko.server.packet.OutPacket;
 
 import java.util.Set;
@@ -199,49 +198,49 @@ public final class CharacterStat {
     public void encode(int characterId, String characterName, OutPacket outPacket) {
         outPacket.encodeInt(characterId); // dwCharacterID
         outPacket.encodeString(characterName, 13); // sCharacterName
-        outPacket.encodeByte(getGender()); // nGender
-        outPacket.encodeByte(getSkin()); // nSkin
-        outPacket.encodeInt(getFace()); // nFace
-        outPacket.encodeInt(getHair()); // nHair
+        outPacket.encodeByte(gender); // nGender
+        outPacket.encodeByte(skin); // nSkin
+        outPacket.encodeInt(face); // nFace
+        outPacket.encodeInt(hair); // nHair
 
         // aliPetLockerSN
         for (int i = 0; i < 3; i++) {
             outPacket.encodeLong(0);
         }
 
-        outPacket.encodeByte(getLevel()); // nLevel
-        outPacket.encodeShort(getJob()); // nJob
-        outPacket.encodeShort(getBaseStr()); // nSTR
-        outPacket.encodeShort(getBaseDex()); // nDEX
-        outPacket.encodeShort(getBaseInt()); // nINT
-        outPacket.encodeShort(getBaseLuk()); // nLUK
-        outPacket.encodeInt(getHp()); // nHP
-        outPacket.encodeInt(getMaxHp()); // nMHP
-        outPacket.encodeInt(getMp()); // nMP
-        outPacket.encodeInt(getMaxMp()); // nMMP
-        outPacket.encodeShort(getAp()); // nAP
-        getSp().encode(getJob(), outPacket);
+        outPacket.encodeByte(level); // nLevel
+        outPacket.encodeShort(job); // nJob
+        outPacket.encodeShort(baseStr); // nSTR
+        outPacket.encodeShort(baseDex); // nDEX
+        outPacket.encodeShort(baseInt); // nINT
+        outPacket.encodeShort(baseLuk); // nLUK
+        outPacket.encodeInt(hp); // nHP
+        outPacket.encodeInt(maxHp); // nMHP
+        outPacket.encodeInt(mp); // nMP
+        outPacket.encodeInt(maxMp); // nMMP
+        outPacket.encodeShort(ap); // nAP
+        sp.encode(job, outPacket);
 
-        outPacket.encodeInt(getExp()); // nEXP
-        outPacket.encodeShort(getPop()); // nPOP
+        outPacket.encodeInt(exp); // nEXP
+        outPacket.encodeShort(pop); // nPOP
         outPacket.encodeInt(0); // nTempEXP
-        outPacket.encodeInt(getPosMap()); // dwPosMap
-        outPacket.encodeByte(getPortal()); // nPortal
+        outPacket.encodeInt(posMap); // dwPosMap
+        outPacket.encodeByte(portal); // nPortal
         outPacket.encodeInt(0); // nPlayTime
-        outPacket.encodeShort(getSubJob()); // nSubJob
+        outPacket.encodeShort(subJob); // nSubJob
     }
 
     public void encodeChangeStat(Set<StatFlag> flags, int money, OutPacket outPacket) {
         // GW_CharacterStat::DecodeChangeStat
         outPacket.encodeInt(StatFlag.from(flags));
         if (flags.contains(StatFlag.SKIN)) {
-            outPacket.encodeByte(getSkin());
+            outPacket.encodeByte(skin);
         }
         if (flags.contains(StatFlag.FACE)) {
-            outPacket.encodeInt(getFace());
+            outPacket.encodeInt(face);
         }
         if (flags.contains(StatFlag.HAIR)) {
-            outPacket.encodeInt(getHair());
+            outPacket.encodeInt(hair);
         }
         if (flags.contains(StatFlag.PET_1)) {
             outPacket.encodeLong(0);
@@ -253,46 +252,46 @@ public final class CharacterStat {
             outPacket.encodeLong(0);
         }
         if (flags.contains(StatFlag.LEVEL)) {
-            outPacket.encodeByte(getLevel());
+            outPacket.encodeByte(level);
         }
         if (flags.contains(StatFlag.JOB)) {
-            outPacket.encodeShort(getJob());
+            outPacket.encodeShort(job);
         }
         if (flags.contains(StatFlag.STR)) {
-            outPacket.encodeShort(getBaseStr());
+            outPacket.encodeShort(baseStr);
         }
         if (flags.contains(StatFlag.DEX)) {
-            outPacket.encodeShort(getBaseDex());
+            outPacket.encodeShort(baseDex);
         }
         if (flags.contains(StatFlag.INT)) {
-            outPacket.encodeShort(getBaseInt());
+            outPacket.encodeShort(baseInt);
         }
         if (flags.contains(StatFlag.LUK)) {
-            outPacket.encodeShort(getBaseLuk());
+            outPacket.encodeShort(baseLuk);
         }
         if (flags.contains(StatFlag.HP)) {
-            outPacket.encodeInt(getHp());
+            outPacket.encodeInt(hp);
         }
         if (flags.contains(StatFlag.MAX_HP)) {
-            outPacket.encodeInt(getMaxHp());
+            outPacket.encodeInt(maxHp);
         }
         if (flags.contains(StatFlag.MP)) {
-            outPacket.encodeInt(getMp());
+            outPacket.encodeInt(mp);
         }
         if (flags.contains(StatFlag.MAX_MP)) {
-            outPacket.encodeInt(getMaxMp());
+            outPacket.encodeInt(maxMp);
         }
         if (flags.contains(StatFlag.AP)) {
-            outPacket.encodeShort(getAp());
+            outPacket.encodeShort(ap);
         }
         if (flags.contains(StatFlag.SP)) {
-            getSp().encode(getJob(), outPacket);
+            sp.encode(job, outPacket);
         }
         if (flags.contains(StatFlag.EXP)) {
-            outPacket.encodeInt(getExp());
+            outPacket.encodeInt(exp);
         }
         if (flags.contains(StatFlag.POP)) {
-            outPacket.encodeShort(getPop());
+            outPacket.encodeShort(pop);
         }
         if (flags.contains(StatFlag.MONEY)) {
             outPacket.encodeInt(money);

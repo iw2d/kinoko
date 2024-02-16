@@ -91,6 +91,11 @@ public final class ScriptHandler {
 
     @Handler(InHeader.USER_PORTAL_SCRIPT_REQUEST)
     public static void handleUserPortalScriptRequest(User user, InPacket inPacket) {
+        inPacket.decodeByte(); // bFieldKey
+        final String scriptName = inPacket.decodeString(); // sName
+        final short x = inPacket.decodeShort(); // GetPos()->x
+        final short y = inPacket.decodeShort(); // GetPos()->y
+        log.debug(scriptName);
         user.dispose(); // TODO
     }
 

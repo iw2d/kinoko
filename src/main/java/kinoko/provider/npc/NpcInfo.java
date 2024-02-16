@@ -13,6 +13,7 @@ public final class NpcInfo {
     private final int trunkGet;
 
     public NpcInfo(int templateId, boolean move, String script, int trunkPut, int trunkGet) {
+        // TODO linked npcs
         this.templateId = templateId;
         this.move = move;
         this.script = script;
