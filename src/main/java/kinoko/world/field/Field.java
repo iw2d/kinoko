@@ -19,13 +19,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Field {
+    private static final AtomicInteger fieldKeyCounter = new AtomicInteger(1);
+    private static final AtomicInteger objectIdCounter = new AtomicInteger(1);
     private final MapInfo mapInfo;
-    private final AtomicInteger objectIdCounter = new AtomicInteger(1);
+    private final byte fieldKey;
     private final Map<Integer, Life> lifes = new ConcurrentHashMap<>(); // objectId -> Life
     private final Map<Integer, User> users = new ConcurrentHashMap<>(); // characterId -> User
 
     public Field(MapInfo mapInfo) {
         this.mapInfo = mapInfo;
+        this.fieldKey = getNewFieldKey();
     }
 
     public int getFieldId() {
@@ -48,8 +51,8 @@ public final class Field {
         return mapInfo.getPortalByName(name);
     }
 
-    public int getNewObjectId() {
-        return objectIdCounter.getAndIncrement();
+    public byte getFieldKey() {
+        return fieldKey;
     }
 
     public Optional<Life> getLifeById(int objectId) {
@@ -160,5 +163,13 @@ public final class Field {
             }
         }
         return field;
+    }
+
+    private static byte getNewFieldKey() {
+        return (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
+    }
+
+    private static int getNewObjectId() {
+        return objectIdCounter.getAndIncrement();
     }
 }

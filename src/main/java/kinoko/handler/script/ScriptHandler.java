@@ -91,12 +91,16 @@ public final class ScriptHandler {
 
     @Handler(InHeader.USER_PORTAL_SCRIPT_REQUEST)
     public static void handleUserPortalScriptRequest(User user, InPacket inPacket) {
-        inPacket.decodeByte(); // bFieldKey
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
         final String scriptName = inPacket.decodeString(); // sName
         final short x = inPacket.decodeShort(); // GetPos()->x
         final short y = inPacket.decodeShort(); // GetPos()->y
-        log.debug(scriptName);
-        user.dispose(); // TODO
+
+        ScriptDispatcher.startPortalScript(user, scriptName);
     }
 
     @Handler(InHeader.USER_QUEST_REQUEST)
@@ -114,6 +118,11 @@ public final class ScriptHandler {
         final QuestRequestType questRequestType = QuestRequestType.getByValue(action);
         switch (questRequestType) {
             case LOST_ITEM -> {
+                final int size = inPacket.decodeInt();
+                final int[] lostItems = new int[size];
+                for (int i = 0; i < size; i++) {
+                    lostItems[i] = inPacket.decodeInt();
+                }
                 // TODO
             }
             case ACCEPT_QUEST -> {
@@ -157,7 +166,7 @@ public final class ScriptHandler {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
-                // ScriptManager.start(user, questId, templateId);
+                ScriptDispatcher.startQuestScript(user, templateId, questId, questRequestType == QuestRequestType.OPENING_SCRIPT);
             }
             case null -> {
                 log.error("Unknown quest action type : {}", action);

@@ -19,7 +19,11 @@ public final class AttackHandler {
     public static void handlerUserMeleeAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingMeleeAttack, CUserLocal::TryDoingNormalAttack
         final Attack attack = new Attack(OutHeader.USER_MELEE_ATTACK);
-        inPacket.decodeByte(); // bFieldKey
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
         inPacket.decodeInt(); // ~pDrInfo.dr0
         inPacket.decodeInt(); // ~pDrInfo.dr1
         attack.mask = inPacket.decodeByte(); // nDamagePerMob | (16 * nMobCount)
@@ -67,7 +71,11 @@ public final class AttackHandler {
     public static void handlerUserMagicAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingMagicAttack
         final Attack attack = new Attack(OutHeader.USER_MAGIC_ATTACK);
-        inPacket.decodeByte(); // bFieldKey
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
         inPacket.decodeInt(); // ~pDrInfo.dr0
         inPacket.decodeInt(); // ~pDrInfo.dr1
         attack.mask = inPacket.decodeByte(); // nDamagePerMob | (16 * nMobCount)

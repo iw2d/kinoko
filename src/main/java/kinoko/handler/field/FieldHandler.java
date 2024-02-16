@@ -24,6 +24,10 @@ public final class FieldHandler {
     @Handler(InHeader.USER_TRANSFER_FIELD_REQUEST)
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte();
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
         final int targetField = inPacket.decodeInt(); // dwTargetField
         final String portalName = inPacket.decodeString(); // sPortal
         if (!portalName.isEmpty()) {
@@ -38,7 +42,7 @@ public final class FieldHandler {
         final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
         if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
             log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
-            user.write(FieldPacket.transferFieldReqIgnored(2));
+            user.dispose();
             return;
         }
 
@@ -54,7 +58,7 @@ public final class FieldHandler {
         final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(nextPortalName);
         if (nextPortalResult.isEmpty()) {
             log.error("Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
-            user.write(FieldPacket.transferFieldReqIgnored(2));
+            user.dispose();
             return;
         }
         user.warp(nextField, nextPortalResult.get().getPortalId(), false, false);

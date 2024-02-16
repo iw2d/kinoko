@@ -2,6 +2,7 @@ package kinoko.packet.user;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.quest.QuestResult;
 
 public final class UserLocalPacket {
     public static OutPacket userSitResult(boolean sit, short fieldSeatId) {
@@ -10,6 +11,12 @@ public final class UserLocalPacket {
         if (sit) {
             outPacket.encodeShort(fieldSeatId);
         }
+        return outPacket;
+    }
+
+    public static OutPacket userQuestResult(QuestResult questResult) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_QUEST_RESULT);
+        questResult.encode(outPacket);
         return outPacket;
     }
 

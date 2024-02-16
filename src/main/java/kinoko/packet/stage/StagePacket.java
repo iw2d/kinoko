@@ -14,7 +14,7 @@ public final class StagePacket {
         outPacket.encodeShort(0); // CClientOptMan::DecodeOpt
         outPacket.encodeInt(channelId); // nChannelID
         outPacket.encodeInt(0); // dwOldDriverID
-        outPacket.encodeByte(true); // bFieldKey
+        outPacket.encodeByte(user.getField().getFieldKey()); // bFieldKey
         outPacket.encodeByte(isMigrate); // bCharacterData
         outPacket.encodeShort(0); // nNotifierCheck
 

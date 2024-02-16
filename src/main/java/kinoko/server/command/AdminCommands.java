@@ -19,6 +19,7 @@ import java.util.Optional;
 public final class AdminCommands {
     @Command("dispose")
     public static void dispose(User user, String[] args) {
+        ScriptDispatcher.removeScriptManager(user);
         user.dispose();
         user.write(WvsContext.message(Message.system("You have been disposed.")));
     }

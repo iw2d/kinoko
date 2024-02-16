@@ -22,7 +22,6 @@ public final class MobInfo {
     private final Map<Integer, MobSkill> skills;
 
     public MobInfo(int templateId, int level, int acc, int eva, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
-        // TODO linked mobs
         this.templateId = templateId;
         this.level = level;
         this.acc = acc;
@@ -94,7 +93,7 @@ public final class MobInfo {
                 "boss=" + boss + ']';
     }
 
-    public static MobInfo from(int mobId, WzListProperty mobProperty) throws ProviderError {
+    public static MobInfo from(int mobId, WzListProperty mobProp, WzListProperty infoProp) throws ProviderError {
         int level = 0;
         int acc = 0;
         int eva = 0;
@@ -105,81 +104,27 @@ public final class MobInfo {
         boolean boss = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
-        for (var entry : mobProperty.getItems().entrySet()) {
-            if (entry.getKey().equals("info")) {
-                if (!(entry.getValue() instanceof WzListProperty infoProp)) {
-                    throw new ProviderError("Failed to resolve info for mob : %d", mobId);
-                }
-                for (var infoEntry : infoProp.getItems().entrySet()) {
-                    switch (infoEntry.getKey()) {
-                        case "level" -> {
-                            level = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "acc" -> {
-                            acc = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "eva" -> {
-                            eva = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "maxHP" -> {
-                            maxHP = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "maxMP" -> {
-                            maxMP = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "hpRecovery" -> {
-                            hpRecovery = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "mpRecovery" -> {
-                            mpRecovery = WzProvider.getInteger(infoEntry.getValue());
-                        }
-                        case "boss" -> {
-                            boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
-                        }
-                        case "skill" -> {
-                            if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
-                                throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
-                            }
-                            for (var skillEntry : skillEntries.getItems().entrySet()) {
-                                final int skillIndex = Integer.parseInt(skillEntry.getKey());
-                                if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
-                                    throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
-                                }
-                                final int skillId = WzProvider.getInteger(skillProp.get("skill"));
-                                final MobSkillType type = MobSkillType.getByValue(skillId);
-                                if (type == null) {
-                                    throw new ProviderError("Failed to resolve mob skill : %d", skillId);
-                                }
-                                skills.put(skillIndex, new MobSkill(
-                                        skillId,
-                                        WzProvider.getInteger(skillProp.get("level"))
-                                ));
-                            }
-                        }
-                        default -> {
-                            // System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
-                        }
-                    }
-                }
-            } else if (entry.getKey().startsWith("attack")) {
+        // Process attacks
+        for (var entry : mobProp.getItems().entrySet()) {
+            if (entry.getKey().startsWith("attack")) {
                 final int attackIndex = Integer.parseInt(entry.getKey().replace("attack", "")) - 1;
                 if (!(entry.getValue() instanceof WzListProperty attackProp) ||
-                        !(attackProp.get("info") instanceof WzListProperty infoProp)) {
+                        !(attackProp.get("info") instanceof WzListProperty attackInfoProp)) {
                     throw new ProviderError("Failed to resolve attack info for mob : %d", mobId);
                 }
                 int skillId = 0;
                 int skillLevel = 0;
                 int conMp = 0;
-                for (var infoEntry : infoProp.getItems().entrySet()) {
-                    switch (infoEntry.getKey()) {
+                for (var attackInfoEntry : attackInfoProp.getItems().entrySet()) {
+                    switch (attackInfoEntry.getKey()) {
                         case "disease" -> {
-                            skillId = WzProvider.getInteger(infoEntry.getValue());
+                            skillId = WzProvider.getInteger(attackInfoEntry.getValue());
                         }
                         case "level" -> {
-                            skillLevel = WzProvider.getInteger(infoEntry.getValue());
+                            skillLevel = WzProvider.getInteger(attackInfoEntry.getValue());
                         }
                         case "conMP" -> {
-                            conMp = WzProvider.getInteger(infoEntry.getValue());
+                            conMp = WzProvider.getInteger(attackInfoEntry.getValue());
                         }
                         default -> {
                             // System.err.printf("Unhandled mob attack info %s in mob %d%n", infoEntry.getKey(), mobId);
@@ -191,6 +136,58 @@ public final class MobInfo {
                         skillLevel,
                         conMp
                 ));
+            }
+        }
+        // Process info
+        for (var infoEntry : infoProp.getItems().entrySet()) {
+            switch (infoEntry.getKey()) {
+                case "level" -> {
+                    level = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "acc" -> {
+                    acc = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "eva" -> {
+                    eva = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "maxHP" -> {
+                    maxHP = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "maxMP" -> {
+                    maxMP = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "hpRecovery" -> {
+                    hpRecovery = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "mpRecovery" -> {
+                    mpRecovery = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "boss" -> {
+                    boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
+                }
+                case "skill" -> {
+                    if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
+                        throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
+                    }
+                    for (var skillEntry : skillEntries.getItems().entrySet()) {
+                        final int skillIndex = Integer.parseInt(skillEntry.getKey());
+                        if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
+                            throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
+                        }
+                        final int skillId = WzProvider.getInteger(skillProp.get("skill"));
+                        final MobSkillType type = MobSkillType.getByValue(skillId);
+                        if (type == null) {
+                            throw new ProviderError("Failed to resolve mob skill : %d", skillId);
+                        }
+                        skills.put(skillIndex, new MobSkill(
+                                skillId,
+                                WzProvider.getInteger(skillProp.get("level"))
+                        ));
+                    }
+                }
+                default -> {
+                    // System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
+                }
             }
         }
         return new MobInfo(mobId, level, acc, eva, maxHP, maxMP, hpRecovery, mpRecovery, boss, attacks, skills);

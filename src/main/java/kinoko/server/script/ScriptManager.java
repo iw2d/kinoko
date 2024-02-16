@@ -29,8 +29,9 @@ public final class ScriptManager {
     private int speakerId;
     private CompletableFuture<ScriptAnswer> answerFuture;
 
-    public ScriptManager(User user) {
+    public ScriptManager(User user, int speakerId) {
         this.user = user;
+        this.speakerId = speakerId;
     }
 
     private void toggleParam(ScriptMessageParam messageParam, boolean enabled) {

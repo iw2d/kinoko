@@ -36,13 +36,28 @@ public final class NpcProvider implements WzProvider {
     }
 
     private static void loadNpcInfos(WzPackage source) throws ProviderError {
+        final Map<Integer, Integer> linkedNpcs = new HashMap<>();
         for (var npcEntry : source.getDirectory().getImages().entrySet()) {
             final int npcId = Integer.parseInt(npcEntry.getKey().replace(".img", ""));
             if (!(npcEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
                 throw new ProviderError("Failed to resolve info property");
             }
+            final int link = WzProvider.getInteger(infoProp.get("link"));
+            if (link != 0) {
+                linkedNpcs.put(npcId, link);
+                continue;
+            }
             final boolean move = npcEntry.getValue().getProperty().get("move") instanceof WzListProperty;
             npcInfos.put(npcId, NpcInfo.from(npcId, move, infoProp));
+        }
+        for (var linkEntry : linkedNpcs.entrySet()) {
+            final int npcId = linkEntry.getKey();
+            final int link = linkEntry.getValue();
+            final NpcInfo linkInfo = npcInfos.get(link);
+            if (linkInfo == null) {
+                throw new ProviderError("Failed to resolve linked Npc ID : %d, link : %d", npcId, link);
+            }
+            npcInfos.put(npcId, linkInfo);
         }
     }
 }

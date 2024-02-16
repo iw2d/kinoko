@@ -22,7 +22,11 @@ public final class UserHandler {
     public static void handleUserMove(User user, InPacket inPacket) {
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // 0
-        inPacket.decodeByte(); // bFieldKey
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // dwCrc
@@ -119,5 +123,19 @@ public final class UserHandler {
         final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
 
         user.getField().broadcastPacket(UserRemotePacket.userEmotion(user, emotion, duration, isByItemOption), user);
+    }
+
+    @Handler(InHeader.USER_PORTAL_TELEPORT_REQUEST)
+    public static void handleUserPortalTeleportRequest(User user, InPacket inPacket) {
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
+        final String portalName = inPacket.decodeString(); // sPortalName
+        final short x = inPacket.decodeShort(); // GetPos()->x
+        final short y = inPacket.decodeShort(); // GetPos()->x
+        inPacket.decodeShort(); // portal x
+        inPacket.decodeShort(); // portal y
     }
 }
