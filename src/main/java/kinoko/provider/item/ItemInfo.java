@@ -38,6 +38,14 @@ public final class ItemInfo {
         return getInfo(ItemInfoType.cash) != 0;
     }
 
+    public int getPrice() {
+        return getInfo(ItemInfoType.price);
+    }
+
+    public int getSlotMax() {
+        return getInfo(ItemInfoType.slotMax);
+    }
+
     public boolean isTradeBlock() {
         return getInfo(ItemInfoType.tradBlock) != 0 || getInfo(ItemInfoType.tradeBlock) != 0;
     }

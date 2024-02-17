@@ -86,10 +86,9 @@ public final class CharacterInventory {
             case ETC -> {
                 return getEtcInventory();
             }
-            case CASH -> {
+            default -> {
                 return getCashInventory();
             }
         }
-        return null;
     }
 }

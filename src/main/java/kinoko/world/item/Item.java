@@ -127,6 +127,10 @@ public final class Item implements Encodable {
     }
 
     public static Optional<Item> createById(long itemSn, int itemId) {
+        return createById(itemSn, itemId, 1);
+    }
+
+    public static Optional<Item> createById(long itemSn, int itemId, int quantity) {
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
             return Optional.empty();
@@ -137,7 +141,7 @@ public final class Item implements Encodable {
         item.setItemSn(itemSn);
         item.setItemId(itemId);
         item.setCash(ii.isCash());
-        item.setQuantity((short) 1);
+        item.setQuantity((short) quantity);
         if (type == ItemType.EQUIP) {
             item.setEquipData(EquipData.from(ii));
         } else if (type == ItemType.PET) {

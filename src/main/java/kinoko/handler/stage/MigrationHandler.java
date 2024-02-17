@@ -91,8 +91,8 @@ public final class MigrationHandler {
         channelServer.getClientStorage().addClient(c);
 
         // Add User to Field
-        final int fieldId = user.getCharacterData().getCharacterStat().getPosMap();
-        final byte portalId = user.getCharacterData().getCharacterStat().getPortal();
+        final int fieldId = user.getCharacterStat().getPosMap();
+        final byte portalId = user.getCharacterStat().getPortal();
         final Field field;
         final Optional<Field> fieldResult = channelServer.getFieldById(fieldId);
         if (fieldResult.isPresent()) {

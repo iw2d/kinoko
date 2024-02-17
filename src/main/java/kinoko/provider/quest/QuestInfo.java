@@ -1,5 +1,8 @@
 package kinoko.provider.quest;
 
+import kinoko.provider.ProviderError;
+import kinoko.provider.quest.act.QuestAct;
+import kinoko.provider.quest.act.QuestItemAct;
 import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Collections;
@@ -10,12 +13,12 @@ public final class QuestInfo {
     private final int questId;
     private final boolean autoStart;
     private final boolean autoComplete;
-    private final Set<QuestAction> startActs;
-    private final Set<QuestAction> completeActs;
+    private final Set<QuestAct> startActs;
+    private final Set<QuestAct> completeActs;
     private final Set<QuestCheck> startChecks;
     private final Set<QuestCheck> completeChecks;
 
-    public QuestInfo(int questId, boolean autoStart, boolean autoComplete, Set<QuestAction> startActs, Set<QuestAction> completeActs,
+    public QuestInfo(int questId, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs,
                      Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
         this.questId = questId;
         this.autoStart = autoStart;
@@ -38,11 +41,11 @@ public final class QuestInfo {
         return autoComplete;
     }
 
-    public Set<QuestAction> getStartActs() {
+    public Set<QuestAct> getStartActs() {
         return startActs;
     }
 
-    public Set<QuestAction> getCompleteActs() {
+    public Set<QuestAct> getCompleteActs() {
         return completeActs;
     }
 
@@ -70,7 +73,7 @@ public final class QuestInfo {
                 "completeChecks=" + completeChecks + ']';
     }
 
-    public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) {
+    public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) throws ProviderError {
         boolean autoStart = false;
         boolean autoComplete = false;
         for (var infoEntry : questInfo.getItems().entrySet()) {
@@ -87,21 +90,39 @@ public final class QuestInfo {
                 questId,
                 autoStart,
                 autoComplete,
-                Collections.unmodifiableSet(resolveQuestActs(questAct.get("0"))),
-                Collections.unmodifiableSet(resolveQuestActs(questAct.get("1"))),
-                Collections.unmodifiableSet(resolveQuestChecks(questAct.get("0"))),
-                Collections.unmodifiableSet(resolveQuestChecks(questAct.get("1")))
+                Collections.unmodifiableSet(resolveQuestActs(questId, questAct.get("0"))),
+                Collections.unmodifiableSet(resolveQuestActs(questId, questAct.get("1"))),
+                Collections.unmodifiableSet(resolveQuestChecks(questCheck.get("0"))),
+                Collections.unmodifiableSet(resolveQuestChecks(questCheck.get("1")))
         );
     }
 
-    private static Set<QuestAction> resolveQuestActs(WzListProperty actProps) {
-        final Set<QuestAction> questActions = new HashSet<>();
+    private static Set<String> acts = new HashSet<>();
+    private static Set<String> items = new HashSet<>();
+
+    private static Set<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
+        final Set<QuestAct> questActs = new HashSet<>();
         for (var entry : actProps.getItems().entrySet()) {
-            // TODO
+            final String actType = entry.getKey();
+            switch (actType) {
+                case "item" -> {
+                    if (!(entry.getValue() instanceof WzListProperty itemList)) {
+                        throw new ProviderError("Failed to resolve quest act item list");
+                    }
+                    questActs.add(QuestItemAct.from(itemList));
+                }
+                default -> {
+                    if (!acts.contains(actType)) {
+                        acts.add(actType);
+                        System.out.printf("%d %s%n", questId, actType);
+                    }
+                }
+            }
         }
-        return questActions;
+        return questActs;
     }
 
+    private static Set<String> checks = new HashSet<>();
     private static Set<QuestCheck> resolveQuestChecks(WzListProperty checkProps) {
         final Set<QuestCheck> questChecks = new HashSet<>();
         for (var entry : checkProps.getItems().entrySet()) {

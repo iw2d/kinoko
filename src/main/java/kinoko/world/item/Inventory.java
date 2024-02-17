@@ -1,9 +1,13 @@
 package kinoko.world.item;
 
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
+
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public final class Inventory {
+public class Inventory {
     private final SortedMap<Integer, Item> items = new TreeMap<>();
     private int size;
 
@@ -21,5 +25,14 @@ public final class Inventory {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public boolean hasItem(int itemId, int quantity) {
+        for (Item item : items.values()) {
+            if (item.getItemId() == itemId && item.getQuantity() > quantity) {
+                return true;
+            }
+        }
+        return false;
     }
 }

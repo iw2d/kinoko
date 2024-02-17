@@ -91,7 +91,7 @@ public final class AdminCommands {
     }
 
     @Command("meso")
-    public static void check(User user, String[] args) {
+    public static void meso(User user, String[] args) {
         user.addMoney(1_000_000);
         user.write(WvsContext.message(Message.system("Money : %d", user.getMoney())));
     }

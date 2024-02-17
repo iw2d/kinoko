@@ -7,7 +7,16 @@ public interface WzProvider {
         } else if (object instanceof String value) {
             return Integer.parseInt(value);
         }
-        return 0;
+        throw new ProviderError("Unexpected or missing value while extracting Integer");
+    }
+
+    static int getInteger(Object object, int defaultValue) {
+        if (object instanceof Integer value) {
+            return value;
+        } else if (object instanceof String value) {
+            return Integer.parseInt(value);
+        }
+        return defaultValue;
     }
 
     static String getString(Object object) {
@@ -16,6 +25,6 @@ public interface WzProvider {
         } else if (object instanceof String value) {
             return value;
         }
-        return "";
+        throw new ProviderError("Unexpected or missing value while extracting String");
     }
 }

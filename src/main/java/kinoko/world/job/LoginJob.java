@@ -8,7 +8,7 @@ public enum LoginJob {
     EXPLORER(1, Job.BEGINNER),
     CYGNUS(2, Job.NOBLESSE),
     ARAN(3, Job.ARAN_BEGINNER),
-    EVAN(4, Job.EVEN_BEGINNER);
+    EVAN(4, Job.EVAN_BEGINNER);
 
     private final int race;
     private final Job job;

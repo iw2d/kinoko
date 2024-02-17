@@ -121,8 +121,8 @@ public final class ComputedSkillInfo implements SkillInfo {
         return new ComputedSkillInfo(
                 skillId,
                 maxLevel,
-                WzProvider.getInteger(skillProp.get("psd")) != 0,
-                WzProvider.getInteger(skillProp.get("invisible")) != 0,
+                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
                 Collections.unmodifiableMap(stats),
                 rect
         );

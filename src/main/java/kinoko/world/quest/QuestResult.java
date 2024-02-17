@@ -31,7 +31,7 @@ public final class QuestResult implements Encodable {
                 outPacket.encodeShort(questId);
                 outPacket.encodeInt(time);
             }
-            case END_TIME_KEEP_QUEST_TIMER, FAILED_INVENTORY -> {
+            case END_TIME_KEEP_QUEST_TIMER, FAILED_INVENTORY, FAILED_TIME_OVER, RESET_QUEST_TIMER -> {
                 outPacket.encodeShort(questId);
             }
             case SUCCESS -> {
@@ -39,6 +39,22 @@ public final class QuestResult implements Encodable {
                 outPacket.encodeInt(templateId);
                 outPacket.encodeShort(nextQuestId);
             }
+            case FAILED_MESO, FAILED_PET, FAILED_EQUIPPED, FAILED_ONLY_ITEM -> {
+            }
         }
+    }
+
+    public static QuestResult success(int questId, int templateId, int nextQuestId) {
+        final QuestResult questResult = new QuestResult(QuestResultType.SUCCESS);
+        questResult.questId = questId;
+        questResult.templateId = templateId;
+        questResult.nextQuestId = nextQuestId;
+        return questResult;
+    }
+
+    public static QuestResult failed(int questId, QuestResultType type) {
+        final QuestResult questResult = new QuestResult(type);
+        questResult.questId = questId;
+        return questResult;
     }
 }

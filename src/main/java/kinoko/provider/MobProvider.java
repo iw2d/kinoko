@@ -45,9 +45,8 @@ public final class MobProvider implements WzProvider {
             if (!(mobEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
                 throw new ProviderError("Failed to resolve info property");
             }
-            final int link = WzProvider.getInteger(infoProp.get("link"));
-            if (link != 0) {
-                linkedMobs.put(mobId, new Tuple<>(link, infoProp));
+            if (infoProp.getItems().containsKey("link")) {
+                linkedMobs.put(mobId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
                 continue;
             }
             mobProperties.put(mobId, mobProperty);

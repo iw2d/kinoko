@@ -2,10 +2,12 @@ package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserPoolPacket;
+import kinoko.packet.world.Message;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.life.Life;
 import kinoko.world.user.temp.TemporaryStatManager;
@@ -33,6 +35,10 @@ public final class User extends Life {
         return characterData;
     }
 
+    public CharacterStat getCharacterStat() {
+        return characterData.getCharacterStat();
+    }
+
     public CalcDamage getCalcDamage() {
         return calcDamage;
     }
@@ -57,19 +63,27 @@ public final class User extends Life {
     }
 
     public int getLevel() {
-        return characterData.getCharacterStat().getLevel();
+        return getCharacterStat().getLevel();
+    }
+
+    public byte getGender() {
+        return getCharacterStat().getGender();
     }
 
     public short getJob() {
-        return characterData.getCharacterStat().getJob();
+        return getCharacterStat().getJob();
     }
 
     public String getName() {
         return characterData.getCharacterName();
     }
 
+    public CharacterInventory getInventory() {
+        return characterData.getCharacterInventory();
+    }
+
     public int getMoney() {
-        return characterData.getCharacterInventory().getMoney();
+        return getInventory().getMoney();
     }
 
 
@@ -84,8 +98,8 @@ public final class User extends Life {
             getField().removeUser(getCharacterId());
         }
         setField(destination);
-        getCharacterData().getCharacterStat().setPosMap(destination.getFieldId());
-        getCharacterData().getCharacterStat().setPortal((byte) portalId);
+        getCharacterStat().setPosMap(destination.getFieldId());
+        getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
     }
@@ -108,9 +122,18 @@ public final class User extends Life {
         if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
             return false;
         }
-        getCharacterData().getCharacterInventory().setMoney((int) newMoney);
+        getInventory().setMoney((int) newMoney);
         write(WvsContext.statChanged(Set.of(StatFlag.MONEY), characterData));
         return true;
+    }
+
+    public void addExp(int exp, boolean white, boolean quest) {
+        final int newExp = getCharacterStat().getExp() + exp;
+        final int nextLevelExp = GameConstants.getNextLevelExp(getLevel());
+        if (newExp >= nextLevelExp) {
+            // TODO level up
+        }
+        write(WvsContext.message(Message.incExp(exp, white, quest)));
     }
 
 

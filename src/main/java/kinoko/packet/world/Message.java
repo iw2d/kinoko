@@ -66,7 +66,7 @@ public final class Message implements Encodable {
                 outPacket.encodeByte(0); // ignored
                 outPacket.encodeInt(0); // nWeddingBonusEXP
                 // outPacket.encodeByte(0); // nPlayTimeHour (if nMobEventBonusPercentage > 0)
-                outPacket.encodeByte(0); // nQuestBonusRemainCount (or spirit week bonus exp)
+                outPacket.encodeByte(0); // if (bOnQuest) nQuestBonusRemainCount else nSpiritWeekEventEXP
                 outPacket.encodeByte(0); // nPartyBonusEventRate
                 outPacket.encodeInt(0); // nPartyBonusExp
                 outPacket.encodeInt(0); // nItemBonusEXP

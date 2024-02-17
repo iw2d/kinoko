@@ -35,9 +35,9 @@ public final class StagePacket {
             outPacket.encodeArray(new byte[4 * 3]); // anLogoutGiftCommoditySN
         } else {
             outPacket.encodeByte(isRevive);
-            outPacket.encodeInt(user.getCharacterData().getCharacterStat().getPosMap());
-            outPacket.encodeByte(user.getCharacterData().getCharacterStat().getPortal());
-            outPacket.encodeInt(user.getCharacterData().getCharacterStat().getHp());
+            outPacket.encodeInt(user.getCharacterStat().getPosMap());
+            outPacket.encodeByte(user.getCharacterStat().getPortal());
+            outPacket.encodeInt(user.getCharacterStat().getHp());
             outPacket.encodeByte(false); // bChaseEnable -> int, int
         }
 

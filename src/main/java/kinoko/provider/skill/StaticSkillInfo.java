@@ -113,8 +113,8 @@ public final class StaticSkillInfo implements SkillInfo {
         return new StaticSkillInfo(
                 skillId,
                 maxLevel,
-                WzProvider.getInteger(skillProp.get("psd")) != 0,
-                WzProvider.getInteger(skillProp.get("invisible")) != 0,
+                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
                 stats,
                 rect
         );

@@ -10,8 +10,9 @@ public enum QuestResultType {
     // QuestRes_Act
     SUCCESS(10),
     FAILED_UNKNOWN(11),
-    FAILED_INVENTORY(11),
+    FAILED_INVENTORY(12),
     FAILED_MESO(13),
+    FAILED_PET(14), // unhandled
     FAILED_EQUIPPED(15),
     FAILED_ONLY_ITEM(16),
     FAILED_TIME_OVER(17),
