@@ -45,24 +45,22 @@ public final class InventoryHandler {
         final int newPos = inPacket.decodeShort(); // nNewPos
         final int count = inPacket.decodeShort(); // nCount
 
-        final InventoryType oldType = (inventoryType == InventoryType.EQUIP && oldPos < 0) ? InventoryType.EQUIPPED : inventoryType;
-        final InventoryType newType = (inventoryType == InventoryType.EQUIP && newPos < 0) ? InventoryType.EQUIPPED : inventoryType;
-
-        final int actualPos = oldType == InventoryType.EQUIPPED ? -oldPos : oldPos;
-
-        final Inventory inventory = user.getInventory().getInventoryByType(oldType);
-        final Item item = inventory.getItems().get(actualPos);
+        final InventoryType actualType = InventoryType.getByPosition(inventoryType, oldPos);
+        final Inventory inventory = user.getInventory().getInventoryByType(actualType);
+        final Item item = inventory.getItem(oldPos);
         if (item == null) {
-            log.error("Could not find item in {} inventory, position {}", oldType.name(), actualPos);
+            log.error("Could not find item in {} inventory, position {}", actualType.name(), oldPos);
             return;
         }
         if (newPos == 0) {
+            // TODO: implement count
+
             // CDraggableItem::ThrowItem
-            if (!inventory.getItems().remove(actualPos, item)) {
-                log.error("Failed to remove item in {} inventory, position {}", oldType.name(), actualPos);
+            if (!inventory.removeItem(oldPos, item)) {
+                log.error("Failed to remove item in {} inventory, position {}", actualType.name(), oldPos);
                 return;
             }
-            // Remove item from inventory
+            // Remove item from client inventory
             user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos)));
             // Create drop
             final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
@@ -70,7 +68,13 @@ public final class InventoryHandler {
             drop.setY(user.getY());
             user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE);
         } else {
-            // TODO
+            final InventoryType secondType = InventoryType.getByPosition(inventoryType, newPos);
+            final Inventory secondInventory = user.getInventory().getInventoryByType(secondType);
+            final Item secondItem = secondInventory.getItem(newPos);
+            inventory.putItem(oldPos, secondItem);
+            secondInventory.putItem(newPos, item);
+            // Swap item position in client inventory
+            user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos)));
         }
     }
 

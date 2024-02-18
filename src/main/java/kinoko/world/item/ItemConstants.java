@@ -41,12 +41,16 @@ public final class ItemConstants {
     }
 
     public static boolean isWeapon(int itemId) {
-        final int prefix = itemId / 100000;
-        return prefix == 13 || prefix == 14 || prefix == 16 || prefix == 17;
+        final int weaponPrefix = itemId / 100000;
+        return weaponPrefix == 13 || weaponPrefix == 14 || weaponPrefix == 16 || weaponPrefix == 17;
     }
 
     public static boolean isPet(int itemId) {
         return getItemPrefix(itemId) == 500;
+    }
+
+    public static boolean isRechargeableItem(int itemId) {
+        return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
     }
 
     public static boolean isCorrectBodyPart(int itemId, BodyPart bodyPart, int gender) {

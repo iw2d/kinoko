@@ -1,7 +1,10 @@
 package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
+import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.world.GameConstants;
+import kinoko.world.item.ItemType;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -31,7 +34,7 @@ public final class ItemInfo {
     }
 
     public int getInfo(ItemInfoType infoType) {
-        return (int) itemInfos.getOrDefault(infoType, 0);
+        return WzProvider.getInteger(itemInfos.get(infoType), 0);
     }
 
     public boolean isCash() {
@@ -43,7 +46,10 @@ public final class ItemInfo {
     }
 
     public int getSlotMax() {
-        return getInfo(ItemInfoType.slotMax);
+        if (getItemInfos().containsKey(ItemInfoType.slotMax)) {
+            return getInfo(ItemInfoType.slotMax);
+        }
+        return ItemType.getByItemId(itemId) == ItemType.BUNDLE ? GameConstants.DEFAULT_ITEM_SLOT_MAX : 1;
     }
 
     public boolean isTradeBlock() {

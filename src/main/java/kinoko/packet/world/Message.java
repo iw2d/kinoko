@@ -173,7 +173,7 @@ public final class Message implements Encodable {
         return message;
     }
 
-    private enum DropPickUpMessageType {
+    public enum DropPickUpMessageType {
         CANNOT_ACQUIRE_ANY_ITEMS(-3),
         UNAVAILABLE_FOR_PICK_UP(-2),
         CANNOT_GET_ANYMORE_ITEMS(-1),

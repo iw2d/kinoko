@@ -23,12 +23,23 @@ public class Inventory {
         this.size = size;
     }
 
-    public boolean hasItem(int itemId, int quantity) {
-        for (Item item : items.values()) {
-            if (item.getItemId() == itemId && item.getQuantity() > quantity) {
-                return true;
-            }
+    public Item getItem(int position) {
+        return items.get(Math.abs(position));
+    }
+
+    public void putItem(int position, Item item) {
+        if (item != null) {
+            items.put(Math.abs(position), item);
+        } else {
+            items.remove(Math.abs(position));
         }
-        return false;
+    }
+
+    public Item removeItem(int position) {
+        return items.remove(Math.abs(position));
+    }
+
+    public boolean removeItem(int position, Item item) {
+        return items.remove(Math.abs(position), item);
     }
 }

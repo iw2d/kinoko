@@ -38,8 +38,7 @@ public final class QuestItemAct implements QuestAct {
                 final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
                 requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
             } else {
-                final Inventory inventory = user.getInventory().getInventoryByItemId(itemData.getItemId());
-                if (!inventory.hasItem(itemData.getItemId(), itemData.getCount())) {
+                if (!user.hasItem(itemData.getItemId(), itemData.getCount())) {
                     return false;
                 }
             }

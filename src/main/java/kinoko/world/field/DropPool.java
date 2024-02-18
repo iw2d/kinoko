@@ -5,6 +5,8 @@ import kinoko.world.drop.Drop;
 import kinoko.world.drop.DropEnterType;
 import kinoko.world.drop.DropLeaveType;
 
+import java.util.function.Predicate;
+
 public final class DropPool extends FieldObjectPool<Drop> {
     public DropPool(Field field) {
         super(field);

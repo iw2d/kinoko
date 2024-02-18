@@ -9,9 +9,13 @@ import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.item.InventoryOperation;
+import kinoko.world.item.Item;
 import kinoko.world.life.Life;
 import kinoko.world.user.temp.TemporaryStatManager;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public final class User extends Life {
@@ -111,17 +115,7 @@ public final class User extends Life {
     }
 
 
-    // UTILITY METHODS -------------------------------------------------------------------------------------------------
-
-    public boolean addMoney(int money) {
-        final long newMoney = ((long) getMoney()) + money;
-        if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
-            return false;
-        }
-        getInventory().setMoney((int) newMoney);
-        write(WvsContext.statChanged(Set.of(StatFlag.MONEY), characterData));
-        return true;
-    }
+    // STAT METHODS ----------------------------------------------------------------------------------------------------
 
     public void addExp(int exp, boolean white, boolean quest) {
         final int newExp = getCharacterStat().getExp() + exp;
@@ -130,6 +124,30 @@ public final class User extends Life {
             // TODO level up
         }
         write(WvsContext.message(Message.incExp(exp, white, quest)));
+    }
+
+
+    // INVENTORY METHODS -----------------------------------------------------------------------------------------------
+
+    public boolean hasItem(int itemId, int count) {
+        return getInventory().hasItem(itemId, count);
+    }
+
+    public boolean addItem(Item item) {
+        final Optional<List<InventoryOperation>> addItemResult = getInventory().addItem(item);
+        if (addItemResult.isEmpty()) {
+            return false;
+        }
+        write(WvsContext.inventoryOperation(addItemResult.get(), true));
+        return true;
+    }
+
+    public boolean addMoney(int money) {
+        if (!getInventory().addMoney(money)) {
+            return false;
+        }
+        write(WvsContext.statChanged(Set.of(StatFlag.MONEY), characterData));
+        return true;
     }
 
 

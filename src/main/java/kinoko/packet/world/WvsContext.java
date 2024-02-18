@@ -29,16 +29,16 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket inventoryOperation(InventoryOperation inventoryOperation) {
-        return inventoryOperation(List.of(inventoryOperation), true);
+    public static OutPacket inventoryOperation(InventoryOperation op) {
+        return inventoryOperation(List.of(op), true);
     }
 
     public static OutPacket inventoryOperation(List<InventoryOperation> inventoryOperations, boolean exclRequestSent) {
         final OutPacket outPacket = OutPacket.of(OutHeader.INVENTORY_OPERATION);
         outPacket.encodeByte(exclRequestSent); // bool -> bExclRequestSent = 0
         outPacket.encodeByte(inventoryOperations.size());
-        for (InventoryOperation inventoryOperation : inventoryOperations) {
-            inventoryOperation.encode(outPacket);
+        for (InventoryOperation op : inventoryOperations) {
+            op.encode(outPacket);
         }
         return outPacket;
     }

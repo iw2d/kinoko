@@ -37,7 +37,45 @@ public final class EquipData {
     private byte levelUpType;
     private byte level;
     private int exp;
-    private int durability;
+    private int durability = -1;
+
+    public EquipData() {
+    }
+
+    public EquipData(EquipData equipData) {
+        this.incStr = equipData.incStr;
+        this.incDex = equipData.incDex;
+        this.incInt = equipData.incInt;
+        this.incLuk = equipData.incLuk;
+        this.incMaxHp = equipData.incMaxHp;
+        this.incMaxMp = equipData.incMaxMp;
+        this.incPad = equipData.incPad;
+        this.incMad = equipData.incMad;
+        this.incPdd = equipData.incPdd;
+        this.incMdd = equipData.incMdd;
+        this.incAcc = equipData.incAcc;
+        this.incEva = equipData.incEva;
+        this.incCraft = equipData.incCraft;
+        this.incSpeed = equipData.incSpeed;
+        this.incJump = equipData.incJump;
+
+        this.ruc = equipData.ruc;
+        this.cuc = equipData.cuc;
+        this.iuc = equipData.iuc;
+        this.chuc = equipData.chuc;
+
+        this.grade = equipData.grade;
+        this.option1 = equipData.option1;
+        this.option2 = equipData.option2;
+        this.option3 = equipData.option3;
+        this.socket1 = equipData.socket1;
+        this.socket2 = equipData.socket2;
+
+        this.levelUpType = equipData.levelUpType;
+        this.level = equipData.level;
+        this.exp = equipData.exp;
+        this.durability = equipData.durability;
+    }
 
     public void encode(Item item, OutPacket outPacket) {
         outPacket.encodeByte(getRuc()); // nRUC

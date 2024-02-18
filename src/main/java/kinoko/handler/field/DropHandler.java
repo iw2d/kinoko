@@ -1,9 +1,13 @@
 package kinoko.handler.field;
 
 import kinoko.handler.Handler;
+import kinoko.packet.world.Message;
+import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.world.GameConstants;
 import kinoko.world.drop.Drop;
+import kinoko.world.drop.DropLeaveType;
 import kinoko.world.field.Field;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -33,8 +37,29 @@ public final class DropHandler {
             user.dispose();
             return;
         }
-
-        // TODO
-        user.dispose();
+        final Drop drop = dropResult.get();
+        if (drop.isMoney()) {
+            final long newMoney = ((long) user.getMoney()) + drop.getMoney();
+            if (newMoney > GameConstants.MAX_MONEY) {
+                user.write(WvsContext.message(Message.dropPickUp(Message.DropPickUpMessageType.UNAVAILABLE_FOR_PICK_UP)));
+                user.dispose();
+                return;
+            }
+        } else {
+            if (user.getInventory().canAddItem(drop.getItem()).isEmpty()) {
+                user.write(WvsContext.message(Message.dropPickUp(Message.DropPickUpMessageType.CANNOT_GET_ANYMORE_ITEMS)));
+                user.dispose();
+                return;
+            }
+        }
+        if (field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getId(), 0)) {
+            if (drop.isMoney()) {
+                user.addMoney(drop.getMoney());
+            } else {
+                user.addItem(drop.getItem());
+            }
+        } else {
+            user.dispose();
+        }
     }
 }

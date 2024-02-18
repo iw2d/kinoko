@@ -249,7 +249,7 @@ public final class LoginHandler {
             if (startingEquip.isEmpty()) {
                 continue;
             }
-            characterInventory.getEquipped().getItems().put(bodyPart.getValue(), startingEquip.get());
+            characterInventory.getEquipped().putItem(bodyPart.getValue(), startingEquip.get());
         }
 
         // Initialize Skills

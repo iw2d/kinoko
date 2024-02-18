@@ -24,17 +24,30 @@ public final class Item implements Encodable {
         this.itemType = itemType;
     }
 
+    public Item(Item item) {
+        this(item.getItemType());
+        this.itemSn = item.itemSn;
+        this.itemId = item.itemId;
+        this.cash = item.cash;
+        this.quantity = item.quantity;
+        this.attribute = item.attribute;
+        this.dateExpire = item.dateExpire;
+        this.title = item.title;
+        this.equipData = item.equipData != null ? new EquipData(item.equipData) : null;
+        this.petData = item.petData != null ? new PetData(item.petData) : null;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getItemType().getValue()); // nType
 
         // GW_ItemSlotBase::RawDecode
-        outPacket.encodeInt(getItemId()); // nItemID
-        outPacket.encodeByte(isCash());
-        if (isCash()) {
-            outPacket.encodeLong(getItemSn()); // liCashItemSN
+        outPacket.encodeInt(itemId); // nItemID
+        outPacket.encodeByte(cash);
+        if (cash) {
+            outPacket.encodeLong(itemSn); // liCashItemSN
         }
-        outPacket.encodeFT(getDateExpire()); // dateExpire
+        outPacket.encodeFT(dateExpire); // dateExpire
 
         switch (getItemType()) {
             case EQUIP -> {
@@ -47,13 +60,12 @@ public final class Item implements Encodable {
             }
             default -> {
                 // GW_ItemSlotBundle::RawDecode
-                outPacket.encodeShort(getQuantity()); // nNumber
-                outPacket.encodeString(getTitle()); // sTitle
-                outPacket.encodeShort(getAttribute()); // nAttribute
+                outPacket.encodeShort(quantity); // nNumber
+                outPacket.encodeString(title); // sTitle
+                outPacket.encodeShort(attribute); // nAttribute
 
-                final int itemPrefix = getItemId() / 10000;
-                if (itemPrefix == 207 || itemPrefix == 233) {
-                    outPacket.encodeLong(getItemSn());
+                if (ItemConstants.isRechargeableItem(itemId)) {
+                    outPacket.encodeLong(itemSn);
                 }
             }
         }
