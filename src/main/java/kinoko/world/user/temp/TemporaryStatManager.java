@@ -55,24 +55,26 @@ public final class TemporaryStatManager {
         statFlag.encode(outPacket);
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.REMOTE_ENCODE_ORDER) {
-            switch (cts) {
-                case Speed, ComboCounter, Cyclone -> {
-                    outPacket.encodeByte(stats.get(cts).nOption);
-                }
-                case Morph, Ghost -> {
-                    outPacket.encodeShort(stats.get(cts).nOption);
-                }
-                case SpiritJavelin, RespectPImmune, RespectMImmune, DefenseAtt, DefenseState, MagicShield -> {
-                    outPacket.encodeInt(stats.get(cts).nOption);
-                }
-                case WeaponCharge, Stun, Darkness, Seal, Weakness, ShadowPartner, Attract, BanMap, DojangShield,
-                        ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen, SuddenDeath, FinalCut,
-                        Mechanic, DarkAura, BlueAura, YellowAura -> {
-                    outPacket.encodeInt(stats.get(cts).rOption);
-                }
-                case Poison -> {
-                    outPacket.encodeShort(stats.get(cts).nOption); // overwritten with 1
-                    outPacket.encodeInt(stats.get(cts).rOption);
+            if (statFlag.hasFlag(cts)) {
+                switch (cts) {
+                    case Speed, ComboCounter, Cyclone -> {
+                        outPacket.encodeByte(stats.get(cts).nOption);
+                    }
+                    case Morph, Ghost -> {
+                        outPacket.encodeShort(stats.get(cts).nOption);
+                    }
+                    case SpiritJavelin, RespectPImmune, RespectMImmune, DefenseAtt, DefenseState, MagicShield -> {
+                        outPacket.encodeInt(stats.get(cts).nOption);
+                    }
+                    case WeaponCharge, Stun, Darkness, Seal, Weakness, ShadowPartner, Attract, BanMap, DojangShield,
+                            ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen, SuddenDeath, FinalCut,
+                            Mechanic, DarkAura, BlueAura, YellowAura -> {
+                        outPacket.encodeInt(stats.get(cts).rOption);
+                    }
+                    case Poison -> {
+                        outPacket.encodeShort(stats.get(cts).nOption); // overwritten with 1
+                        outPacket.encodeInt(stats.get(cts).rOption);
+                    }
                 }
             }
         }

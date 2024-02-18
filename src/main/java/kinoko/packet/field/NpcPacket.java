@@ -1,4 +1,4 @@
-package kinoko.packet.life;
+package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
@@ -9,7 +9,7 @@ public final class NpcPacket {
 
     public static OutPacket npcEnterField(Npc npc) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_ENTER_FIELD);
-        outPacket.encodeInt(npc.getObjectId()); // dwNpcID
+        outPacket.encodeInt(npc.getId()); // dwNpcID
         outPacket.encodeInt(npc.getTemplateId()); // dwTemplateID
         npc.encodeInit(outPacket);
         return outPacket;
@@ -17,14 +17,14 @@ public final class NpcPacket {
 
     public static OutPacket npcLeaveField(Npc npc) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_LEAVE_FIELD);
-        outPacket.encodeInt(npc.getObjectId()); // dwNpcID
+        outPacket.encodeInt(npc.getId()); // dwNpcID
         return outPacket;
     }
 
     public static OutPacket npcChangeController(Npc npc, boolean forController) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_CHANGE_CONTROLLER);
         outPacket.encodeByte(forController);
-        outPacket.encodeInt(npc.getObjectId()); // dwNpcID
+        outPacket.encodeInt(npc.getId()); // dwNpcID
         if (forController) {
             outPacket.encodeInt(npc.getTemplateId()); // dwTemplateID
             npc.encodeInit(outPacket);
@@ -34,7 +34,7 @@ public final class NpcPacket {
 
     public static OutPacket npcMove(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_MOVE);
-        outPacket.encodeInt(npc.getObjectId());
+        outPacket.encodeInt(npc.getId());
         outPacket.encodeByte(oneTimeAction);
         outPacket.encodeByte(chatIndex);
         if (movePath != null) {

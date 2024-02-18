@@ -76,9 +76,9 @@ public final class FieldHandler {
             return;
         }
         final ChannelServer channelServer = channelResult.get();
-        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getCharacterId());
+        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getId());
         if (mrResult.isEmpty()) {
-            log.error("Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
+            log.error("Failed to submit migration request for character ID : {}", c.getUser().getId());
             c.write(FieldPacket.transferChannelReqIgnored(1));
             return;
         }

@@ -160,7 +160,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             Sneak, MorewildDamageUp, Mechanic, DarkAura, BlueAura, YellowAura, BlessingArmor
     );
     public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
-            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet, Undead
+            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet // Undead doesn't fit in the mask...
     );
     public static final List<CharacterTemporaryStat> SWALLOW_BUFF = List.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion

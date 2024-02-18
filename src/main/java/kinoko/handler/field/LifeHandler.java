@@ -1,7 +1,8 @@
-package kinoko.handler.life;
+package kinoko.handler.field;
 
 import kinoko.handler.Handler;
-import kinoko.packet.life.MobPacket;
+import kinoko.packet.field.MobPacket;
+import kinoko.packet.field.NpcPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
@@ -18,6 +19,7 @@ import kinoko.world.life.MovePath;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobActionType;
 import kinoko.world.life.mob.MobAttackInfo;
+import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public final class MobHandler {
-    private static final Logger log = LogManager.getLogger(MobHandler.class);
+public final class LifeHandler {
+    private static final Logger log = LogManager.getLogger(LifeHandler.class);
 
     @Handler(InHeader.MOB_MOVE)
     public static void handleMobMove(User user, InPacket inPacket) {
@@ -37,7 +39,7 @@ public final class MobHandler {
         final int objectId = inPacket.decodeInt(); // dwMobID
 
         final Field field = user.getField();
-        final Optional<Life> lifeResult = field.getLifeById(objectId);
+        final Optional<Life> lifeResult = field.getLifePool().getById(objectId);
         if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Mob mob)) {
             log.error("Received MOB_MOVE for invalid life with ID : {}", objectId);
             return;
@@ -154,5 +156,22 @@ public final class MobHandler {
         inPacket.decodeInt(); // dwMobID
         inPacket.decodeInt(); // unk
         // do nothing, since the controller logic is handled elsewhere
+    }
+
+    @Handler(InHeader.NPC_MOVE)
+    public static void handleNpcMove(User user, InPacket inPacket) {
+        final int objectId = inPacket.decodeInt(); // dwNpcId
+        final byte oneTimeAction = inPacket.decodeByte(); // nOneTimeAction
+        final byte chatIndex = inPacket.decodeByte(); // nChatIdx
+
+        final Field field = user.getField();
+        final Optional<Life> lifeResult = field.getLifePool().getById(objectId);
+        if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Npc npc)) {
+            log.error("Received NPC_MOVE for invalid life with ID : {}", objectId);
+            return;
+        }
+
+        final MovePath movePath = npc.isMove() ? MovePath.decode(inPacket) : null;
+        field.broadcastPacket(NpcPacket.npcMove(npc, oneTimeAction, chatIndex, movePath));
     }
 }

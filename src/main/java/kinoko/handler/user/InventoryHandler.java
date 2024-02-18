@@ -4,20 +4,16 @@ import kinoko.handler.Handler;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.world.field.Field;
+import kinoko.world.drop.Drop;
+import kinoko.world.drop.DropEnterType;
+import kinoko.world.drop.DropOwnType;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
-import kinoko.world.life.Life;
-import kinoko.world.life.drop.Drop;
-import kinoko.world.life.drop.DropEnterType;
-import kinoko.world.life.drop.DropOwnType;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Optional;
 
 public final class InventoryHandler {
     private static final Logger log = LogManager.getLogger(InventoryHandler.class);
@@ -70,7 +66,9 @@ public final class InventoryHandler {
             user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos)));
             // Create drop
             final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
-            user.getField().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY());
+            drop.setX(user.getX()); // TODO: findFootholdBelow
+            drop.setY(user.getY());
+            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE);
         } else {
             // TODO
         }
@@ -85,30 +83,8 @@ public final class InventoryHandler {
             return;
         }
         final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, 0);
-        user.getField().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY());
-    }
-
-    @Handler(InHeader.DROP_PICK_UP_REQUEST)
-    public static void handleDropPickUpRequest(User user, InPacket inPacket) {
-        final byte fieldKey = inPacket.decodeByte();
-        if (user.getField().getFieldKey() != fieldKey) {
-            user.dispose();
-            return;
-        }
-        inPacket.decodeInt(); // update_time
-        inPacket.decodeShort(); // pt->x
-        inPacket.decodeShort(); // pt->y
-        final int objectId = inPacket.decodeInt(); // dwDropID
-        inPacket.decodeInt(); // dwCliCrc
-
-        final Field field = user.getField();
-        final Optional<Life> lifeResult = field.getLifeById(objectId);
-        if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Drop drop)) {
-            user.dispose();
-            return;
-        }
-
-        // TODO
-        user.dispose();
+        drop.setX(user.getX()); // TODO: findFootholdBelow
+        drop.setY(user.getY());
+        user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE);
     }
 }

@@ -8,7 +8,7 @@ import kinoko.world.user.User;
 public final class UserPoolPacket {
     public static OutPacket userEnterField(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_ENTER_FIELD);
-        outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
+        outPacket.encodeInt(user.getId()); // dwCharacterId
         // CUserRemote::Init
         outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeString(user.getName()); // sCharacterName
@@ -32,7 +32,7 @@ public final class UserPoolPacket {
         outPacket.encodeShort(user.getX()); // x
         outPacket.encodeShort(user.getY()); // y
         outPacket.encodeByte(user.getMoveAction()); // nMoveAction
-        outPacket.encodeShort(user.getFh());
+        outPacket.encodeShort(user.getFoothold());
 
         outPacket.encodeByte(false); // bShowAdminEffect
 
@@ -70,7 +70,7 @@ public final class UserPoolPacket {
 
     public static OutPacket userLeaveField(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_LEAVE_FIELD);
-        outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
+        outPacket.encodeInt(user.getId()); // dwCharacterId
         return outPacket;
     }
 }

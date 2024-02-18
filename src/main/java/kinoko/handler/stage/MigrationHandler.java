@@ -98,7 +98,7 @@ public final class MigrationHandler {
         if (fieldResult.isPresent()) {
             field = fieldResult.get();
         } else {
-            log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
+            log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getId(), 100000000);
             field = channelServer.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
         }
         user.warp(field, portalId, true, false);

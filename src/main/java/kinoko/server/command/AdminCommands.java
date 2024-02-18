@@ -27,7 +27,7 @@ public final class AdminCommands {
     @Command("info")
     public static void info(User user, String[] args) {
         user.write(WvsContext.message(Message.system("Field ID : %d", user.getField().getFieldId())));
-        user.write(WvsContext.message(Message.system("x : %d, y : %d, fh : %d", user.getX(), user.getY(), user.getFh())));
+        user.write(WvsContext.message(Message.system("x : %d, y : %d, fh : %d", user.getX(), user.getY(), user.getFoothold())));
     }
 
     @Command("npc")
@@ -82,12 +82,12 @@ public final class AdminCommands {
         final Mob mob = new Mob(
                 user.getX(),
                 user.getY(),
-                user.getFh(),
+                user.getFoothold(),
                 mobInfoResult.get(),
                 MobAppearType.NORMAL
         );
         mob.setField(user.getField());
-        user.getField().addLife(mob);
+        user.getField().getLifePool().addLife(mob);
     }
 
     @Command("meso")

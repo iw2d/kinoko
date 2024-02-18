@@ -58,10 +58,6 @@ public final class User extends Life {
         return getConnectedServer().getChannelId();
     }
 
-    public int getCharacterId() {
-        return characterData.getCharacterId();
-    }
-
     public int getLevel() {
         return getCharacterStat().getLevel();
     }
@@ -95,13 +91,13 @@ public final class User extends Life {
 
     public void warp(Field destination, int portalId, boolean isMigrate, boolean isRevive) {
         if (getField() != null) {
-            getField().removeUser(getCharacterId());
+            getField().getUserPool().removeUser(this);
         }
         setField(destination);
         getCharacterStat().setPosMap(destination.getFieldId());
         getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
-        destination.addUser(this);
+        destination.getUserPool().addUser(this);
     }
 
     public void dispose() {
@@ -110,7 +106,7 @@ public final class User extends Life {
 
     public void logout() {
         if (getField() != null) {
-            getField().removeUser(getCharacterId());
+            getField().getUserPool().removeUser(this);
         }
     }
 
@@ -140,8 +136,13 @@ public final class User extends Life {
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
-    public int getObjectId() {
-        return getCharacterId();
+    public int getId() {
+        return characterData.getCharacterId();
+    }
+
+    @Override
+    public void setId(int id) {
+        throw new IllegalStateException();
     }
 
     @Override

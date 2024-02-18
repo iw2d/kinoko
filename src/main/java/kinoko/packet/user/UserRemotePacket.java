@@ -9,14 +9,14 @@ import kinoko.world.user.User;
 public final class UserRemotePacket {
     public static OutPacket userMove(User user, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT);
-        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(user.getId());
         movePath.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket userAttack(User user, Attack a) {
         final OutPacket outPacket = OutPacket.of(a.getHeaderType());
-        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(user.getId());
         outPacket.encodeByte(a.mask); // nDamagePerMob | (16 * nMobCount)
         outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeByte(a.slv);
@@ -92,7 +92,7 @@ public final class UserRemotePacket {
 
     public static OutPacket userEmotion(User user, int emotion, int duration, boolean isByItemOption) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_EMOTION);
-        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(user.getId());
         outPacket.encodeInt(emotion);
         outPacket.encodeInt(duration);
         outPacket.encodeByte(isByItemOption); // bEmotionByItemOption
@@ -101,7 +101,7 @@ public final class UserRemotePacket {
 
     public static OutPacket userSetActivePortableChair(User user, int itemId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
-        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(user.getId());
         outPacket.encodeInt(itemId); // nPortableChairID
         return outPacket;
     }

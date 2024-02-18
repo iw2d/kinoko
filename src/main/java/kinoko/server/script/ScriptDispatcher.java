@@ -37,7 +37,7 @@ public final class ScriptDispatcher {
     }
 
     public static Optional<ScriptManager> getScriptManager(User user) {
-        final Tuple<ScriptManager, Context> tuple = scriptManagers.get(user.getCharacterId());
+        final Tuple<ScriptManager, Context> tuple = scriptManagers.get(user.getId());
         if (tuple == null) {
             return Optional.empty();
         }
@@ -45,14 +45,14 @@ public final class ScriptDispatcher {
     }
 
     public static void removeScriptManager(User user) {
-        final Tuple<ScriptManager, Context> tuple = scriptManagers.remove(user.getCharacterId());
+        final Tuple<ScriptManager, Context> tuple = scriptManagers.remove(user.getId());
         if (tuple != null) {
             tuple.getRight().close(true);
         }
     }
 
     public static void startNpcScript(User user, int speakerId, String scriptName) {
-        if (scriptManagers.containsKey(user.getCharacterId())) {
+        if (scriptManagers.containsKey(user.getId())) {
             log.error("Script already being evaluated.");
             return;
         }
@@ -65,7 +65,7 @@ public final class ScriptDispatcher {
     }
 
     public static void startPortalScript(User user, String scriptName) {
-        if (scriptManagers.containsKey(user.getCharacterId())) {
+        if (scriptManagers.containsKey(user.getId())) {
             log.error("Script already being evaluated.");
             user.dispose();
             return;
@@ -80,7 +80,7 @@ public final class ScriptDispatcher {
     }
 
     public static void startQuestScript(User user, int speakerId, int questId, boolean isStart) {
-        if (scriptManagers.containsKey(user.getCharacterId())) {
+        if (scriptManagers.containsKey(user.getId())) {
             log.error("Script already being evaluated.");
             return;
         }
@@ -102,7 +102,7 @@ public final class ScriptDispatcher {
                 .build();
         context.getBindings(SCRIPT_LANGUAGE).putMember("user", user);
         context.getBindings(SCRIPT_LANGUAGE).putMember("sm", scriptManager);
-        scriptManagers.put(user.getCharacterId(), new Tuple<>(scriptManager, context));
+        scriptManagers.put(user.getId(), new Tuple<>(scriptManager, context));
         // Evaluate script with virtual thread executor
         executor.submit(() -> {
             try {

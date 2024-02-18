@@ -3,7 +3,6 @@ package kinoko.world.life;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
-import kinoko.world.field.FieldObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,17 +42,17 @@ public final class MovePath implements Encodable {
         return moveElems;
     }
 
-    public void applyTo(FieldObject fieldObject) {
+    public void applyTo(Life life) {
         for (MoveElem elem : getElems()) {
             switch (MoveType.fromAttr(elem.getAttr())) {
                 case NORMAL, TELEPORT -> {
-                    fieldObject.setX(elem.getX());
-                    fieldObject.setY(elem.getY());
-                    fieldObject.setFh(elem.getFh());
+                    life.setX(elem.getX());
+                    life.setY(elem.getY());
+                    life.setFoothold(elem.getFh());
                 }
                 case JUMP, START_FALL_DOWN, FLYING_BLOCK -> {
-                    fieldObject.setX(elem.getX());
-                    fieldObject.setY(elem.getY());
+                    life.setX(elem.getX());
+                    life.setY(elem.getY());
                 }
                 case STAT_CHANGE -> {
                     continue;
@@ -62,7 +61,7 @@ public final class MovePath implements Encodable {
                     // noop
                 }
             }
-            fieldObject.setMoveAction(elem.getMoveAction());
+            life.setMoveAction(elem.getMoveAction());
         }
     }
 

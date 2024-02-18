@@ -1,4 +1,4 @@
-package kinoko.world.life.drop;
+package kinoko.world.drop;
 
 public enum DropOwnType {
     USER_OWN(0),

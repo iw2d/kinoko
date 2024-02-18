@@ -1,6 +1,6 @@
 package kinoko.world.life.mob;
 
-import kinoko.packet.life.MobPacket;
+import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobInfo;
@@ -35,7 +35,7 @@ public final class Mob extends Life implements ControlledObject {
         // Life initialization
         setX(x);
         setY(y);
-        setFh(fh);
+        setFoothold(fh);
         setMoveAction(5); // idk
 
         // Mob initialization
@@ -149,7 +149,7 @@ public final class Mob extends Life implements ControlledObject {
 
     @Override
     public String toString() {
-        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d }", getTemplateId(), getObjectId(), getHp(), getMp());
+        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d }", getTemplateId(), getId(), getHp(), getMp());
     }
 
     public void encodeInit(OutPacket outPacket) {
@@ -158,7 +158,7 @@ public final class Mob extends Life implements ControlledObject {
         outPacket.encodeShort(getY()); // ptPosPrev.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
         outPacket.encodeShort(getCurrentFh()); // pvcMobActiveObj (current foothold)
-        outPacket.encodeShort(getFh()); // Foothold (start foothold)
+        outPacket.encodeShort(getFoothold()); // Foothold (start foothold)
         outPacket.encodeByte(appearType.getValue()); // nAppearType
         if (appearType == MobAppearType.REVIVED || appearType.getValue() >= 0) {
             outPacket.encodeInt(0); // dwOption

@@ -2,28 +2,45 @@ package kinoko.world.field;
 
 import kinoko.server.packet.OutPacket;
 
-public interface FieldObject {
-    int getX();
+public abstract class FieldObject {
+    private Field field;
+    private int id;
+    private int x;
+    private int y;
 
-    void setX(int x);
+    public abstract OutPacket enterFieldPacket();
 
-    int getY();
+    public abstract OutPacket leaveFieldPacket();
 
-    void setY(int y);
+    public final Field getField() {
+        return field;
+    }
 
-    int getFh();
+    public final void setField(Field field) {
+        this.field = field;
+    }
 
-    void setFh(int fh);
+    public int getId() {
+        return id;
+    }
 
-    int getMoveAction();
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    void setMoveAction(int moveAction);
+    public final int getX() {
+        return x;
+    }
 
-    Field getField();
+    public final void setX(int x) {
+        this.x = x;
+    }
 
-    void setField(Field field);
+    public final int getY() {
+        return y;
+    }
 
-    OutPacket enterFieldPacket();
-
-    OutPacket leaveFieldPacket();
+    public final void setY(int y) {
+        this.y = y;
+    }
 }

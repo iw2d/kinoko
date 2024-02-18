@@ -1,6 +1,6 @@
 package kinoko.world.life.npc;
 
-import kinoko.packet.life.NpcPacket;
+import kinoko.packet.field.NpcPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
@@ -24,7 +24,7 @@ public final class Npc extends Life implements ControlledObject {
         // Life initialization
         setX(x);
         setY(y);
-        setFh(fh);
+        setFoothold(fh);
         setMoveAction(isFlip ? 0 : 1);
     }
 
@@ -70,7 +70,7 @@ public final class Npc extends Life implements ControlledObject {
 
     @Override
     public String toString() {
-        return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getObjectId(), getScript().orElse("-"));
+        return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getId(), getScript().orElse("-"));
     }
 
     public void encodeInit(OutPacket outPacket) {
@@ -78,7 +78,7 @@ public final class Npc extends Life implements ControlledObject {
         outPacket.encodeShort(getX()); // ptPos.x
         outPacket.encodeShort(getY()); // ptPos.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
-        outPacket.encodeShort(getFh()); // Foothold
+        outPacket.encodeShort(getFoothold()); // Foothold
         outPacket.encodeShort(rx0); // rgHorz.low
         outPacket.encodeShort(rx1); // rgHorz.high
         outPacket.encodeByte(true); // bEnabled

@@ -30,7 +30,7 @@ public final class ScriptHandler {
         final short x = inPacket.decodeShort(); // ptUserPos.x
         final short y = inPacket.decodeShort(); // ptUserPos.y
 
-        final Optional<Life> lifeResult = user.getField().getLifeById(npcId);
+        final Optional<Life> lifeResult = user.getField().getLifePool().getById(npcId);
         if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Npc npc)) {
             log.error("Tried to select invalid npc ID : {}", npcId);
             return;
@@ -53,7 +53,7 @@ public final class ScriptHandler {
 
         final Optional<ScriptManager> scriptManagerResult = ScriptDispatcher.getScriptManager(user);
         if (scriptManagerResult.isEmpty()) {
-            log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getCharacterId());
+            log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getId());
             return;
         }
         final ScriptManager scriptManager = scriptManagerResult.get();

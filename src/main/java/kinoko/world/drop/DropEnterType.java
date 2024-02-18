@@ -1,4 +1,4 @@
-package kinoko.world.life.drop;
+package kinoko.world.drop;
 
 public enum DropEnterType {
     JUST_SHOWING(0),

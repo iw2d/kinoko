@@ -1,8 +1,9 @@
-package kinoko.world.life.drop;
+package kinoko.world.drop;
 
-import kinoko.packet.life.DropPacket;
+import kinoko.packet.field.DropPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.GameConstants;
+import kinoko.world.field.FieldObject;
 import kinoko.world.item.Item;
 import kinoko.world.life.Life;
 import kinoko.world.user.User;
@@ -10,7 +11,7 @@ import kinoko.world.user.User;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public final class Drop extends Life {
+public final class Drop extends FieldObject {
     private final DropOwnType ownType;
     private final Life source;
     private final Item item;
@@ -50,9 +51,6 @@ public final class Drop extends Life {
     public Instant getDateExpire() {
         return dateExpire;
     }
-
-
-    // UTILITY METHODS -------------------------------------------------------------------------------------------------
 
     public boolean isMoney() {
         return item == null && money > 0;

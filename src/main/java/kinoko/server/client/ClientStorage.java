@@ -9,15 +9,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public final class ClientStorage {
-    private final Map<Integer, Client> connectedAccounts = new ConcurrentHashMap<>(); // getAccountId -> Client
-    private final Map<Integer, Client> connectedUsers = new ConcurrentHashMap<>(); // getCharacterId -> Client
+    private final Map<Integer, Client> connectedAccounts = new ConcurrentHashMap<>(); // accountId -> Client
+    private final Map<Integer, Client> connectedUsers = new ConcurrentHashMap<>(); // characterId -> Client
 
     public boolean isConnected(Account account) {
         return connectedAccounts.containsKey(account.getId());
     }
 
     public boolean isConnected(User user) {
-        return connectedUsers.containsKey(user.getCharacterId());
+        return connectedUsers.containsKey(user.getId());
     }
 
     public void addClient(Client client) {
@@ -27,7 +27,7 @@ public final class ClientStorage {
         }
         final User user = client.getUser();
         if (user != null) {
-            connectedUsers.put(user.getCharacterId(), client);
+            connectedUsers.put(user.getId(), client);
         }
     }
 
@@ -38,7 +38,7 @@ public final class ClientStorage {
         }
         final User user = client.getUser();
         if (user != null) {
-            connectedUsers.remove(user.getCharacterId());
+            connectedUsers.remove(user.getId());
         }
     }
 

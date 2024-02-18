@@ -1,4 +1,4 @@
-package kinoko.packet.life;
+package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
@@ -9,7 +9,7 @@ import kinoko.world.life.mob.MobAttackInfo;
 public final class MobPacket {
     public static OutPacket mobEnterField(Mob mob) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_ENTER_FIELD);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
         mob.getMobStatManager().encode(outPacket, true);
@@ -19,7 +19,7 @@ public final class MobPacket {
 
     public static OutPacket mobLeaveField(Mob mob) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_LEAVE_FIELD);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobID
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(1); // nDeadType
         // if nDeadType == 4, encodeInt(dwSwallowCharacterID);
         return outPacket;
@@ -28,7 +28,7 @@ public final class MobPacket {
     public static OutPacket mobChangeController(Mob mob, boolean forController) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CHANGE_CONTROLLER);
         outPacket.encodeByte(forController);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobId
         if (forController) {
             outPacket.encodeByte(1); // nCalcDamageIndex
             // CMobPool::SetLocalMob
@@ -41,7 +41,7 @@ public final class MobPacket {
 
     public static OutPacket mobMove(Mob mob, MobAttackInfo mai, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_MOVE);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(false); // bNotForceLandingWhenDiscard
         outPacket.encodeByte(false); // bNotChangeAction
         outPacket.encodeByte(mai.actionMask);
@@ -72,7 +72,7 @@ public final class MobPacket {
 
     public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CTRL_ACK);
-        outPacket.encodeInt(mob.getObjectId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
         outPacket.encodeByte(nextAttackPossible); // bNextAttackPossible
         outPacket.encodeShort(mob.getMp()); // nMP
