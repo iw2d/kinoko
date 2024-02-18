@@ -36,7 +36,7 @@ public interface OutPacket {
     }
 
     default void encodeFT(Instant timestamp) {
-        encodeFT(FileTime.from(timestamp));
+        encodeFT(timestamp != null ? FileTime.from(timestamp) : FileTime.DEFAULT_TIME);
     }
 
     void encodeArray(byte[] value);

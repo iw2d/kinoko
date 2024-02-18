@@ -41,6 +41,7 @@ public final class ItemCodec extends MappingCodec<UdtValue, Item> {
         item.setQuantity(value.getShort(ItemUDT.QUANTITY));
         item.setAttribute(value.getShort(ItemUDT.ATTRIBUTE));
         item.setTitle(value.getString(ItemUDT.TITLE));
+        item.setDateExpire(value.getInstant(ItemUDT.DATE_EXPIRE));
         if (item.getItemType() == ItemType.EQUIP) {
             item.setEquipData(value.get(ItemUDT.EQUIP_INFO, EquipData.class));
         } else if (item.getItemType() == ItemType.PET) {

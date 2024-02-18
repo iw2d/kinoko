@@ -1,9 +1,5 @@
 package kinoko.world.item;
 
-import kinoko.provider.ItemProvider;
-import kinoko.provider.item.ItemInfo;
-
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 

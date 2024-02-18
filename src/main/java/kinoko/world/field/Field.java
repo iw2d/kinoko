@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.packet.life.DropPacket;
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.map.*;
@@ -8,6 +9,8 @@ import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.life.Life;
+import kinoko.world.life.drop.Drop;
+import kinoko.world.life.drop.DropEnterType;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
@@ -20,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Field {
     private static final AtomicInteger fieldKeyCounter = new AtomicInteger(1);
-    private static final AtomicInteger objectIdCounter = new AtomicInteger(1);
+    private final AtomicInteger objectIdCounter = new AtomicInteger(1);
     private final MapInfo mapInfo;
     private final byte fieldKey;
     private final Map<Integer, Life> lifes = new ConcurrentHashMap<>(); // objectId -> Life
@@ -55,6 +58,10 @@ public final class Field {
         return fieldKey;
     }
 
+    public int getNewObjectId() {
+        return objectIdCounter.getAndIncrement();
+    }
+
     public Optional<Life> getLifeById(int objectId) {
         if (!lifes.containsKey(objectId)) {
             return Optional.empty();
@@ -86,6 +93,18 @@ public final class Field {
             return;
         }
         broadcastPacket(removed.leaveFieldPacket());
+    }
+
+    public void addDrop(Drop drop, DropEnterType enterType, int x, int y) {
+        drop.setObjectId(getNewObjectId());
+        // TODO: findFootholdBelow
+        drop.setX(x);
+        drop.setY(y);
+        if (enterType != DropEnterType.FADING_OUT) {
+            lifes.put(drop.getObjectId(), drop);
+            // TODO: schedule REMOVE OWNERSHIP AND REMOVE DROP
+        }
+        broadcastPacket(DropPacket.dropEnterField(drop, enterType));
     }
 
     public void addUser(User user) {
@@ -167,9 +186,5 @@ public final class Field {
 
     private static byte getNewFieldKey() {
         return (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
-    }
-
-    private static int getNewObjectId() {
-        return objectIdCounter.getAndIncrement();
     }
 }

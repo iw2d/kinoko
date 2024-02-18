@@ -3,7 +3,7 @@ package kinoko.util;
 import java.time.Instant;
 
 public final class FileTime {
-    public static final FileTime MAX_TIME = FileTime.from(150841440000000000L);
+    public static final FileTime DEFAULT_TIME = FileTime.from(150841440000000000L);
     public static final FileTime ZERO_TIME = FileTime.from(94354848000000000L);
 
     private final int lowDateTime;

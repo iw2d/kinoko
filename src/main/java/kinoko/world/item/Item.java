@@ -3,9 +3,9 @@ package kinoko.world.item;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.FileTime;
 import kinoko.world.Encodable;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public final class Item implements Encodable {
@@ -15,6 +15,7 @@ public final class Item implements Encodable {
     private boolean cash;
     private short quantity;
     private short attribute;
+    private Instant dateExpire;
     private String title = "";
     private EquipData equipData;
     private PetData petData;
@@ -33,7 +34,7 @@ public final class Item implements Encodable {
         if (isCash()) {
             outPacket.encodeLong(getItemSn()); // liCashItemSN
         }
-        outPacket.encodeFT(FileTime.MAX_TIME); // dateExpire
+        outPacket.encodeFT(getDateExpire()); // dateExpire
 
         switch (getItemType()) {
             case EQUIP -> {
@@ -103,11 +104,19 @@ public final class Item implements Encodable {
     }
 
     public String getTitle() {
-        return title != null ? title : "";
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Instant getDateExpire() {
+        return dateExpire;
+    }
+
+    public void setDateExpire(Instant dateExpire) {
+        this.dateExpire = dateExpire;
     }
 
     public EquipData getEquipData() {

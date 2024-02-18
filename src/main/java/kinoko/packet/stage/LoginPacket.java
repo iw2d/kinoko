@@ -5,12 +5,12 @@ import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.FileTime;
 import kinoko.world.Account;
 import kinoko.world.World;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 
+import java.time.Instant;
 import java.util.List;
 
 public final class LoginPacket {
@@ -57,7 +57,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket checkPasswordResultBlocked(int blockedType, FileTime unblockDate) {
+    public static OutPacket checkPasswordResultBlocked(int blockedType, Instant unblockDate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(LoginType.BLOCKED.getValue());
         outPacket.encodeByte(0);

@@ -14,7 +14,7 @@ public final class Message implements Encodable {
     private DropPickUpMessageInfo dropPickUpInfo;
     private QuestRecord questRecord;
 
-    public Message(MessageType type) {
+    private Message(MessageType type) {
         this.type = type;
     }
 
@@ -199,7 +199,7 @@ public final class Message implements Encodable {
         private int itemId;
         private int itemCount;
 
-        public DropPickUpMessageInfo(DropPickUpMessageType type) {
+        private DropPickUpMessageInfo(DropPickUpMessageType type) {
             this.type = type;
         }
 

@@ -141,7 +141,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeByte(characterInventory.getCashInventory().getSize());
         }
         if (flag.hasFlag(DBChar.EQUIP_EXT)) {
-            outPacket.encodeFT(FileTime.MAX_TIME); // aEquipExtExpire
+            outPacket.encodeFT(FileTime.DEFAULT_TIME); // aEquipExtExpire
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_EQUIP)) {
             final Map<Integer, Item> equippedItems = characterInventory.getEquipped().getItems();
@@ -223,7 +223,7 @@ public final class CharacterData implements Encodable {
             for (SkillRecord sr : skillManager.getSkillRecords().values()) {
                 outPacket.encodeInt(sr.getSkillId());
                 outPacket.encodeInt(sr.getSkillLevel());
-                outPacket.encodeFT(FileTime.MAX_TIME); // mSkillExpired
+                outPacket.encodeFT(FileTime.DEFAULT_TIME); // mSkillExpired
                 if (SkillConstants.isSkillNeedMasterLevel(sr.getSkillId())) {
                     outPacket.encodeInt(sr.getMasterLevel());
                 }

@@ -14,6 +14,7 @@ public final class ItemUDT {
     public static final String QUANTITY = "quantity";
     public static final String ATTRIBUTE = "attribute";
     public static final String TITLE = "title";
+    public static final String DATE_EXPIRE = "date_expire";
     public static final String EQUIP_INFO = "equip_info";
     public static final String PET_INFO = "pet_info";
 
@@ -34,6 +35,7 @@ public final class ItemUDT {
                         .withField(QUANTITY, DataTypes.SMALLINT)
                         .withField(ATTRIBUTE, DataTypes.SMALLINT)
                         .withField(TITLE, DataTypes.TEXT)
+                        .withField(DATE_EXPIRE, DataTypes.TIMESTAMP)
                         .withField(EQUIP_INFO, udt(EquipDataUDT.getTypeName(), true))
                         .withField(PET_INFO, udt(PetDataUDT.getTypeName(), true))
                         .build()

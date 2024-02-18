@@ -84,8 +84,8 @@ public final class MobInfo {
         return "MobInfo[" +
                 "id=" + templateId + ", " +
                 "level=" + level + ", " +
-                "acc=" + acc +", " +
-                "eva=" + eva +", " +
+                "acc=" + acc + ", " +
+                "eva=" + eva + ", " +
                 "maxHp=" + maxHp + ", " +
                 "maxMp=" + maxMp + ", " +
                 "hpRecovery=" + hpRecovery + ", " +

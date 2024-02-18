@@ -1,7 +1,5 @@
 package kinoko.server.script;
 
-import kinoko.handler.field.FieldHandler;
-import kinoko.packet.field.FieldPacket;
 import kinoko.packet.script.ScriptMessage;
 import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
@@ -21,7 +19,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class ScriptManager {
-    private static final Logger log = LogManager.getLogger(FieldHandler.class);
+    private static final Logger log = LogManager.getLogger(ScriptManager.class);
     private final Set<ScriptMessageParam> messageParams = EnumSet.noneOf(ScriptMessageParam.class);
     private final ScriptMemory scriptMemory = new ScriptMemory();
     private final User user;

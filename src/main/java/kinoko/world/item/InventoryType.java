@@ -1,11 +1,22 @@
 package kinoko.world.item;
 
 public enum InventoryType {
-    EQUIP,
-    CONSUME,
-    INSTALL,
-    ETC,
-    CASH;
+    EQUIPPED(0),
+    EQUIP(1),
+    CONSUME(2),
+    INSTALL(3),
+    ETC(4),
+    CASH(5);
+
+    private final int value;
+
+    InventoryType(int value) {
+        this.value = value;
+    }
+
+    public final int getValue() {
+        return value;
+    }
 
     public static InventoryType getByItemId(int itemId) {
         if (ItemConstants.isEquip(itemId)) {
@@ -19,5 +30,14 @@ public enum InventoryType {
         } else {
             return CASH;
         }
+    }
+
+    public static InventoryType getByValue(int value) {
+        for (InventoryType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
     }
 }

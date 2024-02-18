@@ -97,9 +97,6 @@ public final class QuestInfo {
         );
     }
 
-    private static Set<String> acts = new HashSet<>();
-    private static Set<String> items = new HashSet<>();
-
     private static Set<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
         final Set<QuestAct> questActs = new HashSet<>();
         for (var entry : actProps.getItems().entrySet()) {
@@ -112,17 +109,13 @@ public final class QuestInfo {
                     questActs.add(QuestItemAct.from(itemList));
                 }
                 default -> {
-                    if (!acts.contains(actType)) {
-                        acts.add(actType);
-                        System.out.printf("%d %s%n", questId, actType);
-                    }
+                    // TODO
                 }
             }
         }
         return questActs;
     }
 
-    private static Set<String> checks = new HashSet<>();
     private static Set<QuestCheck> resolveQuestChecks(WzListProperty checkProps) {
         final Set<QuestCheck> questChecks = new HashSet<>();
         for (var entry : checkProps.getItems().entrySet()) {

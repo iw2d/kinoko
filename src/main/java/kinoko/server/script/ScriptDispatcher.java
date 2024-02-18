@@ -23,7 +23,7 @@ public final class ScriptDispatcher {
     public static final String SCRIPT_EXTENSION = ".py";
     public static final String SCRIPT_LANGUAGE = "python";
 
-    private static final Logger log = LogManager.getLogger(ScriptManager.class);
+    private static final Logger log = LogManager.getLogger(ScriptDispatcher.class);
     private static final Map<Integer, Tuple<ScriptManager, Context>> scriptManagers = new ConcurrentHashMap<>();
 
     private static ExecutorService executor;

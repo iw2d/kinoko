@@ -2,7 +2,7 @@
 <Configuration>
     <Appenders>
         <Console name="ConsoleLogger" target="SYSTEM_OUT">
-            <LoggerLayout />
+            <LoggerLayout/>
         </Console>
     </Appenders>
 

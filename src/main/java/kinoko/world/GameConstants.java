@@ -5,6 +5,9 @@ public final class GameConstants {
     public static final int INVENTORY_MAX_SLOTS = 96;
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
 
+    public static final int DROP_REMOVE_OWNERSHIP_TIME = 30;
+    public static final int DROP_REMAIN_ON_GROUND_TIME = 120;
+
     public static final int MAX_DAMAGE = 999_999;
     public static final int MAX_LEVEL = 200;
     public static final int[] EXP_TABLE = initializeExpTable(); // NEXTLEVEL::NEXTLEVEL

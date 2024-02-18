@@ -74,6 +74,9 @@ public final class CharacterInventory {
 
     public Inventory getInventoryByType(InventoryType inventoryType) {
         switch (inventoryType) {
+            case EQUIPPED -> {
+                return getEquipped();
+            }
             case EQUIP -> {
                 return getEquipInventory();
             }

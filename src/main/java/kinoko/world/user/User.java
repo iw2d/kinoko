@@ -140,6 +140,11 @@ public final class User extends Life {
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
+    public int getObjectId() {
+        return getCharacterId();
+    }
+
+    @Override
     public OutPacket enterFieldPacket() {
         return UserPoolPacket.userEnterField(this);
     }
