@@ -2,8 +2,8 @@ package kinoko.handler.script;
 
 import kinoko.handler.Handler;
 import kinoko.packet.script.ScriptMessageType;
-import kinoko.packet.world.Message;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;

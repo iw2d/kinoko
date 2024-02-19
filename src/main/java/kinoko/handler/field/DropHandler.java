@@ -1,8 +1,8 @@
 package kinoko.handler.field;
 
 import kinoko.handler.Handler;
-import kinoko.packet.world.Message;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.DropPickUpMessage;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
@@ -37,17 +37,18 @@ public final class DropHandler {
             user.dispose();
             return;
         }
+
         final Drop drop = dropResult.get();
         if (drop.isMoney()) {
             final long newMoney = ((long) user.getMoney()) + drop.getMoney();
             if (newMoney > GameConstants.MAX_MONEY) {
-                user.write(WvsContext.message(Message.dropPickUp(Message.DropPickUpMessageType.UNAVAILABLE_FOR_PICK_UP)));
+                user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
                 user.dispose();
                 return;
             }
         } else {
             if (user.getInventory().canAddItem(drop.getItem()).isEmpty()) {
-                user.write(WvsContext.message(Message.dropPickUp(Message.DropPickUpMessageType.CANNOT_GET_ANYMORE_ITEMS)));
+                user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
                 user.dispose();
                 return;
             }

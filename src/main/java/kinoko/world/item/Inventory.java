@@ -3,7 +3,7 @@ package kinoko.world.item;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Inventory {
+public final class Inventory {
     private final SortedMap<Integer, Item> items = new TreeMap<>();
     private int size;
 

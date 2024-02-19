@@ -1,4 +1,4 @@
-package kinoko.packet.world;
+package kinoko.packet.world.message;
 
 public enum MessageType {
     DROP_PICK_UP(0),

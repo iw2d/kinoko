@@ -2,7 +2,6 @@ package kinoko.world.user;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
-import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 
 import java.util.ArrayList;
@@ -155,7 +154,7 @@ public final class CharacterInventory {
                 if (existingItem.getQuantity() >= ii.getSlotMax()) {
                     continue;
                 }
-                final int newQuantity = Math.max(ii.getSlotMax(), existingItem.getQuantity() + item.getQuantity());
+                final int newQuantity = Math.min(ii.getSlotMax(), existingItem.getQuantity() + item.getQuantity());
                 final int delta = newQuantity - existingItem.getQuantity();
                 // Create item number operation for existing item and reduce item quantity
                 inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, entry.getKey(), newQuantity));

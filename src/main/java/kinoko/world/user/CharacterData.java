@@ -107,7 +107,7 @@ public final class CharacterData implements Encodable {
         this.friendMax = friendMax;
     }
 
-    public long nextItemSn() {
+    public long getNextItemSn() {
         return ((long) itemSnCounter.getAndIncrement()) | (((long) getCharacterId()) << 32);
     }
 

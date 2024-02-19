@@ -245,7 +245,7 @@ public final class LoginHandler {
             if (!ItemConstants.isCorrectBodyPart(itemId, bodyPart, gender)) {
                 continue;
             }
-            final Optional<Item> startingEquip = Item.createById(characterData.nextItemSn(), itemId);
+            final Optional<Item> startingEquip = Item.createById(characterData.getNextItemSn(), itemId);
             if (startingEquip.isEmpty()) {
                 continue;
             }

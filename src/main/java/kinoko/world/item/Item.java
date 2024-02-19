@@ -156,11 +156,15 @@ public final class Item implements Encodable {
         if (itemInfoResult.isEmpty()) {
             return Optional.empty();
         }
-        final ItemInfo ii = itemInfoResult.get();
-        final ItemType type = ItemType.getByItemId(itemId);
+        final Item item = createByInfo(itemSn, itemInfoResult.get(), quantity);
+        return Optional.of(item);
+    }
+
+    public static Item createByInfo(long itemSn, ItemInfo ii, int quantity) {
+        final ItemType type = ItemType.getByItemId(ii.getItemId());
         final Item item = new Item(type);
         item.setItemSn(itemSn);
-        item.setItemId(itemId);
+        item.setItemId(ii.getItemId());
         item.setCash(ii.isCash());
         item.setQuantity((short) quantity);
         if (type == ItemType.EQUIP) {
@@ -168,6 +172,6 @@ public final class Item implements Encodable {
         } else if (type == ItemType.PET) {
             item.setPetData(PetData.from(ii));
         }
-        return Optional.of(item);
+        return item;
     }
 }

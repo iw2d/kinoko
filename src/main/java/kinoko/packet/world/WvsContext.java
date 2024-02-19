@@ -1,5 +1,6 @@
 package kinoko.packet.world;
 
+import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.item.InventoryOperation;
@@ -29,8 +30,8 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket inventoryOperation(InventoryOperation op) {
-        return inventoryOperation(List.of(op), true);
+    public static OutPacket inventoryOperation(InventoryOperation op, boolean exclRequestSent) {
+        return inventoryOperation(List.of(op), exclRequestSent);
     }
 
     public static OutPacket inventoryOperation(List<InventoryOperation> inventoryOperations, boolean exclRequestSent) {

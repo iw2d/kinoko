@@ -61,7 +61,7 @@ public final class InventoryHandler {
                 return;
             }
             // Remove item from client inventory
-            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos)));
+            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
             // Create drop
             final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
             drop.setX(user.getX()); // TODO: findFootholdBelow
@@ -74,7 +74,7 @@ public final class InventoryHandler {
             inventory.putItem(oldPos, secondItem);
             secondInventory.putItem(newPos, item);
             // Swap item position in client inventory
-            user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos)));
+            user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
         }
     }
 

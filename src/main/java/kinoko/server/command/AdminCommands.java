@@ -1,15 +1,20 @@
 package kinoko.server.command;
 
-import kinoko.packet.world.Message;
+import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
+import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.item.Item;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobAppearType;
 import kinoko.world.user.User;
@@ -88,6 +93,36 @@ public final class AdminCommands {
         );
         mob.setField(user.getField());
         user.getField().getLifePool().addLife(mob);
+    }
+
+    @Command("item")
+    public static void item(User user, String[] args) {
+        if (args.length < 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int itemId = Integer.parseInt(args[1]);
+        final int quantity;
+        if (args.length == 2) {
+            quantity = 1;
+        } else if (args.length == 3 && Util.isInteger(args[2])) {
+            quantity = Integer.parseInt(args[2]);
+        } else {
+            user.write(WvsContext.message(Message.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            user.write(WvsContext.message(Message.system("Could not resolve item ID : %d", itemId)));
+            return;
+        }
+        final ItemInfo ii = itemInfoResult.get();
+        final Item item = Item.createByInfo(user.getCharacterData().getNextItemSn(), ii, Math.min(quantity, ii.getSlotMax()));
+        if (user.addItem(item)) {
+            user.write(UserLocalPacket.userEffect(Effect.gainItem(item.getItemId(), item.getQuantity())));
+        } else {
+            user.write(WvsContext.message(Message.system("Failed to add item {} to inventory", itemId)));
+        }
     }
 
     @Command("meso")

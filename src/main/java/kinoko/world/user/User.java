@@ -2,8 +2,8 @@ package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserPoolPacket;
-import kinoko.packet.world.Message;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
@@ -86,6 +86,10 @@ public final class User extends Life {
         return getInventory().getMoney();
     }
 
+    public long getNextItemSn() {
+        return characterData.getNextItemSn();
+    }
+
 
     // PACKET WRITES ---------------------------------------------------------------------------------------------------
 
@@ -138,7 +142,10 @@ public final class User extends Life {
         if (addItemResult.isEmpty()) {
             return false;
         }
-        write(WvsContext.inventoryOperation(addItemResult.get(), true));
+        final var iter = addItemResult.get().iterator();
+        while (iter.hasNext()) {
+            write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+        }
         return true;
     }
 
@@ -160,7 +167,7 @@ public final class User extends Life {
 
     @Override
     public void setId(int id) {
-        throw new IllegalStateException();
+        throw new IllegalStateException("Tried to modify character ID");
     }
 
     @Override

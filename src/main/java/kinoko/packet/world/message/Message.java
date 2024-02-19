@@ -1,20 +1,19 @@
-package kinoko.packet.world;
+package kinoko.packet.world.message;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 import kinoko.world.quest.QuestRecord;
 
-public final class Message implements Encodable {
-    private final MessageType type;
+public class Message implements Encodable {
+    protected final MessageType type;
     private boolean bool1;
     private boolean bool2;
     private int int1;
     private int int2;
     private String string1;
-    private DropPickUpMessageInfo dropPickUpInfo;
     private QuestRecord questRecord;
 
-    private Message(MessageType type) {
+    protected Message(MessageType type) {
         this.type = type;
     }
 
@@ -22,23 +21,6 @@ public final class Message implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case DROP_PICK_UP -> {
-                outPacket.encodeByte(dropPickUpInfo.getType().getValue());
-                switch (dropPickUpInfo.getType()) {
-                    case MONEY -> {
-                        outPacket.encodeByte(dropPickUpInfo.isPortionNotFound());
-                        outPacket.encodeInt(dropPickUpInfo.getMoney());
-                        outPacket.encodeShort(0); // Internet Cafe Meso Bonus
-                    }
-                    case ITEM_BUNDLE -> {
-                        outPacket.encodeInt(dropPickUpInfo.getItemId()); // nItemID
-                        outPacket.encodeInt(dropPickUpInfo.getItemCount());
-                    }
-                    case ITEM_SINGLE -> {
-                        outPacket.encodeInt(dropPickUpInfo.getItemId());
-                    }
-                }
-            }
             case QUEST_RECORD -> {
                 outPacket.encodeShort(questRecord.getQuestId()); // nQuestID
                 outPacket.encodeByte(questRecord.getQuestState().getValue());
@@ -94,31 +76,10 @@ public final class Message implements Encodable {
                 outPacket.encodeByte(1); // count
                 outPacket.encodeString(string1); // sChat
             }
+            default -> {
+                throw new IllegalStateException("Tried to encode unsupported message type");
+            }
         }
-    }
-
-    public static Message dropPickUp(DropPickUpMessageInfo info) {
-        final Message message = new Message(MessageType.DROP_PICK_UP);
-        message.dropPickUpInfo = info;
-        return message;
-    }
-
-    public static Message dropPickUp(DropPickUpMessageType type) {
-        return dropPickUp(new DropPickUpMessageInfo(type));
-    }
-
-    public static Message dropPickUpMoney(int money, boolean portionNotFound) {
-        final DropPickUpMessageInfo info = new DropPickUpMessageInfo(DropPickUpMessageType.MONEY);
-        info.setMoney(money);
-        info.setPortionNotFound(portionNotFound);
-        return dropPickUp(info);
-    }
-
-    public static Message dropPickUpItem(int itemId, int itemCount) {
-        final DropPickUpMessageInfo info = new DropPickUpMessageInfo(DropPickUpMessageType.ITEM_BUNDLE);
-        info.setItemId(itemId);
-        info.setItemCount(itemCount);
-        return dropPickUp(info);
     }
 
     public static Message questRecord(QuestRecord questRecord) {
@@ -171,72 +132,5 @@ public final class Message implements Encodable {
         final Message message = new Message(MessageType.SYSTEM);
         message.string1 = String.format(format, args);
         return message;
-    }
-
-    public enum DropPickUpMessageType {
-        CANNOT_ACQUIRE_ANY_ITEMS(-3),
-        UNAVAILABLE_FOR_PICK_UP(-2),
-        CANNOT_GET_ANYMORE_ITEMS(-1),
-        ITEM_BUNDLE(0),
-        MONEY(1),
-        ITEM_SINGLE(2);
-
-        private final byte value;
-
-        DropPickUpMessageType(int value) {
-            this.value = (byte) value;
-        }
-
-        public final byte getValue() {
-            return value;
-        }
-    }
-
-    private static final class DropPickUpMessageInfo {
-        private final DropPickUpMessageType type;
-        private boolean portionNotFound;
-        private int money;
-        private int itemId;
-        private int itemCount;
-
-        private DropPickUpMessageInfo(DropPickUpMessageType type) {
-            this.type = type;
-        }
-
-        public DropPickUpMessageType getType() {
-            return type;
-        }
-
-        public boolean isPortionNotFound() {
-            return portionNotFound;
-        }
-
-        public void setPortionNotFound(boolean portionNotFound) {
-            this.portionNotFound = portionNotFound;
-        }
-
-        public int getMoney() {
-            return money;
-        }
-
-        public void setMoney(int money) {
-            this.money = money;
-        }
-
-        public int getItemId() {
-            return itemId;
-        }
-
-        public void setItemId(int itemId) {
-            this.itemId = itemId;
-        }
-
-        public int getItemCount() {
-            return itemCount;
-        }
-
-        public void setItemCount(int itemCount) {
-            this.itemCount = itemCount;
-        }
     }
 }
