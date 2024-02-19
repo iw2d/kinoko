@@ -29,6 +29,7 @@ import kinoko.world.user.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -192,24 +193,27 @@ public final class LoginHandler {
         characterData.setItemSnCounter(new AtomicInteger(1));
 
         // Initial Stats
+        final int level = 1;
+        final int hp = GameConstants.getMinHp(level, job.getJobId());
+        final int mp = GameConstants.getMinMp(level, job.getJobId());
         final CharacterStat characterStat = new CharacterStat();
         characterStat.setGender(gender);
         characterStat.setSkin((byte) selectedAL[3]);
         characterStat.setFace(selectedAL[0]);
         characterStat.setHair(selectedAL[1] + selectedAL[2]);
-        characterStat.setLevel((byte) 1);
+        characterStat.setLevel((byte) level);
         characterStat.setJob(job.getJobId());
         characterStat.setSubJob(selectedSubJob);
         characterStat.setBaseStr((short) 12);
         characterStat.setBaseDex((short) 5);
         characterStat.setBaseInt((short) 4);
         characterStat.setBaseLuk((short) 4);
-        characterStat.setHp(50);
-        characterStat.setMaxHp(50);
-        characterStat.setMp(5);
-        characterStat.setMaxMp(5);
+        characterStat.setHp(hp);
+        characterStat.setMaxHp(hp);
+        characterStat.setMp(mp);
+        characterStat.setMaxMp(mp);
         characterStat.setAp((short) 0);
-        characterStat.setSp(ExtendSP.getDefault());
+        characterStat.setSp(ExtendSP.from(List.of(0)));
         characterStat.setExp(0);
         characterStat.setPop((short) 0);
         characterStat.setPosMap(10000);

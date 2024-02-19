@@ -2,7 +2,6 @@ package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class ExtendSP {
@@ -24,18 +23,12 @@ public final class ExtendSP {
                 outPacket.encodeByte(spList.get(jobLevel));
             }
         } else {
-            if (spList == null || spList.isEmpty()) {
-                outPacket.encodeShort(0);
-            } else {
-                outPacket.encodeShort(spList.get(0));
+            int totalSp = 0;
+            for (int sp : spList) {
+                totalSp += sp;
             }
+            outPacket.encodeShort(totalSp);
         }
-    }
-
-    public static ExtendSP getDefault() {
-        final List<Integer> spList = new ArrayList<>();
-        spList.add(0);
-        return from(spList);
     }
 
     public static ExtendSP from(List<Integer> spList) {

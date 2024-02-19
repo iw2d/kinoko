@@ -37,4 +37,8 @@ public final class JobConstants {
     public static boolean isWildHunterJob(int jobId) {
         return jobId / 100 == 33;
     }
+
+    public static boolean isMechanicJob(int jobId) {
+        return jobId / 100 == 35;
+    }
 }

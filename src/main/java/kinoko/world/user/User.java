@@ -3,7 +3,6 @@ package kinoko.world.user;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserPoolPacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
@@ -122,12 +121,14 @@ public final class User extends Life {
     // STAT METHODS ----------------------------------------------------------------------------------------------------
 
     public void addExp(int exp, boolean white, boolean quest) {
-        final int newExp = getCharacterStat().getExp() + exp;
-        final int nextLevelExp = GameConstants.getNextLevelExp(getLevel());
-        if (newExp >= nextLevelExp) {
-            // TODO level up
+        if (getLevel() >= GameConstants.MAX_LEVEL) {
+            return;
         }
-        write(WvsContext.message(Message.incExp(exp, white, quest)));
+        long newExp = ((long) getCharacterStat().getExp()) + exp;
+        while (newExp >= GameConstants.getNextLevelExp(getLevel())) {
+            newExp -= GameConstants.getNextLevelExp(getLevel());
+
+        }
     }
 
 
