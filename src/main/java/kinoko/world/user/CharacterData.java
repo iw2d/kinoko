@@ -2,7 +2,9 @@ package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
+import kinoko.util.Lockable;
 import kinoko.world.Encodable;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestManager;
@@ -10,6 +12,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -17,38 +20,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public final class CharacterData implements Encodable {
+public final class CharacterData implements Encodable, Lockable<CharacterData> {
+    private final Lock lock = new ReentrantLock();
     private final int accountId;
-    private final int characterId;
-    private String characterName;
     private CharacterStat characterStat;
-    private CharacterInventory characterInventory;
+    private TemporaryStatManager temporaryStatManager;
+    private InventoryManager inventoryManager;
     private SkillManager skillManager;
     private QuestManager questManager;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
-    private int friendMax;
+    private int friendMax; // TODO: friend manager
 
-    public CharacterData(int accountId, int characterId) {
+    public CharacterData(int accountId) {
         this.accountId = accountId;
-        this.characterId = characterId;
     }
 
     public int getAccountId() {
         return accountId;
-    }
-
-    public int getCharacterId() {
-        return characterId;
-    }
-
-    public String getCharacterName() {
-        return characterName;
-    }
-
-    public void setCharacterName(String characterName) {
-        this.characterName = characterName;
     }
 
     public CharacterStat getCharacterStat() {
@@ -59,12 +51,20 @@ public final class CharacterData implements Encodable {
         this.characterStat = characterStat;
     }
 
-    public CharacterInventory getCharacterInventory() {
-        return characterInventory;
+    public TemporaryStatManager getTemporaryStatManager() {
+        return temporaryStatManager;
     }
 
-    public void setCharacterInventory(CharacterInventory characterInventory) {
-        this.characterInventory = characterInventory;
+    public void setTemporaryStatManager(TemporaryStatManager temporaryStatManager) {
+        this.temporaryStatManager = temporaryStatManager;
+    }
+
+    public InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
+
+    public void setInventoryManager(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
     }
 
     public SkillManager getSkillManager() {
@@ -111,13 +111,16 @@ public final class CharacterData implements Encodable {
         return ((long) itemSnCounter.getAndIncrement()) | (((long) getCharacterId()) << 32);
     }
 
-    public AvatarLook getAvatarLook() {
-        return AvatarLook.from(characterStat, characterInventory.getEquipped());
+    public int getCharacterId() {
+        return characterStat.getId();
     }
 
-    @Override
-    public void encode(OutPacket outPacket) {
-        encodeCharacterData(DBChar.ALL, outPacket);
+    public String getCharacterName() {
+        return characterStat.getName();
+    }
+
+    public AvatarLook getAvatarLook() {
+        return AvatarLook.from(characterStat, inventoryManager.getEquipped());
     }
 
     public void encodeCharacterData(DBChar flag, OutPacket outPacket) {
@@ -126,25 +129,25 @@ public final class CharacterData implements Encodable {
         outPacket.encodeByte(false); // bool -> byte, int * FT, int * FT
 
         if (flag.hasFlag(DBChar.CHARACTER)) {
-            characterStat.encode(characterId, characterName, outPacket);
+            characterStat.encode(outPacket);
             outPacket.encodeByte(friendMax); // nFriendMax
             outPacket.encodeByte(false); // sLinkedCharacter: bool -> str
         }
         if (flag.hasFlag(DBChar.MONEY)) {
-            outPacket.encodeInt(characterInventory.getMoney()); // nMoney
+            outPacket.encodeInt(inventoryManager.getMoney()); // nMoney
         }
         if (flag.hasFlag(DBChar.INVENTORY_SIZE)) {
-            outPacket.encodeByte(characterInventory.getEquipInventory().getSize());
-            outPacket.encodeByte(characterInventory.getConsumeInventory().getSize());
-            outPacket.encodeByte(characterInventory.getInstallInventory().getSize());
-            outPacket.encodeByte(characterInventory.getEtcInventory().getSize());
-            outPacket.encodeByte(characterInventory.getCashInventory().getSize());
+            outPacket.encodeByte(inventoryManager.getEquipInventory().getSize());
+            outPacket.encodeByte(inventoryManager.getConsumeInventory().getSize());
+            outPacket.encodeByte(inventoryManager.getInstallInventory().getSize());
+            outPacket.encodeByte(inventoryManager.getEtcInventory().getSize());
+            outPacket.encodeByte(inventoryManager.getCashInventory().getSize());
         }
         if (flag.hasFlag(DBChar.EQUIP_EXT)) {
             outPacket.encodeFT(FileTime.DEFAULT_TIME); // aEquipExtExpire
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_EQUIP)) {
-            final Map<Integer, Item> equippedItems = characterInventory.getEquipped().getItems();
+            final Map<Integer, Item> equippedItems = inventoryManager.getEquipped().getItems();
             // Normal Equipped Items
             for (var entry : equippedItems.entrySet()) {
                 final int bodyPart = entry.getKey();
@@ -165,7 +168,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0);
 
             // Equip Inventory
-            for (var entry : characterInventory.getEquipInventory().getItems().entrySet()) {
+            for (var entry : inventoryManager.getEquipInventory().getItems().entrySet()) {
                 outPacket.encodeShort(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
@@ -191,28 +194,28 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_CONSUME)) {
-            for (var entry : characterInventory.getConsumeInventory().getItems().entrySet()) {
+            for (var entry : inventoryManager.getConsumeInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_INSTALL)) {
-            for (var entry : characterInventory.getInstallInventory().getItems().entrySet()) {
+            for (var entry : inventoryManager.getInstallInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_ETC)) {
-            for (var entry : characterInventory.getEtcInventory().getItems().entrySet()) {
+            for (var entry : inventoryManager.getEtcInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_CASH)) {
-            for (var entry : characterInventory.getCashInventory().getItems().entrySet()) {
+            for (var entry : inventoryManager.getCashInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
@@ -304,5 +307,24 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.VISITOR_LOG)) {
             outPacket.encodeShort(0); // short * (short, short)
         }
+    }
+
+    @Override
+    public void encode(OutPacket outPacket) {
+        encodeCharacterData(DBChar.ALL, outPacket);
+    }
+
+    @Override
+    public void lock() {
+        characterStat.lock();
+        inventoryManager.lock();
+        lock.lock();
+    }
+
+    @Override
+    public void unlock() {
+        lock.unlock();
+        inventoryManager.unlock();
+        characterStat.unlock();
     }
 }

@@ -1,25 +1,29 @@
 package kinoko.server.command;
 
-import kinoko.packet.user.UserLocalPacket;
-import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.DropPickUpMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
+import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.item.InventoryManager;
+import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobAppearType;
+import kinoko.world.user.Stat;
 import kinoko.world.user.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public final class AdminCommands {
@@ -70,8 +74,13 @@ public final class AdminCommands {
             user.write(WvsContext.message(Message.system("Could not resolve field ID : %d", fieldId)));
             return;
         }
-        user.write(WvsContext.message(Message.system("Warping to field ID : %d", fieldId)));
-        user.warp(fieldResult.get(), 0, false, false);
+        final Field targetField = fieldResult.get();
+        final Optional<PortalInfo> portalResult = targetField.getPortalById(0);
+        if (portalResult.isEmpty()) {
+            user.write(WvsContext.message(Message.system("Could not resolve portal for field ID : %d", fieldId)));
+            return;
+        }
+        user.warp(targetField, portalResult.get(), false, false);
     }
 
     @Command("mob")
@@ -86,7 +95,8 @@ public final class AdminCommands {
             user.write(WvsContext.message(Message.system("Could not resolve mob ID : %d", mobId)));
             return;
         }
-        final Optional<Foothold> footholdResult = user.getField().getFootholdBelow(user.getX(), user.getY());
+        final Field field = user.getField();
+        final Optional<Foothold> footholdResult = field.getFootholdBelow(user.getX(), user.getY());
         final Mob mob = new Mob(
                 user.getX(),
                 user.getY(),
@@ -94,8 +104,7 @@ public final class AdminCommands {
                 mobInfoResult.get(),
                 MobAppearType.NORMAL
         );
-        mob.setField(user.getField());
-        user.getField().getLifePool().addLife(mob);
+        field.getLifePool().addLife(mob);
     }
 
     @Command("item")
@@ -120,17 +129,37 @@ public final class AdminCommands {
             return;
         }
         final ItemInfo ii = itemInfoResult.get();
-        final Item item = Item.createByInfo(user.getCharacterData().getNextItemSn(), ii, Math.min(quantity, ii.getSlotMax()));
-        if (user.addItem(item)) {
-            user.write(UserLocalPacket.userEffect(Effect.gainItem(item.getItemId(), item.getQuantity())));
-        } else {
-            user.write(WvsContext.message(Message.system("Failed to add item {} to inventory", itemId)));
+        final Item item = Item.createByInfo(user.getNextItemSn(), ii, Math.min(quantity, ii.getSlotMax()));
+        try (var locked = user.acquireInventoryManager()) {
+            final InventoryManager im = locked.get();
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+            if (addItemResult.isPresent()) {
+                final var iter = addItemResult.get().iterator();
+                while (iter.hasNext()) {
+                    user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+                }
+                user.write(WvsContext.message(DropPickUpMessage.item(item)));
+            } else {
+                user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
+            }
         }
     }
 
     @Command("meso")
     public static void meso(User user, String[] args) {
-        user.addMoney(1_000_000);
-        user.write(WvsContext.message(Message.system("Money : %d", user.getMoney())));
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %smeso <mesos to add>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int money = Integer.parseInt(args[1]);
+        try (var locked = user.acquireInventoryManager()) {
+            final InventoryManager im = locked.get();
+            if (im.addMoney(money)) {
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+                user.write(WvsContext.message(Message.incMoney(money)));
+            } else {
+                user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
+            }
+        }
     }
 }

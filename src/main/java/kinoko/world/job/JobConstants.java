@@ -34,11 +34,23 @@ public final class JobConstants {
         return jobId / 10 == 43;
     }
 
+    public static boolean isResistance(int jobId) {
+        return jobId / 1000 == 3;
+    }
+
+    public static boolean isBattleMageJob(int jobId) {
+        return jobId / 100 == 32;
+    }
+
     public static boolean isWildHunterJob(int jobId) {
         return jobId / 100 == 33;
     }
 
     public static boolean isMechanicJob(int jobId) {
         return jobId / 100 == 35;
+    }
+
+    public static boolean isExtendSpJob(int jobId) {
+        return isResistance(jobId) || isEvanJob(jobId);
     }
 }

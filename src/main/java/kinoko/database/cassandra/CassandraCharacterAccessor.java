@@ -7,13 +7,14 @@ import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.CharacterInventory;
 import kinoko.world.user.CharacterStat;
+import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +32,26 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
     private CharacterData loadCharacterData(Row row) {
         final int accountId = row.getInt(CharacterTable.ACCOUNT_ID);
-        final int characterId = row.getInt(CharacterTable.CHARACTER_ID);
-        final CharacterData cd = new CharacterData(accountId, characterId);
-        cd.setCharacterName(row.getString(CharacterTable.CHARACTER_NAME));
-        cd.setCharacterStat(row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class));
 
-        final CharacterInventory ci = new CharacterInventory();
-        ci.setEquipped(row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class));
-        ci.setEquipInventory(row.get(CharacterTable.EQUIP_INVENTORY, Inventory.class));
-        ci.setConsumeInventory(row.get(CharacterTable.CONSUME_INVENTORY, Inventory.class));
-        ci.setInstallInventory(row.get(CharacterTable.INSTALL_INVENTORY, Inventory.class));
-        ci.setEtcInventory(row.get(CharacterTable.ETC_INVENTORY, Inventory.class));
-        ci.setCashInventory(row.get(CharacterTable.CASH_INVENTORY, Inventory.class));
-        ci.setMoney(row.getInt(CharacterTable.MONEY));
-        cd.setCharacterInventory(ci);
+        final CharacterData cd = new CharacterData(accountId);
+
+        final CharacterStat cs = row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class);
+        cs.setId(row.getInt(CharacterTable.CHARACTER_ID));
+        cs.setName(row.getString(CharacterTable.CHARACTER_NAME));
+        cd.setCharacterStat(cs);
+
+        final TemporaryStatManager tsm = new TemporaryStatManager();
+        cd.setTemporaryStatManager(tsm);
+
+        final InventoryManager im = new InventoryManager();
+        im.setEquipped(row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class));
+        im.setEquipInventory(row.get(CharacterTable.EQUIP_INVENTORY, Inventory.class));
+        im.setConsumeInventory(row.get(CharacterTable.CONSUME_INVENTORY, Inventory.class));
+        im.setInstallInventory(row.get(CharacterTable.INSTALL_INVENTORY, Inventory.class));
+        im.setEtcInventory(row.get(CharacterTable.ETC_INVENTORY, Inventory.class));
+        im.setCashInventory(row.get(CharacterTable.CASH_INVENTORY, Inventory.class));
+        im.setMoney(row.getInt(CharacterTable.MONEY));
+        cd.setInventoryManager(im);
 
         final SkillManager sm = new SkillManager();
         cd.setSkillManager(sm);
@@ -129,11 +136,11 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .build()
         );
         for (Row row : selectResult) {
-            final int characterId = row.getInt(CharacterTable.CHARACTER_ID);
-            final String characterName = row.getString(CharacterTable.CHARACTER_NAME);
             final CharacterStat characterStat = row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class);
+            characterStat.setId(row.getInt(CharacterTable.CHARACTER_ID));
+            characterStat.setName(row.getString(CharacterTable.CHARACTER_NAME));
             final Inventory equipped = row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class);
-            avatarDataList.add(AvatarData.from(characterId, characterName, characterStat, equipped));
+            avatarDataList.add(AvatarData.from(characterStat, equipped));
         }
         return avatarDataList;
     }
@@ -155,13 +162,13 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.CHARACTER_NAME, literal(characterData.getCharacterName()))
                         .setColumn(CharacterTable.CHARACTER_NAME_INDEX, literal(lowerName(characterData.getCharacterName())))
                         .setColumn(CharacterTable.CHARACTER_STAT, literal(characterData.getCharacterStat(), registry))
-                        .setColumn(CharacterTable.CHARACTER_EQUIPPED, literal(characterData.getCharacterInventory().getEquipped(), registry))
-                        .setColumn(CharacterTable.EQUIP_INVENTORY, literal(characterData.getCharacterInventory().getEquipInventory(), registry))
-                        .setColumn(CharacterTable.CONSUME_INVENTORY, literal(characterData.getCharacterInventory().getConsumeInventory(), registry))
-                        .setColumn(CharacterTable.INSTALL_INVENTORY, literal(characterData.getCharacterInventory().getInstallInventory(), registry))
-                        .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getCharacterInventory().getEtcInventory(), registry))
-                        .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getCharacterInventory().getCashInventory(), registry))
-                        .setColumn(CharacterTable.MONEY, literal(characterData.getCharacterInventory().getMoney()))
+                        .setColumn(CharacterTable.CHARACTER_EQUIPPED, literal(characterData.getInventoryManager().getEquipped(), registry))
+                        .setColumn(CharacterTable.EQUIP_INVENTORY, literal(characterData.getInventoryManager().getEquipInventory(), registry))
+                        .setColumn(CharacterTable.CONSUME_INVENTORY, literal(characterData.getInventoryManager().getConsumeInventory(), registry))
+                        .setColumn(CharacterTable.INSTALL_INVENTORY, literal(characterData.getInventoryManager().getInstallInventory(), registry))
+                        .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getInventoryManager().getEtcInventory(), registry))
+                        .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getInventoryManager().getCashInventory(), registry))
+                        .setColumn(CharacterTable.MONEY, literal(characterData.getInventoryManager().getMoney()))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))

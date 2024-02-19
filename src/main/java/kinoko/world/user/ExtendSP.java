@@ -1,37 +1,35 @@
 package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.world.Encodable;
 
 import java.util.List;
 
-public final class ExtendSP {
-    private final List<Integer> spList;
+public final class ExtendSP implements Encodable {
+    private final List<Integer> list;
 
-    public ExtendSP(List<Integer> spList) {
-        this.spList = spList;
+    public ExtendSP(List<Integer> list) {
+        this.list = list;
     }
 
-    public List<Integer> getSpList() {
-        return spList;
+    public List<Integer> getList() {
+        return list;
     }
 
-    public void encode(short job, OutPacket outPacket) {
-        if (job / 1000 == 3 || job / 100 == 22 || job == 2001) {
-            outPacket.encodeByte(spList.size());
-            for (int jobLevel = 0; jobLevel < spList.size(); jobLevel++) {
-                outPacket.encodeByte(jobLevel);
-                outPacket.encodeByte(spList.get(jobLevel));
-            }
-        } else {
-            int totalSp = 0;
-            for (int sp : spList) {
-                totalSp += sp;
-            }
-            outPacket.encodeShort(totalSp);
+    public int getTotal() {
+        return list.stream().mapToInt(Integer::intValue).sum();
+    }
+
+    @Override
+    public void encode(OutPacket outPacket) {
+        outPacket.encodeByte(list.size());
+        for (int jobLevel = 0; jobLevel < list.size(); jobLevel++) {
+            outPacket.encodeByte(jobLevel);
+            outPacket.encodeByte(list.get(jobLevel));
         }
     }
 
-    public static ExtendSP from(List<Integer> spList) {
-        return new ExtendSP(spList);
+    public static ExtendSP from(List<Integer> list) {
+        return new ExtendSP(list);
     }
 }

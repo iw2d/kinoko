@@ -11,6 +11,6 @@ FIELDS = {
 fieldId = user.getField().getFieldId()
 
 if fieldId in FIELDS:
-    sm.warpToPortal(FIELDS[fieldId], "out00")
+    sm.warp(FIELDS[fieldId], "out00")
 else:
     sm.dispose()

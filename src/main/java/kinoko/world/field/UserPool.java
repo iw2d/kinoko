@@ -82,7 +82,7 @@ public final class UserPool extends FieldObjectPool<User> {
 
     private void broadcastPacketUnsafe(OutPacket outPacket, User except) {
         getObjectsUnsafe().forEach((user) -> {
-            if (except != null && user.getId() == except.getId()) {
+            if (except != null && user.getCharacterId() == except.getCharacterId()) {
                 return;
             }
             user.write(outPacket);

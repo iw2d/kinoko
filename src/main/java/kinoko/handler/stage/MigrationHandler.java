@@ -2,6 +2,7 @@ package kinoko.handler.stage;
 
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
+import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
 import kinoko.server.client.Client;
@@ -13,7 +14,6 @@ import kinoko.world.field.Field;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
-import kinoko.world.user.temp.TemporaryStatManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,7 +79,7 @@ public final class MigrationHandler {
             c.close();
             return;
         }
-        final User user = new User(c, characterData, new CalcDamage(), new TemporaryStatManager()); // TODO: persist tsm across channels
+        final User user = new User(c, characterData, new CalcDamage());
         if (channelServer.getClientStorage().isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
             c.close();
@@ -93,16 +93,23 @@ public final class MigrationHandler {
         // Add User to Field
         final int fieldId = user.getCharacterStat().getPosMap();
         final byte portalId = user.getCharacterStat().getPortal();
-        final Field field;
+        final Field targetField;
         final Optional<Field> fieldResult = channelServer.getFieldById(fieldId);
         if (fieldResult.isPresent()) {
-            field = fieldResult.get();
+            targetField = fieldResult.get();
         } else {
-            log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getId(), 100000000);
-            field = channelServer.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
+            log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
+            targetField = channelServer.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
         }
-        user.warp(field, portalId, true, false);
-
+        final PortalInfo targetPortal;
+        final Optional<PortalInfo> portalResult = targetField.getPortalById(portalId);
+        if (portalResult.isPresent()) {
+            targetPortal = portalResult.get();
+        } else {
+            log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
+            targetPortal = targetField.getPortalById(0).orElseThrow(() -> new IllegalStateException("Could not resolve Portal"));
+        }
+        user.warp(targetField, targetPortal, true, false);
 
         // TODO: keymap, quickslot, macros
 

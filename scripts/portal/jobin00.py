@@ -2,4 +2,4 @@
 
 MAGIC_LIBRARY = 101000003
 
-sm.warpToPortal(MAGIC_LIBRARY, "jobout00")
+sm.warp(MAGIC_LIBRARY, "jobout00")

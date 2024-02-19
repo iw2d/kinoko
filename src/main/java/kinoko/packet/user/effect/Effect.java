@@ -2,6 +2,7 @@ package kinoko.packet.user.effect;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
+import kinoko.world.item.Item;
 
 public class Effect implements Encodable {
     protected final EffectType type;
@@ -93,6 +94,10 @@ public class Effect implements Encodable {
                 throw new IllegalStateException("Tried to encode unsupported effect type");
             }
         }
+    }
+
+    public static Effect gainItem(Item item) {
+        return gainItem(item.getItemId(), item.getQuantity());
     }
 
     public static Effect gainItem(int itemId, int quantity) {

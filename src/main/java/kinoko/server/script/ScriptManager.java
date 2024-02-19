@@ -8,6 +8,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.map.PortalInfo;
 import kinoko.world.field.Field;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -168,10 +169,17 @@ public final class ScriptManager {
             dispose();
             return;
         }
-        user.warp(fieldResult.get(), 0, false, false);
+        final Field targetField = fieldResult.get();
+        final Optional<PortalInfo> portalResult = targetField.getPortalById(0);
+        if (portalResult.isEmpty()) {
+            log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
+            dispose();
+            return;
+        }
+        user.warp(fieldResult.get(), portalResult.get(), false, false);
     }
 
-    public void warpToPortal(int fieldId, String portalName) {
+    public void warp(int fieldId, String portalName) {
         final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
         if (fieldResult.isEmpty()) {
             log.error("Could not resolve field ID : {}", fieldId);
@@ -185,14 +193,17 @@ public final class ScriptManager {
             dispose();
             return;
         }
-        user.warp(targetField, portalResult.get().getPortalId(), false, false);
+        user.warp(fieldResult.get(), portalResult.get(), false, false);
     }
 
     public boolean addMoney(int money) {
-        if (!user.addMoney(money)) {
-            return false;
+        try (var locked = user.acquireInventoryManager()) {
+            final InventoryManager im = locked.get();
+            if (!im.addMoney(money)) {
+                return false;
+            }
+            user.write(WvsContext.message(Message.incMoney(money)));
         }
-        user.write(WvsContext.message(Message.incMoney(money)));
         return true;
     }
 }

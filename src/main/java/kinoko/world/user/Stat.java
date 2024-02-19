@@ -2,7 +2,7 @@ package kinoko.world.user;
 
 import java.util.Set;
 
-public enum StatFlag {
+public enum Stat {
     SKIN(0x1),
     FACE(0x2),
     HAIR(0x4),
@@ -28,7 +28,7 @@ public enum StatFlag {
 
     private final int value;
 
-    StatFlag(int value) {
+    Stat(int value) {
         this.value = value;
     }
 
@@ -36,9 +36,9 @@ public enum StatFlag {
         return value;
     }
 
-    public static int from(Set<StatFlag> flags) {
-        return flags.stream()
-                .mapToInt(StatFlag::getValue)
+    public static int from(Set<Stat> stats) {
+        return stats.stream()
+                .mapToInt(Stat::getValue)
                 .reduce(0, (a, b) -> a | b);
     }
 }

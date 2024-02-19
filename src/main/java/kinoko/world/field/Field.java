@@ -83,7 +83,7 @@ public final class Field {
 
     public void broadcastPacket(OutPacket outPacket, User except) {
         userPool.forEach((user) -> {
-            if (except != null && user.getId() == except.getId()) {
+            if (except != null && user.getCharacterId() == except.getCharacterId()) {
                 return;
             }
             user.write(outPacket);
@@ -97,13 +97,11 @@ public final class Field {
                 case NPC -> {
                     final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.getTemplateId());
                     final Npc npc = Npc.from(lifeInfo, npcInfoResult.orElseThrow());
-                    npc.setField(field);
                     field.getLifePool().addLife(npc);
                 }
                 case MOB -> {
                     final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(lifeInfo.getTemplateId());
                     final Mob mob = Mob.from(lifeInfo, mobInfoResult.orElseThrow());
-                    mob.setField(field);
                     field.getLifePool().addLife(mob);
                 }
             }

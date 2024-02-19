@@ -59,7 +59,9 @@ public final class Client extends NettyClient {
         super.close();
         if (user != null) {
             user.logout();
-            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
+            try (var locked = user.acquireCharacterData()) {
+                DatabaseManager.characterAccessor().saveCharacter(locked.get());
+            }
         }
         if (account != null) {
             DatabaseManager.accountAccessor().saveAccount(account);

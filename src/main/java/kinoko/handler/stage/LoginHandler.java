@@ -18,14 +18,18 @@ import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.World;
 import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.user.BodyPart;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.*;
+import kinoko.world.user.CharacterStat;
+import kinoko.world.user.ExtendSP;
+import kinoko.world.user.temp.TemporaryStatManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -188,48 +192,52 @@ public final class LoginHandler {
             c.write(LoginPacket.createNewCharacterResultFail(LoginType.TIMEOUT));
             return;
         }
-        final CharacterData characterData = new CharacterData(c.getAccount().getId(), characterIdResult.get());
-        characterData.setCharacterName(name);
+        final CharacterData characterData = new CharacterData(c.getAccount().getId());
         characterData.setItemSnCounter(new AtomicInteger(1));
 
         // Initial Stats
         final int level = 1;
         final int hp = GameConstants.getMinHp(level, job.getJobId());
         final int mp = GameConstants.getMinMp(level, job.getJobId());
-        final CharacterStat characterStat = new CharacterStat();
-        characterStat.setGender(gender);
-        characterStat.setSkin((byte) selectedAL[3]);
-        characterStat.setFace(selectedAL[0]);
-        characterStat.setHair(selectedAL[1] + selectedAL[2]);
-        characterStat.setLevel((byte) level);
-        characterStat.setJob(job.getJobId());
-        characterStat.setSubJob(selectedSubJob);
-        characterStat.setBaseStr((short) 12);
-        characterStat.setBaseDex((short) 5);
-        characterStat.setBaseInt((short) 4);
-        characterStat.setBaseLuk((short) 4);
-        characterStat.setHp(hp);
-        characterStat.setMaxHp(hp);
-        characterStat.setMp(mp);
-        characterStat.setMaxMp(mp);
-        characterStat.setAp((short) 0);
-        characterStat.setSp(ExtendSP.from(List.of(0)));
-        characterStat.setExp(0);
-        characterStat.setPop((short) 0);
-        characterStat.setPosMap(10000);
-        characterStat.setPortal((byte) 0);
-        characterData.setCharacterStat(characterStat);
+        final CharacterStat cs = new CharacterStat();
+        cs.setId(characterIdResult.get());
+        cs.setName(name);
+        cs.setGender(gender);
+        cs.setSkin((byte) selectedAL[3]);
+        cs.setFace(selectedAL[0]);
+        cs.setHair(selectedAL[1] + selectedAL[2]);
+        cs.setLevel((byte) level);
+        cs.setJob(job.getJobId());
+        cs.setSubJob(selectedSubJob);
+        cs.setBaseStr((short) 12);
+        cs.setBaseDex((short) 5);
+        cs.setBaseInt((short) 4);
+        cs.setBaseLuk((short) 4);
+        cs.setHp(hp);
+        cs.setMaxHp(hp);
+        cs.setMp(mp);
+        cs.setMaxMp(mp);
+        cs.setAp((short) 0);
+        cs.setSp(ExtendSP.from(List.of(0)));
+        cs.setExp(0);
+        cs.setPop((short) 0);
+        cs.setPosMap(10000);
+        cs.setPortal((byte) 0);
+        characterData.setCharacterStat(cs);
+
+        final TemporaryStatManager tsm = new TemporaryStatManager();
+        characterData.setTemporaryStatManager(tsm);
 
         // Initialize Inventory and Add Starting Equips
-        final CharacterInventory characterInventory = new CharacterInventory();
-        characterInventory.setEquipped(new Inventory(Short.MAX_VALUE));
-        characterInventory.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        characterInventory.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        characterInventory.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        characterInventory.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        characterInventory.setCashInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        characterInventory.setMoney(0);
-        characterData.setCharacterInventory(characterInventory);
+        final InventoryManager im = new InventoryManager();
+        im.setEquipped(new Inventory(Short.MAX_VALUE));
+        im.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        im.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        im.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        im.setMoney(0);
+        characterData.setInventoryManager(im);
 
         for (int i = 4; i < selectedAL.length; i++) {
             final int itemId = selectedAL[i];
@@ -253,22 +261,22 @@ public final class LoginHandler {
             if (startingEquip.isEmpty()) {
                 continue;
             }
-            characterInventory.getEquipped().putItem(bodyPart.getValue(), startingEquip.get());
+            im.getEquipped().putItem(bodyPart.getValue(), startingEquip.get());
         }
 
         // Initialize Skills
-        final SkillManager skillManager = new SkillManager();
+        final SkillManager sm = new SkillManager();
         for (SkillInfo skillInfo : SkillProvider.getSkillsForJob(job)) {
             if (skillInfo.isInvisible()) {
                 continue;
             }
-            skillManager.addSkill(skillInfo);
+            sm.addSkill(skillInfo);
         }
-        characterData.setSkillManager(skillManager);
+        characterData.setSkillManager(sm);
 
         // Initialize Quest Manager
-        final QuestManager questManager = new QuestManager();
-        characterData.setQuestManager(questManager);
+        final QuestManager qm = new QuestManager();
+        characterData.setQuestManager(qm);
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {

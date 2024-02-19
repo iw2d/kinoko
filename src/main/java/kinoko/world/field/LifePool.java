@@ -8,6 +8,7 @@ public final class LifePool extends FieldObjectPool<Life> {
     }
 
     public void addLife(Life life) {
+        life.setField(field);
         lock.lock();
         try {
             life.setId(field.getNewObjectId());

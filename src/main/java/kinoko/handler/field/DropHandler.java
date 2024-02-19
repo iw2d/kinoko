@@ -9,10 +9,14 @@ import kinoko.world.GameConstants;
 import kinoko.world.drop.Drop;
 import kinoko.world.drop.DropLeaveType;
 import kinoko.world.field.Field;
+import kinoko.world.item.InventoryManager;
+import kinoko.world.item.InventoryOperation;
+import kinoko.world.user.Stat;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Optional;
 
 public final class DropHandler {
@@ -20,8 +24,9 @@ public final class DropHandler {
 
     @Handler(InHeader.DROP_PICK_UP_REQUEST)
     public static void handleDropPickUpRequest(User user, InPacket inPacket) {
+        final Field field = user.getField();
         final byte fieldKey = inPacket.decodeByte();
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (field.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -31,36 +36,55 @@ public final class DropHandler {
         final int objectId = inPacket.decodeInt(); // dwDropID
         inPacket.decodeInt(); // dwCliCrc
 
-        final Field field = user.getField();
+        // Find drop in field
         final Optional<Drop> dropResult = field.getDropPool().getById(objectId);
         if (dropResult.isEmpty()) {
             user.dispose();
             return;
         }
-
         final Drop drop = dropResult.get();
-        if (drop.isMoney()) {
-            final long newMoney = ((long) user.getMoney()) + drop.getMoney();
-            if (newMoney > GameConstants.MAX_MONEY) {
-                user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
-                user.dispose();
-                return;
-            }
-        } else {
-            if (user.getInventory().canAddItem(drop.getItem()).isEmpty()) {
-                user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
-                user.dispose();
-                return;
-            }
-        }
-        if (field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getId(), 0)) {
+
+        try (var locked = user.acquireInventoryManager()) {
+            final InventoryManager im = locked.get();
+
+            // Check if drop can be added to inventory
             if (drop.isMoney()) {
-                user.addMoney(drop.getMoney());
+                final long newMoney = ((long) im.getMoney()) + drop.getMoney();
+                if (newMoney > GameConstants.MAX_MONEY) {
+                    user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                    user.dispose();
+                    return;
+                }
             } else {
-                user.addItem(drop.getItem());
+                if (im.canAddItem(drop.getItem()).isEmpty()) {
+                    user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                    user.dispose();
+                    return;
+                }
             }
-        } else {
-            user.dispose();
+
+            // Try removing drop from field
+            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getCharacterId(), 0)) {
+                user.dispose();
+                return;
+            }
+
+            // Add drop to inventory
+            if (drop.isMoney()) {
+                if (im.addMoney(drop.getMoney())) {
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+                    user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
+                }
+            } else {
+                final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
+                if (addItemResult.isPresent()) {
+                    final var iter = addItemResult.get().iterator();
+                    while (iter.hasNext()) {
+                        user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+                    }
+                    user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+                }
+            }
         }
     }
 }

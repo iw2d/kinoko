@@ -8,10 +8,10 @@ import kinoko.world.user.User;
 public final class UserPoolPacket {
     public static OutPacket userEnterField(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_ENTER_FIELD);
-        outPacket.encodeInt(user.getId()); // dwCharacterId
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         // CUserRemote::Init
-        outPacket.encodeByte(user.getLevel()); // nLevel
-        outPacket.encodeString(user.getName()); // sCharacterName
+        outPacket.encodeByte(user.getCharacterStat().getLevel()); // nLevel
+        outPacket.encodeString(user.getCharacterStat().getName()); // sCharacterName
         outPacket.encodeString(""); // sGuildName
         outPacket.encodeShort(0); // nGuildMarkBg
         outPacket.encodeByte(0); // nGuildMarkBgColor
@@ -19,7 +19,7 @@ public final class UserPoolPacket {
         outPacket.encodeByte(0); // nGuildMarkColor
 
         user.getTemporaryStatManager().encodeForRemote(outPacket, true); // SecondaryStat::DecodeForRemote
-        outPacket.encodeShort(user.getJob()); // nJobCode
+        outPacket.encodeShort(user.getCharacterStat().getJob()); // nJobCode
         user.getCharacterData().getAvatarLook().encode(outPacket); // AvatarLook::AvatarLook
 
         outPacket.encodeInt(0); // dwDriverID
@@ -70,7 +70,7 @@ public final class UserPoolPacket {
 
     public static OutPacket userLeaveField(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_LEAVE_FIELD);
-        outPacket.encodeInt(user.getId()); // dwCharacterId
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         return outPacket;
     }
 }

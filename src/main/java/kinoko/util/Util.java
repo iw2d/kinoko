@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HexFormat;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.ToDoubleFunction;
 
 public final class Util {
     private static final HexFormat hexFormat = HexFormat.ofDelimiter(" ").withUpperCase();
@@ -39,12 +40,22 @@ public final class Util {
     }
 
     public static <T> Optional<T> getRandomFromCollection(Collection<T> collection) {
+        return getRandomFromCollection(collection, (ignored) -> 1.0);
+    }
+
+    public static <T> Optional<T> getRandomFromCollection(Collection<T> collection, ToDoubleFunction<T> weightFunction) {
         if (collection.isEmpty()) {
             return Optional.empty();
         }
-        return collection.stream()
-                .skip(getRandom(collection.size()))
-                .findFirst();
+        final double totalWeight = collection.stream().mapToDouble(weightFunction).sum();
+        double r = random.nextDouble() * totalWeight;
+        for (T item : collection) {
+            r -= weightFunction.applyAsDouble(item);
+            if (r <= 0.0) {
+                return Optional.of(item);
+            }
+        }
+        return Optional.empty();
     }
 
     public static boolean isInteger(String string) {

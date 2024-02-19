@@ -1,14 +1,17 @@
-package kinoko.world.user;
+package kinoko.world.item;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
-import kinoko.world.item.*;
+import kinoko.util.Lockable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public final class CharacterInventory {
+public final class InventoryManager implements Lockable<InventoryManager> {
+    private final Lock lock = new ReentrantLock();
     private Inventory equipped;
     private Inventory equipInventory;
     private Inventory consumeInventory;
@@ -113,13 +116,41 @@ public final class CharacterInventory {
     }
 
     public boolean hasItem(int itemId, int quantity) {
-        final Inventory inventory = getInventoryByItemId(itemId);
-        for (Item item : inventory.getItems().values()) {
-            if (item.getItemId() == itemId && item.getQuantity() > quantity) {
-                return true;
+        boolean hasItem = false;
+        for (Item item : getInventoryByItemId(itemId).getItems().values()) {
+            if (item.getItemId() == itemId) {
+                hasItem = true;
+                quantity -= item.getQuantity();
             }
         }
-        return false;
+        return hasItem && quantity <= 0;
+    }
+
+    public Optional<List<InventoryOperation>> removeItem(int itemId, int quantity) {
+        final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+        final InventoryType inventoryType = InventoryType.getByItemId(itemId);
+        final Inventory inventory = getInventoryByType(inventoryType);
+        for (var entry : inventory.getItems().entrySet()) {
+            final Item existingItem = entry.getValue();
+            if (existingItem.getItemId() != itemId) {
+                continue;
+            }
+            final int newQuantity = Math.max(0, existingItem.getQuantity() - quantity);
+            if (newQuantity > 0) {
+                inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, entry.getKey(), newQuantity));
+            } else {
+                inventoryOperations.add(InventoryOperation.delItem(inventoryType, entry.getKey()));
+            }
+            quantity -= existingItem.getQuantity();
+            if (quantity <= 0) {
+                break;
+            }
+        }
+        if (quantity > 0) {
+            return Optional.empty();
+        }
+        applyInventoryOperations(inventoryOperations);
+        return Optional.of(inventoryOperations);
     }
 
     public Optional<List<InventoryOperation>> addItem(Item originalItem) {
@@ -127,7 +158,7 @@ public final class CharacterInventory {
         if (addItemResult.isEmpty()) {
             return addItemResult;
         }
-        applyInventoryOperationsUnsafe(addItemResult.get());
+        applyInventoryOperations(addItemResult.get());
         return addItemResult;
     }
 
@@ -183,7 +214,7 @@ public final class CharacterInventory {
         return Optional.of(inventoryOperations);
     }
 
-    private void applyInventoryOperationsUnsafe(List<InventoryOperation> inventoryOperations) {
+    public void applyInventoryOperations(List<InventoryOperation> inventoryOperations) {
         for (InventoryOperation op : inventoryOperations) {
             final InventoryType inventoryType = InventoryType.getByPosition(op.getInventoryType(), op.getPosition());
             final Inventory inventory = getInventoryByType(inventoryType);
@@ -214,5 +245,15 @@ public final class CharacterInventory {
                 }
             }
         }
+    }
+
+    @Override
+    public void lock() {
+        lock.lock();
+    }
+
+    @Override
+    public void unlock() {
+        lock.unlock();
     }
 }

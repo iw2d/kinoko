@@ -1,9 +1,10 @@
 package kinoko.provider.quest.act;
 
+import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 public interface QuestAct {
-    boolean canAct(User user);
+    boolean canAct(Locked<User> locked);
 
-    void doAct(User user);
+    boolean doAct(Locked<User> locked);
 }

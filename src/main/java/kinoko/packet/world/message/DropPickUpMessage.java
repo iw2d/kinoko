@@ -1,6 +1,7 @@
 package kinoko.packet.world.message;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.world.item.Item;
 
 public final class DropPickUpMessage extends Message {
     private final DropPickUpMessageType pickUpMessageType;
@@ -51,6 +52,10 @@ public final class DropPickUpMessage extends Message {
 
     public static DropPickUpMessage cannotGetAnymoreItems() {
         return new DropPickUpMessage(DropPickUpMessageType.CANNOT_GET_ANYMORE_ITEMS);
+    }
+
+    public static DropPickUpMessage item(Item item) {
+        return item(item.getItemId(), item.getQuantity());
     }
 
     public static DropPickUpMessage item(int itemId, int quantity) {

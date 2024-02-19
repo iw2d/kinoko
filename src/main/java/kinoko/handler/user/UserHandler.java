@@ -100,7 +100,7 @@ public final class UserHandler {
         }
 
         // TODO: update stats
-        user.getField().broadcastPacket(UserRemotePacket.userHit(user.getId(), hitInfo), user);
+        user.getField().broadcastPacket(UserRemotePacket.userHit(user.getCharacterId(), hitInfo), user);
     }
 
     @Handler(InHeader.USER_CHAT)

@@ -53,7 +53,7 @@ public final class ScriptHandler {
 
         final Optional<ScriptManager> scriptManagerResult = ScriptDispatcher.getScriptManager(user);
         if (scriptManagerResult.isEmpty()) {
-            log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getId());
+            log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getCharacterId());
             return;
         }
         final ScriptManager scriptManager = scriptManagerResult.get();

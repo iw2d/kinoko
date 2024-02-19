@@ -61,7 +61,7 @@ public final class FieldHandler {
             user.dispose();
             return;
         }
-        user.warp(nextField, nextPortalResult.get().getPortalId(), false, false);
+        user.warp(nextField, nextPortalResult.get(), false, false);
     }
 
     @Handler(InHeader.USER_TRANSFER_CHANNEL_REQUEST)
@@ -76,9 +76,9 @@ public final class FieldHandler {
             return;
         }
         final ChannelServer channelServer = channelResult.get();
-        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getId());
+        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getCharacterId());
         if (mrResult.isEmpty()) {
-            log.error("Failed to submit migration request for character ID : {}", c.getUser().getId());
+            log.error("Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
             c.write(FieldPacket.transferChannelReqIgnored(1));
             return;
         }

@@ -2,13 +2,16 @@ package kinoko.world.user.temp;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
+import kinoko.util.Lockable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public final class TemporaryStatManager {
+public final class TemporaryStatManager implements Lockable<TemporaryStatManager> {
+    private final Lock lock = new ReentrantLock();
     private final Map<CharacterTemporaryStat, Option> stats = new EnumMap<>(CharacterTemporaryStat.class);
-    // TODO: scheduler and lock
     private final BitFlag<CharacterTemporaryStat> setStatFlag = new BitFlag<>(CharacterTemporaryStat.FLAG_SIZE);
     private final BitFlag<CharacterTemporaryStat> resetStatFlag = new BitFlag<>(CharacterTemporaryStat.FLAG_SIZE);
 
@@ -87,5 +90,15 @@ public final class TemporaryStatManager {
                 stats.get(cts).encode(outPacket);
             }
         }
+    }
+
+    @Override
+    public void lock() {
+        lock.lock();
+    }
+
+    @Override
+    public void unlock() {
+        lock.unlock();
     }
 }

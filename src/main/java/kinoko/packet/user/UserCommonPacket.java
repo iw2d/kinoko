@@ -7,7 +7,7 @@ import kinoko.world.user.User;
 public final class UserCommonPacket {
     public static OutPacket userChat(User user, int type, String text, boolean onlyBalloon) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT);
-        outPacket.encodeInt(user.getId());
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(type); // lType
         outPacket.encodeString(text); // sChat
         outPacket.encodeByte(onlyBalloon);

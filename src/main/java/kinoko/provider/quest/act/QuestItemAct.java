@@ -1,10 +1,17 @@
 package kinoko.provider.quest.act;
 
+import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.effect.Effect;
+import kinoko.packet.world.WvsContext;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Locked;
+import kinoko.util.Util;
 import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
+import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.user.User;
 
@@ -14,21 +21,24 @@ import java.util.stream.Collectors;
 public final class QuestItemAct implements QuestAct {
     private final Set<ItemData> items;
 
-    public QuestItemAct(Set<ItemData> items) {
+    QuestItemAct(Set<ItemData> items) {
         this.items = items;
     }
 
     @Override
-    public boolean canAct(User user) {
-        final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
-        final Set<ItemData> filteredItems = getFilteredItems(user);
+    public boolean canAct(Locked<User> locked) {
+        final User user = locked.get();
+        final Set<ItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
+
         // Handle required slots for random items
+        final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
         for (ItemData itemData : filteredItems) {
             if (itemData.isRandom()) {
                 final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
                 requiredSlots.put(inventoryType, 1);
             }
         }
+
         // Handle static items
         for (ItemData itemData : filteredItems) {
             if (itemData.isRandom()) {
@@ -38,30 +48,89 @@ public final class QuestItemAct implements QuestAct {
                 final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
                 requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
             } else {
-                if (!user.hasItem(itemData.getItemId(), itemData.getCount())) {
+                if (!user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount())) {
                     return false;
                 }
             }
         }
+
         // Check for required slots
         for (var entry : requiredSlots.entrySet()) {
-            final Inventory inventory = user.getInventory().getInventoryByType(entry.getKey());
+            final Inventory inventory = user.getInventoryManager().getInventoryByType(entry.getKey());
             final int remainingSlots = inventory.getSize() - inventory.getItems().size();
             if (remainingSlots < entry.getValue()) {
                 return false;
             }
         }
+
         return true;
     }
 
     @Override
-    public void doAct(User user) {
-        // TODO
+    public boolean doAct(Locked<User> locked) {
+        final User user = locked.get();
+        final Set<ItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
+
+        // Take required items
+        for (ItemData itemData : filteredItems) {
+            if (itemData.isRandom() || itemData.getCount() >= 0) {
+                continue;
+            }
+            final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemData.getItemId(), itemData.getCount());
+            if (removeItemResult.isEmpty()) {
+                return false;
+            }
+            user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
+            user.write(UserLocalPacket.userEffect(Effect.gainItem(itemData.getItemId(), itemData.getCount())));
+        }
+
+        // Give static items
+        for (ItemData itemData : filteredItems) {
+            if (itemData.isRandom() || itemData.getCount() <= 0) {
+                continue;
+            }
+            final Optional<Item> itemResult = Item.createById(user.getNextItemSn(), itemData.getItemId(), itemData.getCount());
+            if (itemResult.isEmpty()) {
+                return false;
+            }
+            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(itemResult.get());
+            if (addItemResult.isEmpty()) {
+                return false;
+            }
+            final var iter = addItemResult.get().iterator();
+            while (iter.hasNext()) {
+                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+            }
+            user.write(UserLocalPacket.userEffect(Effect.gainItem(itemResult.get())));
+        }
+
+        // Give random item
+        final Set<ItemData> randomItems = filteredItems.stream()
+                .filter(ItemData::isRandom)
+                .collect(Collectors.toUnmodifiableSet());
+        final Optional<ItemData> randomResult = Util.getRandomFromCollection(randomItems, ItemData::getProp);
+        if (randomResult.isPresent()) {
+            final Optional<Item> itemResult = Item.createById(user.getNextItemSn(), randomResult.get().getItemId(), randomResult.get().getCount());
+            if (itemResult.isEmpty()) {
+                return false;
+            }
+            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(itemResult.get());
+            if (addItemResult.isEmpty()) {
+                return false;
+            }
+            final var iter = addItemResult.get().iterator();
+            while (iter.hasNext()) {
+                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+            }
+            user.write(UserLocalPacket.userEffect(Effect.gainItem(itemResult.get())));
+        }
+
+        return true;
     }
 
-    private Set<ItemData> getFilteredItems(User user) {
+    private Set<ItemData> getFilteredItems(byte gender, short job) {
         return items.stream()
-                .filter(itemData -> itemData.checkGender(user.getGender()) && itemData.checkJob(user.getJob()))
+                .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
                 .collect(Collectors.toUnmodifiableSet());
     }
 
