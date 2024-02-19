@@ -33,10 +33,7 @@ public final class QuestManager {
     }
 
     public Optional<QuestRecord> getQuestRecord(int questId) {
-        if (questRecords.containsKey(questId)) {
-            return Optional.empty();
-        }
-        return Optional.of(questRecords.get(questId));
+        return Optional.ofNullable(questRecords.get(questId));
     }
 
     public Set<QuestRecord> getQuestRecords() {

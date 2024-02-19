@@ -51,6 +51,16 @@ public final class Foothold {
         return y2;
     }
 
+    public int getYFromX(int x) {
+        // interpolate between the two foothold ends for the y value below pos.x
+        final double f = (double) (x - x1) / (double) (x2 - x1);
+        return (int) Math.ceil(y1 + (f * (y2 - y1)));
+    }
+
+    public boolean isWall() {
+        return x1 == x2;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(layerId, groupId, footholdId);
@@ -79,5 +89,4 @@ public final class Foothold {
                 footholdProp.getOrDefault("y2", 0)
         );
     }
-
 }

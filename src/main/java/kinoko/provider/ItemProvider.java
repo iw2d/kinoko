@@ -38,10 +38,7 @@ public final class ItemProvider implements WzProvider {
     }
 
     public static Optional<ItemInfo> getItemInfo(int itemId) {
-        if (!itemInfos.containsKey(itemId)) {
-            return Optional.empty();
-        }
-        return Optional.of(itemInfos.get(itemId));
+        return Optional.ofNullable(itemInfos.get(itemId));
     }
 
     private static void loadEquipInfos(WzPackage source) throws ProviderError, IOException {

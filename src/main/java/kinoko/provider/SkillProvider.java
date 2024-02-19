@@ -35,17 +35,11 @@ public final class SkillProvider implements WzProvider {
     }
 
     public static Optional<SkillInfo> getMobSkillById(int skillId) {
-        if (!mobSkills.containsKey(skillId)) {
-            return Optional.empty();
-        }
-        return Optional.of(mobSkills.get(skillId));
+        return Optional.ofNullable(mobSkills.get(skillId));
     }
 
     public static Optional<SkillInfo> getSkillInfoById(int skillId) {
-        if (!skillInfos.containsKey(skillId)) {
-            return Optional.empty();
-        }
-        return Optional.of(skillInfos.get(skillId));
+        return Optional.ofNullable(skillInfos.get(skillId));
     }
 
     private static void loadSkillInfos(WzPackage source) throws ProviderError {

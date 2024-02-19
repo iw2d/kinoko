@@ -20,10 +20,7 @@ public abstract class FieldObjectPool<T extends FieldObject> {
     public final Optional<T> getById(int id) {
         lock.lock();
         try {
-            if (!objects.containsKey(id)) {
-                return Optional.empty();
-            }
-            return Optional.of(objects.get(id));
+            return Optional.ofNullable(objects.get(id));
         } finally {
             lock.unlock();
         }

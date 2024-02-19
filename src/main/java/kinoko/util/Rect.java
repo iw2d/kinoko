@@ -25,4 +25,25 @@ public final class Rect {
     public int getBottom() {
         return bottom;
     }
+
+    public int getCenterX() {
+        return (left + right) / 2;
+    }
+
+    public int getCenterY() {
+        return (top + bottom) / 2;
+    }
+
+    public boolean isInsideRect(int x, int y) {
+        return x >= left && y >= top && x <= right && y <= bottom;
+    }
+
+    public Rect union(Rect rect) {
+        return new Rect(
+                Math.min(getLeft(), rect.getLeft()),
+                Math.min(getTop(), rect.getTop()),
+                Math.max(getRight(), rect.getRight()),
+                Math.max(getBottom(), rect.getBottom())
+        );
+    }
 }

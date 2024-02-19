@@ -8,6 +8,7 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.map.Foothold;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.ServerConfig;
@@ -32,7 +33,8 @@ public final class AdminCommands {
     @Command("info")
     public static void info(User user, String[] args) {
         user.write(WvsContext.message(Message.system("Field ID : %d", user.getField().getFieldId())));
-        user.write(WvsContext.message(Message.system("x : %d, y : %d, fh : %d", user.getX(), user.getY(), user.getFoothold())));
+        user.write(WvsContext.message(Message.system("x : %d, y : %d, fh : %d (%d)", user.getX(), user.getY(), user.getFoothold(),
+                user.getField().getFootholdBelow(user.getX(), user.getY()).get().getFootholdId())));
     }
 
     @Command("npc")
@@ -84,10 +86,11 @@ public final class AdminCommands {
             user.write(WvsContext.message(Message.system("Could not resolve mob ID : %d", mobId)));
             return;
         }
+        final Optional<Foothold> footholdResult = user.getField().getFootholdBelow(user.getX(), user.getY());
         final Mob mob = new Mob(
                 user.getX(),
                 user.getY(),
-                user.getFoothold(),
+                footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold()),
                 mobInfoResult.get(),
                 MobAppearType.NORMAL
         );

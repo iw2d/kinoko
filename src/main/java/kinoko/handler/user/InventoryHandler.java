@@ -4,13 +4,11 @@ import kinoko.handler.Handler;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.world.GameConstants;
 import kinoko.world.drop.Drop;
 import kinoko.world.drop.DropEnterType;
 import kinoko.world.drop.DropOwnType;
-import kinoko.world.item.Inventory;
-import kinoko.world.item.InventoryOperation;
-import kinoko.world.item.InventoryType;
-import kinoko.world.item.Item;
+import kinoko.world.item.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,9 +39,9 @@ public final class InventoryHandler {
             log.error("Unknown inventory type : {}", type);
             return;
         }
-        final int oldPos = inPacket.decodeShort(); // nOldPos
-        final int newPos = inPacket.decodeShort(); // nNewPos
-        final int count = inPacket.decodeShort(); // nCount
+        final short oldPos = inPacket.decodeShort(); // nOldPos
+        final short newPos = inPacket.decodeShort(); // nNewPos
+        final short count = inPacket.decodeShort(); // nCount
 
         final InventoryType actualType = InventoryType.getByPosition(inventoryType, oldPos);
         final Inventory inventory = user.getInventory().getInventoryByType(actualType);
@@ -53,20 +51,31 @@ public final class InventoryHandler {
             return;
         }
         if (newPos == 0) {
-            // TODO: implement count
-
             // CDraggableItem::ThrowItem
-            if (!inventory.removeItem(oldPos, item)) {
-                log.error("Failed to remove item in {} inventory, position {}", actualType.name(), oldPos);
-                return;
+            if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
+                    item.getQuantity() > count) {
+                // Update item count
+                item.setQuantity((short) (item.getQuantity() - count));
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, oldPos, item.getQuantity()), true));
+                // Create partial item
+                final Item partialItem = new Item(item);
+                partialItem.setItemSn(user.getNextItemSn());
+                partialItem.setQuantity(count);
+                // Create drop
+                final Drop drop = Drop.item(DropOwnType.NO_OWN, user, partialItem, 0);
+                user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+            } else {
+                // Full drop
+                if (!inventory.removeItem(oldPos, item)) {
+                    log.error("Failed to remove item in {} inventory, position {}", actualType.name(), oldPos);
+                    return;
+                }
+                // Remove item from client inventory
+                user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
+                // Create drop
+                final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
+                user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
             }
-            // Remove item from client inventory
-            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
-            // Create drop
-            final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
-            drop.setX(user.getX()); // TODO: findFootholdBelow
-            drop.setY(user.getY());
-            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE);
         } else {
             final InventoryType secondType = InventoryType.getByPosition(inventoryType, newPos);
             final Inventory secondInventory = user.getInventory().getInventoryByType(secondType);
@@ -87,8 +96,6 @@ public final class InventoryHandler {
             return;
         }
         final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, 0);
-        drop.setX(user.getX()); // TODO: findFootholdBelow
-        drop.setY(user.getY());
-        user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE);
+        user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
     }
 }

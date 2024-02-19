@@ -69,6 +69,10 @@ public final class Field {
         return mapInfo.getPortalByName(name);
     }
 
+    public Optional<Foothold> getFootholdBelow(int x, int y) {
+        return mapInfo.getFootholdBelow(x, y);
+    }
+
     public int getNewObjectId() {
         return fieldObjectCounter.getAndIncrement();
     }

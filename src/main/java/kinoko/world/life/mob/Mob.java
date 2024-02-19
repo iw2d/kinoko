@@ -69,17 +69,11 @@ public final class Mob extends Life implements ControlledObject {
     }
 
     public Optional<MobAttack> getAttack(int attackIndex) {
-        if (!mobInfo.getAttacks().containsKey(attackIndex)) {
-            return Optional.empty();
-        }
-        return Optional.of(mobInfo.getAttacks().get(attackIndex));
+        return Optional.ofNullable(mobInfo.getAttacks().get(attackIndex));
     }
 
     public Optional<MobSkill> getSkill(int skillIndex) {
-        if (!mobInfo.getSkills().containsKey(skillIndex)) {
-            return Optional.empty();
-        }
-        return Optional.of(mobInfo.getSkills().get(skillIndex));
+        return Optional.ofNullable(mobInfo.getSkills().get(skillIndex));
     }
 
     public boolean isSkillAvailable(MobSkill mobSkill) {

@@ -30,10 +30,7 @@ public final class MobProvider implements WzProvider {
     }
 
     public static Optional<MobInfo> getMobInfo(int mobId) {
-        if (!mobInfos.containsKey(mobId)) {
-            return Optional.empty();
-        }
-        return Optional.of(mobInfos.get(mobId));
+        return Optional.ofNullable(mobInfos.get(mobId));
     }
 
     private static void loadMobInfos(WzPackage source) throws ProviderError {

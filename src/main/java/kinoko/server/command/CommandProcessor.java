@@ -42,7 +42,8 @@ public final class CommandProcessor {
         try {
             commandMap.get(args[0]).invoke(null, user, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            log.error("Exception caught while processing command {}", args[0], e);
+            log.error("Exception caught while processing command {}", text, e);
+            e.printStackTrace();
         }
         return true;
     }

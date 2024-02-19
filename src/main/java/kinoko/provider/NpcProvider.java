@@ -29,10 +29,7 @@ public final class NpcProvider implements WzProvider {
     }
 
     public static Optional<NpcInfo> getNpcInfo(int npcId) {
-        if (!npcInfos.containsKey(npcId)) {
-            return Optional.empty();
-        }
-        return Optional.of(npcInfos.get(npcId));
+        return Optional.ofNullable(npcInfos.get(npcId));
     }
 
     private static void loadNpcInfos(WzPackage source) throws ProviderError {

@@ -24,10 +24,7 @@ public final class MapProvider implements WzProvider {
     }
 
     public static Optional<MapInfo> getMapInfo(int mapId) {
-        if (!mapInfos.containsKey(mapId)) {
-            return Optional.empty();
-        }
-        return Optional.of(mapInfos.get(mapId));
+        return Optional.ofNullable(mapInfos.get(mapId));
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {

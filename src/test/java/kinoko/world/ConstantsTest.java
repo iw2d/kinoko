@@ -1,4 +1,4 @@
-package kinoko;
+package kinoko.world;
 
 import kinoko.world.GameConstants;
 import kinoko.world.job.Job;

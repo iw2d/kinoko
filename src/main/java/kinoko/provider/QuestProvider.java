@@ -26,10 +26,7 @@ public final class QuestProvider implements WzProvider {
     }
 
     public static Optional<QuestInfo> getQuestInfo(int questId) {
-        if (!questInfos.containsKey(questId)) {
-            return Optional.empty();
-        }
-        return Optional.of(questInfos.get(questId));
+        return Optional.ofNullable(questInfos.get(questId));
     }
 
     private static void loadQuestInfos(WzPackage source) throws ProviderError {

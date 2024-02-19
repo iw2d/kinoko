@@ -28,6 +28,7 @@ public final class MapInfo {
     private final List<LifeInfo> lifeInfos;
     private final List<PortalInfo> portalInfos;
     private final List<ReactorInfo> reactorInfos;
+    private final FootholdNode footholdRoot = new FootholdNode();
 
     public MapInfo(int mapId, boolean town, boolean swim, boolean fly, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions,
                    FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom,
@@ -52,6 +53,11 @@ public final class MapInfo {
         this.lifeInfos = lifeInfos;
         this.portalInfos = portalInfos;
         this.reactorInfos = reactorInfos;
+
+        // Initialize Footholds BST
+        for (Foothold fh : footholds) {
+            footholdRoot.insert(fh);
+        }
     }
 
     public int getMapId() {
@@ -140,6 +146,24 @@ public final class MapInfo {
         return portalInfos.stream()
                 .filter(pi -> pi.getPortalName().equals(name))
                 .findFirst();
+    }
+
+    public Optional<Foothold> getFootholdBelow(int x, int y) {
+        final FootholdNode.SearchResult result = new FootholdNode.SearchResult();
+        footholdRoot.searchDown((match) -> {
+            if (match.isWall()) {
+                return;
+            }
+            if (x < match.getX1() || x > match.getX2()) {
+                return;
+            }
+            final int my = match.getYFromX(x);
+            if (my < y) {
+                return;
+            }
+            result.setIf(res -> res.getYFromX(x) >= my, match);
+        }, x, y);
+        return Optional.ofNullable(result.get());
     }
 
     @Override
