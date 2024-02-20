@@ -2,7 +2,7 @@ package kinoko.world.job;
 
 public final class JobConstants {
     public static int getJobLevel(int jobId) {
-        if (jobId % 100 != 0 || jobId == 2001) {
+        if (jobId % 100 == 0 || jobId == 2001) {
             return 1;
         }
         int jobLevel;

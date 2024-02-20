@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public final class ScriptDispatcher {
     public static final Path NPC_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "npc");
@@ -61,7 +62,9 @@ public final class ScriptDispatcher {
             log.error("Npc script file not found : {}", scriptName);
             return;
         }
-        startScript(user, speakerId, scriptFile);
+        startScript(user, speakerId, scriptFile, (context) -> {
+            context.getBindings(SCRIPT_LANGUAGE).putMember("npcId", speakerId);
+        });
     }
 
     public static void startPortalScript(User user, String scriptName) {
@@ -76,7 +79,9 @@ public final class ScriptDispatcher {
             user.dispose();
             return;
         }
-        startScript(user, ServerConfig.SCRIPT_DEFAULT_SPEAKER, scriptFile);
+        startScript(user, ServerConfig.SCRIPT_DEFAULT_SPEAKER, scriptFile, (context) -> {
+            context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
+        });
     }
 
     public static void startQuestScript(User user, int speakerId, int questId, boolean isStart) {
@@ -90,20 +95,27 @@ public final class ScriptDispatcher {
             log.error("Quest script file not found : {}", scriptName);
             return;
         }
-        startScript(user, speakerId, scriptFile);
+        startScript(user, speakerId, scriptFile, (context) -> {
+            context.getBindings(SCRIPT_LANGUAGE).putMember("questId", questId);
+        });
     }
 
     private static void startScript(User user, int speakerId, File scriptFile) {
+        startScript(user, speakerId, scriptFile, (context) -> {
+        });
+    }
+
+    private static void startScript(User user, int speakerId, File scriptFile, Consumer<Context> contextConsumer) {
         // Create ScriptManager instance and polyglot Context
         final ScriptManager scriptManager = new ScriptManager(user, speakerId);
         final Context context = Context.newBuilder(SCRIPT_LANGUAGE)
                 .engine(engine)
                 .allowHostAccess(HostAccess.ALL)
                 .build();
-        context.getBindings(SCRIPT_LANGUAGE).putMember("user", user);
         context.getBindings(SCRIPT_LANGUAGE).putMember("sm", scriptManager);
-        scriptManagers.put(user.getCharacterId(), new Tuple<>(scriptManager, context));
+        contextConsumer.accept(context);
         // Evaluate script with virtual thread executor
+        scriptManagers.put(user.getCharacterId(), new Tuple<>(scriptManager, context));
         executor.submit(() -> {
             try {
                 log.debug("Evaluating script file : {}", scriptFile.getPath());

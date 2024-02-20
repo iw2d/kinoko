@@ -523,30 +523,28 @@ public enum OutHeader {
     ITC_QUERY_CASH_RESULT(411),
     ITC_NORMAL_ITEM_RESULT(412),
 
-
     LOGOUT_GIFT(432),
     NO(433);
 
 
-    private static final Map<Short, OutHeader> headerMap;
-    private static final Set<OutHeader> ignoreHeaders;
+    private static final Map<Short, OutHeader> headerMap = new HashMap<>();
+    private static final Set<OutHeader> ignoreHeaders = Set.of(
+            STAT_CHANGED,
+            MOB_ENTER_FIELD,
+            MOB_LEAVE_FIELD,
+            MOB_CHANGE_CONTROLLER,
+            MOB_MOVE,
+            MOB_CTRL_ACK,
+            NPC_ENTER_FIELD,
+            NPC_LEAVE_FIELD,
+            NPC_CHANGE_CONTROLLER,
+            NPC_MOVE
+    );
 
     static {
-        headerMap = new HashMap<>();
         for (OutHeader header : values()) {
             headerMap.put(header.getValue(), header);
         }
-        ignoreHeaders = Set.of(
-                MOB_ENTER_FIELD,
-                MOB_LEAVE_FIELD,
-                MOB_CHANGE_CONTROLLER,
-                MOB_MOVE,
-                MOB_CTRL_ACK,
-                NPC_ENTER_FIELD,
-                NPC_LEAVE_FIELD,
-                NPC_CHANGE_CONTROLLER,
-                NPC_MOVE
-        );
     }
 
     private final short value;

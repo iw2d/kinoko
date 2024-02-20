@@ -37,6 +37,10 @@ public final class ItemInfo {
         return WzProvider.getInteger(itemInfos.get(infoType), 0);
     }
 
+    public int getSpec(ItemSpecType specType) {
+        return WzProvider.getInteger(itemSpecs.get(specType), 0);
+    }
+
     public boolean isCash() {
         return getInfo(ItemInfoType.cash) != 0;
     }

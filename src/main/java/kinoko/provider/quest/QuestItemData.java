@@ -44,7 +44,7 @@ public class QuestItemData {
     }
 
     public boolean isRandom() {
-        return prop == -1;
+        return prop != -1;
     }
 
     public boolean checkJob(int jobId) {

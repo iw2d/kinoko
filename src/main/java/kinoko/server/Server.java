@@ -150,7 +150,7 @@ public final class Server {
         // Load Commands
         CommandProcessor.initialize();
 
-        // Load ScriptDispatcher
+        // Load Script Dispatcher
         ScriptDispatcher.initialize();
 
         // Load World

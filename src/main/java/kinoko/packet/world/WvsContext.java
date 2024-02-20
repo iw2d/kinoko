@@ -20,25 +20,27 @@ public final class WvsContext {
         outPacket.encodeByte(true); // bool -> bExclRequestSent = 0
 
         outPacket.encodeInt(Stat.from(statMap.keySet()));
-        for (var entry : statMap.entrySet()) {
-            switch (entry.getKey()) {
-                case SKIN, LEVEL -> {
-                    outPacket.encodeByte((byte) entry.getValue());
-                }
-                case JOB, STR, DEX, INT, LUK, AP, POP -> {
-                    outPacket.encodeShort((short) entry.getValue());
-                }
-                case FACE, HAIR, HP, MAX_HP, MP, MAX_MP, EXP, MONEY, TEMP_EXP -> {
-                    outPacket.encodeInt((int) entry.getValue());
-                }
-                case PET_1, PET_2, PET_3 -> {
-                    outPacket.encodeLong((long) entry.getValue());
-                }
-                case SP -> {
-                    if (entry.getValue() instanceof ExtendSP sp) {
-                        sp.encode(outPacket);
-                    } else {
-                        outPacket.encodeShort((short) entry.getValue());
+        for (Stat stat : Stat.ENCODE_ORDER) {
+            if (statMap.containsKey(stat)) {
+                switch (stat) {
+                    case SKIN, LEVEL -> {
+                        outPacket.encodeByte((byte) statMap.get(stat));
+                    }
+                    case JOB, STR, DEX, INT, LUK, AP, POP -> {
+                        outPacket.encodeShort((short) statMap.get(stat));
+                    }
+                    case FACE, HAIR, HP, MAX_HP, MP, MAX_MP, EXP, MONEY, TEMP_EXP -> {
+                        outPacket.encodeInt((int) statMap.get(stat));
+                    }
+                    case PET_1, PET_2, PET_3 -> {
+                        outPacket.encodeLong((long) statMap.get(stat));
+                    }
+                    case SP -> {
+                        if (statMap.get(stat) instanceof ExtendSP sp) {
+                            sp.encode(outPacket);
+                        } else {
+                            outPacket.encodeShort((short) statMap.get(stat));
+                        }
                     }
                 }
             }

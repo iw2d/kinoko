@@ -4,6 +4,7 @@ import kinoko.handler.Handler;
 import kinoko.packet.user.UserCommonPacket;
 import kinoko.packet.user.UserLocalPacket;
 import kinoko.packet.user.UserRemotePacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.server.ServerConfig;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
@@ -12,8 +13,13 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.skill.HitInfo;
 import kinoko.world.skill.HitType;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public final class UserHandler {
     private static final Logger log = LogManager.getLogger(UserHandler.class);
@@ -123,6 +129,37 @@ public final class UserHandler {
         final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
 
         user.getField().broadcastPacket(UserRemotePacket.userEmotion(user, emotion, duration, isByItemOption), user);
+    }
+
+    @Handler(InHeader.USER_STAT_CHANGE_REQUEST)
+    public static void handleUserStatChangeRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int mask = inPacket.decodeInt(); // 0x1400
+        if (mask != 0x1400) {
+            log.error("Unhandled mask received for USER_STAT_CHANGE_REQUEST : {}", mask);
+            return;
+        }
+        final int hp = Short.toUnsignedInt(inPacket.decodeShort()); // nHP
+        final int mp = Short.toUnsignedInt(inPacket.decodeShort()); // nMP
+        inPacket.decodeByte(); // nOption
+
+        try (var locked = user.acquireCharacterStat()) {
+            final CharacterStat cs = locked.get();
+            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+            if (hp > 0) {
+                final int newHp = cs.getHp() + hp;
+                cs.setHp(Math.min(newHp, cs.getMaxHp()));
+                statMap.put(Stat.HP, cs.getHp());
+            }
+            if (mp > 0) {
+                final int newMp = cs.getMp() + mp;
+                cs.setMp(Math.min(newMp, cs.getMaxMp()));
+                statMap.put(Stat.MP, cs.getMp());
+            }
+            if (!statMap.isEmpty()) {
+                user.write(WvsContext.statChanged(statMap));
+            }
+        }
     }
 
     @Handler(InHeader.USER_PORTAL_TELEPORT_REQUEST)

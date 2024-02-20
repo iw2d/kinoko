@@ -84,7 +84,7 @@ public enum InHeader {
     USER_GATHER_ITEM_REQUEST(75),
     USER_SORT_ITEM_REQUEST(76),
     USER_CHANGE_SLOT_POSITION_REQUEST(77),
-    USER_STAT_CHANGE_ITEM_REQUEST(78),
+    USER_STAT_CHANGE_ITEM_USE_REQUEST(78),
     USER_STAT_CHANGE_ITEM_CANCEL_REQUEST(79),
     USER_STAT_CHANGE_BY_PORTABLE_CHAIR_REQUEST(80),
     USER_MOB_SUMMON_ITEM_USE_REQUEST(81),
@@ -321,23 +321,22 @@ public enum InHeader {
     LOGOUT_GIFT_SELECT(313),
     NO(314);
 
-    private static final Map<Short, InHeader> headerMap;
-    private static final Set<InHeader> ignoreHeaders;
+    private static final Map<Short, InHeader> headerMap = new HashMap<>();
+    private static final Set<InHeader> ignoreHeaders = Set.of(
+            CREATE_SECURITY_HANDLE,
+            UPDATE_SCREEN_SETTING,
+            USER_MOVE,
+            USER_EMOTION,
+            USER_STAT_CHANGE_REQUEST,
+            MOB_MOVE,
+            MOB_APPLY_CTRL,
+            NPC_MOVE
+    );
 
     static {
-        headerMap = new HashMap<>();
         for (InHeader header : values()) {
             headerMap.put(header.getValue(), header);
         }
-        ignoreHeaders = Set.of(
-                CREATE_SECURITY_HANDLE,
-                UPDATE_SCREEN_SETTING,
-                USER_MOVE,
-                USER_EMOTION,
-                MOB_MOVE,
-                MOB_APPLY_CTRL,
-                NPC_MOVE
-        );
     }
 
     private final short value;

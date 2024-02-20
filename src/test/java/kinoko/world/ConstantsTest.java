@@ -1,24 +1,25 @@
 package kinoko.world;
 
 import kinoko.world.job.Job;
+import kinoko.world.user.stat.StatConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public final class ConstantsTest {
     @Test
     public void testMinHpMp() {
-        Assertions.assertEquals(50, GameConstants.getMinHp(1, Job.BEGINNER.getJobId()));
-        Assertions.assertEquals(5, GameConstants.getMinMp(1, Job.BEGINNER.getJobId()));
+        Assertions.assertEquals(50, StatConstants.getMinHp(1, Job.BEGINNER.getJobId()));
+        Assertions.assertEquals(5, StatConstants.getMinMp(1, Job.BEGINNER.getJobId()));
 
         for (Job job : Job.values()) {
             if (job == Job.MANAGER || job == Job.GM || job == Job.SUPER_GM || job == Job.ADDITIONAL_SKILLS) {
                 continue;
             }
 
-            final int hp = GameConstants.getMinHp(120, job.getJobId());
+            final int hp = StatConstants.getMinHp(120, job.getJobId());
             Assertions.assertTrue(hp > 0);
 
-            final int mp = GameConstants.getMinMp(120, job.getJobId());
+            final int mp = StatConstants.getMinMp(120, job.getJobId());
             Assertions.assertTrue(mp > 0);
         }
     }

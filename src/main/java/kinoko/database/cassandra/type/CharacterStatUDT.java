@@ -41,7 +41,7 @@ public final class CharacterStatUDT {
                         .withField(SKIN, DataTypes.TINYINT)
                         .withField(FACE, DataTypes.INT)
                         .withField(HAIR, DataTypes.INT)
-                        .withField(LEVEL, DataTypes.TINYINT)
+                        .withField(LEVEL, DataTypes.SMALLINT)
                         .withField(JOB, DataTypes.SMALLINT)
                         .withField(SUB_JOB, DataTypes.SMALLINT)
                         .withField(BASE_STR, DataTypes.SMALLINT)

@@ -24,7 +24,7 @@ public final class ScriptAnswer {
     }
 
     public static ScriptAnswer withAction(int action) {
-        return new ScriptAnswer(action, 0, null);
+        return new ScriptAnswer(action, -1, null);
     }
 
     public static ScriptAnswer withAnswer(int action, int answer) {
@@ -32,6 +32,6 @@ public final class ScriptAnswer {
     }
 
     public static ScriptAnswer withTextAnswer(int action, String answer) {
-        return new ScriptAnswer(action, 0, answer);
+        return new ScriptAnswer(action, -1, answer);
     }
 }

@@ -4,19 +4,25 @@ import kinoko.packet.script.ScriptMessage;
 import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
+import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
+import kinoko.world.item.InventoryOperation;
+import kinoko.world.item.Item;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public final class ScriptManager {
@@ -196,6 +202,43 @@ public final class ScriptManager {
         user.warp(fieldResult.get(), portalResult.get(), false, false);
     }
 
+    public void avatarOriented(String effectPath) {
+        user.write(UserLocalPacket.userEffect(Effect.avatarOriented(effectPath)));
+    }
+
+
+    // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    public int getGender() {
+        return user.getCharacterStat().getGender();
+    }
+
+    public int getHp() {
+        return user.getCharacterStat().getHp();
+    }
+
+    public void setHp(int hp) {
+        try (var locked = user.acquireCharacterStat()) {
+            locked.get().setHp(hp);
+            user.write(WvsContext.statChanged(Stat.HP, hp));
+        }
+    }
+
+    public void addExp(int exp) {
+        try (var locked = user.acquireCharacterStat()) {
+            final CharacterStat cs = locked.get();
+            final Map<Stat, Object> addExpResult = cs.addExp(exp);
+            if (addExpResult.containsKey(Stat.LEVEL)) {
+                user.write(UserLocalPacket.userEffect(Effect.levelUp()));
+            }
+            user.write(WvsContext.statChanged(addExpResult));
+            user.write(WvsContext.message(Message.incExp(exp, true, true)));
+        }
+    }
+
+
+    // INVENTORY METHODS -----------------------------------------------------------------------------------------------
+
     public boolean addMoney(int money) {
         try (var locked = user.acquireInventoryManager()) {
             final InventoryManager im = locked.get();
@@ -205,5 +248,55 @@ public final class ScriptManager {
             user.write(WvsContext.message(Message.incMoney(money)));
         }
         return true;
+    }
+
+    public boolean addItem(int itemId) {
+        return addItem(itemId, 1);
+    }
+
+    public boolean addItem(int itemId, int quantity) {
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            return false;
+        }
+        final ItemInfo ii = itemInfoResult.get();
+        final Item item = Item.createByInfo(user.getNextItemSn(), ii, Math.min(quantity, ii.getSlotMax()));
+        try (var locked = user.acquireInventoryManager()) {
+            final InventoryManager im = locked.get();
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+            if (addItemResult.isPresent()) {
+                final var iter = addItemResult.get().iterator();
+                while (iter.hasNext()) {
+                    user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+                }
+                user.write(UserLocalPacket.userEffect(Effect.gainItem(item)));
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public boolean hasItem(int itemId) {
+        return hasItem(itemId, 1);
+    }
+
+    public boolean hasItem(int itemId, int quantity) {
+        try (var locked = user.acquireInventoryManager()) {
+            return locked.get().hasItem(itemId, quantity);
+        }
+    }
+
+
+    // QUEST METHODS ---------------------------------------------------------------------------------------------------
+
+    public void forceStartQuest(int questId) {
+        final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
+        user.write(WvsContext.message(Message.questRecord(qr)));
+    }
+
+    public void forceCompleteQuest(int questId) {
+        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
+        user.write(WvsContext.message(Message.questRecord(qr)));
     }
 }

@@ -76,6 +76,7 @@ public class Effect implements Encodable {
             }
             case AVATAR_ORIENTED -> {
                 outPacket.encodeString(string1); // sEffect
+                outPacket.encodeInt(0); // ignored
             }
             case INCUBATOR_USE -> {
                 outPacket.encodeInt(int1); // nItemId
@@ -94,6 +95,16 @@ public class Effect implements Encodable {
                 throw new IllegalStateException("Tried to encode unsupported effect type");
             }
         }
+    }
+
+    public static Effect levelUp() {
+        return new Effect(EffectType.LEVEL_UP);
+    }
+
+    public static Effect avatarOriented(String effectPath) {
+        final Effect effect = new Effect(EffectType.AVATAR_ORIENTED);
+        effect.string1 = effectPath; // sEffect
+        return effect;
     }
 
     public static Effect gainItem(Item item) {

@@ -33,7 +33,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
         cs.setSkin(value.getByte(CharacterStatUDT.SKIN));
         cs.setFace(value.getInt(CharacterStatUDT.FACE));
         cs.setHair(value.getInt(CharacterStatUDT.HAIR));
-        cs.setLevel(value.getByte(CharacterStatUDT.LEVEL));
+        cs.setLevel(value.getShort(CharacterStatUDT.LEVEL));
         cs.setJob(value.getShort(CharacterStatUDT.JOB));
         cs.setSubJob(value.getShort(CharacterStatUDT.SUB_JOB));
         cs.setBaseStr(value.getShort(CharacterStatUDT.BASE_STR));
@@ -64,7 +64,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
                 .setByte(CharacterStatUDT.SKIN, cs.getSkin())
                 .setInt(CharacterStatUDT.FACE, cs.getFace())
                 .setInt(CharacterStatUDT.HAIR, cs.getHair())
-                .setByte(CharacterStatUDT.LEVEL, cs.getLevel())
+                .setShort(CharacterStatUDT.LEVEL, cs.getLevel())
                 .setShort(CharacterStatUDT.JOB, cs.getJob())
                 .setShort(CharacterStatUDT.SUB_JOB, cs.getSubJob())
                 .setShort(CharacterStatUDT.BASE_STR, cs.getBaseStr())

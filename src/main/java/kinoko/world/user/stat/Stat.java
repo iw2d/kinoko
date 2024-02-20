@@ -1,5 +1,6 @@
 package kinoko.world.user.stat;
 
+import java.util.List;
 import java.util.Set;
 
 public enum Stat {
@@ -25,6 +26,8 @@ public enum Stat {
     PET_2(0x80000),
     PET_3(0x100000),
     TEMP_EXP(0x200000);
+
+    public static final List<Stat> ENCODE_ORDER = List.of(values());
 
     private final int value;
 

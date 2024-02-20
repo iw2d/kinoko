@@ -2,11 +2,13 @@ package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
+import kinoko.util.Util;
 import kinoko.world.Encodable;
+import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
 
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -18,7 +20,7 @@ public final class CharacterStat implements Encodable, Lockable<CharacterStat> {
     private byte skin;
     private int face;
     private int hair;
-    private byte level;
+    private short level; // encoded as unsigned byte
     private short job;
     private short subJob;
     private short baseStr;
@@ -84,11 +86,11 @@ public final class CharacterStat implements Encodable, Lockable<CharacterStat> {
         this.hair = hair;
     }
 
-    public byte getLevel() {
+    public short getLevel() {
         return level;
     }
 
-    public void setLevel(byte level) {
+    public void setLevel(short level) {
         this.level = level;
     }
 
@@ -220,9 +222,45 @@ public final class CharacterStat implements Encodable, Lockable<CharacterStat> {
         this.portal = portal;
     }
 
-    public Optional<Map<Stat, Object>> addExp(int exp) {
-        // TODO + level up handling
-        return Optional.of(Map.of());
+    public Map<Stat, Object> addExp(int delta) {
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        if (getLevel() >= GameConstants.MAX_LEVEL) {
+            return statMap;
+        }
+        long newExp = ((long) getExp()) + delta;
+        while (newExp >= GameConstants.getNextLevelExp(getLevel())) {
+            newExp -= GameConstants.getNextLevelExp(getLevel());
+            statMap.putAll(levelUp());
+        }
+        setExp((int) newExp);
+        statMap.put(Stat.EXP, (int) newExp);
+        return statMap;
+    }
+
+    public Map<Stat, Object> levelUp() {
+        if (getLevel() >= GameConstants.MAX_LEVEL) {
+            return Map.of();
+        }
+        // Compute and update stats
+        final int newMaxHp = getMaxHp() + StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE + 1);
+        final int newMaxMp = getMaxMp() + StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE + 1);
+        setLevel((short) Math.min(getLevel() + 1, GameConstants.MAX_LEVEL));
+        setMaxHp(Math.min(newMaxHp, GameConstants.MAX_HP));
+        setMaxMp(Math.min(newMaxMp, GameConstants.MAX_MP));
+        setAp((short) (getAp() + StatConstants.getIncAp(getJob())));
+        getSp().addSp(getJob(), StatConstants.getIncSp(getJob()));
+        // Populate stat change map
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        statMap.put(Stat.LEVEL, (byte) getLevel());
+        statMap.put(Stat.MAX_HP, getMaxHp());
+        statMap.put(Stat.MAX_MP, getMaxMp());
+        statMap.put(Stat.AP, getAp());
+        if (JobConstants.isExtendSpJob(job)) {
+            statMap.put(Stat.SP, getSp());
+        } else {
+            statMap.put(Stat.SP, (short) getSp().getTotal());
+        }
+        return statMap;
     }
 
     @Override

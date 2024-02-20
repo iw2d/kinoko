@@ -57,6 +57,10 @@ public final class Field {
         return mapInfo.getFieldOptions();
     }
 
+    public boolean hasFieldOption(FieldOption fieldOption) {
+        return mapInfo.getFieldOptions().contains(fieldOption);
+    }
+
     public FieldType getFieldType() {
         return mapInfo.getFieldType();
     }

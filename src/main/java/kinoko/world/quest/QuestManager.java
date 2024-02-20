@@ -80,6 +80,13 @@ public final class QuestManager {
         return Optional.of(qr);
     }
 
+    public QuestRecord forceStartQuest(int questId) {
+        final QuestRecord qr = new QuestRecord(questId);
+        qr.setState(QuestState.PERFORM);
+        addQuestRecord(qr);
+        return qr;
+    }
+
     public Optional<QuestRecord> completeQuest(Locked<User> locked, int questId) {
         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
@@ -116,6 +123,14 @@ public final class QuestManager {
         qr.setState(QuestState.COMPLETE);
         qr.setCompletedTime(Instant.now());
         return Optional.of(qr);
+    }
+
+    public QuestRecord forceCompleteQuest(int questId) {
+        final QuestRecord qr = new QuestRecord(questId);
+        qr.setState(QuestState.COMPLETE);
+        qr.setCompletedTime(Instant.now());
+        addQuestRecord(qr);
+        return qr;
     }
 
     public Optional<QuestRecord> resignQuest(int questId) {

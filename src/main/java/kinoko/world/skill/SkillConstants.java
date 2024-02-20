@@ -84,7 +84,7 @@ public final class SkillConstants {
         final int jobId = skillId / 10000;
         if (JobConstants.isEvanJob(jobId)) {
             final int jobLevel = JobConstants.getJobLevel(jobId);
-            return jobLevel == 0 || jobLevel == 10 || jobLevel == 22111001 || jobLevel == 22141002 || jobLevel == 22140000;
+            return jobLevel == 9 || jobLevel == 10 || skillId == 22111001 || skillId == 22141002 || skillId == 22140000;
         }
         if (JobConstants.isDualJob(jobId)) {
             return JobConstants.getJobLevel(jobId) == 4 ||

@@ -25,6 +25,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSP;
+import kinoko.world.user.stat.StatConstants;
 import kinoko.world.user.temp.TemporaryStatManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -192,9 +193,9 @@ public final class LoginHandler {
         characterData.setItemSnCounter(new AtomicInteger(1));
 
         // Initial Stats
-        final int level = 1;
-        final int hp = GameConstants.getMinHp(level, job.getJobId());
-        final int mp = GameConstants.getMinMp(level, job.getJobId());
+        final short level = 1;
+        final int hp = StatConstants.getMinHp(level, job.getJobId());
+        final int mp = StatConstants.getMinMp(level, job.getJobId());
         final CharacterStat cs = new CharacterStat();
         cs.setId(characterIdResult.get());
         cs.setName(name);
@@ -202,7 +203,7 @@ public final class LoginHandler {
         cs.setSkin((byte) selectedAL[3]);
         cs.setFace(selectedAL[0]);
         cs.setHair(selectedAL[1] + selectedAL[2]);
-        cs.setLevel((byte) level);
+        cs.setLevel(level);
         cs.setJob(job.getJobId());
         cs.setSubJob(selectedSubJob);
         cs.setBaseStr((short) 12);

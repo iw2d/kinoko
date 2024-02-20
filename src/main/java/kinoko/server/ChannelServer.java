@@ -6,10 +6,7 @@ import kinoko.handler.field.FieldHandler;
 import kinoko.handler.field.LifeHandler;
 import kinoko.handler.script.ScriptHandler;
 import kinoko.handler.stage.MigrationHandler;
-import kinoko.handler.user.AttackHandler;
-import kinoko.handler.user.InventoryHandler;
-import kinoko.handler.user.SkillHandler;
-import kinoko.handler.user.UserHandler;
+import kinoko.handler.user.*;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;
 import kinoko.server.header.InHeader;
@@ -32,6 +29,7 @@ public final class ChannelServer extends NettyServer {
             UserHandler.class,
             AttackHandler.class,
             SkillHandler.class,
+            ItemHandler.class,
             InventoryHandler.class,
             ScriptHandler.class
     );

@@ -74,7 +74,8 @@ public final class QuestItemAct implements QuestAct {
             if (itemData.isRandom() || itemData.getCount() >= 0) {
                 continue;
             }
-            final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemData.getItemId(), itemData.getCount());
+            final int quantity = -itemData.getCount();
+            final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemData.getItemId(), quantity);
             if (removeItemResult.isEmpty()) {
                 return false;
             }

@@ -65,19 +65,24 @@ public final class ScriptHandler {
                 if (action == 1) {
                     final String answer = inPacket.decodeString(); // sInputStr_Result
                     scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
+                } else {
+                    scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
                 }
             }
             case ASK_NUMBER, ASK_MENU, ASK_SLIDE_MENU -> {
                 if (action == 1) {
                     final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
                     scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                } else {
+                    scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
                 }
             }
-            // nSelect
             case ASK_AVATAR, ASK_MEMBER_SHOP_AVATAR -> {
                 if (action == 1) {
                     final byte answer = inPacket.decodeByte(); // nAvatarIndex
                     scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                } else {
+                    scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
                 }
             }
             case null -> {
@@ -133,7 +138,7 @@ public final class ScriptHandler {
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
                 try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> questRecordResult = locked.get().getQuestManager().startQuest(locked, questId);
+                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().startQuest(locked, questId);
                     if (questRecordResult.isEmpty()) {
                         log.error("Failed to accept quest : {}", questId);
                         return;
@@ -150,7 +155,7 @@ public final class ScriptHandler {
                 }
                 final int index = inPacket.decodeInt(); // nIdx
                 try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> questRecordResult = locked.get().getQuestManager().completeQuest(locked, questId);
+                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().completeQuest(locked, questId);
                     if (questRecordResult.isEmpty()) {
                         log.error("Failed to complete quest : {}", questId);
                         return;

@@ -1,4 +1,4 @@
-# Portal to Hall of (Job)
+# Portal to Hall of <job>
 
 FIELDS = {
     100000201 : 100000205, # Bowman Instructional School -> Hall of Bowmen
