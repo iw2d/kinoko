@@ -12,6 +12,7 @@ import kinoko.util.Locked;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.life.Life;
+import kinoko.world.quest.QuestManager;
 import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.Map;
@@ -81,6 +82,10 @@ public final class User extends Life implements Lockable<User> {
 
     public Locked<InventoryManager> acquireInventoryManager() {
         return characterData.getInventoryManager().acquire();
+    }
+
+    public QuestManager getQuestManager() {
+        return characterData.getQuestManager();
     }
 
     public CalcDamage getCalcDamage() {

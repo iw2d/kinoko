@@ -256,7 +256,7 @@ public final class CharacterData implements Encodable, Lockable<CharacterData> {
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
-                outPacket.encodeString(qr.getQuestInfo());
+                outPacket.encodeString(qr.getValue());
             }
         }
         if (flag.hasFlag(DBChar.QUEST_COMPLETE)) {
@@ -294,7 +294,7 @@ public final class CharacterData implements Encodable, Lockable<CharacterData> {
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
-                outPacket.encodeString(qr.getQuestInfo());
+                outPacket.encodeString(qr.getValue());
             }
         }
         if (flag.hasFlag(DBChar.WILD_HUNTER_INFO) &&

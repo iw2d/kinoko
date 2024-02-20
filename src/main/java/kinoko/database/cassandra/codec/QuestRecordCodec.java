@@ -30,8 +30,8 @@ public final class QuestRecordCodec extends MappingCodec<UdtValue, QuestRecord> 
         }
         final int questId = value.getInt(QuestRecordUDT.QUEST_ID);
         final QuestRecord qr = new QuestRecord(questId);
-        qr.setQuestState(QuestState.getByValue(value.getInt(QuestRecordUDT.QUEST_STATE)));
-        qr.setQuestInfo(value.getString(QuestRecordUDT.QUEST_INFO));
+        qr.setState(QuestState.getByValue(value.getInt(QuestRecordUDT.QUEST_STATE)));
+        qr.setValue(value.getString(QuestRecordUDT.QUEST_VALUE));
         qr.setCompletedTime(value.getInstant(QuestRecordUDT.COMPLETED_TIME));
         return qr;
     }
@@ -44,8 +44,8 @@ public final class QuestRecordCodec extends MappingCodec<UdtValue, QuestRecord> 
         }
         return getCqlType().newValue()
                 .setInt(QuestRecordUDT.QUEST_ID, qr.getQuestId())
-                .setInt(QuestRecordUDT.QUEST_STATE, qr.getQuestState().getValue())
-                .setString(QuestRecordUDT.QUEST_INFO, qr.getQuestInfo())
+                .setInt(QuestRecordUDT.QUEST_STATE, qr.getState().getValue())
+                .setString(QuestRecordUDT.QUEST_VALUE, qr.getValue())
                 .setInstant(QuestRecordUDT.COMPLETED_TIME, qr.getCompletedTime());
     }
 }

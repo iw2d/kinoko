@@ -11,13 +11,7 @@ public final class SkillManager {
     private final Map<Integer, Instant> skillCooltimes = new ConcurrentHashMap<>();
 
     public Map<Integer, SkillRecord> getSkillRecords() {
-        //return skillRecords;
-        final SkillRecord threeSnails = new SkillRecord(1000);
-        threeSnails.setSkillLevel(1);
-        threeSnails.setMasterLevel(3);
-        return Map.of(
-                1000, threeSnails
-        );
+        return skillRecords;
     }
 
     public Map<Integer, Instant> getSkillCooltimes() {

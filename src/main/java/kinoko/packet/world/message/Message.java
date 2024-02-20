@@ -23,16 +23,16 @@ public class Message implements Encodable {
         switch (type) {
             case QUEST_RECORD -> {
                 outPacket.encodeShort(questRecord.getQuestId()); // nQuestID
-                outPacket.encodeByte(questRecord.getQuestState().getValue());
-                switch (questRecord.getQuestState()) {
+                outPacket.encodeByte(questRecord.getState().getValue());
+                switch (questRecord.getState()) {
                     case NONE -> {
                         outPacket.encodeByte(true); // delete quest
                     }
                     case PERFORM -> {
-                        outPacket.encodeString(questRecord.getQuestInfo());
+                        outPacket.encodeString(questRecord.getValue()); // sQRValue
                     }
                     case COMPLETE -> {
-                        outPacket.encodeFT(questRecord.getCompletedTime());
+                        outPacket.encodeFT(questRecord.getCompletedTime()); // ftEnd
                     }
                 }
             }

@@ -221,7 +221,8 @@ public final class CharacterStat implements Encodable, Lockable<CharacterStat> {
     }
 
     public Optional<Map<Stat, Object>> addExp(int exp) {
-        return Optional.empty();
+        // TODO + level up handling
+        return Optional.of(Map.of());
     }
 
     @Override

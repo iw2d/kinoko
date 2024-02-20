@@ -1,15 +1,11 @@
 package kinoko.world.quest;
 
-import kinoko.provider.QuestProvider;
-import kinoko.provider.quest.QuestInfo;
-
 import java.time.Instant;
-import java.util.Optional;
 
 public final class QuestRecord {
     private final int questId;
-    private QuestState questState;
-    private String questInfo;
+    private QuestState state;
+    private String value;
     private Instant completedTime;
 
     public QuestRecord(int questId) {
@@ -20,20 +16,20 @@ public final class QuestRecord {
         return questId;
     }
 
-    public QuestState getQuestState() {
-        return questState;
+    public QuestState getState() {
+        return state;
     }
 
-    public void setQuestState(QuestState questState) {
-        this.questState = questState;
+    public void setState(QuestState state) {
+        this.state = state;
     }
 
-    public String getQuestInfo() {
-        return questInfo;
+    public String getValue() {
+        return value;
     }
 
-    public void setQuestInfo(String questInfo) {
-        this.questInfo = questInfo;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public Instant getCompletedTime() {
@@ -42,16 +38,5 @@ public final class QuestRecord {
 
     public void setCompletedTime(Instant completedTime) {
         this.completedTime = completedTime;
-    }
-
-    public static Optional<QuestRecord> createById(int questId) {
-        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
-        if (questInfoResult.isEmpty()) {
-            return Optional.empty();
-        }
-        final QuestInfo qi = questInfoResult.get();
-        final QuestRecord qr = new QuestRecord(questId);
-        qr.setQuestState(QuestState.PERFORM);
-        return Optional.of(qr);
     }
 }

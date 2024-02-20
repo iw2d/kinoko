@@ -12,7 +12,7 @@ import java.util.Optional;
 public final class QuestExpAct implements QuestAct {
     private final int exp;
 
-    QuestExpAct(int exp) {
+    public QuestExpAct(int exp) {
         this.exp = exp;
     }
 
