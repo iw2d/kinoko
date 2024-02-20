@@ -1,11 +1,11 @@
-package kinoko.world.drop;
+package kinoko.world.field.drop;
 
 import kinoko.packet.field.DropPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObject;
+import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
-import kinoko.world.life.Life;
 import kinoko.world.user.User;
 
 import java.time.Instant;

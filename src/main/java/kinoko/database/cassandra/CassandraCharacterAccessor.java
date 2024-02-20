@@ -13,7 +13,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.CharacterStat;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.ArrayList;

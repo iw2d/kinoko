@@ -1,4 +1,4 @@
-package kinoko.world.life.mob;
+package kinoko.world.field.life.mob;
 
 import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.LifeInfo;
@@ -7,7 +7,7 @@ import kinoko.provider.mob.MobInfo;
 import kinoko.provider.mob.MobSkill;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.ControlledObject;
-import kinoko.world.life.Life;
+import kinoko.world.field.life.Life;
 import kinoko.world.user.User;
 
 import java.time.Instant;

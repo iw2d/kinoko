@@ -8,7 +8,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.world.life.MovePath;
+import kinoko.world.field.life.MovePath;
 import kinoko.world.skill.HitInfo;
 import kinoko.world.skill.HitType;
 import kinoko.world.user.User;

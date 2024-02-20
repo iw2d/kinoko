@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.user.stat;
 
 import java.util.Set;
 

@@ -10,9 +10,10 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.util.Locked;
 import kinoko.world.field.Field;
+import kinoko.world.field.life.Life;
 import kinoko.world.item.InventoryManager;
-import kinoko.world.life.Life;
 import kinoko.world.quest.QuestManager;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.Map;

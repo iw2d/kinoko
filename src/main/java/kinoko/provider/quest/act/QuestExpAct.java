@@ -3,8 +3,8 @@ package kinoko.provider.quest.act;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.util.Locked;
-import kinoko.world.user.Stat;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 
 import java.util.Map;
 import java.util.Optional;

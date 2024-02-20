@@ -8,8 +8,8 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.CharacterStatUDT;
-import kinoko.world.user.CharacterStat;
-import kinoko.world.user.ExtendSP;
+import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.ExtendSP;
 
 public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterStat> {
     public CharacterStatCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<CharacterStat> outerJavaType) {

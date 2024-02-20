@@ -3,6 +3,7 @@ package kinoko.world.user;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 import kinoko.world.item.Inventory;
+import kinoko.world.user.stat.CharacterStat;
 
 public final class AvatarData implements Encodable {
     private final CharacterStat characterStat;

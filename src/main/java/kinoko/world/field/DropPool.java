@@ -2,9 +2,9 @@ package kinoko.world.field;
 
 import kinoko.packet.field.DropPacket;
 import kinoko.provider.map.Foothold;
-import kinoko.world.drop.Drop;
-import kinoko.world.drop.DropEnterType;
-import kinoko.world.drop.DropLeaveType;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropLeaveType;
 
 import java.util.Optional;
 

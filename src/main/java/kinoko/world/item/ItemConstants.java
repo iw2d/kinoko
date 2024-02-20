@@ -1,7 +1,5 @@
 package kinoko.world.item;
 
-import kinoko.world.user.BodyPart;
-
 public final class ItemConstants {
     public static int getItemPrefix(int itemId) {
         return itemId / 10000;

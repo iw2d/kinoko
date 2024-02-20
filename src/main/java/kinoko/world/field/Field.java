@@ -6,8 +6,8 @@ import kinoko.provider.map.*;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.life.mob.Mob;
-import kinoko.world.life.npc.Npc;
+import kinoko.world.field.life.mob.Mob;
+import kinoko.world.field.life.npc.Npc;
 import kinoko.world.user.User;
 
 import java.util.Optional;

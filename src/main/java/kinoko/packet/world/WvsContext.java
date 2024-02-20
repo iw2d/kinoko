@@ -4,8 +4,8 @@ import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.item.InventoryOperation;
-import kinoko.world.user.ExtendSP;
-import kinoko.world.user.Stat;
+import kinoko.world.user.stat.ExtendSP;
+import kinoko.world.user.stat.Stat;
 
 import java.util.List;
 import java.util.Map;

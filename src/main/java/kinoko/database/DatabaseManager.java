@@ -24,7 +24,7 @@ import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
 import kinoko.world.item.PetData;
 import kinoko.world.quest.QuestRecord;
-import kinoko.world.user.CharacterStat;
+import kinoko.world.user.stat.CharacterStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

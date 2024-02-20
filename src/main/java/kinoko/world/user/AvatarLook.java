@@ -2,7 +2,9 @@ package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
+import kinoko.world.item.BodyPart;
 import kinoko.world.item.Inventory;
+import kinoko.world.user.stat.CharacterStat;
 
 import java.util.HashMap;
 import java.util.Map;

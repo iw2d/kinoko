@@ -2,6 +2,7 @@ package kinoko.world.user;
 
 import kinoko.world.item.WeaponType;
 import kinoko.world.job.JobConstants;
+import kinoko.world.user.stat.CharacterStat;
 
 public final class CalcDamage {
     public static int calcBaseDamage(int p1, int p2, int p3, int ad, double k) {

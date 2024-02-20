@@ -1,6 +1,6 @@
 package kinoko.world.field;
 
-import kinoko.world.life.Life;
+import kinoko.world.field.life.Life;
 
 public final class LifePool extends FieldObjectPool<Life> {
     public LifePool(Field field) {

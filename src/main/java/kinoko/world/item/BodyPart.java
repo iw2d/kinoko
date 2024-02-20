@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.item;
 
 public enum BodyPart {
     EQUIPPED_BASE(0),

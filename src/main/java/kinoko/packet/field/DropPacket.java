@@ -2,9 +2,9 @@ package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.drop.Drop;
-import kinoko.world.drop.DropEnterType;
-import kinoko.world.drop.DropLeaveType;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropLeaveType;
 
 public final class DropPacket {
     public static OutPacket dropEnterField(Drop drop, DropEnterType enterType) {

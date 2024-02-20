@@ -6,13 +6,13 @@ import kinoko.packet.world.message.DropPickUpMessage;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
-import kinoko.world.drop.Drop;
-import kinoko.world.drop.DropLeaveType;
 import kinoko.world.field.Field;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
-import kinoko.world.user.Stat;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

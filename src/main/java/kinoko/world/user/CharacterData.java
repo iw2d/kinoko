@@ -4,6 +4,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.util.Lockable;
 import kinoko.world.Encodable;
+import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.job.JobConstants;
@@ -12,6 +13,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.time.Duration;
