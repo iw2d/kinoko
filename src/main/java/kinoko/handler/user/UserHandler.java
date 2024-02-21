@@ -1,6 +1,7 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.packet.user.ChatType;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
@@ -119,7 +120,7 @@ public final class UserHandler {
             return;
         }
 
-        user.getField().broadcastPacket(UserPacket.chat(user, 0, text, onlyBalloon));
+        user.getField().broadcastPacket(UserPacket.chat(user, ChatType.NORMAL, text, onlyBalloon));
     }
 
     @Handler(InHeader.USER_EMOTION)

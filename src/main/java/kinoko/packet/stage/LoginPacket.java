@@ -14,6 +14,8 @@ import java.time.Instant;
 import java.util.List;
 
 public final class LoginPacket {
+    // CLogin::OnPacket ------------------------------------------------------------------------------------------------
+
     public static OutPacket connect(byte[] sendIv, byte[] recvIv) {
         final OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(0x0E);

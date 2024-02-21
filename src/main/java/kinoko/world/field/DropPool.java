@@ -32,13 +32,13 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
     }
 
-    public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petId) {
+    public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
         lock.lock();
         try {
             if (!removeObjectUnsafe(drop)) {
                 return false;
             }
-            field.broadcastPacket(DropPacket.dropLeaveField(drop, leaveType, pickUpId, petId));
+            field.broadcastPacket(DropPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
             return true;
         } finally {
             lock.unlock();

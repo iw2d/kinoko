@@ -33,7 +33,7 @@ public final class DropPacket {
         return outPacket;
     }
 
-    public static OutPacket dropLeaveField(Drop drop, DropLeaveType leaveType, int pickUpId, int petId) {
+    public static OutPacket dropLeaveField(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
         final OutPacket outPacket = OutPacket.of(OutHeader.DROP_LEAVE_FIELD);
         outPacket.encodeByte(leaveType.getValue());
         outPacket.encodeInt(drop.getId());
@@ -41,7 +41,7 @@ public final class DropPacket {
             case PICKED_UP_BY_USER, PICKED_UP_BY_MOB, PICKED_UP_BY_PET -> {
                 outPacket.encodeInt(pickUpId); // dwPickUpID
                 if (leaveType == DropLeaveType.PICKED_UP_BY_PET) {
-                    outPacket.encodeInt(petId);
+                    outPacket.encodeInt(petIndex);
                 }
             }
             case EXPLODE -> {

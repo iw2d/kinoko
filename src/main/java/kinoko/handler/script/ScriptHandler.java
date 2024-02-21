@@ -184,6 +184,7 @@ public final class ScriptHandler {
                     return;
                 }
                 user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
+                user.write(UserLocal.resignQuestReturn(questId));
             }
             case OPENING_SCRIPT, COMPLETE_SCRIPT -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID

@@ -44,6 +44,31 @@ public final class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket openUI(UIType type) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_OPEN_UI);
+        outPacket.encodeByte(type.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket setDirectionMode(boolean set, int delay) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SET_DIRECTION_MODE);
+        outPacket.encodeByte(set);
+        outPacket.encodeInt(delay);
+        return outPacket;
+    }
+
+    public static OutPacket incCombo(int combo) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.INC_COMBO);
+        outPacket.encodeInt(combo); // nCombo
+        return outPacket;
+    }
+
+    public static OutPacket resignQuestReturn(int questId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.RESIGN_QUEST_RETURN);
+        outPacket.encodeShort(questId); // usQuestID
+        return outPacket;
+    }
+
     public static OutPacket noticeMsg(String text) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_NOTICE_MSG);
         outPacket.encodeString(text); // sMsg
@@ -54,6 +79,13 @@ public final class UserLocal {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT_MSG);
         outPacket.encodeShort(type.getValue()); // lType
         outPacket.encodeString(text); // sChat
+        return outPacket;
+    }
+
+    public static OutPacket skillCooltimeSet(int skillId, int remainSeconds) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SKILL_COOLTIME_SET);
+        outPacket.encodeInt(skillId);
+        outPacket.encodeShort(remainSeconds); // usRemainSec
         return outPacket;
     }
 }

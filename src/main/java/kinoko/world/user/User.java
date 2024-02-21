@@ -9,6 +9,7 @@ import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.util.Locked;
+import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.InventoryManager;
@@ -31,6 +32,10 @@ public final class User extends Life implements Lockable<User> {
 
     public Client getClient() {
         return client;
+    }
+
+    public Account getAccount() {
+        return client.getAccount();
     }
 
     public ChannelServer getConnectedServer() {

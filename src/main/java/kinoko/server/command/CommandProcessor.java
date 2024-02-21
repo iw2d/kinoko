@@ -36,7 +36,7 @@ public final class CommandProcessor {
 
     public static boolean tryProcessCommand(User user, String text) {
         final String[] args = text.replaceFirst(ServerConfig.COMMAND_PREFIX, "").split(" ");
-        if (!commandMap.containsKey(args[0])) {
+        if (!commandMap.containsKey(args[0].toLowerCase())) {
             return false;
         }
         try {

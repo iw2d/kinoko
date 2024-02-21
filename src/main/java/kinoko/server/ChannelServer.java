@@ -27,6 +27,7 @@ public final class ChannelServer extends NettyServer {
             LifeHandler.class,
             DropHandler.class,
             UserHandler.class,
+            PetHandler.class,
             AttackHandler.class,
             SkillHandler.class,
             ItemHandler.class,
