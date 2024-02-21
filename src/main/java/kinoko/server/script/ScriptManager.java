@@ -4,8 +4,8 @@ import kinoko.packet.script.ScriptMessage;
 import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
-import kinoko.packet.user.UserLocalPacket;
-import kinoko.packet.user.UserRemotePacket;
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
@@ -204,7 +204,7 @@ public final class ScriptManager {
     }
 
     public void avatarOriented(String effectPath) {
-        user.write(UserLocalPacket.userEffect(Effect.avatarOriented(effectPath)));
+        user.write(UserLocal.effect(Effect.avatarOriented(effectPath)));
     }
 
 
@@ -230,7 +230,7 @@ public final class ScriptManager {
             final CharacterStat cs = locked.get();
             final Map<Stat, Object> addExpResult = cs.addExp(exp);
             if (addExpResult.containsKey(Stat.LEVEL)) {
-                user.write(UserLocalPacket.userEffect(Effect.levelUp()));
+                user.write(UserLocal.effect(Effect.levelUp()));
             }
             user.write(WvsContext.statChanged(addExpResult));
             user.write(WvsContext.message(Message.incExp(exp, true, true)));
@@ -270,7 +270,7 @@ public final class ScriptManager {
                 while (iter.hasNext()) {
                     user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
                 }
-                user.write(UserLocalPacket.userEffect(Effect.gainItem(item)));
+                user.write(UserLocal.effect(Effect.gainItem(item)));
                 return true;
             } else {
                 return false;
@@ -299,7 +299,7 @@ public final class ScriptManager {
     public void forceCompleteQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
         user.write(WvsContext.message(Message.questRecord(qr)));
-        user.write(UserLocalPacket.userEffect(Effect.questComplete()));
-        user.getField().broadcastPacket(UserRemotePacket.userEffect(user, Effect.questComplete()), user);
+        user.write(UserLocal.effect(Effect.questComplete()));
+        user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
     }
 }

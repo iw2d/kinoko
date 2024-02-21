@@ -6,6 +6,7 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.field.life.npc.Npc;
 
 public final class NpcPacket {
+    // CNpcPool::OnPacket ----------------------------------------------------------------------------------------------
 
     public static OutPacket npcEnterField(Npc npc) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_ENTER_FIELD);
@@ -32,7 +33,10 @@ public final class NpcPacket {
         return outPacket;
     }
 
-    public static OutPacket npcMove(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
+
+    // CNpcPool::OnNpcPacket -------------------------------------------------------------------------------------------
+
+    public static OutPacket move(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_MOVE);
         outPacket.encodeInt(npc.getId());
         outPacket.encodeByte(oneTimeAction);

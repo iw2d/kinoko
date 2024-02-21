@@ -146,8 +146,8 @@ public final class LifeHandler {
         // update mob position and write response
         final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
         movePath.applyTo(mob);
-        user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, mai)); // TODO: create lock for mob
-        field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
+        user.write(MobPacket.ctrlAck(mob, mobCtrlSn, nextAttackPossible, mai)); // TODO: create lock for mob
+        field.broadcastPacket(MobPacket.move(mob, mai, movePath), user);
     }
 
     @Handler(InHeader.MOB_APPLY_CTRL)
@@ -172,6 +172,6 @@ public final class LifeHandler {
         }
 
         final MovePath movePath = npc.isMove() ? MovePath.decode(inPacket) : null;
-        field.broadcastPacket(NpcPacket.npcMove(npc, oneTimeAction, chatIndex, movePath));
+        field.broadcastPacket(NpcPacket.move(npc, oneTimeAction, chatIndex, movePath));
     }
 }

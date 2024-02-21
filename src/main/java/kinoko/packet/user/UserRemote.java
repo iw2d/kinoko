@@ -7,15 +7,17 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 
-public final class UserRemotePacket {
-    public static OutPacket userMove(User user, MovePath movePath) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT);
+public final class UserRemote {
+    // CUserPool::OnUserRemotePacket -----------------------------------------------------------------------------------
+
+    public static OutPacket move(User user, MovePath movePath) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_MOVE);
         outPacket.encodeInt(user.getCharacterId());
         movePath.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket userAttack(User user, Attack a) {
+    public static OutPacket attack(User user, Attack a) {
         final OutPacket outPacket = OutPacket.of(a.getHeaderType());
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(a.mask); // nDamagePerMob | (16 * nMobCount)
@@ -63,7 +65,7 @@ public final class UserRemotePacket {
         return outPacket;
     }
 
-    public static OutPacket userHit(User user, HitInfo hitInfo) {
+    public static OutPacket hit(User user, HitInfo hitInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_HIT);
         outPacket.encodeInt(user.getCharacterId());
 
@@ -91,7 +93,7 @@ public final class UserRemotePacket {
         return outPacket;
     }
 
-    public static OutPacket userEmotion(User user, int emotion, int duration, boolean isByItemOption) {
+    public static OutPacket emotion(User user, int emotion, int duration, boolean isByItemOption) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_EMOTION);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(emotion);
@@ -100,14 +102,14 @@ public final class UserRemotePacket {
         return outPacket;
     }
 
-    public static OutPacket userSetActivePortableChair(User user, int itemId) {
+    public static OutPacket setActivePortableChair(User user, int itemId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(itemId); // nPortableChairID
         return outPacket;
     }
 
-    public static OutPacket userEffect(User user, Effect effect) {
+    public static OutPacket effect(User user, Effect effect) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
         outPacket.encodeInt(user.getCharacterId());
         effect.encode(outPacket);

@@ -7,6 +7,8 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 
 public final class DropPacket {
+    // CDropPool::OnPacket ---------------------------------------------------------------------------------------------
+
     public static OutPacket dropEnterField(Drop drop, DropEnterType enterType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.DROP_ENTER_FIELD);
         outPacket.encodeByte(enterType.getValue()); // nEnterType

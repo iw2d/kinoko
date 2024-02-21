@@ -1,9 +1,9 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
-import kinoko.packet.user.UserCommonPacket;
-import kinoko.packet.user.UserLocalPacket;
-import kinoko.packet.user.UserRemotePacket;
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserPacket;
+import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.ServerConfig;
 import kinoko.server.command.CommandProcessor;
@@ -41,21 +41,21 @@ public final class UserHandler {
 
         final MovePath movePath = MovePath.decode(inPacket);
         movePath.applyTo(user);
-        user.getField().broadcastPacket(UserRemotePacket.userMove(user, movePath), user);
+        user.getField().broadcastPacket(UserRemote.move(user, movePath), user);
     }
 
     @Handler(InHeader.USER_SIT_REQUEST)
     public static void handleUserSitRequest(User user, InPacket inPacket) {
         // CUserLocal::HandleXKeyDown, CWvsContext::SendGetUpFromChairRequest
         final short fieldSeatId = inPacket.decodeShort();
-        user.write(UserLocalPacket.userSitResult(fieldSeatId != -1, fieldSeatId)); // broadcast not required
+        user.write(UserLocal.sitResult(fieldSeatId != -1, fieldSeatId)); // broadcast not required
     }
 
     @Handler(InHeader.USER_PORTABLE_CHAIR_SIT_REQUEST)
     public static void handleUserPortableChairSitRequest(User user, InPacket inPacket) {
         // CWvsContext::SendSitOnPortableChairRequest
         final int itemId = inPacket.decodeInt(); // nItemID
-        user.getField().broadcastPacket(UserRemotePacket.userSetActivePortableChair(user, itemId), user); // self-cast not required
+        user.getField().broadcastPacket(UserRemote.setActivePortableChair(user, itemId), user); // self-cast not required
     }
 
     @Handler(InHeader.USER_HIT)
@@ -106,7 +106,7 @@ public final class UserHandler {
         }
 
         // TODO: update stats
-        user.getField().broadcastPacket(UserRemotePacket.userHit(user, hitInfo), user);
+        user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
     }
 
     @Handler(InHeader.USER_CHAT)
@@ -119,7 +119,7 @@ public final class UserHandler {
             return;
         }
 
-        user.getField().broadcastPacket(UserCommonPacket.userChat(user, 0, text, onlyBalloon));
+        user.getField().broadcastPacket(UserPacket.chat(user, 0, text, onlyBalloon));
     }
 
     @Handler(InHeader.USER_EMOTION)
@@ -128,7 +128,7 @@ public final class UserHandler {
         final int duration = inPacket.decodeInt(); // nDuration
         final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
 
-        user.getField().broadcastPacket(UserRemotePacket.userEmotion(user, emotion, duration, isByItemOption), user);
+        user.getField().broadcastPacket(UserRemote.emotion(user, emotion, duration, isByItemOption), user);
     }
 
     @Handler(InHeader.USER_STAT_CHANGE_REQUEST)

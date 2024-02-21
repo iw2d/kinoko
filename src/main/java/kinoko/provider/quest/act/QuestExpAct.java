@@ -1,6 +1,6 @@
 package kinoko.provider.quest.act;
 
-import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
@@ -27,7 +27,7 @@ public final class QuestExpAct implements QuestAct {
         final User user = locked.get();
         final Map<Stat, Object> addExpResult = user.getCharacterStat().addExp(exp);
         if (addExpResult.containsKey(Stat.LEVEL)) {
-            user.write(UserLocalPacket.userEffect(Effect.levelUp()));
+            user.write(UserLocal.effect(Effect.levelUp()));
         }
         user.write(WvsContext.statChanged(addExpResult));
         user.write(WvsContext.message(Message.incExp(exp, true, true)));

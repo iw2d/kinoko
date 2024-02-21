@@ -1,7 +1,7 @@
 package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
-import kinoko.packet.user.UserPoolPacket;
+import kinoko.packet.user.UserPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
@@ -132,12 +132,12 @@ public final class User extends Life implements Lockable<User> {
 
     @Override
     public OutPacket enterFieldPacket() {
-        return UserPoolPacket.userEnterField(this);
+        return UserPacket.userEnterField(this);
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        return UserPoolPacket.userLeaveField(this);
+        return UserPacket.userLeaveField(this);
     }
 
     @Override

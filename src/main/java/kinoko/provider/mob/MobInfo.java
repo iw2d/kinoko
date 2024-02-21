@@ -186,10 +186,10 @@ public final class MobInfo {
                     }
                 }
                 default -> {
-                    System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
+                    // System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
                 }
             }
         }
-        return new MobInfo(mobId, level, acc, eva, exp, maxHP, maxMP, hpRecovery, mpRecovery, boss, damagedByMob, attacks, skills);
+        return new MobInfo(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, boss, damagedByMob, attacks, skills);
     }
 }

@@ -48,7 +48,7 @@ public enum LoginType {
         this.value = value;
     }
 
-    public int getValue() {
+    public final int getValue() {
         return value;
     }
 }

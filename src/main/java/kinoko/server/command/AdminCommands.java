@@ -1,6 +1,6 @@
 package kinoko.server.command;
 
-import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
@@ -139,7 +139,7 @@ public final class AdminCommands {
                 while (iter.hasNext()) {
                     user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
                 }
-                user.write(UserLocalPacket.userEffect(Effect.gainItem(item)));
+                user.write(UserLocal.effect(Effect.gainItem(item)));
             } else {
                 user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
             }

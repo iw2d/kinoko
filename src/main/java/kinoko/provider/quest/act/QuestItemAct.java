@@ -1,6 +1,6 @@
 package kinoko.provider.quest.act;
 
-import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.quest.QuestItemData;
@@ -80,7 +80,7 @@ public final class QuestItemAct implements QuestAct {
                 return false;
             }
             user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
-            user.write(UserLocalPacket.userEffect(Effect.gainItem(itemData.getItemId(), itemData.getCount())));
+            user.write(UserLocal.effect(Effect.gainItem(itemData.getItemId(), itemData.getCount())));
         }
 
         // Give static items
@@ -100,7 +100,7 @@ public final class QuestItemAct implements QuestAct {
             while (iter.hasNext()) {
                 user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
             }
-            user.write(UserLocalPacket.userEffect(Effect.gainItem(itemResult.get())));
+            user.write(UserLocal.effect(Effect.gainItem(itemResult.get())));
         }
 
         // Give random item
@@ -121,7 +121,7 @@ public final class QuestItemAct implements QuestAct {
             while (iter.hasNext()) {
                 user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
             }
-            user.write(UserLocalPacket.userEffect(Effect.gainItem(itemResult.get())));
+            user.write(UserLocal.effect(Effect.gainItem(itemResult.get())));
         }
 
         return true;

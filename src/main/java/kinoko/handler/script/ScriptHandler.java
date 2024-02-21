@@ -2,8 +2,8 @@ package kinoko.handler.script;
 
 import kinoko.handler.Handler;
 import kinoko.packet.script.ScriptMessageType;
-import kinoko.packet.user.UserLocalPacket;
-import kinoko.packet.user.UserRemotePacket;
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
@@ -150,7 +150,7 @@ public final class ScriptHandler {
                         return;
                     }
                     user.write(WvsContext.message(Message.questRecord(startQuestResult.get())));
-                    user.write(UserLocalPacket.userQuestResult(QuestResult.success(questId, templateId, 0)));
+                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
                 }
             }
             case COMPLETE_QUEST -> {
@@ -171,11 +171,11 @@ public final class ScriptHandler {
                     final QuestRecord qr = completeQuestResult.get().getLeft();
                     final int nextQuest = completeQuestResult.get().getRight();
                     user.write(WvsContext.message(Message.questRecord(qr)));
-                    user.write(UserLocalPacket.userQuestResult(QuestResult.success(questId, templateId, nextQuest)));
+                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
                 }
                 // Quest complete effect
-                user.write(UserLocalPacket.userEffect(Effect.questComplete()));
-                user.getField().broadcastPacket(UserRemotePacket.userEffect(user, Effect.questComplete()), user);
+                user.write(UserLocal.effect(Effect.questComplete()));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
             }
             case RESIGN_QUEST -> {
                 final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().resignQuest(questId);
