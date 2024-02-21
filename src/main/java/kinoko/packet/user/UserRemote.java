@@ -65,6 +65,36 @@ public final class UserRemote {
         return outPacket;
     }
 
+    public static OutPacket skillPrepare(User user, int skillId, int slv, short actionAndDir, byte attackSpeed) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_SKILL_PREPARE);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(skillId);
+        outPacket.encodeByte(slv);
+        outPacket.encodeShort(actionAndDir);
+        outPacket.encodeByte(attackSpeed);
+        return outPacket;
+    }
+
+    public static OutPacket movingShootAttackPrepare(User user, int skillId, int slv, short actionAndDir, byte attackSpeed) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_MOVING_SHOOT_ATTACK_PREPARE);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(user.getCharacterStat().getLevel());
+        outPacket.encodeByte(slv);
+        if (slv != 0) {
+            outPacket.encodeInt(skillId);
+        }
+        outPacket.encodeShort(actionAndDir);
+        outPacket.encodeByte(attackSpeed);
+        return outPacket;
+    }
+
+    public static OutPacket skillCancel(User user, int skillId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_SKILL_PREPARE);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(skillId);
+        return outPacket;
+    }
+
     public static OutPacket hit(User user, HitInfo hitInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_HIT);
         outPacket.encodeInt(user.getCharacterId());

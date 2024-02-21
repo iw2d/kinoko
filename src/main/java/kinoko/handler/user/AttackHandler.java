@@ -4,6 +4,7 @@ import kinoko.handler.Handler;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.world.job.JobConstants;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.SkillConstants;
@@ -64,7 +65,59 @@ public final class AttackHandler {
     @Handler(InHeader.USER_SHOOT_ATTACK)
     public static void handlerUserShootAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingShootAttack
+        final Attack attack = new Attack(OutHeader.USER_SHOOT_ATTACK);
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
+        inPacket.decodeInt(); // ~pDrInfo.dr0
+        inPacket.decodeInt(); // ~pDrInfo.dr1
+        attack.mask = inPacket.decodeByte(); // nDamagePerMob | (16 * nMobCount)
+        inPacket.decodeInt(); // ~pDrInfo.dr2
+        inPacket.decodeInt(); // ~pDrInfo.dr3
+        attack.skillId = inPacket.decodeInt(); // nSkillID
+        attack.combatOrders = inPacket.decodeByte(); // nCombatOrders
+        inPacket.decodeInt(); // dwKey
+        inPacket.decodeInt(); // Crc32
 
+        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+
+        if (SkillConstants.isKeydownSkill(attack.skillId)) {
+            attack.keyDown = inPacket.decodeInt(); // tKeyDown
+        }
+        attack.flag = inPacket.decodeByte();
+        attack.exJablin = inPacket.decodeByte(); // bNextShootExJablin && CUserLocal::CheckApplyExJablin
+        attack.actionAndDir = inPacket.decodeShort(); // nAttackAction & 0x7FFF | (bLeft << 15)
+
+        inPacket.decodeInt(); // GETCRC32Svr
+        inPacket.decodeByte(); // nAttackActionType
+        attack.attackSpeed = inPacket.decodeByte(); // nAttackSpeed | (16 * nReduceCount)
+        inPacket.decodeInt(); // tAttackTime
+        inPacket.decodeInt(); // dwID
+
+        attack.bulletPosition = inPacket.decodeShort(); // ProperBulletPosition
+        inPacket.decodeShort(); // pnCashItemPos
+        inPacket.decodeByte(); // nShootRange0a
+        if (attack.isSpiritJavelin() && !SkillConstants.isShootSkillNotConsumingBullet(attack.skillId)) {
+            attack.bulletItemId = inPacket.decodeInt(); // pnItemID
+        }
+
+        decodeMobAttackInfo(inPacket, attack);
+
+        attack.userX = inPacket.decodeShort(); // GetPos()->x
+        attack.userY = inPacket.decodeShort(); // GetPos()->y
+        if (JobConstants.isWildHunterJob(user.getCharacterStat().getJob())) {
+            inPacket.decodeShort(); // ptBodyRelMove.y
+        }
+        inPacket.decodeShort(); // pt0.x
+        inPacket.decodeShort(); // pt0.y
+        if (attack.skillId == 15111006) {
+            inPacket.decodeInt(); // tReserveSpark
+        }
+
+        SkillProcessor.processAttack(user, attack);
     }
 
     @Handler(InHeader.USER_MAGIC_ATTACK)
@@ -113,6 +166,45 @@ public final class AttackHandler {
             attack.dragonX = inPacket.decodeShort();
             attack.dragonY = inPacket.decodeShort();
         }
+
+        SkillProcessor.processAttack(user, attack);
+    }
+
+    @Handler(InHeader.USER_BODY_ATTACK)
+    public static void handlerUserBodyAttack(User user, InPacket inPacket) {
+        // CUserLocal::TryDoingBodyAttack
+        final Attack attack = new Attack(OutHeader.USER_BODY_ATTACK);
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        if (user.getField().getFieldKey() != fieldKey) {
+            user.dispose();
+            return;
+        }
+        inPacket.decodeInt(); // ~pDrInfo.dr0
+        inPacket.decodeInt(); // ~pDrInfo.dr1
+        attack.mask = inPacket.decodeByte(); // nDamagePerMob | (16 * nMobCount)
+        inPacket.decodeInt(); // ~pDrInfo.dr2
+        inPacket.decodeInt(); // ~pDrInfo.dr3
+        attack.skillId = inPacket.decodeInt(); // nSkillID
+        attack.combatOrders = inPacket.decodeByte(); // nCombatOrders
+        inPacket.decodeInt(); // dwKey
+        inPacket.decodeInt(); // Crc32
+
+        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+
+        attack.flag = inPacket.decodeByte();
+        attack.actionAndDir = inPacket.decodeShort(); // nAttackAction & 0x7FFF | bLeft << 15
+
+        inPacket.decodeInt(); // GETCRC32Svr
+        inPacket.decodeByte(); // nAttackActionType
+        attack.attackSpeed = inPacket.decodeByte(); // nAttackSpeed
+        inPacket.decodeInt(); // tAttackTime
+        inPacket.decodeInt(); // dwID
+
+        decodeMobAttackInfo(inPacket, attack);
+
+        attack.userX = inPacket.decodeShort(); // GetPos()->x
+        attack.userY = inPacket.decodeShort(); // GetPos()->y
 
         SkillProcessor.processAttack(user, attack);
     }

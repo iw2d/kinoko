@@ -15,9 +15,11 @@ public final class Attack {
     public byte slv;
     public byte combatOrders;
     public int keyDown;
+    public byte exJablin;
     public short actionAndDir;
     public byte attackSpeed;
     public byte mastery;
+    public short bulletPosition;
     public int bulletItemId;
 
     public short userX;

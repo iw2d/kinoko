@@ -325,8 +325,9 @@ public enum ActionType {
             case MONSTER_BOMB_PREPARE:
             case FINAL_CUT_PREPARE:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public static boolean isProneStabAction(ActionType actionType) {

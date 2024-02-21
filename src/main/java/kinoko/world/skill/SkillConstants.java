@@ -3,6 +3,50 @@ package kinoko.world.skill;
 import kinoko.world.job.JobConstants;
 
 public final class SkillConstants {
+    public static boolean isShootSkillNotUsingShootingWeapon(int skillId) {
+        switch (skillId) {
+            case 4121003:
+            case 4221003:
+            case 5121002:
+            case 11101004:
+            case 15111006:
+            case 15111007:
+            case 21100004:
+            case 21110004:
+            case 21120006:
+            case 33101007:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isShootSkillNotConsumingBullet(int skillId) {
+        if (isShootSkillNotUsingShootingWeapon(skillId)) {
+            return true;
+        }
+        switch (skillId) {
+            case 3101003:
+            case 3201003:
+            case 4111004:
+            case 13101005:
+            case 14101006:
+            case 33101002:
+            case 35001001:
+            case 35001004:
+            case 35101009:
+            case 35101010:
+            case 35111004:
+            case 35111015:
+            case 35121005:
+            case 35121012:
+            case 35121013:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isMagicKeydownSkill(int skillId) {
         switch (skillId) {
             case 2121001:
@@ -11,8 +55,9 @@ public final class SkillConstants {
             case 22121000:
             case 22151000:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public static boolean isKeydownSkill(int skillId) {
@@ -37,8 +82,9 @@ public final class SkillConstants {
             case 35001001:
             case 35101009:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public static boolean isJaguarMeleeAttackSkill(int skillId) {
@@ -49,8 +95,9 @@ public final class SkillConstants {
             case 33111006:
             case 33121002:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public static boolean isIgnoreMasterLevelForCommon(int skillId) {
