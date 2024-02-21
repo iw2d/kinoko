@@ -8,6 +8,7 @@ import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Tuple;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -33,14 +34,14 @@ public final class NpcProvider implements WzProvider {
     }
 
     private static void loadNpcInfos(WzPackage source) throws ProviderError {
-        final Map<Integer, Integer> linkedNpcs = new HashMap<>();
+        final Map<Integer, Tuple<Integer, WzListProperty>> linkedNpcs = new HashMap<>();
         for (var npcEntry : source.getDirectory().getImages().entrySet()) {
             final int npcId = Integer.parseInt(npcEntry.getKey().replace(".img", ""));
             if (!(npcEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
                 throw new ProviderError("Failed to resolve info property");
             }
             if (infoProp.getItems().containsKey("link")) {
-                linkedNpcs.put(npcId, WzProvider.getInteger(infoProp.get("link")));
+                linkedNpcs.put(npcId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
                 continue;
             }
             final boolean move = npcEntry.getValue().getProperty().get("move") instanceof WzListProperty;
@@ -48,12 +49,13 @@ public final class NpcProvider implements WzProvider {
         }
         for (var linkEntry : linkedNpcs.entrySet()) {
             final int npcId = linkEntry.getKey();
-            final int link = linkEntry.getValue();
+            final int link = linkEntry.getValue().getLeft();
+            final WzListProperty infoProp = linkEntry.getValue().getRight();
             final NpcInfo linkInfo = npcInfos.get(link);
             if (linkInfo == null) {
                 throw new ProviderError("Failed to resolve linked Npc ID : %d, link : %d", npcId, link);
             }
-            npcInfos.put(npcId, linkInfo);
+            npcInfos.put(npcId, NpcInfo.from(npcId, linkInfo.isMove(), infoProp));
         }
     }
 }

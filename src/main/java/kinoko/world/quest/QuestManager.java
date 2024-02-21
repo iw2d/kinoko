@@ -5,6 +5,7 @@ import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.quest.act.QuestAct;
 import kinoko.provider.quest.check.QuestCheck;
 import kinoko.util.Locked;
+import kinoko.util.Tuple;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -87,7 +88,7 @@ public final class QuestManager {
         return qr;
     }
 
-    public Optional<QuestRecord> completeQuest(Locked<User> locked, int questId) {
+    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked, int questId) {
         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
             return Optional.empty();
@@ -122,7 +123,7 @@ public final class QuestManager {
         // Mark as completed and return
         qr.setState(QuestState.COMPLETE);
         qr.setCompletedTime(Instant.now());
-        return Optional.of(qr);
+        return Optional.of(new Tuple<>(qr, qi.getNextQuest()));
     }
 
     public QuestRecord forceCompleteQuest(int questId) {

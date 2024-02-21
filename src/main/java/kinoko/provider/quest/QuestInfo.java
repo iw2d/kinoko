@@ -36,6 +36,10 @@ public final class QuestInfo {
         return questId;
     }
 
+    public int getNextQuest() {
+        return nextQuest;
+    }
+
     public boolean isAutoStart() {
         return autoStart;
     }

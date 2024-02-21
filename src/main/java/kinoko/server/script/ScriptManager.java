@@ -5,6 +5,7 @@ import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
 import kinoko.packet.user.UserLocalPacket;
+import kinoko.packet.user.UserRemotePacket;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
@@ -298,5 +299,7 @@ public final class ScriptManager {
     public void forceCompleteQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
         user.write(WvsContext.message(Message.questRecord(qr)));
+        user.write(UserLocalPacket.userEffect(Effect.questComplete()));
+        user.getField().broadcastPacket(UserRemotePacket.userEffect(user, Effect.questComplete()), user);
     }
 }

@@ -31,12 +31,12 @@ public interface OutPacket {
     void encodeLong(long value);
 
     default void encodeFT(FileTime ft) {
-        encodeInt(ft.getHighDateTime());
         encodeInt(ft.getLowDateTime());
+        encodeInt(ft.getHighDateTime());
     }
 
     default void encodeFT(Instant timestamp) {
-        encodeFT(timestamp != null ? FileTime.from(timestamp) : FileTime.DEFAULT_TIME);
+        encodeFT(timestamp != null ? FileTime.from(timestamp) : FileTime.ZERO_TIME);
     }
 
     void encodeArray(byte[] value);

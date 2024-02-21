@@ -1,5 +1,6 @@
 package kinoko.packet.user;
 
+import kinoko.packet.user.effect.Effect;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.life.MovePath;
@@ -62,9 +63,9 @@ public final class UserRemotePacket {
         return outPacket;
     }
 
-    public static OutPacket userHit(int characterId, HitInfo hitInfo) {
+    public static OutPacket userHit(User user, HitInfo hitInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_HIT);
-        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(user.getCharacterId());
 
         final int attackIndex = hitInfo.hitType.getValue();
         outPacket.encodeByte(attackIndex); // nAttackIdx
@@ -103,6 +104,13 @@ public final class UserRemotePacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(itemId); // nPortableChairID
+        return outPacket;
+    }
+
+    public static OutPacket userEffect(User user, Effect effect) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
+        outPacket.encodeInt(user.getCharacterId());
+        effect.encode(outPacket);
         return outPacket;
     }
 }

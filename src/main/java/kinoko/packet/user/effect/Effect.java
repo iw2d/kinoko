@@ -118,4 +118,8 @@ public class Effect implements Encodable {
         effect.int2 = quantity;
         return effect;
     }
+
+    public static Effect questComplete() {
+        return new Effect(EffectType.QUEST_COMPLETE);
+    }
 }

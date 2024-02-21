@@ -33,10 +33,10 @@ public final class ChannelServer extends NettyServer {
             InventoryHandler.class,
             ScriptHandler.class
     );
+    private final Map<Integer, Field> fields = new ConcurrentHashMap<>();
     private final int worldId;
     private final int channelId;
     private final int port;
-    private final Map<Integer, Field> fields = new ConcurrentHashMap<>();
 
     public ChannelServer(int worldId, int channelId, int port) {
         this.worldId = worldId;
