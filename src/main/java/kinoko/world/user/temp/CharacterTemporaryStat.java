@@ -162,8 +162,12 @@ public enum CharacterTemporaryStat implements BitIndex {
     public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
             EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet // Undead doesn't fit in the mask...
     );
-    public static final List<CharacterTemporaryStat> SWALLOW_BUFF = List.of(
+    public static final List<CharacterTemporaryStat> SWALLOW_BUFF_STAT = List.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion
+    );
+    public static final List<CharacterTemporaryStat> MOVEMENT_AFFECTING_STAT = List.of(
+            Speed, Jump, Stun, Weakness, Slow, Morph, Ghost, BasicStatUp, Attract, RideVehicle, Dash_Speed, Dash_Jump,
+            Flying, Frozen, YellowAura
     );
 
     private final int value;

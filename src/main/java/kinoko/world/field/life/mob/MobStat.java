@@ -50,6 +50,9 @@ public enum MobStat implements BitIndex {
             MGuardUp, PImmune, MImmune, Doom, Web, HardSkin, Ambush, Venom, Blind, SealSkill, Dazzle, PCounter,
             MCounter, RiseByToss, BodyPressure, Weakness, TimeBomb, Showdown, MagicCrash, DamagedElemAttr, HealByDamage
     );
+    public static final List<MobStat> MOVEMENT_AFFECTING_STAT = List.of(
+            Speed, Stun, Freeze, Doom, RiseByToss
+    );
 
     private final int value;
     private final int arrayIndex;

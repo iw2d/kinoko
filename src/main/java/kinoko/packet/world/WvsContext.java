@@ -6,6 +6,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.user.stat.ExtendSP;
 import kinoko.world.user.stat.Stat;
+import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,21 @@ public final class WvsContext {
 
         outPacket.encodeByte(false); // bool -> byte (CUserLocal::SetSecondaryStatChangedPoint)
         outPacket.encodeByte(false); // bool -> int, int (CBattleRecordMan::SetBattleRecoveryInfo)
+        return outPacket;
+    }
+
+    public static OutPacket temporaryStatSet(TemporaryStatManager tsm, boolean complete) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
+        tsm.encodeForLocal(outPacket, complete);
+        outPacket.encodeShort(0); // tDelay
+        outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
+        return outPacket;
+    }
+
+    public static OutPacket temporaryStatReset(TemporaryStatManager tsm) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
+        tsm.encodeReset(outPacket);
+        outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }
 

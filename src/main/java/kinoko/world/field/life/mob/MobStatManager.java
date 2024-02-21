@@ -5,16 +5,15 @@ import kinoko.util.BitFlag;
 import kinoko.util.Lockable;
 import kinoko.util.Tuple;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class MobStatManager implements Lockable<MobStatManager> {
     private final Lock lock = new ReentrantLock();
     private final Map<MobStat, MobStatOption> stats = new EnumMap<>(MobStat.class);
-    private final Map<Tuple<Integer, Integer>, BurnedInfo> burnedInfos = new HashMap<>();
+    private final Map<Tuple<Integer, Integer>, BurnedInfo> burnedInfos = new HashMap<>(); // characterId, skillId -> BurnedInfo
+    private final Set<Tuple<Integer, Integer>> resetBurnedInfos = new HashSet<>(); // characterId, skillId
     private final BitFlag<MobStat> setStatFlag = new BitFlag<>(MobStat.FLAG_SIZE);
     private final BitFlag<MobStat> resetStatFlag = new BitFlag<>(MobStat.FLAG_SIZE);
 
@@ -52,6 +51,19 @@ public final class MobStatManager implements Lockable<MobStatManager> {
         if (statFlag.hasFlag(MobStat.Disable)) {
             outPacket.encodeByte(true); // bInvincible
             outPacket.encodeByte(false); // bDisable
+        }
+    }
+
+    public void encodeReset(OutPacket outPacket) {
+        resetStatFlag.encode(outPacket); // uFlagReset
+
+        // MobStat::Reset
+        if (resetStatFlag.hasFlag(MobStat.Burned)) {
+            outPacket.encodeInt(resetBurnedInfos.size());
+            for (var entry : resetBurnedInfos) {
+                outPacket.encodeInt(entry.getLeft()); // dwCharacterID
+                outPacket.encodeInt(entry.getRight()); // nSkillID
+            }
         }
     }
 

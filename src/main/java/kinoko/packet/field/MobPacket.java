@@ -80,4 +80,68 @@ public final class MobPacket {
         outPacket.encodeByte(mai.slv); // nSLV
         return outPacket;
     }
+
+    public static OutPacket mobStatSet(Mob mob) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_SET);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        // CMob::ProcessStatSet
+        mob.getMobStatManager().encode(outPacket, false);
+        outPacket.encodeShort(0); // tDelay
+        outPacket.encodeByte(true); // nCalcDamageStatIndex
+        outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat || bDoomReservedSN
+        return outPacket;
+    }
+
+    public static OutPacket mobStatReset(Mob mob) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_RESET);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        mob.getMobStatManager().encodeReset(outPacket);
+        outPacket.encodeByte(true); // nCalcDamageStatIndex
+        outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat
+        return outPacket;
+    }
+
+    public static OutPacket mobDamaged(Mob mob, int damage) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_DAMAGED);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeByte(0); // (byte != 2) -> CMob::ShowDamage
+        outPacket.encodeInt(damage); // nDamage
+        if (mob.isDamagedByMob()) { // this->m_pTemplate->bDamagedByMob
+            outPacket.encodeInt(mob.getHp());
+            outPacket.encodeInt(mob.getMaxHp());
+        }
+        return outPacket;
+    }
+
+    public static OutPacket mobSpecialEffectBySkill(Mob mob, int skillId, int characterId, int delay) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_SPECIAL_EFFECT_BY_SKILL);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(skillId); // nSkillID
+        outPacket.encodeInt(characterId); // dwCharacterID, only used for mortal blow?
+        outPacket.encodeShort(delay); // tDelay
+        return outPacket;
+    }
+
+    public static OutPacket mobHpIndicator(Mob mob, int percentage) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_HP_INDICATOR);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeByte(percentage); // nHPpercentage
+        return outPacket;
+    }
+
+    public static OutPacket mobCatchEffect(Mob mob, boolean success, boolean delay) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CATCH_EFFECT);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeByte(success); // bSuccess
+        outPacket.encodeByte(delay); // tDelay = bool ? 270 : 0
+        return outPacket;
+    }
+
+    public static OutPacket mobEffectByItem(Mob mob, int itemId, boolean success) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_EFFECT_BY_ITEM);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(itemId); // nItemID
+        outPacket.encodeByte(success); // bSuccess
+        return outPacket;
+    }
 }

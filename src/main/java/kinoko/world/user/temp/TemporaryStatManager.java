@@ -28,7 +28,7 @@ public final class TemporaryStatManager implements Lockable<TemporaryStatManager
         outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt, new Option()).nOption);
         outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState, new Option()).nOption);
 
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.SWALLOW_BUFF) {
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.SWALLOW_BUFF_STAT) {
             if (statFlag.hasFlag(cts)) {
                 outPacket.encodeByte(stats.get(cts).tOption); // tSwallowBuffTime
                 break;
@@ -90,6 +90,10 @@ public final class TemporaryStatManager implements Lockable<TemporaryStatManager
                 stats.get(cts).encode(outPacket);
             }
         }
+    }
+
+    public void encodeReset(OutPacket outPacket) {
+        resetStatFlag.encode(outPacket);
     }
 
     @Override

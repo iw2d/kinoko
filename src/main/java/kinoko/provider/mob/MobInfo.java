@@ -11,26 +11,26 @@ import java.util.Map;
 public final class MobInfo {
     private final int templateId;
     private final int level;
-    private final int acc;
-    private final int eva;
+    private final int exp;
     private final int maxHp;
     private final int maxMp;
     private final int hpRecovery;
     private final int mpRecovery;
     private final boolean boss;
+    private final boolean damagedByMob;
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
 
-    public MobInfo(int templateId, int level, int acc, int eva, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
+    public MobInfo(int templateId, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
         this.templateId = templateId;
         this.level = level;
-        this.acc = acc;
-        this.eva = eva;
+        this.exp = exp;
         this.maxHp = maxHp;
         this.maxMp = maxMp;
         this.hpRecovery = hpRecovery;
         this.mpRecovery = mpRecovery;
         this.boss = boss;
+        this.damagedByMob = damagedByMob;
         this.attacks = attacks;
         this.skills = skills;
     }
@@ -43,12 +43,8 @@ public final class MobInfo {
         return level;
     }
 
-    public int getAcc() {
-        return acc;
-    }
-
-    public int getEva() {
-        return eva;
+    public int getExp() {
+        return exp;
     }
 
     public int getMaxHp() {
@@ -71,6 +67,10 @@ public final class MobInfo {
         return boss;
     }
 
+    public boolean isDamagedByMob() {
+        return damagedByMob;
+    }
+
     public Map<Integer, MobAttack> getAttacks() {
         return attacks;
     }
@@ -84,24 +84,24 @@ public final class MobInfo {
         return "MobInfo[" +
                 "id=" + templateId + ", " +
                 "level=" + level + ", " +
-                "acc=" + acc + ", " +
-                "eva=" + eva + ", " +
+                "exp=" + exp + ", " +
                 "maxHp=" + maxHp + ", " +
                 "maxMp=" + maxMp + ", " +
                 "hpRecovery=" + hpRecovery + ", " +
                 "mpRecovery=" + mpRecovery + ", " +
+                "isDamagedByMob=" + damagedByMob + ", " +
                 "boss=" + boss + ']';
     }
 
     public static MobInfo from(int mobId, WzListProperty mobProp, WzListProperty infoProp) throws ProviderError {
         int level = 0;
-        int acc = 0;
-        int eva = 0;
+        int exp = 0;
         int maxHP = 0;
         int maxMP = 0;
         int hpRecovery = 0;
         int mpRecovery = 0;
         boolean boss = false;
+        boolean damagedByMob = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
         // Process attacks
@@ -144,11 +144,8 @@ public final class MobInfo {
                 case "level" -> {
                     level = WzProvider.getInteger(infoEntry.getValue());
                 }
-                case "acc" -> {
-                    acc = WzProvider.getInteger(infoEntry.getValue());
-                }
-                case "eva" -> {
-                    eva = WzProvider.getInteger(infoEntry.getValue());
+                case "exp" -> {
+                    exp = WzProvider.getInteger(infoEntry.getValue());
                 }
                 case "maxHP" -> {
                     maxHP = WzProvider.getInteger(infoEntry.getValue());
@@ -164,6 +161,9 @@ public final class MobInfo {
                 }
                 case "boss" -> {
                     boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
+                }
+                case "damagedByMob" -> {
+                    damagedByMob = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
                 case "skill" -> {
                     if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
@@ -186,10 +186,10 @@ public final class MobInfo {
                     }
                 }
                 default -> {
-                    // System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
+                    System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
                 }
             }
         }
-        return new MobInfo(mobId, level, acc, eva, maxHP, maxMP, hpRecovery, mpRecovery, boss, attacks, skills);
+        return new MobInfo(mobId, level, acc, eva, exp, maxHP, maxMP, hpRecovery, mpRecovery, boss, damagedByMob, attacks, skills);
     }
 }
