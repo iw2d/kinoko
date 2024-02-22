@@ -45,6 +45,10 @@ public final class ItemInfo {
         return getInfo(ItemInfoType.cash) != 0;
     }
 
+    public boolean isQuest() {
+        return getInfo(ItemInfoType.quest) != 0;
+    }
+
     public int getPrice() {
         return getInfo(ItemInfoType.price);
     }

@@ -139,6 +139,7 @@ public final class Server {
         QuestProvider.initialize();
         StringProvider.initialize();
         EtcProvider.initialize();
+        RewardProvider.initialize();
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 

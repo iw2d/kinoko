@@ -114,13 +114,18 @@ public final class WzReader implements AutoCloseable {
         return crypto;
     }
 
+    public ByteBuffer getBuffer(int offset) throws IOException {
+        final ByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, offset, file.length());
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        return buffer;
+    }
+
     public WzPackage readPackage() throws IOException, WzReaderError {
         return readPackage(0);
     }
 
     public WzPackage readPackage(int offset) throws IOException, WzReaderError {
-        final ByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, offset, file.length());
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        final ByteBuffer buffer = getBuffer(offset);
 
         // Check PKG1 header
         if (buffer.getInt() != 0x31474B50) {

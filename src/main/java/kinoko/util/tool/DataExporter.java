@@ -1,4 +1,4 @@
-package kinoko.util;
+package kinoko.util.tool;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.StringProvider;

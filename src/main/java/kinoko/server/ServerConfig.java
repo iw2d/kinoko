@@ -11,6 +11,7 @@ public final class ServerConfig {
     public static final boolean AUTO_CREATE_ACCOUNT = true;
     public static final boolean REQUIRE_SECONDARY_PASSWORD = true;
     public static final String WZ_DIRECTORY = "wz";
+    public static final String DATA_DIRECTORY = "data";
     public static final String SCRIPT_DIRECTORY = "scripts";
     public static final int SCRIPT_DEFAULT_SPEAKER = 2007; // Maple Administrator
 

@@ -1,0 +1,858 @@
+# mBoxItem0
+2000, 2000000, 1, 1, 0.100000, false                                                                                    # Red Potion
+2000, 2000001, 1, 1, 0.100000, false                                                                                    # Orange Potion
+2000, 2010000, 1, 1, 0.100000, false                                                                                    # Apple
+2000, 4031161, 1, 1, 1.000000, true                                                                                     # Rusty Screw
+2000, 4031162, 1, 1, 1.000000, true                                                                                     # Old Wooden Board
+
+# vFlowerItem0
+1012000, 2000000, 1, 1, 0.200000, false                                                                                 # Red Potion
+1012000, 4000003, 1, 1, 0.500000, false                                                                                 # Tree Branch
+1012000, 4031150, 1, 1, 0.300000, true                                                                                  # Plant Sample
+
+# s4hitmanItem0
+1022000, 4031452, 1, 1, 1.000000, true                                                                                  # Shawn's Request
+
+# s4berserkItem0
+1052000, 4031471, 1, 1, 1.000000, true                                                                                  # Sayram's Shield
+
+# vFlowerItem1
+1072000, 4031165, 1, 1, 0.300000, true                                                                                  # Witchgrass Leaf
+
+# coconut0
+1102000, 4000136, 1, 1, 1.000000, false                                                                                 # Coconut
+
+# coconut1
+1102001, 4000136, 1, 1, 1.000000, false                                                                                 # Coconut
+
+# coconut2
+1102002, 4000136, 1, 1, 1.000000, false                                                                                 # Coconut
+
+# florinaBox0
+1102003, 4031302, 1, 1, 0.800000, true                                                                                  # Sea Trash
+1102003, 4031321, 1, 1, 0.800000, true                                                                                  # Sea Trash
+
+# oBoxItem0
+2002000, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
+2002000, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
+2002000, 2010000, 1, 1, 0.100000, false                                                                                 # Apple
+2002000, 4031198, 1, 1, 0.800000, true                                                                                  # Empty Potion Bottle
+
+# fgodItem0
+2002001, 4001063, 1, 1, 1.000000, false                                                                                 # Cloud Piece
+
+# fgodItem1
+2002002, 4001052, 1, 1, 1.000000, false                                                                                 # 5th Small Piece
+
+# fgodItem2
+2002003, 4001055, 1, 1, 1.000000, false                                                                                 # Grass of Life
+
+# fgodItem3
+2002004, 4001056, 1, 1, 1.000000, false                                                                                 # LP : Operatic Music
+
+# fgodItem4
+2002005, 4001057, 1, 1, 1.000000, false                                                                                 # LP : Cute Music
+
+# fgodItem5
+2002006, 4001058, 1, 1, 1.000000, false                                                                                 # LP : Scary Music
+
+# fgodItem6
+2002007, 4001059, 1, 1, 1.000000, false                                                                                 # LP : Fun Music
+
+# fgodItem7
+2002008, 4001060, 1, 1, 1.000000, false                                                                                 # LP : Sad Music
+
+# fgodItem8
+2002009, 4001061, 1, 1, 1.000000, false                                                                                 # LP : Cold Music
+
+# fgodItem9
+2002010, 4001062, 1, 1, 1.000000, false                                                                                 # LP : Tight Music
+
+# fgodItem10
+2002011, 4001046, 1, 1, 1.000000, false                                                                                 # Statue of Goddess : 3rd Piece
+
+# fgodItem11
+2002012, 4001047, 1, 1, 1.000000, false                                                                                 # Statue of Goddess : 4th Piece
+
+# fgodItem12
+2002013, 4001049, 1, 1, 1.000000, false                                                                                 # Statue of Goddess : 6th Piece
+
+# fgodItem13
+2002014, 1032014, 1, 1, 0.008000, false                                                                                 # Pink-Flowered Earrings
+2002014, 1032015, 1, 1, 0.008000, false                                                                                 # Metal Silver Earrings
+2002014, 1102015, 1, 1, 0.008000, false                                                                                 # Blue Magic Cape
+2002014, 1102016, 1, 1, 0.008000, false                                                                                 # Red Magic Cape
+2002014, 1102017, 1, 1, 0.008000, false                                                                                 # White Magic Cape
+2002014, 1102018, 1, 1, 0.008000, false                                                                                 # Black Magic Cape
+2002014, 2000005, 1, 1, 0.040000, false                                                                                 # Power Elixir
+2002014, 2001000, 1, 1, 0.200000, false                                                                                 # Watermelon
+2002014, 2001001, 1, 1, 0.200000, false                                                                                 # Ice Cream Pop
+2002014, 2001002, 1, 1, 0.200000, false                                                                                 # Red Bean Sundae
+2002014, 2020009, 1, 1, 0.200000, false                                                                                 # Orange Juice
+2002014, 2020010, 1, 1, 0.200000, false                                                                                 # Grape Juice
+2002014, 2020014, 1, 1, 0.040000, false                                                                                 # Sunrise Dew
+2002014, 2020015, 1, 1, 0.040000, false                                                                                 # Sunset Dew
+
+# fgodItem16
+2002017, 4004000, 1, 1, 0.100000, false                                                                                 # Power Crystal Ore
+2002017, 4004001, 1, 1, 0.100000, false                                                                                 # Wisdom Crystal Ore
+2002017, 4004002, 1, 1, 0.100000, false                                                                                 # DEX Crystal Ore
+2002017, 4004003, 1, 1, 0.100000, false                                                                                 # LUK Crystal Ore
+2002017, 4004004, 1, 1, 0.100000, false                                                                                 # Dark Crystal Ore
+2002017, 4005000, 1, 1, 0.010000, false                                                                                 # Power Crystal
+2002017, 4005001, 1, 1, 0.010000, false                                                                                 # Wisdom Crystal
+2002017, 4005002, 1, 1, 0.010000, false                                                                                 # DEX Crystal
+2002017, 4005003, 1, 1, 0.010000, false                                                                                 # LUK Crystal
+2002017, 4005004, 1, 1, 0.010000, false                                                                                 # Dark Crystal
+
+# fgodItem17
+2002018, 1082060, 1, 1, 0.040000, false                                                                                 # Sapphire Clench
+2002018, 1082087, 1, 1, 0.040000, false                                                                                 # Gold Manute
+2002018, 1082090, 1, 1, 0.040000, false                                                                                 # Sephia Garner
+2002018, 1082093, 1, 1, 0.040000, false                                                                                 # Steal Pow
+2002018, 1082096, 1, 1, 0.040000, false                                                                                 # Silver Rover
+2002018, 1082099, 1, 1, 0.040000, false                                                                                 # Blue Lorin
+2002018, 1082104, 1, 1, 0.040000, false                                                                                 # Mithril Husk
+2002018, 1082107, 1, 1, 0.040000, false                                                                                 # Gold Eyes
+2002018, 2000004, 1, 1, 0.600000, false                                                                                 # Elixir
+2002018, 2000004, 1, 1, 0.300000, false                                                                                 # Elixir
+2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
+2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
+2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
+2002018, 2000005, 1, 1, 0.400000, false                                                                                 # Power Elixir
+2002018, 2000005, 1, 1, 0.100000, false                                                                                 # Power Elixir
+2002018, 2000005, 1, 1, 0.200000, false                                                                                 # Power Elixir
+2002018, 2000005, 1, 1, 0.100000, false                                                                                 # Power Elixir
+2002018, 2000005, 1, 1, 0.100000, false                                                                                 # Power Elixir
+2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
+2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
+2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
+2002018, 2000006, 1, 1, 0.600000, false                                                                                 # Mana Elixir
+2002018, 2000006, 1, 1, 0.900000, false                                                                                 # Mana Elixir
+2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
+2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
+2002018, 2020013, 1, 1, 0.300000, false                                                                                 # Reindeer Milk
+2002018, 2020013, 1, 1, 0.500000, false                                                                                 # Reindeer Milk
+2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
+2002018, 2020014, 1, 1, 0.300000, false                                                                                 # Sunrise Dew
+2002018, 2020014, 1, 1, 0.100000, false                                                                                 # Sunrise Dew
+2002018, 2020014, 1, 1, 0.100000, false                                                                                 # Sunrise Dew
+2002018, 2020014, 1, 1, 0.100000, false                                                                                 # Sunrise Dew
+2002018, 2020014, 1, 1, 0.500000, false                                                                                 # Sunrise Dew
+
+# snowdrop
+2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
+2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
+2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
+2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
+2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
+2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
+2092000, 2060006, 20, 40, 0.100000, false                                                                               # Big Snowball
+2092000, 2060006, 20, 40, 0.100000, false                                                                               # Big Snowball
+2092000, 2060006, 20, 40, 0.100000, false                                                                               # Big Snowball
+2092000, 2060006, 20, 40, 0.100000, false                                                                               # Big Snowball
+2092000, 2060006, 20, 40, 0.100000, false                                                                               # Big Snowball
+2092000, 2060006, 20, 40, 0.100000, false                                                                               # Big Snowball
+
+# snowdrop1
+2092001, 1472063, 1, 1, 1.000000, false                                                                                 # Magical Mitten
+
+# boxItem0
+2112000, 2000005, 1, 1, 1.000000, false                                                                                 # Power Elixir
+
+# boxItem1
+2112001, 2000004, 1, 1, 1.000000, false                                                                                 # Elixir
+
+# boxItem2
+2112002, 2020001, 1, 1, 1.000000, false                                                                                 # Fried Chicken
+
+# boxItem3
+2112003, 2022001, 1, 1, 1.000000, false                                                                                 # Red Bean Porridge
+
+# boxKey0
+2112004, 4001016, 1, 1, 1.000000, false                                                                                 # The Key
+
+# boxPaper0
+2112005, 4001015, 1, 1, 1.000000, false                                                                                 # Paper Document
+
+# boxItem0
+2112007, 2000005, 1, 1, 1.000000, false                                                                                 # Power Elixir
+
+# boxItem1
+2112008, 2000004, 1, 1, 1.000000, false                                                                                 # Elixir
+
+# boxItem2
+2112009, 2020001, 1, 1, 1.000000, false                                                                                 # Fried Chicken
+
+# boxItem3
+2112010, 2022001, 1, 1, 1.000000, false                                                                                 # Red Bean Porridge
+
+# boxKey0
+2112011, 4001016, 1, 1, 1.000000, false                                                                                 # The Key
+
+# boxPaper0
+2112012, 4001015, 1, 1, 1.000000, false                                                                                 # Paper Document
+
+# boxBItem0
+2112014, 4001018, 1, 1, 1.000000, false                                                                                 # Fire Ore
+
+# s4frameItem0
+2112015, 2280000, 1, 1, 1.000000, false                                                                                 # Lava Bottle
+
+# s4fireHawkItem0
+2112016, 4001113, 1, 1, 1.000000, false                                                                                 # Phoenix's Egg
+
+# s4iceEagleItem0
+2112017, 4001114, 1, 1, 1.000000, false                                                                                 # Freezer's Egg
+
+# ludiquest0
+2202000, 4031145, 1, 1, 1.000000, false                                                                                 # Pendulum
+
+# ludiquest1
+2202001, 4031092, 1, 1, 1.000000, true                                                                                  # Machine Parts
+
+# ludiquest2
+2202002, 2000000, 1, 1, 0.200000, false                                                                                 # Red Potion
+
+# ludiquest3
+2202003, 4001022, 1, 1, 1.000000, false                                                                                 # Pass of Dimension
+
+# ludiquest4
+2202004, 1032011, 1, 1, 0.008000, false                                                                                 # Blue Moon
+2202004, 1032012, 1, 1, 0.008000, false                                                                                 # Skull Earrings
+2202004, 1032013, 1, 1, 0.008000, false                                                                                 # Red-Hearted Earrings
+2202004, 1102000, 1, 1, 0.008000, false                                                                                 # Green Napoleon
+2202004, 1102001, 1, 1, 0.008000, false                                                                                 # Blue Napoleon
+2202004, 1102002, 1, 1, 0.008000, false                                                                                 # Red Napoleon
+2202004, 1102003, 1, 1, 0.008000, false                                                                                 # White Napoleon
+2202004, 1102004, 1, 1, 0.008000, false                                                                                 # Black Napoleon
+2202004, 2000005, 1, 1, 0.040000, false                                                                                 # Power Elixir
+2202004, 2001000, 1, 1, 0.200000, false                                                                                 # Watermelon
+2202004, 2001001, 1, 1, 0.200000, false                                                                                 # Ice Cream Pop
+2202004, 2001002, 1, 1, 0.200000, false                                                                                 # Red Bean Sundae
+2202004, 2020009, 1, 1, 0.200000, false                                                                                 # Orange Juice
+2202004, 2020010, 1, 1, 0.200000, false                                                                                 # Grape Juice
+2202004, 2020014, 1, 1, 0.040000, false                                                                                 # Sunrise Dew
+2202004, 2020015, 1, 1, 0.040000, false                                                                                 # Sunset Dew
+
+# osquest0
+2212000, 2000002, 1, 1, 0.300000, false                                                                                 # White Potion
+2212000, 4031141, 1, 1, 0.150000, true                                                                                  # Parts #1
+
+# osquest1
+2212001, 2000003, 1, 1, 0.300000, false                                                                                 # Blue Potion
+2212001, 4031142, 1, 1, 0.150000, true                                                                                  # Parts #2
+
+# osquest2
+2212002, 2000001, 1, 1, 0.300000, false                                                                                 # Orange Potion
+2212002, 4031143, 1, 1, 0.150000, true                                                                                  # Parts #3
+
+# osquest3
+2212003, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+2212003, 4031107, 1, 1, 0.330000, true                                                                                  # Dogon's Report
+
+# osquest4
+2212004, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
+2212004, 4031116, 1, 1, 0.200000, true                                                                                  # Secret Document
+
+# osquest5
+2212005, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
+2212005, 4031136, 1, 1, 0.080000, true                                                                                  # Gray's Document
+
+# fvquest2
+2222000, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
+2222000, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
+2222000, 4031231, 1, 1, 0.300000, true                                                                                  # Artemisia
+2222000, 4031258, 1, 1, 0.300000, true                                                                                  # Chrysanthemum
+
+# fvevent0
+2222001, 2001000, 1, 1, 0.050000, false                                                                                 # Watermelon
+2222001, 2001000, 1, 1, 0.050000, false                                                                                 # Watermelon
+2222001, 2001000, 1, 1, 0.050000, false                                                                                 # Watermelon
+2222001, 2001000, 1, 1, 0.050000, false                                                                                 # Watermelon
+2222001, 2001000, 1, 1, 0.050000, false                                                                                 # Watermelon
+2222001, 4031701, 1, 1, 1.000000, false                                                                                 # Chumji's Watermelon
+2222001, 4031702, 1, 1, 1.000000, false                                                                                 # Transparent Item
+
+# aquaItem0
+2302000, 2022040, 1, 1, 0.100000, false                                                                                 # Air Bubble
+2302000, 4031274, 1, 1, 0.020000, true                                                                                  # Piece of Paper A
+2302000, 4031275, 1, 1, 0.020000, true                                                                                  # Piece of Paper B
+2302000, 4031276, 1, 1, 0.020000, true                                                                                  # Piece of Paper C
+2302000, 4031277, 1, 1, 0.020000, true                                                                                  # Piece of Paper D
+2302000, 4031278, 1, 1, 0.020000, true                                                                                  # Piece of Paper E
+
+# aquaItem1
+2302001, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+2302001, 4031251, 1, 1, 0.250000, true                                                                                  # Sea Dust
+
+# aquaItem2
+2302002, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+2302002, 2022040, 1, 1, 0.050000, false                                                                                 # Air Bubble
+
+# s4resurItem0
+2302003, 4161017, 1, 1, 1.000000, false                                                                                 # Caron's Note
+
+# tameItem0
+2302005, 4031508, 1, 1, 0.800000, true                                                                                  # Kenta's Report
+
+# leafItem0
+2402000, 2022086, 1, 1, 0.100000, false                                                                                 # Red Fruit
+2402000, 2022087, 1, 1, 0.100000, false                                                                                 # Black Fruit
+2402000, 2022088, 1, 1, 0.100000, false                                                                                 # Blue Fruit
+
+# leafItem1
+2402001, 2022086, 1, 1, 0.100000, false                                                                                 # Red Fruit
+2402001, 2022087, 1, 1, 0.100000, false                                                                                 # Black Fruit
+2402001, 2022088, 1, 1, 0.100000, false                                                                                 # Blue Fruit
+
+# hontaleItem0
+2402002, 4001088, 1, 1, 1.000000, false                                                                                 # Crystal Key : 2nd Room of Maze
+
+# hontaleItem1
+2402003, 4001089, 1, 1, 1.000000, false                                                                                 # Crystal Key : 3rd Room of Maze
+
+# hontaleItem2
+2402004, 4001090, 1, 1, 1.000000, false                                                                                 # Crystal Key : 4th Room of Maze
+
+# hontaleItem3
+2402005, 4001091, 1, 1, 1.000000, false                                                                                 # Crystal Key : 5th Room of Maze
+
+# hontaleItem4
+2402006, 4001093, 1, 1, 1.000000, false                                                                                 # Blue Key
+
+# muruengItem0
+2502000, 2022116, 1, 1, 0.500000, false                                                                                 # Peach
+
+# muruengItem1
+2502001, 2022116, 1, 1, 0.500000, false                                                                                 # Peach
+
+# davyItem0
+2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512000, 2022131, 1, 1, 1.000000, false                                                                                 # Ginseng Concentrate
+2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512000, 4031438, 1, 1, 0.150000, false                                                                                 # Lord Pirate's Travel Diary
+
+# davyItem1
+2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
+2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
+2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
+2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
+2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
+2512001, 2000003, 1, 1, 0.300000, false                                                                                 # Blue Potion
+2512001, 2000003, 1, 1, 0.300000, false                                                                                 # Blue Potion
+2512001, 2000003, 1, 1, 0.300000, false                                                                                 # Blue Potion
+2512001, 2000006, 1, 1, 0.150000, false                                                                                 # Mana Elixir
+2512001, 2000006, 1, 1, 0.150000, false                                                                                 # Mana Elixir
+2512001, 2000006, 1, 1, 0.150000, false                                                                                 # Mana Elixir
+2512001, 2020013, 1, 1, 0.150000, false                                                                                 # Reindeer Milk
+2512001, 2020014, 1, 1, 0.150000, false                                                                                 # Sunrise Dew
+2512001, 2020015, 1, 1, 0.150000, false                                                                                 # Sunset Dew
+2512001, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512001, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512001, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512001, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512001, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
+2512001, 2040001, 1, 1, 0.070000, false                                                                                 # Scroll for Helmet for DEF 60%
+2512001, 2040002, 1, 1, 0.070000, false                                                                                 # Scroll for Helmet for DEF 10%
+2512001, 2040704, 1, 1, 0.030000, false                                                                                 # Scroll for Shoes for Jump 60%
+2512001, 2040705, 1, 1, 0.030000, false                                                                                 # Scroll for Shoes for Jump 10%
+2512001, 4004004, 1, 1, 0.050000, false                                                                                 # Dark Crystal Ore
+2512001, 4031551, 1, 1, 1.000000, true                                                                                  # Lord Pirate's Treasures
+
+# ariantItem0
+2602000, 4031574, 1, 1, 1.000000, true                                                                                  # Sky Jewel
+
+# magatiaItem0
+2612000, 4031695, 1, 1, 0.500000, true                                                                                  # Snow Rose
+
+# rnjItem0
+2612001, 4001135, 1, 1, 1.000000, false                                                                                 # Zenumist's Experiment Files
+
+# rnjItem1
+2612002, 4001134, 1, 1, 1.000000, false                                                                                 # Alcadno's Experiment Files
+
+# rnjItem2
+2612003, 2022000, 1, 1, 0.100000, false                                                                                 # Pure Water
+2612003, 2022003, 1, 1, 0.150000, false                                                                                 # Unagi
+2612003, 2022174, 1, 1, 0.200000, false                                                                                 # White Potion
+2612003, 2022177, 1, 1, 0.200000, false                                                                                 # Mana Elixir
+
+# magatiaItem1
+2612004, 4031703, 1, 1, 1.000000, true                                                                                  # Regular Tree Branch
+
+# magaScript0
+2619000, 4031709, 1, 1, 1.000000, true                                                                                  # Lightless Magic Device
+
+# amoriaItem0
+6702000, 4031595, 1, 1, 1.000000, false                                                                                 # Magik Mirror Shard
+
+# amoriaItem2
+6702002, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702002, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702002, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702002, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702002, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702002, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702002, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702002, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702002, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702002, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702002, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702002, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702002, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702002, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702002, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702002, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702002, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702002, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702002, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702002, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702002, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702002, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702002, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702002, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702002, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem3
+6702003, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702003, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702003, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702003, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702003, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702003, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702003, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702003, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702003, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702003, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702003, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702003, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702003, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702003, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702003, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702003, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702003, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702003, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702003, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702003, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702003, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702003, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702003, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702003, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702003, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem4
+6702004, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702004, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702004, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702004, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702004, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702004, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702004, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702004, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702004, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702004, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702004, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702004, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702004, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702004, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702004, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702004, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702004, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702004, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702004, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702004, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702004, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702004, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702004, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702004, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702004, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem5
+6702005, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702005, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702005, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702005, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702005, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702005, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702005, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702005, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702005, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702005, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702005, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702005, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702005, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702005, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702005, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702005, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702005, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702005, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702005, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702005, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702005, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702005, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702005, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702005, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702005, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem6
+6702006, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702006, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702006, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702006, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702006, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702006, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702006, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702006, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702006, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702006, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702006, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702006, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702006, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702006, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702006, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702006, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702006, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702006, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702006, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702006, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702006, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702006, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702006, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702006, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702006, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem7
+6702007, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702007, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702007, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702007, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702007, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702007, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702007, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702007, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702007, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702007, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702007, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702007, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702007, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702007, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702007, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702007, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702007, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702007, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702007, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702007, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702007, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702007, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702007, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702007, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702007, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem8
+6702008, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702008, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702008, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702008, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702008, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702008, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702008, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702008, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702008, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702008, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702008, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702008, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702008, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702008, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702008, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702008, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702008, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702008, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702008, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702008, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702008, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702008, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702008, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702008, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702008, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem9
+6702009, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702009, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702009, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702009, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702009, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702009, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702009, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702009, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702009, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702009, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702009, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702009, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702009, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702009, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702009, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702009, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702009, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702009, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702009, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702009, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702009, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702009, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702009, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702009, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702009, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem10
+6702010, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702010, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702010, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702010, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702010, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702010, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702010, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702010, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702010, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702010, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702010, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702010, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702010, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702010, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702010, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702010, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702010, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702010, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702010, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702010, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702010, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702010, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702010, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702010, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702010, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem11
+6702011, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702011, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702011, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702011, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702011, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702011, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702011, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702011, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702011, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702011, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702011, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702011, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702011, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702011, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702011, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702011, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702011, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702011, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702011, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702011, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702011, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702011, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702011, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702011, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702011, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# amoriaItem12
+6702012, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
+6702012, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
+6702012, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
+6702012, 1102099, 1, 1, 0.000500, false                                                                                 # Amos's Royal Cape
+6702012, 1102100, 1, 1, 0.000500, false                                                                                 # Amos's Spirit Cape
+6702012, 2000004, 1, 1, 0.080000, false                                                                                 # Elixir
+6702012, 2000005, 1, 1, 0.080000, false                                                                                 # Power Elixir
+6702012, 2020010, 1, 1, 0.078000, false                                                                                 # Grape Juice
+6702012, 2020013, 1, 1, 0.024500, false                                                                                 # Reindeer Milk
+6702012, 2022015, 1, 1, 0.040000, false                                                                                 # Mushroom Miso Ramen
+6702012, 2022179, 1, 1, 0.050000, false                                                                                 # Onyx Apple
+6702012, 2022180, 1, 1, 0.050000, false                                                                                 # Amorian Rice Cookie
+6702012, 2022181, 1, 1, 0.037500, false                                                                                 # Victoria's Amorian Basket
+6702012, 2022182, 1, 1, 0.050000, false                                                                                 # Crystalized Pineapple Chew
+6702012, 2040005, 1, 1, 0.000300, false                                                                                 # Scroll for Helmet for HP 10%
+6702012, 2040804, 1, 1, 0.000400, false                                                                                 # Scroll for Gloves for ATT 60%
+6702012, 2041035, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for STR 30%
+6702012, 2041037, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for INT 30%
+6702012, 2041039, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for DEX 30%
+6702012, 2041041, 1, 1, 0.000300, false                                                                                 # Dark scroll for Cape for LUK 30%
+6702012, 3010011, 1, 1, 0.000500, false                                                                                 # Amorian Relaxer
+6702012, 4011006, 1, 1, 0.050000, false                                                                                 # Gold Plate
+6702012, 4020007, 1, 1, 0.066000, false                                                                                 # Diamond Ore
+6702012, 4020008, 1, 1, 0.090000, false                                                                                 # Black Crystal Ore
+6702012, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
+
+# weddingItem0
+6802000, 4031423, 1, 1, 1.000000, false                                                                                 # Onyx Chest
+
+# weddingItem1
+6802001, 4031423, 1, 1, 1.000000, false                                                                                 # Onyx Chest
+
+# eventItem0
+9002000, 2000000, 1, 1, 0.300000, false                                                                                 # Red Potion
+9002000, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+9002000, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
+9002000, 2000003, 1, 1, 0.100000, false                                                                                 # Blue Potion
+9002000, 2000006, 1, 1, 0.050000, false                                                                                 # Mana Elixir
+9002000, 2020028, 1, 1, 0.800000, false                                                                                 # Chocolate
+9002000, 2022175, 1, 1, 0.200000, false                                                                                 # Elixir
+9002000, 2030000, 1, 1, 0.050000, false                                                                                 # Return Scroll - Nearest Town
+9002000, 2040314, 1, 1, 0.100000, false                                                                                 # Scroll for Earring for INT 15%
+9002000, 2040822, 1, 1, 0.100000, false                                                                                 # Scroll for Gloves for ATT 15%
+9002000, 4021007, 1, 1, 0.200000, false                                                                                 # Diamond
+
+# eventItem1
+9002001, 2000000, 1, 1, 0.300000, false                                                                                 # Red Potion
+9002001, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+9002001, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
+9002001, 2000003, 1, 1, 0.100000, false                                                                                 # Blue Potion
+9002001, 2000005, 1, 1, 0.010000, false                                                                                 # Power Elixir
+9002001, 2000006, 1, 1, 0.050000, false                                                                                 # Mana Elixir
+9002001, 2012000, 1, 1, 0.010000, false                                                                                 # Drake's Blood
+9002001, 2012001, 1, 1, 0.010000, false                                                                                 # Fairy's Honey
+9002001, 2012002, 1, 1, 0.010000, false                                                                                 # Sap of Ancient Tree
+9002001, 2012003, 1, 1, 0.010000, false                                                                                 # Drake's Meat
+9002001, 2020013, 1, 1, 0.010000, false                                                                                 # Reindeer Milk
+9002001, 2020014, 1, 1, 0.010000, false                                                                                 # Sunrise Dew
+9002001, 2030000, 1, 1, 0.050000, false                                                                                 # Return Scroll - Nearest Town
+9002001, 2050004, 1, 1, 0.010000, false                                                                                 # All Cure Potion
+9002001, 4011004, 1, 1, 0.010000, false                                                                                 # Silver Plate
+9002001, 4011006, 1, 1, 0.010000, false                                                                                 # Gold Plate
+9002001, 4021000, 1, 1, 0.010000, false                                                                                 # Garnet
+9002001, 4021001, 1, 1, 0.010000, false                                                                                 # Amethyst
+9002001, 4021002, 1, 1, 0.010000, false                                                                                 # AquaMarine
+9002001, 4021003, 1, 1, 0.010000, false                                                                                 # Emerald
+9002001, 4021004, 1, 1, 0.010000, false                                                                                 # Opal
+9002001, 4021005, 1, 1, 0.010000, false                                                                                 # Sapphire
+9002001, 4021006, 1, 1, 0.010000, false                                                                                 # Topaz
+9002001, 4021007, 1, 1, 0.010000, false                                                                                 # Diamond
+9002001, 4021008, 1, 1, 0.010000, false                                                                                 # Black Crystal
+
+# eventItem2
+9002002, 2000000, 1, 1, 0.300000, false                                                                                 # Red Potion
+9002002, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+9002002, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
+9002002, 2000003, 1, 1, 0.100000, false                                                                                 # Blue Potion
+9002002, 2000006, 1, 1, 0.050000, false                                                                                 # Mana Elixir
+9002002, 2030000, 1, 1, 0.050000, false                                                                                 # Return Scroll - Nearest Town
+9002002, 4031018, 1, 1, 0.100000, true                                                                                  # Treasure Scroll
+
+# sBoxItem0
+9102000, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
+9102000, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
+9102000, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
+9102000, 2000003, 1, 1, 0.100000, false                                                                                 # Blue Potion
+9102000, 2010000, 1, 1, 0.100000, false                                                                                 # Apple
+9102000, 2010003, 1, 1, 0.100000, false                                                                                 # Orange
+9102000, 2010004, 1, 1, 0.100000, false                                                                                 # Lemon
+9102000, 4031157, 1, 1, 0.800000, true                                                                                  # Maple History Book I
+
+# sBoxItem1
+9102001, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
+9102001, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
+9102001, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
+9102001, 2000003, 1, 1, 0.100000, false                                                                                 # Blue Potion
+9102001, 2010000, 1, 1, 0.100000, false                                                                                 # Apple
+9102001, 2010003, 1, 1, 0.100000, false                                                                                 # Orange
+9102001, 2010004, 1, 1, 0.100000, false                                                                                 # Lemon
+9102001, 4031158, 1, 1, 0.800000, true                                                                                  # Maple History Book II
+
+# moonItem0
+9102002, 4001095, 1, 1, 0.200000, false                                                                                 # Green Primrose Seed
+
+# moonItem1
+9102003, 4001096, 1, 1, 0.200000, false                                                                                 # Purple Primrose Seed
+
+# moonItem2
+9102004, 4001097, 1, 1, 0.200000, false                                                                                 # Pink Primrose Seed
+
+# moonItem3
+9102005, 4001098, 1, 1, 0.200000, false                                                                                 # Brown Primrose Seed
+
+# moonItem4
+9102006, 4001099, 1, 1, 0.200000, false                                                                                 # Yellow Primrose Seed
+
+# moonItem5
+9102007, 4001100, 1, 1, 0.200000, false                                                                                 # Blue Primrose Seed
+
+# syarenItem0
+9202000, 1032033, 1, 1, 1.000000, false                                                                                 # Protector Rock
+
+# syarenItem1
+9202001, 4001025, 1, 1, 1.000000, false                                                                                 # Longinus Spear
+
+# syarenItem2
+9202002, 4001037, 1, 1, 1.000000, false                                                                                 # Rusty Key
+
+# syarenItem3
+9202003, 4001029, 1, 1, 1.000000, false                                                                                 # Spoiled Food
+
+# syarenItem4
+9202004, 4001030, 1, 1, 1.000000, false                                                                                 # Jr. Necki Drink - 700 Yrs Old
+
+# syarenItem5
+9202005, 4001031, 1, 1, 1.000000, false                                                                                 # Sharen III's Pants
+
+# syarenItem6
+9202006, 4001032, 1, 1, 1.000000, false                                                                                 # Sharen III's Shoes
+
+# syarenItem7
+9202007, 4001033, 1, 1, 1.000000, false                                                                                 # Sharen III's Top
+
+# syarenItem8
+9202008, 4001034, 1, 1, 1.000000, false                                                                                 # Sharen III's Crown
+
+# syarenItem9
+9202009, 1032033, 1, 1, 1.000000, false                                                                                 # Protector Rock
+
+# syarenItem12
+9202012, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
+9202012, 2000002, 1, 1, 0.200000, false                                                                                 # White Potion
+9202012, 2000004, 1, 1, 0.040000, false                                                                                 # Elixir
+9202012, 2000005, 1, 1, 0.040000, false                                                                                 # Power Elixir
+9202012, 2000006, 1, 1, 0.200000, false                                                                                 # Mana Elixir
+9202012, 2001001, 1, 1, 0.200000, false                                                                                 # Ice Cream Pop
+9202012, 2001002, 1, 1, 0.200000, false                                                                                 # Red Bean Sundae
+9202012, 2020013, 1, 1, 0.040000, false                                                                                 # Reindeer Milk
+9202012, 2020014, 1, 1, 0.040000, false                                                                                 # Sunrise Dew
+9202012, 2020015, 1, 1, 0.040000, false                                                                                 # Sunset Dew
+9202012, 2040001, 1, 1, 0.004000, false                                                                                 # Scroll for Helmet for DEF 60%
+9202012, 2040004, 1, 1, 0.004000, false                                                                                 # Scroll for Helmet for HP 60%
+9202012, 2040301, 1, 1, 0.004000, false                                                                                 # Scroll for Earring for INT 60%
+9202012, 2040401, 1, 1, 0.004000, false                                                                                 # Scroll for Topwear for DEF 60%
+9202012, 2040501, 1, 1, 0.004000, false                                                                                 # Scroll for Overall Armor for DEX 60%
+9202012, 2040504, 1, 1, 0.004000, false                                                                                 # Scroll for Overall Armor for DEF 60%
+9202012, 2040513, 1, 1, 0.004000, false                                                                                 # Scroll for Overall Armor for INT 60%
+9202012, 2040516, 1, 1, 0.004000, false                                                                                 # Scroll for Overall Armor for LUK 60%
+9202012, 2040601, 1, 1, 0.004000, false                                                                                 # Scroll for Bottomwear for DEF 60%
+9202012, 2040701, 1, 1, 0.004000, false                                                                                 # Scroll for Shoes for DEX 60%
+9202012, 2040704, 1, 1, 0.004000, false                                                                                 # Scroll for Shoes for Jump 60%
+9202012, 2040707, 1, 1, 0.004000, false                                                                                 # Scroll for Shoes for Speed 60%
+9202012, 2040801, 1, 1, 0.004000, false                                                                                 # Scroll for Gloves for DEX 60%
+9202012, 2040804, 1, 1, 0.004000, false                                                                                 # Scroll for Gloves for ATT 60%
+9202012, 2040901, 1, 1, 0.004000, false                                                                                 # Scroll for Shield for DEF 60%
+9202012, 2041001, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for Magic Def. 60%
+9202012, 2041004, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for Weapon DEF 60%
+9202012, 2041007, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for HP 60%
+9202012, 2041010, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for MP 60%
+9202012, 2041013, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for STR 60%
+9202012, 2041016, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for INT 60%
+9202012, 2041019, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for DEX 60%
+9202012, 2041022, 1, 1, 0.004000, false                                                                                 # Scroll for Cape for LUK 60%
+9202012, 2100000, 1, 1, 0.002000, false                                                                                 # Black Sack
+9202012, 2290009, 1, 1, 0.000600, false                                                                                 # [Mastery Book] Advanced Combo Attack
+9202012, 2290031, 1, 1, 0.000700, false                                                                                 # [Mastery Book] Paralyze
+9202012, 2290033, 1, 1, 0.003500, false                                                                                 # [Mastery Book] Chain Lightning
+9202012, 2290039, 1, 1, 0.000600, false                                                                                 # [Mastery Book] Elquines
+9202012, 2290045, 1, 1, 0.004000, false                                                                                 # [Mastery Book] Ifrit
+9202012, 2290060, 1, 1, 0.002000, false                                                                                 # [Mastery Book] Hurricane
+9202012, 2290073, 1, 1, 0.000200, false                                                                                 # [Mastery Book] Frostprey
+9202012, 2290081, 1, 1, 0.002000, false                                                                                 # [Mastery Book] Taunt
+9202012, 2290087, 1, 1, 0.001500, false                                                                                 # [Mastery Book] Ninja Storm
+9202012, 2290093, 1, 1, 0.000200, false                                                                                 # [Mastery Book] Assassinate
+
