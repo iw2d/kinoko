@@ -91,62 +91,64 @@ public final class LifeHandler {
         mai.isAttack = action >= MobActionType.ATTACK1.getValue() && action <= MobActionType.ATTACKF.getValue();
         mai.isSkill = action >= MobActionType.SKILL1.getValue() && action <= MobActionType.SKILLF.getValue();
 
-        if (mai.isAttack) {
-            final int attackIndex = action - MobActionType.ATTACK1.getValue();
-            final Optional<MobAttack> mobAttackResult = mob.getAttack(attackIndex);
-            if (mobAttackResult.isEmpty()) {
-                log.error("{} : Could not resolve mob attack for index : {}", mob, attackIndex);
-                return;
-            }
-            final MobAttack ma = mobAttackResult.get();
+        try (var locked = mob.acquire()) {
+            if (mai.isAttack) {
+                final int attackIndex = action - MobActionType.ATTACK1.getValue();
+                final Optional<MobAttack> mobAttackResult = mob.getAttack(attackIndex);
+                if (mobAttackResult.isEmpty()) {
+                    log.error("{} : Could not resolve mob attack for index : {}", mob, attackIndex);
+                    return;
+                }
+                final MobAttack ma = mobAttackResult.get();
 
-            log.debug("{} : Using mob attack index {}", mob, attackIndex);
-            mob.setMp(Math.max(mob.getMp() - ma.getConMp(), 0));
-            mob.setAttackCounter(Util.getRandom(
-                    GameConstants.MOB_ATTACK_COOLTIME_MIN,
-                    mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
-            ));
-        } else if (mai.isSkill) {
-            final int skillIndex = action - MobActionType.SKILL1.getValue();
-            final Optional<MobSkill> mobSkillResult = mob.getSkill(skillIndex);
-            if (mobSkillResult.isEmpty()) {
-                log.error("{} : Could not resolve mob skill for index : {}", mob, skillIndex);
-                return;
-            }
-            final MobSkill ms = mobSkillResult.get();
+                log.debug("{} : Using mob attack index {}", mob, attackIndex);
+                mob.setMp(Math.max(mob.getMp() - ma.getConMp(), 0));
+                mob.setAttackCounter(Util.getRandom(
+                        GameConstants.MOB_ATTACK_COOLTIME_MIN,
+                        mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
+                ));
+            } else if (mai.isSkill) {
+                final int skillIndex = action - MobActionType.SKILL1.getValue();
+                final Optional<MobSkill> mobSkillResult = mob.getSkill(skillIndex);
+                if (mobSkillResult.isEmpty()) {
+                    log.error("{} : Could not resolve mob skill for index : {}", mob, skillIndex);
+                    return;
+                }
+                final MobSkill ms = mobSkillResult.get();
 
-            mai.skillId = targetInfo & 0xFF;
-            mai.slv = (targetInfo >> 8) & 0xFF;
-            mai.option = (targetInfo >> 16) & 0xFFFF;
-            if (mai.skillId != ms.getSkillId() || mai.slv != ms.getLevel()) {
-                log.error("{} : Mismatching skill ID or level for mob skill index : {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
-                return;
+                mai.skillId = targetInfo & 0xFF;
+                mai.slv = (targetInfo >> 8) & 0xFF;
+                mai.option = (targetInfo >> 16) & 0xFFFF;
+                if (mai.skillId != ms.getSkillId() || mai.slv != ms.getLevel()) {
+                    log.error("{} : Mismatching skill ID or level for mob skill index : {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
+                    return;
+                }
+
+                final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillById(mai.skillId);
+                if (skillInfoResult.isEmpty()) {
+                    log.error("{} : Could not resolve skill info for mob skill : {}", mob, mai.skillId);
+                    return;
+                }
+                final SkillInfo si = skillInfoResult.get();
+                if (mob.isSkillAvailable(ms)) {
+                    log.debug("{} : Using mob skill index {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
+                    mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
+                    mob.setSkillOnCooltime(ms, Instant.now().plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
+                    // TODO: apply effect
+                } else {
+                    log.error("{} : Mob skill ({}, {}) not available", mob, mai.skillId, mai.slv);
+                    mai.skillId = 0;
+                    mai.slv = 0;
+                    mai.option = 0;
+                }
             }
 
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillById(mai.skillId);
-            if (skillInfoResult.isEmpty()) {
-                log.error("{} : Could not resolve skill info for mob skill : {}", mob, mai.skillId);
-                return;
-            }
-            final SkillInfo si = skillInfoResult.get();
-            if (mob.isSkillAvailable(ms)) {
-                log.debug("{} : Using mob skill index {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
-                mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
-                mob.setSkillOnCooltime(ms, Instant.now().plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
-                // TODO: apply effect
-            } else {
-                log.error("{} : Mob skill ({}, {}) not available", mob, mai.skillId, mai.slv);
-                mai.skillId = 0;
-                mai.slv = 0;
-                mai.option = 0;
-            }
+            // update mob position and write response
+            final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
+            movePath.applyTo(mob);
+            user.write(MobPacket.ctrlAck(mob, mobCtrlSn, nextAttackPossible, mai));
+            field.broadcastPacket(MobPacket.move(mob, mai, movePath), user);
         }
-
-        // update mob position and write response
-        final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
-        movePath.applyTo(mob);
-        user.write(MobPacket.ctrlAck(mob, mobCtrlSn, nextAttackPossible, mai)); // TODO: create lock for mob
-        field.broadcastPacket(MobPacket.move(mob, mai, movePath), user);
     }
 
     @Handler(InHeader.MOB_APPLY_CTRL)

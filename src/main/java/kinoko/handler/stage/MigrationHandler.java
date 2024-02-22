@@ -109,7 +109,9 @@ public final class MigrationHandler {
             log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
             targetPortal = targetField.getPortalById(0).orElseThrow(() -> new IllegalStateException("Could not resolve Portal"));
         }
-        user.warp(targetField, targetPortal, true, false);
+        try (var locked = user.acquire()) {
+            user.warp(targetField, targetPortal, true, false);
+        }
 
         // TODO: keymap, quickslot, macros
 

@@ -42,44 +42,46 @@ public final class ItemHandler {
             return;
         }
 
-        // Consume item
-        final Inventory inventory = user.getInventoryManager().getInventoryByType(inventoryType);
-        final Item item = inventory.getItem(position);
-        if (item == null || item.getItemId() != itemId) {
-            user.dispose();
-            return;
-        }
-        item.setQuantity((short) (item.getQuantity() - 1));
-        if (item.getQuantity() > 0) {
-            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()), true));
-        } else {
-            if (!inventory.removeItem(position, item)) {
+        try (var locked = user.acquire()) {
+            // Consume item
+            final Inventory inventory = user.getInventoryManager().getInventoryByType(inventoryType);
+            final Item item = inventory.getItem(position);
+            if (item == null || item.getItemId() != itemId) {
                 user.dispose();
                 return;
             }
-            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, position), true));
-        }
+            item.setQuantity((short) (item.getQuantity() - 1));
+            if (item.getQuantity() > 0) {
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()), true));
+            } else {
+                if (!inventory.removeItem(position, item)) {
+                    user.dispose();
+                    return;
+                }
+                user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, position), true));
+            }
 
-        // Apply stat change
-        final CharacterStat cs = user.getCharacterStat();
-        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        for (var entry : ii.getItemSpecs().entrySet()) {
-            switch (entry.getKey()) {
-                case hp -> {
-                    final int newHp = cs.getHp() + ii.getSpec(ItemSpecType.hp);
-                    cs.setHp(Math.min(newHp, cs.getMaxHp()));
-                    statMap.put(Stat.HP, cs.getHp());
-                }
-                case mp -> {
-                    final int newMp = cs.getMp() + ii.getSpec(ItemSpecType.mp);
-                    cs.setMp(Math.min(newMp, cs.getMaxMp()));
-                    statMap.put(Stat.MP, cs.getMp());
-                }
-                default -> {
-                    log.error("Unhandled item spec type : {}", entry.getKey().name());
+            // Apply stat change
+            final CharacterStat cs = user.getCharacterStat();
+            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+            for (var entry : ii.getItemSpecs().entrySet()) {
+                switch (entry.getKey()) {
+                    case hp -> {
+                        final int newHp = cs.getHp() + ii.getSpec(ItemSpecType.hp);
+                        cs.setHp(Math.min(newHp, cs.getMaxHp()));
+                        statMap.put(Stat.HP, cs.getHp());
+                    }
+                    case mp -> {
+                        final int newMp = cs.getMp() + ii.getSpec(ItemSpecType.mp);
+                        cs.setMp(Math.min(newMp, cs.getMaxMp()));
+                        statMap.put(Stat.MP, cs.getMp());
+                    }
+                    default -> {
+                        log.error("Unhandled item spec type : {}", entry.getKey().name());
+                    }
                 }
             }
+            user.write(WvsContext.statChanged(statMap));
         }
-        user.write(WvsContext.statChanged(statMap));
     }
 }

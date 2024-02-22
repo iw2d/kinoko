@@ -59,7 +59,9 @@ public final class AttackHandler {
             attack.grenadeY = inPacket.decodeShort(); // pGrenade->GetPos()->y
         }
 
-        SkillProcessor.processAttack(user, attack);
+        try (var locked = user.acquire()) {
+            SkillProcessor.processAttack(user, attack);
+        }
     }
 
     @Handler(InHeader.USER_SHOOT_ATTACK)
@@ -117,7 +119,9 @@ public final class AttackHandler {
             inPacket.decodeInt(); // tReserveSpark
         }
 
-        SkillProcessor.processAttack(user, attack);
+        try (var locked = user.acquire()) {
+            SkillProcessor.processAttack(user, attack);
+        }
     }
 
     @Handler(InHeader.USER_MAGIC_ATTACK)
@@ -167,7 +171,9 @@ public final class AttackHandler {
             attack.dragonY = inPacket.decodeShort();
         }
 
-        SkillProcessor.processAttack(user, attack);
+        try (var locked = user.acquire()) {
+            SkillProcessor.processAttack(user, attack);
+        }
     }
 
     @Handler(InHeader.USER_BODY_ATTACK)
@@ -206,7 +212,9 @@ public final class AttackHandler {
         attack.userX = inPacket.decodeShort(); // GetPos()->x
         attack.userY = inPacket.decodeShort(); // GetPos()->y
 
-        SkillProcessor.processAttack(user, attack);
+        try (var locked = user.acquire()) {
+            SkillProcessor.processAttack(user, attack);
+        }
     }
 
     private static void decodeMobAttackInfo(InPacket inPacket, Attack attack) {

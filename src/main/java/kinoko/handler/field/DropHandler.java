@@ -44,43 +44,45 @@ public final class DropHandler {
         }
         final Drop drop = dropResult.get();
 
-        // Check if drop can be added to inventory
-        final InventoryManager im = user.getInventoryManager();
-        if (drop.isMoney()) {
-            final long newMoney = ((long) im.getMoney()) + drop.getMoney();
-            if (newMoney > GameConstants.MAX_MONEY) {
-                user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
-                user.dispose();
-                return;
-            }
-        } else {
-            if (im.canAddItem(drop.getItem()).isEmpty()) {
-                user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
-                user.dispose();
-                return;
-            }
-        }
-
-        // Try removing drop from field
-        if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getCharacterId(), 0)) {
-            user.dispose();
-            return;
-        }
-
-        // Add drop to inventory
-        if (drop.isMoney()) {
-            if (im.addMoney(drop.getMoney())) {
-                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
-                user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
-            }
-        } else {
-            final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
-            if (addItemResult.isPresent()) {
-                final var iter = addItemResult.get().iterator();
-                while (iter.hasNext()) {
-                    user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+        try (var locked = user.acquire()) {
+            // Check if drop can be added to inventory
+            final InventoryManager im = user.getInventoryManager();
+            if (drop.isMoney()) {
+                final long newMoney = ((long) im.getMoney()) + drop.getMoney();
+                if (newMoney > GameConstants.MAX_MONEY) {
+                    user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                    user.dispose();
+                    return;
                 }
-                user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+            } else {
+                if (im.canAddItem(drop.getItem()).isEmpty()) {
+                    user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                    user.dispose();
+                    return;
+                }
+            }
+
+            // Try removing drop from field
+            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getCharacterId(), 0)) {
+                user.dispose();
+                return;
+            }
+
+            // Add drop to inventory
+            if (drop.isMoney()) {
+                if (im.addMoney(drop.getMoney())) {
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+                    user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
+                }
+            } else {
+                final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
+                if (addItemResult.isPresent()) {
+                    final var iter = addItemResult.get().iterator();
+                    while (iter.hasNext()) {
+                        user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
+                    }
+                    user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+                }
             }
         }
     }

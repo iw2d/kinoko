@@ -13,6 +13,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.skill.HitInfo;
 import kinoko.world.skill.HitType;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
@@ -63,7 +64,6 @@ public final class UserHandler {
     public static void handleUserHit(User user, InPacket inPacket) {
         // CUserLocal::SetDamaged, CUserLocal::Update
         inPacket.decodeInt(); // get_update_time()
-
         final int attackIndex = inPacket.decodeByte(); // nAttackIdx
         final HitType hitType = HitType.getByValue(attackIndex);
         if (hitType == null) {
@@ -105,9 +105,9 @@ public final class UserHandler {
                 hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
             }
         }
-
-        // TODO: update stats
-        user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
+        try (var locked = user.acquire()) {
+            SkillProcessor.processHit(user, hitInfo);
+        }
     }
 
     @Handler(InHeader.USER_CHAT)
@@ -115,11 +115,9 @@ public final class UserHandler {
         inPacket.decodeInt(); // update_time
         final String text = inPacket.decodeString(); // sText
         final boolean onlyBalloon = inPacket.decodeBoolean(); // bOnlyBalloon
-
         if (text.startsWith(ServerConfig.COMMAND_PREFIX) && CommandProcessor.tryProcessCommand(user, text)) {
             return;
         }
-
         user.getField().broadcastPacket(UserPacket.chat(user, ChatType.NORMAL, text, onlyBalloon));
     }
 
@@ -128,7 +126,6 @@ public final class UserHandler {
         final int emotion = inPacket.decodeInt(); // nEmotion
         final int duration = inPacket.decodeInt(); // nDuration
         final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
-
         user.getField().broadcastPacket(UserRemote.emotion(user, emotion, duration, isByItemOption), user);
     }
 
@@ -144,20 +141,22 @@ public final class UserHandler {
         final int mp = Short.toUnsignedInt(inPacket.decodeShort()); // nMP
         inPacket.decodeByte(); // nOption
 
-        final CharacterStat cs = user.getCharacterStat();
-        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        if (hp > 0) {
-            final int newHp = cs.getHp() + hp;
-            cs.setHp(Math.min(newHp, cs.getMaxHp()));
-            statMap.put(Stat.HP, cs.getHp());
-        }
-        if (mp > 0) {
-            final int newMp = cs.getMp() + mp;
-            cs.setMp(Math.min(newMp, cs.getMaxMp()));
-            statMap.put(Stat.MP, cs.getMp());
-        }
-        if (!statMap.isEmpty()) {
-            user.write(WvsContext.statChanged(statMap));
+        try (var locked = user.acquire()) {
+            final CharacterStat cs = user.getCharacterStat();
+            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+            if (hp > 0) {
+                final int newHp = cs.getHp() + hp;
+                cs.setHp(Math.min(newHp, cs.getMaxHp()));
+                statMap.put(Stat.HP, cs.getHp());
+            }
+            if (mp > 0) {
+                final int newMp = cs.getMp() + mp;
+                cs.setMp(Math.min(newMp, cs.getMaxMp()));
+                statMap.put(Stat.MP, cs.getMp());
+            }
+            if (!statMap.isEmpty()) {
+                user.write(WvsContext.statChanged(statMap));
+            }
         }
     }
 
@@ -173,5 +172,6 @@ public final class UserHandler {
         final short y = inPacket.decodeShort(); // GetPos()->x
         inPacket.decodeShort(); // portal x
         inPacket.decodeShort(); // portal y
+        // let USER_MOVE packets update user position
     }
 }

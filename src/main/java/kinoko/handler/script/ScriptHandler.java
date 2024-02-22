@@ -142,14 +142,16 @@ public final class ScriptHandler {
                     final short x = inPacket.decodeShort(); // ptUserPos.x
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
-                final Optional<QuestRecord> startQuestResult = questInfo.startQuest(user);
-                if (startQuestResult.isEmpty()) {
-                    log.error("Failed to accept quest : {}", questId);
-                    user.dispose();
-                    return;
+                try (var locked = user.acquire()) {
+                    final Optional<QuestRecord> startQuestResult = questInfo.startQuest(user);
+                    if (startQuestResult.isEmpty()) {
+                        log.error("Failed to accept quest : {}", questId);
+                        user.dispose();
+                        return;
+                    }
+                    user.write(WvsContext.message(Message.questRecord(startQuestResult.get())));
+                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
                 }
-                user.write(WvsContext.message(Message.questRecord(startQuestResult.get())));
-                user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
             }
             case COMPLETE_QUEST -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
@@ -158,29 +160,33 @@ public final class ScriptHandler {
                     final short x = inPacket.decodeShort(); // ptUserPos.x
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
-                final int index = inPacket.decodeInt(); // nIdx
-                final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(user);
-                if (questCompleteResult.isEmpty()) {
-                    log.error("Failed to complete quest : {}", questId);
-                    user.dispose();
-                    return;
+                final int index = inPacket.decodeInt(); // nIdx, for selecting reward? TODO
+                try (var locked = user.acquire()) {
+                    final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(user);
+                    if (questCompleteResult.isEmpty()) {
+                        log.error("Failed to complete quest : {}", questId);
+                        user.dispose();
+                        return;
+                    }
+                    final QuestRecord qr = questCompleteResult.get().getLeft();
+                    final int nextQuest = questCompleteResult.get().getRight();
+                    user.write(WvsContext.message(Message.questRecord(questCompleteResult.get().getLeft())));
+                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
                 }
-                final QuestRecord qr = questCompleteResult.get().getLeft();
-                final int nextQuest = questCompleteResult.get().getRight();
-                user.write(WvsContext.message(Message.questRecord(questCompleteResult.get().getLeft())));
-                user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
                 // Quest complete effect
                 user.write(UserLocal.effect(Effect.questComplete()));
                 user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
             }
             case RESIGN_QUEST -> {
-                final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(user);
-                if (questRecordResult.isEmpty()) {
-                    log.error("Failed to resign quest : {}", questId);
-                    return;
+                try (var locked = user.acquire()) {
+                    final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(user);
+                    if (questRecordResult.isEmpty()) {
+                        log.error("Failed to resign quest : {}", questId);
+                        return;
+                    }
+                    user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
+                    user.write(UserLocal.resignQuestReturn(questId));
                 }
-                user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
-                user.write(UserLocal.resignQuestReturn(questId));
             }
             case OPENING_SCRIPT, COMPLETE_SCRIPT -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID

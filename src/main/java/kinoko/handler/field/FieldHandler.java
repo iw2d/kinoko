@@ -61,7 +61,9 @@ public final class FieldHandler {
             user.dispose();
             return;
         }
-        user.warp(nextField, nextPortalResult.get(), false, false);
+        try (var locked = user.acquire()) {
+            user.warp(nextField, nextPortalResult.get(), false, false);
+        }
     }
 
     @Handler(InHeader.USER_TRANSFER_CHANNEL_REQUEST)
