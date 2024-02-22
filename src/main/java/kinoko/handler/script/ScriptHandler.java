@@ -3,8 +3,6 @@ package kinoko.handler.script;
 import kinoko.handler.Handler;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.user.UserLocal;
-import kinoko.packet.user.UserRemote;
-import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.QuestProvider;
@@ -14,12 +12,10 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.server.script.ScriptManager;
-import kinoko.util.Tuple;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.life.npc.Npc;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
-import kinoko.world.quest.QuestResult;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -143,14 +139,10 @@ public final class ScriptHandler {
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
                 try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> startQuestResult = user.getQuestManager().startQuest(locked, questId);
-                    if (startQuestResult.isEmpty()) {
+                    if (!user.getQuestManager().startQuest(locked, questId, templateId)) {
                         log.error("Failed to accept quest : {}", questId);
                         user.dispose();
-                        return;
                     }
-                    user.write(WvsContext.message(Message.questRecord(startQuestResult.get())));
-                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
                 }
             }
             case COMPLETE_QUEST -> {
@@ -162,20 +154,11 @@ public final class ScriptHandler {
                 }
                 final int index = inPacket.decodeInt(); // nIdx
                 try (var locked = user.acquire()) {
-                    final Optional<Tuple<QuestRecord, Integer>> completeQuestResult = user.getQuestManager().completeQuest(locked, questId);
-                    if (completeQuestResult.isEmpty()) {
+                    if (!user.getQuestManager().completeQuest(locked, questId, templateId)) {
                         log.error("Failed to complete quest : {}", questId);
                         user.dispose();
-                        return;
                     }
-                    final QuestRecord qr = completeQuestResult.get().getLeft();
-                    final int nextQuest = completeQuestResult.get().getRight();
-                    user.write(WvsContext.message(Message.questRecord(qr)));
-                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
                 }
-                // Quest complete effect
-                user.write(UserLocal.effect(Effect.questComplete()));
-                user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
             }
             case RESIGN_QUEST -> {
                 final Optional<QuestRecord> questRecordResult = user.getCharacterData().getQuestManager().resignQuest(questId);

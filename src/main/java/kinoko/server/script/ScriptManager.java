@@ -283,9 +283,7 @@ public final class ScriptManager {
     }
 
     public boolean hasItem(int itemId, int quantity) {
-        try (var locked = user.acquireInventoryManager()) {
-            return locked.get().hasItem(itemId, quantity);
-        }
+        return user.getInventoryManager().hasItem(itemId, quantity);
     }
 
 

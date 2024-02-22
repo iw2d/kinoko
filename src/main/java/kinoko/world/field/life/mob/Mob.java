@@ -6,6 +6,7 @@ import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.mob.MobSkill;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Lockable;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.field.life.Life;
 import kinoko.world.user.User;
@@ -15,10 +16,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public final class Mob extends Life implements ControlledObject {
+public final class Mob extends Life implements ControlledObject, Lockable<Mob> {
+    private final Lock lock = new ReentrantLock();
     private final MobStatManager mobStatManager = new MobStatManager();
-    private final Map<MobSkill, Instant> skillCooltimes = new ConcurrentHashMap<>(); // TODO: use a lock
+    private final Map<MobSkill, Instant> skillCooltimes = new ConcurrentHashMap<>();
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final MobInfo mobInfo;
     private final MobAppearType appearType;
@@ -160,6 +164,16 @@ public final class Mob extends Life implements ControlledObject {
         outPacket.encodeByte(0); // nTeamForMCarnival
         outPacket.encodeInt(0); // nEffectItemID
         outPacket.encodeInt(0); // nPhase
+    }
+
+    @Override
+    public void lock() {
+        lock.lock();
+    }
+
+    @Override
+    public void unlock() {
+        lock.unlock();
     }
 
     public static Mob from(LifeInfo lifeInfo, MobInfo mobInfo) {
