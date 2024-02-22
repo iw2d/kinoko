@@ -24,6 +24,14 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * ScriptManager handles blocking calls in the script (waiting on user input) and manages the lock on the User object,
+ * which should be locked during the execution of the non-blocking script code.
+ * <pre>
+ * Context::eval -> ScriptManager::handleAnswer <-> ScriptManager::handleAnswer -> ScriptManager::dispose
+ *      (lock)                (unlock)        (lock)          (unlock)        (lock)         (unlock)
+ * </pre>
+ */
 public final class ScriptManager {
     private static final Logger log = LogManager.getLogger(ScriptManager.class);
     private final Set<ScriptMessageParam> messageParams = EnumSet.noneOf(ScriptMessageParam.class);
@@ -52,8 +60,12 @@ public final class ScriptManager {
     }
 
     private ScriptAnswer handleAnswer() {
-        this.answerFuture = new CompletableFuture<>();
+        // Unlock user while waiting on answer
+        user.unlock();
+        answerFuture = new CompletableFuture<>();
         final ScriptAnswer answer = answerFuture.join();
+        user.lock();
+        // Handle answer
         if (answer.getAction() == -1 || answer.getAction() == 5) {
             dispose();
         } else if (answer.getAction() == 0 && scriptMemory.isPrevPossible()) {
@@ -203,6 +215,11 @@ public final class ScriptManager {
 
     public void avatarOriented(String effectPath) {
         user.write(UserLocal.effect(Effect.avatarOriented(effectPath)));
+    }
+
+    public void balloonMsg(String text, int width, int duration) {
+        user.write(UserLocal.balloonMsg(text, width, duration));
+        user.dispose();
     }
 
 

@@ -1,4 +1,4 @@
-# Portal to Magic Library - Ellinia (101000000)
+# Portal to Magic Library - Ellinia : Ellinia (101000000)
 
 MAGIC_LIBRARY = 101000003
 

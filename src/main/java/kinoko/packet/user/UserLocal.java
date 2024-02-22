@@ -44,6 +44,15 @@ public final class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket balloonMsg(String text, int width, int duration) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_BALLOON_MSG);
+        outPacket.encodeString(text); // str
+        outPacket.encodeShort(width); // nWidth
+        outPacket.encodeShort(duration); // tTimeout = 1000 * short
+        outPacket.encodeByte(true); // avatar oriented, if false: int, int
+        return outPacket;
+    }
+
     public static OutPacket openUI(UIType type) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_OPEN_UI);
         outPacket.encodeByte(type.getValue());

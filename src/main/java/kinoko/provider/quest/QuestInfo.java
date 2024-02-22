@@ -141,13 +141,14 @@ public final class QuestInfo {
 
     public Optional<QuestRecord> resignQuest(User user) {
         final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
-        if (questRecordResult.isEmpty()) {
+        if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
             return Optional.empty();
         }
-        final QuestRecord qr = questRecordResult.get();
-        if (qr.getState() != QuestState.PERFORM || !user.getQuestManager().removeQuestRecord(qr)) {
+        final Optional<QuestRecord> removeQuestRecordResult = user.getQuestManager().removeQuestRecord(questId);
+        if (removeQuestRecordResult.isEmpty()) {
             return Optional.empty();
         }
+        final QuestRecord qr = removeQuestRecordResult.get();
         qr.setState(QuestState.NONE);
         return Optional.of(qr);
 

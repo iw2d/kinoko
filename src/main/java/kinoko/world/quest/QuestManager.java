@@ -32,8 +32,8 @@ public final class QuestManager {
         questRecords.put(questRecord.getQuestId(), questRecord);
     }
 
-    public boolean removeQuestRecord(QuestRecord questRecord) {
-        return questRecords.remove(questRecord.getQuestId(), questRecord);
+    public Optional<QuestRecord> removeQuestRecord(int questId) {
+        return Optional.ofNullable(questRecords.remove(questId));
     }
 
     public Optional<QuestRecord> getQuestRecord(int questId) {

@@ -119,6 +119,7 @@ public final class ScriptDispatcher {
         executor.submit(() -> {
             try {
                 log.debug("Evaluating script file : {}", scriptFile.getPath());
+                user.lock();
                 context.eval(
                         Source.newBuilder(SCRIPT_LANGUAGE, scriptFile)
                                 .cached(true)
@@ -132,6 +133,8 @@ public final class ScriptDispatcher {
                 }
             } catch (IOException e) {
                 log.error("Error while loading script file : {}", scriptFile.getPath(), e);
+            } finally {
+                user.unlock();
             }
         });
     }

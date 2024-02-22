@@ -1,4 +1,4 @@
-# Portal to Bowman Instructional School - Henesys Park (100000200)
+# Portal to Bowman Instructional School - Henesys : Henesys Park (100000200)
 
 BOWMAN_INSTRUCTIONAL_SCHOOL = 100000201
 
