@@ -13,12 +13,10 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.world.field.Field;
-import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -219,35 +217,27 @@ public final class ScriptManager {
     }
 
     public void setHp(int hp) {
-        try (var locked = user.acquireCharacterStat()) {
-            locked.get().setHp(hp);
-            user.write(WvsContext.statChanged(Stat.HP, hp));
-        }
+        user.getCharacterStat().setHp(hp);
+        user.write(WvsContext.statChanged(Stat.HP, hp));
     }
 
     public void addExp(int exp) {
-        try (var locked = user.acquireCharacterStat()) {
-            final CharacterStat cs = locked.get();
-            final Map<Stat, Object> addExpResult = cs.addExp(exp);
-            if (addExpResult.containsKey(Stat.LEVEL)) {
-                user.write(UserLocal.effect(Effect.levelUp()));
-            }
-            user.write(WvsContext.statChanged(addExpResult));
-            user.write(WvsContext.message(Message.incExp(exp, true, true)));
+        final Map<Stat, Object> addExpResult = user.getCharacterStat().addExp(exp);
+        if (addExpResult.containsKey(Stat.LEVEL)) {
+            user.write(UserLocal.effect(Effect.levelUp()));
         }
+        user.write(WvsContext.statChanged(addExpResult));
+        user.write(WvsContext.message(Message.incExp(exp, true, true)));
     }
 
 
     // INVENTORY METHODS -----------------------------------------------------------------------------------------------
 
     public boolean addMoney(int money) {
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            if (!im.addMoney(money)) {
-                return false;
-            }
-            user.write(WvsContext.message(Message.incMoney(money)));
+        if (!user.getInventoryManager().addMoney(money)) {
+            return false;
         }
+        user.write(WvsContext.message(Message.incMoney(money)));
         return true;
     }
 
@@ -261,20 +251,17 @@ public final class ScriptManager {
             return false;
         }
         final ItemInfo ii = itemInfoResult.get();
-        final Item item = Item.createByInfo(user.getNextItemSn(), ii, Math.min(quantity, ii.getSlotMax()));
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
-            if (addItemResult.isPresent()) {
-                final var iter = addItemResult.get().iterator();
-                while (iter.hasNext()) {
-                    user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
-                }
-                user.write(UserLocal.effect(Effect.gainItem(item)));
-                return true;
-            } else {
-                return false;
+        final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()));
+        final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+        if (addItemResult.isPresent()) {
+            final var iter = addItemResult.get().iterator();
+            while (iter.hasNext()) {
+                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
             }
+            user.write(UserLocal.effect(Effect.gainItem(item)));
+            return true;
+        } else {
+            return false;
         }
     }
 

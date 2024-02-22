@@ -144,22 +144,20 @@ public final class UserHandler {
         final int mp = Short.toUnsignedInt(inPacket.decodeShort()); // nMP
         inPacket.decodeByte(); // nOption
 
-        try (var locked = user.acquireCharacterStat()) {
-            final CharacterStat cs = locked.get();
-            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-            if (hp > 0) {
-                final int newHp = cs.getHp() + hp;
-                cs.setHp(Math.min(newHp, cs.getMaxHp()));
-                statMap.put(Stat.HP, cs.getHp());
-            }
-            if (mp > 0) {
-                final int newMp = cs.getMp() + mp;
-                cs.setMp(Math.min(newMp, cs.getMaxMp()));
-                statMap.put(Stat.MP, cs.getMp());
-            }
-            if (!statMap.isEmpty()) {
-                user.write(WvsContext.statChanged(statMap));
-            }
+        final CharacterStat cs = user.getCharacterStat();
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        if (hp > 0) {
+            final int newHp = cs.getHp() + hp;
+            cs.setHp(Math.min(newHp, cs.getMaxHp()));
+            statMap.put(Stat.HP, cs.getHp());
+        }
+        if (mp > 0) {
+            final int newMp = cs.getMp() + mp;
+            cs.setMp(Math.min(newMp, cs.getMaxMp()));
+            statMap.put(Stat.MP, cs.getMp());
+        }
+        if (!statMap.isEmpty()) {
+            user.write(WvsContext.statChanged(statMap));
         }
     }
 

@@ -2,7 +2,6 @@ package kinoko.provider.quest.check;
 
 import kinoko.provider.quest.QuestMobData;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 import java.util.Collections;
@@ -16,7 +15,7 @@ public final class QuestMobCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(Locked<User> locked) {
+    public boolean check(User user) {
         return false;
     }
 

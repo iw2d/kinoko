@@ -2,15 +2,11 @@ package kinoko.world.field.life.mob;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
-import kinoko.util.Lockable;
 import kinoko.util.Tuple;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public final class MobStatManager implements Lockable<MobStatManager> {
-    private final Lock lock = new ReentrantLock();
+public final class MobStatManager {
     private final Map<MobStat, MobStatOption> stats = new EnumMap<>(MobStat.class);
     private final Map<Tuple<Integer, Integer>, BurnedInfo> burnedInfos = new HashMap<>(); // characterId, skillId -> BurnedInfo
     private final Set<Tuple<Integer, Integer>> resetBurnedInfos = new HashSet<>(); // characterId, skillId
@@ -65,15 +61,5 @@ public final class MobStatManager implements Lockable<MobStatManager> {
                 outPacket.encodeInt(entry.getRight()); // nSkillID
             }
         }
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

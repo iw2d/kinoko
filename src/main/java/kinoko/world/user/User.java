@@ -8,7 +8,6 @@ import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
-import kinoko.util.Locked;
 import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
@@ -18,8 +17,11 @@ import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class User extends Life implements Lockable<User> {
+    private final Lock lock = new ReentrantLock();
     private final Client client;
     private final CharacterData characterData;
     private final CalcDamage calcDamage;
@@ -62,32 +64,16 @@ public final class User extends Life implements Lockable<User> {
         return characterData;
     }
 
-    public Locked<CharacterData> acquireCharacterData() {
-        return characterData.acquire();
-    }
-
     public CharacterStat getCharacterStat() {
         return characterData.getCharacterStat();
-    }
-
-    public Locked<CharacterStat> acquireCharacterStat() {
-        return characterData.getCharacterStat().acquire();
     }
 
     public TemporaryStatManager getTemporaryStatManager() {
         return characterData.getTemporaryStatManager();
     }
 
-    public Locked<TemporaryStatManager> acquireTemporaryStatManager() {
-        return characterData.getTemporaryStatManager().acquire();
-    }
-
     public InventoryManager getInventoryManager() {
         return characterData.getInventoryManager();
-    }
-
-    public Locked<InventoryManager> acquireInventoryManager() {
-        return characterData.getInventoryManager().acquire();
     }
 
     public QuestManager getQuestManager() {
@@ -147,11 +133,11 @@ public final class User extends Life implements Lockable<User> {
 
     @Override
     public void lock() {
-        characterData.lock();
+        lock.lock();
     }
 
     @Override
     public void unlock() {
-        characterData.unlock();
+        lock.unlock();
     }
 }

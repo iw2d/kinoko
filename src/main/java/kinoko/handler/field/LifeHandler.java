@@ -142,7 +142,6 @@ public final class LifeHandler {
             }
         }
 
-
         // update mob position and write response
         final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
         movePath.applyTo(mob);
@@ -172,6 +171,9 @@ public final class LifeHandler {
         }
 
         final MovePath movePath = npc.isMove() ? MovePath.decode(inPacket) : null;
+        if (movePath != null) {
+            movePath.applyTo(npc);
+        }
         field.broadcastPacket(NpcPacket.move(npc, oneTimeAction, chatIndex, movePath));
     }
 }

@@ -2,7 +2,6 @@ package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
-import kinoko.util.Lockable;
 import kinoko.world.Encodable;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
@@ -22,11 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public final class CharacterData implements Encodable, Lockable<CharacterData> {
-    private final Lock lock = new ReentrantLock();
+public final class CharacterData implements Encodable {
     private final int accountId;
     private CharacterStat characterStat;
     private TemporaryStatManager temporaryStatManager;
@@ -314,19 +310,5 @@ public final class CharacterData implements Encodable, Lockable<CharacterData> {
     @Override
     public void encode(OutPacket outPacket) {
         encodeCharacterData(DBChar.ALL, outPacket);
-    }
-
-    @Override
-    public void lock() {
-        characterStat.lock();
-        inventoryManager.lock();
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
-        inventoryManager.unlock();
-        characterStat.unlock();
     }
 }

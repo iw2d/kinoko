@@ -43,48 +43,46 @@ public final class InventoryHandler {
         final short newPos = inPacket.decodeShort(); // nNewPos
         final short count = inPacket.decodeShort(); // nCount
 
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            final Inventory inventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, oldPos));
-            final Item item = inventory.getItem(oldPos);
-            if (item == null) {
-                log.error("Could not find item in {} inventory, position {}", inventoryType.name(), oldPos);
-                return;
-            }
-            if (newPos == 0) {
-                // CDraggableItem::ThrowItem
-                if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
-                        item.getQuantity() > count) {
-                    // Update item count
-                    item.setQuantity((short) (item.getQuantity() - count));
-                    user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, oldPos, item.getQuantity()), true));
-                    // Create partial item
-                    final Item partialItem = new Item(item);
-                    partialItem.setItemSn(user.getNextItemSn());
-                    partialItem.setQuantity(count);
-                    // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, partialItem, 0);
-                    user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
-                } else {
-                    // Full drop
-                    if (!inventory.removeItem(oldPos, item)) {
-                        log.error("Failed to remove item in {} inventory, position {}", inventoryType.name(), oldPos);
-                        return;
-                    }
-                    // Remove item from client inventory
-                    user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
-                    // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
-                    user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
-                }
+        final InventoryManager im = user.getInventoryManager();
+        final Inventory inventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, oldPos));
+        final Item item = inventory.getItem(oldPos);
+        if (item == null) {
+            log.error("Could not find item in {} inventory, position {}", inventoryType.name(), oldPos);
+            return;
+        }
+        if (newPos == 0) {
+            // CDraggableItem::ThrowItem
+            if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
+                    item.getQuantity() > count) {
+                // Update item count
+                item.setQuantity((short) (item.getQuantity() - count));
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, oldPos, item.getQuantity()), true));
+                // Create partial item
+                final Item partialItem = new Item(item);
+                partialItem.setItemSn(user.getNextItemSn());
+                partialItem.setQuantity(count);
+                // Create drop
+                final Drop drop = Drop.item(DropOwnType.NO_OWN, user, partialItem, 0);
+                user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
             } else {
-                final Inventory secondInventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, newPos));
-                final Item secondItem = secondInventory.getItem(newPos);
-                inventory.putItem(oldPos, secondItem);
-                secondInventory.putItem(newPos, item);
-                // Swap item position in client inventory
-                user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
+                // Full drop
+                if (!inventory.removeItem(oldPos, item)) {
+                    log.error("Failed to remove item in {} inventory, position {}", inventoryType.name(), oldPos);
+                    return;
+                }
+                // Remove item from client inventory
+                user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
+                // Create drop
+                final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
+                user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
             }
+        } else {
+            final Inventory secondInventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, newPos));
+            final Item secondItem = secondInventory.getItem(newPos);
+            inventory.putItem(oldPos, secondItem);
+            secondInventory.putItem(newPos, item);
+            // Swap item position in client inventory
+            user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
         }
     }
 
@@ -93,14 +91,11 @@ public final class InventoryHandler {
         inPacket.decodeInt(); // update_time
         final int money = inPacket.decodeInt(); // nAmount
 
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            if (money <= 0 || !im.addMoney(-money)) {
-                user.dispose();
-                return;
-            }
-            final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, 0);
-            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+        if (money <= 0 || !user.getInventoryManager().addMoney(-money)) {
+            user.dispose();
+            return;
         }
+        final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, 0);
+        user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
     }
 }

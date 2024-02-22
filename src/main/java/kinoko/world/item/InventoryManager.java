@@ -2,16 +2,12 @@ package kinoko.world.item;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
-import kinoko.util.Lockable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public final class InventoryManager implements Lockable<InventoryManager> {
-    private final Lock lock = new ReentrantLock();
+public final class InventoryManager {
     private Inventory equipped;
     private Inventory equipInventory;
     private Inventory consumeInventory;
@@ -245,15 +241,5 @@ public final class InventoryManager implements Lockable<InventoryManager> {
                 }
             }
         }
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

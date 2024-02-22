@@ -5,7 +5,9 @@ import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.packet.stage.LoginType;
 import kinoko.provider.EtcProvider;
+import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
@@ -225,7 +227,7 @@ public final class LoginHandler {
         final TemporaryStatManager tsm = new TemporaryStatManager();
         characterData.setTemporaryStatManager(tsm);
 
-        // Initialize Inventory and Add Starting Equips
+        // Initialize inventory and add starting equips
         final InventoryManager im = new InventoryManager();
         im.setEquipped(new Inventory(Short.MAX_VALUE));
         im.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
@@ -252,13 +254,17 @@ public final class LoginHandler {
                 bodyPart = BodyPart.WEAPON;
             }
             if (!ItemConstants.isCorrectBodyPart(itemId, bodyPart, gender)) {
+                log.error("Incorrect body part {} for item {}", bodyPart.name(), itemId);
                 continue;
             }
-            final Optional<Item> startingEquip = Item.createById(characterData.getNextItemSn(), itemId);
-            if (startingEquip.isEmpty()) {
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+            if (itemInfoResult.isEmpty()) {
+                log.error("Failed to resolve item {}", itemId);
                 continue;
             }
-            im.getEquipped().putItem(bodyPart.getValue(), startingEquip.get());
+            final ItemInfo ii = itemInfoResult.get();
+            final Item item = ii.createItem(characterData.getNextItemSn());
+            im.getEquipped().putItem(bodyPart.getValue(), item);
         }
 
         // Initialize Skills

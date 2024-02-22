@@ -5,9 +5,14 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.quest.act.*;
 import kinoko.provider.quest.check.*;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Tuple;
+import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
+import kinoko.world.user.User;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public final class QuestInfo {
@@ -79,6 +84,73 @@ public final class QuestInfo {
                 "completeActs=" + completeActs + ", " +
                 "startChecks=" + startChecks + ", " +
                 "completeChecks=" + completeChecks + ']';
+    }
+
+    public Optional<QuestRecord> startQuest(User user) {
+        // Check that the quest can be started
+        for (QuestCheck startCheck : getStartChecks()) {
+            if (!startCheck.check(user)) {
+                return Optional.empty();
+            }
+        }
+        for (QuestAct startAct : getStartActs()) {
+            if (!startAct.canAct(user)) {
+                return Optional.empty();
+            }
+        }
+
+        // Perform start acts
+        for (QuestAct startAct : getStartActs()) {
+            if (!startAct.doAct(user)) {
+                throw new IllegalStateException("Failed to perform quest start act");
+            }
+        }
+
+        return Optional.of(user.getQuestManager().forceStartQuest(questId));
+    }
+
+    public Optional<Tuple<QuestRecord, Integer>> completeQuest(User user) {
+        // Check that the quest has been started
+        if (!user.getQuestManager().hasQuestStarted(questId)) {
+            return Optional.empty();
+        }
+
+        // Check that the quest can be completed
+        for (QuestCheck completeCheck : getCompleteChecks()) {
+            if (!completeCheck.check(user)) {
+                return Optional.empty();
+            }
+        }
+        for (QuestAct completeAct : getCompleteActs()) {
+            if (!completeAct.canAct(user)) {
+                return Optional.empty();
+            }
+        }
+
+        // Perform complete acts
+        for (QuestAct completeAct : getCompleteActs()) {
+            if (!completeAct.doAct(user)) {
+                throw new IllegalStateException("Failed to perform quest complete act");
+            }
+        }
+
+        // Mark as completed and update client
+        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
+        return Optional.of(new Tuple<>(qr, getNextQuest()));
+    }
+
+    public Optional<QuestRecord> resignQuest(User user) {
+        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+        if (questRecordResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final QuestRecord qr = questRecordResult.get();
+        if (qr.getState() != QuestState.PERFORM || !user.getQuestManager().removeQuestRecord(qr)) {
+            return Optional.empty();
+        }
+        qr.setState(QuestState.NONE);
+        return Optional.of(qr);
+
     }
 
     public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) throws ProviderError {

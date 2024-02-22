@@ -41,9 +41,11 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
             log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
             try {
                 if (handler.getParameterTypes()[0] == Client.class) {
-                    handler.invoke(this, client, inPacket);
+                    handler.invoke(this, client, inPacket); // invoke without synchronization on user object
                 } else if (handler.getParameterTypes()[0] == User.class) {
-                    handler.invoke(this, client.getUser(), inPacket);
+                    try (var locked = client.getUser().acquire()) {
+                        handler.invoke(this, client.getUser(), inPacket);
+                    }
                 } else {
                     throw new IllegalStateException("Handler with incorrect parameter types.");
                 }

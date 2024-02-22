@@ -1,7 +1,6 @@
 package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Lockable;
 import kinoko.util.Util;
 import kinoko.world.Encodable;
 import kinoko.world.GameConstants;
@@ -9,11 +8,8 @@ import kinoko.world.job.JobConstants;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public final class CharacterStat implements Encodable, Lockable<CharacterStat> {
-    private final Lock lock = new ReentrantLock();
+public final class CharacterStat implements Encodable {
     private int id;
     private String name;
     private byte gender;
@@ -301,15 +297,5 @@ public final class CharacterStat implements Encodable, Lockable<CharacterStat> {
         outPacket.encodeByte(portal); // nPortal
         outPacket.encodeInt(0); // nPlayTime
         outPacket.encodeShort(subJob); // nSubJob
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

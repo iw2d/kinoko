@@ -2,7 +2,6 @@ package kinoko.provider.quest.act;
 
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
-import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 public final class QuestMoneyAct implements QuestAct {
@@ -13,15 +12,13 @@ public final class QuestMoneyAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean canAct(User user) {
         final long newMoney = ((long) user.getInventoryManager().getMoney()) + money;
         return newMoney <= Integer.MAX_VALUE && newMoney >= 0;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean doAct(User user) {
         if (!user.getInventoryManager().addMoney(money)) {
             return false;
         }

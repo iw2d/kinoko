@@ -7,7 +7,10 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.world.item.*;
+import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryOperation;
+import kinoko.world.item.InventoryType;
+import kinoko.world.item.Item;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
@@ -40,48 +43,43 @@ public final class ItemHandler {
         }
 
         // Consume item
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            final Inventory inventory = im.getInventoryByType(inventoryType);
-            final Item item = inventory.getItem(position);
-            if (item == null || item.getItemId() != itemId) {
+        final Inventory inventory = user.getInventoryManager().getInventoryByType(inventoryType);
+        final Item item = inventory.getItem(position);
+        if (item == null || item.getItemId() != itemId) {
+            user.dispose();
+            return;
+        }
+        item.setQuantity((short) (item.getQuantity() - 1));
+        if (item.getQuantity() > 0) {
+            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()), true));
+        } else {
+            if (!inventory.removeItem(position, item)) {
                 user.dispose();
                 return;
             }
-            item.setQuantity((short) (item.getQuantity() - 1));
-            if (item.getQuantity() > 0) {
-                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()), true));
-            } else {
-                if (!inventory.removeItem(position, item)) {
-                    user.dispose();
-                    return;
-                }
-                user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, position), true));
-            }
+            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, position), true));
         }
 
         // Apply stat change
-        try (var locked = user.acquireCharacterStat()) {
-            final CharacterStat cs = locked.get();
-            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-            for (var entry : ii.getItemSpecs().entrySet()) {
-                switch (entry.getKey()) {
-                    case hp -> {
-                        final int newHp = cs.getHp() + ii.getSpec(ItemSpecType.hp);
-                        cs.setHp(Math.min(newHp, cs.getMaxHp()));
-                        statMap.put(Stat.HP, cs.getHp());
-                    }
-                    case mp -> {
-                        final int newMp = cs.getMp() + ii.getSpec(ItemSpecType.mp);
-                        cs.setMp(Math.min(newMp, cs.getMaxMp()));
-                        statMap.put(Stat.MP, cs.getMp());
-                    }
-                    default -> {
-                        log.error("Unhandled item spec type : {}", entry.getKey().name());
-                    }
+        final CharacterStat cs = user.getCharacterStat();
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        for (var entry : ii.getItemSpecs().entrySet()) {
+            switch (entry.getKey()) {
+                case hp -> {
+                    final int newHp = cs.getHp() + ii.getSpec(ItemSpecType.hp);
+                    cs.setHp(Math.min(newHp, cs.getMaxHp()));
+                    statMap.put(Stat.HP, cs.getHp());
+                }
+                case mp -> {
+                    final int newMp = cs.getMp() + ii.getSpec(ItemSpecType.mp);
+                    cs.setMp(Math.min(newMp, cs.getMaxMp()));
+                    statMap.put(Stat.MP, cs.getMp());
+                }
+                default -> {
+                    log.error("Unhandled item spec type : {}", entry.getKey().name());
                 }
             }
-            user.write(WvsContext.statChanged(statMap));
         }
+        user.write(WvsContext.statChanged(statMap));
     }
 }

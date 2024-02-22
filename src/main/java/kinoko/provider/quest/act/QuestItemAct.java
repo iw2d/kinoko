@@ -3,9 +3,10 @@ package kinoko.provider.quest.act;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryOperation;
@@ -24,8 +25,7 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean canAct(User user) {
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
 
         // Handle required slots for random items
@@ -65,8 +65,7 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean doAct(User user) {
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
 
         // Take required items
@@ -88,11 +87,12 @@ public final class QuestItemAct implements QuestAct {
             if (itemData.isRandom() || itemData.getCount() <= 0) {
                 continue;
             }
-            final Optional<Item> itemResult = Item.createById(user.getNextItemSn(), itemData.getItemId(), itemData.getCount());
-            if (itemResult.isEmpty()) {
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
+            if (itemInfoResult.isEmpty()) {
                 return false;
             }
-            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(itemResult.get());
+            final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), itemData.getCount());
+            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
             if (addItemResult.isEmpty()) {
                 return false;
             }
@@ -100,7 +100,7 @@ public final class QuestItemAct implements QuestAct {
             while (iter.hasNext()) {
                 user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
             }
-            user.write(UserLocal.effect(Effect.gainItem(itemResult.get())));
+            user.write(UserLocal.effect(Effect.gainItem(item)));
         }
 
         // Give random item
@@ -109,11 +109,13 @@ public final class QuestItemAct implements QuestAct {
                 .collect(Collectors.toUnmodifiableSet());
         final Optional<QuestItemData> randomResult = Util.getRandomFromCollection(randomItems, QuestItemData::getProp);
         if (randomResult.isPresent()) {
-            final Optional<Item> itemResult = Item.createById(user.getNextItemSn(), randomResult.get().getItemId(), randomResult.get().getCount());
-            if (itemResult.isEmpty()) {
+            final QuestItemData itemData = randomResult.get();
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
+            if (itemInfoResult.isEmpty()) {
                 return false;
             }
-            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(itemResult.get());
+            final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), itemData.getCount());
+            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
             if (addItemResult.isEmpty()) {
                 return false;
             }
@@ -121,7 +123,7 @@ public final class QuestItemAct implements QuestAct {
             while (iter.hasNext()) {
                 user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
             }
-            user.write(UserLocal.effect(Effect.gainItem(itemResult.get())));
+            user.write(UserLocal.effect(Effect.gainItem(item)));
         }
 
         return true;

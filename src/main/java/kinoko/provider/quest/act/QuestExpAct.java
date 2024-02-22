@@ -4,7 +4,6 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
-import kinoko.util.Locked;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 
@@ -18,13 +17,12 @@ public final class QuestExpAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
+    public boolean canAct(User user) {
         return true;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean doAct(User user) {
         final Map<Stat, Object> addExpResult = user.getCharacterStat().addExp(exp);
         if (addExpResult.containsKey(Stat.LEVEL)) {
             user.write(UserLocal.effect(Effect.levelUp()));

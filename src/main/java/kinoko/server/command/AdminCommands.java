@@ -130,19 +130,18 @@ public final class AdminCommands {
             return;
         }
         final ItemInfo ii = itemInfoResult.get();
-        final Item item = Item.createByInfo(user.getNextItemSn(), ii, Math.min(quantity, ii.getSlotMax()));
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
-            if (addItemResult.isPresent()) {
-                final var iter = addItemResult.get().iterator();
-                while (iter.hasNext()) {
-                    user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
-                }
-                user.write(UserLocal.effect(Effect.gainItem(item)));
-            } else {
-                user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
+        final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()));
+
+        // Add item
+        final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+        if (addItemResult.isPresent()) {
+            final var iter = addItemResult.get().iterator();
+            while (iter.hasNext()) {
+                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
             }
+            user.write(UserLocal.effect(Effect.gainItem(item)));
+        } else {
+            user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
         }
     }
 
@@ -153,14 +152,12 @@ public final class AdminCommands {
             return;
         }
         final int money = Integer.parseInt(args[1]);
-        try (var locked = user.acquireInventoryManager()) {
-            final InventoryManager im = locked.get();
-            if (im.addMoney(money)) {
-                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
-                user.write(WvsContext.message(Message.incMoney(money)));
-            } else {
-                user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
-            }
+        final InventoryManager im = user.getInventoryManager();
+        if (im.addMoney(money)) {
+            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+            user.write(WvsContext.message(Message.incMoney(money)));
+        } else {
+            user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
         }
     }
 }

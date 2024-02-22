@@ -2,7 +2,6 @@ package kinoko.provider.quest.check;
 
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 import java.util.Collections;
@@ -17,8 +16,7 @@ public final class QuestItemCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean check(User user) {
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
         for (QuestItemData itemData : filteredItems) {
             if (!user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount())) {

@@ -2,7 +2,6 @@ package kinoko.provider.quest.check;
 
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 import java.util.Collections;
@@ -17,9 +16,9 @@ public final class QuestJobCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(Locked<User> locked) {
-        final int job = locked.get().getCharacterStat().getJob();
-        return jobs.contains(job);
+    public boolean check(User user) {
+        final int jobId = user.getCharacterStat().getJob();
+        return jobs.contains(jobId);
     }
 
     public static QuestJobCheck from(WzListProperty jobList) {

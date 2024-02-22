@@ -4,7 +4,10 @@ import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.world.GameConstants;
+import kinoko.world.item.EquipData;
+import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
+import kinoko.world.item.PetData;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -62,6 +65,25 @@ public final class ItemInfo {
 
     public boolean isTradeBlock() {
         return getInfo(ItemInfoType.tradBlock) != 0 || getInfo(ItemInfoType.tradeBlock) != 0;
+    }
+
+    public Item createItem(long itemSn) {
+        return createItem(itemSn, 1);
+    }
+
+    public Item createItem(long itemSn, int quantity) {
+        final ItemType type = ItemType.getByItemId(itemId);
+        final Item item = new Item(type);
+        item.setItemSn(itemSn);
+        item.setItemId(itemId);
+        item.setCash(isCash());
+        item.setQuantity((short) quantity);
+        if (type == ItemType.EQUIP) {
+            item.setEquipData(EquipData.from(this));
+        } else if (type == ItemType.PET) {
+            item.setPetData(PetData.from(this));
+        }
+        return item;
     }
 
     @Override

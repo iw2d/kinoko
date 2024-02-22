@@ -1,12 +1,9 @@
 package kinoko.world.item;
 
-import kinoko.provider.ItemProvider;
-import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 
 import java.time.Instant;
-import java.util.Optional;
 
 public final class Item implements Encodable {
     private final ItemType itemType;
@@ -145,33 +142,5 @@ public final class Item implements Encodable {
 
     public void setPetData(PetData petData) {
         this.petData = petData;
-    }
-
-    public static Optional<Item> createById(long itemSn, int itemId) {
-        return createById(itemSn, itemId, 1);
-    }
-
-    public static Optional<Item> createById(long itemSn, int itemId, int quantity) {
-        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
-        if (itemInfoResult.isEmpty()) {
-            return Optional.empty();
-        }
-        final Item item = createByInfo(itemSn, itemInfoResult.get(), quantity);
-        return Optional.of(item);
-    }
-
-    public static Item createByInfo(long itemSn, ItemInfo ii, int quantity) {
-        final ItemType type = ItemType.getByItemId(ii.getItemId());
-        final Item item = new Item(type);
-        item.setItemSn(itemSn);
-        item.setItemId(ii.getItemId());
-        item.setCash(ii.isCash());
-        item.setQuantity((short) quantity);
-        if (type == ItemType.EQUIP) {
-            item.setEquipData(EquipData.from(ii));
-        } else if (type == ItemType.PET) {
-            item.setPetData(PetData.from(ii));
-        }
-        return item;
     }
 }
