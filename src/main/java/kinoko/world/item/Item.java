@@ -143,4 +143,29 @@ public final class Item implements Encodable {
     public void setPetData(PetData petData) {
         this.petData = petData;
     }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public boolean hasAttribute(ItemAttribute itemAttribute) {
+        return (attribute & itemAttribute.getValue()) != 0;
+    }
+
+    public void addAttribute(ItemAttribute itemAttribute) {
+        this.attribute |= itemAttribute.getValue();
+    }
+
+    public void removeAttribute(ItemAttribute itemAttribute) {
+        if (hasAttribute(itemAttribute)) {
+            this.attribute ^= itemAttribute.getValue();
+        }
+    }
+
+    public boolean isPossibleTrading() {
+        return switch (itemType) {
+            case EQUIP -> hasAttribute(ItemAttribute.EQUIP_POSSIBLE_TRADING);
+            case BUNDLE -> hasAttribute(ItemAttribute.BUNDLE_POSSIBLE_TRADING);
+            case PET -> hasAttribute(ItemAttribute.PET_POSSIBLE_TRADING);
+        };
+    }
 }

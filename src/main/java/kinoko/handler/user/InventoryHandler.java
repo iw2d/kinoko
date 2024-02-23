@@ -2,6 +2,8 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
@@ -10,8 +12,11 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.item.*;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public final class InventoryHandler {
     private static final Logger log = LogManager.getLogger(InventoryHandler.class);
@@ -52,7 +57,13 @@ public final class InventoryHandler {
                 return;
             }
             if (newPos == 0) {
-                // CDraggableItem::ThrowItem
+                // CDraggableItem::ThrowItem : item is deleted if (quest || tradeBlock) && POSSIBLE_TRADING attribute not set
+                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+                final boolean isQuest = itemInfoResult.map(ItemInfo::isQuest).orElse(false);
+                final boolean isTradeBlock = itemInfoResult.map(ItemInfo::isTradeBlock).orElse(false);
+                final DropEnterType dropEnterType = ((isQuest || isTradeBlock) && !item.isPossibleTrading()) ?
+                        DropEnterType.FADING_OUT :
+                        DropEnterType.CREATE;
                 if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
                         item.getQuantity() > count) {
                     // Update item count
@@ -64,7 +75,7 @@ public final class InventoryHandler {
                     partialItem.setQuantity(count);
                     // Create drop
                     final Drop drop = Drop.item(DropOwnType.NO_OWN, user, partialItem, 0);
-                    user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
                 } else {
                     // Full drop
                     if (!inventory.removeItem(oldPos, item)) {
@@ -74,8 +85,8 @@ public final class InventoryHandler {
                     // Remove item from client inventory
                     user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
                     // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
-                    user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, user.getCharacterId());
+                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
                 }
             } else {
                 final Inventory secondInventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, newPos));
@@ -97,8 +108,9 @@ public final class InventoryHandler {
                 user.dispose();
                 return;
             }
-            final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, 0);
+            final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, user.getCharacterId());
             user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+            user.write(WvsContext.statChanged(Stat.MONEY, user.getInventoryManager().getMoney()));
         }
     }
 }

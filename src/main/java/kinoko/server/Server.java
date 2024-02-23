@@ -6,6 +6,7 @@ import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.crypto.MapleCrypto;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.Account;
 import kinoko.world.World;
@@ -148,10 +149,9 @@ public final class Server {
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Load Commands
+        // Load Server classes
         CommandProcessor.initialize();
-
-        // Load Script Dispatcher
+        EventScheduler.initialize();
         ScriptDispatcher.initialize();
 
         // Load World

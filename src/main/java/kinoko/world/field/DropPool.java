@@ -2,11 +2,14 @@ package kinoko.world.field;
 
 import kinoko.packet.field.DropPacket;
 import kinoko.provider.map.Foothold;
+import kinoko.server.event.EventScheduler;
+import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public final class DropPool extends FieldObjectPool<Drop> {
     public DropPool(Field field) {
@@ -25,7 +28,14 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
         lock.lock();
         try {
-            addObjectUnsafe(drop);
+            if (enterType != DropEnterType.FADING_OUT) {
+                addObjectUnsafe(drop);
+                EventScheduler.addEvent(
+                        () -> removeDrop(drop, DropLeaveType.TIMEOUT, 0, 0),
+                        GameConstants.DROP_REMAIN_ON_GROUND_TIME,
+                        TimeUnit.SECONDS
+                );
+            }
             field.broadcastPacket(DropPacket.dropEnterField(drop, enterType));
         } finally {
             lock.unlock();

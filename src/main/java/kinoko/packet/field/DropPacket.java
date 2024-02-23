@@ -19,7 +19,7 @@ public final class DropPacket {
         outPacket.encodeByte(drop.getOwnType().getValue()); // DROP->nOwnType
         outPacket.encodeShort(drop.getX());
         outPacket.encodeShort(drop.getY());
-        outPacket.encodeInt(drop.getSource().getId()); // DROP->dwSourceID
+        outPacket.encodeInt(drop.isUserDrop() ? 0 : drop.getSource().getId()); // DROP->dwSourceID (object id)
         if (enterType != DropEnterType.ON_THE_FOOTHOLD) {
             outPacket.encodeShort(drop.getSource().getX()); // source x
             outPacket.encodeShort(drop.getSource().getY()); // source y

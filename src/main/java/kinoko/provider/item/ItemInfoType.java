@@ -18,6 +18,7 @@ public enum ItemInfoType {
     tradeAvailable,
     equipTradeBlock,
     scanTradeBlock,
+    accountSharable,
     timeLimited,
     noExpend,
     notExtend,
