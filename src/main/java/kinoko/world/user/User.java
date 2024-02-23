@@ -94,7 +94,7 @@ public final class User extends Life implements Lockable<User> {
         getCharacterStat().setPosMap(destination.getFieldId());
         getCharacterStat().setPortal((byte) portal.getPortalId());
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
-        destination.getUserPool().addUser(this);
+        destination.addUser(this);
     }
 
     public void write(OutPacket outPacket) {

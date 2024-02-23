@@ -8,12 +8,13 @@ import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.QuestProvider;
+import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.server.script.NpcScriptManager;
 import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
-import kinoko.server.script.ScriptManager;
 import kinoko.util.Tuple;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.life.npc.Npc;
@@ -56,12 +57,12 @@ public final class ScriptHandler {
 
         final ScriptMessageType lastMessageType = ScriptMessageType.getByValue(type);
 
-        final Optional<ScriptManager> scriptManagerResult = ScriptDispatcher.getScriptManager(user);
+        final Optional<NpcScriptManager> scriptManagerResult = ScriptDispatcher.getNpcScriptManager(user);
         if (scriptManagerResult.isEmpty()) {
             log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getCharacterId());
             return;
         }
-        final ScriptManager scriptManager = scriptManagerResult.get();
+        final NpcScriptManager scriptManager = scriptManagerResult.get();
         switch (lastMessageType) {
             case SAY, SAY_IMAGE, ASK_YES_NO, ASK_ACCEPT -> {
                 scriptManager.submitAnswer(ScriptAnswer.withAction(action));
@@ -106,11 +107,15 @@ public final class ScriptHandler {
             user.dispose();
             return;
         }
-        final String scriptName = inPacket.decodeString(); // sName
+        final String portalName = inPacket.decodeString(); // sName
         final short x = inPacket.decodeShort(); // GetPos()->x
         final short y = inPacket.decodeShort(); // GetPos()->y
-
-        ScriptDispatcher.startPortalScript(user, scriptName);
+        final Optional<PortalInfo> portalResult = user.getField().getPortalByName(portalName);
+        if (portalResult.isEmpty() || portalResult.get().getScript() == null) {
+            user.dispose();
+            return;
+        }
+        ScriptDispatcher.startPortalScript(user, portalResult.get().getScript());
     }
 
     @Handler(InHeader.USER_QUEST_REQUEST)

@@ -58,6 +58,12 @@ public final class Util {
         return Optional.empty();
     }
 
+    public static double distance(int x1, int y1, int x2, int y2) {
+        final int dx = x1 - x2;
+        final int dy = y1 - y2;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     public static boolean isInteger(String string) {
         return string != null && string.matches("^-?\\d+$");
     }

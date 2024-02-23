@@ -10,10 +10,10 @@ public enum ItemInfoType {
     slotMax,
     durability,
     only,
-    tradBlock, // (sic)
+    tradBlock, // [sic]
     dropBlock,
     tradeBlock,
-    tragetBlock, // (sic)
+    tragetBlock, // [sic]
     pickUpBlock,
     tradeAvailable,
     equipTradeBlock,

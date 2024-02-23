@@ -96,8 +96,16 @@ public final class MapInfo {
         return mobRate;
     }
 
+    public boolean hasOnFirstUserEnter() {
+        return onFirstUserEnter != null && !onFirstUserEnter.isEmpty();
+    }
+
     public String getOnFirstUserEnter() {
         return onFirstUserEnter;
+    }
+
+    public boolean hasOnUserEnter() {
+        return onUserEnter != null && !onUserEnter.isEmpty();
     }
 
     public String getOnUserEnter() {

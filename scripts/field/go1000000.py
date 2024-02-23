@@ -1,0 +1,1 @@
+sm.screenEffect("maplemap/enter/1000000")

@@ -1,4 +1,4 @@
-# Maple Road : Mushroom Park (10000)
+# Maple Administrator (2007)
 
 LITH_HARBOR = 104000000
 

@@ -66,6 +66,20 @@ public final class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket hireTutor(boolean hire) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_HIRE_TUTOR);
+        outPacket.encodeByte(hire);
+        return outPacket;
+    }
+
+    public static OutPacket tutorMsg(int index, int duration) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_TUTOR_MSG);
+        outPacket.encodeByte(true); // false -> str, int, int
+        outPacket.encodeInt(index); // nIdx
+        outPacket.encodeInt(duration); // nDuration
+        return outPacket;
+    }
+
     public static OutPacket incCombo(int combo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.INC_COMBO);
         outPacket.encodeInt(combo); // nCombo

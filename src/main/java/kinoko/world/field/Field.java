@@ -6,17 +6,20 @@ import kinoko.provider.map.*;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.field.life.mob.Mob;
 import kinoko.world.field.life.npc.Npc;
 import kinoko.world.user.User;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Field {
     private static final AtomicInteger fieldKeyCounter = new AtomicInteger(1);
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
+    private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
     private final UserPool userPool = new UserPool(this);
     private final LifePool lifePool = new LifePool(this);
     private final DropPool dropPool = new DropPool(this);
@@ -92,6 +95,19 @@ public final class Field {
             }
             user.write(outPacket);
         });
+    }
+
+    public void addUser(User user) {
+        userPool.addUser(user);
+        // Execute field enter scripts
+        if (mapInfo.hasOnFirstUserEnter()) {
+            if (firstEnterScript.compareAndSet(false, true)) {
+                ScriptDispatcher.startFirstUserEnterScript(user, mapInfo.getOnFirstUserEnter());
+            }
+        }
+        if (mapInfo.hasOnUserEnter()) {
+            ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
+        }
     }
 
     public static Field from(MapInfo mapInfo) {

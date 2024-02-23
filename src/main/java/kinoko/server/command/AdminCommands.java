@@ -4,14 +4,14 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
-import kinoko.provider.ItemProvider;
-import kinoko.provider.MobProvider;
-import kinoko.provider.NpcProvider;
+import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
+import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.npc.NpcInfo;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
@@ -24,10 +24,15 @@ import kinoko.world.item.Item;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public final class AdminCommands {
+    @Command("test")
+    public static void test(User user, String[] args) {
+        user.write(UserLocal.effect(Effect.avatarOriented(args[1])));
+        user.dispose();
+    }
+
     @Command("dispose")
     public static void dispose(User user, String[] args) {
         ScriptDispatcher.removeScriptManager(user);
@@ -37,9 +42,199 @@ public final class AdminCommands {
 
     @Command("info")
     public static void info(User user, String[] args) {
-        user.write(WvsContext.message(Message.system("Field ID : %d", user.getField().getFieldId())));
-        user.write(WvsContext.message(Message.system("x : %d, y : %d, fh : %d (%d)", user.getX(), user.getY(), user.getFoothold(),
-                user.getField().getFootholdBelow(user.getX(), user.getY()).get().getFootholdId())));
+        final Field field = user.getField();
+        user.write(WvsContext.message(Message.system("Field ID : %d", field.getFieldId())));
+        // Compute foothold below
+        final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
+        final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getFootholdId())).orElse("unk");
+        user.write(WvsContext.message(Message.system("  x : %d, y : %d, fh : %d (%s)", user.getX(), user.getY(), user.getFoothold(), footholdBelow)));
+        // Compute nearest portal
+        double nearestDistance = Double.MAX_VALUE;
+        PortalInfo nearestPortal = null;
+        for (PortalInfo pi : field.getMapInfo().getPortalInfos()) {
+            final double distance = Util.distance(user.getX(), user.getY(), pi.getX(), pi.getY());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestPortal = pi;
+            }
+        }
+        if (nearestPortal != null && nearestDistance < 100) {
+            user.write(WvsContext.message(Message.system("Portal name : %s (%d)", nearestPortal.getPortalName(), nearestPortal.getPortalId())));
+            user.write(WvsContext.message(Message.system("  x : %d, y : %d, script : %s",
+                    nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript())));
+        }
+    }
+
+    @Command({ "find", "lookup" })
+    public static void find(User user, String[] args) {
+        if (args.length < 3) {
+            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill> <id or query>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final String type = args[1];
+        final String query = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+        final boolean isNumber = Util.isInteger(query);
+        if (type.equalsIgnoreCase("item")) {
+            int itemId = -1;
+            if (isNumber) {
+                itemId = Integer.parseInt(query);
+            } else {
+                final List<Map.Entry<Integer, String>> searchResult = StringProvider.getItemNames().entrySet().stream()
+                        .filter((entry) -> entry.getValue().toLowerCase().contains(query.toLowerCase()))
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                        .toList();
+                if (!searchResult.isEmpty()) {
+                    if (searchResult.size() == 1) {
+                        itemId = searchResult.get(0).getKey();
+                    } else {
+                        user.write(WvsContext.message(Message.system("Results for item name : \"%s\"", query)));
+                        for (var entry : searchResult) {
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                        }
+                        return;
+                    }
+                }
+            }
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+            if (itemInfoResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("Could not find item with %s : %s", isNumber ? "ID" : "name", query)));
+                return;
+            }
+            final ItemInfo ii = itemInfoResult.get();
+            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getItemName(itemId), itemId)));
+            if (!ii.getItemInfos().isEmpty()) {
+                user.write(WvsContext.message(Message.system("  info")));
+                for (var entry : ii.getItemInfos().entrySet()) {
+                    user.write(WvsContext.message(Message.system("    %s : %s", entry.getKey().name(), entry.getValue().toString())));
+                }
+            }
+            if (!ii.getItemSpecs().isEmpty()) {
+                user.write(WvsContext.message(Message.system("  spec")));
+                for (var entry : ii.getItemSpecs().entrySet()) {
+                    user.write(WvsContext.message(Message.system("    %s : %s", entry.getKey().name(), entry.getValue().toString())));
+                }
+            }
+        } else if (type.equalsIgnoreCase("map")) {
+            int mapId = -1;
+            if (isNumber) {
+                mapId = Integer.parseInt(query);
+            } else {
+                final List<Map.Entry<Integer, String>> searchResult = StringProvider.getMapNames().entrySet().stream()
+                        .filter((entry) -> entry.getValue().toLowerCase().contains(query.toLowerCase()))
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                        .toList();
+                if (!searchResult.isEmpty()) {
+                    if (searchResult.size() == 1) {
+                        mapId = searchResult.get(0).getKey();
+                    } else {
+                        user.write(WvsContext.message(Message.system("Results for map name : \"%s\"", query)));
+                        for (var entry : searchResult) {
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                        }
+                        return;
+                    }
+                }
+            }
+            final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
+            if (mapInfoResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("Could not find map with %s : %s", isNumber ? "ID" : "name", query)));
+                return;
+            }
+            final MapInfo mapInfo = mapInfoResult.get();
+            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getMapName(mapId), mapId)));
+            user.write(WvsContext.message(Message.system("  type : %s", mapInfo.getFieldType().name())));
+            user.write(WvsContext.message(Message.system("  returnMap : %d", mapInfo.getReturnMap())));
+            user.write(WvsContext.message(Message.system("  onFirstUserEnter : %s", mapInfo.getOnFirstUserEnter())));
+            user.write(WvsContext.message(Message.system("  onUserEnter : %s", mapInfo.getOnUserEnter())));
+        } else if (type.equalsIgnoreCase("mob")) {
+            int mobId = -1;
+            if (isNumber) {
+                mobId = Integer.parseInt(query);
+            } else {
+                final List<Map.Entry<Integer, String>> searchResult = StringProvider.getMobNames().entrySet().stream()
+                        .filter((entry) -> entry.getValue().toLowerCase().contains(query.toLowerCase()))
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                        .toList();
+                if (!searchResult.isEmpty()) {
+                    if (searchResult.size() == 1) {
+                        mobId = searchResult.get(0).getKey();
+                    } else {
+                        user.write(WvsContext.message(Message.system("Results for mob name : \"%s\"", query)));
+                        for (var entry : searchResult) {
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                        }
+                        return;
+                    }
+                }
+            }
+            final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(mobId);
+            if (mobInfoResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("Could not find mob with %s : %s", isNumber ? "ID" : "name", query)));
+                return;
+            }
+            final MobInfo mobInfo = mobInfoResult.get();
+            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getMobName(mobId), mobId)));
+            user.write(WvsContext.message(Message.system("  level : %d", mobInfo.getLevel())));
+        } else if (type.equalsIgnoreCase("npc")) {
+            int npcId = -1;
+            if (isNumber) {
+                npcId = Integer.parseInt(query);
+            } else {
+                final List<Map.Entry<Integer, String>> searchResult = StringProvider.getNpcNames().entrySet().stream()
+                        .filter((entry) -> entry.getValue().toLowerCase().contains(query.toLowerCase()))
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                        .toList();
+                if (!searchResult.isEmpty()) {
+                    if (searchResult.size() == 1) {
+                        npcId = searchResult.get(0).getKey();
+                    } else {
+                        user.write(WvsContext.message(Message.system("Results for npc name : \"%s\"", query)));
+                        for (var entry : searchResult) {
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                        }
+                        return;
+                    }
+                }
+            }
+            final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(npcId);
+            if (npcInfoResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("Could not find npc with %s : %s", isNumber ? "ID" : "name", query)));
+                return;
+            }
+            final NpcInfo npcInfo = npcInfoResult.get();
+            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getNpcName(npcId), npcId)));
+            user.write(WvsContext.message(Message.system("  script : %s", npcInfo.getScript())));
+        } else if (type.equalsIgnoreCase("skill")) {
+            int skillId = -1;
+            if (isNumber) {
+                skillId = Integer.parseInt(query);
+            } else {
+                final List<Map.Entry<Integer, String>> searchResult = StringProvider.getNpcNames().entrySet().stream()
+                        .filter((entry) -> entry.getValue().toLowerCase().contains(query.toLowerCase()))
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                        .toList();
+                if (!searchResult.isEmpty()) {
+                    if (searchResult.size() == 1) {
+                        skillId = searchResult.get(0).getKey();
+                    } else {
+                        user.write(WvsContext.message(Message.system("Results for skill name : \"%s\"", query)));
+                        for (var entry : searchResult) {
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                        }
+                        return;
+                    }
+                }
+            }
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+            if (skillInfoResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("Could not find skill with %s : %s", isNumber ? "ID" : "name", query)));
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getSkillName(skillId), skillId)));
+        } else {
+            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill> <id or query>", ServerConfig.COMMAND_PREFIX)));
+        }
     }
 
     @Command("npc")
