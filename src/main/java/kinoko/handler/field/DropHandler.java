@@ -77,10 +77,7 @@ public final class DropHandler {
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
                 if (addItemResult.isPresent()) {
-                    final var iter = addItemResult.get().iterator();
-                    while (iter.hasNext()) {
-                        user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
-                    }
+                    user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
                     user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
                 }
             }

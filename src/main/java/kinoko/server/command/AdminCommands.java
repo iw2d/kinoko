@@ -135,10 +135,7 @@ public final class AdminCommands {
         // Add item
         final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
         if (addItemResult.isPresent()) {
-            final var iter = addItemResult.get().iterator();
-            while (iter.hasNext()) {
-                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
-            }
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
             user.write(UserLocal.effect(Effect.gainItem(item)));
         } else {
             user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));

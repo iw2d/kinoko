@@ -68,8 +68,6 @@ public final class InventoryOperation implements Encodable {
                 outPacket.encodeInt(item.getEquipData().getExp()); // pEquip.p->SetEXP
             }
         }
-        outPacket.encodeByte(inventoryType == InventoryType.EQUIP &&
-                (position < 0 || newPosition < 0)); // bool -> CWvsContext::CheckEquipOnAutoStartQuest
     }
 
     public static InventoryOperation newItem(InventoryType inventoryType, int position, Item item) {

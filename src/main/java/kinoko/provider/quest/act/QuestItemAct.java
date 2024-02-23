@@ -96,10 +96,7 @@ public final class QuestItemAct implements QuestAct {
             if (addItemResult.isEmpty()) {
                 return false;
             }
-            final var iter = addItemResult.get().iterator();
-            while (iter.hasNext()) {
-                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
-            }
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
             user.write(UserLocal.effect(Effect.gainItem(item)));
         }
 
@@ -119,10 +116,7 @@ public final class QuestItemAct implements QuestAct {
             if (addItemResult.isEmpty()) {
                 return false;
             }
-            final var iter = addItemResult.get().iterator();
-            while (iter.hasNext()) {
-                user.write(WvsContext.inventoryOperation(iter.next(), !iter.hasNext()));
-            }
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
             user.write(UserLocal.effect(Effect.gainItem(item)));
         }
 

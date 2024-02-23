@@ -4,6 +4,7 @@ import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.item.InventoryOperation;
+import kinoko.world.item.InventoryType;
 import kinoko.world.user.stat.ExtendSP;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.TemporaryStatManager;
@@ -84,6 +85,21 @@ public final class WvsContext {
         for (InventoryOperation op : inventoryOperations) {
             op.encode(outPacket);
         }
+        outPacket.encodeByte(0); // bSN
+        return outPacket;
+    }
+
+    public static OutPacket gatherItemResult(InventoryType inventoryType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.GATHER_ITEM_RESULT);
+        outPacket.encodeByte(0); // ignored
+        outPacket.encodeByte(inventoryType.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket sortItemResult(InventoryType inventoryType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SORT_ITEM_RESULT);
+        outPacket.encodeByte(0); // ignored
+        outPacket.encodeByte(inventoryType.getValue());
         return outPacket;
     }
 }
