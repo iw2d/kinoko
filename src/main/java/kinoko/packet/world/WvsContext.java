@@ -5,7 +5,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
-import kinoko.world.user.stat.ExtendSP;
+import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
@@ -38,7 +38,7 @@ public final class WvsContext {
                         outPacket.encodeLong((long) statMap.get(stat));
                     }
                     case SP -> {
-                        if (statMap.get(stat) instanceof ExtendSP sp) {
+                        if (statMap.get(stat) instanceof ExtendSp sp) {
                             sp.encode(outPacket);
                         } else {
                             outPacket.encodeShort((short) statMap.get(stat));

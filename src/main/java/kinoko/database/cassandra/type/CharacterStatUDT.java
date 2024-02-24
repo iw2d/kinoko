@@ -53,7 +53,7 @@ public final class CharacterStatUDT {
                         .withField(MP, DataTypes.INT)
                         .withField(MAX_MP, DataTypes.INT)
                         .withField(AP, DataTypes.SMALLINT)
-                        .withField(SP, DataTypes.frozenListOf(DataTypes.INT))
+                        .withField(SP, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.INT))
                         .withField(EXP, DataTypes.INT)
                         .withField(POP, DataTypes.SMALLINT)
                         .withField(POS_MAP, DataTypes.INT)

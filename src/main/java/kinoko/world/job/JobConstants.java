@@ -34,6 +34,10 @@ public final class JobConstants {
         return jobId / 10 == 43;
     }
 
+    public static boolean isCygnusJob(int jobId) {
+        return jobId / 1000 == 1;
+    }
+
     public static boolean isResistance(int jobId) {
         return jobId / 1000 == 3;
     }

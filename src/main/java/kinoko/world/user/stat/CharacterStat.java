@@ -28,7 +28,7 @@ public final class CharacterStat implements Encodable {
     private int mp;
     private int maxMp;
     private short ap;
-    private ExtendSP sp;
+    private ExtendSp sp;
     private int exp;
     private short pop;
     private int posMap;
@@ -178,11 +178,11 @@ public final class CharacterStat implements Encodable {
         this.ap = ap;
     }
 
-    public ExtendSP getSp() {
+    public ExtendSp getSp() {
         return sp;
     }
 
-    public void setSp(ExtendSP sp) {
+    public void setSp(ExtendSp sp) {
         this.sp = sp;
     }
 
@@ -218,6 +218,9 @@ public final class CharacterStat implements Encodable {
         this.portal = portal;
     }
 
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
     public Map<Stat, Object> addExp(int delta) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
         if (getLevel() >= GameConstants.MAX_LEVEL) {
@@ -234,27 +237,44 @@ public final class CharacterStat implements Encodable {
     }
 
     public Map<Stat, Object> levelUp() {
-        if (getLevel() >= GameConstants.MAX_LEVEL) {
-            return Map.of();
-        }
-        // Compute and update stats
-        final int newMaxHp = getMaxHp() + StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
-        final int newMaxMp = getMaxMp() + StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
-        setLevel((short) Math.min(getLevel() + 1, GameConstants.MAX_LEVEL));
-        setMaxHp(Math.min(newMaxHp, GameConstants.MAX_HP));
-        setMaxMp(Math.min(newMaxMp, GameConstants.MAX_MP));
-        setAp((short) (getAp() + StatConstants.getIncAp(getJob())));
-        getSp().addSp(getJob(), StatConstants.getIncSp(getJob()));
-        // Populate stat change map
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        if (getLevel() >= GameConstants.MAX_LEVEL) {
+            return statMap;
+        }
+        // Update level
+        setLevel((short) (getLevel() + 1));
         statMap.put(Stat.LEVEL, (byte) getLevel());
+        // Update max hp
+        final int incHp = StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
+        setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.MAX_HP));
         statMap.put(Stat.MAX_HP, getMaxHp());
+        // Update max mp
+        final int incMp = StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
+        setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MAX_MP));
         statMap.put(Stat.MAX_MP, getMaxMp());
-        statMap.put(Stat.AP, getAp());
-        if (JobConstants.isExtendSpJob(job)) {
+        // Update ap (auto distribution for beginners)
+        if (JobConstants.isBeginnerJob(getJob()) && getLevel() <= 11) {
+            if (getLevel() <= 6) {
+                setBaseStr((short) (getBaseStr() + 5));
+                statMap.put(Stat.STR, getBaseStr());
+            } else {
+                setBaseStr((short) (getBaseStr() + 4));
+                statMap.put(Stat.STR, getBaseStr());
+                setBaseDex((short) (getBaseDex() + 4));
+                statMap.put(Stat.DEX, getBaseDex());
+            }
+        } else {
+            setAp((short) (getAp() + StatConstants.getIncAp(getJob())));
+            statMap.put(Stat.AP, getAp());
+        }
+        // Update sp
+        if (JobConstants.isExtendSpJob(getJob())) {
+            final int jobLevel = JobConstants.getJobLevel(getJob());
+            getSp().addSp(jobLevel, StatConstants.getIncSp(getJob(), getLevel()));
             statMap.put(Stat.SP, getSp());
         } else {
-            statMap.put(Stat.SP, (short) getSp().getTotal());
+            getSp().addNonExtendSp(StatConstants.getIncSp(getJob(), getLevel()));
+            statMap.put(Stat.SP, (short) getSp().getNonExtendSp());
         }
         return statMap;
     }
@@ -287,7 +307,7 @@ public final class CharacterStat implements Encodable {
         if (JobConstants.isExtendSpJob(job)) {
             sp.encode(outPacket);
         } else {
-            outPacket.encodeShort(sp.getTotal());
+            outPacket.encodeShort((short) sp.getNonExtendSp());
         }
 
         outPacket.encodeInt(exp); // nEXP

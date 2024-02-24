@@ -26,13 +26,13 @@ import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.ExtendSP;
+import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.StatConstants;
 import kinoko.world.user.temp.TemporaryStatManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -217,7 +217,7 @@ public final class LoginHandler {
         cs.setMp(mp);
         cs.setMaxMp(mp);
         cs.setAp((short) 0);
-        cs.setSp(ExtendSP.from(List.of(0)));
+        cs.setSp(ExtendSp.from(Map.of()));
         cs.setExp(0);
         cs.setPop((short) 0);
         cs.setPosMap(10000);

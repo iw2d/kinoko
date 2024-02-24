@@ -196,13 +196,14 @@ public final class InventoryHandler {
         inPacket.decodeInt(); // update_time
         final int money = inPacket.decodeInt(); // nAmount
         try (var locked = user.acquire()) {
-            if (money <= 0 || !user.getInventoryManager().addMoney(-money)) {
+            final InventoryManager im = user.getInventoryManager();
+            if (money <= 0 || !im.addMoney(-money)) {
                 user.dispose();
                 return;
             }
             final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, user.getCharacterId());
             user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
-            user.write(WvsContext.statChanged(Stat.MONEY, user.getInventoryManager().getMoney()));
+            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
         }
     }
 }

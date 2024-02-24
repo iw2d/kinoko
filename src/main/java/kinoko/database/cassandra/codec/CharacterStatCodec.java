@@ -9,7 +9,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.CharacterStatUDT;
 import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.ExtendSP;
+import kinoko.world.user.stat.ExtendSp;
 
 public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterStat> {
     public CharacterStatCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<CharacterStat> outerJavaType) {
@@ -45,7 +45,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
         cs.setMp(value.getInt(CharacterStatUDT.MP));
         cs.setMaxMp(value.getInt(CharacterStatUDT.MAX_MP));
         cs.setAp(value.getShort(CharacterStatUDT.AP));
-        cs.setSp(ExtendSP.from(value.getList(CharacterStatUDT.SP, Integer.class)));
+        cs.setSp(ExtendSp.from(value.getMap(CharacterStatUDT.SP, Integer.class, Integer.class)));
         cs.setExp(value.getInt(CharacterStatUDT.EXP));
         cs.setPop(value.getShort(CharacterStatUDT.POP));
         cs.setPosMap(value.getInt(CharacterStatUDT.POS_MAP));
@@ -76,7 +76,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
                 .setInt(CharacterStatUDT.MP, cs.getMp())
                 .setInt(CharacterStatUDT.MAX_MP, cs.getMaxMp())
                 .setShort(CharacterStatUDT.AP, cs.getAp())
-                .setList(CharacterStatUDT.SP, cs.getSp().getList(), Integer.class)
+                .setMap(CharacterStatUDT.SP, cs.getSp().getMap(), Integer.class, Integer.class)
                 .setInt(CharacterStatUDT.EXP, cs.getExp())
                 .setShort(CharacterStatUDT.POP, cs.getPop())
                 .setInt(CharacterStatUDT.POS_MAP, cs.getPosMap())

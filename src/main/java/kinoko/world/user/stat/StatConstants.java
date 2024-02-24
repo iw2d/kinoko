@@ -8,10 +8,70 @@ public class StatConstants {
     public static final int INC_MP_VARIANCE = 2; // 4 for pirates?
 
     public static int getIncAp(int jobId) {
+        if (JobConstants.isCygnusJob(jobId)) {
+            return 6;
+        }
         return 5;
     }
 
-    public static int getIncSp(int jobId) {
+    public static int getIncSp(int jobId, int newLevel) {
+        // Beginner SP is not distributed (level-based)
+        if (JobConstants.isBeginnerJob(jobId)) {
+            return 0;
+        }
+        // ExtendSP Jobs (resistance, evan)
+        if (JobConstants.isResistance(jobId)) {
+            switch (JobConstants.getJobLevel(jobId)) {
+                case 1 -> {
+                    return newLevel <= 30 ? 3 : 0;
+                }
+                case 2 -> {
+                    return newLevel <= 70 ? 3 : 0;
+                }
+                case 3 -> {
+                    return newLevel <= 120 ? 3 : 0;
+                }
+                default -> {
+                    return 3;
+                }
+            }
+        }
+        if (JobConstants.isEvanJob(jobId)) {
+            // is_jobchange_level_in_evan
+            switch (JobConstants.getJobLevel(jobId)) {
+                case 1 -> {
+                    return newLevel <= 20 ? 3 : 0;
+                }
+                case 2 -> {
+                    return newLevel <= 30 ? 3 : 0;
+                }
+                case 3 -> {
+                    return newLevel <= 40 ? 3 : 0;
+                }
+                case 4 -> {
+                    return newLevel <= 50 ? 3 : 0;
+                }
+                case 5 -> {
+                    return newLevel <= 60 ? 3 : 0;
+                }
+                case 6 -> {
+                    return newLevel <= 80 ? 3 : 0;
+                }
+                case 7 -> {
+                    return newLevel <= 100 ? 3 : 0;
+                }
+                case 8 -> {
+                    return newLevel <= 120 ? 3 : 0;
+                }
+                case 9 -> {
+                    return newLevel <= 160 ? 3 : 0;
+                }
+                default -> {
+                    return 3;
+                }
+            }
+        }
+        // Default SP gain
         return 3;
     }
 
@@ -260,5 +320,4 @@ public class StatConstants {
             }
         }
     }
-
 }

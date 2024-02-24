@@ -2,44 +2,43 @@ package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
-import kinoko.world.job.JobConstants;
 
-import java.util.List;
+import java.util.Map;
 
-public final class ExtendSP implements Encodable {
-    private final List<Integer> list;
+public final class ExtendSp implements Encodable {
+    public static final int DEFAULT_JOB_LEVEL = 0; // for non-ExtendSp jobs
+    private final Map<Integer, Integer> map; // nJobLevel -> nSP
 
-    public ExtendSP(List<Integer> list) {
-        this.list = list;
+    public ExtendSp(Map<Integer, Integer> map) {
+        this.map = map;
     }
 
-    public List<Integer> getList() {
-        return list;
+    public Map<Integer, Integer> getMap() {
+        return map;
     }
 
-    public int getTotal() {
-        return list.stream().mapToInt(Integer::intValue).sum();
+    public int getNonExtendSp() {
+        return map.getOrDefault(DEFAULT_JOB_LEVEL, 0);
     }
 
-    public void addSp(short jobId, int incSp) {
-        final int jobLevel = JobConstants.getJobLevel(jobId);
-        while (list.size() < jobLevel) {
-            list.add(0);
-        }
-        final int i = jobLevel - 1;
-        list.set(i, list.get(i) + incSp);
+    public void addNonExtendSp(int sp) {
+        addSp(DEFAULT_JOB_LEVEL, sp);
+    }
+
+    public void addSp(int jobLevel, int sp) {
+        map.put(jobLevel, map.getOrDefault(jobLevel, 0) + sp);
     }
 
     @Override
     public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(list.size());
-        for (int i = 0; i < list.size(); i++) {
-            outPacket.encodeByte(i + 1); // nJobLevel
-            outPacket.encodeByte(list.get(i)); // nSP
+        outPacket.encodeByte(map.size());
+        for (var entry : map.entrySet()) {
+            outPacket.encodeByte(entry.getKey()); // nJobLevel
+            outPacket.encodeByte(entry.getValue()); // nSP
         }
     }
 
-    public static ExtendSP from(List<Integer> list) {
-        return new ExtendSP(list);
+    public static ExtendSp from(Map<Integer, Integer> map) {
+        return new ExtendSp(map);
     }
 }
