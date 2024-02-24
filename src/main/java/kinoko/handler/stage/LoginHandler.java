@@ -273,7 +273,7 @@ public final class LoginHandler {
             if (skillInfo.isInvisible()) {
                 continue;
             }
-            sm.addSkill(skillInfo);
+            sm.addSkill(skillInfo.createRecord());
         }
         characterData.setSkillManager(sm);
 

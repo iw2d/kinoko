@@ -131,7 +131,7 @@ public final class InventoryManager {
             if (existingItem.getItemId() != itemId) {
                 continue;
             }
-            final int newQuantity = Math.max(0, existingItem.getQuantity() - quantity);
+            final int newQuantity = Math.max(existingItem.getQuantity() - quantity, 0);
             if (newQuantity > 0) {
                 inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, entry.getKey(), newQuantity));
             } else {
@@ -181,7 +181,7 @@ public final class InventoryManager {
                 if (existingItem.getQuantity() >= ii.getSlotMax()) {
                     continue;
                 }
-                final int newQuantity = Math.min(ii.getSlotMax(), existingItem.getQuantity() + item.getQuantity());
+                final int newQuantity = Math.min(existingItem.getQuantity() + item.getQuantity(), ii.getSlotMax());
                 final int delta = newQuantity - existingItem.getQuantity();
                 // Create item number operation for existing item and reduce item quantity
                 inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, entry.getKey(), newQuantity));

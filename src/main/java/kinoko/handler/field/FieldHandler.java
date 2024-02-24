@@ -3,6 +3,7 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
@@ -13,6 +14,8 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,38 +34,52 @@ public final class FieldHandler {
         final int targetField = inPacket.decodeInt(); // dwTargetField
         final String portalName = inPacket.decodeString(); // sPortal
         if (!portalName.isEmpty()) {
-            final short x = inPacket.decodeShort();
-            final short y = inPacket.decodeShort();
+            inPacket.decodeShort();
+            inPacket.decodeShort();
         }
         inPacket.decodeByte(); // 0
         inPacket.decodeByte(); // bPremium
         inPacket.decodeByte(); // bChase -> int, int
 
-        final Field currentField = user.getField();
-        final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
-        if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
-            log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
-            user.dispose();
-            return;
-        }
-
-        // Move User to Field
-        final int nextFieldId = portalResult.get().getDestinationFieldId();
-        final String nextPortalName = portalResult.get().getDestinationPortalName();
-        final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(nextFieldId);
-        if (nextFieldResult.isEmpty()) {
-            user.write(FieldPacket.transferFieldReqIgnored(2));
-            return;
-        }
-        final Field nextField = nextFieldResult.get();
-        final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(nextPortalName);
-        if (nextPortalResult.isEmpty()) {
-            log.error("Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
-            user.dispose();
-            return;
-        }
         try (var locked = user.acquire()) {
-            user.warp(nextField, nextPortalResult.get(), false, false);
+            final boolean isRevive = portalName.isEmpty() && user.getCharacterStat().getHp() == 0;
+            final int nextFieldId;
+            final String nextPortalName;
+            if (isRevive) {
+                // Handle revive
+                final CharacterStat cs = user.getCharacterStat();
+                cs.setHp(50);
+                user.write(WvsContext.statChanged(Stat.HP, cs.getHp()));
+                nextFieldId = user.getField().getReturnMap();
+                nextPortalName = "sp"; // spawn point
+            } else {
+                // Handle portal name
+                final Field currentField = user.getField();
+                final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
+                if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
+                    log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
+                    user.dispose();
+                    return;
+                }
+                final PortalInfo portal = portalResult.get();
+                nextFieldId = portal.getDestinationFieldId();
+                nextPortalName = portal.getDestinationPortalName();
+            }
+
+            // Move User to Field
+            final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(nextFieldId);
+            if (nextFieldResult.isEmpty()) {
+                user.write(FieldPacket.transferFieldReqIgnored(2));
+                return;
+            }
+            final Field nextField = nextFieldResult.get();
+            final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(nextPortalName);
+            if (nextPortalResult.isEmpty()) {
+                log.error("Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
+                user.dispose();
+                return;
+            }
+            user.warp(nextField, nextPortalResult.get(), false, isRevive);
         }
     }
 

@@ -102,6 +102,10 @@ public final class Field {
         return mapInfo.getFootholdBelow(x, y);
     }
 
+    public int getReturnMap() {
+        return mapInfo.getReturnMap();
+    }
+
     public int getNewObjectId() {
         return fieldObjectCounter.getAndIncrement();
     }

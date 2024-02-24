@@ -10,13 +10,19 @@ import kinoko.world.field.Field;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.life.mob.Mob;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 public final class SkillProcessor {
     public static void processAttack(User user, Attack attack) {
-        // TODO skill handling
+        // Set skill level
+        if (attack.skillId != 0) {
+            attack.skillId = user.getSkillManager().getSkillLevel(attack.skillId);
+        }
+        // Process attack damage
         final Field field = user.getField();
         for (AttackInfo ai : attack.getAttackInfo()) {
             final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
@@ -66,6 +72,12 @@ public final class SkillProcessor {
 
     public static void processHit(User user, HitInfo hitInfo) {
         // TODO skill handling
+        hitInfo.damage = Math.max(hitInfo.damage, 0);
+        // Process hit damage
+        final CharacterStat cs = user.getCharacterStat();
+        final int newHp = Math.max(cs.getHp() - hitInfo.damage, 0);
+        cs.setHp(newHp);
+        user.write(WvsContext.statChanged(Stat.HP, newHp));
         user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
     }
 }

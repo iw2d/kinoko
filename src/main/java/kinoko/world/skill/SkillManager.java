@@ -1,7 +1,5 @@
 package kinoko.world.skill;
 
-import kinoko.provider.skill.SkillInfo;
-
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +20,11 @@ public final class SkillManager {
         skillRecords.put(skillRecord.getSkillId(), skillRecord);
     }
 
-    public void addSkill(SkillInfo skillInfo) {
-        final SkillRecord skillRecord = new SkillRecord(skillInfo.getId());
-        skillRecord.setSkillLevel(0);
-        skillRecord.setMasterLevel(skillInfo.getMaxLevel());
-        addSkill(skillRecord);
+    public int getSkillLevel(int skillId) {
+        final SkillRecord skillRecord = skillRecords.get(skillId);
+        if (skillRecord == null) {
+            return 0;
+        }
+        return skillRecord.getSkillLevel();
     }
 }
