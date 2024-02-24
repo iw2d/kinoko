@@ -10,8 +10,6 @@ import kinoko.world.field.Field;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.life.mob.Mob;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.Stat;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -74,10 +72,9 @@ public final class SkillProcessor {
         // TODO skill handling
         hitInfo.damage = Math.max(hitInfo.damage, 0);
         // Process hit damage
-        final CharacterStat cs = user.getCharacterStat();
-        final int newHp = Math.max(cs.getHp() - hitInfo.damage, 0);
-        cs.setHp(newHp);
-        user.write(WvsContext.statChanged(Stat.HP, newHp));
+        if (hitInfo.damage > 0) {
+            user.addHp(-hitInfo.damage);
+        }
         user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
     }
 }

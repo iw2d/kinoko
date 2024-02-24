@@ -96,6 +96,40 @@ public final class User extends Life implements Lockable<User> {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
+    public int getHp() {
+        return getCharacterStat().getHp();
+    }
+
+    public void setHp(int hp) {
+        getCharacterStat().setHp(Math.max(Math.min(hp, getMaxHp()), 0));
+        write(WvsContext.statChanged(Stat.HP, getHp()));
+    }
+
+    public void addHp(int hp) {
+        setHp(getHp() + hp);
+    }
+
+    public int getMp() {
+        return getCharacterStat().getMp();
+    }
+
+    public void setMp(int mp) {
+        getCharacterStat().setMp(Math.max(Math.min(mp, getMaxMp()), 0));
+        write(WvsContext.statChanged(Stat.MP, getMp()));
+    }
+
+    public void addMp(int mp) {
+        setMp(getMp() + mp);
+    }
+
+    public int getMaxHp() {
+        return getCharacterStat().getMaxHp();
+    }
+
+    public int getMaxMp() {
+        return getCharacterStat().getMaxMp();
+    }
+
     public void addExp(int exp) {
         final Map<Stat, Object> addExpResult = getCharacterStat().addExp(exp);
         if (addExpResult.containsKey(Stat.LEVEL)) {

@@ -25,8 +25,6 @@ import kinoko.world.item.Item;
 import kinoko.world.item.PetData;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.stat.CharacterStat;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +34,6 @@ public final class DatabaseManager {
     public static final InetSocketAddress DATABASE_ADDRESS = new InetSocketAddress("127.0.0.1", 9042);
     public static final String DATABASE_DATACENTER = "datacenter1";
     public static final String DATABASE_KEYSPACE = "kinoko";
-    private static final Logger log = LogManager.getLogger(DatabaseManager.class);
     private static CqlSession cqlSession;
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;

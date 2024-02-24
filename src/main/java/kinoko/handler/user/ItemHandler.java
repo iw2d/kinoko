@@ -12,13 +12,9 @@ import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
 
 public final class ItemHandler {
@@ -62,26 +58,19 @@ public final class ItemHandler {
             }
 
             // Apply stat change
-            final CharacterStat cs = user.getCharacterStat();
-            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
             for (var entry : ii.getItemSpecs().entrySet()) {
                 switch (entry.getKey()) {
                     case hp -> {
-                        final int newHp = cs.getHp() + ii.getSpec(ItemSpecType.hp);
-                        cs.setHp(Math.min(newHp, cs.getMaxHp()));
-                        statMap.put(Stat.HP, cs.getHp());
+                        user.addHp(ii.getSpec(ItemSpecType.hp));
                     }
                     case mp -> {
-                        final int newMp = cs.getMp() + ii.getSpec(ItemSpecType.mp);
-                        cs.setMp(Math.min(newMp, cs.getMaxMp()));
-                        statMap.put(Stat.MP, cs.getMp());
+                        user.addMp(ii.getSpec(ItemSpecType.mp));
                     }
                     default -> {
                         log.error("Unhandled item spec type : {}", entry.getKey().name());
                     }
                 }
             }
-            user.write(WvsContext.statChanged(statMap));
         }
     }
 }

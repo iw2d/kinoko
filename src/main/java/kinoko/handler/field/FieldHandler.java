@@ -14,7 +14,6 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,14 +41,13 @@ public final class FieldHandler {
         inPacket.decodeByte(); // bChase -> int, int
 
         try (var locked = user.acquire()) {
-            final boolean isRevive = portalName.isEmpty() && user.getCharacterStat().getHp() == 0;
+            final boolean isRevive = portalName.isEmpty() && user.getHp() == 0;
             final int nextFieldId;
             final String nextPortalName;
             if (isRevive) {
                 // Handle revive
-                final CharacterStat cs = user.getCharacterStat();
-                cs.setHp(50);
-                user.write(WvsContext.statChanged(Stat.HP, cs.getHp()));
+                user.setHp(50);
+                user.write(WvsContext.statChanged(Stat.HP, user.getHp()));
                 nextFieldId = user.getField().getReturnMap();
                 nextPortalName = "sp"; // spawn point
             } else {

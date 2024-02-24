@@ -14,7 +14,6 @@ import kinoko.world.field.Field;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -104,12 +103,11 @@ public abstract class ScriptManager {
     }
 
     public final int getHp() {
-        return user.getCharacterStat().getHp();
+        return user.getHp();
     }
 
     public final void setHp(int hp) {
-        user.getCharacterStat().setHp(hp);
-        user.write(WvsContext.statChanged(Stat.HP, hp));
+        user.setHp(hp);
     }
 
     public final void addExp(int exp) {

@@ -5,7 +5,6 @@ import kinoko.packet.user.ChatType;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
-import kinoko.packet.world.WvsContext;
 import kinoko.server.ServerConfig;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
@@ -15,13 +14,8 @@ import kinoko.world.skill.HitInfo;
 import kinoko.world.skill.HitType;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 public final class UserHandler {
     private static final Logger log = LogManager.getLogger(UserHandler.class);
@@ -142,20 +136,11 @@ public final class UserHandler {
         inPacket.decodeByte(); // nOption
 
         try (var locked = user.acquire()) {
-            final CharacterStat cs = user.getCharacterStat();
-            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
             if (hp > 0) {
-                final int newHp = cs.getHp() + hp;
-                cs.setHp(Math.min(newHp, cs.getMaxHp()));
-                statMap.put(Stat.HP, cs.getHp());
+                user.addHp(hp);
             }
             if (mp > 0) {
-                final int newMp = cs.getMp() + mp;
-                cs.setMp(Math.min(newMp, cs.getMaxMp()));
-                statMap.put(Stat.MP, cs.getMp());
-            }
-            if (!statMap.isEmpty()) {
-                user.write(WvsContext.statChanged(statMap));
+                user.addMp(mp);
             }
         }
     }
