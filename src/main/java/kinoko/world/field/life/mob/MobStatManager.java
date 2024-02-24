@@ -13,6 +13,14 @@ public final class MobStatManager {
     private final BitFlag<MobStat> setStatFlag = new BitFlag<>(MobStat.FLAG_SIZE);
     private final BitFlag<MobStat> resetStatFlag = new BitFlag<>(MobStat.FLAG_SIZE);
 
+    public void clear() {
+        stats.clear();
+        burnedInfos.clear();
+        resetBurnedInfos.clear();
+        setStatFlag.clear();
+        resetStatFlag.clear();
+    }
+
     public void encode(OutPacket outPacket, boolean complete) {
         final BitFlag<MobStat> statFlag = complete ? BitFlag.from(stats.keySet(), MobStat.FLAG_SIZE) : setStatFlag;
 

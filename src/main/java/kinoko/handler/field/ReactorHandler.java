@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class ReactorHandler {
-    private static final Logger log = LogManager.getLogger(LifeHandler.class);
+    private static final Logger log = LogManager.getLogger(MobHandler.class);
 
     @Handler(InHeader.REACTOR_HIT)
     public static void handleReactorHit(User user, InPacket inPacket) {

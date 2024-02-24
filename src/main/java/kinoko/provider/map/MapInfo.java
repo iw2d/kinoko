@@ -150,11 +150,18 @@ public final class MapInfo {
                 .findFirst();
     }
 
-    public Optional<PortalInfo> getPortalByName(String name) {
+    public Optional<PortalInfo> getPortalByName(String portalName) {
         return portalInfos.stream()
-                .filter(pi -> pi.getPortalName().equals(name))
+                .filter(pi -> pi.getPortalName().equals(portalName))
                 .findFirst();
     }
+
+    public Optional<Foothold> getFootholdById(int footholdId) {
+        return footholds.stream()
+                .filter(fh -> fh.getFootholdId() == footholdId)
+                .findFirst();
+    }
+
 
     public Optional<Foothold> getFootholdBelow(int x, int y) {
         final FootholdNode.SearchResult result = new FootholdNode.SearchResult();

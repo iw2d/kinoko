@@ -3,12 +3,12 @@ package kinoko.world.skill;
 import kinoko.provider.skill.SkillInfo;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class SkillManager {
-    private final Map<Integer, SkillRecord> skillRecords = new ConcurrentHashMap<>();
-    private final Map<Integer, Instant> skillCooltimes = new ConcurrentHashMap<>();
+    private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
+    private final Map<Integer, Instant> skillCooltimes = new HashMap<>();
 
     public Map<Integer, SkillRecord> getSkillRecords() {
         return skillRecords;

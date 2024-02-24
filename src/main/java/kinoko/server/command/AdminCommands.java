@@ -3,6 +3,7 @@ package kinoko.server.command;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.IncExpMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
@@ -29,7 +30,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        user.write(UserLocal.effect(Effect.avatarOriented(args[1])));
+        user.write(WvsContext.message(IncExpMessage.mob(true, 5, 5)));
         user.dispose();
     }
 
@@ -294,13 +295,15 @@ public final class AdminCommands {
         final Field field = user.getField();
         final Optional<Foothold> footholdResult = field.getFootholdBelow(user.getX(), user.getY());
         final Mob mob = new Mob(
+                mobInfoResult.get(),
                 user.getX(),
                 user.getY(),
                 footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold()),
-                mobInfoResult.get(),
-                MobAppearType.NORMAL
+                0,
+                false
         );
-        field.getLifePool().addLife(mob);
+        mob.setAppearType(MobAppearType.REGEN);
+        field.getMobPool().addMob(mob);
     }
 
     @Command("item")

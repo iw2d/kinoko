@@ -10,6 +10,9 @@ public final class IdTable {
     public static final String ID_TYPE = "id_type";
     public static final String NEXT_ID = "next_id";
 
+    // ID types
+    public static final String ACCOUNT_TABLE = AccountTable.getTableName();
+    public static final String CHARACTER_TABLE = CharacterTable.getTableName();
 
     private static final String tableName = "id_table";
 
@@ -28,8 +31,8 @@ public final class IdTable {
         if (createResult.wasApplied()) {
             // Insert initial values
             for (String idType : new String[]{
-                    AccountTable.getTableName(),
-                    CharacterTable.getTableName()
+                    ACCOUNT_TABLE,
+                    CHARACTER_TABLE
             }) {
                 session.execute(
                         QueryBuilder.insertInto(keyspace, getTableName())

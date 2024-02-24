@@ -12,7 +12,7 @@ public final class NpcPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_ENTER_FIELD);
         outPacket.encodeInt(npc.getId()); // dwNpcID
         outPacket.encodeInt(npc.getTemplateId()); // dwTemplateID
-        npc.encodeInit(outPacket);
+        npc.encode(outPacket);
         return outPacket;
     }
 
@@ -28,7 +28,7 @@ public final class NpcPacket {
         outPacket.encodeInt(npc.getId()); // dwNpcID
         if (forController) {
             outPacket.encodeInt(npc.getTemplateId()); // dwTemplateID
-            npc.encodeInit(outPacket);
+            npc.encode(outPacket);
         }
         return outPacket;
     }

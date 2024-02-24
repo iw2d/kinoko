@@ -36,11 +36,12 @@ public final class CommandProcessor {
 
     public static boolean tryProcessCommand(User user, String text) {
         final String[] args = text.replaceFirst(ServerConfig.COMMAND_PREFIX, "").split(" ");
-        if (!commandMap.containsKey(args[0].toLowerCase())) {
+        final String command = args[0].toLowerCase();
+        if (!commandMap.containsKey(command.toLowerCase())) {
             return false;
         }
         try (var locked = user.acquire()) {
-            commandMap.get(args[0]).invoke(null, user, args);
+            commandMap.get(command).invoke(null, user, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("Exception caught while processing command {}", text, e);
             e.printStackTrace();

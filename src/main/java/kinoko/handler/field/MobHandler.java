@@ -2,7 +2,6 @@ package kinoko.handler.field;
 
 import kinoko.handler.Handler;
 import kinoko.packet.field.MobPacket;
-import kinoko.packet.field.NpcPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
@@ -14,12 +13,10 @@ import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
-import kinoko.world.field.life.Life;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.life.mob.Mob;
 import kinoko.world.field.life.mob.MobActionType;
 import kinoko.world.field.life.mob.MobAttackInfo;
-import kinoko.world.field.life.npc.Npc;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public final class LifeHandler {
-    private static final Logger log = LogManager.getLogger(LifeHandler.class);
+public final class MobHandler {
+    private static final Logger log = LogManager.getLogger(MobHandler.class);
 
     @Handler(InHeader.MOB_MOVE)
     public static void handleMobMove(User user, InPacket inPacket) {
@@ -39,11 +36,12 @@ public final class LifeHandler {
         final int objectId = inPacket.decodeInt(); // dwMobID
 
         final Field field = user.getField();
-        final Optional<Life> lifeResult = field.getLifePool().getById(objectId);
-        if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Mob mob)) {
+        final Optional<Mob> mobResult = field.getMobPool().getById(objectId);
+        if (mobResult.isEmpty()) {
             log.error("Received MOB_MOVE for invalid life with ID : {}", objectId);
             return;
         }
+        final Mob mob = mobResult.get();
 
         final short mobCtrlSn = inPacket.decodeShort(); // nMobCtrlSN
         final byte actionMask = inPacket.decodeByte(); // bDirLeft | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
@@ -100,7 +98,6 @@ public final class LifeHandler {
                     return;
                 }
                 final MobAttack ma = mobAttackResult.get();
-
                 log.debug("{} : Using mob attack index {}", mob, attackIndex);
                 mob.setMp(Math.max(mob.getMp() - ma.getConMp(), 0));
                 mob.setAttackCounter(Util.getRandom(
@@ -157,25 +154,5 @@ public final class LifeHandler {
         inPacket.decodeInt(); // dwMobID
         inPacket.decodeInt(); // unk
         // do nothing, since the controller logic is handled elsewhere
-    }
-
-    @Handler(InHeader.NPC_MOVE)
-    public static void handleNpcMove(User user, InPacket inPacket) {
-        final int objectId = inPacket.decodeInt(); // dwNpcId
-        final byte oneTimeAction = inPacket.decodeByte(); // nOneTimeAction
-        final byte chatIndex = inPacket.decodeByte(); // nChatIdx
-
-        final Field field = user.getField();
-        final Optional<Life> lifeResult = field.getLifePool().getById(objectId);
-        if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Npc npc)) {
-            log.error("Received NPC_MOVE for invalid life with ID : {}", objectId);
-            return;
-        }
-
-        final MovePath movePath = npc.isMove() ? MovePath.decode(inPacket) : null;
-        if (movePath != null) {
-            movePath.applyTo(npc);
-        }
-        field.broadcastPacket(NpcPacket.move(npc, oneTimeAction, chatIndex, movePath));
     }
 }

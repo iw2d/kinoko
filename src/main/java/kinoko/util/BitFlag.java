@@ -3,6 +3,7 @@ package kinoko.util;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public final class BitFlag<T extends BitIndex> implements Encodable {
@@ -19,6 +20,10 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
 
     public void setFlag(T bitIndex) {
         this.flags[bitIndex.getArrayIndex()] |= bitIndex.getBitPosition();
+    }
+
+    public void clear() {
+        Arrays.fill(this.flags, 0);
     }
 
     @Override

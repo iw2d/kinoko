@@ -141,7 +141,7 @@ public final class BmsExtractor {
                         continue;
                     }
                     final ItemInfo ii = itemInfoResult.get();
-                    rewards.add(new Reward(itemId, min, max, prob, ii.isQuest()));
+                    rewards.add(Reward.item(itemId, min, max, prob, ii.isQuest()));
                 }
             }
             if (!rewards.isEmpty()) {

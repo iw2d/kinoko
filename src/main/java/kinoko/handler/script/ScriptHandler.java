@@ -16,7 +16,6 @@ import kinoko.server.script.NpcScriptManager;
 import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Tuple;
-import kinoko.world.field.life.Life;
 import kinoko.world.field.life.npc.Npc;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
@@ -32,21 +31,19 @@ public final class ScriptHandler {
 
     @Handler(InHeader.USER_SELECT_NPC)
     public static void handleUserSelectNpc(User user, InPacket inPacket) {
-        final int npcId = inPacket.decodeInt(); // dwNpcId
+        final int objectId = inPacket.decodeInt(); // dwNpcId
         final short x = inPacket.decodeShort(); // ptUserPos.x
         final short y = inPacket.decodeShort(); // ptUserPos.y
-
-        final Optional<Life> lifeResult = user.getField().getLifePool().getById(npcId);
-        if (lifeResult.isEmpty() || !(lifeResult.get() instanceof Npc npc)) {
-            log.error("Tried to select invalid npc ID : {}", npcId);
+        final Optional<Npc> npcResult = user.getField().getNpcPool().getById(objectId);
+        if (npcResult.isEmpty()) {
+            log.error("Tried to select invalid npc ID : {}", objectId);
             return;
         }
-
+        final Npc npc = npcResult.get();
         if (npc.getScript().isEmpty()) {
             log.error("Npc template ID {} does not have an associated script", npc.getTemplateId());
             return;
         }
-
         ScriptDispatcher.startNpcScript(user, npc.getTemplateId(), npc.getScript().get());
     }
 

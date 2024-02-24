@@ -4,19 +4,20 @@ import kinoko.packet.field.NpcPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.npc.NpcInfo;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.Encodable;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.field.life.Life;
 import kinoko.world.user.User;
 
 import java.util.Optional;
 
-public final class Npc extends Life implements ControlledObject {
+public final class Npc extends Life implements ControlledObject, Encodable {
     private final NpcInfo npcInfo;
     private final int rx0;
     private final int rx1;
     private User controller;
 
-    public Npc(int x, int y, int rx0, int rx1, int fh, boolean isFlip, NpcInfo npcInfo) {
+    public Npc(NpcInfo npcInfo, int x, int y, int rx0, int rx1, int fh, boolean isFlip) {
         this.npcInfo = npcInfo;
         this.rx0 = rx0;
         this.rx1 = rx1;
@@ -73,7 +74,8 @@ public final class Npc extends Life implements ControlledObject {
         return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getId(), getScript().orElse("-"));
     }
 
-    public void encodeInit(OutPacket outPacket) {
+    @Override
+    public void encode(OutPacket outPacket) {
         // CNpc::Init
         outPacket.encodeShort(getX()); // ptPos.x
         outPacket.encodeShort(getY()); // ptPos.y
@@ -84,15 +86,15 @@ public final class Npc extends Life implements ControlledObject {
         outPacket.encodeByte(true); // bEnabled
     }
 
-    public static Npc from(LifeInfo lifeInfo, NpcInfo npcInfo) {
+    public static Npc from(NpcInfo npcInfo, LifeInfo lifeInfo) {
         return new Npc(
+                npcInfo,
                 lifeInfo.getX(),
                 lifeInfo.getY(),
                 lifeInfo.getRx0(),
                 lifeInfo.getRx1(),
                 lifeInfo.getFh(),
-                lifeInfo.isFlip(),
-                npcInfo
+                lifeInfo.isFlip()
         );
     }
 }

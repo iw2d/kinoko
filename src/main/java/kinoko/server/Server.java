@@ -195,6 +195,6 @@ public final class Server {
                 channelServer.stop().join();
             }
         }
-        DatabaseManager.shutdown();
+        DatabaseManager.shutdown().join();
     }
 }

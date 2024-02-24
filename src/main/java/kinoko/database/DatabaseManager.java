@@ -29,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public final class DatabaseManager {
@@ -113,7 +114,9 @@ public final class DatabaseManager {
         migrationAccessor = new CassandraMigrationAccessor(cqlSession, DATABASE_KEYSPACE);
     }
 
-    public static void shutdown() {
-        cqlSession.close();
+    public static CompletableFuture<Void> shutdown() {
+        final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
+        cqlSession.closeAsync().thenAccept(shutdownFuture::complete);
+        return shutdownFuture;
     }
 }

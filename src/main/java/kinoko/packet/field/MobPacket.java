@@ -15,7 +15,7 @@ public final class MobPacket {
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
         mob.getMobStatManager().encode(outPacket, true);
-        mob.encodeInit(outPacket);
+        mob.encode(outPacket);
         return outPacket;
     }
 
@@ -36,7 +36,7 @@ public final class MobPacket {
             // CMobPool::SetLocalMob
             outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
             mob.getMobStatManager().encode(outPacket, true);
-            mob.encodeInit(outPacket);
+            mob.encode(outPacket);
         }
         return outPacket;
     }

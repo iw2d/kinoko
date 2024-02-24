@@ -2,21 +2,28 @@ package kinoko.world.field;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
+import kinoko.world.field.life.Life;
+import kinoko.world.field.life.mob.Mob;
+import kinoko.world.field.life.npc.Npc;
 import kinoko.world.user.User;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public final class UserPool extends FieldObjectPool<User> {
     public UserPool(Field field) {
         super(field);
     }
 
+    @SuppressWarnings("unchecked")
     public void addUser(User user) {
         lock.lock();
         try {
             addObjectUnsafe(user);
             broadcastPacketUnsafe(user.enterFieldPacket(), user);
-            field.getLifePool().forEach((life) -> {
+
+            // Handle field objects
+            final Consumer<? extends Life> lifeHandler = (life) -> {
                 user.write(life.enterFieldPacket());
                 if (!(life instanceof ControlledObject controlled)) {
                     return;
@@ -28,7 +35,9 @@ public final class UserPool extends FieldObjectPool<User> {
                 } else {
                     user.write(controlled.changeControllerPacket(false));
                 }
-            });
+            };
+            field.getMobPool().forEach((Consumer<Mob>) lifeHandler);
+            field.getNpcPool().forEach((Consumer<Npc>) lifeHandler);
             field.getDropPool().forEach((drop) -> {
                 user.write(drop.enterFieldPacket());
             });
@@ -37,6 +46,7 @@ public final class UserPool extends FieldObjectPool<User> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public boolean removeUser(User user) {
         lock.lock();
         try {
@@ -47,7 +57,7 @@ public final class UserPool extends FieldObjectPool<User> {
 
             // Handle controller change
             final Optional<User> controllerResult = Util.getRandomFromCollection(getObjectsUnsafe());
-            field.getLifePool().forEach((life) -> {
+            final Consumer<? extends Life> controllerHandler = (life) -> {
                 if (!(life instanceof ControlledObject controlled)) {
                     return;
                 }
@@ -59,7 +69,9 @@ public final class UserPool extends FieldObjectPool<User> {
                     return;
                 }
                 setControllerUnsafe(controlled, controllerResult.get());
-            });
+            };
+            field.getMobPool().forEach((Consumer<Mob>) controllerHandler);
+            field.getNpcPool().forEach((Consumer<Npc>) controllerHandler);
             return true;
         } finally {
             lock.unlock();
@@ -80,6 +92,12 @@ public final class UserPool extends FieldObjectPool<User> {
         }
     }
 
+    private void setControllerUnsafe(ControlledObject controlled, User controller) {
+        controlled.setController(controller);
+        controller.write(controlled.changeControllerPacket(true));
+        broadcastPacketUnsafe(controlled.changeControllerPacket(false), controller);
+    }
+
     private void broadcastPacketUnsafe(OutPacket outPacket, User except) {
         getObjectsUnsafe().forEach((user) -> {
             if (except != null && user.getCharacterId() == except.getCharacterId()) {
@@ -87,11 +105,5 @@ public final class UserPool extends FieldObjectPool<User> {
             }
             user.write(outPacket);
         });
-    }
-
-    private void setControllerUnsafe(ControlledObject controlled, User controller) {
-        controlled.setController(controller);
-        controller.write(controlled.changeControllerPacket(true));
-        broadcastPacketUnsafe(controlled.changeControllerPacket(false), controller);
     }
 }

@@ -23,12 +23,12 @@ public final class Util {
         return random;
     }
 
-    public static int getRandom(int bound) {
-        return random.nextInt(bound);
+    public static int getRandom(int toInclusive) {
+        return random.nextInt(toInclusive + 1);
     }
 
-    public static int getRandom(int origin, int bound) {
-        return random.nextInt(origin, bound);
+    public static int getRandom(int fromInclusive, int toInclusive) {
+        return random.nextInt(fromInclusive, toInclusive + 1);
     }
 
     public static boolean succeedProp(int chance, int max) {

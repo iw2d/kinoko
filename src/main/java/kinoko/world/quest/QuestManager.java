@@ -1,14 +1,14 @@
 package kinoko.world.quest;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public final class QuestManager {
-    private final Map<Integer, QuestRecord> questRecords = new ConcurrentHashMap<>();
+    private final Map<Integer, QuestRecord> questRecords = new HashMap<>();
 
     public Set<QuestRecord> getStartedQuests() {
         return questRecords.values().stream()

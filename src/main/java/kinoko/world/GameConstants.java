@@ -1,5 +1,7 @@
 package kinoko.world;
 
+import kinoko.util.Tuple;
+
 public final class GameConstants {
     public static final int CHARACTER_MAX_SLOTS = 15;
     public static final int INVENTORY_MAX_SLOTS = 96;
@@ -7,8 +9,10 @@ public final class GameConstants {
     public static final int MAX_MONEY = Integer.MAX_VALUE;
 
     public static final int DROP_HEIGHT = 100;
+    public static final int DROP_SPREAD = 25;
     public static final int DROP_REMOVE_OWNERSHIP_TIME = 30;
     public static final int DROP_REMAIN_ON_GROUND_TIME = 120;
+    public static final double DROP_MONEY_PROB = 0.60;
 
     public static final int MAX_HP = 99999;
     public static final int MAX_MP = 99999;
@@ -17,6 +21,7 @@ public final class GameConstants {
 
     public static final int MAX_DAMAGE = 999_999;
 
+    public static final int MOB_RESPAWN_TIME = 7;
     public static final int MOB_ATTACK_CHANCE = 75;
     public static final int MOB_ATTACK_COOLTIME_MIN = 3;
     public static final int MOB_ATTACK_COOLTIME_MAX = 13;
@@ -24,6 +29,43 @@ public final class GameConstants {
 
     public static boolean isValidCharacterName(String name) {
         return name.length() >= 4 && name.length() <= 13 && name.matches("[a-zA-Z0-9]+");
+    }
+
+    public static Tuple<Integer, Integer> getMoneyForMobLevel(int level) {
+        final double min;
+        final double max;
+        if (level == 1) {
+            min = 1.0;
+            max = 1.0;
+        } else if (level <= 20) {
+            min = 1.6;
+            max = 2.4;
+        } else if (level <= 30) {
+            min = 2.0;
+            max = 3.0;
+        } else if (level <= 40) {
+            min = 2.4;
+            max = 3.6;
+        } else if (level <= 50) {
+            min = 2.8;
+            max = 4.2;
+        } else if (level <= 60) {
+            min = 4.0;
+            max = 6.0;
+        } else if (level <= 70) {
+            min = 4.8;
+            max = 7.2;
+        } else if (level <= 80) {
+            min = 5.2;
+            max = 7.8;
+        } else if (level <= 90) {
+            min = 5.6;
+            max = 8.4;
+        } else {
+            min = 6.0;
+            max = 9.0;
+        }
+        return new Tuple<>((int) (min * level), (int) (max * level));
     }
 
     public static int getNextLevelExp(int level) {

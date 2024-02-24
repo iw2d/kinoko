@@ -17,7 +17,7 @@ public final class PetPacket {
         outPacket.encodeByte(petIndex); // nIdx
         outPacket.encodeByte(true); // activate
         outPacket.encodeByte(true); // replace?
-        pet.encodeInit(outPacket);
+        pet.encode(outPacket);
         return outPacket;
     }
 

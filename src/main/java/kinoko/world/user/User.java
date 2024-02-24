@@ -1,7 +1,10 @@
 package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
+import kinoko.packet.user.UserRemote;
+import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
@@ -14,6 +17,7 @@ import kinoko.world.field.life.Life;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
 import java.util.Map;
@@ -84,6 +88,18 @@ public final class User extends Life implements Lockable<User> {
         return calcDamage;
     }
 
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public void addExp(int exp) {
+        final Map<Stat, Object> addExpResult = getCharacterStat().addExp(exp);
+        if (addExpResult.containsKey(Stat.LEVEL)) {
+            write(UserLocal.effect(Effect.levelUp()));
+            getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
+        }
+        write(WvsContext.statChanged(addExpResult));
+    }
+
     public void warp(Field destination, PortalInfo portal, boolean isMigrate, boolean isRevive) {
         if (getField() != null) {
             getField().getUserPool().removeUser(this);
@@ -110,6 +126,9 @@ public final class User extends Life implements Lockable<User> {
             getField().getUserPool().removeUser(this);
         }
     }
+
+
+    // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
     public int getId() {

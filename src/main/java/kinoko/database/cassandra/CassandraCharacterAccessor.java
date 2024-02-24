@@ -6,6 +6,7 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.cassandra.table.CharacterTable;
+import kinoko.database.cassandra.table.IdTable;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
@@ -76,7 +77,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
     @Override
     public Optional<Integer> nextCharacterId() {
-        return getNextId(CharacterTable.getTableName());
+        return getNextId(IdTable.CHARACTER_TABLE);
     }
 
     @Override

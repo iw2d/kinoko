@@ -17,7 +17,7 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         this.field = field;
     }
 
-    public final Optional<T> getById(int id) {
+    public Optional<T> getById(int id) {
         lock.lock();
         try {
             return Optional.ofNullable(objects.get(id));
@@ -26,10 +26,19 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         }
     }
 
-    public final void forEach(Consumer<T> consumer) {
+    public void forEach(Consumer<T> consumer) {
         lock.lock();
         try {
             objects.values().forEach(consumer);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean isEmpty() {
+        lock.lock();
+        try {
+            return objects.isEmpty();
         } finally {
             lock.unlock();
         }

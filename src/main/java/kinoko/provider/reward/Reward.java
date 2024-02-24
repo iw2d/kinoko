@@ -34,4 +34,16 @@ public final class Reward {
     public boolean isQuest() {
         return quest;
     }
+
+    public boolean isMoney() {
+        return itemId == 0;
+    }
+
+    public static Reward item(int itemId, int min, int max, double prob, boolean quest) {
+        return new Reward(itemId, min, max, prob, quest);
+    }
+
+    public static Reward money(int min, int max, double prob) {
+        return new Reward(0, min, max, prob, false);
+    }
 }

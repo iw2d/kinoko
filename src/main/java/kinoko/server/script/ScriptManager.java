@@ -5,6 +5,7 @@ import kinoko.packet.field.effect.FieldEffect;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.IncExpMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
@@ -18,7 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public abstract class ScriptManager {
@@ -113,12 +113,8 @@ public abstract class ScriptManager {
     }
 
     public final void addExp(int exp) {
-        final Map<Stat, Object> addExpResult = user.getCharacterStat().addExp(exp);
-        if (addExpResult.containsKey(Stat.LEVEL)) {
-            user.write(UserLocal.effect(Effect.levelUp()));
-        }
-        user.write(WvsContext.statChanged(addExpResult));
-        user.write(WvsContext.message(Message.incExp(exp, true, true)));
+        user.addExp(exp);
+        user.write(WvsContext.message(IncExpMessage.quest(exp)));
     }
 
 

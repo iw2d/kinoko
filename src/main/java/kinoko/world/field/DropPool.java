@@ -9,6 +9,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public final class DropPool extends FieldObjectPool<Drop> {
@@ -17,15 +18,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
     }
 
     public void addDrop(Drop drop, DropEnterType enterType, int x, int y) {
-        final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);
-        drop.setId(field.getNewObjectId());
-        if (footholdResult.isPresent()) {
-            drop.setX(x);
-            drop.setY(footholdResult.get().getYFromX(x));
-        } else {
-            drop.setX(x);
-            drop.setY(y);
-        }
+        prepareDrop(drop, x, y);
         lock.lock();
         try {
             if (enterType != DropEnterType.FADING_OUT) {
@@ -42,6 +35,15 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
     }
 
+    public void addDrops(Set<Drop> drops, DropEnterType enterType, int centerX, int centerY) {
+        final int width = drops.size() * GameConstants.DROP_SPREAD;
+        int dropX = centerX - (width / 2);
+        for (Drop drop : drops) {
+            addDrop(drop, enterType, dropX, centerY);
+            dropX += GameConstants.DROP_SPREAD;
+        }
+    }
+
     public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
         lock.lock();
         try {
@@ -52,6 +54,18 @@ public final class DropPool extends FieldObjectPool<Drop> {
             return true;
         } finally {
             lock.unlock();
+        }
+    }
+
+    private void prepareDrop(Drop drop, int x, int y) {
+        final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);
+        drop.setId(field.getNewObjectId());
+        if (footholdResult.isPresent()) {
+            drop.setX(x);
+            drop.setY(footholdResult.get().getYFromX(x));
+        } else {
+            drop.setX(x);
+            drop.setY(y);
         }
     }
 }

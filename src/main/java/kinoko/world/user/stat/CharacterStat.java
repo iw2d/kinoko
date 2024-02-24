@@ -238,8 +238,8 @@ public final class CharacterStat implements Encodable {
             return Map.of();
         }
         // Compute and update stats
-        final int newMaxHp = getMaxHp() + StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE + 1);
-        final int newMaxMp = getMaxMp() + StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE + 1);
+        final int newMaxHp = getMaxHp() + StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
+        final int newMaxMp = getMaxMp() + StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
         setLevel((short) Math.min(getLevel() + 1, GameConstants.MAX_LEVEL));
         setMaxHp(Math.min(newMaxHp, GameConstants.MAX_HP));
         setMaxMp(Math.min(newMaxMp, GameConstants.MAX_MP));

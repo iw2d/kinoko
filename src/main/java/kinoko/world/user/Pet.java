@@ -2,10 +2,11 @@ package kinoko.world.user;
 
 import kinoko.packet.user.PetPacket;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.Encodable;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
 
-public final class Pet extends Life {
+public final class Pet extends Life implements Encodable {
     private final User owner;
     private final Item item;
 
@@ -24,7 +25,8 @@ public final class Pet extends Life {
         return PetPacket.petDeactivated(owner, 0, 0);
     }
 
-    public void encodeInit(OutPacket outPacket) {
+    @Override
+    public void encode(OutPacket outPacket) {
         // CPet::Init
         outPacket.encodeInt(item.getItemId()); // dwTemplateID
         outPacket.encodeString(owner.getCharacterStat().getName()); // pOwner

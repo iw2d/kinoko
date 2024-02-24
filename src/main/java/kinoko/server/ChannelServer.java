@@ -1,10 +1,7 @@
 package kinoko.server;
 
 import kinoko.handler.ClientHandler;
-import kinoko.handler.field.DropHandler;
-import kinoko.handler.field.FieldHandler;
-import kinoko.handler.field.LifeHandler;
-import kinoko.handler.field.ReactorHandler;
+import kinoko.handler.field.*;
 import kinoko.handler.script.ScriptHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.*;
@@ -25,7 +22,8 @@ public final class ChannelServer extends NettyServer {
             ClientHandler.class,
             MigrationHandler.class,
             FieldHandler.class,
-            LifeHandler.class,
+            MobHandler.class,
+            NpcHandler.class,
             DropHandler.class,
             ReactorHandler.class,
             UserHandler.class,
