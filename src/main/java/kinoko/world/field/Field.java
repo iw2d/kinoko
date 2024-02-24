@@ -155,7 +155,7 @@ public final class Field {
         }
         // Schedule mob respawns
         if (!field.getMobPool().isEmpty()) {
-            final ScheduledFuture<?> respawnFuture = EventScheduler.scheduleWithFixedDelay(() -> {
+            final ScheduledFuture<?> respawnFuture = EventScheduler.addFixedDelayEvent(() -> {
                 field.getMobPool().respawnMobs();
             }, GameConstants.MOB_RESPAWN_TIME, GameConstants.MOB_RESPAWN_TIME, TimeUnit.SECONDS);
             field.setRespawnFuture(respawnFuture);

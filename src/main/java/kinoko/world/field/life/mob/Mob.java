@@ -1,6 +1,8 @@
 package kinoko.world.field.life.mob;
 
 import kinoko.packet.field.MobPacket;
+import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.IncExpMessage;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
@@ -9,13 +11,15 @@ import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.mob.MobSkill;
 import kinoko.provider.reward.Reward;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
-import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.Encodable;
+import kinoko.world.GameConstants;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
@@ -158,28 +162,44 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setHp(mobInfo.getMaxHp());
         setMp(mobInfo.getMaxMp());
         getMobStatManager().clear();
+        damageDone.clear();
     }
 
-    public void damage(User user, int totalDamage) {
+    public void damage(User attacker, int totalDamage) {
         final int actualDamage = Math.min(getHp(), totalDamage);
         setHp(getHp() - actualDamage);
-        damageDone.put(user.getCharacterId(), damageDone.getOrDefault(user.getCharacterId(), 0) + actualDamage);
+        damageDone.put(attacker.getCharacterId(), damageDone.getOrDefault(attacker.getCharacterId(), 0) + actualDamage);
     }
 
-    public Set<Drop> getDrops(User user) {
-        // TODO: use damageDone to get drop owner
-        final User owner = user;
+    public void dropRewards(User lastAttacker) {
+        // Sort damageDone by highest damage, assign owner to most damage attacker present in the field
+        User owner = lastAttacker;
+        var iter = damageDone.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .iterator();
+        while (iter.hasNext()) {
+            final Optional<User> userResult = getField().getUserPool().getById(iter.next().getKey());
+            if (userResult.isPresent()) {
+                owner = userResult.get();
+                break;
+            }
+        }
+        // Create drops from possible rewards
         final Set<Drop> drops = new HashSet<>();
         final Set<Reward> possibleRewards = Stream.concat(RewardProvider.getMobRewards(this).stream(), Stream.of(RewardProvider.getMobMoneyReward(this)))
                 .collect(Collectors.toUnmodifiableSet());
         for (Reward reward : possibleRewards) {
-            // TODO: apply drop rate
+            // Drop probability
+            if (Util.getRandom().nextDouble() > reward.getProb()) {
+                continue;
+            }
+            // Create drop
             if (reward.isMoney()) {
                 final int money = Util.getRandom(reward.getMin(), reward.getMax());
                 if (money <= 0) {
                     continue;
                 }
-                drops.add(Drop.money(DropOwnType.NO_OWN, this, money, 0));
+                drops.add(Drop.money(DropOwnType.USER_OWN, this, money, owner.getCharacterId()));
             } else {
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
                 if (itemInfoResult.isEmpty()) {
@@ -187,14 +207,35 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 }
                 final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
                 final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-                drops.add(Drop.item(DropOwnType.NO_OWN, this, item, 0));
+                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId()));
             }
         }
-        return drops;
+        // Add drops to field
+        getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
     }
 
-    public Set<Tuple<Integer, Integer>> getExp(User user) {
-        return Set.of(new Tuple<>(user.getCharacterId(), mobInfo.getExp()));
+    public void distributeExp() {
+        final int totalExp = mobInfo.getExp();
+        final int topAttackerId = damageDone.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(-1);
+        for (var entry : damageDone.entrySet()) {
+            final int attackerDamage = entry.getValue();
+            final Optional<User> attackerResult = getField().getUserPool().getById(entry.getKey());
+            if (attackerResult.isEmpty()) {
+                continue;
+            }
+            // Schedule exp distribution as it requires locking the user
+            EventScheduler.addEvent(() -> {
+                try (var locked = attackerResult.get().acquire()) {
+                    final User attacker = locked.get();
+                    final int splitExp = (int) (((double) attackerDamage / getMaxHp()) * totalExp);
+                    attacker.addExp(splitExp);
+                    attacker.write(WvsContext.message(IncExpMessage.mob(attacker.getCharacterId() == topAttackerId, splitExp, 0)));
+                }
+            }, 0);
+        }
     }
 
 

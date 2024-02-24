@@ -12,14 +12,14 @@ public final class EventScheduler {
     }
 
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay) {
-        return scheduler.schedule(runnable, delay, TimeUnit.MILLISECONDS);
+        return scheduler.schedule(() -> executor.submit(runnable), delay, TimeUnit.MILLISECONDS);
     }
 
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay, TimeUnit timeUnit) {
         return scheduler.schedule(() -> executor.submit(runnable), delay, timeUnit);
     }
 
-    public static ScheduledFuture<?> scheduleWithFixedDelay(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
+    public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
         return scheduler.scheduleWithFixedDelay(() -> executor.submit(runnable), initialDelay, delay, timeUnit);
     }
 }

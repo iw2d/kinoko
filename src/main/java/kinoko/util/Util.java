@@ -31,12 +31,8 @@ public final class Util {
         return random.nextInt(fromInclusive, toInclusive + 1);
     }
 
-    public static boolean succeedProp(int chance, int max) {
-        return random.nextInt(max) < chance;
-    }
-
     public static boolean succeedProp(int chance) {
-        return succeedProp(chance, 100);
+        return random.nextInt(0, 100) < chance;
     }
 
     public static <T> Optional<T> getRandomFromCollection(Collection<T> collection) {
