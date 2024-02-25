@@ -3,13 +3,16 @@ package kinoko.world.field.life.mob;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.IncExpMessage;
+import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
+import kinoko.provider.QuestProvider;
 import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobInfo;
 import kinoko.provider.mob.MobSkill;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
@@ -23,6 +26,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -226,13 +230,26 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             if (attackerResult.isEmpty()) {
                 continue;
             }
-            // Schedule exp distribution as it requires locking the user
+            // Schedule event as user lock is required
             EventScheduler.addEvent(() -> {
                 try (var locked = attackerResult.get().acquire()) {
+                    // Distribute exp
                     final User attacker = locked.get();
                     final int splitExp = (int) (((double) attackerDamage / getMaxHp()) * totalExp);
                     attacker.addExp(splitExp);
                     attacker.write(WvsContext.message(IncExpMessage.mob(attacker.getCharacterId() == topAttackerId, splitExp, 0)));
+                    // Process mob kill for quest
+                    for (QuestRecord qr : attacker.getQuestManager().getStartedQuests()) {
+                        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
+                        if (questInfoResult.isEmpty()) {
+                            continue;
+                        }
+                        final Optional<QuestRecord> questProgressResult = questInfoResult.get().progressQuest(qr, getTemplateId());
+                        if (questProgressResult.isEmpty()) {
+                            continue;
+                        }
+                        attacker.write(WvsContext.message(Message.questRecord(questProgressResult.get())));
+                    }
                 }
             }, 0);
         }

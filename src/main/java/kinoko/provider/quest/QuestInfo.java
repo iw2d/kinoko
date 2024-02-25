@@ -6,14 +6,13 @@ import kinoko.provider.quest.act.*;
 import kinoko.provider.quest.check.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Tuple;
+import kinoko.util.Util;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public final class QuestInfo {
     private final int questId;
@@ -98,14 +97,13 @@ public final class QuestInfo {
                 return Optional.empty();
             }
         }
-
         // Perform start acts
         for (QuestAct startAct : getStartActs()) {
             if (!startAct.doAct(user)) {
                 throw new IllegalStateException("Failed to perform quest start act");
             }
         }
-
+        // Add quest record and return
         return Optional.of(user.getQuestManager().forceStartQuest(questId));
     }
 
@@ -114,7 +112,6 @@ public final class QuestInfo {
         if (!user.getQuestManager().hasQuestStarted(questId)) {
             return Optional.empty();
         }
-
         // Check that the quest can be completed
         for (QuestCheck completeCheck : getCompleteChecks()) {
             if (!completeCheck.check(user)) {
@@ -126,15 +123,13 @@ public final class QuestInfo {
                 return Optional.empty();
             }
         }
-
         // Perform complete acts
         for (QuestAct completeAct : getCompleteActs()) {
             if (!completeAct.doAct(user)) {
                 throw new IllegalStateException("Failed to perform quest complete act");
             }
         }
-
-        // Mark as completed and update client
+        // Mark as completed and return
         final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
         return Optional.of(new Tuple<>(qr, getNextQuest()));
     }
@@ -150,8 +145,56 @@ public final class QuestInfo {
         }
         final QuestRecord qr = removeQuestRecordResult.get();
         qr.setState(QuestState.NONE);
+        // TODO: resign remove
         return Optional.of(qr);
+    }
 
+    public Optional<QuestRecord> progressQuest(QuestRecord questRecord, int mobId) {
+        // Check that the quest has been started
+        if (questRecord.getState() != QuestState.PERFORM) {
+            return Optional.empty();
+        }
+        // Check if the quest is relevant for the mob
+        final Optional<QuestCheck> mobCheckResult = getCompleteChecks().stream()
+                .filter((check) -> check instanceof QuestMobCheck)
+                .findFirst();
+        if (mobCheckResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final QuestMobCheck mobCheck = (QuestMobCheck) mobCheckResult.get();
+        if (mobCheck.getMobs().stream().noneMatch((mobData) -> mobData.getMobId() == mobId)) {
+            return Optional.empty();
+        }
+        // Get current progress
+        final int[] progress = new int[mobCheck.getMobs().size()];
+        final String qrValue = questRecord.getValue();
+        if (qrValue != null && !qrValue.isEmpty()) {
+            // Split qrValue string every 3 characters to get current mob count
+            for (int c = 0; c < qrValue.length(); c += 3) {
+                final int countIndex = c / 3;
+                if (countIndex >= progress.length) {
+                    break;
+                }
+                final String countValue = qrValue.substring(c, Math.min(c + 3, qrValue.length()));
+                if (!Util.isInteger(countValue)) {
+                    continue;
+                }
+                progress[countIndex] = Integer.parseInt(countValue);
+            }
+        }
+        // Increment progress
+        for (int i = 0; i < mobCheck.getMobs().size(); i++) {
+            final QuestMobData mobData = mobCheck.getMobs().get(i);
+            if (mobData.getMobId() == mobId) {
+                progress[i] = Math.min(progress[i] + 1, mobData.getCount());
+            }
+        }
+        // Update quest record and return
+        final String newQrValue = Arrays.stream(progress)
+                .mapToObj((count) -> String.format("%03d", Math.min(count, 999)))
+                .collect(Collectors.joining());
+        questRecord.setValue(newQrValue);
+        return Optional.of(questRecord);
     }
 
     public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) throws ProviderError {
@@ -227,7 +270,7 @@ public final class QuestInfo {
                     if (!(entry.getValue() instanceof WzListProperty mobList)) {
                         throw new ProviderError("Failed to resolve quest check mob list");
                     }
-                    questChecks.add(QuestMobCheck.from(mobList));
+                    questChecks.add(QuestMobCheck.from(questId, mobList));
                 }
                 case "job" -> {
                     if (!(entry.getValue() instanceof WzListProperty jobList)) {
@@ -247,5 +290,4 @@ public final class QuestInfo {
         }
         return questChecks;
     }
-
 }
