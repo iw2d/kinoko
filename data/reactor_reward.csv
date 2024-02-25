@@ -1,4 +1,5 @@
 # mBoxItem0
+2000, 0, 10, 10, 0.700000, false                                                                                        # money
 2000, 2000000, 1, 1, 0.100000, false                                                                                    # Red Potion
 2000, 2000001, 1, 1, 0.100000, false                                                                                    # Orange Potion
 2000, 2010000, 1, 1, 0.100000, false                                                                                    # Apple
@@ -33,6 +34,7 @@
 1102003, 4031321, 1, 1, 0.800000, true                                                                                  # Sea Trash
 
 # oBoxItem0
+2002000, 0, 20, 20, 0.700000, false                                                                                     # money
 2002000, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
 2002000, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
 2002000, 2010000, 1, 1, 0.100000, false                                                                                 # Apple
@@ -78,6 +80,24 @@
 2002013, 4001049, 1, 1, 1.000000, false                                                                                 # Statue of Goddess : 6th Piece
 
 # fgodItem13
+2002014, 0, 25, 25, 0.700000, false                                                                                     # money
+2002014, 0, 30, 30, 0.800000, false                                                                                     # money
+2002014, 0, 25, 25, 0.900000, false                                                                                     # money
+2002014, 0, 15, 15, 0.900000, false                                                                                     # money
+2002014, 0, 50, 50, 0.900000, false                                                                                     # money
+2002014, 0, 15, 15, 0.700000, false                                                                                     # money
+2002014, 0, 20, 20, 0.900000, false                                                                                     # money
+2002014, 0, 35, 35, 0.900000, false                                                                                     # money
+2002014, 0, 30, 30, 0.900000, false                                                                                     # money
+2002014, 0, 15, 15, 0.800000, false                                                                                     # money
+2002014, 0, 50, 50, 0.800000, false                                                                                     # money
+2002014, 0, 35, 35, 0.800000, false                                                                                     # money
+2002014, 0, 30, 30, 0.700000, false                                                                                     # money
+2002014, 0, 50, 50, 0.700000, false                                                                                     # money
+2002014, 0, 20, 20, 0.700000, false                                                                                     # money
+2002014, 0, 20, 20, 0.800000, false                                                                                     # money
+2002014, 0, 25, 25, 0.800000, false                                                                                     # money
+2002014, 0, 35, 35, 0.700000, false                                                                                     # money
 2002014, 1032014, 1, 1, 0.008000, false                                                                                 # Pink-Flowered Earrings
 2002014, 1032015, 1, 1, 0.008000, false                                                                                 # Metal Silver Earrings
 2002014, 1102015, 1, 1, 0.008000, false                                                                                 # Blue Magic Cape
@@ -114,31 +134,31 @@
 2002018, 1082099, 1, 1, 0.040000, false                                                                                 # Blue Lorin
 2002018, 1082104, 1, 1, 0.040000, false                                                                                 # Mithril Husk
 2002018, 1082107, 1, 1, 0.040000, false                                                                                 # Gold Eyes
+2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
+2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
+2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
 2002018, 2000004, 1, 1, 0.600000, false                                                                                 # Elixir
 2002018, 2000004, 1, 1, 0.300000, false                                                                                 # Elixir
-2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
-2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
-2002018, 2000004, 1, 1, 0.100000, false                                                                                 # Elixir
-2002018, 2000005, 1, 1, 0.400000, false                                                                                 # Power Elixir
 2002018, 2000005, 1, 1, 0.100000, false                                                                                 # Power Elixir
+2002018, 2000005, 1, 1, 0.400000, false                                                                                 # Power Elixir
 2002018, 2000005, 1, 1, 0.200000, false                                                                                 # Power Elixir
 2002018, 2000005, 1, 1, 0.100000, false                                                                                 # Power Elixir
 2002018, 2000005, 1, 1, 0.100000, false                                                                                 # Power Elixir
 2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
 2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
-2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
 2002018, 2000006, 1, 1, 0.600000, false                                                                                 # Mana Elixir
 2002018, 2000006, 1, 1, 0.900000, false                                                                                 # Mana Elixir
-2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
-2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
+2002018, 2000006, 1, 1, 0.300000, false                                                                                 # Mana Elixir
 2002018, 2020013, 1, 1, 0.300000, false                                                                                 # Reindeer Milk
+2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
+2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
 2002018, 2020013, 1, 1, 0.500000, false                                                                                 # Reindeer Milk
 2002018, 2020013, 1, 1, 0.100000, false                                                                                 # Reindeer Milk
+2002018, 2020014, 1, 1, 0.500000, false                                                                                 # Sunrise Dew
 2002018, 2020014, 1, 1, 0.300000, false                                                                                 # Sunrise Dew
 2002018, 2020014, 1, 1, 0.100000, false                                                                                 # Sunrise Dew
 2002018, 2020014, 1, 1, 0.100000, false                                                                                 # Sunrise Dew
 2002018, 2020014, 1, 1, 0.100000, false                                                                                 # Sunrise Dew
-2002018, 2020014, 1, 1, 0.500000, false                                                                                 # Sunrise Dew
 
 # snowdrop
 2092000, 2060005, 20, 40, 0.200000, false                                                                               # Snowball
@@ -175,6 +195,9 @@
 # boxPaper0
 2112005, 4001015, 1, 1, 1.000000, false                                                                                 # Paper Document
 
+# money10000
+2112006, 0, 5000, 5000, 1.000000, false                                                                                 # money
+
 # boxItem0
 2112007, 2000005, 1, 1, 1.000000, false                                                                                 # Power Elixir
 
@@ -192,6 +215,9 @@
 
 # boxPaper0
 2112012, 4001015, 1, 1, 1.000000, false                                                                                 # Paper Document
+
+# money100
+2112013, 0, 100, 100, 1.000000, false                                                                                   # money
 
 # boxBItem0
 2112014, 4001018, 1, 1, 1.000000, false                                                                                 # Fire Ore
@@ -212,12 +238,31 @@
 2202001, 4031092, 1, 1, 1.000000, true                                                                                  # Machine Parts
 
 # ludiquest2
+2202002, 0, 30, 30, 0.200000, false                                                                                     # money
 2202002, 2000000, 1, 1, 0.200000, false                                                                                 # Red Potion
 
 # ludiquest3
 2202003, 4001022, 1, 1, 1.000000, false                                                                                 # Pass of Dimension
 
 # ludiquest4
+2202004, 0, 20, 20, 0.900000, false                                                                                     # money
+2202004, 0, 20, 20, 0.800000, false                                                                                     # money
+2202004, 0, 15, 15, 0.700000, false                                                                                     # money
+2202004, 0, 50, 50, 0.800000, false                                                                                     # money
+2202004, 0, 20, 20, 0.700000, false                                                                                     # money
+2202004, 0, 30, 30, 0.800000, false                                                                                     # money
+2202004, 0, 15, 15, 0.900000, false                                                                                     # money
+2202004, 0, 15, 15, 0.800000, false                                                                                     # money
+2202004, 0, 25, 25, 0.900000, false                                                                                     # money
+2202004, 0, 25, 25, 0.800000, false                                                                                     # money
+2202004, 0, 50, 50, 0.900000, false                                                                                     # money
+2202004, 0, 30, 30, 0.900000, false                                                                                     # money
+2202004, 0, 35, 35, 0.900000, false                                                                                     # money
+2202004, 0, 50, 50, 0.700000, false                                                                                     # money
+2202004, 0, 35, 35, 0.700000, false                                                                                     # money
+2202004, 0, 25, 25, 0.700000, false                                                                                     # money
+2202004, 0, 35, 35, 0.800000, false                                                                                     # money
+2202004, 0, 30, 30, 0.700000, false                                                                                     # money
 2202004, 1032011, 1, 1, 0.008000, false                                                                                 # Blue Moon
 2202004, 1032012, 1, 1, 0.008000, false                                                                                 # Skull Earrings
 2202004, 1032013, 1, 1, 0.008000, false                                                                                 # Red-Hearted Earrings
@@ -236,30 +281,39 @@
 2202004, 2020015, 1, 1, 0.040000, false                                                                                 # Sunset Dew
 
 # osquest0
+2212000, 0, 100, 100, 0.300000, false                                                                                   # money
 2212000, 2000002, 1, 1, 0.300000, false                                                                                 # White Potion
 2212000, 4031141, 1, 1, 0.150000, true                                                                                  # Parts #1
 
 # osquest1
+2212001, 0, 70, 70, 0.300000, false                                                                                     # money
 2212001, 2000003, 1, 1, 0.300000, false                                                                                 # Blue Potion
 2212001, 4031142, 1, 1, 0.150000, true                                                                                  # Parts #2
 
 # osquest2
+2212002, 0, 50, 50, 0.300000, false                                                                                     # money
 2212002, 2000001, 1, 1, 0.300000, false                                                                                 # Orange Potion
 2212002, 4031143, 1, 1, 0.150000, true                                                                                  # Parts #3
 
 # osquest3
+2212003, 0, 70, 70, 0.300000, false                                                                                     # money
 2212003, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 2212003, 4031107, 1, 1, 0.330000, true                                                                                  # Dogon's Report
 
 # osquest4
+2212004, 0, 10, 10, 0.200000, false                                                                                     # money
+2212004, 0, 5, 5, 0.200000, false                                                                                       # money
 2212004, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
 2212004, 4031116, 1, 1, 0.200000, true                                                                                  # Secret Document
 
 # osquest5
+2212005, 0, 10, 10, 0.400000, false                                                                                     # money
+2212005, 0, 20, 20, 0.200000, false                                                                                     # money
 2212005, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
 2212005, 4031136, 1, 1, 0.080000, true                                                                                  # Gray's Document
 
 # fvquest2
+2222000, 0, 20, 20, 0.700000, false                                                                                     # money
 2222000, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
 2222000, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
 2222000, 4031231, 1, 1, 0.300000, true                                                                                  # Artemisia
@@ -275,6 +329,7 @@
 2222001, 4031702, 1, 1, 1.000000, false                                                                                 # Transparent Item
 
 # aquaItem0
+2302000, 0, 20, 20, 0.600000, false                                                                                     # money
 2302000, 2022040, 1, 1, 0.100000, false                                                                                 # Air Bubble
 2302000, 4031274, 1, 1, 0.020000, true                                                                                  # Piece of Paper A
 2302000, 4031275, 1, 1, 0.020000, true                                                                                  # Piece of Paper B
@@ -283,10 +338,12 @@
 2302000, 4031278, 1, 1, 0.020000, true                                                                                  # Piece of Paper E
 
 # aquaItem1
+2302001, 0, 30, 30, 0.600000, false                                                                                     # money
 2302001, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 2302001, 4031251, 1, 1, 0.250000, true                                                                                  # Sea Dust
 
 # aquaItem2
+2302002, 0, 30, 30, 0.600000, false                                                                                     # money
 2302002, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 2302002, 2022040, 1, 1, 0.050000, false                                                                                 # Air Bubble
 
@@ -330,13 +387,19 @@
 # davyItem0
 2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
 2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
-2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
 2512000, 2022131, 1, 1, 1.000000, false                                                                                 # Ginseng Concentrate
+2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
 2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
 2512000, 2022131, 1, 1, 0.600000, false                                                                                 # Ginseng Concentrate
 2512000, 4031438, 1, 1, 0.150000, false                                                                                 # Lord Pirate's Travel Diary
 
 # davyItem1
+2512001, 0, 200, 200, 0.400000, false                                                                                   # money
+2512001, 0, 200, 200, 0.400000, false                                                                                   # money
+2512001, 0, 300, 300, 0.400000, false                                                                                   # money
+2512001, 0, 200, 200, 0.400000, false                                                                                   # money
+2512001, 0, 300, 300, 0.400000, false                                                                                   # money
+2512001, 0, 300, 300, 0.400000, false                                                                                   # money
 2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
 2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
 2512001, 2000002, 1, 1, 0.150000, false                                                                                 # White Potion
@@ -376,6 +439,7 @@
 2612002, 4001134, 1, 1, 1.000000, false                                                                                 # Alcadno's Experiment Files
 
 # rnjItem2
+2612003, 0, 300, 300, 0.400000, false                                                                                   # money
 2612003, 2022000, 1, 1, 0.100000, false                                                                                 # Pure Water
 2612003, 2022003, 1, 1, 0.150000, false                                                                                 # Unagi
 2612003, 2022174, 1, 1, 0.200000, false                                                                                 # White Potion
@@ -391,6 +455,22 @@
 6702000, 4031595, 1, 1, 1.000000, false                                                                                 # Magik Mirror Shard
 
 # amoriaItem2
+6702002, 0, 25, 25, 0.900000, false                                                                                     # money
+6702002, 0, 50, 50, 0.700000, false                                                                                     # money
+6702002, 0, 15, 15, 0.700000, false                                                                                     # money
+6702002, 0, 50, 50, 0.900000, false                                                                                     # money
+6702002, 0, 25, 25, 0.700000, false                                                                                     # money
+6702002, 0, 25, 25, 0.800000, false                                                                                     # money
+6702002, 0, 20, 20, 0.700000, false                                                                                     # money
+6702002, 0, 35, 35, 0.700000, false                                                                                     # money
+6702002, 0, 35, 35, 0.800000, false                                                                                     # money
+6702002, 0, 20, 20, 0.800000, false                                                                                     # money
+6702002, 0, 50, 50, 0.800000, false                                                                                     # money
+6702002, 0, 30, 30, 0.800000, false                                                                                     # money
+6702002, 0, 15, 15, 0.900000, false                                                                                     # money
+6702002, 0, 15, 15, 0.800000, false                                                                                     # money
+6702002, 0, 20, 20, 0.900000, false                                                                                     # money
+6702002, 0, 30, 30, 0.900000, false                                                                                     # money
 6702002, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702002, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702002, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -418,6 +498,22 @@
 6702002, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem3
+6702003, 0, 30, 30, 0.900000, false                                                                                     # money
+6702003, 0, 15, 15, 0.800000, false                                                                                     # money
+6702003, 0, 20, 20, 0.900000, false                                                                                     # money
+6702003, 0, 20, 20, 0.800000, false                                                                                     # money
+6702003, 0, 25, 25, 0.700000, false                                                                                     # money
+6702003, 0, 25, 25, 0.900000, false                                                                                     # money
+6702003, 0, 15, 15, 0.900000, false                                                                                     # money
+6702003, 0, 30, 30, 0.800000, false                                                                                     # money
+6702003, 0, 15, 15, 0.700000, false                                                                                     # money
+6702003, 0, 35, 35, 0.700000, false                                                                                     # money
+6702003, 0, 50, 50, 0.700000, false                                                                                     # money
+6702003, 0, 50, 50, 0.900000, false                                                                                     # money
+6702003, 0, 50, 50, 0.800000, false                                                                                     # money
+6702003, 0, 25, 25, 0.800000, false                                                                                     # money
+6702003, 0, 35, 35, 0.800000, false                                                                                     # money
+6702003, 0, 20, 20, 0.700000, false                                                                                     # money
 6702003, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702003, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702003, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -445,6 +541,22 @@
 6702003, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem4
+6702004, 0, 25, 25, 0.700000, false                                                                                     # money
+6702004, 0, 15, 15, 0.900000, false                                                                                     # money
+6702004, 0, 35, 35, 0.800000, false                                                                                     # money
+6702004, 0, 20, 20, 0.900000, false                                                                                     # money
+6702004, 0, 50, 50, 0.700000, false                                                                                     # money
+6702004, 0, 25, 25, 0.800000, false                                                                                     # money
+6702004, 0, 35, 35, 0.700000, false                                                                                     # money
+6702004, 0, 15, 15, 0.700000, false                                                                                     # money
+6702004, 0, 50, 50, 0.900000, false                                                                                     # money
+6702004, 0, 25, 25, 0.900000, false                                                                                     # money
+6702004, 0, 50, 50, 0.800000, false                                                                                     # money
+6702004, 0, 20, 20, 0.700000, false                                                                                     # money
+6702004, 0, 30, 30, 0.900000, false                                                                                     # money
+6702004, 0, 20, 20, 0.800000, false                                                                                     # money
+6702004, 0, 15, 15, 0.800000, false                                                                                     # money
+6702004, 0, 30, 30, 0.800000, false                                                                                     # money
 6702004, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702004, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702004, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -472,6 +584,22 @@
 6702004, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem5
+6702005, 0, 25, 25, 0.900000, false                                                                                     # money
+6702005, 0, 30, 30, 0.800000, false                                                                                     # money
+6702005, 0, 50, 50, 0.700000, false                                                                                     # money
+6702005, 0, 15, 15, 0.900000, false                                                                                     # money
+6702005, 0, 35, 35, 0.800000, false                                                                                     # money
+6702005, 0, 15, 15, 0.800000, false                                                                                     # money
+6702005, 0, 20, 20, 0.700000, false                                                                                     # money
+6702005, 0, 25, 25, 0.800000, false                                                                                     # money
+6702005, 0, 50, 50, 0.800000, false                                                                                     # money
+6702005, 0, 15, 15, 0.700000, false                                                                                     # money
+6702005, 0, 20, 20, 0.900000, false                                                                                     # money
+6702005, 0, 50, 50, 0.900000, false                                                                                     # money
+6702005, 0, 30, 30, 0.900000, false                                                                                     # money
+6702005, 0, 25, 25, 0.700000, false                                                                                     # money
+6702005, 0, 20, 20, 0.800000, false                                                                                     # money
+6702005, 0, 35, 35, 0.700000, false                                                                                     # money
 6702005, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702005, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702005, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -499,6 +627,22 @@
 6702005, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem6
+6702006, 0, 30, 30, 0.900000, false                                                                                     # money
+6702006, 0, 25, 25, 0.900000, false                                                                                     # money
+6702006, 0, 25, 25, 0.800000, false                                                                                     # money
+6702006, 0, 15, 15, 0.800000, false                                                                                     # money
+6702006, 0, 20, 20, 0.800000, false                                                                                     # money
+6702006, 0, 20, 20, 0.700000, false                                                                                     # money
+6702006, 0, 15, 15, 0.900000, false                                                                                     # money
+6702006, 0, 50, 50, 0.800000, false                                                                                     # money
+6702006, 0, 35, 35, 0.700000, false                                                                                     # money
+6702006, 0, 35, 35, 0.800000, false                                                                                     # money
+6702006, 0, 20, 20, 0.900000, false                                                                                     # money
+6702006, 0, 50, 50, 0.900000, false                                                                                     # money
+6702006, 0, 30, 30, 0.800000, false                                                                                     # money
+6702006, 0, 25, 25, 0.700000, false                                                                                     # money
+6702006, 0, 15, 15, 0.700000, false                                                                                     # money
+6702006, 0, 50, 50, 0.700000, false                                                                                     # money
 6702006, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702006, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702006, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -526,6 +670,22 @@
 6702006, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem7
+6702007, 0, 25, 25, 0.900000, false                                                                                     # money
+6702007, 0, 50, 50, 0.800000, false                                                                                     # money
+6702007, 0, 15, 15, 0.900000, false                                                                                     # money
+6702007, 0, 20, 20, 0.900000, false                                                                                     # money
+6702007, 0, 30, 30, 0.800000, false                                                                                     # money
+6702007, 0, 50, 50, 0.700000, false                                                                                     # money
+6702007, 0, 50, 50, 0.900000, false                                                                                     # money
+6702007, 0, 35, 35, 0.700000, false                                                                                     # money
+6702007, 0, 25, 25, 0.700000, false                                                                                     # money
+6702007, 0, 20, 20, 0.700000, false                                                                                     # money
+6702007, 0, 30, 30, 0.900000, false                                                                                     # money
+6702007, 0, 15, 15, 0.800000, false                                                                                     # money
+6702007, 0, 35, 35, 0.800000, false                                                                                     # money
+6702007, 0, 25, 25, 0.800000, false                                                                                     # money
+6702007, 0, 20, 20, 0.800000, false                                                                                     # money
+6702007, 0, 15, 15, 0.700000, false                                                                                     # money
 6702007, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702007, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702007, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -553,6 +713,22 @@
 6702007, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem8
+6702008, 0, 35, 35, 0.700000, false                                                                                     # money
+6702008, 0, 20, 20, 0.900000, false                                                                                     # money
+6702008, 0, 30, 30, 0.800000, false                                                                                     # money
+6702008, 0, 25, 25, 0.700000, false                                                                                     # money
+6702008, 0, 15, 15, 0.800000, false                                                                                     # money
+6702008, 0, 15, 15, 0.700000, false                                                                                     # money
+6702008, 0, 25, 25, 0.900000, false                                                                                     # money
+6702008, 0, 50, 50, 0.900000, false                                                                                     # money
+6702008, 0, 30, 30, 0.900000, false                                                                                     # money
+6702008, 0, 25, 25, 0.800000, false                                                                                     # money
+6702008, 0, 20, 20, 0.700000, false                                                                                     # money
+6702008, 0, 50, 50, 0.800000, false                                                                                     # money
+6702008, 0, 15, 15, 0.900000, false                                                                                     # money
+6702008, 0, 50, 50, 0.700000, false                                                                                     # money
+6702008, 0, 20, 20, 0.800000, false                                                                                     # money
+6702008, 0, 35, 35, 0.800000, false                                                                                     # money
 6702008, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702008, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702008, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -580,6 +756,22 @@
 6702008, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem9
+6702009, 0, 25, 25, 0.800000, false                                                                                     # money
+6702009, 0, 50, 50, 0.800000, false                                                                                     # money
+6702009, 0, 30, 30, 0.900000, false                                                                                     # money
+6702009, 0, 35, 35, 0.800000, false                                                                                     # money
+6702009, 0, 20, 20, 0.900000, false                                                                                     # money
+6702009, 0, 30, 30, 0.800000, false                                                                                     # money
+6702009, 0, 25, 25, 0.900000, false                                                                                     # money
+6702009, 0, 15, 15, 0.900000, false                                                                                     # money
+6702009, 0, 20, 20, 0.800000, false                                                                                     # money
+6702009, 0, 15, 15, 0.800000, false                                                                                     # money
+6702009, 0, 50, 50, 0.700000, false                                                                                     # money
+6702009, 0, 25, 25, 0.700000, false                                                                                     # money
+6702009, 0, 35, 35, 0.700000, false                                                                                     # money
+6702009, 0, 50, 50, 0.900000, false                                                                                     # money
+6702009, 0, 15, 15, 0.700000, false                                                                                     # money
+6702009, 0, 20, 20, 0.700000, false                                                                                     # money
 6702009, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702009, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702009, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -607,6 +799,22 @@
 6702009, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem10
+6702010, 0, 30, 30, 0.800000, false                                                                                     # money
+6702010, 0, 20, 20, 0.700000, false                                                                                     # money
+6702010, 0, 15, 15, 0.800000, false                                                                                     # money
+6702010, 0, 25, 25, 0.900000, false                                                                                     # money
+6702010, 0, 25, 25, 0.800000, false                                                                                     # money
+6702010, 0, 50, 50, 0.800000, false                                                                                     # money
+6702010, 0, 20, 20, 0.800000, false                                                                                     # money
+6702010, 0, 25, 25, 0.700000, false                                                                                     # money
+6702010, 0, 15, 15, 0.900000, false                                                                                     # money
+6702010, 0, 50, 50, 0.700000, false                                                                                     # money
+6702010, 0, 30, 30, 0.900000, false                                                                                     # money
+6702010, 0, 15, 15, 0.700000, false                                                                                     # money
+6702010, 0, 35, 35, 0.800000, false                                                                                     # money
+6702010, 0, 50, 50, 0.900000, false                                                                                     # money
+6702010, 0, 35, 35, 0.700000, false                                                                                     # money
+6702010, 0, 20, 20, 0.900000, false                                                                                     # money
 6702010, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702010, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702010, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -634,6 +842,22 @@
 6702010, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem11
+6702011, 0, 50, 50, 0.800000, false                                                                                     # money
+6702011, 0, 35, 35, 0.700000, false                                                                                     # money
+6702011, 0, 35, 35, 0.800000, false                                                                                     # money
+6702011, 0, 25, 25, 0.800000, false                                                                                     # money
+6702011, 0, 20, 20, 0.800000, false                                                                                     # money
+6702011, 0, 20, 20, 0.900000, false                                                                                     # money
+6702011, 0, 25, 25, 0.700000, false                                                                                     # money
+6702011, 0, 15, 15, 0.700000, false                                                                                     # money
+6702011, 0, 30, 30, 0.900000, false                                                                                     # money
+6702011, 0, 20, 20, 0.700000, false                                                                                     # money
+6702011, 0, 15, 15, 0.900000, false                                                                                     # money
+6702011, 0, 15, 15, 0.800000, false                                                                                     # money
+6702011, 0, 50, 50, 0.900000, false                                                                                     # money
+6702011, 0, 25, 25, 0.900000, false                                                                                     # money
+6702011, 0, 30, 30, 0.800000, false                                                                                     # money
+6702011, 0, 50, 50, 0.700000, false                                                                                     # money
 6702011, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702011, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702011, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -661,6 +885,22 @@
 6702011, 4021007, 1, 1, 0.070000, false                                                                                 # Diamond
 
 # amoriaItem12
+6702012, 0, 35, 35, 0.800000, false                                                                                     # money
+6702012, 0, 25, 25, 0.800000, false                                                                                     # money
+6702012, 0, 25, 25, 0.700000, false                                                                                     # money
+6702012, 0, 25, 25, 0.900000, false                                                                                     # money
+6702012, 0, 30, 30, 0.800000, false                                                                                     # money
+6702012, 0, 30, 30, 0.900000, false                                                                                     # money
+6702012, 0, 20, 20, 0.800000, false                                                                                     # money
+6702012, 0, 15, 15, 0.900000, false                                                                                     # money
+6702012, 0, 50, 50, 0.800000, false                                                                                     # money
+6702012, 0, 15, 15, 0.700000, false                                                                                     # money
+6702012, 0, 20, 20, 0.900000, false                                                                                     # money
+6702012, 0, 35, 35, 0.700000, false                                                                                     # money
+6702012, 0, 50, 50, 0.700000, false                                                                                     # money
+6702012, 0, 15, 15, 0.800000, false                                                                                     # money
+6702012, 0, 20, 20, 0.700000, false                                                                                     # money
+6702012, 0, 50, 50, 0.900000, false                                                                                     # money
 6702012, 1032043, 1, 1, 0.090000, false                                                                                 # Cecelia's Earrings
 6702012, 1032044, 1, 1, 0.090000, false                                                                                 # Moonstar Earrings
 6702012, 1032045, 1, 1, 0.090000, false                                                                                 # Celestial Earrings
@@ -694,6 +934,9 @@
 6802001, 4031423, 1, 1, 1.000000, false                                                                                 # Onyx Chest
 
 # eventItem0
+9002000, 0, 10, 10, 0.400000, false                                                                                     # money
+9002000, 0, 20, 20, 0.400000, false                                                                                     # money
+9002000, 0, 30, 30, 0.400000, false                                                                                     # money
 9002000, 2000000, 1, 1, 0.300000, false                                                                                 # Red Potion
 9002000, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 9002000, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
@@ -707,6 +950,9 @@
 9002000, 4021007, 1, 1, 0.200000, false                                                                                 # Diamond
 
 # eventItem1
+9002001, 0, 30, 30, 0.400000, false                                                                                     # money
+9002001, 0, 10, 10, 0.400000, false                                                                                     # money
+9002001, 0, 20, 20, 0.400000, false                                                                                     # money
 9002001, 2000000, 1, 1, 0.300000, false                                                                                 # Red Potion
 9002001, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 9002001, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
@@ -734,6 +980,9 @@
 9002001, 4021008, 1, 1, 0.010000, false                                                                                 # Black Crystal
 
 # eventItem2
+9002002, 0, 30, 30, 0.400000, false                                                                                     # money
+9002002, 0, 10, 10, 0.400000, false                                                                                     # money
+9002002, 0, 20, 20, 0.400000, false                                                                                     # money
 9002002, 2000000, 1, 1, 0.300000, false                                                                                 # Red Potion
 9002002, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 9002002, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
@@ -743,6 +992,7 @@
 9002002, 4031018, 1, 1, 0.100000, true                                                                                  # Treasure Scroll
 
 # sBoxItem0
+9102000, 0, 15, 15, 0.700000, false                                                                                     # money
 9102000, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
 9102000, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
 9102000, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
@@ -753,6 +1003,7 @@
 9102000, 4031157, 1, 1, 0.800000, true                                                                                  # Maple History Book I
 
 # sBoxItem1
+9102001, 0, 15, 15, 0.700000, false                                                                                     # money
 9102001, 2000000, 1, 1, 0.100000, false                                                                                 # Red Potion
 9102001, 2000001, 1, 1, 0.100000, false                                                                                 # Orange Potion
 9102001, 2000002, 1, 1, 0.100000, false                                                                                 # White Potion
@@ -811,6 +1062,24 @@
 9202009, 1032033, 1, 1, 1.000000, false                                                                                 # Protector Rock
 
 # syarenItem12
+9202012, 0, 35, 35, 0.700000, false                                                                                     # money
+9202012, 0, 50, 50, 0.900000, false                                                                                     # money
+9202012, 0, 50, 50, 0.800000, false                                                                                     # money
+9202012, 0, 35, 35, 0.900000, false                                                                                     # money
+9202012, 0, 20, 20, 0.700000, false                                                                                     # money
+9202012, 0, 30, 30, 0.800000, false                                                                                     # money
+9202012, 0, 50, 50, 0.700000, false                                                                                     # money
+9202012, 0, 15, 15, 0.800000, false                                                                                     # money
+9202012, 0, 25, 25, 0.800000, false                                                                                     # money
+9202012, 0, 25, 25, 0.700000, false                                                                                     # money
+9202012, 0, 30, 30, 0.700000, false                                                                                     # money
+9202012, 0, 20, 20, 0.900000, false                                                                                     # money
+9202012, 0, 15, 15, 0.700000, false                                                                                     # money
+9202012, 0, 30, 30, 0.900000, false                                                                                     # money
+9202012, 0, 25, 25, 0.900000, false                                                                                     # money
+9202012, 0, 15, 15, 0.900000, false                                                                                     # money
+9202012, 0, 20, 20, 0.800000, false                                                                                     # money
+9202012, 0, 35, 35, 0.800000, false                                                                                     # money
 9202012, 2000001, 1, 1, 0.200000, false                                                                                 # Orange Potion
 9202012, 2000002, 1, 1, 0.200000, false                                                                                 # White Potion
 9202012, 2000004, 1, 1, 0.040000, false                                                                                 # Elixir

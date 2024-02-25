@@ -26,7 +26,7 @@ final class BmsExtractor {
         final WzImage rewardImage = readImage(REWARD_IMG);
 
         // Extract mob rewards
-        final Map<Integer, Set<Reward>> mobRewards = loadRewards(rewardImage, "m");
+        final Map<Integer, Set<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
         try (BufferedWriter bw = Files.newBufferedWriter(RewardProvider.MOB_REWARD, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             for (var entry : mobRewards.entrySet().stream()
                     .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
@@ -39,10 +39,15 @@ final class BmsExtractor {
                 bw.write(String.format("# %s%n", mobName));
                 for (Reward r : entry.getValue().stream()
                         .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
-                    final String itemName = StringProvider.getItemName(r.getItemId());
-                    if (itemName == null) {
-                        System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
-                        continue;
+                    final String itemName;
+                    if (r.isMoney()) {
+                        itemName = "money";
+                    } else {
+                        itemName = StringProvider.getItemName(r.getItemId());
+                        if (itemName == null) {
+                            System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
+                            continue;
+                        }
                     }
                     final String line = String.format("%d, %d, %d, %d, %f, %b", mobId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.isQuest());
                     bw.write(String.format("%-120s# %s%n", line, itemName));
@@ -68,7 +73,7 @@ final class BmsExtractor {
         }
 
         // Extract reactor rewards
-        final Map<Integer, Set<Reward>> reactorRewards = loadRewards(rewardImage, "r");
+        final Map<Integer, Set<Reward>> reactorRewards = loadRewards(rewardImage, "r", true);
         try (BufferedWriter bw = Files.newBufferedWriter(RewardProvider.REACTOR_REWARD, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             for (var entry : reactorRewards.entrySet().stream()
                     .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
@@ -80,10 +85,15 @@ final class BmsExtractor {
                 bw.write(String.format("# %s%n", reactorActions.get(reactorId)));
                 for (Reward r : entry.getValue().stream()
                         .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
-                    final String itemName = StringProvider.getItemName(r.getItemId());
-                    if (itemName == null) {
-                        System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
-                        continue;
+                    final String itemName;
+                    if (r.isMoney()) {
+                        itemName = "money";
+                    } else {
+                        itemName = StringProvider.getItemName(r.getItemId());
+                        if (itemName == null) {
+                            System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
+                            continue;
+                        }
                     }
                     final String line = String.format("%d, %d, %d, %d, %f, %b", reactorId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.isQuest());
                     bw.write(String.format("%-120s# %s%n", line, itemName));
@@ -93,7 +103,7 @@ final class BmsExtractor {
         }
     }
 
-    public static Map<Integer, Set<Reward>> loadRewards(WzImage image, String prefix) {
+    public static Map<Integer, Set<Reward>> loadRewards(WzImage image, String prefix, boolean includeMoney) {
         final Map<Integer, Set<Reward>> rewardMap = new HashMap<>();
         for (var entry : image.getProperty().getItems().entrySet()) {
             if (!(entry.getValue() instanceof WzListProperty rewardList)) {
@@ -112,12 +122,16 @@ final class BmsExtractor {
                     //System.err.printf("Date expire reward for template %d%n", templateId);
                     continue;
                 }
+                int money = -1;
                 int itemId = -1;
                 int min = 1;
                 int max = 1;
                 double prob = -1;
                 for (var propEntry : rewardProp.getItems().entrySet()) {
                     switch (propEntry.getKey()) {
+                        case "money" -> {
+                            money = WzProvider.getInteger(propEntry.getValue());
+                        }
                         case "item" -> {
                             itemId = WzProvider.getInteger(propEntry.getValue());
                         }
@@ -134,7 +148,9 @@ final class BmsExtractor {
                         }
                     }
                 }
-                if (itemId > 0 && prob > 0) {
+                if (includeMoney && money > 0 && prob > 0) {
+                    rewards.add(Reward.money(money, money, prob));
+                } else if (itemId > 0 && prob > 0) {
                     final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
                     if (itemInfoResult.isEmpty()) {
                         System.err.printf("Could not resolve item info for item ID : %d%n", itemId);
