@@ -15,11 +15,11 @@ public class StatConstants {
     }
 
     public static int getIncSp(int jobId, int newLevel) {
-        // Beginner SP is not distributed (level-based)
+        // Beginner sp is not distributed (level-based)
         if (JobConstants.isBeginnerJob(jobId)) {
             return 0;
         }
-        // ExtendSP Jobs (resistance, evan)
+        // ExtendSp jobs (resistance, evan)
         if (JobConstants.isResistance(jobId)) {
             switch (JobConstants.getJobLevel(jobId)) {
                 case 1 -> {
@@ -71,7 +71,7 @@ public class StatConstants {
                 }
             }
         }
-        // Default SP gain
+        // Default sp gain
         return 3;
     }
 

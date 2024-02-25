@@ -67,7 +67,7 @@ public final class StagePacket {
         // ~CCashShop::LoadData
 
         outPacket.encodeByte(false); // bEventOn
-        outPacket.encodeInt(user.getCharacterStat().getLevel()); // nHighestCharacterLevelInThisAccount
+        outPacket.encodeInt(user.getLevel()); // nHighestCharacterLevelInThisAccount
         return outPacket;
     }
 }

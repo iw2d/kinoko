@@ -6,6 +6,7 @@ import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.type.CharacterStatUDT;
 import kinoko.database.cassandra.type.InventoryUDT;
 import kinoko.database.cassandra.type.QuestRecordUDT;
+import kinoko.database.cassandra.type.SkillRecordUDT;
 
 public final class CharacterTable {
     public static final String CHARACTER_ID = "character_id";
@@ -49,6 +50,7 @@ public final class CharacterTable {
                         .withColumn(ETC_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(CASH_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(MONEY, DataTypes.INT)
+                        .withColumn(SKILL_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
                         .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
                         .withColumn(FRIEND_MAX, DataTypes.INT)

@@ -12,6 +12,7 @@ import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.stat.CharacterStat;
@@ -55,6 +56,12 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setInventoryManager(im);
 
         final SkillManager sm = new SkillManager();
+        final Set<SkillRecord> skillRecords = row.getSet(CharacterTable.SKILL_RECORDS, SkillRecord.class);
+        if (skillRecords != null) {
+            for (SkillRecord sr : skillRecords) {
+                sm.addSkill(sr);
+            }
+        }
         cd.setSkillManager(sm);
 
         final QuestManager qm = new QuestManager();
@@ -170,6 +177,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getInventoryManager().getEtcInventory(), registry))
                         .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getInventoryManager().getCashInventory(), registry))
                         .setColumn(CharacterTable.MONEY, literal(characterData.getInventoryManager().getMoney()))
+                        .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))

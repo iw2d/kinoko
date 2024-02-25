@@ -29,7 +29,7 @@ public final class Pet extends Life implements Encodable {
     public void encode(OutPacket outPacket) {
         // CPet::Init
         outPacket.encodeInt(item.getItemId()); // dwTemplateID
-        outPacket.encodeString(owner.getCharacterStat().getName()); // pOwner
+        outPacket.encodeString(owner.getCharacterName()); // pOwner
         outPacket.encodeLong(item.getItemSn()); // liPetLockerSN
         outPacket.encodeShort(getX()); // ptPosPrev.x
         outPacket.encodeShort(getY()); // ptPosPrev.y

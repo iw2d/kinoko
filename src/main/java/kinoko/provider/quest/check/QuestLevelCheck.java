@@ -14,9 +14,9 @@ public final class QuestLevelCheck implements QuestCheck {
     @Override
     public boolean check(User user) {
         if (isMinimum) {
-            return user.getCharacterStat().getLevel() >= level;
+            return user.getLevel() >= level;
         } else {
-            return user.getCharacterStat().getLevel() <= level;
+            return user.getLevel() <= level;
         }
     }
 }

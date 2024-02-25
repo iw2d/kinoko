@@ -60,7 +60,9 @@ public final class InventoryHandler {
                 final List<Tuple<Integer, Item>> sortedItems = entry.getValue().stream()
                         .sorted(Comparator.comparingInt(Tuple::getLeft))
                         .toList();
-                int total = sortedItems.stream().mapToInt((tuple) -> tuple.getRight().getQuantity()).sum();
+                int total = sortedItems.stream()
+                        .mapToInt((tuple) -> tuple.getRight().getQuantity())
+                        .sum();
                 for (var tuple : sortedItems) {
                     final int position = tuple.getLeft();
                     if (total > slotMax) {

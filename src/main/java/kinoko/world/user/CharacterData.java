@@ -221,7 +221,7 @@ public final class CharacterData implements Encodable {
         }
         if (flag.hasFlag(DBChar.SKILL_RECORD)) {
             outPacket.encodeShort(skillManager.getSkillRecords().size());
-            for (SkillRecord sr : skillManager.getSkillRecords().values()) {
+            for (SkillRecord sr : skillManager.getSkillRecords()) {
                 outPacket.encodeInt(sr.getSkillId());
                 outPacket.encodeInt(sr.getSkillLevel());
                 outPacket.encodeFT(FileTime.DEFAULT_TIME); // mSkillExpired

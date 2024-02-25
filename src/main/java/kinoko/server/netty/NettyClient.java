@@ -65,7 +65,7 @@ public abstract class NettyClient {
         nettyChannel.writeAndFlush(outPacket);
     }
 
-    public synchronized void close() {
+    public void close() {
         nettyChannel.close();
     }
 }

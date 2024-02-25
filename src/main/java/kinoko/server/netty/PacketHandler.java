@@ -61,7 +61,6 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
         if (client != null) {
             client.close();
         }
-        ctx.fireChannelInactive();
     }
 
     @Override

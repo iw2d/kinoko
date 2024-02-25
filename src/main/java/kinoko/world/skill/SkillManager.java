@@ -3,17 +3,24 @@ package kinoko.world.skill;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class SkillManager {
     private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
     private final Map<Integer, Instant> skillCooltimes = new HashMap<>();
 
-    public Map<Integer, SkillRecord> getSkillRecords() {
-        return skillRecords;
+    public Set<SkillRecord> getSkillRecords() {
+        return skillRecords.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 
     public Map<Integer, Instant> getSkillCooltimes() {
         return skillCooltimes;
+    }
+
+    public Optional<SkillRecord> getSkill(int skillId) {
+        return Optional.ofNullable(skillRecords.get(skillId));
     }
 
     public void addSkill(SkillRecord skillRecord) {

@@ -11,8 +11,8 @@ public final class UserPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_ENTER_FIELD);
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         // CUserRemote::Init
-        outPacket.encodeByte(user.getCharacterStat().getLevel()); // nLevel
-        outPacket.encodeString(user.getCharacterStat().getName()); // sCharacterName
+        outPacket.encodeByte(user.getLevel()); // nLevel
+        outPacket.encodeString(user.getCharacterName()); // sCharacterName
         outPacket.encodeString(""); // sGuildName
         outPacket.encodeShort(0); // nGuildMarkBg
         outPacket.encodeByte(0); // nGuildMarkBgColor

@@ -3,7 +3,6 @@ package kinoko.server.command;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.IncExpMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
@@ -30,7 +29,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        user.write(WvsContext.message(IncExpMessage.mob(true, 5, 5)));
+        System.out.println(user.getSkillManager().getSkillRecords());
         user.dispose();
     }
 

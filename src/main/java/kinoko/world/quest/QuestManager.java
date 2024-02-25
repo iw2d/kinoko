@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 public final class QuestManager {
     private final Map<Integer, QuestRecord> questRecords = new HashMap<>();
 
+    public Set<QuestRecord> getQuestRecords() {
+        return questRecords.values().stream().collect(Collectors.toUnmodifiableSet());
+    }
+
     public Set<QuestRecord> getStartedQuests() {
         return questRecords.values().stream()
                 .filter(qr -> qr.getState() == QuestState.PERFORM)
@@ -38,10 +42,6 @@ public final class QuestManager {
 
     public Optional<QuestRecord> getQuestRecord(int questId) {
         return Optional.ofNullable(questRecords.get(questId));
-    }
-
-    public Set<QuestRecord> getQuestRecords() {
-        return questRecords.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 
     public boolean hasQuestStarted(int questId) {

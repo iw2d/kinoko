@@ -61,6 +61,10 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getCharacterId();
     }
 
+    public String getCharacterName() {
+        return characterData.getCharacterName();
+    }
+
     public long getNextItemSn() {
         return characterData.getNextItemSn();
     }
@@ -95,6 +99,10 @@ public final class User extends Life implements Lockable<User> {
 
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public int getLevel() {
+        return getCharacterStat().getLevel();
+    }
 
     public int getHp() {
         return getCharacterStat().getHp();

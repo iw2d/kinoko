@@ -3,6 +3,19 @@ package kinoko.world.skill;
 import kinoko.world.job.JobConstants;
 
 public final class SkillConstants {
+
+    public static int getSkillRoot(int skillId) {
+        return skillId / 10000;
+    }
+
+    public static boolean isBeginnerSpAddableSkill(int skillId) {
+        if (!JobConstants.isBeginnerJob(getSkillRoot(skillId))) {
+            return false;
+        }
+        final int skillType = skillId % 10000;
+        return skillType == 1000 || skillType == 1001 || skillType == 1002;
+    }
+
     public static boolean isShootSkillNotUsingShootingWeapon(int skillId) {
         switch (skillId) {
             case 4121003:

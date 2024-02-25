@@ -21,7 +21,7 @@ public final class UserRemote {
         final OutPacket outPacket = OutPacket.of(a.getHeaderType());
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(a.mask); // nDamagePerMob | (16 * nMobCount)
-        outPacket.encodeByte(user.getCharacterStat().getLevel()); // nLevel
+        outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeByte(a.slv);
         if (a.slv != 0) {
             outPacket.encodeInt(a.skillId);
@@ -78,7 +78,7 @@ public final class UserRemote {
     public static OutPacket movingShootAttackPrepare(User user, int skillId, int slv, short actionAndDir, byte attackSpeed) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_MOVING_SHOOT_ATTACK_PREPARE);
         outPacket.encodeInt(user.getCharacterId());
-        outPacket.encodeByte(user.getCharacterStat().getLevel());
+        outPacket.encodeByte(user.getLevel());
         outPacket.encodeByte(slv);
         if (slv != 0) {
             outPacket.encodeInt(skillId);

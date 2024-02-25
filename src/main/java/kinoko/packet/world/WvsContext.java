@@ -3,8 +3,10 @@ package kinoko.packet.world;
 import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.FileTime;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.TemporaryStatManager;
@@ -65,6 +67,24 @@ public final class WvsContext {
         final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
         tsm.encodeReset(outPacket);
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
+        return outPacket;
+    }
+
+    public static OutPacket changeSkillRecordResult(SkillRecord skillRecord) {
+        return changeSkillRecordResult(List.of(skillRecord));
+    }
+
+    public static OutPacket changeSkillRecordResult(List<SkillRecord> skillRecords) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHANGE_SKILL_RECORD_RESULT);
+        outPacket.encodeByte(true); // bool -> bExclRequestSent = 0
+        outPacket.encodeShort(skillRecords.size());
+        for (SkillRecord sr : skillRecords) {
+            outPacket.encodeInt(sr.getSkillId()); // nSkillID
+            outPacket.encodeInt(sr.getSkillLevel());
+            outPacket.encodeInt(sr.getMasterLevel());
+            outPacket.encodeFT(FileTime.DEFAULT_TIME); // dateExpire
+        }
+        outPacket.encodeByte(0); // bSN
         return outPacket;
     }
 

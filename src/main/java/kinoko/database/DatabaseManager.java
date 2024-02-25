@@ -24,6 +24,7 @@ import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
 import kinoko.world.item.PetData;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.net.InetSocketAddress;
@@ -88,6 +89,7 @@ public final class DatabaseManager {
         PetDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        SkillRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
@@ -102,6 +104,7 @@ public final class DatabaseManager {
         registerCodec(cqlSession, PetDataUDT.getTypeName(), (ic) -> new PetDataCodec(ic, GenericType.of(PetData.class)));
         registerCodec(cqlSession, ItemUDT.getTypeName(), (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
         registerCodec(cqlSession, InventoryUDT.getTypeName(), (ic) -> new InventoryCodec(ic, GenericType.of(Inventory.class)));
+        registerCodec(cqlSession, SkillRecordUDT.getTypeName(), (ic) -> new SkillRecordCodec(ic, GenericType.of(SkillRecord.class)));
         registerCodec(cqlSession, QuestRecordUDT.getTypeName(), (ic) -> new QuestRecordCodec(ic, GenericType.of(QuestRecord.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
