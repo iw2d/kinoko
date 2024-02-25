@@ -12,7 +12,7 @@ public final class Attack {
     public byte mask;
     public byte flag;
     public int skillId;
-    public byte slv;
+    public int slv;
     public byte combatOrders;
     public int keyDown;
     public byte exJablin;

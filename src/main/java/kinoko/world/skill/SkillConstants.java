@@ -16,6 +16,67 @@ public final class SkillConstants {
         return skillType == 1000 || skillType == 1001 || skillType == 1002;
     }
 
+    public static boolean isAntiRepeatBuffSkill(int skillId) {
+        switch (skillId) {
+            case 1001003:
+            case 1101006:
+            case 1111007:
+            case 1121000:
+            case 1201006:
+            case 1211009:
+            case 1211010:
+            case 1221000:
+            case 1301006:
+            case 1301007:
+            case 1311007:
+            case 1321000:
+            case 2101001:
+            case 2101003:
+            case 2121000:
+            case 2201001:
+            case 2201003:
+            case 2221000:
+            case 2301004:
+            case 2311001:
+            case 2311003:
+            case 2321000:
+            case 2321005:
+            case 3121000:
+            case 3121002:
+            case 3221000:
+            case 4101004:
+            case 4111001:
+            case 4121000:
+            case 4201003:
+            case 4221000:
+            case 4311001:
+            case 4341000:
+            case 4341007:
+            case 5111007:
+            case 5121000:
+            case 5121009:
+            case 5211007:
+            case 5221000:
+            case 11001001:
+            case 11101003:
+            case 12101000:
+            case 12101001:
+            case 14101003:
+            case 15111005:
+            case 21121000:
+            case 22141003:
+            case 22171000:
+            case 22181000:
+            case 32111004:
+            case 32121007:
+            case 33121007:
+            case 35111013:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isShootSkillNotUsingShootingWeapon(int skillId) {
         switch (skillId) {
             case 4121003:

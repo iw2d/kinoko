@@ -88,6 +88,12 @@ public final class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket skillUseResult() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SKILL_USE_RESULT);
+        outPacket.encodeByte(0); // unused, packet sets bExclRequestSent = 0
+        return outPacket;
+    }
+
     public static OutPacket message(Message message) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MESSAGE);
         message.encode(outPacket);

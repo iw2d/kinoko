@@ -8,6 +8,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobConstants;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -84,7 +85,12 @@ public final class SkillHandler {
 
     @Handler(InHeader.USER_SKILL_USE_REQUEST)
     public static void handleUserSkillUseRequest(User user, InPacket inPacket) {
-        // TODO
+        inPacket.decodeInt(); // update_time
+        final int skillId = inPacket.decodeInt(); // nSkillID
+        final int slv = inPacket.decodeByte(); // nSLV
+        try (var locked = user.acquire()) {
+            SkillProcessor.processSkill(user, skillId, slv, inPacket);
+        }
     }
 
     @Handler(InHeader.USER_SKILL_CANCEL_REQUEST)
