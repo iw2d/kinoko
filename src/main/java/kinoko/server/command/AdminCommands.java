@@ -14,6 +14,7 @@ import kinoko.provider.npc.NpcInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
+import kinoko.util.Triple;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.mob.Mob;
@@ -209,8 +210,8 @@ public final class AdminCommands {
             if (isNumber) {
                 skillId = Integer.parseInt(query);
             } else {
-                final List<Map.Entry<Integer, String>> searchResult = StringProvider.getNpcNames().entrySet().stream()
-                        .filter((entry) -> entry.getValue().toLowerCase().contains(query.toLowerCase()))
+                final List<Map.Entry<Integer, Triple<String, String, String>>> searchResult = StringProvider.getSkillStrings().entrySet().stream()
+                        .filter((entry) -> entry.getValue().getLeft().toLowerCase().contains(query.toLowerCase()))
                         .sorted(Comparator.comparingInt(Map.Entry::getKey))
                         .toList();
                 if (!searchResult.isEmpty()) {
@@ -219,7 +220,7 @@ public final class AdminCommands {
                     } else {
                         user.write(WvsContext.message(Message.system("Results for skill name : \"%s\"", query)));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue().getLeft())));
                         }
                         return;
                     }

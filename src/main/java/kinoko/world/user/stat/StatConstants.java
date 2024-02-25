@@ -20,7 +20,7 @@ public class StatConstants {
             return 0;
         }
         // ExtendSp jobs (resistance, evan)
-        if (JobConstants.isResistance(jobId)) {
+        if (JobConstants.isResistanceJob(jobId)) {
             switch (JobConstants.getJobLevel(jobId)) {
                 case 1 -> {
                     return newLevel <= 30 ? 3 : 0;
@@ -86,7 +86,7 @@ public class StatConstants {
         if (JobConstants.isBattleMageJob(jobId)) {
             return 34;
         }
-        switch (jobId % 1000 / 100) {
+        switch (JobConstants.getJobCategory(jobId)) {
             case 1 -> {
                 return 24;
             }
@@ -116,7 +116,7 @@ public class StatConstants {
         if (JobConstants.isBattleMageJob(jobId)) {
             return 22;
         }
-        switch (jobId % 1000 / 100) {
+        switch (JobConstants.getJobCategory(jobId)) {
             case 1 -> {
                 return 4;
             }
@@ -137,7 +137,7 @@ public class StatConstants {
 
     public static int getIncHpByAp(int jobId) {
         // IncHPVal
-        switch (jobId % 1000 / 100) {
+        switch (JobConstants.getJobCategory(jobId)) {
             case 0 -> {
                 return 8;
             }
@@ -164,7 +164,7 @@ public class StatConstants {
 
     public static int getIncMpByAp(int jobId) {
         // IncMPVal
-        switch (jobId % 1000 / 100) {
+        switch (JobConstants.getJobCategory(jobId)) {
             case 0 -> {
                 return 6;
             }

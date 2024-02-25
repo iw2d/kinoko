@@ -6,30 +6,33 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.util.Rect;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class StaticSkillInfo implements SkillInfo {
     private final int id;
     private final int maxLevel;
-    private final boolean psd;
     private final boolean invisible;
+    private final boolean psd;
+    private final List<Integer> psdSkills;
     private final Map<SkillStat, List<Integer>> stats;
     private final Rect rect;
 
-    public StaticSkillInfo(int id, int maxLevel, boolean psd, boolean invisible, Map<SkillStat, List<Integer>> stats, Rect rect) {
+    public StaticSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, List<Integer>> stats, Rect rect) {
         this.id = id;
         this.maxLevel = maxLevel;
-        this.psd = psd;
         this.invisible = invisible;
+        this.psd = psd;
+        this.psdSkills = psdSkills;
         this.stats = stats;
         this.rect = rect;
     }
 
+    public Map<SkillStat, List<Integer>> getStats() {
+        return stats;
+    }
+
     @Override
-    public int getId() {
+    public int getSkillId() {
         return id;
     }
 
@@ -39,13 +42,18 @@ public final class StaticSkillInfo implements SkillInfo {
     }
 
     @Override
+    public boolean isInvisible() {
+        return invisible;
+    }
+
+    @Override
     public boolean isPsd() {
         return psd;
     }
 
     @Override
-    public boolean isInvisible() {
-        return invisible;
+    public List<Integer> getPsdSkills() {
+        return psdSkills;
     }
 
     @Override
@@ -63,8 +71,8 @@ public final class StaticSkillInfo implements SkillInfo {
         return "StaticSkillInfo[" +
                 "id=" + id + ", " +
                 "maxLevel=" + maxLevel + ", " +
-                "psd=" + psd + ", " +
-                "invisible=" + invisible + ']';
+                "invisible=" + invisible + ", " +
+                "psd=" + psd + ", " + ']';
     }
 
     public static StaticSkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {
@@ -110,11 +118,21 @@ public final class StaticSkillInfo implements SkillInfo {
                 }
             }
         }
+        if (maxLevel == 0) {
+            throw new ProviderError("Could not resolve static skill info");
+        }
+        final List<Integer> psdSkills = new ArrayList<>();
+        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
+            for (var entry : psdProp.getItems().entrySet()) {
+                psdSkills.add(Integer.parseInt(entry.getKey()));
+            }
+        }
         return new StaticSkillInfo(
                 skillId,
                 maxLevel,
-                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
                 WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
+                Collections.unmodifiableList(psdSkills),
                 stats,
                 rect
         );

@@ -61,7 +61,7 @@ public final class SkillHandler {
                         .sum();
                 // Beginner sp is calculated by level
                 final int totalSp;
-                if (JobConstants.isResistance(skillRoot)) {
+                if (JobConstants.isResistanceJob(skillRoot)) {
                     totalSp = Math.min(user.getLevel(), 10) - 1; // max total sp = 9
                 } else {
                     totalSp = Math.min(user.getLevel(), 7) - 1; // max total sp = 6

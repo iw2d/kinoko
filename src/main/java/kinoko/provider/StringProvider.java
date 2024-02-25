@@ -4,6 +4,7 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Triple;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,7 +19,7 @@ public final class StringProvider implements WzProvider {
     private static final Map<Integer, String> mapNames = new HashMap<>();
     private static final Map<Integer, String> mobNames = new HashMap<>();
     private static final Map<Integer, String> npcNames = new HashMap<>();
-    private static final Map<Integer, String> skillNames = new HashMap<>();
+    private static final Map<Integer, Triple<String, String, String>> skillStrings = new HashMap<>(); // skillId -> name, desc, h
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
@@ -49,8 +50,8 @@ public final class StringProvider implements WzProvider {
         return npcNames;
     }
 
-    public static Map<Integer, String> getSkillNames() {
-        return skillNames;
+    public static Map<Integer, Triple<String, String, String>> getSkillStrings() {
+        return skillStrings;
     }
 
     public static String getItemName(int itemId) {
@@ -70,7 +71,11 @@ public final class StringProvider implements WzProvider {
     }
 
     public static String getSkillName(int skillId) {
-        return skillNames.get(skillId);
+        return skillStrings.get(skillId).getLeft();
+    }
+
+    public static Triple<String, String, String> getSkillString(int skillId) {
+        return skillStrings.get(skillId);
     }
 
     private static void loadItemNames(WzPackage source) throws ProviderError {
@@ -106,7 +111,7 @@ public final class StringProvider implements WzProvider {
             itemNames.put(itemId, name);
         }
         // Other types
-        for (String imageName : List.of("Consume.img", "Ins.img", "Cash.img")) {
+        for (String imageName : List.of("Consume.img", "Ins.img", "Cash.img", "Pet.img")) {
             if (!(source.getDirectory().getImages().get(imageName) instanceof WzImage itemImage)) {
                 throw new ProviderError("Could not resolve String.wz/%s", imageName);
             }
@@ -181,7 +186,9 @@ public final class StringProvider implements WzProvider {
                     !(prop.getItems().get("name") instanceof String name)) {
                 continue;
             }
-            skillNames.put(skillId, name);
+            final String desc = WzProvider.getString(prop.getItems().get("desc"));
+            final String h = WzProvider.getString(prop.getItems().get("h"), "");
+            skillStrings.put(skillId, new Triple<>(name, desc, h));
         }
     }
 }

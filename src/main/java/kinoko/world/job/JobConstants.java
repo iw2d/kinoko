@@ -18,6 +18,10 @@ public final class JobConstants {
         return 0;
     }
 
+    public static int getJobCategory(int jobId) {
+        return jobId % 1000 / 100;
+    }
+
     public static boolean isBeginnerJob(int jobId) {
         return jobId % 1000 == 0 || jobId == 2001;
     }
@@ -38,7 +42,7 @@ public final class JobConstants {
         return jobId / 1000 == 1;
     }
 
-    public static boolean isResistance(int jobId) {
+    public static boolean isResistanceJob(int jobId) {
         return jobId / 1000 == 3;
     }
 
@@ -55,6 +59,6 @@ public final class JobConstants {
     }
 
     public static boolean isExtendSpJob(int jobId) {
-        return isResistance(jobId) || isEvanJob(jobId);
+        return isResistanceJob(jobId) || isEvanJob(jobId);
     }
 }

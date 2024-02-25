@@ -70,5 +70,13 @@ public final class ItemProvider implements WzProvider {
                 }
             }
         }
+        final WzDirectory petDirectory = source.getDirectory().getDirectories().get("Pet");
+        if (petDirectory == null) {
+            throw new ProviderError("Could not resolve Item.wz/Pet");
+        }
+        for (var imageEntry : petDirectory.getImages().entrySet()) {
+            final int itemId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
+            itemInfos.put(itemId, ItemInfo.from(itemId, imageEntry.getValue().getProperty()));
+        }
     }
 }

@@ -5,21 +5,25 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Rect;
 import kinoko.world.skill.SkillRecord;
 
+import java.util.List;
+
 public interface SkillInfo {
-    int getId();
+    int getSkillId();
 
     int getMaxLevel();
 
+    boolean isInvisible();
+
     boolean isPsd();
 
-    boolean isInvisible();
+    List<Integer> getPsdSkills();
 
     int getValue(SkillStat stat, int slv);
 
     Rect getRect();
 
     default SkillRecord createRecord() {
-        final SkillRecord skillRecord = new SkillRecord(getId());
+        final SkillRecord skillRecord = new SkillRecord(getSkillId());
         skillRecord.setSkillLevel(0);
         skillRecord.setMasterLevel(getMaxLevel());
         return skillRecord;

@@ -31,6 +31,18 @@ public enum ItemInfoType {
     maxLevel,
     setItemID,
 
+    // Pet
+    life,
+    hungry,
+    chatBalloon,
+    nameTag,
+    permanent,
+    consumeHP,
+    consumeMP,
+    pickupItem,
+    sweepForDrop,
+    evol,
+
     incSTR,
     incDEX,
     incINT,

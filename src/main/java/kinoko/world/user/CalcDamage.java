@@ -13,7 +13,7 @@ public final class CalcDamage {
         final int jobId = cs.getJob();
         if (JobConstants.isBeginnerJob(jobId)) {
             return calcBaseDamage(cs.getBaseStr(), cs.getBaseDex(), 0, pad, 1.2);
-        } else if (jobId % 1000 / 100 == 2) { // is_mage_job
+        } else if (JobConstants.getJobCategory(jobId) == 2) { // is_mage_job
             return calcBaseDamage(cs.getBaseInt(), cs.getBaseLuk(), 0, mad, 1.0);
         }
         switch (wt) {

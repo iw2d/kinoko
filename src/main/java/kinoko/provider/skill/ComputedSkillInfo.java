@@ -9,9 +9,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ComputedSkillInfo implements SkillInfo {
     private static final Function ceil = new Function("u", 1) {
@@ -29,22 +27,34 @@ public final class ComputedSkillInfo implements SkillInfo {
 
     private final int id;
     private final int maxLevel;
-    private final boolean psd;
     private final boolean invisible;
+    private final boolean psd;
+    private final List<Integer> psdSkills;
     private final Map<SkillStat, Expression> stats;
+    private final Map<SkillStat, String> strings;
     private final Rect rect;
 
-    public ComputedSkillInfo(int id, int maxLevel, boolean psd, boolean invisible, Map<SkillStat, Expression> stats, Rect rect) {
+    public ComputedSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, Expression> stats, Map<SkillStat, String> strings, Rect rect) {
         this.id = id;
         this.maxLevel = maxLevel;
-        this.psd = psd;
         this.invisible = invisible;
+        this.psd = psd;
+        this.psdSkills = psdSkills;
         this.stats = stats;
+        this.strings = strings;
         this.rect = rect;
     }
 
+    public Map<SkillStat, Expression> getStats() {
+        return stats;
+    }
+
+    public Map<SkillStat, String> getStrings() {
+        return strings;
+    }
+
     @Override
-    public int getId() {
+    public int getSkillId() {
         return id;
     }
 
@@ -54,13 +64,18 @@ public final class ComputedSkillInfo implements SkillInfo {
     }
 
     @Override
+    public boolean isInvisible() {
+        return invisible;
+    }
+
+    @Override
     public boolean isPsd() {
         return psd;
     }
 
     @Override
-    public boolean isInvisible() {
-        return invisible;
+    public List<Integer> getPsdSkills() {
+        return psdSkills;
     }
 
     @Override
@@ -80,12 +95,13 @@ public final class ComputedSkillInfo implements SkillInfo {
         return "ComputedSkillInfo[" +
                 "id=" + id + ", " +
                 "maxLevel=" + maxLevel + ", " +
-                "psd=" + psd + ", " +
-                "invisible=" + invisible + ']';
+                "invisible=" + invisible + ", " +
+                "psd=" + psd + ", " + ']';
     }
 
     public static ComputedSkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {
         final Map<SkillStat, Expression> stats = new EnumMap<>(SkillStat.class);
+        final Map<SkillStat, String> strings = new EnumMap<>(SkillStat.class);
         Rect rect = null;
         int maxLevel = 0;
         if (skillProp.get("common") instanceof WzListProperty commonProps) {
@@ -109,21 +125,31 @@ public final class ComputedSkillInfo implements SkillInfo {
                         // skip; rb is handled by lt
                     }
                     default -> {
-                        final Expression expression = new ExpressionBuilder(WzProvider.getString(entry.getValue()))
+                        final String expressionString = WzProvider.getString(entry.getValue());
+                        final Expression expression = new ExpressionBuilder(expressionString)
                                 .functions(ceil, floor)
                                 .variables("x")
                                 .build();
                         stats.put(stat, expression);
+                        strings.put(stat, expressionString);
                     }
                 }
+            }
+        }
+        final List<Integer> psdSkills = new ArrayList<>();
+        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
+            for (var entry : psdProp.getItems().entrySet()) {
+                psdSkills.add(Integer.parseInt(entry.getKey()));
             }
         }
         return new ComputedSkillInfo(
                 skillId,
                 maxLevel,
-                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
                 WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
+                Collections.unmodifiableList(psdSkills),
                 Collections.unmodifiableMap(stats),
+                Collections.unmodifiableMap(strings),
                 rect
         );
     }

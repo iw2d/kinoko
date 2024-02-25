@@ -1,5 +1,6 @@
 package kinoko.world.item;
 
+import kinoko.provider.StringProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
@@ -96,7 +97,7 @@ public final class PetData {
 
     public static PetData from(ItemInfo itemInfo) {
         final PetData petData = new PetData();
-        petData.setPetName(String.valueOf(itemInfo.getItemId())); // TODO: StringProvider
+        petData.setPetName(StringProvider.getItemName(itemInfo.getItemId()));
         petData.setLevel((byte) 1);
         petData.setFullness((byte) 100);
         return petData;

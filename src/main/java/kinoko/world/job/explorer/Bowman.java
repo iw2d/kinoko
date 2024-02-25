@@ -25,7 +25,7 @@ public final class Bowman {
     public static final int ARROW_RAIN = 3111004;
     public static final int SILVER_HAWK = 3111005;
     public static final int STRAFE_BM = 3111006;
-    // SNIPER
+    // BOWMASTER
     public static final int BOW_EXPERT = 3120005;
     public static final int VENGEANCE = 3120010;
     public static final int MARKSMANSHIP_BM = 3120011;
@@ -38,7 +38,7 @@ public final class Bowman {
     public static final int CONCENTRATE = 3121008;
     public static final int HEROS_WILL_BM = 3121009;
 
-    // CROSSBOW_MAN
+    // CROSSBOWMAN
     public static final int CROSSBOW_MASTERY = 3200000;
     public static final int FINAL_ATTACK_MM = 3200001;
     public static final int ENHANCED_BASICS_MM = 3200006;
