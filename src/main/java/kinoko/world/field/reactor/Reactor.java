@@ -1,12 +1,28 @@
 package kinoko.world.field.reactor;
 
 import kinoko.packet.field.ReactorPacket;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.RewardProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.ReactorInfo;
+import kinoko.provider.reactor.ReactorEvent;
+import kinoko.provider.reactor.ReactorState;
 import kinoko.provider.reactor.ReactorTemplate;
+import kinoko.provider.reward.Reward;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
+import kinoko.util.Util;
+import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObject;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropOwnType;
+import kinoko.world.item.Item;
+import kinoko.world.user.User;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -48,6 +64,76 @@ public final class Reactor extends FieldObject implements Lockable<Reactor> {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public boolean hasAction() {
+        return getAction() != null && !getAction().isEmpty();
+    }
+
+    public boolean isLastState() {
+        return getState() == template.getLastState();
+    }
+
+    public boolean hit(int skillId) {
+        final ReactorState state = template.getStates().get(getState());
+        if (state == null) {
+            return false;
+        }
+        for (ReactorEvent event : state.getEvents()) {
+            // Find event that can be triggered
+            switch (event.getType()) {
+                case HIT -> {
+                    if (skillId != 0) {
+                        continue;
+                    }
+                }
+                case SKILL -> {
+                    if (skillId == 0) {
+                        continue;
+                    }
+                }
+                default -> {
+                    continue;
+                }
+            }
+            // Event triggered -> update state
+            setState(event.getNextState());
+            return true;
+        }
+        return false;
+    }
+
+    public void dropRewards(User owner) {
+        // Create drops from possible rewards
+        final Set<Drop> drops = new HashSet<>();
+        final Set<Reward> possibleRewards = RewardProvider.getReactorRewards(this);
+        for (Reward reward : possibleRewards) {
+            // Drop probability
+            if (Util.getRandom().nextDouble() > reward.getProb()) {
+                continue;
+            }
+            // Create drop
+            if (reward.isMoney()) {
+                final int money = Util.getRandom(reward.getMin(), reward.getMax());
+                if (money <= 0) {
+                    continue;
+                }
+                drops.add(Drop.money(DropOwnType.USER_OWN, this, money, owner.getCharacterId()));
+            } else {
+                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
+                if (itemInfoResult.isEmpty()) {
+                    continue;
+                }
+                final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
+                final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
+                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId()));
+            }
+        }
+        // Add drops to field
+        getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
     }
 
     public void reset(int x, int y, int state) {

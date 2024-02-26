@@ -6,6 +6,7 @@ package kinoko.server.script;
 public enum ScriptType {
     NPC,                // npc and quest scripts
     PORTAL,             // portal scripts
+    REACTOR,            // reactor scripts
     FIRST_USER_ENTER,   // field onFirstUserEnter scripts
-    USER_ENTER         // field onUserEnter scripts
+    USER_ENTER          // field onUserEnter scripts
 }

@@ -49,14 +49,19 @@ public final class NioBufferInPacket implements InPacket {
     }
 
     @Override
+    public String decodeString() {
+        final short length = decodeShort();
+        return decodeString(length);
+    }
+
+    @Override
     public byte[] getData() {
         return buffer.array();
     }
 
     @Override
-    public String decodeString() {
-        final short length = decodeShort();
-        return decodeString(length);
+    public int getRemaining() {
+        return buffer.remaining();
     }
 
     @Override

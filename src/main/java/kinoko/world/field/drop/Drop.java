@@ -4,7 +4,6 @@ import kinoko.packet.field.DropPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObject;
-import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
 
@@ -13,13 +12,13 @@ import java.time.temporal.ChronoUnit;
 
 public final class Drop extends FieldObject {
     private final DropOwnType ownType;
-    private final Life source;
+    private final FieldObject source;
     private final Item item;
     private final int money;
     private final int ownerId;
     private final Instant dateExpire;
 
-    private Drop(DropOwnType ownType, Life source, Item item, int money, int ownerId, Instant dateExpire) {
+    private Drop(DropOwnType ownType, FieldObject source, Item item, int money, int ownerId, Instant dateExpire) {
         this.ownType = ownType;
         this.source = source;
         this.item = item;
@@ -32,7 +31,7 @@ public final class Drop extends FieldObject {
         return ownType;
     }
 
-    public Life getSource() {
+    public FieldObject getSource() {
         return source;
     }
 
@@ -70,11 +69,11 @@ public final class Drop extends FieldObject {
         return DropPacket.dropLeaveField(this, DropLeaveType.TIMEOUT, 0, 0);
     }
 
-    public static Drop item(DropOwnType ownType, Life source, Item item, int ownerId) {
+    public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId) {
         return new Drop(ownType, source, item, 0, ownerId, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
     }
 
-    public static Drop money(DropOwnType ownType, Life source, int money, int ownerId) {
+    public static Drop money(DropOwnType ownType, FieldObject source, int money, int ownerId) {
         return new Drop(ownType, source, null, money, ownerId, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
     }
 }

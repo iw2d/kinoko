@@ -1,7 +1,9 @@
 package kinoko.server.script;
 
+import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
+import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +23,7 @@ public final class ScriptDispatcher {
     public static final Path NPC_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "npc");
     public static final Path QUEST_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "quest");
     public static final Path PORTAL_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "portal");
+    public static final Path REACTOR_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "reactor");
     public static final Path FIELD_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "field");
     public static final String SCRIPT_EXTENSION = ".py";
     public static final String SCRIPT_LANGUAGE = "python";
@@ -29,6 +32,7 @@ public final class ScriptDispatcher {
     private static final Map<ScriptType, Map<Integer, Tuple<ScriptManager, Context>>> scriptManagers = Map.of(
             ScriptType.NPC, new ConcurrentHashMap<>(),
             ScriptType.PORTAL, new ConcurrentHashMap<>(),
+            ScriptType.REACTOR, new ConcurrentHashMap<>(),
             ScriptType.FIRST_USER_ENTER, new ConcurrentHashMap<>(),
             ScriptType.USER_ENTER, new ConcurrentHashMap<>()
     );
@@ -84,14 +88,29 @@ public final class ScriptDispatcher {
         });
     }
 
-    public static void startPortalScript(User user, String scriptName) {
+    public static void startPortalScript(User user, PortalInfo portalInfo) {
+        final String scriptName = portalInfo.getScript();
         if (scriptManagers.get(ScriptType.PORTAL).containsKey(user.getCharacterId())) {
             log.error("Cannot start portal script {}, another script already being evaluated.", scriptName);
             return;
         }
-        final PortalScriptManager scriptManager = new PortalScriptManager(user);
+        final PortalScriptManager scriptManager = new PortalScriptManager(user, portalInfo);
         startScript(ScriptType.PORTAL, scriptManager, Path.of(PORTAL_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
             context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
+            context.getBindings(SCRIPT_LANGUAGE).putMember("portal", portalInfo);
+        });
+    }
+
+    public static void startReactorScript(User user, Reactor reactor) {
+        final String scriptName = reactor.getAction();
+        if (scriptManagers.get(ScriptType.REACTOR).containsKey(user.getCharacterId())) {
+            log.error("Cannot start reactor script {}, another script already being evaluated.", scriptName);
+            return;
+        }
+        final ReactorScriptManager scriptManager = new ReactorScriptManager(user, reactor);
+        startScript(ScriptType.REACTOR, scriptManager, Path.of(REACTOR_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
+            context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
+            context.getBindings(SCRIPT_LANGUAGE).putMember("reactor", reactor);
         });
     }
 

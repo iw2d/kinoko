@@ -28,14 +28,14 @@ public final class ReactorPacket {
         return outPacket;
     }
 
-    public static OutPacket changeState(int reactorId, int state, short x, short y, short delay, byte properEventIndex, byte endDelay) {
+    public static OutPacket changeState(Reactor reactor, int delay, int eventIndex, int endDelay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_CHANGE_STATE);
-        outPacket.encodeInt(reactorId); // reactorId
-        outPacket.encodeByte(state); // nState
-        outPacket.encodeShort(x); // ptPos.x
-        outPacket.encodeShort(y); // ptPos.y
+        outPacket.encodeInt(reactor.getId());
+        outPacket.encodeByte(reactor.getState()); // nState
+        outPacket.encodeShort(reactor.getX()); // ptPos.x
+        outPacket.encodeShort(reactor.getY()); // ptPos.y
         outPacket.encodeShort(delay);
-        outPacket.encodeByte(properEventIndex);
+        outPacket.encodeByte(eventIndex); // nProperEventIdx
         outPacket.encodeByte(endDelay); // tStateEnd = update_time + 100 * byte
         return outPacket;
     }

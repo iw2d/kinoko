@@ -35,47 +35,12 @@ public final class Field {
 
     private final MapInfo mapInfo;
     private final byte fieldKey;
-    private ScheduledFuture<?> respawnFuture = null;
+    private ScheduledFuture<?> mobRespawnFuture = null;
+    private ScheduledFuture<?> reactorResetFuture = null;
 
     public Field(MapInfo mapInfo) {
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
-    }
-
-    public UserPool getUserPool() {
-        return userPool;
-    }
-
-    public MobPool getMobPool() {
-        return mobPool;
-    }
-
-    public NpcPool getNpcPool() {
-        return npcPool;
-    }
-
-    public DropPool getDropPool() {
-        return dropPool;
-    }
-
-    public ReactorPool getReactorPool() {
-        return reactorPool;
-    }
-
-    public MapInfo getMapInfo() {
-        return mapInfo;
-    }
-
-    public byte getFieldKey() {
-        return fieldKey;
-    }
-
-    public ScheduledFuture<?> getRespawnFuture() {
-        return respawnFuture;
-    }
-
-    public void setRespawnFuture(ScheduledFuture<?> respawnFuture) {
-        this.respawnFuture = respawnFuture;
     }
 
     public int getFieldId() {
@@ -114,9 +79,56 @@ public final class Field {
         return mapInfo.getReturnMap();
     }
 
+    public UserPool getUserPool() {
+        return userPool;
+    }
+
+    public MobPool getMobPool() {
+        return mobPool;
+    }
+
+    public NpcPool getNpcPool() {
+        return npcPool;
+    }
+
+    public DropPool getDropPool() {
+        return dropPool;
+    }
+
+    public ReactorPool getReactorPool() {
+        return reactorPool;
+    }
+
+    public MapInfo getMapInfo() {
+        return mapInfo;
+    }
+
+    public byte getFieldKey() {
+        return fieldKey;
+    }
+
+    public ScheduledFuture<?> getMobRespawnFuture() {
+        return mobRespawnFuture;
+    }
+
+    public void setMobRespawnFuture(ScheduledFuture<?> mobRespawnFuture) {
+        this.mobRespawnFuture = mobRespawnFuture;
+    }
+
+    public ScheduledFuture<?> getReactorResetFuture() {
+        return reactorResetFuture;
+    }
+
+    public void setReactorResetFuture(ScheduledFuture<?> reactorResetFuture) {
+        this.reactorResetFuture = reactorResetFuture;
+    }
+
     public int getNewObjectId() {
         return fieldObjectCounter.getAndIncrement();
     }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public void broadcastPacket(OutPacket outPacket) {
         broadcastPacket(outPacket, null);
@@ -142,6 +154,10 @@ public final class Field {
         if (mapInfo.hasOnUserEnter()) {
             ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
         }
+    }
+
+    public void removeUser(User user) {
+        userPool.removeUser(user);
     }
 
     public static Field from(MapInfo mapInfo) {
@@ -175,12 +191,18 @@ public final class Field {
             final Reactor reactor = Reactor.from(reactorTemplateResult.get(), reactorInfo);
             field.getReactorPool().addReactor(reactor);
         }
-        // Schedule mob respawns
+        // Schedule mob and reactor respawns
         if (!field.getMobPool().isEmpty()) {
             final ScheduledFuture<?> respawnFuture = EventScheduler.addFixedDelayEvent(() -> {
                 field.getMobPool().respawnMobs();
             }, GameConstants.MOB_RESPAWN_TIME, GameConstants.MOB_RESPAWN_TIME, TimeUnit.SECONDS);
-            field.setRespawnFuture(respawnFuture);
+            field.setMobRespawnFuture(respawnFuture);
+        }
+        if (!field.getReactorPool().isEmpty()) {
+            final ScheduledFuture<?> resetFuture = EventScheduler.addFixedDelayEvent(() -> {
+                field.getReactorPool().resetReactors();
+            }, GameConstants.REACTOR_RESET_INTERVAL, GameConstants.REACTOR_RESET_INTERVAL, TimeUnit.SECONDS);
+            field.setReactorResetFuture(resetFuture);
         }
         return field;
     }

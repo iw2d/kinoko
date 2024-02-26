@@ -112,7 +112,7 @@ public final class ScriptHandler {
             user.dispose();
             return;
         }
-        ScriptDispatcher.startPortalScript(user, portalResult.get().getScript());
+        ScriptDispatcher.startPortalScript(user, portalResult.get());
     }
 
     @Handler(InHeader.USER_QUEST_REQUEST)

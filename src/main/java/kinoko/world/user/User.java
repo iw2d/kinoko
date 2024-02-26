@@ -149,7 +149,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void warp(Field destination, PortalInfo portal, boolean isMigrate, boolean isRevive) {
         if (getField() != null) {
-            getField().getUserPool().removeUser(this);
+            getField().removeUser(this);
         }
         setField(destination);
         setX(portal.getX());
@@ -170,7 +170,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void logout() {
         if (getField() != null) {
-            getField().getUserPool().removeUser(this);
+            getField().removeUser(this);
         }
     }
 

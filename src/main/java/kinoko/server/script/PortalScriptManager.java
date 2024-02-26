@@ -1,19 +1,27 @@
 package kinoko.server.script;
 
 import kinoko.provider.NpcProvider;
+import kinoko.provider.map.PortalInfo;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.world.user.User;
 
 import java.util.Optional;
 
 public final class PortalScriptManager extends ScriptManager {
-    public PortalScriptManager(User user) {
+    private final PortalInfo portalInfo;
+
+    public PortalScriptManager(User user, PortalInfo portalInfo) {
         super(user);
+        this.portalInfo = portalInfo;
     }
 
     @Override
     public void disposeManager() {
         ScriptDispatcher.removeScriptManager(ScriptType.PORTAL, user);
+    }
+
+    public PortalInfo getPortalInfo() {
+        return portalInfo;
     }
 
     public void openNpc(int templateId) {

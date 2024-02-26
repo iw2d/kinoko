@@ -62,9 +62,9 @@ public final class SkillProcessor {
                 user.write(MobPacket.hpIndicator(mob, (int) (percentage * 100)));
                 // Handle death
                 if (mob.getHp() <= 0) {
+                    field.getMobPool().removeMob(mob);
                     mob.distributeExp();
                     mob.dropRewards(user);
-                    field.getMobPool().removeMob(mob);
                 }
             }
         }

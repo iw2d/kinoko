@@ -38,6 +38,9 @@ public final class UserPool extends FieldObjectPool<User> {
             };
             field.getMobPool().forEach((Consumer<Mob>) lifeHandler);
             field.getNpcPool().forEach((Consumer<Npc>) lifeHandler);
+            field.getReactorPool().forEach((reactor) -> {
+                user.write(reactor.enterFieldPacket());
+            });
             field.getDropPool().forEach((drop) -> {
                 user.write(drop.enterFieldPacket());
             });

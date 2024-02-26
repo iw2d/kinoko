@@ -3,20 +3,20 @@ package kinoko.world.field;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
-import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.field.life.mob.Mob;
 import kinoko.world.field.life.mob.MobAppearType;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class MobPool extends FieldObjectPool<Mob> {
-    private final Set<Tuple<Mob, Instant>> graveyard = new HashSet<>(); // mob, removed time
+    private final Map<Mob, Instant> graveyard = new HashMap<>(); // mob -> removed time
 
     public MobPool(Field field) {
         super(field);
@@ -49,7 +49,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
             }
             field.broadcastPacket(mob.leaveFieldPacket());
             if (mob.isRespawn()) {
-                graveyard.add(new Tuple<>(mob, Instant.now()));
+                graveyard.put(mob, Instant.now());
             }
             return true;
         } finally {
@@ -60,13 +60,13 @@ public final class MobPool extends FieldObjectPool<Mob> {
     public void respawnMobs() {
         lock.lock();
         try {
-            var iter = graveyard.iterator();
+            var iter = graveyard.entrySet().iterator();
             while (iter.hasNext()) {
-                var tuple = iter.next();
-                try (var locked = tuple.getLeft().acquire()) {
+                final Map.Entry<Mob, Instant> entry = iter.next();
+                try (var locked = entry.getKey().acquire()) {
                     final Mob mob = locked.get();
                     // Check respawn timer and remove from graveyard
-                    if (Instant.now().isBefore(tuple.getRight().plus(mob.getMobTime(), ChronoUnit.SECONDS))) {
+                    if (Instant.now().isBefore(entry.getValue().plus(mob.getMobTime(), ChronoUnit.SECONDS))) {
                         continue;
                     }
                     iter.remove();

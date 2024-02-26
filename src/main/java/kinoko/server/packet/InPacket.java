@@ -20,4 +20,6 @@ public interface InPacket {
     String decodeString();
 
     byte[] getData();
+
+    int getRemaining();
 }

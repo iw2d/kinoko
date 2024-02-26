@@ -25,6 +25,9 @@ public final class AttackHandler {
             user.dispose();
             return;
         }
+        if (inPacket.getRemaining() == 60) {
+            inPacket.decodeByte(); // extra byte is sent when reactor is hit, no other way to detect this
+        }
         inPacket.decodeInt(); // ~pDrInfo.dr0
         inPacket.decodeInt(); // ~pDrInfo.dr1
         attack.mask = inPacket.decodeByte(); // nDamagePerMob | (16 * nMobCount)

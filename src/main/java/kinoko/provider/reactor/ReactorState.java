@@ -10,4 +10,12 @@ public final class ReactorState {
         this.events = events;
         this.timeOut = timeOut;
     }
+
+    public Set<ReactorEvent> getEvents() {
+        return events;
+    }
+
+    public int getTimeOut() {
+        return timeOut;
+    }
 }

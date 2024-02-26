@@ -95,7 +95,7 @@ final class BmsExtractor {
                             continue;
                         }
                     }
-                    final String line = String.format("%d, %d, %d, %d, %f, %b", reactorId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.isQuest());
+                    final String line = String.format("%s, %d, %d, %d, %f, %b", reactorActions.get(reactorId), r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.isQuest());
                     bw.write(String.format("%-120s# %s%n", line, itemName));
                 }
                 bw.write("\n");

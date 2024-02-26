@@ -25,7 +25,7 @@ public final class NpcHandler {
         final Field field = user.getField();
         final Optional<Npc> npcResult = field.getNpcPool().getById(objectId);
         if (npcResult.isEmpty()) {
-            log.error("Received NPC_MOVE for invalid life with ID : {}", objectId);
+            log.error("Received NPC_MOVE for invalid object with ID : {}", objectId);
             return;
         }
         final Npc npc = npcResult.get();
