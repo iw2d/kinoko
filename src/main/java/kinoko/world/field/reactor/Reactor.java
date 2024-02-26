@@ -26,6 +26,10 @@ public final class Reactor extends FieldObject implements Lockable<Reactor> {
         return template.getId();
     }
 
+    public String getAction() {
+        return template.getAction();
+    }
+
     public String getName() {
         return reactorInfo.getName();
     }

@@ -57,7 +57,7 @@ public final class MapProvider implements WzProvider {
             final int link = linkEntry.getValue().getLeft();
             final MapInfo linkInfo = mapInfos.get(link);
             if (linkInfo == null) {
-                throw new ProviderError("Failed to resolve linked Map ID : %d, link : %d", mapId, link);
+                throw new ProviderError("Failed to resolve linked map ID : %d, link : %d", mapId, link);
             }
             mapInfos.put(mapId, MapInfo.from(
                     mapId,

@@ -3,7 +3,6 @@ package kinoko.provider.skill;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.util.Rect;
 
 import java.util.*;
@@ -96,14 +95,7 @@ public final class StaticSkillInfo implements SkillInfo {
                             maxLevel = WzProvider.getInteger(entry.getValue());
                         }
                         case lt -> {
-                            final WzVectorProperty lt = statProp.get("lt");
-                            final WzVectorProperty rb = statProp.get("rb");
-                            rect = new Rect(
-                                    lt.getX(),
-                                    lt.getY(),
-                                    rb.getX(),
-                                    rb.getY()
-                            );
+                            rect = WzProvider.getRect(statProp);
                         }
                         case rb, hs, hit, ball, action, dateExpire -> {
                             // skip; rb is handled by lt

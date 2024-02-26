@@ -55,7 +55,7 @@ public final class MobProvider implements WzProvider {
             final int link = linkEntry.getValue().getLeft();
             final WzListProperty linkProp = mobProperties.get(link);
             if (linkProp == null) {
-                throw new ProviderError("Failed to resolve linked Mob ID : %d, link : %d", mobId, link);
+                throw new ProviderError("Failed to resolve linked mob ID : %d, link : %d", mobId, link);
             }
             final WzListProperty infoProp = linkEntry.getValue().getRight();
             mobTemplates.put(mobId, MobTemplate.from(mobId, linkProp, infoProp));

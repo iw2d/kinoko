@@ -1,5 +1,9 @@
 package kinoko.provider;
 
+import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.property.WzVectorProperty;
+import kinoko.util.Rect;
+
 public interface WzProvider {
     static int getInteger(Object object) {
         if (object instanceof Integer value) {
@@ -35,5 +39,16 @@ public interface WzProvider {
             return value;
         }
         return defaultValue;
+    }
+
+    static Rect getRect(WzListProperty prop) {
+        final WzVectorProperty lt = prop.get("lt");
+        final WzVectorProperty rb = prop.get("rb");
+        return new Rect(
+                lt.getX(),
+                lt.getY(),
+                rb.getX(),
+                rb.getY()
+        );
     }
 }

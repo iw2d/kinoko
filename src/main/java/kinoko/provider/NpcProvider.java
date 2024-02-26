@@ -54,7 +54,7 @@ public final class NpcProvider implements WzProvider {
             final WzListProperty infoProp = linkEntry.getValue().getRight();
             final NpcTemplate linkedTemplate = npcTemplates.get(link);
             if (linkedTemplate == null) {
-                throw new ProviderError("Failed to resolve linked Npc ID : %d, link : %d", npcId, link);
+                throw new ProviderError("Failed to resolve linked npc ID : %d, link : %d", npcId, link);
             }
             npcTemplates.put(npcId, NpcTemplate.from(npcId, linkedTemplate.isMove(), infoProp));
         }

@@ -3,7 +3,6 @@ package kinoko.provider.skill;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.util.Rect;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -112,14 +111,7 @@ public final class ComputedSkillInfo implements SkillInfo {
                         maxLevel = WzProvider.getInteger(entry.getValue());
                     }
                     case lt -> {
-                        final WzVectorProperty lt = commonProps.get("lt");
-                        final WzVectorProperty rb = commonProps.get("rb");
-                        rect = new Rect(
-                                lt.getX(),
-                                lt.getY(),
-                                rb.getX(),
-                                rb.getY()
-                        );
+                        rect = WzProvider.getRect(commonProps);
                     }
                     case rb, hs, hit, ball, action, dateExpire -> {
                         // skip; rb is handled by lt
