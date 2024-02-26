@@ -35,7 +35,7 @@ final class JsonExporter {
             Map.entry("Arch Mage (I/L)", List.of(BEGINNER, MAGICIAN, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL)),
             Map.entry("Bishop", List.of(BEGINNER, MAGICIAN, CLERIC, PRIEST, BISHOP)),
             Map.entry("Bowmaster", List.of(BEGINNER, ARCHER, HUNTER, RANGER, BOWMASTER)),
-            Map.entry("Marksman", List.of(BEGINNER, CROSSBOWMAN, SNIPER, MARKSMAN)),
+            Map.entry("Marksman", List.of(BEGINNER, ARCHER, CROSSBOWMAN, SNIPER, MARKSMAN)),
             Map.entry("Night Lord", List.of(BEGINNER, ROGUE, ASSASSIN, HERMIT, NIGHT_LORD)),
             Map.entry("Shadower", List.of(BEGINNER, ROGUE, BANDIT, CHIEF_BANDIT, SHADOWER)),
             Map.entry("Dual Blade", List.of(BEGINNER, ROGUE, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER)),
