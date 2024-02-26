@@ -9,8 +9,8 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
-import kinoko.provider.mob.MobInfo;
-import kinoko.provider.npc.NpcInfo;
+import kinoko.provider.mob.MobTemplate;
+import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
@@ -168,14 +168,14 @@ public final class AdminCommands {
                     }
                 }
             }
-            final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(mobId);
-            if (mobInfoResult.isEmpty()) {
+            final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
+            if (mobTemplateResult.isEmpty()) {
                 user.write(WvsContext.message(Message.system("Could not find mob with %s : %s", isNumber ? "ID" : "name", query)));
                 return;
             }
-            final MobInfo mobInfo = mobInfoResult.get();
+            final MobTemplate mobTemplate = mobTemplateResult.get();
             user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getMobName(mobId), mobId)));
-            user.write(WvsContext.message(Message.system("  level : %d", mobInfo.getLevel())));
+            user.write(WvsContext.message(Message.system("  level : %d", mobTemplate.getLevel())));
         } else if (type.equalsIgnoreCase("npc")) {
             int npcId = -1;
             if (isNumber) {
@@ -197,14 +197,14 @@ public final class AdminCommands {
                     }
                 }
             }
-            final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(npcId);
-            if (npcInfoResult.isEmpty()) {
+            final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(npcId);
+            if (npcTemplateResult.isEmpty()) {
                 user.write(WvsContext.message(Message.system("Could not find npc with %s : %s", isNumber ? "ID" : "name", query)));
                 return;
             }
-            final NpcInfo npcInfo = npcInfoResult.get();
+            final NpcTemplate npcTemplate = npcTemplateResult.get();
             user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getNpcName(npcId), npcId)));
-            user.write(WvsContext.message(Message.system("  script : %s", npcInfo.getScript())));
+            user.write(WvsContext.message(Message.system("  script : %s", npcTemplate.getScript())));
         } else if (type.equalsIgnoreCase("skill")) {
             int skillId = -1;
             if (isNumber) {
@@ -245,12 +245,12 @@ public final class AdminCommands {
             return;
         }
         final int templateId = Integer.parseInt(args[1]);
-        final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(templateId);
-        if (npcInfoResult.isEmpty()) {
+        final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
+        if (npcTemplateResult.isEmpty()) {
             user.write(WvsContext.message(Message.system("Could not resolve npc ID : %d", templateId)));
             return;
         }
-        final String scriptName = npcInfoResult.get().getScript();
+        final String scriptName = npcTemplateResult.get().getScript();
         if (scriptName == null || scriptName.isEmpty()) {
             user.write(WvsContext.message(Message.system("Could not find script for npc ID : %d", templateId)));
             return;
@@ -287,15 +287,15 @@ public final class AdminCommands {
             return;
         }
         final int mobId = Integer.parseInt(args[1]);
-        final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(mobId);
-        if (mobInfoResult.isEmpty()) {
+        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
+        if (mobTemplateResult.isEmpty()) {
             user.write(WvsContext.message(Message.system("Could not resolve mob ID : %d", mobId)));
             return;
         }
         final Field field = user.getField();
         final Optional<Foothold> footholdResult = field.getFootholdBelow(user.getX(), user.getY());
         final Mob mob = new Mob(
-                mobInfoResult.get(),
+                mobTemplateResult.get(),
                 user.getX(),
                 user.getY(),
                 footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold()),

@@ -10,8 +10,8 @@ import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.mob.MobAttack;
-import kinoko.provider.mob.MobInfo;
 import kinoko.provider.mob.MobSkill;
+import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
 import kinoko.server.event.EventScheduler;
@@ -43,7 +43,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
-    private final MobInfo mobInfo;
+    private final MobTemplate template;
     private final int mobTime;
     private final boolean respawn;
 
@@ -53,35 +53,35 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private int hp;
     private int mp;
 
-    public Mob(MobInfo mobInfo, int x, int y, int fh, int mobTime, boolean respawn) {
-        this.mobInfo = mobInfo;
+    public Mob(MobTemplate template, int x, int y, int fh, int mobTime, boolean respawn) {
+        this.template = template;
         this.mobTime = mobTime;
         this.respawn = respawn;
         reset(x, y, fh);
     }
 
     public int getTemplateId() {
-        return this.mobInfo.getTemplateId();
+        return this.template.getId();
     }
 
     public int getLevel() {
-        return mobInfo.getLevel();
+        return template.getLevel();
     }
 
     public int getMaxHp() {
-        return mobInfo.getMaxHp();
+        return template.getMaxHp();
     }
 
     public int getMaxMp() {
-        return mobInfo.getMaxMp();
+        return template.getMaxMp();
     }
 
     public boolean isBoss() {
-        return mobInfo.isBoss();
+        return template.isBoss();
     }
 
     public boolean isDamagedByMob() {
-        return mobInfo.isDamagedByMob();
+        return template.isDamagedByMob();
     }
 
     public int getMobTime() {
@@ -97,11 +97,11 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public Optional<MobAttack> getAttack(int attackIndex) {
-        return Optional.ofNullable(mobInfo.getAttacks().get(attackIndex));
+        return Optional.ofNullable(template.getAttacks().get(attackIndex));
     }
 
     public Optional<MobSkill> getSkill(int skillIndex) {
-        return Optional.ofNullable(mobInfo.getSkills().get(skillIndex));
+        return Optional.ofNullable(template.getSkills().get(skillIndex));
     }
 
     public boolean isSkillAvailable(MobSkill mobSkill) {
@@ -163,8 +163,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setMoveAction(5); // idk
         // Mob initialization
         setCurrentFh(fh);
-        setHp(mobInfo.getMaxHp());
-        setMp(mobInfo.getMaxMp());
+        setHp(template.getMaxHp());
+        setMp(template.getMaxMp());
         getMobStatManager().clear();
         damageDone.clear();
     }
@@ -219,7 +219,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void distributeExp() {
-        final int totalExp = mobInfo.getExp();
+        final int totalExp = template.getExp();
         final int topAttackerId = damageDone.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
@@ -315,9 +315,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         lock.unlock();
     }
 
-    public static Mob from(MobInfo mobInfo, LifeInfo lifeInfo) {
+    public static Mob from(MobTemplate mobTemplate, LifeInfo lifeInfo) {
         return new Mob(
-                mobInfo,
+                mobTemplate,
                 lifeInfo.getX(),
                 lifeInfo.getY(),
                 lifeInfo.getFh(),

@@ -2,15 +2,18 @@ package kinoko.world.field;
 
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
+import kinoko.provider.ReactorProvider;
 import kinoko.provider.map.*;
-import kinoko.provider.mob.MobInfo;
-import kinoko.provider.npc.NpcInfo;
+import kinoko.provider.mob.MobTemplate;
+import kinoko.provider.npc.NpcTemplate;
+import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.GameConstants;
 import kinoko.world.field.life.mob.Mob;
 import kinoko.world.field.life.npc.Npc;
+import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
 
 import java.util.Optional;
@@ -28,6 +31,7 @@ public final class Field {
     private final MobPool mobPool = new MobPool(this);
     private final NpcPool npcPool = new NpcPool(this);
     private final DropPool dropPool = new DropPool(this);
+    private final ReactorPool reactorPool = new ReactorPool(this);
 
     private final MapInfo mapInfo;
     private final byte fieldKey;
@@ -52,6 +56,10 @@ public final class Field {
 
     public DropPool getDropPool() {
         return dropPool;
+    }
+
+    public ReactorPool getReactorPool() {
+        return reactorPool;
     }
 
     public MapInfo getMapInfo() {
@@ -138,20 +146,34 @@ public final class Field {
 
     public static Field from(MapInfo mapInfo) {
         final Field field = new Field(mapInfo);
-        // Populate life pools
+        // Populate object pools
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
             switch (lifeInfo.getLifeType()) {
                 case NPC -> {
-                    final Optional<NpcInfo> npcInfoResult = NpcProvider.getNpcInfo(lifeInfo.getTemplateId());
-                    final Npc npc = Npc.from(npcInfoResult.orElseThrow(), lifeInfo);
+                    final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(lifeInfo.getTemplateId());
+                    if (npcTemplateResult.isEmpty()) {
+                        continue;
+                    }
+                    final Npc npc = Npc.from(npcTemplateResult.get(), lifeInfo);
                     field.getNpcPool().addNpc(npc);
                 }
                 case MOB -> {
-                    final Optional<MobInfo> mobInfoResult = MobProvider.getMobInfo(lifeInfo.getTemplateId());
-                    final Mob mob = Mob.from(mobInfoResult.orElseThrow(), lifeInfo);
+                    final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(lifeInfo.getTemplateId());
+                    if (mobTemplateResult.isEmpty()) {
+                        continue;
+                    }
+                    final Mob mob = Mob.from(mobTemplateResult.get(), lifeInfo);
                     field.getMobPool().addMob(mob);
                 }
             }
+        }
+        for (ReactorInfo reactorInfo : mapInfo.getReactorInfos()) {
+            final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(reactorInfo.getTemplateId());
+            if (reactorTemplateResult.isEmpty()) {
+                continue;
+            }
+            final Reactor reactor = Reactor.from(reactorTemplateResult.get(), reactorInfo);
+            field.getReactorPool().addReactor(reactor);
         }
         // Schedule mob respawns
         if (!field.getMobPool().isEmpty()) {

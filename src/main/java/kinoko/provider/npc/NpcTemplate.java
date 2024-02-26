@@ -5,23 +5,23 @@ import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Objects;
 
-public final class NpcInfo {
-    private final int templateId;
+public final class NpcTemplate {
+    private final int id;
     private final boolean move;
     private final String script;
     private final int trunkPut;
     private final int trunkGet;
 
-    public NpcInfo(int templateId, boolean move, String script, int trunkPut, int trunkGet) {
-        this.templateId = templateId;
+    public NpcTemplate(int id, boolean move, String script, int trunkPut, int trunkGet) {
+        this.id = id;
         this.move = move;
         this.script = script;
         this.trunkPut = trunkPut;
         this.trunkGet = trunkGet;
     }
 
-    public int getTemplateId() {
-        return templateId;
+    public int getId() {
+        return id;
     }
 
     public boolean isMove() {
@@ -42,20 +42,20 @@ public final class NpcInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(templateId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
-        return "NpcInfo[" +
-                "id=" + templateId + ", " +
+        return "NpcTemplate[" +
+                "id=" + id + ", " +
                 "move=" + move + ", " +
                 "script=" + script + ", " +
                 "trunkPut=" + trunkPut + ", " +
                 "trunkGet=" + trunkGet + ']';
     }
 
-    public static NpcInfo from(int npcId, boolean move, WzListProperty infoProp) throws ProviderError {
+    public static NpcTemplate from(int npcId, boolean move, WzListProperty infoProp) throws ProviderError {
         String script = null;
         int trunkPut = 0;
         int trunkGet = 0;
@@ -87,7 +87,7 @@ public final class NpcInfo {
                 }
             }
         }
-        return new NpcInfo(npcId, move, script, trunkPut, trunkGet);
+        return new NpcTemplate(npcId, move, script, trunkPut, trunkGet);
     }
 
 }

@@ -130,7 +130,7 @@ public final class Server {
     }
 
     private static void start() {
-        // Load Providers
+        // Load providers
         Instant start = Instant.now();
         ItemProvider.initialize();
         MapProvider.initialize();
@@ -138,6 +138,7 @@ public final class Server {
         NpcProvider.initialize();
         SkillProvider.initialize();
         QuestProvider.initialize();
+        ReactorProvider.initialize();
         StringProvider.initialize();
         EtcProvider.initialize();
         RewardProvider.initialize();
@@ -149,12 +150,12 @@ public final class Server {
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Load Server classes
+        // Load server classes
         CommandProcessor.initialize();
         EventScheduler.initialize();
         ScriptDispatcher.initialize();
 
-        // Load World
+        // Load world
         start = Instant.now();
         MapleCrypto.initialize();
         loginServer = new LoginServer();
@@ -174,6 +175,7 @@ public final class Server {
         worlds = List.of(new World(ServerConfig.WORLD_ID, ServerConfig.WORLD_NAME, Collections.unmodifiableList(channelServers)));
         log.info("Loaded world in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
+        // Setup shutdown hook stop gracefully
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 Server.stop();

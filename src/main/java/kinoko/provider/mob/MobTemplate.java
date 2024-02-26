@@ -8,8 +8,8 @@ import kinoko.world.field.life.mob.MobSkillType;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class MobInfo {
-    private final int templateId;
+public final class MobTemplate {
+    private final int id;
     private final int level;
     private final int exp;
     private final int maxHp;
@@ -21,8 +21,8 @@ public final class MobInfo {
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
 
-    public MobInfo(int templateId, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
-        this.templateId = templateId;
+    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
+        this.id = id;
         this.level = level;
         this.exp = exp;
         this.maxHp = maxHp;
@@ -35,8 +35,8 @@ public final class MobInfo {
         this.skills = skills;
     }
 
-    public int getTemplateId() {
-        return templateId;
+    public int getId() {
+        return id;
     }
 
     public int getLevel() {
@@ -81,8 +81,8 @@ public final class MobInfo {
 
     @Override
     public String toString() {
-        return "MobInfo[" +
-                "id=" + templateId + ", " +
+        return "MobTemplate[" +
+                "id=" + id + ", " +
                 "level=" + level + ", " +
                 "exp=" + exp + ", " +
                 "maxHp=" + maxHp + ", " +
@@ -93,7 +93,7 @@ public final class MobInfo {
                 "boss=" + boss + ']';
     }
 
-    public static MobInfo from(int mobId, WzListProperty mobProp, WzListProperty infoProp) throws ProviderError {
+    public static MobTemplate from(int mobId, WzListProperty mobProp, WzListProperty infoProp) throws ProviderError {
         int level = 0;
         int exp = 0;
         int maxHP = 0;
@@ -190,6 +190,6 @@ public final class MobInfo {
                 }
             }
         }
-        return new MobInfo(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, boss, damagedByMob, attacks, skills);
+        return new MobTemplate(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, boss, damagedByMob, attacks, skills);
     }
 }

@@ -2,7 +2,7 @@ package kinoko.world.field.life.npc;
 
 import kinoko.packet.field.NpcPacket;
 import kinoko.provider.map.LifeInfo;
-import kinoko.provider.npc.NpcInfo;
+import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 import kinoko.world.field.ControlledObject;
@@ -12,13 +12,13 @@ import kinoko.world.user.User;
 import java.util.Optional;
 
 public final class Npc extends Life implements ControlledObject, Encodable {
-    private final NpcInfo npcInfo;
+    private final NpcTemplate template;
     private final int rx0;
     private final int rx1;
     private User controller;
 
-    public Npc(NpcInfo npcInfo, int x, int y, int rx0, int rx1, int fh, boolean isFlip) {
-        this.npcInfo = npcInfo;
+    public Npc(NpcTemplate template, int x, int y, int rx0, int rx1, int fh, boolean isFlip) {
+        this.template = template;
         this.rx0 = rx0;
         this.rx1 = rx1;
 
@@ -30,18 +30,18 @@ public final class Npc extends Life implements ControlledObject, Encodable {
     }
 
     public int getTemplateId() {
-        return npcInfo.getTemplateId();
+        return template.getId();
     }
 
     public boolean isMove() {
-        return npcInfo.isMove();
+        return template.isMove();
     }
 
     public Optional<String> getScript() {
-        if (npcInfo == null || npcInfo.getScript() == null || npcInfo.getScript().isEmpty()) {
+        if (template == null || template.getScript() == null || template.getScript().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(npcInfo.getScript());
+        return Optional.of(template.getScript());
     }
 
     @Override
@@ -86,9 +86,9 @@ public final class Npc extends Life implements ControlledObject, Encodable {
         outPacket.encodeByte(true); // bEnabled
     }
 
-    public static Npc from(NpcInfo npcInfo, LifeInfo lifeInfo) {
+    public static Npc from(NpcTemplate template, LifeInfo lifeInfo) {
         return new Npc(
-                npcInfo,
+                template,
                 lifeInfo.getX(),
                 lifeInfo.getY(),
                 lifeInfo.getRx0(),

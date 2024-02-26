@@ -5,6 +5,7 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Tuple;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,6 +29,7 @@ public final class MapProvider implements WzProvider {
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {
+        final Map<Integer, Tuple<Integer, WzListProperty>> linkedMaps = new HashMap<>(); // mapId -> link, info
         if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
             throw new ProviderError("Could not resolve Map.wz/Map");
         }
@@ -39,15 +41,36 @@ public final class MapProvider implements WzProvider {
             for (var mapEntry : dirEntry.getValue().getImages().entrySet()) {
                 final String imageName = mapEntry.getKey();
                 final int mapId = Integer.parseInt(imageName.replace(".img", ""));
-                mapInfos.put(mapId, resolveMapInfo(mapId, mapEntry.getValue()));
+                if (!(mapEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+                    throw new ProviderError("Failed to resolve info property");
+                }
+                if (infoProp.getItems().containsKey("link")) {
+                    linkedMaps.put(mapId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
+                    continue;
+                }
+                mapInfos.put(mapId, resolveMapInfo(mapId, mapEntry.getValue(), infoProp));
             }
+        }
+        // Process linked maps
+        for (var linkEntry : linkedMaps.entrySet()) {
+            final int mapId = linkEntry.getKey();
+            final int link = linkEntry.getValue().getLeft();
+            final MapInfo linkInfo = mapInfos.get(link);
+            if (linkInfo == null) {
+                throw new ProviderError("Failed to resolve linked Map ID : %d, link : %d", mapId, link);
+            }
+            mapInfos.put(mapId, MapInfo.from(
+                    mapId,
+                    linkEntry.getValue().getRight(),
+                    linkInfo.getFootholds(),
+                    linkInfo.getLifeInfos(),
+                    linkInfo.getPortalInfos(),
+                    linkInfo.getReactorInfos()
+            ));
         }
     }
 
-    private static MapInfo resolveMapInfo(int mapId, WzImage image) throws ProviderError {
-        if (!(image.getProperty().get("info") instanceof WzListProperty infoProp)) {
-            throw new ProviderError("Failed to resolve info property");
-        }
+    private static MapInfo resolveMapInfo(int mapId, WzImage image, WzListProperty infoProp) throws ProviderError {
         final List<Foothold> foothold = resolveFoothold(image.getProperty());
         final List<LifeInfo> life = resolveLife(image.getProperty());
         final List<PortalInfo> portal = resolvePortal(image.getProperty());

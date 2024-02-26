@@ -3,28 +3,28 @@ package kinoko.provider.map;
 import kinoko.provider.wz.property.WzListProperty;
 
 public final class ReactorInfo {
-    private final int reactorId;
-    private final String reactorName;
+    private final int templateId;
+    private final String name;
     private final int x;
     private final int y;
     private final boolean flip;
     private final int reactorTime;
 
-    public ReactorInfo(int reactorId, String reactorName, int x, int y, boolean flip, int reactorTime) {
-        this.reactorId = reactorId;
-        this.reactorName = reactorName;
+    public ReactorInfo(int templateId, String name, int x, int y, boolean flip, int reactorTime) {
+        this.templateId = templateId;
+        this.name = name;
         this.x = x;
         this.y = y;
         this.flip = flip;
         this.reactorTime = reactorTime;
     }
 
-    public int getReactorId() {
-        return reactorId;
+    public int getTemplateId() {
+        return templateId;
     }
 
-    public String getReactorName() {
-        return reactorName;
+    public String getName() {
+        return name;
     }
 
     public int getX() {
@@ -46,8 +46,8 @@ public final class ReactorInfo {
     @Override
     public String toString() {
         return "ReactorInfo[" +
-                "id=" + reactorId + ", " +
-                "name=" + reactorName + ", " +
+                "id=" + templateId + ", " +
+                "name=" + name + ", " +
                 "x=" + x + ", " +
                 "y=" + y + ", " +
                 "f=" + flip + ", " +

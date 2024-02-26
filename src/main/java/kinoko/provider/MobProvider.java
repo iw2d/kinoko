@@ -1,6 +1,6 @@
 package kinoko.provider;
 
-import kinoko.provider.mob.MobInfo;
+import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.WzReader;
@@ -18,24 +18,24 @@ import java.util.Optional;
 
 public final class MobProvider implements WzProvider {
     public static final Path MOB_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Mob.wz");
-    private static final Map<Integer, MobInfo> mobInfos = new HashMap<>();
+    private static final Map<Integer, MobTemplate> mobTemplates = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(MOB_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
-            loadMobInfos(wzPackage);
+            loadMobTemplates(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Mob.wz", e);
         }
     }
 
-    public static Optional<MobInfo> getMobInfo(int mobId) {
-        return Optional.ofNullable(mobInfos.get(mobId));
+    public static Optional<MobTemplate> getMobTemplate(int mobId) {
+        return Optional.ofNullable(mobTemplates.get(mobId));
     }
 
-    private static void loadMobInfos(WzPackage source) throws ProviderError {
-        final Map<Integer, WzListProperty> mobProperties = new HashMap<>();
-        final Map<Integer, Tuple<Integer, WzListProperty>> linkedMobs = new HashMap<>();
+    private static void loadMobTemplates(WzPackage source) throws ProviderError {
+        final Map<Integer, WzListProperty> mobProperties = new HashMap<>(); // mobId -> mobProperty
+        final Map<Integer, Tuple<Integer, WzListProperty>> linkedMobs = new HashMap<>(); // mobId -> link, infoProp
         for (var mobEntry : source.getDirectory().getImages().entrySet()) {
             final int mobId = Integer.parseInt(mobEntry.getKey().replace(".img", ""));
             final WzListProperty mobProperty = mobEntry.getValue().getProperty();
@@ -47,8 +47,9 @@ public final class MobProvider implements WzProvider {
                 continue;
             }
             mobProperties.put(mobId, mobProperty);
-            mobInfos.put(mobId, MobInfo.from(mobId, mobProperty, infoProp));
+            mobTemplates.put(mobId, MobTemplate.from(mobId, mobProperty, infoProp));
         }
+        // Process linked mobs
         for (var linkEntry : linkedMobs.entrySet()) {
             final int mobId = linkEntry.getKey();
             final int link = linkEntry.getValue().getLeft();
@@ -57,7 +58,7 @@ public final class MobProvider implements WzProvider {
                 throw new ProviderError("Failed to resolve linked Mob ID : %d, link : %d", mobId, link);
             }
             final WzListProperty infoProp = linkEntry.getValue().getRight();
-            mobInfos.put(mobId, MobInfo.from(mobId, linkProp, infoProp));
+            mobTemplates.put(mobId, MobTemplate.from(mobId, linkProp, infoProp));
         }
     }
 }

@@ -27,6 +27,8 @@ public final class GameConstants {
     public static final int MOB_ATTACK_COOLTIME_MAX = 13;
     public static final int MOB_ATTACK_COOLTIME_MAX_BOSS = 7;
 
+    public static final int REACTOR_RESET_INTERVAL = 5;
+
     public static boolean isValidCharacterName(String name) {
         return name.length() >= 4 && name.length() <= 13 && name.matches("[a-zA-Z0-9]+");
     }
