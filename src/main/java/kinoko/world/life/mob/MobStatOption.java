@@ -1,4 +1,4 @@
-package kinoko.world.field.life.mob;
+package kinoko.world.life.mob;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;

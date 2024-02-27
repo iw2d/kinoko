@@ -2,7 +2,7 @@ package kinoko.packet.user;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.field.life.MovePath;
+import kinoko.world.life.MovePath;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 

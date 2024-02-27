@@ -1,6 +1,6 @@
 package kinoko.world.field;
 
-import kinoko.world.field.life.npc.Npc;
+import kinoko.world.life.npc.Npc;
 
 public final class NpcPool extends FieldObjectPool<Npc> {
     public NpcPool(Field field) {

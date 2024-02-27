@@ -8,7 +8,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
 import kinoko.world.field.Field;
-import kinoko.world.field.life.mob.Mob;
+import kinoko.world.life.mob.Mob;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

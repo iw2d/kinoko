@@ -1,4 +1,4 @@
-package kinoko.world.field.life;
+package kinoko.world.life;
 
 import kinoko.world.field.FieldObject;
 

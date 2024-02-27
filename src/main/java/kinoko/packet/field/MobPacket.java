@@ -2,9 +2,9 @@ package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.field.life.MovePath;
-import kinoko.world.field.life.mob.Mob;
-import kinoko.world.field.life.mob.MobAttackInfo;
+import kinoko.world.life.MovePath;
+import kinoko.world.life.mob.Mob;
+import kinoko.world.life.mob.MobAttackInfo;
 
 public final class MobPacket {
     // CMobPool::OnPacket ----------------------------------------------------------------------------------------------

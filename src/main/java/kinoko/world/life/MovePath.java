@@ -1,4 +1,4 @@
-package kinoko.world.field.life;
+package kinoko.world.life;
 
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;

@@ -4,8 +4,8 @@ import kinoko.provider.map.Foothold;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
 import kinoko.util.Util;
-import kinoko.world.field.life.mob.Mob;
-import kinoko.world.field.life.mob.MobAppearType;
+import kinoko.world.life.mob.Mob;
+import kinoko.world.life.mob.MobAppearType;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

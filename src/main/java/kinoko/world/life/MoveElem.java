@@ -1,4 +1,4 @@
-package kinoko.world.field.life;
+package kinoko.world.life;
 
 public final class MoveElem {
     private final byte attr;

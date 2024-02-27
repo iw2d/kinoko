@@ -2,9 +2,9 @@ package kinoko.world.field;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
-import kinoko.world.field.life.Life;
-import kinoko.world.field.life.mob.Mob;
-import kinoko.world.field.life.npc.Npc;
+import kinoko.world.life.Life;
+import kinoko.world.life.mob.Mob;
+import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 
 import java.util.Optional;

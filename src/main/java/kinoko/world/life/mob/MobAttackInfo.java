@@ -1,4 +1,4 @@
-package kinoko.world.field.life.mob;
+package kinoko.world.life.mob;
 
 import kinoko.util.Tuple;
 

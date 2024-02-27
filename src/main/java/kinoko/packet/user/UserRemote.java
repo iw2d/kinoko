@@ -3,7 +3,7 @@ package kinoko.packet.user;
 import kinoko.packet.user.effect.Effect;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.field.life.MovePath;
+import kinoko.world.life.MovePath;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 

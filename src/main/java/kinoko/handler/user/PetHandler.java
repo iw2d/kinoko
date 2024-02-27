@@ -4,7 +4,7 @@ import kinoko.handler.Handler;
 import kinoko.packet.user.PetPacket;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.world.field.life.MovePath;
+import kinoko.world.life.MovePath;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

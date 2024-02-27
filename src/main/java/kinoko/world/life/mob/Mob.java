@@ -1,4 +1,4 @@
-package kinoko.world.field.life.mob;
+package kinoko.world.life.mob;
 
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.world.WvsContext;
@@ -24,8 +24,8 @@ import kinoko.world.field.ControlledObject;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
-import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
+import kinoko.world.life.Life;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 

@@ -1,4 +1,4 @@
-package kinoko.world.field.life.npc;
+package kinoko.world.life.npc;
 
 import kinoko.packet.field.NpcPacket;
 import kinoko.provider.map.LifeInfo;
@@ -6,7 +6,7 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 import kinoko.world.field.ControlledObject;
-import kinoko.world.field.life.Life;
+import kinoko.world.life.Life;
 import kinoko.world.user.User;
 
 import java.util.Optional;

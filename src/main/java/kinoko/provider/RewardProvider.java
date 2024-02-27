@@ -4,8 +4,8 @@ import kinoko.provider.reward.Reward;
 import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
-import kinoko.world.field.life.mob.Mob;
 import kinoko.world.field.reactor.Reactor;
+import kinoko.world.life.mob.Mob;
 
 import java.io.IOException;
 import java.nio.file.Path;
