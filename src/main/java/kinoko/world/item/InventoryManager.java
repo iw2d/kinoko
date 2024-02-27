@@ -136,6 +136,15 @@ public final class InventoryManager {
         return Optional.of(InventoryOperation.delItem(inventoryType, position));
     }
 
+    public Optional<InventoryOperation> removeItem(int position, Item item, int quantity) {
+        final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
+        final Inventory inventory = getInventoryByType(inventoryType);
+        if (!inventory.removeItem(position, item)) {
+            return Optional.empty();
+        }
+        return Optional.of(InventoryOperation.delItem(inventoryType, position));
+    }
+
     public Optional<List<InventoryOperation>> removeItem(int itemId, int quantity) {
         final List<InventoryOperation> inventoryOperations = new ArrayList<>();
         final InventoryType inventoryType = InventoryType.getByItemId(itemId);

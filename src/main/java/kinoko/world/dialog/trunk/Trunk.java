@@ -38,6 +38,10 @@ public final class Trunk implements Encodable {
         this.size = size;
     }
 
+    public int getRemaining() {
+        return Math.max(size - items.size(), 0);
+    }
+
     public int getMoney() {
         return money;
     }

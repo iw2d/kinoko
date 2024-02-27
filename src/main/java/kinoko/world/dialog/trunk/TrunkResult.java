@@ -8,6 +8,7 @@ public final class TrunkResult implements Encodable {
     private final TrunkResultType type;
     private Trunk trunk;
     private int templateId;
+    private String message = "Due to an error, the trade did not happen."; // default message for SERVER_MSG
 
     private TrunkResult(TrunkResultType type) {
         this.type = type;
@@ -28,7 +29,7 @@ public final class TrunkResult implements Encodable {
             }
             case SERVER_MSG -> {
                 outPacket.encodeByte(true);
-                outPacket.encodeString("Due to an error, the trade did not happen.");
+                outPacket.encodeString(message);
             }
         }
     }
@@ -65,6 +66,12 @@ public final class TrunkResult implements Encodable {
     public static TrunkResult moneySuccess(Trunk trunk) {
         final TrunkResult result = new TrunkResult(TrunkResultType.MONEY_SUCCESS);
         result.trunk = trunk;
+        return result;
+    }
+
+    public static TrunkResult message(String message) {
+        final TrunkResult result = new TrunkResult(TrunkResultType.SERVER_MSG);
+        result.message = message;
         return result;
     }
 }

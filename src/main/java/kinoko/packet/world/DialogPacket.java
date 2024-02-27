@@ -16,6 +16,10 @@ public final class DialogPacket {
     }
 
     public static OutPacket shopResult(ShopResultType resultType) {
+        return shopResult(resultType, "Due to an error, the trade did not happen."); // Default message for SERVER_MSG
+    }
+
+    public static OutPacket shopResult(ShopResultType resultType, String message) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SHOP_RESULT);
         outPacket.encodeByte(resultType.getValue());
         switch (resultType) {
@@ -24,7 +28,7 @@ public final class DialogPacket {
             }
             case SERVER_MSG -> {
                 outPacket.encodeByte(true);
-                outPacket.encodeString("Due to an error, the trade did not happen.");
+                outPacket.encodeString(message);
             }
         }
         return outPacket;

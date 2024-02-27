@@ -55,7 +55,7 @@ public final class QuestItemAct implements QuestAct {
         // Check for required slots
         for (var entry : requiredSlots.entrySet()) {
             final Inventory inventory = user.getInventoryManager().getInventoryByType(entry.getKey());
-            final int remainingSlots = inventory.getSize() - inventory.getItems().size();
+            final int remainingSlots = inventory.getRemaining();
             if (remainingSlots < entry.getValue()) {
                 return false;
             }

@@ -23,6 +23,10 @@ public final class Inventory {
         this.size = size;
     }
 
+    public int getRemaining() {
+        return Math.max(size - items.size(), 0);
+    }
+
     public Item getItem(int position) {
         return items.get(Math.abs(position));
     }

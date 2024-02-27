@@ -49,7 +49,7 @@ public final class TrunkDialog implements Dialog {
                     // Check if user can move item from trunk to inventory
                     final Item item = trunk.getItems().get(position);
                     if (item == null) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_UNKNOWN)));
+                        user.write(DialogPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
                         return;
                     }
                     if (im.canAddItem(item).isEmpty()) {
@@ -84,11 +84,11 @@ public final class TrunkDialog implements Dialog {
                     }
                     final Item item = im.getInventoryByItemId(itemId).getItem(position);
                     if (item == null || item.getItemId() != itemId || item.getQuantity() < quantity) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_UNKNOWN)));
+                        user.write(DialogPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
                         return;
                     }
                     // Check if trunk has space for item
-                    if (trunk.getItems().size() >= trunk.getSize()) {
+                    if (trunk.getRemaining() == 0) {
                         user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
                         return;
                     }
@@ -122,7 +122,7 @@ public final class TrunkDialog implements Dialog {
                             return;
                         }
                         if (!im.canAddMoney(money)) {
-                            user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.MONEY_UNKNOWN)));
+                            user.write(DialogPacket.trunkResult(TrunkResult.message("You cannot hold any more mesos.")));
                             return;
                         }
                         // Move money
@@ -142,7 +142,7 @@ public final class TrunkDialog implements Dialog {
                             return;
                         }
                         if (!trunk.canAddMoney(-money)) {
-                            user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.MONEY_UNKNOWN)));
+                            user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
                             return;
                         }
                         // Move money
