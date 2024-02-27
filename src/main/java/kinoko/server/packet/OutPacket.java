@@ -30,6 +30,8 @@ public interface OutPacket {
 
     void encodeLong(long value);
 
+    void encodeDouble(double value);
+
     default void encodeFT(FileTime ft) {
         encodeInt(ft.getLowDateTime());
         encodeInt(ft.getHighDateTime());

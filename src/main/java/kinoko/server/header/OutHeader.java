@@ -197,11 +197,6 @@ public enum OutHeader {
     HONTAIL_TIMER(361),
     ZAKUM_TIMER(362),
 
-    TRUNK_RESULT(368),
-    RPS_GAME(371),
-    MESSENGER(372),
-    MINIROOM(373),
-    PARCEL(381),
     GOLD_HAMMER_RESULT(418),
 
     // CUserPool::OnPacket
@@ -402,9 +397,24 @@ public enum OutHeader {
     ADMIN_SHOP_RESULT(366),
     ADMIN_SHOP_COMMODITY(367),
 
+    // CTrunkDlg::OnPacket
+    TRUNK_RESULT(368),
+
     // CStoreBankDlg::OnPacket
     STORE_BANK_GET_ALL_RESULT(369),
     STORE_BANK_RESULT(370),
+
+    // CRPSGameDlg::OnPacket
+    RPS_GAME(371),
+
+    // CUIMessenger::OnPacket
+    MESSENGER(372),
+
+    // CMiniRoomBaseDlg::OnPacketBase
+    MINIROOM(373),
+
+    // CParcelDlg::OnPacket
+    PARCEL(381),
 
     // CFuncKeyMappedMan::OnPacket
     FUNC_KEY_MAPPED_INIT(398),

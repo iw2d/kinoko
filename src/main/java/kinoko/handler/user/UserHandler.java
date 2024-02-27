@@ -7,6 +7,7 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
+import kinoko.packet.world.DialogPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
@@ -23,6 +24,11 @@ import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
+import kinoko.world.dialog.shop.ShopDialog;
+import kinoko.world.dialog.shop.ShopRequestType;
+import kinoko.world.dialog.trunk.TrunkDialog;
+import kinoko.world.dialog.trunk.TrunkRequestType;
+import kinoko.world.dialog.trunk.TrunkResultType;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
@@ -95,6 +101,9 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserRemote.emotion(user, emotion, duration, isByItemOption), user);
     }
 
+
+    // NPC HANDLERS ----------------------------------------------------------------------------------------------------
+
     @Handler(InHeader.USER_SELECT_NPC)
     public static void handleUserSelectNpc(User user, InPacket inPacket) {
         final int objectId = inPacket.decodeInt(); // dwNpcId
@@ -106,8 +115,26 @@ public final class UserHandler {
             return;
         }
         final Npc npc = npcResult.get();
-        if (npc.getScript().isPresent()) {
-            ScriptDispatcher.startNpcScript(user, npc.getTemplateId(), npc.getScript().get());
+        // Handle script
+        if (npc.hasScript()) {
+            ScriptDispatcher.startNpcScript(user, npc.getTemplateId(), npc.getScript());
+            return;
+        }
+        // Handle trunk / npc shop dialog
+        try (var locked = user.acquire()) {
+            if (user.hasDialog()) {
+                log.error("Tried to select npc ID {}, while already in a dialog", npc.getTemplateId());
+                return;
+            }
+            if (npc.isTrunk()) {
+                final TrunkDialog trunkDialog = TrunkDialog.from(user, npc);
+                user.setDialog(trunkDialog);
+                user.write(DialogPacket.trunkResult(TrunkResultType.OPEN_TRUNK_DLG, trunkDialog));
+            } else {
+                final ShopDialog shopDialog = ShopDialog.from(user, npc);
+                user.setDialog(shopDialog);
+                user.write(DialogPacket.openShopDlg(shopDialog));
+            }
         }
     }
 
@@ -115,9 +142,11 @@ public final class UserHandler {
     public static void handleUserScriptMessageAnswer(User user, InPacket inPacket) {
         final byte type = inPacket.decodeByte(); // nMsgType
         final byte action = inPacket.decodeByte();
-
         final ScriptMessageType lastMessageType = ScriptMessageType.getByValue(type);
-
+        if (lastMessageType == null) {
+            log.error("Unknown script message type {}", type);
+            return;
+        }
         final Optional<NpcScriptManager> scriptManagerResult = ScriptDispatcher.getNpcScriptManager(user);
         if (scriptManagerResult.isEmpty()) {
             log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getCharacterId());
@@ -152,14 +181,85 @@ public final class UserHandler {
                     scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
                 }
             }
-            case null -> {
-                log.error("Unknown script message type {}", type);
-            }
             default -> {
                 log.error("Unhandled script message type {}", lastMessageType);
             }
         }
     }
+
+    @Handler(InHeader.USER_SHOP_REQUEST)
+    public static void handleUserShopRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final ShopRequestType requestType = ShopRequestType.getByValue(type);
+        if (requestType == null) {
+            log.error("Unknown shop request type {}", type);
+            return;
+        }
+        try (var locked = user.acquire()) {
+            if (!(user.getDialog() instanceof ShopDialog)) {
+                log.error("Received USER_SHOP_REQUEST without associated shop dialog");
+                return;
+            }
+            switch (requestType) {
+                case BUY -> {
+                    inPacket.decodeShort(); // nBuySelected
+                    inPacket.decodeInt(); // nItemID
+                    inPacket.decodeShort(); // nCount
+                    inPacket.decodeInt(); // DiscountPrice
+                }
+                case SELL -> {
+                    inPacket.decodeShort(); // nPOS
+                    inPacket.decodeInt(); // nItemID
+                    inPacket.decodeShort(); // nCount
+                }
+                case RECHARGE -> {
+                    inPacket.decodeShort(); // nPos
+                }
+                case CLOSE -> {
+                    user.closeDialog();
+                }
+            }
+        }
+    }
+
+    @Handler(InHeader.USER_TRUNK_REQUEST)
+    public static void handleUserTrunkRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final TrunkRequestType requestType = TrunkRequestType.getByValue(type);
+        if (requestType == null) {
+            log.error("Unknown trunk request type {}", type);
+            return;
+        }
+        try (var locked = user.acquire()) {
+            if (!(user.getDialog() instanceof TrunkDialog)) {
+                log.error("Received USER_TRUNK_REQUEST without associated trunk dialog");
+                return;
+            }
+            switch (requestType) {
+                case GET_ITEM -> {
+                    inPacket.decodeByte(); // nItemID / 1000000
+                    inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
+                }
+                case PUT_ITEM -> {
+                    inPacket.decodeShort(); // nPOS
+                    inPacket.decodeInt(); // nItemID
+                    inPacket.decodeShort(); // nCount
+                }
+                case SORT_ITEM -> {
+                    // DO SORT
+                }
+                case MONEY -> {
+                    inPacket.decodeInt(); // nMoney, SendGetMoneyRequest if positive, else SendPutMoneyRequest
+                }
+                case CLOSE_DIALOG -> {
+                    user.closeDialog();
+                }
+            }
+        }
+    }
+
+
+    // INVENTORY HANDLERS ----------------------------------------------------------------------------------------------
 
     @Handler(InHeader.USER_GATHER_ITEM_REQUEST)
     public static void handlerUserGatherItemRequest(User user, InPacket inPacket) {
@@ -332,6 +432,9 @@ public final class UserHandler {
         }
     }
 
+
+    // STAT HANDLERS ---------------------------------------------------------------------------------------------------
+
     @Handler(InHeader.USER_STAT_CHANGE_REQUEST)
     public static void handleUserStatChangeRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
@@ -353,6 +456,9 @@ public final class UserHandler {
             }
         }
     }
+
+
+    // OTHER HANDLERS --------------------------------------------------------------------------------------------------
 
     @Handler(InHeader.USER_DROP_MONEY_REQUEST)
     public static void handleUserDropMoneyRequest(User user, InPacket inPacket) {

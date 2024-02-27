@@ -60,6 +60,12 @@ public final class NioBufferOutPacket implements OutPacket {
     }
 
     @Override
+    public void encodeDouble(double value) {
+        ensureSize(8);
+        getBuffer().putDouble(value);
+    }
+
+    @Override
     public void encodeArray(byte[] value) {
         ensureSize(value.length);
         getBuffer().put(value);

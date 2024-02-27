@@ -9,8 +9,6 @@ import kinoko.world.field.ControlledObject;
 import kinoko.world.life.Life;
 import kinoko.world.user.User;
 
-import java.util.Optional;
-
 public final class Npc extends Life implements ControlledObject, Encodable {
     private final NpcTemplate template;
     private final int rx0;
@@ -37,11 +35,16 @@ public final class Npc extends Life implements ControlledObject, Encodable {
         return template.isMove();
     }
 
-    public Optional<String> getScript() {
-        if (template == null || template.getScript() == null || template.getScript().isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(template.getScript());
+    public boolean isTrunk() {
+        return template.getTrunkGet() > 0 || template.getTrunkPut() > 0;
+    }
+
+    public boolean hasScript() {
+        return template != null && template.getScript() != null && !template.getScript().isEmpty();
+    }
+
+    public String getScript() {
+        return template.getScript();
     }
 
     @Override
@@ -71,7 +74,7 @@ public final class Npc extends Life implements ControlledObject, Encodable {
 
     @Override
     public String toString() {
-        return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getId(), getScript().orElse("-"));
+        return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getId(), hasScript() ? getScript() : "-");
     }
 
     @Override

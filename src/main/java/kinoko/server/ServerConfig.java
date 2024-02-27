@@ -18,6 +18,7 @@ public final class ServerConfig {
     public static final int CHARACTER_BASE_SLOTS = 3;
     public static final int INVENTORY_BASE_SLOTS = 24;
     public static final int INVENTORY_CASH_SLOTS = GameConstants.INVENTORY_MAX_SLOTS;
+    public static final int TRUNK_INVENTORY_BASE_SLOTS = 4;
 
     public static final String COMMAND_PREFIX = "!";
 }

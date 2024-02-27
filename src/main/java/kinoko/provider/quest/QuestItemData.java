@@ -8,7 +8,7 @@ import kinoko.world.job.Job;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QuestItemData {
+public final class QuestItemData {
     private final int itemId;
     private final int count;
     private final int prop;

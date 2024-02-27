@@ -1,6 +1,7 @@
 package kinoko.world;
 
 import kinoko.util.Lockable;
+import kinoko.world.dialog.trunk.Trunk;
 import kinoko.world.user.AvatarData;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public final class Account implements Lockable<Account> {
     private int nxCredit;
     private int nxPrepaid;
     private int maplePoint;
+    private Trunk trunk;
 
     // TRANSIENT
     private boolean hasSecondaryPassword = false;
@@ -67,6 +69,13 @@ public final class Account implements Lockable<Account> {
         this.maplePoint = maplePoint;
     }
 
+    public Trunk getTrunk() {
+        return trunk;
+    }
+
+    public void setTrunk(Trunk trunk) {
+        this.trunk = trunk;
+    }
 
     // TRANSIENT -------------------------------------------------------------------------------------------------------
 

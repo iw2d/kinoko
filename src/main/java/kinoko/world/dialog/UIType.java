@@ -1,4 +1,4 @@
-package kinoko.packet.user;
+package kinoko.world.dialog;
 
 public enum UIType {
     ITEM(0),

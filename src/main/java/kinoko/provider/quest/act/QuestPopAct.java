@@ -2,7 +2,7 @@ package kinoko.provider.quest.act;
 
 import kinoko.world.user.User;
 
-public class QuestPopAct implements QuestAct {
+public final class QuestPopAct implements QuestAct {
     private final int pop;
 
     public QuestPopAct(int pop) {

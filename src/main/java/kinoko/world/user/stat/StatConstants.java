@@ -3,7 +3,7 @@ package kinoko.world.user.stat;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 
-public class StatConstants {
+public final class StatConstants {
     public static final int INC_HP_VARIANCE = 4;
     public static final int INC_MP_VARIANCE = 2; // 4 for pirates?
 

@@ -12,6 +12,7 @@ import kinoko.server.client.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.world.Account;
+import kinoko.world.dialog.Dialog;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.life.Life;
@@ -31,10 +32,13 @@ public final class User extends Life implements Lockable<User> {
     private final CharacterData characterData;
     private final CalcDamage calcDamage;
 
+    private Dialog dialog;
+
     public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
         this.client = client;
         this.characterData = characterData;
         this.calcDamage = calcDamage;
+        this.dialog = null;
     }
 
     public Client getClient() {
@@ -95,6 +99,22 @@ public final class User extends Life implements Lockable<User> {
 
     public CalcDamage getCalcDamage() {
         return calcDamage;
+    }
+
+    public Dialog getDialog() {
+        return dialog;
+    }
+
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+
+    public boolean hasDialog() {
+        return getDialog() != null;
+    }
+
+    public void closeDialog() {
+        setDialog(null);
     }
 
 

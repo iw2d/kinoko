@@ -36,6 +36,7 @@ public final class AdminCommands {
     @Command("dispose")
     public static void dispose(User user, String[] args) {
         ScriptDispatcher.removeScriptManager(user);
+        user.closeDialog();
         user.dispose();
         user.write(WvsContext.message(Message.system("You have been disposed.")));
     }
