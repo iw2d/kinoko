@@ -90,7 +90,7 @@ public final class DropHandler {
             // Add drop to inventory
             if (drop.isMoney()) {
                 if (im.addMoney(drop.getMoney())) {
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                     user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
                 }
             } else {

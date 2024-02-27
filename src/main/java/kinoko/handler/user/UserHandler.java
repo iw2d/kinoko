@@ -25,10 +25,8 @@ import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.shop.ShopDialog;
-import kinoko.world.dialog.shop.ShopRequestType;
 import kinoko.world.dialog.trunk.TrunkDialog;
-import kinoko.world.dialog.trunk.TrunkRequestType;
-import kinoko.world.dialog.trunk.TrunkResultType;
+import kinoko.world.dialog.trunk.TrunkResult;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
@@ -120,18 +118,21 @@ public final class UserHandler {
             ScriptDispatcher.startNpcScript(user, npc.getTemplateId(), npc.getScript());
             return;
         }
-        // Handle trunk / npc shop dialog
+        // Handle trunk / npc shop dialog, lock user
         try (var locked = user.acquire()) {
             if (user.hasDialog()) {
                 log.error("Tried to select npc ID {}, while already in a dialog", npc.getTemplateId());
                 return;
             }
             if (npc.isTrunk()) {
-                final TrunkDialog trunkDialog = TrunkDialog.from(user, npc);
+                final TrunkDialog trunkDialog = TrunkDialog.from(npc);
                 user.setDialog(trunkDialog);
-                user.write(DialogPacket.trunkResult(TrunkResultType.OPEN_TRUNK_DLG, trunkDialog));
+                // Lock account to access trunk
+                try (var lockedAccount = user.getAccount().acquire()) {
+                    user.write(DialogPacket.trunkResult(TrunkResult.open(lockedAccount.get().getTrunk(), npc.getTemplateId())));
+                }
             } else {
-                final ShopDialog shopDialog = ShopDialog.from(user, npc);
+                final ShopDialog shopDialog = ShopDialog.from(npc);
                 user.setDialog(shopDialog);
                 user.write(DialogPacket.openShopDlg(shopDialog));
             }
@@ -189,72 +190,23 @@ public final class UserHandler {
 
     @Handler(InHeader.USER_SHOP_REQUEST)
     public static void handleUserShopRequest(User user, InPacket inPacket) {
-        final int type = inPacket.decodeByte();
-        final ShopRequestType requestType = ShopRequestType.getByValue(type);
-        if (requestType == null) {
-            log.error("Unknown shop request type {}", type);
-            return;
-        }
         try (var locked = user.acquire()) {
-            if (!(user.getDialog() instanceof ShopDialog)) {
+            if (!(user.getDialog() instanceof ShopDialog shopDialog)) {
                 log.error("Received USER_SHOP_REQUEST without associated shop dialog");
                 return;
             }
-            switch (requestType) {
-                case BUY -> {
-                    inPacket.decodeShort(); // nBuySelected
-                    inPacket.decodeInt(); // nItemID
-                    inPacket.decodeShort(); // nCount
-                    inPacket.decodeInt(); // DiscountPrice
-                }
-                case SELL -> {
-                    inPacket.decodeShort(); // nPOS
-                    inPacket.decodeInt(); // nItemID
-                    inPacket.decodeShort(); // nCount
-                }
-                case RECHARGE -> {
-                    inPacket.decodeShort(); // nPos
-                }
-                case CLOSE -> {
-                    user.closeDialog();
-                }
-            }
+            shopDialog.onPacket(locked.get(), inPacket);
         }
     }
 
     @Handler(InHeader.USER_TRUNK_REQUEST)
     public static void handleUserTrunkRequest(User user, InPacket inPacket) {
-        final int type = inPacket.decodeByte();
-        final TrunkRequestType requestType = TrunkRequestType.getByValue(type);
-        if (requestType == null) {
-            log.error("Unknown trunk request type {}", type);
-            return;
-        }
         try (var locked = user.acquire()) {
-            if (!(user.getDialog() instanceof TrunkDialog)) {
+            if (!(user.getDialog() instanceof TrunkDialog trunkDialog)) {
                 log.error("Received USER_TRUNK_REQUEST without associated trunk dialog");
                 return;
             }
-            switch (requestType) {
-                case GET_ITEM -> {
-                    inPacket.decodeByte(); // nItemID / 1000000
-                    inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
-                }
-                case PUT_ITEM -> {
-                    inPacket.decodeShort(); // nPOS
-                    inPacket.decodeInt(); // nItemID
-                    inPacket.decodeShort(); // nCount
-                }
-                case SORT_ITEM -> {
-                    // DO SORT
-                }
-                case MONEY -> {
-                    inPacket.decodeInt(); // nMoney, SendGetMoneyRequest if positive, else SendPutMoneyRequest
-                }
-                case CLOSE_DIALOG -> {
-                    user.closeDialog();
-                }
-            }
+            trunkDialog.onPacket(locked.get(), inPacket);
         }
     }
 
@@ -472,7 +424,7 @@ public final class UserHandler {
             }
             final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, user.getCharacterId());
             user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
-            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
         }
     }
 

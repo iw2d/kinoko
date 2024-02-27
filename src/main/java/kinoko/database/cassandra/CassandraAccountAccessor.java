@@ -10,9 +10,11 @@ import kinoko.database.cassandra.table.IdTable;
 import kinoko.server.ServerConfig;
 import kinoko.world.Account;
 import kinoko.world.dialog.trunk.Trunk;
-import kinoko.world.item.Inventory;
+import kinoko.world.item.Item;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
@@ -34,8 +36,13 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         account.setNxPrepaid(row.getInt(AccountTable.NX_PREPAID));
         account.setMaplePoint(row.getInt(AccountTable.MAPLE_POINT));
 
-        final Trunk trunk = new Trunk();
-        trunk.setInventory(row.get(AccountTable.TRUNK_INVENTORY, Inventory.class));
+        final Trunk trunk = new Trunk(row.getInt(AccountTable.TRUNK_SIZE));
+        final List<Item> items = row.getList(AccountTable.TRUNK_ITEMS, Item.class);
+        if (items != null) {
+            for (Item item : items) {
+                trunk.getItems().add(item);
+            }
+        }
         trunk.setMoney(row.getInt(AccountTable.TRUNK_MONEY));
         account.setTrunk(trunk);
         return account;
@@ -143,7 +150,8 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .value(AccountTable.NX_CREDIT, literal(0))
                         .value(AccountTable.NX_PREPAID, literal(0))
                         .value(AccountTable.MAPLE_POINT, literal(0))
-                        .value(AccountTable.TRUNK_INVENTORY, literal(new Inventory(ServerConfig.TRUNK_INVENTORY_BASE_SLOTS), registry))
+                        .value(AccountTable.TRUNK_ITEMS, literal(new ArrayList<Item>(), registry))
+                        .value(AccountTable.TRUNK_SIZE, literal(ServerConfig.TRUNK_BASE_SLOTS))
                         .value(AccountTable.TRUNK_MONEY, literal(0))
                         .ifNotExists()
                         .build()
@@ -160,7 +168,8 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .setColumn(AccountTable.NX_CREDIT, literal(account.getNxCredit()))
                         .setColumn(AccountTable.NX_PREPAID, literal(account.getNxPrepaid()))
                         .setColumn(AccountTable.MAPLE_POINT, literal(account.getMaplePoint()))
-                        .setColumn(AccountTable.TRUNK_INVENTORY, literal(account.getTrunk().getInventory(), registry))
+                        .setColumn(AccountTable.TRUNK_ITEMS, literal(account.getTrunk().getItems(), registry))
+                        .setColumn(AccountTable.TRUNK_SIZE, literal(account.getTrunk().getSize()))
                         .setColumn(AccountTable.TRUNK_MONEY, literal(account.getTrunk().getMoney()))
                         .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()

@@ -39,6 +39,14 @@ public final class Npc extends Life implements ControlledObject, Encodable {
         return template.getTrunkGet() > 0 || template.getTrunkPut() > 0;
     }
 
+    public int getTrunkGet() {
+        return template.getTrunkGet();
+    }
+
+    public int getTrunkPut() {
+        return template.getTrunkPut();
+    }
+
     public boolean hasScript() {
         return template != null && template.getScript() != null && !template.getScript().isEmpty();
     }

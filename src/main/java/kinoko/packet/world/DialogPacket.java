@@ -4,9 +4,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.shop.ShopResultType;
-import kinoko.world.dialog.trunk.TrunkDialog;
-import kinoko.world.dialog.trunk.TrunkResultType;
-import kinoko.world.user.DBChar;
+import kinoko.world.dialog.trunk.TrunkResult;
 
 public final class DialogPacket {
     // CShopDlg::OnPacket ----------------------------------------------------------------------------------------------
@@ -35,24 +33,9 @@ public final class DialogPacket {
 
     // CTrunkDlg::OnPacket ---------------------------------------------------------------------------------------------
 
-    public static OutPacket trunkResult(TrunkResultType resultType, TrunkDialog dialog) {
+    public static OutPacket trunkResult(TrunkResult trunkResult) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TRUNK_RESULT);
-        outPacket.encodeByte(resultType.getValue());
-        if (resultType == TrunkResultType.OPEN_TRUNK_DLG) {
-            outPacket.encodeInt(dialog.getTemplateId()); // dwNpcTemplateID
-        }
-        switch (resultType) {
-            case GET_SUCCESS, PUT_SUCCESS, SORT_ITEM, OPEN_TRUNK_DLG -> {
-                dialog.getTrunk().encode(outPacket);
-            }
-            case MONEY_SUCCESS -> {
-                dialog.getTrunk().encodeItems(DBChar.MONEY, outPacket);
-            }
-            case SERVER_MSG -> {
-                outPacket.encodeByte(true);
-                outPacket.encodeString("Due to an error, the trade did not happen.");
-            }
-        }
+        trunkResult.encode(outPacket);
         return outPacket;
     }
 }

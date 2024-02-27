@@ -77,6 +77,7 @@ public final class Account implements Lockable<Account> {
         this.trunk = trunk;
     }
 
+
     // TRANSIENT -------------------------------------------------------------------------------------------------------
 
     public boolean hasSecondaryPassword() {

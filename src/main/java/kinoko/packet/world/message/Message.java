@@ -6,8 +6,6 @@ import kinoko.world.quest.QuestRecord;
 
 public class Message implements Encodable {
     protected final MessageType type;
-    private boolean bool1;
-    private boolean bool2;
     private int int1;
     private int int2;
     private String string1;

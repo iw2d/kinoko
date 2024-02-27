@@ -47,7 +47,7 @@ public final class FieldHandler {
             if (isRevive) {
                 // Handle revive
                 user.setHp(50);
-                user.write(WvsContext.statChanged(Stat.HP, user.getHp()));
+                user.write(WvsContext.statChanged(Stat.HP, user.getHp(), true));
                 nextFieldId = user.getField().getReturnMap();
                 nextPortalName = "sp"; // spawn point
             } else {

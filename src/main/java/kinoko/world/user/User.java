@@ -130,7 +130,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void setHp(int hp) {
         getCharacterStat().setHp(Math.max(Math.min(hp, getMaxHp()), 0));
-        write(WvsContext.statChanged(Stat.HP, getHp()));
+        write(WvsContext.statChanged(Stat.HP, getHp(), true));
     }
 
     public void addHp(int hp) {
@@ -143,7 +143,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void setMp(int mp) {
         getCharacterStat().setMp(Math.max(Math.min(mp, getMaxMp()), 0));
-        write(WvsContext.statChanged(Stat.MP, getMp()));
+        write(WvsContext.statChanged(Stat.MP, getMp(), true));
     }
 
     public void addMp(int mp) {
@@ -164,7 +164,7 @@ public final class User extends Life implements Lockable<User> {
             write(UserLocal.effect(Effect.levelUp()));
             getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
         }
-        write(WvsContext.statChanged(addExpResult));
+        write(WvsContext.statChanged(addExpResult, true));
     }
 
     public void warp(Field destination, PortalInfo portal, boolean isMigrate, boolean isRevive) {
@@ -185,7 +185,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void dispose() {
-        write(WvsContext.statChanged(Map.of()));
+        write(WvsContext.statChanged(Map.of(), true));
     }
 
     public void logout() {

@@ -32,9 +32,9 @@ public final class UserLocal {
         return outPacket;
     }
 
-    public static OutPacket teleport(boolean exclRequestSent, int portalId) {
+    public static OutPacket teleport(boolean exclRequest, int portalId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_EFFECT_LOCAL);
-        outPacket.encodeByte(exclRequestSent); // bool -> bExclRequestSent = 0
+        outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeByte(portalId);
         return outPacket;
     }

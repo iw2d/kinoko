@@ -102,6 +102,11 @@ public final class InventoryManager {
 
     // HELPER METHODS -------------------------------------------------------------------------------------------------
 
+    public boolean canAddMoney(int money) {
+        final long newMoney = ((long) getMoney()) + money;
+        return newMoney <= Integer.MAX_VALUE && newMoney >= 0;
+    }
+
     public boolean addMoney(int money) {
         final long newMoney = ((long) getMoney()) + money;
         if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
@@ -120,6 +125,15 @@ public final class InventoryManager {
             }
         }
         return hasItem && quantity <= 0;
+    }
+
+    public Optional<InventoryOperation> removeItem(int position, Item item) {
+        final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
+        final Inventory inventory = getInventoryByType(inventoryType);
+        if (!inventory.removeItem(position, item)) {
+            return Optional.empty();
+        }
+        return Optional.of(InventoryOperation.delItem(inventoryType, position));
     }
 
     public Optional<List<InventoryOperation>> removeItem(int itemId, int quantity) {

@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 public final class WvsContext {
-    public static OutPacket statChanged(Stat stat, Object value) {
-        return statChanged(Map.of(stat, value));
+    public static OutPacket statChanged(Stat stat, Object value, boolean exclRequest) {
+        return statChanged(Map.of(stat, value), exclRequest);
     }
 
-    public static OutPacket statChanged(Map<Stat, Object> statMap) {
+    public static OutPacket statChanged(Map<Stat, Object> statMap, boolean exclRequest) {
         final OutPacket outPacket = OutPacket.of(OutHeader.STAT_CHANGED);
-        outPacket.encodeByte(true); // bool -> bExclRequestSent = 0
+        outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
 
         outPacket.encodeInt(Stat.from(statMap.keySet()));
         for (Stat stat : Stat.ENCODE_ORDER) {
@@ -100,13 +100,13 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket inventoryOperation(InventoryOperation op, boolean exclRequestSent) {
-        return inventoryOperation(List.of(op), exclRequestSent);
+    public static OutPacket inventoryOperation(InventoryOperation op, boolean exclRequest) {
+        return inventoryOperation(List.of(op), exclRequest);
     }
 
-    public static OutPacket inventoryOperation(List<InventoryOperation> inventoryOperations, boolean exclRequestSent) {
+    public static OutPacket inventoryOperation(List<InventoryOperation> inventoryOperations, boolean exclRequest) {
         final OutPacket outPacket = OutPacket.of(OutHeader.INVENTORY_OPERATION);
-        outPacket.encodeByte(exclRequestSent); // bool -> bExclRequestSent = 0
+        outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeByte(inventoryOperations.size());
         for (InventoryOperation op : inventoryOperations) {
             op.encode(outPacket);

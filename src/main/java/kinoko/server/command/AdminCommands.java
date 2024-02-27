@@ -340,7 +340,7 @@ public final class AdminCommands {
         }
     }
 
-    @Command("meso")
+    @Command({ "meso", "money" })
     public static void meso(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
             user.write(WvsContext.message(Message.system("Syntax : %smeso <mesos to add>", ServerConfig.COMMAND_PREFIX)));
@@ -349,7 +349,7 @@ public final class AdminCommands {
         final int money = Integer.parseInt(args[1]);
         final InventoryManager im = user.getInventoryManager();
         if (im.addMoney(money)) {
-            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney()));
+            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
             user.write(WvsContext.message(Message.incMoney(money)));
         } else {
             user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
