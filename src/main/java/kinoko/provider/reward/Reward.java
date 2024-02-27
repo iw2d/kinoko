@@ -5,14 +5,14 @@ public final class Reward {
     private final int min;
     private final int max;
     private final double prob;
-    private final boolean quest;
+    private final int questId;
 
-    public Reward(int itemId, int min, int max, double prob, boolean quest) {
+    public Reward(int itemId, int min, int max, double prob, int questId) {
         this.itemId = itemId;
         this.min = min;
         this.max = max;
         this.prob = prob;
-        this.quest = quest;
+        this.questId = questId;
     }
 
     public int getItemId() {
@@ -31,19 +31,23 @@ public final class Reward {
         return prob;
     }
 
-    public boolean isQuest() {
-        return quest;
+    public int getQuestId() {
+        return questId;
     }
 
     public boolean isMoney() {
         return itemId == 0;
     }
 
-    public static Reward item(int itemId, int min, int max, double prob, boolean quest) {
-        return new Reward(itemId, min, max, prob, quest);
+    public boolean isQuest() {
+        return questId != 0;
+    }
+
+    public static Reward item(int itemId, int min, int max, double prob, int questId) {
+        return new Reward(itemId, min, max, prob, questId);
     }
 
     public static Reward money(int min, int max, double prob) {
-        return new Reward(0, min, max, prob, false);
+        return new Reward(0, min, max, prob, 0);
     }
 }

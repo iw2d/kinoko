@@ -15,6 +15,10 @@ public final class QuestItemCheck implements QuestCheck {
         this.items = items;
     }
 
+    public Set<QuestItemData> getItems() {
+        return items;
+    }
+
     @Override
     public boolean check(User user) {
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());

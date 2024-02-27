@@ -193,6 +193,12 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         final Set<Reward> possibleRewards = Stream.concat(RewardProvider.getMobRewards(this).stream(), Stream.of(RewardProvider.getMobMoneyReward(this)))
                 .collect(Collectors.toUnmodifiableSet());
         for (Reward reward : possibleRewards) {
+            // Quest drops
+            if (reward.isQuest()) {
+                if (!owner.getQuestManager().hasQuestStarted(reward.getQuestId())) {
+                    continue;
+                }
+            }
             // Drop probability
             if (Util.getRandom().nextDouble() > reward.getProb()) {
                 continue;
@@ -211,7 +217,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 }
                 final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
                 final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId()));
+                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId(), reward.getQuestId()));
             }
         }
         // Add drops to field

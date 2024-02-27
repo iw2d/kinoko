@@ -30,9 +30,6 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        user.getField().getReactorPool().forEach(reactor -> {
-            System.out.println(reactor);
-        });
         user.dispose();
     }
 

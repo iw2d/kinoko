@@ -197,6 +197,20 @@ public final class QuestInfo {
         return Optional.of(questRecord);
     }
 
+    public boolean hasRequiredItem(User user, int itemId) {
+        for (QuestCheck check : getCompleteChecks()) {
+            if (!(check instanceof QuestItemCheck itemCheck)) {
+                continue;
+            }
+            for (QuestItemData itemData : itemCheck.getItems()) {
+                if (itemData.getItemId() == itemId && user.getInventoryManager().hasItem(itemId, itemData.getCount())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) throws ProviderError {
         boolean autoStart = false;
         boolean autoComplete = false;

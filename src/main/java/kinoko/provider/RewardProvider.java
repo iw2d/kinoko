@@ -82,7 +82,7 @@ public final class RewardProvider implements DataProvider {
                     Integer.parseInt(props.get(2)),
                     Integer.parseInt(props.get(3)),
                     Double.parseDouble(props.get(4)),
-                    Boolean.parseBoolean(props.get(5))
+                    Integer.parseInt(props.get(5))
             );
         }
     }

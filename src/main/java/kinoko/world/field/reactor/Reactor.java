@@ -111,6 +111,12 @@ public final class Reactor extends FieldObject implements Lockable<Reactor> {
         final Set<Drop> drops = new HashSet<>();
         final Set<Reward> possibleRewards = RewardProvider.getReactorRewards(this);
         for (Reward reward : possibleRewards) {
+            // Quest drops
+            if (reward.isQuest()) {
+                if (!owner.getQuestManager().hasQuestStarted(reward.getQuestId())) {
+                    continue;
+                }
+            }
             // Drop probability
             if (Util.getRandom().nextDouble() > reward.getProb()) {
                 continue;
@@ -129,7 +135,7 @@ public final class Reactor extends FieldObject implements Lockable<Reactor> {
                 }
                 final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
                 final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId()));
+                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId(), reward.getQuestId()));
             }
         }
         // Add drops to field

@@ -3,6 +3,8 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.DropPickUpMessage;
+import kinoko.provider.QuestProvider;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
@@ -11,6 +13,7 @@ import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
@@ -55,10 +58,26 @@ public final class DropHandler {
                     return;
                 }
             } else {
+                // Inventory full
                 if (im.canAddItem(drop.getItem()).isEmpty()) {
                     user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
                     user.dispose();
                     return;
+                }
+                // Quest item handling
+                if (drop.isQuest()) {
+                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
+                    if (questRecordResult.isEmpty()) {
+                        user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                        user.dispose();
+                        return;
+                    }
+                    final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
+                    if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
+                        user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                        user.dispose();
+                        return;
+                    }
                 }
             }
 

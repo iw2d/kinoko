@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class QuestProvider implements WzProvider {
     public static final Path QUEST_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Quest.wz");
@@ -23,6 +25,10 @@ public final class QuestProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Quest.wz", e);
         }
+    }
+
+    public static Set<QuestInfo> getQuestInfos() {
+        return questInfos.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 
     public static Optional<QuestInfo> getQuestInfo(int questId) {

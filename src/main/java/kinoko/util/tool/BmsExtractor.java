@@ -2,6 +2,10 @@ package kinoko.util.tool;
 
 import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.quest.QuestInfo;
+import kinoko.provider.quest.QuestItemData;
+import kinoko.provider.quest.check.QuestCheck;
+import kinoko.provider.quest.check.QuestItemCheck;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
@@ -21,6 +25,7 @@ final class BmsExtractor {
 
     public static void main(String[] args) throws IOException {
         ItemProvider.initialize();
+        QuestProvider.initialize();
         StringProvider.initialize();
 
         final WzImage rewardImage = readImage(REWARD_IMG);
@@ -49,7 +54,7 @@ final class BmsExtractor {
                             continue;
                         }
                     }
-                    final String line = String.format("%d, %d, %d, %d, %f, %b", mobId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.isQuest());
+                    final String line = String.format("%d, %d, %d, %d, %f, %d", mobId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.getQuestId());
                     bw.write(String.format("%-120s# %s%n", line, itemName));
                 }
                 bw.write("\n");
@@ -95,7 +100,7 @@ final class BmsExtractor {
                             continue;
                         }
                     }
-                    final String line = String.format("%s, %d, %d, %d, %f, %b", reactorActions.get(reactorId), r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.isQuest());
+                    final String line = String.format("%s, %d, %d, %d, %f, %d", reactorActions.get(reactorId), r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.getQuestId());
                     bw.write(String.format("%-120s# %s%n", line, itemName));
                 }
                 bw.write("\n");
@@ -157,7 +162,23 @@ final class BmsExtractor {
                         continue;
                     }
                     final ItemInfo ii = itemInfoResult.get();
-                    rewards.add(Reward.item(itemId, min, max, prob, ii.isQuest()));
+                    final Set<Integer> questIds = new HashSet<>();
+                    if (ii.isQuest()) {
+                        for (QuestInfo qi : QuestProvider.getQuestInfos()) {
+                            for (QuestCheck qc : qi.getCompleteChecks()) {
+                                if (!(qc instanceof QuestItemCheck qic)) {
+                                    continue;
+                                }
+                                for (QuestItemData itemData : qic.getItems()) {
+                                    if (itemData.getItemId() == itemId) {
+                                        questIds.add(qi.getQuestId());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    assert questIds.size() <= 1;
+                    rewards.add(Reward.item(itemId, min, max, prob, questIds.stream().findFirst().orElse(0)));
                 }
             }
             if (!rewards.isEmpty()) {

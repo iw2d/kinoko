@@ -16,14 +16,16 @@ public final class Drop extends FieldObject {
     private final Item item;
     private final int money;
     private final int ownerId;
+    private final int questId;
     private final Instant dateExpire;
 
-    private Drop(DropOwnType ownType, FieldObject source, Item item, int money, int ownerId, Instant dateExpire) {
+    private Drop(DropOwnType ownType, FieldObject source, Item item, int money, int ownerId, int questId, Instant dateExpire) {
         this.ownType = ownType;
         this.source = source;
         this.item = item;
         this.money = money;
         this.ownerId = ownerId;
+        this.questId = questId;
         this.dateExpire = dateExpire;
     }
 
@@ -47,12 +49,20 @@ public final class Drop extends FieldObject {
         return ownerId;
     }
 
+    public int getQuestId() {
+        return questId;
+    }
+
     public Instant getDateExpire() {
         return dateExpire;
     }
 
     public boolean isMoney() {
         return item == null && money > 0;
+    }
+
+    public boolean isQuest() {
+        return questId != 0;
     }
 
     public boolean isUserDrop() {
@@ -70,10 +80,14 @@ public final class Drop extends FieldObject {
     }
 
     public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId) {
-        return new Drop(ownType, source, item, 0, ownerId, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
+        return item(ownType, source, item, ownerId, 0);
+    }
+
+    public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId, int questId) {
+        return new Drop(ownType, source, item, 0, ownerId, questId, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
     }
 
     public static Drop money(DropOwnType ownType, FieldObject source, int money, int ownerId) {
-        return new Drop(ownType, source, null, money, ownerId, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
+        return new Drop(ownType, source, null, money, ownerId, 0, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
     }
 }
