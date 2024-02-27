@@ -132,16 +132,17 @@ public final class Server {
     private static void start() {
         // Load providers
         Instant start = Instant.now();
-        ItemProvider.initialize();
-        MapProvider.initialize();
-        MobProvider.initialize();
-        NpcProvider.initialize();
-        SkillProvider.initialize();
-        QuestProvider.initialize();
-        ReactorProvider.initialize();
-        StringProvider.initialize();
-        EtcProvider.initialize();
-        RewardProvider.initialize();
+        ItemProvider.initialize();      // Item.wz
+        MapProvider.initialize();       // Map.wz
+        MobProvider.initialize();       // Mob.wz
+        NpcProvider.initialize();       // Npc.wz
+        ReactorProvider.initialize();   // Reactor.wz
+        QuestProvider.initialize();     // Quest.wz
+        SkillProvider.initialize();     // Skill.wz
+        StringProvider.initialize();    // String.wz
+        EtcProvider.initialize();       // Etc.wz
+        ShopProvider.initialize();      // npc_shop.csv
+        RewardProvider.initialize();    // *_reward.csv
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 

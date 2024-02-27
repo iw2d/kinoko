@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-final class BmsExtractor {
+final class RewardExtractor {
     public static final Path REACTOR_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Reactor.wz");
     public static final Path REWARD_IMG = Path.of(ServerConfig.WZ_DIRECTORY, "bms", "Reward.img");
 

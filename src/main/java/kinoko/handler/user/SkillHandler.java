@@ -19,14 +19,6 @@ import java.util.Optional;
 public final class SkillHandler {
     private static final Logger log = LogManager.getLogger(SkillHandler.class);
 
-    @Handler(InHeader.USER_MOVING_SHOOT_ATTACK_PREPARE)
-    public static void handleMovingShootAttackPrepare(User user, InPacket inPacket) {
-        final int skillId = inPacket.decodeInt(); // nSkillID
-        final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
-        final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
-        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, 1, actionAndDir, attackSpeed), user); // TODO: slv
-    }
-
     @Handler(InHeader.USER_SKILL_UP_REQUEST)
     public static void handleUserSkillUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time

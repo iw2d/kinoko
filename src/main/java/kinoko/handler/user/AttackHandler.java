@@ -1,14 +1,12 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.packet.user.UserRemote;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobConstants;
-import kinoko.world.skill.Attack;
-import kinoko.world.skill.AttackInfo;
-import kinoko.world.skill.SkillConstants;
-import kinoko.world.skill.SkillProcessor;
+import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -217,6 +215,64 @@ public final class AttackHandler {
 
         try (var locked = user.acquire()) {
             SkillProcessor.processAttack(user, attack);
+        }
+    }
+
+    @Handler(InHeader.USER_MOVING_SHOOT_ATTACK_PREPARE)
+    public static void handleMovingShootAttackPrepare(User user, InPacket inPacket) {
+        final int skillId = inPacket.decodeInt(); // nSkillID
+        final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
+        final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
+        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, 1, actionAndDir, attackSpeed), user); // TODO: slv
+    }
+
+    @Handler(InHeader.USER_HIT)
+    public static void handleUserHit(User user, InPacket inPacket) {
+        // CUserLocal::SetDamaged, CUserLocal::Update
+        inPacket.decodeInt(); // get_update_time()
+        final int attackIndex = inPacket.decodeByte(); // nAttackIdx
+        final HitType hitType = HitType.getByValue(attackIndex);
+        if (hitType == null) {
+            log.error("Unknown hit type (attack index) received : {}", attackIndex);
+            return;
+        }
+        final HitInfo hitInfo = new HitInfo(hitType);
+        switch (hitType) {
+            case MOB_PHYSICAL, MOB_MAGIC -> {
+                hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
+                hitInfo.damage = inPacket.decodeInt(); // nDamage
+                hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
+                hitInfo.mobId = inPacket.decodeInt(); // MobID
+                hitInfo.dir = inPacket.decodeByte(); // nDir
+                hitInfo.reflect = inPacket.decodeByte(); // nX = 0
+                hitInfo.guard = inPacket.decodeByte(); // bGuard
+                final byte knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
+                if (knockback > 0 || hitInfo.reflect != 0) {
+                    hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
+                    hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
+                    hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction
+                    hitInfo.reflectMobX = inPacket.decodeShort(); // ptHit.x
+                    hitInfo.reflectMobY = inPacket.decodeShort(); // ptHit.y
+                    inPacket.decodeShort(); // this->GetPos()->x
+                    inPacket.decodeShort(); // this->GetPos()->y
+                }
+                hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
+            }
+            case COUNTER, OBSTACLE -> {
+                inPacket.decodeByte(); // 0
+                hitInfo.damage = inPacket.decodeInt(); // nDamage
+                hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
+                inPacket.decodeByte(); // 0
+            }
+            case STAT -> {
+                hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
+                hitInfo.damage = inPacket.decodeInt(); // nDamage
+                hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
+                hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
+            }
+        }
+        try (var locked = user.acquire()) {
+            SkillProcessor.processHit(user, hitInfo);
         }
     }
 

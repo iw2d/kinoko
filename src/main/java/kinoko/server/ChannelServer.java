@@ -2,7 +2,6 @@ package kinoko.server;
 
 import kinoko.handler.ClientHandler;
 import kinoko.handler.field.*;
-import kinoko.handler.script.ScriptHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.*;
 import kinoko.provider.MapProvider;
@@ -27,12 +26,10 @@ public final class ChannelServer extends NettyServer {
             ReactorHandler.class,
             DropHandler.class,
             UserHandler.class,
-            PetHandler.class,
             AttackHandler.class,
             SkillHandler.class,
             ItemHandler.class,
-            InventoryHandler.class,
-            ScriptHandler.class
+            PetHandler.class
     );
     private final Map<Integer, Field> fields = new ConcurrentHashMap<>();
     private final int worldId;
