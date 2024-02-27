@@ -14,8 +14,8 @@ import java.util.*;
 public final class RewardProvider implements DataProvider {
     public static final Path MOB_REWARD = Path.of(ServerConfig.DATA_DIRECTORY, "mob_reward.csv");
     public static final Path REACTOR_REWARD = Path.of(ServerConfig.DATA_DIRECTORY, "reactor_reward.csv");
-    private static final Map<Integer, Set<Reward>> mobRewards = new HashMap<>();
-    private static final Map<String, Set<Reward>> reactorRewards = new HashMap<>();
+    private static final Map<Integer, Set<Reward>> mobRewards = new HashMap<>(); // mobId -> mob rewards
+    private static final Map<String, Set<Reward>> reactorRewards = new HashMap<>(); // reactorAction -> reactor rewards
 
     public static Set<Reward> getMobRewards(Mob mob) {
         if (!mobRewards.containsKey(mob.getTemplateId())) {

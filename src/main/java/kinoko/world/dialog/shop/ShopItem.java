@@ -14,7 +14,7 @@ public final class ShopItem implements Encodable {
     private final int tokenPrice;
     private final double unitPrice;
 
-    private ShopItem(int itemId, int price, int quantity, int maxPerSlot, int tokenItemId, int tokenPrice, double unitPrice) {
+    public ShopItem(int itemId, int price, int quantity, int maxPerSlot, int tokenItemId, int tokenPrice, double unitPrice) {
         this.itemId = itemId;
         this.price = price;
         this.quantity = quantity;
@@ -22,6 +22,34 @@ public final class ShopItem implements Encodable {
         this.tokenItemId = tokenItemId;
         this.tokenPrice = tokenPrice;
         this.unitPrice = unitPrice;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getMaxPerSlot() {
+        return maxPerSlot;
+    }
+
+    public int getTokenItemId() {
+        return tokenItemId;
+    }
+
+    public int getTokenPrice() {
+        return tokenPrice;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
     @Override
@@ -39,5 +67,13 @@ public final class ShopItem implements Encodable {
             outPacket.encodeShort(quantity); // nQuantity
         }
         outPacket.encodeShort(maxPerSlot); // nMaxPerSlot
+    }
+
+    public static ShopItem from(int itemId, int price, int quantity, int maxPerSlot) {
+        return new ShopItem(itemId, price, quantity, maxPerSlot, 0, 0, 0);
+    }
+
+    public static ShopItem rechargeable(int itemId, int maxPerSlot, double unitPrice) {
+        return new ShopItem(itemId, 0, 0, maxPerSlot, 0, 0, unitPrice);
     }
 }
