@@ -20,7 +20,7 @@ public final class MapleCrypto {
     private static final Cipher cipher;
 
     static {
-        SecretKey key = new SecretKeySpec(AES_USER_KEY, "AES");
+        final SecretKey key = new SecretKeySpec(AES_USER_KEY, "AES");
         try {
             cipher = Cipher.getInstance("AES/ECB/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -35,6 +35,7 @@ public final class MapleCrypto {
     }
 
     public static void crypt(byte[] data, byte[] iv) {
+        final byte[] cipher = new byte[BLOCK_SIZE];
         int a = data.length;
         int b = 0x5B0;
         int c = 0;
@@ -46,9 +47,9 @@ public final class MapleCrypto {
             for (int i = c; i < (c + b); i++) {
                 if ((i - c) % BLOCK_SIZE == 0) {
                     try {
-                        final byte[] cipher = MapleCrypto.cipher.doFinal(block);
+                        MapleCrypto.cipher.doFinal(block, 0, BLOCK_SIZE, cipher);
                         System.arraycopy(cipher, 0, block, 0, BLOCK_SIZE);
-                    } catch (IllegalBlockSizeException | BadPaddingException e) {
+                    } catch (IllegalBlockSizeException | BadPaddingException | ShortBufferException e) {
                         throw new RuntimeException(e);
                     }
                 }
