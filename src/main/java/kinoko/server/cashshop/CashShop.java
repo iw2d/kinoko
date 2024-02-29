@@ -1,11 +1,18 @@
 package kinoko.server.cashshop;
 
+import kinoko.provider.EtcProvider;
 import kinoko.server.packet.OutPacket;
+
+import java.util.Optional;
 
 
 public final class CashShop {
 
     public static void initialize() {
+    }
+
+    public static Optional<Commodity> getCommodity(int commodityId) {
+        return Optional.ofNullable(EtcProvider.getCommodities().get(commodityId));
     }
 
     public static void encode(OutPacket outPacket) {
@@ -15,7 +22,17 @@ public final class CashShop {
         outPacket.encodeByte(0); // aaDiscountRate[9][30], byte * (byte, byte, byte)
         // ~CWvsContext::SetSaleInfo
 
-        outPacket.encodeArray(new byte[1080]); // this->aBest (9 * 2 * 5 * CS_BEST (12))
+        // this->aBest
+        for (int i = 1; i <= 9; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 5; k++) {
+                    // CS_BEST struct
+                    outPacket.encodeInt(i); // nCategory
+                    outPacket.encodeInt(j); // nGender
+                    outPacket.encodeInt(0); // nCommoditySN
+                }
+            }
+        }
         outPacket.encodeShort(0); // CCashShop::DecodeStock, short * 8
         outPacket.encodeShort(0); // CCashShop::DecodeLimitGoods, short * 104
         outPacket.encodeShort(0); // CCashShop::DecodeZeroGoods, short * 68

@@ -26,6 +26,20 @@ public final class FieldHandler {
 
     @Handler(InHeader.USER_TRANSFER_FIELD_REQUEST)
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
+        // Returning from CashShop
+        if (inPacket.getRemaining() == 0) {
+            final ChannelServer channelServer = user.getConnectedServer();
+            final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(user.getClient(), channelServer, user.getCharacterId());
+            if (mrResult.isEmpty()) {
+                log.error("Failed to submit migration request for character ID : {}", user.getCharacterId());
+                user.write(FieldPacket.transferChannelReqIgnored(1));
+                return;
+            }
+            user.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
+            return;
+        }
+
+        // Normal transfer field request
         final byte fieldKey = inPacket.decodeByte();
         if (user.getField().getFieldKey() != fieldKey) {
             user.dispose();
@@ -107,6 +121,6 @@ public final class FieldHandler {
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 
-        user.write(StagePacket.setCashShop(user, Server.getCashShop()));
+        user.write(StagePacket.setCashShop(user));
     }
 }

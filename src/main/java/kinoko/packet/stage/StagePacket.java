@@ -47,7 +47,7 @@ public final class StagePacket {
         return outPacket;
     }
 
-    public static OutPacket setCashShop(User user, CashShop cashShop) {
+    public static OutPacket setCashShop(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SET_CASHSHOP);
         user.getCharacterData().encode(outPacket);
 

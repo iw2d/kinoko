@@ -25,15 +25,10 @@ import java.util.concurrent.ExecutionException;
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
     private static LoginServer loginServer;
-    private static CashShop cashShop;
     private static List<World> worlds;
 
     public static LoginServer getLoginServer() {
         return loginServer;
-    }
-
-    public static CashShop getCashShop() {
-        return cashShop;
     }
 
     public static List<World> getWorlds() {

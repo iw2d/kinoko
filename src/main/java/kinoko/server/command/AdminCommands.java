@@ -13,6 +13,8 @@ import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ServerConfig;
+import kinoko.server.cashshop.CashShop;
+import kinoko.server.cashshop.Commodity;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Triple;
 import kinoko.util.Util;
@@ -69,7 +71,7 @@ public final class AdminCommands {
     @Command({ "find", "lookup" })
     public static void find(User user, String[] args) {
         if (args.length < 3) {
-            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill> <id or query>", ServerConfig.COMMAND_PREFIX)));
+            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX)));
             return;
         }
         final String type = args[1];
@@ -102,7 +104,7 @@ public final class AdminCommands {
                 return;
             }
             final ItemInfo ii = itemInfoResult.get();
-            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getItemName(itemId), itemId)));
+            user.write(WvsContext.message(Message.system("Item : %s (%d)", StringProvider.getItemName(itemId), itemId)));
             if (!ii.getItemInfos().isEmpty()) {
                 user.write(WvsContext.message(Message.system("  info")));
                 for (var entry : ii.getItemInfos().entrySet()) {
@@ -142,7 +144,7 @@ public final class AdminCommands {
                 return;
             }
             final MapInfo mapInfo = mapInfoResult.get();
-            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getMapName(mapId), mapId)));
+            user.write(WvsContext.message(Message.system("Map : %s (%d)", StringProvider.getMapName(mapId), mapId)));
             user.write(WvsContext.message(Message.system("  type : %s", mapInfo.getFieldType().name())));
             user.write(WvsContext.message(Message.system("  returnMap : %d", mapInfo.getReturnMap())));
             user.write(WvsContext.message(Message.system("  onFirstUserEnter : %s", mapInfo.getOnFirstUserEnter())));
@@ -174,7 +176,7 @@ public final class AdminCommands {
                 return;
             }
             final MobTemplate mobTemplate = mobTemplateResult.get();
-            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getMobName(mobId), mobId)));
+            user.write(WvsContext.message(Message.system("Mob : %s (%d)", StringProvider.getMobName(mobId), mobId)));
             user.write(WvsContext.message(Message.system("  level : %d", mobTemplate.getLevel())));
         } else if (type.equalsIgnoreCase("npc")) {
             int npcId = -1;
@@ -203,7 +205,7 @@ public final class AdminCommands {
                 return;
             }
             final NpcTemplate npcTemplate = npcTemplateResult.get();
-            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getNpcName(npcId), npcId)));
+            user.write(WvsContext.message(Message.system("Npc : %s (%d)", StringProvider.getNpcName(npcId), npcId)));
             user.write(WvsContext.message(Message.system("  script : %s", npcTemplate.getScript())));
         } else if (type.equalsIgnoreCase("skill")) {
             int skillId = -1;
@@ -232,9 +234,27 @@ public final class AdminCommands {
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            user.write(WvsContext.message(Message.system("%s (%d)", StringProvider.getSkillName(skillId), skillId)));
+            user.write(WvsContext.message(Message.system("Skill : %s (%d)", StringProvider.getSkillName(skillId), skillId)));
+        } else if (type.equalsIgnoreCase("commodity")) {
+            if (!isNumber) {
+                user.write(WvsContext.message(Message.system("Can only lookup commodity by ID")));
+                return;
+            }
+            final int commodityId = Integer.parseInt(query);
+            final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
+            if (commodityResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("Could not find commodity with ID : %d", commodityId)));
+                return;
+            }
+            final Commodity commodity = commodityResult.get();
+            user.write(WvsContext.message(Message.system("Commodity : %d", commodityId)));
+            user.write(WvsContext.message(Message.system("  itemId : %d (%s)", commodity.getItemId(), StringProvider.getItemName(commodity.getItemId()))));
+            user.write(WvsContext.message(Message.system("  count : %d", commodity.getCount())));
+            user.write(WvsContext.message(Message.system("  price : %d", commodity.getPrice())));
+            user.write(WvsContext.message(Message.system("  period : %d", commodity.getPeriod())));
+            user.write(WvsContext.message(Message.system("  gender : %d", commodity.getGender())));
         } else {
-            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill> <id or query>", ServerConfig.COMMAND_PREFIX)));
+            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX)));
         }
     }
 
