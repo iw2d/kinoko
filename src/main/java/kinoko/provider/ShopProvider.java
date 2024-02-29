@@ -12,13 +12,6 @@ public final class ShopProvider implements DataProvider {
     public static final Path NPC_SHOP = Path.of(ServerConfig.DATA_DIRECTORY, "npc_shop.csv");
     private static final Map<Integer, List<ShopItem>> npcShopItems = new HashMap<>(); // npcId -> shop items
 
-    public static List<ShopItem> getNpcShopItems(Npc npc) {
-        if (!npcShopItems.containsKey(npc.getTemplateId())) {
-            return List.of();
-        }
-        return npcShopItems.get(npc.getTemplateId());
-    }
-
     public static void initialize() {
         try {
             DataProvider.readData(NPC_SHOP).forEach((props) -> {
@@ -35,6 +28,13 @@ public final class ShopProvider implements DataProvider {
         } catch (IOException e) {
             throw new IllegalArgumentException("Exception caught while loading Reward Data", e);
         }
+    }
+
+    public static List<ShopItem> getNpcShopItems(Npc npc) {
+        if (!npcShopItems.containsKey(npc.getTemplateId())) {
+            return List.of();
+        }
+        return npcShopItems.get(npc.getTemplateId());
     }
 
     private static ShopItem getShopItem(List<String> props) {

@@ -3,6 +3,7 @@ package kinoko.database.cassandra.table;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import kinoko.database.cassandra.type.CashItemInfoUDT;
 import kinoko.database.cassandra.type.ItemUDT;
 
 public final class AccountTable {
@@ -17,6 +18,7 @@ public final class AccountTable {
     public static final String TRUNK_ITEMS = "trunk_items";
     public static final String TRUNK_SIZE = "trunk_size";
     public static final String TRUNK_MONEY = "trunk_money";
+    public static final String LOCKER_ITEMS = "locker_items";
 
     private static final String tableName = "account";
 
@@ -39,6 +41,7 @@ public final class AccountTable {
                         .withColumn(TRUNK_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(ItemUDT.getTypeName(), true)))
                         .withColumn(TRUNK_SIZE, DataTypes.INT)
                         .withColumn(TRUNK_MONEY, DataTypes.INT)
+                        .withColumn(LOCKER_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(CashItemInfoUDT.getTypeName(), true)))
                         .build()
         );
         session.execute(

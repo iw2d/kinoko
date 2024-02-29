@@ -17,25 +17,6 @@ public final class RewardProvider implements DataProvider {
     private static final Map<Integer, Set<Reward>> mobRewards = new HashMap<>(); // mobId -> mob rewards
     private static final Map<String, Set<Reward>> reactorRewards = new HashMap<>(); // reactorAction -> reactor rewards
 
-    public static Set<Reward> getMobRewards(Mob mob) {
-        if (!mobRewards.containsKey(mob.getTemplateId())) {
-            return Set.of();
-        }
-        return mobRewards.get(mob.getTemplateId());
-    }
-
-    public static Reward getMobMoneyReward(Mob mob) {
-        final Tuple<Integer, Integer> money = GameConstants.getMoneyForMobLevel(mob.getLevel());
-        return Reward.money(money.getLeft(), money.getRight(), GameConstants.DROP_MONEY_PROB);
-    }
-
-    public static Set<Reward> getReactorRewards(Reactor reactor) {
-        if (!reactorRewards.containsKey(reactor.getAction())) {
-            return Set.of();
-        }
-        return reactorRewards.get(reactor.getAction());
-    }
-
     public static void initialize() {
         try {
             // Mob rewards
@@ -66,6 +47,25 @@ public final class RewardProvider implements DataProvider {
         } catch (IOException e) {
             throw new IllegalArgumentException("Exception caught while loading Reward Data", e);
         }
+    }
+
+    public static Set<Reward> getMobRewards(Mob mob) {
+        if (!mobRewards.containsKey(mob.getTemplateId())) {
+            return Set.of();
+        }
+        return mobRewards.get(mob.getTemplateId());
+    }
+
+    public static Reward getMobMoneyReward(Mob mob) {
+        final Tuple<Integer, Integer> money = GameConstants.getMoneyForMobLevel(mob.getLevel());
+        return Reward.money(money.getLeft(), money.getRight(), GameConstants.DROP_MONEY_PROB);
+    }
+
+    public static Set<Reward> getReactorRewards(Reactor reactor) {
+        if (!reactorRewards.containsKey(reactor.getAction())) {
+            return Set.of();
+        }
+        return reactorRewards.get(reactor.getAction());
     }
 
     private static Reward getReward(List<String> props) {

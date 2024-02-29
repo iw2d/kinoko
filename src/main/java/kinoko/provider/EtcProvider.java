@@ -4,27 +4,38 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.server.cashshop.Commodity;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class EtcProvider implements WzProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
+    // CashShop info
+    private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
+    private static final Map<Integer, Set<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
+    // Other info
     private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(ETC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
+            loadCashShop(wzPackage);
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Etc.wz", e);
         }
+    }
+
+    public static Map<Integer, Commodity> getCommodities() {
+        return commodities;
+    }
+
+    public static Map<Integer, Set<Integer>> getCashPackages() {
+        return cashPackages;
     }
 
     public static boolean isForbiddenName(String name) {
@@ -33,6 +44,46 @@ public final class EtcProvider implements WzProvider {
 
     public static boolean isValidStartingItem(int index, int id) {
         return makeCharInfo.getOrDefault(index, Set.of()).contains(id);
+    }
+
+    private static void loadCashShop(WzPackage source) throws ProviderError {
+        // Load commodities
+        if (!(source.getDirectory().getImages().get("Commodity.img") instanceof WzImage commodityImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/Commodity.img");
+        }
+        for (var entry : commodityImage.getProperty().getItems().entrySet()) {
+            if (!(entry.getValue() instanceof WzListProperty commodityProp)) {
+                throw new ProviderError("Failed to resolve commodity");
+            }
+            if (WzProvider.getInteger(commodityProp.get("OnSale"), 0) == 0) {
+                continue;
+            }
+            final int commodityId = WzProvider.getInteger(commodityProp.get("SN"));
+            commodities.put(commodityId, new Commodity(
+                    commodityId,
+                    WzProvider.getInteger(commodityProp.get("ItemId")),
+                    WzProvider.getInteger(commodityProp.get("Count")),
+                    WzProvider.getInteger(commodityProp.get("Price")),
+                    WzProvider.getInteger(commodityProp.get("Period")),
+                    WzProvider.getInteger(commodityProp.get("Gender"))
+            ));
+        }
+        // Load cash packages
+        if (!(source.getDirectory().getImages().get("CashPackage.img") instanceof WzImage cashPackageImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/CashPackage.img");
+        }
+        for (var entry : cashPackageImage.getProperty().getItems().entrySet()) {
+            final int packageId = Integer.parseInt(entry.getKey());
+            if (!(entry.getValue() instanceof WzListProperty cashPackageProp) ||
+                    !(cashPackageProp.get("SN") instanceof WzListProperty snProp)) {
+                throw new ProviderError("Failed to resolve cash package");
+            }
+            final Set<Integer> commodityIds = new HashSet<>();
+            for (var snEntry : snProp.getItems().entrySet()) {
+                commodityIds.add(WzProvider.getInteger(snEntry.getValue()));
+            }
+            cashPackages.put(packageId, Collections.unmodifiableSet(commodityIds));
+        }
     }
 
     private static void loadForbiddenNames(WzPackage source) throws ProviderError {

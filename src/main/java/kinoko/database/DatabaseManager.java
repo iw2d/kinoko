@@ -19,6 +19,7 @@ import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.database.cassandra.table.MigrationTable;
 import kinoko.database.cassandra.type.*;
+import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.EquipData;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
@@ -89,6 +90,7 @@ public final class DatabaseManager {
         PetDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        CashItemInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         SkillRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
@@ -104,6 +106,7 @@ public final class DatabaseManager {
         registerCodec(cqlSession, PetDataUDT.getTypeName(), (ic) -> new PetDataCodec(ic, GenericType.of(PetData.class)));
         registerCodec(cqlSession, ItemUDT.getTypeName(), (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
         registerCodec(cqlSession, InventoryUDT.getTypeName(), (ic) -> new InventoryCodec(ic, GenericType.of(Inventory.class)));
+        registerCodec(cqlSession, CashItemInfoUDT.getTypeName(), (ic) -> new CashItemInfoCodec(ic, GenericType.of(CashItemInfo.class)));
         registerCodec(cqlSession, SkillRecordUDT.getTypeName(), (ic) -> new SkillRecordCodec(ic, GenericType.of(SkillRecord.class)));
         registerCodec(cqlSession, QuestRecordUDT.getTypeName(), (ic) -> new QuestRecordCodec(ic, GenericType.of(QuestRecord.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));

@@ -2,6 +2,7 @@ package kinoko.world.dialog.trunk;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
+import kinoko.world.item.Trunk;
 import kinoko.world.user.DBChar;
 
 public final class TrunkResult implements Encodable {

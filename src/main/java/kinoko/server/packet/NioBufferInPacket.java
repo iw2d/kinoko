@@ -17,6 +17,11 @@ public final class NioBufferInPacket implements InPacket {
     }
 
     @Override
+    public byte peekByte() {
+        return buffer.get(buffer.position());
+    }
+
+    @Override
     public byte decodeByte() {
         return buffer.get();
     }

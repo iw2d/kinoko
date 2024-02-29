@@ -1,7 +1,8 @@
 package kinoko.world;
 
+import kinoko.server.cashshop.Locker;
 import kinoko.util.Lockable;
-import kinoko.world.dialog.trunk.Trunk;
+import kinoko.world.item.Trunk;
 import kinoko.world.user.AvatarData;
 
 import java.util.List;
@@ -17,12 +18,13 @@ public final class Account implements Lockable<Account> {
     private int nxPrepaid;
     private int maplePoint;
     private Trunk trunk;
+    private Locker locker;
 
     // TRANSIENT
     private boolean hasSecondaryPassword = false;
     private int worldId = -1;
     private int channelId = -1;
-    private List<AvatarData> characterList;
+    private List<AvatarData> characterList = null;
 
     public Account(int id, String username) {
         this.id = id;
@@ -75,6 +77,14 @@ public final class Account implements Lockable<Account> {
 
     public void setTrunk(Trunk trunk) {
         this.trunk = trunk;
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
     }
 
 

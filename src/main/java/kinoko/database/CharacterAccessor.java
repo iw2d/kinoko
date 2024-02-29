@@ -15,6 +15,8 @@ public interface CharacterAccessor {
 
     Optional<CharacterData> getCharacterByName(String name);
 
+    Optional<Integer> getAccountIdByName(String name);
+
     List<AvatarData> getAvatarDataByAccount(int accountId);
 
     boolean newCharacter(CharacterData characterData);

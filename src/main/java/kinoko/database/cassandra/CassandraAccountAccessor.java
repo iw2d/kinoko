@@ -8,12 +8,13 @@ import kinoko.database.AccountAccessor;
 import kinoko.database.cassandra.table.AccountTable;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.server.ServerConfig;
+import kinoko.server.cashshop.CashItemInfo;
+import kinoko.server.cashshop.Locker;
 import kinoko.world.Account;
-import kinoko.world.dialog.trunk.Trunk;
 import kinoko.world.item.Item;
+import kinoko.world.item.Trunk;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,15 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         }
         trunk.setMoney(row.getInt(AccountTable.TRUNK_MONEY));
         account.setTrunk(trunk);
+
+        final Locker locker = new Locker();
+        final List<CashItemInfo> cashItems = row.getList(AccountTable.LOCKER_ITEMS, CashItemInfo.class);
+        if (cashItems != null) {
+            for (CashItemInfo cii : cashItems) {
+                locker.getCashItems().add(cii);
+            }
+        }
+        account.setLocker(locker);
         return account;
     }
 
@@ -133,7 +143,6 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
 
     @Override
     public synchronized boolean newAccount(String username, String password) {
-        final CodecRegistry registry = getSession().getContext().getCodecRegistry();
         final Optional<Integer> accountId = getNextId(IdTable.ACCOUNT_TABLE);
         if (accountId.isEmpty()) {
             return false;
@@ -150,9 +159,10 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .value(AccountTable.NX_CREDIT, literal(0))
                         .value(AccountTable.NX_PREPAID, literal(0))
                         .value(AccountTable.MAPLE_POINT, literal(0))
-                        .value(AccountTable.TRUNK_ITEMS, literal(new ArrayList<Item>(), registry))
+                        .value(AccountTable.TRUNK_ITEMS, literal(List.of()))
                         .value(AccountTable.TRUNK_SIZE, literal(ServerConfig.TRUNK_BASE_SLOTS))
                         .value(AccountTable.TRUNK_MONEY, literal(0))
+                        .value(AccountTable.LOCKER_ITEMS, literal(List.of()))
                         .ifNotExists()
                         .build()
         );
@@ -171,6 +181,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .setColumn(AccountTable.TRUNK_ITEMS, literal(account.getTrunk().getItems(), registry))
                         .setColumn(AccountTable.TRUNK_SIZE, literal(account.getTrunk().getSize()))
                         .setColumn(AccountTable.TRUNK_MONEY, literal(account.getTrunk().getMoney()))
+                        .setColumn(AccountTable.LOCKER_ITEMS, literal(account.getLocker().getCashItems(), registry))
                         .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
         );

@@ -1,6 +1,8 @@
 package kinoko.server.packet;
 
 public interface InPacket {
+    byte peekByte();
+
     byte decodeByte();
 
     default boolean decodeBoolean() {

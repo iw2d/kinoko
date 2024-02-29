@@ -59,13 +59,14 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
         log.debug("Channel inactive");
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (client != null) {
+            log.debug("Closing client");
             client.close();
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("Exception caught", cause);
+        log.error("Exception caught while handling packet", cause);
         cause.printStackTrace();
     }
 

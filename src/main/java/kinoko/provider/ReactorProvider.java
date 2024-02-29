@@ -20,10 +20,6 @@ public final class ReactorProvider implements WzProvider {
     public static final Path REACTOR_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Reactor.wz");
     private static final Map<Integer, ReactorTemplate> reactorTemplates = new HashMap<>();
 
-    public static Optional<ReactorTemplate> getReactorTemplate(int reactorId) {
-        return Optional.ofNullable(reactorTemplates.get(reactorId));
-    }
-
     public static void initialize() {
         try (final WzReader reader = WzReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
@@ -31,6 +27,10 @@ public final class ReactorProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Reactor.wz", e);
         }
+    }
+
+    public static Optional<ReactorTemplate> getReactorTemplate(int reactorId) {
+        return Optional.ofNullable(reactorTemplates.get(reactorId));
     }
 
     private static void loadReactorTemplates(WzPackage source) throws ProviderError {

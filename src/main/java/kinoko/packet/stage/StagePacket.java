@@ -1,5 +1,6 @@
 package kinoko.packet.stage;
 
+import kinoko.server.cashshop.CashShop;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
@@ -46,24 +47,14 @@ public final class StagePacket {
         return outPacket;
     }
 
-    public static OutPacket setCashShop(User user) {
+    public static OutPacket setCashShop(User user, CashShop cashShop) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SET_CASHSHOP);
         user.getCharacterData().encode(outPacket);
 
         // CCashShop::LoadData
         outPacket.encodeByte(true); // bCashShopAuthorized
         outPacket.encodeString(user.getAccount().getUsername()); // sNexonClubID
-
-        // CWvsContext::SetSaleInfo
-        outPacket.encodeInt(0); // nNotSaleCount, int * 4
-        outPacket.encodeShort(0); // short * (int, CS_COMMODITY::DecodeModifiedData)
-        outPacket.encodeByte(0); // aaDiscountRate[9][30], byte * (byte, byte, byte)
-        // ~CWvsContext::SetSaleInfo
-
-        outPacket.encodeArray(new byte[0x438]); // this->aBest
-        outPacket.encodeShort(0); // CCashShop::DecodeStock, short * 8
-        outPacket.encodeShort(0); // CCashShop::DecodeLimitGoods, short * 104
-        outPacket.encodeShort(0); // CCashShop::DecodeZeroGoods, short * 68
+        CashShop.encode(outPacket);
         // ~CCashShop::LoadData
 
         outPacket.encodeByte(false); // bEventOn

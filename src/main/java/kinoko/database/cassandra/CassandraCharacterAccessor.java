@@ -130,6 +130,22 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
     }
 
     @Override
+    public Optional<Integer> getAccountIdByName(String name) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), CharacterTable.getTableName())
+                        .columns(
+                                CharacterTable.ACCOUNT_ID
+                        )
+                        .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            return Optional.of(row.getInt(CharacterTable.ACCOUNT_ID));
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<AvatarData> getAvatarDataByAccount(int accountId) {
         final List<AvatarData> avatarDataList = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(

@@ -2,6 +2,7 @@ package kinoko.server;
 
 import kinoko.handler.ClientHandler;
 import kinoko.handler.field.*;
+import kinoko.handler.stage.CashShopHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.*;
 import kinoko.provider.MapProvider;
@@ -19,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ChannelServer extends NettyServer {
     private static final Map<InHeader, Method> handlerMap = PacketHandler.loadHandlers(
             ClientHandler.class,
+            CashShopHandler.class,
             MigrationHandler.class,
             FieldHandler.class,
             MobHandler.class,

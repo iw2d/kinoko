@@ -1,9 +1,7 @@
-package kinoko.world.dialog.trunk;
+package kinoko.world.item;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
-import kinoko.world.item.InventoryType;
-import kinoko.world.item.Item;
 import kinoko.world.user.DBChar;
 
 import java.util.ArrayList;

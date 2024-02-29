@@ -3,6 +3,7 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.stage.StagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
@@ -100,5 +101,12 @@ public final class FieldHandler {
             return;
         }
         c.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
+    }
+
+    @Handler(InHeader.USER_MIGRATE_TO_CASHSHOP_REQUEST)
+    public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+
+        user.write(StagePacket.setCashShop(user, Server.getCashShop()));
     }
 }

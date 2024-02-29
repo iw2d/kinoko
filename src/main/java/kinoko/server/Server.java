@@ -2,6 +2,7 @@ package kinoko.server;
 
 import kinoko.database.DatabaseManager;
 import kinoko.provider.*;
+import kinoko.server.cashshop.CashShop;
 import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.command.CommandProcessor;
@@ -24,10 +25,15 @@ import java.util.concurrent.ExecutionException;
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
     private static LoginServer loginServer;
+    private static CashShop cashShop;
     private static List<World> worlds;
 
-    public static LoginServer loginServer() {
+    public static LoginServer getLoginServer() {
         return loginServer;
+    }
+
+    public static CashShop getCashShop() {
+        return cashShop;
     }
 
     public static List<World> getWorlds() {
@@ -152,13 +158,14 @@ public final class Server {
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Load server classes
+        MapleCrypto.initialize();
         CommandProcessor.initialize();
         EventScheduler.initialize();
         ScriptDispatcher.initialize();
+        CashShop.initialize();
 
         // Load world
         start = Instant.now();
-        MapleCrypto.initialize();
         loginServer = new LoginServer();
         loginServer.start().join();
         log.info("Login server listening on port {}", loginServer.getPort());

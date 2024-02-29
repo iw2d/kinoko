@@ -7,6 +7,7 @@ import kinoko.world.dialog.Dialog;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
+import kinoko.world.item.Trunk;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
