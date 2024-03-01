@@ -54,8 +54,8 @@ public final class SkillProcessor {
             }
             final int totalDamage = Arrays.stream(ai.damage).sum();
             // Acquire mob
-            try (var locked = mobResult.get().acquire()) {
-                final Mob mob = locked.get();
+            try (var lockedMob = mobResult.get().acquire()) {
+                final Mob mob = lockedMob.get();
                 mob.damage(user, totalDamage);
                 // Show mob hp indicator
                 final double percentage = (double) mob.getHp() / mob.getMaxHp();

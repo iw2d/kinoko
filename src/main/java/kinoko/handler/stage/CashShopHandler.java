@@ -21,8 +21,8 @@ public final class CashShopHandler {
 
     @Handler(InHeader.CASHSHOP_QUERY_CASH_REQUEST)
     public static void handleQueryCashRequest(User user, InPacket inPacket) {
-        try (var locked = user.getAccount().acquire()) {
-            user.write(CashShopPacket.queryCashResult(locked.get()));
+        try (var lockedAccount = user.getAccount().acquire()) {
+            user.write(CashShopPacket.queryCashResult(lockedAccount.get()));
         }
     }
 
@@ -60,15 +60,15 @@ public final class CashShopHandler {
                     return;
                 }
                 final CashItemInfo cashItemInfo = cashItemInfoResult.get();
-                try (var locked = user.getAccount().acquire()) {
+                try (var lockedAccount = user.getAccount().acquire()) {
                     // Check account locker
-                    final Account account = locked.get();
+                    final Account account = lockedAccount.get();
                     if (account.getLocker().getCashItems().size() >= GameConstants.LOCKER_MAX_SLOTS) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.BUY_STORED_PROC_FAILED))); // Please check and see if you have exceeded\r\nthe number of cash items you can have.
                         return;
                     }
                     // Check payment type and deduct price
-                    if (!deductPrice(locked, PaymentType.getByValue(paymentType), commodity.getPrice())) {
+                    if (!deductPrice(lockedAccount, PaymentType.getByValue(paymentType), commodity.getPrice())) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.NO_REMAIN_CASH))); // You don't have enough cash.
                         return;
                     }
@@ -147,8 +147,8 @@ public final class CashShopHandler {
                 for (int i = 0; i < 10; i++) {
                     wishlist.add(inPacket.decodeInt()); // nCommSN
                 }
-                try (var locked = user.getAccount().acquire()) {
-                    final Account account = locked.get();
+                try (var lockedAccount = user.getAccount().acquire()) {
+                    final Account account = lockedAccount.get();
                     account.setWishlist(Collections.unmodifiableList(wishlist));
                     user.write(CashShopPacket.cashItemResult(CashItemResult.setWishDone(account.getWishlist())));
                 }
@@ -226,9 +226,9 @@ public final class CashShopHandler {
                     log.error("Tried to increase char slot count with item ID : {}", commodity.getItemId());
                     return;
                 }
-                try (var locked = user.getAccount().acquire()) {
+                try (var lockedAccount = user.getAccount().acquire()) {
                     // Check current character slot count
-                    final Account account = locked.get();
+                    final Account account = lockedAccount.get();
                     final int newSize = account.getSlotCount() + 1;
                     if (newSize > GameConstants.CHARACTER_MAX_SLOTS) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.INC_CHAR_SLOT_COUNT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
@@ -236,7 +236,7 @@ public final class CashShopHandler {
                         return;
                     }
                     // Check payment type and deduct price
-                    if (!deductPrice(locked, PaymentType.getByValue(paymentType), commodity.getPrice())) {
+                    if (!deductPrice(lockedAccount, PaymentType.getByValue(paymentType), commodity.getPrice())) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.INC_CHAR_SLOT_COUNT_FAILED, CashItemFailReason.NO_REMAIN_CASH))); // You don't have enough cash.
                         return;
                     }

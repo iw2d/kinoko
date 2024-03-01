@@ -89,7 +89,7 @@ public final class MobHandler {
         mai.isAttack = action >= MobActionType.ATTACK1.getValue() && action <= MobActionType.ATTACKF.getValue();
         mai.isSkill = action >= MobActionType.SKILL1.getValue() && action <= MobActionType.SKILLF.getValue();
 
-        try (var locked = mob.acquire()) {
+        try (var lockedMob = mob.acquire()) {
             if (mai.isAttack) {
                 final int attackIndex = action - MobActionType.ATTACK1.getValue();
                 final Optional<MobAttack> mobAttackResult = mob.getAttack(attackIndex);

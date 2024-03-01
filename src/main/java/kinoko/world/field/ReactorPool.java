@@ -46,8 +46,8 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
             final var iter = hitReactors.entrySet().iterator();
             while (iter.hasNext()) {
                 final Map.Entry<Reactor, Instant> entry = iter.next();
-                try (var locked = entry.getKey().acquire()) {
-                    final Reactor reactor = locked.get();
+                try (var lockedReactor = entry.getKey().acquire()) {
+                    final Reactor reactor = lockedReactor.get();
                     // Check reactor time and reset reactor
                     if (Instant.now().isBefore(entry.getValue().plus(reactor.getReactorTime(), ChronoUnit.SECONDS))) {
                         continue;

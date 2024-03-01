@@ -29,9 +29,9 @@ public final class ReactorHandler {
             log.error("Received REACTOR_HIT for invalid object with ID : {}", objectId);
             return;
         }
-        try (var locked = reactorResult.get().acquire()) {
+        try (var lockedReactor = reactorResult.get().acquire()) {
             // Hit reactor
-            final Reactor reactor = locked.get();
+            final Reactor reactor = lockedReactor.get();
             if (!reactor.hit(skillId)) {
                 log.error("{} : could not hit reactor with skill ID {}", reactor, skillId);
             }

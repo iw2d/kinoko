@@ -63,8 +63,8 @@ public final class MobPool extends FieldObjectPool<Mob> {
             final var iter = graveyard.entrySet().iterator();
             while (iter.hasNext()) {
                 final Map.Entry<Mob, Instant> entry = iter.next();
-                try (var locked = entry.getKey().acquire()) {
-                    final Mob mob = locked.get();
+                try (var lockedMob = entry.getKey().acquire()) {
+                    final Mob mob = lockedMob.get();
                     // Check respawn timer and remove from graveyard
                     if (Instant.now().isBefore(entry.getValue().plus(mob.getMobTime(), ChronoUnit.SECONDS))) {
                         continue;
