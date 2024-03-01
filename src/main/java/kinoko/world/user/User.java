@@ -120,6 +120,14 @@ public final class User extends Life implements Lockable<User> {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
+    public int getGender() {
+        return getCharacterStat().getGender();
+    }
+
+    public int getJob() {
+        return getCharacterStat().getJob();
+    }
+
     public int getLevel() {
         return getCharacterStat().getLevel();
     }

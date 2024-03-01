@@ -20,7 +20,7 @@ public final class UserPacket {
         outPacket.encodeByte(0); // nGuildMarkColor
 
         user.getTemporaryStatManager().encodeForRemote(outPacket, true); // SecondaryStat::DecodeForRemote
-        outPacket.encodeShort(user.getCharacterStat().getJob()); // nJobCode
+        outPacket.encodeShort(user.getJob()); // nJobCode
         user.getCharacterData().getAvatarLook().encode(outPacket); // AvatarLook::AvatarLook
 
         outPacket.encodeInt(0); // dwDriverID

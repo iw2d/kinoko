@@ -12,6 +12,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.CassandraAccountAccessor;
 import kinoko.database.cassandra.CassandraCharacterAccessor;
+import kinoko.database.cassandra.CassandraGiftAccessor;
 import kinoko.database.cassandra.CassandraMigrationAccessor;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.AccountTable;
@@ -40,6 +41,7 @@ public final class DatabaseManager {
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
     private static MigrationAccessor migrationAccessor;
+    private static GiftAccessor giftAccessor;
 
     public static AccountAccessor accountAccessor() {
         return accountAccessor;
@@ -51,6 +53,10 @@ public final class DatabaseManager {
 
     public static MigrationAccessor migrationAccessor() {
         return migrationAccessor;
+    }
+
+    public static GiftAccessor giftAccessor() {
+        return giftAccessor;
     }
 
     public static void createKeyspace(CqlSession session, String keyspace) {
@@ -115,6 +121,7 @@ public final class DatabaseManager {
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
         migrationAccessor = new CassandraMigrationAccessor(cqlSession, DATABASE_KEYSPACE);
+        giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
     }
 
     public static CompletableFuture<Void> shutdown() {

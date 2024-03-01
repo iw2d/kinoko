@@ -1,7 +1,9 @@
 package kinoko.server.cashshop;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.world.Account;
 import kinoko.world.Encodable;
+import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 
 import java.util.List;
@@ -17,12 +19,12 @@ public final class CashItemResult implements Encodable {
     private boolean bool2;
     private String string1;
 
-    private long[] longArray;
-    private int[] intArray;
+    private List<Long> longList;
+    private List<Integer> intList;
 
     private List<CashItemInfo> cashItemInfos;
     private CashItemInfo cashItemInfo;
-    private List<GiftList> giftLists;
+    private List<Gift> gifts;
     private Item item;
 
     private CashItemFailReason reason;
@@ -52,15 +54,15 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeShort(int4); // nCharacterCount
             }
             case LOAD_GIFT_DONE -> {
-                outPacket.encodeShort(giftLists.size());
-                for (GiftList giftList : giftLists) {
-                    giftList.encode(outPacket); // GW_GiftList (98)
+                outPacket.encodeShort(gifts.size());
+                for (Gift gift : gifts) {
+                    gift.encode(outPacket); // GW_GiftList (98)
                 }
             }
             case LOAD_WISH_DONE, SET_WISH_DONE -> {
                 for (int i = 0; i < 10; i++) {
-                    if (i < intArray.length) {
-                        outPacket.encodeInt(intArray[i]); // sn
+                    if (i < intList.size()) {
+                        outPacket.encodeInt(intList.get(i)); // sn
                     } else {
                         outPacket.encodeInt(0);
                     }
@@ -83,9 +85,9 @@ public final class CashItemResult implements Encodable {
                     cii.encode(outPacket); // GW_CashItemInfo (55)
                 }
                 outPacket.encodeInt(int1);
-                outPacket.encodeInt(longArray.length);
-                for (int i = 0; i < longArray.length; i++) {
-                    outPacket.encodeLong(longArray[i]);
+                outPacket.encodeInt(longList.size());
+                for (long longItem : longList) {
+                    outPacket.encodeLong(longItem);
                 }
                 outPacket.encodeInt(int2);
             }
@@ -108,7 +110,7 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeShort(int2); // new size
             }
             case INC_TRUNK_COUNT_DONE, INC_CHAR_SLOT_COUNT_DONE, INC_BUY_CHAR_COUNT_DONE -> {
-                outPacket.encodeShort(int1); // nTrunkCount
+                outPacket.encodeShort(int1);
             }
             case ENABLE_EQUIP_SLOT_EXT_DONE -> {
                 outPacket.encodeShort(int1); // not sure
@@ -149,9 +151,9 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeInt(int2); // [ %s ] \r\nwas sent to %s. \r\n%d NX Prepaid \r\nwere spent in the process.
             }
             case BUY_NORMAL_DONE -> {
-                outPacket.encodeInt(longArray.length);
-                for (int i = 0; i < longArray.length; i++) {
-                    outPacket.encodeLong(longArray[i]);
+                outPacket.encodeInt(longList.size());
+                for (long longItem : longList) {
+                    outPacket.encodeLong(longItem);
                 }
             }
             case PURCHASE_RECORD_DONE -> {
@@ -205,7 +207,78 @@ public final class CashItemResult implements Encodable {
         }
     }
 
-    public static CashItemResult of(CashItemResultType type) {
-        return new CashItemResult(type);
+    public static CashItemResult fail(CashItemResultType type, CashItemFailReason reason) {
+        final CashItemResult result = new CashItemResult(type);
+        result.reason = reason;
+        return result;
+    }
+
+    public static CashItemResult loadLockerDone(Account account) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_LOCKER_DONE);
+        result.cashItemInfos = account.getLocker().getCashItems(); // aCashItemInfo
+        result.int1 = account.getTrunk().getSize(); // nTrunkCount
+        result.int2 = account.getSlotCount(); // nCharacterSlotCount
+        result.int3 = -1; // nBuyCharacterCount
+        result.int4 = -1; // nCharacterCount
+        return result;
+    }
+
+    public static CashItemResult buyDone(CashItemInfo cashItemInfo) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.BUY_DONE);
+        result.cashItemInfo = cashItemInfo; // GW_CashItemInfo
+        return result;
+    }
+
+    public static CashItemResult giftDone(String receiverName, Commodity commodity) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.GIFT_DONE);
+        result.string1 = receiverName; // sRcvCharacterName
+        result.int1 = commodity.getItemId(); // nItemID
+        result.int2 = commodity.getCount(); // nCount
+        result.int3 = commodity.getPrice(); // nSpentNXCash
+        return result;
+    }
+
+    public static CashItemResult loadWishDone(List<Integer> wishlist) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_WISH_DONE);
+        result.intList = wishlist; // nWishList
+        return result;
+    }
+
+    public static CashItemResult setWishDone(List<Integer> wishlist) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.SET_WISH_DONE);
+        result.intList = wishlist; // nWishList
+        return result;
+    }
+
+    public static CashItemResult incSlotCountDone(InventoryType inventoryType, int newSize) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.INC_SLOT_COUNT_DONE);
+        result.int1 = inventoryType.getValue(); // nTI
+        result.int2 = newSize;
+        return result;
+    }
+
+    public static CashItemResult incTrunkCountDone(int newSize) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.INC_TRUNK_COUNT_DONE);
+        result.int1 = newSize; // nTrunkCount
+        return result;
+    }
+
+    public static CashItemResult incCharSlotCountDone(int newSize) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.INC_CHAR_SLOT_COUNT_DONE);
+        result.int1 = newSize; // nCharacterSlotCount
+        return result;
+    }
+
+    public static CashItemResult moveLtoSDone(int position, Item item) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.MOVE_L_TO_S_DONE);
+        result.int1 = position; // nPOS
+        result.item = item; // GW_ItemSlotBase
+        return result;
+    }
+
+    public static CashItemResult moveStoLDone(CashItemInfo cashItemInfo) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.MOVE_S_TO_L_DONE);
+        result.cashItemInfo = cashItemInfo; // GW_CashItemInfo
+        return result;
     }
 }

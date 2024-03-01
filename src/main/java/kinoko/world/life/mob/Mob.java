@@ -178,7 +178,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     public void dropRewards(User lastAttacker) {
         // Sort damageDone by highest damage, assign owner to most damage attacker present in the field
         User owner = lastAttacker;
-        var iter = damageDone.entrySet().stream()
+        final var iter = damageDone.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .iterator();
         while (iter.hasNext()) {

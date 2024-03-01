@@ -7,6 +7,7 @@ import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Locked;
 import kinoko.world.Encodable;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.Dialog;
@@ -46,7 +47,8 @@ public final class ShopDialog implements Dialog, Encodable {
     }
 
     @Override
-    public void onPacket(User user, InPacket inPacket) {
+    public void onPacket(Locked<User> locked, InPacket inPacket) {
+        final User user = locked.get();
         final int type = inPacket.decodeByte();
         final ShopRequestType requestType = ShopRequestType.getByValue(type);
         if (requestType == null) {

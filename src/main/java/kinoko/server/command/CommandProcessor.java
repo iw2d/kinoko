@@ -40,7 +40,7 @@ public final class CommandProcessor {
         if (!commandMap.containsKey(command.toLowerCase())) {
             return false;
         }
-        try (var locked = user.acquire()) {
+        try {
             commandMap.get(command).invoke(null, user, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("Exception caught while processing command {}", text, e);

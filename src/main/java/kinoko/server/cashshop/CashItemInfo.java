@@ -3,6 +3,7 @@ package kinoko.server.cashshop;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
 import kinoko.world.item.Item;
+import kinoko.world.user.User;
 
 public final class CashItemInfo implements Encodable {
     private final Item item;
@@ -52,5 +53,15 @@ public final class CashItemInfo implements Encodable {
         outPacket.encodeFT(item.getDateExpire()); // dateExpire
         outPacket.encodeInt(0); // nPaybackRate
         outPacket.encodeInt(0); // nDiscountRate
+    }
+
+    public static CashItemInfo from(Item item, User user) {
+        return new CashItemInfo(
+                item,
+                0,
+                user.getAccountId(),
+                user.getCharacterId(),
+                ""
+        );
     }
 }

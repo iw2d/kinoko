@@ -92,4 +92,13 @@ public enum BodyPart {
     public final int getValue() {
         return value;
     }
+
+    public static BodyPart getByValue(int value) {
+        for (BodyPart bodyPart : values()) {
+            if (bodyPart.getValue() == value) {
+                return bodyPart;
+            }
+        }
+        return null;
+    }
 }

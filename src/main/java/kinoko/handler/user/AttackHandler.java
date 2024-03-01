@@ -111,7 +111,7 @@ public final class AttackHandler {
 
         attack.userX = inPacket.decodeShort(); // GetPos()->x
         attack.userY = inPacket.decodeShort(); // GetPos()->y
-        if (JobConstants.isWildHunterJob(user.getCharacterStat().getJob())) {
+        if (JobConstants.isWildHunterJob(user.getJob())) {
             inPacket.decodeShort(); // ptBodyRelMove.y
         }
         inPacket.decodeShort(); // pt0.x

@@ -17,7 +17,7 @@ public final class QuestJobCheck implements QuestCheck {
 
     @Override
     public boolean check(User user) {
-        final int jobId = user.getCharacterStat().getJob();
+        final int jobId = user.getJob();
         return jobs.contains(jobId);
     }
 

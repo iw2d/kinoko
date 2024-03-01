@@ -1,7 +1,7 @@
 package kinoko.server.cashshop;
 
 public enum CashItemFailReason {
-    // CashItemFailReason
+    // CCashShop::NoticeFailReason
     UNKNOWN(0),
     TIMEOUT(1),
     CASH_DAEMON_DB_ERROR(2),
@@ -36,7 +36,7 @@ public enum CashItemFailReason {
     PURCHASE_LIMIT_OVER(31),
     NO_REMAIN_MESO(32),
     NOT_AUTHORIZED_USER(33),
-    INVALID_BIRTH_DATE(34),
+    INVALID_BIRTH_DATE(34), // Check your PIC password and\r\nplease try again
     INVALID_PASSPORT_ID(35),
     INCORRECT_SSN2(36),
     FOR_NO_PURCHASE_EXP_USERS_ONLY(37),

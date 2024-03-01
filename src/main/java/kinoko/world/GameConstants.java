@@ -5,6 +5,9 @@ import kinoko.util.Tuple;
 public final class GameConstants {
     public static final int CHARACTER_MAX_SLOTS = 15;
     public static final int INVENTORY_MAX_SLOTS = 96;
+    public static final int TRUNK_MAX_SLOTS = 48;
+    public static final int LOCKER_MAX_SLOTS = 500; // avoid reaching packet size limit
+
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
     public static final int MAX_MONEY = Integer.MAX_VALUE;
 

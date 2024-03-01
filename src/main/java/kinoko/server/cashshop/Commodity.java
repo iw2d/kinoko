@@ -1,5 +1,12 @@
 package kinoko.server.cashshop;
 
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
+import kinoko.world.item.Item;
+import kinoko.world.user.User;
+
+import java.util.Optional;
+
 public final class Commodity {
     private final int commodityId;
     private final int itemId;
@@ -39,5 +46,38 @@ public final class Commodity {
 
     public int getGender() {
         return gender;
+    }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public Optional<CashItemInfo> createCashItemInfo(User user) {
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(getItemId());
+        if (itemInfoResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), getCount());
+        final CashItemInfo cashItemInfo = new CashItemInfo(
+                item,
+                getCommodityId(),
+                user.getAccountId(),
+                user.getCharacterId(),
+                ""
+        );
+        return Optional.of(cashItemInfo);
+    }
+
+    public Optional<Gift> createGift(User user, String message) {
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(getItemId());
+        if (itemInfoResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), getCount());
+        final Gift gift = new Gift(
+                item,
+                user.getCharacterName(),
+                message
+        );
+        return Optional.of(gift);
     }
 }

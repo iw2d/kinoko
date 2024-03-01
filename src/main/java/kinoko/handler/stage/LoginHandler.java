@@ -234,7 +234,7 @@ public final class LoginHandler {
         im.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
         im.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
         im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
+        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS));
         im.setMoney(0);
         characterData.setInventoryManager(im);
 

@@ -43,7 +43,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
     public void resetReactors() {
         lock.lock();
         try {
-            var iter = hitReactors.entrySet().iterator();
+            final var iter = hitReactors.entrySet().iterator();
             while (iter.hasNext()) {
                 final Map.Entry<Reactor, Instant> entry = iter.next();
                 try (var locked = entry.getKey().acquire()) {

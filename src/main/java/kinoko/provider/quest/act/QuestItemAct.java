@@ -26,7 +26,7 @@ public final class QuestItemAct implements QuestAct {
 
     @Override
     public boolean canAct(User user) {
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
+        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Handle required slots for random items
         final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
@@ -66,7 +66,7 @@ public final class QuestItemAct implements QuestAct {
 
     @Override
     public boolean doAct(User user) {
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
+        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Take required items
         for (QuestItemData itemData : filteredItems) {
@@ -123,7 +123,7 @@ public final class QuestItemAct implements QuestAct {
         return true;
     }
 
-    private Set<QuestItemData> getFilteredItems(byte gender, short job) {
+    private Set<QuestItemData> getFilteredItems(int gender, int job) {
         return items.stream()
                 .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
                 .collect(Collectors.toUnmodifiableSet());

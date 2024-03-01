@@ -60,7 +60,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
     public void respawnMobs() {
         lock.lock();
         try {
-            var iter = graveyard.entrySet().iterator();
+            final var iter = graveyard.entrySet().iterator();
             while (iter.hasNext()) {
                 final Map.Entry<Mob, Instant> entry = iter.next();
                 try (var locked = entry.getKey().acquire()) {

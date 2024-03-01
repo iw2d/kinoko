@@ -19,6 +19,7 @@ public final class Account implements Lockable<Account> {
     private int maplePoint;
     private Trunk trunk;
     private Locker locker;
+    private List<Integer> wishlist;
 
     // TRANSIENT
     private boolean hasSecondaryPassword = false;
@@ -85,6 +86,14 @@ public final class Account implements Lockable<Account> {
 
     public void setLocker(Locker locker) {
         this.locker = locker;
+    }
+
+    public List<Integer> getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(List<Integer> wishlist) {
+        this.wishlist = wishlist;
     }
 
 

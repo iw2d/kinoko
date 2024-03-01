@@ -195,7 +195,7 @@ public final class UserHandler {
                 log.error("Received USER_SHOP_REQUEST without associated shop dialog");
                 return;
             }
-            shopDialog.onPacket(locked.get(), inPacket);
+            shopDialog.onPacket(locked, inPacket);
         }
     }
 
@@ -206,7 +206,7 @@ public final class UserHandler {
                 log.error("Received USER_TRUNK_REQUEST without associated trunk dialog");
                 return;
             }
-            trunkDialog.onPacket(locked.get(), inPacket);
+            trunkDialog.onPacket(locked, inPacket);
         }
     }
 
@@ -374,11 +374,23 @@ public final class UserHandler {
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
                 }
             } else {
-                final Inventory secondInventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, newPos));
+                final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
+                final Inventory secondInventory = im.getInventoryByType(secondInventoryType);
                 final Item secondItem = secondInventory.getItem(newPos);
+                // Check body part if equipped inventory
+                if (secondInventoryType == InventoryType.EQUIPPED) {
+                    final int absPos = Math.abs(newPos);
+                    final boolean isCash = absPos >= BodyPart.CASH_BASE.getValue() && absPos < BodyPart.CASH_END.getValue();
+                    final BodyPart bodyPart = BodyPart.getByValue(isCash ? (absPos - BodyPart.CASH_BASE.getValue()) : absPos);
+                    if (bodyPart == null || !ItemConstants.isCorrectBodyPart(item.getItemId(), bodyPart, user.getGender())) {
+                        log.error("Failed to equip item ID {} in position {}", item.getItemId(), absPos);
+                        user.dispose();
+                        return;
+                    }
+                }
+                // Swap item position and update client
                 inventory.putItem(oldPos, secondItem);
                 secondInventory.putItem(newPos, item);
-                // Swap item position in client inventory
                 user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
             }
         }
@@ -491,7 +503,7 @@ public final class UserHandler {
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
                 try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> startQuestResult = questInfo.startQuest(user);
+                    final Optional<QuestRecord> startQuestResult = questInfo.startQuest(locked);
                     if (startQuestResult.isEmpty()) {
                         log.error("Failed to accept quest : {}", questId);
                         user.dispose();
@@ -510,7 +522,7 @@ public final class UserHandler {
                 }
                 final int index = inPacket.decodeInt(); // nIdx, for selecting reward? TODO
                 try (var locked = user.acquire()) {
-                    final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(user);
+                    final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(locked);
                     if (questCompleteResult.isEmpty()) {
                         log.error("Failed to complete quest : {}", questId);
                         user.dispose();
@@ -527,7 +539,7 @@ public final class UserHandler {
             }
             case RESIGN_QUEST -> {
                 try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(user);
+                    final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(locked);
                     if (questRecordResult.isEmpty()) {
                         log.error("Failed to resign quest : {}", questId);
                         return;

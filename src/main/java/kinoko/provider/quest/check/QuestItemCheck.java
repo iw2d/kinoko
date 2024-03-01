@@ -21,7 +21,7 @@ public final class QuestItemCheck implements QuestCheck {
 
     @Override
     public boolean check(User user) {
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getCharacterStat().getGender(), user.getCharacterStat().getJob());
+        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
         for (QuestItemData itemData : filteredItems) {
             if (!user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount())) {
                 return false;
@@ -30,7 +30,7 @@ public final class QuestItemCheck implements QuestCheck {
         return true;
     }
 
-    private Set<QuestItemData> getFilteredItems(byte gender, short job) {
+    private Set<QuestItemData> getFilteredItems(int gender, int job) {
         return items.stream()
                 .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
                 .collect(Collectors.toUnmodifiableSet());

@@ -9,4 +9,8 @@ public final class Locker {
     public List<CashItemInfo> getCashItems() {
         return cashItems;
     }
+
+    public void addCashItem(CashItemInfo cashItemInfo) {
+        cashItems.add(cashItemInfo);
+    }
 }

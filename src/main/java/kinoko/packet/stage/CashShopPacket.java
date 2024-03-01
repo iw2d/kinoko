@@ -3,11 +3,20 @@ package kinoko.packet.stage;
 import kinoko.server.cashshop.CashItemResult;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.Account;
 
 public final class CashShopPacket {
     // CCashShop::OnPacket ---------------------------------------------------------------------------------------------
 
-    public static OutPacket queryCashResult(int nxCredit, int nxPrepaid, int maplePoint) {
+    public static OutPacket queryCashResult(Account account) {
+        return queryCashResult(
+                account.getNxCredit(),
+                account.getMaplePoint(),
+                account.getNxPrepaid()
+        );
+    }
+
+    public static OutPacket queryCashResult(int nxCredit, int maplePoint, int nxPrepaid) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CASHSHOP_QUERY_CASH_RESULT);
         outPacket.encodeInt(nxCredit); // nNexonCash
         outPacket.encodeInt(maplePoint); // nMaplePoint

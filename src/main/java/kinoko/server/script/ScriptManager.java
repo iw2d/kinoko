@@ -99,7 +99,7 @@ public abstract class ScriptManager {
     // STAT METHODS ----------------------------------------------------------------------------------------------------
 
     public final int getGender() {
-        return user.getCharacterStat().getGender();
+        return user.getGender();
     }
 
     public final int getHp() {

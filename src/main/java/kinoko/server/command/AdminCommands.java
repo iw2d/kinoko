@@ -18,6 +18,7 @@ import kinoko.server.cashshop.Commodity;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Triple;
 import kinoko.util.Util;
+import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
@@ -351,12 +352,15 @@ public final class AdminCommands {
         final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()));
 
         // Add item
-        final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
-        if (addItemResult.isPresent()) {
-            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-            user.write(UserLocal.effect(Effect.gainItem(item)));
-        } else {
-            user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
+        try (var locked = user.acquire()) {
+            final InventoryManager im = locked.get().getInventoryManager();
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+            if (addItemResult.isPresent()) {
+                user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                user.write(UserLocal.effect(Effect.gainItem(item)));
+            } else {
+                user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
+            }
         }
     }
 
@@ -367,12 +371,28 @@ public final class AdminCommands {
             return;
         }
         final int money = Integer.parseInt(args[1]);
-        final InventoryManager im = user.getInventoryManager();
-        if (im.addMoney(money)) {
-            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-            user.write(WvsContext.message(Message.incMoney(money)));
-        } else {
-            user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
+        try (var locked = user.acquire()) {
+            final InventoryManager im = locked.get().getInventoryManager();
+            if (im.addMoney(money)) {
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                user.write(WvsContext.message(Message.incMoney(money)));
+            } else {
+                user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
+            }
+        }
+    }
+
+    @Command("nx")
+    public static void nx(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %snx <value>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int nx = Integer.parseInt(args[1]);
+        try (var lockedAccount = user.getAccount().acquire()) {
+            final Account account = lockedAccount.get();
+            account.setNxCredit(nx);
+            user.write(WvsContext.message(Message.system("Set NX credit to %d", nx)));
         }
     }
 }

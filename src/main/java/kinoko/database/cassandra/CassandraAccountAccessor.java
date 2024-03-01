@@ -51,10 +51,12 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         final List<CashItemInfo> cashItems = row.getList(AccountTable.LOCKER_ITEMS, CashItemInfo.class);
         if (cashItems != null) {
             for (CashItemInfo cii : cashItems) {
-                locker.getCashItems().add(cii);
+                locker.addCashItem(cii);
             }
         }
         account.setLocker(locker);
+
+        final List<Integer> wishlist = row.getList(AccountTable.WISHLIST, Integer.class);
         return account;
     }
 

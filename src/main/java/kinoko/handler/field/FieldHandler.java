@@ -3,11 +3,13 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
+import kinoko.server.cashshop.CashItemResult;
 import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
@@ -121,6 +123,11 @@ public final class FieldHandler {
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 
-        user.write(StagePacket.setCashShop(user));
+        try (var lockedAccount = user.getAccount().acquire()) {
+            final Account account = lockedAccount.get();
+            user.write(StagePacket.setCashShop(user));
+            user.write(CashShopPacket.cashItemResult(CashItemResult.loadLockerDone(account)));
+            user.write(CashShopPacket.queryCashResult(account));
+        }
     }
 }

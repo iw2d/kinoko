@@ -7,6 +7,15 @@ import java.util.Optional;
 
 
 public final class CashShop {
+    public static final int ADD_4_SLOTS_PRICE = 4000;
+    public static final int ADD_STORAGE_SLOTS = 9110000;
+    public static final int ADD_EQUIP_SLOTS = 9111000;
+    public static final int ADD_USE_SLOTS = 9112000;
+    public static final int ADD_SETUP_SLOTS = 9113000;
+    public static final int ADD_ETC_SLOTS = 9114000;
+    public static final int ADD_CHAR_SLOTS = 5430000;
+    public static final int EQUIP_SLOT_EXT_30_DAYS = 5550000;
+    public static final int EQUIP_SLOT_EXT_7_days = 5550001;
 
     public static void initialize() {
     }

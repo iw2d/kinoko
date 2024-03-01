@@ -19,6 +19,7 @@ public final class AccountTable {
     public static final String TRUNK_SIZE = "trunk_size";
     public static final String TRUNK_MONEY = "trunk_money";
     public static final String LOCKER_ITEMS = "locker_items";
+    public static final String WISHLIST = "wishlist";
 
     private static final String tableName = "account";
 
@@ -42,6 +43,7 @@ public final class AccountTable {
                         .withColumn(TRUNK_SIZE, DataTypes.INT)
                         .withColumn(TRUNK_MONEY, DataTypes.INT)
                         .withColumn(LOCKER_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(CashItemInfoUDT.getTypeName(), true)))
+                        .withColumn(WISHLIST, DataTypes.frozenListOf(DataTypes.INT))
                         .build()
         );
         session.execute(

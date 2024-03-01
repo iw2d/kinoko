@@ -3,6 +3,7 @@ package kinoko.world.dialog.trunk;
 import kinoko.packet.world.DialogPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Locked;
 import kinoko.world.dialog.Dialog;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
@@ -27,7 +28,8 @@ public final class TrunkDialog implements Dialog {
     }
 
     @Override
-    public void onPacket(User user, InPacket inPacket) {
+    public void onPacket(Locked<User> locked, InPacket inPacket) {
+        final User user = locked.get();
         final int type = inPacket.decodeByte();
         final TrunkRequestType requestType = TrunkRequestType.getByValue(type);
         if (requestType == null) {
@@ -35,8 +37,8 @@ public final class TrunkDialog implements Dialog {
             return;
         }
         // Lock account to access trunk
-        try (var locked = user.getAccount().acquire()) {
-            final Trunk trunk = locked.get().getTrunk();
+        try (var lockedAccount = user.getAccount().acquire()) {
+            final Trunk trunk = lockedAccount.get().getTrunk();
             switch (requestType) {
                 case GET_ITEM -> {
                     inPacket.decodeByte(); // nItemID / 1000000, can be ignored

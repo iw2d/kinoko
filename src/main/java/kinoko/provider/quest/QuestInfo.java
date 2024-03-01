@@ -5,6 +5,7 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.quest.act.*;
 import kinoko.provider.quest.check.*;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Locked;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.quest.QuestRecord;
@@ -85,7 +86,9 @@ public final class QuestInfo {
                 "completeChecks=" + completeChecks + ']';
     }
 
-    public Optional<QuestRecord> startQuest(User user) {
+    public Optional<QuestRecord> startQuest(Locked<User> locked) {
+        final User user = locked.get();
+
         // Check that the quest can be started
         for (QuestCheck startCheck : getStartChecks()) {
             if (!startCheck.check(user)) {
@@ -107,7 +110,9 @@ public final class QuestInfo {
         return Optional.of(user.getQuestManager().forceStartQuest(questId));
     }
 
-    public Optional<Tuple<QuestRecord, Integer>> completeQuest(User user) {
+    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked) {
+        final User user = locked.get();
+
         // Check that the quest has been started
         if (!user.getQuestManager().hasQuestStarted(questId)) {
             return Optional.empty();
@@ -134,7 +139,8 @@ public final class QuestInfo {
         return Optional.of(new Tuple<>(qr, getNextQuest()));
     }
 
-    public Optional<QuestRecord> resignQuest(User user) {
+    public Optional<QuestRecord> resignQuest(Locked<User> locked) {
+        final User user = locked.get();
         final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
         if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
             return Optional.empty();
