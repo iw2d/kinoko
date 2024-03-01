@@ -128,4 +128,10 @@ public final class WvsContext {
         outPacket.encodeByte(inventoryType.getValue());
         return outPacket;
     }
+
+    public static OutPacket setGender(int gender) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SET_GENDER);
+        outPacket.encodeByte(gender); // nGender
+        return outPacket;
+    }
 }

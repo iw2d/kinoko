@@ -2,6 +2,7 @@ package kinoko.handler.stage;
 
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
+import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
@@ -109,14 +110,14 @@ public final class MigrationHandler {
             log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
             targetPortal = targetField.getPortalById(0).orElseThrow(() -> new IllegalStateException("Could not resolve Portal"));
         }
+
         try (var locked = user.acquire()) {
             user.warp(targetField, targetPortal, true, false);
+            user.write(WvsContext.setGender(user.getGender()));
+
+            // TODO: keymap, quickslot, macros
+
+            // TODO: update friends, family, guild, party
         }
-
-        // TODO: keymap, quickslot, macros
-
-        // TODO: add to Field
-
-        // TODO: update friends, family, guild, party
     }
 }
