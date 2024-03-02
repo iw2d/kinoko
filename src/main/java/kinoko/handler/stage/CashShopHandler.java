@@ -63,7 +63,7 @@ public final class CashShopHandler {
                 try (var lockedAccount = user.getAccount().acquire()) {
                     // Check account locker
                     final Account account = lockedAccount.get();
-                    if (account.getLocker().getCashItems().size() >= GameConstants.LOCKER_MAX_SLOTS) {
+                    if (account.getLocker().getRemaining() < 1) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.BUY_STORED_PROC_FAILED))); // Please check and see if you have exceeded\r\nthe number of cash items you can have.
                         return;
                     }
@@ -139,6 +139,8 @@ public final class CashShopHandler {
                     user.write(CashShopPacket.queryCashResult(account));
                     user.write(CashShopPacket.cashItemResult(CashItemResult.giftDone(receiverName, commodity)));
                 }
+
+                // TODO create memo for receiver
             }
             case SET_WISH -> {
                 // CCashShop::OnSetWish
@@ -322,7 +324,8 @@ public final class CashShopHandler {
                 try (var lockedAccount = user.getAccount().acquire()) {
                     // Verify locker size
                     final Locker locker = lockedAccount.get().getLocker();
-                    if (locker.getCashItems().size() >= GameConstants.LOCKER_MAX_SLOTS) {
+                    if (locker.getRemaining() < 1) {
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.MOVE_S_TO_L_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
                     try (var locked = user.acquire()) {

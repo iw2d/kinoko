@@ -15,10 +15,7 @@ import kinoko.database.cassandra.CassandraCharacterAccessor;
 import kinoko.database.cassandra.CassandraGiftAccessor;
 import kinoko.database.cassandra.CassandraMigrationAccessor;
 import kinoko.database.cassandra.codec.*;
-import kinoko.database.cassandra.table.AccountTable;
-import kinoko.database.cassandra.table.CharacterTable;
-import kinoko.database.cassandra.table.IdTable;
-import kinoko.database.cassandra.table.MigrationTable;
+import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.EquipData;
@@ -106,6 +103,7 @@ public final class DatabaseManager {
         AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
         MigrationTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
         // Register Codecs
         registerCodec(cqlSession, EquipDataUDT.getTypeName(), (ic) -> new EquipDataCodec(ic, GenericType.of(EquipData.class)));

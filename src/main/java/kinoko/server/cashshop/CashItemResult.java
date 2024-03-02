@@ -238,6 +238,12 @@ public final class CashItemResult implements Encodable {
         return result;
     }
 
+    public static CashItemResult loadGiftDone(List<Gift> gifts) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_GIFT_DONE);
+        result.gifts = gifts; // GW_GiftList
+        return result;
+    }
+
     public static CashItemResult loadWishDone(List<Integer> wishlist) {
         final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_WISH_DONE);
         result.intList = wishlist; // nWishList

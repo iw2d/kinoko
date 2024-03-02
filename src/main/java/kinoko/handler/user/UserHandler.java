@@ -18,6 +18,8 @@ import kinoko.provider.quest.QuestInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
+import kinoko.server.memo.MemoRequestType;
+import kinoko.server.memo.MemoType;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.NpcScriptManager;
 import kinoko.server.script.ScriptAnswer;
@@ -37,6 +39,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -559,6 +562,60 @@ public final class UserHandler {
             }
             default -> {
                 log.error("Unhandled quest action type : {}", questRequestType);
+            }
+        }
+    }
+
+    @Handler(InHeader.MEMO_REQUEST)
+    public static void handleMemoRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final MemoRequestType requestType = MemoRequestType.getByValue(type);
+        if (requestType == null) {
+            log.error("Unknown memo request type : {}", type);
+            return;
+        }
+        switch (requestType) {
+            case SEND -> {
+                // CCashShop::OnCashItemResLoadGiftDone
+                final String characterName = inPacket.decodeString();
+                final String message = inPacket.decodeString(); // sMsg
+                final int flag = inPacket.decodeByte(); // nFlag
+                final int index = inPacket.decodeInt(); // nIdx
+                final long itemSn = inPacket.decodeLong(); // GW_GiftList->liSN
+                final MemoType memoType = MemoType.getByValue(flag);
+                if (memoType == null) {
+                    log.error("Tried to send memo with unknown type : {}", flag);
+                    user.dispose();
+                }
+                // TODO create memo
+            }
+            case DELETE -> {
+                // CMemoListDlg::SetRet
+                final int size = inPacket.decodeByte(); // size
+                inPacket.decodeByte(); // number of memos where nFlag == 3 (INVITATION) -> number of slots required
+                inPacket.decodeByte(); // nEmptySlotCount
+                for (int i = 0; i < size; i++) {
+                    inPacket.decodeInt(); // dwSN
+                    final int flag = inPacket.decodeByte(); // nFlag
+                    final MemoType memoType = MemoType.getByValue(flag);
+                    if (memoType == MemoType.INVITATION) {
+                        final int marriageId = inPacket.decodeInt(); // atoi(strMarriageNo)
+                        // TODO: add marriage invitation item
+                    }
+                    // TODO: db handling for memos
+                    if (memoType == MemoType.INC_POP) {
+                        try (var locked = user.acquire()) {
+                            final CharacterStat cs = locked.get().getCharacterStat();
+                            final short newPop = (short) Math.min(cs.getPop() + 1, Short.MAX_VALUE);
+                            cs.setPop(newPop);
+                            user.write(WvsContext.statChanged(Stat.POP, newPop, false));
+                        }
+                    }
+                }
+            }
+            case LOAD -> {
+                // CWvsContext::OnMemoNotify_Receive
+                // TODO fetch memo from DB
             }
         }
     }

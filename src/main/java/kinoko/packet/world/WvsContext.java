@@ -1,7 +1,9 @@
 package kinoko.packet.world;
 
+import kinoko.packet.world.broadcast.BroadcastMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
+import kinoko.server.memo.MemoResult;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.item.InventoryOperation;
@@ -100,6 +102,12 @@ public final class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket memoResult(MemoResult memoResult) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MEMO_RESULT);
+        memoResult.encode(outPacket);
+        return outPacket;
+    }
+
     public static OutPacket inventoryOperation(InventoryOperation op, boolean exclRequest) {
         return inventoryOperation(List.of(op), exclRequest);
     }
@@ -132,6 +140,12 @@ public final class WvsContext {
     public static OutPacket setGender(int gender) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SET_GENDER);
         outPacket.encodeByte(gender); // nGender
+        return outPacket;
+    }
+
+    public static OutPacket broadcastMsg(BroadcastMessage message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.BROADCAST_MSG);
+        message.encode(outPacket);
         return outPacket;
     }
 }
