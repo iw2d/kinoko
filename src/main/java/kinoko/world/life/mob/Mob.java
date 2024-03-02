@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 
 public final class Mob extends Life implements ControlledObject, Encodable, Lockable<Mob> {
     private final Lock lock = new ReentrantLock();
-    private final MobStatManager mobStatManager = new MobStatManager();
+    private final MobStat mobStat = new MobStat();
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
@@ -92,8 +92,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         return respawn;
     }
 
-    public MobStatManager getMobStatManager() {
-        return mobStatManager;
+    public MobStat getMobStat() {
+        return mobStat;
     }
 
     public Optional<MobAttack> getAttack(int attackIndex) {
@@ -165,7 +165,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setCurrentFh(fh);
         setHp(template.getMaxHp());
         setMp(template.getMaxMp());
-        getMobStatManager().clear();
+        getMobStat().clear();
         damageDone.clear();
     }
 

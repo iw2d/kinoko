@@ -29,7 +29,7 @@ import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.StatConstants;
-import kinoko.world.user.temp.TemporaryStatManager;
+import kinoko.world.user.temp.SecondaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -225,8 +225,8 @@ public final class LoginHandler {
         cs.setPortal((byte) 0);
         characterData.setCharacterStat(cs);
 
-        final TemporaryStatManager tsm = new TemporaryStatManager();
-        characterData.setTemporaryStatManager(tsm);
+        final SecondaryStat ss = new SecondaryStat();
+        characterData.setSecondaryStat(ss);
 
         // Initialize inventory and add starting equips
         final InventoryManager im = new InventoryManager();

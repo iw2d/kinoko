@@ -21,7 +21,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
-import kinoko.world.user.temp.TemporaryStatManager;
+import kinoko.world.user.temp.SecondaryStat;
 
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -79,8 +79,8 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getCharacterStat();
     }
 
-    public TemporaryStatManager getTemporaryStatManager() {
-        return characterData.getTemporaryStatManager();
+    public SecondaryStat getSecondaryStat() {
+        return characterData.getSecondaryStat();
     }
 
     public InventoryManager getInventoryManager() {

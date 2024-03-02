@@ -19,7 +19,7 @@ public final class UserPacket {
         outPacket.encodeShort(0); // nGuildMark
         outPacket.encodeByte(0); // nGuildMarkColor
 
-        user.getTemporaryStatManager().encodeForRemote(outPacket, true); // SecondaryStat::DecodeForRemote
+        user.getSecondaryStat().encodeForRemote(outPacket, true); // SecondaryStat::DecodeForRemote
         outPacket.encodeShort(user.getJob()); // nJobCode
         user.getCharacterData().getAvatarLook().encode(outPacket); // AvatarLook::AvatarLook
 

@@ -6,7 +6,7 @@ import kinoko.util.BitFlag;
 import java.util.EnumMap;
 import java.util.Map;
 
-public final class TemporaryStatManager {
+public final class SecondaryStat {
     private final Map<CharacterTemporaryStat, Option> stats = new EnumMap<>(CharacterTemporaryStat.class);
     private final BitFlag<CharacterTemporaryStat> setStatFlag = new BitFlag<>(CharacterTemporaryStat.FLAG_SIZE);
     private final BitFlag<CharacterTemporaryStat> resetStatFlag = new BitFlag<>(CharacterTemporaryStat.FLAG_SIZE);

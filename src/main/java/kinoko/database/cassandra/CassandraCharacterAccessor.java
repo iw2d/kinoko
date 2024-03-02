@@ -17,7 +17,7 @@ import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.temp.TemporaryStatManager;
+import kinoko.world.user.temp.SecondaryStat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +43,8 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cs.setName(row.getString(CharacterTable.CHARACTER_NAME));
         cd.setCharacterStat(cs);
 
-        final TemporaryStatManager tsm = new TemporaryStatManager();
-        cd.setTemporaryStatManager(tsm);
+        final SecondaryStat ss = new SecondaryStat();
+        cd.setSecondaryStat(ss);
 
         final InventoryManager im = new InventoryManager();
         im.setEquipped(row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class));

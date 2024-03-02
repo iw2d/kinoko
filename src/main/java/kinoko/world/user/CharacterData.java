@@ -14,7 +14,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.temp.TemporaryStatManager;
+import kinoko.world.user.temp.SecondaryStat;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class CharacterData implements Encodable {
     private final int accountId;
     private CharacterStat characterStat;
-    private TemporaryStatManager temporaryStatManager;
+    private SecondaryStat secondaryStat;
     private InventoryManager inventoryManager;
     private SkillManager skillManager;
     private QuestManager questManager;
@@ -51,12 +51,12 @@ public final class CharacterData implements Encodable {
         this.characterStat = characterStat;
     }
 
-    public TemporaryStatManager getTemporaryStatManager() {
-        return temporaryStatManager;
+    public SecondaryStat getSecondaryStat() {
+        return secondaryStat;
     }
 
-    public void setTemporaryStatManager(TemporaryStatManager temporaryStatManager) {
-        this.temporaryStatManager = temporaryStatManager;
+    public void setSecondaryStat(SecondaryStat secondaryStat) {
+        this.secondaryStat = secondaryStat;
     }
 
     public InventoryManager getInventoryManager() {

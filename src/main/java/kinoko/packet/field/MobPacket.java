@@ -14,7 +14,7 @@ public final class MobPacket {
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
-        mob.getMobStatManager().encode(outPacket, true);
+        mob.getMobStat().encode(outPacket, true);
         mob.encode(outPacket);
         return outPacket;
     }
@@ -35,7 +35,7 @@ public final class MobPacket {
             outPacket.encodeByte(1); // nCalcDamageIndex
             // CMobPool::SetLocalMob
             outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
-            mob.getMobStatManager().encode(outPacket, true);
+            mob.getMobStat().encode(outPacket, true);
             mob.encode(outPacket);
         }
         return outPacket;
@@ -90,7 +90,7 @@ public final class MobPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_SET);
         outPacket.encodeInt(mob.getId()); // dwMobId
         // CMob::ProcessStatSet
-        mob.getMobStatManager().encode(outPacket, false);
+        mob.getMobStat().encode(outPacket, false);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat || bDoomReservedSN
@@ -100,7 +100,7 @@ public final class MobPacket {
     public static OutPacket statReset(Mob mob) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_RESET);
         outPacket.encodeInt(mob.getId()); // dwMobId
-        mob.getMobStatManager().encodeReset(outPacket);
+        mob.getMobStat().encodeReset(outPacket);
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat
         return outPacket;

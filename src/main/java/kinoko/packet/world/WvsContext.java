@@ -12,7 +12,7 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.Stat;
-import kinoko.world.user.temp.TemporaryStatManager;
+import kinoko.world.user.temp.SecondaryStat;
 
 import java.util.List;
 import java.util.Map;
@@ -58,17 +58,17 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket temporaryStatSet(TemporaryStatManager tsm, boolean complete) {
+    public static OutPacket temporaryStatSet(SecondaryStat secondaryStat, boolean complete) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
-        tsm.encodeForLocal(outPacket, complete);
+        secondaryStat.encodeForLocal(outPacket, complete);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }
 
-    public static OutPacket temporaryStatReset(TemporaryStatManager tsm) {
+    public static OutPacket temporaryStatReset(SecondaryStat secondaryStat) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
-        tsm.encodeReset(outPacket);
+        secondaryStat.encodeReset(outPacket);
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }

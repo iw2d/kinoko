@@ -1,81 +1,73 @@
 package kinoko.world.life.mob;
 
-import kinoko.util.BitIndex;
+import kinoko.server.packet.OutPacket;
+import kinoko.util.BitFlag;
+import kinoko.util.Tuple;
 
-import java.util.List;
+import java.util.*;
 
-public enum MobStat implements BitIndex {
-    PAD(0),
-    PDR(1),
-    MAD(2),
-    MDR(3),
-    ACC(4),
-    EVA(5),
-    Speed(6),
-    Stun(7),
-    Freeze(8),
-    Poison(9),
-    Seal(10),
-    Darkness(11),
-    PowerUp(12),
-    MagicUp(13),
-    PGuardUp(14),
-    MGuardUp(15),
-    Doom(16),
-    Web(17),
-    PImmune(18),
-    MImmune(19),
-    Showdown(20),
-    HardSkin(21),
-    Ambush(22),
-    DamagedElemAttr(23),
-    Venom(24),
-    Blind(25),
-    SealSkill(26),
-    Burned(27),
-    Dazzle(28),
-    PCounter(29),
-    MCounter(30),
-    Disable(31),
-    RiseByToss(32),
-    BodyPressure(33),
-    Weakness(34),
-    TimeBomb(35),
-    MagicCrash(36),
-    HealByDamage(37);
+public final class MobStat {
+    private final Map<MobTemporaryStat, MobStatOption> stats = new EnumMap<>(MobTemporaryStat.class);
+    private final Map<Tuple<Integer, Integer>, BurnedInfo> burnedInfos = new HashMap<>(); // characterId, skillId -> BurnedInfo
+    private final Set<Tuple<Integer, Integer>> resetBurnedInfos = new HashSet<>(); // characterId, skillId
+    private final BitFlag<MobTemporaryStat> setStatFlag = new BitFlag<>(MobTemporaryStat.FLAG_SIZE);
+    private final BitFlag<MobTemporaryStat> resetStatFlag = new BitFlag<>(MobTemporaryStat.FLAG_SIZE);
 
-    public static final int FLAG_SIZE = 128;
-    public static final List<MobStat> ENCODE_ORDER = List.of(
-            PAD, PDR, MAD, MDR, ACC, EVA, Speed, Stun, Freeze, Poison, Seal, Darkness, PowerUp, MagicUp, PGuardUp,
-            MGuardUp, PImmune, MImmune, Doom, Web, HardSkin, Ambush, Venom, Blind, SealSkill, Dazzle, PCounter,
-            MCounter, RiseByToss, BodyPressure, Weakness, TimeBomb, Showdown, MagicCrash, DamagedElemAttr, HealByDamage
-    );
-    public static final List<MobStat> MOVEMENT_AFFECTING_STAT = List.of(
-            Speed, Stun, Freeze, Doom, RiseByToss
-    );
-
-    private final int value;
-    private final int arrayIndex;
-    private final int bitPosition;
-
-    MobStat(int value) {
-        this.value = value;
-        this.arrayIndex = value / 32;
-        this.bitPosition = 1 << (31 - value % 32);
+    public void clear() {
+        stats.clear();
+        burnedInfos.clear();
+        resetBurnedInfos.clear();
+        setStatFlag.clear();
+        resetStatFlag.clear();
     }
 
-    @Override
-    public final int getValue() {
-        return value;
+    public void encode(OutPacket outPacket, boolean complete) {
+        final BitFlag<MobTemporaryStat> statFlag = complete ? BitFlag.from(stats.keySet(), MobTemporaryStat.FLAG_SIZE) : setStatFlag;
+
+        // CMob::SetTemporaryStat
+        statFlag.encode(outPacket); // uFlag
+
+        // MobStat::DecodeTemporary
+        for (MobTemporaryStat mts : MobTemporaryStat.ENCODE_ORDER) {
+            if (statFlag.hasFlag(mts)) {
+                stats.get(mts).encode(outPacket);
+            }
+        }
+        if (statFlag.hasFlag(MobTemporaryStat.Burned)) {
+            outPacket.encodeInt(burnedInfos.size()); // uCount;
+            for (BurnedInfo bi : burnedInfos.values()) {
+                outPacket.encodeInt(bi.characterId); // dwCharacterID
+                outPacket.encodeInt(bi.skillId); // nSkillID
+                outPacket.encodeInt(bi.damage); // nDamage
+                outPacket.encodeInt(bi.interval); // tInterval
+                outPacket.encodeInt(bi.end); // tEnd
+                outPacket.encodeInt(bi.dotCount); // nDotCount
+            }
+        }
+        if (statFlag.hasFlag(MobTemporaryStat.PCounter)) {
+            outPacket.encodeInt(0); // wPCounter
+            outPacket.encodeInt(100); // nCounterProb
+        }
+        if (statFlag.hasFlag(MobTemporaryStat.PCounter)) {
+            outPacket.encodeInt(0); // wMCounter
+            outPacket.encodeInt(100); // nCounterProb
+        }
+        if (statFlag.hasFlag(MobTemporaryStat.Disable)) {
+            outPacket.encodeByte(true); // bInvincible
+            outPacket.encodeByte(false); // bDisable
+        }
     }
 
-    @Override
-    public int getArrayIndex() {
-        return arrayIndex;
-    }
+    public void encodeReset(OutPacket outPacket) {
+        resetStatFlag.encode(outPacket); // uFlagReset
 
-    @Override
-    public int getBitPosition() {
-        return bitPosition;
+        // MobStat::Reset
+        if (resetStatFlag.hasFlag(MobTemporaryStat.Burned)) {
+            outPacket.encodeInt(resetBurnedInfos.size());
+            for (var entry : resetBurnedInfos) {
+                outPacket.encodeInt(entry.getLeft()); // dwCharacterID
+                outPacket.encodeInt(entry.getRight()); // nSkillID
+            }
+        }
     }
 }
