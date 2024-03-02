@@ -33,6 +33,9 @@ public final class CharacterStat implements Encodable {
     private short pop;
     private int posMap;
     private byte portal;
+    private long petSn1;
+    private long petSn2;
+    private long petSn3;
 
     public int getId() {
         return id;
@@ -218,6 +221,30 @@ public final class CharacterStat implements Encodable {
         this.portal = portal;
     }
 
+    public long getPetSn1() {
+        return petSn1;
+    }
+
+    public void setPetSn1(long petSn1) {
+        this.petSn1 = petSn1;
+    }
+
+    public long getPetSn2() {
+        return petSn2;
+    }
+
+    public void setPetSn2(long petSn2) {
+        this.petSn2 = petSn2;
+    }
+
+    public long getPetSn3() {
+        return petSn3;
+    }
+
+    public void setPetSn3(long petSn3) {
+        this.petSn3 = petSn3;
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
@@ -289,9 +316,9 @@ public final class CharacterStat implements Encodable {
         outPacket.encodeInt(hair); // nHair
 
         // aliPetLockerSN
-        for (int i = 0; i < 3; i++) {
-            outPacket.encodeLong(0);
-        }
+        outPacket.encodeLong(petSn1);
+        outPacket.encodeLong(petSn2);
+        outPacket.encodeLong(petSn3);
 
         outPacket.encodeByte(level); // nLevel
         outPacket.encodeShort(job); // nJob

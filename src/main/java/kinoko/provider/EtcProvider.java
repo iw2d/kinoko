@@ -1,5 +1,6 @@
 package kinoko.provider;
 
+import kinoko.provider.item.SetItemInfo;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -18,6 +19,7 @@ public final class EtcProvider implements WzProvider {
     // Other info
     private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
+    private static final Set<SetItemInfo> setItemInfos = new HashSet<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(ETC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
@@ -25,6 +27,7 @@ public final class EtcProvider implements WzProvider {
             loadCashShop(wzPackage);
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
+            loadSetItemInfo(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Etc.wz", e);
         }
@@ -44,6 +47,10 @@ public final class EtcProvider implements WzProvider {
 
     public static boolean isValidStartingItem(int index, int id) {
         return makeCharInfo.getOrDefault(index, Set.of()).contains(id);
+    }
+
+    public static Set<SetItemInfo> getSetItemInfos() {
+        return setItemInfos;
     }
 
     private static void loadCashShop(WzPackage source) throws ProviderError {
@@ -130,6 +137,18 @@ public final class EtcProvider implements WzProvider {
                 }
                 makeCharInfo.get(index).add(id);
             }
+        }
+    }
+
+    private static void loadSetItemInfo(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getImages().get("SetItemInfo.img") instanceof WzImage infoImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/SetItemInfo.img");
+        }
+        for (var entry : infoImage.getProperty().getItems().entrySet()) {
+            if (!(entry.getValue() instanceof WzListProperty setItemProp)) {
+                throw new ProviderError("Could not resolve set item info prop");
+            }
+            setItemInfos.add(SetItemInfo.from(setItemProp));
         }
     }
 }

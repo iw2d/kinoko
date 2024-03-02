@@ -6,7 +6,9 @@ import kinoko.util.Rect;
 
 public interface WzProvider {
     static int getInteger(Object object) {
-        if (object instanceof Integer value) {
+        if (object instanceof Short value) {
+            return value;
+        } else if (object instanceof Integer value) {
             return value;
         } else if (object instanceof String value) {
             return Integer.parseInt(value);
@@ -15,7 +17,9 @@ public interface WzProvider {
     }
 
     static int getInteger(Object object, int defaultValue) {
-        if (object instanceof Integer value) {
+        if (object instanceof Short value) {
+            return value;
+        } else if (object instanceof Integer value) {
             return value;
         } else if (object instanceof String value) {
             return Integer.parseInt(value);

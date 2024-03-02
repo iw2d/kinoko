@@ -94,6 +94,7 @@ public enum ItemInfoType {
     enchantCategory,
     tuc,
     IUCMax,
+    setKey,
 
     recoveryHP,
     recoveryMP;

@@ -50,6 +50,9 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
         cs.setPop(value.getShort(CharacterStatUDT.POP));
         cs.setPosMap(value.getInt(CharacterStatUDT.POS_MAP));
         cs.setPortal(value.getByte(CharacterStatUDT.PORTAL));
+        cs.setPetSn1(value.getLong(CharacterStatUDT.PET_1));
+        cs.setPetSn2(value.getLong(CharacterStatUDT.PET_2));
+        cs.setPetSn3(value.getLong(CharacterStatUDT.PET_3));
         return cs;
     }
 
@@ -80,6 +83,9 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
                 .setInt(CharacterStatUDT.EXP, cs.getExp())
                 .setShort(CharacterStatUDT.POP, cs.getPop())
                 .setInt(CharacterStatUDT.POS_MAP, cs.getPosMap())
-                .setByte(CharacterStatUDT.PORTAL, cs.getPortal());
+                .setByte(CharacterStatUDT.PORTAL, cs.getPortal())
+                .setLong(CharacterStatUDT.PET_1, cs.getPetSn1())
+                .setLong(CharacterStatUDT.PET_2, cs.getPetSn2())
+                .setLong(CharacterStatUDT.PET_3, cs.getPetSn3());
     }
 }

@@ -26,6 +26,9 @@ public final class CharacterStatUDT {
     public static final String POP = "pop";
     public static final String POS_MAP = "pos_map";
     public static final String PORTAL = "portal";
+    public static final String PET_1 = "pet_1";
+    public static final String PET_2 = "pet_2";
+    public static final String PET_3 = "pet_3";
 
     private static final String typeName = "character_stat_type";
 
@@ -58,6 +61,9 @@ public final class CharacterStatUDT {
                         .withField(POP, DataTypes.SMALLINT)
                         .withField(POS_MAP, DataTypes.INT)
                         .withField(PORTAL, DataTypes.TINYINT)
+                        .withField(PET_1, DataTypes.BIGINT)
+                        .withField(PET_2, DataTypes.BIGINT)
+                        .withField(PET_3, DataTypes.BIGINT)
                         .build()
         );
     }
