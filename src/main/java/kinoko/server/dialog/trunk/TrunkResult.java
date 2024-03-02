@@ -1,4 +1,4 @@
-package kinoko.world.dialog.trunk;
+package kinoko.server.dialog.trunk;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;

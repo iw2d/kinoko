@@ -1,4 +1,4 @@
-package kinoko.world.dialog.shop;
+package kinoko.server.dialog.shop;
 
 public enum ShopResultType {
     // ShopRes

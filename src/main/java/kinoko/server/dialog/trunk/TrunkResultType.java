@@ -1,4 +1,4 @@
-package kinoko.world.dialog.trunk;
+package kinoko.server.dialog.trunk;
 
 public enum TrunkResultType {
     GET_SUCCESS(9),

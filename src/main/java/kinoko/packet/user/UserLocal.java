@@ -1,9 +1,9 @@
 package kinoko.packet.user;
 
 import kinoko.packet.user.effect.Effect;
+import kinoko.server.dialog.UIType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.dialog.UIType;
 import kinoko.world.quest.QuestResult;
 
 public final class UserLocal {

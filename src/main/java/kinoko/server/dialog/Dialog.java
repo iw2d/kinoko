@@ -1,4 +1,4 @@
-package kinoko.world.dialog;
+package kinoko.server.dialog;
 
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;

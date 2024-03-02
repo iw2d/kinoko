@@ -1,10 +1,10 @@
 package kinoko.packet.world;
 
+import kinoko.server.dialog.shop.ShopDialog;
+import kinoko.server.dialog.shop.ShopResultType;
+import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.dialog.shop.ShopDialog;
-import kinoko.world.dialog.shop.ShopResultType;
-import kinoko.world.dialog.trunk.TrunkResult;
 
 public final class DialogPacket {
     // CShopDlg::OnPacket ----------------------------------------------------------------------------------------------

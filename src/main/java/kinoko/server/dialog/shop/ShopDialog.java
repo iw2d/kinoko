@@ -1,18 +1,18 @@
-package kinoko.world.dialog.shop;
+package kinoko.server.dialog.shop;
 
 import kinoko.packet.world.DialogPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.server.dialog.Dialog;
+import kinoko.server.dialog.trunk.TrunkDialog;
+import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Locked;
 import kinoko.world.Encodable;
 import kinoko.world.GameConstants;
-import kinoko.world.dialog.Dialog;
-import kinoko.world.dialog.trunk.TrunkDialog;
-import kinoko.world.dialog.trunk.TrunkResult;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;

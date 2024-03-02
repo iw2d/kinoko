@@ -1,10 +1,10 @@
-package kinoko.world.dialog.trunk;
+package kinoko.server.dialog.trunk;
 
 import kinoko.packet.world.DialogPacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
-import kinoko.world.dialog.Dialog;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;

@@ -1,4 +1,4 @@
-package kinoko.world.dialog.shop;
+package kinoko.server.dialog.shop;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Encodable;
