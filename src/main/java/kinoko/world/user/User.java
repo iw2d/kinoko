@@ -31,15 +31,12 @@ public final class User extends Life implements Lockable<User> {
     private final Lock lock = new ReentrantLock();
     private final Client client;
     private final CharacterData characterData;
-    private final CalcDamage calcDamage;
 
     private Dialog dialog;
 
-    public User(Client client, CharacterData characterData, CalcDamage calcDamage) {
+    public User(Client client, CharacterData characterData) {
         this.client = client;
         this.characterData = characterData;
-        this.calcDamage = calcDamage;
-        this.dialog = null;
     }
 
     public Client getClient() {
@@ -100,10 +97,6 @@ public final class User extends Life implements Lockable<User> {
 
     public FuncKeyManager getFuncKeyManager() {
         return characterData.getFuncKeyManager();
-    }
-
-    public CalcDamage getCalcDamage() {
-        return calcDamage;
     }
 
     public Dialog getDialog() {

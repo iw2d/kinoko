@@ -13,7 +13,6 @@ import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
 import kinoko.world.field.Field;
-import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
 import kinoko.world.user.funckey.FuncKeyManager;
@@ -82,7 +81,7 @@ public final class MigrationHandler {
             c.close();
             return;
         }
-        final User user = new User(c, characterData, new CalcDamage());
+        final User user = new User(c, characterData);
         if (channelServer.getClientStorage().isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
             c.close();
