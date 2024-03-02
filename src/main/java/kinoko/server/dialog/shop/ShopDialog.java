@@ -1,6 +1,6 @@
 package kinoko.server.dialog.shop;
 
-import kinoko.packet.world.DialogPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.ShopProvider;
@@ -63,34 +63,34 @@ public final class ShopDialog implements Dialog, Encodable {
                 final int price = inPacket.decodeInt(); // DiscountPrice
                 // Check buy request matches with shop data
                 if (index >= items.size()) {
-                    user.write(DialogPacket.shopResult(ShopResultType.SERVER_MSG));
+                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG));
                     return;
                 }
                 final ShopItem shopItem = items.get(index);
                 if (shopItem.getItemId() != itemId || shopItem.getMaxPerSlot() < count || shopItem.getPrice() != price) {
-                    user.write(DialogPacket.shopResult(ShopResultType.SERVER_MSG));
+                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG));
                     return;
                 }
                 // Check if user has enough money
                 final long totalPrice = ((long) count) * price;
                 if (totalPrice > GameConstants.MAX_MONEY) {
-                    user.write(DialogPacket.shopResult(ShopResultType.BUY_NO_MONEY));
+                    user.write(FieldPacket.shopResult(ShopResultType.BUY_NO_MONEY));
                     return;
                 }
                 final InventoryManager im = user.getInventoryManager();
                 if (!im.canAddMoney((int) -totalPrice)) {
-                    user.write(DialogPacket.shopResult(ShopResultType.BUY_NO_MONEY));
+                    user.write(FieldPacket.shopResult(ShopResultType.BUY_NO_MONEY));
                     return;
                 }
                 // Check if user can add item to inventory
                 if (im.getInventoryByItemId(itemId).getRemaining() == 0) {
-                    user.write(DialogPacket.shopResult(ShopResultType.BUY_UNKNOWN));
+                    user.write(FieldPacket.shopResult(ShopResultType.BUY_UNKNOWN));
                     return;
                 }
                 // Create item
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
                 if (itemInfoResult.isEmpty()) {
-                    user.write(DialogPacket.shopResult(ShopResultType.SERVER_MSG));
+                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG));
                     return;
                 }
                 final Item boughtItem = itemInfoResult.get().createItem(user.getNextItemSn(), count);
@@ -105,7 +105,7 @@ public final class ShopDialog implements Dialog, Encodable {
                 // Update client
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
                 user.write(WvsContext.inventoryOperation(addResult.get(), true));
-                user.write(DialogPacket.shopResult(ShopResultType.BUY_SUCCESS));
+                user.write(FieldPacket.shopResult(ShopResultType.BUY_SUCCESS));
             }
             case SELL -> {
                 final int position = inPacket.decodeShort(); // nPOS
@@ -116,20 +116,20 @@ public final class ShopDialog implements Dialog, Encodable {
                 final Inventory inventory = im.getInventoryByItemId(itemId);
                 final Item sellItem = inventory.getItem(position);
                 if (sellItem.getItemId() != itemId || sellItem.getQuantity() < count) {
-                    user.write(DialogPacket.shopResult(ShopResultType.SERVER_MSG));
+                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG));
                     return;
                 }
                 // Resolve sell price
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
                 if (itemInfoResult.isEmpty()) {
-                    user.write(DialogPacket.shopResult(ShopResultType.SERVER_MSG));
+                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG));
                     return;
                 }
                 final int price = itemInfoResult.get().getPrice();
                 final long totalPrice = ((long) price) * count;
                 // Check if user can add money
                 if (!im.canAddMoney((int) totalPrice)) {
-                    user.write(DialogPacket.trunkResult(TrunkResult.message("You cannot hold any more mesos.")));
+                    user.write(FieldPacket.trunkResult(TrunkResult.message("You cannot hold any more mesos.")));
                     return;
                 }
                 // Remove items and add money
@@ -143,7 +143,7 @@ public final class ShopDialog implements Dialog, Encodable {
                 // Update client
                 user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                user.write(DialogPacket.shopResult(ShopResultType.SELL_SUCCESS));
+                user.write(FieldPacket.shopResult(ShopResultType.SELL_SUCCESS));
             }
             case RECHARGE -> {
                 inPacket.decodeShort(); // nPos

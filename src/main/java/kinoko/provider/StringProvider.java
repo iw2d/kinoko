@@ -71,7 +71,7 @@ public final class StringProvider implements WzProvider {
     }
 
     public static String getSkillName(int skillId) {
-        return skillStrings.get(skillId).getLeft();
+        return skillStrings.get(skillId).getFirst();
     }
 
     public static Triple<String, String, String> getSkillString(int skillId) {

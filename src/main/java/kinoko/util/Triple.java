@@ -1,25 +1,25 @@
 package kinoko.util;
 
-public final class Triple<L, M, R> {
-    private final L left;
-    private final M middle;
-    private final R right;
+public final class Triple<T, U, V> {
+    private final T first;
+    private final U second;
+    private final V third;
 
-    public Triple(L left, M middle, R right) {
-        this.left = left;
-        this.middle = middle;
-        this.right = right;
+    public Triple(T first, U second, V third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
     }
 
-    public L getLeft() {
-        return left;
+    public T getFirst() {
+        return first;
     }
 
-    public M getMiddle() {
-        return middle;
+    public U getSecond() {
+        return second;
     }
 
-    public R getRight() {
-        return right;
+    public V getThird() {
+        return third;
     }
 }

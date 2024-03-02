@@ -20,9 +20,9 @@ public enum QuestRequestType {
     }
 
     public static QuestRequestType getByValue(int value) {
-        for (QuestRequestType action : values()) {
-            if (action.getValue() == value) {
-                return action;
+        for (QuestRequestType type : values()) {
+            if (type.getValue() == value) {
+                return type;
             }
         }
         return null;

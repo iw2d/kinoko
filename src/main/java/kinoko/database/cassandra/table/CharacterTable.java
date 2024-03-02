@@ -3,10 +3,7 @@ package kinoko.database.cassandra.table;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import kinoko.database.cassandra.type.CharacterStatUDT;
-import kinoko.database.cassandra.type.InventoryUDT;
-import kinoko.database.cassandra.type.QuestRecordUDT;
-import kinoko.database.cassandra.type.SkillRecordUDT;
+import kinoko.database.cassandra.type.*;
 
 public final class CharacterTable {
     public static final String CHARACTER_ID = "character_id";
@@ -24,6 +21,7 @@ public final class CharacterTable {
     public static final String SKILL_RECORDS = "skill_records";
     public static final String SKILL_COOLTIMES = "skill_cooltimes";
     public static final String QUEST_RECORDS = "quest_records";
+    public static final String FUNC_KEY_MAN = "func_key_man";
     public static final String ITEM_SN_COUNTER = "item_sn_counter";
     public static final String FRIEND_MAX = "friend_max";
 
@@ -52,6 +50,7 @@ public final class CharacterTable {
                         .withColumn(MONEY, DataTypes.INT)
                         .withColumn(SKILL_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
+                        .withColumn(FUNC_KEY_MAN, SchemaBuilder.udt(FuncKeyManUDT.getTypeName(), true))
                         .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
                         .withColumn(FRIEND_MAX, DataTypes.INT)
                         .build()

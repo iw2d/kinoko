@@ -214,7 +214,7 @@ public final class AdminCommands {
                 skillId = Integer.parseInt(query);
             } else {
                 final List<Map.Entry<Integer, Triple<String, String, String>>> searchResult = StringProvider.getSkillStrings().entrySet().stream()
-                        .filter((entry) -> entry.getValue().getLeft().toLowerCase().contains(query.toLowerCase()))
+                        .filter((entry) -> entry.getValue().getFirst().toLowerCase().contains(query.toLowerCase()))
                         .sorted(Comparator.comparingInt(Map.Entry::getKey))
                         .toList();
                 if (!searchResult.isEmpty()) {
@@ -223,7 +223,7 @@ public final class AdminCommands {
                     } else {
                         user.write(WvsContext.message(Message.system("Results for skill name : \"%s\"", query)));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue().getLeft())));
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue().getFirst())));
                         }
                         return;
                     }

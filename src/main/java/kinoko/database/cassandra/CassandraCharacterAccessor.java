@@ -15,6 +15,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
+import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.temp.TemporaryStatManager;
 
@@ -72,6 +73,9 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
             }
         }
         cd.setQuestManager(qm);
+
+        final FuncKeyManager fkm = row.get(CharacterTable.FUNC_KEY_MAN, FuncKeyManager.class);
+        cd.setFuncKeyManager(fkm);
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(CharacterTable.ITEM_SN_COUNTER)));
         cd.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
@@ -195,6 +199,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.MONEY, literal(characterData.getInventoryManager().getMoney()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
+                        .setColumn(CharacterTable.FUNC_KEY_MAN, literal(characterData.getFuncKeyManager(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))

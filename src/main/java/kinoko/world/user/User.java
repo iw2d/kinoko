@@ -18,6 +18,7 @@ import kinoko.world.item.InventoryManager;
 import kinoko.world.life.Life;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.TemporaryStatManager;
@@ -95,6 +96,10 @@ public final class User extends Life implements Lockable<User> {
 
     public QuestManager getQuestManager() {
         return characterData.getQuestManager();
+    }
+
+    public FuncKeyManager getFuncKeyManager() {
+        return characterData.getFuncKeyManager();
     }
 
     public CalcDamage getCalcDamage() {

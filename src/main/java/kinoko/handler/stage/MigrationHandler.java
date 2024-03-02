@@ -2,6 +2,7 @@ package kinoko.handler.stage;
 
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
@@ -15,6 +16,7 @@ import kinoko.world.field.Field;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
+import kinoko.world.user.funckey.FuncKeyManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -115,7 +117,13 @@ public final class MigrationHandler {
             user.warp(targetField, targetPortal, true, false);
             user.write(WvsContext.setGender(user.getGender()));
 
-            // TODO: keymap, quickslot, macros
+            // Initialize func keys and quickslot
+            final FuncKeyManager fkm = user.getFuncKeyManager();
+            user.write(FieldPacket.funcKeyMappedInit(fkm.getFuncKeyMap()));
+            user.write(FieldPacket.quickSlotMappedInit(fkm.getQuickslotKeyMap()));
+            user.write(FieldPacket.petConsumeItemInit(fkm.getPetConsumeItem()));
+            user.write(FieldPacket.petConsumeMpItemInit(fkm.getPetConsumeMpItem()));
+
 
             // TODO: update friends, family, guild, party
         }

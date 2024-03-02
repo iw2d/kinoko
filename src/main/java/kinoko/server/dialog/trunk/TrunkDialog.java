@@ -1,6 +1,6 @@
 package kinoko.server.dialog.trunk;
 
-import kinoko.packet.world.DialogPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
@@ -46,17 +46,17 @@ public final class TrunkDialog implements Dialog {
                     // Check if user has enough money
                     final InventoryManager im = user.getInventoryManager();
                     if (im.getMoney() < npc.getTrunkGet()) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_NO_MONEY)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_NO_MONEY)));
                         return;
                     }
                     // Check if user can move item from trunk to inventory
                     final Item item = trunk.getItems().get(position);
                     if (item == null) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
+                        user.write(FieldPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
                         return;
                     }
                     if (im.canAddItem(item).isEmpty()) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_UNKNOWN)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_UNKNOWN)));
                         return;
                     }
                     // Deduct money and move item
@@ -71,7 +71,7 @@ public final class TrunkDialog implements Dialog {
                         throw new IllegalStateException("Could not add trunk item into inventory");
                     }
                     // Update client
-                    user.write(DialogPacket.trunkResult(TrunkResult.getSuccess(trunk)));
+                    user.write(FieldPacket.trunkResult(TrunkResult.getSuccess(trunk)));
                     user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
                     user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                 }
@@ -82,17 +82,17 @@ public final class TrunkDialog implements Dialog {
                     // Check if user has money and item
                     final InventoryManager im = user.getInventoryManager();
                     if (im.getMoney() < npc.getTrunkPut()) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_MONEY)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_MONEY)));
                         return;
                     }
                     final Item item = im.getInventoryByItemId(itemId).getItem(position);
                     if (item == null || item.getItemId() != itemId || item.getQuantity() < quantity) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
+                        user.write(FieldPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
                         return;
                     }
                     // Check if trunk has space for item
                     if (trunk.getRemaining() == 0) {
-                        user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
                         return;
                     }
                     // Deduct money and move item
@@ -106,13 +106,13 @@ public final class TrunkDialog implements Dialog {
                     trunk.getItems().add(item);
                     // Update client
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
-                    user.write(DialogPacket.trunkResult(TrunkResult.putSuccess(trunk)));
+                    user.write(FieldPacket.trunkResult(TrunkResult.putSuccess(trunk)));
                     user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                 }
                 case SORT_ITEM -> {
                     // Sort items by item id (ascending), then quantity (descending)
                     trunk.getItems().sort(Comparator.comparing(Item::getItemId).thenComparing(Item::getQuantity, Comparator.reverseOrder()));
-                    user.write(DialogPacket.trunkResult(TrunkResult.sortItem(trunk)));
+                    user.write(FieldPacket.trunkResult(TrunkResult.sortItem(trunk)));
                 }
                 case MONEY -> {
                     final int money = inPacket.decodeInt(); // nMoney
@@ -121,11 +121,11 @@ public final class TrunkDialog implements Dialog {
                         // CTrunkDlg::SendGetMoneyRequest
                         // Check if money can be moved from trunk to inventory
                         if (!trunk.canAddMoney(-money)) {
-                            user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_NO_MONEY)));
+                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_NO_MONEY)));
                             return;
                         }
                         if (!im.canAddMoney(money)) {
-                            user.write(DialogPacket.trunkResult(TrunkResult.message("You cannot hold any more mesos.")));
+                            user.write(FieldPacket.trunkResult(TrunkResult.message("You cannot hold any more mesos.")));
                             return;
                         }
                         // Move money
@@ -135,17 +135,17 @@ public final class TrunkDialog implements Dialog {
                         if (!im.addMoney(money)) {
                             throw new IllegalStateException("Could not add money to inventory");
                         }
-                        user.write(DialogPacket.trunkResult(TrunkResult.moneySuccess(trunk)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.moneySuccess(trunk)));
                         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                     } else if (money < 0) {
                         // CTrunkDlg::SendPutMoneyRequest
                         // Check if money can be moved from inventory to trunk
                         if (!im.canAddMoney(money)) {
-                            user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_MONEY)));
+                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_MONEY)));
                             return;
                         }
                         if (!trunk.canAddMoney(-money)) {
-                            user.write(DialogPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
+                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
                             return;
                         }
                         // Move money
@@ -155,7 +155,7 @@ public final class TrunkDialog implements Dialog {
                         if (!trunk.addMoney(-money)) {
                             throw new IllegalStateException("Could not add money to trunk");
                         }
-                        user.write(DialogPacket.trunkResult(TrunkResult.moneySuccess(trunk)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.moneySuccess(trunk)));
                         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                     }
                 }

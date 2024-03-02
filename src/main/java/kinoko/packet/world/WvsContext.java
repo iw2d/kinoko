@@ -9,6 +9,7 @@ import kinoko.util.FileTime;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.User;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.TemporaryStatManager;
@@ -140,6 +141,31 @@ public final class WvsContext {
     public static OutPacket setGender(int gender) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SET_GENDER);
         outPacket.encodeByte(gender); // nGender
+        return outPacket;
+    }
+
+    public static OutPacket characterInfo(User user, boolean petInfo) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CHARACTER_INFO);
+        // CWvsContext::OnCharacterInfo, TODO: add missing information
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
+        outPacket.encodeByte(user.getLevel()); // nLevel
+        outPacket.encodeShort(user.getJob()); // nJob
+        outPacket.encodeShort(user.getCharacterStat().getPop()); // nPOP
+        outPacket.encodeByte(false); // bIsMarried
+        outPacket.encodeString(""); // sCommunity
+        outPacket.encodeString(""); // sAlliance
+        outPacket.encodeByte(false); // bMedalInfo
+        outPacket.encodeByte(petInfo); // bPetInfo
+        outPacket.encodeByte(false); // bTamingMobInfo (bool -> int, int, int)
+        outPacket.encodeByte(0); // aWishItem (byte * int)
+
+        // MedalAchievementInfo::Decode
+        outPacket.encodeInt(0); // nEquipedMedalID
+        outPacket.encodeShort(0); // p_ausMedalQuestID (short * short)
+        // ~MedalAchievementInfo::Decode
+
+        outPacket.encodeInt(0);
+        // aChairItem (int * int)
         return outPacket;
     }
 

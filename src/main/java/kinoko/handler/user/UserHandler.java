@@ -1,13 +1,13 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.user.ChatType;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
-import kinoko.packet.world.DialogPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
@@ -39,6 +39,10 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
 import kinoko.world.user.User;
+import kinoko.world.user.funckey.FuncKeyManager;
+import kinoko.world.user.funckey.FuncKeyMapped;
+import kinoko.world.user.funckey.FuncKeyMappedType;
+import kinoko.world.user.funckey.FuncKeyType;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
@@ -132,12 +136,12 @@ public final class UserHandler {
                 user.setDialog(trunkDialog);
                 // Lock account to access trunk
                 try (var lockedAccount = user.getAccount().acquire()) {
-                    user.write(DialogPacket.trunkResult(TrunkResult.open(lockedAccount.get().getTrunk(), npc.getTemplateId())));
+                    user.write(FieldPacket.trunkResult(TrunkResult.open(lockedAccount.get().getTrunk(), npc.getTemplateId())));
                 }
             } else {
                 final ShopDialog shopDialog = ShopDialog.from(npc);
                 user.setDialog(shopDialog);
-                user.write(DialogPacket.openShopDlg(shopDialog));
+                user.write(FieldPacket.openShopDlg(shopDialog));
             }
         }
     }
@@ -443,6 +447,19 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.USER_CHARACTER_INFO_REQUEST)
+    public static void handleUserCharacterInfoRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int characterId = inPacket.decodeInt(); // dwCharacterId
+        final boolean petInfo = inPacket.decodeBoolean(); // bPetInfo
+        final Optional<User> userResult = user.getField().getUserPool().getById(characterId);
+        if (userResult.isEmpty()) {
+            user.dispose();
+            return;
+        }
+        user.write(WvsContext.characterInfo(userResult.get(), petInfo));
+    }
+
     @Handler(InHeader.USER_PORTAL_SCRIPT_REQUEST)
     public static void handleUserPortalScriptRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
@@ -617,6 +634,61 @@ public final class UserHandler {
                 // CWvsContext::OnMemoNotify_Receive
                 // TODO fetch memo from DB
             }
+        }
+    }
+
+    @Handler(InHeader.FUNC_KEY_MAPPED_MODIFIED)
+    public static void handleFuncKeyMappedModified(User user, InPacket inPacket) {
+        final int type = inPacket.decodeInt();
+        final FuncKeyMappedType funcKeyMappedType = FuncKeyMappedType.getByValue(type);
+        if (funcKeyMappedType == null) {
+            log.error("Received unknown type {} for FUNC_KEY_MAPPED_MODIFIED", type);
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final FuncKeyManager fkm = locked.get().getFuncKeyManager();
+            switch (funcKeyMappedType) {
+                case KEY_MODIFIED -> {
+                    final int size = inPacket.decodeInt(); // *(anChangedIdx.a - 1)
+                    final Map<Integer, FuncKeyMapped> changed = new HashMap<>();
+                    for (int i = 0; i < size; i++) {
+                        final int index = inPacket.decodeInt();
+
+                        // FUNCKEY_MAPPED::Encode
+                        final int funcKeyValue = inPacket.decodeByte(); // nType
+                        final int funcKeyId = inPacket.decodeInt(); // nID
+                        // ~FUNCKEY_MAPPED::Encode
+
+                        final FuncKeyType funcKeyType = FuncKeyType.getByValue(funcKeyValue);
+                        if (funcKeyType == null) {
+                            log.error("Received unknown func key type {}", funcKeyValue);
+                            return;
+                        }
+                        changed.put(index, new FuncKeyMapped(funcKeyType, funcKeyId));
+                    }
+                    fkm.updateFuncKeyMap(changed);
+                }
+                case PET_CONSUME_ITEM_MODIFIED -> {
+                    final int itemId = inPacket.decodeInt(); // nPetConsumeItemID
+                    fkm.setPetConsumeItem(itemId);
+                }
+                case PET_CONSUME_MP_ITEM_MODIFIED -> {
+                    final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
+                    fkm.setPetConsumeMpItem(itemId);
+                }
+            }
+        }
+    }
+
+    @Handler(InHeader.QUICKSLOT_KEY_MAPPED_MODIFIED)
+    public static void handleQuickslotKeyMappedModified(User user, InPacket inPacket) {
+        final int[] quickslotKeyMap = new int[GameConstants.QUICKSLOT_KEY_SIZE];
+        for (int i = 0; i < quickslotKeyMap.length; i++) {
+            quickslotKeyMap[i] = inPacket.decodeInt();
+        }
+        try (var locked = user.acquire()) {
+            final FuncKeyManager fkm = locked.get().getFuncKeyManager();
+            fkm.setQuickslotKeyMap(quickslotKeyMap);
         }
     }
 }

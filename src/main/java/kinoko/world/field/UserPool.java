@@ -19,10 +19,17 @@ public final class UserPool extends FieldObjectPool<User> {
     public void addUser(User user) {
         lock.lock();
         try {
+            // Update user client with existing users in pool
+            forEach(existingUser -> {
+                try (var locked = existingUser.acquire()) {
+                    user.write(locked.get().enterFieldPacket());
+                }
+            });
+            // Add user to pool
             addObjectUnsafe(user);
             broadcastPacketUnsafe(user.enterFieldPacket(), user);
 
-            // Handle field objects
+            // Handle other field objects
             final Consumer<? extends Life> lifeHandler = (life) -> {
                 user.write(life.enterFieldPacket());
                 if (!(life instanceof ControlledObject controlled)) {

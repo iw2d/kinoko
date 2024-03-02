@@ -119,9 +119,9 @@ final class JsonExporter {
 
                     final Triple<String, String, String> skillString = StringProvider.getSkillString(si.getSkillId());
                     if (skillString != null) {
-                        skillObject.put("name", skillString.getLeft());
-                        skillObject.put("desc", skillString.getMiddle());
-                        skillObject.put("h", skillString.getRight());
+                        skillObject.put("name", skillString.getFirst());
+                        skillObject.put("desc", skillString.getSecond());
+                        skillObject.put("h", skillString.getThird());
                     } else {
                         skillObject.put("name", "");
                         skillObject.put("desc", "");

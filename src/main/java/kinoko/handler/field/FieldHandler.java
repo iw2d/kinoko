@@ -4,6 +4,8 @@ import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.field.TransferChannelType;
+import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.world.WvsContext;
@@ -12,7 +14,6 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.Server;
 import kinoko.server.cashshop.*;
-import kinoko.server.client.Client;
 import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -37,7 +38,7 @@ public final class FieldHandler {
             final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(user.getClient(), channelServer, user.getCharacterId());
             if (mrResult.isEmpty()) {
                 log.error("Failed to submit migration request for character ID : {}", user.getCharacterId());
-                user.write(FieldPacket.transferChannelReqIgnored(1));
+                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
                 return;
             }
             user.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
@@ -87,7 +88,7 @@ public final class FieldHandler {
             // Move User to Field
             final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(nextFieldId);
             if (nextFieldResult.isEmpty()) {
-                user.write(FieldPacket.transferFieldReqIgnored(2));
+                user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place
                 return;
             }
             final Field nextField = nextFieldResult.get();
@@ -102,24 +103,24 @@ public final class FieldHandler {
     }
 
     @Handler(InHeader.USER_TRANSFER_CHANNEL_REQUEST)
-    public static void handleUserTransferChannelRequest(Client c, InPacket inPacket) {
+    public static void handleUserTransferChannelRequest(User user, InPacket inPacket) {
         final byte channelId = inPacket.decodeByte();
         inPacket.decodeInt(); // update_time
 
-        final Account account = c.getAccount();
+        final Account account = user.getAccount();
         final Optional<ChannelServer> channelResult = Server.getChannelServerById(account.getWorldId(), channelId);
         if (channelResult.isEmpty()) {
-            c.write(FieldPacket.transferChannelReqIgnored(1));
+            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
             return;
         }
         final ChannelServer channelServer = channelResult.get();
-        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, c.getUser().getCharacterId());
+        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(user.getClient(), channelServer, user.getCharacterId());
         if (mrResult.isEmpty()) {
-            log.error("Failed to submit migration request for character ID : {}", c.getUser().getCharacterId());
-            c.write(FieldPacket.transferChannelReqIgnored(1));
+            log.error("Failed to submit migration request for character ID : {}", user.getCharacterId());
+            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
             return;
         }
-        c.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
+        user.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
     }
 
     @Handler(InHeader.USER_MIGRATE_TO_CASHSHOP_REQUEST)
