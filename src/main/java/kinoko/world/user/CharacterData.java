@@ -1,8 +1,8 @@
 package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Encodable;
 import kinoko.util.FileTime;
-import kinoko.world.Encodable;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;

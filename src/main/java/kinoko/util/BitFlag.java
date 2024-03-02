@@ -1,7 +1,6 @@
 package kinoko.util;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
 
 import java.util.Arrays;
 import java.util.Set;

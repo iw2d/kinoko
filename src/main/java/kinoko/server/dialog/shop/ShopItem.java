@@ -1,7 +1,7 @@
 package kinoko.server.dialog.shop;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.item.ItemConstants;
 
 public final class ShopItem implements Encodable {

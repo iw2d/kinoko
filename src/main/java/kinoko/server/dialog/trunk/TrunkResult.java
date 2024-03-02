@@ -1,7 +1,7 @@
 package kinoko.server.dialog.trunk;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.item.Trunk;
 import kinoko.world.user.DBChar;
 

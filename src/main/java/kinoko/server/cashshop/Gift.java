@@ -1,7 +1,7 @@
 package kinoko.server.cashshop;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.item.Item;
 
 public final class Gift implements Encodable {

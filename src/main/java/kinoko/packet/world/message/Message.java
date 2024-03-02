@@ -1,7 +1,7 @@
 package kinoko.packet.world.message;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.quest.QuestRecord;
 
 public class Message implements Encodable {

@@ -2,7 +2,7 @@ package kinoko.world.user;
 
 import kinoko.packet.user.PetPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.item.Item;
 import kinoko.world.life.Life;
 

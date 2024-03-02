@@ -1,7 +1,7 @@
 package kinoko.packet.user.effect;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.item.Item;
 
 public class Effect implements Encodable {

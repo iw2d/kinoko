@@ -4,7 +4,7 @@ import kinoko.packet.field.NpcPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.life.Life;
 import kinoko.world.user.User;

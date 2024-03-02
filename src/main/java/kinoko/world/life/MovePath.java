@@ -2,7 +2,7 @@ package kinoko.world.life;
 
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 
 import java.util.ArrayList;
 import java.util.List;

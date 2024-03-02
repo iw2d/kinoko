@@ -1,7 +1,7 @@
 package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 
 import java.util.Map;
 

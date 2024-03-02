@@ -1,7 +1,7 @@
 package kinoko.world.user.temp;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 
 public class Option implements Encodable {
     public int nOption;

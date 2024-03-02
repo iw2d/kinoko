@@ -1,7 +1,7 @@
 package kinoko.world.item;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 
 public final class InventoryOperation implements Encodable {
     private final InventoryOperationType operationType;

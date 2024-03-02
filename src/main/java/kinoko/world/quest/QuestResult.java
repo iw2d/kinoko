@@ -1,7 +1,7 @@
 package kinoko.world.quest;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 
 public final class QuestResult implements Encodable {
     private final QuestResultType questResultType;

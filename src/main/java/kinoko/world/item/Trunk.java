@@ -1,7 +1,7 @@
 package kinoko.world.item;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 import kinoko.world.user.DBChar;
 
 import java.util.ArrayList;

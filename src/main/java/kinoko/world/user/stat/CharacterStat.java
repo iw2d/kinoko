@@ -1,8 +1,8 @@
 package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Encodable;
 import kinoko.util.Util;
-import kinoko.world.Encodable;
 import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
 

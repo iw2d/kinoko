@@ -1,7 +1,7 @@
 package kinoko.packet.field.effect;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Encodable;
+import kinoko.util.Encodable;
 
 public final class FieldEffect implements Encodable {
     private final FieldEffectType type;

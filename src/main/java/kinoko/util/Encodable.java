@@ -1,4 +1,4 @@
-package kinoko.world;
+package kinoko.util;
 
 import kinoko.server.packet.OutPacket;
 
