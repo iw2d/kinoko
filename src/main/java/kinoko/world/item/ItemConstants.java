@@ -51,6 +51,10 @@ public final class ItemConstants {
         return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
     }
 
+    public static boolean isPortableChairItem(int itemId) {
+        return getItemPrefix(itemId) == 301;
+    }
+
     public static boolean isCorrectBodyPart(int itemId, BodyPart bodyPart, int gender) {
         final int genderFromId = getGenderFromId(itemId);
         if (gender != 2 && genderFromId != 2 && genderFromId != gender) {

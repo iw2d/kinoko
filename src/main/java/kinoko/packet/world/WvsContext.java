@@ -8,6 +8,8 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
+import kinoko.world.item.Item;
+import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
@@ -189,7 +191,12 @@ public final class WvsContext {
         outPacket.encodeShort(0); // p_ausMedalQuestID (short * short)
         // ~MedalAchievementInfo::Decode
 
-        outPacket.encodeInt(0); // aChairItem (int * int)
+        // aChairItem
+        final List<Item> chairs = user.getInventoryManager().getInventoryByType(InventoryType.INSTALL).getItems().values().stream()
+                .filter((item) -> ItemConstants.isPortableChairItem(item.getItemId()))
+                .toList();
+        outPacket.encodeInt(chairs.size());
+        chairs.forEach((item) -> outPacket.encodeInt(item.getItemId()));
         return outPacket;
     }
 

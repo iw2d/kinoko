@@ -77,6 +77,7 @@ public final class UserHandler {
     public static void handleUserSitRequest(User user, InPacket inPacket) {
         // CUserLocal::HandleXKeyDown, CWvsContext::SendGetUpFromChairRequest
         final short fieldSeatId = inPacket.decodeShort();
+        user.setPortableChairId(0);
         user.write(UserLocal.sitResult(fieldSeatId != -1, fieldSeatId)); // broadcast not required
     }
 
@@ -84,7 +85,14 @@ public final class UserHandler {
     public static void handleUserPortableChairSitRequest(User user, InPacket inPacket) {
         // CWvsContext::SendSitOnPortableChairRequest
         final int itemId = inPacket.decodeInt(); // nItemID
+        if (!ItemConstants.isPortableChairItem(itemId)) {
+            log.error("Received USER_PORTABLE_CHAIR_SIT_REQUEST with a non-portable chair item ID : {}", itemId);
+            user.dispose();
+            return;
+        }
+        user.setPortableChairId(itemId);
         user.getField().broadcastPacket(UserRemote.setActivePortableChair(user, itemId), user); // self-cast not required
+        user.dispose();
     }
 
     @Handler(InHeader.USER_CHAT)
