@@ -3,6 +3,7 @@ package kinoko.packet.user;
 import kinoko.provider.map.FieldType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 
 public final class UserPacket {
@@ -28,7 +29,7 @@ public final class UserPacket {
         outPacket.encodeInt(0); // nChocoCount
         outPacket.encodeInt(0); // nActiveEffectItemID
         outPacket.encodeInt(0); // nCompletedSetItemID
-        outPacket.encodeInt(0); // nPortableChairID
+        outPacket.encodeInt(user.getPortableChairId()); // nPortableChairID
 
         outPacket.encodeShort(user.getX()); // x
         outPacket.encodeShort(user.getY()); // y
@@ -37,7 +38,14 @@ public final class UserPacket {
 
         outPacket.encodeByte(false); // bShowAdminEffect
 
-        outPacket.encodeByte(0); // byte -> CPet::Init
+        for (Pet pet : user.getPets()) {
+            if (pet == null) {
+                continue;
+            }
+            outPacket.encodeByte(true);
+            pet.encode(outPacket); // CPet::Init
+        }
+        outPacket.encodeByte(0);
 
         outPacket.encodeInt(0); // nTamingMobLevel
         outPacket.encodeInt(0); // nTamingMobExp

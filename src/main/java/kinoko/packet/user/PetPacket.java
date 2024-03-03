@@ -12,7 +12,6 @@ public final class PetPacket {
     public static OutPacket petActivated(User user, Pet pet, int petIndex) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTIVATED);
         outPacket.encodeInt(user.getCharacterId());
-
         // this->OnPetActivated
         outPacket.encodeByte(petIndex); // nIdx
         outPacket.encodeByte(true); // activate
@@ -24,7 +23,6 @@ public final class PetPacket {
     public static OutPacket petDeactivated(User user, int petIndex, int reason) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTIVATED);
         outPacket.encodeInt(user.getCharacterId());
-
         // this->OnPetActivated
         outPacket.encodeByte(petIndex);
         outPacket.encodeByte(false); // activate

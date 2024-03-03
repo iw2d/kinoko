@@ -328,6 +328,8 @@ public enum InHeader {
             USER_MOVE,
             USER_EMOTION,
             USER_STAT_CHANGE_REQUEST,
+            PET_MOVE,
+            PET_ACTION,
             MOB_MOVE,
             MOB_APPLY_CTRL,
             NPC_MOVE

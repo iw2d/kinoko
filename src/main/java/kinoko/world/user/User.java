@@ -13,6 +13,7 @@ import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.world.Account;
+import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.life.Life;
@@ -24,6 +25,7 @@ import kinoko.world.user.stat.Stat;
 import kinoko.world.user.temp.SecondaryStat;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -31,8 +33,10 @@ public final class User extends Life implements Lockable<User> {
     private final Lock lock = new ReentrantLock();
     private final Client client;
     private final CharacterData characterData;
+    private final Pet[] pets = new Pet[GameConstants.MAX_PET_COUNT];
 
     private Dialog dialog;
+    private int portableChairId;
 
     public User(Client client, CharacterData characterData) {
         this.client = client;
@@ -99,6 +103,10 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getFuncKeyManager();
     }
 
+    public Pet[] getPets() {
+        return pets;
+    }
+
     public Dialog getDialog() {
         return dialog;
     }
@@ -115,6 +123,13 @@ public final class User extends Life implements Lockable<User> {
         setDialog(null);
     }
 
+    public int getPortableChairId() {
+        return portableChairId;
+    }
+
+    public void setPortableChairId(int portableChairId) {
+        this.portableChairId = portableChairId;
+    }
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
@@ -171,6 +186,42 @@ public final class User extends Life implements Lockable<User> {
             getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
         }
         write(WvsContext.statChanged(addExpResult, true));
+    }
+
+    public long getPenSn(int index) {
+        assert index >= 0 && index < GameConstants.MAX_PET_COUNT;
+        if (index == 0) {
+            return getCharacterStat().getPetSn1();
+        } else if (index == 1) {
+            return getCharacterStat().getPetSn2();
+        } else {
+            return getCharacterStat().getPetSn3();
+        }
+    }
+
+    public Optional<Integer> getPetIndex(long petSn) {
+        if (getCharacterStat().getPetSn1() == petSn) {
+            return Optional.of(0);
+        } else if (getCharacterStat().getPetSn2() == petSn) {
+            return Optional.of(1);
+        } else if (getCharacterStat().getPetSn3() == petSn) {
+            return Optional.of(2);
+        }
+        return Optional.empty();
+    }
+
+    public void setPetIndex(int index, long petSn) {
+        assert index >= 0 && index < GameConstants.MAX_PET_COUNT;
+        if (index == 0) {
+            getCharacterStat().setPetSn1(petSn);
+            write(WvsContext.statChanged(Stat.PET_1, petSn, true));
+        } else if (index == 1) {
+            getCharacterStat().setPetSn2(petSn);
+            write(WvsContext.statChanged(Stat.PET_2, petSn, true));
+        } else {
+            getCharacterStat().setPetSn3(petSn);
+            write(WvsContext.statChanged(Stat.PET_3, petSn, true));
+        }
     }
 
     public void warp(Field destination, PortalInfo portal, boolean isMigrate, boolean isRevive) {

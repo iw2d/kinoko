@@ -451,13 +451,13 @@ public final class UserHandler {
     public static void handleUserCharacterInfoRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int characterId = inPacket.decodeInt(); // dwCharacterId
-        final boolean petInfo = inPacket.decodeBoolean(); // bPetInfo
+        inPacket.decodeBoolean(); // bPetInfo
         final Optional<User> userResult = user.getField().getUserPool().getById(characterId);
         if (userResult.isEmpty()) {
             user.dispose();
             return;
         }
-        user.write(WvsContext.characterInfo(userResult.get(), petInfo));
+        user.write(WvsContext.characterInfo(userResult.get()));
     }
 
     @Handler(InHeader.USER_PORTAL_SCRIPT_REQUEST)

@@ -15,6 +15,7 @@ import kinoko.world.item.Item;
 import kinoko.world.item.Trunk;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,8 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         account.setLocker(locker);
 
         final List<Integer> wishlist = row.getList(AccountTable.WISHLIST, Integer.class);
+        account.setWishlist(Collections.unmodifiableList(wishlist != null ? wishlist : Collections.nCopies(10, 0)));
+
         return account;
     }
 
@@ -165,6 +168,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .value(AccountTable.TRUNK_SIZE, literal(ServerConfig.TRUNK_BASE_SLOTS))
                         .value(AccountTable.TRUNK_MONEY, literal(0))
                         .value(AccountTable.LOCKER_ITEMS, literal(List.of()))
+                        .value(AccountTable.WISHLIST, literal(List.of()))
                         .ifNotExists()
                         .build()
         );
@@ -184,6 +188,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .setColumn(AccountTable.TRUNK_SIZE, literal(account.getTrunk().getSize()))
                         .setColumn(AccountTable.TRUNK_MONEY, literal(account.getTrunk().getMoney()))
                         .setColumn(AccountTable.LOCKER_ITEMS, literal(account.getLocker().getCashItems(), registry))
+                        .setColumn(AccountTable.WISHLIST, literal(account.getWishlist()))
                         .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
         );

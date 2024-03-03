@@ -5,6 +5,7 @@ import kinoko.util.Util;
 import kinoko.world.life.Life;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.npc.Npc;
+import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 
 import java.util.Optional;
@@ -28,6 +29,17 @@ public final class UserPool extends FieldObjectPool<User> {
             // Add user to pool
             addObjectUnsafe(user);
             broadcastPacketUnsafe(user.enterFieldPacket(), user);
+
+            // Add user pets
+            for (Pet pet : user.getPets()) {
+                if (pet == null) {
+                    continue;
+                }
+                pet.setX(user.getX());
+                pet.setY(user.getY());
+                pet.setFoothold(user.getFoothold());
+                broadcastPacketUnsafe(pet.enterFieldPacket());
+            }
 
             // Handle other field objects
             final Consumer<? extends Life> lifeHandler = (life) -> {
@@ -106,6 +118,10 @@ public final class UserPool extends FieldObjectPool<User> {
         controlled.setController(controller);
         controller.write(controlled.changeControllerPacket(true));
         broadcastPacketUnsafe(controlled.changeControllerPacket(false), controller);
+    }
+
+    private void broadcastPacketUnsafe(OutPacket outPacket) {
+        broadcastPacketUnsafe(outPacket, null);
     }
 
     private void broadcastPacketUnsafe(OutPacket outPacket, User except) {

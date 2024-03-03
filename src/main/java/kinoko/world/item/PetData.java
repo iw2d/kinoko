@@ -3,7 +3,6 @@ package kinoko.world.item;
 import kinoko.provider.StringProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.FileTime;
 
 public final class PetData {
     private String petName;
@@ -32,7 +31,7 @@ public final class PetData {
         outPacket.encodeByte(getLevel()); // nLevel
         outPacket.encodeShort(getTameness()); // nTameness
         outPacket.encodeByte(getFullness()); // nRepleteness
-        outPacket.encodeFT(FileTime.DEFAULT_TIME); // dateDead
+        outPacket.encodeFT(item.getDateExpire()); // dateDead
         outPacket.encodeShort(getPetAttribute()); // nPetAttribute
         outPacket.encodeShort(getPetSkill()); // usPetSkill
         outPacket.encodeInt(getRemainLife()); // nRemainLife

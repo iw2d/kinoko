@@ -9,6 +9,7 @@ import kinoko.util.FileTime;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.Stat;
@@ -144,7 +145,7 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket characterInfo(User user, boolean petInfo) {
+    public static OutPacket characterInfo(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHARACTER_INFO);
         // CWvsContext::OnCharacterInfo, TODO: add missing information
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
@@ -155,17 +156,40 @@ public final class WvsContext {
         outPacket.encodeString(""); // sCommunity
         outPacket.encodeString(""); // sAlliance
         outPacket.encodeByte(false); // bMedalInfo
-        outPacket.encodeByte(petInfo); // bPetInfo
-        outPacket.encodeByte(false); // bTamingMobInfo (bool -> int, int, int)
-        outPacket.encodeByte(0); // aWishItem (byte * int)
+
+        // bPetActivated -> CUIUserInfo::SetMultiPetInfo
+        for (Pet pet : user.getPets()) {
+            if (pet == null) {
+                continue;
+            }
+            outPacket.encodeByte(true);
+            outPacket.encodeInt(pet.getTemplateId()); // dwTemplateId
+            outPacket.encodeString(pet.getName()); // sName
+            outPacket.encodeByte(pet.getLevel()); // nLevel
+            outPacket.encodeShort(pet.getTameness()); // nTameness
+            outPacket.encodeByte(pet.getFullness()); // nRepleteness
+            outPacket.encodeShort(pet.getPetSkill()); // usPetSkill
+            outPacket.encodeInt(0); // nItemID
+        }
+        outPacket.encodeByte(0);
+        // ~CUIUserInfo::SetMultiPetInfo
+
+        // CUIUserInfo::SetTamingMobInfo (bool -> int, int, int)
+        outPacket.encodeByte(false);
+
+        // aWishItem (byte * int), itemId = 0 becomes Brown Flight Headgear for some reason
+        final List<Integer> wishlist = user.getAccount().getWishlist().stream()
+                .filter((itemId) -> itemId != 0)
+                .toList();
+        outPacket.encodeByte(wishlist.size());
+        wishlist.forEach(outPacket::encodeInt);
 
         // MedalAchievementInfo::Decode
         outPacket.encodeInt(0); // nEquipedMedalID
         outPacket.encodeShort(0); // p_ausMedalQuestID (short * short)
         // ~MedalAchievementInfo::Decode
 
-        outPacket.encodeInt(0);
-        // aChairItem (int * int)
+        outPacket.encodeInt(0); // aChairItem (int * int)
         return outPacket;
     }
 

@@ -2,9 +2,13 @@ package kinoko.server.cashshop;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemInfoType;
 import kinoko.world.item.Item;
+import kinoko.world.item.ItemType;
 import kinoko.world.user.User;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public final class Commodity {
@@ -56,7 +60,18 @@ public final class Commodity {
         if (itemInfoResult.isEmpty()) {
             return Optional.empty();
         }
-        final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), getCount());
+        final ItemInfo ii = itemInfoResult.get();
+        final Item item = ii.createItem(user.getNextItemSn(), getCount());
+        if (item.getItemType() == ItemType.PET) {
+            final int life = ii.getInfo(ItemInfoType.life);
+            if (life > 0) {
+                item.setDateExpire(Instant.now().plus(life, ChronoUnit.DAYS));
+            }
+        } else {
+            if (getPeriod() > 0) {
+                item.setDateExpire(Instant.now().plus(getPeriod(), ChronoUnit.DAYS));
+            }
+        }
         final CashItemInfo cashItemInfo = new CashItemInfo(
                 item,
                 getCommodityId(),
@@ -73,6 +88,7 @@ public final class Commodity {
             return Optional.empty();
         }
         final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), getCount());
+        item.setDateExpire(Instant.now().plus(getPeriod(), ChronoUnit.DAYS));
         final Gift gift = new Gift(
                 item,
                 user.getCharacterName(),

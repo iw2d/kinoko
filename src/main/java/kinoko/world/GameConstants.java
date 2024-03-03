@@ -18,6 +18,7 @@ public final class GameConstants {
 
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
     public static final int MAX_MONEY = Integer.MAX_VALUE;
+    public static final int MAX_PET_COUNT = 3;
 
     public static final int MAX_HP = 99999;
     public static final int MAX_MP = 99999;

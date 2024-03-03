@@ -540,6 +540,9 @@ public enum OutHeader {
     private static final Map<Short, OutHeader> headerMap = new HashMap<>();
     private static final Set<OutHeader> ignoreHeaders = Set.of(
             STAT_CHANGED,
+            USER_MOVE,
+            PET_MOVE,
+            PET_ACTION,
             MOB_ENTER_FIELD,
             MOB_LEAVE_FIELD,
             MOB_CHANGE_CONTROLLER,
