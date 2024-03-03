@@ -18,7 +18,6 @@ public final class GameConstants {
 
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
     public static final int MAX_MONEY = Integer.MAX_VALUE;
-    public static final int MAX_PET_COUNT = 3;
 
     public static final int MAX_HP = 99999;
     public static final int MAX_MP = 99999;
@@ -31,6 +30,18 @@ public final class GameConstants {
     public static final Map<Integer, FuncKeyMapped> DEFAULT_FUNC_KEY_MAP = defaultFuncKeyMap(); // aDefaultFKM
     public static final int QUICKSLOT_KEY_SIZE = 8;
     public static final int[] DEFAULT_QUICKSLOT_KEY_MAP = new int[]{ 0x2A, 0x52, 0x47, 0x49, 0x1D, 0x53, 0x4F, 0x51 }; // aDefaultQKM
+
+
+    // PET CONSTANTS ---------------------------------------------------------------------------------------------------
+
+    public static final int PET_COUNT_MAX = 3;
+    public static final int PET_LEVEL_MAX = 30;
+    public static final int PET_FULLNESS_FOR_TAMENESS = 75;
+    public static final int PET_FULLNESS_MAX = 100;
+    public static final int PET_TAMENESS_MAX = 30000; // closeness in GMS
+    public static final int[] PET_TAMENESS_TABLE = new int[]{
+            0, 1, 3, 6, 14, 31, 60, 108, 181, 287, 434, 632, 891, 1224, 1642, 2161, 2793, 3557, 4467, 5542, 6801, 8263, 9950, 11882, 14084, 16578, 19391, 22548, 26084, 30000
+    };
 
 
     // MOB CONSTANTS ---------------------------------------------------------------------------------------------------
@@ -102,6 +113,11 @@ public final class GameConstants {
     public static int getNextLevelExp(int level) {
         return EXP_TABLE[level];
     }
+
+    public static int getNextLevelPetCloseness(int level) {
+        return PET_TAMENESS_TABLE[level];
+    }
+
 
     private static int[] initializeExpTable() {
         // NEXTLEVEL::NEXTLEVEL

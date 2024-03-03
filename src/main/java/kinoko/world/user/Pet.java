@@ -16,6 +16,14 @@ public final class Pet extends Life implements Encodable {
         this.item = item;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
+    public long getItemSn() {
+        return item.getItemSn();
+    }
+
     public int getTemplateId() {
         return item.getItemId();
     }
@@ -55,7 +63,7 @@ public final class Pet extends Life implements Encodable {
         // CPet::Init
         outPacket.encodeInt(getTemplateId()); // dwTemplateID
         outPacket.encodeString(getName()); // sName
-        outPacket.encodeLong(item.getItemSn()); // liPetLockerSN
+        outPacket.encodeLong(getItemSn()); // liPetLockerSN
         outPacket.encodeShort(getX()); // ptPosPrev.x
         outPacket.encodeShort(getY()); // ptPosPrev.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction

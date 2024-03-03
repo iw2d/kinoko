@@ -33,7 +33,7 @@ public final class User extends Life implements Lockable<User> {
     private final Lock lock = new ReentrantLock();
     private final Client client;
     private final CharacterData characterData;
-    private final Pet[] pets = new Pet[GameConstants.MAX_PET_COUNT];
+    private final Pet[] pets = new Pet[GameConstants.PET_COUNT_MAX];
 
     private Dialog dialog;
     private int portableChairId;
@@ -131,6 +131,7 @@ public final class User extends Life implements Lockable<User> {
         this.portableChairId = portableChairId;
     }
 
+
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public int getGender() {
@@ -188,8 +189,8 @@ public final class User extends Life implements Lockable<User> {
         write(WvsContext.statChanged(addExpResult, true));
     }
 
-    public long getPenSn(int index) {
-        assert index >= 0 && index < GameConstants.MAX_PET_COUNT;
+    public long getPetSn(int index) {
+        assert index >= 0 && index < GameConstants.PET_COUNT_MAX;
         if (index == 0) {
             return getCharacterStat().getPetSn1();
         } else if (index == 1) {
@@ -211,7 +212,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void setPetIndex(int index, long petSn) {
-        assert index >= 0 && index < GameConstants.MAX_PET_COUNT;
+        assert index >= 0 && index < GameConstants.PET_COUNT_MAX;
         if (index == 0) {
             getCharacterStat().setPetSn1(petSn);
             write(WvsContext.statChanged(Stat.PET_1, petSn, true));

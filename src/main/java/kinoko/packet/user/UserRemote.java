@@ -27,6 +27,7 @@ public final class UserRemote {
             outPacket.encodeInt(a.skillId);
         }
         if (a.skillId == 3211006) {
+            // TODO: ultimate strafe?
             outPacket.encodeByte(0); // nPassiveSLV
             if (false) {
                 outPacket.encodeInt(0); // nSkillID
@@ -44,7 +45,10 @@ public final class UserRemote {
                     continue;
                 }
                 if (a.skillId == 4211006) {
-
+                    outPacket.encodeByte(a.getDamagePerMob());
+                    for (int i = 0; i < a.getDamagePerMob(); i++) {
+                        outPacket.encodeInt(ai.damage[i]);
+                    }
                 } else if (a.getDamagePerMob() > 0) {
                     for (int i = 0; i < a.getDamagePerMob(); i++) {
                         outPacket.encodeByte(ai.critical[i]);

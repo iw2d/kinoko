@@ -6,6 +6,8 @@ import kinoko.world.life.MovePath;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 
+import java.util.List;
+
 public final class PetPacket {
     // CUser::OnPetPacket ----------------------------------------------------------------------------------------------
 
@@ -42,8 +44,8 @@ public final class PetPacket {
         return outPacket;
     }
 
-    public static OutPacket action(User user, int petIndex, byte type, byte action, String chat) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_MOVE);
+    public static OutPacket action(User user, int petIndex, int type, int action, String chat) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTION);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeByte(type);
@@ -58,6 +60,37 @@ public final class PetPacket {
         outPacket.encodeByte(petIndex);
         outPacket.encodeString(name); // sName
         outPacket.encodeByte(false); // nNameTag
+        return outPacket;
+    }
+
+    public static OutPacket loadExceptionList(User user, int petIndex, List<Integer> exceptionList) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.PET_LOAD_EXCEPTION_LIST);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(petIndex);
+        outPacket.encodeLong(user.getPetSn(petIndex)); // liPetSN
+        outPacket.encodeByte(exceptionList.size());
+        exceptionList.forEach(outPacket::encodeInt);
+        return outPacket;
+    }
+
+    public static OutPacket actionInteract(User user, int petIndex, int action, boolean success, boolean chatBalloon) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTION_COMMAND);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(petIndex);
+        outPacket.encodeByte(PetActionType.INTERACT.getValue());
+        outPacket.encodeByte(action); // this->pTemplate->m_aInteractiona[byte]
+        outPacket.encodeByte(success);
+        outPacket.encodeByte(chatBalloon); // bChatBalloon
+        return outPacket;
+    }
+
+    public static OutPacket actionFeed(User user, int petIndex, boolean success, boolean chatBalloon) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTION_COMMAND);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(petIndex);
+        outPacket.encodeByte(PetActionType.FEED.getValue());
+        outPacket.encodeByte(success);
+        outPacket.encodeByte(chatBalloon);
         return outPacket;
     }
 }

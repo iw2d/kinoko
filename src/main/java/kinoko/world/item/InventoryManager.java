@@ -127,22 +127,39 @@ public final class InventoryManager {
         return hasItem && quantity <= 0;
     }
 
-    public Optional<InventoryOperation> removeItem(int position, Item item) {
+    public Optional<InventoryOperation> updateItem(int position, Item item) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
         final Inventory inventory = getInventoryByType(inventoryType);
-        if (!inventory.removeItem(position, item)) {
+        if (inventory.getItem(position) != item) {
             return Optional.empty();
         }
-        return Optional.of(InventoryOperation.delItem(inventoryType, position));
+        return Optional.of(InventoryOperation.newItem(inventoryType, position, item));
+    }
+
+    public Optional<InventoryOperation> removeItem(int position, Item item) {
+        return removeItem(position, item, item.getQuantity());
     }
 
     public Optional<InventoryOperation> removeItem(int position, Item item, int quantity) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
         final Inventory inventory = getInventoryByType(inventoryType);
-        if (!inventory.removeItem(position, item)) {
+        if (inventory.getItem(position) != item) {
             return Optional.empty();
         }
-        return Optional.of(InventoryOperation.delItem(inventoryType, position));
+        if (item.getQuantity() < quantity) {
+            // Tried to remove more than the available quantity
+            return Optional.empty();
+        } else if (item.getQuantity() > quantity) {
+            // Deduct quantity
+            item.setQuantity((short) (item.getQuantity() - 1));
+            return Optional.of(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()));
+        } else {
+            // Remove item
+            if (!inventory.removeItem(position, item)) {
+                return Optional.empty();
+            }
+            return Optional.of(InventoryOperation.delItem(inventoryType, position));
+        }
     }
 
     public Optional<List<InventoryOperation>> removeItem(int itemId, int quantity) {

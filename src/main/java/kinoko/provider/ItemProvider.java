@@ -1,6 +1,7 @@
 package kinoko.provider;
 
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.PetInteraction;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -8,10 +9,7 @@ import kinoko.server.ServerConstants;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class ItemProvider implements WzProvider {
     public static final Path CHARACTER_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Character.wz");
@@ -19,6 +17,7 @@ public final class ItemProvider implements WzProvider {
     public static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
+    private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
 
     public static void initialize() {
         // Character.wz
@@ -39,6 +38,10 @@ public final class ItemProvider implements WzProvider {
 
     public static Optional<ItemInfo> getItemInfo(int itemId) {
         return Optional.ofNullable(itemInfos.get(itemId));
+    }
+
+    public static Optional<PetInteraction> getPetInteraction(int templateId, int action) {
+        return Optional.ofNullable(petActions.getOrDefault(templateId, Map.of()).get(action));
     }
 
     private static void loadEquipInfos(WzPackage source) throws ProviderError, IOException {
@@ -77,6 +80,20 @@ public final class ItemProvider implements WzProvider {
         for (var imageEntry : petDirectory.getImages().entrySet()) {
             final int itemId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
             itemInfos.put(itemId, ItemInfo.from(itemId, imageEntry.getValue().getProperty()));
+            // Pet interactions
+            if (!(imageEntry.getValue().getProperty().get("interact") instanceof WzListProperty interactList)) {
+                continue;
+            }
+            final Map<Integer, PetInteraction> actions = new HashMap<>();
+            for (var interactionEntry : interactList.getItems().entrySet()) {
+                final int action = WzProvider.getInteger(interactionEntry.getKey());
+                if (!(interactionEntry.getValue() instanceof WzListProperty interactProp)) {
+                    throw new ProviderError("Failed to resolve pet interact prop");
+                }
+                final PetInteraction interaction = PetInteraction.from(interactProp);
+                actions.put(action, interaction);
+            }
+            petActions.put(itemId, Collections.unmodifiableMap(actions));
         }
     }
 }

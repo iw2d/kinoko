@@ -76,7 +76,7 @@ public final class TrunkDialog implements Dialog {
                     user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                 }
                 case PUT_ITEM -> {
-                    final short position = inPacket.decodeShort(); // nPOS
+                    final int position = inPacket.decodeShort(); // nPOS
                     final int itemId = inPacket.decodeInt(); // nItemID
                     final int quantity = inPacket.decodeShort(); // nCount
                     // Check if user has money and item

@@ -8,7 +8,7 @@ public final class PetData {
     private String petName;
     private byte level;
     private byte fullness;
-    private short tameness;
+    private short tameness; // closeness in GMS
     private short petSkill;
     private short petAttribute;
     private int remainLife;

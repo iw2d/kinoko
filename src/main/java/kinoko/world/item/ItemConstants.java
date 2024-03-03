@@ -51,6 +51,10 @@ public final class ItemConstants {
         return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
     }
 
+    public static boolean isPetFoodItem(int itemId) {
+        return getItemPrefix(itemId) == 212;
+    }
+
     public static boolean isPortableChairItem(int itemId) {
         return getItemPrefix(itemId) == 301;
     }

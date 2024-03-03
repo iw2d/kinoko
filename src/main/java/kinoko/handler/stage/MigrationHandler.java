@@ -103,8 +103,8 @@ public final class MigrationHandler {
 
             // Initialize pets
             final InventoryManager im = user.getInventoryManager();
-            for (int i = 0; i < GameConstants.MAX_PET_COUNT; i++) {
-                final long petSn = user.getPenSn(i);
+            for (int i = 0; i < GameConstants.PET_COUNT_MAX; i++) {
+                final long petSn = user.getPetSn(i);
                 if (petSn == 0) {
                     continue;
                 }

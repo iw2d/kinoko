@@ -2,17 +2,35 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.PetPacket;
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
+import kinoko.packet.user.effect.Effect;
+import kinoko.packet.user.effect.PetEffectType;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.DropPickUpMessage;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.QuestProvider;
+import kinoko.provider.item.PetInteraction;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Util;
+import kinoko.world.GameConstants;
+import kinoko.world.field.Field;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.item.*;
+import kinoko.world.job.explorer.Beginner;
 import kinoko.world.life.MovePath;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -65,8 +83,9 @@ public final class PetHandler {
             if (petIndexResult.isEmpty()) {
                 // Resolve pet index
                 final CharacterStat cs = user.getCharacterStat();
+                final boolean hasFollowTheLead = user.getSkillManager().getSkill(Beginner.FOLLOW_THE_LEAD).isPresent(); // TODO other beginner jobs
                 final int petIndex;
-                if (bossPet || cs.getPetSn1() == 0) {
+                if (!hasFollowTheLead || bossPet || cs.getPetSn1() == 0) {
                     petIndex = 0;
                 } else if (cs.getPetSn2() == 0) {
                     petIndex = 1;
@@ -118,8 +137,8 @@ public final class PetHandler {
     public static void handlePetAction(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         inPacket.decodeInt(); // update_time
-        final byte type = inPacket.decodeByte(); // nType
-        final byte action = inPacket.decodeByte(); // nAction
+        final int type = inPacket.decodeByte(); // nType
+        final int action = inPacket.decodeByte(); // nAction
         final String chat = inPacket.decodeString(); // sChat
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
@@ -133,5 +152,157 @@ public final class PetHandler {
             return;
         }
         user.getField().broadcastPacket(PetPacket.action(user, petIndex, type, action, chat), user);
+    }
+
+    @Handler(InHeader.PET_INTERACTION_REQUEST)
+    public static void handlePetInteractionRequest(User user, InPacket inPacket) {
+        final long petSn = inPacket.decodeLong(); // liPetLockerSN
+        final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
+        if (petIndexResult.isEmpty()) {
+            log.error("Received PET_INTERACTION_REQUEST for invalid pet sn : {}", petSn);
+            return;
+        }
+        inPacket.decodeByte(); // bCommandWithName
+        final int action = inPacket.decodeByte();
+
+        try (var locked = user.acquire()) {
+            // Resolve pet interaction
+            final int petIndex = petIndexResult.get();
+            final Pet pet = user.getPets()[petIndex];
+            final Optional<PetInteraction> interactionResult = ItemProvider.getPetInteraction(pet.getTemplateId(), action);
+            if (interactionResult.isEmpty()) {
+                log.error("Could not resolve pet interaction for template {}, action {}", pet.getTemplateId(), action);
+                return;
+            }
+            final PetInteraction interaction = interactionResult.get();
+
+            // Check interaction and success
+            if (pet.getLevel() < interaction.getLevelMin() || pet.getLevel() > interaction.getLevelMax()) {
+                log.error("Tried to perform pet action {} which is not available for pet {} at level {}", action, pet.getTemplateId(), pet.getLevel());
+                return;
+            }
+            final boolean success = Util.succeedProp(interaction.getProp());
+            if (success) {
+                // Resolve pet item
+                final InventoryManager im = user.getInventoryManager();
+                final Optional<Map.Entry<Integer, Item>> itemEntry = im.getInventoryByType(InventoryType.CASH).getItems().entrySet().stream()
+                        .filter((entry) -> entry.getValue().getItemSn() == petSn)
+                        .findFirst();
+                if (itemEntry.isEmpty()) {
+                    throw new IllegalStateException("Could not resolve pet item");
+                }
+                final int position = itemEntry.get().getKey();
+                final Item item = itemEntry.get().getValue();
+
+                // Increase tameness (closeness)
+                final PetData petData = item.getPetData();
+                final int newTameness = Math.min(petData.getTameness() + interaction.getIncTameness(), GameConstants.PET_TAMENESS_MAX);
+                petData.setTameness((short) newTameness);
+
+                // Level up
+                boolean levelUp = false;
+                while (petData.getLevel() < GameConstants.PET_LEVEL_MAX &&
+                        newTameness > GameConstants.getNextLevelPetCloseness(petData.getLevel())) {
+                    petData.setLevel((byte) (petData.getLevel() + 1));
+                    levelUp = true;
+                }
+
+                // Update pet item
+                final Optional<InventoryOperation> updateResult = im.updateItem(position, item);
+                if (updateResult.isEmpty()) {
+                    throw new IllegalStateException("Could not update pet item");
+                }
+
+                // Update client
+                user.write(WvsContext.inventoryOperation(updateResult.get(), false));
+                if (levelUp) {
+                    user.write(UserLocal.effect(Effect.pet(PetEffectType.LEVEL_UP, petIndex)));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.pet(PetEffectType.LEVEL_UP, petIndex)), user);
+                }
+            }
+
+            // Broadcast pet action
+            user.getField().broadcastPacket(PetPacket.actionInteract(user, petIndex, action, success, false));
+        }
+    }
+
+    @Handler(InHeader.PET_DROP_PICK_UP_REQUEST)
+    public static void handlePetDropPickUpRequest(User user, InPacket inPacket) {
+        final long petSn = inPacket.decodeLong(); // liPetLockerSN
+        final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
+        if (petIndexResult.isEmpty()) {
+            log.error("Received PET_DROP_PICK_UP_REQUEST for invalid pet sn : {}", petSn);
+            return;
+        }
+        final byte fieldKey = inPacket.decodeByte(); // bFieldKey
+        final Field field = user.getField();
+        if (field.getFieldKey() != fieldKey) {
+            return;
+        }
+        inPacket.decodeInt(); // update_time
+        inPacket.decodeShort(); // pt->x
+        inPacket.decodeShort(); // pt->y
+        final int objectId = inPacket.decodeInt(); // dwID
+        inPacket.decodeInt(); // dwCliCrc
+        inPacket.decodeByte(); // bPickupOthers
+        inPacket.decodeByte(); // bSweepForDrop
+        inPacket.decodeByte(); // bLongRange
+
+        // Find drop in field
+        final Optional<Drop> dropResult = field.getDropPool().getById(objectId);
+        if (dropResult.isEmpty()) {
+            return;
+        }
+        final Drop drop = dropResult.get();
+
+        try (var locked = user.acquire()) {
+            // Check if drop can be added to inventory
+            final InventoryManager im = user.getInventoryManager();
+            if (drop.isMoney()) {
+                final long newMoney = ((long) im.getMoney()) + drop.getMoney();
+                if (newMoney > GameConstants.MAX_MONEY) {
+                    user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                    return;
+                }
+            } else {
+                // Inventory full
+                if (im.canAddItem(drop.getItem()).isEmpty()) {
+                    user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                    return;
+                }
+                // Quest item handling
+                if (drop.isQuest()) {
+                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
+                    if (questRecordResult.isEmpty()) {
+                        user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                        return;
+                    }
+                    final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
+                    if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
+                        user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                        return;
+                    }
+                }
+            }
+
+            // Try removing drop from field
+            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_PET, user.getCharacterId(), petIndexResult.get())) {
+                return;
+            }
+
+            // Add drop to inventory
+            if (drop.isMoney()) {
+                if (im.addMoney(drop.getMoney())) {
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                    user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
+                }
+            } else {
+                final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
+                if (addItemResult.isPresent()) {
+                    user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                    user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+                }
+            }
+        }
     }
 }

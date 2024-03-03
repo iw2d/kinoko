@@ -101,6 +101,13 @@ public class Effect implements Encodable {
         return new Effect(EffectType.LEVEL_UP);
     }
 
+    public static Effect pet(PetEffectType type, int petIndex) {
+        final Effect effect = new Effect(EffectType.PET);
+        effect.int1 = type.getValue(); // nType
+        effect.int2 = petIndex;
+        return effect;
+    }
+
     public static Effect avatarOriented(String effectPath) {
         final Effect effect = new Effect(EffectType.AVATAR_ORIENTED);
         effect.string1 = effectPath; // sEffect
