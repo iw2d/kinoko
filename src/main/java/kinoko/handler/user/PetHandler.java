@@ -260,7 +260,7 @@ public final class PetHandler {
             final InventoryManager im = user.getInventoryManager();
             if (drop.isMoney()) {
                 final long newMoney = ((long) im.getMoney()) + drop.getMoney();
-                if (newMoney > GameConstants.MAX_MONEY) {
+                if (newMoney > GameConstants.MONEY_MAX) {
                     user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
                     return;
                 }

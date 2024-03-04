@@ -302,7 +302,7 @@ public final class UserHandler {
         try (var locked = user.acquire()) {
             final InventoryManager im = user.getInventoryManager();
             // Create array for sorting
-            final Item[] items = new Item[GameConstants.INVENTORY_MAX_SLOTS]; // using 0-based indexing for positions (inventory uses 1-based)
+            final Item[] items = new Item[GameConstants.INVENTORY_SLOT_MAX]; // using 0-based indexing for positions (inventory uses 1-based)
             for (var entry : im.getInventoryByType(inventoryType).getItems().entrySet()) {
                 items[entry.getKey() - 1] = entry.getValue();
             }

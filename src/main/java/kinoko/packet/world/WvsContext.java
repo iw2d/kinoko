@@ -71,7 +71,7 @@ public final class WvsContext {
 
     public static OutPacket temporaryStatReset(SecondaryStat secondaryStat) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
-        secondaryStat.encodeReset(outPacket);
+        // TODO secondaryStat.encodeReset(outPacket);
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }

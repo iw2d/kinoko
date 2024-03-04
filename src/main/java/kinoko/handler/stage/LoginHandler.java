@@ -225,9 +225,6 @@ public final class LoginHandler {
         cs.setPortal((byte) 0);
         characterData.setCharacterStat(cs);
 
-        final SecondaryStat ss = new SecondaryStat();
-        characterData.setSecondaryStat(ss);
-
         // Initialize inventory and add starting equips
         final InventoryManager im = new InventoryManager();
         im.setEquipped(new Inventory(Short.MAX_VALUE));

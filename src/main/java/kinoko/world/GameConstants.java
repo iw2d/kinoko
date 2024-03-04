@@ -11,20 +11,30 @@ import java.util.Map;
 public final class GameConstants {
     // USER CONSTANTS --------------------------------------------------------------------------------------------------
 
-    public static final int CHARACTER_MAX_SLOTS = 15;
-    public static final int INVENTORY_MAX_SLOTS = 96;
-    public static final int TRUNK_MAX_SLOTS = 48;
-    public static final int LOCKER_MAX_SLOTS = 500; // avoid reaching packet size limit
+    public static final int CHARACTER_SLOT_MAX = 15;
+    public static final int INVENTORY_SLOT_MAX = 96;
+    public static final int TRUNK_SLOT_MAX = 48;
+    public static final int LOCKER_SLOT_MAX = 500; // avoid reaching packet size limit
 
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
-    public static final int MAX_MONEY = Integer.MAX_VALUE;
+    public static final int MONEY_MAX = Integer.MAX_VALUE;
 
-    public static final int MAX_HP = 99999;
-    public static final int MAX_MP = 99999;
-    public static final int MAX_LEVEL = 200;
+    public static final int HP_MAX = 99999;
+    public static final int MP_MAX = 99999;
+    public static final int PAD_MAX = 29999;
+    public static final int PDD_MAX = 30000;
+    public static final int MAD_MAX = 29999;
+    public static final int MDD_MAX = 30000;
+    public static final int ACC_MAX = 9999;
+    public static final int EVA_MAX = 9999;
+    public static final int SPEED_MIN = 100;
+    public static final int SPEED_MAX = 140;
+    public static final int JUMP_MIN = 100;
+    public static final int JUMP_MAX = 123;
+    public static final int LEVEL_MAX = 200;
     public static final int[] EXP_TABLE = initializeExpTable();
 
-    public static final int MAX_DAMAGE = 999_999;
+    public static final int DAMAGE_MAX = 999_999;
 
     public static final int FUNC_KEY_MAP_SIZE = 89;
     public static final Map<Integer, FuncKeyMapped> DEFAULT_FUNC_KEY_MAP = defaultFuncKeyMap(); // aDefaultFKM

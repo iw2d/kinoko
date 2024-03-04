@@ -250,7 +250,7 @@ public final class CharacterStat implements Encodable {
 
     public Map<Stat, Object> addExp(int delta) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        if (getLevel() >= GameConstants.MAX_LEVEL) {
+        if (getLevel() >= GameConstants.LEVEL_MAX) {
             return statMap;
         }
         long newExp = ((long) getExp()) + delta;
@@ -265,7 +265,7 @@ public final class CharacterStat implements Encodable {
 
     public Map<Stat, Object> levelUp() {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        if (getLevel() >= GameConstants.MAX_LEVEL) {
+        if (getLevel() >= GameConstants.LEVEL_MAX) {
             return statMap;
         }
         // Update level
@@ -273,11 +273,11 @@ public final class CharacterStat implements Encodable {
         statMap.put(Stat.LEVEL, (byte) getLevel());
         // Update max hp
         final int incHp = StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
-        setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.MAX_HP));
+        setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.HP_MAX));
         statMap.put(Stat.MAX_HP, getMaxHp());
         // Update max mp
         final int incMp = StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
-        setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MAX_MP));
+        setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
         statMap.put(Stat.MAX_MP, getMaxMp());
         // Update ap (auto distribution for beginners)
         if (JobConstants.isBeginnerJob(getJob()) && getLevel() <= 11) {

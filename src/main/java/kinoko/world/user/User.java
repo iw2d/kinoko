@@ -7,10 +7,8 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
-import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
-import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.dialog.Dialog;
@@ -20,22 +18,15 @@ import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
-import kinoko.world.job.JobConstants;
 import kinoko.world.life.Life;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
-import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
-import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.funckey.FuncKeyManager;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.Stat;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.SecondaryStat;
+import kinoko.world.user.stat.*;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -44,6 +35,9 @@ public final class User extends Life implements Lockable<User> {
     private final Client client;
     private final CharacterData characterData;
 
+    private final BasicStat basicStat = new BasicStat();
+    private final ForcedStat forcedStat = new ForcedStat();
+    private final SecondaryStat secondaryStat = new SecondaryStat();
     private final PassiveSkillData passiveSkillData = new PassiveSkillData();
     private final Pet[] pets = new Pet[GameConstants.PET_COUNT_MAX];
 
@@ -95,10 +89,6 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getCharacterStat();
     }
 
-    public SecondaryStat getSecondaryStat() {
-        return characterData.getSecondaryStat();
-    }
-
     public InventoryManager getInventoryManager() {
         return characterData.getInventoryManager();
     }
@@ -113,6 +103,18 @@ public final class User extends Life implements Lockable<User> {
 
     public FuncKeyManager getFuncKeyManager() {
         return characterData.getFuncKeyManager();
+    }
+
+    public BasicStat getBasicStat() {
+        return basicStat;
+    }
+
+    public ForcedStat getForcedStat() {
+        return forcedStat;
+    }
+
+    public SecondaryStat getSecondaryStat() {
+        return secondaryStat;
     }
 
     public PassiveSkillData getPassiveSkillData() {
@@ -205,98 +207,15 @@ public final class User extends Life implements Lockable<User> {
         write(WvsContext.statChanged(addExpResult, true));
     }
 
-
-    // SKILL METHODS ---------------------------------------------------------------------------------------------------
-
-    public void updatePassiveSkillData() {
-        getPassiveSkillData().clearData();
-        // TODO: guild skill
-
-        // Add passive skill data
-        for (SkillRecord skillRecord : getSkillManager().getSkillRecords()) {
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillRecord.getSkillId());
-            if (skillInfoResult.isEmpty()) {
-                continue;
-            }
-            final SkillInfo si = skillInfoResult.get();
-            if (si.isPsd() && (si.getSkillId() != 35101007 || getSecondaryStat().getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
-                if (si.getSkillId() == 35121013) {
-                    getPassiveSkillData().addPassiveSkillData(si, getSkillManager().getSkillLevel(35111004));
-                } else {
-                    getPassiveSkillData().addPassiveSkillData(si, skillRecord.getSkillLevel());
-                }
-            }
-        }
-
-        // Special handling for Mech: Siege Mode
-        if (JobConstants.isMechanicJob(getJob())) {
-            if (getSkillManager().getSkillLevel(35121005) > 0) {
-                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(35121013);
-                if (skillInfoResult.isPresent()) {
-                    getPassiveSkillData().addPassiveSkillData(skillInfoResult.get(), getSkillManager().getSkillLevel(35111004));
-                }
-            }
-        }
-
-        // Handle dice info
-        getSecondaryStat().getDiceInfo().updatePassiveSkillData(getPassiveSkillData());
-
-        // Revise passive skill data
-        getPassiveSkillData().revisePassiveSkillData();
-    }
-
     public void validateStat() {
-        // Compute stats from equipped items
-        final CharacterStat cs = getCharacterStat();
-        final int incBasicStat = getSecondaryStat().getOption(CharacterTemporaryStat.BasicStatUp).nOption;
-        int incStr = 0;
-        int incDex = 0;
-        int incInt = 0;
-        int incLuk = 0;
-        for (var entry : getInventoryManager().getEquipped().getItems().entrySet()) {
-            // Resolve equip data
-            final int position = entry.getKey();
-            final Item item = entry.getValue();
-            if (item.getItemType() != ItemType.EQUIP || item.getDateExpire().isBefore(Instant.now())) {
-                // TODO: check equip slot ext
-                continue;
-            }
-            final EquipData equipData = item.getEquipData();
+        // get_real_equip
+        final Map<Integer, Item> realEquip = getRealEquip();
 
-            // Resolve item info
-            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
-            if (itemInfoResult.isEmpty()) {
-                continue;
-            }
-            final ItemInfo ii = itemInfoResult.get();
+        // BasicStat::SetFrom
+        getBasicStat().setFrom(getCharacterStat(), getForcedStat(), getSecondaryStat(), getSkillManager(), getPassiveSkillData(), realEquip);
 
-            // Check if able to equip
-            final Item weaponOrPet;
-            if (position == BodyPart.PET_EQUIP_1.getValue() && getPets()[0] != null) {
-                weaponOrPet = getPets()[0].getItem();
-            } else if (position == BodyPart.PET_EQUIP_1.getValue() && getPets()[1] != null) {
-                weaponOrPet = getPets()[1].getItem();
-            } else if (position == BodyPart.PET_EQUIP_1.getValue() && getPets()[2] != null) {
-                weaponOrPet = getPets()[2].getItem();
-            } else {
-                weaponOrPet = getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-            }
-            final boolean isAbleToEquip = ii.isAbleToEquip(
-                    cs.getGender(),
-                    cs.getLevel(),
-                    cs.getJob(),
-                    cs.getSubJob(),
-                    cs.getBaseStr() + incStr - equipData.getIncStr(),
-                    cs.getBaseStr() + incStr - equipData.getIncStr(),
-                    cs.getBaseStr() + incStr - equipData.getIncStr(),
-                    cs.getBaseStr() + incStr - equipData.getIncStr(),
-                    cs.getPop(),
-                    equipData.getDurability(),
-                    weaponOrPet
-            );
-        }
-
-        // CWvsContext::CheckEquippedSetItem
+        // SecondaryStat::SetFrom
+        getSecondaryStat().setFrom(getBasicStat(), getForcedStat(), getSkillManager(), realEquip);
     }
 
 
@@ -397,4 +316,84 @@ public final class User extends Life implements Lockable<User> {
     public void unlock() {
         lock.unlock();
     }
+
+
+    // PRIVATE METHODS -------------------------------------------------------------------------------------------------
+
+    public Map<Integer, Item> getRealEquip() {
+        final CharacterStat cs = getCharacterStat();
+        final int basicStatUp = getSecondaryStat().getOption(CharacterTemporaryStat.BasicStatUp).nOption;
+        final int baseStr = cs.getBaseStr() + (basicStatUp * cs.getBaseStr() / 100);
+        final int baseDex = cs.getBaseDex() + (basicStatUp * cs.getBaseDex() / 100);
+        final int baseInt = cs.getBaseInt() + (basicStatUp * cs.getBaseInt() / 100);
+        final int baseLuk = cs.getBaseLuk() + (basicStatUp * cs.getBaseLuk() / 100);
+        int incStr = 0, incDex = 0, incInt = 0, incLuk = 0;
+
+        // Compute total stat
+        final Inventory equipped = getInventoryManager().getEquipped();
+        for (var entry : equipped.getItems().entrySet()) {
+            final Item item = entry.getValue();
+            if (item.getItemType() != ItemType.EQUIP) {  // TODO: check equip slot ext expired
+                continue;
+            }
+            final EquipData ed = item.getEquipData();
+            incStr += ed.getIncStr();
+            incDex += ed.getIncDex();
+            incInt += ed.getIncInt();
+            incLuk += ed.getIncLuk();
+            // TODO ApplyItemOption, ApplyItemOptionR
+        }
+        // TODO set items
+
+        // Build real equip list
+        final Map<Integer, Item> realEquip = new HashMap<>();
+        final Item weapon = equipped.getItem(BodyPart.WEAPON.getValue());
+        for (var entry : equipped.getItems().entrySet()) {
+            // Resolve item info and equip data
+            final int position = entry.getKey();
+            final Item item = entry.getValue();
+            if (item.getItemType() != ItemType.EQUIP) {
+                continue;
+            }
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                continue;
+            }
+            final ItemInfo ii = itemInfoResult.get();
+            final EquipData ed = item.getEquipData();
+
+            // Find applicable pet
+            final Pet pet;
+            if (position == BodyPart.PET_EQUIP_1.getValue()) {
+                pet = getPets()[0];
+            } else if (position == BodyPart.PET_EQUIP_2.getValue()) {
+                pet = getPets()[2];
+            } else if (position == BodyPart.PET_EQUIP_3.getValue()) {
+                pet = getPets()[3];
+            } else {
+                pet = null;
+            }
+
+            // Check if able to equip
+            if (ii.isAbleToEquip(
+                    cs.getGender(),
+                    cs.getLevel(),
+                    cs.getJob(),
+                    cs.getSubJob(),
+                    baseStr + incStr - ed.getIncStr(),
+                    baseDex + incDex - ed.getIncDex(),
+                    baseInt + incInt - ed.getIncInt(),
+                    baseLuk + incLuk - ed.getIncLuk(),
+                    cs.getPop(),
+                    ed.getDurability(),
+                    weapon != null ? weapon.getItemId() : 0,
+                    pet != null ? pet.getTemplateId() : 0
+            )) {
+                realEquip.put(position, item);
+            }
+        }
+        return Collections.unmodifiableMap(realEquip);
+    }
+
+
 }

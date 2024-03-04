@@ -43,9 +43,6 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cs.setName(row.getString(CharacterTable.CHARACTER_NAME));
         cd.setCharacterStat(cs);
 
-        final SecondaryStat ss = new SecondaryStat();
-        cd.setSecondaryStat(ss);
-
         final InventoryManager im = new InventoryManager();
         im.setEquipped(row.get(CharacterTable.CHARACTER_EQUIPPED, Inventory.class));
         im.setEquipInventory(row.get(CharacterTable.EQUIP_INVENTORY, Inventory.class));

@@ -2,13 +2,20 @@ package kinoko.world.user.stat;
 
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
+import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemOptionLevelData;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.PassiveSkillData;
+import kinoko.world.skill.SkillConstants;
+import kinoko.world.skill.SkillManager;
 
+import java.util.Map;
 import java.util.Optional;
 
 public final class BasicStat {
@@ -63,7 +70,10 @@ public final class BasicStat {
         return maxMp;
     }
 
-    public void setFrom(CharacterStat cs, ForcedStat fs, SecondaryStat ss, InventoryManager im, PassiveSkillData psd) {
+
+    // VALIDATE STAT METHODS -------------------------------------------------------------------------------------------
+
+    public void setFrom(CharacterStat cs, ForcedStat fs, SecondaryStat ss, SkillManager sm, PassiveSkillData psd, Map<Integer, Item> realEquip) {
         this.gender = cs.getGender();
         this.level = cs.getLevel();
         this.job = cs.getJob();
@@ -75,18 +85,12 @@ public final class BasicStat {
         this.maxHp = cs.getMaxHp();
         this.maxMp = cs.getMaxMp();
 
-        final RateOption option = new RateOption();
+        final BasicStatRateOption option = new BasicStatRateOption();
         int incMaxHpR = 0;
         int incMaxMpR = 0;
 
         // Equip stats
-        // TODO: set items
-        for (var entry : im.getEquipped().getItems().entrySet()) {
-            // Resolve item and item info
-            final Item item = entry.getValue();
-            if (item.getItemType() != ItemType.EQUIP) {
-                continue;
-            }
+        for (var item : realEquip.values()) {
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
             if (itemInfoResult.isEmpty()) {
                 continue;
@@ -147,7 +151,7 @@ public final class BasicStat {
         int hpIncRateFromCts = ss.getOption(CharacterTemporaryStat.Conversion).nOption;
         hpIncRateFromCts = Math.max(hpIncRateFromCts, ss.getOption(CharacterTemporaryStat.MaxHP).nOption);
         hpIncRateFromCts = Math.max(hpIncRateFromCts, ss.getOption(CharacterTemporaryStat.MorewildMaxHP).nOption);
-        hpIncRateFromCts += ss.getJaguarRidingMaxHpR();
+        hpIncRateFromCts += getJaguarRidingMaxHpUp(ss, sm);
         int mpIncRateFromCts = ss.getOption(CharacterTemporaryStat.SwallowMaxMP).nOption;
         mpIncRateFromCts += ss.getOption(CharacterTemporaryStat.MaxMP).nOption;
 
@@ -156,8 +160,8 @@ public final class BasicStat {
         this.maxMp = 0x51EB851F * maxMp * (incMaxMpR + option.incMaxMpR + mpIncRateFromCts + psd.mmpR);
 
         // Max hp/mp cap
-        this.maxHp = Math.min(this.maxHp, GameConstants.MAX_HP);
-        this.maxMp = Math.min(this.maxMp, GameConstants.MAX_MP);
+        this.maxHp = Math.min(this.maxHp, GameConstants.HP_MAX);
+        this.maxMp = Math.min(this.maxMp, GameConstants.MP_MAX);
     }
 
     private void applyItemOption(int itemOptionId, int optionLevel) {
@@ -165,12 +169,25 @@ public final class BasicStat {
         // TODO
     }
 
-    private void applyItemOptionR(int itemOptionId, int optionLevel, RateOption option) {
+    private void applyItemOptionR(int itemOptionId, int optionLevel, BasicStatRateOption option) {
         final Optional<ItemOptionLevelData> itemOptionResult = EtcProvider.getItemOptionInfo(itemOptionId, optionLevel);
         // TODO
     }
 
-    private class RateOption {
+    private int getJaguarRidingMaxHpUp(SecondaryStat ss, SkillManager sm) {
+        if (!SkillConstants.WILD_HUNTER_JAGUARS.contains(ss.getRidingVehicle())) {
+            return 0;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(WildHunter.JAGUAR_RIDER);
+        if (skillInfoResult.isEmpty()) {
+            return 0;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int slv = sm.getSkillLevel(WildHunter.JAGUAR_RIDER);
+        return si.getValue(SkillStat.z, slv);
+    }
+
+    private static class BasicStatRateOption {
         private int strR;
         private int dexR;
         private int intR;

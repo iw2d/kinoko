@@ -73,7 +73,7 @@ public final class ShopDialog implements Dialog, Encodable {
                 }
                 // Check if user has enough money
                 final long totalPrice = ((long) count) * price;
-                if (totalPrice > GameConstants.MAX_MONEY) {
+                if (totalPrice > GameConstants.MONEY_MAX) {
                     user.write(FieldPacket.shopResult(ShopResultType.BUY_NO_MONEY));
                     return;
                 }

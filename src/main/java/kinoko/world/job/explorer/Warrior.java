@@ -37,13 +37,13 @@ public final class Warrior {
     public static final int HEROS_WILL_HERO = 1121011;
 
     // PAGE
-    public static final int WEAPON_MASTERY__PALADIN = 1200000;
-    public static final int FINAL_ATTACK__PALADIN = 1200002;
-    public static final int ENHANCED_BASICS__PALADIN = 1200009;
-    public static final int WEAPON_BOOSTER__PALADIN = 1201004;
+    public static final int WEAPON_MASTERY_PALADIN = 1200000;
+    public static final int FINAL_ATTACK_PALADIN = 1200002;
+    public static final int ENHANCED_BASICS_PALADIN = 1200009;
+    public static final int WEAPON_BOOSTER_PALADIN = 1201004;
     public static final int THREATEN = 1201006;
-    public static final int POWER_GUARD__PALADIN = 1201007;
-    public static final int GROUND_SMASH__PALADIN = 1201008;
+    public static final int POWER_GUARD_PALADIN = 1201007;
+    public static final int GROUND_SMASH_PALADIN = 1201008;
     // WHITE_KNIGHT
     public static final int SHIELD_MASTERY = 1210001;
     public static final int CHARGED_BLOW = 1211002;

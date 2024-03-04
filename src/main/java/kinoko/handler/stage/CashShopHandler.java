@@ -232,7 +232,7 @@ public final class CashShopHandler {
                     // Check current character slot count
                     final Account account = lockedAccount.get();
                     final int newSize = account.getSlotCount() + 1;
-                    if (newSize > GameConstants.CHARACTER_MAX_SLOTS) {
+                    if (newSize > GameConstants.CHARACTER_SLOT_MAX) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.INC_CHAR_SLOT_COUNT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         log.error("Tried to increase char slot count over maximum number");
                         return;
@@ -366,7 +366,7 @@ public final class CashShopHandler {
             final InventoryManager im = locked.get().getInventoryManager();
             final Inventory inventory = im.getInventoryByType(inventoryType);
             final int newSize = inventory.getSize() + incSlots;
-            if (newSize > GameConstants.INVENTORY_MAX_SLOTS) {
+            if (newSize > GameConstants.INVENTORY_SLOT_MAX) {
                 user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.INC_SLOT_COUNT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 return;
             }
@@ -390,7 +390,7 @@ public final class CashShopHandler {
             final Account account = lockedAccount.get();
             final Trunk trunk = account.getTrunk();
             final int newSize = trunk.getSize() + incSlots;
-            if (newSize > GameConstants.TRUNK_MAX_SLOTS) {
+            if (newSize > GameConstants.TRUNK_SLOT_MAX) {
                 user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.INC_TRUNK_COUNT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 return;
             }

@@ -26,6 +26,26 @@ public final class JobConstants {
         return jobId % 1000 == 0 || jobId == 2001;
     }
 
+    public static boolean isFirePoisonJob(int jobId) {
+        return jobId / 10 == 21;
+    }
+
+    public static boolean isIceLightningJob(int jobId) {
+        return jobId / 10 == 22;
+    }
+
+    public static boolean isBishopJob(int jobId) {
+        return jobId / 10 == 23;
+    }
+
+    public static boolean isBowmasterJob(int jobId) {
+        return jobId / 10 == 31;
+    }
+
+    public static boolean isMarksmanJob(int jobId) {
+        return jobId / 10 == 32;
+    }
+
     public static boolean isAranJob(int jobId) {
         return jobId / 100 == 21 || jobId == 2000;
     }
@@ -40,6 +60,14 @@ public final class JobConstants {
 
     public static boolean isCygnusJob(int jobId) {
         return jobId / 1000 == 1;
+    }
+
+    public static boolean isBlazeWizardJob(int jobId) {
+        return jobId / 100 == 12;
+    }
+
+    public static boolean isWindArcherJob(int jobId) {
+        return jobId / 100 == 13;
     }
 
     public static boolean isResistanceJob(int jobId) {

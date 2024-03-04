@@ -97,18 +97,13 @@ public final class MigrationHandler {
         channelServer.getClientStorage().addClient(c);
 
         try (var locked = user.acquire()) {
-            // Initialize user
-            final CharacterStat cs = user.getCharacterStat();
-            user.write(WvsContext.setGender(cs.getGender()));
-
             // Initialize pets
-            final InventoryManager im = user.getInventoryManager();
             for (int i = 0; i < GameConstants.PET_COUNT_MAX; i++) {
                 final long petSn = user.getPetSn(i);
                 if (petSn == 0) {
                     continue;
                 }
-                final Inventory cashInventory = im.getInventoryByType(InventoryType.CASH);
+                final Inventory cashInventory = user.getInventoryManager().getInventoryByType(InventoryType.CASH);
                 final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
                         .filter((entry) -> entry.getValue().getItemSn() == petSn)
                         .findFirst();
@@ -127,6 +122,10 @@ public final class MigrationHandler {
                 final Pet pet = Pet.from(user, item);
                 user.getPets()[i] = pet;
             }
+
+            // Initialize user stats
+            user.validateStat();
+            user.write(WvsContext.setGender(user.getGender()));
 
             // Add user to field
             final int fieldId = user.getCharacterStat().getPosMap();

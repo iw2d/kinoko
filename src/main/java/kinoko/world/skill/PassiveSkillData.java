@@ -1,10 +1,15 @@
 package kinoko.world.skill;
 
+import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.world.job.JobConstants;
+import kinoko.world.user.stat.BasicStat;
+import kinoko.world.user.stat.SecondaryStat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class PassiveSkillData {
     public final List<AdditionPsd> additionPsd = new ArrayList<>();
@@ -38,8 +43,65 @@ public final class PassiveSkillData {
     public int ocR;
     public int dcR;
 
-    public void addPassiveSkillData(SkillInfo si, int slv) {
-        // CUserLocal::SetPassiveSkillData
+    public void setFrom(BasicStat bs, SecondaryStat ss, SkillManager sm) {
+        clearData();
+        // TODO: guild skill
+
+        // Add passive skill data
+        for (SkillRecord skillRecord : sm.getSkillRecords()) {
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillRecord.getSkillId());
+            if (skillInfoResult.isEmpty()) {
+                continue;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            if (si.isPsd() && (si.getSkillId() != 35101007 || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
+                if (si.getSkillId() == 35121013) {
+                    addPassiveSkillData(si, sm.getSkillLevel(35111004));
+                } else {
+                    addPassiveSkillData(si, skillRecord.getSkillLevel());
+                }
+            }
+        }
+
+        // Special handling for Mech: Siege Mode
+        if (JobConstants.isMechanicJob(bs.getJob())) {
+            if (sm.getSkillLevel(35121005) > 0) {
+                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(35121013);
+                if (skillInfoResult.isPresent()) {
+                    addPassiveSkillData(skillInfoResult.get(), sm.getSkillLevel(35111004));
+                }
+            }
+        }
+
+        // Handle dice info
+        final int[] diceInfo = ss.getDiceInfo().getInfoArray();
+        this.mhpR += diceInfo[0];
+        this.mmpR += diceInfo[1];
+        this.cr += diceInfo[2];
+        this.cdMin += diceInfo[3]; // 4 not used
+        this.evaR += diceInfo[5];
+        this.ar += diceInfo[6];
+        this.er += diceInfo[7];
+        this.pddR += diceInfo[8];
+        this.mddR += diceInfo[9];
+        this.pdR += diceInfo[10];
+        this.mdR += diceInfo[11];
+        this.dipR += diceInfo[12];
+        this.pdamR += diceInfo[13];
+        this.mdamR += diceInfo[14];
+        this.padR += diceInfo[15];
+        this.madR += diceInfo[16];
+        this.expR += diceInfo[17];
+        this.impR += diceInfo[18];
+        this.asrR += diceInfo[19];
+        this.terR += diceInfo[20];
+        this.mesoR += diceInfo[21];
+
+        // Revise passive skill data
+        revisePassiveSkillData();
+    }
+
+    private void addPassiveSkillData(SkillInfo si, int slv) {
         this.mhpR += si.getValue(SkillStat.mhpR, slv);
         this.mmpR += si.getValue(SkillStat.mmpR, slv);
         if (this.additionPsd.isEmpty()) {
@@ -89,7 +151,7 @@ public final class PassiveSkillData {
         }
     }
 
-    public void revisePassiveSkillData() {
+    private void revisePassiveSkillData() {
         // Meso rate
         if (this.mesoR > 0) {
             this.mesoR = Math.max(this.mesoR, 100);
@@ -110,8 +172,7 @@ public final class PassiveSkillData {
         }
     }
 
-    public void clearData() {
-        // PassiveSkillData::ClearData
+    private void clearData() {
         this.mhpR = 0;
         this.mmpR = 0;
         this.cr = 0;

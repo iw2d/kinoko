@@ -66,7 +66,7 @@ public final class ItemInfo {
         return getInfo(ItemInfoType.tradeBlock) != 0;
     }
 
-    public boolean isAbleToEquip(int gender, int level, int job, int subJob, int totalStr, int totalDex, int totalInt, int totalLuk, int pop, int durability, Item weaponOrPet) {
+    public boolean isAbleToEquip(int gender, int level, int job, int subJob, int totalStr, int totalDex, int totalInt, int totalLuk, int pop, int durability, int weaponId, int petTemplateId) {
         // Check durability
         if (getInfo(ItemInfoType.durability) > 0 && durability == 0) {
             return false;
@@ -74,14 +74,13 @@ public final class ItemInfo {
         // Sub dagger (katara) can only be equipped by dual blades, and while equipped with a dagger
         final WeaponType wt = WeaponType.getByItemId(getItemId());
         if (wt == WeaponType.SUB_DAGGER) {
-            if (WeaponType.getByItemId(weaponOrPet.getItemId()) != WeaponType.DAGGER || !JobConstants.isDualJob(job) && !JobConstants.isAdminJob(job)) {
+            if (WeaponType.getByItemId(weaponId) != WeaponType.DAGGER || !JobConstants.isDualJob(job) && !JobConstants.isAdminJob(job)) {
                 return false;
             }
         }
         // Check pet equip
         if (ItemConstants.isCorrectBodyPart(getItemId(), BodyPart.PET_EQUIP_1, gender)) {
             // CItemInfo::EQUIPITEM::IsItemSuitedForPet
-            final int petTemplateId = weaponOrPet.getItemId();
             if (!ItemConstants.isPetEquipItem(getItemId()) || !ItemConstants.isPet(petTemplateId) ||
                     !ItemProvider.isPetEquipSuitable(getItemId(), petTemplateId)) {
                 return false;

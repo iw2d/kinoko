@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class CharacterData implements Encodable {
     private final int accountId;
     private CharacterStat characterStat;
-    private SecondaryStat secondaryStat;
     private InventoryManager inventoryManager;
     private SkillManager skillManager;
     private QuestManager questManager;
@@ -49,14 +48,6 @@ public final class CharacterData implements Encodable {
 
     public void setCharacterStat(CharacterStat characterStat) {
         this.characterStat = characterStat;
-    }
-
-    public SecondaryStat getSecondaryStat() {
-        return secondaryStat;
-    }
-
-    public void setSecondaryStat(SecondaryStat secondaryStat) {
-        this.secondaryStat = secondaryStat;
     }
 
     public InventoryManager getInventoryManager() {

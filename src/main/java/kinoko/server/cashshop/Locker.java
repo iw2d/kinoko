@@ -17,6 +17,6 @@ public final class Locker {
     }
 
     public int getRemaining() {
-        return Math.max(GameConstants.LOCKER_MAX_SLOTS - cashItems.size(), 0);
+        return Math.max(GameConstants.LOCKER_SLOT_MAX - cashItems.size(), 0);
     }
 }
