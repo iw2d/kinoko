@@ -1,5 +1,7 @@
 package kinoko.provider;
 
+import kinoko.provider.item.ItemOptionInfo;
+import kinoko.provider.item.ItemOptionLevelData;
 import kinoko.provider.item.SetItemInfo;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
@@ -13,24 +15,38 @@ import java.util.*;
 
 public final class EtcProvider implements WzProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
+    // Item info
+    private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
+    private static final Set<SetItemInfo> setItemInfos = new HashSet<>();
     // CashShop info
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
     private static final Map<Integer, Set<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
     // Other info
     private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
-    private static final Set<SetItemInfo> setItemInfos = new HashSet<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(ETC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
+            loadItemOptionInfo(wzPackage);
+            loadSetItemInfo(wzPackage);
             loadCashShop(wzPackage);
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
-            loadSetItemInfo(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Etc.wz", e);
         }
+    }
+
+    public static Optional<ItemOptionLevelData> getItemOptionInfo(int itemOptionId, int optionLevel) {
+        if (itemOptionInfos.containsKey(itemOptionId)) {
+            return Optional.empty();
+        }
+        return itemOptionInfos.get(itemOptionId).getLevelData(optionLevel);
+    }
+
+    public static Set<SetItemInfo> getSetItemInfos() {
+        return setItemInfos;
     }
 
     public static Map<Integer, Commodity> getCommodities() {
@@ -49,8 +65,20 @@ public final class EtcProvider implements WzProvider {
         return makeCharInfo.getOrDefault(index, Set.of()).contains(id);
     }
 
-    public static Set<SetItemInfo> getSetItemInfos() {
-        return setItemInfos;
+    private static void loadItemOptionInfo(WzPackage source) throws ProviderError {
+        // TODO
+    }
+
+    private static void loadSetItemInfo(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getImages().get("SetItemInfo.img") instanceof WzImage infoImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/SetItemInfo.img");
+        }
+        for (var entry : infoImage.getProperty().getItems().entrySet()) {
+            if (!(entry.getValue() instanceof WzListProperty setItemProp)) {
+                throw new ProviderError("Could not resolve set item info prop");
+            }
+            setItemInfos.add(SetItemInfo.from(setItemProp));
+        }
     }
 
     private static void loadCashShop(WzPackage source) throws ProviderError {
@@ -137,18 +165,6 @@ public final class EtcProvider implements WzProvider {
                 }
                 makeCharInfo.get(index).add(id);
             }
-        }
-    }
-
-    private static void loadSetItemInfo(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("SetItemInfo.img") instanceof WzImage infoImage)) {
-            throw new ProviderError("Could not resolve Etc.wz/SetItemInfo.img");
-        }
-        for (var entry : infoImage.getProperty().getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty setItemProp)) {
-                throw new ProviderError("Could not resolve set item info prop");
-            }
-            setItemInfos.add(SetItemInfo.from(setItemProp));
         }
     }
 }

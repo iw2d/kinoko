@@ -61,4 +61,12 @@ public final class JobConstants {
     public static boolean isExtendSpJob(int jobId) {
         return isResistanceJob(jobId) || isEvanJob(jobId);
     }
+
+    public static boolean isAdminJob(int jobId) {
+        return jobId % 1000 / 100 == 9;
+    }
+
+    public static boolean isManagerJob(int jobId) {
+        return jobId % 1000 / 100 == 8;
+    }
 }

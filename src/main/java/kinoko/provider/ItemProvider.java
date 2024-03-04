@@ -17,6 +17,7 @@ public final class ItemProvider implements WzProvider {
     public static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
+    private static final Map<Integer, Set<Integer>> petEquips = new HashMap<>(); // petEquipId -> set<petTemplateId>
     private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
 
     public static void initialize() {
@@ -38,6 +39,10 @@ public final class ItemProvider implements WzProvider {
 
     public static Optional<ItemInfo> getItemInfo(int itemId) {
         return Optional.ofNullable(itemInfos.get(itemId));
+    }
+
+    public static boolean isPetEquipSuitable(int itemId, int templateId) {
+        return petEquips.getOrDefault(itemId, Set.of()).contains(templateId);
     }
 
     public static Optional<PetInteraction> getPetInteraction(int templateId, int action) {

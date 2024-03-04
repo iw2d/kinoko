@@ -392,8 +392,8 @@ public final class UserHandler {
                 final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
                 final Inventory secondInventory = im.getInventoryByType(secondInventoryType);
                 final Item secondItem = secondInventory.getItem(newPos);
-                // Check body part if equipped inventory
                 if (secondInventoryType == InventoryType.EQUIPPED) {
+                    // Check body part
                     final int absPos = Math.abs(newPos);
                     final boolean isCash = absPos >= BodyPart.CASH_BASE.getValue() && absPos < BodyPart.CASH_END.getValue();
                     final BodyPart bodyPart = BodyPart.getByValue(isCash ? (absPos - BodyPart.CASH_BASE.getValue()) : absPos);

@@ -3,6 +3,7 @@ package kinoko.provider.skill;
 import java.util.HashMap;
 import java.util.Map;
 
+// SKILLLEVELDATA::LoadLevelData
 public enum SkillStat {
     // SKILL -----------------------------------------------------------------------------------------------------------
     x,
@@ -53,6 +54,8 @@ public enum SkillStat {
     morph,
     speed,
     jump,
+    psdSpeed,
+    psdJump,
 
     emhp,
     emmp,
@@ -65,14 +68,24 @@ public enum SkillStat {
 
     mhpR,
     mmpR,
+    ar,
+    pdr,
+    mdr,
+    accR,
+    evaR,
+    padR,
+    madR,
     pddR,
     mddR,
     asrR,
     terR,
     damR,
+    ignoreMobDamR,
     ignoreMobpdpR,
     mesoR,
     expR,
+    overChargeR,
+    disCountR,
 
     // SPECIAL ---------------------------------------------------------------------------------------------------------
     lt,

@@ -47,6 +47,10 @@ public final class ItemConstants {
         return getItemPrefix(itemId) == 500;
     }
 
+    public static boolean isPetEquipItem(int itemId) {
+        return itemId / 100000 == 18;
+    }
+
     public static boolean isRechargeableItem(int itemId) {
         return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
     }
@@ -59,9 +63,13 @@ public final class ItemConstants {
         return getItemPrefix(itemId) == 301;
     }
 
-    public static boolean isCorrectBodyPart(int itemId, BodyPart bodyPart, int gender) {
+    public static boolean isMatchedItemIdGender(int itemId, int gender) {
         final int genderFromId = getGenderFromId(itemId);
-        if (gender != 2 && genderFromId != 2 && genderFromId != gender) {
+        return gender == 2 || genderFromId == 2 || gender == genderFromId;
+    }
+
+    public static boolean isCorrectBodyPart(int itemId, BodyPart bodyPart, int gender) {
+        if (!isMatchedItemIdGender(itemId, gender)) {
             return false;
         }
         switch (getItemPrefix(itemId)) {

@@ -1,13 +1,12 @@
 package kinoko.provider.item;
 
+import kinoko.provider.ItemProvider;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.world.GameConstants;
-import kinoko.world.item.EquipData;
-import kinoko.world.item.Item;
-import kinoko.world.item.ItemType;
-import kinoko.world.item.PetData;
+import kinoko.world.item.*;
+import kinoko.world.job.JobConstants;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -64,7 +63,45 @@ public final class ItemInfo {
     }
 
     public boolean isTradeBlock() {
-        return getInfo(ItemInfoType.tradBlock) != 0 || getInfo(ItemInfoType.tradeBlock) != 0;
+        return getInfo(ItemInfoType.tradeBlock) != 0;
+    }
+
+    public boolean isAbleToEquip(int gender, int level, int job, int subJob, int totalStr, int totalDex, int totalInt, int totalLuk, int pop, int durability, Item weaponOrPet) {
+        // Check durability
+        if (getInfo(ItemInfoType.durability) > 0 && durability == 0) {
+            return false;
+        }
+        // Sub dagger (katara) can only be equipped by dual blades, and while equipped with a dagger
+        final WeaponType wt = WeaponType.getByItemId(getItemId());
+        if (wt == WeaponType.SUB_DAGGER) {
+            if (WeaponType.getByItemId(weaponOrPet.getItemId()) != WeaponType.DAGGER || !JobConstants.isDualJob(job) && !JobConstants.isAdminJob(job)) {
+                return false;
+            }
+        }
+        // Check pet equip
+        if (ItemConstants.isCorrectBodyPart(getItemId(), BodyPart.PET_EQUIP_1, gender)) {
+            // CItemInfo::EQUIPITEM::IsItemSuitedForPet
+            final int petTemplateId = weaponOrPet.getItemId();
+            if (!ItemConstants.isPetEquipItem(getItemId()) || !ItemConstants.isPet(petTemplateId) ||
+                    !ItemProvider.isPetEquipSuitable(getItemId(), petTemplateId)) {
+                return false;
+            }
+        }
+        // Check other requirements
+        final int jobFlag = 1 << ((job % 1000 / 100) - 1);
+        return JobConstants.isAdminJob(job) ||
+                JobConstants.isManagerJob(job) ||
+                ItemConstants.isMatchedItemIdGender(getItemId(), gender) &&
+                        level >= getInfo(ItemInfoType.reqLEVEL) &&
+                        totalStr >= getInfo(ItemInfoType.reqSTR) &&
+                        totalDex >= getInfo(ItemInfoType.reqDEX) &&
+                        totalInt >= getInfo(ItemInfoType.reqINT) &&
+                        totalLuk >= getInfo(ItemInfoType.reqLUK) &&
+                        (getInfo(ItemInfoType.reqPOP) == 0 || pop >= getInfo(ItemInfoType.reqPOP)) &&
+                        (getInfo(ItemInfoType.reqJob) == 0 ||
+                                getInfo(ItemInfoType.reqJob) == -1 && jobFlag == 0 ||
+                                getInfo(ItemInfoType.reqJob) > 0 && (getInfo(ItemInfoType.reqJob) & jobFlag) != 0
+                        );
     }
 
     public Item createItem(long itemSn) {

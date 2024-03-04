@@ -1,4 +1,4 @@
-package kinoko.world.user.temp;
+package kinoko.world.user.stat;
 
 public enum TwoStateType {
     NO_EXPIRE,

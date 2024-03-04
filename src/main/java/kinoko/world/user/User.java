@@ -6,7 +6,11 @@ import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ChannelServer;
 import kinoko.server.client.Client;
 import kinoko.server.dialog.Dialog;
@@ -15,15 +19,21 @@ import kinoko.util.Lockable;
 import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
-import kinoko.world.item.InventoryManager;
+import kinoko.world.item.*;
+import kinoko.world.job.JobConstants;
 import kinoko.world.life.Life;
 import kinoko.world.quest.QuestManager;
+import kinoko.world.skill.PassiveSkillData;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
-import kinoko.world.user.temp.SecondaryStat;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.SecondaryStat;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -33,6 +43,8 @@ public final class User extends Life implements Lockable<User> {
     private final Lock lock = new ReentrantLock();
     private final Client client;
     private final CharacterData characterData;
+
+    private final PassiveSkillData passiveSkillData = new PassiveSkillData();
     private final Pet[] pets = new Pet[GameConstants.PET_COUNT_MAX];
 
     private Dialog dialog;
@@ -103,6 +115,10 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getFuncKeyManager();
     }
 
+    public PassiveSkillData getPassiveSkillData() {
+        return passiveSkillData;
+    }
+
     public Pet[] getPets() {
         return pets;
     }
@@ -132,7 +148,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
 
-    // HELPER METHODS --------------------------------------------------------------------------------------------------
+    // STAT METHODS ----------------------------------------------------------------------------------------------------
 
     public int getGender() {
         return getCharacterStat().getGender();
@@ -188,6 +204,103 @@ public final class User extends Life implements Lockable<User> {
         }
         write(WvsContext.statChanged(addExpResult, true));
     }
+
+
+    // SKILL METHODS ---------------------------------------------------------------------------------------------------
+
+    public void updatePassiveSkillData() {
+        getPassiveSkillData().clearData();
+        // TODO: guild skill
+
+        // Add passive skill data
+        for (SkillRecord skillRecord : getSkillManager().getSkillRecords()) {
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillRecord.getSkillId());
+            if (skillInfoResult.isEmpty()) {
+                continue;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            if (si.isPsd() && (si.getSkillId() != 35101007 || getSecondaryStat().getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
+                if (si.getSkillId() == 35121013) {
+                    getPassiveSkillData().addPassiveSkillData(si, getSkillManager().getSkillLevel(35111004));
+                } else {
+                    getPassiveSkillData().addPassiveSkillData(si, skillRecord.getSkillLevel());
+                }
+            }
+        }
+
+        // Special handling for Mech: Siege Mode
+        if (JobConstants.isMechanicJob(getJob())) {
+            if (getSkillManager().getSkillLevel(35121005) > 0) {
+                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(35121013);
+                if (skillInfoResult.isPresent()) {
+                    getPassiveSkillData().addPassiveSkillData(skillInfoResult.get(), getSkillManager().getSkillLevel(35111004));
+                }
+            }
+        }
+
+        // Handle dice info
+        getSecondaryStat().getDiceInfo().updatePassiveSkillData(getPassiveSkillData());
+
+        // Revise passive skill data
+        getPassiveSkillData().revisePassiveSkillData();
+    }
+
+    public void validateStat() {
+        // Compute stats from equipped items
+        final CharacterStat cs = getCharacterStat();
+        final int incBasicStat = getSecondaryStat().getOption(CharacterTemporaryStat.BasicStatUp).nOption;
+        int incStr = 0;
+        int incDex = 0;
+        int incInt = 0;
+        int incLuk = 0;
+        for (var entry : getInventoryManager().getEquipped().getItems().entrySet()) {
+            // Resolve equip data
+            final int position = entry.getKey();
+            final Item item = entry.getValue();
+            if (item.getItemType() != ItemType.EQUIP || item.getDateExpire().isBefore(Instant.now())) {
+                // TODO: check equip slot ext
+                continue;
+            }
+            final EquipData equipData = item.getEquipData();
+
+            // Resolve item info
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                continue;
+            }
+            final ItemInfo ii = itemInfoResult.get();
+
+            // Check if able to equip
+            final Item weaponOrPet;
+            if (position == BodyPart.PET_EQUIP_1.getValue() && getPets()[0] != null) {
+                weaponOrPet = getPets()[0].getItem();
+            } else if (position == BodyPart.PET_EQUIP_1.getValue() && getPets()[1] != null) {
+                weaponOrPet = getPets()[1].getItem();
+            } else if (position == BodyPart.PET_EQUIP_1.getValue() && getPets()[2] != null) {
+                weaponOrPet = getPets()[2].getItem();
+            } else {
+                weaponOrPet = getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+            }
+            final boolean isAbleToEquip = ii.isAbleToEquip(
+                    cs.getGender(),
+                    cs.getLevel(),
+                    cs.getJob(),
+                    cs.getSubJob(),
+                    cs.getBaseStr() + incStr - equipData.getIncStr(),
+                    cs.getBaseStr() + incStr - equipData.getIncStr(),
+                    cs.getBaseStr() + incStr - equipData.getIncStr(),
+                    cs.getBaseStr() + incStr - equipData.getIncStr(),
+                    cs.getPop(),
+                    equipData.getDurability(),
+                    weaponOrPet
+            );
+        }
+
+        // CWvsContext::CheckEquippedSetItem
+    }
+
+
+    // OTHER HELPER METHODS --------------------------------------------------------------------------------------------
 
     public long getPetSn(int index) {
         assert index >= 0 && index < GameConstants.PET_COUNT_MAX;

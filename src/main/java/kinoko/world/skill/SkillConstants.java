@@ -1,8 +1,37 @@
 package kinoko.world.skill;
 
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.cygnus.NightWalker;
+import kinoko.world.job.cygnus.Noblesse;
+import kinoko.world.job.cygnus.ThunderBreaker;
+import kinoko.world.job.explorer.Beginner;
+import kinoko.world.job.explorer.Pirate;
+import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.legend.Aran;
+import kinoko.world.job.legend.Evan;
+import kinoko.world.job.resistance.Citizen;
+
+import java.util.List;
 
 public final class SkillConstants {
+    public static final List<Integer> SECONDARY_STAT_SKILLS = List.of(
+            Thief.NIMBLE_BODY,
+            NightWalker.NIMBLE_BODY,
+            Pirate.BULLET_TIME, // PirateQuickMotion
+            ThunderBreaker.QUICK_MOTION, // StrikerQuickMotion
+            Evan.DRAGON_SOUL,
+            Beginner.BLESSING_OF_THE_FAIRY,
+            Noblesse.BLESSING_OF_THE_FAIRY,
+            Citizen.BLESSING_OF_THE_FAIRY,
+            Aran.BLESSING_OF_THE_FAIRY,
+            Evan.BLESSING_OF_THE_FAIRY
+    );
+
+    public static final List<Integer> WILD_HUNTER_JAGUARS = List.of(
+            1932015, 1932030, 1932031, 1932032, 1932033, 1932036
+    );
+
+    public static final int MECHANIC_VEHICLE = 1932016;
 
     public static int getSkillRoot(int skillId) {
         return skillId / 10000;

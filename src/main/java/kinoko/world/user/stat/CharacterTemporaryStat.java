@@ -1,4 +1,4 @@
-package kinoko.world.user.temp;
+package kinoko.world.user.stat;
 
 import kinoko.util.BitIndex;
 

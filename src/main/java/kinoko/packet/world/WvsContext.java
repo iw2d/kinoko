@@ -15,7 +15,7 @@ import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.Stat;
-import kinoko.world.user.temp.SecondaryStat;
+import kinoko.world.user.stat.SecondaryStat;
 
 import java.util.List;
 import java.util.Map;
