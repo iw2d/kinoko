@@ -6,6 +6,8 @@ import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.cygnus.NightWalker;
+import kinoko.world.job.cygnus.ThunderBreaker;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -55,7 +57,7 @@ public final class AttackHandler {
 
         attack.userX = inPacket.decodeShort(); // GetPos()->x
         attack.userY = inPacket.decodeShort(); // GetPos()->y
-        if (attack.skillId == 14111006) {
+        if (attack.skillId == NightWalker.POISON_BOMB) {
             attack.grenadeX = inPacket.decodeShort(); // pGrenade->GetPos()->x
             attack.grenadeY = inPacket.decodeShort(); // pGrenade->GetPos()->y
         }
@@ -116,7 +118,7 @@ public final class AttackHandler {
         }
         attack.ballStartX = inPacket.decodeShort(); // pt0.x
         attack.ballStartY = inPacket.decodeShort(); // pt0.y
-        if (attack.skillId == 15111006) {
+        if (attack.skillId == ThunderBreaker.SPARK) {
             inPacket.decodeInt(); // tReserveSpark
         }
 
@@ -247,7 +249,7 @@ public final class AttackHandler {
                 hitInfo.reflect = inPacket.decodeByte(); // nX = 0
                 hitInfo.guard = inPacket.decodeByte(); // bGuard
                 final byte knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
-                if (knockback > 0 || hitInfo.reflect != 0) {
+                if (knockback > 1 || hitInfo.reflect != 0) {
                     hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
                     hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
                     hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction

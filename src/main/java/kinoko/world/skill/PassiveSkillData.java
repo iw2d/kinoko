@@ -4,6 +4,7 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.user.stat.BasicStat;
 import kinoko.world.user.stat.SecondaryStat;
 
@@ -54,9 +55,9 @@ public final class PassiveSkillData {
                 continue;
             }
             final SkillInfo si = skillInfoResult.get();
-            if (si.isPsd() && (si.getSkillId() != 35101007 || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
-                if (si.getSkillId() == 35121013) {
-                    addPassiveSkillData(si, sm.getSkillLevel(35111004));
+            if (si.isPsd() && (si.getSkillId() != Mechanic.PERFECT_ARMOR || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
+                if (si.getSkillId() == Mechanic.MECH_SIEGE_MODE_2) {
+                    addPassiveSkillData(si, sm.getSkillLevel(Mechanic.MECH_SIEGE_MODE));
                 } else {
                     addPassiveSkillData(si, skillRecord.getSkillLevel());
                 }
@@ -65,10 +66,10 @@ public final class PassiveSkillData {
 
         // Special handling for Mech: Siege Mode
         if (JobConstants.isMechanicJob(bs.getJob())) {
-            if (sm.getSkillLevel(35121005) > 0) {
-                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(35121013);
+            if (sm.getSkillLevel(Mechanic.MECH_MISSILE_TANK) > 0) {
+                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(Mechanic.MECH_SIEGE_MODE_2);
                 if (skillInfoResult.isPresent()) {
-                    addPassiveSkillData(skillInfoResult.get(), sm.getSkillLevel(35111004));
+                    addPassiveSkillData(skillInfoResult.get(), sm.getSkillLevel(Mechanic.MECH_SIEGE_MODE));
                 }
             }
         }

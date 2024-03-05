@@ -6,6 +6,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillProcessor;
@@ -97,7 +98,7 @@ public final class SkillHandler {
         final int slv = inPacket.decodeByte(); // nSLV
         final short actionAndDir = inPacket.decodeShort(); // nOneTimeAction & 0x7FFF | (nMoveAction << 15)
         final byte attackSpeed = inPacket.decodeByte(); // attack_speed_degree
-        if (skillId == 33101005) {
+        if (skillId == WildHunter.JAGUAR_OSHI) {
             inPacket.decodeInt(); // dwSwallowMobID
         }
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);

@@ -3,6 +3,9 @@ package kinoko.packet.user;
 import kinoko.packet.user.effect.Effect;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.job.explorer.Bowman;
+import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.life.MovePath;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
@@ -26,11 +29,10 @@ public final class UserRemote {
         if (a.slv != 0) {
             outPacket.encodeInt(a.skillId);
         }
-        if (a.skillId == 3211006) {
-            // TODO: ultimate strafe?
-            outPacket.encodeByte(0); // nPassiveSLV
-            if (false) {
-                outPacket.encodeInt(0); // nSkillID
+        if (a.skillId == Bowman.STRAFE_MM) {
+            outPacket.encodeByte(a.passiveSlv); // nPassiveSLV
+            if (a.passiveSlv != 0) {
+                outPacket.encodeInt(a.passiveSkillId); // nSkillID
             }
         }
         outPacket.encodeByte(a.flag);
@@ -45,7 +47,7 @@ public final class UserRemote {
                     continue;
                 }
                 outPacket.encodeByte(ai.actionAndDir);
-                if (a.skillId == 4211006) {
+                if (a.skillId == Thief.MESO_EXPLOSION) {
                     outPacket.encodeByte(a.getDamagePerMob());
                     for (int i = 0; i < a.getDamagePerMob(); i++) {
                         outPacket.encodeInt(ai.damage[i]);
@@ -63,8 +65,8 @@ public final class UserRemote {
             }
             if (SkillConstants.isMagicKeydownSkill(a.skillId)) {
                 outPacket.encodeInt(a.keyDown); // tKeyDown
-            } else if (a.skillId == 33101007) {
-                outPacket.encodeInt(0); // dwSwallowMobTemplateID
+            } else if (a.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
+                outPacket.encodeInt(a.swallowMobTemplateId); // dwSwallowMobTemplateID
             }
         }
         return outPacket;

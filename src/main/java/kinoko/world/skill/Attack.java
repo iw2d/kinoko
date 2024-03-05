@@ -31,6 +31,10 @@ public final class Attack {
     public short dragonX;
     public short dragonY;
 
+    public int passiveSlv;
+    public int passiveSkillId;
+    public int swallowMobTemplateId;
+
     public Attack(OutHeader headerType) {
         this.headerType = headerType;
     }
