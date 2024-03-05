@@ -408,6 +408,7 @@ public final class UserHandler {
                 secondInventory.putItem(newPos, item);
                 user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
             }
+            user.validateStat();
         }
     }
 
@@ -539,6 +540,7 @@ public final class UserHandler {
                     }
                     user.write(WvsContext.message(Message.questRecord(startQuestResult.get())));
                     user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
+                    user.validateStat();
                 }
             }
             case COMPLETE_QUEST -> {
@@ -560,6 +562,7 @@ public final class UserHandler {
                     final int nextQuest = questCompleteResult.get().getRight();
                     user.write(WvsContext.message(Message.questRecord(questCompleteResult.get().getLeft())));
                     user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
+                    user.validateStat();
                 }
                 // Quest complete effect
                 user.write(UserLocal.effect(Effect.questComplete()));
@@ -574,6 +577,7 @@ public final class UserHandler {
                     }
                     user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
                     user.write(UserLocal.resignQuestReturn(questId));
+                    user.validateStat();
                 }
             }
             case OPENING_SCRIPT, COMPLETE_SCRIPT -> {

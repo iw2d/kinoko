@@ -175,11 +175,14 @@ public final class NpcScriptManager extends ScriptManager {
     public void forceStartQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
         user.write(WvsContext.message(Message.questRecord(qr)));
+        user.validateStat();
     }
 
     public void forceCompleteQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
         user.write(WvsContext.message(Message.questRecord(qr)));
+        user.validateStat();
+        // Quest complete effect
         user.write(UserLocal.effect(Effect.questComplete()));
         user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
     }

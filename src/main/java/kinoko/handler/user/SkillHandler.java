@@ -73,6 +73,8 @@ public final class SkillHandler {
             // Add skill point and update client
             skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
             user.write(WvsContext.changeSkillRecordResult(skillRecord));
+            user.updatePassiveSkillData();
+            user.validateStat();
         }
     }
 

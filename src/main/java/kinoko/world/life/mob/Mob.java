@@ -255,6 +255,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                             continue;
                         }
                         attacker.write(WvsContext.message(Message.questRecord(questProgressResult.get())));
+                        attacker.validateStat();
                     }
                 }
             }, 0);

@@ -126,7 +126,7 @@ public final class MigrationHandler {
             }
 
             // Initialize user stats
-            user.validateStat(true);
+            user.validateStat();
             user.write(WvsContext.setGender(user.getGender()));
 
             // Add user to field

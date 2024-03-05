@@ -171,7 +171,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void setHp(int hp) {
-        getCharacterStat().setHp(Math.max(Math.min(hp, getMaxHp()), 0));
+        getCharacterStat().setHp(Math.clamp(hp, 0, getMaxMp()));
         write(WvsContext.statChanged(Stat.HP, getHp(), true));
     }
 
@@ -184,7 +184,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void setMp(int mp) {
-        getCharacterStat().setMp(Math.max(Math.min(mp, getMaxMp()), 0));
+        getCharacterStat().setMp(Math.clamp(mp, 0, getMaxMp()));
         write(WvsContext.statChanged(Stat.MP, getMp(), true));
     }
 
@@ -193,23 +193,30 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public int getMaxHp() {
-        return getCharacterStat().getMaxHp();
+        return getBasicStat().getMaxHp();
     }
 
     public int getMaxMp() {
-        return getCharacterStat().getMaxMp();
+        return getBasicStat().getMaxMp();
     }
 
     public void addExp(int exp) {
         final Map<Stat, Object> addExpResult = getCharacterStat().addExp(exp);
-        if (addExpResult.containsKey(Stat.LEVEL)) {
-            write(UserLocal.effect(Effect.levelUp()));
-            getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
-        }
         write(WvsContext.statChanged(addExpResult, true));
+        // Level up
+        if (addExpResult.containsKey(Stat.LEVEL)) {
+            getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
+            validateStat();
+            setHp(getMaxHp());
+            setMp(getMaxMp());
+        }
     }
 
-    public void validateStat(boolean isMigrate) {
+    public void updatePassiveSkillData() {
+        getPassiveSkillData().setFrom(getBasicStat(), getSecondaryStat(), getSkillManager());
+    }
+
+    public void validateStat() {
         // get_real_equip
         final Map<Integer, Item> realEquip = getRealEquip();
 
@@ -219,10 +226,12 @@ public final class User extends Life implements Lockable<User> {
         // SecondaryStat::SetFrom
         getSecondaryStat().setFrom(getBasicStat(), getForcedStat(), getSkillManager(), realEquip);
 
-        // Update hp and mp
-
-        if (!isMigrate) {
-            // TODO
+        // Adjust hp and mp
+        if (getHp() > getMaxHp()) {
+            setHp(getMaxHp());
+        }
+        if (getMp() > getMaxMp()) {
+            setMp(getMaxMp());
         }
     }
 
