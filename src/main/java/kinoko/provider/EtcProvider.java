@@ -39,7 +39,7 @@ public final class EtcProvider implements WzProvider {
     }
 
     public static Optional<ItemOptionLevelData> getItemOptionInfo(int itemOptionId, int optionLevel) {
-        if (itemOptionInfos.containsKey(itemOptionId)) {
+        if (!itemOptionInfos.containsKey(itemOptionId)) {
             return Optional.empty();
         }
         return itemOptionInfos.get(itemOptionId).getLevelData(optionLevel);

@@ -2,12 +2,8 @@ package kinoko.world.item;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.SecondaryStat;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

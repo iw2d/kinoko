@@ -4,9 +4,9 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.StringProvider;
 import kinoko.provider.skill.ComputedSkillInfo;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStringInfo;
 import kinoko.provider.skill.StaticSkillInfo;
 import kinoko.util.Rect;
-import kinoko.util.Triple;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import org.json.JSONArray;
@@ -117,11 +117,19 @@ final class JsonExporter {
                     JSONObject skillObject = new JSONObject();
                     skillObject.put("id", si.getSkillId());
 
-                    final Triple<String, String, String> skillString = StringProvider.getSkillString(si.getSkillId());
-                    if (skillString != null) {
-                        skillObject.put("name", skillString.getFirst());
-                        skillObject.put("desc", skillString.getSecond());
-                        skillObject.put("h", skillString.getThird());
+                    final SkillStringInfo skillStringInfo = StringProvider.getSkillString(si.getSkillId());
+                    if (skillStringInfo != null) {
+                        skillObject.put("name", skillStringInfo.getName());
+                        skillObject.put("desc", skillStringInfo.getDesc());
+                        skillObject.put("h", skillStringInfo.getH());
+
+                        final JSONObject hmap = new JSONObject();
+                        for (var entry : skillStringInfo.getHMap().entrySet()) {
+                            hmap.put(String.format("h%d", entry.getKey()), entry.getValue());
+                        }
+                        if (!hmap.isEmpty()) {
+                            skillObject.put("hmap", hmap);
+                        }
                     } else {
                         skillObject.put("name", "");
                         skillObject.put("desc", "");

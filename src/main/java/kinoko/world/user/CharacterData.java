@@ -14,7 +14,6 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.SecondaryStat;
 
 import java.time.Duration;
 import java.time.Instant;

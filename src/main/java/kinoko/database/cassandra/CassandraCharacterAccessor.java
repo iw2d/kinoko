@@ -17,7 +17,6 @@ import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.SecondaryStat;
 
 import java.util.ArrayList;
 import java.util.List;

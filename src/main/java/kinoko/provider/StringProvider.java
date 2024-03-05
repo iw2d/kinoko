@@ -1,10 +1,10 @@
 package kinoko.provider;
 
+import kinoko.provider.skill.SkillStringInfo;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.util.Triple;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,7 +19,7 @@ public final class StringProvider implements WzProvider {
     private static final Map<Integer, String> mapNames = new HashMap<>();
     private static final Map<Integer, String> mobNames = new HashMap<>();
     private static final Map<Integer, String> npcNames = new HashMap<>();
-    private static final Map<Integer, Triple<String, String, String>> skillStrings = new HashMap<>(); // skillId -> name, desc, h
+    private static final Map<Integer, SkillStringInfo> skillStrings = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
@@ -28,7 +28,7 @@ public final class StringProvider implements WzProvider {
             loadMapNames(wzPackage);
             loadMobNames(wzPackage);
             loadNpcNames(wzPackage);
-            loadSkillNames(wzPackage);
+            loadSkillStrings(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading String.wz", e);
         }
@@ -50,7 +50,7 @@ public final class StringProvider implements WzProvider {
         return npcNames;
     }
 
-    public static Map<Integer, Triple<String, String, String>> getSkillStrings() {
+    public static Map<Integer, SkillStringInfo> getSkillStrings() {
         return skillStrings;
     }
 
@@ -71,10 +71,10 @@ public final class StringProvider implements WzProvider {
     }
 
     public static String getSkillName(int skillId) {
-        return skillStrings.get(skillId).getFirst();
+        return skillStrings.get(skillId).getName();
     }
 
-    public static Triple<String, String, String> getSkillString(int skillId) {
+    public static SkillStringInfo getSkillString(int skillId) {
         return skillStrings.get(skillId);
     }
 
@@ -173,7 +173,7 @@ public final class StringProvider implements WzProvider {
         }
     }
 
-    private static void loadSkillNames(WzPackage source) throws ProviderError {
+    private static void loadSkillStrings(WzPackage source) throws ProviderError {
         if (!(source.getDirectory().getImages().get("Skill.img") instanceof WzImage image)) {
             throw new ProviderError("Could not resolve String.wz/Skill.img");
         }
@@ -182,13 +182,10 @@ public final class StringProvider implements WzProvider {
                 continue;
             }
             final int skillId = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty prop) ||
-                    !(prop.getItems().get("name") instanceof String name)) {
+            if (!(entry.getValue() instanceof WzListProperty prop)) {
                 continue;
             }
-            final String desc = WzProvider.getString(prop.getItems().get("desc"));
-            final String h = WzProvider.getString(prop.getItems().get("h"), "");
-            skillStrings.put(skillId, new Triple<>(name, desc, h));
+            skillStrings.put(skillId, SkillStringInfo.from(prop));
         }
     }
 }

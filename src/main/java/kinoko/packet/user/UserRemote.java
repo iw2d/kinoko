@@ -44,6 +44,7 @@ public final class UserRemote {
                 if (ai.mobId == 0) {
                     continue;
                 }
+                outPacket.encodeByte(ai.actionAndDir);
                 if (a.skillId == 4211006) {
                     outPacket.encodeByte(a.getDamagePerMob());
                     for (int i = 0; i < a.getDamagePerMob(); i++) {
@@ -57,8 +58,8 @@ public final class UserRemote {
                 }
             }
             if (a.getHeaderType() == OutHeader.USER_SHOOT_ATTACK) { // nType == 212
-                outPacket.encodeShort(0); // ptBallStart.x
-                outPacket.encodeShort(0); // ptBallStart.y
+                outPacket.encodeShort(a.ballStartX); // ptBallStart.x
+                outPacket.encodeShort(a.ballStartY); // ptBallStart.y
             }
             if (SkillConstants.isMagicKeydownSkill(a.skillId)) {
                 outPacket.encodeInt(a.keyDown); // tKeyDown

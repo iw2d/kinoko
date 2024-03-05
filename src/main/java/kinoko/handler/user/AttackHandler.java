@@ -114,8 +114,8 @@ public final class AttackHandler {
         if (JobConstants.isWildHunterJob(user.getJob())) {
             inPacket.decodeShort(); // ptBodyRelMove.y
         }
-        inPacket.decodeShort(); // pt0.x
-        inPacket.decodeShort(); // pt0.y
+        attack.ballStartX = inPacket.decodeShort(); // pt0.x
+        attack.ballStartY = inPacket.decodeShort(); // pt0.y
         if (attack.skillId == 15111006) {
             inPacket.decodeInt(); // tReserveSpark
         }

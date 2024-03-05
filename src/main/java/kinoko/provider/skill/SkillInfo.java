@@ -3,7 +3,6 @@ package kinoko.provider.skill;
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Rect;
-import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillRecord;
 
 import java.util.List;

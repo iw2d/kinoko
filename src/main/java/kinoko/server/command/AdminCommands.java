@@ -12,20 +12,25 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStringInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashShop;
 import kinoko.server.cashshop.Commodity;
 import kinoko.server.script.ScriptDispatcher;
-import kinoko.util.Triple;
 import kinoko.util.Util;
 import kinoko.world.Account;
+import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
+import kinoko.world.job.Job;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobAppearType;
+import kinoko.world.skill.SkillManager;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 
 import java.util.*;
@@ -213,8 +218,8 @@ public final class AdminCommands {
             if (isNumber) {
                 skillId = Integer.parseInt(query);
             } else {
-                final List<Map.Entry<Integer, Triple<String, String, String>>> searchResult = StringProvider.getSkillStrings().entrySet().stream()
-                        .filter((entry) -> entry.getValue().getFirst().toLowerCase().contains(query.toLowerCase()))
+                final List<Map.Entry<Integer, SkillStringInfo>> searchResult = StringProvider.getSkillStrings().entrySet().stream()
+                        .filter((entry) -> entry.getValue().getName().toLowerCase().contains(query.toLowerCase()))
                         .sorted(Comparator.comparingInt(Map.Entry::getKey))
                         .toList();
                 if (!searchResult.isEmpty()) {
@@ -223,7 +228,7 @@ public final class AdminCommands {
                     } else {
                         user.write(WvsContext.message(Message.system("Results for skill name : \"%s\"", query)));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue().getFirst())));
+                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue().getName())));
                         }
                         return;
                     }
@@ -393,6 +398,65 @@ public final class AdminCommands {
             final Account account = lockedAccount.get();
             account.setNxCredit(nx);
             user.write(WvsContext.message(Message.system("Set NX credit to %d", nx)));
+        }
+    }
+
+    @Command("level")
+    public static void level(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %slevel <new level>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int level = Integer.parseInt(args[1]);
+        if (level < 1 || level > GameConstants.LEVEL_MAX) {
+            user.write(WvsContext.message(Message.system("Could not change level to : {}", level)));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final CharacterStat cs = user.getCharacterStat();
+            cs.setLevel((short) level);
+            user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
+        }
+    }
+
+    @Command("job")
+    public static void job(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %sjob <job id>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int jobId = Integer.parseInt(args[1]);
+        if (Job.getById(jobId) == null) {
+            user.write(WvsContext.message(Message.system("Could not change to unknown job : {}", jobId)));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final CharacterStat cs = user.getCharacterStat();
+            cs.setJob((short) jobId);
+            user.write(WvsContext.statChanged(Stat.JOB, cs.getJob(), true));
+        }
+    }
+
+    @Command("skill")
+    public static void skill(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %sskill <skill id>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int skillId = Integer.parseInt(args[1]);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            user.write(WvsContext.message(Message.system("Could not find skill : {}", skillId)));
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final SkillRecord skillRecord = si.createRecord();
+        skillRecord.setSkillLevel(si.getMaxLevel());
+        skillRecord.setMasterLevel(si.getMaxLevel());
+        try (var locked = user.acquire()) {
+            final SkillManager sm = user.getSkillManager();
+            sm.addSkill(skillRecord);
+            user.write(WvsContext.changeSkillRecordResult(skillRecord));
         }
     }
 }

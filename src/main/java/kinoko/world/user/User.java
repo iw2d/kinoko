@@ -25,8 +25,10 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
-import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -207,7 +209,7 @@ public final class User extends Life implements Lockable<User> {
         write(WvsContext.statChanged(addExpResult, true));
     }
 
-    public void validateStat() {
+    public void validateStat(boolean isMigrate) {
         // get_real_equip
         final Map<Integer, Item> realEquip = getRealEquip();
 
@@ -216,6 +218,12 @@ public final class User extends Life implements Lockable<User> {
 
         // SecondaryStat::SetFrom
         getSecondaryStat().setFrom(getBasicStat(), getForcedStat(), getSkillManager(), realEquip);
+
+        // Update hp and mp
+
+        if (!isMigrate) {
+            // TODO
+        }
     }
 
 

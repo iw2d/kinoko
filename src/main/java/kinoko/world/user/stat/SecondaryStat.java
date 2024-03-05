@@ -9,7 +9,10 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.world.GameConstants;
-import kinoko.world.item.*;
+import kinoko.world.item.BodyPart;
+import kinoko.world.item.EquipData;
+import kinoko.world.item.Item;
+import kinoko.world.item.WeaponType;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -475,7 +478,7 @@ public final class SecondaryStat {
                         WindArcher.BOW_MASTERY, Bowman.BOW_MASTERY, WildHunter.CROSSBOW_MASTERY,
                         Bowman.CROSSBOW_MASTERY, NightWalker.CLAW_MASTERY, Thief.CLAW_MASTERY,
                         ThunderBreaker.KNUCKLE_MASTERY, Pirate.KNUCKLE_MASTERY, Mechanic.EXTREME_MECH,
-                        Mechanic.MECHANIC_MASTERY, Pirate.GUN_MASTERY-> {
+                        Mechanic.MECHANIC_MASTERY, Pirate.GUN_MASTERY -> {
                     this.acc += si.getValue(SkillStat.x, slv);
                 }
                 case Aran.HIGH_MASTERY, WindArcher.BOW_EXPERT, Bowman.BOW_EXPERT, WildHunter.CROSSBOW_EXPERT,

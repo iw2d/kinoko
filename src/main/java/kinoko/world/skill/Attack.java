@@ -24,6 +24,8 @@ public final class Attack {
 
     public short userX;
     public short userY;
+    public short ballStartX;
+    public short ballStartY;
     public short grenadeX;
     public short grenadeY;
     public short dragonX;

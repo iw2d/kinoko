@@ -14,12 +14,14 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
-import kinoko.world.item.*;
+import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryType;
+import kinoko.world.item.Item;
+import kinoko.world.item.ItemType;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.funckey.FuncKeyManager;
-import kinoko.world.user.stat.CharacterStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -124,7 +126,7 @@ public final class MigrationHandler {
             }
 
             // Initialize user stats
-            user.validateStat();
+            user.validateStat(true);
             user.write(WvsContext.setGender(user.getGender()));
 
             // Add user to field

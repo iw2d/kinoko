@@ -45,6 +45,7 @@ public final class SkillProcessor {
             }
             // TODO skill handling
         }
+        // TODO: set bulletId
         // Process attack damage
         final Field field = user.getField();
         for (AttackInfo ai : attack.getAttackInfo()) {
