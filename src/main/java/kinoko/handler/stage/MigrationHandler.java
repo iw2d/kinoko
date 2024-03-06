@@ -15,7 +15,6 @@ import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.Inventory;
-import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
 import kinoko.world.user.CharacterData;
@@ -105,7 +104,7 @@ public final class MigrationHandler {
                 if (petSn == 0) {
                     continue;
                 }
-                final Inventory cashInventory = user.getInventoryManager().getInventoryByType(InventoryType.CASH);
+                final Inventory cashInventory = user.getInventoryManager().getCashInventory();
                 final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
                         .filter((entry) -> entry.getValue().getItemSn() == petSn)
                         .findFirst();

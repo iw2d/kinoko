@@ -191,7 +191,7 @@ public final class WvsContext {
         // ~MedalAchievementInfo::Decode
 
         // aChairItem
-        final List<Item> chairs = user.getInventoryManager().getInventoryByType(InventoryType.INSTALL).getItems().values().stream()
+        final List<Item> chairs = user.getInventoryManager().getInstallInventory().getItems().values().stream()
                 .filter((item) -> ItemConstants.isPortableChairItem(item.getItemId()))
                 .toList();
         outPacket.encodeInt(chairs.size());

@@ -28,8 +28,8 @@ public final class SkillProcessor {
     public static void processAttack(User user, Attack attack) {
         // Resolve bullet id
         if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
-            final Item weaponItem = user.getInventoryManager().getInventoryByType(InventoryType.EQUIPPED).getItem(BodyPart.WEAPON.getValue());
-            final Item bulletItem = user.getInventoryManager().getInventoryByType(InventoryType.CONSUME).getItem(attack.bulletPosition);
+            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+            final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
             if (weaponItem == null || bulletItem == null || !ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
                 log.error("Tried to attack with incorrect bullet {} using weapon {}", bulletItem != null ? bulletItem.getItemId() : 0, weaponItem != null ? weaponItem.getItemId() : 0);
                 return;
@@ -82,7 +82,7 @@ public final class SkillProcessor {
             if (bulletCon > 0 && attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
                 // Resolve bullet item
                 final int bulletCount = bulletCon * (attack.isShadowPartner() ? 2 : 1);
-                final Item bulletItem = user.getInventoryManager().getInventoryByType(InventoryType.CONSUME).getItem(attack.bulletPosition);
+                final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
                 if (bulletItem == null || bulletItem.getQuantity() < bulletCount) {
                     log.error("Tried to use skill {} without enough bullets", attack.skillId);
                     return;
@@ -158,12 +158,12 @@ public final class SkillProcessor {
         final int bulletCon = si.getBulletCon(skill.slv);
         if (bulletCon > 0) {
             // Resolve bullet item
-            final Item weaponItem = user.getInventoryManager().getInventoryByType(InventoryType.EQUIPPED).getItem(BodyPart.WEAPON.getValue());
+            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
             if (weaponItem == null) {
                 log.error("Tried to use skill {} without a weapon", skill.skillId);
                 return;
             }
-            final Optional<Map.Entry<Integer, Item>> bulletEntryResult = user.getInventoryManager().getInventoryByType(InventoryType.CONSUME).getItems().entrySet().stream()
+            final Optional<Map.Entry<Integer, Item>> bulletEntryResult = user.getInventoryManager().getConsumeInventory().getItems().entrySet().stream()
                     .filter((entry) -> ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), entry.getValue().getItemId()) && entry.getValue().getQuantity() >= bulletCon)
                     .findFirst();
             if (bulletEntryResult.isEmpty()) {

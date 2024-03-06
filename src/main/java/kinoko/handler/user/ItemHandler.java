@@ -115,7 +115,7 @@ public final class ItemHandler {
 
             // Resolve pet item
             final InventoryManager im = user.getInventoryManager();
-            final Optional<Map.Entry<Integer, Item>> itemEntry = im.getInventoryByType(InventoryType.CASH).getItems().entrySet().stream()
+            final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
                     .filter((entry) -> entry.getValue().getItemSn() == petSn)
                     .findFirst();
             if (itemEntry.isEmpty()) {

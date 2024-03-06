@@ -59,6 +59,14 @@ public final class ItemConstants {
         return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
     }
 
+    public static boolean isJavelinItem(int itemId) {
+        return getItemPrefix(itemId) == 207;
+    }
+
+    public static boolean isPelletItem(int itemId) {
+        return getItemPrefix(itemId) == 233;
+    }
+
     public static boolean isCorrectBulletItem(int weaponItemId, int itemId) {
         final WeaponType wt = WeaponType.getByItemId(weaponItemId);
         if (wt == WeaponType.BOW || weaponItemId == 1472063) {

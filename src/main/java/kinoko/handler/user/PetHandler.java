@@ -43,8 +43,7 @@ public final class PetHandler {
         final long petSn = inPacket.decodeLong(); // liCashItemSN
         try (var locked = user.acquire()) {
             final InventoryManager im = locked.get().getInventoryManager();
-            final Inventory inventory = im.getInventoryByType(InventoryType.CASH);
-            final Optional<Map.Entry<Integer, Item>> itemEntryResult = inventory.getItems().entrySet().stream()
+            final Optional<Map.Entry<Integer, Item>> itemEntryResult = im.getCashInventory().getItems().entrySet().stream()
                     .filter((entry) -> entry.getValue().getItemSn() == petSn)
                     .findFirst();
             if (itemEntryResult.isEmpty()) {
@@ -70,8 +69,7 @@ public final class PetHandler {
         try (var locked = user.acquire()) {
             // Resolve pet item in inventory
             final InventoryManager im = locked.get().getInventoryManager();
-            final Inventory inventory = im.getInventoryByType(InventoryType.CASH);
-            final Item item = inventory.getItem(position);
+            final Item item = im.getCashInventory().getItem(position);
             if (item == null || item.getItemType() != ItemType.PET) {
                 log.error("Received USER_ACTIVATE_PET_REQUEST with incorrect position {}", position);
                 user.dispose();
@@ -185,7 +183,7 @@ public final class PetHandler {
             if (success) {
                 // Resolve pet item
                 final InventoryManager im = user.getInventoryManager();
-                final Optional<Map.Entry<Integer, Item>> itemEntry = im.getInventoryByType(InventoryType.CASH).getItems().entrySet().stream()
+                final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
                         .filter((entry) -> entry.getValue().getItemSn() == petSn)
                         .findFirst();
                 if (itemEntry.isEmpty()) {
