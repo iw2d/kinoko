@@ -5,6 +5,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.SecondaryStat;
 
 public final class UserPacket {
     // CUserPool::OnPacket ---------------------------------------------------------------------------------------------
@@ -20,7 +21,7 @@ public final class UserPacket {
         outPacket.encodeShort(0); // nGuildMark
         outPacket.encodeByte(0); // nGuildMarkColor
 
-        user.getSecondaryStat().encodeForRemote(outPacket, true); // SecondaryStat::DecodeForRemote
+        SecondaryStat.encodeForRemote(outPacket, user.getSecondaryStat().getTemporaryStats()); // SecondaryStat::DecodeForRemote
         outPacket.encodeShort(user.getJob()); // nJobCode
         user.getCharacterData().getAvatarLook().encode(outPacket); // AvatarLook::AvatarLook
 

@@ -76,6 +76,10 @@ public abstract class ScriptManager {
         user.warp(fieldResult.get(), portalResult.get(), false, false);
     }
 
+    public final void message(String message) {
+        user.write(WvsContext.message(Message.system(message)));
+    }
+
     public final void avatarOriented(String effectPath) {
         user.write(UserLocal.effect(Effect.avatarOriented(effectPath)));
         user.dispose();

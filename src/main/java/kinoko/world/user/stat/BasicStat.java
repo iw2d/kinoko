@@ -156,9 +156,9 @@ public final class BasicStat {
         int mpIncRateFromCts = ss.getOption(CharacterTemporaryStat.SwallowMaxMP).nOption;
         mpIncRateFromCts += ss.getOption(CharacterTemporaryStat.MaxMP).nOption;
 
-        // Fixed point division
-        this.maxHp = 0x51EB851F * maxHp * (incMaxHpR + option.incMaxHpR + hpIncRateFromCts + psd.mhpR);
-        this.maxMp = 0x51EB851F * maxMp * (incMaxMpR + option.incMaxMpR + mpIncRateFromCts + psd.mmpR);
+        // Max hp/mp rate increases
+        this.maxHp += this.maxHp * (incMaxHpR + option.incMaxHpR + hpIncRateFromCts + psd.mhpR) / 100;
+        this.maxMp += this.maxMp * (incMaxMpR + option.incMaxMpR + mpIncRateFromCts + psd.mmpR) / 100;
 
         // Max hp/mp cap
         this.maxHp = Math.min(this.maxHp, GameConstants.HP_MAX);

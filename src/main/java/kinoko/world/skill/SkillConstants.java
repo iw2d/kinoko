@@ -45,6 +45,10 @@ public final class SkillConstants {
         return skillType == 1000 || skillType == 1001 || skillType == 1002;
     }
 
+    public static boolean isEncodePositionSkill(int skillId) {
+        return isAntiRepeatBuffSkill(skillId); // TODO
+    }
+
     public static boolean isAntiRepeatBuffSkill(int skillId) {
         switch (skillId) {
             case 1001003:

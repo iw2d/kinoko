@@ -1,5 +1,13 @@
 package kinoko.world.job.cygnus;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class WindArcher {
     // WIND_ARCHER_1
     public static final int CRITICAL_SHOT = 13000000;
@@ -24,4 +32,16 @@ public final class WindArcher {
     public static final int EAGLE_EYE = 13111005;
     public static final int WIND_PIERCING = 13111006;
     public static final int WIND_SHOT = 13111007;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

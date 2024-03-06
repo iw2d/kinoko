@@ -13,12 +13,11 @@ import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.ExtendSp;
-import kinoko.world.user.stat.SecondaryStat;
-import kinoko.world.user.stat.Stat;
+import kinoko.world.user.stat.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class WvsContext {
     public static OutPacket statChanged(Stat stat, Object value, boolean exclRequest) {
@@ -61,17 +60,17 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket temporaryStatSet(SecondaryStat secondaryStat, boolean complete) {
+    public static OutPacket temporaryStatSet(SecondaryStat ss, Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
-        secondaryStat.encodeForLocal(outPacket, complete);
+        SecondaryStat.encodeForLocal(outPacket, setStats);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }
 
-    public static OutPacket temporaryStatReset(SecondaryStat secondaryStat) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
-        // TODO secondaryStat.encodeReset(outPacket);
+    public static OutPacket temporaryStatReset(Set<CharacterTemporaryStat> resetStats) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_RESET);
+        SecondaryStat.encodeReset(outPacket, resetStats);
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }

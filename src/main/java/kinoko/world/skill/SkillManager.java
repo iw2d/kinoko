@@ -34,4 +34,13 @@ public final class SkillManager {
         }
         return skillRecord.getSkillLevel();
     }
+
+    public boolean hasSkillCooltime(int skillId) {
+        final Instant nextAvailable = skillCooltimes.get(skillId);
+        return nextAvailable != null && nextAvailable.isAfter(Instant.now());
+    }
+
+    public void setSkillCooltime(int skillId, Instant nextAvailable) {
+        skillCooltimes.put(skillId, nextAvailable);
+    }
 }

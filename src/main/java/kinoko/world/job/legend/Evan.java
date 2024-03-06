@@ -1,5 +1,13 @@
 package kinoko.world.job.legend;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Evan {
     // EVAN_BEGINNER
     public static final int BLESSING_OF_THE_FAIRY = 20010012;
@@ -52,4 +60,16 @@ public final class Evan {
     public static final int BLAZE = 22181001;
     public static final int DARK_FOG = 22181002;
     public static final int SOUL_STONE = 22181003;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

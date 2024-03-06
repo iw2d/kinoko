@@ -1,12 +1,19 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Warrior {
     // WARRIOR
     public static final int HP_BOOST = 1000006;
     public static final int IRON_BODY = 1001003;
     public static final int POWER_STRIKE = 1001004;
     public static final int SLASH_BLAST = 1001005;
-
     // FIGHTER
     public static final int WEAPON_MASTERY_HERO = 1100000;
     public static final int FINAL_ATTACK_HERO = 1100002;
@@ -35,7 +42,6 @@ public final class Warrior {
     public static final int INTREPID_SLASH = 1121008;
     public static final int ENRAGE = 1121010;
     public static final int HEROS_WILL_HERO = 1121011;
-
     // PAGE
     public static final int WEAPON_MASTERY_PALADIN = 1200000;
     public static final int FINAL_ATTACK_PALADIN = 1200002;
@@ -65,7 +71,6 @@ public final class Warrior {
     public static final int BLAST = 1221009;
     public static final int HEAVENS_HAMMER = 1221011;
     public static final int HEROS_WILL_PALADIN = 1221012;
-
     // SPEARMAN
     public static final int WEAPON_MASTERY_DRK = 1300000;
     public static final int FINAL_ATTACK_DRK = 1300002;
@@ -95,4 +100,16 @@ public final class Warrior {
     public static final int RUSH_DRK = 1321003;
     public static final int BEHOLDER = 1321007;
     public static final int HEROS_WILL_DRK = 1321010;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

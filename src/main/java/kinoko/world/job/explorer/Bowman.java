@@ -1,5 +1,13 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Bowman {
     // ARCHER
     public static final int CRITICAL_SHOT = 3000001;
@@ -7,7 +15,6 @@ public final class Bowman {
     public static final int FOCUS = 3001003;
     public static final int ARROW_BLOW = 3001004;
     public static final int DOUBLE_SHOT = 3001005;
-
     // HUNTER
     public static final int BOW_MASTERY = 3100000;
     public static final int FINAL_ATTACK_BOW = 3100001;
@@ -37,7 +44,6 @@ public final class Bowman {
     public static final int HAMSTRING = 3121007;
     public static final int CONCENTRATE = 3121008;
     public static final int HEROS_WILL_BM = 3121009;
-
     // CROSSBOWMAN
     public static final int CROSSBOW_MASTERY = 3200000;
     public static final int FINAL_ATTACK_MM = 3200001;
@@ -67,4 +73,16 @@ public final class Bowman {
     public static final int BLIND = 3221006;
     public static final int SNIPE = 3221007;
     public static final int HEROS_WILL_MM = 3221008;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

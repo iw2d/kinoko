@@ -57,6 +57,9 @@ public final class StaticSkillInfo implements SkillInfo {
 
     @Override
     public int getValue(SkillStat stat, int slv) {
+        if (!stats.containsKey(stat)) {
+            return 0;
+        }
         return stats.get(stat).get(slv - 1);
     }
 

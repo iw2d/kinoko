@@ -1,5 +1,13 @@
 package kinoko.world.job.resistance;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class WildHunter {
     // WILD_HUNTER_1
     public static final int TRIPLE_SHOT = 33001000;
@@ -36,4 +44,16 @@ public final class WildHunter {
     public static final int MAPLE_WARRIOR_WH = 33121007;
     public static final int HEROS_WILL_WH = 33121008;
     public static final int WILD_ARROW_BLAST = 33121009;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

@@ -6,11 +6,9 @@ import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
-import kinoko.world.skill.SkillConstants;
-import kinoko.world.skill.SkillManager;
-import kinoko.world.skill.SkillProcessor;
-import kinoko.world.skill.SkillRecord;
+import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,10 +79,19 @@ public final class SkillHandler {
     @Handler(InHeader.USER_SKILL_USE_REQUEST)
     public static void handleUserSkillUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
-        final int skillId = inPacket.decodeInt(); // nSkillID
-        final int slv = inPacket.decodeByte(); // nSLV
+        final Skill skill = new Skill();
+        skill.skillId = inPacket.decodeInt(); // nSkillID
+        skill.slv = inPacket.decodeByte(); // nSLV
+        if (SkillConstants.isEncodePositionSkill(skill.skillId)) {
+            skill.userX = inPacket.decodeShort(); // GetPos()->x
+            skill.userY = inPacket.decodeShort(); // GetPos()->y
+        }
+        if (skill.skillId == Thief.SHADOW_STARS) {
+            skill.spiritJavelinItemId = inPacket.decodeInt(); // nSpiritJavelinItemID
+            System.out.println(skill.spiritJavelinItemId);
+        }
         try (var locked = user.acquire()) {
-            SkillProcessor.processSkill(user, skillId, slv, inPacket);
+            SkillProcessor.processSkill(user, skill, inPacket);
         }
     }
 
@@ -104,5 +111,14 @@ public final class SkillHandler {
             inPacket.decodeInt(); // dwSwallowMobID
         }
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
+    }
+
+    @Handler(InHeader.PASSIVE_SKILL_INFO_UPDATE)
+    public static void handlePassiveSkillInfoUpdate(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        try (var locked = user.acquire()) {
+            user.updatePassiveSkillData();
+            user.validateStat();
+        }
     }
 }

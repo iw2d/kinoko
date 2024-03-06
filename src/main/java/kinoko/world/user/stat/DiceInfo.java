@@ -4,8 +4,8 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
 public final class DiceInfo implements Encodable {
-    public static final int SIZE = 22;
-    private final int[] infoArray = new int[SIZE];
+    public static final DiceInfo DEFAULT = new DiceInfo();
+    private final int[] infoArray = new int[22];
 
     public int[] getInfoArray() {
         return infoArray;
@@ -14,7 +14,7 @@ public final class DiceInfo implements Encodable {
     @Override
     public void encode(OutPacket outPacket) {
         // aDiceInfo
-        for (int i = 0; i < SIZE; i++) {
+        for (int i = 0; i < 22; i++) {
             outPacket.encodeInt(infoArray[i]);
         }
     }

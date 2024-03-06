@@ -2,7 +2,7 @@ package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
 
-public class TwoStateTemporaryStat extends Option {
+public class TwoStateTemporaryStat extends TemporaryStatOption {
     private final TwoStateType twoStateType;
 
     public TwoStateTemporaryStat(TwoStateType twoStateType) {

@@ -1,7 +1,6 @@
 package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
-import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
@@ -25,10 +24,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -171,7 +167,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void setHp(int hp) {
-        getCharacterStat().setHp(Math.clamp(hp, 0, getMaxMp()));
+        getCharacterStat().setHp(Math.clamp(hp, 0, getMaxHp()));
         write(WvsContext.statChanged(Stat.HP, getHp(), true));
     }
 
@@ -233,6 +229,27 @@ public final class User extends Life implements Lockable<User> {
         if (getMp() > getMaxMp()) {
             setMp(getMaxMp());
         }
+    }
+
+    public void setTemporaryStat(CharacterTemporaryStat cts, TemporaryStatOption option) {
+        setTemporaryStat(Map.of(cts, option));
+    }
+
+    public void setTemporaryStat(Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
+        for (var entry : setStats.entrySet()) {
+            getSecondaryStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
+        }
+        write(WvsContext.temporaryStatSet(getSecondaryStat(), setStats));
+        getField().broadcastPacket(UserRemote.temporaryStatSet(this, setStats));
+    }
+
+    public void resetTemporaryStat(CharacterTemporaryStat cts) {
+        resetTemporaryStat(Set.of(cts));
+    }
+
+    public void resetTemporaryStat(Set<CharacterTemporaryStat> resetStats) {
+        write(WvsContext.temporaryStatReset(resetStats));
+        getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats));
     }
 
 

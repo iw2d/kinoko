@@ -22,6 +22,14 @@ public interface SkillInfo {
 
     Rect getRect();
 
+    default int getDuration(int slv) {
+        return getValue(SkillStat.time, slv) * 1000;
+    }
+
+    default int getBulletCon(int slv) {
+        return Math.max(getValue(SkillStat.bulletConsume, slv), getValue(SkillStat.bulletCount, slv));
+    }
+
     default SkillRecord createRecord() {
         final SkillRecord skillRecord = new SkillRecord(getSkillId());
         skillRecord.setSkillLevel(0);

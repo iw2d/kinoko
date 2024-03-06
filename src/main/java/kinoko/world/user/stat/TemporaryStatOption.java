@@ -3,11 +3,13 @@ package kinoko.world.user.stat;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
-public class Option implements Encodable {
-    public static final Option EMPTY = new Option();
+public class TemporaryStatOption implements Encodable {
+    public static final TemporaryStatOption EMPTY = new TemporaryStatOption();
     public int nOption;
     public int rOption;
     public int tOption;
+
+    public DiceInfo diceInfo = DiceInfo.DEFAULT;
 
     @Override
     public void encode(OutPacket outPacket) {

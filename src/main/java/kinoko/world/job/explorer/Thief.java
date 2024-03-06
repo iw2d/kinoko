@@ -1,5 +1,13 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Thief {
     // ROGUE
     public static final int NIMBLE_BODY = 4000000;
@@ -8,7 +16,6 @@ public final class Thief {
     public static final int DARK_SIGHT = 4001003;
     public static final int DOUBLE_STAB = 4001334;
     public static final int LUCKY_SEVEN = 4001344;
-
     // ASSASSIN
     public static final int CLAW_MASTERY = 4100000;
     public static final int CRITICAL_THROW = 4100001;
@@ -36,7 +43,6 @@ public final class Thief {
     public static final int TRIPLE_THROW = 4121007;
     public static final int NINJA_STORM = 4121008;
     public static final int HEROS_WILL_NL = 4121009;
-
     // BANDIT
     public static final int DAGGER_MASTERY = 4200000;
     public static final int SHADOW_RESISTANCE_SHAD = 4200006;
@@ -66,7 +72,6 @@ public final class Thief {
     public static final int SMOKESCREEN = 4221006;
     public static final int BOOMERANG_STEP = 4221007;
     public static final int HEROS_WILL_SHAD = 4221008;
-
     // BLADE_RECRUIT
     public static final int KATARA_MASTERY = 4300000;
     public static final int TRIPLE_STAB = 4301001;
@@ -98,4 +103,16 @@ public final class Thief {
     public static final int MIRRORED_TARGET = 4341006;
     public static final int THORNS = 4341007;
     public static final int HEROS_WILL_DB = 4341008;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

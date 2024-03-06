@@ -67,6 +67,7 @@ public final class FieldHandler {
             final String nextPortalName;
             if (isRevive) {
                 // Handle revive
+                user.validateStat();
                 user.setHp(50);
                 user.write(WvsContext.statChanged(Stat.HP, user.getHp(), true));
                 nextFieldId = user.getField().getReturnMap();

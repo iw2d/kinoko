@@ -1,5 +1,13 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Magician {
     // MAGICIAN
     public static final int MP_BOOST = 2000006;
@@ -7,7 +15,6 @@ public final class Magician {
     public static final int MAGIC_ARMOR = 2001003;
     public static final int ENERGY_BOLT = 2001004;
     public static final int MAGIC_CLAW = 2001005;
-
     // WIZARD_FP
     public static final int MP_EATER_FP = 2100000;
     public static final int SPELL_MASTERY_FP = 2100006;
@@ -37,7 +44,6 @@ public final class Magician {
     public static final int PARALYZE = 2121006;
     public static final int METEOR_SHOWER = 2121007;
     public static final int HEROS_WILL_FP = 2121008;
-
     // WIZARD_IL
     public static final int MP_EATER_IL = 2200000;
     public static final int SPELL_MASTERY_IL = 2200006;
@@ -67,7 +73,6 @@ public final class Magician {
     public static final int CHAIN_LIGHTNING = 2221006;
     public static final int BLIZZARD = 2221007;
     public static final int HEROS_WILL_IL = 2221008;
-
     // CLERIC
     public static final int MP_EATER_BISH = 2300000;
     public static final int SPELL_MASTERY_BISH = 2300006;
@@ -98,4 +103,16 @@ public final class Magician {
     public static final int ANGEL_RAY = 2321007;
     public static final int GENESIS = 2321008;
     public static final int HEROS_WILL_BISH = 2321009;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

@@ -79,6 +79,9 @@ public final class ComputedSkillInfo implements SkillInfo {
 
     @Override
     public int getValue(SkillStat stat, int slv) {
+        if (!stats.containsKey(stat)) {
+            return 0;
+        }
         return (int) stats.get(stat)
                 .setVariable("x", slv)
                 .evaluate();

@@ -51,12 +51,31 @@ public final class ItemConstants {
         return itemId / 100000 == 18;
     }
 
+    public static boolean isPetFoodItem(int itemId) {
+        return getItemPrefix(itemId) == 212;
+    }
+
     public static boolean isRechargeableItem(int itemId) {
         return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
     }
 
-    public static boolean isPetFoodItem(int itemId) {
-        return getItemPrefix(itemId) == 212;
+    public static boolean isCorrectBulletItem(int weaponItemId, int itemId) {
+        final WeaponType wt = WeaponType.getByItemId(weaponItemId);
+        if (wt == WeaponType.BOW || weaponItemId == 1472063) {
+            return itemId / 1000 == 2060;
+        }
+        switch (wt) {
+            case CROSSBOW -> {
+                return itemId / 1000 == 2061;
+            }
+            case THROWINGGLOVE -> {
+                return itemId / 10000 == 207;
+            }
+            case GUN -> {
+                return itemId / 10000 == 233;
+            }
+        }
+        return false;
     }
 
     public static boolean isPortableChairItem(int itemId) {

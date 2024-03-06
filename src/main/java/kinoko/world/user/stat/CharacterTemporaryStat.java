@@ -150,7 +150,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             MagicResistance, SoulStone, Flying, Frozen, AssistCharge, Enrage, SuddenDeath, NotDamaged, FinalCut,
             ThornsEffect, SwallowAttackDamage, MorewildDamageUp, Mine, Cyclone, SwallowCritical, SwallowMaxMP,
             SwallowDefence, SwallowEvasion, Conversion, Revive, Sneak, Mechanic, Aura, DarkAura, BlueAura, YellowAura,
-            SuperBody, MorewildMaxHP, Dice, BlessingArmor, DamR, TeleportMasteryOn, CombatOrders, Beholder, SummonBomb
+            SuperBody, MorewildMaxHP, Dice, BlessingArmor, DamR, TeleportMasteryOn, CombatOrders, Beholder // SummonBomb doesn't fit in the mask
     );
     public static final List<CharacterTemporaryStat> REMOTE_ENCODE_ORDER = List.of(
             Speed, ComboCounter, WeaponCharge, Stun, Darkness, Seal, Weakness, Curse, Poison, ShadowPartner, DarkSight,
@@ -160,7 +160,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             Sneak, MorewildDamageUp, Mechanic, DarkAura, BlueAura, YellowAura, BlessingArmor
     );
     public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
-            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet // Undead doesn't fit in the mask...
+            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet // Undead doesn't fit in the mask
     );
     public static final List<CharacterTemporaryStat> SWALLOW_BUFF_STAT = List.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion

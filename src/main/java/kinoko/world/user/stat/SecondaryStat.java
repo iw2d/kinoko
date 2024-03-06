@@ -28,9 +28,10 @@ import kinoko.world.skill.SkillManager;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public final class SecondaryStat {
-    private final Map<CharacterTemporaryStat, Option> temporaryStats = new EnumMap<>(CharacterTemporaryStat.class);
+    private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new EnumMap<>(CharacterTemporaryStat.class);
     private final DiceInfo diceInfo = new DiceInfo();
 
     private int pad;
@@ -49,7 +50,7 @@ public final class SecondaryStat {
     private int speed;
     private int jump;
 
-    public Map<CharacterTemporaryStat, Option> getTemporaryStats() {
+    public Map<CharacterTemporaryStat, TemporaryStatOption> getTemporaryStats() {
         return temporaryStats;
     }
 
@@ -116,8 +117,8 @@ public final class SecondaryStat {
 
     // TEMPORARY STAT METHODS ------------------------------------------------------------------------------------------
 
-    public Option getOption(CharacterTemporaryStat cts) {
-        return temporaryStats.getOrDefault(cts, new Option());
+    public TemporaryStatOption getOption(CharacterTemporaryStat cts) {
+        return temporaryStats.getOrDefault(cts, TemporaryStatOption.EMPTY);
     }
 
     public int getRidingVehicle() {
@@ -125,81 +126,7 @@ public final class SecondaryStat {
     }
 
     public DiceInfo getDiceInfo() {
-        return diceInfo;
-    }
-
-    public void encodeForLocal(OutPacket outPacket, boolean complete) {
-        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(temporaryStats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
-        statFlag.encode(outPacket);
-
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.LOCAL_ENCODE_ORDER) {
-            if (statFlag.hasFlag(cts)) {
-                getOption(cts).encode(outPacket);
-            }
-        }
-
-        outPacket.encodeByte(getOption(CharacterTemporaryStat.DefenseAtt).nOption);
-        outPacket.encodeByte(getOption(CharacterTemporaryStat.DefenseState).nOption);
-
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.SWALLOW_BUFF_STAT) {
-            if (statFlag.hasFlag(cts)) {
-                outPacket.encodeByte(getOption(cts).tOption); // tSwallowBuffTime
-                break;
-            }
-        }
-
-        if (statFlag.hasFlag(CharacterTemporaryStat.Dice)) {
-            diceInfo.encode(outPacket); // aDiceInfo
-        }
-
-        if (statFlag.hasFlag(CharacterTemporaryStat.BlessingArmor)) {
-            outPacket.encodeInt(temporaryStats.get(CharacterTemporaryStat.BlessingArmor).nOption); // nBlessingArmorIncPAD
-        }
-
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
-            if (statFlag.hasFlag(cts)) {
-                getOption(cts).encode(outPacket);
-            }
-        }
-    }
-
-    public void encodeForRemote(OutPacket outPacket, boolean complete) {
-        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(temporaryStats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
-        statFlag.encode(outPacket);
-
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.REMOTE_ENCODE_ORDER) {
-            if (statFlag.hasFlag(cts)) {
-                switch (cts) {
-                    case Speed, ComboCounter, Cyclone -> {
-                        outPacket.encodeByte(getOption(cts).nOption);
-                    }
-                    case Morph, Ghost -> {
-                        outPacket.encodeShort(getOption(cts).nOption);
-                    }
-                    case SpiritJavelin, RespectPImmune, RespectMImmune, DefenseAtt, DefenseState, MagicShield -> {
-                        outPacket.encodeInt(getOption(cts).nOption);
-                    }
-                    case WeaponCharge, Stun, Darkness, Seal, Weakness, ShadowPartner, Attract, BanMap, DojangShield,
-                            ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen, SuddenDeath, FinalCut,
-                            Mechanic, DarkAura, BlueAura, YellowAura -> {
-                        outPacket.encodeInt(getOption(cts).rOption);
-                    }
-                    case Poison -> {
-                        outPacket.encodeShort(getOption(cts).nOption); // overwritten with 1
-                        outPacket.encodeInt(getOption(cts).rOption);
-                    }
-                }
-            }
-        }
-
-        outPacket.encodeByte(getOption(CharacterTemporaryStat.DefenseAtt).nOption);
-        outPacket.encodeByte(getOption(CharacterTemporaryStat.DefenseState).nOption);
-
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
-            if (statFlag.hasFlag(cts)) {
-                getOption(cts).encode(outPacket);
-            }
-        }
+        return getOption(CharacterTemporaryStat.Dice).diceInfo;
     }
 
 
@@ -497,7 +424,87 @@ public final class SecondaryStat {
         }
     }
 
-    private class SecondaryStatRateOption {
+    public static void encodeForLocal(OutPacket outPacket, Map<CharacterTemporaryStat, TemporaryStatOption> stats) {
+        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(stats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
+        statFlag.encode(outPacket);
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.LOCAL_ENCODE_ORDER) {
+            if (statFlag.hasFlag(cts)) {
+                stats.get(cts).encode(outPacket);
+            }
+        }
+
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt, TemporaryStatOption.EMPTY).nOption);
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState, TemporaryStatOption.EMPTY).nOption);
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.SWALLOW_BUFF_STAT) {
+            if (statFlag.hasFlag(cts)) {
+                outPacket.encodeByte(stats.get(cts).tOption); // tSwallowBuffTime
+                break;
+            }
+        }
+
+        if (statFlag.hasFlag(CharacterTemporaryStat.Dice)) {
+            stats.get(CharacterTemporaryStat.Dice).encode(outPacket); // aDiceInfo
+        }
+
+        if (statFlag.hasFlag(CharacterTemporaryStat.BlessingArmor)) {
+            outPacket.encodeInt(stats.get(CharacterTemporaryStat.BlessingArmor).nOption); // nBlessingArmorIncPAD
+        }
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
+            if (statFlag.hasFlag(cts)) {
+                stats.get(cts).encode(outPacket);
+            }
+        }
+    }
+
+    public static void encodeForRemote(OutPacket outPacket, Map<CharacterTemporaryStat, TemporaryStatOption> stats) {
+        // SecondaryStat::DecodeForRemote
+        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(stats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
+        statFlag.encode(outPacket);
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.REMOTE_ENCODE_ORDER) {
+            if (statFlag.hasFlag(cts)) {
+                switch (cts) {
+                    case Speed, ComboCounter, Cyclone -> {
+                        outPacket.encodeByte(stats.get(cts).nOption);
+                    }
+                    case Morph, Ghost -> {
+                        outPacket.encodeShort(stats.get(cts).nOption);
+                    }
+                    case SpiritJavelin, RespectPImmune, RespectMImmune, DefenseAtt, DefenseState, MagicShield -> {
+                        outPacket.encodeInt(stats.get(cts).nOption);
+                    }
+                    case WeaponCharge, Stun, Darkness, Seal, Weakness, ShadowPartner, Attract, BanMap, DojangShield,
+                            ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen, SuddenDeath, FinalCut,
+                            Mechanic, DarkAura, BlueAura, YellowAura -> {
+                        outPacket.encodeInt(stats.get(cts).rOption);
+                    }
+                    case Poison -> {
+                        outPacket.encodeShort(stats.get(cts).nOption); // overwritten with 1
+                        outPacket.encodeInt(stats.get(cts).rOption);
+                    }
+                }
+            }
+        }
+
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt, TemporaryStatOption.EMPTY).nOption);
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState, TemporaryStatOption.EMPTY).nOption);
+
+        for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
+            if (statFlag.hasFlag(cts)) {
+                stats.get(cts).encode(outPacket);
+            }
+        }
+    }
+
+    public static void encodeReset(OutPacket outPacket, Set<CharacterTemporaryStat> resetStats) {
+        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
+        statFlag.encode(outPacket);
+    }
+
+    private static class SecondaryStatRateOption {
         private int padR;
         private int pddR;
         private int madR;

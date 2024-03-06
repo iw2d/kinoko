@@ -9,6 +9,12 @@ import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.life.MovePath;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.SecondaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
+
+import java.util.Map;
+import java.util.Set;
 
 public final class UserRemote {
     // CUserPool::OnUserRemotePacket -----------------------------------------------------------------------------------
@@ -150,6 +156,20 @@ public final class UserRemote {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
         outPacket.encodeInt(user.getCharacterId());
         effect.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket temporaryStatSet(User user, Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_TEMPORARY_STAT_SET);
+        outPacket.encodeInt(user.getCharacterId());
+        SecondaryStat.encodeForRemote(outPacket, setStats);
+        return outPacket;
+    }
+
+    public static OutPacket temporaryStatReset(User user, Set<CharacterTemporaryStat> resetStats) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_TEMPORARY_STAT_RESET);
+        outPacket.encodeInt(user.getCharacterId());
+        SecondaryStat.encodeReset(outPacket, resetStats);
         return outPacket;
     }
 }

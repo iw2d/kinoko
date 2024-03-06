@@ -1,5 +1,13 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Pirate {
     // PIRATE
     public static final int BULLET_TIME = 5000000;
@@ -7,7 +15,6 @@ public final class Pirate {
     public static final int SOMMERSAULT_KICK = 5001002;
     public static final int DOUBLE_SHOT = 5001003;
     public static final int DASH = 5001005;
-
     // BRAWLER
     public static final int KNUCKLE_MASTERY = 5100001;
     public static final int CRITICAL_PUNCH = 5100008;
@@ -39,7 +46,6 @@ public final class Pirate {
     public static final int PIRATES_RAGE = 5121008; // Hero's Will
     public static final int SPEED_INFUSION = 5121009;
     public static final int TIME_LEAP = 5121010;
-
     // GUNSLINGER
     public static final int GUN_MASTERY = 5200000;
     public static final int CRITICAL_SHOT = 5200007;
@@ -70,4 +76,16 @@ public final class Pirate {
     public static final int BATTLESHIP_TORPEDO = 5221008;
     public static final int HYPNOTIZE = 5221009;
     public static final int HEROS_WILL = 5221010;
+    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+        switch (skillId) {
+        }
+    }
+
+    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        log.error("Unhandled skill {}", skill.skillId);
+    }
 }

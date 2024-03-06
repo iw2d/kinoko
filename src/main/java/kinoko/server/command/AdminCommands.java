@@ -415,7 +415,16 @@ public final class AdminCommands {
         try (var locked = user.acquire()) {
             final CharacterStat cs = user.getCharacterStat();
             cs.setLevel((short) level);
-            user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
+            cs.setMaxHp(50000);
+            cs.setMaxMp(50000);
+            user.validateStat();
+            user.write(WvsContext.statChanged(Map.of(
+                    Stat.LEVEL, (byte) cs.getLevel(),
+                    Stat.MAX_HP, cs.getMaxHp(),
+                    Stat.MAX_MP, cs.getMaxMp()
+            ), true));
+            user.setHp(user.getMaxHp());
+            user.setMp(user.getMaxMp());
         }
     }
 
