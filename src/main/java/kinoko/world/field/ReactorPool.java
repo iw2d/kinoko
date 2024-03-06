@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ReactorPool extends FieldObjectPool<Reactor> {
-    private final Map<Reactor, Instant> hitReactors = new HashMap<>(); // reactor, last hit time
+    private final Map<Reactor, Instant> hitReactors = new HashMap<>(); // reactor, next respawn time
 
     public ReactorPool(Field field) {
         super(field);
@@ -32,7 +32,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         lock.lock();
         try {
             if (reactor.getReactorTime() > 0) {
-                hitReactors.put(reactor, Instant.now());
+                hitReactors.put(reactor, Instant.now().plus(reactor.getReactorTime(), ChronoUnit.SECONDS));
             }
             field.broadcastPacket(ReactorPacket.changeState(reactor, delay, 0, GameConstants.REACTOR_END_DELAY));
         } finally {
@@ -40,7 +40,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         }
     }
 
-    public void resetReactors() {
+    public void expireReactors() {
         lock.lock();
         try {
             final var iter = hitReactors.entrySet().iterator();
@@ -49,7 +49,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
                 try (var lockedReactor = entry.getKey().acquire()) {
                     final Reactor reactor = lockedReactor.get();
                     // Check reactor time and reset reactor
-                    if (Instant.now().isBefore(entry.getValue().plus(reactor.getReactorTime(), ChronoUnit.SECONDS))) {
+                    if (Instant.now().isBefore(entry.getValue())) {
                         continue;
                     }
                     iter.remove();

@@ -7,6 +7,7 @@ import kinoko.provider.map.*;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
+import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
@@ -16,10 +17,11 @@ import kinoko.world.life.mob.Mob;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,6 +29,7 @@ public final class Field {
     private static final AtomicInteger fieldKeyCounter = new AtomicInteger(1);
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
+
     private final UserPool userPool = new UserPool(this);
     private final MobPool mobPool = new MobPool(this);
     private final NpcPool npcPool = new NpcPool(this);
@@ -35,12 +38,15 @@ public final class Field {
 
     private final MapInfo mapInfo;
     private final byte fieldKey;
-    private ScheduledFuture<?> mobRespawnFuture = null;
-    private ScheduledFuture<?> reactorResetFuture = null;
+    private final ScheduledFuture<?> fieldEventFuture;
+    private Instant nextMobRespawn = Instant.now();
+    private Instant nextDropExpire = Instant.now();
+    private Instant nextReactorExpire = Instant.now();
 
     public Field(MapInfo mapInfo) {
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
+        this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
     }
 
     public int getFieldId() {
@@ -107,24 +113,29 @@ public final class Field {
         return fieldKey;
     }
 
-    public ScheduledFuture<?> getMobRespawnFuture() {
-        return mobRespawnFuture;
-    }
-
-    public void setMobRespawnFuture(ScheduledFuture<?> mobRespawnFuture) {
-        this.mobRespawnFuture = mobRespawnFuture;
-    }
-
-    public ScheduledFuture<?> getReactorResetFuture() {
-        return reactorResetFuture;
-    }
-
-    public void setReactorResetFuture(ScheduledFuture<?> reactorResetFuture) {
-        this.reactorResetFuture = reactorResetFuture;
+    public ScheduledFuture<?> getFieldEventFuture() {
+        return fieldEventFuture;
     }
 
     public int getNewObjectId() {
         return fieldObjectCounter.getAndIncrement();
+    }
+
+    public void update() {
+        final Instant now = Instant.now();
+        if (nextMobRespawn.isBefore(now)) {
+            nextMobRespawn = now.plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
+            mobPool.respawnMobs();
+        }
+        if (nextDropExpire.isBefore(now)) {
+            nextDropExpire = now.plus(GameConstants.DROP_EXPIRE_INTERVAL, ChronoUnit.SECONDS);
+            dropPool.expireDrops();
+        }
+        if (nextReactorExpire.isBefore(now)) {
+            nextReactorExpire = now.plus(GameConstants.REACTOR_EXPIRE_INTERVAL, ChronoUnit.SECONDS);
+            reactorPool.expireReactors();
+        }
+        // TODO expire temporary stats
     }
 
 
@@ -190,19 +201,6 @@ public final class Field {
             }
             final Reactor reactor = Reactor.from(reactorTemplateResult.get(), reactorInfo);
             field.getReactorPool().addReactor(reactor);
-        }
-        // Schedule mob and reactor respawns
-        if (!field.getMobPool().isEmpty()) {
-            final ScheduledFuture<?> respawnFuture = EventScheduler.addFixedDelayEvent(() -> {
-                field.getMobPool().respawnMobs();
-            }, GameConstants.MOB_RESPAWN_TIME, GameConstants.MOB_RESPAWN_TIME, TimeUnit.SECONDS);
-            field.setMobRespawnFuture(respawnFuture);
-        }
-        if (!field.getReactorPool().isEmpty()) {
-            final ScheduledFuture<?> resetFuture = EventScheduler.addFixedDelayEvent(() -> {
-                field.getReactorPool().resetReactors();
-            }, GameConstants.REACTOR_RESET_INTERVAL, GameConstants.REACTOR_RESET_INTERVAL, TimeUnit.SECONDS);
-            field.setReactorResetFuture(resetFuture);
         }
         return field;
     }

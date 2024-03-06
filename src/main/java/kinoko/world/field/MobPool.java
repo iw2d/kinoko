@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class MobPool extends FieldObjectPool<Mob> {
-    private final Map<Mob, Instant> graveyard = new HashMap<>(); // mob -> removed time
+    private final Map<Mob, Instant> graveyard = new HashMap<>(); // mob -> next respawn time
 
     public MobPool(Field field) {
         super(field);
@@ -49,7 +49,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
             }
             field.broadcastPacket(mob.leaveFieldPacket());
             if (mob.isRespawn()) {
-                graveyard.put(mob, Instant.now());
+                graveyard.put(mob, Instant.now().plus(mob.getMobTime(), ChronoUnit.SECONDS));
             }
             return true;
         } finally {
@@ -66,7 +66,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 try (var lockedMob = entry.getKey().acquire()) {
                     final Mob mob = lockedMob.get();
                     // Check respawn timer and remove from graveyard
-                    if (Instant.now().isBefore(entry.getValue().plus(mob.getMobTime(), ChronoUnit.SECONDS))) {
+                    if (Instant.now().isBefore(entry.getValue())) {
                         continue;
                     }
                     iter.remove();

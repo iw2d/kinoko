@@ -63,19 +63,19 @@ public final class GameConstants {
     public static final int MOB_ATTACK_COOLTIME_MAX_BOSS = 7;
 
 
-    // REACTOR CONSTANTS -----------------------------------------------------------------------------------------------
-
-    public static final int REACTOR_RESET_INTERVAL = 5; // interval to check if reactors can be reset
-    public static final int REACTOR_END_DELAY = 5; // tStateEnd = update_time + 100 * x
-
-
     // DROP CONSTANTS --------------------------------------------------------------------------------------------------
 
     public static final int DROP_HEIGHT = 100;
     public static final int DROP_SPREAD = 25;
-    public static final int DROP_REMOVE_OWNERSHIP_TIME = 30;
+    public static final int DROP_EXPIRE_INTERVAL = 3;
     public static final int DROP_REMAIN_ON_GROUND_TIME = 120;
     public static final double DROP_MONEY_PROB = 0.60;
+
+
+    // REACTOR CONSTANTS -----------------------------------------------------------------------------------------------
+
+    public static final int REACTOR_EXPIRE_INTERVAL = 5; // interval to check if reactors can be reset
+    public static final int REACTOR_END_DELAY = 5; // tStateEnd = update_time + 100 * x
 
 
     public static boolean isValidCharacterName(String name) {

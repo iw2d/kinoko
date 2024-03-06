@@ -385,7 +385,7 @@ public final class UserHandler {
                     // Remove item from client inventory
                     user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
                     // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, user.getCharacterId());
+                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
                 }
             } else {

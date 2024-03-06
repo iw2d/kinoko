@@ -21,11 +21,13 @@ public final class UserPool extends FieldObjectPool<User> {
         lock.lock();
         try {
             // Update user client with existing users in pool
-            forEach(existingUser -> {
-                try (var locked = existingUser.acquire()) {
+            final var iter = objects.values().iterator();
+            while (iter.hasNext()) {
+                try (var locked = iter.next().acquire()) {
                     user.write(locked.get().enterFieldPacket());
                 }
-            });
+            }
+
             // Add user to pool
             addObjectUnsafe(user);
             broadcastPacketUnsafe(user.enterFieldPacket(), user);

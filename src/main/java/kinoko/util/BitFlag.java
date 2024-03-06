@@ -27,8 +27,8 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
 
     @Override
     public void encode(OutPacket outPacket) {
-        for (int flag : flags) {
-            outPacket.encodeInt(flag);
+        for (int i = flags.length - 1; i >= 0; i--) {
+            outPacket.encodeInt(flags[i]);
         }
     }
 

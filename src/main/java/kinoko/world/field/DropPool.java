@@ -2,15 +2,14 @@ package kinoko.world.field;
 
 import kinoko.packet.field.DropPacket;
 import kinoko.provider.map.Foothold;
-import kinoko.server.event.EventScheduler;
 import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public final class DropPool extends FieldObjectPool<Drop> {
     public DropPool(Field field) {
@@ -23,11 +22,6 @@ public final class DropPool extends FieldObjectPool<Drop> {
         try {
             if (enterType != DropEnterType.FADING_OUT) {
                 addObjectUnsafe(drop);
-                EventScheduler.addEvent(
-                        () -> removeDrop(drop, DropLeaveType.TIMEOUT, 0, 0),
-                        GameConstants.DROP_REMAIN_ON_GROUND_TIME,
-                        TimeUnit.SECONDS
-                );
             }
             field.broadcastPacket(DropPacket.dropEnterField(drop, enterType));
         } finally {
@@ -52,6 +46,23 @@ public final class DropPool extends FieldObjectPool<Drop> {
             }
             field.broadcastPacket(DropPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
             return true;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void expireDrops() {
+        lock.lock();
+        try {
+            final Instant now = Instant.now();
+            final var iter = objects.values().iterator();
+            while (iter.hasNext()) {
+                final Drop drop = iter.next();
+                if (drop.getExpireTime().isBefore(now)) {
+                    iter.remove();
+                    field.broadcastPacket(DropPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
+                }
+            }
         } finally {
             lock.unlock();
         }

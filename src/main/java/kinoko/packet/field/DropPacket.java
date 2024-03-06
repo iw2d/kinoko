@@ -26,7 +26,7 @@ public final class DropPacket {
             outPacket.encodeShort(0); // tDelay
         }
         if (!drop.isMoney()) {
-            outPacket.encodeFT(drop.getDateExpire()); // m_dateExpire
+            outPacket.encodeFT(drop.getItem().getDateExpire()); // m_dateExpire
         }
         outPacket.encodeByte(!drop.isUserDrop()); // bByPet
         outPacket.encodeByte(false); // bool -> IWzGr2DLayer::Putz(0xC0041F15)

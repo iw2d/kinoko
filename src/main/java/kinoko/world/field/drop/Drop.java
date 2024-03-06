@@ -17,16 +17,16 @@ public final class Drop extends FieldObject {
     private final int money;
     private final int ownerId;
     private final int questId;
-    private final Instant dateExpire;
+    private final Instant createTime;
 
-    private Drop(DropOwnType ownType, FieldObject source, Item item, int money, int ownerId, int questId, Instant dateExpire) {
+    private Drop(DropOwnType ownType, FieldObject source, Item item, int money, int ownerId, int questId, Instant createTime) {
         this.ownType = ownType;
         this.source = source;
         this.item = item;
         this.money = money;
         this.ownerId = ownerId;
         this.questId = questId;
-        this.dateExpire = dateExpire;
+        this.createTime = createTime;
     }
 
     public DropOwnType getOwnType() {
@@ -53,8 +53,12 @@ public final class Drop extends FieldObject {
         return questId;
     }
 
-    public Instant getDateExpire() {
-        return dateExpire;
+    public Instant getCreateTime() {
+        return createTime;
+    }
+
+    public Instant getExpireTime() {
+        return getCreateTime().plus(GameConstants.DROP_REMAIN_ON_GROUND_TIME, ChronoUnit.SECONDS);
     }
 
     public boolean isMoney() {
@@ -84,10 +88,10 @@ public final class Drop extends FieldObject {
     }
 
     public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId, int questId) {
-        return new Drop(ownType, source, item, 0, ownerId, questId, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
+        return new Drop(ownType, source, item, 0, ownerId, questId, Instant.now());
     }
 
     public static Drop money(DropOwnType ownType, FieldObject source, int money, int ownerId) {
-        return new Drop(ownType, source, null, money, ownerId, 0, Instant.now().plus(GameConstants.DROP_REMOVE_OWNERSHIP_TIME, ChronoUnit.SECONDS));
+        return new Drop(ownType, source, null, money, ownerId, 0, Instant.now());
     }
 }

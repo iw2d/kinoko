@@ -19,6 +19,10 @@ public final class EventScheduler {
         return scheduler.schedule(() -> executor.submit(runnable), delay, timeUnit);
     }
 
+    public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay) {
+        return scheduler.scheduleWithFixedDelay(() -> executor.submit(runnable), initialDelay, delay, TimeUnit.MILLISECONDS);
+    }
+
     public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
         return scheduler.scheduleWithFixedDelay(() -> executor.submit(runnable), initialDelay, delay, timeUnit);
     }
