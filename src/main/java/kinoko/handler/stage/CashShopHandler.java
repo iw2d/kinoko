@@ -14,7 +14,10 @@ import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public final class CashShopHandler {
     private static final Logger log = LogManager.getLogger(CashShopHandler.class);
@@ -333,11 +336,11 @@ public final class CashShopHandler {
                         final InventoryManager im = user.getInventoryManager();
                         final Inventory inventory = im.getInventoryByType(inventoryType);
                         Item removed = null;
-                        final var iter = inventory.getItems().entrySet().iterator();
+                        final var iter = inventory.getItems().values().iterator();
                         while (iter.hasNext()) {
-                            final Map.Entry<Integer, Item> entry = iter.next();
-                            if (entry.getValue().getItemSn() == itemSn) {
-                                removed = entry.getValue();
+                            final Item item = iter.next();
+                            if (item.getItemSn() == itemSn) {
+                                removed = item;
                                 iter.remove();
                                 break;
                             }

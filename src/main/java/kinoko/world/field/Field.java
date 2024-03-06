@@ -125,17 +125,17 @@ public final class Field {
         final Instant now = Instant.now();
         if (nextMobRespawn.isBefore(now)) {
             nextMobRespawn = now.plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
-            mobPool.respawnMobs();
+            mobPool.respawnMobs(now);
         }
         if (nextDropExpire.isBefore(now)) {
             nextDropExpire = now.plus(GameConstants.DROP_EXPIRE_INTERVAL, ChronoUnit.SECONDS);
-            dropPool.expireDrops();
+            dropPool.expireDrops(now);
         }
         if (nextReactorExpire.isBefore(now)) {
             nextReactorExpire = now.plus(GameConstants.REACTOR_EXPIRE_INTERVAL, ChronoUnit.SECONDS);
-            reactorPool.expireReactors();
+            reactorPool.expireReactors(now);
         }
-        // TODO expire temporary stats
+        userPool.expireTemporaryStat(now);
     }
 
 

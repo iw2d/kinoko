@@ -57,7 +57,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
         }
     }
 
-    public void respawnMobs() {
+    public void respawnMobs(Instant now) {
         lock.lock();
         try {
             final var iter = graveyard.entrySet().iterator();
@@ -66,7 +66,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 try (var lockedMob = entry.getKey().acquire()) {
                     final Mob mob = lockedMob.get();
                     // Check respawn timer and remove from graveyard
-                    if (Instant.now().isBefore(entry.getValue())) {
+                    if (now.isBefore(entry.getValue())) {
                         continue;
                     }
                     iter.remove();

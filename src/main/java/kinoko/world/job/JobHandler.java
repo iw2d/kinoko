@@ -10,6 +10,7 @@ import kinoko.world.job.explorer.*;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.job.legend.Evan;
 import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.Attack;
@@ -21,6 +22,8 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 public final class JobHandler {
     private static final Logger log = LogManager.getLogger(JobHandler.class);
@@ -75,6 +78,7 @@ public final class JobHandler {
         final int slv = skill.slv;
 
         final TemporaryStatOption o1 = new TemporaryStatOption();
+        final TemporaryStatOption o2 = new TemporaryStatOption();
         switch (skillId) {
             // Handle common skills
             case Beginner.RECOVERY:
@@ -85,6 +89,27 @@ public final class JobHandler {
                 o1.rOption = skillId;
                 o1.tOption = si.getDuration(slv);
                 user.setTemporaryStat(CharacterTemporaryStat.Regen, o1);
+                return;
+            case Beginner.NIMBLE_FEET:
+            case Noblesse.NIMBLE_FEET:
+            case Aran.AGILE_BODY:
+            case Evan.NIMBLE_FEET:
+                o1.nOption = si.getValue(SkillStat.speed, slv);
+                o1.rOption = skillId;
+                o1.tOption = si.getDuration(slv);
+                user.setTemporaryStat(CharacterTemporaryStat.Speed, o1);
+                return;
+            case Citizen.INFILTRATE:
+                o1.nOption = si.getValue(SkillStat.speed, slv);
+                o1.rOption = skillId;
+                o1.tOption = si.getDuration(slv);
+                o2.nOption = si.getValue(SkillStat.x, slv);
+                o2.rOption = skillId;
+                o2.tOption = si.getDuration(slv);
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Speed, o1,
+                        CharacterTemporaryStat.Sneak, o2
+                ));
                 return;
             // Handle class specific skills
             default:

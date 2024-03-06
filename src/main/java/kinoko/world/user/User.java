@@ -24,7 +24,10 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -239,17 +242,9 @@ public final class User extends Life implements Lockable<User> {
         for (var entry : setStats.entrySet()) {
             getSecondaryStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
-        write(WvsContext.temporaryStatSet(getSecondaryStat(), setStats));
+        validateStat();
+        write(WvsContext.temporaryStatSet(setStats));
         getField().broadcastPacket(UserRemote.temporaryStatSet(this, setStats));
-    }
-
-    public void resetTemporaryStat(CharacterTemporaryStat cts) {
-        resetTemporaryStat(Set.of(cts));
-    }
-
-    public void resetTemporaryStat(Set<CharacterTemporaryStat> resetStats) {
-        write(WvsContext.temporaryStatReset(resetStats));
-        getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats));
     }
 
 

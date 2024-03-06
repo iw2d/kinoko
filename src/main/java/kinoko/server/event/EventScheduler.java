@@ -1,8 +1,13 @@
 package kinoko.server.event;
 
+import kinoko.world.skill.SkillProcessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.concurrent.*;
 
 public final class EventScheduler {
+    private static final Logger log = LogManager.getLogger(SkillProcessor.class);
     private static ScheduledExecutorService scheduler;
     private static ExecutorService executor;
 
@@ -12,18 +17,29 @@ public final class EventScheduler {
     }
 
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay) {
-        return scheduler.schedule(() -> executor.submit(runnable), delay, TimeUnit.MILLISECONDS);
+        return scheduler.schedule(() -> submit(runnable), delay, TimeUnit.MILLISECONDS);
     }
 
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay, TimeUnit timeUnit) {
-        return scheduler.schedule(() -> executor.submit(runnable), delay, timeUnit);
+        return scheduler.schedule(() -> submit(runnable), delay, timeUnit);
     }
 
     public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay) {
-        return scheduler.scheduleWithFixedDelay(() -> executor.submit(runnable), initialDelay, delay, TimeUnit.MILLISECONDS);
+        return scheduler.scheduleWithFixedDelay(() -> submit(runnable), initialDelay, delay, TimeUnit.MILLISECONDS);
     }
 
     public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
-        return scheduler.scheduleWithFixedDelay(() -> executor.submit(runnable), initialDelay, delay, timeUnit);
+        return scheduler.scheduleWithFixedDelay(() -> submit(runnable), initialDelay, delay, timeUnit);
+    }
+
+    private static void submit(Runnable runnable) {
+        executor.submit(() -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                log.error("Exception caught while executing scheduled event", e);
+                e.printStackTrace();
+            }
+        });
     }
 }

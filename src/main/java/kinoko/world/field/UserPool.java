@@ -1,5 +1,7 @@
 package kinoko.world.field;
 
+import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.WvsContext;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.life.Life;
@@ -7,8 +9,14 @@ import kinoko.world.life.mob.Mob;
 import kinoko.world.life.npc.Npc;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public final class UserPool extends FieldObjectPool<User> {
@@ -21,9 +29,8 @@ public final class UserPool extends FieldObjectPool<User> {
         lock.lock();
         try {
             // Update user client with existing users in pool
-            final var iter = objects.values().iterator();
-            while (iter.hasNext()) {
-                try (var locked = iter.next().acquire()) {
+            for (User existingUser : getObjectsUnsafe()) {
+                try (var locked = existingUser.acquire()) {
                     user.write(locked.get().enterFieldPacket());
                 }
             }
@@ -97,6 +104,37 @@ public final class UserPool extends FieldObjectPool<User> {
             field.getMobPool().forEach((Consumer<Mob>) controllerHandler);
             field.getNpcPool().forEach((Consumer<Npc>) controllerHandler);
             return true;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void expireTemporaryStat(Instant now) {
+        lock.lock();
+        try {
+            for (User user : getObjectsUnsafe()) {
+                try (var locked = user.acquire()) {
+                    final Set<CharacterTemporaryStat> removed = new HashSet<>();
+                    final var iter = user.getSecondaryStat().getTemporaryStats().entrySet().iterator();
+                    while (iter.hasNext()) {
+                        final Map.Entry<CharacterTemporaryStat, TemporaryStatOption> entry = iter.next();
+                        final CharacterTemporaryStat cts = entry.getKey();
+                        final TemporaryStatOption option = entry.getValue();
+                        // Check temporary stat expire time and remove cts
+                        if (now.isBefore(option.getExpireTime())) {
+                            continue;
+                        }
+                        iter.remove();
+                        removed.add(cts);
+                    }
+                    // Update users if required
+                    if (removed.isEmpty()) {
+                        return;
+                    }
+                    user.write(WvsContext.temporaryStatReset(removed));
+                    broadcastPacketUnsafe(UserRemote.temporaryStatReset(user, removed), user);
+                }
+            }
         } finally {
             lock.unlock();
         }

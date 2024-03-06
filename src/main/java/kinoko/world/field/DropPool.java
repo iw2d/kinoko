@@ -51,17 +51,18 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
     }
 
-    public void expireDrops() {
+    public void expireDrops(Instant now) {
         lock.lock();
         try {
-            final Instant now = Instant.now();
             final var iter = objects.values().iterator();
             while (iter.hasNext()) {
                 final Drop drop = iter.next();
-                if (drop.getExpireTime().isBefore(now)) {
-                    iter.remove();
-                    field.broadcastPacket(DropPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
+                // Check drop expire time and remove drop
+                if (now.isBefore(drop.getExpireTime())) {
+                    continue;
                 }
+                iter.remove();
+                field.broadcastPacket(DropPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
             }
         } finally {
             lock.unlock();

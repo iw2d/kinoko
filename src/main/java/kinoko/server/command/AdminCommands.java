@@ -38,6 +38,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
+        System.out.println(user.getSecondaryStat().getTemporaryStats());
         user.dispose();
     }
 

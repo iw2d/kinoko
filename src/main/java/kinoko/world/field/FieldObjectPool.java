@@ -29,7 +29,7 @@ public abstract class FieldObjectPool<T extends FieldObject> {
     public void forEach(Consumer<T> consumer) {
         lock.lock();
         try {
-            objects.values().forEach(consumer);
+            getObjectsUnsafe().forEach(consumer);
         } finally {
             lock.unlock();
         }

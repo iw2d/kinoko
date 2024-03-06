@@ -88,7 +88,6 @@ public final class SkillHandler {
         }
         if (skill.skillId == Thief.SHADOW_STARS) {
             skill.spiritJavelinItemId = inPacket.decodeInt(); // nSpiritJavelinItemID
-            System.out.println(skill.spiritJavelinItemId);
         }
         try (var locked = user.acquire()) {
             SkillProcessor.processSkill(user, skill, inPacket);

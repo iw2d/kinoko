@@ -60,7 +60,7 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket temporaryStatSet(SecondaryStat ss, Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
+    public static OutPacket temporaryStatSet(Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
         SecondaryStat.encodeForLocal(outPacket, setStats);
         outPacket.encodeShort(0); // tDelay

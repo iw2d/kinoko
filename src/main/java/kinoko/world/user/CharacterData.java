@@ -235,13 +235,14 @@ public final class CharacterData implements Encodable {
             final Instant now = Instant.now();
             final var iter = skillManager.getSkillCooltimes().entrySet().iterator();
             while (iter.hasNext()) {
-                final var entry = iter.next();
+                final Map.Entry<Integer, Instant> entry = iter.next();
+                final int skillId = entry.getKey();
                 final Instant end = entry.getValue();
                 if (now.isAfter(end)) {
                     iter.remove();
                     continue;
                 }
-                cooltimes.put(entry.getKey(), Duration.between(now, end).getSeconds());
+                cooltimes.put(skillId, Duration.between(now, end).getSeconds());
             }
             outPacket.encodeShort(cooltimes.size());
             for (var entry : cooltimes.entrySet()) {

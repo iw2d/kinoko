@@ -40,7 +40,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         }
     }
 
-    public void expireReactors() {
+    public void expireReactors(Instant now) {
         lock.lock();
         try {
             final var iter = hitReactors.entrySet().iterator();
@@ -49,7 +49,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
                 try (var lockedReactor = entry.getKey().acquire()) {
                     final Reactor reactor = lockedReactor.get();
                     // Check reactor time and reset reactor
-                    if (Instant.now().isBefore(entry.getValue())) {
+                    if (now.isBefore(entry.getValue())) {
                         continue;
                     }
                     iter.remove();
