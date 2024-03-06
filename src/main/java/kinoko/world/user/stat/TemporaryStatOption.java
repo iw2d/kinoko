@@ -15,7 +15,7 @@ public class TemporaryStatOption implements Encodable {
 
     public Instant startTime = Instant.now();
     public DiceInfo diceInfo = DiceInfo.DEFAULT;
-    public ScheduledFuture<?> statFuture;
+    public ScheduledFuture<?> statFuture = null;
 
     public Instant getExpireTime() {
         return startTime.plus(tOption, ChronoUnit.MILLIS);

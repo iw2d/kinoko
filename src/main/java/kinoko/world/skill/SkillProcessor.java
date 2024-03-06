@@ -99,9 +99,10 @@ public final class SkillProcessor {
                 user.getSkillManager().setSkillCooltime(attack.skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
                 user.write(UserLocal.skillCooltimeSet(attack.skillId, cooltime));
             }
-            // Skill-specific handling
-            JobHandler.handleAttack(user, attack, si);
         }
+
+        // Skill specific handling
+        JobHandler.handleAttack(user, attack);
 
         // Process attack damage
         final Field field = user.getField();
@@ -186,7 +187,7 @@ public final class SkillProcessor {
         }
 
         // Skill-specific handling
-        JobHandler.handleSkill(user, skill, si);
+        JobHandler.handleSkill(user, skill, inPacket);
         user.write(WvsContext.skillUseResult());
     }
 
@@ -197,6 +198,7 @@ public final class SkillProcessor {
         if (hitInfo.damage > 0) {
             user.addHp(-hitInfo.damage);
         }
+        // TODO POWERGUARD
         user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
     }
 }

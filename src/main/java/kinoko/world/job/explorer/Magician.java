@@ -1,6 +1,6 @@
 package kinoko.world.job.explorer;
 
-import kinoko.provider.skill.SkillInfo;
+import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
@@ -105,14 +105,14 @@ public final class Magician {
     public static final int HEROS_WILL_BISH = 2321009;
     private static final Logger log = LogManager.getLogger(JobHandler.class);
 
-    public static void handleAttack(User user, Attack attack, SkillInfo si) {
+    public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;
         final int slv = attack.slv;
         switch (skillId) {
         }
     }
 
-    public static void handleSkill(User user, Skill skill, SkillInfo si) {
+    public static void handleSkill(User user, Skill skill, InPacket inPacket) {
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

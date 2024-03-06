@@ -1,5 +1,9 @@
 package kinoko.world.skill;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,10 +14,6 @@ public final class SkillManager {
 
     public Set<SkillRecord> getSkillRecords() {
         return skillRecords.values().stream().collect(Collectors.toUnmodifiableSet());
-    }
-
-    public Map<Integer, Instant> getSkillCooltimes() {
-        return skillCooltimes;
     }
 
     public Optional<SkillRecord> getSkill(int skillId) {
@@ -31,6 +31,20 @@ public final class SkillManager {
         }
         return skillRecord.getSkillLevel();
     }
+
+    public int getSkillStatValue(int skillId, SkillStat stat) {
+        final int slv = getSkillLevel(skillId);
+        if (slv == 0) {
+            return 0;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        return skillInfoResult.map(skillInfo -> skillInfo.getValue(stat, slv)).orElse(0);
+    }
+
+    public Map<Integer, Instant> getSkillCooltimes() {
+        return skillCooltimes;
+    }
+
 
     public boolean hasSkillCooltime(int skillId) {
         final Instant nextAvailable = skillCooltimes.get(skillId);

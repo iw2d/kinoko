@@ -404,6 +404,30 @@ public final class AdminCommands {
         }
     }
 
+    @Command("hp")
+    public static void hp(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %shp <new hp>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int newHp = Integer.parseInt(args[1]);
+        try (var locked = user.acquire()) {
+            user.setHp(newHp);
+        }
+    }
+
+    @Command("mp")
+    public static void mp(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %smp <new mp>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int newMp = Integer.parseInt(args[1]);
+        try (var locked = user.acquire()) {
+            user.setMp(newMp);
+        }
+    }
+
     @Command("level")
     public static void level(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
