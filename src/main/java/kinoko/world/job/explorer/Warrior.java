@@ -1,10 +1,13 @@
 package kinoko.world.job.explorer;
 
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,6 +113,19 @@ public final class Warrior {
     }
 
     public static void handleSkill(User user, Skill skill, SkillInfo si) {
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        final TemporaryStatOption o1 = new TemporaryStatOption();
+        switch (skillId) {
+            // WARRIOR
+            case IRON_BODY:
+                o1.nOption = si.getValue(SkillStat.pdd, slv);
+                o1.rOption = skillId;
+                o1.tOption = si.getDuration(slv);
+                user.setTemporaryStat(CharacterTemporaryStat.PDD, o1);
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

@@ -50,7 +50,7 @@ public final class ItemHandler {
             }
             user.write(WvsContext.inventoryOperation(consumeItemResult.get(), true));
 
-            // Apply stat change
+            // Apply stat change, TODO: NL/NW alchemist and Citizen potion mastery
             for (var entry : ii.getItemSpecs().entrySet()) {
                 switch (entry.getKey()) {
                     case hp -> {
@@ -58,6 +58,12 @@ public final class ItemHandler {
                     }
                     case mp -> {
                         user.addMp(ii.getSpec(ItemSpecType.mp));
+                    }
+                    case hpR -> {
+                        user.addHp(user.getMaxHp() * ii.getSpec(ItemSpecType.hpR) / 100);
+                    }
+                    case mpR -> {
+                        user.addMp(user.getMaxMp() * ii.getSpec(ItemSpecType.mpR) / 100);
                     }
                     default -> {
                         log.error("Unhandled item spec type : {}", entry.getKey().name());

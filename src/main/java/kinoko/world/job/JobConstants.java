@@ -1,5 +1,8 @@
 package kinoko.world.job;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public final class JobConstants {
     public static int getJobLevel(int jobId) {
         if (jobId % 100 == 0 || jobId == 2001) {
@@ -96,5 +99,34 @@ public final class JobConstants {
 
     public static boolean isManagerJob(int jobId) {
         return jobId % 1000 / 100 == 8;
+    }
+
+    public static Set<Integer> getSkillRootFromJob(int jobId) {
+        final Set<Integer> jobs = new HashSet<>();
+        if (Job.getById(jobId) == null) {
+            return jobs;
+        }
+        final int jobCategory = getJobCategory(jobId);
+        if (jobCategory != 0) {
+            final int firstJob = 100 * (jobCategory + 10 * (jobId / 1000));
+            jobs.add(firstJob);
+            final int secondJobType = jobId % 100 / 10;
+            if (secondJobType != 0) {
+                final int secondJob = firstJob + 10 * secondJobType;
+                jobs.add(secondJob);
+                for (int i = 1; i <= 8; i++) {
+                    if (jobId % 10 < i) {
+                        break;
+                    }
+                    jobs.add(secondJob + i);
+                }
+            }
+        }
+        if (isEvanJob(jobId)) {
+            jobs.add(2001);
+        } else {
+            jobs.add(1000 * (jobId / 1000));
+        }
+        return jobs;
     }
 }

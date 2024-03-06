@@ -75,13 +75,13 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket changeSkillRecordResult(SkillRecord skillRecord) {
-        return changeSkillRecordResult(List.of(skillRecord));
+    public static OutPacket changeSkillRecordResult(SkillRecord skillRecord, boolean exclRequest) {
+        return changeSkillRecordResult(Set.of(skillRecord), exclRequest);
     }
 
-    public static OutPacket changeSkillRecordResult(List<SkillRecord> skillRecords) {
+    public static OutPacket changeSkillRecordResult(Set<SkillRecord> skillRecords, boolean exclRequest) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHANGE_SKILL_RECORD_RESULT);
-        outPacket.encodeByte(true); // bool -> bExclRequestSent = 0
+        outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeShort(skillRecords.size());
         for (SkillRecord sr : skillRecords) {
             outPacket.encodeInt(sr.getSkillId()); // nSkillID

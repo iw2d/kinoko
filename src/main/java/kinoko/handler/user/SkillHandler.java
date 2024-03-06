@@ -10,10 +10,12 @@ import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
+import java.util.Set;
 
 public final class SkillHandler {
     private static final Logger log = LogManager.getLogger(SkillHandler.class);
@@ -70,7 +72,7 @@ public final class SkillHandler {
             }
             // Add skill point and update client
             skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
-            user.write(WvsContext.changeSkillRecordResult(skillRecord));
+            user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
             user.updatePassiveSkillData();
             user.validateStat();
         }
@@ -97,7 +99,14 @@ public final class SkillHandler {
     @Handler(InHeader.USER_SKILL_CANCEL_REQUEST)
     public static void handleUserSkillCancelRequest(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
-        user.getField().broadcastPacket(UserRemote.skillCancel(user, skillId), user);
+        try (var locked = user.acquire()) {
+            final Set<CharacterTemporaryStat> resetStats = locked.get().getSecondaryStat().resetTemporaryStat(skillId);
+            if (!resetStats.isEmpty()) {
+                user.validateStat();
+                user.write(WvsContext.temporaryStatReset(resetStats));
+                user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);
+            }
+        }
     }
 
     @Handler(InHeader.USER_SKILL_PREPARE_REQUEST)

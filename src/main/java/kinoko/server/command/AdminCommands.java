@@ -25,6 +25,7 @@ import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.job.Job;
+import kinoko.world.job.JobConstants;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobAppearType;
 import kinoko.world.skill.SkillManager;
@@ -53,6 +54,7 @@ public final class AdminCommands {
     @Command("info")
     public static void info(User user, String[] args) {
         final Field field = user.getField();
+        user.write(WvsContext.message(Message.system("HP : %d / %d, MP : %d / %d", user.getHp(), user.getMaxHp(), user.getMp(), user.getMaxMp())));
         user.write(WvsContext.message(Message.system("Field ID : %d", field.getFieldId())));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
@@ -416,16 +418,8 @@ public final class AdminCommands {
         try (var locked = user.acquire()) {
             final CharacterStat cs = user.getCharacterStat();
             cs.setLevel((short) level);
-            cs.setMaxHp(50000);
-            cs.setMaxMp(50000);
             user.validateStat();
-            user.write(WvsContext.statChanged(Map.of(
-                    Stat.LEVEL, (byte) cs.getLevel(),
-                    Stat.MAX_HP, cs.getMaxHp(),
-                    Stat.MAX_MP, cs.getMaxMp()
-            ), true));
-            user.setHp(user.getMaxHp());
-            user.setMp(user.getMaxMp());
+            user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
         }
     }
 
@@ -449,11 +443,12 @@ public final class AdminCommands {
 
     @Command("skill")
     public static void skill(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %sskill <skill id>", ServerConfig.COMMAND_PREFIX)));
+        if (args.length != 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2])) {
+            user.write(WvsContext.message(Message.system("Syntax : %sskill <skill id> <skill level>", ServerConfig.COMMAND_PREFIX)));
             return;
         }
         final int skillId = Integer.parseInt(args[1]);
+        final int slv = Integer.parseInt(args[2]);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
             user.write(WvsContext.message(Message.system("Could not find skill : {}", skillId)));
@@ -461,12 +456,62 @@ public final class AdminCommands {
         }
         final SkillInfo si = skillInfoResult.get();
         final SkillRecord skillRecord = si.createRecord();
-        skillRecord.setSkillLevel(si.getMaxLevel());
+        skillRecord.setSkillLevel(Math.min(slv, si.getMaxLevel()));
         skillRecord.setMasterLevel(si.getMaxLevel());
         try (var locked = user.acquire()) {
             final SkillManager sm = user.getSkillManager();
             sm.addSkill(skillRecord);
-            user.write(WvsContext.changeSkillRecordResult(skillRecord));
+            user.updatePassiveSkillData();
+            user.validateStat();
+            user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
+        }
+    }
+
+    @Command("max")
+    public static void max(User user, String[] args) {
+        try (var locked = user.acquire()) {
+            // Set stats
+            final CharacterStat cs = user.getCharacterStat();
+            cs.setLevel((short) 200);
+            cs.setBaseStr((short) 999);
+            cs.setBaseDex((short) 999);
+            cs.setBaseInt((short) 999);
+            cs.setBaseLuk((short) 999);
+            cs.setMaxHp(50000);
+            cs.setMaxMp(50000);
+            cs.setExp(0);
+            user.validateStat();
+            user.write(WvsContext.statChanged(Map.of(
+                    Stat.LEVEL, (byte) cs.getLevel(),
+                    Stat.STR, cs.getBaseStr(),
+                    Stat.DEX, cs.getBaseDex(),
+                    Stat.INT, cs.getBaseInt(),
+                    Stat.LUK, cs.getBaseLuk(),
+                    Stat.MAX_HP, cs.getMaxHp(),
+                    Stat.MAX_MP, cs.getMaxMp(),
+                    Stat.EXP, cs.getExp()
+            ), true));
+
+            // Add skills
+            final SkillManager sm = user.getSkillManager();
+            final Set<SkillRecord> skillRecords = new HashSet<>();
+            for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
+                final Job job = Job.getById(skillRoot);
+                for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                    final SkillRecord skillRecord = si.createRecord();
+                    skillRecord.setSkillLevel(si.getMaxLevel());
+                    skillRecord.setMasterLevel(si.getMaxLevel());
+                    sm.addSkill(skillRecord);
+                    skillRecords.add(skillRecord);
+                }
+            }
+            user.updatePassiveSkillData();
+            user.validateStat();
+            user.write(WvsContext.changeSkillRecordResult(skillRecords, true));
+
+            // Heal
+            user.setHp(user.getMaxHp());
+            user.setMp(user.getMaxMp());
         }
     }
 }

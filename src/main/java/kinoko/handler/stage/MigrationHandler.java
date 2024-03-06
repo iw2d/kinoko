@@ -125,6 +125,7 @@ public final class MigrationHandler {
             }
 
             // Initialize user stats
+            user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.setGender(user.getGender()));
 

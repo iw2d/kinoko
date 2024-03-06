@@ -127,6 +127,23 @@ public final class SecondaryStat {
         return getOption(CharacterTemporaryStat.Dice).diceInfo;
     }
 
+    public Set<CharacterTemporaryStat> resetTemporaryStat(int skillId) {
+        final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
+        final var iter = getTemporaryStats().entrySet().iterator();
+        while (iter.hasNext()) {
+            final Map.Entry<CharacterTemporaryStat, TemporaryStatOption> entry = iter.next();
+            final CharacterTemporaryStat cts = entry.getKey();
+            final TemporaryStatOption option = entry.getValue();
+            // Check skill reason and remove cts
+            if (option.rOption != skillId) {
+                continue;
+            }
+            iter.remove();
+            resetStats.add(cts);
+        }
+        return resetStats;
+    }
+
     public Set<CharacterTemporaryStat> expireTemporaryStat(Instant now) {
         final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
         final var iter = getTemporaryStats().entrySet().iterator();
