@@ -1,10 +1,7 @@
 package kinoko.world.skill;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class SkillManager {
@@ -42,5 +39,22 @@ public final class SkillManager {
 
     public void setSkillCooltime(int skillId, Instant nextAvailable) {
         skillCooltimes.put(skillId, nextAvailable);
+    }
+
+    public Set<Integer> expireSkillCooltime(Instant now) {
+        final Set<Integer> resetCooltimes = new HashSet<>();
+        final var iter = getSkillCooltimes().entrySet().iterator();
+        while (iter.hasNext()) {
+            final Map.Entry<Integer, Instant> entry = iter.next();
+            final int skillId = entry.getKey();
+            final Instant nextAvailable = entry.getValue();
+            // Check skill cooltime and remove
+            if (now.isBefore(nextAvailable)) {
+                continue;
+            }
+            iter.remove();
+            resetCooltimes.add(skillId);
+        }
+        return resetCooltimes;
     }
 }

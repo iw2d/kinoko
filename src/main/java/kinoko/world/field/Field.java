@@ -135,7 +135,7 @@ public final class Field {
             nextReactorExpire = now.plus(GameConstants.REACTOR_EXPIRE_INTERVAL, ChronoUnit.SECONDS);
             reactorPool.expireReactors(now);
         }
-        userPool.expireTemporaryStat(now);
+        userPool.updateUsers(now);
     }
 
 

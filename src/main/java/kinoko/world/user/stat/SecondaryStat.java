@@ -25,10 +25,8 @@ import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 
 public final class SecondaryStat {
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new EnumMap<>(CharacterTemporaryStat.class);
@@ -127,6 +125,23 @@ public final class SecondaryStat {
 
     public DiceInfo getDiceInfo() {
         return getOption(CharacterTemporaryStat.Dice).diceInfo;
+    }
+
+    public Set<CharacterTemporaryStat> expireTemporaryStat(Instant now) {
+        final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
+        final var iter = getTemporaryStats().entrySet().iterator();
+        while (iter.hasNext()) {
+            final Map.Entry<CharacterTemporaryStat, TemporaryStatOption> entry = iter.next();
+            final CharacterTemporaryStat cts = entry.getKey();
+            final TemporaryStatOption option = entry.getValue();
+            // Check temporary stat expire time and remove cts
+            if (now.isBefore(option.getExpireTime())) {
+                continue;
+            }
+            iter.remove();
+            resetStats.add(cts);
+        }
+        return resetStats;
     }
 
 

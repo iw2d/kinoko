@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.packet.OutPacket;
@@ -10,11 +11,8 @@ import kinoko.world.life.npc.Npc;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -109,30 +107,23 @@ public final class UserPool extends FieldObjectPool<User> {
         }
     }
 
-    public void expireTemporaryStat(Instant now) {
+    public void updateUsers(Instant now) {
         lock.lock();
         try {
             for (User user : getObjectsUnsafe()) {
                 try (var locked = user.acquire()) {
-                    final Set<CharacterTemporaryStat> removed = new HashSet<>();
-                    final var iter = user.getSecondaryStat().getTemporaryStats().entrySet().iterator();
-                    while (iter.hasNext()) {
-                        final Map.Entry<CharacterTemporaryStat, TemporaryStatOption> entry = iter.next();
-                        final CharacterTemporaryStat cts = entry.getKey();
-                        final TemporaryStatOption option = entry.getValue();
-                        // Check temporary stat expire time and remove cts
-                        if (now.isBefore(option.getExpireTime())) {
-                            continue;
-                        }
-                        iter.remove();
-                        removed.add(cts);
+                    // Expire temporary stat
+                    final Set<CharacterTemporaryStat> resetStats = locked.get().getSecondaryStat().expireTemporaryStat(now);
+                    if (!resetStats.isEmpty()) {
+                        user.validateStat();
+                        user.write(WvsContext.temporaryStatReset(resetStats));
+                        broadcastPacketUnsafe(UserRemote.temporaryStatReset(user, resetStats), user);
                     }
-                    // Update users if required
-                    if (removed.isEmpty()) {
-                        return;
+                    // Expire skill cooltimes
+                    final Set<Integer> resetCooltimes = locked.get().getSkillManager().expireSkillCooltime(now);
+                    for (int skillId : resetCooltimes) {
+                        user.write(UserLocal.skillCooltimeSet(skillId, 0));
                     }
-                    user.write(WvsContext.temporaryStatReset(removed));
-                    broadcastPacketUnsafe(UserRemote.temporaryStatReset(user, removed), user);
                 }
             }
         } finally {
