@@ -309,7 +309,7 @@ public final class AdminCommands {
         user.warp(targetField, portalResult.get(), false, false);
     }
 
-    @Command("mob")
+    @Command({"mob", "spawn"})
     public static void mob(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
             user.write(WvsContext.message(Message.system("Syntax : %smob <mob template ID to spawn>", ServerConfig.COMMAND_PREFIX)));
@@ -375,18 +375,14 @@ public final class AdminCommands {
     @Command({ "meso", "money" })
     public static void meso(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %smeso <mesos to add>", ServerConfig.COMMAND_PREFIX)));
+            user.write(WvsContext.message(Message.system("Syntax : %smeso <new mesos>", ServerConfig.COMMAND_PREFIX)));
             return;
         }
         final int money = Integer.parseInt(args[1]);
         try (var locked = user.acquire()) {
             final InventoryManager im = locked.get().getInventoryManager();
-            if (im.addMoney(money)) {
-                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                user.write(WvsContext.message(Message.incMoney(money)));
-            } else {
-                user.write(WvsContext.message(Message.system("Failed to add %d mesos", money)));
-            }
+            im.setMoney(money);
+            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
         }
     }
 
@@ -491,16 +487,26 @@ public final class AdminCommands {
         }
     }
 
+    @Command("ignorecd")
+    public static void ignoreCd(User user, String[] args) {
+        try (var locked = user.acquire()) {
+            final SkillManager sm = locked.get().getSkillManager();
+            final boolean state = sm.isIgnoreCooltime();
+            sm.setIgnoreCooltime(!state);
+            user.write(WvsContext.message(Message.system("Skill cooldowns are now %s", state ? "enabled" : "disabled")));
+        }
+    }
+
     @Command("max")
     public static void max(User user, String[] args) {
         try (var locked = user.acquire()) {
             // Set stats
             final CharacterStat cs = user.getCharacterStat();
             cs.setLevel((short) 200);
-            cs.setBaseStr((short) 999);
-            cs.setBaseDex((short) 999);
-            cs.setBaseInt((short) 999);
-            cs.setBaseLuk((short) 999);
+            cs.setBaseStr((short) 100);
+            cs.setBaseDex((short) 100);
+            cs.setBaseInt((short) 100);
+            cs.setBaseLuk((short) 100);
             cs.setMaxHp(50000);
             cs.setMaxMp(50000);
             cs.setExp(0);
@@ -516,8 +522,18 @@ public final class AdminCommands {
                     Stat.EXP, cs.getExp()
             ), true));
 
-            // Add skills
+            // Reset skills
             final SkillManager sm = user.getSkillManager();
+            final Set<SkillRecord> removedRecords = new HashSet<>();
+            for (SkillRecord skillRecord : sm.getSkillRecords()) {
+                skillRecord.setSkillLevel(0);
+                skillRecord.setMasterLevel(0);
+                removedRecords.add(skillRecord);
+            }
+            user.write(WvsContext.changeSkillRecordResult(removedRecords, true));
+
+
+            // Add skills
             final Set<SkillRecord> skillRecords = new HashSet<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
                 final Job job = Job.getById(skillRoot);

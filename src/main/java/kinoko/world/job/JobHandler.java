@@ -4,7 +4,6 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
-import kinoko.util.Util;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
 import kinoko.world.job.legend.Aran;
@@ -13,48 +12,21 @@ import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
-import kinoko.world.skill.*;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class JobHandler {
     private static final Logger log = LogManager.getLogger(JobHandler.class);
 
     public static void handleAttack(User user, Attack attack) {
-        // CTS updates on attack
-        final SkillManager sm = user.getSkillManager();
-        final Map<CharacterTemporaryStat, TemporaryStatOption> updateStats = new HashMap<>();
-        for (var entry : user.getSecondaryStat().getTemporaryStats().entrySet()) {
-            final CharacterTemporaryStat cts = entry.getKey();
-            final TemporaryStatOption option = entry.getValue();
-            switch (cts) {
-                case ComboCounter -> {
-                    if (attack.getMobCount() > 0) {
-                        final int maxCombo = 1 + Math.max(
-                                sm.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
-                                sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
-                        );
-                        final int doubleProp = sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
-                        final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
-                        if (newCombo > option.nOption) {
-                            updateStats.put(cts, option.update(newCombo));
-                        }
-
-                    }
-                }
-            }
-        }
-        if (!updateStats.isEmpty()) {
-            user.setTemporaryStat(updateStats);
-        }
-
-        // Class specific skill handling
         final int skillRoot = SkillConstants.getSkillRoot(attack.skillId);
         switch (Job.getById(skillRoot)) {
             case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
@@ -123,6 +95,13 @@ public final class JobHandler {
                         CharacterTemporaryStat.Sneak, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
                 ));
                 return;
+            case Beginner.ECHO_OF_HERO:
+            case Noblesse.ECHO_OF_HERO:
+            case Aran.ECHO_OF_HERO:
+            case Evan.HEROS_ECHO:
+            case Citizen.HEROS_ECHO:
+                user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
 
             // OTHER COMMON SKILLS -------------------------------------------------------------------------------------
             case Warrior.FIRE_CHARGE:
@@ -133,6 +112,15 @@ public final class JobHandler {
             case ThunderBreaker.LIGHTNING_CHARGE:
             case Aran.SNOW_CHARGE:
                 user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case Thief.DARK_SIGHT:
+            case NightWalker.DARK_SIGHT:
+                user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case Thief.FLASH_JUMP_NL:
+            case Thief.FLASH_JUMP_SHAD:
+            case Thief.FLASH_JUMP_DB:
+            case NightWalker.FLASH_JUMP:
                 return;
 
             // WEAPON BOOSTER ------------------------------------------------------------------------------------------
@@ -264,8 +252,5 @@ public final class JobHandler {
                 }
         }
         log.error("Unhandled skill {}", skill.skillId);
-    }
-
-    public static void handleHit(User user, HitInfo hitInfo) {
     }
 }

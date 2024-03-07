@@ -170,9 +170,19 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void damage(User attacker, int totalDamage) {
+        // Process damage
         final int actualDamage = Math.min(getHp(), totalDamage);
         setHp(getHp() - actualDamage);
         damageDone.put(attacker.getCharacterId(), damageDone.getOrDefault(attacker.getCharacterId(), 0) + actualDamage);
+        // Show mob hp indicator
+        final double percentage = (double) getHp() / getMaxHp();
+        attacker.write(MobPacket.hpIndicator(this, (int) (percentage * 100)));
+        // Handle death
+        if (getHp() <= 0) {
+            getField().getMobPool().removeMob(this);
+            distributeExp();
+            dropRewards(attacker);
+        }
     }
 
     public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {

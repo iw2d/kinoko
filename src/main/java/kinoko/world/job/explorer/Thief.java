@@ -1,10 +1,15 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -113,6 +118,18 @@ public final class Thief {
     }
 
     public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        switch (skillId) {
+            // COMMON
+
+            // SHADOWER
+            case MESO_GUARD:
+                user.setTemporaryStat(CharacterTemporaryStat.MesoGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

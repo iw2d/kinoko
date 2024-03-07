@@ -548,10 +548,13 @@ public enum OutHeader {
             MOB_CHANGE_CONTROLLER,
             MOB_MOVE,
             MOB_CTRL_ACK,
+            MOB_HP_INDICATOR,
             NPC_ENTER_FIELD,
             NPC_LEAVE_FIELD,
             NPC_CHANGE_CONTROLLER,
-            NPC_MOVE
+            NPC_MOVE,
+            DROP_ENTER_FIELD,
+            DROP_LEAVE_FIELD
     );
 
     static {

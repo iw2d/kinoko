@@ -16,12 +16,13 @@ public final class MobTemplate {
     private final int maxMp;
     private final int hpRecovery;
     private final int mpRecovery;
+    private final int fixedDamage;
     private final boolean boss;
     private final boolean damagedByMob;
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
 
-    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, boolean boss, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
+    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, int fixedDamage, boolean boss, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -29,6 +30,7 @@ public final class MobTemplate {
         this.maxMp = maxMp;
         this.hpRecovery = hpRecovery;
         this.mpRecovery = mpRecovery;
+        this.fixedDamage = fixedDamage;
         this.boss = boss;
         this.damagedByMob = damagedByMob;
         this.attacks = attacks;
@@ -63,6 +65,10 @@ public final class MobTemplate {
         return mpRecovery;
     }
 
+    public int getFixedDamage() {
+        return fixedDamage;
+    }
+
     public boolean isBoss() {
         return boss;
     }
@@ -87,6 +93,7 @@ public final class MobTemplate {
                 "exp=" + exp + ", " +
                 "maxHp=" + maxHp + ", " +
                 "maxMp=" + maxMp + ", " +
+                "fixedDamage=" + fixedDamage + ", " +
                 "hpRecovery=" + hpRecovery + ", " +
                 "mpRecovery=" + mpRecovery + ", " +
                 "isDamagedByMob=" + damagedByMob + ", " +
@@ -100,6 +107,7 @@ public final class MobTemplate {
         int maxMP = 0;
         int hpRecovery = 0;
         int mpRecovery = 0;
+        int fixedDamage = 0;
         boolean boss = false;
         boolean damagedByMob = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
@@ -159,6 +167,9 @@ public final class MobTemplate {
                 case "mpRecovery" -> {
                     mpRecovery = WzProvider.getInteger(infoEntry.getValue());
                 }
+                case "fixedDamage" -> {
+                    fixedDamage = WzProvider.getInteger(infoEntry.getValue());
+                }
                 case "boss" -> {
                     boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
@@ -190,6 +201,6 @@ public final class MobTemplate {
                 }
             }
         }
-        return new MobTemplate(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, boss, damagedByMob, attacks, skills);
+        return new MobTemplate(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, fixedDamage, boss, damagedByMob, attacks, skills);
     }
 }

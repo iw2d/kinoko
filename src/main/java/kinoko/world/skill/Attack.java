@@ -1,9 +1,13 @@
 package kinoko.world.skill;
 
 import kinoko.server.header.OutHeader;
+import kinoko.world.field.Field;
+import kinoko.world.life.mob.Mob;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public final class Attack {
     private final List<AttackInfo> attackInfo = new ArrayList<>();
@@ -89,5 +93,21 @@ public final class Attack {
 
     public boolean isLeft() {
         return (actionAndDir & 0x8000) != 0;
+    }
+
+
+    public static void forEachMob(Attack attack, Field field, Consumer<Mob> consumer) {
+        for (AttackInfo ai : attack.getAttackInfo()) {
+            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+            if (mobResult.isEmpty()) {
+                continue;
+            }
+            try (var lockedMob = mobResult.get().acquire()) {
+                final Mob mob = lockedMob.get();
+                if (mob.getHp() > 0) {
+                    consumer.accept(mob);
+                }
+            }
+        }
     }
 }

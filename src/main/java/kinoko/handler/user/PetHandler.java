@@ -291,13 +291,13 @@ public final class PetHandler {
             // Add drop to inventory
             if (drop.isMoney()) {
                 if (im.addMoney(drop.getMoney())) {
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
                     user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
                 }
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
                 if (addItemResult.isPresent()) {
-                    user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                    user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
                     user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
                 }
             }

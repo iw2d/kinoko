@@ -1,10 +1,14 @@
 package kinoko.world.job.resistance;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,6 +65,16 @@ public final class BattleMage {
     }
 
     public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        switch (skillId) {
+            case BLUE_AURA:
+            case ADVANCED_BLUE_AURA:
+                user.setTemporaryStat(CharacterTemporaryStat.BlueAura, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

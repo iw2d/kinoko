@@ -6,11 +6,9 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.job.JobHandler;
-import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobStatOption;
 import kinoko.world.life.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
-import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.Skill;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -19,7 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-import java.util.Optional;
 
 public final class Warrior {
     // WARRIOR
@@ -121,39 +118,26 @@ public final class Warrior {
         final int slv = attack.slv;
 
         switch (skillId) {
+            // HERO
             case PANIC:
                 resetComboCounter(user);
-                for (AttackInfo ai : attack.getAttackInfo()) {
-                    final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
-                    if (mobResult.isEmpty()) {
-                        continue;
+                Attack.forEachMob(attack, user.getField(), (mob) -> {
+                    if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        return;
                     }
-                    try (var lockedMob = mobResult.get().acquire()) {
-                        final Mob mob = lockedMob.get();
-                        if (mob.isBoss() || mob.getHp() <= 0 || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                            continue;
-                        }
-                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                    }
-                }
+                    mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                });
                 return;
             case COMA:
                 resetComboCounter(user);
                 // Fallthrough intended
             case SHOUT:
-                for (AttackInfo ai : attack.getAttackInfo()) {
-                    final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
-                    if (mobResult.isEmpty()) {
-                        continue;
+                Attack.forEachMob(attack, user.getField(), (mob) -> {
+                    if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        return;
                     }
-                    try (var lockedMob = mobResult.get().acquire()) {
-                        final Mob mob = lockedMob.get();
-                        if (mob.isBoss() || mob.getHp() <= 0 || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                            continue;
-                        }
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                }
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                });
         }
     }
 
@@ -174,21 +158,12 @@ public final class Warrior {
             case MAGIC_CRASH_HERO:
             case MAGIC_CRASH_PALADIN:
             case MAGIC_CRASH_DRK:
-                final int size = inPacket.decodeByte();
-                for (int i = 0; i < size; i++) {
-                    final int mobId = inPacket.decodeInt();
-                    final Optional<Mob> mobResult = user.getField().getMobPool().getById(mobId);
-                    if (mobResult.isEmpty()) {
-                        continue;
+                Skill.forEachMob(inPacket, user.getField(), (mob) -> {
+                    if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        return;
                     }
-                    try (var lockedMob = mobResult.get().acquire()) {
-                        final Mob mob = lockedMob.get();
-                        if (mob.isBoss() || mob.getHp() <= 0 || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                            continue;
-                        }
-                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                }
+                    mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                });
                 return;
             case POWER_STANCE_HERO:
             case POWER_STANCE_PALADIN:
@@ -212,7 +187,7 @@ public final class Warrior {
             case THREATEN:
                 return;
             case HP_RECOVERY:
-                // TODO
+                user.addHp(user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100);
                 return;
             case COMBAT_ORDERS:
                 user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
