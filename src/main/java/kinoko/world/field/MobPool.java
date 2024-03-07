@@ -1,11 +1,15 @@
 package kinoko.world.field;
 
+import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
+import kinoko.util.Tuple;
 import kinoko.util.Util;
+import kinoko.world.life.mob.BurnedInfo;
 import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobAppearType;
+import kinoko.world.life.mob.MobTemporaryStat;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -16,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class MobPool extends FieldObjectPool<Mob> {
-    private final Map<Mob, Instant> graveyard = new HashMap<>(); // mob -> next respawn time
+    private final Map<Integer, Tuple<Mob, Instant>> graveyard = new HashMap<>(); // mob id -> tuple<mob, next respawn time>
 
     public MobPool(Field field) {
         super(field);
@@ -27,6 +31,19 @@ public final class MobPool extends FieldObjectPool<Mob> {
         lock.lock();
         try {
             return objects.isEmpty() && graveyard.isEmpty();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public Optional<Mob> getById(int id) {
+        lock.lock();
+        try {
+            if (graveyard.containsKey(id)) {
+                return Optional.of(graveyard.get(id).getLeft());
+            }
+            return Optional.ofNullable(objects.get(id));
         } finally {
             lock.unlock();
         }
@@ -49,9 +66,28 @@ public final class MobPool extends FieldObjectPool<Mob> {
             }
             field.broadcastPacket(mob.leaveFieldPacket());
             if (mob.isRespawn()) {
-                graveyard.put(mob, Instant.now().plus(mob.getMobTime(), ChronoUnit.SECONDS));
+                graveyard.put(mob.getId(), new Tuple<>(mob, Instant.now().plus(mob.getMobTime(), ChronoUnit.SECONDS)));
             }
             return true;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void updateMobs(Instant now) {
+        lock.lock();
+        try {
+            for (Mob mob : getObjectsUnsafe()) {
+                try (var lockedMob = mob.acquire()) {
+                    // Expire temporary stat
+                    final Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireResult = lockedMob.get().getMobStat().expireMobStat(now);
+                    final Set<MobTemporaryStat> resetStats = expireResult.getLeft();
+                    final Set<BurnedInfo> resetBurnedInfos = expireResult.getRight();
+                    if (!resetStats.isEmpty()) {
+                        field.broadcastPacket(MobPacket.statReset(mob, resetStats, resetBurnedInfos));
+                    }
+                }
+            }
         } finally {
             lock.unlock();
         }
@@ -60,13 +96,13 @@ public final class MobPool extends FieldObjectPool<Mob> {
     public void respawnMobs(Instant now) {
         lock.lock();
         try {
-            final var iter = graveyard.entrySet().iterator();
+            final var iter = graveyard.values().iterator();
             while (iter.hasNext()) {
-                final Map.Entry<Mob, Instant> entry = iter.next();
-                try (var lockedMob = entry.getKey().acquire()) {
+                final Tuple<Mob, Instant> tuple = iter.next();
+                try (var lockedMob = tuple.getLeft().acquire()) {
                     final Mob mob = lockedMob.get();
                     // Check respawn timer and remove from graveyard
-                    if (now.isBefore(entry.getValue())) {
+                    if (now.isBefore(tuple.getRight())) {
                         continue;
                     }
                     iter.remove();

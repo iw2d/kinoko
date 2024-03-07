@@ -5,8 +5,8 @@ import kinoko.server.packet.OutPacket;
 public final class GuidedBullet extends TwoStateTemporaryStat {
     private int mobId;
 
-    public GuidedBullet() {
-        super(TwoStateType.NO_EXPIRE);
+    public GuidedBullet(int nOption, int rOption, int tOption) {
+        super(TwoStateType.NO_EXPIRE, nOption, rOption, tOption);
     }
 
     public int getMobId() {

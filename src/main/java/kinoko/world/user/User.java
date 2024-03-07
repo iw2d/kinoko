@@ -242,6 +242,7 @@ public final class User extends Life implements Lockable<User> {
         for (var entry : setStats.entrySet()) {
             getSecondaryStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
+        updatePassiveSkillData();
         validateStat();
         write(WvsContext.temporaryStatSet(setStats));
         getField().broadcastPacket(UserRemote.temporaryStatSet(this, setStats));

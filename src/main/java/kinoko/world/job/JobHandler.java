@@ -35,13 +35,18 @@ public final class JobHandler {
             final TemporaryStatOption option = entry.getValue();
             switch (cts) {
                 case ComboCounter -> {
-                    final int maxCombo = 1 + Math.max(
-                            sm.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
-                            sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
-                    );
-                    final int doubleProp = sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
-                    option.nOption = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
-                    updateStats.put(cts, option);
+                    if (attack.getMobCount() > 0) {
+                        final int maxCombo = 1 + Math.max(
+                                sm.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
+                                sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
+                        );
+                        final int doubleProp = sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
+                        final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
+                        if (newCombo > option.nOption) {
+                            updateStats.put(cts, option.update(newCombo));
+                        }
+
+                    }
                 }
             }
         }
@@ -98,39 +103,24 @@ public final class JobHandler {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
         final int slv = skill.slv;
-
-        final TemporaryStatOption o1 = new TemporaryStatOption();
-        final TemporaryStatOption o2 = new TemporaryStatOption();
         switch (skillId) {
             // BEGINNER SKILLS -----------------------------------------------------------------------------------------
             case Beginner.RECOVERY:
             case Noblesse.RECOVERY:
             case Aran.RECOVERY:
             case Evan.RECOVER:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.Regen, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.Regen, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case Beginner.NIMBLE_FEET:
             case Noblesse.NIMBLE_FEET:
             case Aran.AGILE_BODY:
             case Evan.NIMBLE_FEET:
-                o1.nOption = si.getValue(SkillStat.speed, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.Speed, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)));
                 return;
             case Citizen.INFILTRATE:
-                o1.nOption = si.getValue(SkillStat.speed, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                o2.nOption = si.getValue(SkillStat.x, slv);
-                o2.rOption = skillId;
-                o2.tOption = si.getDuration(slv);
                 user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Speed, o1,
-                        CharacterTemporaryStat.Sneak, o2
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Sneak, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
                 ));
                 return;
 
@@ -142,10 +132,7 @@ public final class JobHandler {
             case DawnWarrior.SOUL_CHARGE:
             case ThunderBreaker.LIGHTNING_CHARGE:
             case Aran.SNOW_CHARGE:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
             // WEAPON BOOSTER ------------------------------------------------------------------------------------------
@@ -171,10 +158,7 @@ public final class JobHandler {
             case BattleMage.STAFF_BOOST:
             case WildHunter.CROSSBOW_BOOSTER:
             case Mechanic.MECHANIC_RAGE:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.Booster, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.Booster, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
             // MAPLE WARRIOR -------------------------------------------------------------------------------------------
@@ -196,10 +180,7 @@ public final class JobHandler {
             case BattleMage.MAPLE_WARRIOR_BAM:
             case WildHunter.MAPLE_WARRIOR_WH:
             case Mechanic.MAPLE_WARRIOR_MECH:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.BasicStatUp, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.BasicStatUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
             // HERO'S WILL ---------------------------------------------------------------------------------------------

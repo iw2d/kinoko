@@ -4,9 +4,13 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Util;
 import kinoko.world.job.JobHandler;
+import kinoko.world.life.mob.Mob;
 import kinoko.world.life.mob.MobStatOption;
+import kinoko.world.life.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
+import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.Skill;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -15,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
+import java.util.Optional;
 
 public final class Warrior {
     // WARRIOR
@@ -115,12 +120,40 @@ public final class Warrior {
         final int skillId = attack.skillId;
         final int slv = attack.slv;
 
-        final MobStatOption m1 = new MobStatOption();
         switch (skillId) {
             case PANIC:
+                resetComboCounter(user);
+                for (AttackInfo ai : attack.getAttackInfo()) {
+                    final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
+                    if (mobResult.isEmpty()) {
+                        continue;
+                    }
+                    try (var lockedMob = mobResult.get().acquire()) {
+                        final Mob mob = lockedMob.get();
+                        if (mob.isBoss() || mob.getHp() <= 0 || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                            continue;
+                        }
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    }
+                }
+                return;
             case COMA:
+                resetComboCounter(user);
+                // Fallthrough intended
             case SHOUT:
-                // TODO mobstat
+                for (AttackInfo ai : attack.getAttackInfo()) {
+                    final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
+                    if (mobResult.isEmpty()) {
+                        continue;
+                    }
+                    try (var lockedMob = mobResult.get().acquire()) {
+                        final Mob mob = lockedMob.get();
+                        if (mob.isBoss() || mob.getHp() <= 0 || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                            continue;
+                        }
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                }
         }
     }
 
@@ -129,107 +162,89 @@ public final class Warrior {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
-        final TemporaryStatOption o1 = new TemporaryStatOption();
-        final TemporaryStatOption o2 = new TemporaryStatOption();
-        final MobStatOption m1 = new MobStatOption();
         switch (skillId) {
             // COMMON
             case IRON_BODY:
-                o1.nOption = si.getValue(SkillStat.pdd, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.PDD, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)));
                 return;
             case POWER_GUARD_HERO:
             case POWER_GUARD_PALADIN:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.PowerGuard, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.PowerGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case MAGIC_CRASH_HERO:
             case MAGIC_CRASH_PALADIN:
             case MAGIC_CRASH_DRK:
-                // TODO mobstat
+                final int size = inPacket.decodeByte();
+                for (int i = 0; i < size; i++) {
+                    final int mobId = inPacket.decodeInt();
+                    final Optional<Mob> mobResult = user.getField().getMobPool().getById(mobId);
+                    if (mobResult.isEmpty()) {
+                        continue;
+                    }
+                    try (var lockedMob = mobResult.get().acquire()) {
+                        final Mob mob = lockedMob.get();
+                        if (mob.isBoss() || mob.getHp() <= 0 || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                            continue;
+                        }
+                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                }
                 return;
             case POWER_STANCE_HERO:
             case POWER_STANCE_PALADIN:
             case POWER_STANCE_DRK:
-                o1.nOption = si.getValue(SkillStat.prop, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.Stance, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.Stance, TemporaryStatOption.of(si.getValue(SkillStat.prop, slv), skillId, si.getDuration(slv)));
                 return;
 
             // HERO
             case RAGE:
-                o1.nOption = si.getValue(SkillStat.pad, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.PAD, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv)));
                 return;
             case COMBO_ATTACK:
-                o1.nOption = 1;
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
             case ENRAGE:
-                o1.nOption = si.getValue(SkillStat.x, slv) * 100 + si.getValue(SkillStat.mobCount, slv); // damR = n / 100, nCount = n % 100
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.Enrage, o1);
+                final int nEnrage = si.getValue(SkillStat.x, slv) * 100 + si.getValue(SkillStat.mobCount, slv); // damR = n / 100, nCount = n % 100
+                user.setTemporaryStat(CharacterTemporaryStat.Enrage, TemporaryStatOption.of(nEnrage, skillId, si.getDuration(slv)));
                 return;
 
             // PALADIN
             case THREATEN:
-                // TODO mobstat
                 return;
             case HP_RECOVERY:
                 // TODO
                 return;
             case COMBAT_ORDERS:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
             // DARK KNIGHT
             case IRON_WILL:
-                o1.nOption = si.getValue(SkillStat.pdd, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                o2.nOption = si.getValue(SkillStat.mdd, slv);
-                o2.rOption = skillId;
-                o2.tOption = si.getDuration(slv);
                 user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.PDD, o1,
-                        CharacterTemporaryStat.MDD, o2
+                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, si.getDuration(slv))
                 ));
                 return;
             case HYPER_BODY:
-                o1.nOption = si.getValue(SkillStat.x, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                o2.nOption = si.getValue(SkillStat.y, slv);
-                o2.rOption = skillId;
-                o2.tOption = si.getDuration(slv);
                 user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.MaxHP, o1,
-                        CharacterTemporaryStat.MaxMP, o2
+                        CharacterTemporaryStat.MaxHP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.MaxMP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
                 ));
                 return;
             case DRAGON_BLOOD:
-                o1.nOption = si.getValue(SkillStat.pad, slv);
-                o1.rOption = skillId;
-                o1.tOption = si.getDuration(slv);
-                user.setTemporaryStat(CharacterTemporaryStat.DragonBlood, o1);
+                user.setTemporaryStat(CharacterTemporaryStat.DragonBlood, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv)));
                 return;
             case BEHOLDER:
                 // TODO summoned
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
+    }
+
+    private static void resetComboCounter(User user) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
+        if (option.nOption > 1) {
+            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(1));
+        }
     }
 }

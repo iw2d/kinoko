@@ -121,6 +121,14 @@ public final class SkillHandler {
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
 
+    @Handler(InHeader.USER_CALC_DAMAGE_STAT_SET_REQUEST)
+    public static void handleUserCalcDamageStatSetRequest(User user, InPacket inPacket) {
+        try (var locked = user.acquire()) {
+            user.updatePassiveSkillData();
+            user.validateStat();
+        }
+    }
+
     @Handler(InHeader.PASSIVE_SKILL_INFO_UPDATE)
     public static void handlePassiveSkillInfoUpdate(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time

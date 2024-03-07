@@ -136,6 +136,7 @@ public final class Field {
             reactorPool.expireReactors(now);
         }
         userPool.updateUsers(now);
+        mobPool.updateMobs(now);
     }
 
 
@@ -146,11 +147,13 @@ public final class Field {
     }
 
     public void broadcastPacket(OutPacket outPacket, User except) {
-        userPool.forEach((user) -> {
-            if (except != null && user.getCharacterId() == except.getCharacterId()) {
-                return;
-            }
-            user.write(outPacket);
+        EventScheduler.submit(() -> {
+            userPool.forEach((user) -> {
+                if (except != null && user.getCharacterId() == except.getCharacterId()) {
+                    return;
+                }
+                user.write(outPacket);
+            });
         });
     }
 

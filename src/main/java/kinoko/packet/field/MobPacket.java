@@ -3,8 +3,10 @@ package kinoko.packet.field;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.life.MovePath;
-import kinoko.world.life.mob.Mob;
-import kinoko.world.life.mob.MobAttackInfo;
+import kinoko.world.life.mob.*;
+
+import java.util.Map;
+import java.util.Set;
 
 public final class MobPacket {
     // CMobPool::OnPacket ----------------------------------------------------------------------------------------------
@@ -14,7 +16,7 @@ public final class MobPacket {
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
-        mob.getMobStat().encode(outPacket, true);
+        MobStat.encode(outPacket, mob.getMobStat());
         mob.encode(outPacket);
         return outPacket;
     }
@@ -35,7 +37,7 @@ public final class MobPacket {
             outPacket.encodeByte(1); // nCalcDamageIndex
             // CMobPool::SetLocalMob
             outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
-            mob.getMobStat().encode(outPacket, true);
+            MobStat.encode(outPacket, mob.getMobStat());
             mob.encode(outPacket);
         }
         return outPacket;
@@ -86,21 +88,21 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket statSet(Mob mob) {
+    public static OutPacket statSet(Mob mob, Map<MobTemporaryStat, MobStatOption> setStats, Set<BurnedInfo> setBurnedInfos) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_SET);
         outPacket.encodeInt(mob.getId()); // dwMobId
         // CMob::ProcessStatSet
-        mob.getMobStat().encode(outPacket, false);
+        MobStat.encode(outPacket, setStats, setBurnedInfos);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat || bDoomReservedSN
         return outPacket;
     }
 
-    public static OutPacket statReset(Mob mob) {
+    public static OutPacket statReset(Mob mob, Set<MobTemporaryStat> resetStats, Set<BurnedInfo> resetBurnedInfos) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_RESET);
         outPacket.encodeInt(mob.getId()); // dwMobId
-        mob.getMobStat().encodeReset(outPacket);
+        MobStat.encodeReset(outPacket, resetStats, resetBurnedInfos);
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat
         return outPacket;

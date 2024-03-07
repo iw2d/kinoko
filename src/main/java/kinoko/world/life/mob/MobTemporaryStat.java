@@ -61,7 +61,7 @@ public enum MobTemporaryStat implements BitIndex {
     MobTemporaryStat(int value) {
         this.value = value;
         this.arrayIndex = value / 32;
-        this.bitPosition = 1 << (31 - value % 32);
+        this.bitPosition = 1 << (value % 32);
     }
 
     @Override

@@ -5,7 +5,8 @@ import kinoko.server.packet.OutPacket;
 public class TwoStateTemporaryStat extends TemporaryStatOption {
     private final TwoStateType twoStateType;
 
-    public TwoStateTemporaryStat(TwoStateType twoStateType) {
+    public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption) {
+        super(nOption, rOption, tOption);
         this.twoStateType = twoStateType;
     }
 

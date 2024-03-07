@@ -32,7 +32,7 @@ public final class EventScheduler {
         return scheduler.scheduleWithFixedDelay(() -> submit(runnable), initialDelay, delay, timeUnit);
     }
 
-    private static void submit(Runnable runnable) {
+    public static void submit(Runnable runnable) {
         executor.submit(() -> {
             try {
                 runnable.run();

@@ -175,6 +175,17 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         damageDone.put(attacker.getCharacterId(), damageDone.getOrDefault(attacker.getCharacterId(), 0) + actualDamage);
     }
 
+    public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {
+        setTemporaryStat(Map.of(mts, option));
+    }
+
+    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats) {
+        for (var entry : setStats.entrySet()) {
+            getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
+        }
+        getField().broadcastPacket(MobPacket.statSet(this, setStats, Set.of()));
+    }
+
     public void dropRewards(User lastAttacker) {
         // Sort damageDone by highest damage, assign owner to most damage attacker present in the field
         User owner = lastAttacker;
