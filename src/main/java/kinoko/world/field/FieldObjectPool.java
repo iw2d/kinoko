@@ -1,16 +1,13 @@
 package kinoko.world.field;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public abstract class FieldObjectPool<T extends FieldObject> {
-    protected final Map<Integer, T> objects = new HashMap<>(); // FieldObject::getId() -> FieldObject
-    protected final Lock lock = new ReentrantLock();
+    protected final ConcurrentHashMap<Integer, T> objects = new ConcurrentHashMap<>(); // FieldObject::getId() -> FieldObject
     protected final Field field;
 
     protected FieldObjectPool(Field field) {
@@ -18,41 +15,26 @@ public abstract class FieldObjectPool<T extends FieldObject> {
     }
 
     public Optional<T> getById(int id) {
-        lock.lock();
-        try {
-            return Optional.ofNullable(objects.get(id));
-        } finally {
-            lock.unlock();
-        }
+        return Optional.ofNullable(objects.get(id));
     }
 
     public void forEach(Consumer<T> consumer) {
-        lock.lock();
-        try {
-            getObjectsUnsafe().forEach(consumer);
-        } finally {
-            lock.unlock();
-        }
+        objects.forEachValue(Long.MAX_VALUE, consumer);
     }
 
     public boolean isEmpty() {
-        lock.lock();
-        try {
-            return objects.isEmpty();
-        } finally {
-            lock.unlock();
-        }
+        return objects.isEmpty();
     }
 
-    protected void addObjectUnsafe(T object) {
+    protected void addObject(T object) {
         objects.put(object.getId(), object);
     }
 
-    protected boolean removeObjectUnsafe(T object) {
+    protected boolean removeObject(T object) {
         return objects.remove(object.getId(), object);
     }
 
-    protected Collection<T> getObjectsUnsafe() {
-        return objects.values();
+    protected Set<T> getObjects() {
+        return objects.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 }

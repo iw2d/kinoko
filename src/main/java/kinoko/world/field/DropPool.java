@@ -18,15 +18,10 @@ public final class DropPool extends FieldObjectPool<Drop> {
 
     public void addDrop(Drop drop, DropEnterType enterType, int x, int y) {
         prepareDrop(drop, x, y);
-        lock.lock();
-        try {
-            if (enterType != DropEnterType.FADING_OUT) {
-                addObjectUnsafe(drop);
-            }
-            field.broadcastPacket(DropPacket.dropEnterField(drop, enterType));
-        } finally {
-            lock.unlock();
+        if (enterType != DropEnterType.FADING_OUT) {
+            addObject(drop);
         }
+        field.broadcastPacket(DropPacket.dropEnterField(drop, enterType));
     }
 
     public void addDrops(Set<Drop> drops, DropEnterType enterType, int centerX, int centerY) {
@@ -39,33 +34,23 @@ public final class DropPool extends FieldObjectPool<Drop> {
     }
 
     public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
-        lock.lock();
-        try {
-            if (!removeObjectUnsafe(drop)) {
-                return false;
-            }
-            field.broadcastPacket(DropPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
-            return true;
-        } finally {
-            lock.unlock();
+        if (!removeObject(drop)) {
+            return false;
         }
+        field.broadcastPacket(DropPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
+        return true;
     }
 
     public void expireDrops(Instant now) {
-        lock.lock();
-        try {
-            final var iter = objects.values().iterator();
-            while (iter.hasNext()) {
-                final Drop drop = iter.next();
-                // Check drop expire time and remove drop
-                if (now.isBefore(drop.getExpireTime())) {
-                    continue;
-                }
-                iter.remove();
-                field.broadcastPacket(DropPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
+        final var iter = objects.values().iterator();
+        while (iter.hasNext()) {
+            final Drop drop = iter.next();
+            // Check drop expire time and remove drop
+            if (now.isBefore(drop.getExpireTime())) {
+                continue;
             }
-        } finally {
-            lock.unlock();
+            iter.remove();
+            field.broadcastPacket(DropPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
         }
     }
 

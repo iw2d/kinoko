@@ -143,18 +143,12 @@ public final class Field {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public void broadcastPacket(OutPacket outPacket) {
-        broadcastPacket(outPacket, null);
+        userPool.broadcastPacket(outPacket);
     }
 
     public void broadcastPacket(OutPacket outPacket, User except) {
-        EventScheduler.submit(() -> {
-            userPool.forEach((user) -> {
-                if (except != null && user.getCharacterId() == except.getCharacterId()) {
-                    return;
-                }
-                user.write(outPacket);
-            });
-        });
+        userPool.broadcastPacket(outPacket, except);
+
     }
 
     public void addUser(User user) {
