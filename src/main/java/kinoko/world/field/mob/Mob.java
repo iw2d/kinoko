@@ -29,6 +29,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -49,6 +50,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private int currentFh;
     private int hp;
     private int mp;
+    private Instant nextRecovery;
 
     public Mob(MobTemplate template, int x, int y, int fh) {
         this.template = template;
@@ -61,10 +63,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setCurrentFh(fh);
         setHp(template.getMaxHp());
         setMp(template.getMaxMp());
-        mobStat.clear();
-        attackCounter.set(0);
-        skillCooltimes.clear();
-        damageDone.clear();
+        nextRecovery = Instant.now();
     }
 
     public int getTemplateId() {
@@ -81,6 +80,18 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public int getMaxMp() {
         return template.getMaxMp();
+    }
+
+    public int getHpRecovery() {
+        return template.getHpRecovery();
+    }
+
+    public int getMpRecovery() {
+        return template.getMpRecovery();
+    }
+
+    public int getFixedDamage() {
+        return template.getFixedDamage();
     }
 
     public boolean isBoss() {
@@ -152,6 +163,35 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
 
+    // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    public void recovery(Instant now) {
+        if (getHp() < 0 || now.isBefore(nextRecovery)) {
+            return;
+        }
+        if (getHpRecovery() > 0) {
+            final int newHp = getHp() + getHpRecovery();
+            setHp(Math.min(newHp, getMaxHp()));
+        }
+        if (getMpRecovery() > 0) {
+            final int newMp = getMp() + getMpRecovery();
+            setMp(Math.min(newMp, getMaxMp()));
+        }
+        nextRecovery = now.plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
+    }
+
+    public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {
+        setTemporaryStat(Map.of(mts, option));
+    }
+
+    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats) {
+        for (var entry : setStats.entrySet()) {
+            getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
+        }
+        getField().broadcastPacket(MobPacket.statSet(this, setStats, Set.of()));
+    }
+
+
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public void damage(User attacker, int totalDamage) {
@@ -169,17 +209,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 dropRewards(attacker);
             }
         }
-    }
-
-    public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {
-        setTemporaryStat(Map.of(mts, option));
-    }
-
-    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats) {
-        for (var entry : setStats.entrySet()) {
-            getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
-        }
-        getField().broadcastPacket(MobPacket.statSet(this, setStats, Set.of()));
     }
 
     public void dropRewards(User lastAttacker) {

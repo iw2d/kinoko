@@ -60,7 +60,7 @@ public final class GameConstants {
     public static final int MOB_ATTACK_COOLTIME_MIN = 3;
     public static final int MOB_ATTACK_COOLTIME_MAX = 13;
     public static final int MOB_ATTACK_COOLTIME_MAX_BOSS = 7;
-
+    public static final int MOB_RECOVER_TIME = 5;
     public static final int MOB_RESPAWN_TIME = 7;
     public static final int MOB_CAPACITY_MAX = 40;
     public static final double MOB_CAPACITY_CONSTANT = 0.0000078125;
@@ -77,7 +77,7 @@ public final class GameConstants {
 
     // REACTOR CONSTANTS -----------------------------------------------------------------------------------------------
 
-    public static final int REACTOR_EXPIRE_INTERVAL = 5; // interval to check if reactors can be reset
+    public static final int REACTOR_EXPIRE_INTERVAL = 5; // interval to check whether reactors can be reset
     public static final int REACTOR_END_DELAY = 5; // tStateEnd = update_time + 100 * x
 
 
