@@ -2,6 +2,7 @@ package kinoko.provider.map;
 
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Rect;
 
 import java.util.Collections;
 import java.util.List;
@@ -179,6 +180,10 @@ public final class MapInfo {
             result.setIf(res -> res.getYFromX(x) >= my, match);
         }, x, y);
         return Optional.ofNullable(result.get());
+    }
+
+    public Rect getRootBounds() {
+        return footholdRoot.getRootBounds();
     }
 
     @Override

@@ -8,7 +8,6 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
-import kinoko.provider.map.LifeInfo;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
 import kinoko.provider.mob.MobTemplate;
@@ -44,8 +43,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
     private final MobTemplate template;
-    private final int mobTime;
-    private final boolean respawn;
 
     private MobAppearType appearType = MobAppearType.NORMAL;
     private User controller;
@@ -53,11 +50,21 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private int hp;
     private int mp;
 
-    public Mob(MobTemplate template, int x, int y, int fh, int mobTime, boolean respawn) {
+    public Mob(MobTemplate template, int x, int y, int fh) {
         this.template = template;
-        this.mobTime = mobTime;
-        this.respawn = respawn;
-        reset(x, y, fh);
+        // Life initialization
+        setX(x);
+        setY(y);
+        setFoothold(fh);
+        setMoveAction(5); // idk
+        // Mob initialization
+        setCurrentFh(fh);
+        setHp(template.getMaxHp());
+        setMp(template.getMaxMp());
+        mobStat.clear();
+        attackCounter.set(0);
+        skillCooltimes.clear();
+        damageDone.clear();
     }
 
     public int getTemplateId() {
@@ -82,14 +89,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public boolean isDamagedByMob() {
         return template.isDamagedByMob();
-    }
-
-    public int getMobTime() {
-        return mobTime;
-    }
-
-    public boolean isRespawn() {
-        return respawn;
     }
 
     public MobStat getMobStat() {
@@ -155,20 +154,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
-    public void reset(int x, int y, int fh) {
-        // Life initialization
-        setX(x);
-        setY(y);
-        setFoothold(fh);
-        setMoveAction(5); // idk
-        // Mob initialization
-        setCurrentFh(fh);
-        setHp(template.getMaxHp());
-        setMp(template.getMaxMp());
-        getMobStat().clear();
-        damageDone.clear();
-    }
-
     public void damage(User attacker, int totalDamage) {
         // Process damage
         final int actualDamage = Math.min(getHp(), totalDamage);
@@ -179,9 +164,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         attacker.write(MobPacket.hpIndicator(this, (int) (percentage * 100)));
         // Handle death
         if (getHp() <= 0) {
-            getField().getMobPool().removeMob(this);
-            distributeExp();
-            dropRewards(attacker);
+            if (getField().getMobPool().removeMob(this)) {
+                distributeExp();
+                dropRewards(attacker);
+            }
         }
     }
 
@@ -341,16 +327,5 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     @Override
     public void unlock() {
         lock.unlock();
-    }
-
-    public static Mob from(MobTemplate mobTemplate, LifeInfo lifeInfo) {
-        return new Mob(
-                mobTemplate,
-                lifeInfo.getX(),
-                lifeInfo.getY(),
-                lifeInfo.getFh(),
-                lifeInfo.getMobTime(),
-                true
-        );
     }
 }

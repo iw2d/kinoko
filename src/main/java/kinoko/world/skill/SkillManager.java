@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public final class SkillManager {
     private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
     private final Map<Integer, Instant> skillCooltimes = new HashMap<>();
-    private boolean ignoreCooltime = false;
 
     public Set<SkillRecord> getSkillRecords() {
         return skillRecords.values().stream().collect(Collectors.toUnmodifiableSet());
@@ -53,9 +52,6 @@ public final class SkillManager {
     }
 
     public void setSkillCooltime(int skillId, Instant nextAvailable) {
-        if (isIgnoreCooltime()) {
-            return;
-        }
         skillCooltimes.put(skillId, nextAvailable);
     }
 
@@ -67,20 +63,12 @@ public final class SkillManager {
             final int skillId = entry.getKey();
             final Instant nextAvailable = entry.getValue();
             // Check skill cooltime and remove
-            if (now.isBefore(nextAvailable) && !isIgnoreCooltime()) {
+            if (now.isBefore(nextAvailable)) {
                 continue;
             }
             iter.remove();
             resetCooltimes.add(skillId);
         }
         return resetCooltimes;
-    }
-
-    public boolean isIgnoreCooltime() {
-        return ignoreCooltime;
-    }
-
-    public void setIgnoreCooltime(boolean ignoreCooltime) {
-        this.ignoreCooltime = ignoreCooltime;
     }
 }

@@ -1,5 +1,8 @@
 package kinoko.world.field;
 
+import kinoko.util.Rect;
+
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,15 +17,29 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         this.field = field;
     }
 
-    public Optional<T> getById(int id) {
+    public final int getCount() {
+        return objects.size();
+    }
+
+    public final Optional<T> getById(int id) {
         return Optional.ofNullable(objects.get(id));
     }
 
-    public void forEach(Consumer<T> consumer) {
+    public final Set<T> getInsideRect(Rect rect) {
+        final Set<T> inside = new HashSet<>();
+        for (T object : getObjects()) {
+            if (rect.isInsideRect(object.getX(), object.getY())) {
+                inside.add(object);
+            }
+        }
+        return inside;
+    }
+
+    public final void forEach(Consumer<T> consumer) {
         objects.forEachValue(Long.MAX_VALUE, consumer);
     }
 
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return objects.isEmpty();
     }
 

@@ -327,9 +327,7 @@ public final class AdminCommands {
                 mobTemplateResult.get(),
                 user.getX(),
                 user.getY(),
-                footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold()),
-                0,
-                false
+                footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold())
         );
         mob.setAppearType(MobAppearType.REGEN);
         field.getMobPool().addMob(mob);
@@ -487,14 +485,13 @@ public final class AdminCommands {
         }
     }
 
-    @Command("ignorecd")
+    @Command("killmobs")
     public static void ignoreCd(User user, String[] args) {
-        try (var locked = user.acquire()) {
-            final SkillManager sm = locked.get().getSkillManager();
-            final boolean state = sm.isIgnoreCooltime();
-            sm.setIgnoreCooltime(!state);
-            user.write(WvsContext.message(Message.system("Skill cooldowns are now %s", state ? "enabled" : "disabled")));
-        }
+        user.getField().getMobPool().forEach((mob) -> {
+            if (mob.getHp() > 0) {
+                mob.damage(user, mob.getMaxHp());
+            }
+        });
     }
 
     @Command("max")

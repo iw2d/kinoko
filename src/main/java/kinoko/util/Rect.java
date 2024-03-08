@@ -26,6 +26,14 @@ public final class Rect {
         return bottom;
     }
 
+    public int getWidth() {
+        return right - left;
+    }
+
+    public int getHeight() {
+        return bottom - top;
+    }
+
     public int getCenterX() {
         return (left + right) / 2;
     }

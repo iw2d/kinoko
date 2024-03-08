@@ -1,10 +1,8 @@
 package kinoko.world.field;
 
-import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
 import kinoko.provider.map.*;
-import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
@@ -12,7 +10,6 @@ import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.GameConstants;
-import kinoko.world.field.mob.Mob;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
@@ -30,17 +27,18 @@ public final class Field {
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
 
-    private final UserPool userPool = new UserPool(this);
-    private final UserObjectPool userObjectPool = new UserObjectPool(this);
-
-    private final MobPool mobPool = new MobPool(this);
-    private final NpcPool npcPool = new NpcPool(this);
-    private final DropPool dropPool = new DropPool(this);
-    private final ReactorPool reactorPool = new ReactorPool(this);
-
     private final MapInfo mapInfo;
     private final byte fieldKey;
     private final ScheduledFuture<?> fieldEventFuture;
+
+    private final UserPool userPool;
+    private final UserObjectPool userObjectPool;
+
+    private final MobPool mobPool;
+    private final NpcPool npcPool;
+    private final DropPool dropPool;
+    private final ReactorPool reactorPool;
+
     private Instant nextMobRespawn = Instant.now();
     private Instant nextDropExpire = Instant.now();
     private Instant nextReactorExpire = Instant.now();
@@ -49,6 +47,13 @@ public final class Field {
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
+        // Initialize field object pools
+        this.userPool = new UserPool(this);
+        this.userObjectPool = new UserObjectPool(this);
+        this.mobPool = new MobPool(this);
+        this.npcPool = new NpcPool(this);
+        this.dropPool = new DropPool(this);
+        this.reactorPool = new ReactorPool(this);
     }
 
     public int getFieldId() {
@@ -142,6 +147,7 @@ public final class Field {
             reactorPool.expireReactors(now);
         }
         userPool.updateUsers(now);
+        userObjectPool.updateObjects(now);
         mobPool.updateMobs(now);
     }
 
@@ -176,27 +182,19 @@ public final class Field {
 
     public static Field from(MapInfo mapInfo) {
         final Field field = new Field(mapInfo);
-        // Populate object pools
+        // Populate npc pool
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
-            switch (lifeInfo.getLifeType()) {
-                case NPC -> {
-                    final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(lifeInfo.getTemplateId());
-                    if (npcTemplateResult.isEmpty()) {
-                        continue;
-                    }
-                    final Npc npc = Npc.from(npcTemplateResult.get(), lifeInfo);
-                    field.getNpcPool().addNpc(npc);
-                }
-                case MOB -> {
-                    final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(lifeInfo.getTemplateId());
-                    if (mobTemplateResult.isEmpty()) {
-                        continue;
-                    }
-                    final Mob mob = Mob.from(mobTemplateResult.get(), lifeInfo);
-                    field.getMobPool().addMob(mob);
-                }
+            if (lifeInfo.getLifeType() == LifeType.NPC) {
+                continue;
             }
+            final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(lifeInfo.getTemplateId());
+            if (npcTemplateResult.isEmpty()) {
+                continue;
+            }
+            final Npc npc = Npc.from(npcTemplateResult.get(), lifeInfo);
+            field.getNpcPool().addNpc(npc);
         }
+        // Populate reactor pool
         for (ReactorInfo reactorInfo : mapInfo.getReactorInfos()) {
             final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(reactorInfo.getTemplateId());
             if (reactorTemplateResult.isEmpty()) {
