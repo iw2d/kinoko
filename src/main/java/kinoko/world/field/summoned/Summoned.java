@@ -3,22 +3,31 @@ package kinoko.world.field.summoned;
 import kinoko.packet.field.SummonedPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.Lockable;
+import kinoko.world.field.UserObject;
 import kinoko.world.field.life.Life;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.user.AvatarLook;
-import kinoko.world.user.User;
 
-public final class Summoned extends Life implements Encodable {
-    private final User owner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public final class Summoned extends Life implements UserObject, Encodable, Lockable<Summoned> {
+    private final Lock lock = new ReentrantLock();
+    private final int ownerId;
+    private final int ownerLevel;
     private final int skillId;
     private final int skillLevel;
-    private final MoveAbility moveAbility;
-    private final AssistType assistType;
-    private final EnterType enterType;
+    private final SummonedMoveAbility moveAbility;
+    private final SummonedAssistType assistType;
+    private final SummonedEnterType enterType;
     private final AvatarLook avatarLook;
 
-    public Summoned(User owner, int skillId, int skillLevel, MoveAbility moveAbility, AssistType assistType, EnterType enterType, AvatarLook avatarLook) {
-        this.owner = owner;
+    private int hp = 1;
+
+    public Summoned(int ownerId, int ownerLevel, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, SummonedEnterType enterType, AvatarLook avatarLook) {
+        this.ownerId = ownerId;
+        this.ownerLevel = ownerLevel;
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.moveAbility = moveAbility;
@@ -27,8 +36,13 @@ public final class Summoned extends Life implements Encodable {
         this.avatarLook = avatarLook;
     }
 
-    public User getOwner() {
-        return owner;
+    @Override
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public int getOwnerLevel() {
+        return ownerLevel;
     }
 
     public int getSkillId() {
@@ -39,20 +53,28 @@ public final class Summoned extends Life implements Encodable {
         return skillLevel;
     }
 
-    public MoveAbility getMoveAbility() {
+    public SummonedMoveAbility getMoveAbility() {
         return moveAbility;
     }
 
-    public AssistType getAssistType() {
+    public SummonedAssistType getAssistType() {
         return assistType;
     }
 
-    public EnterType getEnterType() {
+    public SummonedEnterType getEnterType() {
         return enterType;
     }
 
     public AvatarLook getAvatarLook() {
         return avatarLook;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
     @Override
@@ -88,5 +110,15 @@ public final class Summoned extends Life implements Encodable {
     @Override
     public OutPacket leaveFieldPacket() {
         return SummonedPacket.summonedLeaveField(this);
+    }
+
+    @Override
+    public void lock() {
+        lock.lock();
+    }
+
+    @Override
+    public void unlock() {
+        lock.unlock();
     }
 }

@@ -1,6 +1,6 @@
 package kinoko.world.field.summoned;
 
-public enum MoveAbility {
+public enum SummonedMoveAbility {
     // MOVEABILITY
     STOP(0),
     WALK(1),
@@ -12,7 +12,7 @@ public enum MoveAbility {
 
     private final int value;
 
-    MoveAbility(int value) {
+    SummonedMoveAbility(int value) {
         this.value = value;
     }
 

@@ -1,6 +1,6 @@
 package kinoko.world.field.summoned;
 
-public enum AssistType {
+public enum SummonedAssistType {
     // ASSIST
     NONE(0),
     ATTACK(1),
@@ -12,7 +12,7 @@ public enum AssistType {
 
     private final int value;
 
-    AssistType(int value) {
+    SummonedAssistType(int value) {
         this.value = value;
     }
 

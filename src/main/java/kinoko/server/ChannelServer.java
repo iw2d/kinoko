@@ -23,6 +23,7 @@ public final class ChannelServer extends NettyServer {
             CashShopHandler.class,
             MigrationHandler.class,
             FieldHandler.class,
+            SummonedHandler.class,
             MobHandler.class,
             NpcHandler.class,
             ReactorHandler.class,

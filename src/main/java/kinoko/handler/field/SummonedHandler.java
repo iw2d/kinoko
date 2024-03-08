@@ -2,6 +2,8 @@ package kinoko.handler.field;
 
 import kinoko.handler.Handler;
 import kinoko.packet.field.SummonedPacket;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.field.Field;
@@ -23,7 +25,7 @@ public class SummonedHandler {
         final int objectId = inPacket.decodeInt(); // dwSummonedID
 
         final Field field = user.getField();
-        final Optional<Summoned> summonedResult = field.getSummonedPool().getById(objectId);
+        final Optional<Summoned> summonedResult = field.getUserObjectPool().getSummonedById(objectId);
         if (summonedResult.isEmpty()) {
             log.error("Received SUMMONED_MOVE for invalid object with ID : {}", objectId);
             return;
@@ -40,7 +42,7 @@ public class SummonedHandler {
         final int objectId = inPacket.decodeInt(); // dwSummonedID
 
         final Field field = user.getField();
-        final Optional<Summoned> summonedResult = field.getSummonedPool().getById(objectId);
+        final Optional<Summoned> summonedResult = field.getUserObjectPool().getSummonedById(objectId);
         if (summonedResult.isEmpty()) {
             log.error("Received SUMMONED_ATTACK for invalid object with ID : {}", objectId);
             return;
@@ -85,7 +87,17 @@ public class SummonedHandler {
 
         inPacket.decodeInt(); // Crc
 
+        // Check summoned attack info
+        final Optional<SummonedAttackInfo> summonedAttackInfoResult = SkillProvider.getSummonedAttackInfo(summoned.getSkillId());
+        if (summonedAttackInfoResult.isEmpty()) {
+            log.error("Failed to resolve summoned attack info for summoned with skill id : {}", summoned.getSkillId());
+            return;
+        }
+        final SummonedAttackInfo sai = summonedAttackInfoResult.get();
+        if (sai.getMobCount() < attack.mobCount) {
+            log.error("Received SUMMON_ATTACK with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.mobCount);
+        }
 
-        // TODO: check SummonedAttackInfo
+
     }
 }

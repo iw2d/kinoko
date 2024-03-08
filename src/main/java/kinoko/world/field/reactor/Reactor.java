@@ -13,7 +13,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
-import kinoko.world.field.FieldObject;
+import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public final class Reactor extends FieldObject implements Lockable<Reactor> {
+public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> {
     private final Lock lock = new ReentrantLock();
     private final ReactorTemplate template;
     private final ReactorInfo reactorInfo;

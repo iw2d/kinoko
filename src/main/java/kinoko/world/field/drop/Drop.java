@@ -4,13 +4,14 @@ import kinoko.packet.field.DropPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObject;
+import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public final class Drop extends FieldObject {
+public final class Drop extends FieldObjectImpl {
     private final DropOwnType ownType;
     private final FieldObject source;
     private final Item item;

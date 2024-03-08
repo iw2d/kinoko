@@ -1,6 +1,6 @@
 package kinoko.world.field.summoned;
 
-public enum EnterType {
+public enum SummonedEnterType {
     // ENTER_TYPE
     DEFAULT(0),
     CREATE_SUMMONED(1),
@@ -8,7 +8,7 @@ public enum EnterType {
 
     private final int value;
 
-    EnterType(int value) {
+    SummonedEnterType(int value) {
         this.value = value;
     }
 
