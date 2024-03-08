@@ -1,4 +1,4 @@
-package kinoko.world.life.npc;
+package kinoko.world.field.npc;
 
 import kinoko.packet.field.NpcPacket;
 import kinoko.provider.map.LifeInfo;
@@ -6,7 +6,7 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.field.ControlledObject;
-import kinoko.world.life.Life;
+import kinoko.world.field.life.Life;
 import kinoko.world.user.User;
 
 public final class Npc extends Life implements ControlledObject, Encodable {

@@ -1,4 +1,4 @@
-package kinoko.world.life.summoned;
+package kinoko.world.field.summoned;
 
 import kinoko.world.skill.AttackInfo;
 

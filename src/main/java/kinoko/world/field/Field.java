@@ -12,9 +12,9 @@ import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.GameConstants;
+import kinoko.world.field.mob.Mob;
+import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
-import kinoko.world.life.mob.Mob;
-import kinoko.world.life.npc.Npc;
 import kinoko.world.user.User;
 
 import java.time.Instant;

@@ -1,4 +1,4 @@
-package kinoko.world.life.summoned;
+package kinoko.world.field.summoned;
 
 public enum AssistType {
     // ASSIST

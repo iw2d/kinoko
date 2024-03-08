@@ -1,4 +1,4 @@
-package kinoko.world.life.mob;
+package kinoko.world.field.mob;
 
 import java.util.HashMap;
 import java.util.Map;

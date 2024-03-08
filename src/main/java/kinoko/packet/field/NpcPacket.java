@@ -2,8 +2,8 @@ package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.life.MovePath;
-import kinoko.world.life.npc.Npc;
+import kinoko.world.field.life.MovePath;
+import kinoko.world.field.npc.Npc;
 
 public final class NpcPacket {
     // CNpcPool::OnPacket ----------------------------------------------------------------------------------------------

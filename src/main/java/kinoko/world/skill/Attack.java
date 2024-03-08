@@ -2,7 +2,7 @@ package kinoko.world.skill;
 
 import kinoko.server.header.OutHeader;
 import kinoko.world.field.Field;
-import kinoko.world.life.mob.Mob;
+import kinoko.world.field.mob.Mob;
 
 import java.util.ArrayList;
 import java.util.List;

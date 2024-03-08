@@ -1,4 +1,4 @@
-package kinoko.world.life.mob;
+package kinoko.world.field.mob;
 
 public final class BurnedInfo {
     public int characterId;

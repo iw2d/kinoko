@@ -2,8 +2,8 @@ package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.life.MovePath;
-import kinoko.world.life.mob.*;
+import kinoko.world.field.life.MovePath;
+import kinoko.world.field.mob.*;
 
 import java.util.Map;
 import java.util.Set;

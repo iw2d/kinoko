@@ -1,10 +1,10 @@
-package kinoko.world.life.summoned;
+package kinoko.world.field.summoned;
 
 import kinoko.packet.field.SummonedPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.world.field.life.Life;
 import kinoko.world.job.resistance.Mechanic;
-import kinoko.world.life.Life;
 import kinoko.world.user.AvatarLook;
 import kinoko.world.user.User;
 

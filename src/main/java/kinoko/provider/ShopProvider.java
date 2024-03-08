@@ -2,7 +2,7 @@ package kinoko.provider;
 
 import kinoko.server.ServerConfig;
 import kinoko.server.dialog.shop.ShopItem;
-import kinoko.world.life.npc.Npc;
+import kinoko.world.field.npc.Npc;
 
 import java.io.IOException;
 import java.nio.file.Path;

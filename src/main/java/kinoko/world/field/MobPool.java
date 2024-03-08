@@ -6,10 +6,10 @@ import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
-import kinoko.world.life.mob.BurnedInfo;
-import kinoko.world.life.mob.Mob;
-import kinoko.world.life.mob.MobAppearType;
-import kinoko.world.life.mob.MobTemporaryStat;
+import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.mob.MobTemporaryStat;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
