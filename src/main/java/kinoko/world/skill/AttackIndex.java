@@ -1,9 +1,7 @@
 package kinoko.world.skill;
 
-/**
- * Enum AttackIndex.
- */
-public enum HitType {
+public enum AttackIndex {
+    // AttackIndex
     MOB_PHYSICAL(0),
     MOB_MAGIC(-1),
     COUNTER(-2),
@@ -12,7 +10,7 @@ public enum HitType {
 
     private final int value;
 
-    HitType(int value) {
+    AttackIndex(int value) {
         this.value = value;
     }
 
@@ -20,8 +18,8 @@ public enum HitType {
         return value;
     }
 
-    public static HitType getByValue(int value) {
-        for (HitType type : values()) {
+    public static AttackIndex getByValue(int value) {
+        for (AttackIndex type : values()) {
             if (type.getValue() == value) {
                 return type;
             }

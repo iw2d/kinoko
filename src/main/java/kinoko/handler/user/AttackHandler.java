@@ -232,14 +232,14 @@ public final class AttackHandler {
     public static void handleUserHit(User user, InPacket inPacket) {
         // CUserLocal::SetDamaged, CUserLocal::Update
         inPacket.decodeInt(); // get_update_time()
-        final int attackIndex = inPacket.decodeByte(); // nAttackIdx
-        final HitType hitType = HitType.getByValue(attackIndex);
-        if (hitType == null) {
-            log.error("Unknown hit type (attack index) received : {}", attackIndex);
+        final int index = inPacket.decodeByte(); // nAttackIdx
+        final AttackIndex attackIndex = AttackIndex.getByValue(index);
+        if (attackIndex == null) {
+            log.error("Unknown attack index received : {}", index);
             return;
         }
-        final HitInfo hitInfo = new HitInfo(hitType);
-        switch (hitType) {
+        final HitInfo hitInfo = new HitInfo(attackIndex);
+        switch (attackIndex) {
             case MOB_PHYSICAL, MOB_MAGIC -> {
                 hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
                 hitInfo.damage = inPacket.decodeInt(); // nDamage

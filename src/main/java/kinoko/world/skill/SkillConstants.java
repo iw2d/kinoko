@@ -37,6 +37,14 @@ public final class SkillConstants {
         return skillId / 10000;
     }
 
+    public static int getNoviceSkillAsRace(int skillId, int jobId) {
+        if (JobConstants.isEvanJob(jobId)) {
+            return skillId + 20010000;
+        } else {
+            return skillId + 10000000 * (jobId / 1000);
+        }
+    }
+
     public static boolean isBeginnerSpAddableSkill(int skillId) {
         if (!JobConstants.isBeginnerJob(getSkillRoot(skillId))) {
             return false;

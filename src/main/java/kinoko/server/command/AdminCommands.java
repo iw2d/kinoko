@@ -309,7 +309,7 @@ public final class AdminCommands {
         user.warp(targetField, portalResult.get(), false, false);
     }
 
-    @Command({"mob", "spawn"})
+    @Command({ "mob", "spawn" })
     public static void mob(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
             user.write(WvsContext.message(Message.system("Syntax : %smob <mob template ID to spawn>", ServerConfig.COMMAND_PREFIX)));

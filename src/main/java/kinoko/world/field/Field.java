@@ -31,6 +31,9 @@ public final class Field {
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
 
     private final UserPool userPool = new UserPool(this);
+    private final SummonedPool summonedPool = new SummonedPool(this);
+    private final AffectedAreaPool affectedAreaPool = new AffectedAreaPool(this);
+
     private final MobPool mobPool = new MobPool(this);
     private final NpcPool npcPool = new NpcPool(this);
     private final DropPool dropPool = new DropPool(this);
@@ -87,6 +90,14 @@ public final class Field {
 
     public UserPool getUserPool() {
         return userPool;
+    }
+
+    public SummonedPool getSummonedPool() {
+        return summonedPool;
+    }
+
+    public AffectedAreaPool getAffectedAreaPool() {
+        return affectedAreaPool;
     }
 
     public MobPool getMobPool() {

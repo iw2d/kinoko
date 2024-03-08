@@ -1,6 +1,7 @@
 package kinoko.provider;
 
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.WzReader;
@@ -19,6 +20,7 @@ public final class SkillProvider implements WzProvider {
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
     private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
+    private static final Map<Integer, SummonedAttackInfo> summonedAttackInfos = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
@@ -40,6 +42,10 @@ public final class SkillProvider implements WzProvider {
 
     public static Optional<SkillInfo> getSkillInfoById(int skillId) {
         return Optional.ofNullable(skillInfos.get(skillId));
+    }
+
+    public static Optional<SummonedAttackInfo> getSummonedAttackInfo(int skillId) {
+        return Optional.ofNullable(summonedAttackInfos.get(skillId));
     }
 
     private static void loadSkillInfos(WzPackage source) throws ProviderError {
@@ -65,6 +71,18 @@ public final class SkillProvider implements WzProvider {
                 }
                 jobSkills.get(job).add(skillInfo);
                 skillInfos.put(skillId, skillInfo);
+
+                // Handle summon attack info
+                if (!(skillProp.get("summon") instanceof WzListProperty summonProp)) {
+                    continue;
+                }
+                for (var summonEntry : summonProp.getItems().entrySet()) {
+                    if (!summonEntry.getKey().startsWith("attack") ||
+                            !(summonEntry.getValue() instanceof WzListProperty attackProp)) {
+                        continue;
+                    }
+                    summonedAttackInfos.put(skillId, SummonedAttackInfo.from(skillId, attackProp));
+                }
             }
         }
     }

@@ -23,6 +23,7 @@ import kinoko.world.item.*;
 import kinoko.world.job.explorer.Beginner;
 import kinoko.world.life.MovePath;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
@@ -81,7 +82,7 @@ public final class PetHandler {
             if (petIndexResult.isEmpty()) {
                 // Resolve pet index
                 final CharacterStat cs = user.getCharacterStat();
-                final boolean hasFollowTheLead = user.getSkillManager().getSkill(Beginner.FOLLOW_THE_LEAD).isPresent(); // TODO other beginner jobs
+                final boolean hasFollowTheLead = user.getSkillManager().getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
                 final int petIndex;
                 if (!hasFollowTheLead || bossPet || cs.getPetSn1() == 0) {
                     petIndex = 0;

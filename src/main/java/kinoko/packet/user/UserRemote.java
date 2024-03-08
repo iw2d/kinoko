@@ -112,7 +112,7 @@ public final class UserRemote {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_HIT);
         outPacket.encodeInt(user.getCharacterId());
 
-        final int attackIndex = hitInfo.hitType.getValue();
+        final int attackIndex = hitInfo.attackIndex.getValue();
         outPacket.encodeByte(attackIndex); // nAttackIdx
         outPacket.encodeInt(hitInfo.damage); // nDamage
         if (attackIndex > -2) {
