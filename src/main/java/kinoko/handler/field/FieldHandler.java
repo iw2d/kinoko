@@ -34,14 +34,7 @@ public final class FieldHandler {
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         // Returning from CashShop
         if (inPacket.getRemaining() == 0) {
-            final ChannelServer channelServer = user.getConnectedServer();
-            final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(user.getClient(), channelServer, user.getCharacterId());
-            if (mrResult.isEmpty()) {
-                log.error("Failed to submit migration request for character ID : {}", user.getCharacterId());
-                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-                return;
-            }
-            user.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
+            migrateToChannelServer(user, user.getConnectedServer());
             return;
         }
 
@@ -114,14 +107,7 @@ public final class FieldHandler {
             user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
             return;
         }
-        final ChannelServer channelServer = channelResult.get();
-        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(user.getClient(), channelServer, user.getCharacterId());
-        if (mrResult.isEmpty()) {
-            log.error("Failed to submit migration request for character ID : {}", user.getCharacterId());
-            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-            return;
-        }
-        user.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
+        migrateToChannelServer(user, channelResult.get());
     }
 
     @Handler(InHeader.USER_MIGRATE_TO_CASHSHOP_REQUEST)
@@ -169,5 +155,20 @@ public final class FieldHandler {
                 user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("Could not receive some gifts due to the locker being full.")));
             }
         }
+    }
+
+    private static void migrateToChannelServer(User user, ChannelServer channelServer) {
+        // Force character save
+        DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
+        DatabaseManager.accountAccessor().saveAccount(user.getAccount());
+        // Submit migration request
+        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(user.getClient(), channelServer, user.getCharacterId());
+        if (mrResult.isEmpty()) {
+            log.error("Failed to submit migration request for character ID : {}", user.getCharacterId());
+            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+            return;
+        }
+        // Send migrate command
+        user.write(ClientPacket.migrateCommand(channelServer.getAddress(), channelServer.getPort()));
     }
 }
