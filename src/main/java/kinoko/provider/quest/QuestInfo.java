@@ -195,10 +195,14 @@ public final class QuestInfo {
                 progress[i] = Math.min(progress[i] + 1, mobData.getCount());
             }
         }
-        // Update quest record and return
+        // Check if quest record needs to be updated
         final String newQrValue = Arrays.stream(progress)
                 .mapToObj((count) -> String.format("%03d", Math.min(count, 999)))
                 .collect(Collectors.joining());
+        if (newQrValue.equals(questRecord.getValue())) {
+            return Optional.empty();
+        }
+        // Update quest record and return
         questRecord.setValue(newQrValue);
         return Optional.of(questRecord);
     }

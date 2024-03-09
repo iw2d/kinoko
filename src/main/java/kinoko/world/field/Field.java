@@ -184,7 +184,7 @@ public final class Field {
         final Field field = new Field(mapInfo);
         // Populate npc pool
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
-            if (lifeInfo.getLifeType() == LifeType.NPC) {
+            if (lifeInfo.getLifeType() != LifeType.NPC) {
                 continue;
             }
             final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(lifeInfo.getTemplateId());

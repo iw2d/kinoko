@@ -220,7 +220,7 @@ public final class LoginHandler {
         cs.setSp(ExtendSp.from(Map.of()));
         cs.setExp(0);
         cs.setPop((short) 0);
-        cs.setPosMap(10000);
+        cs.setPosMap(0); // TODO starting maps for each login job
         cs.setPortal((byte) 0);
         characterData.setCharacterStat(cs);
 

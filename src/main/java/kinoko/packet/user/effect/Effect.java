@@ -114,6 +114,12 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static Effect squibEffect(String effectPath) {
+        final Effect effect = new Effect(EffectType.SQUIB_EFFECT);
+        effect.string1 = effectPath; // sEffect
+        return effect;
+    }
+
     public static Effect gainItem(Item item) {
         return gainItem(item.getItemId(), item.getQuantity());
     }

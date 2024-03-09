@@ -692,6 +692,11 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.UPDATE_GM_BOARD)
+    public static void handleUpdateGmBoard(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // nGameOpt_OpBoardIndex
+    }
+
     @Handler(InHeader.QUICKSLOT_KEY_MAPPED_MODIFIED)
     public static void handleQuickslotKeyMappedModified(User user, InPacket inPacket) {
         final int[] quickslotKeyMap = new int[GameConstants.QUICKSLOT_KEY_SIZE];
@@ -702,5 +707,11 @@ public final class UserHandler {
             final FuncKeyManager fkm = locked.get().getFuncKeyManager();
             fkm.setQuickslotKeyMap(quickslotKeyMap);
         }
+    }
+
+    @Handler(InHeader.UPDATE_SCREEN_SETTING)
+    public static void handleUpdateScreenSetting(User user, InPacket inPacket) {
+        inPacket.decodeByte(); // bSysOpt_LargeScreen
+        inPacket.decodeByte(); // bSysOpt_WindowedMode
     }
 }

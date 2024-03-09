@@ -3,6 +3,7 @@ package kinoko.server.script;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.effect.FieldEffect;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.IncExpMessage;
@@ -11,9 +12,12 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.world.field.Field;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,6 +89,11 @@ public abstract class ScriptManager {
         user.dispose();
     }
 
+    public final void squibEffect(String effectPath) {
+        user.write(UserLocal.effect(Effect.squibEffect(effectPath)));
+        user.dispose();
+    }
+
     public final void balloonMsg(String text, int width, int duration) {
         user.write(UserLocal.balloonMsg(text, width, duration));
         user.dispose();
@@ -95,8 +104,16 @@ public abstract class ScriptManager {
         user.dispose();
     }
 
+    public final void setDirectionMode(boolean set, int delay) {
+        user.write(UserLocal.setDirectionMode(set, delay));
+    }
+
     public final void screenEffect(String effectPath) {
         user.write(FieldPacket.effect(FieldEffect.screen(effectPath)));
+    }
+
+    public final int getFieldId() {
+        return user.getField().getFieldId();
     }
 
 
@@ -104,6 +121,14 @@ public abstract class ScriptManager {
 
     public final int getGender() {
         return user.getGender();
+    }
+
+    public final int getLevel() {
+        return user.getLevel();
+    }
+
+    public final int getJob() {
+        return user.getJob();
     }
 
     public final int getHp() {
@@ -123,9 +148,11 @@ public abstract class ScriptManager {
     // INVENTORY METHODS -----------------------------------------------------------------------------------------------
 
     public final boolean addMoney(int money) {
-        if (!user.getInventoryManager().addMoney(money)) {
+        final InventoryManager im = user.getInventoryManager();
+        if (!im.addMoney(money)) {
             return false;
         }
+        user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
         user.write(WvsContext.message(Message.incMoney(money)));
         return true;
     }
@@ -151,11 +178,44 @@ public abstract class ScriptManager {
         }
     }
 
+    public final boolean removeItem(int itemId, int quantity) {
+        final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemId, quantity);
+        if (removeItemResult.isPresent()) {
+            user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
+            user.write(UserLocal.effect(Effect.gainItem(itemId, -quantity)));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public final boolean hasItem(int itemId) {
         return hasItem(itemId, 1);
     }
 
     public final boolean hasItem(int itemId, int quantity) {
         return user.getInventoryManager().hasItem(itemId, quantity);
+    }
+
+
+    // QUEST METHODS ---------------------------------------------------------------------------------------------------
+
+    public boolean hasQuestStarted(int questId) {
+        return user.getQuestManager().hasQuestStarted(questId);
+    }
+
+    public void forceStartQuest(int questId) {
+        final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
+        user.write(WvsContext.message(Message.questRecord(qr)));
+        user.validateStat();
+    }
+
+    public void forceCompleteQuest(int questId) {
+        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
+        user.write(WvsContext.message(Message.questRecord(qr)));
+        user.validateStat();
+        // Quest complete effect
+        user.write(UserLocal.effect(Effect.questComplete()));
+        user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
     }
 }

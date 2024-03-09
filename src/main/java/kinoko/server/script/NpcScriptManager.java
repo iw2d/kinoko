@@ -4,12 +4,6 @@ import kinoko.packet.script.ScriptMessage;
 import kinoko.packet.script.ScriptMessageParam;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.script.ScriptPacket;
-import kinoko.packet.user.UserLocal;
-import kinoko.packet.user.UserRemote;
-import kinoko.packet.user.effect.Effect;
-import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
-import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 
 import java.util.EnumSet;
@@ -167,23 +161,5 @@ public final class NpcScriptManager extends ScriptManager {
     public String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines) {
         sendMessage(ScriptMessage.askBoxText(speakerId, messageParams, text, textDefault, textBoxColumns, textBoxLines));
         return handleAnswer().getTextAnswer();
-    }
-
-
-    // QUEST METHODS ---------------------------------------------------------------------------------------------------
-
-    public void forceStartQuest(int questId) {
-        final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
-        user.write(WvsContext.message(Message.questRecord(qr)));
-        user.validateStat();
-    }
-
-    public void forceCompleteQuest(int questId) {
-        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
-        user.write(WvsContext.message(Message.questRecord(qr)));
-        user.validateStat();
-        // Quest complete effect
-        user.write(UserLocal.effect(Effect.questComplete()));
-        user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
     }
 }

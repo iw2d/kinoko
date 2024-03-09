@@ -50,4 +50,8 @@ public final class ReactorHandler {
         final boolean inside = inPacket.decodeBoolean(); // PtInRect
         // TODO
     }
+
+    @Handler(InHeader.REQUIRE_FIELD_OBSTACLE_STATUS)
+    public static void handleRequireFieldObstacleStatus(User user, InPacket inPacket) {
+    }
 }

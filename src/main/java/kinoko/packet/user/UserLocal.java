@@ -63,7 +63,7 @@ public final class UserLocal {
     public static OutPacket setDirectionMode(boolean set, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SET_DIRECTION_MODE);
         outPacket.encodeByte(set);
-        outPacket.encodeInt(delay);
+        outPacket.encodeInt(delay); // tAfterLeaveDirectionMode
         return outPacket;
     }
 

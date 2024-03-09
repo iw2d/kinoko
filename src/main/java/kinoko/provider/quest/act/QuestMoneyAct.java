@@ -2,7 +2,9 @@ package kinoko.provider.quest.act;
 
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 
 public final class QuestMoneyAct implements QuestAct {
     private final int money;
@@ -19,9 +21,11 @@ public final class QuestMoneyAct implements QuestAct {
 
     @Override
     public boolean doAct(User user) {
-        if (!user.getInventoryManager().addMoney(money)) {
+        final InventoryManager im = user.getInventoryManager();
+        if (!im.addMoney(money)) {
             return false;
         }
+        user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
         user.write(WvsContext.message(Message.incMoney(money)));
         return true;
     }

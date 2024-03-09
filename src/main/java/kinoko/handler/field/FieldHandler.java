@@ -58,11 +58,20 @@ public final class FieldHandler {
             final boolean isRevive = portalName.isEmpty() && user.getHp() == 0;
             final int nextFieldId;
             final String nextPortalName;
-            if (isRevive) {
-                // Handle revive
-                user.validateStat();
-                user.setHp(50);
-                user.write(WvsContext.statChanged(Stat.HP, user.getHp(), true));
+            if (portalName.isEmpty()) {
+                if (targetField != user.getField().getReturnMap()) {
+                    log.error("Tried to return to field : {} from field : {}", targetField, user.getField().getFieldId());
+                    user.dispose();
+                    return;
+                }
+                if (isRevive) {
+                    // Handle revive
+                    // TODO remove CTS, etc
+                    user.updatePassiveSkillData();
+                    user.validateStat();
+                    user.setHp(50);
+                    user.write(WvsContext.statChanged(Stat.HP, user.getHp(), true));
+                }
                 nextFieldId = user.getField().getReturnMap();
                 nextPortalName = "sp"; // spawn point
             } else {
@@ -155,6 +164,10 @@ public final class FieldHandler {
                 user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("Could not receive some gifts due to the locker being full.")));
             }
         }
+    }
+
+    @Handler(InHeader.CANCEL_INVITE_PARTY_MATCH)
+    public static void handleCancelInvitePartyMatch(User user, InPacket inPacket) {
     }
 
     private static void migrateToChannelServer(User user, ChannelServer channelServer) {

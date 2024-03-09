@@ -115,7 +115,23 @@ public final class JobHandler {
                 return;
             case Thief.DARK_SIGHT:
             case NightWalker.DARK_SIGHT:
-                user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                if (slv == si.getMaxLevel()) {
+                    user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                } else {
+                    user.setTemporaryStat(Map.of(
+                            CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            CharacterTemporaryStat.Slow, TemporaryStatOption.of(100 - si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                    ));
+                }
+                return;
+            case Thief.HASTE_NL:
+            case Thief.HASTE_SHAD:
+            case Thief.SELF_HASTE:
+            case NightWalker.HASTE:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
+                ));
                 return;
             case Thief.FLASH_JUMP_NL:
             case Thief.FLASH_JUMP_SHAD:
