@@ -34,6 +34,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.npc.Npc;
+import kinoko.world.friend.FriendRequestType;
 import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
@@ -595,6 +596,33 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.FRIEND_REQUEST)
+    public static void handleFriendRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final FriendRequestType requestType = FriendRequestType.getByValue(type);
+        if (requestType == null) {
+            log.error("Unknown friend request type : {}", type);
+            return;
+        }
+        switch (requestType) {
+            case LOAD_FRIEND -> {
+            }
+            case SET_FRIEND -> {
+                final String target = inPacket.decodeString(); // sTarget
+                final String friendGroup = inPacket.decodeString(); // sFriendGroup
+            }
+            case ACCEPT_FRIEND -> {
+                final int friendId = inPacket.decodeInt();
+            }
+            case DELETE_FRIEND -> {
+                final int friendId = inPacket.decodeInt();
+            }
+            default -> {
+                log.error("Unhandled friend request type : {}", requestType);
+            }
+        }
+    }
+
     @Handler(InHeader.MEMO_REQUEST)
     public static void handleMemoRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
@@ -646,6 +674,9 @@ public final class UserHandler {
                 // CWvsContext::OnMemoNotify_Receive
                 // TODO fetch memo from DB
             }
+            default -> {
+                log.error("Unhandled memo request type : {}", requestType);
+            }
         }
     }
 
@@ -687,6 +718,9 @@ public final class UserHandler {
                 case PET_CONSUME_MP_ITEM_MODIFIED -> {
                     final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
                     fkm.setPetConsumeMpItem(itemId);
+                }
+                default -> {
+                    log.error("Unhandled func key mapped type : {}", funcKeyMappedType);
                 }
             }
         }

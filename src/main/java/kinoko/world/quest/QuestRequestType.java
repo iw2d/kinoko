@@ -9,13 +9,13 @@ public enum QuestRequestType {
     OPENING_SCRIPT(4),
     COMPLETE_SCRIPT(5);
 
-    private final byte value;
+    private final int value;
 
     QuestRequestType(int value) {
-        this.value = (byte) value;
+        this.value = value;
     }
 
-    public final byte getValue() {
+    public final int getValue() {
         return value;
     }
 

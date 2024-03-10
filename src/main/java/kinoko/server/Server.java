@@ -16,16 +16,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
     private static LoginServer loginServer;
     private static List<World> worlds;
+    private static Map<String, UserProxy> userMap = new ConcurrentHashMap<>();
 
     public static LoginServer getLoginServer() {
         return loginServer;
@@ -49,6 +48,18 @@ public final class Server {
         return worldResult.get().getChannels().stream()
                 .filter(ch -> ch.getWorldId() == worldId && ch.getChannelId() == channelId)
                 .findFirst();
+    }
+
+    public static void addUser(UserProxy userProxy) {
+        userMap.put(UserProxy.normalizeName(userProxy.getCharacterName()), userProxy);
+    }
+
+    public static void removeUser(String characterName) {
+        userMap.remove(UserProxy.normalizeName(characterName));
+    }
+
+    public static Optional<UserProxy> getUserByName(String characterName) {
+        return Optional.ofNullable(userMap.get(UserProxy.normalizeName(characterName)));
     }
 
     /**

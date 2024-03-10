@@ -199,6 +199,11 @@ public final class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket friendResult() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.FRIEND_RESULT);
+        return outPacket;
+    }
+
     public static OutPacket broadcastMsg(BroadcastMessage message) {
         final OutPacket outPacket = OutPacket.of(OutHeader.BROADCAST_MSG);
         message.encode(outPacket);
