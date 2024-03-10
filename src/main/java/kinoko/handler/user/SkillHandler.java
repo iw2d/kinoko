@@ -101,11 +101,13 @@ public final class SkillHandler {
         final int skillId = inPacket.decodeInt(); // nSkillID
         try (var locked = user.acquire()) {
             final Set<CharacterTemporaryStat> resetStats = locked.get().getSecondaryStat().resetTemporaryStat(skillId);
-            if (!resetStats.isEmpty()) {
-                user.validateStat();
-                user.write(WvsContext.temporaryStatReset(resetStats));
-                user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);
+            if (resetStats.isEmpty()) {
+                log.error("Tried to cancel skill {}", skillId);
+                return;
             }
+            user.validateStat();
+            user.write(WvsContext.temporaryStatReset(resetStats));
+            user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);
         }
     }
 

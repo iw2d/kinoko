@@ -3,6 +3,8 @@ package kinoko.server.client;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.ClientPacket;
+import kinoko.server.Server;
+import kinoko.server.UserProxy;
 import kinoko.server.netty.NettyClient;
 import kinoko.server.netty.NettyServer;
 import kinoko.world.Account;
@@ -59,6 +61,7 @@ public final class Client extends NettyClient {
         super.close();
         getConnectedServer().getClientStorage().removeClient(this);
         if (user != null) {
+            Server.getUserStorage().removeUser(UserProxy.from(null, user));
             try (var locked = user.acquire()) {
                 user.logout();
                 DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());

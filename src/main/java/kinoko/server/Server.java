@@ -16,15 +16,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
+    private static final UserStorage userStorage = new UserStorage();
     private static LoginServer loginServer;
     private static List<World> worlds;
-    private static Map<String, UserProxy> userMap = new ConcurrentHashMap<>();
+
+    public static UserStorage getUserStorage() {
+        return userStorage;
+    }
 
     public static LoginServer getLoginServer() {
         return loginServer;
@@ -42,53 +48,31 @@ public final class Server {
 
     public static Optional<ChannelServer> getChannelServerById(int worldId, int channelId) {
         final Optional<World> worldResult = Server.getWorldById(worldId);
-        if (worldResult.isEmpty()) {
-            return Optional.empty();
-        }
-        return worldResult.get().getChannels().stream()
+        return worldResult.flatMap(world -> world.getChannels().stream()
                 .filter(ch -> ch.getWorldId() == worldId && ch.getChannelId() == channelId)
-                .findFirst();
-    }
-
-    public static void addUser(UserProxy userProxy) {
-        userMap.put(UserProxy.normalizeName(userProxy.getCharacterName()), userProxy);
-    }
-
-    public static void removeUser(String characterName) {
-        userMap.remove(UserProxy.normalizeName(characterName));
-    }
-
-    public static Optional<UserProxy> getUserByName(String characterName) {
-        return Optional.ofNullable(userMap.get(UserProxy.normalizeName(characterName)));
+                .findFirst());
     }
 
     /**
      * Check whether an {@link Account} instance is associated with a client. In order to prevent multiple clients
      * logging into the same account, this should return true if:
      * <ul>
+     *     <li>{@link Account} is connected according to {@link UserStorage} or</li>
      *     <li>{@link Account} is authenticated on the {@link LoginServer}, or</li>
      *     <li>{@link MigrationRequest} exists for the account, or</li>
-     *     <li>{@link Account} is connected to a {@link ChannelServer} instance.</li>
      * </ul>
      *
      * @param account {@link Account} instance to check.
      * @return true if {@link Account} is currently associated with a client.
      */
     public static boolean isConnected(Account account) {
+        if (userStorage.isConnected(account)) {
+            return true;
+        }
         if (loginServer.getClientStorage().isConnected(account)) {
             return true;
         }
-        if (DatabaseManager.migrationAccessor().hasMigrationRequest(account.getId())) {
-            return true;
-        }
-        for (World world : getWorlds()) {
-            for (ChannelServer channelServer : world.getChannels()) {
-                if (channelServer.getClientStorage().isConnected(account)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return DatabaseManager.migrationAccessor().hasMigrationRequest(account.getId());
     }
 
     /**
