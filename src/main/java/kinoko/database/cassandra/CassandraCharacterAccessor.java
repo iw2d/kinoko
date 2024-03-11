@@ -18,10 +18,8 @@ import kinoko.world.user.CharacterData;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
@@ -53,6 +51,10 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setInventoryManager(im);
 
         final SkillManager sm = new SkillManager();
+        final Map<Integer, Instant> skillCooltimes = row.getMap(CharacterTable.SKILL_COOLTIMES, Integer.class, Instant.class);
+        if (skillCooltimes != null) {
+            sm.getSkillCooltimes().putAll(skillCooltimes);
+        }
         final Set<SkillRecord> skillRecords = row.getSet(CharacterTable.SKILL_RECORDS, SkillRecord.class);
         if (skillRecords != null) {
             for (SkillRecord sr : skillRecords) {
@@ -193,6 +195,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getInventoryManager().getEtcInventory(), registry))
                         .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getInventoryManager().getCashInventory(), registry))
                         .setColumn(CharacterTable.MONEY, literal(characterData.getInventoryManager().getMoney()))
+                        .setColumn(CharacterTable.SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.FUNC_KEY_MAN, literal(characterData.getFuncKeyManager(), registry))

@@ -13,7 +13,6 @@ public final class MigrationTable {
     public static final String MACHINE_ID = "machine_id";
     public static final String REMOTE_ADDRESS = "remote_address";
 
-
     private static final String tableName = "migration";
 
     public static String getTableName() {

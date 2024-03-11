@@ -194,4 +194,13 @@ public enum CharacterTemporaryStat implements BitIndex {
     public int getBitPosition() {
         return bitPosition;
     }
+
+    public static CharacterTemporaryStat getByValue(int value) {
+        for (CharacterTemporaryStat cts : values()) {
+            if (cts.getValue() == value) {
+                return cts;
+            }
+        }
+        return null;
+    }
 }

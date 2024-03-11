@@ -5,6 +5,8 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.type.*;
 
+import java.time.Instant;
+
 public final class CharacterTable {
     public static final String CHARACTER_ID = "character_id";
     public static final String ACCOUNT_ID = "account_id";
@@ -18,8 +20,8 @@ public final class CharacterTable {
     public static final String ETC_INVENTORY = "etc_inventory";
     public static final String CASH_INVENTORY = "cash_inventory";
     public static final String MONEY = "money";
-    public static final String SKILL_RECORDS = "skill_records";
     public static final String SKILL_COOLTIMES = "skill_cooltimes";
+    public static final String SKILL_RECORDS = "skill_records";
     public static final String QUEST_RECORDS = "quest_records";
     public static final String FUNC_KEY_MAN = "func_key_man";
     public static final String ITEM_SN_COUNTER = "item_sn_counter";
@@ -48,6 +50,7 @@ public final class CharacterTable {
                         .withColumn(ETC_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(CASH_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(MONEY, DataTypes.INT)
+                        .withColumn(SKILL_COOLTIMES, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.TIMESTAMP))
                         .withColumn(SKILL_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
                         .withColumn(FUNC_KEY_MAN, SchemaBuilder.udt(FuncKeyManUDT.getTypeName(), true))
