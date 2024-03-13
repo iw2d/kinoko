@@ -59,7 +59,7 @@ public final class Server {
                 centralServerNode.initialize();
             } catch (Exception e) {
                 log.error("Failed to initialize central server node", e);
-                throw new RuntimeException(e);
+                System.exit(1);
             }
         });
         for (int channelId = 0; channelId < ServerConfig.CHANNELS_PER_WORLD; channelId++) {
@@ -69,7 +69,7 @@ public final class Server {
                     channelServerNode.initialize();
                 } catch (Exception e) {
                     log.error("Failed to initialize channel server node {}", channelServerNode.getChannelId() + 1, e);
-                    throw new RuntimeException(e);
+                    System.exit(1);
                 }
             });
         }

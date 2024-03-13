@@ -309,6 +309,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void logout() {
+        getConnectedServer().notifyUserDisconnect(this);
         if (getField() != null) {
             getField().removeUser(this);
         }

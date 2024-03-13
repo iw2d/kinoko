@@ -12,7 +12,7 @@ public final class UserStorage {
     private final Map<Integer, UserProxy> mapByCharacterId = new HashMap<>();
     private final Map<String, UserProxy> mapByCharacterName = new HashMap<>();
 
-    public void addUser(UserProxy userProxy) {
+    public void putUser(UserProxy userProxy) {
         lock.lock();
         try {
             mapByAccountId.put(userProxy.getAccountId(), userProxy);

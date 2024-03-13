@@ -3,10 +3,7 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
-import kinoko.server.node.CentralServerNode;
-import kinoko.server.node.MigrationInfo;
-import kinoko.server.node.RemoteChildNode;
-import kinoko.server.node.TransferInfo;
+import kinoko.server.node.*;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import org.apache.logging.log4j.Level;
@@ -85,6 +82,18 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         targetNode.getChannelHost(),
                         targetNode.getChannelPort()
                 )));
+            }
+            case USER_CONNECT -> {
+                final UserProxy userProxy = UserProxy.decode(inPacket);
+                centralServerNode.addUser(userProxy);
+            }
+            case USER_UPDATE -> {
+                final UserProxy userProxy = UserProxy.decode(inPacket);
+                centralServerNode.updateUser(userProxy);
+            }
+            case USER_DISCONNECT -> {
+                final UserProxy userProxy = UserProxy.decode(inPacket);
+                centralServerNode.removeUser(userProxy);
             }
             case null -> {
                 log.error("Central Server received an unknown opcode : {}", op);

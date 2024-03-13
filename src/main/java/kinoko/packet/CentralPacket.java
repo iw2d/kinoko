@@ -3,6 +3,7 @@ package kinoko.packet;
 import kinoko.server.netty.CentralPacketHeader;
 import kinoko.server.node.MigrationInfo;
 import kinoko.server.node.TransferInfo;
+import kinoko.server.node.UserProxy;
 import kinoko.server.packet.OutPacket;
 
 public final class CentralPacket {
@@ -61,6 +62,18 @@ public final class CentralPacket {
         if (transferInfo != null) {
             transferInfo.encode(outPacket);
         }
+        return outPacket;
+    }
+
+    public static OutPacket userConnect(UserProxy userProxy) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_CONNECT);
+        userProxy.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket userDisconnect(UserProxy userProxy) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_DISCONNECT);
+        userProxy.encode(outPacket);
         return outPacket;
     }
 }

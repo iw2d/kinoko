@@ -85,6 +85,17 @@ public final class ChannelServerNode extends ServerNode {
     }
 
 
+    // USER METHODS ----------------------------------------------------------------------------------------------------
+
+    public void notifyUserConnect(User user) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userConnect(UserProxy.from(user)));
+    }
+
+    public void notifyUserDisconnect(User user) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userDisconnect(UserProxy.from(user)));
+    }
+
+
     // FIELD METHODS ---------------------------------------------------------------------------------------------------
 
     public synchronized Optional<Field> getFieldById(int mapId) {

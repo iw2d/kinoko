@@ -68,6 +68,7 @@ public enum CentralPacketHeader {
     TRANSFER_REQUEST,
     TRANSFER_RESULT,
     USER_CONNECT,
+    USER_UPDATE,
     USER_DISCONNECT;
 
     private static final Map<Integer, CentralPacketHeader> headerMap = new HashMap<>();

@@ -130,6 +130,7 @@ public final class MigrationHandler {
         }
         c.setUser(user);
         channelServerNode.addClient(c);
+        channelServerNode.notifyUserConnect(user);
 
         try (var locked = user.acquire()) {
             // Initialize pets

@@ -1,6 +1,11 @@
 package kinoko.server.node;
 
-public final class UserProxy {
+import kinoko.server.packet.InPacket;
+import kinoko.server.packet.OutPacket;
+import kinoko.util.Encodable;
+import kinoko.world.user.User;
+
+public final class UserProxy implements Encodable {
     private final int channelId;
     private final int accountId;
     private final int characterId;
@@ -47,5 +52,43 @@ public final class UserProxy {
 
     public void setJob(int job) {
         this.job = job;
+    }
+
+    @Override
+    public void encode(OutPacket outPacket) {
+        outPacket.encodeInt(channelId);
+        outPacket.encodeInt(accountId);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeString(characterName);
+        outPacket.encodeInt(level);
+        outPacket.encodeInt(job);
+    }
+
+    public static UserProxy decode(InPacket inPacket) {
+        final int channelId = inPacket.decodeInt();
+        final int accountId = inPacket.decodeInt();
+        final int characterId = inPacket.decodeInt();
+        final String characterName = inPacket.decodeString();
+        final int level = inPacket.decodeInt();
+        final int job = inPacket.decodeInt();
+        return new UserProxy(
+                channelId,
+                accountId,
+                characterId,
+                characterName,
+                level,
+                job
+        );
+    }
+
+    public static UserProxy from(User user) {
+        return new UserProxy(
+                user.getChannelId(),
+                user.getAccountId(),
+                user.getCharacterId(),
+                user.getCharacterName(),
+                user.getLevel(),
+                user.getJob()
+        );
     }
 }
