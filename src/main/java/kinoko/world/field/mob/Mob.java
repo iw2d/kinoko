@@ -44,6 +44,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
     private final MobTemplate template;
+    private final MobSpawnPoint spawnPoint;
 
     private MobAppearType appearType = MobAppearType.NORMAL;
     private User controller;
@@ -52,8 +53,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private int mp;
     private Instant nextRecovery;
 
-    public Mob(MobTemplate template, int x, int y, int fh) {
+    public Mob(MobTemplate template, MobSpawnPoint spawnPoint, int x, int y, int fh) {
         this.template = template;
+        this.spawnPoint = spawnPoint;
         // Life initialization
         setX(x);
         setY(y);
@@ -207,6 +209,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             if (getField().getMobPool().removeMob(this)) {
                 distributeExp();
                 dropRewards(attacker);
+            }
+            if (spawnPoint != null) {
+                spawnPoint.setNextMobRespawn();
             }
         }
     }

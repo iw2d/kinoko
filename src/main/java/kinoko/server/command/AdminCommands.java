@@ -325,12 +325,14 @@ public final class AdminCommands {
         final Optional<Foothold> footholdResult = field.getFootholdBelow(user.getX(), user.getY());
         final Mob mob = new Mob(
                 mobTemplateResult.get(),
+                null,
                 user.getX(),
                 user.getY(),
                 footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold())
         );
         mob.setAppearType(MobAppearType.REGEN);
         field.getMobPool().addMob(mob);
+        mob.setAppearType(MobAppearType.NORMAL);
     }
 
     @Command("item")

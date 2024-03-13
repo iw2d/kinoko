@@ -54,6 +54,13 @@ public final class MobSpawnPoint {
         return mobTime;
     }
 
+    public void setNextMobRespawn() {
+        // Spawns with mobTime > 0 can only spawn after death
+        if (mobTime > 0) {
+            nextMobRespawn = Instant.now().plus(mobTime, ChronoUnit.SECONDS);
+        }
+    }
+
     public Optional<Mob> trySpawnMob(Instant now) {
         // Check respawn time
         if (now.isBefore(nextMobRespawn)) {
@@ -63,13 +70,16 @@ public final class MobSpawnPoint {
         if (!field.getMobPool().getInsideRect(checkArea).isEmpty()) {
             return Optional.empty();
         }
-        // Create and return mob
+        // Create mob
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(getTemplateId());
         if (mobTemplateResult.isEmpty()) {
             return Optional.empty();
         }
-        final Mob mob = new Mob(mobTemplateResult.get(), x, y, fh);
-        nextMobRespawn = now.plus(getMobTime(), ChronoUnit.SECONDS);
+        final Mob mob = new Mob(mobTemplateResult.get(), this, x, y, fh);
+        // Spawns with mobTime > 0 can only spawn after death
+        if (mobTime > 0) {
+            nextMobRespawn = Instant.MAX;
+        }
         return Optional.of(mob);
     }
 }
