@@ -3,130 +3,28 @@ package kinoko.server;
 import kinoko.database.DatabaseManager;
 import kinoko.provider.*;
 import kinoko.server.cashshop.CashShop;
-import kinoko.server.client.Client;
-import kinoko.server.client.MigrationRequest;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.event.EventScheduler;
+import kinoko.server.node.CentralServerNode;
+import kinoko.server.node.ChannelServerNode;
 import kinoko.server.script.ScriptDispatcher;
-import kinoko.world.Account;
-import kinoko.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
-    private static final UserStorage userStorage = new UserStorage();
-    private static LoginServer loginServer;
-    private static List<World> worlds;
+    private static CentralServerNode centralServerNode;
 
-    public static UserStorage getUserStorage() {
-        return userStorage;
+    public static void main(String[] args) throws Exception {
+        Server.initialize();
     }
 
-    public static LoginServer getLoginServer() {
-        return loginServer;
-    }
-
-    public static List<World> getWorlds() {
-        return worlds;
-    }
-
-    public static Optional<World> getWorldById(int worldId) {
-        return getWorlds().stream()
-                .filter(w -> w.getId() == worldId)
-                .findFirst();
-    }
-
-    public static Optional<ChannelServer> getChannelServerById(int worldId, int channelId) {
-        final Optional<World> worldResult = Server.getWorldById(worldId);
-        return worldResult.flatMap(world -> world.getChannels().stream()
-                .filter(ch -> ch.getWorldId() == worldId && ch.getChannelId() == channelId)
-                .findFirst());
-    }
-
-    /**
-     * Check whether an {@link Account} instance is associated with a client. In order to prevent multiple clients
-     * logging into the same account, this should return true if:
-     * <ul>
-     *     <li>{@link Account} is connected according to {@link UserStorage} or</li>
-     *     <li>{@link Account} is authenticated on the {@link LoginServer}, or</li>
-     *     <li>{@link MigrationRequest} exists for the account, or</li>
-     * </ul>
-     *
-     * @param account {@link Account} instance to check.
-     * @return true if {@link Account} is currently associated with a client.
-     */
-    public static boolean isConnected(Account account) {
-        if (userStorage.isConnected(account)) {
-            return true;
-        }
-        if (loginServer.getClientStorage().isConnected(account)) {
-            return true;
-        }
-        return DatabaseManager.migrationAccessor().hasMigrationRequest(account.getId());
-    }
-
-    /**
-     * Start migration process, an empty result is returned if migration cannot be performed due to incorrect
-     * initialization or due to existing migrations.
-     *
-     * @param c             {@link Client} instance attempting to start migration.
-     * @param channelServer The target channel to migrate to.
-     * @param characterId   The target character for migration.
-     * @return Empty result is returned if migration cannot be performed, result with {@link MigrationRequest} if
-     * migration was successfully queued.
-     */
-    public static Optional<MigrationRequest> submitMigrationRequest(Client c, ChannelServer channelServer, int characterId) {
-        // Account not initialized
-        if (c == null || c.getAccount() == null) {
-            return Optional.empty();
-        }
-        // Account not authenticated
-        final Account account = c.getAccount();
-        if (!c.getConnectedServer().getClientStorage().isConnected(account)) {
-            return Optional.empty();
-        }
-        // Create and Submit MigrationRequest
-        final MigrationRequest migrationRequest = new MigrationRequest(
-                account.getId(), channelServer.getChannelId(), characterId, c.getClientKey(), c.getMachineId(), c.getRemoteAddress()
-        );
-        if (!DatabaseManager.migrationAccessor().submitMigrationRequest(migrationRequest)) {
-            return Optional.empty();
-        }
-        return Optional.of(migrationRequest);
-    }
-
-    /**
-     * Check whether a client migration is valid. There should be a {@link MigrationRequest} that matches the requested
-     * channel ID, character ID, the client's machine ID, and remote address.
-     *
-     * @param client      {@link Client} instance attempting to migrate to channel server.
-     * @param characterId Target character ID attempting to migrate to channel server.
-     * @return {@link MigrationRequest} instance that matches the request.
-     */
-    public static Optional<MigrationRequest> fetchMigrationRequest(Client client, int characterId) {
-        final Optional<MigrationRequest> mrResult = DatabaseManager.migrationAccessor().fetchMigrationRequest(characterId);
-        if (mrResult.isEmpty() || !mrResult.get().strictMatch(client, characterId)) {
-            return Optional.empty();
-        }
-        return mrResult;
-    }
-
-    public static void main(String[] args) {
-        Server.start();
-    }
-
-    private static void start() {
-        // Load providers
+    private static void initialize() throws Exception {
+        // Initialize providers
         Instant start = Instant.now();
         ItemProvider.initialize();      // Item.wz
         MapProvider.initialize();       // Map.wz
@@ -142,59 +40,54 @@ public final class Server {
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Load Database
+        // Initialize Database
         start = Instant.now();
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Load server classes
+        // Initialize server classes
         MapleCrypto.initialize();
-        CommandProcessor.initialize();
         EventScheduler.initialize();
         ScriptDispatcher.initialize();
+        CommandProcessor.initialize();
         CashShop.initialize();
 
-        // Load world
-        start = Instant.now();
-        loginServer = new LoginServer();
-        loginServer.start().join();
-        log.info("Login server listening on port {}", loginServer.getPort());
-        final List<ChannelServer> channelServers = new ArrayList<>();
+        // Initialize nodes
+        centralServerNode = new CentralServerNode();
+        EventScheduler.submit(() -> {
+            try {
+                centralServerNode.initialize();
+            } catch (Exception e) {
+                log.error("Failed to initialize central server node", e);
+                throw new RuntimeException(e);
+            }
+        });
         for (int channelId = 0; channelId < ServerConfig.CHANNELS_PER_WORLD; channelId++) {
-            final ChannelServer channelServer = new ChannelServer(
-                    ServerConfig.WORLD_ID,
-                    channelId,
-                    ServerConstants.CHANNEL_PORT + channelId
-            );
-            channelServer.start().join();
-            channelServers.add(channelServer);
-            log.info("Channel {} listening on port {}", channelId + 1, channelServer.getPort());
+            final ChannelServerNode channelServerNode = new ChannelServerNode(channelId, ServerConstants.CHANNEL_PORT + channelId);
+            EventScheduler.submit(() -> {
+                try {
+                    channelServerNode.initialize();
+                } catch (Exception e) {
+                    log.error("Failed to initialize channel server node {}", channelServerNode.getChannelId() + 1, e);
+                    throw new RuntimeException(e);
+                }
+            });
         }
-        worlds = List.of(new World(ServerConfig.WORLD_ID, ServerConfig.WORLD_NAME, Collections.unmodifiableList(channelServers)));
-        log.info("Loaded world in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Setup shutdown hook stop gracefully
+        // Setup shutdown hook shutdown gracefully
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                Server.stop();
-            } catch (ExecutionException | InterruptedException e) {
+                Server.shutdown();
+            } catch (Exception e) {
                 log.error("Exception caught while shutting down Server", e);
                 throw new RuntimeException(e);
             }
         }));
     }
 
-    private static void stop() throws ExecutionException, InterruptedException {
+    private static void shutdown() throws Exception {
         log.info("Shutting down Server");
-        loginServer.stop().join();
-        for (World world : getWorlds()) {
-            for (ChannelServer channelServer : world.getChannels()) {
-                for (Client client : channelServer.getClientStorage().getConnectedClients()) {
-                    client.close();
-                }
-                channelServer.stop().join();
-            }
-        }
+        centralServerNode.shutdown();
         DatabaseManager.shutdown().join();
     }
 }

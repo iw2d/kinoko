@@ -48,7 +48,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             ShandaCrypto.decrypt(data);
             c.setRecvIv(IGCipher.innoHash(iv));
 
-            NioBufferInPacket inPacket = new NioBufferInPacket(data);
+            final NioBufferInPacket inPacket = new NioBufferInPacket(data);
             out.add(inPacket);
         }
     }

@@ -3,8 +3,9 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.handler.Handler;
-import kinoko.server.client.Client;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.Client;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.user.User;
@@ -17,20 +18,20 @@ import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.Map;
 
-public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
+public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(PacketHandler.class);
-    private final NettyServer server;
+    private final Map<InHeader, Method> handlerMap;
 
-    public PacketHandler(NettyServer server) {
-        this.server = server;
+    protected PacketHandler(Map<InHeader, Method> handlerMap) {
+        this.handlerMap = handlerMap;
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
+    public final void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         final short op = inPacket.decodeShort();
         final InHeader header = InHeader.getByValue(op);
-        final Method handler = server.getHandler(header);
+        final Method handler = handlerMap.get(header);
         if (header == null) {
             log.debug("Unknown opcode {} | {}", Util.opToString(op), inPacket);
         } else if (handler == null) {
@@ -39,23 +40,25 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
             }
         } else {
             log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
-            try {
-                if (handler.getParameterTypes()[0] == Client.class) {
-                    handler.invoke(this, client, inPacket);
-                } else if (handler.getParameterTypes()[0] == User.class) {
-                    handler.invoke(this, client.getUser(), inPacket);
-                } else {
-                    throw new IllegalStateException("Handler with incorrect parameter types.");
+            EventScheduler.submit(() -> {
+                try {
+                    if (handler.getParameterTypes()[0] == Client.class) {
+                        handler.invoke(this, client, inPacket);
+                    } else if (handler.getParameterTypes()[0] == User.class) {
+                        handler.invoke(this, client.getUser(), inPacket);
+                    } else {
+                        throw new IllegalStateException("Handler with incorrect parameter types.");
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    log.error("Exception caught while invoking packet handler", e);
+                    e.printStackTrace();
                 }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                log.error("Exception caught while handling packet", e);
-                e.printStackTrace();
-            }
+            });
         }
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
+    public final void channelInactive(ChannelHandlerContext ctx) {
         log.debug("Channel inactive");
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (client != null) {
@@ -65,12 +68,12 @@ public final class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    public final void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("Exception caught while handling packet", cause);
         cause.printStackTrace();
     }
 
-    public static Map<InHeader, Method> loadHandlers(Class<?>... handlerClasses) {
+    protected static Map<InHeader, Method> loadHandlers(Class<?>... handlerClasses) {
         final Map<InHeader, Method> handlerMap = new EnumMap<>(InHeader.class);
         for (Class<?> clazz : handlerClasses) {
             for (Method method : clazz.getDeclaredMethods()) {

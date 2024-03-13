@@ -100,7 +100,7 @@ public final class CashShopHandler {
                     return;
                 }
                 // Check gift receiver
-                final Optional<Integer> receiverAccountIdResult = DatabaseManager.characterAccessor().getAccountIdByName(receiverName);
+                final Optional<Integer> receiverAccountIdResult = DatabaseManager.characterAccessor().getAccountIdByCharacterName(receiverName);
                 if (receiverAccountIdResult.isEmpty()) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.GIFT_UNKNOWN_RECIPIENT))); // Please confirm whether\r\nthe character's name is correct.
                     return;

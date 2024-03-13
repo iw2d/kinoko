@@ -1,6 +1,7 @@
 package kinoko.packet.stage;
 
 public enum LoginType {
+    // LoginResCode
     SUCCESS(0),
     TEMP_BLOCKED(1),
     BLOCKED(2),

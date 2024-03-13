@@ -1,6 +1,4 @@
-package kinoko.server;
-
-import kinoko.world.Account;
+package kinoko.server.node;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,15 +11,6 @@ public final class UserStorage {
     private final Map<Integer, UserProxy> mapByAccountId = new HashMap<>();
     private final Map<Integer, UserProxy> mapByCharacterId = new HashMap<>();
     private final Map<String, UserProxy> mapByCharacterName = new HashMap<>();
-
-    public boolean isConnected(Account account) {
-        lock.lock();
-        try {
-            return mapByAccountId.containsKey(account.getId());
-        } finally {
-            lock.unlock();
-        }
-    }
 
     public void addUser(UserProxy userProxy) {
         lock.lock();

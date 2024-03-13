@@ -1,17 +1,15 @@
-package kinoko.server;
-
-import kinoko.world.user.User;
+package kinoko.server.node;
 
 public final class UserProxy {
-    private final ChannelServer connectedServer;
+    private final int channelId;
     private final int accountId;
     private final int characterId;
     private final String characterName;
     private int level;
     private int job;
 
-    public UserProxy(ChannelServer connectedServer, int accountId, int characterId, String characterName, int level, int job) {
-        this.connectedServer = connectedServer;
+    public UserProxy(int channelId, int accountId, int characterId, String characterName, int level, int job) {
+        this.channelId = channelId;
         this.accountId = accountId;
         this.characterId = characterId;
         this.characterName = characterName;
@@ -19,8 +17,8 @@ public final class UserProxy {
         this.job = job;
     }
 
-    public ChannelServer getConnectedServer() {
-        return connectedServer;
+    public int getChannelId() {
+        return channelId;
     }
 
     public int getAccountId() {
@@ -49,16 +47,5 @@ public final class UserProxy {
 
     public void setJob(int job) {
         this.job = job;
-    }
-
-    public static UserProxy from(ChannelServer connectedServer, User user) {
-        return new UserProxy(
-                connectedServer,
-                user.getAccountId(),
-                user.getCharacterId(),
-                user.getCharacterName(),
-                user.getLevel(),
-                user.getJob()
-        );
     }
 }

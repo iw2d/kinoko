@@ -2,6 +2,7 @@ package kinoko.server.netty;
 
 import io.netty.channel.socket.SocketChannel;
 import io.netty.util.AttributeKey;
+import kinoko.server.node.ServerNode;
 import kinoko.server.packet.OutPacket;
 
 import java.util.concurrent.locks.Lock;
@@ -10,15 +11,19 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class NettyClient {
     public static final AttributeKey<NettyClient> CLIENT_KEY = AttributeKey.valueOf("C");
     private final Lock encoderLock = new ReentrantLock();
-    private final NettyServer nettyServer;
-    private final SocketChannel nettyChannel;
+    private final ServerNode serverNode;
+    private final SocketChannel socketChannel;
     private byte[] sendIv;
     private byte[] recvIv;
     private int storedLength = -1;
 
-    public NettyClient(NettyServer nettyServer, SocketChannel nettyChannel) {
-        this.nettyServer = nettyServer;
-        this.nettyChannel = nettyChannel;
+    public NettyClient(ServerNode serverNode, SocketChannel socketChannel) {
+        this.serverNode = serverNode;
+        this.socketChannel = socketChannel;
+    }
+
+    public ServerNode getServerNode() {
+        return serverNode;
     }
 
     public final byte[] getSendIv() {
@@ -53,19 +58,11 @@ public abstract class NettyClient {
         encoderLock.unlock();
     }
 
-    public final NettyServer getConnectedServer() {
-        return nettyServer;
-    }
-
-    public final byte[] getRemoteAddress() {
-        return nettyChannel.remoteAddress().getAddress().getAddress();
-    }
-
     public final void write(OutPacket outPacket) {
-        nettyChannel.writeAndFlush(outPacket);
+        socketChannel.writeAndFlush(outPacket);
     }
 
     public void close() {
-        nettyChannel.close();
+        socketChannel.close();
     }
 }

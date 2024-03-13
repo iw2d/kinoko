@@ -8,9 +8,9 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
-import kinoko.server.ChannelServer;
-import kinoko.server.client.Client;
 import kinoko.server.dialog.Dialog;
+import kinoko.server.node.ChannelServerNode;
+import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.world.Account;
@@ -58,8 +58,8 @@ public final class User extends Life implements Lockable<User> {
         return client.getAccount();
     }
 
-    public ChannelServer getConnectedServer() {
-        return (ChannelServer) client.getConnectedServer();
+    public ChannelServerNode getConnectedServer() {
+        return (ChannelServerNode) client.getServerNode();
     }
 
     public int getChannelId() {

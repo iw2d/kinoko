@@ -17,23 +17,27 @@ public final class EventScheduler {
     }
 
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay) {
-        return scheduler.schedule(() -> submit(runnable), delay, TimeUnit.MILLISECONDS);
+        return scheduler.schedule(() -> wrapAndSubmit(runnable), delay, TimeUnit.MILLISECONDS);
     }
 
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay, TimeUnit timeUnit) {
-        return scheduler.schedule(() -> submit(runnable), delay, timeUnit);
+        return scheduler.schedule(() -> wrapAndSubmit(runnable), delay, timeUnit);
     }
 
     public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay) {
-        return scheduler.scheduleWithFixedDelay(() -> submit(runnable), initialDelay, delay, TimeUnit.MILLISECONDS);
+        return scheduler.scheduleWithFixedDelay(() -> wrapAndSubmit(runnable), initialDelay, delay, TimeUnit.MILLISECONDS);
     }
 
     public static ScheduledFuture<?> addFixedDelayEvent(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
-        return scheduler.scheduleWithFixedDelay(() -> submit(runnable), initialDelay, delay, timeUnit);
+        return scheduler.scheduleWithFixedDelay(() -> wrapAndSubmit(runnable), initialDelay, delay, timeUnit);
     }
 
     public static void submit(Runnable runnable) {
-        executor.submit(() -> {
+        executor.submit(runnable);
+    }
+
+    private static void wrapAndSubmit(Runnable runnable) {
+        submit(() -> {
             try {
                 runnable.run();
             } catch (Exception e) {

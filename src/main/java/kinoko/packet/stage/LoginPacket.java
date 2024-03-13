@@ -1,12 +1,11 @@
 package kinoko.packet.stage;
 
-import kinoko.server.ChannelServer;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.header.OutHeader;
+import kinoko.server.node.RemoteChildNode;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.Account;
-import kinoko.world.World;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 
@@ -77,23 +76,22 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket worldInformation(World world) {
+    public static OutPacket worldInformation(List<RemoteChildNode> connectedNodes) {
         final OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
-        outPacket.encodeByte(world.getId()); // nWorldID
-        outPacket.encodeString(world.getName());
+        outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
+        outPacket.encodeString(ServerConfig.WORLD_NAME);
         outPacket.encodeByte(0); // nWorldState
         outPacket.encodeString(""); // sWorldEventDesc
         outPacket.encodeShort(100); // nWorldEventEXP_WSE
         outPacket.encodeShort(100); // nWorldEventDrop_WSE
         outPacket.encodeByte(0); // nBlockCharCreation
 
-        final List<ChannelServer> channelServers = world.getChannels();
-        outPacket.encodeByte(channelServers.size());
-        for (ChannelServer channelServer : channelServers) {
-            outPacket.encodeString(channelServer.getName()); // sName
-            outPacket.encodeInt(channelServer.getClientStorage().getUserCount()); // nUserNo
-            outPacket.encodeByte(channelServer.getWorldId()); // nWorldID
-            outPacket.encodeByte(channelServer.getChannelId()); // nChannelID
+        outPacket.encodeByte(connectedNodes.size());
+        for (RemoteChildNode childNode : connectedNodes) {
+            outPacket.encodeString(String.format("%s - %d", ServerConfig.WORLD_NAME, childNode.getChannelId() + 1)); // sName
+            outPacket.encodeInt(childNode.getUserCount()); // nUserNo
+            outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
+            outPacket.encodeByte(childNode.getChannelId()); // nChannelID
             outPacket.encodeByte(false); // bAdultChannel
         }
 
@@ -137,23 +135,23 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultSuccess(byte[] channelAddress, int port, int characterId) {
+    public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
         outPacket.encodeByte(LoginType.SUCCESS.getValue());
         outPacket.encodeByte(0);
 
-        outPacket.encodeArray(channelAddress); // sin_addr
-        outPacket.encodeShort(port); // uPort
+        outPacket.encodeArray(channelHost); // sin_addr
+        outPacket.encodeShort(channelPort); // uPort
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(0); // bAuthenCode
         outPacket.encodeInt(0); // ulPremiumArgument
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultFail(LoginType resultType, int errorType) {
+    public static OutPacket selectCharacterResultFail(LoginType resultType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
         outPacket.encodeByte(resultType.getValue());
-        outPacket.encodeByte(errorType);
+        outPacket.encodeByte(0); // Trouble logging in?
         return outPacket;
     }
 

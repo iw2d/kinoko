@@ -13,9 +13,11 @@ import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.CassandraAccountAccessor;
 import kinoko.database.cassandra.CassandraCharacterAccessor;
 import kinoko.database.cassandra.CassandraGiftAccessor;
-import kinoko.database.cassandra.CassandraMigrationAccessor;
 import kinoko.database.cassandra.codec.*;
-import kinoko.database.cassandra.table.*;
+import kinoko.database.cassandra.table.AccountTable;
+import kinoko.database.cassandra.table.CharacterTable;
+import kinoko.database.cassandra.table.GiftTable;
+import kinoko.database.cassandra.table.IdTable;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.EquipData;
@@ -38,7 +40,6 @@ public final class DatabaseManager {
     private static CqlSession cqlSession;
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
-    private static MigrationAccessor migrationAccessor;
     private static GiftAccessor giftAccessor;
 
     public static AccountAccessor accountAccessor() {
@@ -47,10 +48,6 @@ public final class DatabaseManager {
 
     public static CharacterAccessor characterAccessor() {
         return characterAccessor;
-    }
-
-    public static MigrationAccessor migrationAccessor() {
-        return migrationAccessor;
     }
 
     public static GiftAccessor giftAccessor() {
@@ -104,7 +101,6 @@ public final class DatabaseManager {
         IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
         AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        MigrationTable.createTable(cqlSession, DATABASE_KEYSPACE);
         GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
         // Register Codecs
@@ -121,7 +117,6 @@ public final class DatabaseManager {
         // Create Accessors
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
-        migrationAccessor = new CassandraMigrationAccessor(cqlSession, DATABASE_KEYSPACE);
         giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
     }
 

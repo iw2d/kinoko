@@ -15,7 +15,7 @@ public final class Util {
         return hexFormat.formatHex(array);
     }
 
-    public static String opToString(short op) {
+    public static String opToString(int op) {
         return String.format("%d/0x%X", op, op);
     }
 

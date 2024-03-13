@@ -22,9 +22,8 @@ public final class Account implements Lockable<Account> {
     private List<Integer> wishlist;
 
     // TRANSIENT
-    private boolean hasSecondaryPassword = false;
-    private int worldId = -1;
     private int channelId = -1;
+    private boolean hasSecondaryPassword = false;
     private List<AvatarData> characterList = null;
 
     public Account(int id, String username) {
@@ -99,28 +98,20 @@ public final class Account implements Lockable<Account> {
 
     // TRANSIENT -------------------------------------------------------------------------------------------------------
 
-    public boolean hasSecondaryPassword() {
-        return hasSecondaryPassword;
-    }
-
-    public void setHasSecondaryPassword(boolean hasSecondaryPassword) {
-        this.hasSecondaryPassword = hasSecondaryPassword;
-    }
-
-    public int getWorldId() {
-        return worldId;
-    }
-
-    public void setWorldId(int worldId) {
-        this.worldId = worldId;
-    }
-
     public int getChannelId() {
         return channelId;
     }
 
     public void setChannelId(int channelId) {
         this.channelId = channelId;
+    }
+
+    public boolean hasSecondaryPassword() {
+        return hasSecondaryPassword;
+    }
+
+    public void setHasSecondaryPassword(boolean hasSecondaryPassword) {
+        this.hasSecondaryPassword = hasSecondaryPassword;
     }
 
     public List<AvatarData> getCharacterList() {

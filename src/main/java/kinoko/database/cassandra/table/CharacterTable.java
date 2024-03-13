@@ -5,8 +5,6 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.type.*;
 
-import java.time.Instant;
-
 public final class CharacterTable {
     public static final String CHARACTER_ID = "character_id";
     public static final String ACCOUNT_ID = "account_id";

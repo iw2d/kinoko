@@ -9,16 +9,15 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.skill.SkillInfo;
-import kinoko.server.ChannelServer;
-import kinoko.server.Server;
 import kinoko.server.ServerConfig;
-import kinoko.server.client.Client;
-import kinoko.server.client.MigrationRequest;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.CentralServerNode;
+import kinoko.server.node.Client;
+import kinoko.server.node.MigrationInfo;
+import kinoko.server.node.RemoteChildNode;
 import kinoko.server.packet.InPacket;
 import kinoko.world.Account;
 import kinoko.world.GameConstants;
-import kinoko.world.World;
 import kinoko.world.item.*;
 import kinoko.world.job.Job;
 import kinoko.world.job.LoginJob;
@@ -60,7 +59,7 @@ public final class LoginHandler {
         }
 
         final Account account = accountResult.get();
-        if (Server.isConnected(account)) {
+        if (c.getServerNode().isConnected(account)) {
             c.write(LoginPacket.checkPasswordResultFail(LoginType.ALREADY_CONNECTED));
             return;
         }
@@ -71,15 +70,14 @@ public final class LoginHandler {
 
         c.setAccount(account);
         c.setMachineId(machineId);
-        c.getConnectedServer().getClientStorage().addClient(c);
+        c.getServerNode().addClient(c);
         c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
     }
 
     @Handler({ InHeader.WORLD_INFO_REQUEST, InHeader.WORLD_REQUEST })
     public static void handleWorldRequest(Client c, InPacket inPacket) {
-        for (World world : Server.getWorlds()) {
-            c.write(LoginPacket.worldInformation(world));
-        }
+        final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
+        c.write(LoginPacket.worldInformation(centralServerNode.getConnectedNodes()));
         c.write(LoginPacket.worldInformationEnd());
         c.write(LoginPacket.latestConnectedWorld(ServerConfig.WORLD_ID));
     }
@@ -108,8 +106,9 @@ public final class LoginHandler {
         inPacket.decodeInt(); // unk
 
         // Check World ID and Channel ID
-        final Optional<ChannelServer> channelResult = Server.getChannelServerById(worldId, channelId);
-        if (channelResult.isEmpty()) {
+        final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
+        final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(channelId);
+        if (worldId != ServerConfig.WORLD_ID || childNodeResult.isEmpty()) {
             c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
@@ -120,13 +119,12 @@ public final class LoginHandler {
             c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
-        if (!c.getConnectedServer().getClientStorage().isConnected(account)) {
+        if (!c.getServerNode().isConnected(account)) {
             c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
             return;
         }
 
         loadCharacterList(c);
-        account.setWorldId(worldId);
         account.setChannelId(channelId);
         c.write(LoginPacket.selectWorldResultSuccess(account));
     }
@@ -301,10 +299,10 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (ServerConfig.REQUIRE_SECONDARY_PASSWORD || account == null || !account.canSelectCharacter(characterId)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
             return;
         }
-        tryMigration(c, account, characterId);
+        handleMigration(c, account, characterId);
     }
 
     @Handler(InHeader.DELETE_CHARACTER)
@@ -314,7 +312,7 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
-                !c.getConnectedServer().getClientStorage().isConnected(account)) {
+                !c.getServerNode().isConnected(account)) {
             c.write(LoginPacket.deleteCharacterResult(LoginType.UNKNOWN, characterId));
             return;
         }
@@ -340,12 +338,12 @@ public final class LoginHandler {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
 
         final Account account = c.getAccount();
-        if (account == null || !account.canSelectCharacter(characterId) || account.hasSecondaryPassword() ||
-                !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+        if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
+                account.hasSecondaryPassword() || !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
             return;
         }
-        tryMigration(c, account, characterId);
+        handleMigration(c, account, characterId);
     }
 
     @Handler(InHeader.CHECK_SPW_REQUEST)
@@ -356,36 +354,55 @@ public final class LoginHandler {
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
         final Account account = c.getAccount();
-        if (account == null || !account.canSelectCharacter(characterId) || !account.hasSecondaryPassword()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+        if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
+                !account.hasSecondaryPassword()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
             c.write(LoginPacket.checkSecondaryPasswordResult());
             return;
         }
-        tryMigration(c, account, characterId);
+        handleMigration(c, account, characterId);
     }
 
     private static void loadCharacterList(Client c) {
         final Account account = c.getAccount();
-        account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccount(account.getId()));
+        account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccountId(account.getId()));
     }
 
-    private static void tryMigration(Client c, Account account, int characterId) {
-        final Optional<ChannelServer> channelResult = Server.getChannelServerById(account.getWorldId(), account.getChannelId());
-        if (channelResult.isEmpty()) {
-            log.error("Failed to submit migration request for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+    private static void handleMigration(Client c, Account account, int characterId) {
+        // Check that client requirements are set
+        if (c.getMachineId() == null || c.getMachineId().length != 16 || c.getClientKey() == null || c.getClientKey().length != 8) {
+            log.error("Tried to submit migration request without client requirements for character ID : {}", characterId);
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
             return;
         }
-        final ChannelServer channelServer = channelResult.get();
-        final Optional<MigrationRequest> mrResult = Server.submitMigrationRequest(c, channelServer, characterId);
-        if (mrResult.isEmpty()) {
-            log.error("Failed to submit migration request for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN, 2));
+
+        // Resolve target channel
+        final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
+        final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(account.getChannelId());
+        if (childNodeResult.isEmpty()) {
+            log.error("Could not resolve target channel for migration request for character ID : {}", characterId);
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
             return;
         }
-        c.write(LoginPacket.selectCharacterResultSuccess(channelServer.getAddress(), channelServer.getPort(), characterId));
+        final RemoteChildNode targetNode = childNodeResult.get();
+
+        // Create and submit migration request
+        final MigrationInfo migrationInfo = new MigrationInfo(
+                account.getChannelId(),
+                account.getId(),
+                characterId,
+                c.getMachineId(),
+                c.getClientKey()
+        );
+        if (!centralServerNode.submitMigrationRequest(migrationInfo)) {
+            log.error("Failed to submit migration request for character ID : {}", characterId);
+            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            return;
+        }
+
+        c.write(LoginPacket.selectCharacterResultSuccess(targetNode.getChannelHost(), targetNode.getChannelPort(), characterId));
     }
 }

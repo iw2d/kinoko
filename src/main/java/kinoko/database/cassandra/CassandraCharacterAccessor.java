@@ -132,7 +132,23 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
     }
 
     @Override
-    public Optional<Integer> getAccountIdByName(String name) {
+    public Optional<Integer> getAccountIdByCharacterId(int characterId) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), CharacterTable.getTableName())
+                        .columns(
+                                CharacterTable.ACCOUNT_ID
+                        )
+                        .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterId))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            return Optional.of(row.getInt(CharacterTable.ACCOUNT_ID));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Integer> getAccountIdByCharacterName(String name) {
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), CharacterTable.getTableName())
                         .columns(
@@ -148,7 +164,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
     }
 
     @Override
-    public List<AvatarData> getAvatarDataByAccount(int accountId) {
+    public List<AvatarData> getAvatarDataByAccountId(int accountId) {
         final List<AvatarData> avatarDataList = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), CharacterTable.getTableName())

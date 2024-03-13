@@ -1,6 +1,7 @@
 package kinoko.server.packet;
 
 import kinoko.server.header.OutHeader;
+import kinoko.server.netty.CentralPacketHeader;
 import kinoko.util.FileTime;
 
 import java.time.Instant;
@@ -64,6 +65,12 @@ public interface OutPacket {
     static OutPacket of(OutHeader op) {
         final OutPacket outPacket = of();
         outPacket.encodeShort(op.getValue());
+        return outPacket;
+    }
+
+    static OutPacket of(CentralPacketHeader op) {
+        final OutPacket outPacket = of();
+        outPacket.encodeInt(op.getValue());
         return outPacket;
     }
 }
