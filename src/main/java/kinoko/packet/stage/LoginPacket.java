@@ -5,7 +5,7 @@ import kinoko.server.ServerConstants;
 import kinoko.server.header.OutHeader;
 import kinoko.server.node.RemoteChildNode;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.Account;
+import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 

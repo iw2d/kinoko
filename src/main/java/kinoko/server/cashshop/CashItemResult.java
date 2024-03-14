@@ -2,9 +2,9 @@ package kinoko.server.cashshop;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
-import kinoko.world.Account;
 import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
+import kinoko.world.user.Account;
 
 import java.util.List;
 

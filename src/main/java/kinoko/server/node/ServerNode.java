@@ -10,7 +10,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import kinoko.world.Account;
+import kinoko.world.user.Account;
 
 import java.net.InetAddress;
 import java.security.SecureRandom;

@@ -4,7 +4,7 @@ import io.netty.channel.socket.SocketChannel;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.ClientPacket;
 import kinoko.server.netty.NettyClient;
-import kinoko.world.Account;
+import kinoko.world.user.Account;
 import kinoko.world.user.User;
 
 public final class Client extends NettyClient {

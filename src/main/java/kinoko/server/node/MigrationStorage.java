@@ -1,6 +1,6 @@
 package kinoko.server.node;
 
-import kinoko.world.Account;
+import kinoko.world.user.Account;
 
 import java.util.HashMap;
 import java.util.Map;

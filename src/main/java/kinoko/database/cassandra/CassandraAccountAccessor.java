@@ -10,9 +10,9 @@ import kinoko.database.cassandra.table.IdTable;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.server.cashshop.Locker;
-import kinoko.world.Account;
 import kinoko.world.item.Item;
 import kinoko.world.item.Trunk;
+import kinoko.world.user.Account;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Collections;

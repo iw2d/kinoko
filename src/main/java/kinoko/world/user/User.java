@@ -13,7 +13,6 @@ import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
-import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;

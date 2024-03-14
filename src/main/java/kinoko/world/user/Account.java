@@ -1,9 +1,8 @@
-package kinoko.world;
+package kinoko.world.user;
 
 import kinoko.server.cashshop.Locker;
 import kinoko.util.Lockable;
 import kinoko.world.item.Trunk;
-import kinoko.world.user.AvatarData;
 
 import java.util.List;
 import java.util.concurrent.locks.Lock;

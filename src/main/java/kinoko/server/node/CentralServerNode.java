@@ -7,7 +7,7 @@ import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
-import kinoko.world.Account;
+import kinoko.world.user.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

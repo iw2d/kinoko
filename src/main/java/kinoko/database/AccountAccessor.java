@@ -1,6 +1,6 @@
 package kinoko.database;
 
-import kinoko.world.Account;
+import kinoko.world.user.Account;
 
 import java.util.Optional;
 
