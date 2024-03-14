@@ -36,7 +36,7 @@ public final class SkillProvider implements WzProvider {
         return jobSkills.getOrDefault(job, Set.of());
     }
 
-    public static Optional<SkillInfo> getMobSkillById(int skillId) {
+    public static Optional<SkillInfo> getMobSkillInfoById(int skillId) {
         return Optional.ofNullable(mobSkills.get(skillId));
     }
 

@@ -70,11 +70,15 @@ public final class StaticSkillInfo implements SkillInfo {
 
     @Override
     public String toString() {
-        return "StaticSkillInfo[" +
-                "id=" + id + ", " +
-                "maxLevel=" + maxLevel + ", " +
-                "invisible=" + invisible + ", " +
-                "psd=" + psd + ", " + ']';
+        return "StaticSkillInfo{" +
+                "id=" + id +
+                ", maxLevel=" + maxLevel +
+                ", invisible=" + invisible +
+                ", psd=" + psd +
+                ", psdSkills=" + psdSkills +
+                ", stats=" + stats +
+                ", rect=" + rect +
+                '}';
     }
 
     public static StaticSkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {

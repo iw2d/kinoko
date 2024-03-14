@@ -21,6 +21,10 @@ public final class MobStatOption implements Encodable {
         this.expireTime = expireTime;
     }
 
+    public MobStatOption(int nOption, int rOption, int tOption) {
+        this(nOption, rOption, tOption, Instant.now().plus(tOption, ChronoUnit.MILLIS));
+    }
+
     public Instant getExpireTime() {
         return expireTime;
     }
@@ -33,6 +37,11 @@ public final class MobStatOption implements Encodable {
     }
 
     public static MobStatOption of(int nOption, int rOption, int tOption) {
-        return new MobStatOption(nOption, rOption, tOption, Instant.now().plus(tOption, ChronoUnit.MILLIS));
+        return new MobStatOption(nOption, rOption, tOption);
+    }
+
+    public static MobStatOption ofMobSkill(int nOption, int skillId, int slv, int tOption) {
+        final int rOption = skillId | (slv << 16);
+        return new MobStatOption(nOption, rOption, tOption);
     }
 }

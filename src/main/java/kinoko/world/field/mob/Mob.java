@@ -104,16 +104,16 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         return template.isDamagedByMob();
     }
 
-    public MobStat getMobStat() {
-        return mobStat;
-    }
-
     public Optional<MobAttack> getAttack(int attackIndex) {
-        return Optional.ofNullable(template.getAttacks().get(attackIndex));
+        return template.getAttack(attackIndex);
     }
 
     public Optional<MobSkill> getSkill(int skillIndex) {
-        return Optional.ofNullable(template.getSkills().get(skillIndex));
+        return template.getSkill(skillIndex);
+    }
+
+    public MobStat getMobStat() {
+        return mobStat;
     }
 
     public boolean isSkillAvailable(MobSkill mobSkill) {
@@ -166,6 +166,11 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    public void heal(int hp) {
+        setHp(Math.min(getHp() + hp, getMaxHp()));
+        getField().broadcastPacket(MobPacket.damaged(this, -hp));
+    }
 
     public void recovery(Instant now) {
         if (getHp() < 0 || now.isBefore(nextRecovery)) {
@@ -305,6 +310,14 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isLeft() {
+        if (template.isNoFlip()) {
+            return true;
+        }
+        return super.isLeft();
+    }
 
     @Override
     public User getController() {

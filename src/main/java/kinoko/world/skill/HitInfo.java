@@ -1,7 +1,7 @@
 package kinoko.world.skill;
 
 public final class HitInfo {
-    public final AttackIndex attackIndex;
+    public AttackIndex attackIndex;
     public int damage;
     public short obstacleData;
     public short diseaseData;
@@ -21,8 +21,4 @@ public final class HitInfo {
     public byte stance;
 
     public int missSkillId;
-
-    public HitInfo(AttackIndex attackIndex) {
-        this.attackIndex = attackIndex;
-    }
 }

@@ -61,7 +61,12 @@ public class TemporaryStatOption implements Encodable {
         return new TemporaryStatOption(nOption, rOption, tOption);
     }
 
-    public static TemporaryStatOption of(int nOption, int rOption, int tOption, DiceInfo diceInfo) {
+    public static TemporaryStatOption ofMobSkill(int nOption, int skillId, int slv, int tOption) {
+        final int rOption = skillId | (slv << 16);
+        return new TemporaryStatOption(nOption, rOption, tOption);
+    }
+
+    public static TemporaryStatOption ofDice(int nOption, int rOption, int tOption, DiceInfo diceInfo) {
         return new TemporaryStatOption(nOption, rOption, tOption, diceInfo);
     }
 }

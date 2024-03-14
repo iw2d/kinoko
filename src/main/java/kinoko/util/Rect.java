@@ -54,4 +54,22 @@ public final class Rect {
                 Math.max(getBottom(), rect.getBottom())
         );
     }
+
+    public Rect flipX() {
+        return new Rect(
+                -getRight(),
+                getTop(),
+                -getLeft(),
+                getBottom()
+        );
+    }
+
+    public Rect translate(int x, int y) {
+        return new Rect(
+                x + getLeft(),
+                y + getTop(),
+                x + getRight(),
+                y + getBottom()
+        );
+    }
 }

@@ -229,7 +229,7 @@ public final class MigrationHandler {
             final int nextFieldId;
             final String nextPortalName;
             if (portalName.isEmpty()) {
-                if (targetField != user.getField().getReturnMap()) {
+                if (!isRevive && targetField != user.getField().getReturnMap()) {
                     log.error("Tried to return to field : {} from field : {}", targetField, user.getField().getFieldId());
                     user.dispose();
                     return;

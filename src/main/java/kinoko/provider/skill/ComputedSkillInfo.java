@@ -94,11 +94,15 @@ public final class ComputedSkillInfo implements SkillInfo {
 
     @Override
     public String toString() {
-        return "ComputedSkillInfo[" +
-                "id=" + id + ", " +
-                "maxLevel=" + maxLevel + ", " +
-                "invisible=" + invisible + ", " +
-                "psd=" + psd + ", " + ']';
+        return "ComputedSkillInfo{" +
+                "id=" + id +
+                ", maxLevel=" + maxLevel +
+                ", invisible=" + invisible +
+                ", psd=" + psd +
+                ", psdSkills=" + psdSkills +
+                ", stats=" + stats +
+                ", rect=" + rect +
+                '}';
     }
 
     public static ComputedSkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {

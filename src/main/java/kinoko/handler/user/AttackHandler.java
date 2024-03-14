@@ -2,16 +2,28 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserRemote;
+import kinoko.provider.MobProvider;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.mob.MobAttack;
+import kinoko.provider.mob.MobSkillType;
+import kinoko.provider.mob.MobTemplate;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Locked;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.cygnus.ThunderBreaker;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public final class AttackHandler {
     private static final Logger log = LogManager.getLogger(AttackHandler.class);
@@ -232,48 +244,53 @@ public final class AttackHandler {
     public static void handleUserHit(User user, InPacket inPacket) {
         // CUserLocal::SetDamaged, CUserLocal::Update
         inPacket.decodeInt(); // get_update_time()
-        final int index = inPacket.decodeByte(); // nAttackIdx
-        final AttackIndex attackIndex = AttackIndex.getByValue(index);
-        if (attackIndex == null) {
-            log.error("Unknown attack index received : {}", index);
+        final int attackIndex = inPacket.decodeByte(); // nAttackIdx
+
+        final HitInfo hitInfo = new HitInfo();
+        if (attackIndex > 0 || attackIndex == AttackIndex.MOB_PHYSICAL.getValue() || attackIndex == AttackIndex.MOB_MAGIC.getValue()) {
+            hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
+            hitInfo.damage = inPacket.decodeInt(); // nDamage
+            hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
+            hitInfo.mobId = inPacket.decodeInt(); // MobID
+            hitInfo.dir = inPacket.decodeByte(); // nDir
+            hitInfo.reflect = inPacket.decodeByte(); // nX = 0
+            hitInfo.guard = inPacket.decodeByte(); // bGuard
+            final byte knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
+            if (knockback > 1 || hitInfo.reflect != 0) {
+                hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
+                hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
+                hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction
+                hitInfo.reflectMobX = inPacket.decodeShort(); // ptHit.x
+                hitInfo.reflectMobY = inPacket.decodeShort(); // ptHit.y
+                inPacket.decodeShort(); // this->GetPos()->x
+                inPacket.decodeShort(); // this->GetPos()->y
+            }
+            hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
+        } else if (attackIndex == AttackIndex.COUNTER.getValue() || attackIndex == AttackIndex.OBSTACLE.getValue()) {
+            inPacket.decodeByte(); // 0
+            hitInfo.damage = inPacket.decodeInt(); // nDamage
+            hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
+            inPacket.decodeByte(); // 0
+        } else if (attackIndex == AttackIndex.STAT.getValue()) {
+            hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
+            hitInfo.damage = inPacket.decodeInt(); // nDamage
+            hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
+            hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
+        } else {
+            log.error("Unknown attack index received : {}", attackIndex);
             return;
         }
-        final HitInfo hitInfo = new HitInfo(attackIndex);
-        switch (attackIndex) {
-            case MOB_PHYSICAL, MOB_MAGIC -> {
-                hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
-                hitInfo.damage = inPacket.decodeInt(); // nDamage
-                hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
-                hitInfo.mobId = inPacket.decodeInt(); // MobID
-                hitInfo.dir = inPacket.decodeByte(); // nDir
-                hitInfo.reflect = inPacket.decodeByte(); // nX = 0
-                hitInfo.guard = inPacket.decodeByte(); // bGuard
-                final byte knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
-                if (knockback > 1 || hitInfo.reflect != 0) {
-                    hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
-                    hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
-                    hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction
-                    hitInfo.reflectMobX = inPacket.decodeShort(); // ptHit.x
-                    hitInfo.reflectMobY = inPacket.decodeShort(); // ptHit.y
-                    inPacket.decodeShort(); // this->GetPos()->x
-                    inPacket.decodeShort(); // this->GetPos()->y
-                }
-                hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
-            }
-            case COUNTER, OBSTACLE -> {
-                inPacket.decodeByte(); // 0
-                hitInfo.damage = inPacket.decodeInt(); // nDamage
-                hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
-                inPacket.decodeByte(); // 0
-            }
-            case STAT -> {
-                hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
-                hitInfo.damage = inPacket.decodeInt(); // nDamage
-                hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
-                hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
-            }
-        }
+
         try (var locked = user.acquire()) {
+            // Resolve attack index and apply disease
+            if (attackIndex > 0) {
+                if (!handleMobAttack(locked, attackIndex, hitInfo)) {
+                    log.error("Failed to resolve mob attack index : {}, defaulting to {}", attackIndex, AttackIndex.MOB_PHYSICAL);
+                    hitInfo.attackIndex = AttackIndex.MOB_PHYSICAL;
+                }
+            } else {
+                hitInfo.attackIndex = AttackIndex.getByValue(attackIndex);
+            }
             SkillProcessor.processHit(user, hitInfo);
         }
     }
@@ -297,5 +314,40 @@ public final class AttackHandler {
             inPacket.decodeInt(); // CMob::GetCrc
             attack.getAttackInfo().add(ai);
         }
+    }
+
+    private static boolean handleMobAttack(Locked<User> locked, int attackIndex, HitInfo hitInfo) {
+        // Resolve mob attack and attack index
+        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(hitInfo.templateId);
+        if (mobTemplateResult.isEmpty()) {
+            return false;
+        }
+        final Optional<MobAttack> mobAttackResult = mobTemplateResult.get().getAttack(attackIndex);
+        if (mobAttackResult.isEmpty()) {
+            return false;
+        }
+        final MobAttack mobAttack = mobAttackResult.get();
+        hitInfo.attackIndex = mobAttack.isMagic() ? AttackIndex.MOB_MAGIC : AttackIndex.MOB_PHYSICAL;
+
+        // Resolve mob skill, check if it applies a CTS
+        final int skillId = mobAttack.getSkillId();
+        final MobSkillType skillType = MobSkillType.getByValue(skillId);
+        if (skillType == null) {
+            return true;
+        }
+        final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
+        if (cts == null) {
+            return true;
+        }
+
+        // Apply mob skill
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            return true;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int slv = mobAttack.getSkillLevel();
+        locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+        return true;
     }
 }

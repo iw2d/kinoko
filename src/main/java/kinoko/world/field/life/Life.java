@@ -1,5 +1,6 @@
 package kinoko.world.field.life;
 
+import kinoko.util.Rect;
 import kinoko.world.field.FieldObjectImpl;
 
 public abstract class Life extends FieldObjectImpl {
@@ -20,5 +21,17 @@ public abstract class Life extends FieldObjectImpl {
 
     public void setMoveAction(int moveAction) {
         this.moveAction = moveAction;
+    }
+
+    public boolean isLeft() {
+        return (getMoveAction() & 1) != 0;
+    }
+
+    public Rect getRelativeRect(Rect rect) {
+        if (!isLeft()) {
+            // Flip horizontally along x = 0
+            rect = rect.flipX();
+        }
+        return rect.translate(getX(), getY());
     }
 }

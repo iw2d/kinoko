@@ -3,10 +3,10 @@ package kinoko.provider.mob;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.world.field.mob.MobSkillType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public final class MobTemplate {
     private final int id;
@@ -18,11 +18,12 @@ public final class MobTemplate {
     private final int mpRecovery;
     private final int fixedDamage;
     private final boolean boss;
+    private final boolean noFlip;
     private final boolean damagedByMob;
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
 
-    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, int fixedDamage, boolean boss, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
+    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, int fixedDamage, boolean boss, boolean noFlip, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -32,6 +33,7 @@ public final class MobTemplate {
         this.mpRecovery = mpRecovery;
         this.fixedDamage = fixedDamage;
         this.boss = boss;
+        this.noFlip = noFlip;
         this.damagedByMob = damagedByMob;
         this.attacks = attacks;
         this.skills = skills;
@@ -73,6 +75,10 @@ public final class MobTemplate {
         return boss;
     }
 
+    public boolean isNoFlip() {
+        return noFlip;
+    }
+
     public boolean isDamagedByMob() {
         return damagedByMob;
     }
@@ -81,8 +87,16 @@ public final class MobTemplate {
         return attacks;
     }
 
+    public Optional<MobAttack> getAttack(int attackIndex) {
+        return Optional.ofNullable(getAttacks().get(attackIndex));
+    }
+
     public Map<Integer, MobSkill> getSkills() {
         return skills;
+    }
+
+    public Optional<MobSkill> getSkill(int skillIndex) {
+        return Optional.ofNullable(getSkills().get(skillIndex));
     }
 
     @Override
@@ -109,6 +123,7 @@ public final class MobTemplate {
         int mpRecovery = 0;
         int fixedDamage = 0;
         boolean boss = false;
+        boolean noFlip = false;
         boolean damagedByMob = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
@@ -123,6 +138,7 @@ public final class MobTemplate {
                 int skillId = 0;
                 int skillLevel = 0;
                 int conMp = 0;
+                boolean magic = false;
                 for (var attackInfoEntry : attackInfoProp.getItems().entrySet()) {
                     switch (attackInfoEntry.getKey()) {
                         case "disease" -> {
@@ -134,6 +150,9 @@ public final class MobTemplate {
                         case "conMP" -> {
                             conMp = WzProvider.getInteger(attackInfoEntry.getValue());
                         }
+                        case "magic" -> {
+                            magic = WzProvider.getInteger(attackInfoEntry.getValue()) != 0;
+                        }
                         default -> {
                             // System.err.printf("Unhandled mob attack info %s in mob %d%n", infoEntry.getKey(), mobId);
                         }
@@ -142,7 +161,8 @@ public final class MobTemplate {
                 attacks.put(attackIndex, new MobAttack(
                         skillId,
                         skillLevel,
-                        conMp
+                        conMp,
+                        magic
                 ));
             }
         }
@@ -173,6 +193,9 @@ public final class MobTemplate {
                 case "boss" -> {
                     boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
+                case "noFlip" -> {
+                    noFlip = WzProvider.getInteger(infoEntry.getValue()) != 0;
+                }
                 case "damagedByMob" -> {
                     damagedByMob = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
@@ -186,11 +209,12 @@ public final class MobTemplate {
                             throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
                         }
                         final int skillId = WzProvider.getInteger(skillProp.get("skill"));
-                        final MobSkillType type = MobSkillType.getByValue(skillId);
-                        if (type == null) {
+                        final MobSkillType skillType = MobSkillType.getByValue(skillId);
+                        if (skillType == null) {
                             throw new ProviderError("Failed to resolve mob skill : %d", skillId);
                         }
                         skills.put(skillIndex, new MobSkill(
+                                skillType,
                                 skillId,
                                 WzProvider.getInteger(skillProp.get("level"))
                         ));
@@ -201,6 +225,6 @@ public final class MobTemplate {
                 }
             }
         }
-        return new MobTemplate(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, fixedDamage, boss, damagedByMob, attacks, skills);
+        return new MobTemplate(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, fixedDamage, boss, noFlip, damagedByMob, attacks, skills);
     }
 }
