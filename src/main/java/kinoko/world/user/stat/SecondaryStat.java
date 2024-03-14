@@ -30,8 +30,6 @@ import java.util.*;
 
 public final class SecondaryStat {
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new EnumMap<>(CharacterTemporaryStat.class);
-    private final DiceInfo diceInfo = new DiceInfo();
-
     private int pad;
     private int pdd;
     private int mad;
@@ -114,6 +112,10 @@ public final class SecondaryStat {
 
 
     // TEMPORARY STAT METHODS ------------------------------------------------------------------------------------------
+
+    public void clear() {
+        temporaryStats.clear();
+    }
 
     public TemporaryStatOption getOption(CharacterTemporaryStat cts) {
         return temporaryStats.getOrDefault(cts, TemporaryStatOption.EMPTY);
@@ -455,6 +457,9 @@ public final class SecondaryStat {
             break;
         }
     }
+
+
+    // ENCODE METHODS --------------------------------------------------------------------------------------------------
 
     public static void encodeForLocal(OutPacket outPacket, Map<CharacterTemporaryStat, TemporaryStatOption> stats) {
         final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(stats.keySet(), CharacterTemporaryStat.FLAG_SIZE);

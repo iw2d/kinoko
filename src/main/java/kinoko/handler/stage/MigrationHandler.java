@@ -236,7 +236,7 @@ public final class MigrationHandler {
                 }
                 if (isRevive) {
                     // Handle revive
-                    // TODO remove CTS, etc
+                    user.getSecondaryStat().clear();
                     user.updatePassiveSkillData();
                     user.validateStat();
                     user.setHp(50);
