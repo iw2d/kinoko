@@ -21,6 +21,33 @@ public final class JobConstants {
         return 0;
     }
 
+    public static int getJobChangeLevel(int jobId, int subJob, int step) {
+        final int classGroup = jobId / 1000;
+        if (isResistanceJob(jobId) || isEvanJob(jobId)) { // probably extend sp jank
+            return classGroup != 1 ? 200 : 120;
+        }
+        switch (step) {
+            case 1 -> {
+                if (classGroup != 0 && getJobCategory(jobId) == 2) {
+                    return 8; // explorer magicians
+                }
+                return 10;
+            }
+            case 2 -> {
+                return isDualJobBorn(jobId, subJob) ? 20 : 30;
+            }
+            case 3 -> {
+                return isDualJobBorn(jobId, subJob) ? 55 : 70;
+            }
+            case 4 -> {
+                return 120;
+            }
+            default -> {
+                return classGroup != 1 ? 200 : 120;
+            }
+        }
+    }
+
     public static int getJobCategory(int jobId) {
         return jobId % 1000 / 100;
     }
@@ -59,6 +86,13 @@ public final class JobConstants {
 
     public static boolean isDualJob(int jobId) {
         return jobId / 10 == 43;
+    }
+
+    public static boolean isDualJobBorn(int jobId, int subJob) {
+        if (jobId / 1000 != 0) {
+            return false;
+        }
+        return subJob == 1;
     }
 
     public static boolean isCygnusJob(int jobId) {

@@ -25,8 +25,21 @@ public final class ExtendSp implements Encodable {
         addSp(DEFAULT_JOB_LEVEL, sp);
     }
 
+    public boolean removeNonExtendSp(int sp) {
+        return removeSp(DEFAULT_JOB_LEVEL, sp);
+    }
+
     public void addSp(int jobLevel, int sp) {
         map.put(jobLevel, map.getOrDefault(jobLevel, 0) + sp);
+    }
+
+    public boolean removeSp(int jobLevel, int sp) {
+        final int currentSp = map.getOrDefault(jobLevel, 0);
+        if (currentSp < sp) {
+            return false;
+        }
+        map.put(jobLevel, currentSp - sp);
+        return true;
     }
 
     @Override

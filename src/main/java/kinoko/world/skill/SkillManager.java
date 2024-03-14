@@ -12,6 +12,8 @@ public final class SkillManager {
     private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
     private final Map<Integer, Instant> skillCooltimes = new HashMap<>();
 
+    // SKILL RECORD METHODS --------------------------------------------------------------------------------------------
+
     public Set<SkillRecord> getSkillRecords() {
         return skillRecords.values().stream().collect(Collectors.toUnmodifiableSet());
     }
@@ -24,22 +26,8 @@ public final class SkillManager {
         skillRecords.put(skillRecord.getSkillId(), skillRecord);
     }
 
-    public int getSkillLevel(int skillId) {
-        final SkillRecord skillRecord = skillRecords.get(skillId);
-        if (skillRecord == null) {
-            return 0;
-        }
-        return skillRecord.getSkillLevel();
-    }
 
-    public int getSkillStatValue(int skillId, SkillStat stat) {
-        final int slv = getSkillLevel(skillId);
-        if (slv == 0) {
-            return 0;
-        }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
-        return skillInfoResult.map(skillInfo -> skillInfo.getValue(stat, slv)).orElse(0);
-    }
+    // SKILL COOLTIME METHODS ------------------------------------------------------------------------------------------
 
     public Map<Integer, Instant> getSkillCooltimes() {
         return skillCooltimes;
@@ -70,5 +58,25 @@ public final class SkillManager {
             resetCooltimes.add(skillId);
         }
         return resetCooltimes;
+    }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public int getSkillLevel(int skillId) {
+        final SkillRecord skillRecord = skillRecords.get(skillId);
+        if (skillRecord == null) {
+            return 0;
+        }
+        return skillRecord.getSkillLevel();
+    }
+
+    public int getSkillStatValue(int skillId, SkillStat stat) {
+        final int slv = getSkillLevel(skillId);
+        if (slv == 0) {
+            return 0;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        return skillInfoResult.map(skillInfo -> skillInfo.getValue(stat, slv)).orElse(0);
     }
 }

@@ -38,7 +38,6 @@ public final class SkillHandler {
                 user.dispose();
                 return;
             }
-
             final int skillRoot = SkillConstants.getSkillRoot(skillId);
             if (JobConstants.isBeginnerJob(skillRoot)) {
                 // Check if valid beginner skill
@@ -66,9 +65,18 @@ public final class SkillHandler {
                     return;
                 }
             } else if (JobConstants.isExtendSpJob(skillRoot)) {
-                // TODO
+                final int jobLevel = JobConstants.getJobLevel(skillRoot);
+                if (!user.getCharacterStat().getSp().removeSp(jobLevel, 1)) {
+                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
+                    user.dispose();
+                    return;
+                }
             } else {
-                // TODO
+                if (!user.getCharacterStat().getSp().removeNonExtendSp(1)) {
+                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
+                    user.dispose();
+                    return;
+                }
             }
             // Add skill point and update client
             skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
