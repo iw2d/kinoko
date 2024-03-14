@@ -23,10 +23,14 @@ import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.MemoRequestType;
 import kinoko.server.memo.MemoType;
+import kinoko.server.node.UserProxy;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.NpcScriptManager;
 import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
+import kinoko.server.whisper.LocationResult;
+import kinoko.server.whisper.WhisperFlag;
+import kinoko.server.whisper.WhisperResult;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
@@ -50,6 +54,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public final class UserHandler {
     private static final Logger log = LogManager.getLogger(UserHandler.class);
@@ -559,9 +567,9 @@ public final class UserHandler {
                         user.dispose();
                         return;
                     }
-                    final QuestRecord qr = questCompleteResult.get().getLeft();
+                    final QuestRecord questRecord = questCompleteResult.get().getLeft();
                     final int nextQuest = questCompleteResult.get().getRight();
-                    user.write(WvsContext.message(Message.questRecord(questCompleteResult.get().getLeft())));
+                    user.write(WvsContext.message(Message.questRecord(questRecord)));
                     user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
                     user.validateStat();
                 }
@@ -596,14 +604,70 @@ public final class UserHandler {
         }
     }
 
+
+    // SOCIAL HANDLERS -------------------------------------------------------------------------------------------------
+
+    @Handler(InHeader.WHISPER)
+    public static void handleWhisper(User user, InPacket inPacket) {
+        final int flag = inPacket.decodeByte();
+        inPacket.decodeInt(); // update_time
+        final WhisperFlag whisperFlag = WhisperFlag.getByValue(flag);
+        switch (whisperFlag) {
+            case LOCATION_REQUEST, LOCATION_REQUEST_F -> {
+                final String targetName = inPacket.decodeString();
+                // Submit whisper request
+                final CompletableFuture<Optional<UserProxy>> whisperResultFuture = user.getConnectedServer()
+                        .submitWhisperRequest(WhisperFlag.LOCATION, user.getCharacterName(), targetName, null);
+                try {
+                    final Optional<UserProxy> whisperResult = whisperResultFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                    if (whisperResult.isEmpty()) {
+                        user.write(FieldPacket.whisper(LocationResult.none(targetName)));
+                        return;
+                    }
+                    final UserProxy userProxy = whisperResult.get();
+                    if (userProxy.getChannelId() == user.getChannelId()) {
+                        user.write(FieldPacket.whisper(LocationResult.sameChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, userProxy.getFieldId())));
+                    } else {
+                        user.write(FieldPacket.whisper(LocationResult.otherChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, userProxy.getChannelId())));
+                    }
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    log.error("Exception caught while waiting for whisper result", e);
+                    user.write(FieldPacket.whisper(LocationResult.none(targetName)));
+                    e.printStackTrace();
+                }
+            }
+            case WHISPER_REQUEST, WHISPER_REQUEST_MANAGER -> {
+                final String targetName = inPacket.decodeString();
+                final String message = inPacket.decodeString();
+                // Submit whisper request
+                final CompletableFuture<Optional<UserProxy>> whisperResultFuture = user.getConnectedServer()
+                        .submitWhisperRequest(WhisperFlag.WHISPER, user.getCharacterName(), targetName, message);
+                try {
+                    final Optional<UserProxy> whisperResult = whisperResultFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                    user.write(FieldPacket.whisper(WhisperResult.whisperResult(targetName, whisperResult.isPresent())));
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    log.error("Exception caught while waiting for whisper result", e);
+                    user.write(FieldPacket.whisper(WhisperResult.whisperResult(targetName, false)));
+                    e.printStackTrace();
+                }
+            }
+            case WHISPER_BLOCKED -> {
+                final String targetName = inPacket.decodeString();
+                user.getConnectedServer().submitWhisperRequest(WhisperFlag.BLOCKED, user.getCharacterName(), targetName, null); // response not required
+            }
+            case null -> {
+                log.error("Unknown whisper flag : {}", flag);
+            }
+            default -> {
+                log.error("Unhandled whisper flag : {}", whisperFlag);
+            }
+        }
+    }
+
     @Handler(InHeader.FRIEND_REQUEST)
     public static void handleFriendRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final FriendRequestType requestType = FriendRequestType.getByValue(type);
-        if (requestType == null) {
-            log.error("Unknown friend request type : {}", type);
-            return;
-        }
         switch (requestType) {
             case LOAD_FRIEND -> {
             }
@@ -617,6 +681,9 @@ public final class UserHandler {
             case DELETE_FRIEND -> {
                 final int friendId = inPacket.decodeInt();
             }
+            case null -> {
+                log.error("Unknown friend request type : {}", type);
+            }
             default -> {
                 log.error("Unhandled friend request type : {}", requestType);
             }
@@ -627,10 +694,6 @@ public final class UserHandler {
     public static void handleMemoRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final MemoRequestType requestType = MemoRequestType.getByValue(type);
-        if (requestType == null) {
-            log.error("Unknown memo request type : {}", type);
-            return;
-        }
         switch (requestType) {
             case SEND -> {
                 // CCashShop::OnCashItemResLoadGiftDone
@@ -674,6 +737,9 @@ public final class UserHandler {
                 // CWvsContext::OnMemoNotify_Receive
                 // TODO fetch memo from DB
             }
+            case null -> {
+                log.error("Unknown memo request type : {}", type);
+            }
             default -> {
                 log.error("Unhandled memo request type : {}", requestType);
             }
@@ -684,10 +750,6 @@ public final class UserHandler {
     public static void handleFuncKeyMappedModified(User user, InPacket inPacket) {
         final int type = inPacket.decodeInt();
         final FuncKeyMappedType funcKeyMappedType = FuncKeyMappedType.getByValue(type);
-        if (funcKeyMappedType == null) {
-            log.error("Received unknown type {} for FUNC_KEY_MAPPED_MODIFIED", type);
-            return;
-        }
         try (var locked = user.acquire()) {
             final FuncKeyManager fkm = locked.get().getFuncKeyManager();
             switch (funcKeyMappedType) {
@@ -718,6 +780,9 @@ public final class UserHandler {
                 case PET_CONSUME_MP_ITEM_MODIFIED -> {
                     final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
                     fkm.setPetConsumeMpItem(itemId);
+                }
+                case null -> {
+                    log.error("Received unknown type {} for FUNC_KEY_MAPPED_MODIFIED", type);
                 }
                 default -> {
                     log.error("Unhandled func key mapped type : {}", funcKeyMappedType);

@@ -455,9 +455,7 @@ public final class AdminCommands {
             return;
         }
         try (var locked = user.acquire()) {
-            final CharacterStat cs = user.getCharacterStat();
-            cs.setJob((short) jobId);
-            user.write(WvsContext.statChanged(Stat.JOB, cs.getJob(), true));
+            user.setJob((short) jobId);
         }
     }
 

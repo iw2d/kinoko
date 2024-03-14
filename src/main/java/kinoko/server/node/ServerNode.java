@@ -22,11 +22,11 @@ public abstract class ServerNode {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    public abstract boolean isConnected(Account account);
-
     public abstract void initialize() throws Exception;
 
     public abstract void shutdown() throws Exception;
+
+    public abstract boolean isConnected(Account account);
 
     public final void addClient(Client client) {
         clientStorage.addClient(client);

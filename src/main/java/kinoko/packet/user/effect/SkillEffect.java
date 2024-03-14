@@ -12,7 +12,7 @@ public final class SkillEffect extends Effect {
     private short positionX;
     private short positionY;
 
-    public SkillEffect(EffectType type) {
+    SkillEffect(EffectType type) {
         super(type);
     }
 

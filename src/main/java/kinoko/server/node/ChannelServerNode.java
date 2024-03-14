@@ -9,6 +9,7 @@ import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
+import kinoko.server.whisper.WhisperFlag;
 import kinoko.world.Account;
 import kinoko.world.field.Field;
 import kinoko.world.user.User;
@@ -87,12 +88,43 @@ public final class ChannelServerNode extends ServerNode {
 
     // USER METHODS ----------------------------------------------------------------------------------------------------
 
+    public boolean isConnected(User user) {
+        return clientStorage.isConnected(user);
+    }
+
+    public Optional<User> getUserByCharacterId(int characterId) {
+        return clientStorage.getUserByCharacterId(characterId);
+    }
+
     public void notifyUserConnect(User user) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userConnect(UserProxy.from(user)));
     }
 
+    public void notifyUserUpdate(User user) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userUpdate(UserProxy.from(user)));
+    }
+
     public void notifyUserDisconnect(User user) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userDisconnect(UserProxy.from(user)));
+    }
+
+
+    // WHISPER METHODS -------------------------------------------------------------------------------------------------
+
+    public CompletableFuture<Optional<UserProxy>> submitWhisperRequest(WhisperFlag flag, String sourceCharacterName, String targetCharacterName, String message) {
+        final int requestId = getNewRequestId();
+        final CompletableFuture<Optional<UserProxy>> whisperRequestFuture = new CompletableFuture<>();
+        requestFutures.put(requestId, whisperRequestFuture);
+        centralClientFuture.channel().writeAndFlush(CentralPacket.whisperRequest(flag, requestId, sourceCharacterName, targetCharacterName, message));
+        return whisperRequestFuture;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void completeWhisperRequest(int requestId, UserProxy userProxy) {
+        final CompletableFuture<Optional<UserProxy>> whisperRequestFuture = (CompletableFuture<Optional<UserProxy>>) requestFutures.remove(requestId);
+        if (whisperRequestFuture != null) {
+            whisperRequestFuture.complete(Optional.ofNullable(userProxy));
+        }
     }
 
 
@@ -111,10 +143,6 @@ public final class ChannelServerNode extends ServerNode {
 
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
-
-    public boolean isConnected(User user) {
-        return clientStorage.isConnected(user);
-    }
 
     @Override
     public boolean isConnected(Account account) {

@@ -7,7 +7,7 @@ import kinoko.server.header.InHeader;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class LoginPacketHandler extends PacketHandler {
+public final class LoginPacketHandler extends PacketHandler {
     private static final Map<InHeader, Method> loginPacketHandlerMap = loadHandlers(
             ClientHandler.class,
             LoginHandler.class

@@ -7,14 +7,16 @@ import kinoko.world.user.User;
 
 public final class UserProxy implements Encodable {
     private final int channelId;
+    private final int fieldId;
     private final int accountId;
     private final int characterId;
     private final String characterName;
-    private int level;
-    private int job;
+    private final int level;
+    private final int job;
 
-    public UserProxy(int channelId, int accountId, int characterId, String characterName, int level, int job) {
+    public UserProxy(int channelId, int fieldId, int accountId, int characterId, String characterName, int level, int job) {
         this.channelId = channelId;
+        this.fieldId = fieldId;
         this.accountId = accountId;
         this.characterId = characterId;
         this.characterName = characterName;
@@ -24,6 +26,10 @@ public final class UserProxy implements Encodable {
 
     public int getChannelId() {
         return channelId;
+    }
+
+    public int getFieldId() {
+        return fieldId;
     }
 
     public int getAccountId() {
@@ -42,21 +48,14 @@ public final class UserProxy implements Encodable {
         return level;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
     public int getJob() {
         return job;
-    }
-
-    public void setJob(int job) {
-        this.job = job;
     }
 
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(channelId);
+        outPacket.encodeInt(fieldId);
         outPacket.encodeInt(accountId);
         outPacket.encodeInt(characterId);
         outPacket.encodeString(characterName);
@@ -66,6 +65,7 @@ public final class UserProxy implements Encodable {
 
     public static UserProxy decode(InPacket inPacket) {
         final int channelId = inPacket.decodeInt();
+        final int fieldId = inPacket.decodeInt();
         final int accountId = inPacket.decodeInt();
         final int characterId = inPacket.decodeInt();
         final String characterName = inPacket.decodeString();
@@ -73,6 +73,7 @@ public final class UserProxy implements Encodable {
         final int job = inPacket.decodeInt();
         return new UserProxy(
                 channelId,
+                fieldId,
                 accountId,
                 characterId,
                 characterName,
@@ -84,6 +85,7 @@ public final class UserProxy implements Encodable {
     public static UserProxy from(User user) {
         return new UserProxy(
                 user.getChannelId(),
+                user.getFieldId(),
                 user.getAccountId(),
                 user.getCharacterId(),
                 user.getCharacterName(),

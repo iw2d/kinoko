@@ -67,21 +67,22 @@ public final class CentralServerNode extends ServerNode {
 
     // USER METHODS ----------------------------------------------------------------------------------------------------
 
+    public Optional<UserProxy> getUserByCharacterName(String characterName) {
+        return userStorage.getByCharacterName(characterName);
+    }
+
     public void addUser(UserProxy userProxy) {
         userStorage.putUser(userProxy);
         getChildNodeByChannelId(userProxy.getChannelId()).ifPresent(RemoteChildNode::incrementUserCount);
-        // TODO notify
     }
 
     public void updateUser(UserProxy userProxy) {
         userStorage.putUser(userProxy);
-        // TODO notify
     }
 
     public void removeUser(UserProxy userProxy) {
         userStorage.removeUser(userProxy);
         getChildNodeByChannelId(userProxy.getChannelId()).ifPresent(RemoteChildNode::decrementUserCount);
-        // TODO notify
     }
 
 

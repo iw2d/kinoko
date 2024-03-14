@@ -33,10 +33,6 @@ public final class CashShopHandler {
     public static void handleCashItemRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final CashItemRequestType requestType = CashItemRequestType.getByValue(type);
-        if (requestType == null) {
-            log.error("Unknown cash item request type : {}", type);
-            return;
-        }
         switch (requestType) {
             case BUY -> {
                 // CCashShop::OnBuy
@@ -356,6 +352,12 @@ public final class CashShopHandler {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.moveStoLDone(cashItemInfo)));
                     }
                 }
+            }
+            case null -> {
+                log.error("Unknown cash item request type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled cash item request type : {}", requestType);
             }
         }
     }

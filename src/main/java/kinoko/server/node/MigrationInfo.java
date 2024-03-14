@@ -28,7 +28,7 @@ public final class MigrationInfo implements Encodable {
     }
 
     public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey) {
-        this(channelId, accountId, characterId, machineId, clientKey, Instant.now().plus(ServerConfig.MIGRATION_REQUEST_TTL, ChronoUnit.SECONDS));
+        this(channelId, accountId, characterId, machineId, clientKey, Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
     }
 
     public int getChannelId() {

@@ -7,6 +7,7 @@ import kinoko.server.dialog.shop.ShopResultType;
 import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.whisper.WhisperResult;
 import kinoko.world.GameConstants;
 import kinoko.world.user.funckey.FuncKeyMapped;
 import kinoko.world.user.funckey.FuncKeyType;
@@ -38,6 +39,12 @@ public final class FieldPacket {
             // CField_MonsterCarnival::DecodeFieldSpecificData,  CField_MonsterCarnivalRevive::DecodeFieldSpecificData
             outPacket.encodeByte(data); // nTeamForMCarnival
         }
+        return outPacket;
+    }
+
+    public static OutPacket whisper(WhisperResult whisperResult) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.WHISPER);
+        whisperResult.encode(outPacket);
         return outPacket;
     }
 

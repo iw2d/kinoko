@@ -10,7 +10,7 @@ import kinoko.server.header.InHeader;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class ChannelPacketHandler extends PacketHandler {
+public final class ChannelPacketHandler extends PacketHandler {
     private static final Map<InHeader, Method> channelPacketHandlerMap = loadHandlers(
             ClientHandler.class,
             CashShopHandler.class,

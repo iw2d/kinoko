@@ -5,6 +5,7 @@ import kinoko.world.user.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -28,6 +29,19 @@ public final class ClientStorage {
         lock.lock();
         try {
             return mapByCharacterId.containsKey(user.getCharacterId());
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Optional<User> getUserByCharacterId(int characterId) {
+        lock.lock();
+        try {
+            final Client client = mapByCharacterId.get(characterId);
+            if (client == null || client.getUser() == null) {
+                return Optional.empty();
+            }
+            return Optional.of(client.getUser());
         } finally {
             lock.unlock();
         }

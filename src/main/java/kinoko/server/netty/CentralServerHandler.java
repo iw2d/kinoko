@@ -5,6 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
 import kinoko.server.node.*;
 import kinoko.server.packet.InPacket;
+import kinoko.server.whisper.WhisperFlag;
 import kinoko.util.Util;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -94,6 +95,27 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             case USER_DISCONNECT -> {
                 final UserProxy userProxy = UserProxy.decode(inPacket);
                 centralServerNode.removeUser(userProxy);
+            }
+            case WHISPER_REQUEST -> {
+                final int requestId = inPacket.decodeInt();
+                final String sourceCharacterName = inPacket.decodeString();
+                final String targetCharacterName = inPacket.decodeString();
+                final WhisperFlag flag = WhisperFlag.getByValue(inPacket.decodeByte());
+                final String message = flag == WhisperFlag.WHISPER ? inPacket.decodeString() : null;
+                // Resolve target user and reply with WHISPER_RESULT
+                final Optional<UserProxy> targetResult = centralServerNode.getUserByCharacterName(targetCharacterName);
+                ctx.channel().writeAndFlush(CentralPacket.whisperResult(requestId, targetResult.orElse(null)));
+                // If not location request, send WHISPER_RECEIVE to target channel server node
+                if (flag != null && flag != WhisperFlag.LOCATION && targetResult.isPresent()) {
+                    final UserProxy target = targetResult.get();
+                    final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
+                    if (targetNodeResult.isEmpty()) {
+                        // Transfer request failed
+                        log.error("Failed to resolve channel ID {}", target.getChannelId() + 1);
+                        return;
+                    }
+                    targetNodeResult.get().write(CentralPacket.whisperReceive(flag, target.getCharacterId(), remoteChildNode.getChannelId(), sourceCharacterName, message));
+                }
             }
             case null -> {
                 log.error("Central Server received an unknown opcode : {}", op);

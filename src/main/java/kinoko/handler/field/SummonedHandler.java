@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-public class SummonedHandler {
+public final class SummonedHandler {
     private static final Logger log = LogManager.getLogger(SummonedHandler.class);
 
     @Handler(InHeader.SUMMONED_MOVE)

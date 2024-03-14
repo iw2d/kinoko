@@ -56,6 +56,30 @@ import java.util.Map;
  *      7 : receive MIGRATE_IN (channel server), send MIGRATION_REQUEST to CentralServerNode [same as migration step 3 onwards]
  *      8 : block until MIGRATION_RESULT received from CentralServerNode
  *     12 : perform migration, send USER_CONNECT to central server
+ *
+ * Location
+ *   ChannelServerNode
+ *      1 : receive WHISPER (channel server) from source client [LOCATION_REQUEST]
+ *      2 : send WHISPER_REQUEST to CentralServerNode
+ *      5 : receive WHISPER_RESULT from CentralServerNode
+ *      6 : send WHISPER (channel server) to source client [LOCATION_RESULT]
+ *   CentralServerNode
+ *      3 : receive WHISPER_REQUEST, resolve target from UserStorage
+ *      4 : send WHISPER_RESULT to ChannelServerNode
+ *
+ * Whisper
+ *   ChannelServerNode (source)
+ *      1 : receive WHISPER (channel server) from source client
+ *      2 : send WHISPER_REQUEST to CentralServerNode
+ *      5 : receive WHISPER_RESULT from CentralServerNode
+ *      6 : send WHISPER (channel server) to source client
+ *   CentralServerNode
+ *      3 : receive WHISPER_REQUEST, resolve target from UserStorage
+ *      4 : send WHISPER_RESULT to source ChannelServerNode
+ *      7 : send WHISPER_RECEIVE to target ChannelServerNode [if whisper]
+ *   ChannelServerNode (target)
+ *      8 : receive WHISPER_RECEIVE, resolve target client from ClientStorage
+ *      9 : send WHISPER (channel server) to target client
  * </pre>
  */
 public enum CentralPacketHeader {
@@ -69,7 +93,10 @@ public enum CentralPacketHeader {
     TRANSFER_RESULT,
     USER_CONNECT,
     USER_UPDATE,
-    USER_DISCONNECT;
+    USER_DISCONNECT,
+    WHISPER_REQUEST,
+    WHISPER_RESULT,
+    WHISPER_RECEIVE;
 
     private static final Map<Integer, CentralPacketHeader> headerMap = new HashMap<>();
 

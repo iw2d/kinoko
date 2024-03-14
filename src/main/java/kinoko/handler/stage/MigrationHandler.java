@@ -72,7 +72,7 @@ public final class MigrationHandler {
         );
         final MigrationInfo migrationResult;
         try {
-            final Optional<MigrationInfo> migrationFutureResult = migrationFuture.get(ServerConfig.MIGRATION_REQUEST_TTL, TimeUnit.SECONDS);
+            final Optional<MigrationInfo> migrationFutureResult = migrationFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
             if (migrationFutureResult.isEmpty()) {
                 log.error("Failed to retrieve migration result for character ID : {}", characterId);
                 c.close();
@@ -346,7 +346,7 @@ public final class MigrationHandler {
         final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
         final TransferInfo transferResult;
         try {
-            final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.MIGRATION_REQUEST_TTL, TimeUnit.SECONDS);
+            final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
             if (transferFutureResult.isEmpty()) {
                 log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
                 c.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel

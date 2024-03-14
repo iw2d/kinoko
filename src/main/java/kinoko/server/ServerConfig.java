@@ -6,7 +6,7 @@ public final class ServerConfig {
     public static final int WORLD_ID = 0;
     public static final String WORLD_NAME = "Kinoko";
     public static final int CHANNELS_PER_WORLD = 5;
-    public static final int MIGRATION_REQUEST_TTL = 5;
+    public static final int CENTRAL_REQUEST_TTL = 5;
     public static final int FIELD_TICK_INTERVAL = 100; // 100 ms tick
 
     public static final boolean AUTO_CREATE_ACCOUNT = true;

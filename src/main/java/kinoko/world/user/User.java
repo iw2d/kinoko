@@ -161,6 +161,14 @@ public final class User extends Life implements Lockable<User> {
         return getCharacterStat().getJob();
     }
 
+    public void setJob(int jobId) {
+        getCharacterStat().setJob((short) jobId);
+        write(WvsContext.statChanged(Stat.JOB, getJob(), true));
+        getField().broadcastPacket(UserRemote.effect(this, Effect.jobChanged()), this);
+        validateStat();
+        getConnectedServer().notifyUserUpdate(this);
+    }
+
     public int getLevel() {
         return getCharacterStat().getLevel();
     }
@@ -208,6 +216,7 @@ public final class User extends Life implements Lockable<User> {
             validateStat();
             setHp(getMaxHp());
             setMp(getMaxMp());
+            getConnectedServer().notifyUserUpdate(this);
         }
     }
 
@@ -287,6 +296,13 @@ public final class User extends Life implements Lockable<User> {
         }
     }
 
+    public int getFieldId() {
+        if (getField() != null) {
+            return getField().getFieldId();
+        }
+        return GameConstants.UNDEFINED_FIELD_ID;
+    }
+
     public void warp(Field destination, PortalInfo portal, boolean isMigrate, boolean isRevive) {
         if (getField() != null) {
             getField().removeUser(this);
@@ -298,6 +314,7 @@ public final class User extends Life implements Lockable<User> {
         getCharacterStat().setPortal((byte) portal.getPortalId());
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
+        getConnectedServer().notifyUserUpdate(this);
     }
 
     public void write(OutPacket outPacket) {
@@ -351,7 +368,7 @@ public final class User extends Life implements Lockable<User> {
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------
 
-    public Map<Integer, Item> getRealEquip() {
+    private Map<Integer, Item> getRealEquip() {
         final CharacterStat cs = getCharacterStat();
         final int basicStatUp = getSecondaryStat().getOption(CharacterTemporaryStat.BasicStatUp).nOption;
         final int baseStr = cs.getBaseStr() + (basicStatUp * cs.getBaseStr() / 100);
@@ -425,6 +442,4 @@ public final class User extends Life implements Lockable<User> {
         }
         return Collections.unmodifiableMap(realEquip);
     }
-
-
 }

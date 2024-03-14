@@ -1,6 +1,7 @@
 package kinoko.provider.map;
 
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.world.GameConstants;
 
 public final class PortalInfo {
     private final PortalType portalType;
@@ -36,7 +37,7 @@ public final class PortalInfo {
     }
 
     public boolean hasDestinationField() {
-        return destinationFieldId != 999999999;
+        return destinationFieldId != GameConstants.UNDEFINED_FIELD_ID;
     }
 
     public int getDestinationFieldId() {

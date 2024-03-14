@@ -11,7 +11,7 @@ public class Effect implements Encodable {
     private int int2;
     private String string1;
 
-    public Effect(EffectType type) {
+    Effect(EffectType type) {
         this.type = type;
     }
 
@@ -99,6 +99,10 @@ public class Effect implements Encodable {
 
     public static Effect levelUp() {
         return new Effect(EffectType.LEVEL_UP);
+    }
+
+    public static Effect jobChanged() {
+        return new Effect(EffectType.JOB_CHANGED);
     }
 
     public static Effect pet(PetEffectType type, int petIndex) {
