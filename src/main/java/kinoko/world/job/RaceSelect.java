@@ -3,7 +3,8 @@ package kinoko.world.job;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum LoginJob {
+public enum RaceSelect {
+    // RACE_SELECT
     RESISTANCE(0, Job.CITIZEN),
     EXPLORER(1, Job.BEGINNER),
     CYGNUS(2, Job.NOBLESSE),
@@ -13,16 +14,16 @@ public enum LoginJob {
     private final int race;
     private final Job job;
 
-    LoginJob(int race, Job job) {
+    RaceSelect(int race, Job job) {
         this.race = race;
         this.job = job;
     }
 
-    public Job getJob() {
+    public final Job getJob() {
         return job;
     }
 
-    public static Optional<LoginJob> getByRace(int race) {
+    public static Optional<RaceSelect> getByRace(int race) {
         return Arrays.stream(values()).filter(j -> j.race == race).findFirst();
     }
 }

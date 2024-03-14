@@ -1,6 +1,7 @@
 package kinoko.world;
 
 import kinoko.util.Tuple;
+import kinoko.world.job.Job;
 import kinoko.world.user.funckey.FuncKeyMapped;
 import kinoko.world.user.funckey.FuncKeyType;
 
@@ -87,6 +88,26 @@ public final class GameConstants {
         return name.length() >= 4 && name.length() <= 13 && name.matches("[a-zA-Z0-9]+");
     }
 
+    public static int getStartingMap(Job job, int subJob) {
+        switch (job) {
+            case NOBLESSE -> {
+                return 130030000;
+            }
+            case ARAN_BEGINNER -> {
+                return 914000000;
+            }
+            case EVAN_BEGINNER -> {
+                return 900010000;
+            }
+            case CITIZEN -> {
+                return 931000000;
+            }
+            default -> {
+                return 0;
+            }
+        }
+    }
+
     public static Tuple<Integer, Integer> getMoneyForMobLevel(int level) {
         // modern maple values, may not be accurate
         final double min;
@@ -132,7 +153,6 @@ public final class GameConstants {
     public static int getNextLevelPetCloseness(int level) {
         return PET_TAMENESS_TABLE[level];
     }
-
 
     private static int[] initializeExpTable() {
         // NEXTLEVEL::NEXTLEVEL

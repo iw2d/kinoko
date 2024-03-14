@@ -20,7 +20,7 @@ import kinoko.world.Account;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.job.Job;
-import kinoko.world.job.LoginJob;
+import kinoko.world.job.RaceSelect;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.CharacterData;
@@ -162,23 +162,28 @@ public final class LoginHandler {
             c.write(LoginPacket.createNewCharacterResultFail(LoginType.INVALID_CHARACTER_NAME));
             return;
         }
-        Optional<LoginJob> loginJob = LoginJob.getByRace(selectedRace);
-        if (loginJob.isEmpty()) {
+        final Optional<RaceSelect> raceSelectResult = RaceSelect.getByRace(selectedRace);
+        if (raceSelectResult.isEmpty()) {
+            log.error("Could not resolve selected race : {}", selectedRace);
             c.close();
             return;
         }
-        Job job = loginJob.get().getJob();
+        final RaceSelect raceSelect = raceSelectResult.get();
+        final Job job = raceSelect.getJob();
         if (selectedSubJob != 0 && job != Job.BEGINNER) {
+            log.error("Tried to create a character with job : {} and sub job : {}", job, selectedSubJob);
             c.close();
             return;
         }
         for (int i = 0; i < selectedAL.length; i++) {
             if (!EtcProvider.isValidStartingItem(i, selectedAL[i])) {
+                log.error("Tried to create a character with an invalid starting item : {}", selectedAL[i]);
                 c.close();
                 return;
             }
         }
         if (gender < 0 || gender > 2) {
+            log.error("Tried to create a character with an invalid gender : {}", gender);
             c.close();
             return;
         }
@@ -218,7 +223,7 @@ public final class LoginHandler {
         cs.setSp(ExtendSp.from(Map.of()));
         cs.setExp(0);
         cs.setPop((short) 0);
-        cs.setPosMap(0); // TODO starting maps for each login job
+        cs.setPosMap(GameConstants.getStartingMap(job, selectedSubJob));
         cs.setPortal((byte) 0);
         characterData.setCharacterStat(cs);
 
