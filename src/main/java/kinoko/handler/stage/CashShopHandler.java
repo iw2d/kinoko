@@ -5,8 +5,11 @@ import kinoko.handler.Handler;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.server.cashshop.*;
 import kinoko.server.header.InHeader;
+import kinoko.server.memo.Memo;
+import kinoko.server.memo.MemoType;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
+import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.user.Account;
@@ -14,6 +17,7 @@ import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +63,7 @@ public final class CashShopHandler {
                     return;
                 }
                 final CashItemInfo cashItemInfo = cashItemInfoResult.get();
+
                 try (var lockedAccount = user.getAccount().acquire()) {
                     // Check account locker
                     final Account account = lockedAccount.get();
@@ -66,11 +71,13 @@ public final class CashShopHandler {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.BUY_STORED_PROC_FAILED))); // Please check and see if you have exceeded\r\nthe number of cash items you can have.
                         return;
                     }
+
                     // Check payment type and deduct price
                     if (!deductPrice(lockedAccount, PaymentType.getByValue(paymentType), commodity.getPrice())) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.NO_REMAIN_CASH))); // You don't have enough cash.
                         return;
                     }
+
                     // Add to locker and update client
                     account.getLocker().addCashItem(cashItemInfo);
                     user.write(CashShopPacket.queryCashResult(account));
@@ -95,17 +102,20 @@ public final class CashShopHandler {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.INVALID_BIRTH_DATE))); // Check your PIC password and\r\nplease try again
                     return;
                 }
+
                 // Check gift receiver
-                final Optional<Integer> receiverAccountIdResult = DatabaseManager.characterAccessor().getAccountIdByCharacterName(receiverName);
-                if (receiverAccountIdResult.isEmpty()) {
+                final Optional<Tuple<Integer, Integer>> receiverIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(receiverName);
+                if (receiverIdResult.isEmpty()) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.GIFT_UNKNOWN_RECIPIENT))); // Please confirm whether\r\nthe character's name is correct.
                     return;
                 }
-                final int receiverAccountId = receiverAccountIdResult.get();
+                final int receiverAccountId = receiverIdResult.get().getLeft();
+                final int receiverCharacterId = receiverIdResult.get().getRight();
                 if (receiverAccountId == user.getAccountId()) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.GIFT_SAME_ACCOUNT))); // You cannot send a gift to your own account.\r\nPlease purchase it after logging\r\nin with the related character.
                     return;
                 }
+
                 // Resolve Commodity and create Gift
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
                 if (commodityResult.isEmpty()) {
@@ -121,25 +131,45 @@ public final class CashShopHandler {
                     return;
                 }
                 final Gift gift = giftResult.get();
+
                 try (var lockedAccount = user.getAccount().acquire()) {
-                    // Check account has enough nx prepaid (gifts are prepaid only
+                    // Check account has enough nx prepaid (gifts are prepaid only)
                     final Account account = lockedAccount.get();
                     if (account.getNxPrepaid() < commodity.getPrice()) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.NO_REMAIN_CASH))); // You don't have enough cash.
                         return;
                     }
+
                     // Record gift in DB and deduct nx credit
-                    if (!DatabaseManager.giftAccessor().newGift(gift, receiverAccountId)) {
+                    if (!DatabaseManager.giftAccessor().newGift(gift, receiverCharacterId)) {
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
                     account.setNxPrepaid(account.getNxPrepaid() - commodity.getPrice());
+
                     // Update client
-                    user.write(CashShopPacket.queryCashResult(account));
                     user.write(CashShopPacket.cashItemResult(CashItemResult.giftDone(receiverName, commodity)));
+                    user.write(CashShopPacket.queryCashResult(account)); // the order is important here
                 }
 
-                // TODO create memo for receiver
+                // Create memo
+                final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
+                if (memoIdResult.isEmpty()) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    return;
+                }
+                final Memo memo = new Memo(
+                        MemoType.DEFAULT,
+                        memoIdResult.get(),
+                        user.getCharacterName(),
+                        user.getCharacterName() + " has sent you a gift! Go check out the Cash Shop.",
+                        Instant.now()
+                );
+
+                // Save memo and update client
+                if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                }
             }
             case SET_WISH -> {
                 // CCashShop::OnSetWish
@@ -353,6 +383,10 @@ public final class CashShopHandler {
                     }
                 }
             }
+            case PURCHASE_RECORD -> {
+                final int commodityId = inPacket.decodeInt(); // nCommoditySn
+                user.write(CashShopPacket.cashItemResult(CashItemResult.purchaseRecord(commodityId, false)));
+            }
             case null -> {
                 log.error("Unknown cash item request type : {}", type);
             }
@@ -425,13 +459,13 @@ public final class CashShopHandler {
                     return false;
 
                 }
-                account.setNxPrepaid(account.getNxCredit() - price);
+                account.setNxPrepaid(account.getNxPrepaid() - price);
             }
             case MAPLE_POINT -> {
                 if (account.getMaplePoint() < price) {
                     return false;
                 }
-                account.setMaplePoint(account.getNxCredit() - price);
+                account.setMaplePoint(account.getMaplePoint() - price);
             }
             case null -> {
                 return false;

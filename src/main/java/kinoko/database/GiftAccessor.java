@@ -5,9 +5,7 @@ import kinoko.server.cashshop.Gift;
 import java.util.List;
 
 public interface GiftAccessor {
-    List<Gift> getGiftsByAccountId(int accountId);
-
-    boolean hasGift(int accountId);
+    List<Gift> getGiftsByCharacterId(int characterId);
 
     boolean newGift(Gift gift, int receiverId);
 

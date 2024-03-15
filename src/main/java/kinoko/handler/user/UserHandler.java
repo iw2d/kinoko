@@ -1,8 +1,10 @@
 package kinoko.handler.user;
 
+import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.script.ScriptMessageType;
+import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.user.ChatType;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
@@ -16,12 +18,17 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.ServerConfig;
+import kinoko.server.cashshop.CashItemFailReason;
+import kinoko.server.cashshop.CashItemResult;
+import kinoko.server.cashshop.CashItemResultType;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.header.InHeader;
+import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
+import kinoko.server.memo.MemoResult;
 import kinoko.server.memo.MemoType;
 import kinoko.server.node.UserProxy;
 import kinoko.server.packet.InPacket;
@@ -53,6 +60,7 @@ import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -697,7 +705,7 @@ public final class UserHandler {
         switch (requestType) {
             case SEND -> {
                 // CCashShop::OnCashItemResLoadGiftDone
-                final String characterName = inPacket.decodeString();
+                final String receiverName = inPacket.decodeString();
                 final String message = inPacket.decodeString(); // sMsg
                 final int flag = inPacket.decodeByte(); // nFlag
                 final int index = inPacket.decodeInt(); // nIdx
@@ -706,8 +714,34 @@ public final class UserHandler {
                 if (memoType == null) {
                     log.error("Tried to send memo with unknown type : {}", flag);
                     user.dispose();
+                    return;
                 }
-                // TODO create memo
+                // Resolve receiver
+                final Optional<Tuple<Integer, Integer>> receiverIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(receiverName);
+                if (receiverIdResult.isEmpty()) {
+                    user.write(WvsContext.memoResult(MemoResult.sendWarningName())); // Please check the name of the receiving character.
+                    return;
+                }
+                final int receiverCharacterId = receiverIdResult.get().getRight();
+                // Create memo
+                final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
+                if (memoIdResult.isEmpty()) {
+                    // This type of request is only sent while retrieving gifts from the cashshop, hence the cash shop fail result
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    return;
+                }
+                final Memo memo = new Memo(
+                        memoType,
+                        memoIdResult.get(),
+                        user.getCharacterName(),
+                        message,
+                        Instant.now()
+                );
+                // Save memo
+                if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                }
+                // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // not required
             }
             case DELETE -> {
                 // CMemoListDlg::SetRet
@@ -715,27 +749,32 @@ public final class UserHandler {
                 inPacket.decodeByte(); // number of memos where nFlag == 3 (INVITATION) -> number of slots required
                 inPacket.decodeByte(); // nEmptySlotCount
                 for (int i = 0; i < size; i++) {
-                    inPacket.decodeInt(); // dwSN
+                    final int memoId = inPacket.decodeInt(); // dwSN
                     final int flag = inPacket.decodeByte(); // nFlag
                     final MemoType memoType = MemoType.getByValue(flag);
+                    if (!DatabaseManager.memoAccessor().deleteMemo(memoId, user.getCharacterId())) {
+                        log.error("Failed to delete memo {} from database", memoId);
+                        return;
+                    }
                     if (memoType == MemoType.INVITATION) {
                         final int marriageId = inPacket.decodeInt(); // atoi(strMarriageNo)
-                        // TODO: add marriage invitation item
+                        // TODO: give marriage invitation item
                     }
-                    // TODO: db handling for memos
                     if (memoType == MemoType.INC_POP) {
                         try (var locked = user.acquire()) {
                             final CharacterStat cs = locked.get().getCharacterStat();
                             final short newPop = (short) Math.min(cs.getPop() + 1, Short.MAX_VALUE);
                             cs.setPop(newPop);
                             user.write(WvsContext.statChanged(Stat.POP, newPop, false));
+                            user.write(WvsContext.message(Message.incPop(1)));
                         }
                     }
                 }
             }
             case LOAD -> {
                 // CWvsContext::OnMemoNotify_Receive
-                // TODO fetch memo from DB
+                final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
+                user.write(WvsContext.memoResult(MemoResult.load(memos)));
             }
             case null -> {
                 log.error("Unknown memo request type : {}", type);

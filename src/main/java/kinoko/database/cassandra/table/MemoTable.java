@@ -3,18 +3,16 @@ package kinoko.database.cassandra.table;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import kinoko.database.cassandra.type.ItemUDT;
 
-public final class GiftTable {
-    public static final String ITEM_SN = "item_sn";
+public final class MemoTable {
+    public static final String MEMO_ID = "memo_id";
     public static final String RECEIVER_ID = "receiver_id";
-    public static final String ITEM = "item";
+    public static final String MEMO_TYPE = "memo_type";
+    public static final String MEMO_CONTENT = "memo_content";
     public static final String SENDER_NAME = "sender_name";
-    public static final String MESSAGE = "message";
+    public static final String DATE_SENT = "date_sent";
 
-
-    private static final String tableName = "gift";
-
+    private static final String tableName = "memo_table";
 
     public static String getTableName() {
         return tableName;
@@ -24,11 +22,12 @@ public final class GiftTable {
         session.execute(
                 SchemaBuilder.createTable(keyspace, getTableName())
                         .ifNotExists()
-                        .withPartitionKey(ITEM_SN, DataTypes.BIGINT)
+                        .withPartitionKey(MEMO_ID, DataTypes.INT)
                         .withColumn(RECEIVER_ID, DataTypes.INT)
-                        .withColumn(ITEM, SchemaBuilder.udt(ItemUDT.getTypeName(), true))
+                        .withColumn(MEMO_TYPE, DataTypes.INT)
+                        .withColumn(MEMO_CONTENT, DataTypes.TEXT)
                         .withColumn(SENDER_NAME, DataTypes.TEXT)
-                        .withColumn(MESSAGE, DataTypes.TEXT)
+                        .withColumn(DATE_SENT, DataTypes.TIMESTAMP)
                         .build()
         );
         session.execute(

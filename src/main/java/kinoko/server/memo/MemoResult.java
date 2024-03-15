@@ -32,7 +32,7 @@ public final class MemoResult implements Encodable {
     }
 
     public static MemoResult load(List<Memo> memos) {
-        final MemoResult result = new MemoResult(MemoResultType.SEND_WARNING);
+        final MemoResult result = new MemoResult(MemoResultType.LOAD);
         result.memos = memos; // lReceivedMemo
         return result;
     }
@@ -57,5 +57,9 @@ public final class MemoResult implements Encodable {
         final MemoResult result = new MemoResult(MemoResultType.SEND_WARNING);
         result.warningType = 2; // The receiver's inbox is full.\r\nPlease try again.
         return result;
+    }
+
+    public static MemoResult receive() {
+        return new MemoResult(MemoResultType.RECEIVE);
     }
 }

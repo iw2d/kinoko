@@ -1,5 +1,6 @@
 package kinoko.database;
 
+import kinoko.util.Tuple;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 
@@ -15,9 +16,9 @@ public interface CharacterAccessor {
 
     Optional<CharacterData> getCharacterByName(String name);
 
-    Optional<Integer> getAccountIdByCharacterId(int characterId);
+    Optional<Tuple<Integer, Integer>> getAccountAndCharacterIdByName(String name);
 
-    Optional<Integer> getAccountIdByCharacterName(String name);
+    Optional<Integer> getAccountIdByCharacterId(int characterId);
 
     List<AvatarData> getAvatarDataByAccountId(int accountId);
 

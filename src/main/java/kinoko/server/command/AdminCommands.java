@@ -397,8 +397,8 @@ public final class AdminCommands {
         final int nx = Integer.parseInt(args[1]);
         try (var lockedAccount = user.getAccount().acquire()) {
             final Account account = lockedAccount.get();
-            account.setNxCredit(nx);
-            user.write(WvsContext.message(Message.system("Set NX credit to %d", nx)));
+            account.setNxPrepaid(nx);
+            user.write(WvsContext.message(Message.system("Set NX prepaid to %d", nx)));
         }
     }
 

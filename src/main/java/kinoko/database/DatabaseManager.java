@@ -13,11 +13,9 @@ import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.cassandra.CassandraAccountAccessor;
 import kinoko.database.cassandra.CassandraCharacterAccessor;
 import kinoko.database.cassandra.CassandraGiftAccessor;
+import kinoko.database.cassandra.CassandraMemoAccessor;
 import kinoko.database.cassandra.codec.*;
-import kinoko.database.cassandra.table.AccountTable;
-import kinoko.database.cassandra.table.CharacterTable;
-import kinoko.database.cassandra.table.GiftTable;
-import kinoko.database.cassandra.table.IdTable;
+import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.EquipData;
@@ -40,6 +38,7 @@ public final class DatabaseManager {
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
     private static GiftAccessor giftAccessor;
+    private static MemoAccessor memoAccessor;
 
     public static AccountAccessor accountAccessor() {
         return accountAccessor;
@@ -51,6 +50,10 @@ public final class DatabaseManager {
 
     public static GiftAccessor giftAccessor() {
         return giftAccessor;
+    }
+
+    public static MemoAccessor memoAccessor() {
+        return memoAccessor;
     }
 
     public static void createKeyspace(CqlSession session, String keyspace) {
@@ -101,6 +104,7 @@ public final class DatabaseManager {
         AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
         GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        MemoTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
         // Register Codecs
         registerCodec(cqlSession, EquipDataUDT.getTypeName(), (ic) -> new EquipDataCodec(ic, GenericType.of(EquipData.class)));
@@ -117,6 +121,7 @@ public final class DatabaseManager {
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
         giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
+        memoAccessor = new CassandraMemoAccessor(cqlSession, DATABASE_KEYSPACE);
     }
 
     public static void shutdown() {

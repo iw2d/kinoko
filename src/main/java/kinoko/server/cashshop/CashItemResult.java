@@ -158,7 +158,7 @@ public final class CashItemResult implements Encodable {
             }
             case PURCHASE_RECORD_DONE -> {
                 outPacket.encodeInt(int1);
-                outPacket.encodeByte(int2); // nPurchaseRecord
+                outPacket.encodeByte(bool1); // nPurchaseRecord
             }
             case CASH_GACHAPON_OPEN_DONE -> {
                 outPacket.encodeLong(long1); // liSN
@@ -285,6 +285,13 @@ public final class CashItemResult implements Encodable {
     public static CashItemResult moveStoLDone(CashItemInfo cashItemInfo) {
         final CashItemResult result = new CashItemResult(CashItemResultType.MOVE_S_TO_L_DONE);
         result.cashItemInfo = cashItemInfo; // GW_CashItemInfo
+        return result;
+    }
+
+    public static CashItemResult purchaseRecord(int commodityId, boolean purchaseRecord) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.PURCHASE_RECORD_DONE);
+        result.int1 = commodityId;
+        result.bool1 = purchaseRecord;
         return result;
     }
 }

@@ -20,7 +20,7 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
     }
 
     @Override
-    public List<Gift> getGiftsByAccountId(int accountId) {
+    public List<Gift> getGiftsByCharacterId(int characterId) {
         final List<Gift> gifts = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), GiftTable.getTableName())
@@ -29,7 +29,7 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
                                 GiftTable.SENDER_NAME,
                                 GiftTable.MESSAGE
                         )
-                        .whereColumn(GiftTable.RECEIVER_ID).isEqualTo(literal(accountId))
+                        .whereColumn(GiftTable.RECEIVER_ID).isEqualTo(literal(characterId))
                         .build()
         );
         for (Row row : selectResult) {
@@ -45,38 +45,18 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
     }
 
     @Override
-    public boolean hasGift(int accountId) {
-        final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), GiftTable.getTableName())
-                        .columns(
-                                GiftTable.RECEIVER_ID
-                        )
-                        .whereColumn(GiftTable.RECEIVER_ID).isEqualTo(literal(accountId))
-                        .build()
-        );
-        for (Row row : selectResult) {
-            final int receiverId = row.getInt(GiftTable.RECEIVER_ID);
-            if (receiverId == accountId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public boolean newGift(Gift gift, int receiverId) {
         final CodecRegistry registry = getSession().getContext().getCodecRegistry();
-        final ResultSet updateResult = getSession().execute(
-                update(getKeyspace(), GiftTable.getTableName())
-                        .setColumn(GiftTable.ITEM_SN, literal(gift.getItemSn()))
-                        .setColumn(GiftTable.RECEIVER_ID, literal(receiverId))
-                        .setColumn(GiftTable.ITEM, literal(gift.getItem(), registry))
-                        .setColumn(GiftTable.SENDER_NAME, literal(gift.getSender()))
-                        .setColumn(GiftTable.MESSAGE, literal(gift.getMessage()))
-                        .whereColumn(GiftTable.ITEM_SN).isEqualTo(literal(GiftTable.ITEM_SN))
+        final ResultSet insertResult = getSession().execute(
+                insertInto(getKeyspace(), GiftTable.getTableName())
+                        .value(GiftTable.ITEM_SN, literal(gift.getItemSn()))
+                        .value(GiftTable.RECEIVER_ID, literal(receiverId))
+                        .value(GiftTable.ITEM, literal(gift.getItem(), registry))
+                        .value(GiftTable.SENDER_NAME, literal(gift.getSender()))
+                        .value(GiftTable.MESSAGE, literal(gift.getMessage()))
                         .build()
         );
-        return updateResult.wasApplied();
+        return insertResult.wasApplied();
     }
 
     @Override

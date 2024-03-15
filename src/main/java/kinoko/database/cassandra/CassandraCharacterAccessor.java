@@ -7,6 +7,7 @@ import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
+import kinoko.util.Tuple;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
@@ -132,6 +133,26 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
     }
 
     @Override
+    public Optional<Tuple<Integer, Integer>> getAccountAndCharacterIdByName(String name) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), CharacterTable.getTableName())
+                        .columns(
+                                CharacterTable.ACCOUNT_ID,
+                                CharacterTable.CHARACTER_ID
+                        )
+                        .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            return Optional.of(new Tuple<>(
+                    row.getInt(CharacterTable.ACCOUNT_ID),
+                    row.getInt(CharacterTable.CHARACTER_ID)
+            ));
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Integer> getAccountIdByCharacterId(int characterId) {
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), CharacterTable.getTableName())
@@ -139,22 +160,6 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                                 CharacterTable.ACCOUNT_ID
                         )
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterId))
-                        .build()
-        );
-        for (Row row : selectResult) {
-            return Optional.of(row.getInt(CharacterTable.ACCOUNT_ID));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Integer> getAccountIdByCharacterName(String name) {
-        final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), CharacterTable.getTableName())
-                        .columns(
-                                CharacterTable.ACCOUNT_ID
-                        )
-                        .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
                         .build()
         );
         for (Row row : selectResult) {

@@ -14,6 +14,7 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.*;
 import kinoko.server.header.InHeader;
+import kinoko.server.memo.MemoResult;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.MigrationInfo;
@@ -195,6 +196,11 @@ public final class MigrationHandler {
             user.write(FieldPacket.petConsumeItemInit(fkm.getPetConsumeItem()));
             user.write(FieldPacket.petConsumeMpItemInit(fkm.getPetConsumeMpItem()));
 
+            // Check memos
+            final boolean hasMemo = DatabaseManager.memoAccessor().hasMemo(user.getCharacterId());
+            if (hasMemo) {
+                user.write(WvsContext.memoResult(MemoResult.receive()));
+            }
 
             // TODO: update friends, family, guild, party
         }
@@ -287,7 +293,7 @@ public final class MigrationHandler {
         inPacket.decodeInt(); // update_time
 
         // Load gifts
-        final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByAccountId(user.getAccountId());
+        final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 
         try (var lockedAccount = user.getAccount().acquire()) {
             // Load cash shop

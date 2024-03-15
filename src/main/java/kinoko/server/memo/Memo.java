@@ -20,6 +20,26 @@ public final class Memo implements Encodable {
         this.dateSent = dateSent;
     }
 
+    public MemoType getType() {
+        return type;
+    }
+
+    public int getMemoId() {
+        return memoId;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public Instant getDateSent() {
+        return dateSent;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(memoId); // dwSN
