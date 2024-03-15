@@ -75,7 +75,7 @@ public final class AttackHandler {
         }
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(user, attack);
+            SkillProcessor.processAttack(locked, attack);
         }
     }
 
@@ -135,7 +135,7 @@ public final class AttackHandler {
         }
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(user, attack);
+            SkillProcessor.processAttack(locked, attack);
         }
     }
 
@@ -187,7 +187,7 @@ public final class AttackHandler {
         }
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(user, attack);
+            SkillProcessor.processAttack(locked, attack);
         }
     }
 
@@ -228,7 +228,7 @@ public final class AttackHandler {
         attack.userY = inPacket.decodeShort(); // GetPos()->y
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(user, attack);
+            SkillProcessor.processAttack(locked, attack);
         }
     }
 
@@ -291,7 +291,7 @@ public final class AttackHandler {
             } else {
                 hitInfo.attackIndex = AttackIndex.getByValue(attackIndex);
             }
-            SkillProcessor.processHit(user, hitInfo);
+            SkillProcessor.processHit(locked, hitInfo);
         }
     }
 

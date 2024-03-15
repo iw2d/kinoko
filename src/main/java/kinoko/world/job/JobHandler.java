@@ -4,6 +4,7 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Locked;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
 import kinoko.world.job.legend.Aran;
@@ -26,7 +27,8 @@ import java.util.Map;
 public final class JobHandler {
     private static final Logger log = LogManager.getLogger(JobHandler.class);
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(Locked<User> locked, Attack attack) {
+        final User user = locked.get();
         final int skillRoot = SkillConstants.getSkillRoot(attack.skillId);
         switch (Job.getById(skillRoot)) {
             case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
@@ -71,7 +73,8 @@ public final class JobHandler {
         }
     }
 
-    public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+    public static void handleSkill(Locked<User> locked, Skill skill, InPacket inPacket) {
+        final User user = locked.get();
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
         final int slv = skill.slv;

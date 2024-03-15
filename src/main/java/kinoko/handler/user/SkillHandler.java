@@ -100,7 +100,7 @@ public final class SkillHandler {
             skill.spiritJavelinItemId = inPacket.decodeInt(); // nSpiritJavelinItemID
         }
         try (var locked = user.acquire()) {
-            SkillProcessor.processSkill(user, skill, inPacket);
+            SkillProcessor.processSkill(locked, skill, inPacket);
         }
     }
 

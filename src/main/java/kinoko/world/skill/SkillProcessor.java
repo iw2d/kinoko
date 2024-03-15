@@ -9,6 +9,7 @@ import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -36,7 +37,9 @@ import java.util.Optional;
 public final class SkillProcessor {
     private static final Logger log = LogManager.getLogger(SkillProcessor.class);
 
-    public static void processAttack(User user, Attack attack) {
+    public static void processAttack(Locked<User> locked, Attack attack) {
+        final User user = locked.get();
+
         // Resolve bullet id
         if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
             final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
@@ -139,7 +142,7 @@ public final class SkillProcessor {
         }
 
         // Skill specific handling
-        JobHandler.handleAttack(user, attack);
+        JobHandler.handleAttack(locked, attack);
 
         // Process attack damage
         final Field field = user.getField();
@@ -158,7 +161,9 @@ public final class SkillProcessor {
         field.broadcastPacket(UserRemote.attack(user, attack), user);
     }
 
-    public static void processSkill(User user, Skill skill, InPacket inPacket) {
+    public static void processSkill(Locked<User> locked, Skill skill, InPacket inPacket) {
+        final User user = locked.get();
+
         // Resolve skill info
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skill.skillId);
         if (skillInfoResult.isEmpty()) {
@@ -214,11 +219,12 @@ public final class SkillProcessor {
         }
 
         // Skill-specific handling
-        JobHandler.handleSkill(user, skill, inPacket);
+        JobHandler.handleSkill(locked, skill, inPacket);
         user.write(WvsContext.skillUseResult());
     }
 
-    public static void processHit(User user, HitInfo hitInfo) {
+    public static void processHit(Locked<User> locked, HitInfo hitInfo) {
+        final User user = locked.get();
         final int damage = hitInfo.damage;
 
         final int powerGuardReduce = handlePowerGuard(user, hitInfo);
