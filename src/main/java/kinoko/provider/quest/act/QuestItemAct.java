@@ -27,6 +27,14 @@ public final class QuestItemAct implements QuestAct {
         this.choices = choices;
     }
 
+    public Set<QuestItemData> getItems() {
+        return items;
+    }
+
+    public List<QuestItemData> getChoices() {
+        return choices;
+    }
+
     @Override
     public boolean canAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();

@@ -149,7 +149,6 @@ public final class QuestInfo {
         }
         final QuestRecord qr = removeQuestRecordResult.get();
         qr.setState(QuestState.NONE);
-        // TODO: resign remove
         return Optional.of(qr);
     }
 
