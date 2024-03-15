@@ -5,7 +5,9 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.world.job.Job;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class QuestItemData {
@@ -44,7 +46,15 @@ public final class QuestItemData {
     }
 
     public boolean isRandom() {
-        return prop != -1;
+        return prop > 0;
+    }
+
+    public boolean isStatic() {
+        return prop == 0;
+    }
+
+    public boolean isChoice() {
+        return prop == -1;
     }
 
     public boolean checkJob(int jobId) {
@@ -62,24 +72,45 @@ public final class QuestItemData {
         return this.gender == 2 || this.gender == gender;
     }
 
-    public static Set<QuestItemData> resolveItemData(WzListProperty itemList, int defaultCount) {
+    public static Set<QuestItemData> resolveItemData(WzListProperty itemList, int defaultCount) throws ProviderError {
         final Set<QuestItemData> items = new HashSet<>();
         for (var itemEntry : itemList.getItems().entrySet()) {
             if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
                 throw new ProviderError("Failed to resolve quest item list");
             }
-            final QuestItemData itemData = new QuestItemData(
-                    WzProvider.getInteger(itemProp.get("id")),
-                    WzProvider.getInteger(itemProp.get("count"), defaultCount),
-                    WzProvider.getInteger(itemProp.get("prop"), -1),
-                    WzProvider.getInteger(itemProp.get("gender"), 2),
-                    WzProvider.getInteger(itemProp.get("job"), -1),
-                    WzProvider.getInteger(itemProp.get("jobEx"), -1),
-                    WzProvider.getInteger(itemProp.get("resignRemove"), 0) != 0
-            );
+            final QuestItemData itemData = from(itemProp, defaultCount);
             assert !(itemData.getCount() <= 0 && itemData.getProp() != -1);
             items.add(itemData);
         }
         return items;
+    }
+
+    public static List<QuestItemData> resolveChoiceItemData(WzListProperty itemList) throws ProviderError {
+        final List<QuestItemData> items = new ArrayList<>();
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            if (!(itemList.get(String.valueOf(i)) instanceof WzListProperty itemProp)) {
+                break;
+            }
+            final int prop = WzProvider.getInteger(itemProp.get("prop"), 0);
+            if (prop != -1) {
+                continue;
+            }
+            final QuestItemData itemData = from(itemProp, 1);
+            assert !(itemData.getCount() <= 0 && itemData.getProp() != -1);
+            items.add(itemData);
+        }
+        return items;
+    }
+
+    private static QuestItemData from(WzListProperty itemProp, int defaultCount) throws ProviderError {
+        return new QuestItemData(
+                WzProvider.getInteger(itemProp.get("id")),
+                WzProvider.getInteger(itemProp.get("count"), defaultCount),
+                WzProvider.getInteger(itemProp.get("prop"), 0),
+                WzProvider.getInteger(itemProp.get("gender"), 2),
+                WzProvider.getInteger(itemProp.get("job"), -1),
+                WzProvider.getInteger(itemProp.get("jobEx"), -1),
+                WzProvider.getInteger(itemProp.get("resignRemove"), 0) != 0
+        );
     }
 }

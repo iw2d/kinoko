@@ -20,28 +20,41 @@ import java.util.stream.Collectors;
 
 public final class QuestItemAct implements QuestAct {
     private final Set<QuestItemData> items;
+    private final List<QuestItemData> choices;
 
-    public QuestItemAct(Set<QuestItemData> items) {
+    public QuestItemAct(Set<QuestItemData> items, List<QuestItemData> choices) {
         this.items = items;
+        this.choices = choices;
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
+    public boolean canAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Handle required slots for random items
         final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
         for (QuestItemData itemData : filteredItems) {
-            if (itemData.isRandom()) {
-                final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
-                requiredSlots.put(inventoryType, 1);
+            if (!itemData.isRandom()) {
+                continue;
             }
+            final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
+            requiredSlots.put(inventoryType, 1);
         }
 
-        // Handle static items
+        // Handle required slots for choice items
+        if (rewardIndex > 0) {
+            if (choices.size() < rewardIndex) {
+                return false;
+            }
+            final QuestItemData choiceItemData = choices.get(rewardIndex);
+            final InventoryType inventoryType = InventoryType.getByItemId(choiceItemData.getItemId());
+            requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
+        }
+
+        // Handle static items - required slots if count > 0, else check if present in inventory
         for (QuestItemData itemData : filteredItems) {
-            if (itemData.isRandom()) {
+            if (!itemData.isStatic()) {
                 continue;
             }
             if (itemData.getCount() > 0) {
@@ -67,13 +80,13 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
+    public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Take required items
         for (QuestItemData itemData : filteredItems) {
-            if (itemData.isRandom() || itemData.getCount() >= 0) {
+            if (!itemData.isStatic() || itemData.getCount() >= 0) {
                 continue;
             }
             final int quantity = -itemData.getCount();
@@ -85,9 +98,28 @@ public final class QuestItemAct implements QuestAct {
             user.write(UserLocal.effect(Effect.gainItem(itemData.getItemId(), itemData.getCount())));
         }
 
+        // Give choice item
+        if (rewardIndex > 0) {
+            if (choices.size() < rewardIndex) {
+                return false;
+            }
+            final QuestItemData choiceItemData = choices.get(rewardIndex);
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(choiceItemData.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                return false;
+            }
+            final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), choiceItemData.getCount());
+            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+            if (addItemResult.isEmpty()) {
+                return false;
+            }
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+            user.write(UserLocal.effect(Effect.gainItem(item)));
+        }
+
         // Give static items
         for (QuestItemData itemData : filteredItems) {
-            if (itemData.isRandom() || itemData.getCount() <= 0) {
+            if (!itemData.isStatic() || itemData.getCount() <= 0) {
                 continue;
             }
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
@@ -134,8 +166,10 @@ public final class QuestItemAct implements QuestAct {
 
     public static QuestItemAct from(WzListProperty itemList) {
         final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList, 1);
+        final List<QuestItemData> choices = QuestItemData.resolveChoiceItemData(itemList);
         return new QuestItemAct(
-                Collections.unmodifiableSet(items)
+                Collections.unmodifiableSet(items),
+                Collections.unmodifiableList(choices)
         );
     }
 }

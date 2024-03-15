@@ -15,13 +15,13 @@ public final class QuestMoneyAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
+    public boolean canAct(Locked<User> locked, int rewardIndex) {
         final long newMoney = ((long) locked.get().getInventoryManager().getMoney()) + money;
         return newMoney <= Integer.MAX_VALUE && newMoney >= 0;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
+    public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         final InventoryManager im = user.getInventoryManager();
         if (!im.addMoney(money)) {

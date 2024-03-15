@@ -95,13 +95,13 @@ public final class QuestInfo {
             }
         }
         for (QuestAct startAct : getStartActs()) {
-            if (!startAct.canAct(locked)) {
+            if (!startAct.canAct(locked, -1)) {
                 return Optional.empty();
             }
         }
         // Perform start acts
         for (QuestAct startAct : getStartActs()) {
-            if (!startAct.doAct(locked)) {
+            if (!startAct.doAct(locked, -1)) {
                 throw new IllegalStateException("Failed to perform quest start act");
             }
         }
@@ -109,7 +109,7 @@ public final class QuestInfo {
         return Optional.of(locked.get().getQuestManager().forceStartQuest(questId));
     }
 
-    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked) {
+    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked, int rewardIndex) {
         // Check that the quest has been started
         final QuestManager qm = locked.get().getQuestManager();
         if (!qm.hasQuestStarted(questId)) {
@@ -122,13 +122,13 @@ public final class QuestInfo {
             }
         }
         for (QuestAct completeAct : getCompleteActs()) {
-            if (!completeAct.canAct(locked)) {
+            if (!completeAct.canAct(locked, rewardIndex)) {
                 return Optional.empty();
             }
         }
         // Perform complete acts
         for (QuestAct completeAct : getCompleteActs()) {
-            if (!completeAct.doAct(locked)) {
+            if (!completeAct.doAct(locked, rewardIndex)) {
                 throw new IllegalStateException("Failed to perform quest complete act");
             }
         }

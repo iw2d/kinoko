@@ -559,9 +559,9 @@ public final class UserHandler {
                     final short x = inPacket.decodeShort(); // ptUserPos.x
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
-                final int index = inPacket.decodeInt(); // nIdx, for selecting reward? TODO
+                final int rewardIndex = inPacket.decodeInt(); // nIdx - for selecting reward
                 try (var locked = user.acquire()) {
-                    final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(locked);
+                    final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(locked, rewardIndex);
                     if (questCompleteResult.isEmpty()) {
                         log.error("Failed to complete quest : {}", questId);
                         user.dispose();

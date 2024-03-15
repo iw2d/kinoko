@@ -12,12 +12,12 @@ public final class QuestPopAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
+    public boolean canAct(Locked<User> locked, int rewardIndex) {
         return true;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
+    public boolean doAct(Locked<User> locked, int rewardIndex) {
         final CharacterStat cs = locked.get().getCharacterStat();
         cs.setPop((short) (cs.getPop() + pop));
         return true;

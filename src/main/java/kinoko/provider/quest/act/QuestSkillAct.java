@@ -21,12 +21,12 @@ public final class QuestSkillAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked) {
+    public boolean canAct(Locked<User> locked, int rewardIndex) {
         return true;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked) {
+    public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         for (QuestSkillData qsd : skills) {
             if (!qsd.getJobs().contains(user.getJob())) {
