@@ -88,6 +88,9 @@ public final class Server {
     private static void shutdown() throws Exception {
         log.info("Shutting down Server");
         centralServerNode.shutdown();
-        DatabaseManager.shutdown().join();
+        ScriptDispatcher.shutdown();
+        EventScheduler.shutdown();
+        DatabaseManager.shutdown();
+        LogManager.shutdown();
     }
 }

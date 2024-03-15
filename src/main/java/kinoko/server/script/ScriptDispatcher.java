@@ -47,6 +47,11 @@ public final class ScriptDispatcher {
                 .build();
     }
 
+    public static void shutdown() {
+        executor.shutdown();
+        engine.close(true);
+    }
+
     public static Optional<NpcScriptManager> getNpcScriptManager(User user) {
         return Optional.ofNullable((NpcScriptManager) scriptManagers.get(ScriptType.NPC).get(user.getCharacterId()).getLeft());
     }

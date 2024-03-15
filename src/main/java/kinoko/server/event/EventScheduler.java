@@ -16,6 +16,11 @@ public final class EventScheduler {
         executor = Executors.newVirtualThreadPerTaskExecutor();
     }
 
+    public static void shutdown() {
+        scheduler.shutdown();
+        executor.shutdown();
+    }
+
     public static ScheduledFuture<?> addEvent(Runnable runnable, long delay) {
         return scheduler.schedule(() -> wrapAndSubmit(runnable), delay, TimeUnit.MILLISECONDS);
     }

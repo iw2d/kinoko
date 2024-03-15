@@ -30,7 +30,6 @@ import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public final class DatabaseManager {
@@ -120,9 +119,7 @@ public final class DatabaseManager {
         giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
     }
 
-    public static CompletableFuture<Void> shutdown() {
-        final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
-        cqlSession.closeAsync().thenAccept(shutdownFuture::complete);
-        return shutdownFuture;
+    public static void shutdown() {
+        cqlSession.close();
     }
 }
