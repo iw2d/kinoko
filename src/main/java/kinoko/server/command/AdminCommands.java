@@ -11,6 +11,7 @@ import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStringInfo;
 import kinoko.server.ServerConfig;
@@ -27,6 +28,7 @@ import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
@@ -455,7 +457,7 @@ public final class AdminCommands {
             return;
         }
         try (var locked = user.acquire()) {
-            user.setJob((short) jobId);
+            user.setJob(jobId);
         }
     }
 
@@ -485,8 +487,42 @@ public final class AdminCommands {
         }
     }
 
+    @Command("startquest")
+    public static void startQuest(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %sstartquest <quest id>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int questId = Integer.parseInt(args[1]);
+        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
+        if (questInfoResult.isEmpty()) {
+            user.write(WvsContext.message(Message.system("Could not find quest : {}", questId)));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
+            user.write(WvsContext.message(Message.questRecord(qr)));
+            user.validateStat();
+        }
+    }
+
+    @Command("questex")
+    public static void questex(User user, String[] args) {
+        if (args.length != 3 || !Util.isInteger(args[1])) {
+            user.write(WvsContext.message(Message.system("Syntax : %squestex <quest id> <qr value>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int questId = Integer.parseInt(args[1]);
+        final String infoValue = args[2];
+        try (var locked = user.acquire()) {
+            final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, infoValue);
+            user.write(WvsContext.message(Message.questRecord(qr)));
+            user.validateStat();
+        }
+    }
+
     @Command("killmobs")
-    public static void ignoreCd(User user, String[] args) {
+    public static void killMobs(User user, String[] args) {
         user.getField().getMobPool().forEach((mob) -> {
             if (mob.getHp() > 0) {
                 mob.damage(user, mob.getMaxHp());

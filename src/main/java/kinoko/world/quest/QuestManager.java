@@ -63,4 +63,12 @@ public final class QuestManager {
         addQuestRecord(qr);
         return qr;
     }
+
+    public QuestRecord setQuestInfoEx(int questId, String value) {
+        final QuestRecord qr = new QuestRecord(questId);
+        qr.setState(QuestState.PERFORM);
+        qr.setValue(value);
+        addQuestRecord(qr);
+        return qr;
+    }
 }

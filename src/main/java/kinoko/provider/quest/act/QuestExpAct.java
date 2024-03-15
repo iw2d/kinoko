@@ -2,6 +2,7 @@ package kinoko.provider.quest.act;
 
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.IncExpMessage;
+import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 public final class QuestExpAct implements QuestAct {
@@ -12,12 +13,13 @@ public final class QuestExpAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(User user) {
+    public boolean canAct(Locked<User> locked) {
         return true;
     }
 
     @Override
-    public boolean doAct(User user) {
+    public boolean doAct(Locked<User> locked) {
+        final User user = locked.get();
         user.addExp(exp);
         user.write(WvsContext.message(IncExpMessage.quest(exp)));
         return true;

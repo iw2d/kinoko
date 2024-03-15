@@ -62,7 +62,7 @@ public final class QuestItemData {
         return this.gender == 2 || this.gender == gender;
     }
 
-    public static Set<QuestItemData> resolveItemData(WzListProperty itemList) {
+    public static Set<QuestItemData> resolveItemData(WzListProperty itemList, int defaultCount) {
         final Set<QuestItemData> items = new HashSet<>();
         for (var itemEntry : itemList.getItems().entrySet()) {
             if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
@@ -70,7 +70,7 @@ public final class QuestItemData {
             }
             final QuestItemData itemData = new QuestItemData(
                     WzProvider.getInteger(itemProp.get("id")),
-                    WzProvider.getInteger(itemProp.get("count"), 1),
+                    WzProvider.getInteger(itemProp.get("count"), defaultCount),
                     WzProvider.getInteger(itemProp.get("prop"), -1),
                     WzProvider.getInteger(itemProp.get("gender"), 2),
                     WzProvider.getInteger(itemProp.get("job"), -1),

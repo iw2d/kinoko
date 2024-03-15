@@ -8,6 +8,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
+import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
@@ -87,65 +88,62 @@ public final class QuestInfo {
     }
 
     public Optional<QuestRecord> startQuest(Locked<User> locked) {
-        final User user = locked.get();
-
         // Check that the quest can be started
         for (QuestCheck startCheck : getStartChecks()) {
-            if (!startCheck.check(user)) {
+            if (!startCheck.check(locked)) {
                 return Optional.empty();
             }
         }
         for (QuestAct startAct : getStartActs()) {
-            if (!startAct.canAct(user)) {
+            if (!startAct.canAct(locked)) {
                 return Optional.empty();
             }
         }
         // Perform start acts
         for (QuestAct startAct : getStartActs()) {
-            if (!startAct.doAct(user)) {
+            if (!startAct.doAct(locked)) {
                 throw new IllegalStateException("Failed to perform quest start act");
             }
         }
         // Add quest record and return
-        return Optional.of(user.getQuestManager().forceStartQuest(questId));
+        return Optional.of(locked.get().getQuestManager().forceStartQuest(questId));
     }
 
     public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked) {
-        final User user = locked.get();
-
         // Check that the quest has been started
-        if (!user.getQuestManager().hasQuestStarted(questId)) {
+        final QuestManager qm = locked.get().getQuestManager();
+        if (!qm.hasQuestStarted(questId)) {
             return Optional.empty();
         }
         // Check that the quest can be completed
         for (QuestCheck completeCheck : getCompleteChecks()) {
-            if (!completeCheck.check(user)) {
+            if (!completeCheck.check(locked)) {
                 return Optional.empty();
             }
         }
         for (QuestAct completeAct : getCompleteActs()) {
-            if (!completeAct.canAct(user)) {
+            if (!completeAct.canAct(locked)) {
                 return Optional.empty();
             }
         }
         // Perform complete acts
         for (QuestAct completeAct : getCompleteActs()) {
-            if (!completeAct.doAct(user)) {
+            if (!completeAct.doAct(locked)) {
                 throw new IllegalStateException("Failed to perform quest complete act");
             }
         }
         // Mark as completed and return
-        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
+        final QuestRecord qr = qm.forceCompleteQuest(questId);
         return Optional.of(new Tuple<>(qr, getNextQuest()));
     }
 
     public Optional<QuestRecord> resignQuest(Locked<User> locked) {
-        final User user = locked.get();
-        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+        final QuestManager qm = locked.get().getQuestManager();
+        final Optional<QuestRecord> questRecordResult = qm.getQuestRecord(questId);
         if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
             return Optional.empty();
         }
-        final Optional<QuestRecord> removeQuestRecordResult = user.getQuestManager().removeQuestRecord(questId);
+        final Optional<QuestRecord> removeQuestRecordResult = qm.removeQuestRecord(questId);
         if (removeQuestRecordResult.isEmpty()) {
             return Optional.empty();
         }
@@ -241,14 +239,14 @@ public final class QuestInfo {
                 nextQuest,
                 autoStart,
                 autoComplete,
-                Collections.unmodifiableSet(resolveQuestActs(questAct.get("0"))),
-                Collections.unmodifiableSet(resolveQuestActs(questAct.get("1"))),
+                Collections.unmodifiableSet(resolveQuestActs(questId, questAct.get("0"))),
+                Collections.unmodifiableSet(resolveQuestActs(questId, questAct.get("1"))),
                 Collections.unmodifiableSet(resolveQuestChecks(questId, questCheck.get("0"))),
                 Collections.unmodifiableSet(resolveQuestChecks(questId, questCheck.get("1")))
         );
     }
 
-    private static Set<QuestAct> resolveQuestActs(WzListProperty actProps) {
+    private static Set<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
         final Set<QuestAct> questActs = new HashSet<>();
         for (var entry : actProps.getItems().entrySet()) {
             final String actType = entry.getKey();
@@ -269,7 +267,14 @@ public final class QuestInfo {
                     questActs.add(new QuestPopAct(WzProvider.getInteger(entry.getValue())));
                 }
                 case "skill" -> {
-                    // TODO
+                    if (!(entry.getValue() instanceof WzListProperty skillList)) {
+                        throw new ProviderError("Failed to resolve quest act skill list");
+                    }
+                    if (questId == 6034) {
+                        // What Moren Dropped
+                        continue;
+                    }
+                    questActs.add(QuestSkillAct.from(skillList));
                 }
                 case "nextQuest" -> {
                     // handled in QuestInfo.from
@@ -307,8 +312,12 @@ public final class QuestInfo {
                     final boolean isMinimum = checkType.equals("lvmin");
                     questChecks.add(new QuestLevelCheck(level, isMinimum));
                 }
-                case "infoex", "infoNumber" -> {
-                    // TODO
+                case "infoex" -> {
+                    final int infoQuestId = WzProvider.getInteger(checkProps.get("infoNumber"), questId);
+                    if (!(entry.getValue() instanceof WzListProperty exList)) {
+                        throw new ProviderError("Failed to resolve quest check ex list");
+                    }
+                    questChecks.add(QuestExCheck.from(infoQuestId, exList));
                 }
             }
         }

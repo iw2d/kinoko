@@ -1,5 +1,6 @@
 package kinoko.provider.quest.check;
 
+import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 public final class QuestLevelCheck implements QuestCheck {
@@ -12,7 +13,8 @@ public final class QuestLevelCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(User user) {
+    public boolean check(Locked<User> locked) {
+        final User user = locked.get();
         if (isMinimum) {
             return user.getLevel() >= level;
         } else {

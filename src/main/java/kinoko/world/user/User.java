@@ -162,7 +162,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void setJob(int jobId) {
         getCharacterStat().setJob((short) jobId);
-        write(WvsContext.statChanged(Stat.JOB, getJob(), true));
+        write(WvsContext.statChanged(Stat.JOB, (short) getJob(), true));
         getField().broadcastPacket(UserRemote.effect(this, Effect.jobChanged()), this);
         validateStat();
         getConnectedServer().notifyUserUpdate(this);

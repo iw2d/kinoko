@@ -2,6 +2,7 @@ package kinoko.provider.quest.check;
 
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 import java.util.Collections;
@@ -20,10 +21,17 @@ public final class QuestItemCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(User user) {
+    public boolean check(Locked<User> locked) {
+        final User user = locked.get();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
         for (QuestItemData itemData : filteredItems) {
-            if (!user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount())) {
+            final boolean hasItem = user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount());
+            if (itemData.getCount() <= 0 && hasItem) {
+                // Should not have item
+                return false;
+            }
+            if (itemData.getCount() > 0 && !hasItem) {
+                // Should have item
                 return false;
             }
         }
@@ -37,7 +45,7 @@ public final class QuestItemCheck implements QuestCheck {
     }
 
     public static QuestItemCheck from(WzListProperty itemList) {
-        final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList);
+        final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList, 0);
         return new QuestItemCheck(
                 Collections.unmodifiableSet(items)
         );

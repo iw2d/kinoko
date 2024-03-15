@@ -5,5 +5,5 @@ import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 public interface Dialog {
-    void onPacket(Locked<User> user, InPacket inPacket);
+    void onPacket(Locked<User> locked, InPacket inPacket);
 }

@@ -7,6 +7,7 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryOperation;
@@ -25,7 +26,8 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(User user) {
+    public boolean canAct(Locked<User> locked) {
+        final User user = locked.get();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Handle required slots for random items
@@ -65,7 +67,8 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean doAct(User user) {
+    public boolean doAct(Locked<User> locked) {
+        final User user = locked.get();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Take required items
@@ -130,7 +133,7 @@ public final class QuestItemAct implements QuestAct {
     }
 
     public static QuestItemAct from(WzListProperty itemList) {
-        final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList);
+        final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList, 1);
         return new QuestItemAct(
                 Collections.unmodifiableSet(items)
         );

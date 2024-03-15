@@ -1,6 +1,8 @@
 package kinoko.provider.quest.act;
 
+import kinoko.util.Locked;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
 
 public final class QuestPopAct implements QuestAct {
     private final int pop;
@@ -10,13 +12,14 @@ public final class QuestPopAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(User user) {
+    public boolean canAct(Locked<User> locked) {
         return true;
     }
 
     @Override
-    public boolean doAct(User user) {
-        user.getCharacterStat().setPop((short) (user.getCharacterStat().getPop() + pop));
+    public boolean doAct(Locked<User> locked) {
+        final CharacterStat cs = locked.get().getCharacterStat();
+        cs.setPop((short) (cs.getPop() + pop));
         return true;
     }
 }
