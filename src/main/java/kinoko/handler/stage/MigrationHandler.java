@@ -9,10 +9,10 @@ import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.broadcast.BroadcastMessage;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
-import kinoko.server.cashshop.*;
+import kinoko.server.cashshop.CashItemResult;
+import kinoko.server.cashshop.Gift;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.MemoResult;
 import kinoko.server.node.ChannelServerNode;
@@ -296,42 +296,14 @@ public final class MigrationHandler {
         final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 
         try (var lockedAccount = user.getAccount().acquire()) {
+            final Account account = lockedAccount.get();
+
             // Load cash shop
             user.write(StagePacket.setCashShop(user));
-
-            // Add gifts to locker
-            final Account account = lockedAccount.get();
-            final Locker locker = account.getLocker();
-            boolean lockerFull = false;
-            final var iter = gifts.iterator();
-            while (iter.hasNext()) {
-                final Gift gift = iter.next();
-                if (locker.getRemaining() < 1) {
-                    // Locker is full, gift will stay in DB for next migration to cash shop
-                    lockerFull = true;
-                    iter.remove();
-                    continue;
-                }
-                // Delete gift from DB and add to locker
-                if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
-                    log.error("Failed to delete gift with item sn : {}", gift.getItemSn());
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.LOAD_GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
-                    return;
-                }
-                final CashItemInfo cashItemInfo = CashItemInfo.from(gift.getItem(), user);
-                locker.addCashItem(cashItemInfo);
-            }
-
-            // Update client
             user.write(CashShopPacket.cashItemResult(CashItemResult.loadGiftDone(gifts)));
             user.write(CashShopPacket.cashItemResult(CashItemResult.loadLockerDone(account)));
             user.write(CashShopPacket.cashItemResult(CashItemResult.loadWishDone(account.getWishlist())));
             user.write(CashShopPacket.queryCashResult(account));
-
-            // Locker full message
-            if (lockerFull) {
-                user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("Could not receive some gifts due to the locker being full.")));
-            }
         }
     }
 

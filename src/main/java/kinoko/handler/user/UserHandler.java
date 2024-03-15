@@ -11,6 +11,7 @@ import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.broadcast.BroadcastMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
@@ -18,9 +19,7 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.ServerConfig;
-import kinoko.server.cashshop.CashItemFailReason;
-import kinoko.server.cashshop.CashItemResult;
-import kinoko.server.cashshop.CashItemResultType;
+import kinoko.server.cashshop.*;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
@@ -716,6 +715,36 @@ public final class UserHandler {
                     user.dispose();
                     return;
                 }
+                // Resolve gift and confirm receiver
+                final Optional<Gift> giftResult = DatabaseManager.giftAccessor().getGiftByItemSn(itemSn);
+                if (giftResult.isEmpty()) {
+                    log.error("Tried to send gift receipt memo for gift with item sn : {}", itemSn);
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    return;
+                }
+                final Gift gift = giftResult.get();
+                if (!receiverName.equalsIgnoreCase(gift.getSender())) {
+                    log.error("Tried to send gift receipt memo with mismatching sender name - expected : {}, actual : {}", gift.getSender(), receiverName);
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    return;
+                }
+                // Receive gift
+                try (var lockedAccount = user.getAccount().acquire()) {
+                    final Locker locker = lockedAccount.get().getLocker();
+                    if (locker.getRemaining() < 1) {
+                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("Could not receive gift as the locker is full.")));
+                        return;
+                    }
+                    // Delete gift from DB and add to locker
+                    if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
+                        log.error("Failed to delete gift with item sn : {}", gift.getItemSn());
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        return;
+                    }
+                    final CashItemInfo cashItemInfo = CashItemInfo.from(gift.getItem(), user);
+                    locker.addCashItem(cashItemInfo);
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.loadLockerDone(lockedAccount.get())));
+                }
                 // Resolve receiver
                 final Optional<Tuple<Integer, Integer>> receiverIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(receiverName);
                 if (receiverIdResult.isEmpty()) {
@@ -726,7 +755,6 @@ public final class UserHandler {
                 // Create memo
                 final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
                 if (memoIdResult.isEmpty()) {
-                    // This type of request is only sent while retrieving gifts from the cashshop, hence the cash shop fail result
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
@@ -741,7 +769,7 @@ public final class UserHandler {
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 }
-                // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // not required
+                // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // memo result not required
             }
             case DELETE -> {
                 // CMemoListDlg::SetRet
@@ -758,9 +786,8 @@ public final class UserHandler {
                     }
                     if (memoType == MemoType.INVITATION) {
                         final int marriageId = inPacket.decodeInt(); // atoi(strMarriageNo)
-                        // TODO: give marriage invitation item
-                    }
-                    if (memoType == MemoType.INC_POP) {
+                        log.error("Unhandled Marriage invitation memo for marriage ID : {}", marriageId);
+                    } else if (memoType == MemoType.INC_POP) {
                         try (var locked = user.acquire()) {
                             final CharacterStat cs = locked.get().getCharacterStat();
                             final short newPop = (short) Math.min(cs.getPop() + 1, Short.MAX_VALUE);

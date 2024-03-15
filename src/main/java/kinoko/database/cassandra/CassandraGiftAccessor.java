@@ -11,12 +11,22 @@ import kinoko.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
 
 public final class CassandraGiftAccessor extends CassandraAccessor implements GiftAccessor {
     public CassandraGiftAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
+    }
+
+    private Gift loadGift(Row row) {
+        final Item item = row.get(GiftTable.ITEM, Item.class);
+        return new Gift(
+                item,
+                row.getString(GiftTable.SENDER_NAME),
+                row.getString(GiftTable.MESSAGE)
+        );
     }
 
     @Override
@@ -33,15 +43,27 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
                         .build()
         );
         for (Row row : selectResult) {
-            final Item item = row.get(GiftTable.ITEM, Item.class);
-            final Gift gift = new Gift(
-                    item,
-                    row.getString(GiftTable.SENDER_NAME),
-                    row.getString(GiftTable.MESSAGE)
-            );
-            gifts.add(gift);
+            gifts.add(loadGift(row));
         }
         return gifts;
+    }
+
+    @Override
+    public Optional<Gift> getGiftByItemSn(long itemSn) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), GiftTable.getTableName())
+                        .columns(
+                                GiftTable.ITEM,
+                                GiftTable.SENDER_NAME,
+                                GiftTable.MESSAGE
+                        )
+                        .whereColumn(GiftTable.ITEM_SN).isEqualTo(literal(itemSn))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            return Optional.of(loadGift(row));
+        }
+        return Optional.empty();
     }
 
     @Override

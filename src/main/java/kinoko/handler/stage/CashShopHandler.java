@@ -457,7 +457,6 @@ public final class CashShopHandler {
             case NX_PREPAID -> {
                 if (account.getNxPrepaid() < price) {
                     return false;
-
                 }
                 account.setNxPrepaid(account.getNxPrepaid() - price);
             }
