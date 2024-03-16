@@ -106,8 +106,7 @@ public final class ItemProvider implements WzProvider {
                 }
             }
         }
-        final WzDirectory petDirectory = source.getDirectory().getDirectories().get("Pet");
-        if (petDirectory == null) {
+        if (!(source.getDirectory().getDirectories().get("Pet") instanceof WzDirectory petDirectory)) {
             throw new ProviderError("Could not resolve Item.wz/Pet");
         }
         for (var imageEntry : petDirectory.getImages().entrySet()) {
@@ -131,6 +130,15 @@ public final class ItemProvider implements WzProvider {
     }
 
     private static void loadItemOptionInfos(WzPackage source) throws ProviderError {
-        // TODO
+        if (!(source.getDirectory().getImages().get("ItemOption.img") instanceof WzImage itemOptionImage)) {
+            throw new ProviderError("Could not resolve Item.wz/ItemOption.img");
+        }
+        for (var entry : itemOptionImage.getProperty().getItems().entrySet()) {
+            final int itemOptionId = Integer.parseInt(entry.getKey());
+            if (!(entry.getValue() instanceof WzListProperty itemOptionProp)) {
+                throw new ProviderError("Failed to resolve item option prop");
+            }
+            itemOptionInfos.put(itemOptionId, ItemOptionInfo.from(itemOptionId, itemOptionProp));
+        }
     }
 }

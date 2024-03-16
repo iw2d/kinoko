@@ -26,7 +26,7 @@ public final class Server {
     private static void initialize() throws Exception {
         // Initialize providers
         Instant start = Instant.now();
-        ItemProvider.initialize();      // Item.wz
+        ItemProvider.initialize();      // Character.wz + Item.wz
         MapProvider.initialize();       // Map.wz
         MobProvider.initialize();       // Mob.wz
         NpcProvider.initialize();       // Npc.wz
@@ -36,7 +36,7 @@ public final class Server {
         StringProvider.initialize();    // String.wz
         EtcProvider.initialize();       // Etc.wz
         ShopProvider.initialize();      // npc_shop.csv
-        RewardProvider.initialize();    // *_reward.csv
+        RewardProvider.initialize();    // mob_reward.csv + reactor_reward.csv
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 

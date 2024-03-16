@@ -110,12 +110,12 @@ public final class BasicStat {
             incMaxMpR += ed.getIncMaxMpR();
 
             final int optionLevel = (ii.getInfo(ItemInfoType.reqLevel) - 1) / 10; // no sockets in v95
-            applyItemOption(ed.getOption1(), optionLevel);
-            applyItemOption(ed.getOption2(), optionLevel);
-            applyItemOption(ed.getOption3(), optionLevel);
-            applyItemOptionR(ed.getOption1(), optionLevel, option);
-            applyItemOptionR(ed.getOption2(), optionLevel, option);
-            applyItemOptionR(ed.getOption3(), optionLevel, option);
+            this.applyItemOption(ed.getOption1(), optionLevel);
+            this.applyItemOption(ed.getOption2(), optionLevel);
+            this.applyItemOption(ed.getOption3(), optionLevel);
+            option.applyItemOptionR(ed.getOption1(), optionLevel);
+            option.applyItemOptionR(ed.getOption2(), optionLevel);
+            option.applyItemOptionR(ed.getOption3(), optionLevel);
         }
 
         // BasicStatUp CTS (Maple Warrior)
@@ -166,12 +166,31 @@ public final class BasicStat {
 
     private void applyItemOption(int itemOptionId, int optionLevel) {
         final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
-        // TODO
-    }
-
-    private void applyItemOptionR(int itemOptionId, int optionLevel, BasicStatRateOption option) {
-        final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
-        // TODO
+        if (itemOptionResult.isEmpty()) {
+            return;
+        }
+        for (var entry : itemOptionResult.get().getStats().entrySet()) {
+            switch (entry.getKey()) {
+                case incSTR -> {
+                    this.str += entry.getValue();
+                }
+                case incDEX -> {
+                    this.dex += entry.getValue();
+                }
+                case incINT -> {
+                    this.int_ += entry.getValue();
+                }
+                case incLUK -> {
+                    this.luk += entry.getValue();
+                }
+                case incMHP -> {
+                    this.maxHp += entry.getValue();
+                }
+                case incMMP -> {
+                    this.maxMp += entry.getValue();
+                }
+            }
+        }
     }
 
     private int getJaguarRidingMaxHpUp(SecondaryStat ss, SkillManager sm) {
@@ -194,5 +213,34 @@ public final class BasicStat {
         private int lukR;
         private int incMaxHpR;
         private int incMaxMpR;
+
+        private void applyItemOptionR(int itemOptionId, int optionLevel) {
+            final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
+            if (itemOptionResult.isEmpty()) {
+                return;
+            }
+            for (var entry : itemOptionResult.get().getStats().entrySet()) {
+                switch (entry.getKey()) {
+                    case incSTRr -> {
+                        this.strR += entry.getValue();
+                    }
+                    case incDEXr -> {
+                        this.dexR += entry.getValue();
+                    }
+                    case incINTr -> {
+                        this.intR += entry.getValue();
+                    }
+                    case incLUKr -> {
+                        this.lukR += entry.getValue();
+                    }
+                    case incMHPr -> {
+                        this.incMaxHpR += entry.getValue();
+                    }
+                    case incMMPr -> {
+                        this.incMaxMpR += entry.getValue();
+                    }
+                }
+            }
+        }
     }
 }

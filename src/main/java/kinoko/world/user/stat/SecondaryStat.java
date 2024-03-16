@@ -4,6 +4,7 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
+import kinoko.provider.item.ItemOptionLevelData;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.OutPacket;
@@ -218,12 +219,12 @@ public final class SecondaryStat {
             this.jump += ed.getIncJump();
 
             final int optionLevel = (ii.getInfo(ItemInfoType.reqLevel) - 1) / 10;
-            applyItemOption(ed.getOption1(), optionLevel);
-            applyItemOption(ed.getOption2(), optionLevel);
-            applyItemOption(ed.getOption3(), optionLevel);
-            applyItemOptionR(ed.getOption1(), optionLevel, option);
-            applyItemOptionR(ed.getOption2(), optionLevel, option);
-            applyItemOptionR(ed.getOption3(), optionLevel, option);
+            this.applyItemOption(ed.getOption1(), optionLevel);
+            this.applyItemOption(ed.getOption2(), optionLevel);
+            this.applyItemOption(ed.getOption3(), optionLevel);
+            option.applyItemOptionR(ed.getOption1(), optionLevel);
+            option.applyItemOptionR(ed.getOption2(), optionLevel);
+            option.applyItemOptionR(ed.getOption3(), optionLevel);
         }
 
         // Passive skills
@@ -415,11 +416,38 @@ public final class SecondaryStat {
     }
 
     private void applyItemOption(int itemOptionId, int optionLevel) {
-        // TODO
-    }
-
-    private void applyItemOptionR(int itemOptionId, int optionLevel, SecondaryStatRateOption option) {
-        // TODO
+        final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
+        if (itemOptionResult.isEmpty()) {
+            return;
+        }
+        for (var entry : itemOptionResult.get().getStats().entrySet()) {
+            switch (entry.getKey()) {
+                case incPAD -> {
+                    this.pad += entry.getValue();
+                }
+                case incPDD -> {
+                    this.pdd += entry.getValue();
+                }
+                case incMAD -> {
+                    this.mad += entry.getValue();
+                }
+                case incMDD -> {
+                    this.mdd += entry.getValue();
+                }
+                case incACC -> {
+                    this.acc += entry.getValue();
+                }
+                case incEVA -> {
+                    this.eva += entry.getValue();
+                }
+                case incSpeed -> {
+                    this.speed += entry.getValue();
+                }
+                case incJump -> {
+                    this.jump += entry.getValue();
+                }
+            }
+        }
     }
 
     private void getStatFromSkill(SkillManager sm, int... skillIds) {
@@ -548,5 +576,34 @@ public final class SecondaryStat {
         private int mddR;
         private int accR;
         private int evaR;
+
+        private void applyItemOptionR(short itemOptionId, int optionLevel) {
+            final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
+            if (itemOptionResult.isEmpty()) {
+                return;
+            }
+            for (var entry : itemOptionResult.get().getStats().entrySet()) {
+                switch (entry.getKey()) {
+                    case incPADr -> {
+                        this.padR += entry.getValue();
+                    }
+                    case incPDDr -> {
+                        this.pddR += entry.getValue();
+                    }
+                    case incMADr -> {
+                        this.madR += entry.getValue();
+                    }
+                    case incMDDr -> {
+                        this.mddR += entry.getValue();
+                    }
+                    case incACCr -> {
+                        this.accR += entry.getValue();
+                    }
+                    case incEVAr -> {
+                        this.evaR += entry.getValue();
+                    }
+                }
+            }
+        }
     }
 }

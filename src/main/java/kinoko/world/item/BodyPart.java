@@ -1,6 +1,7 @@
 package kinoko.world.item;
 
 public enum BodyPart {
+    // BP
     EQUIPPED_BASE(0),
     HAIR(0),
     CAP(1),

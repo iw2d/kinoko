@@ -1,4 +1,48 @@
 package kinoko.provider.item;
 
+import kinoko.provider.ProviderError;
+import kinoko.provider.WzProvider;
+import kinoko.provider.wz.property.WzListProperty;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public final class ItemOptionLevelData {
+    private final Map<ItemOptionStat, Integer> stats;
+
+    public ItemOptionLevelData(Map<ItemOptionStat, Integer> stats) {
+        this.stats = stats;
+    }
+
+    public Map<ItemOptionStat, Integer> getStats() {
+        return stats;
+    }
+
+    public static Map<Integer, ItemOptionLevelData> resolveLevelData(WzListProperty levelList) throws ProviderError {
+        final Map<Integer, ItemOptionLevelData> levelData = new HashMap<>();
+        for (var levelEntry : levelList.getItems().entrySet()) {
+            final int level = Integer.parseInt(levelEntry.getKey());
+            if (!(levelEntry.getValue() instanceof WzListProperty levelProp)) {
+                throw new ProviderError("Failed to resolve item option level prop");
+            }
+            levelData.put(level, from(levelProp));
+        }
+        return Collections.unmodifiableMap(levelData);
+    }
+
+    public static ItemOptionLevelData from(WzListProperty levelProp) throws ProviderError {
+        final Map<ItemOptionStat, Integer> stats = new HashMap<>();
+        for (var propEntry : levelProp.getItems().entrySet()) {
+            if (ItemOptionStat.isIgnored(propEntry.getKey())) {
+                continue;
+            }
+            final ItemOptionStat stat = ItemOptionStat.fromName(propEntry.getKey());
+            if (stat == null) {
+                throw new ProviderError("Unknown item option stat : %s", propEntry.getKey());
+            }
+            stats.put(stat, WzProvider.getInteger(propEntry.getValue()));
+        }
+        return new ItemOptionLevelData(Collections.unmodifiableMap(stats));
+    }
 }
