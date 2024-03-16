@@ -142,7 +142,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeByte(inventoryManager.getCashInventory().getSize());
         }
         if (flag.hasFlag(DBChar.EQUIP_EXT)) {
-            outPacket.encodeFT(FileTime.DEFAULT_TIME); // aEquipExtExpire
+            outPacket.encodeFT(inventoryManager.getExtSlotExpire()); // aEquipExtExpire
         }
         if (flag.hasFlag(DBChar.ITEM_SLOT_EQUIP)) {
             final Map<Integer, Item> equippedItems = inventoryManager.getEquipped().getItems();

@@ -18,6 +18,7 @@ public final class CharacterTable {
     public static final String ETC_INVENTORY = "etc_inventory";
     public static final String CASH_INVENTORY = "cash_inventory";
     public static final String MONEY = "money";
+    public static final String EXT_SLOT_EXPIRE = "ext_slot_expire";
     public static final String SKILL_COOLTIMES = "skill_cooltimes";
     public static final String SKILL_RECORDS = "skill_records";
     public static final String QUEST_RECORDS = "quest_records";
@@ -48,6 +49,7 @@ public final class CharacterTable {
                         .withColumn(ETC_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(CASH_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(MONEY, DataTypes.INT)
+                        .withColumn(EXT_SLOT_EXPIRE, DataTypes.TIMESTAMP)
                         .withColumn(SKILL_COOLTIMES, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.TIMESTAMP))
                         .withColumn(SKILL_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))

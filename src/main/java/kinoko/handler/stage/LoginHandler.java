@@ -31,6 +31,7 @@ import kinoko.world.user.stat.StatConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -236,6 +237,7 @@ public final class LoginHandler {
         im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
         im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS));
         im.setMoney(0);
+        im.setExtSlotExpire(Instant.now());
         characterData.setInventoryManager(im);
 
         for (int i = 4; i < selectedAL.length; i++) {

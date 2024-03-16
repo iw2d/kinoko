@@ -23,6 +23,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -379,8 +380,12 @@ public final class User extends Life implements Lockable<User> {
         // Compute total stat
         final Inventory equipped = getInventoryManager().getEquipped();
         for (var entry : equipped.getItems().entrySet()) {
+            final BodyPart bodyPart = BodyPart.getByValue(entry.getKey());
+            if (bodyPart == BodyPart.PENDANT_EXT && getInventoryManager().getExtSlotExpire().isBefore(Instant.now())) {
+                continue;
+            }
             final Item item = entry.getValue();
-            if (item.getItemType() != ItemType.EQUIP) {  // TODO: check equip slot ext expired
+            if (item.getItemType() != ItemType.EQUIP) {
                 continue;
             }
             final EquipData ed = item.getEquipData();

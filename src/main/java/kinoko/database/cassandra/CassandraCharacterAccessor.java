@@ -49,6 +49,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         im.setEtcInventory(row.get(CharacterTable.ETC_INVENTORY, Inventory.class));
         im.setCashInventory(row.get(CharacterTable.CASH_INVENTORY, Inventory.class));
         im.setMoney(row.getInt(CharacterTable.MONEY));
+        im.setExtSlotExpire(row.getInstant(CharacterTable.EXT_SLOT_EXPIRE));
         cd.setInventoryManager(im);
 
         final SkillManager sm = new SkillManager();
@@ -216,6 +217,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.ETC_INVENTORY, literal(characterData.getInventoryManager().getEtcInventory(), registry))
                         .setColumn(CharacterTable.CASH_INVENTORY, literal(characterData.getInventoryManager().getCashInventory(), registry))
                         .setColumn(CharacterTable.MONEY, literal(characterData.getInventoryManager().getMoney()))
+                        .setColumn(CharacterTable.EXT_SLOT_EXPIRE, literal(characterData.getInventoryManager().getExtSlotExpire()))
                         .setColumn(CharacterTable.SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))

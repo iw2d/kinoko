@@ -3,6 +3,7 @@ package kinoko.world.item;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ public final class InventoryManager {
     private Inventory etcInventory;
     private Inventory cashInventory;
     private int money;
+    private Instant extSlotExpire;
 
     public Inventory getEquipped() {
         return equipped;
@@ -70,6 +72,14 @@ public final class InventoryManager {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public Instant getExtSlotExpire() {
+        return extSlotExpire;
+    }
+
+    public void setExtSlotExpire(Instant extSlotExpire) {
+        this.extSlotExpire = extSlotExpire;
     }
 
     public Inventory getInventoryByItemId(int itemId) {

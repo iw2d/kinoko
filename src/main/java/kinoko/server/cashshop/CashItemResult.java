@@ -113,8 +113,8 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeShort(int1);
             }
             case ENABLE_EQUIP_SLOT_EXT_DONE -> {
-                outPacket.encodeShort(int1); // not sure
-                outPacket.encodeShort(int2); // days?
+                outPacket.encodeShort(int1);
+                outPacket.encodeShort(int2); // short -> Util::FTAddDay
             }
             case MOVE_L_TO_S_DONE -> {
                 outPacket.encodeShort(int1); // nPOS
@@ -272,6 +272,13 @@ public final class CashItemResult implements Encodable {
     public static CashItemResult incCharSlotCountDone(int newSize) {
         final CashItemResult result = new CashItemResult(CashItemResultType.INC_CHAR_SLOT_COUNT_DONE);
         result.int1 = newSize; // nCharacterSlotCount
+        return result;
+    }
+
+    public static CashItemResult enableEquipSlotExtDone(int addDays) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.ENABLE_EQUIP_SLOT_EXT_DONE);
+        result.int1 = 0; // ext slot type?
+        result.int2 = addDays;
         return result;
     }
 

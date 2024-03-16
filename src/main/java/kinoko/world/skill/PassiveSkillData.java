@@ -46,7 +46,7 @@ public final class PassiveSkillData {
 
     public void setFrom(BasicStat bs, SecondaryStat ss, SkillManager sm) {
         clearData();
-        // TODO: guild skill
+        // No guild skills in v95
 
         // Add passive skill data
         for (SkillRecord skillRecord : sm.getSkillRecords()) {
@@ -68,9 +68,7 @@ public final class PassiveSkillData {
         if (JobConstants.isMechanicJob(bs.getJob())) {
             if (sm.getSkillLevel(Mechanic.MECH_MISSILE_TANK) > 0) {
                 final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(Mechanic.MECH_SIEGE_MODE_2);
-                if (skillInfoResult.isPresent()) {
-                    addPassiveSkillData(skillInfoResult.get(), sm.getSkillLevel(Mechanic.MECH_SIEGE_MODE));
-                }
+                skillInfoResult.ifPresent(skillInfo -> addPassiveSkillData(skillInfo, sm.getSkillLevel(Mechanic.MECH_SIEGE_MODE)));
             }
         }
 

@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -190,7 +191,7 @@ public final class CashShopHandler {
                 // CCashShop::OnBuySlotInc - (0x6 + (is_trunkcount_inc_item)) : byte, int (dwOption), byte (1), int (nCommSN)
                 inPacket.decodeByte(); // dwOption == 2
                 final int paymentType = inPacket.decodeInt(); // dwOption
-                final boolean isAdd4Slots = inPacket.decodeInt() == 0;
+                final boolean isAdd4Slots = inPacket.decodeByte() == 0;
 
                 // Add by UI (4 slots) or by commodity (CCashShop::OnBuySlotInc)
                 if (isAdd4Slots) {
@@ -294,7 +295,26 @@ public final class CashShopHandler {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.ENABLE_EQUIP_SLOT_EXT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     log.error("Tried to enable equip slot ext with item ID : {}", commodity.getItemId());
                 }
-                // TODO
+
+                try (var lockedAccount = user.getAccount().acquire()) {
+                    // Deduct price
+                    if (!deductPrice(lockedAccount, isMaplePoint ? PaymentType.MAPLE_POINT : PaymentType.NX_CREDIT, commodity.getPrice())) {
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.ENABLE_EQUIP_SLOT_EXT_FAILED, CashItemFailReason.NO_REMAIN_CASH))); // You don't have enough cash.
+                        return;
+                    }
+
+                    // Extend ext slot expiry and update client
+                    try (var locked = user.acquire()) {
+                        final InventoryManager im = locked.get().getInventoryManager();
+                        final int addDays = commodity.getItemId() == CashShop.EQUIP_SLOT_EXT_30_DAYS ? 30 : 7;
+                        if (im.getExtSlotExpire().isBefore(Instant.now())) {
+                            im.setExtSlotExpire(Instant.now().plus(addDays, ChronoUnit.DAYS));
+                        } else {
+                            im.setExtSlotExpire(im.getExtSlotExpire().plus(addDays, ChronoUnit.DAYS));
+                        }
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.enableEquipSlotExtDone(addDays)));
+                    }
+                }
             }
             case MOVE_L_TO_S -> {
                 // CCashShop::OnMoveCashItemLtoS
