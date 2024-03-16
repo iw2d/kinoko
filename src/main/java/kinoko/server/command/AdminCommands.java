@@ -9,10 +9,12 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.provider.skill.SkillStringInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashShop;
@@ -34,7 +36,9 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.Stat;
+import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.*;
 
@@ -528,6 +532,36 @@ public final class AdminCommands {
                 mob.damage(user, mob.getMaxHp());
             }
         });
+    }
+
+    @Command("mobskill")
+    public static void mobskill(User user, String[] args) {
+        if (args.length != 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2])) {
+            user.write(WvsContext.message(Message.system("Syntax : %smobskill <skill id> <level>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final int skillId = Integer.parseInt(args[1]);
+        final int slv = Integer.parseInt(args[2]);
+        final MobSkillType skillType = MobSkillType.getByValue(skillId);
+        if (skillType == null) {
+            user.write(WvsContext.message(Message.system("Could not resolve mob skill %d", skillId)));
+            return;
+        }
+        final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
+        if (cts == null) {
+            user.write(WvsContext.message(Message.system("Could not resolve mob skill {} does not apply a CTS", skillType)));
+            return;
+        }
+        // Apply mob skill
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            user.write(WvsContext.message(Message.system("Could not resolve mob skill info %d", skillId)));
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        try (var locked = user.acquire()) {
+            locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+        }
     }
 
     @Command("max")

@@ -25,7 +25,11 @@ public class TemporaryStatOption implements Encodable {
     }
 
     public TemporaryStatOption(int nOption, int rOption, int tOption, DiceInfo diceInfo) {
-        this(nOption, rOption, tOption, diceInfo, Instant.now().plus(tOption, ChronoUnit.MILLIS));
+        this(nOption, rOption, tOption, diceInfo, tOption == 0 ? Instant.MAX : Instant.now().plus(tOption, ChronoUnit.MILLIS));
+    }
+
+    public TemporaryStatOption(int nOption, int rOption, int tOption, Instant expireTime) {
+        this(nOption, rOption, tOption, DiceInfo.DEFAULT, expireTime);
     }
 
     public TemporaryStatOption(int nOption, int rOption, int tOption) {

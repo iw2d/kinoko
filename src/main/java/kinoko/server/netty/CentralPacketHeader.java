@@ -47,11 +47,11 @@ import java.util.Map;
  *      6 : send MIGRATE_COMMAND to client (client connects to target channel server)
  *   CentralServerNode
  *      3 : receive TRANSFER_REQUEST from source ChannelServerNode
- *      4 : create MigrationInfo, store in MigrationStorage
+ *      4 : store received MigrationInfo in MigrationStorage
  *      5 : send TRANSFER_RESULT to source ChannelServerNode
  *      9 : receive MIGRATION_REQUEST from ChannelServerNode
  *     10 : remove MigrationInfo from MigrationStorage
- *     11 : reply to ChannelServerNode with MIGRATION_RESULT
+ *     11 : reply to ChannelServerNode with MIGRATION_RESULT and the removed MigrationInfo
  *   ChannelServerNode (target)
  *      7 : receive MIGRATE_IN (channel server), send MIGRATION_REQUEST to CentralServerNode [same as migration step 3 onwards]
  *      8 : block until MIGRATION_RESULT received from CentralServerNode

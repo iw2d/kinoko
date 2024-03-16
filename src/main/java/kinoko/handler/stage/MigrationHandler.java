@@ -161,6 +161,7 @@ public final class MigrationHandler {
             }
 
             // Initialize user stats
+            user.getSecondaryStat().getTemporaryStats().putAll(migrationResult.getTemporaryStats());
             user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.setGender(user.getGender()));
@@ -319,7 +320,8 @@ public final class MigrationHandler {
                 user.getAccountId(),
                 user.getCharacterId(),
                 c.getMachineId(),
-                c.getClientKey()
+                c.getClientKey(),
+                user.getSecondaryStat().getTemporaryStats()
         );
         final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
         final TransferInfo transferResult;

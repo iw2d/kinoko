@@ -2,12 +2,24 @@ package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
 
+import java.time.Instant;
+
 public class TwoStateTemporaryStat extends TemporaryStatOption {
     private final TwoStateType twoStateType;
 
     public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption) {
         super(nOption, rOption, tOption);
         this.twoStateType = twoStateType;
+    }
+
+    public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption, Instant expireTime) {
+        super(nOption, rOption, tOption, expireTime);
+        this.twoStateType = twoStateType;
+    }
+
+
+    public final TwoStateType getType() {
+        return twoStateType;
     }
 
     @Override

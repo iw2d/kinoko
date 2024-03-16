@@ -106,9 +106,13 @@ public enum MobSkillType {
             case POISON -> CharacterTemporaryStat.Poison;
             case SLOW -> CharacterTemporaryStat.Slow;
             case ATTRACT -> CharacterTemporaryStat.Attract;
+            case BAN_MAP -> CharacterTemporaryStat.BanMap;
             case REVERSE_INPUT -> CharacterTemporaryStat.ReverseInput;
-            case UNDEAD -> CharacterTemporaryStat.Undead;
+            // case UNDEAD -> CharacterTemporaryStat.Undead;
+            case STOP_POTION -> CharacterTemporaryStat.StopPortion;
+            case STOP_MOTION -> CharacterTemporaryStat.StopMotion;
             case FEAR -> CharacterTemporaryStat.Fear;
+            case FROZEN -> CharacterTemporaryStat.Frozen;
             default -> null;
         };
     }

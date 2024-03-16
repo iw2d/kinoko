@@ -1,5 +1,6 @@
 package kinoko.util;
 
+import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 
 import java.util.Arrays;
@@ -30,6 +31,14 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
         for (int i = flags.length - 1; i >= 0; i--) {
             outPacket.encodeInt(flags[i]);
         }
+    }
+
+    public static <T extends BitIndex> BitFlag<T> decode(InPacket inPacket, int size) {
+        final BitFlag<T> bitFlag = new BitFlag<>(size);
+        for (int i = bitFlag.flags.length - 1; i >= 0; i--) {
+            bitFlag.flags[i] = inPacket.decodeInt();
+        }
+        return bitFlag;
     }
 
     public static <T extends BitIndex> BitFlag<T> from(Set<T> flagSet, int size) {

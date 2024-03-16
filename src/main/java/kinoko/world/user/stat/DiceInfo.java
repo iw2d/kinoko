@@ -1,5 +1,6 @@
 package kinoko.world.user.stat;
 
+import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
@@ -17,5 +18,13 @@ public final class DiceInfo implements Encodable {
         for (int i = 0; i < 22; i++) {
             outPacket.encodeInt(infoArray[i]);
         }
+    }
+
+    public static DiceInfo decode(InPacket inPacket) {
+        final DiceInfo diceInfo = new DiceInfo();
+        for (int i = 0; i < 22; i++) {
+            diceInfo.infoArray[i] = inPacket.decodeInt();
+        }
+        return diceInfo;
     }
 }

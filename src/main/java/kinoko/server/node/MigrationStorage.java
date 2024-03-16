@@ -4,6 +4,7 @@ import kinoko.world.user.Account;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -43,19 +44,19 @@ public final class MigrationStorage {
         }
     }
 
-    public boolean completeMigrationRequest(MigrationInfo migrationInfo) {
+    public Optional<MigrationInfo> completeMigrationRequest(MigrationInfo migrationInfo) {
         lock.lock();
         try {
             // Confirm migration request is present, unexpired, and matches the request
             final MigrationInfo existingInfo = mapByCharacterId.get(migrationInfo.getCharacterId());
             if (existingInfo == null || existingInfo.isExpired() ||
                     !existingInfo.verify(migrationInfo.getChannelId(), migrationInfo.getAccountId(), migrationInfo.getCharacterId(), migrationInfo.getMachineId(), migrationInfo.getClientKey())) {
-                return false;
+                return Optional.empty();
             }
             // Remove migration request
             mapByAccountId.remove(migrationInfo.getAccountId());
             mapByCharacterId.remove(migrationInfo.getCharacterId());
-            return true;
+            return Optional.of(existingInfo);
         } finally {
             lock.unlock();
         }

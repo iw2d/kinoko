@@ -3,18 +3,15 @@ package kinoko.world.user.stat;
 import kinoko.server.packet.OutPacket;
 
 public final class GuidedBullet extends TwoStateTemporaryStat {
-    private int mobId;
+    private final int mobId;
 
-    public GuidedBullet(int nOption, int rOption, int tOption) {
+    public GuidedBullet(int nOption, int rOption, int tOption, int mobId) {
         super(TwoStateType.NO_EXPIRE, nOption, rOption, tOption);
+        this.mobId = mobId;
     }
 
     public int getMobId() {
         return mobId;
-    }
-
-    public void setMobId(int mobId) {
-        this.mobId = mobId;
     }
 
     @Override

@@ -56,8 +56,8 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Channel migration - complete stored migration request
                 final int requestId = inPacket.decodeInt();
                 final MigrationInfo migrationInfo = MigrationInfo.decode(inPacket);
-                final boolean success = centralServerNode.completeMigrationRequest(migrationInfo);
-                remoteChildNode.write(CentralPacket.migrationResult(requestId, success ? migrationInfo : null));
+                final Optional<MigrationInfo> migrationResult = centralServerNode.completeMigrationRequest(migrationInfo);
+                remoteChildNode.write(CentralPacket.migrationResult(requestId, migrationResult.orElse(null)));
             }
             case TRANSFER_REQUEST -> {
                 // Channel transfer - create migration request and reply with transfer info

@@ -60,7 +60,7 @@ public final class CentralServerNode extends ServerNode {
         return migrationStorage.submitMigrationRequest(migrationInfo);
     }
 
-    public boolean completeMigrationRequest(MigrationInfo migrationInfo) {
+    public Optional<MigrationInfo> completeMigrationRequest(MigrationInfo migrationInfo) {
         return migrationStorage.completeMigrationRequest(migrationInfo);
     }
 
