@@ -1,11 +1,15 @@
 package kinoko.provider;
 
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemOptionInfo;
+import kinoko.provider.item.ItemOptionLevelData;
 import kinoko.provider.item.PetInteraction;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Util;
+import kinoko.world.item.ItemConstants;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,6 +21,7 @@ public final class ItemProvider implements WzProvider {
     public static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
+    private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
     private static final Map<Integer, Set<Integer>> petEquips = new HashMap<>(); // petEquipId -> set<petTemplateId>
     private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
 
@@ -32,6 +37,7 @@ public final class ItemProvider implements WzProvider {
         try (final WzReader reader = WzReader.build(ITEM_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadItemInfos(wzPackage);
+            loadItemOptionInfos(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Item.wz", e);
         }
@@ -39,6 +45,13 @@ public final class ItemProvider implements WzProvider {
 
     public static Optional<ItemInfo> getItemInfo(int itemId) {
         return Optional.ofNullable(itemInfos.get(itemId));
+    }
+
+    public static Optional<ItemOptionLevelData> getItemOptionInfo(int itemOptionId, int optionLevel) {
+        if (!itemOptionInfos.containsKey(itemOptionId)) {
+            return Optional.empty();
+        }
+        return itemOptionInfos.get(itemOptionId).getLevelData(optionLevel);
     }
 
     public static boolean isPetEquipSuitable(int itemId, int templateId) {
@@ -58,6 +71,21 @@ public final class ItemProvider implements WzProvider {
             for (var entry : directory.getImages().entrySet()) {
                 final int itemId = Integer.parseInt(entry.getKey().replace(".img", ""));
                 itemInfos.put(itemId, ItemInfo.from(itemId, entry.getValue().getProperty()));
+                // Pet equips
+                if (!ItemConstants.isPetEquipItem(itemId)) {
+                    continue;
+                }
+                final Set<Integer> suitablePets = new HashSet<>();
+                for (var petEntry : entry.getValue().getProperty().getItems().entrySet()) {
+                    if (!Util.isInteger(petEntry.getKey())) {
+                        continue;
+                    }
+                    final int petTemplateId = Integer.parseInt(petEntry.getKey());
+                    suitablePets.add(petTemplateId);
+                }
+                if (!suitablePets.isEmpty()) {
+                    petEquips.put(itemId, Collections.unmodifiableSet(suitablePets));
+                }
             }
         }
     }
@@ -100,5 +128,9 @@ public final class ItemProvider implements WzProvider {
             }
             petActions.put(itemId, Collections.unmodifiableMap(actions));
         }
+    }
+
+    private static void loadItemOptionInfos(WzPackage source) throws ProviderError {
+        // TODO
     }
 }

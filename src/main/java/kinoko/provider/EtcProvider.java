@@ -1,7 +1,5 @@
 package kinoko.provider;
 
-import kinoko.provider.item.ItemOptionInfo;
-import kinoko.provider.item.ItemOptionLevelData;
 import kinoko.provider.item.SetItemInfo;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
@@ -16,7 +14,6 @@ import java.util.*;
 public final class EtcProvider implements WzProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
     // Item info
-    private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
     private static final Set<SetItemInfo> setItemInfos = new HashSet<>();
     // CashShop info
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
@@ -28,7 +25,6 @@ public final class EtcProvider implements WzProvider {
     public static void initialize() {
         try (final WzReader reader = WzReader.build(ETC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
-            loadItemOptionInfo(wzPackage);
             loadSetItemInfo(wzPackage);
             loadCashShop(wzPackage);
             loadForbiddenNames(wzPackage);
@@ -36,13 +32,6 @@ public final class EtcProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Etc.wz", e);
         }
-    }
-
-    public static Optional<ItemOptionLevelData> getItemOptionInfo(int itemOptionId, int optionLevel) {
-        if (!itemOptionInfos.containsKey(itemOptionId)) {
-            return Optional.empty();
-        }
-        return itemOptionInfos.get(itemOptionId).getLevelData(optionLevel);
     }
 
     public static Set<SetItemInfo> getSetItemInfos() {
@@ -63,10 +52,6 @@ public final class EtcProvider implements WzProvider {
 
     public static boolean isValidStartingItem(int index, int id) {
         return makeCharInfo.getOrDefault(index, Set.of()).contains(id);
-    }
-
-    private static void loadItemOptionInfo(WzPackage source) throws ProviderError {
-        // TODO
     }
 
     private static void loadSetItemInfo(WzPackage source) throws ProviderError {

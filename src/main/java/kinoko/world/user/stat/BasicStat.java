@@ -1,6 +1,5 @@
 package kinoko.world.user.stat;
 
-import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
@@ -166,12 +165,12 @@ public final class BasicStat {
     }
 
     private void applyItemOption(int itemOptionId, int optionLevel) {
-        final Optional<ItemOptionLevelData> itemOptionResult = EtcProvider.getItemOptionInfo(itemOptionId, optionLevel);
+        final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
         // TODO
     }
 
     private void applyItemOptionR(int itemOptionId, int optionLevel, BasicStatRateOption option) {
-        final Optional<ItemOptionLevelData> itemOptionResult = EtcProvider.getItemOptionInfo(itemOptionId, optionLevel);
+        final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
         // TODO
     }
 
