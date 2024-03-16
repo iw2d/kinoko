@@ -1,10 +1,12 @@
 package kinoko.world.user.stat;
 
+import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemOptionLevelData;
+import kinoko.provider.item.SetItemInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.OutPacket;
@@ -28,6 +30,7 @@ import kinoko.world.skill.SkillManager;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class SecondaryStat {
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new EnumMap<>(CharacterTemporaryStat.class);
@@ -184,7 +187,45 @@ public final class SecondaryStat {
         this.speed = 100;
         this.jump = 100;
 
-        final SecondaryStatRateOption option = new SecondaryStatRateOption();
+        // Set items
+        for (SetItemInfo setItemInfo : EtcProvider.getSetItemInfos()) {
+            final Set<Integer> equippedItems = realEquip.values().stream().map(Item::getItemId).collect(Collectors.toSet());
+            equippedItems.retainAll(setItemInfo.getItems());
+            for (int itemCount = 0; itemCount <= equippedItems.size(); itemCount++) {
+                final Map<ItemInfoType, Integer> effect = setItemInfo.getEffect().get(itemCount);
+                if (effect == null) {
+                    continue;
+                }
+                for (var entry : effect.entrySet()) {
+                    switch (entry.getKey()) {
+                        case incPAD -> {
+                            this.pad += entry.getValue();
+                        }
+                        case incPDD -> {
+                            this.pdd += entry.getValue();
+                        }
+                        case incMAD -> {
+                            this.mad += entry.getValue();
+                        }
+                        case incMDD -> {
+                            this.mdd += entry.getValue();
+                        }
+                        case incACC -> {
+                            this.acc += entry.getValue();
+                        }
+                        case incEVA -> {
+                            this.eva += entry.getValue();
+                        }
+                        case incSpeed -> {
+                            this.speed += entry.getValue();
+                        }
+                        case incJump -> {
+                            this.jump += entry.getValue();
+                        }
+                    }
+                }
+            }
+        }
 
         // Bare hands for pirates
         final Item weapon = realEquip.get(BodyPart.WEAPON.getValue());
@@ -197,7 +238,7 @@ public final class SecondaryStat {
         }
 
         // Equip stats
-        // TODO: set items
+        final SecondaryStatRateOption option = new SecondaryStatRateOption();
         for (var item : realEquip.values()) {
             // Resolve item and item info
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());

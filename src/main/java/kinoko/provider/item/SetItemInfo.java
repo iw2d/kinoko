@@ -15,6 +15,14 @@ public final class SetItemInfo {
         this.effect = effect;
     }
 
+    public Set<Integer> getItems() {
+        return items;
+    }
+
+    public Map<Integer, Map<ItemInfoType, Integer>> getEffect() {
+        return effect;
+    }
+
     public static SetItemInfo from(WzListProperty setItemProp) throws ProviderError {
         // Items
         final Set<Integer> items = new HashSet<>();

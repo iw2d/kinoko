@@ -1,10 +1,12 @@
 package kinoko.world.user.stat;
 
+import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemOptionLevelData;
+import kinoko.provider.item.SetItemInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.world.GameConstants;
@@ -17,6 +19,8 @@ import kinoko.world.skill.SkillManager;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class BasicStat {
     private int gender;
@@ -116,6 +120,40 @@ public final class BasicStat {
             option.applyItemOptionR(ed.getOption1(), optionLevel);
             option.applyItemOptionR(ed.getOption2(), optionLevel);
             option.applyItemOptionR(ed.getOption3(), optionLevel);
+        }
+
+        // Set items
+        for (SetItemInfo setItemInfo : EtcProvider.getSetItemInfos()) {
+            final Set<Integer> equippedItems = realEquip.values().stream().map(Item::getItemId).collect(Collectors.toSet());
+            equippedItems.retainAll(setItemInfo.getItems());
+            for (int itemCount = 0; itemCount <= equippedItems.size(); itemCount++) {
+                final Map<ItemInfoType, Integer> effect = setItemInfo.getEffect().get(itemCount);
+                if (effect == null) {
+                    continue;
+                }
+                for (var entry : effect.entrySet()) {
+                    switch (entry.getKey()) {
+                        case incSTR -> {
+                            this.str += entry.getValue();
+                        }
+                        case incDEX -> {
+                            this.dex += entry.getValue();
+                        }
+                        case incINT -> {
+                            this.int_ += entry.getValue();
+                        }
+                        case incLUK -> {
+                            this.luk += entry.getValue();
+                        }
+                        case incMHP -> {
+                            this.maxHp += entry.getValue();
+                        }
+                        case incMMP -> {
+                            this.maxMp += entry.getValue();
+                        }
+                    }
+                }
+            }
         }
 
         // BasicStatUp CTS (Maple Warrior)
