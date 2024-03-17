@@ -22,9 +22,6 @@ public final class EquipData {
     private short incSpeed;
     private short incJump;
 
-    private short incMaxHpR;
-    private short incMaxMpR;
-
     private byte ruc; // Remaining Upgrade Count
     private byte cuc; // Current Upgrade Count
     private int iuc; // Increase Upgrade Count
@@ -246,22 +243,6 @@ public final class EquipData {
         this.incJump = incJump;
     }
 
-    public short getIncMaxHpR() {
-        return incMaxHpR;
-    }
-
-    public void setIncMaxHpR(short incMaxHpR) {
-        this.incMaxHpR = incMaxHpR;
-    }
-
-    public short getIncMaxMpR() {
-        return incMaxMpR;
-    }
-
-    public void setIncMaxMpR(short incMaxMpR) {
-        this.incMaxMpR = incMaxMpR;
-    }
-
     public byte getRuc() {
         return ruc;
     }
@@ -428,12 +409,6 @@ public final class EquipData {
                 }
                 case durability -> {
                     equipData.setDurability(itemInfo.getInfo(infoType));
-                }
-                case incMHPr -> {
-                    equipData.setIncMaxHpR((short) itemInfo.getInfo(infoType));
-                }
-                case incMMPr -> {
-                    equipData.setIncMaxMpR((short) itemInfo.getInfo(infoType));
                 }
             }
         }

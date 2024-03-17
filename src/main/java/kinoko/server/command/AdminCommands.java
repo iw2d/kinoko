@@ -35,17 +35,17 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.Stat;
-import kinoko.world.user.stat.TemporaryStatOption;
+import kinoko.world.user.stat.*;
 
 import java.util.*;
 
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        System.out.println(user.getSecondaryStat().getTemporaryStats());
+        for (var entry : EquipStat.getRealEquip(user).entrySet()) {
+            System.out.println(entry.getValue().getItemId());
+        }
+        System.out.println(user.getSecondaryStat().getPad());
         user.dispose();
     }
 

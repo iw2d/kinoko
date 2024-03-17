@@ -198,30 +198,14 @@ public final class SecondaryStat {
                 }
                 for (var entry : effect.entrySet()) {
                     switch (entry.getKey()) {
-                        case incPAD -> {
-                            this.pad += entry.getValue();
-                        }
-                        case incPDD -> {
-                            this.pdd += entry.getValue();
-                        }
-                        case incMAD -> {
-                            this.mad += entry.getValue();
-                        }
-                        case incMDD -> {
-                            this.mdd += entry.getValue();
-                        }
-                        case incACC -> {
-                            this.acc += entry.getValue();
-                        }
-                        case incEVA -> {
-                            this.eva += entry.getValue();
-                        }
-                        case incSpeed -> {
-                            this.speed += entry.getValue();
-                        }
-                        case incJump -> {
-                            this.jump += entry.getValue();
-                        }
+                        case incPAD -> this.pad += entry.getValue();
+                        case incPDD -> this.pdd += entry.getValue();
+                        case incMAD -> this.mad += entry.getValue();
+                        case incMDD -> this.mdd += entry.getValue();
+                        case incACC -> this.acc += entry.getValue();
+                        case incEVA -> this.eva += entry.getValue();
+                        case incSpeed -> this.speed += entry.getValue();
+                        case incJump -> this.jump += entry.getValue();
                     }
                 }
             }
@@ -463,30 +447,14 @@ public final class SecondaryStat {
         }
         for (var entry : itemOptionResult.get().getStats().entrySet()) {
             switch (entry.getKey()) {
-                case incPAD -> {
-                    this.pad += entry.getValue();
-                }
-                case incPDD -> {
-                    this.pdd += entry.getValue();
-                }
-                case incMAD -> {
-                    this.mad += entry.getValue();
-                }
-                case incMDD -> {
-                    this.mdd += entry.getValue();
-                }
-                case incACC -> {
-                    this.acc += entry.getValue();
-                }
-                case incEVA -> {
-                    this.eva += entry.getValue();
-                }
-                case incSpeed -> {
-                    this.speed += entry.getValue();
-                }
-                case incJump -> {
-                    this.jump += entry.getValue();
-                }
+                case incPAD -> this.pad += entry.getValue();
+                case incPDD -> this.pdd += entry.getValue();
+                case incMAD -> this.mad += entry.getValue();
+                case incMDD -> this.mdd += entry.getValue();
+                case incACC -> this.acc += entry.getValue();
+                case incEVA -> this.eva += entry.getValue();
+                case incSpeed -> this.speed += entry.getValue();
+                case incJump -> this.jump += entry.getValue();
             }
         }
     }
@@ -625,24 +593,12 @@ public final class SecondaryStat {
             }
             for (var entry : itemOptionResult.get().getStats().entrySet()) {
                 switch (entry.getKey()) {
-                    case incPADr -> {
-                        this.padR += entry.getValue();
-                    }
-                    case incPDDr -> {
-                        this.pddR += entry.getValue();
-                    }
-                    case incMADr -> {
-                        this.madR += entry.getValue();
-                    }
-                    case incMDDr -> {
-                        this.mddR += entry.getValue();
-                    }
-                    case incACCr -> {
-                        this.accR += entry.getValue();
-                    }
-                    case incEVAr -> {
-                        this.evaR += entry.getValue();
-                    }
+                    case incPADr -> this.padR += entry.getValue();
+                    case incPDDr -> this.pddR += entry.getValue();
+                    case incMADr -> this.madR += entry.getValue();
+                    case incMDDr -> this.mddR += entry.getValue();
+                    case incACCr -> this.accR += entry.getValue();
+                    case incEVAr -> this.evaR += entry.getValue();
                 }
             }
         }

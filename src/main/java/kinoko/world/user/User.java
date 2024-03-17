@@ -5,8 +5,6 @@ import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
-import kinoko.provider.ItemProvider;
-import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.node.ChannelServerNode;
@@ -16,16 +14,14 @@ import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
-import kinoko.world.item.*;
+import kinoko.world.item.InventoryManager;
+import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -237,7 +233,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void validateStat() {
         // get_real_equip
-        final Map<Integer, Item> realEquip = getRealEquip();
+        final Map<Integer, Item> realEquip = EquipStat.getRealEquip(this);
 
         // BasicStat::SetFrom
         getBasicStat().setFrom(getCharacterStat(), getForcedStat(), getSecondaryStat(), getSkillManager(), getPassiveSkillData(), realEquip);
@@ -374,87 +370,5 @@ public final class User extends Life implements Lockable<User> {
     @Override
     public void unlock() {
         lock.unlock();
-    }
-
-
-    // PRIVATE METHODS -------------------------------------------------------------------------------------------------
-
-    private Map<Integer, Item> getRealEquip() {
-        final CharacterStat cs = getCharacterStat();
-        final int basicStatUp = getSecondaryStat().getOption(CharacterTemporaryStat.BasicStatUp).nOption;
-        final int baseStr = cs.getBaseStr() + (basicStatUp * cs.getBaseStr() / 100);
-        final int baseDex = cs.getBaseDex() + (basicStatUp * cs.getBaseDex() / 100);
-        final int baseInt = cs.getBaseInt() + (basicStatUp * cs.getBaseInt() / 100);
-        final int baseLuk = cs.getBaseLuk() + (basicStatUp * cs.getBaseLuk() / 100);
-        int incStr = 0, incDex = 0, incInt = 0, incLuk = 0;
-
-        // Compute total stat
-        final Inventory equipped = getInventoryManager().getEquipped();
-        for (var entry : equipped.getItems().entrySet()) {
-            final BodyPart bodyPart = BodyPart.getByValue(entry.getKey());
-            if (bodyPart == BodyPart.PENDANT_EXT && getInventoryManager().getExtSlotExpire().isBefore(Instant.now())) {
-                continue;
-            }
-            final Item item = entry.getValue();
-            if (item.getItemType() != ItemType.EQUIP) {
-                continue;
-            }
-            final EquipData ed = item.getEquipData();
-            incStr += ed.getIncStr();
-            incDex += ed.getIncDex();
-            incInt += ed.getIncInt();
-            incLuk += ed.getIncLuk();
-            // TODO ApplyItemOption, ApplyItemOptionR
-        }
-        // TODO set items
-
-        // Build real equip list
-        final Map<Integer, Item> realEquip = new HashMap<>();
-        final Item weapon = equipped.getItem(BodyPart.WEAPON.getValue());
-        for (var entry : equipped.getItems().entrySet()) {
-            // Resolve item info and equip data
-            final int position = entry.getKey();
-            final Item item = entry.getValue();
-            if (item.getItemType() != ItemType.EQUIP) {
-                continue;
-            }
-            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
-            if (itemInfoResult.isEmpty()) {
-                continue;
-            }
-            final ItemInfo ii = itemInfoResult.get();
-            final EquipData ed = item.getEquipData();
-
-            // Find applicable pet
-            final Pet pet;
-            if (position == BodyPart.PET_EQUIP_1.getValue()) {
-                pet = getPets()[0];
-            } else if (position == BodyPart.PET_EQUIP_2.getValue()) {
-                pet = getPets()[2];
-            } else if (position == BodyPart.PET_EQUIP_3.getValue()) {
-                pet = getPets()[3];
-            } else {
-                pet = null;
-            }
-
-            // Check if able to equip
-            if (ii.isAbleToEquip(
-                    cs.getGender(),
-                    cs.getLevel(),
-                    cs.getJob(),
-                    cs.getSubJob(),
-                    baseStr + incStr - ed.getIncStr(),
-                    baseDex + incDex - ed.getIncDex(),
-                    baseInt + incInt - ed.getIncInt(),
-                    baseLuk + incLuk - ed.getIncLuk(),
-                    cs.getPop(),
-                    ed.getDurability(),
-                    weapon != null ? weapon.getItemId() : 0,
-                    pet != null ? pet.getTemplateId() : 0
-            )) {
-                realEquip.put(position, item);
-            }
-        }
-        return Collections.unmodifiableMap(realEquip);
     }
 }

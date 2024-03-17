@@ -87,7 +87,8 @@ public final class ItemInfo {
             }
         }
         // Check other requirements
-        final int jobFlag = 1 << ((job % 1000 / 100) - 1);
+        final int jobCategory = JobConstants.getJobCategory(job);
+        final int jobFlag = jobCategory != 0 ? (1 << (jobCategory - 1)) : 0;
         return JobConstants.isAdminJob(job) ||
                 JobConstants.isManagerJob(job) ||
                 ItemConstants.isMatchedItemIdGender(getItemId(), gender) &&

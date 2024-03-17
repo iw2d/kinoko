@@ -110,8 +110,8 @@ public final class BasicStat {
             this.maxHp += ed.getIncMaxHp();
             this.maxMp += ed.getIncMaxMp();
 
-            incMaxHpR += ed.getIncMaxHpR();
-            incMaxMpR += ed.getIncMaxMpR();
+            incMaxHpR += ii.getInfo(ItemInfoType.incMHPr);
+            incMaxMpR += ii.getInfo(ItemInfoType.incMMPr);
 
             final int optionLevel = (ii.getInfo(ItemInfoType.reqLevel) - 1) / 10; // no sockets in v95
             this.applyItemOption(ed.getOption1(), optionLevel);
@@ -133,24 +133,12 @@ public final class BasicStat {
                 }
                 for (var entry : effect.entrySet()) {
                     switch (entry.getKey()) {
-                        case incSTR -> {
-                            this.str += entry.getValue();
-                        }
-                        case incDEX -> {
-                            this.dex += entry.getValue();
-                        }
-                        case incINT -> {
-                            this.int_ += entry.getValue();
-                        }
-                        case incLUK -> {
-                            this.luk += entry.getValue();
-                        }
-                        case incMHP -> {
-                            this.maxHp += entry.getValue();
-                        }
-                        case incMMP -> {
-                            this.maxMp += entry.getValue();
-                        }
+                        case incSTR -> this.str += entry.getValue();
+                        case incDEX -> this.dex += entry.getValue();
+                        case incINT -> this.int_ += entry.getValue();
+                        case incLUK -> this.luk += entry.getValue();
+                        case incMHP -> this.maxHp += entry.getValue();
+                        case incMMP -> this.maxMp += entry.getValue();
                     }
                 }
             }
@@ -209,24 +197,12 @@ public final class BasicStat {
         }
         for (var entry : itemOptionResult.get().getStats().entrySet()) {
             switch (entry.getKey()) {
-                case incSTR -> {
-                    this.str += entry.getValue();
-                }
-                case incDEX -> {
-                    this.dex += entry.getValue();
-                }
-                case incINT -> {
-                    this.int_ += entry.getValue();
-                }
-                case incLUK -> {
-                    this.luk += entry.getValue();
-                }
-                case incMHP -> {
-                    this.maxHp += entry.getValue();
-                }
-                case incMMP -> {
-                    this.maxMp += entry.getValue();
-                }
+                case incSTR -> this.str += entry.getValue();
+                case incDEX -> this.dex += entry.getValue();
+                case incINT -> this.int_ += entry.getValue();
+                case incLUK -> this.luk += entry.getValue();
+                case incMHP -> this.maxHp += entry.getValue();
+                case incMMP -> this.maxMp += entry.getValue();
             }
         }
     }
@@ -259,24 +235,12 @@ public final class BasicStat {
             }
             for (var entry : itemOptionResult.get().getStats().entrySet()) {
                 switch (entry.getKey()) {
-                    case incSTRr -> {
-                        this.strR += entry.getValue();
-                    }
-                    case incDEXr -> {
-                        this.dexR += entry.getValue();
-                    }
-                    case incINTr -> {
-                        this.intR += entry.getValue();
-                    }
-                    case incLUKr -> {
-                        this.lukR += entry.getValue();
-                    }
-                    case incMHPr -> {
-                        this.incMaxHpR += entry.getValue();
-                    }
-                    case incMMPr -> {
-                        this.incMaxMpR += entry.getValue();
-                    }
+                    case incSTRr -> this.strR += entry.getValue();
+                    case incDEXr -> this.dexR += entry.getValue();
+                    case incINTr -> this.intR += entry.getValue();
+                    case incLUKr -> this.lukR += entry.getValue();
+                    case incMHPr -> this.incMaxHpR += entry.getValue();
+                    case incMMPr -> this.incMaxMpR += entry.getValue();
                 }
             }
         }
