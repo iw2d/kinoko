@@ -220,6 +220,17 @@ public final class User extends Life implements Lockable<User> {
         }
     }
 
+    public int getPop() {
+        return getBasicStat().getPop();
+    }
+
+    public void addPop(int pop) {
+        final short newPop = (short) Math.min(getPop() + pop, Short.MAX_VALUE);
+        getCharacterStat().setPop(newPop);
+        validateStat();
+        write(WvsContext.statChanged(Stat.POP, newPop, true));
+    }
+
     public void updatePassiveSkillData() {
         getPassiveSkillData().setFrom(getBasicStat(), getSecondaryStat(), getSkillManager());
     }

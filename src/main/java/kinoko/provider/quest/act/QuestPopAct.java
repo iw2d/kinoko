@@ -1,8 +1,9 @@
 package kinoko.provider.quest.act;
 
+import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
 
 public final class QuestPopAct implements QuestAct {
     private final int pop;
@@ -18,8 +19,9 @@ public final class QuestPopAct implements QuestAct {
 
     @Override
     public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final CharacterStat cs = locked.get().getCharacterStat();
-        cs.setPop((short) (cs.getPop() + pop));
+        final User user = locked.get();
+        user.addPop(pop);
+        user.write(WvsContext.message(Message.incPop(pop)));
         return true;
     }
 }

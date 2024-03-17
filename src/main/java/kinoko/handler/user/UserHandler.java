@@ -54,7 +54,6 @@ import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.funckey.FuncKeyMapped;
 import kinoko.world.user.funckey.FuncKeyMappedType;
 import kinoko.world.user.funckey.FuncKeyType;
-import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -789,10 +788,7 @@ public final class UserHandler {
                         log.error("Unhandled Marriage invitation memo for marriage ID : {}", marriageId);
                     } else if (memoType == MemoType.INC_POP) {
                         try (var locked = user.acquire()) {
-                            final CharacterStat cs = locked.get().getCharacterStat();
-                            final short newPop = (short) Math.min(cs.getPop() + 1, Short.MAX_VALUE);
-                            cs.setPop(newPop);
-                            user.write(WvsContext.statChanged(Stat.POP, newPop, false));
+                            locked.get().addPop(1);
                             user.write(WvsContext.message(Message.incPop(1)));
                         }
                     }

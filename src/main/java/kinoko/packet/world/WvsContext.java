@@ -152,7 +152,7 @@ public final class WvsContext {
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeShort(user.getJob()); // nJob
-        outPacket.encodeShort(user.getCharacterStat().getPop()); // nPOP
+        outPacket.encodeShort(user.getPop()); // nPOP
         outPacket.encodeByte(false); // bIsMarried
         outPacket.encodeString(""); // sCommunity
         outPacket.encodeString(""); // sAlliance
