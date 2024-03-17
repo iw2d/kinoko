@@ -8,17 +8,29 @@ import java.util.*;
 
 public final class ReactorTemplate {
     private final int id;
+    private final boolean notHitable;
+    private final boolean activateByTouch;
     private final String action;
     private final Map<Integer, ReactorState> states;
 
-    public ReactorTemplate(int id, String action, Map<Integer, ReactorState> states) {
+    public ReactorTemplate(int id, boolean notHitable, boolean activateByTouch, String action, Map<Integer, ReactorState> states) {
         this.id = id;
+        this.notHitable = notHitable;
+        this.activateByTouch = activateByTouch;
         this.action = action;
         this.states = states;
     }
 
     public int getId() {
         return id;
+    }
+
+    public boolean isNotHitable() {
+        return notHitable;
+    }
+
+    public boolean isActivateByTouch() {
+        return activateByTouch;
     }
 
     public String getAction() {
@@ -35,7 +47,7 @@ public final class ReactorTemplate {
         return maxResult.orElse(0);
     }
 
-    public static ReactorTemplate from(int reactorId, String action, WzListProperty reactorProp) throws ProviderError {
+    public static ReactorTemplate from(int reactorId, boolean notHitable, boolean activateByTouch, String action, WzListProperty reactorProp) throws ProviderError {
         // Process states
         final Map<Integer, ReactorState> states = new HashMap<>();
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
@@ -61,6 +73,8 @@ public final class ReactorTemplate {
         }
         return new ReactorTemplate(
                 reactorId,
+                notHitable,
+                activateByTouch,
                 action,
                 Collections.unmodifiableMap(states)
         );

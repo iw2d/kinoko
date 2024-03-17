@@ -32,8 +32,13 @@ public final class ReactorHandler {
         try (var lockedReactor = reactorResult.get().acquire()) {
             // Hit reactor
             final Reactor reactor = lockedReactor.get();
+            if (reactor.isNotHitable()) {
+                log.error("{} : tried to hit reactor that is not hitable", reactor);
+                return;
+            }
             if (!reactor.hit(skillId)) {
                 log.error("{} : could not hit reactor with skill ID {}", reactor, skillId);
+                return;
             }
             field.getReactorPool().hitReactor(reactor, delay);
             // Check if last state and dispatch action script
@@ -48,7 +53,23 @@ public final class ReactorHandler {
     public static void handleReactorTouch(User user, InPacket inPacket) {
         final int objectId = inPacket.decodeInt(); // dwID
         final boolean inside = inPacket.decodeBoolean(); // PtInRect
-        // TODO
+
+        final Field field = user.getField();
+        final Optional<Reactor> reactorResult = field.getReactorPool().getById(objectId);
+        if (reactorResult.isEmpty()) {
+            log.error("Received handleReactorTouch for invalid object with ID : {}", objectId);
+            return;
+        }
+        try (var lockedReactor = reactorResult.get().acquire()) {
+            // Hit reactor
+            final Reactor reactor = lockedReactor.get();
+            if (!reactor.isActivateByTouch()) {
+                log.error("{} : tried to hit reactor that is not activated by touch", reactor);
+                return;
+            }
+            // There are no reactors activated by touch in v95
+            throw new IllegalStateException(String.format("Unexpected reactor touch received for %s", reactor));
+        }
     }
 
     @Handler(InHeader.REQUIRE_FIELD_OBSTACLE_STATUS)

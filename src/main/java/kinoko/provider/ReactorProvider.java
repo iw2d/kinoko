@@ -8,6 +8,7 @@ import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Triple;
 import kinoko.util.Tuple;
 
 import java.io.IOException;
@@ -34,31 +35,40 @@ public final class ReactorProvider implements WzProvider {
     }
 
     private static void loadReactorTemplates(WzPackage source) throws ProviderError {
-        final Map<Integer, Tuple<Integer, String>> linkedReactors = new HashMap<>(); // reactorId -> link, action
+        final Map<Integer, Triple<Integer, Tuple<Boolean, Boolean>, String>> linkedReactors = new HashMap<>(); // reactorId -> link, [notHitable, activateByTouch], action
         for (var imageEntry : source.getDirectory().getImages().entrySet()) {
             final int reactorId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
             final WzListProperty imageProp = imageEntry.getValue().getProperty();
             final String action = imageProp.get("action");
-            // Handle linked reactors
-            if (imageProp.get("info") instanceof WzListProperty infoProp && infoProp.getItems().containsKey("link")) {
-                final int link = WzProvider.getInteger(infoProp.get("link"));
-                linkedReactors.put(reactorId, new Tuple<>(link, action));
-                continue;
+            boolean notHitable = false;
+            boolean activateByTouch = false;
+            if (imageProp.get("info") instanceof WzListProperty infoProp) {
+                notHitable = WzProvider.getInteger(imageProp.get("notHitable"), 0) != 0;
+                activateByTouch = WzProvider.getInteger(imageProp.get("activateByTouch"), 0) != 0;
+
+                // Handle linked reactors
+                if (infoProp.getItems().containsKey("link")) {
+                    final int link = WzProvider.getInteger(infoProp.get("link"));
+                    linkedReactors.put(reactorId, new Triple<>(link, new Tuple<>(notHitable, activateByTouch), action));
+                    continue;
+                }
             }
             // Add template
-            reactorTemplates.put(reactorId, ReactorTemplate.from(reactorId, action, imageProp));
+            reactorTemplates.put(reactorId, ReactorTemplate.from(reactorId, notHitable, activateByTouch, action, imageProp));
         }
         // Process linked reactors
         for (var linkEntry : linkedReactors.entrySet()) {
             final int reactorId = linkEntry.getKey();
-            final int link = linkEntry.getValue().getLeft();
+            final int link = linkEntry.getValue().getFirst();
             final ReactorTemplate linkedTemplate = reactorTemplates.get(link);
             if (linkedTemplate == null) {
                 throw new ProviderError("Failed to resolve linked reactor ID : %d, link : %d", reactorId, link);
             }
             reactorTemplates.put(reactorId, new ReactorTemplate(
                     reactorId,
-                    linkEntry.getValue().getRight(),
+                    linkEntry.getValue().getSecond().getLeft(), // notHitable
+                    linkEntry.getValue().getSecond().getRight(), // activateByTouch
+                    linkEntry.getValue().getThird(),
                     linkedTemplate.getStates()
             ));
         }

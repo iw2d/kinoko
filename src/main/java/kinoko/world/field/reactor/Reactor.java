@@ -42,6 +42,14 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
         return template.getId();
     }
 
+    public boolean isNotHitable() {
+        return template.isNotHitable();
+    }
+
+    public boolean isActivateByTouch() {
+        return template.isActivateByTouch();
+    }
+
     public String getAction() {
         return template.getAction();
     }
@@ -160,7 +168,7 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
 
     @Override
     public String toString() {
-        return String.format("Reactor { %d, oid : %d, state : %d }", getTemplateId(), getId(), getState());
+        return String.format("Reactor { %d, oid : %d, action : %s, state : %d }", getTemplateId(), getId(), getAction(), getState());
     }
 
     @Override
