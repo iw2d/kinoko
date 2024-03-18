@@ -160,9 +160,6 @@ public final class WvsContext {
 
         // bPetActivated -> CUIUserInfo::SetMultiPetInfo
         for (Pet pet : user.getPets()) {
-            if (pet == null) {
-                continue;
-            }
             outPacket.encodeByte(true);
             outPacket.encodeInt(pet.getTemplateId()); // dwTemplateId
             outPacket.encodeString(pet.getName()); // sName

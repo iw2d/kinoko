@@ -57,7 +57,7 @@ public final class Pet extends Life implements Encodable {
     }
 
     public int getPetIndex() {
-        return owner.getPetIndex(getItemSn()).orElse(0);
+        return owner.getPetIndex(getItemSn()).orElseThrow();
     }
 
     @Override

@@ -39,9 +39,6 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Add user pets
         for (Pet pet : user.getPets()) {
-            if (pet == null) {
-                continue;
-            }
             pet.setX(user.getX());
             pet.setY(user.getY());
             pet.setFoothold(user.getFoothold());

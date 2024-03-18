@@ -26,7 +26,6 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,33 +79,35 @@ public final class PetHandler {
             final long petSn = item.getItemSn();
             final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
             if (petIndexResult.isEmpty()) {
-                // Resolve pet index
-                final CharacterStat cs = user.getCharacterStat();
+                // Check if max number of pets active
                 final boolean hasFollowTheLead = user.getSkillManager().getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
-                System.out.println(hasFollowTheLead);
-                final int petIndex;
-                if (!hasFollowTheLead || bossPet || cs.getPetSn1() == 0) {
-                    petIndex = 0;
-                } else if (cs.getPetSn2() == 0) {
-                    petIndex = 1;
-                } else if (cs.getPetSn3() == 0) {
-                    petIndex = 2;
-                } else {
+                if (user.getPets().size() >= (hasFollowTheLead ? GameConstants.PET_COUNT_MAX : 1)) {
                     log.error("Tried to activate pet while having max number of pets active");
                     user.dispose();
                     return;
                 }
-                // Create pet and update client
+                // Create and set pet
                 final Pet pet = Pet.from(user, item);
-                user.getPets()[petIndex] = pet;
-                user.getField().broadcastPacket(PetPacket.petActivated(user, pet, petIndex));
-                user.setPetIndex(petIndex, petSn);
+                if (!hasFollowTheLead || bossPet) {
+                    user.setPet(pet, 0, false);
+                } else {
+                    if (!user.addPet(pet, false)) {
+                        log.error("Could not add pet");
+                        user.dispose();
+                        return;
+                    }
+                }
+                // Update client
+                user.getField().broadcastPacket(PetPacket.petActivated(user, pet, pet.getPetIndex()));
             } else {
                 // Deactivate pet and update client
                 final int petIndex = petIndexResult.get();
-                user.getPets()[petIndex] = null;
+                if (!user.removePet(petIndex)) {
+                    log.error("Could not remove pet at index : {}", petIndex);
+                    user.dispose();
+                    return;
+                }
                 user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndex, 0));
-                user.setPetIndex(petIndex, 0);
             }
         }
     }
@@ -121,7 +122,7 @@ public final class PetHandler {
             return;
         }
         final int petIndex = petIndexResult.get();
-        final Pet pet = user.getPets()[petIndex];
+        final Pet pet = user.getPet(petIndex);
         if (pet == null) {
             log.error("Received PET_MOVE for invalid pet index : {}", petIndex);
             return;
@@ -143,7 +144,7 @@ public final class PetHandler {
             return;
         }
         final int petIndex = petIndexResult.get();
-        final Pet pet = user.getPets()[petIndex];
+        final Pet pet = user.getPet(petIndex);
         if (pet == null) {
             log.error("Received PET_ACTION for invalid pet index : {}", petIndex);
             return;
@@ -165,7 +166,11 @@ public final class PetHandler {
         try (var locked = user.acquire()) {
             // Resolve pet interaction
             final int petIndex = petIndexResult.get();
-            final Pet pet = user.getPets()[petIndex];
+            final Pet pet = user.getPet(petIndex);
+            if (pet == null) {
+                log.error("Received PET_INTERACTION_REQUEST for invalid pet index : {}", petIndex);
+                return;
+            }
             final Optional<PetInteraction> interactionResult = ItemProvider.getPetInteraction(pet.getTemplateId(), action);
             if (interactionResult.isEmpty()) {
                 log.error("Could not resolve pet interaction for template {}, action {}", pet.getTemplateId(), action);

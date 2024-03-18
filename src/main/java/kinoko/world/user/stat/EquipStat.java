@@ -219,11 +219,11 @@ public final class EquipStat {
             // Find applicable pet
             final Pet pet;
             if (position == BodyPart.PET_EQUIP_1.getValue()) {
-                pet = user.getPets()[0];
+                pet = user.getPet(0);
             } else if (position == BodyPart.PET_EQUIP_2.getValue()) {
-                pet = user.getPets()[1];
+                pet = user.getPet(1);
             } else if (position == BodyPart.PET_EQUIP_3.getValue()) {
-                pet = user.getPets()[2];
+                pet = user.getPet(2);
             } else {
                 pet = null;
             }

@@ -63,11 +63,11 @@ public final class PetPacket {
         return outPacket;
     }
 
-    public static OutPacket loadExceptionList(User user, int petIndex, List<Integer> exceptionList) {
+    public static OutPacket loadExceptionList(User user, int petIndex, long petSn, List<Integer> exceptionList) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PET_LOAD_EXCEPTION_LIST);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
-        outPacket.encodeLong(user.getPetSn(petIndex)); // liPetSN
+        outPacket.encodeLong(petSn); // liPetSN
         outPacket.encodeByte(exceptionList.size());
         exceptionList.forEach(outPacket::encodeInt);
         return outPacket;

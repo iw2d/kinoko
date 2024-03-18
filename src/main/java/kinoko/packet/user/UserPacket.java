@@ -40,9 +40,6 @@ public final class UserPacket {
         outPacket.encodeByte(false); // bShowAdminEffect
 
         for (Pet pet : user.getPets()) {
-            if (pet == null) {
-                continue;
-            }
             outPacket.encodeByte(true);
             pet.encode(outPacket); // CPet::Init
         }

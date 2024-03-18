@@ -100,9 +100,6 @@ public final class ItemHandler {
             // Select target pet
             Pet target = null;
             for (Pet pet : user.getPets()) {
-                if (pet == null) {
-                    continue;
-                }
                 if (target == null || target.getFullness() > pet.getFullness()) {
                     target = pet;
                 }
@@ -114,7 +111,9 @@ public final class ItemHandler {
             }
             final Optional<Integer> petIndexResult = user.getPetIndex(target.getItemSn());
             if (petIndexResult.isEmpty()) {
-                throw new IllegalStateException("Could not resolve pet index");
+                log.error("Could not resolve pet index for item : {}", target.getItemSn());
+                user.dispose();
+                return;
             }
             final long petSn = target.getItemSn();
             final int petIndex = petIndexResult.get();
@@ -125,7 +124,9 @@ public final class ItemHandler {
                     .filter((entry) -> entry.getValue().getItemSn() == petSn)
                     .findFirst();
             if (itemEntry.isEmpty()) {
-                throw new IllegalStateException("Could not resolve pet item");
+                log.error("Could not resolve pet item : {}", target.getItemSn());
+                user.dispose();
+                return;
             }
             final int petPosition = itemEntry.get().getKey();
             final Item petItem = itemEntry.get().getValue();

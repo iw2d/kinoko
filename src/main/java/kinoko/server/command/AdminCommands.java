@@ -45,7 +45,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        System.out.println(Arrays.toString(user.getPets()));
+        System.out.println(user.getPets());
         user.dispose();
     }
 

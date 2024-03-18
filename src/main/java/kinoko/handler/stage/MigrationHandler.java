@@ -20,7 +20,6 @@ import kinoko.server.node.Client;
 import kinoko.server.node.MigrationInfo;
 import kinoko.server.node.TransferInfo;
 import kinoko.server.packet.InPacket;
-import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
@@ -30,6 +29,7 @@ import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.funckey.FuncKeyManager;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -135,30 +135,10 @@ public final class MigrationHandler {
 
         try (var locked = user.acquire()) {
             // Initialize pets
-            for (int i = 0; i < GameConstants.PET_COUNT_MAX; i++) {
-                final long petSn = user.getPetSn(i);
-                if (petSn == 0) {
-                    continue;
-                }
-                final Inventory cashInventory = user.getInventoryManager().getCashInventory();
-                final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
-                        .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                        .findFirst();
-                if (itemEntryResult.isEmpty()) {
-                    // Pet item not found
-                    user.setPetIndex(i, 0);
-                    continue;
-                }
-                final Item item = itemEntryResult.get().getValue();
-                if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(Instant.now())) {
-                    // Invalid pet or expired
-                    user.setPetIndex(i, 0);
-                    continue;
-                }
-                // Create pet and assign to user
-                final Pet pet = Pet.from(user, item);
-                user.getPets()[i] = pet;
-            }
+            final CharacterStat cs = locked.get().getCharacterStat();
+            initializePet(user, 0, cs.getPetSn1());
+            initializePet(user, 1, cs.getPetSn2());
+            initializePet(user, 2, cs.getPetSn3());
 
             // Initialize user stats
             user.getSecondaryStat().getTemporaryStats().putAll(migrationResult.getTemporaryStats());
@@ -343,5 +323,29 @@ public final class MigrationHandler {
 
         // Send migrate command
         user.write(ClientPacket.migrateCommand(transferResult.getChannelHost(), transferResult.getChannelPort()));
+    }
+
+    private static void initializePet(User user, int petIndex, long petSn) {
+        if (petSn == 0) {
+            return;
+        }
+        final Inventory cashInventory = user.getInventoryManager().getCashInventory();
+        final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
+                .filter((entry) -> entry.getValue().getItemSn() == petSn)
+                .findFirst();
+        if (itemEntryResult.isEmpty()) {
+            // Pet item not found
+            user.setPetSn(petIndex, 0, true);
+            return;
+        }
+        final Item item = itemEntryResult.get().getValue();
+        if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(Instant.now())) {
+            // Invalid pet or expired
+            user.setPetSn(petIndex, 0, true);
+            return;
+        }
+        // Create pet and assign to user
+        final Pet pet = Pet.from(user, item);
+        user.addPet(pet, true);
     }
 }

@@ -25,9 +25,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -41,7 +39,7 @@ public final class User extends Life implements Lockable<User> {
     private final SecondaryStat secondaryStat = new SecondaryStat();
     private final PassiveSkillData passiveSkillData = new PassiveSkillData();
 
-    private final Pet[] pets = new Pet[GameConstants.PET_COUNT_MAX]; // TODO: use a list
+    private final List<Pet> pets = new ArrayList<>();
     private final Map<Integer, Summoned> summoned = new HashMap<>();
 
     private Dialog dialog;
@@ -124,7 +122,7 @@ public final class User extends Life implements Lockable<User> {
         return passiveSkillData;
     }
 
-    public Pet[] getPets() {
+    public List<Pet> getPets() {
         return pets;
     }
 
@@ -277,40 +275,67 @@ public final class User extends Life implements Lockable<User> {
 
     // PET METHODS --------------------------------------------------------------------------------------------
 
-    public long getPetSn(int index) {
-        assert index >= 0 && index < GameConstants.PET_COUNT_MAX;
-        if (index == 0) {
-            return getCharacterStat().getPetSn1();
-        } else if (index == 1) {
-            return getCharacterStat().getPetSn2();
-        } else {
-            return getCharacterStat().getPetSn3();
+    public Pet getPet(int petIndex) {
+        if (getPets().size() < petIndex) {
+            return null;
         }
+        return getPets().get(petIndex);
     }
 
     public Optional<Integer> getPetIndex(long petSn) {
-        if (getCharacterStat().getPetSn1() == petSn) {
-            return Optional.of(0);
-        } else if (getCharacterStat().getPetSn2() == petSn) {
-            return Optional.of(1);
-        } else if (getCharacterStat().getPetSn3() == petSn) {
-            return Optional.of(2);
+        for (int i = 0; i < getPets().size(); i++) {
+            if (getPets().get(i).getItemSn() == petSn) {
+                return Optional.of(i);
+            }
         }
         return Optional.empty();
     }
 
-    public void setPetIndex(int index, long petSn) {
-        assert index >= 0 && index < GameConstants.PET_COUNT_MAX;
-        if (index == 0) {
-            getCharacterStat().setPetSn1(petSn);
-            write(WvsContext.statChanged(Stat.PET_1, petSn, true));
-        } else if (index == 1) {
-            getCharacterStat().setPetSn2(petSn);
-            write(WvsContext.statChanged(Stat.PET_2, petSn, true));
+    public void setPet(Pet pet, int petIndex, boolean isMigrate) {
+        assert petIndex < GameConstants.PET_COUNT_MAX && petIndex <= getPets().size();
+        if (petIndex == getPets().size()) {
+            getPets().add(pet);
         } else {
-            getCharacterStat().setPetSn3(petSn);
-            write(WvsContext.statChanged(Stat.PET_3, petSn, true));
+            getPets().set(petIndex, pet);
         }
+        setPetSn(petIndex, pet.getItemSn(), isMigrate);
+    }
+
+    public void setPetSn(int petIndex, long petSn, boolean isMigrate) {
+        if (petIndex == 0) {
+            getCharacterStat().setPetSn1(petSn);
+            if (!isMigrate) {
+                write(WvsContext.statChanged(Stat.PET_1, petSn, true));
+            }
+        } else if (petIndex == 1) {
+            getCharacterStat().setPetSn2(petSn);
+            if (!isMigrate) {
+                write(WvsContext.statChanged(Stat.PET_2, petSn, true));
+            }
+        } else if (petIndex == 2) {
+            getCharacterStat().setPetSn3(petSn);
+            if (!isMigrate) {
+                write(WvsContext.statChanged(Stat.PET_3, petSn, true));
+            }
+        }
+    }
+
+    public boolean addPet(Pet pet, boolean isMigrate) {
+        final int index = getPets().size();
+        if (index >= GameConstants.PET_COUNT_MAX) {
+            return false;
+        }
+        setPet(pet, index, isMigrate);
+        return true;
+    }
+
+    public boolean removePet(int petIndex) {
+        if (petIndex >= getPets().size()) {
+            return false;
+        }
+        getPets().remove(petIndex);
+        setPetSn(petIndex, 0, false);
+        return true;
     }
 
 
