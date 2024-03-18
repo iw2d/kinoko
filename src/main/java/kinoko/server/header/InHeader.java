@@ -330,6 +330,7 @@ public enum InHeader {
             USER_STAT_CHANGE_REQUEST,
             PET_MOVE,
             PET_ACTION,
+            SUMMONED_MOVE,
             MOB_MOVE,
             MOB_APPLY_CTRL,
             NPC_MOVE

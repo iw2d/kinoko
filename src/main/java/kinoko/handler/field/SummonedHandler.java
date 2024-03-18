@@ -5,16 +5,20 @@ import kinoko.packet.field.SummonedPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.server.header.InHeader;
+import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.MovePath;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
-import kinoko.world.field.summoned.SummonedAttack;
+import kinoko.world.job.JobHandler;
+import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public final class SummonedHandler {
@@ -48,7 +52,7 @@ public final class SummonedHandler {
             return;
         }
         final Summoned summoned = summonedResult.get();
-        final SummonedAttack attack = new SummonedAttack();
+        final Attack attack = new Attack(OutHeader.SUMMONED_ATTACK);
 
         inPacket.decodeInt(); // ~drInfo.dr0
         inPacket.decodeInt(); // ~drInfo.dr1
@@ -60,16 +64,18 @@ public final class SummonedHandler {
 
         inPacket.decodeInt(); // dwKey
         inPacket.decodeInt(); // Crc32
-        attack.mobCount = inPacket.decodeByte();
+
+        final int mobCount = inPacket.decodeByte();
+        attack.mask = (byte) (1 | (mobCount << 4)); // because we're reusing the Attack object
 
         attack.userX = inPacket.decodeShort();
         attack.userY = inPacket.decodeShort();
-        attack.summonedX = inPacket.decodeShort();
-        attack.summonedY = inPacket.decodeShort();
+        inPacket.decodeShort(); // summonedX
+        inPacket.decodeShort(); // summonedY
 
         inPacket.decodeInt(); // CUserLocal::GetRepeatSkillPoint
 
-        for (int i = 0; i < attack.mobCount; i++) {
+        for (int i = 0; i < attack.getMobCount(); i++) {
             final AttackInfo ai = new AttackInfo();
             ai.mobId = inPacket.decodeInt(); // mobID
             ai.hitAction = inPacket.decodeByte(); // nHitAction
@@ -94,10 +100,29 @@ public final class SummonedHandler {
             return;
         }
         final SummonedAttackInfo sai = summonedAttackInfoResult.get();
-        if (sai.getMobCount() < attack.mobCount) {
-            log.error("Received SUMMON_ATTACK with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.mobCount);
+        if (sai.getMobCount() < attack.getMobCount()) {
+            log.error("Received SUMMON_ATTACK with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.getMobCount());
+            return;
         }
 
-        // TODO
+        // Skill specific handling
+        try (var locked = user.acquire()) {
+            JobHandler.handleAttack(locked, attack);
+        }
+
+        // Process attack damage
+        for (AttackInfo ai : attack.getAttackInfo()) {
+            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+            if (mobResult.isEmpty()) {
+                continue;
+            }
+            // Acquire and damage mob
+            final int totalDamage = Arrays.stream(ai.damage).sum();
+            try (var lockedMob = mobResult.get().acquire()) {
+                lockedMob.get().damage(user, totalDamage);
+            }
+        }
+
+        field.broadcastPacket(SummonedPacket.attack(summoned, attack), user);
     }
 }

@@ -543,6 +543,7 @@ public enum OutHeader {
             USER_MOVE,
             PET_MOVE,
             PET_ACTION,
+            SUMMONED_MOVE,
             MOB_ENTER_FIELD,
             MOB_LEAVE_FIELD,
             MOB_CHANGE_CONTROLLER,

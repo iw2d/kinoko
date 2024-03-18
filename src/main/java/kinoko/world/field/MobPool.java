@@ -72,7 +72,6 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 continue;
             }
             final Mob mob = spawnMobResult.get();
-            mob.setAppearType(MobAppearType.REGEN);
             addMob(mob);
             mob.setAppearType(MobAppearType.NORMAL);
         }

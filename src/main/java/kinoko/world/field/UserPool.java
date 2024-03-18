@@ -23,7 +23,7 @@ public final class UserPool extends FieldObjectPool<User> {
     }
 
     @SuppressWarnings("unchecked")
-    public void addUser(User user) {
+    public synchronized void addUser(User user) {
         // Update client with existing users in pool
         forEach((existingUser) -> {
             try (var locked = existingUser.acquire()) {
@@ -71,7 +71,7 @@ public final class UserPool extends FieldObjectPool<User> {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean removeUser(User user) {
+    public synchronized boolean removeUser(User user) {
         if (!removeObject(user)) {
             return false;
         }

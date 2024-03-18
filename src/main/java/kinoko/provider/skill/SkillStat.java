@@ -33,7 +33,7 @@ public enum SkillStat {
     bulletConsume,
     itemCon,
     itemConNo,
-    itemConsume,
+    itemConsume, // used for flamethrower, ice splitter
     moneyCon,
     selfDestruction,
 

@@ -336,7 +336,6 @@ public final class AdminCommands {
                 user.getY(),
                 footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold())
         );
-        mob.setAppearType(MobAppearType.REGEN);
         field.getMobPool().addMob(mob);
         mob.setAppearType(MobAppearType.NORMAL);
     }

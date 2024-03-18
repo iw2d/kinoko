@@ -1,6 +1,7 @@
 package kinoko.world.field.summoned;
 
 import kinoko.packet.field.SummonedPacket;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
@@ -8,7 +9,10 @@ import kinoko.world.field.UserObject;
 import kinoko.world.field.life.Life;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.user.AvatarLook;
+import kinoko.world.user.User;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,20 +24,25 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
     private final int skillLevel;
     private final SummonedMoveAbility moveAbility;
     private final SummonedAssistType assistType;
-    private final SummonedEnterType enterType;
     private final AvatarLook avatarLook;
+    private final Instant expireTime;
 
+    private SummonedEnterType enterType = SummonedEnterType.CREATE_SUMMONED;
     private int hp = 1;
 
-    public Summoned(int ownerId, int ownerLevel, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, SummonedEnterType enterType, AvatarLook avatarLook) {
+    public Summoned(int ownerId, int ownerLevel, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, AvatarLook avatarLook, Instant expireTime) {
         this.ownerId = ownerId;
         this.ownerLevel = ownerLevel;
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.moveAbility = moveAbility;
         this.assistType = assistType;
-        this.enterType = enterType;
         this.avatarLook = avatarLook;
+        this.expireTime = expireTime;
+    }
+
+    public Summoned(int ownerId, int ownerLevel, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
+        this(ownerId, ownerLevel, skillId, skillLevel, moveAbility, assistType, null, expireTime);
     }
 
     @Override
@@ -61,12 +70,20 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
         return assistType;
     }
 
+    public AvatarLook getAvatarLook() {
+        return avatarLook;
+    }
+
+    public Instant getExpireTime() {
+        return expireTime;
+    }
+
     public SummonedEnterType getEnterType() {
         return enterType;
     }
 
-    public AvatarLook getAvatarLook() {
-        return avatarLook;
+    public void setEnterType(SummonedEnterType enterType) {
+        this.enterType = enterType;
     }
 
     public int getHp() {
@@ -120,5 +137,21 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
     @Override
     public void unlock() {
         lock.unlock();
+    }
+
+    public static Summoned from(User user, SkillInfo si, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType) {
+        final Summoned summoned = new Summoned(
+                user.getCharacterId(),
+                user.getLevel(),
+                si.getSkillId(),
+                slv,
+                moveAbility,
+                assistType,
+                Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS)
+        );
+        summoned.setX(user.getX());
+        summoned.setY(user.getY());
+        summoned.setFoothold(user.getFoothold());
+        return summoned;
     }
 }

@@ -46,7 +46,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
 
-    private MobAppearType appearType = MobAppearType.NORMAL;
+    private MobAppearType appearType = MobAppearType.REGEN;
     private User controller;
     private int currentFh;
     private int hp;

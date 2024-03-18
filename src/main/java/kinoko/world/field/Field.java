@@ -147,7 +147,7 @@ public final class Field {
             reactorPool.expireReactors(now);
         }
         userPool.updateUsers(now);
-        userObjectPool.updateObjects(now);
+        userObjectPool.updateUserObjects(now);
         mobPool.updateMobs(now);
     }
 

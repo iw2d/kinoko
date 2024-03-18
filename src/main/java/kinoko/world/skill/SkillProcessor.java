@@ -29,10 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class SkillProcessor {
     private static final Logger log = LogManager.getLogger(SkillProcessor.class);
@@ -91,6 +88,17 @@ public final class SkillProcessor {
             if (user.getMp() < mpCon) {
                 log.error("Tried to use skill {} without enough mp, current : {}, required : {}", attack.skillId, user.getMp(), mpCon);
                 return;
+            }
+            // Item / Bullet consume are mutually exclusive
+            final int itemCon = si.getValue(SkillStat.itemCon, attack.slv);
+            if (itemCon > 0) {
+                final int itemConNo = si.getValue(SkillStat.itemConNo, attack.slv); // should always be > 0
+                final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(itemCon, itemConNo);
+                if (removeResult.isEmpty()) {
+                    log.error("Tried to use skill {} without required item", itemCon);
+                    return;
+                }
+                user.write(WvsContext.inventoryOperation(removeResult.get(), true));
             }
             final int bulletCon = si.getBulletCon(attack.slv);
             if (bulletCon > 0 && attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
@@ -187,6 +195,17 @@ public final class SkillProcessor {
         if (user.getMp() < mpCon) {
             log.error("Tried to use skill {} without enough mp, current : {}, required : {}", skill.skillId, user.getMp(), mpCon);
             return;
+        }
+        // Item / Bullet consume are mutually exclusive
+        final int itemCon = si.getValue(SkillStat.itemCon, skill.slv);
+        if (itemCon > 0) {
+            final int itemConNo = si.getValue(SkillStat.itemConNo, skill.slv); // should always be > 0
+            final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(itemCon, itemConNo);
+            if (removeResult.isEmpty()) {
+                log.error("Tried to use skill {} without required item", itemCon);
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(removeResult.get(), true));
         }
         final int bulletCon = si.getBulletCon(skill.slv);
         if (bulletCon > 0) {

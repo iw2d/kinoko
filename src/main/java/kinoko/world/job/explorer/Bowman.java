@@ -1,6 +1,12 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.InPacket;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedEnterType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
@@ -83,6 +89,21 @@ public final class Bowman {
     }
 
     public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        switch (skillId) {
+            // COMMON
+            case SILVER_HAWK:
+            case GOLDEN_EAGLE:
+            case PHOENIX:
+            case FROSTPREY:
+                final Summoned birb = Summoned.from(user, si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
+                user.getField().getUserObjectPool().addSummoned(birb);
+                birb.setEnterType(SummonedEnterType.DEFAULT);
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

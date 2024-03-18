@@ -237,7 +237,12 @@ public final class AttackHandler {
         final int skillId = inPacket.decodeInt(); // nSkillID
         final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
         final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
-        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, 1, actionAndDir, attackSpeed), user); // TODO: slv
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        if (slv == 0) {
+            log.error("Received USER_MOVING_SHOOT_ATTACK_PREPARE for skill {}, but its level is 0", skillId);
+            return;
+        }
+        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
 
     @Handler(InHeader.USER_HIT)
