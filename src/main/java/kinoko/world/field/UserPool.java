@@ -8,11 +8,13 @@ import kinoko.util.Util;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.npc.Npc;
+import kinoko.world.field.summoned.Summoned;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -44,6 +46,14 @@ public final class UserPool extends FieldObjectPool<User> {
             pet.setY(user.getY());
             pet.setFoothold(user.getFoothold());
             broadcastPacket(pet.enterFieldPacket());
+        }
+
+        // Add user summoned
+        for (Summoned summoned : user.getSummoned().values()) {
+            summoned.setX(user.getX());
+            summoned.setY(user.getY());
+            summoned.setFoothold(user.getFoothold());
+            broadcastPacket(summoned.enterFieldPacket());
         }
 
         // Handle other field objects
@@ -111,6 +121,17 @@ public final class UserPool extends FieldObjectPool<User> {
                 final Set<Integer> resetCooltimes = locked.get().getSkillManager().expireSkillCooltime(now);
                 for (int skillId : resetCooltimes) {
                     user.write(UserLocal.skillCooltimeSet(skillId, 0));
+                }
+                // Expire summoned
+                final var summonedIter = locked.get().getSummoned().entrySet().iterator();
+                while (summonedIter.hasNext()) {
+                    final Map.Entry<Integer, Summoned> entry = summonedIter.next();
+                    final Summoned summoned = entry.getValue();
+                    if (now.isBefore(summoned.getExpireTime())) {
+                        continue;
+                    }
+                    summonedIter.remove();
+                    broadcastPacket(summoned.leaveFieldPacket());
                 }
             }
         }

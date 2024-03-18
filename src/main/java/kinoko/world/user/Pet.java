@@ -14,6 +14,14 @@ public final class Pet extends Life implements Encodable {
     public Pet(User owner, Item item) {
         this.owner = owner;
         this.item = item;
+        // Life initialization
+        setX(owner.getX());
+        setY(owner.getY());
+        setFoothold(owner.getFoothold());
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public Item getItem() {
@@ -48,14 +56,18 @@ public final class Pet extends Life implements Encodable {
         return item.getPetData().getPetSkill();
     }
 
+    public int getPetIndex() {
+        return owner.getPetIndex(getItemSn()).orElse(0);
+    }
+
     @Override
     public OutPacket enterFieldPacket() {
-        return PetPacket.petActivated(owner, this, 0);
+        return PetPacket.petActivated(owner, this, getPetIndex());
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        return PetPacket.petDeactivated(owner, 0, 0);
+        return PetPacket.petDeactivated(owner, getPetIndex(), 0);
     }
 
     @Override

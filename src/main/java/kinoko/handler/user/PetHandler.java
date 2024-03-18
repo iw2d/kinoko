@@ -83,6 +83,7 @@ public final class PetHandler {
                 // Resolve pet index
                 final CharacterStat cs = user.getCharacterStat();
                 final boolean hasFollowTheLead = user.getSkillManager().getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
+                System.out.println(hasFollowTheLead);
                 final int petIndex;
                 if (!hasFollowTheLead || bossPet || cs.getPetSn1() == 0) {
                     petIndex = 0;
@@ -97,11 +98,8 @@ public final class PetHandler {
                 }
                 // Create pet and update client
                 final Pet pet = Pet.from(user, item);
-                pet.setX(user.getX());
-                pet.setY(user.getY());
-                pet.setFoothold(user.getFoothold());
                 user.getPets()[petIndex] = pet;
-                user.getField().broadcastPacket(PetPacket.petActivated(user, pet, 0));
+                user.getField().broadcastPacket(PetPacket.petActivated(user, pet, petIndex));
                 user.setPetIndex(petIndex, petSn);
             } else {
                 // Deactivate pet and update client

@@ -32,8 +32,6 @@ public final class Field {
     private final ScheduledFuture<?> fieldEventFuture;
 
     private final UserPool userPool;
-    private final UserObjectPool userObjectPool;
-
     private final MobPool mobPool;
     private final NpcPool npcPool;
     private final DropPool dropPool;
@@ -49,7 +47,6 @@ public final class Field {
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
         // Initialize field object pools
         this.userPool = new UserPool(this);
-        this.userObjectPool = new UserObjectPool(this);
         this.mobPool = new MobPool(this);
         this.npcPool = new NpcPool(this);
         this.dropPool = new DropPool(this);
@@ -94,10 +91,6 @@ public final class Field {
 
     public UserPool getUserPool() {
         return userPool;
-    }
-
-    public UserObjectPool getUserObjectPool() {
-        return userObjectPool;
     }
 
     public MobPool getMobPool() {
@@ -147,7 +140,6 @@ public final class Field {
             reactorPool.expireReactors(now);
         }
         userPool.updateUsers(now);
-        userObjectPool.updateUserObjects(now);
         mobPool.updateMobs(now);
     }
 

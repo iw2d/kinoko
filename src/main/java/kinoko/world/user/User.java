@@ -14,6 +14,9 @@ import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedEnterType;
+import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
@@ -22,6 +25,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.user.funckey.FuncKeyManager;
 import kinoko.world.user.stat.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -36,7 +40,9 @@ public final class User extends Life implements Lockable<User> {
     private final ForcedStat forcedStat = new ForcedStat();
     private final SecondaryStat secondaryStat = new SecondaryStat();
     private final PassiveSkillData passiveSkillData = new PassiveSkillData();
-    private final Pet[] pets = new Pet[GameConstants.PET_COUNT_MAX];
+
+    private final Pet[] pets = new Pet[GameConstants.PET_COUNT_MAX]; // TODO: use a list
+    private final Map<Integer, Summoned> summoned = new HashMap<>();
 
     private Dialog dialog;
     private int portableChairId;
@@ -120,6 +126,10 @@ public final class User extends Life implements Lockable<User> {
 
     public Pet[] getPets() {
         return pets;
+    }
+
+    public Map<Integer, Summoned> getSummoned() {
+        return summoned;
     }
 
     public Dialog getDialog() {
@@ -265,7 +275,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
 
-    // OTHER HELPER METHODS --------------------------------------------------------------------------------------------
+    // PET METHODS --------------------------------------------------------------------------------------------
 
     public long getPetSn(int index) {
         assert index >= 0 && index < GameConstants.PET_COUNT_MAX;
@@ -302,6 +312,34 @@ public final class User extends Life implements Lockable<User> {
             write(WvsContext.statChanged(Stat.PET_3, petSn, true));
         }
     }
+
+
+    // SUMMONED METHODS ------------------------------------------------------------------------------------------------
+
+    public void addSummoned(Summoned summoned) {
+        final Summoned existing = getSummoned().remove(summoned.getId());
+        if (existing != null) {
+            existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
+            getField().broadcastPacket(existing.leaveFieldPacket());
+        }
+        getSummoned().put(summoned.getId(), summoned);
+        getField().broadcastPacket(summoned.enterFieldPacket());
+        summoned.setEnterType(SummonedEnterType.DEFAULT);
+    }
+
+    public void removeSummoned(Summoned summoned) {
+        final Summoned existing = getSummoned().get(summoned.getId());
+        if (existing != null) {
+            getField().broadcastPacket(existing.leaveFieldPacket());
+        }
+    }
+
+    public Optional<Summoned> getSummonedById(int summonedId) {
+        return Optional.ofNullable(getSummoned().get(summonedId));
+    }
+
+
+    // OTHER HELPER METHODS --------------------------------------------------------------------------------------------
 
     public int getFieldId() {
         if (getField() != null) {

@@ -26,29 +26,27 @@ public final class SummonedHandler {
 
     @Handler(InHeader.SUMMONED_MOVE)
     public static void handleSummonedMove(User user, InPacket inPacket) {
-        final int objectId = inPacket.decodeInt(); // dwSummonedID
+        final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
-        final Field field = user.getField();
-        final Optional<Summoned> summonedResult = field.getUserObjectPool().getSummonedById(objectId);
+        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
-            log.error("Received SUMMONED_MOVE for invalid object with ID : {}", objectId);
+            log.error("Received SUMMONED_MOVE for invalid object with ID : {}", summonedId);
             return;
         }
         final Summoned summoned = summonedResult.get();
 
         final MovePath movePath = MovePath.decode(inPacket);
         movePath.applyTo(summoned);
-        field.broadcastPacket(SummonedPacket.move(summoned, movePath), user);
+        user.getField().broadcastPacket(SummonedPacket.move(user, summoned, movePath), user);
     }
 
     @Handler(InHeader.SUMMONED_ATTACK)
     public static void handleSummonedAttack(User user, InPacket inPacket) {
-        final int objectId = inPacket.decodeInt(); // dwSummonedID
+        final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
-        final Field field = user.getField();
-        final Optional<Summoned> summonedResult = field.getUserObjectPool().getSummonedById(objectId);
+        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
-            log.error("Received SUMMONED_ATTACK for invalid object with ID : {}", objectId);
+            log.error("Received SUMMONED_ATTACK for invalid object with ID : {}", summonedId);
             return;
         }
         final Summoned summoned = summonedResult.get();
@@ -111,6 +109,7 @@ public final class SummonedHandler {
         }
 
         // Process attack damage
+        final Field field = user.getField();
         for (AttackInfo ai : attack.getAttackInfo()) {
             final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
@@ -123,6 +122,6 @@ public final class SummonedHandler {
             }
         }
 
-        field.broadcastPacket(SummonedPacket.attack(summoned, attack), user);
+        field.broadcastPacket(SummonedPacket.attack(user, summoned, attack), user);
     }
 }

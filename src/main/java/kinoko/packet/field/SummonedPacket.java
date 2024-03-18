@@ -7,44 +7,46 @@ import kinoko.world.field.summoned.Summoned;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.HitInfo;
+import kinoko.world.user.User;
 
 public final class SummonedPacket {
     // CSummonedPool::OnPacket -----------------------------------------------------------------------------------------
 
-    public static OutPacket summonedEnterField(Summoned summoned) {
+    public static OutPacket summonedEnterField(User user, Summoned summoned) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_ENTER_FIELD);
-        outPacket.encodeInt(summoned.getOwnerId()); // dwCharacterID
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         // CSummonedPool::OnCreated
         outPacket.encodeInt(summoned.getId()); // dwSummonedID
         outPacket.encodeInt(summoned.getSkillId()); // nSkillID
-        outPacket.encodeByte(summoned.getOwnerLevel()); // nCharLevel
+        outPacket.encodeByte(user.getLevel()); // nCharLevel
         outPacket.encodeByte(summoned.getSkillLevel()); // nSLV
         summoned.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket summonedLeaveField(Summoned summoned) {
+    public static OutPacket summonedLeaveField(User user, Summoned summoned) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_LEAVE_FIELD);
-        outPacket.encodeInt(summoned.getOwnerId()); // dwCharacterID
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         // CSummonedPool::OnRemoved
         outPacket.encodeInt(summoned.getId()); // dwSummonedID
+        outPacket.encodeByte(summoned.getLeaveType().getValue());
         return outPacket;
     }
 
-    public static OutPacket move(Summoned summoned, MovePath movePath) {
+    public static OutPacket move(User user, Summoned summoned, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_MOVE);
-        outPacket.encodeInt(summoned.getOwnerId());
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         movePath.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket attack(Summoned summoned, Attack attack) {
+    public static OutPacket attack(User user, Summoned summoned, Attack attack) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_ATTACK);
-        outPacket.encodeInt(summoned.getOwnerId());
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnAttack
-        outPacket.encodeByte(summoned.getOwnerLevel()); // nCharLevel
+        outPacket.encodeByte(user.getLevel()); // nCharLevel
         outPacket.encodeByte(attack.actionAndDir);
         outPacket.encodeByte(attack.getMobCount()); // nMobCount
         for (AttackInfo ai : attack.getAttackInfo()) {
@@ -56,18 +58,18 @@ public final class SummonedPacket {
         return outPacket;
     }
 
-    public static OutPacket skill(Summoned summoned) {
+    public static OutPacket skill(User user, Summoned summoned) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_SKILL);
-        outPacket.encodeInt(summoned.getOwnerId());
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnSkill
         outPacket.encodeByte(0); // actionAndDir
         return outPacket;
     }
 
-    public static OutPacket hit(Summoned summoned, HitInfo hitInfo) {
+    public static OutPacket hit(User user, Summoned summoned, HitInfo hitInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_HIT);
-        outPacket.encodeInt(summoned.getOwnerId());
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnHit
         outPacket.encodeByte(hitInfo.attackIndex.getValue()); // nAttackIdx

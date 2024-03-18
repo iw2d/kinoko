@@ -5,7 +5,6 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
-import kinoko.world.field.summoned.SummonedEnterType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
@@ -100,8 +99,7 @@ public final class Bowman {
             case PHOENIX:
             case FROSTPREY:
                 final Summoned birb = Summoned.from(user, si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
-                user.getField().getUserObjectPool().addSummoned(birb);
-                birb.setEnterType(SummonedEnterType.DEFAULT);
+                user.addSummoned(birb);
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

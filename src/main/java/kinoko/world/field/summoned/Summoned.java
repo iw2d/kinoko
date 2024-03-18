@@ -5,7 +5,6 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
-import kinoko.world.field.UserObject;
 import kinoko.world.field.life.Life;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.user.AvatarLook;
@@ -16,10 +15,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public final class Summoned extends Life implements UserObject, Encodable, Lockable<Summoned> {
+public final class Summoned extends Life implements Encodable, Lockable<Summoned> {
     private final Lock lock = new ReentrantLock();
-    private final int ownerId;
-    private final int ownerLevel;
+    private final User owner;
     private final int skillId;
     private final int skillLevel;
     private final SummonedMoveAbility moveAbility;
@@ -28,30 +26,30 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
     private final Instant expireTime;
 
     private SummonedEnterType enterType = SummonedEnterType.CREATE_SUMMONED;
+    private SummonedLeaveType leaveType = SummonedLeaveType.LEAVE_FIELD;
     private int hp = 1;
 
-    public Summoned(int ownerId, int ownerLevel, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, AvatarLook avatarLook, Instant expireTime) {
-        this.ownerId = ownerId;
-        this.ownerLevel = ownerLevel;
+    public Summoned(User owner, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, AvatarLook avatarLook, Instant expireTime) {
+        this.owner = owner;
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.moveAbility = moveAbility;
         this.assistType = assistType;
         this.avatarLook = avatarLook;
         this.expireTime = expireTime;
+        // Life initialization
+        setId(skillId); // id as skill id to prevent multiple summons
+        setX(owner.getX());
+        setY(owner.getY());
+        setFoothold(owner.getFoothold());
     }
 
-    public Summoned(int ownerId, int ownerLevel, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
-        this(ownerId, ownerLevel, skillId, skillLevel, moveAbility, assistType, null, expireTime);
+    public Summoned(User owner, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
+        this(owner, skillId, skillLevel, moveAbility, assistType, null, expireTime);
     }
 
-    @Override
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public int getOwnerLevel() {
-        return ownerLevel;
+    public User getOwner() {
+        return owner;
     }
 
     public int getSkillId() {
@@ -84,6 +82,14 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
 
     public void setEnterType(SummonedEnterType enterType) {
         this.enterType = enterType;
+    }
+
+    public SummonedLeaveType getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(SummonedLeaveType leaveType) {
+        this.leaveType = leaveType;
     }
 
     public int getHp() {
@@ -121,12 +127,12 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
 
     @Override
     public OutPacket enterFieldPacket() {
-        return SummonedPacket.summonedEnterField(this);
+        return SummonedPacket.summonedEnterField(owner, this);
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        return SummonedPacket.summonedLeaveField(this);
+        return SummonedPacket.summonedLeaveField(owner, this);
     }
 
     @Override
@@ -140,18 +146,13 @@ public final class Summoned extends Life implements UserObject, Encodable, Locka
     }
 
     public static Summoned from(User user, SkillInfo si, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType) {
-        final Summoned summoned = new Summoned(
-                user.getCharacterId(),
-                user.getLevel(),
+        return new Summoned(
+                user,
                 si.getSkillId(),
                 slv,
                 moveAbility,
                 assistType,
                 Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS)
         );
-        summoned.setX(user.getX());
-        summoned.setY(user.getY());
-        summoned.setFoothold(user.getFoothold());
-        return summoned;
     }
 }
