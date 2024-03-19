@@ -12,6 +12,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 
@@ -28,10 +29,10 @@ public final class CharacterData implements Encodable {
     private InventoryManager inventoryManager;
     private SkillManager skillManager;
     private QuestManager questManager;
+    private FriendManager friendManager;
     private ConfigManager configManager;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
-    private int friendMax; // TODO: friend manager
 
     public CharacterData(int accountId) {
         this.accountId = accountId;
@@ -73,6 +74,14 @@ public final class CharacterData implements Encodable {
         this.questManager = questManager;
     }
 
+    public FriendManager getFriendManager() {
+        return friendManager;
+    }
+
+    public void setFriendManager(FriendManager friendManager) {
+        this.friendManager = friendManager;
+    }
+
     public ConfigManager getConfigManager() {
         return configManager;
     }
@@ -95,14 +104,6 @@ public final class CharacterData implements Encodable {
 
     public void setItemSnCounter(AtomicInteger itemSnCounter) {
         this.itemSnCounter = itemSnCounter;
-    }
-
-    public int getFriendMax() {
-        return friendMax;
-    }
-
-    public void setFriendMax(int friendMax) {
-        this.friendMax = friendMax;
     }
 
     public long getNextItemSn() {
@@ -128,7 +129,7 @@ public final class CharacterData implements Encodable {
 
         if (flag.hasFlag(DBChar.CHARACTER)) {
             characterStat.encode(outPacket);
-            outPacket.encodeByte(friendMax); // nFriendMax
+            outPacket.encodeByte(friendManager.getFriendMax()); // nFriendMax
             outPacket.encodeByte(false); // sLinkedCharacter: bool -> str
         }
         if (flag.hasFlag(DBChar.MONEY)) {

@@ -14,6 +14,7 @@ import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.config.ConfigManager;
@@ -74,11 +75,14 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         }
         cd.setQuestManager(qm);
 
+        final FriendManager fm = new FriendManager();
+        fm.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
+        cd.setFriendManager(fm);
+
         final ConfigManager cm = row.get(CharacterTable.CONFIG, ConfigManager.class);
         cd.setConfigManager(cm);
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(CharacterTable.ITEM_SN_COUNTER)));
-        cd.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
         return cd;
     }
 
@@ -221,9 +225,9 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
-                        .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
+                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendManager().getFriendMax()))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
-                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
+                        .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
                         .build()
         );

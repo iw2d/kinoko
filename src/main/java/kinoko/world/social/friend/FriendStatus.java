@@ -1,4 +1,4 @@
-package kinoko.world.friend;
+package kinoko.world.social.friend;
 
 public enum FriendStatus {
     // FS

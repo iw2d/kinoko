@@ -1,14 +1,14 @@
-package kinoko.world.friend;
+package kinoko.world.social.friend;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
-import java.util.Set;
+import java.util.List;
 
 public final class FriendResult implements Encodable {
     private final FriendResultType resultType;
 
-    private Set<Friend> friends;
+    private List<Friend> friends;
     private Friend friend;
     private String reason;
     private int friendMax;

@@ -9,6 +9,8 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.whisper.WhisperResult;
 import kinoko.world.GameConstants;
+import kinoko.world.social.party.TownPortal;
+import kinoko.world.user.User;
 import kinoko.world.user.config.FuncKeyMapped;
 
 public final class FieldPacket {
@@ -59,6 +61,25 @@ public final class FieldPacket {
         for (int key : quickslotKeyMap) {
             outPacket.encodeInt(key);
         }
+        return outPacket;
+    }
+
+
+    // CTownPortalPool::OnPacket ---------------------------------------------------------------------------------------
+
+    public static OutPacket townPortalCreated(User user, TownPortal townPortal, boolean enterField) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_CREATED);
+        outPacket.encodeByte(enterField); // nState : create animation if false
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
+        outPacket.encodeShort(townPortal.getX());
+        outPacket.encodeShort(townPortal.getY());
+        return outPacket;
+    }
+
+    public static OutPacket townPortalRemoved(User user, boolean enterField) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_REMOVED);
+        outPacket.encodeByte(enterField); // nState : remove animation if false
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         return outPacket;
     }
 
