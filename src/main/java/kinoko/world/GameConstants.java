@@ -2,12 +2,10 @@ package kinoko.world;
 
 import kinoko.util.Tuple;
 import kinoko.world.job.Job;
-import kinoko.world.user.funckey.FuncKeyMapped;
-import kinoko.world.user.funckey.FuncKeyType;
+import kinoko.world.user.config.FuncKeyMapped;
+import kinoko.world.user.config.FuncKeyType;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 public final class GameConstants {
     // USER CONSTANTS --------------------------------------------------------------------------------------------------
@@ -37,9 +35,11 @@ public final class GameConstants {
 
     public static final int DAMAGE_MAX = 999_999;
 
+    public static final int MACRO_SYS_DATA_SIZE = 5;
+    public static final int MACRO_SKILL_COUNT = 3;
     public static final int FUNC_KEY_MAP_SIZE = 89;
-    public static final Map<Integer, FuncKeyMapped> DEFAULT_FUNC_KEY_MAP = defaultFuncKeyMap(); // aDefaultFKM
-    public static final int QUICKSLOT_KEY_SIZE = 8;
+    public static final FuncKeyMapped[] DEFAULT_FUNC_KEY_MAP = defaultFuncKeyMap(); // aDefaultFKM
+    public static final int QUICKSLOT_KEY_MAP_SIZE = 8;
     public static final int[] DEFAULT_QUICKSLOT_KEY_MAP = new int[]{ 0x2A, 0x52, 0x47, 0x49, 0x1D, 0x53, 0x4F, 0x51 }; // aDefaultQKM
 
     public static final int UNDEFINED_FIELD_ID = 999999999;
@@ -208,16 +208,17 @@ public final class GameConstants {
         return n;
     }
 
-    private static Map<Integer, FuncKeyMapped> defaultFuncKeyMap() {
-        final Map<Integer, FuncKeyMapped> defaultFuncKeyMap = new HashMap<>();
+    private static FuncKeyMapped[] defaultFuncKeyMap() {
+        final FuncKeyMapped[] defaultFuncKeyMap = new FuncKeyMapped[FUNC_KEY_MAP_SIZE];
+        Arrays.fill(defaultFuncKeyMap, FuncKeyMapped.none());
         final int[] indexArray = { 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 23, 24, 25, 26, 27, 29, 31, 33, 34, 35, 37, 38, 39, 40, 41, 43, 44, 45, 46, 50, 56, 57, 59, 60, 61, 62, 63, 64, 65 };
         final int[] typeArray = { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6 };
         final int[] idArray = { 10, 12, 13, 18, 24, 21, 29, 8, 5, 0, 4, 28, 1, 25, 19, 14, 15, 52, 2, 26, 17, 11, 3, 20, 27, 16, 23, 9, 50, 51, 6, 7, 53, 54, 100, 101, 102, 103, 104, 105, 106 };
         for (int i = 0; i < indexArray.length; i++) {
             final FuncKeyType type = FuncKeyType.getByValue(typeArray[i]);
             assert type != null;
-            defaultFuncKeyMap.put(indexArray[i], FuncKeyMapped.of(type, idArray[i]));
+            defaultFuncKeyMap[indexArray[i]] = FuncKeyMapped.of(type, idArray[i]);
         }
-        return Collections.unmodifiableMap(defaultFuncKeyMap);
+        return defaultFuncKeyMap;
     }
 }

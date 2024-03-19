@@ -22,7 +22,7 @@ import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
-import kinoko.world.user.funckey.FuncKeyManager;
+import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.*;
 
 import java.util.*;
@@ -102,8 +102,8 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getQuestManager();
     }
 
-    public FuncKeyManager getFuncKeyManager() {
-        return characterData.getFuncKeyManager();
+    public ConfigManager getConfigManager() {
+        return characterData.getConfigManager();
     }
 
     public BasicStat getBasicStat() {

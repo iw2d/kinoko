@@ -24,7 +24,7 @@ import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.funckey.FuncKeyManager;
+import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.StatConstants;
@@ -283,11 +283,9 @@ public final class LoginHandler {
         final QuestManager qm = new QuestManager();
         characterData.setQuestManager(qm);
 
-        // Initialize Func Key Manager
-        final FuncKeyManager fkm = new FuncKeyManager();
-        fkm.updateFuncKeyMap(GameConstants.DEFAULT_FUNC_KEY_MAP);
-        fkm.setQuickslotKeyMap(GameConstants.DEFAULT_QUICKSLOT_KEY_MAP);
-        characterData.setFuncKeyManager(fkm);
+        // Initialize Config Manager
+        final ConfigManager cm = ConfigManager.defaults();
+        characterData.setConfigManager(cm);
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {

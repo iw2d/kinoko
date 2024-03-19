@@ -28,7 +28,7 @@ import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.funckey.FuncKeyManager;
+import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
@@ -169,13 +169,13 @@ public final class MigrationHandler {
             // Set field packet sent here
             user.warp(targetField, targetPortal, true, false);
 
-
             // Initialize func keys and quickslot
-            final FuncKeyManager fkm = user.getFuncKeyManager();
-            user.write(FieldPacket.funcKeyMappedInit(fkm.getFuncKeyMap()));
-            user.write(FieldPacket.quickSlotMappedInit(fkm.getQuickslotKeyMap()));
-            user.write(FieldPacket.petConsumeItemInit(fkm.getPetConsumeItem()));
-            user.write(FieldPacket.petConsumeMpItemInit(fkm.getPetConsumeMpItem()));
+            final ConfigManager cm = user.getConfigManager();
+            user.write(WvsContext.macroSysDataInit(cm.getMacroSysData()));
+            user.write(FieldPacket.funcKeyMappedInit(cm.getFuncKeyMap()));
+            user.write(FieldPacket.quickSlotMappedInit(cm.getQuickslotKeyMap()));
+            user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
+            user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
             // Check memos
             final boolean hasMemo = DatabaseManager.memoAccessor().hasMemo(user.getCharacterId());

@@ -1,4 +1,4 @@
-package kinoko.world.user.funckey;
+package kinoko.world.user.config;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;

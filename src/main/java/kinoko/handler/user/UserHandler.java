@@ -50,10 +50,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
 import kinoko.world.user.User;
-import kinoko.world.user.funckey.FuncKeyManager;
-import kinoko.world.user.funckey.FuncKeyMapped;
-import kinoko.world.user.funckey.FuncKeyMappedType;
-import kinoko.world.user.funckey.FuncKeyType;
+import kinoko.world.user.config.*;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -610,6 +607,19 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.USER_MACRO_SYS_DATA_MODIFIED)
+    public static void handleUserMacroSysDataModified(User user, InPacket inPacket) {
+        // MACROSYSDATA::Encode
+        final List<SingleMacro> macroSysData = new ArrayList<>();
+        final int size = inPacket.decodeByte();
+        for (int i = 0; i < size; i++) {
+            macroSysData.add(SingleMacro.decode(inPacket));
+        }
+        try (var locked = user.acquire()) {
+            locked.get().getConfigManager().updateMacroSysData(macroSysData);
+        }
+    }
+
 
     // SOCIAL HANDLERS -------------------------------------------------------------------------------------------------
 
@@ -813,11 +823,11 @@ public final class UserHandler {
         final int type = inPacket.decodeInt();
         final FuncKeyMappedType funcKeyMappedType = FuncKeyMappedType.getByValue(type);
         try (var locked = user.acquire()) {
-            final FuncKeyManager fkm = locked.get().getFuncKeyManager();
+            final ConfigManager cm = locked.get().getConfigManager();
             switch (funcKeyMappedType) {
                 case KEY_MODIFIED -> {
                     final int size = inPacket.decodeInt(); // *(anChangedIdx.a - 1)
-                    final Map<Integer, FuncKeyMapped> changed = new HashMap<>();
+                    final Map<Integer, FuncKeyMapped> updates = new HashMap<>();
                     for (int i = 0; i < size; i++) {
                         final int index = inPacket.decodeInt();
 
@@ -831,17 +841,17 @@ public final class UserHandler {
                             log.error("Received unknown func key type {}", funcKeyValue);
                             return;
                         }
-                        changed.put(index, new FuncKeyMapped(funcKeyType, funcKeyId));
+                        updates.put(index, FuncKeyMapped.of(funcKeyType, funcKeyId));
                     }
-                    fkm.updateFuncKeyMap(changed);
+                    cm.updateFuncKeyMap(updates);
                 }
                 case PET_CONSUME_ITEM_MODIFIED -> {
                     final int itemId = inPacket.decodeInt(); // nPetConsumeItemID
-                    fkm.setPetConsumeItem(itemId);
+                    cm.setPetConsumeItem(itemId);
                 }
                 case PET_CONSUME_MP_ITEM_MODIFIED -> {
                     final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
-                    fkm.setPetConsumeMpItem(itemId);
+                    cm.setPetConsumeMpItem(itemId);
                 }
                 case null -> {
                     log.error("Received unknown type {} for FUNC_KEY_MAPPED_MODIFIED", type);
@@ -860,13 +870,13 @@ public final class UserHandler {
 
     @Handler(InHeader.QUICKSLOT_KEY_MAPPED_MODIFIED)
     public static void handleQuickslotKeyMappedModified(User user, InPacket inPacket) {
-        final int[] quickslotKeyMap = new int[GameConstants.QUICKSLOT_KEY_SIZE];
+        final int[] quickslotKeyMap = new int[GameConstants.QUICKSLOT_KEY_MAP_SIZE];
         for (int i = 0; i < quickslotKeyMap.length; i++) {
             quickslotKeyMap[i] = inPacket.decodeInt();
         }
         try (var locked = user.acquire()) {
-            final FuncKeyManager fkm = locked.get().getFuncKeyManager();
-            fkm.setQuickslotKeyMap(quickslotKeyMap);
+            final ConfigManager cm = locked.get().getConfigManager();
+            cm.updateQuickSlotKeyMap(quickslotKeyMap);
         }
     }
 

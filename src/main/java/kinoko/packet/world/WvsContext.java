@@ -13,6 +13,7 @@ import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.config.SingleMacro;
 import kinoko.world.user.stat.*;
 
 import java.util.List;
@@ -204,6 +205,15 @@ public final class WvsContext {
     public static OutPacket broadcastMsg(BroadcastMessage message) {
         final OutPacket outPacket = OutPacket.of(OutHeader.BROADCAST_MSG);
         message.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket macroSysDataInit(List<SingleMacro> macroSysData) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MACRO_SYS_DATA_INIT);
+        outPacket.encodeByte(macroSysData.size());
+        for (SingleMacro macroSysDatum : macroSysData) {
+            macroSysDatum.encode(outPacket); // SINGLEMACRO::Decode
+        }
         return outPacket;
     }
 }

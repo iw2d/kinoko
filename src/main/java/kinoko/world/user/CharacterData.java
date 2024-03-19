@@ -12,7 +12,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.funckey.FuncKeyManager;
+import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Duration;
@@ -28,7 +28,7 @@ public final class CharacterData implements Encodable {
     private InventoryManager inventoryManager;
     private SkillManager skillManager;
     private QuestManager questManager;
-    private FuncKeyManager funcKeyManager;
+    private ConfigManager configManager;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
     private int friendMax; // TODO: friend manager
@@ -73,12 +73,12 @@ public final class CharacterData implements Encodable {
         this.questManager = questManager;
     }
 
-    public FuncKeyManager getFuncKeyManager() {
-        return funcKeyManager;
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
-    public void setFuncKeyManager(FuncKeyManager funcKeyManager) {
-        this.funcKeyManager = funcKeyManager;
+    public void setConfigManager(ConfigManager configManager) {
+        this.configManager = configManager;
     }
 
     public WildHunterInfo getWildHunterInfo() {

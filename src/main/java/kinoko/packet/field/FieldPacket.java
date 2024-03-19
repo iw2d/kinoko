@@ -9,10 +9,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.whisper.WhisperResult;
 import kinoko.world.GameConstants;
-import kinoko.world.user.funckey.FuncKeyMapped;
-import kinoko.world.user.funckey.FuncKeyType;
-
-import java.util.Map;
+import kinoko.world.user.config.FuncKeyMapped;
 
 public final class FieldPacket {
     // CField::OnPacket ------------------------------------------------------------------------------------------------
@@ -58,8 +55,9 @@ public final class FieldPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.QUICKSLOT_MAPPED_INIT);
         outPacket.encodeByte(true); // defaults if false
         // aQuickslotKeyMapped (32)
-        for (int i = 0; i < quickslotKeyMap.length; i++) {
-            outPacket.encodeInt(quickslotKeyMap[i]);
+        assert quickslotKeyMap.length == GameConstants.QUICKSLOT_KEY_MAP_SIZE;
+        for (int key : quickslotKeyMap) {
+            outPacket.encodeInt(key);
         }
         return outPacket;
     }
@@ -104,18 +102,13 @@ public final class FieldPacket {
 
     // CFuncKeyMappedMan::OnPacket -------------------------------------------------------------------------------------
 
-    public static OutPacket funcKeyMappedInit(Map<Integer, FuncKeyMapped> funcKeyMap) {
+    public static OutPacket funcKeyMappedInit(FuncKeyMapped[] funcKeyMap) {
         final OutPacket outPacket = OutPacket.of(OutHeader.FUNC_KEY_MAPPED_INIT);
         outPacket.encodeByte(false); // defaults if true
         // 89 * FUNC_KEY_MAPPED (5)
-        for (int i = 0; i < GameConstants.FUNC_KEY_MAP_SIZE; i++) {
-            final FuncKeyMapped funcKeyMapped = funcKeyMap.get(i);
-            if (funcKeyMapped != null) {
-                funcKeyMapped.encode(outPacket);
-            } else {
-                outPacket.encodeByte(FuncKeyType.NONE.getValue());
-                outPacket.encodeInt(0);
-            }
+        assert funcKeyMap.length == GameConstants.FUNC_KEY_MAP_SIZE;
+        for (FuncKeyMapped funcKeyMapped : funcKeyMap) {
+            funcKeyMapped.encode(outPacket);
         }
         return outPacket;
     }
