@@ -39,7 +39,6 @@ public final class ItemHandler {
             user.dispose();
             return;
         }
-        final ItemInfo ii = itemInfoResult.get();
 
         try (var locked = user.acquire()) {
             // Consume item
@@ -50,26 +49,8 @@ public final class ItemHandler {
             }
             user.write(WvsContext.inventoryOperation(consumeItemResult.get(), true));
 
-            // Apply stat change, TODO: NL/NW alchemist and Citizen potion mastery
-            for (var entry : ii.getItemSpecs().entrySet()) {
-                switch (entry.getKey()) {
-                    case hp -> {
-                        user.addHp(ii.getSpec(ItemSpecType.hp));
-                    }
-                    case mp -> {
-                        user.addMp(ii.getSpec(ItemSpecType.mp));
-                    }
-                    case hpR -> {
-                        user.addHp(user.getMaxHp() * ii.getSpec(ItemSpecType.hpR) / 100);
-                    }
-                    case mpR -> {
-                        user.addMp(user.getMaxMp() * ii.getSpec(ItemSpecType.mpR) / 100);
-                    }
-                    default -> {
-                        log.error("Unhandled item spec type : {}", entry.getKey().name());
-                    }
-                }
-            }
+            // Apply stat change
+            changeStat(locked, itemInfoResult.get());
         }
     }
 
@@ -181,6 +162,36 @@ public final class ItemHandler {
         }
     }
 
+    @Handler(InHeader.PET_STAT_CHANGE_ITEM_USE_REQUEST)
+    public static void handlePetStatChangeItemUseRequest(User user, InPacket inPacket) {
+        final long petSn = inPacket.decodeLong();
+        inPacket.decodeBoolean(); // bBuffSkill
+        inPacket.decodeInt(); // update_time
+        final int position = inPacket.decodeShort(); // nPOS
+        final int itemId = inPacket.decodeInt(); // nIdemID
+
+        // Resolve item
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item : {}", itemId);
+            user.dispose();
+            return;
+        }
+
+        try (var locked = user.acquire()) {
+            // Consume item
+            final Optional<InventoryOperation> consumeItemResult = consumeItem(locked, position, itemId);
+            if (consumeItemResult.isEmpty()) {
+                user.dispose();
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(consumeItemResult.get(), true));
+
+            // Apply stat change
+            changeStat(locked, itemInfoResult.get());
+        }
+    }
+
     private static Optional<InventoryOperation> consumeItem(Locked<User> locked, int position, int itemId) {
         final User user = locked.get();
         final InventoryType inventoryType = InventoryType.getByItemId(itemId);
@@ -199,5 +210,29 @@ public final class ItemHandler {
             throw new IllegalStateException("Could not remove item from inventory");
         }
         return removeResult;
+    }
+
+    private static void changeStat(Locked<User> locked, ItemInfo ii) {
+        // TODO: NL/NW alchemist and Citizen potion mastery
+        final User user = locked.get();
+        for (var entry : ii.getItemSpecs().entrySet()) {
+            switch (entry.getKey()) {
+                case hp -> {
+                    user.addHp(ii.getSpec(ItemSpecType.hp));
+                }
+                case mp -> {
+                    user.addMp(ii.getSpec(ItemSpecType.mp));
+                }
+                case hpR -> {
+                    user.addHp(user.getMaxHp() * ii.getSpec(ItemSpecType.hpR) / 100);
+                }
+                case mpR -> {
+                    user.addMp(user.getMaxMp() * ii.getSpec(ItemSpecType.mpR) / 100);
+                }
+                default -> {
+                    log.error("Unhandled item spec type : {}", entry.getKey().name());
+                }
+            }
+        }
     }
 }
