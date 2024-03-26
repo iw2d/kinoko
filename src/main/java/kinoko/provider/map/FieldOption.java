@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum FieldOption {
+    // FIELDOPT
     MOVE_LIMIT(0x1),
     SKILL_LIMIT(0x2),
     SUMMON_LIMIT(0x4),

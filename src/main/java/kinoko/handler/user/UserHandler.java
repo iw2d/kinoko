@@ -29,7 +29,7 @@ import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
 import kinoko.server.memo.MemoResult;
 import kinoko.server.memo.MemoType;
-import kinoko.server.node.UserProxy;
+import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.NpcScriptManager;
 import kinoko.server.script.ScriptAnswer;
@@ -631,20 +631,20 @@ public final class UserHandler {
         switch (whisperFlag) {
             case LOCATION_REQUEST, LOCATION_REQUEST_F -> {
                 final String targetName = inPacket.decodeString();
-                // Submit whisper request
-                final CompletableFuture<Optional<UserProxy>> whisperResultFuture = user.getConnectedServer()
-                        .submitWhisperRequest(WhisperFlag.LOCATION, user.getCharacterName(), targetName, null);
+                // Query target user
+                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
                 try {
-                    final Optional<UserProxy> whisperResult = whisperResultFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-                    if (whisperResult.isEmpty()) {
+                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                    final Optional<RemoteUser> userResult = queryResult.stream().findFirst();
+                    if (userResult.isEmpty()) {
                         user.write(FieldPacket.whisper(LocationResult.none(targetName)));
                         return;
                     }
-                    final UserProxy userProxy = whisperResult.get();
-                    if (userProxy.getChannelId() == user.getChannelId()) {
-                        user.write(FieldPacket.whisper(LocationResult.sameChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, userProxy.getFieldId())));
+                    final RemoteUser remoteUser = userResult.get();
+                    if (remoteUser.getChannelId() == user.getChannelId()) {
+                        user.write(FieldPacket.whisper(LocationResult.sameChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, remoteUser.getFieldId())));
                     } else {
-                        user.write(FieldPacket.whisper(LocationResult.otherChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, userProxy.getChannelId())));
+                        user.write(FieldPacket.whisper(LocationResult.otherChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, remoteUser.getChannelId())));
                     }
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
                     log.error("Exception caught while waiting for whisper result", e);
@@ -655,12 +655,17 @@ public final class UserHandler {
             case WHISPER_REQUEST, WHISPER_REQUEST_MANAGER -> {
                 final String targetName = inPacket.decodeString();
                 final String message = inPacket.decodeString();
-                // Submit whisper request
-                final CompletableFuture<Optional<UserProxy>> whisperResultFuture = user.getConnectedServer()
-                        .submitWhisperRequest(WhisperFlag.WHISPER, user.getCharacterName(), targetName, message);
+                // Query target user
+                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
                 try {
-                    final Optional<UserProxy> whisperResult = whisperResultFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-                    user.write(FieldPacket.whisper(WhisperResult.whisperResult(targetName, whisperResult.isPresent())));
+                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                    if (queryResult.isEmpty()) {
+                        user.write(FieldPacket.whisper(WhisperResult.whisperResult(targetName, false)));
+                        return;
+                    }
+                    // Write packet to target user
+                    user.getConnectedServer().submitUserPacketRequest(targetName, FieldPacket.whisper(WhisperResult.whisperReceive(user.getChannelId(), user.getCharacterName(), message)));
+                    user.write(FieldPacket.whisper(WhisperResult.whisperResult(targetName, true)));
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
                     log.error("Exception caught while waiting for whisper result", e);
                     user.write(FieldPacket.whisper(WhisperResult.whisperResult(targetName, false)));
@@ -669,7 +674,7 @@ public final class UserHandler {
             }
             case WHISPER_BLOCKED -> {
                 final String targetName = inPacket.decodeString();
-                user.getConnectedServer().submitWhisperRequest(WhisperFlag.BLOCKED, user.getCharacterName(), targetName, null); // response not required
+                user.getConnectedServer().submitUserPacketRequest(targetName, FieldPacket.whisper(WhisperResult.whisperBlocked(user.getCharacterName())));
             }
             case null -> {
                 log.error("Unknown whisper flag : {}", flag);

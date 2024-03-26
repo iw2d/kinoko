@@ -57,29 +57,38 @@ import java.util.Map;
  *      8 : block until MIGRATION_RESULT received from CentralServerNode
  *     12 : perform migration, send USER_CONNECT to central server
  *
- * Location
+ * User tracking
  *   ChannelServerNode
- *      1 : receive WHISPER (channel server) from source client [LOCATION_REQUEST]
- *      2 : send WHISPER_REQUEST to CentralServerNode
- *      5 : receive WHISPER_RESULT from CentralServerNode
- *      6 : send WHISPER (channel server) to source client [LOCATION_RESULT]
+ *      1 : receive MIGRATE_IN (channel server)
+ *      2 : send USER_CONNECT to CentralServerNode
+ *      4 : user in channel server requires updating (level, job, location)
+ *      5 : send USER_UPDATE to CentralServerNode
+ *      7 : user disconnects from channel server
+ *      8 : send USER_DISCONNECT to CentralServerNode
  *   CentralServerNode
- *      3 : receive WHISPER_REQUEST, resolve target from UserStorage
- *      4 : send WHISPER_RESULT to ChannelServerNode
+ *      3 : receive USER_CONNECT, store in UserStorage
+ *      6 : receive USER_UPDATE, update in UserStorage
+ *      7 : receive USER_DISCONNECT, remove from UserStorage
  *
- * Whisper
+ * User remote packets
  *   ChannelServerNode (source)
- *      1 : receive WHISPER (channel server) from source client
- *      2 : send WHISPER_REQUEST to CentralServerNode
- *      5 : receive WHISPER_RESULT from CentralServerNode
- *      6 : send WHISPER (channel server) to source client
+ *      1 : send USER_REMOTE_PACKET [character name, packet] to CentralServerNode
  *   CentralServerNode
- *      3 : receive WHISPER_REQUEST, resolve target from UserStorage
- *      4 : send WHISPER_RESULT to source ChannelServerNode
- *      7 : send WHISPER_RECEIVE to target ChannelServerNode [if whisper]
+ *      2 : receive USER_REMOTE_PACKET
+ *      3 : resolve target user and channel using UserStorage
+ *      4 : send USER_REMOTE_PACKET [character id, packet] to target ChannelServerNode
  *   ChannelServerNode (target)
- *      8 : receive WHISPER_RECEIVE, resolve target client from ClientStorage
- *      9 : send WHISPER (channel server) to target client
+ *      5 : receive USER_REMOTE_PACKET
+ *      6 : send packet to target user
+ *
+ * User query
+ *   ChannelServerNode
+ *      1 : send USER_QUERY_REQUEST [character names] to CentralServerNode
+ *      5 : receive USER_QUERY_RESULT and resolve future
+ *   CentralServerNode
+ *      2 : receive USER_QUERY_REQUEST
+ *      3 : resolve queried users from UserStorage
+ *      4 : send USER_QUERY_RESULT to ChannelServerNode
  * </pre>
  */
 public enum CentralPacketHeader {
@@ -94,9 +103,10 @@ public enum CentralPacketHeader {
     USER_CONNECT,
     USER_UPDATE,
     USER_DISCONNECT,
-    WHISPER_REQUEST,
-    WHISPER_RESULT,
-    WHISPER_RECEIVE;
+    USER_PACKET_REQUEST,
+    USER_PACKET_RECEIVE,
+    USER_QUERY_REQUEST,
+    USER_QUERY_RESULT;
 
     private static final Map<Integer, CentralPacketHeader> headerMap = new HashMap<>();
 

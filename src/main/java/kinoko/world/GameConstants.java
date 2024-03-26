@@ -35,6 +35,7 @@ public final class GameConstants {
 
     public static final int DAMAGE_MAX = 999_999;
 
+    public static final int FRIEND_MAX = 100;
     public static final int PARTY_MAX = 6;
     public static final int EXPEDITION_MAX = 5;
 

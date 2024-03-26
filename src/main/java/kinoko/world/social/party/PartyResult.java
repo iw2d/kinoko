@@ -1,6 +1,6 @@
 package kinoko.world.social.party;
 
-import kinoko.server.node.UserProxy;
+import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
@@ -8,7 +8,7 @@ public final class PartyResult implements Encodable {
     private final PartyResultType resultType;
 
     private Party party;
-    private UserProxy user;
+    private RemoteUser user;
     private TownPortal townPortal;
     private int int1;
     private boolean bool1;

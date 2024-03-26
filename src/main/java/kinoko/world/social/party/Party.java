@@ -1,6 +1,6 @@
 package kinoko.world.social.party;
 
-import kinoko.server.node.UserProxy;
+import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.GameConstants;
@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public final class Party implements Encodable {
-    private static final UserProxy EMPTY_MEMBER = new UserProxy(0, 0, 0, 0, "", 0, 0);
+    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, 0, 0, "", 0, 0);
     private final int partyId;
-    private final List<UserProxy> partyMembers = new ArrayList<>();
-    private UserProxy partyLeader;
+    private final List<RemoteUser> partyMembers = new ArrayList<>();
+    private RemoteUser partyLeader;
 
     public Party(int partyId) {
         this.partyId = partyId;
@@ -23,7 +23,7 @@ public final class Party implements Encodable {
         return partyId;
     }
 
-    public void forEachMember(Consumer<UserProxy> consumer) {
+    public void forEachMember(Consumer<RemoteUser> consumer) {
         for (int i = 0; i < GameConstants.PARTY_MAX; i++) {
             if (i < partyMembers.size()) {
                 consumer.accept(partyMembers.get(i));

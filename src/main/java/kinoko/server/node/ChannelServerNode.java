@@ -9,7 +9,7 @@ import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
-import kinoko.server.whisper.WhisperFlag;
+import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,33 +98,34 @@ public final class ChannelServerNode extends ServerNode {
     }
 
     public void notifyUserConnect(User user) {
-        centralClientFuture.channel().writeAndFlush(CentralPacket.userConnect(UserProxy.from(user)));
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userConnect(RemoteUser.from(user)));
     }
 
     public void notifyUserUpdate(User user) {
-        centralClientFuture.channel().writeAndFlush(CentralPacket.userUpdate(UserProxy.from(user)));
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userUpdate(RemoteUser.from(user)));
     }
 
     public void notifyUserDisconnect(User user) {
-        centralClientFuture.channel().writeAndFlush(CentralPacket.userDisconnect(UserProxy.from(user)));
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userDisconnect(RemoteUser.from(user)));
     }
 
+    public void submitUserPacketRequest(String characterName, OutPacket remotePacket) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketRequest(characterName, remotePacket));
+    }
 
-    // WHISPER METHODS -------------------------------------------------------------------------------------------------
-
-    public CompletableFuture<Optional<UserProxy>> submitWhisperRequest(WhisperFlag flag, String sourceCharacterName, String targetCharacterName, String message) {
+    public CompletableFuture<Set<RemoteUser>> submitUserQueryRequest(Set<String> characterNames) {
         final int requestId = getNewRequestId();
-        final CompletableFuture<Optional<UserProxy>> whisperRequestFuture = new CompletableFuture<>();
-        requestFutures.put(requestId, whisperRequestFuture);
-        centralClientFuture.channel().writeAndFlush(CentralPacket.whisperRequest(flag, requestId, sourceCharacterName, targetCharacterName, message));
-        return whisperRequestFuture;
+        final CompletableFuture<Set<RemoteUser>> userRequestFuture = new CompletableFuture<>();
+        requestFutures.put(requestId, userRequestFuture);
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userQueryRequest(requestId, characterNames));
+        return userRequestFuture;
     }
 
     @SuppressWarnings("unchecked")
-    public void completeWhisperRequest(int requestId, UserProxy userProxy) {
-        final CompletableFuture<Optional<UserProxy>> whisperRequestFuture = (CompletableFuture<Optional<UserProxy>>) requestFutures.remove(requestId);
-        if (whisperRequestFuture != null) {
-            whisperRequestFuture.complete(Optional.ofNullable(userProxy));
+    public void completeUserQueryRequest(int requestId, Set<RemoteUser> remoteUsers) {
+        final CompletableFuture<Set<RemoteUser>> userRequestFuture = (CompletableFuture<Set<RemoteUser>>) requestFutures.remove(requestId);
+        if (userRequestFuture != null) {
+            userRequestFuture.complete(remoteUsers);
         }
     }
 

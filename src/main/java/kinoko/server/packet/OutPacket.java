@@ -62,6 +62,12 @@ public interface OutPacket {
         return new NioBufferOutPacket();
     }
 
+    static OutPacket of(byte[] data) {
+        final OutPacket outPacket = of();
+        outPacket.encodeArray(data);
+        return outPacket;
+    }
+
     static OutPacket of(OutHeader op) {
         final OutPacket outPacket = of();
         outPacket.encodeShort(op.getValue());

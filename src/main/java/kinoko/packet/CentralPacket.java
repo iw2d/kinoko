@@ -2,10 +2,11 @@ package kinoko.packet;
 
 import kinoko.server.netty.CentralPacketHeader;
 import kinoko.server.node.MigrationInfo;
+import kinoko.server.node.RemoteUser;
 import kinoko.server.node.TransferInfo;
-import kinoko.server.node.UserProxy;
 import kinoko.server.packet.OutPacket;
-import kinoko.server.whisper.WhisperFlag;
+
+import java.util.Set;
 
 public final class CentralPacket {
     public static OutPacket initializeRequest() {
@@ -66,56 +67,59 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket userConnect(UserProxy userProxy) {
+    public static OutPacket userConnect(RemoteUser remoteUser) {
         final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_CONNECT);
-        userProxy.encode(outPacket);
+        remoteUser.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket userUpdate(UserProxy userProxy) {
+    public static OutPacket userUpdate(RemoteUser remoteUser) {
         final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_UPDATE);
-        userProxy.encode(outPacket);
+        remoteUser.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket userDisconnect(UserProxy userProxy) {
+    public static OutPacket userDisconnect(RemoteUser remoteUser) {
         final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_DISCONNECT);
-        userProxy.encode(outPacket);
+        remoteUser.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket whisperRequest(WhisperFlag flag, int requestId, String sourceCharacterName, String targetCharacterName, String message) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.WHISPER_REQUEST);
+    public static OutPacket userPacketRequest(String characterName, OutPacket remotePacket) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_PACKET_REQUEST);
+        outPacket.encodeString(characterName);
+        final byte[] packetData = remotePacket.getData();
+        outPacket.encodeInt(packetData.length);
+        outPacket.encodeArray(packetData);
+        return outPacket;
+    }
+
+    public static OutPacket userPacketReceive(int characterId, OutPacket remotePacket) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_PACKET_RECEIVE);
+        outPacket.encodeInt(characterId);
+        final byte[] packetData = remotePacket.getData();
+        outPacket.encodeInt(packetData.length);
+        outPacket.encodeArray(packetData);
+        return outPacket;
+    }
+
+    public static OutPacket userQueryRequest(int requestId, Set<String> characterNames) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_QUERY_REQUEST);
         outPacket.encodeInt(requestId);
-        outPacket.encodeString(sourceCharacterName);
-        outPacket.encodeString(targetCharacterName);
-        outPacket.encodeByte(flag.getValue());
-        if (flag == WhisperFlag.WHISPER) {
-            outPacket.encodeString(message);
+        outPacket.encodeInt(characterNames.size());
+        for (String characterName : characterNames) {
+            outPacket.encodeString(characterName);
         }
         return outPacket;
     }
 
-    public static OutPacket whisperResult(int requestId, UserProxy userProxy) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.WHISPER_RESULT);
+    public static OutPacket userQueryResult(int requestId, Set<RemoteUser> remoteUsers) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_QUERY_RESULT);
         outPacket.encodeInt(requestId);
-        outPacket.encodeByte(userProxy != null);
-        if (userProxy != null) {
-            userProxy.encode(outPacket);
+        outPacket.encodeInt(remoteUsers.size());
+        for (RemoteUser remoteUser : remoteUsers) {
+            remoteUser.encode(outPacket);
         }
         return outPacket;
     }
-
-    public static OutPacket whisperReceive(WhisperFlag flag, int targetCharacterId, int sourceChannelId, String sourceCharacterName, String message) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.WHISPER_RECEIVE);
-        outPacket.encodeInt(targetCharacterId);
-        outPacket.encodeInt(sourceChannelId);
-        outPacket.encodeString(sourceCharacterName);
-        outPacket.encodeByte(flag.getValue());
-        if (flag == WhisperFlag.WHISPER) {
-            outPacket.encodeString(message);
-        }
-        return outPacket;
-    }
-
 }

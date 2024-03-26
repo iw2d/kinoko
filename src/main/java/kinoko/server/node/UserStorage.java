@@ -8,33 +8,33 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public final class UserStorage {
     private final Lock lock = new ReentrantLock();
-    private final Map<Integer, UserProxy> mapByAccountId = new HashMap<>();
-    private final Map<Integer, UserProxy> mapByCharacterId = new HashMap<>();
-    private final Map<String, UserProxy> mapByCharacterName = new HashMap<>();
+    private final Map<Integer, RemoteUser> mapByAccountId = new HashMap<>();
+    private final Map<Integer, RemoteUser> mapByCharacterId = new HashMap<>();
+    private final Map<String, RemoteUser> mapByCharacterName = new HashMap<>();
 
-    public void putUser(UserProxy userProxy) {
+    public void putUser(RemoteUser remoteUser) {
         lock.lock();
         try {
-            mapByAccountId.put(userProxy.getAccountId(), userProxy);
-            mapByCharacterId.put(userProxy.getCharacterId(), userProxy);
-            mapByCharacterName.put(normalizeName(userProxy.getCharacterName()), userProxy);
+            mapByAccountId.put(remoteUser.getAccountId(), remoteUser);
+            mapByCharacterId.put(remoteUser.getCharacterId(), remoteUser);
+            mapByCharacterName.put(normalizeName(remoteUser.getCharacterName()), remoteUser);
         } finally {
             lock.unlock();
         }
     }
 
-    public void removeUser(UserProxy userProxy) {
+    public void removeUser(RemoteUser remoteUser) {
         lock.lock();
         try {
-            mapByAccountId.remove(userProxy.getAccountId());
-            mapByCharacterId.remove(userProxy.getCharacterId());
-            mapByCharacterName.remove(normalizeName(userProxy.getCharacterName()));
+            mapByAccountId.remove(remoteUser.getAccountId());
+            mapByCharacterId.remove(remoteUser.getCharacterId());
+            mapByCharacterName.remove(normalizeName(remoteUser.getCharacterName()));
         } finally {
             lock.unlock();
         }
     }
 
-    public Optional<UserProxy> getByAccountId(int accountId) {
+    public Optional<RemoteUser> getByAccountId(int accountId) {
         lock.lock();
         try {
             return Optional.ofNullable(mapByAccountId.get(accountId));
@@ -43,7 +43,7 @@ public final class UserStorage {
         }
     }
 
-    public Optional<UserProxy> getByCharacterId(int characterId) {
+    public Optional<RemoteUser> getByCharacterId(int characterId) {
         lock.lock();
         try {
             return Optional.ofNullable(mapByCharacterId.get(characterId));
@@ -52,7 +52,7 @@ public final class UserStorage {
         }
     }
 
-    public Optional<UserProxy> getByCharacterName(String characterName) {
+    public Optional<RemoteUser> getByCharacterName(String characterName) {
         lock.lock();
         try {
             return Optional.ofNullable(mapByCharacterName.get(normalizeName(characterName)));

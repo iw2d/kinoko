@@ -69,7 +69,7 @@ public final class MigrationHandler {
         // Submit migration request
         final ChannelServerNode channelServerNode = ((ChannelServerNode) c.getServerNode());
         final CompletableFuture<Optional<MigrationInfo>> migrationFuture = channelServerNode.submitMigrationRequest(
-                new MigrationInfo(channelServerNode.getChannelId(), accountId, characterId, machineId, clientKey)
+                new MigrationInfo(channelServerNode.getChannelId(), accountId, characterId, machineId, clientKey, false)
         );
         final MigrationInfo migrationResult;
         try {
@@ -301,6 +301,7 @@ public final class MigrationHandler {
                 user.getCharacterId(),
                 c.getMachineId(),
                 c.getClientKey(),
+                false,
                 user.getSecondaryStat().getTemporaryStats()
         );
         final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);

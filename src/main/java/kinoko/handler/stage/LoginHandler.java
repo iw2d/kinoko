@@ -22,6 +22,7 @@ import kinoko.world.job.Job;
 import kinoko.world.job.RaceSelect;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.config.ConfigManager;
@@ -283,6 +284,11 @@ public final class LoginHandler {
         final QuestManager qm = new QuestManager();
         characterData.setQuestManager(qm);
 
+        // Initialize Friend Manager
+        final FriendManager fm = new FriendManager();
+        fm.setFriendMax(ServerConfig.FRIEND_MAX_BASE);
+        characterData.setFriendManager(fm);
+
         // Initialize Config Manager
         final ConfigManager cm = ConfigManager.defaults();
         characterData.setConfigManager(cm);
@@ -400,7 +406,8 @@ public final class LoginHandler {
                 account.getId(),
                 characterId,
                 c.getMachineId(),
-                c.getClientKey()
+                c.getClientKey(),
+                true
         );
         if (!centralServerNode.submitMigrationRequest(migrationInfo)) {
             log.error("Failed to submit migration request for character ID : {}", characterId);

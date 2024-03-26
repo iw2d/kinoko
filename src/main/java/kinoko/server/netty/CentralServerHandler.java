@@ -5,13 +5,15 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
 import kinoko.server.node.*;
 import kinoko.server.packet.InPacket;
-import kinoko.server.whisper.WhisperFlag;
+import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public final class CentralServerHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(CentralServerHandler.class);
@@ -85,37 +87,49 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 )));
             }
             case USER_CONNECT -> {
-                final UserProxy userProxy = UserProxy.decode(inPacket);
-                centralServerNode.addUser(userProxy);
+                final RemoteUser remoteUser = RemoteUser.decode(inPacket);
+                centralServerNode.addUser(remoteUser);
             }
             case USER_UPDATE -> {
-                final UserProxy userProxy = UserProxy.decode(inPacket);
-                centralServerNode.updateUser(userProxy);
+                final RemoteUser remoteUser = RemoteUser.decode(inPacket);
+                centralServerNode.updateUser(remoteUser);
             }
             case USER_DISCONNECT -> {
-                final UserProxy userProxy = UserProxy.decode(inPacket);
-                centralServerNode.removeUser(userProxy);
+                final RemoteUser remoteUser = RemoteUser.decode(inPacket);
+                centralServerNode.removeUser(remoteUser);
             }
-            case WHISPER_REQUEST -> {
-                final int requestId = inPacket.decodeInt();
-                final String sourceCharacterName = inPacket.decodeString();
-                final String targetCharacterName = inPacket.decodeString();
-                final WhisperFlag flag = WhisperFlag.getByValue(inPacket.decodeByte());
-                final String message = flag == WhisperFlag.WHISPER ? inPacket.decodeString() : null;
-                // Resolve target user and reply with WHISPER_RESULT
-                final Optional<UserProxy> targetResult = centralServerNode.getUserByCharacterName(targetCharacterName);
-                ctx.channel().writeAndFlush(CentralPacket.whisperResult(requestId, targetResult.orElse(null)));
-                // If not location request, send WHISPER_RECEIVE to target channel server node
-                if (flag != null && flag != WhisperFlag.LOCATION && targetResult.isPresent()) {
-                    final UserProxy target = targetResult.get();
-                    final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
-                    if (targetNodeResult.isEmpty()) {
-                        // Transfer request failed
-                        log.error("Failed to resolve channel ID {}", target.getChannelId() + 1);
-                        return;
-                    }
-                    targetNodeResult.get().write(CentralPacket.whisperReceive(flag, target.getCharacterId(), remoteChildNode.getChannelId(), sourceCharacterName, message));
+            case USER_PACKET_REQUEST -> {
+                final String characterName = inPacket.decodeString();
+                final int packetLength = inPacket.decodeInt();
+                final byte[] packetData = inPacket.decodeArray(packetLength);
+                // Resolve target user
+                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterName(characterName);
+                if (targetResult.isEmpty()) {
+                    return;
                 }
+                final RemoteUser target = targetResult.get();
+                // Resolve target node
+                final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
+                if (targetNodeResult.isEmpty()) {
+                    // Transfer request failed
+                    log.error("Failed to resolve channel ID {}", target.getChannelId() + 1);
+                    return;
+                }
+                // Send USER_PACKET_RECEIVE to target channel node
+                targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), OutPacket.of(packetData)));
+            }
+            case USER_QUERY_REQUEST -> {
+                // Resolve queried users
+                final int requestId = inPacket.decodeInt();
+                final int size = inPacket.decodeInt();
+                final Set<RemoteUser> remoteUsers = new HashSet<>();
+                for (int i = 0; i < size; i++) {
+                    final String characterName = inPacket.decodeString();
+                    centralServerNode.getUserByCharacterName(characterName)
+                            .ifPresent(remoteUsers::add);
+                }
+                // Reply with queried remote users
+                remoteChildNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));
             }
             case null -> {
                 log.error("Central Server received an unknown opcode : {}", op);

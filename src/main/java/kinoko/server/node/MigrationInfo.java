@@ -19,26 +19,28 @@ public final class MigrationInfo implements Encodable {
     private final int characterId;
     private final byte[] machineId;
     private final byte[] clientKey;
+    private final boolean isLogin;
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats;
     private final Instant expireTime;
 
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, Instant expireTime) {
+    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, boolean isLogin, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, Instant expireTime) {
         assert machineId.length == 16 && clientKey.length == 8;
         this.channelId = channelId;
         this.accountId = accountId;
         this.characterId = characterId;
         this.machineId = machineId;
         this.clientKey = clientKey;
+        this.isLogin = isLogin;
         this.temporaryStats = temporaryStats;
         this.expireTime = expireTime;
     }
 
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats) {
-        this(channelId, accountId, characterId, machineId, clientKey, temporaryStats, Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
+    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, boolean isLogin, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats) {
+        this(channelId, accountId, characterId, machineId, clientKey, isLogin, temporaryStats, Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
     }
 
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey) {
-        this(channelId, accountId, characterId, machineId, clientKey, Map.of(), Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
+    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, boolean isLogin) {
+        this(channelId, accountId, characterId, machineId, clientKey, isLogin, Map.of(), Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
     }
 
     public int getChannelId() {
@@ -94,6 +96,7 @@ public final class MigrationInfo implements Encodable {
         outPacket.encodeArray(machineId);
         outPacket.encodeArray(clientKey);
         outPacket.encodeLong(expireTime.toEpochMilli());
+        outPacket.encodeByte(isLogin);
         encodeTemporaryStats(outPacket, temporaryStats);
     }
 
@@ -104,8 +107,9 @@ public final class MigrationInfo implements Encodable {
         final byte[] machineId = inPacket.decodeArray(16);
         final byte[] clientKey = inPacket.decodeArray(8);
         final long expireTime = inPacket.decodeLong();
+        final boolean isLogin = inPacket.decodeBoolean();
         final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = decodeTemporaryStats(inPacket);
-        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, temporaryStats, Instant.ofEpochMilli(expireTime));
+        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, isLogin, temporaryStats, Instant.ofEpochMilli(expireTime));
     }
 
 

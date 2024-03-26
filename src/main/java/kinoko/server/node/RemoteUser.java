@@ -5,7 +5,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.user.User;
 
-public final class UserProxy implements Encodable {
+public final class RemoteUser implements Encodable {
     private final int channelId;
     private final int fieldId;
     private final int accountId;
@@ -14,7 +14,7 @@ public final class UserProxy implements Encodable {
     private final int level;
     private final int job;
 
-    public UserProxy(int channelId, int fieldId, int accountId, int characterId, String characterName, int level, int job) {
+    public RemoteUser(int channelId, int fieldId, int accountId, int characterId, String characterName, int level, int job) {
         this.channelId = channelId;
         this.fieldId = fieldId;
         this.accountId = accountId;
@@ -63,7 +63,7 @@ public final class UserProxy implements Encodable {
         outPacket.encodeInt(job);
     }
 
-    public static UserProxy decode(InPacket inPacket) {
+    public static RemoteUser decode(InPacket inPacket) {
         final int channelId = inPacket.decodeInt();
         final int fieldId = inPacket.decodeInt();
         final int accountId = inPacket.decodeInt();
@@ -71,7 +71,7 @@ public final class UserProxy implements Encodable {
         final String characterName = inPacket.decodeString();
         final int level = inPacket.decodeInt();
         final int job = inPacket.decodeInt();
-        return new UserProxy(
+        return new RemoteUser(
                 channelId,
                 fieldId,
                 accountId,
@@ -82,8 +82,8 @@ public final class UserProxy implements Encodable {
         );
     }
 
-    public static UserProxy from(User user) {
-        return new UserProxy(
+    public static RemoteUser from(User user) {
+        return new RemoteUser(
                 user.getChannelId(),
                 user.getFieldId(),
                 user.getAccountId(),
