@@ -24,6 +24,9 @@ import kinoko.world.field.Field;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
+import kinoko.world.social.friend.Friend;
+import kinoko.world.social.friend.FriendManager;
+import kinoko.world.social.friend.FriendResult;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
@@ -177,14 +180,29 @@ public final class MigrationHandler {
             user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
             user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
+            // Load friends from database
+            final FriendManager fm = user.getFriendManager();
+            final List<Friend> friends = DatabaseManager.friendAccessor().getFriendsByCharacterId(user.getCharacterId());
+            for (Friend friend : friends) {
+                fm.addFriend(friend);
+            }
+            FriendManager.loadFriends(locked); // load friend status from central server
+
+            // Notify friends
+            for (Friend friend : fm.getFriends()) {
+                if (!friend.isOnline()) {
+                    continue;
+                }
+                channelServerNode.submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
+            }
+
             // Check memos
             final boolean hasMemo = DatabaseManager.memoAccessor().hasMemo(user.getCharacterId());
             if (hasMemo) {
                 user.write(WvsContext.memoResult(MemoResult.receive()));
             }
 
-            // Load friends
-            // TODO: update friends, family, guild, party
+            // TODO: update family, guild, party
         }
     }
 

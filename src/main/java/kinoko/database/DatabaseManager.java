@@ -10,10 +10,7 @@ import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import com.datastax.oss.driver.api.core.type.codec.registry.MutableCodecRegistry;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import kinoko.database.cassandra.CassandraAccountAccessor;
-import kinoko.database.cassandra.CassandraCharacterAccessor;
-import kinoko.database.cassandra.CassandraGiftAccessor;
-import kinoko.database.cassandra.CassandraMemoAccessor;
+import kinoko.database.cassandra.*;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
@@ -24,7 +21,6 @@ import kinoko.world.item.Item;
 import kinoko.world.item.PetData;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.social.friend.Friend;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 
@@ -38,6 +34,7 @@ public final class DatabaseManager {
     private static CqlSession cqlSession;
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
+    private static FriendAccessor friendAccessor;
     private static GiftAccessor giftAccessor;
     private static MemoAccessor memoAccessor;
 
@@ -47,6 +44,10 @@ public final class DatabaseManager {
 
     public static CharacterAccessor characterAccessor() {
         return characterAccessor;
+    }
+
+    public static FriendAccessor friendAccessor() {
+        return friendAccessor;
     }
 
     public static GiftAccessor giftAccessor() {
@@ -97,7 +98,6 @@ public final class DatabaseManager {
         CashItemInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         SkillRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        FriendUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ConfigUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
@@ -105,6 +105,7 @@ public final class DatabaseManager {
         IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
         AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        FriendTable.createTable(cqlSession, DATABASE_KEYSPACE);
         GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
         MemoTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
@@ -116,13 +117,13 @@ public final class DatabaseManager {
         registerCodec(cqlSession, CashItemInfoUDT.getTypeName(), (ic) -> new CashItemInfoCodec(ic, GenericType.of(CashItemInfo.class)));
         registerCodec(cqlSession, SkillRecordUDT.getTypeName(), (ic) -> new SkillRecordCodec(ic, GenericType.of(SkillRecord.class)));
         registerCodec(cqlSession, QuestRecordUDT.getTypeName(), (ic) -> new QuestRecordCodec(ic, GenericType.of(QuestRecord.class)));
-        registerCodec(cqlSession, FriendUDT.getTypeName(), (ic) -> new FriendCodec(ic, GenericType.of(Friend.class)));
         registerCodec(cqlSession, ConfigUDT.getTypeName(), (ic) -> new ConfigCodec(ic, GenericType.of(ConfigManager.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
         // Create Accessors
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
+        friendAccessor = new CassandraFriendAccessor(cqlSession, DATABASE_KEYSPACE);
         giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
         memoAccessor = new CassandraMemoAccessor(cqlSession, DATABASE_KEYSPACE);
     }

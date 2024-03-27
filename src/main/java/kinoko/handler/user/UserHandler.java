@@ -48,10 +48,8 @@ import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
-import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendRequestType;
-import kinoko.world.social.friend.FriendResult;
 import kinoko.world.user.User;
 import kinoko.world.user.config.*;
 import kinoko.world.user.stat.Stat;
@@ -64,7 +62,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 public final class UserHandler {
     private static final Logger log = LogManager.getLogger(UserHandler.class);
@@ -695,20 +692,8 @@ public final class UserHandler {
         final FriendRequestType requestType = FriendRequestType.getByValue(type);
         switch (requestType) {
             case LOAD_FRIEND -> {
-                final Set<String> friendNames = user.getFriendManager().getFriends().stream().map(Friend::getFriendName).collect(Collectors.toUnmodifiableSet());
-                // Query target user
-                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(friendNames);
-                try {
-                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-                    try (var locked = user.acquire()) {
-                        // Update friend data and update client
-                        final FriendManager fm = locked.get().getFriendManager();
-                        fm.loadFriends(queryResult);
-                        user.write(WvsContext.friendResult(FriendResult.loadFriendDone(fm.getFriends())));
-                    }
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    log.error("Exception caught while waiting for user query result", e);
-                    e.printStackTrace();
+                try (var locked = user.acquire()) {
+                    FriendManager.loadFriends(locked);
                 }
             }
             case SET_FRIEND -> {

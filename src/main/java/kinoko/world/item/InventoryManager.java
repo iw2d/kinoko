@@ -2,6 +2,8 @@ package kinoko.world.item;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public final class InventoryManager {
+    private static final Logger log = LogManager.getLogger(InventoryManager.class);
     private Inventory equipped;
     private Inventory equipInventory;
     private Inventory consumeInventory;
@@ -158,6 +161,7 @@ public final class InventoryManager {
         }
         if (item.getQuantity() < quantity) {
             // Tried to remove more than the available quantity
+            log.error("Tried to remove more than the available quantity : {} < {}", item.getQuantity(), quantity);
             return Optional.empty();
         } else if (item.getQuantity() > quantity) {
             // Deduct quantity
@@ -166,6 +170,7 @@ public final class InventoryManager {
         } else {
             // Remove item
             if (!inventory.removeItem(position, item)) {
+                log.error("Failed to remove item from position {}", position);
                 return Optional.empty();
             }
             return Optional.of(InventoryOperation.delItem(inventoryType, position));
@@ -215,6 +220,7 @@ public final class InventoryManager {
         // Retrieve item info
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(originalItem.getItemId());
         if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item ID : {}", originalItem.getItemId());
             return Optional.empty();
         }
         final ItemInfo ii = itemInfoResult.get();

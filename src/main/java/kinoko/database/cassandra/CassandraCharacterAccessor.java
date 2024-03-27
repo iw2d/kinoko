@@ -14,7 +14,6 @@ import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
@@ -77,12 +76,6 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setQuestManager(qm);
 
         final FriendManager fm = new FriendManager(row.getInt(CharacterTable.FRIEND_MAX));
-        final List<Friend> friends = row.getList(CharacterTable.FRIENDS, Friend.class);
-        if (friends != null) {
-            for (Friend friend : friends) {
-                fm.addFriend(friend);
-            }
-        }
         cd.setFriendManager(fm);
 
         final ConfigManager cm = row.get(CharacterTable.CONFIG, ConfigManager.class);
@@ -231,7 +224,6 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
-                        .setColumn(CharacterTable.FRIENDS, literal(characterData.getFriendManager().getFriends()))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendManager().getFriendMax()))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))

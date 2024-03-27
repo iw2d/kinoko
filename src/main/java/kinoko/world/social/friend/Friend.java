@@ -53,6 +53,10 @@ public final class Friend implements Encodable {
         this.channelId = channelId;
     }
 
+    public boolean isOnline() {
+        return getChannelId() >= 0;
+    }
+
     public boolean isInShop() {
         return getChannelId() == Friend.CHANNEL_SHOP;
     }

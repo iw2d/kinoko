@@ -10,8 +10,10 @@ public final class FriendResult implements Encodable {
 
     private List<Friend> friends;
     private Friend friend;
-    private String reason;
-    private int friendMax;
+    private String string1;
+    private int int1;
+    private int int2;
+    private int int3;
 
     public FriendResult(FriendResultType resultType) {
         this.resultType = resultType;
@@ -39,22 +41,22 @@ public final class FriendResult implements Encodable {
                 friend.encode(outPacket);
             }
             case INVITE -> {
-                outPacket.encodeInt(0); // dwFriendID
-                outPacket.encodeString(""); // sFriend
-                outPacket.encodeInt(0); // nLevel
-                outPacket.encodeInt(0); // nJobCode
+                outPacket.encodeInt(int1); // dwFriendID
+                outPacket.encodeString(string1); // sFriend
+                outPacket.encodeInt(int2); // nLevel
+                outPacket.encodeInt(int3); // nJobCode
             }
             case SET_FRIEND_UNKNOWN, ACCEPT_FRIEND_UNKNOWN, DELETE_FRIEND_UNKNOWN, INC_MAX_COUNT_UNKNOWN -> {
-                outPacket.encodeByte(reason != null && !reason.isEmpty());
-                outPacket.encodeString(reason);
+                outPacket.encodeByte(string1 != null && !string1.isEmpty());
+                outPacket.encodeString(string1);
             }
             case NOTIFY -> {
-                outPacket.encodeInt(friend.getFriendId()); // dwFriendID
-                outPacket.encodeByte(friend.isInShop()); // aInShop
-                outPacket.encodeByte(friend.getChannelId()); // nChannelID
+                outPacket.encodeInt(int1); // dwFriendID
+                outPacket.encodeByte(int2); // aInShop
+                outPacket.encodeByte(int3); // nChannelID
             }
             case INC_MAX_COUNT_DONE -> {
-                outPacket.encodeByte(friendMax); // nFriendMax
+                outPacket.encodeByte(int1); // nFriendMax
             }
             case SET_FRIEND_FULL_ME, SET_FRIEND_FULL_OTHER, SET_FRIEND_ALREADY_SET, SET_FRIEND_MASTER, SET_FRIEND_UNKNOWN_USER, PLEASE_WAIT -> {
                 // no encodes
@@ -68,6 +70,14 @@ public final class FriendResult implements Encodable {
     public static FriendResult loadFriendDone(List<Friend> friends) {
         final FriendResult result = new FriendResult(FriendResultType.LOAD_FRIEND_DONE);
         result.friends = friends;
+        return result;
+    }
+
+    public static FriendResult notify(int characterId, int channelId) {
+        final FriendResult result = new FriendResult(FriendResultType.NOTIFY);
+        result.int1 = characterId;
+        result.int2 = 0;
+        result.int3 = channelId;
         return result;
     }
 }
