@@ -285,8 +285,7 @@ public final class LoginHandler {
         characterData.setQuestManager(qm);
 
         // Initialize Friend Manager
-        final FriendManager fm = new FriendManager();
-        fm.setFriendMax(ServerConfig.FRIEND_MAX_BASE);
+        final FriendManager fm = new FriendManager(ServerConfig.FRIEND_MAX_BASE);
         characterData.setFriendManager(fm);
 
         // Initialize Config Manager

@@ -44,7 +44,6 @@ public final class EquipDataUDT {
         return typeName;
     }
 
-
     public static void createUserDefinedType(CqlSession session, String keyspace) {
         session.execute(
                 SchemaBuilder.createType(keyspace, getTypeName())

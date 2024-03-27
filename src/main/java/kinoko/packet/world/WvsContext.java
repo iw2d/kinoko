@@ -11,6 +11,7 @@ import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.social.friend.FriendResult;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.config.SingleMacro;
@@ -197,8 +198,9 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket friendResult() {
+    public static OutPacket friendResult(FriendResult friendResult) {
         final OutPacket outPacket = OutPacket.of(OutHeader.FRIEND_RESULT);
+        friendResult.encode(outPacket);
         return outPacket;
     }
 

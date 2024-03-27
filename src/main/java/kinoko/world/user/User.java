@@ -22,6 +22,7 @@ import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.*;
 
@@ -100,6 +101,10 @@ public final class User extends Life implements Lockable<User> {
 
     public QuestManager getQuestManager() {
         return characterData.getQuestManager();
+    }
+
+    public FriendManager getFriendManager() {
+        return characterData.getFriendManager();
     }
 
     public ConfigManager getConfigManager() {

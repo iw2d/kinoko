@@ -7,26 +7,26 @@ public final class Friend implements Encodable {
     public static final int CHANNEL_OFFLINE = -2;
     public static final int CHANNEL_SHOP = -1;
 
-    private int friendId;
-    private String friendName;
+    private final int friendId;
+    private final String friendName;
     private String friendGroup;
     private FriendStatus status;
     private int channelId;
+
+    public Friend(int friendId, String friendName, String friendGroup, FriendStatus status) {
+        this.friendId = friendId;
+        this.friendName = friendName;
+        this.friendGroup = friendGroup;
+        this.status = status;
+        this.channelId = CHANNEL_OFFLINE;
+    }
 
     public int getFriendId() {
         return friendId;
     }
 
-    public void setFriendId(int friendId) {
-        this.friendId = friendId;
-    }
-
     public String getFriendName() {
         return friendName;
-    }
-
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
     }
 
     public String getFriendGroup() {

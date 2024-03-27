@@ -22,9 +22,10 @@ public final class CharacterTable {
     public static final String SKILL_COOLTIMES = "skill_cooltimes";
     public static final String SKILL_RECORDS = "skill_records";
     public static final String QUEST_RECORDS = "quest_records";
-    public static final String ITEM_SN_COUNTER = "item_sn_counter";
-    public static final String CONFIG = "config";
+    public static final String FRIENDS = "friends";
     public static final String FRIEND_MAX = "friend_max";
+    public static final String CONFIG = "config";
+    public static final String ITEM_SN_COUNTER = "item_sn_counter";
 
 
     private static final String tableName = "character";
@@ -53,9 +54,10 @@ public final class CharacterTable {
                         .withColumn(SKILL_COOLTIMES, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.TIMESTAMP))
                         .withColumn(SKILL_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
-                        .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
-                        .withColumn(CONFIG, SchemaBuilder.udt(ConfigUDT.getTypeName(), true))
+                        .withColumn(FRIENDS, DataTypes.frozenListOf(SchemaBuilder.udt(FriendUDT.getTypeName(), true)))
                         .withColumn(FRIEND_MAX, DataTypes.INT)
+                        .withColumn(CONFIG, SchemaBuilder.udt(ConfigUDT.getTypeName(), true))
+                        .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
                         .build()
         );
         session.execute(

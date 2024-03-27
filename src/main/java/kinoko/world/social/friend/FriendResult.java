@@ -64,4 +64,10 @@ public final class FriendResult implements Encodable {
             }
         }
     }
+
+    public static FriendResult loadFriendDone(List<Friend> friends) {
+        final FriendResult result = new FriendResult(FriendResultType.LOAD_FRIEND_DONE);
+        result.friends = friends;
+        return result;
+    }
 }

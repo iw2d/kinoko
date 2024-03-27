@@ -183,6 +183,7 @@ public final class MigrationHandler {
                 user.write(WvsContext.memoResult(MemoResult.receive()));
             }
 
+            // Load friends
             // TODO: update friends, family, guild, party
         }
     }

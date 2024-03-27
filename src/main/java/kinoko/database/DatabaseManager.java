@@ -24,6 +24,7 @@ import kinoko.world.item.Item;
 import kinoko.world.item.PetData;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.social.friend.Friend;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 
@@ -96,6 +97,7 @@ public final class DatabaseManager {
         CashItemInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         SkillRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        FriendUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ConfigUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
@@ -114,6 +116,7 @@ public final class DatabaseManager {
         registerCodec(cqlSession, CashItemInfoUDT.getTypeName(), (ic) -> new CashItemInfoCodec(ic, GenericType.of(CashItemInfo.class)));
         registerCodec(cqlSession, SkillRecordUDT.getTypeName(), (ic) -> new SkillRecordCodec(ic, GenericType.of(SkillRecord.class)));
         registerCodec(cqlSession, QuestRecordUDT.getTypeName(), (ic) -> new QuestRecordCodec(ic, GenericType.of(QuestRecord.class)));
+        registerCodec(cqlSession, FriendUDT.getTypeName(), (ic) -> new FriendCodec(ic, GenericType.of(Friend.class)));
         registerCodec(cqlSession, ConfigUDT.getTypeName(), (ic) -> new ConfigCodec(ic, GenericType.of(ConfigManager.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
