@@ -42,10 +42,12 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 public final class MigrationHandler {
     private static final Logger log = LogManager.getLogger(MigrationHandler.class);
@@ -186,12 +188,11 @@ public final class MigrationHandler {
             FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LOAD_FRIEND_DONE);
 
             // Notify friends
-            for (Friend friend : user.getFriendManager().getRegisteredFriends()) {
-                if (!friend.isOnline()) {
-                    continue;
-                }
-                channelServerNode.submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
-            }
+            final Set<Integer> friendIds = user.getFriendManager().getRegisteredFriends().stream()
+                    .filter(Friend::isOnline)
+                    .map(Friend::getFriendId)
+                    .collect(Collectors.toUnmodifiableSet());
+            channelServerNode.submitUserPacketBroadcast(friendIds, WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
 
             // Process friend requests
             for (Friend friend : user.getFriendManager().getFriendRequests()) {

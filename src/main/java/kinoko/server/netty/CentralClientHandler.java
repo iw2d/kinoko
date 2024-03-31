@@ -69,6 +69,23 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 // Write to target client
                 targetUserResult.get().write(OutPacket.of(packetData));
             }
+            case USER_PACKET_BROADCAST -> {
+                final int size = inPacket.decodeInt();
+                final Set<Integer> characterIds = new HashSet<>();
+                for (int i = 0; i < size; i++) {
+                    characterIds.add(inPacket.decodeInt());
+                }
+                final int packetLength = inPacket.decodeInt();
+                final byte[] packetData = inPacket.decodeArray(packetLength);
+                final OutPacket outPacket = OutPacket.of(packetData);
+                for (int characterId : characterIds) {
+                    final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
+                    if (targetUserResult.isEmpty()) {
+                        continue;
+                    }
+                    targetUserResult.get().write(outPacket);
+                }
+            }
             case USER_QUERY_RESULT -> {
                 final int requestId = inPacket.decodeInt();
                 final int size = inPacket.decodeInt();

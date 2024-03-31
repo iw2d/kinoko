@@ -103,6 +103,18 @@ public final class CentralPacket {
         return outPacket;
     }
 
+    public static OutPacket userPacketBroadcast(Set<Integer> characterIds, OutPacket remotePacket) {
+        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_PACKET_BROADCAST);
+        outPacket.encodeInt(characterIds.size());
+        for (int characterId : characterIds) {
+            outPacket.encodeInt(characterId);
+        }
+        final byte[] packetData = remotePacket.getData();
+        outPacket.encodeInt(packetData.length);
+        outPacket.encodeArray(packetData);
+        return outPacket;
+    }
+
     public static OutPacket userQueryRequest(int requestId, Set<String> characterNames) {
         final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_QUERY_REQUEST);
         outPacket.encodeInt(requestId);

@@ -118,6 +118,18 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Send USER_PACKET_RECEIVE to target channel node
                 targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), OutPacket.of(packetData)));
             }
+            case USER_PACKET_BROADCAST -> {
+                final int size = inPacket.decodeInt();
+                final Set<Integer> characterIds = new HashSet<>();
+                for (int i = 0; i < size; i++) {
+                    characterIds.add(inPacket.decodeInt());
+                }
+                final int packetLength = inPacket.decodeInt();
+                final byte[] packetData = inPacket.decodeArray(packetLength);
+                for (RemoteChildNode childNode : centralServerNode.getConnectedNodes()) {
+                    childNode.write(CentralPacket.userPacketBroadcast(characterIds, OutPacket.of(packetData)));
+                }
+            }
             case USER_QUERY_REQUEST -> {
                 // Resolve queried users
                 final int requestId = inPacket.decodeInt();

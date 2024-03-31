@@ -31,6 +31,7 @@ import kinoko.world.user.stat.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public final class User extends Life implements Lockable<User> {
     private final Lock lock = new ReentrantLock();
@@ -420,12 +421,11 @@ public final class User extends Life implements Lockable<User> {
             return;
         }
         // Notify friends
-        for (Friend friend : getFriendManager().getRegisteredFriends()) {
-            if (!friend.isOnline()) {
-                continue;
-            }
-            getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
-        }
+        final Set<Integer> friendIds = getFriendManager().getRegisteredFriends().stream()
+                .filter(Friend::isOnline)
+                .map(Friend::getFriendId)
+                .collect(Collectors.toUnmodifiableSet());
+        getConnectedServer().submitUserPacketBroadcast(friendIds, WvsContext.friendResult(FriendResult.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
     }
 
 

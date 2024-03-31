@@ -3,6 +3,7 @@ package kinoko.handler.user;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.field.GroupMessageType;
 import kinoko.packet.script.ScriptMessageType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.user.ChatType;
@@ -622,6 +623,24 @@ public final class UserHandler {
 
 
     // SOCIAL HANDLERS -------------------------------------------------------------------------------------------------
+
+    @Handler(InHeader.GROUP_MESSAGE)
+    public static void handleGroupMessage(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int type = inPacket.decodeByte(); // nChatTarget
+        final GroupMessageType messageType = GroupMessageType.getByValue(type);
+        if (messageType == null) {
+            log.error("Unknown group message type : {}", type);
+            return;
+        }
+        final int count = inPacket.decodeByte(); // nMemberCnt
+        final Set<Integer> targetIds = new HashSet<>();
+        for (int i = 0; i < count; i++) {
+            targetIds.add(inPacket.decodeInt());
+        }
+        final String message = inPacket.decodeString(); // sText
+        user.getConnectedServer().submitUserPacketBroadcast(targetIds, FieldPacket.groupMessage(messageType, user.getCharacterName(), message));
+    }
 
     @Handler(InHeader.WHISPER)
     public static void handleWhisper(User user, InPacket inPacket) {

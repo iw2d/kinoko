@@ -41,6 +41,14 @@ public final class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket groupMessage(GroupMessageType messageType, String characterName, String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.GROUP_MESSAGE);
+        outPacket.encodeByte(messageType.getValue());
+        outPacket.encodeString(characterName);
+        outPacket.encodeString(message);
+        return outPacket;
+    }
+
     public static OutPacket whisper(WhisperResult whisperResult) {
         final OutPacket outPacket = OutPacket.of(OutHeader.WHISPER);
         whisperResult.encode(outPacket);

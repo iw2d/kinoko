@@ -72,14 +72,24 @@ import java.util.Map;
  *
  * User remote packets
  *   ChannelServerNode (source)
- *      1 : send USER_REMOTE_PACKET [character name, packet] to CentralServerNode
+ *      1 : send USER_PACKET_REQUEST [character name, packet] to CentralServerNode
  *   CentralServerNode
- *      2 : receive USER_REMOTE_PACKET
+ *      2 : receive USER_PACKET_REQUEST
  *      3 : resolve target user and channel using UserStorage
- *      4 : send USER_REMOTE_PACKET [character id, packet] to target ChannelServerNode
+ *      4 : send USER_PACKET_RECEIVE [character id, packet] to target ChannelServerNode
  *   ChannelServerNode (target)
- *      5 : receive USER_REMOTE_PACKET
+ *      5 : receive USER_PACKET_RECEIVE
  *      6 : send packet to target user
+ *
+ * User packet broadcast
+ *   ChannelServerNode (source)
+ *      1 : send USER_PACKET_BROADCAST [character ids, packet] to CentralServerNode
+ *   CentralServerNode
+ *      2 : receive USER_PACKET_BROADCAST
+ *      3 : send USER_PACKET_BROADCAST [character ids, packet] to all ChannelServerNodes
+ *   ChannelServerNode (targets)
+ *      4 : receive USER_PACKET_BROADCAST
+ *      5 : send packet to target users
  *
  * User query
  *   ChannelServerNode
@@ -105,6 +115,7 @@ public enum CentralPacketHeader {
     USER_DISCONNECT,
     USER_PACKET_REQUEST,
     USER_PACKET_RECEIVE,
+    USER_PACKET_BROADCAST,
     USER_QUERY_REQUEST,
     USER_QUERY_RESULT;
 
