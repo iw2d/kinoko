@@ -27,6 +27,7 @@ import kinoko.world.item.ItemType;
 import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResult;
+import kinoko.world.social.friend.FriendResultType;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
@@ -180,20 +181,21 @@ public final class MigrationHandler {
             user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
             user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
-            // Load friends from database
-            final FriendManager fm = user.getFriendManager();
-            final List<Friend> friends = DatabaseManager.friendAccessor().getFriendsByCharacterId(user.getCharacterId());
-            for (Friend friend : friends) {
-                fm.addFriend(friend);
-            }
-            FriendManager.loadFriends(locked); // load friend status from central server
+            // Loads friends from database and central server
+            FriendManager.updateFriendsFromDatabase(locked);
+            FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LOAD_FRIEND_DONE);
 
             // Notify friends
-            for (Friend friend : fm.getFriends()) {
+            for (Friend friend : user.getFriendManager().getRegisteredFriends()) {
                 if (!friend.isOnline()) {
                     continue;
                 }
                 channelServerNode.submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
+            }
+
+            // Process friend requests
+            for (Friend friend : user.getFriendManager().getFriendRequests()) {
+                user.write(WvsContext.friendResult(FriendResult.invite(friend)));
             }
 
             // Check memos
@@ -210,6 +212,7 @@ public final class MigrationHandler {
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         // Returning from CashShop
         if (inPacket.getRemaining() == 0) {
+            // TODO separate CashShopServer
             handleTransfer(user, user.getAccount().getChannelId());
             return;
         }
@@ -308,6 +311,9 @@ public final class MigrationHandler {
     }
 
     private static void handleTransfer(User user, int channelId) {
+        // Set in transfer
+        user.setInTransfer(true);
+
         // Force character save
         DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
         DatabaseManager.accountAccessor().saveAccount(user.getAccount());

@@ -83,6 +83,7 @@ public final class CassandraMemoAccessor extends CassandraAccessor implements Me
                         .value(MemoTable.MEMO_CONTENT, literal(memo.getContent()))
                         .value(MemoTable.SENDER_NAME, literal(memo.getSender()))
                         .value(MemoTable.DATE_SENT, literal(memo.getDateSent()))
+                        .ifNotExists()
                         .build()
         );
         return updateResult.wasApplied();

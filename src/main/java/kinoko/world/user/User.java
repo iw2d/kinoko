@@ -22,7 +22,9 @@ import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
+import kinoko.world.social.friend.FriendResult;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.*;
 
@@ -45,6 +47,7 @@ public final class User extends Life implements Lockable<User> {
 
     private Dialog dialog;
     private int portableChairId;
+    private boolean inTransfer;
 
     public User(Client client, CharacterData characterData) {
         this.client = client;
@@ -159,6 +162,13 @@ public final class User extends Life implements Lockable<User> {
         this.portableChairId = portableChairId;
     }
 
+    public boolean isInTransfer() {
+        return inTransfer;
+    }
+
+    public void setInTransfer(boolean inTransfer) {
+        this.inTransfer = inTransfer;
+    }
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
 
@@ -404,6 +414,17 @@ public final class User extends Life implements Lockable<User> {
         getConnectedServer().notifyUserDisconnect(this);
         if (getField() != null) {
             getField().removeUser(this);
+        }
+        // Transfer, updates on migration
+        if (isInTransfer()) {
+            return;
+        }
+        // Notify friends
+        for (Friend friend : getFriendManager().getRegisteredFriends()) {
+            if (!friend.isOnline()) {
+                continue;
+            }
+            getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
         }
     }
 

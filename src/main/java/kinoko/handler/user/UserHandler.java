@@ -48,8 +48,7 @@ import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
-import kinoko.world.social.friend.FriendManager;
-import kinoko.world.social.friend.FriendRequestType;
+import kinoko.world.social.friend.*;
 import kinoko.world.user.User;
 import kinoko.world.user.config.*;
 import kinoko.world.user.stat.Stat;
@@ -693,18 +692,118 @@ public final class UserHandler {
         switch (requestType) {
             case LOAD_FRIEND -> {
                 try (var locked = user.acquire()) {
-                    FriendManager.loadFriends(locked);
+                    FriendManager.updateFriendsFromDatabase(locked);
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LOAD_FRIEND_DONE);
                 }
             }
             case SET_FRIEND -> {
-                final String target = inPacket.decodeString(); // sTarget
+                final String targetName = inPacket.decodeString(); // sTarget
                 final String friendGroup = inPacket.decodeString(); // sFriendGroup
+                try (var locked = user.acquire()) {
+                    // Check if friend already exists
+                    final FriendManager fm = locked.get().getFriendManager();
+                    final Optional<Friend> friendResult = fm.getFriendByName(targetName);
+                    if (friendResult.isPresent() && friendResult.get().getStatus() == FriendStatus.NORMAL) {
+                        // Update friend group
+                        final Friend friend = friendResult.get();
+                        friend.setFriendGroup(friendGroup);
+                        if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            return;
+                        }
+                    } else {
+                        // Create new friend - resolve target character id
+                        final Optional<Tuple<Integer, Integer>> targetIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(targetName);
+                        if (targetIdResult.isEmpty()) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_UNKNOWN_USER))); // That character is not registered.
+                            return;
+                        }
+                        final int targetCharacterId = targetIdResult.get().getRight();
+                        // Check if target can be added as a friend
+                        final List<Friend> friends = fm.getRegisteredFriends();
+                        if (friends.size() >= fm.getFriendMax()) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_FULL_ME))); // Your buddy list is full.
+                            return;
+                        }
+                        if (friends.stream().anyMatch((friend) -> friend.getFriendId() == targetCharacterId)) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_ALREADY_SET))); // That character is already registered as your buddy.
+                            return;
+                        }
+                        // Add target as friend, force creation
+                        final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetName, friendGroup, FriendStatus.NORMAL);
+                        if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            return;
+                        }
+                        // Add user as a friend for target, not forced - existing friends, requests, and refused records
+                        final Friend friendForTarget = new Friend(targetCharacterId, user.getCharacterId(), user.getCharacterName(), GameConstants.DEFAULT_FRIEND_GROUP, FriendStatus.REQUEST);
+                        if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
+                            // Send invite to target if request was created
+                            // This operation is a noop if target offline, the request will be processed on target login
+                            user.getConnectedServer().submitUserPacketRequest(targetName, WvsContext.friendResult(FriendResult.invite(friendForTarget)));
+                        }
+                    }
+                    // Reload friends and update client
+                    FriendManager.updateFriendsFromDatabase(locked);
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SET_FRIEND_DONE);
+                }
             }
             case ACCEPT_FRIEND -> {
                 final int friendId = inPacket.decodeInt();
+                try (var locked = user.acquire()) {
+                    // Load friends from database
+                    FriendManager.updateFriendsFromDatabase(locked);
+                    // Resolve friend from id
+                    final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
+                    if (friendResult.isEmpty()) {
+                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.ACCEPT_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                        return;
+                    }
+                    // Update friend status
+                    final Friend friend = friendResult.get();
+                    friend.setStatus(FriendStatus.NORMAL);
+                    if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.ACCEPT_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                        return;
+                    }
+                    // Notify newly added friend (noop if offline)
+                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
+                    // Reload friends and update client
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SET_FRIEND_DONE);
+                }
             }
             case DELETE_FRIEND -> {
                 final int friendId = inPacket.decodeInt();
+                try (var locked = user.acquire()) {
+                    // Load friends from database
+                    FriendManager.updateFriendsFromDatabase(locked);
+                    // Resolve friend from id
+                    final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
+                    if (friendResult.isEmpty()) {
+                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DELETE_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                        return;
+                    }
+                    final Friend friend = friendResult.get();
+                    // Update friend request status to refused (this is set for deletion too, in order to update the client)
+                    friend.setStatus(FriendStatus.REFUSED);
+                    if (friend.getStatus() == FriendStatus.REQUEST) {
+                        // Save friend request result
+                        if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DELETE_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            return;
+                        }
+                    } else {
+                        // Delete friend
+                        if (!DatabaseManager.friendAccessor().deleteFriend(user.getCharacterId(), friend.getFriendId())) {
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DELETE_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            return;
+                        }
+                        // Notify deleted friend (noop if offline)
+                        user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
+                    }
+                    // Reload friends and update client
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.DELETE_FRIEND_DONE);
+                }
             }
             case null -> {
                 log.error("Unknown friend request type : {}", type);

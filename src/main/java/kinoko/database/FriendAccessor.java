@@ -7,5 +7,9 @@ import java.util.List;
 public interface FriendAccessor {
     List<Friend> getFriendsByCharacterId(int characterId);
 
-    boolean newFriend(int characterId, Friend friend);
+    List<Friend> getFriendsByFriendId(int friendId);
+
+    boolean saveFriend(Friend friend, boolean force);
+
+    boolean deleteFriend(int characterId, int friendId);
 }

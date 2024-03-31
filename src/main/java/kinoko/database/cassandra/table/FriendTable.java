@@ -22,17 +22,10 @@ public final class FriendTable {
                 SchemaBuilder.createTable(keyspace, getTableName())
                         .ifNotExists()
                         .withPartitionKey(CHARACTER_ID, DataTypes.INT)
-                        .withColumn(FRIEND_ID, DataTypes.INT)
+                        .withClusteringColumn(FRIEND_ID, DataTypes.INT)
                         .withColumn(FRIEND_NAME, DataTypes.TEXT)
                         .withColumn(FRIEND_GROUP, DataTypes.TEXT)
                         .withColumn(FRIEND_STATUS, DataTypes.INT)
-                        .build()
-        );
-        session.execute(
-                SchemaBuilder.createIndex()
-                        .ifNotExists()
-                        .onTable(keyspace, getTableName())
-                        .andColumn(FRIEND_ID)
                         .build()
         );
     }

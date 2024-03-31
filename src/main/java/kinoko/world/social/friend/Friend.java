@@ -2,23 +2,27 @@ package kinoko.world.social.friend;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.world.GameConstants;
 
 public final class Friend implements Encodable {
-    public static final int CHANNEL_OFFLINE = -2;
-    public static final int CHANNEL_SHOP = -1;
-
+    private final int characterId;
     private final int friendId;
     private final String friendName;
     private String friendGroup;
     private FriendStatus status;
     private int channelId;
 
-    public Friend(int friendId, String friendName, String friendGroup, FriendStatus status) {
+    public Friend(int characterId, int friendId, String friendName, String friendGroup, FriendStatus status) {
+        this.characterId = characterId;
         this.friendId = friendId;
         this.friendName = friendName;
         this.friendGroup = friendGroup;
         this.status = status;
-        this.channelId = CHANNEL_OFFLINE;
+        this.channelId = GameConstants.CHANNEL_OFFLINE;
+    }
+
+    public int getCharacterId() {
+        return characterId;
     }
 
     public int getFriendId() {
@@ -58,7 +62,7 @@ public final class Friend implements Encodable {
     }
 
     public boolean isInShop() {
-        return getChannelId() == Friend.CHANNEL_SHOP;
+        return getChannelId() == GameConstants.CHANNEL_SHOP;
     }
 
     @Override

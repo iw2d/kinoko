@@ -76,6 +76,7 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
                         .value(GiftTable.ITEM, literal(gift.getItem(), registry))
                         .value(GiftTable.SENDER_NAME, literal(gift.getSender()))
                         .value(GiftTable.MESSAGE, literal(gift.getMessage()))
+                        .ifNotExists()
                         .build()
         );
         return insertResult.wasApplied();

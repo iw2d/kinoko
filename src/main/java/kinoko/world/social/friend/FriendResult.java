@@ -41,10 +41,13 @@ public final class FriendResult implements Encodable {
                 friend.encode(outPacket);
             }
             case INVITE -> {
-                outPacket.encodeInt(int1); // dwFriendID
-                outPacket.encodeString(string1); // sFriend
-                outPacket.encodeInt(int2); // nLevel
-                outPacket.encodeInt(int3); // nJobCode
+                outPacket.encodeInt(friend.getFriendId()); // dwFriendID
+                outPacket.encodeString(friend.getFriendName()); // sFriend
+                outPacket.encodeInt(0); // nLevel - unused
+                outPacket.encodeInt(0); // nJobCode - unused
+                // CWvsContext::CFriend::Insert
+                friend.encode(outPacket); // GW_Friend::Decode
+                outPacket.encodeByte(friend.isInShop());
             }
             case SET_FRIEND_UNKNOWN, ACCEPT_FRIEND_UNKNOWN, DELETE_FRIEND_UNKNOWN, INC_MAX_COUNT_UNKNOWN -> {
                 outPacket.encodeByte(string1 != null && !string1.isEmpty());
@@ -53,7 +56,7 @@ public final class FriendResult implements Encodable {
             case NOTIFY -> {
                 outPacket.encodeInt(int1); // dwFriendID
                 outPacket.encodeByte(int2); // aInShop
-                outPacket.encodeByte(int3); // nChannelID
+                outPacket.encodeInt(int3); // nChannelID
             }
             case INC_MAX_COUNT_DONE -> {
                 outPacket.encodeByte(int1); // nFriendMax
@@ -67,9 +70,19 @@ public final class FriendResult implements Encodable {
         }
     }
 
-    public static FriendResult loadFriendDone(List<Friend> friends) {
-        final FriendResult result = new FriendResult(FriendResultType.LOAD_FRIEND_DONE);
+    public static FriendResult of(FriendResultType resultType) {
+        return new FriendResult(resultType);
+    }
+
+    public static FriendResult reset(FriendResultType resultType, List<Friend> friends) {
+        final FriendResult result = new FriendResult(resultType);
         result.friends = friends;
+        return result;
+    }
+
+    public static FriendResult invite(Friend friend) {
+        final FriendResult result = new FriendResult(FriendResultType.INVITE);
+        result.friend = friend;
         return result;
     }
 

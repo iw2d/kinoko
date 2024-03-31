@@ -35,7 +35,11 @@ public final class GameConstants {
 
     public static final int DAMAGE_MAX = 999_999;
 
+    public static final String DEFAULT_FRIEND_GROUP = "Group Unknown";
     public static final int FRIEND_MAX = 100;
+    public static final int CHANNEL_SHOP = -1;
+    public static final int CHANNEL_OFFLINE = -2;
+
     public static final int PARTY_MAX = 6;
     public static final int EXPEDITION_MAX = 5;
 
