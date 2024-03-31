@@ -1,6 +1,6 @@
 package kinoko.world.field;
 
-import kinoko.packet.field.DropPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.provider.map.Foothold;
 import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
@@ -21,7 +21,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
         if (enterType != DropEnterType.FADING_OUT) {
             addObject(drop);
         }
-        field.broadcastPacket(DropPacket.dropEnterField(drop, enterType));
+        field.broadcastPacket(FieldPacket.dropEnterField(drop, enterType));
     }
 
     public void addDrops(Set<Drop> drops, DropEnterType enterType, int centerX, int centerY) {
@@ -37,7 +37,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
         if (!removeObject(drop)) {
             return false;
         }
-        field.broadcastPacket(DropPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
+        field.broadcastPacket(FieldPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
         return true;
     }
 
@@ -50,7 +50,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
                 continue;
             }
             iter.remove();
-            field.broadcastPacket(DropPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
+            field.broadcastPacket(FieldPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
         }
     }
 

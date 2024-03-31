@@ -1,6 +1,6 @@
 package kinoko.world.field.summoned;
 
-import kinoko.packet.field.SummonedPacket;
+import kinoko.packet.user.SummonedPacket;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;

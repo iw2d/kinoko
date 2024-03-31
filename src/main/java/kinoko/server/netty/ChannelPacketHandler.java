@@ -1,7 +1,9 @@
 package kinoko.server.netty;
 
 import kinoko.handler.ClientHandler;
-import kinoko.handler.field.*;
+import kinoko.handler.field.FieldHandler;
+import kinoko.handler.field.MobHandler;
+import kinoko.handler.field.NpcHandler;
 import kinoko.handler.stage.CashShopHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.*;
@@ -17,17 +19,15 @@ public final class ChannelPacketHandler extends PacketHandler {
             MigrationHandler.class,
             // Field
             FieldHandler.class,
-            SummonedHandler.class,
             MobHandler.class,
             NpcHandler.class,
-            ReactorHandler.class,
-            DropHandler.class,
             // User
             UserHandler.class,
             AttackHandler.class,
             SkillHandler.class,
             ItemHandler.class,
-            PetHandler.class
+            PetHandler.class,
+            SummonedHandler.class
     );
 
     public ChannelPacketHandler() {

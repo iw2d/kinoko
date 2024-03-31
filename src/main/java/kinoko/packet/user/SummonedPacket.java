@@ -1,4 +1,4 @@
-package kinoko.packet.field;
+package kinoko.packet.user;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;

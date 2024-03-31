@@ -1,6 +1,6 @@
 package kinoko.world.field.reactor;
 
-import kinoko.packet.field.ReactorPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
@@ -158,12 +158,12 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
 
     @Override
     public OutPacket enterFieldPacket() {
-        return ReactorPacket.reactorEnterField(this);
+        return FieldPacket.reactorEnterField(this);
     }
 
     @Override
     public OutPacket leaveFieldPacket() {
-        return ReactorPacket.reactorLeaveField(this);
+        return FieldPacket.reactorLeaveField(this);
     }
 
     @Override

@@ -1,7 +1,7 @@
-package kinoko.handler.field;
+package kinoko.handler.user;
 
 import kinoko.handler.Handler;
-import kinoko.packet.field.SummonedPacket;
+import kinoko.packet.user.SummonedPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.server.header.InHeader;

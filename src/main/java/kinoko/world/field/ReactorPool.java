@@ -1,6 +1,6 @@
 package kinoko.world.field;
 
-import kinoko.packet.field.ReactorPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.reactor.Reactor;
 
@@ -27,7 +27,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         if (reactor.getReactorTime() > 0) {
             hitReactors.put(reactor, Instant.now().plus(reactor.getReactorTime(), ChronoUnit.SECONDS));
         }
-        field.broadcastPacket(ReactorPacket.changeState(reactor, delay, 0, GameConstants.REACTOR_END_DELAY));
+        field.broadcastPacket(FieldPacket.reactorChangeState(reactor, delay, 0, GameConstants.REACTOR_END_DELAY));
     }
 
     public void expireReactors(Instant now) {
@@ -42,7 +42,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
                 }
                 iter.remove();
                 reactor.reset(reactor.getX(), reactor.getY(), 0);
-                field.broadcastPacket(ReactorPacket.changeState(reactor, 0, 0, 0));
+                field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
             }
         }
     }

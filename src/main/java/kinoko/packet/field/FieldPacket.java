@@ -9,6 +9,10 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.whisper.WhisperResult;
 import kinoko.world.GameConstants;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropLeaveType;
+import kinoko.world.field.reactor.Reactor;
 import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.User;
 import kinoko.world.user.config.FuncKeyMapped;
@@ -72,6 +76,50 @@ public final class FieldPacket {
         return outPacket;
     }
 
+    // CDropPool::OnPacket ---------------------------------------------------------------------------------------------
+
+    public static OutPacket dropEnterField(Drop drop, DropEnterType enterType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.DROP_ENTER_FIELD);
+        outPacket.encodeByte(enterType.getValue()); // nEnterType
+        outPacket.encodeInt(drop.getId()); // DROP->dwId
+        outPacket.encodeByte(drop.isMoney()); // DROP->bIsMoney
+        outPacket.encodeInt(drop.isMoney() ? drop.getMoney() : drop.getItem().getItemId()); // DROP->nInfo
+        outPacket.encodeInt(drop.getOwnerId()); // DROP->dwOwnerID
+        outPacket.encodeByte(drop.getOwnType().getValue()); // DROP->nOwnType
+        outPacket.encodeShort(drop.getX());
+        outPacket.encodeShort(drop.getY());
+        outPacket.encodeInt(drop.isUserDrop() ? 0 : drop.getSource().getId()); // DROP->dwSourceID (object id)
+        if (enterType != DropEnterType.ON_THE_FOOTHOLD) {
+            outPacket.encodeShort(drop.getSource().getX()); // source x
+            outPacket.encodeShort(drop.getSource().getY()); // source y
+            outPacket.encodeShort(0); // tDelay
+        }
+        if (!drop.isMoney()) {
+            outPacket.encodeFT(drop.getItem().getDateExpire()); // m_dateExpire
+        }
+        outPacket.encodeByte(!drop.isUserDrop()); // bByPet
+        outPacket.encodeByte(false); // bool -> IWzGr2DLayer::Putz(0xC0041F15)
+        return outPacket;
+    }
+
+    public static OutPacket dropLeaveField(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.DROP_LEAVE_FIELD);
+        outPacket.encodeByte(leaveType.getValue());
+        outPacket.encodeInt(drop.getId());
+        switch (leaveType) {
+            case PICKED_UP_BY_USER, PICKED_UP_BY_MOB, PICKED_UP_BY_PET -> {
+                outPacket.encodeInt(pickUpId); // dwPickUpID
+                if (leaveType == DropLeaveType.PICKED_UP_BY_PET) {
+                    outPacket.encodeInt(petIndex);
+                }
+            }
+            case EXPLODE -> {
+                outPacket.encodeShort(0); // delay
+            }
+        }
+        return outPacket;
+    }
+
 
     // CTownPortalPool::OnPacket ---------------------------------------------------------------------------------------
 
@@ -88,6 +136,42 @@ public final class FieldPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_REMOVED);
         outPacket.encodeByte(enterField); // nState : remove animation if false
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
+        return outPacket;
+    }
+
+
+    // CReactorPool::OnPacket ------------------------------------------------------------------------------------------
+
+    public static OutPacket reactorEnterField(Reactor reactor) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_ENTER_FIELD);
+        outPacket.encodeInt(reactor.getId()); // dwID
+        outPacket.encodeInt(reactor.getTemplateId()); // dwTemplateID
+        outPacket.encodeByte(reactor.getState()); // nState
+        outPacket.encodeShort(reactor.getX()); // ptPos.x
+        outPacket.encodeShort(reactor.getY()); // ptPos.y
+        outPacket.encodeByte(reactor.isFlip()); // bFlip
+        outPacket.encodeString(reactor.getName()); // sName
+        return outPacket;
+    }
+
+    public static OutPacket reactorLeaveField(Reactor reactor) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_ENTER_FIELD);
+        outPacket.encodeInt(reactor.getId());
+        outPacket.encodeByte(reactor.getState()); // nState
+        outPacket.encodeShort(reactor.getX()); // ptPos.x
+        outPacket.encodeShort(reactor.getY()); // ptPos.y
+        return outPacket;
+    }
+
+    public static OutPacket reactorChangeState(Reactor reactor, int delay, int eventIndex, int endDelay) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_CHANGE_STATE);
+        outPacket.encodeInt(reactor.getId());
+        outPacket.encodeByte(reactor.getState()); // nState
+        outPacket.encodeShort(reactor.getX()); // ptPos.x
+        outPacket.encodeShort(reactor.getY()); // ptPos.y
+        outPacket.encodeShort(delay);
+        outPacket.encodeByte(eventIndex); // nProperEventIdx
+        outPacket.encodeByte(endDelay); // tStateEnd = update_time + 100 * byte
         return outPacket;
     }
 
