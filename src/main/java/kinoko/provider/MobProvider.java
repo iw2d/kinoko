@@ -60,5 +60,13 @@ public final class MobProvider implements WzProvider {
             final WzListProperty infoProp = linkEntry.getValue().getRight();
             mobTemplates.put(mobId, MobTemplate.from(mobId, linkProp, infoProp));
         }
+        // Validate mobs
+        for (MobTemplate mobTemplate : mobTemplates.values()) {
+            for (int reviveId : mobTemplate.getRevives()) {
+                if (getMobTemplate(reviveId).isEmpty()) {
+                    throw new ProviderError("Failed to resolve revive ID : %d for mob template ID : %d", reviveId, mobTemplate.getId());
+                }
+            }
+        }
     }
 }

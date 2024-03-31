@@ -18,4 +18,8 @@ public final class WzCanvasProperty extends WzProperty {
         this.format2 = format2;
         this.data = data;
     }
+
+    public WzListProperty getProperties() {
+        return properties;
+    }
 }

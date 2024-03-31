@@ -4,9 +4,7 @@ import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class MobTemplate {
     private final int id;
@@ -17,13 +15,17 @@ public final class MobTemplate {
     private final int hpRecovery;
     private final int mpRecovery;
     private final int fixedDamage;
+    private final int removeAfter;
     private final boolean boss;
     private final boolean noFlip;
     private final boolean damagedByMob;
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
+    private final List<Integer> revives;
 
-    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery, int fixedDamage, boolean boss, boolean noFlip, boolean damagedByMob, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills) {
+    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery,
+                       int fixedDamage, int removeAfter, boolean boss, boolean noFlip, boolean damagedByMob,
+                       Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills, List<Integer> revives) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -32,11 +34,13 @@ public final class MobTemplate {
         this.hpRecovery = hpRecovery;
         this.mpRecovery = mpRecovery;
         this.fixedDamage = fixedDamage;
+        this.removeAfter = removeAfter;
         this.boss = boss;
         this.noFlip = noFlip;
         this.damagedByMob = damagedByMob;
         this.attacks = attacks;
         this.skills = skills;
+        this.revives = revives;
     }
 
     public int getId() {
@@ -71,6 +75,10 @@ public final class MobTemplate {
         return fixedDamage;
     }
 
+    public int getRemoveAfter() {
+        return removeAfter;
+    }
+
     public boolean isBoss() {
         return boss;
     }
@@ -99,19 +107,28 @@ public final class MobTemplate {
         return Optional.ofNullable(getSkills().get(skillIndex));
     }
 
+    public List<Integer> getRevives() {
+        return revives;
+    }
+
     @Override
     public String toString() {
-        return "MobTemplate[" +
-                "id=" + id + ", " +
-                "level=" + level + ", " +
-                "exp=" + exp + ", " +
-                "maxHp=" + maxHp + ", " +
-                "maxMp=" + maxMp + ", " +
-                "fixedDamage=" + fixedDamage + ", " +
-                "hpRecovery=" + hpRecovery + ", " +
-                "mpRecovery=" + mpRecovery + ", " +
-                "isDamagedByMob=" + damagedByMob + ", " +
-                "boss=" + boss + ']';
+        return "MobTemplate{" +
+                "id=" + id +
+                ", level=" + level +
+                ", exp=" + exp +
+                ", maxHp=" + maxHp +
+                ", maxMp=" + maxMp +
+                ", hpRecovery=" + hpRecovery +
+                ", mpRecovery=" + mpRecovery +
+                ", fixedDamage=" + fixedDamage +
+                ", boss=" + boss +
+                ", noFlip=" + noFlip +
+                ", damagedByMob=" + damagedByMob +
+                ", attacks=" + attacks +
+                ", skills=" + skills +
+                ", revives=" + revives +
+                '}';
     }
 
     public static MobTemplate from(int mobId, WzListProperty mobProp, WzListProperty infoProp) throws ProviderError {
@@ -122,11 +139,13 @@ public final class MobTemplate {
         int hpRecovery = 0;
         int mpRecovery = 0;
         int fixedDamage = 0;
+        int removeAfter = 0;
         boolean boss = false;
         boolean noFlip = false;
         boolean damagedByMob = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
+        final List<Integer> revives = new ArrayList<>();
         // Process attacks
         for (var entry : mobProp.getItems().entrySet()) {
             if (entry.getKey().startsWith("attack")) {
@@ -190,6 +209,9 @@ public final class MobTemplate {
                 case "fixedDamage" -> {
                     fixedDamage = WzProvider.getInteger(infoEntry.getValue());
                 }
+                case "removeAfter" -> {
+                    removeAfter = WzProvider.getInteger(infoEntry.getValue());
+                }
                 case "boss" -> {
                     boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
@@ -220,11 +242,35 @@ public final class MobTemplate {
                         ));
                     }
                 }
+                case "revive" -> {
+                    if (!(infoEntry.getValue() instanceof WzListProperty reviveList)) {
+                        throw new ProviderError("Failed to resolve revives for mob : %d", mobId);
+                    }
+                    for (var reviveEntry : reviveList.getItems().entrySet()) {
+                        final int reviveId = WzProvider.getInteger(reviveEntry.getValue());
+                        revives.add(reviveId); // validate in MobProvider
+                    }
+                }
                 default -> {
                     // System.err.printf("Unhandled info %s in mob %d%n", infoEntry.getKey(), mobId);
                 }
             }
         }
-        return new MobTemplate(mobId, level, exp, maxHP, maxMP, hpRecovery, mpRecovery, fixedDamage, boss, noFlip, damagedByMob, attacks, skills);
+        return new MobTemplate(
+                mobId,
+                level,
+                exp,
+                maxHP,
+                maxMP,
+                hpRecovery,
+                mpRecovery,
+                fixedDamage,
+                removeAfter, boss,
+                noFlip,
+                damagedByMob,
+                Collections.unmodifiableMap(attacks),
+                Collections.unmodifiableMap(skills),
+                Collections.unmodifiableList(revives)
+        );
     }
 }

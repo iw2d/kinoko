@@ -1,0 +1,1 @@
+print("ScriptDispatcher initialization complete")

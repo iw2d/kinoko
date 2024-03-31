@@ -84,6 +84,8 @@ public final class MigrationInfo implements Encodable {
                 ", characterId=" + characterId +
                 ", machineId=" + Arrays.toString(machineId) +
                 ", clientKey=" + Arrays.toString(clientKey) +
+                ", isLogin=" + isLogin +
+                ", temporaryStats=" + temporaryStats +
                 ", expireTime=" + expireTime +
                 '}';
     }

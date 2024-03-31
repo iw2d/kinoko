@@ -17,9 +17,6 @@ public final class CashShop {
     public static final int EQUIP_SLOT_EXT_30_DAYS = 5550000;
     public static final int EQUIP_SLOT_EXT_7_days = 5550001;
 
-    public static void initialize() {
-    }
-
     public static Optional<Commodity> getCommodity(int commodityId) {
         return Optional.ofNullable(EtcProvider.getCommodities().get(commodityId));
     }

@@ -25,6 +25,7 @@ public final class ScriptDispatcher {
     public static final Path PORTAL_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "portal");
     public static final Path REACTOR_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "reactor");
     public static final Path FIELD_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "field");
+    public static final Path TEST_SCRIPT = Path.of(ServerConfig.SCRIPT_DIRECTORY, "test.py");
     public static final String SCRIPT_EXTENSION = ".py";
     public static final String SCRIPT_LANGUAGE = "python";
 
@@ -40,11 +41,18 @@ public final class ScriptDispatcher {
     private static ExecutorService executor;
     private static Engine engine;
 
-    public static void initialize() {
+    public static void initialize() throws IOException {
         executor = Executors.newVirtualThreadPerTaskExecutor();
         engine = Engine.newBuilder()
                 .option("engine.WarnInterpreterOnly", "false")
                 .build();
+        // Evaluate test script (also handle the delay on first script execution)
+        final Context context = createContext();
+        context.eval(
+                Source.newBuilder(SCRIPT_LANGUAGE, TEST_SCRIPT.toFile())
+                        .build()
+        );
+        context.close();
     }
 
     public static void shutdown() {
@@ -142,10 +150,7 @@ public final class ScriptDispatcher {
     }
 
     private static void startScript(ScriptType scriptType, ScriptManager scriptManager, File scriptFile, Consumer<Context> consumer) {
-        final Context context = Context.newBuilder(SCRIPT_LANGUAGE)
-                .engine(engine)
-                .allowHostAccess(HostAccess.ALL)
-                .build();
+        final Context context = createContext();
         context.getBindings(SCRIPT_LANGUAGE).putMember("sm", scriptManager);
         consumer.accept(context); // add bindings
         // Evaluate script with virtual thread executor
@@ -172,5 +177,12 @@ public final class ScriptDispatcher {
                 user.unlock();
             }
         });
+    }
+
+    private static Context createContext() {
+        return Context.newBuilder(SCRIPT_LANGUAGE)
+                .engine(engine)
+                .allowHostAccess(HostAccess.ALL)
+                .build();
     }
 }

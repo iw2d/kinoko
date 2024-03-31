@@ -46,11 +46,12 @@ public final class Server {
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Initialize server classes
+        start = Instant.now();
         MapleCrypto.initialize();
         EventScheduler.initialize();
         ScriptDispatcher.initialize();
         CommandProcessor.initialize();
-        CashShop.initialize();
+        log.info("Loaded server classes in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Initialize nodes
         centralServerNode = new CentralServerNode();
