@@ -568,10 +568,10 @@ public final class AdminCommands {
             // Set stats
             final CharacterStat cs = user.getCharacterStat();
             cs.setLevel((short) 200);
-            cs.setBaseStr((short) 100);
-            cs.setBaseDex((short) 100);
-            cs.setBaseInt((short) 100);
-            cs.setBaseLuk((short) 100);
+            cs.setBaseStr((short) 10000);
+            cs.setBaseDex((short) 10000);
+            cs.setBaseInt((short) 10000);
+            cs.setBaseLuk((short) 10000);
             cs.setMaxHp(50000);
             cs.setMaxMp(50000);
             cs.setExp(0);

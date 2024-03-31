@@ -204,7 +204,7 @@ public final class MobHandler {
                 final int x = si.getValue(SkillStat.x, slv);
                 final int y = si.getValue(SkillStat.y, slv);
                 for (Mob targetMob : targetMobs) {
-                    final int healAmount = x - (y / 2) + Util.getRandom(y);
+                    final int healAmount = x + Util.getRandom(y);
                     targetMob.heal(healAmount);
                 }
             }

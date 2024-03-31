@@ -2,7 +2,10 @@ package kinoko.provider.mob;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
+import kinoko.provider.wz.property.WzCanvasProperty;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.property.WzUolProperty;
+import kinoko.util.Util;
 
 import java.util.*;
 
@@ -22,10 +25,11 @@ public final class MobTemplate {
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
     private final List<Integer> revives;
+    private final int reviveDelay;
 
     public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery,
                        int fixedDamage, int removeAfter, boolean boss, boolean noFlip, boolean damagedByMob,
-                       Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills, List<Integer> revives) {
+                       Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills, List<Integer> revives, int reviveDelay) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -41,6 +45,7 @@ public final class MobTemplate {
         this.attacks = attacks;
         this.skills = skills;
         this.revives = revives;
+        this.reviveDelay = reviveDelay;
     }
 
     public int getId() {
@@ -111,6 +116,10 @@ public final class MobTemplate {
         return revives;
     }
 
+    public int getReviveDelay() {
+        return reviveDelay;
+    }
+
     @Override
     public String toString() {
         return "MobTemplate{" +
@@ -122,12 +131,14 @@ public final class MobTemplate {
                 ", hpRecovery=" + hpRecovery +
                 ", mpRecovery=" + mpRecovery +
                 ", fixedDamage=" + fixedDamage +
+                ", removeAfter=" + removeAfter +
                 ", boss=" + boss +
                 ", noFlip=" + noFlip +
                 ", damagedByMob=" + damagedByMob +
                 ", attacks=" + attacks +
                 ", skills=" + skills +
                 ", revives=" + revives +
+                ", reviveDelay=" + reviveDelay +
                 '}';
     }
 
@@ -256,6 +267,42 @@ public final class MobTemplate {
                 }
             }
         }
+        // Process revive delay
+        int reviveDelay = 0;
+        if (mobId == 9400584) {
+            // Death animation for leprechaun is broken
+            reviveDelay = 1440;
+        } else if (!revives.isEmpty()) {
+            if (!(mobProp.get("die1") instanceof WzListProperty dieAnimationProp)) {
+                throw new ProviderError("Failed to resolve revive delay for mob : %d", mobId);
+            }
+            // Compute frame delays
+            final Map<String, Integer> frameDelays = new HashMap<>();
+            final List<String> frameUols = new ArrayList<>();
+            for (var dieFrameEntry : dieAnimationProp.getItems().entrySet()) {
+                final String key = dieFrameEntry.getKey();
+                if (!Util.isInteger(key)) {
+                    continue; // speak
+                }
+                if (dieFrameEntry.getValue() instanceof WzUolProperty dieUolProp) {
+                    if (!Util.isInteger(dieUolProp.getUol())) {
+                        throw new ProviderError("Found relative UOL while resolving revive delay for mob : %d", mobId); // pain to implement
+                    }
+                    frameUols.add(dieUolProp.getUol());
+                    continue;
+                }
+                if (!(dieFrameEntry.getValue() instanceof WzCanvasProperty dieCanvasProp)) {
+                    throw new ProviderError("Failed to resolve die animation frame for mob : %d", mobId);
+                }
+                final int delay = WzProvider.getInteger(dieCanvasProp.getProperties().get("delay"), 0);
+                frameDelays.put(key, delay);
+                reviveDelay += delay;
+            }
+            // Add up delays from UOLs
+            for (String uol : frameUols) {
+                reviveDelay += frameDelays.get(uol);
+            }
+        }
         return new MobTemplate(
                 mobId,
                 level,
@@ -270,7 +317,7 @@ public final class MobTemplate {
                 damagedByMob,
                 Collections.unmodifiableMap(attacks),
                 Collections.unmodifiableMap(skills),
-                Collections.unmodifiableList(revives)
-        );
+                Collections.unmodifiableList(revives),
+                reviveDelay);
     }
 }

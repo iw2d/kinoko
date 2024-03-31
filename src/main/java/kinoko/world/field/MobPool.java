@@ -44,6 +44,8 @@ public final class MobPool extends FieldObjectPool<Mob> {
             try (var lockedMob = mob.acquire()) {
                 // Try recovering hp/mp
                 mob.recovery(now);
+                // Try removing mob (removeAfter)
+                mob.remove(now);
                 // Expire temporary stat
                 final Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireResult = lockedMob.get().getMobStat().expireMobStat(now);
                 final Set<MobTemporaryStat> resetStats = expireResult.getLeft();

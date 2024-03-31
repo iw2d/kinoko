@@ -2,7 +2,6 @@ package kinoko.server;
 
 import kinoko.database.DatabaseManager;
 import kinoko.provider.*;
-import kinoko.server.cashshop.CashShop;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.event.EventScheduler;

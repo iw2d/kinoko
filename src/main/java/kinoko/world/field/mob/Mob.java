@@ -5,6 +5,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.IncExpMessage;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
+import kinoko.provider.MobProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
@@ -45,6 +46,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final Map<Integer, Integer> damageDone = new HashMap<>();
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
+    private final Instant removeAfter;
 
     private MobAppearType appearType = MobAppearType.REGEN;
     private User controller;
@@ -56,6 +58,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     public Mob(MobTemplate template, MobSpawnPoint spawnPoint, int x, int y, int fh) {
         this.template = template;
         this.spawnPoint = spawnPoint;
+        this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
         // Life initialization
         setX(x);
         setY(y);
@@ -187,6 +190,18 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         nextRecovery = now.plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
     }
 
+    public void remove(Instant now) {
+        if (template.getRemoveAfter() <= 0 && now.isBefore(removeAfter)) {
+            return;
+        }
+        if (getField().getMobPool().removeMob(this)) {
+            spawnRevives();
+        }
+        if (spawnPoint != null) {
+            spawnPoint.setNextMobRespawn();
+        }
+    }
+
     public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {
         setTemporaryStat(Map.of(mts, option));
     }
@@ -214,6 +229,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             if (getField().getMobPool().removeMob(this)) {
                 distributeExp();
                 dropRewards(attacker);
+                spawnRevives();
             }
             if (spawnPoint != null) {
                 spawnPoint.setNextMobRespawn();
@@ -221,7 +237,45 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
     }
 
-    public void dropRewards(User lastAttacker) {
+    private void distributeExp() {
+        final int totalExp = template.getExp();
+        final int topAttackerId = damageDone.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(-1);
+        for (var entry : damageDone.entrySet()) {
+            final int attackerDamage = entry.getValue();
+            final Optional<User> attackerResult = getField().getUserPool().getById(entry.getKey());
+            if (attackerResult.isEmpty()) {
+                continue;
+            }
+            // Schedule event as user lock is required
+            EventScheduler.addEvent(() -> {
+                try (var locked = attackerResult.get().acquire()) {
+                    // Distribute exp
+                    final User attacker = locked.get();
+                    final int splitExp = (int) (((double) attackerDamage / getMaxHp()) * totalExp);
+                    attacker.addExp(splitExp);
+                    attacker.write(WvsContext.message(IncExpMessage.mob(attacker.getCharacterId() == topAttackerId, splitExp, 0)));
+                    // Process mob kill for quest
+                    for (QuestRecord qr : attacker.getQuestManager().getStartedQuests()) {
+                        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
+                        if (questInfoResult.isEmpty()) {
+                            continue;
+                        }
+                        final Optional<QuestRecord> questProgressResult = questInfoResult.get().progressQuest(qr, getTemplateId());
+                        if (questProgressResult.isEmpty()) {
+                            continue;
+                        }
+                        attacker.write(WvsContext.message(Message.questRecord(questProgressResult.get())));
+                        attacker.validateStat();
+                    }
+                }
+            }, 0);
+        }
+    }
+
+    private void dropRewards(User lastAttacker) {
         // Sort damageDone by highest damage, assign owner to most damage attacker present in the field
         User owner = lastAttacker;
         final var iter = damageDone.entrySet().stream()
@@ -270,42 +324,30 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
     }
 
-    public void distributeExp() {
-        final int totalExp = template.getExp();
-        final int topAttackerId = damageDone.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(-1);
-        for (var entry : damageDone.entrySet()) {
-            final int attackerDamage = entry.getValue();
-            final Optional<User> attackerResult = getField().getUserPool().getById(entry.getKey());
-            if (attackerResult.isEmpty()) {
-                continue;
-            }
-            // Schedule event as user lock is required
-            EventScheduler.addEvent(() -> {
-                try (var locked = attackerResult.get().acquire()) {
-                    // Distribute exp
-                    final User attacker = locked.get();
-                    final int splitExp = (int) (((double) attackerDamage / getMaxHp()) * totalExp);
-                    attacker.addExp(splitExp);
-                    attacker.write(WvsContext.message(IncExpMessage.mob(attacker.getCharacterId() == topAttackerId, splitExp, 0)));
-                    // Process mob kill for quest
-                    for (QuestRecord qr : attacker.getQuestManager().getStartedQuests()) {
-                        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
-                        if (questInfoResult.isEmpty()) {
-                            continue;
-                        }
-                        final Optional<QuestRecord> questProgressResult = questInfoResult.get().progressQuest(qr, getTemplateId());
-                        if (questProgressResult.isEmpty()) {
-                            continue;
-                        }
-                        attacker.write(WvsContext.message(Message.questRecord(questProgressResult.get())));
-                        attacker.validateStat();
-                    }
-                }
-            }, 0);
+
+    private void spawnRevives() {
+        if (template.getRevives().isEmpty()) {
+            return;
         }
+        EventScheduler.addEvent(() -> {
+            for (int reviveId : template.getRevives()) {
+                final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(reviveId);
+                if (mobTemplateResult.isEmpty()) {
+                    // Should not happen
+                    continue;
+                }
+                final Mob reviveMob = new Mob(
+                        mobTemplateResult.get(),
+                        null,
+                        getX(),
+                        getY(),
+                        getCurrentFh()
+                );
+                reviveMob.setAppearType(MobAppearType.REVIVED);
+                getField().getMobPool().addMob(reviveMob);
+                reviveMob.setAppearType(MobAppearType.NORMAL);
+            }
+        }, template.getReviveDelay());
     }
 
 
