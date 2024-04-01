@@ -27,7 +27,7 @@ public final class PartyResult implements Encodable {
                 outPacket.encodeString(user.getCharacterName()); // sInviter
                 outPacket.encodeInt(user.getLevel()); // nLevel
                 outPacket.encodeInt(user.getJob()); // nJobCode
-                outPacket.encodeByte(0); // not sure
+                outPacket.encodeByte(0); // not sure, related to party search
             }
             case LOAD_PARTY_DONE, USER_MIGRATION -> {
                 outPacket.encodeInt(party.getPartyId()); // nPartyID
@@ -100,5 +100,9 @@ public final class PartyResult implements Encodable {
                 throw new IllegalStateException("Tried to encode unsupported party result type");
             }
         }
+    }
+
+    public static PartyResult of(PartyResultType resultType) {
+        return new PartyResult(resultType);
     }
 }

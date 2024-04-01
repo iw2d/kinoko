@@ -67,6 +67,10 @@ public final class CentralServerNode extends ServerNode {
 
     // USER METHODS ----------------------------------------------------------------------------------------------------
 
+    public Optional<RemoteUser> getUserByCharacterId(int characterId) {
+        return userStorage.getByCharacterId(characterId);
+    }
+
     public Optional<RemoteUser> getUserByCharacterName(String characterName) {
         return userStorage.getByCharacterName(characterName);
     }

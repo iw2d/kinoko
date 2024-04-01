@@ -185,7 +185,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket shopResult(ShopResultType resultType) {
-        return shopResult(resultType, "Due to an error, the trade did not happen."); // Default message for SERVER_MSG
+        return shopResult(resultType, null);
     }
 
     public static OutPacket shopResult(ShopResultType resultType, String message) {
@@ -196,7 +196,7 @@ public final class FieldPacket {
                 outPacket.encodeInt(0); // level
             }
             case SERVER_MSG -> {
-                outPacket.encodeByte(true);
+                outPacket.encodeByte(message != null && !message.isEmpty());
                 outPacket.encodeString(message);
             }
         }

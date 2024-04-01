@@ -113,6 +113,10 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketRequest(characterName, remotePacket));
     }
 
+    public void submitUserPacketReceive(int characterId, OutPacket remotePacket) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketReceive(characterId, remotePacket));
+    }
+
     public void submitUserPacketBroadcast(Set<Integer> characterIds, OutPacket remotePacket) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketBroadcast(characterIds, remotePacket));
     }

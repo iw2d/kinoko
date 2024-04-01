@@ -118,6 +118,26 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Send USER_PACKET_RECEIVE to target channel node
                 targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), OutPacket.of(packetData)));
             }
+            case USER_PACKET_RECEIVE -> {
+                final int characterId = inPacket.decodeInt();
+                final int packetLength = inPacket.decodeInt();
+                final byte[] packetData = inPacket.decodeArray(packetLength);
+                // Resolve target user
+                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(characterId);
+                if (targetResult.isEmpty()) {
+                    return;
+                }
+                final RemoteUser target = targetResult.get();
+                // Resolve target node
+                final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
+                if (targetNodeResult.isEmpty()) {
+                    // Transfer request failed
+                    log.error("Failed to resolve channel ID {}", target.getChannelId() + 1);
+                    return;
+                }
+                // Send USER_PACKET_RECEIVE to target channel node
+                targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), OutPacket.of(packetData)));
+            }
             case USER_PACKET_BROADCAST -> {
                 final int size = inPacket.decodeInt();
                 final Set<Integer> characterIds = new HashSet<>();

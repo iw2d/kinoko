@@ -61,7 +61,7 @@ public final class UserStorage {
         }
     }
 
-    public static String normalizeName(String name) {
+    private static String normalizeName(String name) {
         return name.toLowerCase();
     }
 }

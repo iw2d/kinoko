@@ -50,6 +50,8 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
 import kinoko.world.social.friend.*;
+import kinoko.world.social.party.PartyRequestType;
+import kinoko.world.social.party.PartyResultType;
 import kinoko.world.user.User;
 import kinoko.world.user.config.*;
 import kinoko.world.user.stat.Stat;
@@ -700,6 +702,66 @@ public final class UserHandler {
             }
             default -> {
                 log.error("Unhandled whisper flag : {}", whisperFlag);
+            }
+        }
+    }
+
+    @Handler(InHeader.PARTY_REQUEST)
+    public static void handlePartyRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final PartyRequestType requestType = PartyRequestType.getByValue(type);
+        switch (requestType) {
+            case CREATE_NEW_PARTY -> {
+                // CField::SendCreateNewPartyMsg
+            }
+            case WITHDRAW_PARTY -> {
+                // CField::SendWithdrawPartyMsg
+                inPacket.decodeByte(); // hardcoded 0
+            }
+            case JOIN_PARTY -> {
+                // CWvsContext::OnPartyResult
+                final int partyId = inPacket.decodeInt();
+                inPacket.decodeByte(); // unknown byte from INVITE_PARTY
+            }
+            case INVITE_PARTY -> {
+                // CField::SendJoinPartyMsg
+                final String targetName = inPacket.decodeString();
+            }
+            case KICK_PARTY -> {
+                // CField::SendKickPartyMsg
+                final int targetId = inPacket.decodeInt();
+            }
+            case CHANGE_PARTY_BOSS -> {
+                // CField::SendChangePartyBossMsg
+                final int targetId = inPacket.decodeInt();
+            }
+            case null -> {
+                log.error("Unknown party request type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled party request type : {}", requestType);
+            }
+        }
+    }
+
+    @Handler(InHeader.PARTY_RESULT)
+    public static void handlePartyResult(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final PartyResultType resultType = PartyResultType.getByValue(type);
+        switch (resultType) {
+            case INVITE_PARTY_SENT, INVITE_PARTY_BLOCKED_USER, INVITE_PARTY_ALREADY_INVITED,
+                    INVITE_PARTY_ALREADY_INVITED_BY_INVITER, INVITE_PARTY_REJECTED, INVITE_PARTY_ACCEPTED -> {
+                final int inviterId = inPacket.decodeInt(); // this->GetInviterID()
+                // Join party
+                if (resultType == PartyResultType.INVITE_PARTY_ACCEPTED) {
+
+                }
+            }
+            case null -> {
+                log.error("Unknown party result type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled party result type : {}", resultType);
             }
         }
     }

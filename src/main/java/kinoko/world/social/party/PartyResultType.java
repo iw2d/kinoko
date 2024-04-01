@@ -67,4 +67,13 @@ public enum PartyResultType {
     public final int getValue() {
         return value;
     }
+
+    public static PartyResultType getByValue(int value) {
+        for (PartyResultType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

@@ -73,8 +73,9 @@ import java.util.Map;
  * User remote packets
  *   ChannelServerNode (source)
  *      1 : send USER_PACKET_REQUEST [character name, packet] to CentralServerNode
+ *          or USER_PACKET_RECEIVE [character id, packet]
  *   CentralServerNode
- *      2 : receive USER_PACKET_REQUEST
+ *      2 : receive USER_PACKET_REQUEST/USER_PACKET_RECEIVE
  *      3 : resolve target user and channel using UserStorage
  *      4 : send USER_PACKET_RECEIVE [character id, packet] to target ChannelServerNode
  *   ChannelServerNode (target)
