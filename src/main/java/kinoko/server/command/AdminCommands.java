@@ -20,6 +20,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashShop;
 import kinoko.server.cashshop.Commodity;
 import kinoko.server.script.ScriptDispatcher;
+import kinoko.util.Rect;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -79,6 +80,13 @@ public final class AdminCommands {
             user.write(WvsContext.message(Message.system("Portal name : %s (%d)", nearestPortal.getPortalName(), nearestPortal.getPortalId())));
             user.write(WvsContext.message(Message.system("  x : %d, y : %d, script : %s",
                     nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript())));
+        }
+        // Compute nearest mob
+        final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(new Rect(-100, -100, 100, 100))));
+        if (nearestMobResult.isPresent()) {
+            final Mob nearestMob = nearestMobResult.get();
+            user.write(WvsContext.message(Message.system("%s", nearestMob.toString())));
+            user.write(WvsContext.message(Message.system("  Controller : %s", nearestMob.getController().getCharacterName())));
         }
     }
 

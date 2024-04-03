@@ -2,6 +2,9 @@ package kinoko.world.field;
 
 import kinoko.server.packet.OutPacket;
 
+import java.util.Optional;
+import java.util.Set;
+
 public interface FieldObject {
     OutPacket enterFieldPacket();
 
@@ -22,4 +25,6 @@ public interface FieldObject {
     int getY();
 
     void setY(int y);
+
+    <T extends FieldObject> Optional<T> getNearestObject(Set<T> objects);
 }

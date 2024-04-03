@@ -148,7 +148,7 @@ public final class UserPool extends FieldObjectPool<User> {
     }
 
     public void assignController(ControlledObject controlled) {
-        final Optional<User> controllerResult = Util.getRandomFromCollection(getObjects());
+        final Optional<User> controllerResult = controlled.getNearestObject(getObjects()); // closest user to controlled object
         if (controllerResult.isEmpty()) {
             controlled.setController(null);
             return;
