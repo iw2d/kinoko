@@ -782,7 +782,6 @@ public final class UserHandler {
             }
             case INVITE_PARTY_ACCEPTED -> {
                 final int inviterId = inPacket.decodeInt();
-                // Join party
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JOIN_PARTY, inviterId));
             }
             case null -> {

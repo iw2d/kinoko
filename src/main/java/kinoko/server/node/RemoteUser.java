@@ -13,7 +13,7 @@ public final class RemoteUser implements Encodable {
     private final String characterName;
     private final int level;
     private final int job;
-    private final int partyId;
+    private int partyId;
 
     public RemoteUser(int channelId, int fieldId, int accountId, int characterId, String characterName, int level, int job, int partyId) {
         this.channelId = channelId;
@@ -56,6 +56,10 @@ public final class RemoteUser implements Encodable {
 
     public int getPartyId() {
         return partyId;
+    }
+
+    public void setPartyId(int partyId) {
+        this.partyId = partyId;
     }
 
     @Override

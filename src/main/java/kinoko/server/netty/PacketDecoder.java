@@ -7,6 +7,7 @@ import kinoko.server.ServerConstants;
 import kinoko.server.crypto.IGCipher;
 import kinoko.server.crypto.MapleCrypto;
 import kinoko.server.crypto.ShandaCrypto;
+import kinoko.server.packet.InPacket;
 import kinoko.server.packet.NioBufferInPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +49,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             ShandaCrypto.decrypt(data);
             c.setRecvIv(IGCipher.innoHash(iv));
 
-            final NioBufferInPacket inPacket = new NioBufferInPacket(data);
+            final InPacket inPacket = new NioBufferInPacket(data);
             out.add(inPacket);
         }
     }

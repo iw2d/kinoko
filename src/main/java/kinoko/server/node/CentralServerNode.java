@@ -7,6 +7,7 @@ import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
+import kinoko.world.social.party.Party;
 import kinoko.world.user.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +23,7 @@ public final class CentralServerNode extends ServerNode {
     private final ChannelStorage channelStorage = new ChannelStorage();
     private final MigrationStorage migrationStorage = new MigrationStorage();
     private final UserStorage userStorage = new UserStorage();
+    private final PartyStorage partyStorage = new PartyStorage();
 
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
@@ -90,6 +92,30 @@ public final class CentralServerNode extends ServerNode {
     }
 
 
+    // PARTY METHODS ---------------------------------------------------------------------------------------------------
+
+    public Party createNewParty(RemoteUser remoteUser) {
+        final Party party = new Party(partyStorage.getNewPartyId(), remoteUser);
+        partyStorage.addParty(party);
+        return party;
+    }
+
+    public boolean removeParty(Party party) {
+        return partyStorage.removeParty(party);
+    }
+
+    public Optional<Party> getPartyById(int partyId) {
+        if (partyId == 0) {
+            return Optional.empty();
+        }
+        return partyStorage.getPartyById(partyId);
+    }
+
+    public Optional<Party> getPartyByCharacterId(int characterId) {
+        return partyStorage.getPartyByCharacterId(characterId);
+    }
+
+
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
@@ -106,6 +132,7 @@ public final class CentralServerNode extends ServerNode {
             @Override
             protected void initChannel(SocketChannel ch) {
                 ch.pipeline().addLast(new CentralPacketDecoder(), new CentralServerHandler(self), new CentralPacketEncoder());
+                ch.attr(NettyContext.CONTEXT_KEY).set(new NettyContext());
                 ch.attr(RemoteChildNode.NODE_KEY).set(new RemoteChildNode(ch));
                 ch.writeAndFlush(CentralPacket.initializeRequest());
             }

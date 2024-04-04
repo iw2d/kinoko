@@ -205,7 +205,7 @@ public final class MigrationHandler {
                 user.write(WvsContext.memoResult(MemoResult.receive()));
             }
 
-            // TODO: update family, guild, party
+            // Loading Party handled from CentralServerNode
         }
     }
 

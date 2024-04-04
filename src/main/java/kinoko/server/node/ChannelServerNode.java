@@ -191,6 +191,7 @@ public final class ChannelServerNode extends ServerNode {
             @Override
             protected void initChannel(SocketChannel ch) {
                 ch.pipeline().addLast(new CentralPacketDecoder(), new CentralClientHandler(self), new CentralPacketEncoder());
+                ch.attr(NettyContext.CONTEXT_KEY).set(new NettyContext());
             }
         }, InetAddress.getByAddress(ServerConstants.CENTRAL_HOST), ServerConstants.CENTRAL_PORT);
         centralClientFuture.sync();

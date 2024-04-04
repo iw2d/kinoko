@@ -30,7 +30,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
-        final int op = inPacket.decodeInt();
+        final int op = inPacket.decodeShort();
         final CentralPacketHeader header = CentralPacketHeader.getByValue(op);
         log.log(Level.DEBUG, "[ChannelServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         switch (header) {

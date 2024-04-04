@@ -76,7 +76,7 @@ public interface OutPacket {
 
     static OutPacket of(CentralPacketHeader op) {
         final OutPacket outPacket = of();
-        outPacket.encodeInt(op.getValue());
+        outPacket.encodeShort(op.getValue());
         return outPacket;
     }
 }

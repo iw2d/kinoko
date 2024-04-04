@@ -6,7 +6,6 @@ import kinoko.server.node.RemoteUser;
 import kinoko.server.node.TransferInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.social.party.PartyRequest;
-import kinoko.world.social.party.TownPortal;
 
 import java.util.Set;
 
@@ -141,20 +140,6 @@ public final class CentralPacket {
         final OutPacket outPacket = OutPacket.of(CentralPacketHeader.PARTY_REQUEST);
         outPacket.encodeInt(characterId);
         partyRequest.encode(outPacket);
-        return outPacket;
-    }
-
-    public static OutPacket partyUpdate(int partyId, RemoteUser remoteUser, TownPortal townPortal) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.PARTY_UPDATE);
-        outPacket.encodeInt(partyId);
-        outPacket.encodeByte(remoteUser != null);
-        if (remoteUser != null) {
-            remoteUser.encode(outPacket);
-        }
-        outPacket.encodeByte(townPortal != null);
-        if (townPortal != null) {
-            townPortal.encode(outPacket);
-        }
         return outPacket;
     }
 

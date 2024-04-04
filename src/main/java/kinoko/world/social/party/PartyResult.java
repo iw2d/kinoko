@@ -110,6 +110,43 @@ public final class PartyResult implements Encodable {
         return new PartyResult(resultType);
     }
 
+    public static PartyResult load(Party party) {
+        final PartyResult result = new PartyResult(PartyResultType.LOAD_PARTY_DONE);
+        result.party = party;
+        return result;
+    }
+
+    public static PartyResult update(RemoteUser member) {
+        final PartyResult result = new PartyResult(PartyResultType.CHANGE_LEVEL_OR_JOB);
+        result.member = member;
+        return result;
+    }
+
+    public static PartyResult create(Party party) {
+        final PartyResult result = new PartyResult(PartyResultType.CREATE_NEW_PARTY_DONE);
+        result.party = party;
+        result.townPortal = TownPortal.EMPTY_PORTAL;
+        return result;
+    }
+
+    public static PartyResult disband(Party party, RemoteUser member) {
+        final PartyResult result = new PartyResult(PartyResultType.WITHDRAW_PARTY_DONE);
+        result.party = party;
+        result.member = member;
+        result.bool1 = false; // disband
+        return result;
+    }
+
+
+    public static PartyResult leave(Party party, RemoteUser member) {
+        final PartyResult result = new PartyResult(PartyResultType.WITHDRAW_PARTY_DONE);
+        result.party = party;
+        result.member = member;
+        result.bool1 = true; // not disband
+        result.bool2 = false; // not expelled
+        return result;
+    }
+
     public static PartyResult message(String message) {
         final PartyResult result = new PartyResult(PartyResultType.SERVER_MSG);
         result.string1 = message;
