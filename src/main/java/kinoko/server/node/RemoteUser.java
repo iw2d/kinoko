@@ -13,8 +13,9 @@ public final class RemoteUser implements Encodable {
     private final String characterName;
     private final int level;
     private final int job;
+    private final int partyId;
 
-    public RemoteUser(int channelId, int fieldId, int accountId, int characterId, String characterName, int level, int job) {
+    public RemoteUser(int channelId, int fieldId, int accountId, int characterId, String characterName, int level, int job, int partyId) {
         this.channelId = channelId;
         this.fieldId = fieldId;
         this.accountId = accountId;
@@ -22,6 +23,7 @@ public final class RemoteUser implements Encodable {
         this.characterName = characterName;
         this.level = level;
         this.job = job;
+        this.partyId = partyId;
     }
 
     public int getChannelId() {
@@ -52,6 +54,10 @@ public final class RemoteUser implements Encodable {
         return job;
     }
 
+    public int getPartyId() {
+        return partyId;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(channelId);
@@ -61,6 +67,7 @@ public final class RemoteUser implements Encodable {
         outPacket.encodeString(characterName);
         outPacket.encodeInt(level);
         outPacket.encodeInt(job);
+        outPacket.encodeInt(partyId);
     }
 
     public static RemoteUser decode(InPacket inPacket) {
@@ -71,6 +78,7 @@ public final class RemoteUser implements Encodable {
         final String characterName = inPacket.decodeString();
         final int level = inPacket.decodeInt();
         final int job = inPacket.decodeInt();
+        final int partyId = inPacket.decodeInt();
         return new RemoteUser(
                 channelId,
                 fieldId,
@@ -78,7 +86,8 @@ public final class RemoteUser implements Encodable {
                 characterId,
                 characterName,
                 level,
-                job
+                job,
+                partyId
         );
     }
 
@@ -90,7 +99,8 @@ public final class RemoteUser implements Encodable {
                 user.getCharacterId(),
                 user.getCharacterName(),
                 user.getLevel(),
-                user.getJob()
+                user.getJob(),
+                user.getPartyId()
         );
     }
 }

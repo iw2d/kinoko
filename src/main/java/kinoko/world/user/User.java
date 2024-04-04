@@ -47,6 +47,7 @@ public final class User extends Life implements Lockable<User> {
     private final Map<Integer, Summoned> summoned = new HashMap<>();
 
     private Dialog dialog;
+    private int partyId;
     private int portableChairId;
     private boolean inTransfer;
 
@@ -153,6 +154,14 @@ public final class User extends Life implements Lockable<User> {
 
     public void closeDialog() {
         setDialog(null);
+    }
+
+    public int getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(int partyId) {
+        this.partyId = partyId;
     }
 
     public int getPortableChairId() {

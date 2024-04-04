@@ -100,6 +100,16 @@ import java.util.Map;
  *      2 : receive USER_QUERY_REQUEST
  *      3 : resolve queried users from UserStorage
  *      4 : send USER_QUERY_RESULT to ChannelServerNode
+ *
+ * Party request
+ *   ChannelServerNode (target)
+ *      1 : receive PARTY_REQUEST (channel server)
+ *      2 : send PARTY_REQUEST [character id, party request] to CentralServerNode
+ *   CentralServerNode
+ *      3 : receive PARTY_REQUEST
+ *      4 : process packet according to received party request type
+ *      5 : send USER_PACKET_RECEIVE to required recipients
+ *          optionally send PARTY_RESULT [character id, party id] back to target ChannelServerNode (update user party id)
  * </pre>
  */
 public enum CentralPacketHeader {
@@ -118,7 +128,10 @@ public enum CentralPacketHeader {
     USER_PACKET_RECEIVE,
     USER_PACKET_BROADCAST,
     USER_QUERY_REQUEST,
-    USER_QUERY_RESULT;
+    USER_QUERY_RESULT,
+    PARTY_REQUEST,
+    PARTY_UPDATE,
+    PARTY_RESULT;
 
     private static final Map<Integer, CentralPacketHeader> headerMap = new HashMap<>();
 

@@ -163,6 +163,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Reply with queried remote users
                 remoteChildNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));
             }
+            case PARTY_REQUEST -> {
+                // TODO
+            }
+            case PARTY_UPDATE -> {
+                // TODO
+            }
             case null -> {
                 log.error("Central Server received an unknown opcode : {}", op);
             }

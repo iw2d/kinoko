@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public final class Party implements Encodable {
-    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, 0, 0, "", 0, 0);
+    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, 0, 0, "", 0, 0, 0);
     private final int partyId;
     private final List<RemoteUser> partyMembers = new ArrayList<>();
-    private RemoteUser partyLeader;
+    private int partyBossId;
 
     public Party(int partyId) {
         this.partyId = partyId;
@@ -41,7 +41,7 @@ public final class Party implements Encodable {
         forEachMember((member) -> outPacket.encodeInt(member.getJob())); // anJob
         forEachMember((member) -> outPacket.encodeInt(member.getLevel())); // anLevel
         forEachMember((member) -> outPacket.encodeInt(member.getChannelId())); // anChannelID
-        outPacket.encodeInt(partyLeader.getCharacterId()); // dwPartyBossCharacterID
+        outPacket.encodeInt(partyBossId); // dwPartyBossCharacterID
         forEachMember((member) -> outPacket.encodeInt(member.getFieldId())); // adwFieldID
         forEachMember((member) -> outPacket.encodeArray(new byte[20])); // aTownPortal // TODO - TownPortal::encodeForPartyData
         forEachMember((member) -> outPacket.encodeInt(0)); // aPQReward

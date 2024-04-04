@@ -50,7 +50,9 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
 import kinoko.world.quest.QuestResult;
 import kinoko.world.social.friend.*;
+import kinoko.world.social.party.PartyRequest;
 import kinoko.world.social.party.PartyRequestType;
+import kinoko.world.social.party.PartyResult;
 import kinoko.world.social.party.PartyResultType;
 import kinoko.world.user.User;
 import kinoko.world.user.config.*;
@@ -713,27 +715,37 @@ public final class UserHandler {
         switch (requestType) {
             case CREATE_NEW_PARTY -> {
                 // CField::SendCreateNewPartyMsg
+                if (user.getPartyId() != 0) {
+                    user.write(WvsContext.partyResult(PartyResult.of(PartyResultType.CREATE_NEW_PARTY_ALREADY_JOINED)));
+                    return;
+                }
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.CREATE_NEW_PARTY));
             }
             case WITHDRAW_PARTY -> {
                 // CField::SendWithdrawPartyMsg
                 inPacket.decodeByte(); // hardcoded 0
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.WITHDRAW_PARTY));
             }
             case JOIN_PARTY -> {
                 // CWvsContext::OnPartyResult
-                final int partyId = inPacket.decodeInt();
+                final int inviterId = inPacket.decodeInt();
                 inPacket.decodeByte(); // unknown byte from INVITE_PARTY
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JOIN_PARTY, inviterId));
             }
             case INVITE_PARTY -> {
                 // CField::SendJoinPartyMsg
                 final String targetName = inPacket.decodeString();
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.invite(targetName));
             }
             case KICK_PARTY -> {
                 // CField::SendKickPartyMsg
                 final int targetId = inPacket.decodeInt();
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.KICK_PARTY, targetId));
             }
             case CHANGE_PARTY_BOSS -> {
                 // CField::SendChangePartyBossMsg
                 final int targetId = inPacket.decodeInt();
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.CHANGE_PARTY_BOSS, targetId));
             }
             case null -> {
                 log.error("Unknown party request type : {}", type);
@@ -750,12 +762,28 @@ public final class UserHandler {
         final PartyResultType resultType = PartyResultType.getByValue(type);
         switch (resultType) {
             case INVITE_PARTY_SENT, INVITE_PARTY_BLOCKED_USER, INVITE_PARTY_ALREADY_INVITED,
-                    INVITE_PARTY_ALREADY_INVITED_BY_INVITER, INVITE_PARTY_REJECTED, INVITE_PARTY_ACCEPTED -> {
-                final int inviterId = inPacket.decodeInt(); // this->GetInviterID()
+                    INVITE_PARTY_ALREADY_INVITED_BY_INVITER, INVITE_PARTY_REJECTED -> {
+                final int inviterId = inPacket.decodeInt();
+                final String message = switch (resultType) {
+                    // These messages are from the client string pool, but are not used (except for INVITE_PARTY_SENT)
+                    case INVITE_PARTY_SENT, INVITE_PARTY_BLOCKED_USER ->
+                            String.format("You have invited '%s' to your party.", user.getCharacterName());
+                    case INVITE_PARTY_ALREADY_INVITED ->
+                            String.format("'%s' is taking care of another invitation.", user.getCharacterName());
+                    case INVITE_PARTY_ALREADY_INVITED_BY_INVITER ->
+                            String.format("You have already invited '%s' to your party.", user.getCharacterName());
+                    case INVITE_PARTY_REJECTED ->
+                            String.format("'%s' has declined the party request.", user.getCharacterName());
+                    default -> {
+                        throw new IllegalStateException("Unexpected party result type");
+                    }
+                };
+                user.getConnectedServer().submitUserPacketReceive(inviterId, WvsContext.partyResult(PartyResult.message(message)));
+            }
+            case INVITE_PARTY_ACCEPTED -> {
+                final int inviterId = inPacket.decodeInt();
                 // Join party
-                if (resultType == PartyResultType.INVITE_PARTY_ACCEPTED) {
-
-                }
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JOIN_PARTY, inviterId));
             }
             case null -> {
                 log.error("Unknown party result type : {}", type);

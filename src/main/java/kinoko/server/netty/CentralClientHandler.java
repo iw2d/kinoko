@@ -95,6 +95,17 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 }
                 channelServerNode.completeUserQueryRequest(requestId, remoteUsers);
             }
+            case PARTY_RESULT -> {
+                final int characterId = inPacket.decodeInt();
+                final int partyId = inPacket.decodeInt();
+                // Resolve target user
+                final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
+                if (targetUserResult.isEmpty()) {
+                    log.error("Could not resolve target user for PARTY_RESULT");
+                    return;
+                }
+                targetUserResult.get().setPartyId(partyId);
+            }
             case null -> {
                 log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);
             }

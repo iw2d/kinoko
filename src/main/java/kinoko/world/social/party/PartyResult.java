@@ -8,11 +8,12 @@ public final class PartyResult implements Encodable {
     private final PartyResultType resultType;
 
     private Party party;
-    private RemoteUser user;
+    private RemoteUser member;
     private TownPortal townPortal;
     private int int1;
     private boolean bool1;
     private boolean bool2;
+    private String string1;
 
     public PartyResult(PartyResultType resultType) {
         this.resultType = resultType;
@@ -23,10 +24,10 @@ public final class PartyResult implements Encodable {
         outPacket.encodeByte(resultType.getValue());
         switch (resultType) {
             case INVITE_PARTY -> {
-                outPacket.encodeInt(party.getPartyId()); // partyId
-                outPacket.encodeString(user.getCharacterName()); // sInviter
-                outPacket.encodeInt(user.getLevel()); // nLevel
-                outPacket.encodeInt(user.getJob()); // nJobCode
+                outPacket.encodeInt(member.getCharacterId()); // dwInviterID
+                outPacket.encodeString(member.getCharacterName()); // sInviter
+                outPacket.encodeInt(member.getLevel()); // nLevel
+                outPacket.encodeInt(member.getJob()); // nJobCode
                 outPacket.encodeByte(0); // not sure, related to party search
             }
             case LOAD_PARTY_DONE, USER_MIGRATION -> {
@@ -39,34 +40,34 @@ public final class PartyResult implements Encodable {
             }
             case WITHDRAW_PARTY_DONE -> {
                 outPacket.encodeInt(party.getPartyId()); // nPartyID
-                outPacket.encodeInt(user.getCharacterId());
+                outPacket.encodeInt(member.getCharacterId());
                 outPacket.encodeByte(bool1); // if false, party disbanded
                 if (bool1) {
                     outPacket.encodeByte(bool2); // bool2 ? expelled : left
-                    outPacket.encodeString(user.getCharacterName());
+                    outPacket.encodeString(member.getCharacterName());
                     party.encode(outPacket); // PARTYDATA::Decode
                 }
             }
             case JOIN_PARTY_DONE -> {
                 outPacket.encodeInt(party.getPartyId()); // nPartyID
-                outPacket.encodeString(user.getCharacterName());
+                outPacket.encodeString(string1);
                 party.encode(outPacket); // PARTYDATA::Decode
             }
             case INVITE_PARTY_SENT -> {
-                outPacket.encodeString(user.getCharacterName());
+                outPacket.encodeString(string1);
             }
             case CHANGE_PARTY_BOSS_DONE -> {
-                outPacket.encodeInt(user.getCharacterId());
+                outPacket.encodeInt(member.getCharacterId());
                 outPacket.encodeByte(bool1); // from disconnecting
             }
             case CHANGE_LEVEL_OR_JOB -> {
-                outPacket.encodeInt(user.getCharacterId());
-                outPacket.encodeInt(user.getLevel());
-                outPacket.encodeInt(user.getJob());
+                outPacket.encodeInt(member.getCharacterId());
+                outPacket.encodeInt(member.getLevel());
+                outPacket.encodeInt(member.getJob());
             }
             case SUCCESS_TO_SELECT_PQ_REWARD -> {
-                outPacket.encodeInt(user.getCharacterId());
-                outPacket.encodeString(user.getCharacterName());
+                outPacket.encodeInt(member.getCharacterId());
+                outPacket.encodeString(member.getCharacterName());
                 outPacket.encodeByte(int1); // nSelectedIdx
             }
             case FAIL_TO_SELECT_PQ_REWARD -> {
@@ -77,17 +78,20 @@ public final class PartyResult implements Encodable {
                 throw new IllegalStateException("Tried to encode unsupported party result type");
             }
             case SERVER_MSG -> {
-                outPacket.encodeByte(false); // Your request for a party didn't work due to an unexpected error.
+                outPacket.encodeByte(string1 != null); // Your request for a party didn't work due to an unexpected error.
+                if (string1 != null) {
+                    outPacket.encodeString(string1);
+                }
             }
             case TOWN_PORTAL_CHANGED -> {
                 outPacket.encodeInt(int1); // member index
                 townPortal.encode(outPacket); // PARTYDATA::TOWNPORTAL
             }
             case ADVER_APPLY -> {
-                outPacket.encodeInt(user.getCharacterId()); // dwApplierId
-                outPacket.encodeString(user.getCharacterName()); // sApplierName
-                outPacket.encodeInt(user.getLevel()); // nLevel
-                outPacket.encodeInt(user.getJob()); // nJobCode
+                outPacket.encodeInt(member.getCharacterId()); // dwApplierId
+                outPacket.encodeString(member.getCharacterName()); // sApplierName
+                outPacket.encodeInt(member.getLevel()); // nLevel
+                outPacket.encodeInt(member.getJob()); // nJobCode
             }
             case CREATE_NEW_PARTY_ALREADY_JOINED, CREATE_NEW_PARTY_BEGINNER, WITHDRAW_PARTY_NOT_JOINED,
                     JOIN_PARTY_DONE_2, JOIN_PARTY_ALREADY_JOINED, JOIN_PARTY_ALREADY_FULL, JOIN_PARTY_OVER_DESIRED_SIZE,
@@ -104,5 +108,11 @@ public final class PartyResult implements Encodable {
 
     public static PartyResult of(PartyResultType resultType) {
         return new PartyResult(resultType);
+    }
+
+    public static PartyResult message(String message) {
+        final PartyResult result = new PartyResult(PartyResultType.SERVER_MSG);
+        result.string1 = message;
+        return result;
     }
 }

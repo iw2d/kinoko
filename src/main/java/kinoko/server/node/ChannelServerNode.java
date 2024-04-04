@@ -11,6 +11,7 @@ import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
+import kinoko.world.social.party.PartyRequest;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -135,6 +136,13 @@ public final class ChannelServerNode extends ServerNode {
         if (userRequestFuture != null) {
             userRequestFuture.complete(remoteUsers);
         }
+    }
+
+
+    // PARTY METHODS ---------------------------------------------------------------------------------------------------
+
+    public void submitPartyRequest(User user, PartyRequest partyRequest) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.partyRequest(user.getCharacterId(), partyRequest));
     }
 
 
