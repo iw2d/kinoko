@@ -50,14 +50,14 @@ public final class PartyResult implements Encodable {
             }
             case JOIN_PARTY_DONE -> {
                 outPacket.encodeInt(party.getPartyId()); // nPartyID
-                outPacket.encodeString(string1);
+                outPacket.encodeString(member.getCharacterName());
                 party.encode(outPacket); // PARTYDATA::Decode
             }
             case INVITE_PARTY_SENT -> {
                 outPacket.encodeString(string1);
             }
             case CHANGE_PARTY_BOSS_DONE -> {
-                outPacket.encodeInt(member.getCharacterId());
+                outPacket.encodeInt(int1); // new boss id
                 outPacket.encodeByte(bool1); // from disconnecting
             }
             case CHANGE_LEVEL_OR_JOB -> {
@@ -101,13 +101,19 @@ public final class PartyResult implements Encodable {
                 // no encodes
             }
             default -> {
-                throw new IllegalStateException("Tried to encode unsupported party result type");
+                // Your request for a party didn't work due to an unexpected error.
             }
         }
     }
 
     public static PartyResult of(PartyResultType resultType) {
         return new PartyResult(resultType);
+    }
+
+    public static PartyResult invite(RemoteUser member) {
+        final PartyResult result = new PartyResult(PartyResultType.INVITE_PARTY);
+        result.member = member;
+        return result;
     }
 
     public static PartyResult load(Party party) {
@@ -137,13 +143,35 @@ public final class PartyResult implements Encodable {
         return result;
     }
 
-
     public static PartyResult leave(Party party, RemoteUser member) {
         final PartyResult result = new PartyResult(PartyResultType.WITHDRAW_PARTY_DONE);
         result.party = party;
         result.member = member;
         result.bool1 = true; // not disband
         result.bool2 = false; // not expelled
+        return result;
+    }
+
+    public static PartyResult kick(Party party, RemoteUser member) {
+        final PartyResult result = new PartyResult(PartyResultType.WITHDRAW_PARTY_DONE);
+        result.party = party;
+        result.member = member;
+        result.bool1 = true; // not disband
+        result.bool2 = true; // not expelled
+        return result;
+    }
+
+    public static PartyResult join(Party party, RemoteUser member) {
+        final PartyResult result = new PartyResult(PartyResultType.JOIN_PARTY_DONE);
+        result.party = party;
+        result.member = member;
+        return result;
+    }
+
+    public static PartyResult changeBoss(int newBossId, boolean isFromDisconnect) {
+        final PartyResult result = new PartyResult(PartyResultType.CHANGE_PARTY_BOSS_DONE);
+        result.int1 = newBossId;
+        result.bool1 = isFromDisconnect;
         return result;
     }
 

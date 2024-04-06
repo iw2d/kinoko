@@ -153,7 +153,7 @@ public final class UserRemote {
     }
 
     public static OutPacket effect(User user, Effect effect) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_EFFECT_REMOTE);
         outPacket.encodeInt(user.getCharacterId());
         effect.encode(outPacket);
         return outPacket;

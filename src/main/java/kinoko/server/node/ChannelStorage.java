@@ -38,6 +38,9 @@ public final class ChannelStorage {
     }
 
     public Optional<RemoteChildNode> getChildNodeByChannelId(int channelId) {
+        if (channelId < 0) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(nodeArray[channelId]);
     }
 

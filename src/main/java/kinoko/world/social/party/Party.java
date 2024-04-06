@@ -8,12 +8,17 @@ import kinoko.world.GameConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
+/**
+ * Party instance managed by CentralServerNode. RemoteUser instances managed by this object should always be pointing to
+ * the instance stored in UserStorage.
+ */
 public final class Party implements Encodable, Lockable<Party> {
-    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, 0, 0, "", 0, 0, 0);
+    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, "", 0, 0, GameConstants.CHANNEL_OFFLINE, GameConstants.UNDEFINED_FIELD_ID, -1);
     private final Lock lock = new ReentrantLock();
     private final int partyId;
     private final List<RemoteUser> partyMembers = new ArrayList<>();
@@ -61,8 +66,14 @@ public final class Party implements Encodable, Lockable<Party> {
         return true;
     }
 
+    public Optional<RemoteUser> getMember(int characterId) {
+        return partyMembers.stream()
+                .filter((member) -> member.getCharacterId() == characterId)
+                .findFirst();
+    }
+
     public boolean hasMember(int characterId) {
-        return partyMembers.stream().anyMatch((member) -> member.getCharacterId() == characterId);
+        return getMember(characterId).isPresent();
     }
 
     public void updateMember(RemoteUser remoteUser) {
