@@ -51,7 +51,7 @@ public final class QuestItemAct implements QuestAct {
         }
 
         // Handle required slots for choice items
-        if (rewardIndex > 0) {
+        if (rewardIndex >= 0) {
             if (choices.size() < rewardIndex) {
                 return false;
             }
@@ -107,7 +107,7 @@ public final class QuestItemAct implements QuestAct {
         }
 
         // Give choice item
-        if (rewardIndex > 0) {
+        if (rewardIndex >= 0) {
             if (choices.size() < rewardIndex) {
                 return false;
             }
