@@ -1,15 +1,9 @@
 package kinoko.world.field;
 
-import kinoko.server.packet.OutPacket;
-
 import java.util.Optional;
 import java.util.Set;
 
 public interface FieldObject {
-    OutPacket enterFieldPacket();
-
-    OutPacket leaveFieldPacket();
-
     Field getField();
 
     void setField(Field field);

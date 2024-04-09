@@ -1,7 +1,7 @@
 package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
-import kinoko.packet.user.UserPacket;
+import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
@@ -374,17 +374,17 @@ public final class User extends Life implements Lockable<User> {
         final Summoned existing = getSummoned().remove(summoned.getId());
         if (existing != null) {
             existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
-            getField().broadcastPacket(existing.leaveFieldPacket());
+            getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
         }
         getSummoned().put(summoned.getId(), summoned);
-        getField().broadcastPacket(summoned.enterFieldPacket());
+        getField().broadcastPacket(SummonedPacket.summonedEnterField(this, summoned));
         summoned.setEnterType(SummonedEnterType.DEFAULT);
     }
 
     public void removeSummoned(Summoned summoned) {
         final Summoned existing = getSummoned().get(summoned.getId());
         if (existing != null) {
-            getField().broadcastPacket(existing.leaveFieldPacket());
+            getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
         }
     }
 
@@ -452,16 +452,6 @@ public final class User extends Life implements Lockable<User> {
     @Override
     public void setId(int id) {
         throw new IllegalStateException("Tried to modify character ID");
-    }
-
-    @Override
-    public OutPacket enterFieldPacket() {
-        return UserPacket.userEnterField(this);
-    }
-
-    @Override
-    public OutPacket leaveFieldPacket() {
-        return UserPacket.userLeaveField(this);
     }
 
     @Override

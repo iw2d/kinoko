@@ -27,7 +27,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
         mob.setField(field);
         mob.setId(field.getNewObjectId());
         addObject(mob);
-        field.broadcastPacket(mob.enterFieldPacket());
+        field.broadcastPacket(MobPacket.mobEnterField(mob));
         field.getUserPool().assignController(mob);
     }
 
@@ -35,7 +35,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
         if (!removeObject(mob)) {
             return false;
         }
-        field.broadcastPacket(mob.leaveFieldPacket());
+        field.broadcastPacket(MobPacket.mobLeaveField(mob));
         return true;
     }
 

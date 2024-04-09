@@ -98,7 +98,7 @@ public final class PetHandler {
                     }
                 }
                 // Update client
-                user.getField().broadcastPacket(PetPacket.petActivated(user, pet, pet.getPetIndex()));
+                user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
             } else {
                 // Deactivate pet and update client
                 final int petIndex = petIndexResult.get();

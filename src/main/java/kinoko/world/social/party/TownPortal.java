@@ -24,16 +24,6 @@ public final class TownPortal extends FieldObjectImpl implements Encodable {
         return getField() != null ? getField().getFieldId() : 0;
     }
 
-    @Override
-    public OutPacket enterFieldPacket() {
-        return null;
-    }
-
-    @Override
-    public OutPacket leaveFieldPacket() {
-        return null;
-    }
-
     public void encodeForPartyData(OutPacket outPacket) {
         // PARTYDATA::TOWNPORTAL struct (20)
         outPacket.encodeInt(getReturnMap()); // dwTownID

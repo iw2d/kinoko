@@ -1,6 +1,5 @@
 package kinoko.world.field.summoned;
 
-import kinoko.packet.user.SummonedPacket;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -123,16 +122,6 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
                 }
             }
         }
-    }
-
-    @Override
-    public OutPacket enterFieldPacket() {
-        return SummonedPacket.summonedEnterField(owner, this);
-    }
-
-    @Override
-    public OutPacket leaveFieldPacket() {
-        return SummonedPacket.summonedLeaveField(owner, this);
     }
 
     @Override

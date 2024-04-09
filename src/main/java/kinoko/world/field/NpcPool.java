@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.packet.field.NpcPacket;
 import kinoko.world.field.npc.Npc;
 
 public final class NpcPool extends FieldObjectPool<Npc> {
@@ -11,7 +12,7 @@ public final class NpcPool extends FieldObjectPool<Npc> {
         npc.setField(field);
         npc.setId(field.getNewObjectId());
         addObject(npc);
-        field.broadcastPacket(npc.enterFieldPacket());
+        field.broadcastPacket(NpcPacket.npcEnterField(npc));
         field.getUserPool().assignController(npc);
     }
 
@@ -19,7 +20,7 @@ public final class NpcPool extends FieldObjectPool<Npc> {
         if (!removeObject(npc)) {
             return false;
         }
-        field.broadcastPacket(npc.leaveFieldPacket());
+        field.broadcastPacket(NpcPacket.npcLeaveField(npc));
         return true;
     }
 }

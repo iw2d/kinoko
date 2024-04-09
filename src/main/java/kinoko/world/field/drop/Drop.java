@@ -1,7 +1,5 @@
 package kinoko.world.field.drop;
 
-import kinoko.packet.field.FieldPacket;
-import kinoko.server.packet.OutPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObject;
 import kinoko.world.field.FieldObjectImpl;
@@ -72,16 +70,6 @@ public final class Drop extends FieldObjectImpl {
 
     public boolean isUserDrop() {
         return source instanceof User;
-    }
-
-    @Override
-    public OutPacket enterFieldPacket() {
-        return FieldPacket.dropEnterField(this, DropEnterType.ON_THE_FOOTHOLD);
-    }
-
-    @Override
-    public OutPacket leaveFieldPacket() {
-        return FieldPacket.dropLeaveField(this, DropLeaveType.TIMEOUT, 0, 0);
     }
 
     public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId) {

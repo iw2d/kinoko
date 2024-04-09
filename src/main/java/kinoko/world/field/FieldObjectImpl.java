@@ -1,6 +1,5 @@
 package kinoko.world.field;
 
-import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 
 import java.util.Optional;
@@ -11,12 +10,6 @@ public abstract class FieldObjectImpl implements FieldObject {
     private int id;
     private int x;
     private int y;
-
-    @Override
-    public abstract OutPacket enterFieldPacket();
-
-    @Override
-    public abstract OutPacket leaveFieldPacket();
 
     @Override
     public final Field getField() {

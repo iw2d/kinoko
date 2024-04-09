@@ -66,16 +66,6 @@ public final class Npc extends Life implements ControlledObject, Encodable {
     }
 
     @Override
-    public OutPacket enterFieldPacket() {
-        return NpcPacket.npcEnterField(this);
-    }
-
-    @Override
-    public OutPacket leaveFieldPacket() {
-        return NpcPacket.npcLeaveField(this);
-    }
-
-    @Override
     public OutPacket changeControllerPacket(boolean forController) {
         return NpcPacket.npcChangeController(this, forController);
     }

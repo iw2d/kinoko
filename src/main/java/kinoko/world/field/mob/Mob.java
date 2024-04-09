@@ -377,16 +377,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     @Override
-    public OutPacket enterFieldPacket() {
-        return MobPacket.mobEnterField(this);
-    }
-
-    @Override
-    public OutPacket leaveFieldPacket() {
-        return MobPacket.mobLeaveField(this);
-    }
-
-    @Override
     public String toString() {
         return String.format("Mob { %d, oid : %d, hp : %d, mp : %d }", getTemplateId(), getId(), getHp(), getMp());
     }

@@ -11,11 +11,11 @@ import java.util.List;
 public final class PetPacket {
     // CUser::OnPetPacket ----------------------------------------------------------------------------------------------
 
-    public static OutPacket petActivated(User user, Pet pet, int petIndex) {
+    public static OutPacket petActivated(User user, Pet pet) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTIVATED);
         outPacket.encodeInt(user.getCharacterId());
         // this->OnPetActivated
-        outPacket.encodeByte(petIndex); // nIdx
+        outPacket.encodeByte(pet.getPetIndex()); // nIdx
         outPacket.encodeByte(true); // activate
         outPacket.encodeByte(true); // replace?
         pet.encode(outPacket);

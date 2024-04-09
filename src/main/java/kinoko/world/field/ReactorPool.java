@@ -20,7 +20,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         reactor.setField(field);
         reactor.setId(field.getNewObjectId());
         addObject(reactor);
-        field.broadcastPacket(reactor.enterFieldPacket());
+        field.broadcastPacket(FieldPacket.reactorEnterField(reactor));
     }
 
     public void hitReactor(Reactor reactor, int delay) {
