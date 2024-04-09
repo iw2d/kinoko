@@ -209,6 +209,10 @@ public final class User extends Life implements Lockable<User> {
     public void setHp(int hp) {
         getCharacterStat().setHp(Math.clamp(hp, 0, getMaxHp()));
         write(WvsContext.statChanged(Stat.HP, getHp(), true));
+        // Update party
+        getField().getUserPool().forEachPartyMember(this, (member) -> {
+            member.write(UserRemote.receiveHp(this));
+        });
     }
 
     public void addHp(int hp) {

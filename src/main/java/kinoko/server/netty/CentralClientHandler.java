@@ -3,6 +3,7 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
+import kinoko.packet.user.UserRemote;
 import kinoko.server.ServerConstants;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.MigrationInfo;
@@ -104,7 +105,17 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     log.error("Could not resolve target user for PARTY_RESULT");
                     return;
                 }
-                targetUserResult.get().setPartyId(partyId);
+                try (var locked = targetUserResult.get().acquire()) {
+                    final User user = locked.get();
+                    user.setPartyId(partyId);
+                    user.getField().getUserPool().forEachPartyMember(user, (member) -> {
+                        try (var lockedMember = member.acquire()) {
+                            user.write(UserRemote.receiveHp(lockedMember.get()));
+                            lockedMember.get().write(UserRemote.receiveHp(user));
+                        }
+                    });
+                }
+
             }
             case null -> {
                 log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);

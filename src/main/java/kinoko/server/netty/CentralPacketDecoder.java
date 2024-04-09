@@ -16,6 +16,9 @@ public final class CentralPacketDecoder extends ByteToMessageDecoder {
             throw new IllegalStateException("Context missing for CentralPacketDecoder");
         }
         if (c.getStoredLength() < 0) {
+            if (in.readableBytes() < 4) {
+                return;
+            }
             final int length = in.readIntLE();
             c.setStoredLength(length);
         } else if (in.readableBytes() >= c.getStoredLength()) {

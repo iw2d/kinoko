@@ -172,4 +172,12 @@ public final class UserRemote {
         SecondaryStat.encodeReset(outPacket, resetStats);
         return outPacket;
     }
+
+    public static OutPacket receiveHp(User user) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_HP);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(user.getHp());
+        outPacket.encodeInt(user.getMaxHp());
+        return outPacket;
+    }
 }

@@ -53,6 +53,14 @@ public final class UserPool extends FieldObjectPool<User> {
             broadcastPacket(summoned.enterFieldPacket());
         }
 
+        // Update party
+        forEachPartyMember(user, (member) -> {
+            try (var lockedMember = member.acquire()) {
+                user.write(UserRemote.receiveHp(lockedMember.get()));
+                lockedMember.get().write(UserRemote.receiveHp(user));
+            }
+        });
+
         // Handle other field objects
         final Consumer<? extends Life> lifeHandler = (life) -> {
             user.write(life.enterFieldPacket());
@@ -145,6 +153,17 @@ public final class UserPool extends FieldObjectPool<User> {
             }
             user.write(outPacket);
         });
+    }
+
+    public void forEachPartyMember(User user, Consumer<User> consumer) {
+        final int partyId = user.getPartyId();
+        if (partyId != 0) {
+            forEach((member) -> {
+                if (member.getCharacterId() != user.getCharacterId() && member.getPartyId() == partyId) {
+                    consumer.accept(member);
+                }
+            });
+        }
     }
 
     public void assignController(ControlledObject controlled) {

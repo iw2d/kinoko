@@ -28,6 +28,8 @@ import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResult;
 import kinoko.world.social.friend.FriendResultType;
+import kinoko.world.social.party.PartyRequest;
+import kinoko.world.social.party.PartyRequestType;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
@@ -199,13 +201,14 @@ public final class MigrationHandler {
                 user.write(WvsContext.friendResult(FriendResult.invite(friend)));
             }
 
+            // Load party from central server
+            channelServerNode.submitPartyRequest(user, PartyRequest.of(PartyRequestType.LOAD_PARTY));
+
             // Check memos
             final boolean hasMemo = DatabaseManager.memoAccessor().hasMemo(user.getCharacterId());
             if (hasMemo) {
                 user.write(WvsContext.memoResult(MemoResult.receive()));
             }
-
-            // Loading Party handled from CentralServerNode
         }
     }
 
