@@ -58,7 +58,7 @@ public final class Friend implements Encodable {
     }
 
     public boolean isOnline() {
-        return getChannelId() >= 0;
+        return getChannelId() != GameConstants.CHANNEL_OFFLINE;
     }
 
     public boolean isInShop() {
