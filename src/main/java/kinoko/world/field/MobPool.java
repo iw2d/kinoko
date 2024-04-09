@@ -51,7 +51,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 final Set<MobTemporaryStat> resetStats = expireResult.getLeft();
                 final Set<BurnedInfo> resetBurnedInfos = expireResult.getRight();
                 if (!resetStats.isEmpty()) {
-                    field.broadcastPacket(MobPacket.statReset(mob, resetStats, resetBurnedInfos));
+                    field.broadcastPacket(MobPacket.mobStatReset(mob, resetStats, resetBurnedInfos));
                 }
             }
         }

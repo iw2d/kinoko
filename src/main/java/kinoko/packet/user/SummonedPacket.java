@@ -33,7 +33,7 @@ public final class SummonedPacket {
         return outPacket;
     }
 
-    public static OutPacket move(User user, Summoned summoned, MovePath movePath) {
+    public static OutPacket summonedMove(User user, Summoned summoned, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_MOVE);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
@@ -41,7 +41,7 @@ public final class SummonedPacket {
         return outPacket;
     }
 
-    public static OutPacket attack(User user, Summoned summoned, Attack attack) {
+    public static OutPacket summonedAttack(User user, Summoned summoned, Attack attack) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_ATTACK);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
@@ -58,7 +58,7 @@ public final class SummonedPacket {
         return outPacket;
     }
 
-    public static OutPacket skill(User user, Summoned summoned) {
+    public static OutPacket summonedSkill(User user, Summoned summoned) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_SKILL);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
@@ -67,7 +67,7 @@ public final class SummonedPacket {
         return outPacket;
     }
 
-    public static OutPacket hit(User user, Summoned summoned, HitInfo hitInfo) {
+    public static OutPacket summonedHit(User user, Summoned summoned, HitInfo hitInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_HIT);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());

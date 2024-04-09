@@ -84,7 +84,7 @@ public final class UserPacket {
 
     // CUserPool::OnUserCommonPacket -----------------------------------------------------------------------------------
 
-    public static OutPacket chat(User user, ChatType type, String text, boolean onlyBalloon) {
+    public static OutPacket userChat(User user, ChatType type, String text, boolean onlyBalloon) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(type.getValue()); // lType
@@ -93,7 +93,7 @@ public final class UserPacket {
         return outPacket;
     }
 
-    public static OutPacket chatRemote(int characterId, String characterName, ChatType type, String text) {
+    public static OutPacket userChatRemote(int characterId, String characterName, ChatType type, String text) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT_NLCPQ);
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(type.getValue()); // lType
@@ -103,7 +103,7 @@ public final class UserPacket {
         return outPacket;
     }
 
-    public static OutPacket adBoard(User user, String text) {
+    public static OutPacket userAdBoard(User user, String text) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_AD_BOARD);
         outPacket.encodeByte(text != null);
         if (text != null) {

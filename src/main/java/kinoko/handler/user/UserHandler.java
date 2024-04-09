@@ -120,7 +120,7 @@ public final class UserHandler {
         if (text.startsWith(ServerConfig.COMMAND_PREFIX) && CommandProcessor.tryProcessCommand(user, text)) {
             return;
         }
-        user.getField().broadcastPacket(UserPacket.chat(user, ChatType.NORMAL, text, onlyBalloon));
+        user.getField().broadcastPacket(UserPacket.userChat(user, ChatType.NORMAL, text, onlyBalloon));
     }
 
     @Handler(InHeader.USER_EMOTION)

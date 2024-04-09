@@ -36,7 +36,7 @@ public final class NpcPacket {
 
     // CNpcPool::OnNpcPacket -------------------------------------------------------------------------------------------
 
-    public static OutPacket move(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
+    public static OutPacket npcMove(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.NPC_MOVE);
         outPacket.encodeInt(npc.getId());
         outPacket.encodeByte(oneTimeAction);

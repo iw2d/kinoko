@@ -128,7 +128,7 @@ public final class PetHandler {
             return;
         }
         movePath.applyTo(pet);
-        user.getField().broadcastPacket(PetPacket.move(user, petIndex, movePath), user);
+        user.getField().broadcastPacket(PetPacket.petMove(user, petIndex, movePath), user);
     }
 
     @Handler(InHeader.PET_ACTION)
@@ -149,7 +149,7 @@ public final class PetHandler {
             log.error("Received PET_ACTION for invalid pet index : {}", petIndex);
             return;
         }
-        user.getField().broadcastPacket(PetPacket.action(user, petIndex, type, action, chat), user);
+        user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat), user);
     }
 
     @Handler(InHeader.PET_INTERACTION_REQUEST)
@@ -224,7 +224,7 @@ public final class PetHandler {
             }
 
             // Broadcast pet action
-            user.getField().broadcastPacket(PetPacket.actionInteract(user, petIndex, action, success, false));
+            user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, false));
         }
     }
 

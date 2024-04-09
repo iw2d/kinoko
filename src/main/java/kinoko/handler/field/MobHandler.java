@@ -89,8 +89,8 @@ public final class MobHandler {
 
             // update mob position and write response
             final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
-            user.write(MobPacket.ctrlAck(mob, mobCtrlSn, nextAttackPossible, mai));
-            field.broadcastPacket(MobPacket.move(mob, mai, movePath), user);
+            user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, mai));
+            field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
         }
     }
 

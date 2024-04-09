@@ -172,7 +172,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void heal(int hp) {
         setHp(Math.min(getHp() + hp, getMaxHp()));
-        getField().broadcastPacket(MobPacket.damaged(this, -hp));
+        getField().broadcastPacket(MobPacket.mobDamaged(this, -hp));
     }
 
     public void recovery(Instant now) {
@@ -210,7 +210,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         for (var entry : setStats.entrySet()) {
             getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
-        getField().broadcastPacket(MobPacket.statSet(this, setStats, Set.of()));
+        getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, Set.of()));
     }
 
 
@@ -223,7 +223,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         damageDone.put(attacker.getCharacterId(), damageDone.getOrDefault(attacker.getCharacterId(), 0) + actualDamage);
         // Show mob hp indicator
         final double percentage = (double) getHp() / getMaxHp();
-        attacker.write(MobPacket.hpIndicator(this, (int) (percentage * 100)));
+        attacker.write(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
         // Handle death
         if (getHp() <= 0) {
             if (getField().getMobPool().removeMob(this)) {

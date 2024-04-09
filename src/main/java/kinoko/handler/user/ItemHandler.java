@@ -158,7 +158,7 @@ public final class ItemHandler {
             }
 
             // Broadcast pet action
-            user.getField().broadcastPacket(PetPacket.actionFeed(user, petIndex, success, false));
+            user.getField().broadcastPacket(PetPacket.petActionFeed(user, petIndex, success, false));
         }
     }
 

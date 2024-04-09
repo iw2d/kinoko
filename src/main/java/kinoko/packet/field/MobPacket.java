@@ -46,7 +46,7 @@ public final class MobPacket {
 
     // CMobPool::OnMobPacket -------------------------------------------------------------------------------------------
 
-    public static OutPacket move(Mob mob, MobAttackInfo mai, MovePath movePath) {
+    public static OutPacket mobMove(Mob mob, MobAttackInfo mai, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_MOVE);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(false); // bNotForceLandingWhenDiscard
@@ -77,7 +77,7 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket ctrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
+    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CTRL_ACK);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
@@ -88,7 +88,7 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket statSet(Mob mob, Map<MobTemporaryStat, MobStatOption> setStats, Set<BurnedInfo> setBurnedInfos) {
+    public static OutPacket mobStatSet(Mob mob, Map<MobTemporaryStat, MobStatOption> setStats, Set<BurnedInfo> setBurnedInfos) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_SET);
         outPacket.encodeInt(mob.getId()); // dwMobId
         // CMob::ProcessStatSet
@@ -99,7 +99,7 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket statReset(Mob mob, Set<MobTemporaryStat> resetStats, Set<BurnedInfo> resetBurnedInfos) {
+    public static OutPacket mobStatReset(Mob mob, Set<MobTemporaryStat> resetStats, Set<BurnedInfo> resetBurnedInfos) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_RESET);
         outPacket.encodeInt(mob.getId()); // dwMobId
         MobStat.encodeReset(outPacket, resetStats, resetBurnedInfos);
@@ -108,7 +108,7 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket damaged(Mob mob, int damage) {
+    public static OutPacket mobDamaged(Mob mob, int damage) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_DAMAGED);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(0); // (byte != 2) -> CMob::ShowDamage
@@ -120,7 +120,7 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket specialEffectBySkill(Mob mob, int skillId, int characterId, int delay) {
+    public static OutPacket mobSpecialEffectBySkill(Mob mob, int skillId, int characterId, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_SPECIAL_EFFECT_BY_SKILL);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeInt(skillId); // nSkillID
@@ -129,14 +129,14 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket hpIndicator(Mob mob, int percentage) {
+    public static OutPacket mobHpIndicator(Mob mob, int percentage) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_HP_INDICATOR);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(percentage); // nHPpercentage
         return outPacket;
     }
 
-    public static OutPacket catchEffect(Mob mob, boolean success, boolean delay) {
+    public static OutPacket mobCatchEffect(Mob mob, boolean success, boolean delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CATCH_EFFECT);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(success); // bSuccess
@@ -144,7 +144,7 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket effectByItem(Mob mob, int itemId, boolean success) {
+    public static OutPacket mobEffectByItem(Mob mob, int itemId, boolean success) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MOB_EFFECT_BY_ITEM);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeInt(itemId); // nItemID

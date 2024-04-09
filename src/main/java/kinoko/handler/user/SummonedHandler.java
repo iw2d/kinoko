@@ -37,7 +37,7 @@ public final class SummonedHandler {
 
         final MovePath movePath = MovePath.decode(inPacket);
         movePath.applyTo(summoned);
-        user.getField().broadcastPacket(SummonedPacket.move(user, summoned, movePath), user);
+        user.getField().broadcastPacket(SummonedPacket.summonedMove(user, summoned, movePath), user);
     }
 
     @Handler(InHeader.SUMMONED_ATTACK)
@@ -122,6 +122,6 @@ public final class SummonedHandler {
             }
         }
 
-        field.broadcastPacket(SummonedPacket.attack(user, summoned, attack), user);
+        field.broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack), user);
     }
 }
