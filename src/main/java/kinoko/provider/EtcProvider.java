@@ -75,17 +75,15 @@ public final class EtcProvider implements WzProvider {
             if (!(entry.getValue() instanceof WzListProperty commodityProp)) {
                 throw new ProviderError("Failed to resolve commodity");
             }
-            if (WzProvider.getInteger(commodityProp.get("OnSale"), 0) == 0) {
-                continue;
-            }
             final int commodityId = WzProvider.getInteger(commodityProp.get("SN"));
             commodities.put(commodityId, new Commodity(
                     commodityId,
                     WzProvider.getInteger(commodityProp.get("ItemId")),
-                    WzProvider.getInteger(commodityProp.get("Count")),
-                    WzProvider.getInteger(commodityProp.get("Price")),
-                    WzProvider.getInteger(commodityProp.get("Period")),
-                    WzProvider.getInteger(commodityProp.get("Gender"))
+                    WzProvider.getInteger(commodityProp.get("Count"), 1),
+                    WzProvider.getInteger(commodityProp.get("Price"), 0),
+                    WzProvider.getInteger(commodityProp.get("Period"), 0),
+                    WzProvider.getInteger(commodityProp.get("Gender"), 2),
+                    WzProvider.getInteger(commodityProp.get("OnSale"), 0) != 0
             ));
         }
         // Load cash packages

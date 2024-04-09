@@ -18,14 +18,16 @@ public final class Commodity {
     private final int price;
     private final int period;
     private final int gender;
+    private final boolean onSale;
 
-    public Commodity(int commodityId, int itemId, int count, int price, int period, int gender) {
+    public Commodity(int commodityId, int itemId, int count, int price, int period, int gender, boolean onSale) {
         this.commodityId = commodityId;
         this.itemId = itemId;
         this.count = count;
         this.price = price;
         this.period = period;
         this.gender = gender;
+        this.onSale = onSale;
     }
 
     public int getCommodityId() {
@@ -52,6 +54,9 @@ public final class Commodity {
         return gender;
     }
 
+    public boolean isOnSale() {
+        return onSale;
+    }
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 

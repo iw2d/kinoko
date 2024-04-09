@@ -137,11 +137,11 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeInt(int2); // nCount
             }
             case BUY_PACKAGE_DONE -> {
-                outPacket.encodeShort(cashItemInfos.size());
+                outPacket.encodeByte(cashItemInfos.size());
                 for (CashItemInfo cii : cashItemInfos) {
                     cii.encode(outPacket); // GW_CashItemInfo (55)
                 }
-                outPacket.encodeShort(int1); // maple points
+                outPacket.encodeShort(int1); // bonus maple points
             }
             case GIFT_PACKAGE_DONE -> {
                 outPacket.encodeString(string1); // sRcvCharacterName
@@ -226,6 +226,13 @@ public final class CashItemResult implements Encodable {
     public static CashItemResult buyDone(CashItemInfo cashItemInfo) {
         final CashItemResult result = new CashItemResult(CashItemResultType.BUY_DONE);
         result.cashItemInfo = cashItemInfo; // GW_CashItemInfo
+        return result;
+    }
+
+    public static CashItemResult buyPackageDone(List<CashItemInfo> cashItemInfos) {
+        final CashItemResult result = new CashItemResult(CashItemResultType.BUY_PACKAGE_DONE);
+        result.cashItemInfos = cashItemInfos;
+        result.int1 = 0; // bonus maple points
         return result;
     }
 

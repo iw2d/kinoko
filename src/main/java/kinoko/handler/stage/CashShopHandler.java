@@ -19,10 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public final class CashShopHandler {
     private static final Logger log = LogManager.getLogger(CashShopHandler.class);
@@ -57,6 +54,11 @@ public final class CashShopHandler {
                     return;
                 }
                 final Commodity commodity = commodityResult.get();
+                if (!commodity.isOnSale()) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    log.error("Tried to buy commodity ID : {}, which is not available for purchase", commodity.getCommodityId());
+                    return;
+                }
                 final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
                 if (cashItemInfoResult.isEmpty()) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
@@ -125,6 +127,11 @@ public final class CashShopHandler {
                     return;
                 }
                 final Commodity commodity = commodityResult.get();
+                if (!commodity.isOnSale()) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    log.error("Tried to gift commodity ID : {}, which is not available for purchase", commodity.getCommodityId());
+                    return;
+                }
                 final Optional<Gift> giftResult = commodity.createGift(user, giftMessage);
                 if (giftResult.isEmpty()) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
@@ -403,7 +410,67 @@ public final class CashShopHandler {
                     }
                 }
             }
+            case BUY_PACKAGE -> {
+                // CCashShop::OnBuyPackage
+                inPacket.decodeByte(); // dwOption == 2
+                final int paymentType = inPacket.decodeInt(); // dwOption
+                final int commodityId = inPacket.decodeInt(); // nCommSN
+
+                // Resolve package commodity and create CashItemInfos
+                final Optional<Tuple<Commodity, Set<Commodity>>> cashPackageResult = CashShop.getCashPackage(commodityId);
+                if (cashPackageResult.isEmpty()) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_PACKAGE_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    log.error("Could not resolve cash package commodity with ID : {}", commodityId);
+                    return;
+                }
+                final Commodity packageCommodity = cashPackageResult.get().getLeft();
+                if (!packageCommodity.isOnSale()) {
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_PACKAGE_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    log.error("Tried to buy package commodity ID : {}, which is not available for purchase", packageCommodity.getCommodityId());
+                    return;
+                }
+                final Set<Commodity> packageContents = cashPackageResult.get().getRight();
+                final List<CashItemInfo> packageCashItemInfos = new ArrayList<>();
+                for (Commodity commodity : packageContents) {
+                    final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
+                    if (cashItemInfoResult.isEmpty()) {
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_PACKAGE_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        log.error("Could not create cash item info for commodity ID : {}, item ID : {}", commodityId, commodity.getItemId());
+                        return;
+                    }
+                    packageCashItemInfos.add(cashItemInfoResult.get());
+                }
+
+                try (var lockedAccount = user.getAccount().acquire()) {
+                    // Check account locker
+                    final Account account = lockedAccount.get();
+                    if (account.getLocker().getRemaining() < packageCashItemInfos.size()) {
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_PACKAGE_FAILED, CashItemFailReason.BUY_STORED_PROC_FAILED))); // Please check and see if you have exceeded\r\nthe number of cash items you can have.
+                        return;
+                    }
+
+                    // Check payment type and deduct price
+                    if (!deductPrice(lockedAccount, PaymentType.getByValue(paymentType), packageCommodity.getPrice())) {
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_PACKAGE_FAILED, CashItemFailReason.NO_REMAIN_CASH))); // You don't have enough cash.
+                        return;
+                    }
+
+                    // Add to locker and update client
+                    for (CashItemInfo cashItemInfo : packageCashItemInfos) {
+                        account.getLocker().addCashItem(cashItemInfo);
+                    }
+                    user.write(CashShopPacket.queryCashResult(account));
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.buyPackageDone(packageCashItemInfos)));
+                }
+            }
+            case BUY_NORMAL -> {
+                // CCashShop::OnBuyNormal
+                final int commodityId = inPacket.decodeInt(); // nCommoditySn
+                user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.BUY_NORMAL_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                log.error("Unhandled BUY_NORMAL operation for commodity ID : {}", commodityId);
+            }
             case PURCHASE_RECORD -> {
+                // CCashShop::RequestCashPurchaseRecord
                 final int commodityId = inPacket.decodeInt(); // nCommoditySn
                 user.write(CashShopPacket.cashItemResult(CashItemResult.purchaseRecord(commodityId, false)));
             }

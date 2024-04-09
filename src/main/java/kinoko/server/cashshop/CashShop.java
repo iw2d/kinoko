@@ -2,8 +2,11 @@ package kinoko.server.cashshop;
 
 import kinoko.provider.EtcProvider;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Tuple;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 
 public final class CashShop {
@@ -19,6 +22,29 @@ public final class CashShop {
 
     public static Optional<Commodity> getCommodity(int commodityId) {
         return Optional.ofNullable(EtcProvider.getCommodities().get(commodityId));
+    }
+
+    public static Optional<Tuple<Commodity, Set<Commodity>>> getCashPackage(int packageId) {
+        // Resolve package commodity
+        final Optional<Commodity> packageCommodityResult = getCommodity(packageId);
+        if (packageCommodityResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final Commodity packageCommodity = packageCommodityResult.get();
+        // Resolve package contents
+        final Set<Integer> packageContentIds = EtcProvider.getCashPackages().get(packageCommodity.getItemId());
+        if (packageContentIds == null) {
+            return Optional.empty();
+        }
+        final Set<Commodity> packageContents = new HashSet<>();
+        for (int commodityId : packageContentIds) {
+            final Optional<Commodity> commodityResult = getCommodity(commodityId);
+            if (commodityResult.isEmpty()) {
+                return Optional.empty();
+            }
+            packageContents.add(commodityResult.get());
+        }
+        return Optional.of(new Tuple<>(packageCommodity, packageContents));
     }
 
     public static void encode(OutPacket outPacket) {
