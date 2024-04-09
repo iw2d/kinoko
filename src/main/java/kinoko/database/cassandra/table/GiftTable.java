@@ -3,17 +3,17 @@ package kinoko.database.cassandra.table;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import kinoko.database.cassandra.type.ItemUDT;
 
 public final class GiftTable {
-    public static final String ITEM_SN = "item_sn";
+    public static final String GIFT_SN = "gift_sn";
     public static final String RECEIVER_ID = "receiver_id";
-    public static final String ITEM = "item";
+    public static final String ITEM_ID = "item_id";
+    public static final String COMMODITY_ID = "commodity_id";
     public static final String SENDER_NAME = "sender_name";
     public static final String MESSAGE = "message";
 
 
-    private static final String tableName = "gift";
+    private static final String tableName = "gift_table";
 
 
     public static String getTableName() {
@@ -24,9 +24,10 @@ public final class GiftTable {
         session.execute(
                 SchemaBuilder.createTable(keyspace, getTableName())
                         .ifNotExists()
-                        .withPartitionKey(ITEM_SN, DataTypes.BIGINT)
+                        .withPartitionKey(GIFT_SN, DataTypes.BIGINT)
                         .withColumn(RECEIVER_ID, DataTypes.INT)
-                        .withColumn(ITEM, SchemaBuilder.udt(ItemUDT.getTypeName(), true))
+                        .withColumn(ITEM_ID, DataTypes.INT)
+                        .withColumn(COMMODITY_ID, DataTypes.INT)
                         .withColumn(SENDER_NAME, DataTypes.TEXT)
                         .withColumn(MESSAGE, DataTypes.TEXT)
                         .build()

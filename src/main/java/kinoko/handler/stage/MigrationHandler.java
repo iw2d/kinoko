@@ -299,6 +299,8 @@ public final class MigrationHandler {
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 
+        user.getField().removeUser(user); // TODO: separate shop server from channel server
+
         // Load gifts
         final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 

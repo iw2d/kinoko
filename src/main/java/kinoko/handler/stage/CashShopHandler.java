@@ -3,9 +3,11 @@ package kinoko.handler.stage;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.CashShopPacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.server.cashshop.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
+import kinoko.server.memo.MemoResult;
 import kinoko.server.memo.MemoType;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
@@ -87,9 +89,10 @@ public final class CashShopHandler {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.buyDone(cashItemInfo)));
                 }
             }
-            case GIFT -> {
+            case GIFT, GIFT_PACKAGE -> {
                 // CCashShop::SendGiftsPacket
                 // CCashShop::GiftWishItem
+                // CCashShop::OnGiftPackage
                 final String secondaryPassword = inPacket.decodeString();
                 final int commodityId = inPacket.decodeInt(); // nCommSN
                 // This byte is only encoded in CCashShop::SendGiftsPacket, and not CCashShop::GiftWishItem
@@ -178,6 +181,9 @@ public final class CashShopHandler {
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 }
+
+                // Notify memo recipient
+                user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, WvsContext.memoResult(MemoResult.receive()));
             }
             case SET_WISH -> {
                 // CCashShop::OnSetWish

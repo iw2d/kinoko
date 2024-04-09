@@ -21,7 +21,7 @@ public final class AccountTable {
     public static final String LOCKER_ITEMS = "locker_items";
     public static final String WISHLIST = "wishlist";
 
-    private static final String tableName = "account";
+    private static final String tableName = "account_table";
 
     public static String getTableName() {
         return tableName;

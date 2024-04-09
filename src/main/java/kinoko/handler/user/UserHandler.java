@@ -953,21 +953,52 @@ public final class UserHandler {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
+                // Resolve commodity
+                final Optional<Commodity> commodityResult = CashShop.getCommodity(gift.getCommodityId());
+                if (commodityResult.isEmpty()) {
+                    log.error("Failed to resolve gift commodity ID : {}", gift.getCommodityId());
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    return;
+                }
+                final Set<CashItemInfo> cashItemInfos = new HashSet<>();
+                final Optional<Tuple<Commodity, Set<Commodity>>> packageResult = CashShop.getCashPackage(gift.getCommodityId());
+                if (packageResult.isPresent()) {
+                    // Cash package
+                    for (Commodity commodity : packageResult.get().getRight()) {
+                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
+                        if (cashItemInfoResult.isEmpty()) {
+                            log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
+                            user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            return;
+                        }
+                        cashItemInfos.add(cashItemInfoResult.get());
+                    }
+                } else {
+                    // Normal gift
+                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user);
+                    if (cashItemInfoResult.isEmpty()) {
+                        log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        return;
+                    }
+                    cashItemInfos.add(cashItemInfoResult.get());
+                }
                 // Receive gift
                 try (var lockedAccount = user.getAccount().acquire()) {
                     final Locker locker = lockedAccount.get().getLocker();
-                    if (locker.getRemaining() < 1) {
+                    if (locker.getRemaining() < cashItemInfos.size()) {
                         user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("Could not receive gift as the locker is full.")));
                         return;
                     }
                     // Delete gift from DB and add to locker
                     if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
-                        log.error("Failed to delete gift with item sn : {}", gift.getItemSn());
+                        log.error("Failed to delete gift with sn : {}", gift.getGiftSn());
                         user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
-                    final CashItemInfo cashItemInfo = CashItemInfo.from(gift.getItem(), user);
-                    locker.addCashItem(cashItemInfo);
+                    for (CashItemInfo cashItemInfo : cashItemInfos) {
+                        locker.addCashItem(cashItemInfo);
+                    }
                     user.write(CashShopPacket.cashItemResult(CashItemResult.loadLockerDone(lockedAccount.get())));
                 }
                 // Resolve receiver
@@ -995,6 +1026,8 @@ public final class UserHandler {
                     user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 }
                 // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // memo result not required
+                // Notify memo recipient
+                user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, WvsContext.memoResult(MemoResult.receive()));
             }
             case DELETE -> {
                 // CMemoListDlg::SetRet

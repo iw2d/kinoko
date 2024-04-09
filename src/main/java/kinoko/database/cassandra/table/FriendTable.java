@@ -11,7 +11,7 @@ public final class FriendTable {
     public static final String FRIEND_GROUP = "friend_group";
     public static final String FRIEND_STATUS = "friend_status";
 
-    private static final String tableName = "friend";
+    private static final String tableName = "friend_table";
 
     public static String getTableName() {
         return tableName;
@@ -26,6 +26,13 @@ public final class FriendTable {
                         .withColumn(FRIEND_NAME, DataTypes.TEXT)
                         .withColumn(FRIEND_GROUP, DataTypes.TEXT)
                         .withColumn(FRIEND_STATUS, DataTypes.INT)
+                        .build()
+        );
+        session.execute(
+                SchemaBuilder.createIndex()
+                        .ifNotExists()
+                        .onTable(keyspace, getTableName())
+                        .andColumn(FRIEND_ID)
                         .build()
         );
     }

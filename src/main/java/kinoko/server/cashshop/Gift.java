@@ -2,29 +2,32 @@ package kinoko.server.cashshop;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
-import kinoko.world.item.Item;
 
 public final class Gift implements Encodable {
-    private final Item item;
+    private final long giftSn;
+    private final int itemId;
+    private final int commodityId;
     private final String sender;
     private final String message;
 
-    public Gift(Item item, String sender, String message) {
-        this.item = item;
+    public Gift(long giftSn, int itemId, int commodityId, String sender, String message) {
+        this.giftSn = giftSn;
+        this.itemId = itemId;
+        this.commodityId = commodityId;
         this.sender = sender;
         this.message = message;
     }
 
-    public Item getItem() {
-        return item;
-    }
-
-    public long getItemSn() {
-        return item.getItemSn();
+    public long getGiftSn() {
+        return giftSn;
     }
 
     public int getItemId() {
-        return item.getItemId();
+        return itemId;
+    }
+
+    public int getCommodityId() {
+        return commodityId;
     }
 
     public String getSender() {
@@ -38,7 +41,7 @@ public final class Gift implements Encodable {
     @Override
     public void encode(OutPacket outPacket) {
         // GW_GiftList struct (98)
-        outPacket.encodeLong(getItemSn()); // liSN
+        outPacket.encodeLong(getGiftSn()); // liSN
         outPacket.encodeInt(getItemId()); // nItemID
         outPacket.encodeString(sender, 13); // sBuyCharacterName
         outPacket.encodeString(message, 73); // sText

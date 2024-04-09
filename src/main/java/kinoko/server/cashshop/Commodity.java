@@ -88,14 +88,10 @@ public final class Commodity {
     }
 
     public Optional<Gift> createGift(User user, String message) {
-        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(getItemId());
-        if (itemInfoResult.isEmpty()) {
-            return Optional.empty();
-        }
-        final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), getCount());
-        item.setDateExpire(Instant.now().plus(getPeriod(), ChronoUnit.DAYS));
         final Gift gift = new Gift(
-                item,
+                user.getNextItemSn(),
+                getItemId(),
+                getCommodityId(),
                 user.getCharacterName(),
                 message
         );

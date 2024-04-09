@@ -27,7 +27,7 @@ public final class CharacterTable {
     public static final String ITEM_SN_COUNTER = "item_sn_counter";
 
 
-    private static final String tableName = "character";
+    private static final String tableName = "character_table";
 
     public static String getTableName() {
         return tableName;
