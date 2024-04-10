@@ -17,7 +17,7 @@ public final class LoginPacket {
 
     public static OutPacket connect(byte[] sendIv, byte[] recvIv) {
         final OutPacket outPacket = OutPacket.of();
-        outPacket.encodeShort(0x0E);
+        outPacket.encodeShort(13 + ServerConstants.PATCH.length());
         outPacket.encodeShort(ServerConstants.GAME_VERSION);
         outPacket.encodeString(ServerConstants.PATCH);
         outPacket.encodeArray(sendIv); // sendIv for client (recvIv for server)
