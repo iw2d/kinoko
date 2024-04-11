@@ -34,15 +34,18 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket migrationRequest(int requestId, MigrationInfo migrationInfo) {
-        final OutPacket outPacket = OutPacket.of(CentralHeader.MIGRATION_REQUEST);
+    public static OutPacket migrateRequest(int requestId, int accountId, int characterId, byte[] machineId, byte[] clientKey) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MIGRATE_REQUEST);
         outPacket.encodeInt(requestId);
-        migrationInfo.encode(outPacket);
+        outPacket.encodeInt(accountId);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeArray(machineId);
+        outPacket.encodeArray(clientKey);
         return outPacket;
     }
 
-    public static OutPacket migrationResult(int requestId, MigrationInfo migrationInfo) {
-        final OutPacket outPacket = OutPacket.of(CentralHeader.MIGRATION_RESULT);
+    public static OutPacket migrateResult(int requestId, MigrationInfo migrationInfo) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MIGRATE_RESULT);
         outPacket.encodeInt(requestId);
         outPacket.encodeByte(migrationInfo != null);
         if (migrationInfo != null) {

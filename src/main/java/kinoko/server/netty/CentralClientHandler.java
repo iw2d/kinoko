@@ -46,7 +46,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     throw new RuntimeException(e);
                 }
             }
-            case MIGRATION_RESULT -> {
+            case MIGRATE_RESULT -> {
                 final int requestId = inPacket.decodeInt();
                 final boolean success = inPacket.decodeBoolean();
                 final MigrationInfo migrationResult = success ? MigrationInfo.decode(inPacket) : null;

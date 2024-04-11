@@ -62,17 +62,22 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 centralServerNode.removeChildNode(channelId);
             }
-            case MIGRATION_REQUEST -> {
+            case MIGRATE_REQUEST -> {
                 // Channel migration - complete stored migration request
                 final int requestId = inPacket.decodeInt();
-                final MigrationInfo migrationInfo = MigrationInfo.decode(inPacket);
-                final Optional<MigrationInfo> migrationResult = centralServerNode.completeMigrationRequest(migrationInfo);
-                remoteChildNode.write(CentralPacket.migrationResult(requestId, migrationResult.orElse(null)));
+                final int accountId = inPacket.decodeInt();
+                final int characterId = inPacket.decodeInt();
+                final byte[] machineId = inPacket.decodeArray(16);
+                final byte[] clientKey = inPacket.decodeArray(8);
+                final Optional<MigrationInfo> migrationResult = centralServerNode.completeMigrationRequest(remoteChildNode.getChannelId(), accountId, characterId, machineId, clientKey);
+                remoteChildNode.write(CentralPacket.migrateResult(requestId, migrationResult.orElse(null)));
             }
             case TRANSFER_REQUEST -> {
                 // Channel transfer - create migration request and reply with transfer info
                 final int requestId = inPacket.decodeInt();
                 final MigrationInfo migrationInfo = MigrationInfo.decode(inPacket);
+
+
                 // Resolve target channel
                 final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(migrationInfo.getChannelId());
                 if (targetNodeResult.isEmpty()) {
@@ -106,9 +111,11 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             case USER_DISCONNECT -> {
                 final RemoteUser remoteUser = RemoteUser.decode(inPacket);
                 centralServerNode.removeUser(remoteUser);
-                // Set channel to offline
-                remoteUser.setChannelId(GameConstants.CHANNEL_OFFLINE);
-                updatePartyMember(remoteUser);
+                if (!centralServerNode.isMigrating(remoteUser.getAccountId())) {
+                    // Set channel to offline
+                    remoteUser.setChannelId(GameConstants.CHANNEL_OFFLINE);
+                    updatePartyMember(remoteUser);
+                }
             }
             case USER_PACKET_REQUEST -> {
                 final String characterName = inPacket.decodeString();

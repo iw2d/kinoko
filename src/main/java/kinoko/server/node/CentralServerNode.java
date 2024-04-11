@@ -58,12 +58,16 @@ public final class CentralServerNode extends ServerNode {
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
 
-    public synchronized boolean submitMigrationRequest(MigrationInfo migrationInfo) {
+    public boolean isMigrating(int accountId) {
+        return migrationStorage.isMigrating(accountId);
+    }
+
+    public boolean submitMigrationRequest(MigrationInfo migrationInfo) {
         return migrationStorage.submitMigrationRequest(migrationInfo);
     }
 
-    public Optional<MigrationInfo> completeMigrationRequest(MigrationInfo migrationInfo) {
-        return migrationStorage.completeMigrationRequest(migrationInfo);
+    public Optional<MigrationInfo> completeMigrationRequest(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey) {
+        return migrationStorage.completeMigrationRequest(channelId, accountId, characterId, machineId, clientKey);
     }
 
 
@@ -120,7 +124,7 @@ public final class CentralServerNode extends ServerNode {
 
     @Override
     public boolean isConnected(Account account) {
-        return clientStorage.isConnected(account) || migrationStorage.isMigrating(account) ||
+        return clientStorage.isConnected(account) || migrationStorage.isMigrating(account.getId()) ||
                 userStorage.getByAccountId(account.getId()).isPresent();
     }
 

@@ -390,8 +390,9 @@ public final class LoginHandler {
         }
 
         // Resolve target channel
+        final int targetChannelId = account.getChannelId();
         final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
-        final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(account.getChannelId());
+        final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(targetChannelId);
         if (childNodeResult.isEmpty()) {
             log.error("Could not resolve target channel for migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
@@ -400,14 +401,7 @@ public final class LoginHandler {
         final RemoteChildNode targetNode = childNodeResult.get();
 
         // Create and submit migration request
-        final MigrationInfo migrationInfo = new MigrationInfo(
-                account.getChannelId(),
-                account.getId(),
-                characterId,
-                c.getMachineId(),
-                c.getClientKey(),
-                true
-        );
+        final MigrationInfo migrationInfo = MigrationInfo.from(targetChannelId, account.getId(), characterId, c.getMachineId(), c.getClientKey());
         if (!centralServerNode.submitMigrationRequest(migrationInfo)) {
             log.error("Failed to submit migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));

@@ -5,6 +5,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Encodable;
+import kinoko.world.user.User;
 import kinoko.world.user.stat.*;
 
 import java.time.Instant;
@@ -19,28 +20,18 @@ public final class MigrationInfo implements Encodable {
     private final int characterId;
     private final byte[] machineId;
     private final byte[] clientKey;
-    private final boolean isLogin;
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats;
     private final Instant expireTime;
 
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, boolean isLogin, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, Instant expireTime) {
+    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, Instant expireTime) {
         assert machineId.length == 16 && clientKey.length == 8;
         this.channelId = channelId;
         this.accountId = accountId;
         this.characterId = characterId;
         this.machineId = machineId;
         this.clientKey = clientKey;
-        this.isLogin = isLogin;
         this.temporaryStats = temporaryStats;
         this.expireTime = expireTime;
-    }
-
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, boolean isLogin, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats) {
-        this(channelId, accountId, characterId, machineId, clientKey, isLogin, temporaryStats, Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
-    }
-
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, boolean isLogin) {
-        this(channelId, accountId, characterId, machineId, clientKey, isLogin, Map.of(), Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS));
     }
 
     public int getChannelId() {
@@ -84,7 +75,6 @@ public final class MigrationInfo implements Encodable {
                 ", characterId=" + characterId +
                 ", machineId=" + Arrays.toString(machineId) +
                 ", clientKey=" + Arrays.toString(clientKey) +
-                ", isLogin=" + isLogin +
                 ", temporaryStats=" + temporaryStats +
                 ", expireTime=" + expireTime +
                 '}';
@@ -97,9 +87,8 @@ public final class MigrationInfo implements Encodable {
         outPacket.encodeInt(characterId);
         outPacket.encodeArray(machineId);
         outPacket.encodeArray(clientKey);
-        outPacket.encodeLong(expireTime.toEpochMilli());
-        outPacket.encodeByte(isLogin);
         encodeTemporaryStats(outPacket, temporaryStats);
+        outPacket.encodeLong(expireTime.toEpochMilli());
     }
 
     public static MigrationInfo decode(InPacket inPacket) {
@@ -108,10 +97,33 @@ public final class MigrationInfo implements Encodable {
         final int characterId = inPacket.decodeInt();
         final byte[] machineId = inPacket.decodeArray(16);
         final byte[] clientKey = inPacket.decodeArray(8);
-        final long expireTime = inPacket.decodeLong();
-        final boolean isLogin = inPacket.decodeBoolean();
         final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = decodeTemporaryStats(inPacket);
-        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, isLogin, temporaryStats, Instant.ofEpochMilli(expireTime));
+        final long expireTime = inPacket.decodeLong();
+        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, temporaryStats, Instant.ofEpochMilli(expireTime));
+    }
+
+    public static MigrationInfo from(User user, int targetChannelId) {
+        return new MigrationInfo(
+                targetChannelId,
+                user.getAccountId(),
+                user.getCharacterId(),
+                user.getClient().getMachineId(),
+                user.getClient().getClientKey(),
+                user.getSecondaryStat().getTemporaryStats(),
+                Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS)
+        );
+    }
+
+    public static MigrationInfo from(int targetChannelId, int accountId, int characterId, byte[] machineId, byte[] clientKey) {
+        return new MigrationInfo(
+                targetChannelId,
+                accountId,
+                characterId,
+                machineId,
+                clientKey,
+                Map.of(),
+                Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS)
+        );
     }
 
 

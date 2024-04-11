@@ -32,12 +32,12 @@ import java.util.Map;
  *   CentralServerNode
  *      1 : create MigrationInfo, store in MigrationStorage
  *      2 : send SELECT_CHARACTER_RESULT to client (client connects to target channel server)
- *      5 : receive MIGRATION_REQUEST from ChannelServerNode
+ *      5 : receive MIGRATE_REQUEST from ChannelServerNode
  *      6 : remove MigrationInfo from MigrationStorage
- *      7 : reply to ChannelServerNode with MIGRATION_RESULT
+ *      7 : reply to ChannelServerNode with MIGRATE_RESULT
  *   ChannelServerNode (target)
- *      3 : receive MIGRATE_IN (channel server), send MIGRATION_REQUEST to CentralServerNode
- *      4 : block until MIGRATION_RESULT received from CentralServerNode
+ *      3 : receive MIGRATE_IN (channel server), send MIGRATE_REQUEST to CentralServerNode
+ *      4 : block until MIGRATE_RESULT received from CentralServerNode
  *      8 : perform migration, send USER_CONNECT to central server
  *
  * Transfer (from channel server):
@@ -49,12 +49,12 @@ import java.util.Map;
  *      3 : receive TRANSFER_REQUEST from source ChannelServerNode
  *      4 : store received MigrationInfo in MigrationStorage
  *      5 : send TRANSFER_RESULT to source ChannelServerNode
- *      9 : receive MIGRATION_REQUEST from ChannelServerNode
+ *      9 : receive MIGRATE_REQUEST from ChannelServerNode
  *     10 : remove MigrationInfo from MigrationStorage
- *     11 : reply to ChannelServerNode with MIGRATION_RESULT and the removed MigrationInfo
+ *     11 : reply to ChannelServerNode with MIGRATE_RESULT and the removed MigrationInfo
  *   ChannelServerNode (target)
- *      7 : receive MIGRATE_IN (channel server), send MIGRATION_REQUEST to CentralServerNode [same as migration step 3 onwards]
- *      8 : block until MIGRATION_RESULT received from CentralServerNode
+ *      7 : receive MIGRATE_IN (channel server), send MIGRATE_REQUEST to CentralServerNode [same as migration step 3 onwards]
+ *      8 : block until MIGRATE_RESULT received from CentralServerNode
  *     12 : perform migration, send USER_CONNECT to central server
  *
  * User tracking
@@ -117,8 +117,8 @@ public enum CentralHeader {
     INITIALIZE_RESULT,
     SHUTDOWN_REQUEST,
     SHUTDOWN_RESULT,
-    MIGRATION_REQUEST,
-    MIGRATION_RESULT,
+    MIGRATE_REQUEST,
+    MIGRATE_RESULT,
     TRANSFER_REQUEST,
     TRANSFER_RESULT,
     USER_CONNECT,

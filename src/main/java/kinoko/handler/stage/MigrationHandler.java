@@ -57,7 +57,7 @@ public final class MigrationHandler {
     public static void handleMigrateIn(Client c, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final byte[] machineId = inPacket.decodeArray(16);
-        final boolean isUserGm = inPacket.decodeBoolean(); // CWvsContext->m_nSubGradeCode >> 7
+        inPacket.decodeBoolean(); // CWvsContext->m_nSubGradeCode >> 7
         inPacket.decodeByte(); // hardcoded 0
         final byte[] clientKey = inPacket.decodeArray(8);
 
@@ -73,11 +73,9 @@ public final class MigrationHandler {
         }
         final int accountId = accountIdResult.get();
 
-        // Submit migration request
+        // Send migrate request to central server
         final ChannelServerNode channelServerNode = ((ChannelServerNode) c.getServerNode());
-        final CompletableFuture<Optional<MigrationInfo>> migrationFuture = channelServerNode.submitMigrationRequest(
-                new MigrationInfo(channelServerNode.getChannelId(), accountId, characterId, machineId, clientKey, false)
-        );
+        final CompletableFuture<Optional<MigrationInfo>> migrationFuture = channelServerNode.submitMigrationRequest(accountId, characterId, machineId, clientKey);
         final MigrationInfo migrationResult;
         try {
             final Optional<MigrationInfo> migrationFutureResult = migrationFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
@@ -94,14 +92,7 @@ public final class MigrationHandler {
             return;
         }
 
-        // Verify migration request
-        if (!migrationResult.verify(channelServerNode.getChannelId(), accountId, characterId, machineId, clientKey)) {
-            log.error("Failed to verify migration request for character ID : {}", characterId);
-            c.close();
-            return;
-        }
-
-        // Check account
+        // Load account
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountById(migrationResult.getAccountId());
         if (accountResult.isEmpty()) {
             log.error("Could not retrieve account with ID : {}", migrationResult.getAccountId());
@@ -117,7 +108,7 @@ public final class MigrationHandler {
         account.setChannelId(channelServerNode.getChannelId());
         c.setAccount(account);
 
-        // Check character
+        // Load character data
         final Optional<CharacterData> characterResult = DatabaseManager.characterAccessor().getCharacterById(characterId);
         if (characterResult.isEmpty()) {
             log.error("Could not retrieve character with ID : {}", characterId);
@@ -130,6 +121,8 @@ public final class MigrationHandler {
             c.close();
             return;
         }
+
+        // Initialize User
         final User user = new User(c, characterData);
         if (channelServerNode.isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
@@ -203,8 +196,7 @@ public final class MigrationHandler {
             channelServerNode.submitPartyRequest(user, PartyRequest.of(PartyRequestType.LOAD_PARTY));
 
             // Check memos
-            final boolean hasMemo = DatabaseManager.memoAccessor().hasMemo(user.getCharacterId());
-            if (hasMemo) {
+            if (DatabaseManager.memoAccessor().hasMemo(user.getCharacterId())) {
                 user.write(WvsContext.memoResult(MemoResult.receive()));
             }
         }
@@ -320,7 +312,7 @@ public final class MigrationHandler {
         }
     }
 
-    private static void handleTransfer(User user, int channelId) {
+    private static void handleTransfer(User user, int targetChannelId) {
         // Set in transfer
         user.setInTransfer(true);
 
@@ -329,30 +321,20 @@ public final class MigrationHandler {
         DatabaseManager.accountAccessor().saveAccount(user.getAccount());
 
         // Submit transfer request
-        final Client c = user.getClient();
-        final MigrationInfo migrationInfo = new MigrationInfo(
-                channelId,
-                user.getAccountId(),
-                user.getCharacterId(),
-                c.getMachineId(),
-                c.getClientKey(),
-                false,
-                user.getSecondaryStat().getTemporaryStats()
-        );
+        final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
         final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
         final TransferInfo transferResult;
         try {
             final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
             if (transferFutureResult.isEmpty()) {
                 log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
-                c.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-                c.close();
+                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
                 return;
             }
             transferResult = transferFutureResult.get();
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.error("Exception caught while waiting for transfer result", e);
-            c.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
             e.printStackTrace();
             return;
         }

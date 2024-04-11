@@ -5,12 +5,11 @@ import kinoko.world.GameConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ChannelStorage {
-    private final Map<Integer, RemoteChildNode> remoteChildNodes = new ConcurrentHashMap<>(); // channel id -> remote child node
+    private final ConcurrentHashMap<Integer, RemoteChildNode> remoteChildNodes = new ConcurrentHashMap<>(); // channel id -> remote child node
 
     public void addChildNode(RemoteChildNode childNode) {
         final int channelId = childNode.getChannelId();

@@ -55,11 +55,11 @@ public final class ChannelServerNode extends ServerNode {
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
 
-    public CompletableFuture<Optional<MigrationInfo>> submitMigrationRequest(MigrationInfo migrationInfo) {
+    public CompletableFuture<Optional<MigrationInfo>> submitMigrationRequest(int accountId, int characterId, byte[] machineId, byte[] clientKey) {
         final int requestId = getNewRequestId();
         final CompletableFuture<Optional<MigrationInfo>> migrationRequestFuture = new CompletableFuture<>();
         requestFutures.put(requestId, migrationRequestFuture);
-        centralClientFuture.channel().writeAndFlush(CentralPacket.migrationRequest(requestId, migrationInfo));
+        centralClientFuture.channel().writeAndFlush(CentralPacket.migrateRequest(requestId, accountId, characterId, machineId, clientKey));
         return migrationRequestFuture;
     }
 
