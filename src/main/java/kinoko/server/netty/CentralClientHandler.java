@@ -5,6 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.server.ServerConstants;
+import kinoko.server.header.CentralHeader;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.MigrationInfo;
 import kinoko.server.node.RemoteUser;
@@ -32,7 +33,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
         final int op = inPacket.decodeShort();
-        final CentralPacketHeader header = CentralPacketHeader.getByValue(op);
+        final CentralHeader header = CentralHeader.getByValue(op);
         log.log(Level.DEBUG, "[ChannelServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         switch (header) {
             case INITIALIZE_REQUEST -> {

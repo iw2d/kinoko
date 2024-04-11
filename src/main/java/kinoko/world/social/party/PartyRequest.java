@@ -1,11 +1,12 @@
 package kinoko.world.social.party;
 
+import kinoko.server.header.CentralHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
 /**
- * Utility class for {@link kinoko.server.netty.CentralPacketHeader#PARTY_REQUEST}
+ * Utility class for {@link CentralHeader#PARTY_REQUEST}
  */
 public final class PartyRequest implements Encodable {
     private final PartyRequestType requestType;

@@ -22,7 +22,6 @@ import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
-import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResult;
 import kinoko.world.user.config.ConfigManager;
@@ -31,7 +30,6 @@ import kinoko.world.user.stat.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 public final class User extends Life implements Lockable<User> {
     private final Lock lock = new ReentrantLock();

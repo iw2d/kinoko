@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.server.header.CentralHeader;
 import kinoko.server.node.*;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
@@ -38,7 +39,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             return;
         }
         final int op = inPacket.decodeShort();
-        final CentralPacketHeader header = CentralPacketHeader.getByValue(op);
+        final CentralHeader header = CentralHeader.getByValue(op);
         log.log(Level.DEBUG, "[CentralServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         switch (header) {
             case INITIALIZE_RESULT -> {

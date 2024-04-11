@@ -1,6 +1,6 @@
 package kinoko.packet;
 
-import kinoko.server.netty.CentralPacketHeader;
+import kinoko.server.header.CentralHeader;
 import kinoko.server.node.MigrationInfo;
 import kinoko.server.node.RemoteUser;
 import kinoko.server.node.TransferInfo;
@@ -11,12 +11,12 @@ import java.util.Set;
 
 public final class CentralPacket {
     public static OutPacket initializeRequest() {
-        return OutPacket.of(CentralPacketHeader.INITIALIZE_REQUEST);
+        return OutPacket.of(CentralHeader.INITIALIZE_REQUEST);
     }
 
     public static OutPacket initializeResult(int channelId, byte[] channelHost, int channelPort) {
         assert channelHost.length == 4;
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.INITIALIZE_RESULT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.INITIALIZE_RESULT);
         outPacket.encodeInt(channelId);
         outPacket.encodeArray(channelHost);
         outPacket.encodeInt(channelPort);
@@ -24,25 +24,25 @@ public final class CentralPacket {
     }
 
     public static OutPacket shutdownRequest() {
-        return OutPacket.of(CentralPacketHeader.SHUTDOWN_REQUEST);
+        return OutPacket.of(CentralHeader.SHUTDOWN_REQUEST);
     }
 
     public static OutPacket shutdownResult(int channelId, boolean success) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.SHUTDOWN_RESULT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.SHUTDOWN_RESULT);
         outPacket.encodeInt(channelId);
         outPacket.encodeByte(success);
         return outPacket;
     }
 
     public static OutPacket migrationRequest(int requestId, MigrationInfo migrationInfo) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.MIGRATION_REQUEST);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MIGRATION_REQUEST);
         outPacket.encodeInt(requestId);
         migrationInfo.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket migrationResult(int requestId, MigrationInfo migrationInfo) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.MIGRATION_RESULT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MIGRATION_RESULT);
         outPacket.encodeInt(requestId);
         outPacket.encodeByte(migrationInfo != null);
         if (migrationInfo != null) {
@@ -52,14 +52,14 @@ public final class CentralPacket {
     }
 
     public static OutPacket transferRequest(int requestId, MigrationInfo migrationInfo) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.TRANSFER_REQUEST);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.TRANSFER_REQUEST);
         outPacket.encodeInt(requestId);
         migrationInfo.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket transferResult(int requestId, TransferInfo transferInfo) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.TRANSFER_RESULT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.TRANSFER_RESULT);
         outPacket.encodeInt(requestId);
         outPacket.encodeByte(transferInfo != null);
         if (transferInfo != null) {
@@ -69,25 +69,25 @@ public final class CentralPacket {
     }
 
     public static OutPacket userConnect(RemoteUser remoteUser) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_CONNECT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_CONNECT);
         remoteUser.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket userUpdate(RemoteUser remoteUser) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_UPDATE);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_UPDATE);
         remoteUser.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket userDisconnect(RemoteUser remoteUser) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_DISCONNECT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_DISCONNECT);
         remoteUser.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket userPacketRequest(String characterName, OutPacket remotePacket) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_PACKET_REQUEST);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_PACKET_REQUEST);
         outPacket.encodeString(characterName);
         final byte[] packetData = remotePacket.getData();
         outPacket.encodeInt(packetData.length);
@@ -96,7 +96,7 @@ public final class CentralPacket {
     }
 
     public static OutPacket userPacketReceive(int characterId, OutPacket remotePacket) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_PACKET_RECEIVE);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_PACKET_RECEIVE);
         outPacket.encodeInt(characterId);
         final byte[] packetData = remotePacket.getData();
         outPacket.encodeInt(packetData.length);
@@ -105,7 +105,7 @@ public final class CentralPacket {
     }
 
     public static OutPacket userPacketBroadcast(Set<Integer> characterIds, OutPacket remotePacket) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_PACKET_BROADCAST);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_PACKET_BROADCAST);
         outPacket.encodeInt(characterIds.size());
         for (int characterId : characterIds) {
             outPacket.encodeInt(characterId);
@@ -117,7 +117,7 @@ public final class CentralPacket {
     }
 
     public static OutPacket userQueryRequest(int requestId, Set<String> characterNames) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_QUERY_REQUEST);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_QUERY_REQUEST);
         outPacket.encodeInt(requestId);
         outPacket.encodeInt(characterNames.size());
         for (String characterName : characterNames) {
@@ -127,7 +127,7 @@ public final class CentralPacket {
     }
 
     public static OutPacket userQueryResult(int requestId, Set<RemoteUser> remoteUsers) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.USER_QUERY_RESULT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.USER_QUERY_RESULT);
         outPacket.encodeInt(requestId);
         outPacket.encodeInt(remoteUsers.size());
         for (RemoteUser remoteUser : remoteUsers) {
@@ -137,14 +137,14 @@ public final class CentralPacket {
     }
 
     public static OutPacket partyRequest(int characterId, PartyRequest partyRequest) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.PARTY_REQUEST);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.PARTY_REQUEST);
         outPacket.encodeInt(characterId);
         partyRequest.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket partyResult(int characterId, int partyId) {
-        final OutPacket outPacket = OutPacket.of(CentralPacketHeader.PARTY_RESULT);
+        final OutPacket outPacket = OutPacket.of(CentralHeader.PARTY_RESULT);
         outPacket.encodeInt(characterId);
         outPacket.encodeInt(partyId);
         return outPacket;

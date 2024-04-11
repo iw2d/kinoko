@@ -1,4 +1,4 @@
-package kinoko.server.netty;
+package kinoko.server.header;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -112,7 +112,7 @@ import java.util.Map;
  *          optionally send PARTY_RESULT [character id, party id] back to target ChannelServerNode (update user party id)
  * </pre>
  */
-public enum CentralPacketHeader {
+public enum CentralHeader {
     INITIALIZE_REQUEST,
     INITIALIZE_RESULT,
     SHUTDOWN_REQUEST,
@@ -132,10 +132,10 @@ public enum CentralPacketHeader {
     PARTY_REQUEST,
     PARTY_RESULT;
 
-    private static final Map<Integer, CentralPacketHeader> headerMap = new HashMap<>();
+    private static final Map<Integer, CentralHeader> headerMap = new HashMap<>();
 
     static {
-        for (CentralPacketHeader header : values()) {
+        for (CentralHeader header : values()) {
             headerMap.put(header.getValue(), header);
         }
     }
@@ -144,7 +144,7 @@ public enum CentralPacketHeader {
         return ordinal();
     }
 
-    public static CentralPacketHeader getByValue(int op) {
+    public static CentralHeader getByValue(int op) {
         return headerMap.get(op);
     }
 }
