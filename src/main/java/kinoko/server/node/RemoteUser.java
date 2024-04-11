@@ -16,7 +16,6 @@ public final class RemoteUser implements Encodable {
     private int partyId;
 
     public RemoteUser(int accountId, int characterId, String characterName, int level, int job, int channelId, int fieldId, int partyId) {
-        this.fieldId = fieldId;
         this.accountId = accountId;
         this.characterId = characterId;
         this.characterName = characterName;

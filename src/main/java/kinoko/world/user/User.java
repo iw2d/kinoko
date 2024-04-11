@@ -425,20 +425,16 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void logout() {
-        getConnectedServer().notifyUserDisconnect(this);
+        getConnectedServer().notifyUserDisconnect(this); // TODO: differentiate between transfer
         if (getField() != null) {
             getField().removeUser(this);
         }
-        // Transfer, updates on migration
-        if (isInTransfer()) {
-            return;
+        if (!isInTransfer()) {
+            getConnectedServer().submitUserPacketBroadcast(
+                    getFriendManager().getBroadcastTargets(),
+                    WvsContext.friendResult(FriendResult.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE))
+            );
         }
-        // Notify friends
-        final Set<Integer> friendIds = getFriendManager().getRegisteredFriends().stream()
-                .filter(Friend::isOnline)
-                .map(Friend::getFriendId)
-                .collect(Collectors.toUnmodifiableSet());
-        getConnectedServer().submitUserPacketBroadcast(friendIds, WvsContext.friendResult(FriendResult.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
     }
 
 

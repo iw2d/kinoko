@@ -20,6 +20,7 @@ import kinoko.server.node.Client;
 import kinoko.server.node.MigrationInfo;
 import kinoko.server.node.TransferInfo;
 import kinoko.server.packet.InPacket;
+import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
@@ -190,11 +191,10 @@ public final class MigrationHandler {
             FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LOAD_FRIEND_DONE);
 
             // Notify friends
-            final Set<Integer> friendIds = user.getFriendManager().getRegisteredFriends().stream()
-                    .filter(Friend::isOnline)
-                    .map(Friend::getFriendId)
-                    .collect(Collectors.toUnmodifiableSet());
-            channelServerNode.submitUserPacketBroadcast(friendIds, WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
+            channelServerNode.submitUserPacketBroadcast(
+                    user.getFriendManager().getBroadcastTargets(),
+                    WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId()))
+            );
 
             // Process friend requests
             for (Friend friend : user.getFriendManager().getFriendRequests()) {
@@ -216,7 +216,6 @@ public final class MigrationHandler {
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         // Returning from CashShop
         if (inPacket.getRemaining() == 0) {
-            // TODO separate CashShopServer
             handleTransfer(user, user.getAccount().getChannelId());
             return;
         }
@@ -299,7 +298,14 @@ public final class MigrationHandler {
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 
-        user.getField().removeUser(user); // TODO: separate shop server from channel server
+        // Remove user from field
+        user.getField().removeUser(user);
+
+        // Update friends
+        user.getConnectedServer().submitUserPacketBroadcast(
+                user.getFriendManager().getBroadcastTargets(),
+                WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), GameConstants.CHANNEL_SHOP))
+        );
 
         // Load gifts
         final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());

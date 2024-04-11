@@ -51,6 +51,13 @@ public final class FriendManager {
                 .toList();
     }
 
+    public Set<Integer> getBroadcastTargets() {
+        return getRegisteredFriends().stream()
+                .filter(Friend::isOnline)
+                .map(Friend::getFriendId)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
     public int getFriendMax() {
         return friendMax;
     }
