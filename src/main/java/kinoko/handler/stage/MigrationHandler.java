@@ -140,7 +140,9 @@ public final class MigrationHandler {
             initializePet(user, 1, cs.getPetSn2());
             initializePet(user, 2, cs.getPetSn3());
 
-            // Initialize user stats
+            // Initialize user data
+            user.setEffectItemId(migrationResult.getEffectItemId());
+            user.setAdBoard(migrationResult.getAdBoard());
             user.getSecondaryStat().getTemporaryStats().putAll(migrationResult.getTemporaryStats());
             user.updatePassiveSkillData();
             user.validateStat();

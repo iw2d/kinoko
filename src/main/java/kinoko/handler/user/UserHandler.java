@@ -123,12 +123,28 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserPacket.userChat(user, ChatType.NORMAL, text, onlyBalloon));
     }
 
+    @Handler(InHeader.USER_AD_BOARD_CLOSE)
+    public static void handleUserAdBoardClose(User user, InPacket inPacket) {
+        user.setAdBoard(null);
+        user.getField().broadcastPacket(UserPacket.userAdBoard(user, null));
+    }
+
     @Handler(InHeader.USER_EMOTION)
     public static void handleUserEmotion(User user, InPacket inPacket) {
         final int emotion = inPacket.decodeInt(); // nEmotion
         final int duration = inPacket.decodeInt(); // nDuration
         final boolean isByItemOption = inPacket.decodeBoolean(); // bByItemOption
         user.getField().broadcastPacket(UserRemote.emotion(user, emotion, duration, isByItemOption), user);
+    }
+
+    @Handler(InHeader.USER_ACTIVATE_EFFECT_ITEM)
+    public static void handleUserActivateEffectItem(User user, InPacket inPacket) {
+        final int itemId = inPacket.decodeInt(); // nEffectItemID
+        if (itemId != 0 && !ItemConstants.isCashEffectItem(itemId) && !ItemConstants.isNonCashEffectItem(itemId)) {
+            log.error("Received USER_ACTIVATE_EFFECT_ITEM with invalid effect item : {}", itemId);
+        }
+        user.setEffectItemId(itemId);
+        user.getField().broadcastPacket(UserRemote.setActiveEffectItem(user, itemId), user); // self-cast not required
     }
 
 

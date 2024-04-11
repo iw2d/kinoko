@@ -46,7 +46,9 @@ public final class User extends Life implements Lockable<User> {
 
     private Dialog dialog;
     private int partyId;
+    private int effectItemId;
     private int portableChairId;
+    private String adBoard;
     private boolean inTransfer;
 
     public User(Client client, CharacterData characterData) {
@@ -162,12 +164,28 @@ public final class User extends Life implements Lockable<User> {
         this.partyId = partyId;
     }
 
+    public int getEffectItemId() {
+        return effectItemId;
+    }
+
+    public void setEffectItemId(int effectItemId) {
+        this.effectItemId = effectItemId;
+    }
+
     public int getPortableChairId() {
         return portableChairId;
     }
 
     public void setPortableChairId(int portableChairId) {
         this.portableChairId = portableChairId;
+    }
+
+    public String getAdBoard() {
+        return adBoard;
+    }
+
+    public void setAdBoard(String adBoard) {
+        this.adBoard = adBoard;
     }
 
     public boolean isInTransfer() {
@@ -177,6 +195,7 @@ public final class User extends Life implements Lockable<User> {
     public void setInTransfer(boolean inTransfer) {
         this.inTransfer = inTransfer;
     }
+
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
 

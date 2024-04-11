@@ -28,7 +28,7 @@ public final class UserPacket {
         outPacket.encodeInt(0); // dwDriverID
         outPacket.encodeInt(0); // dwPassenserID
         outPacket.encodeInt(0); // nChocoCount
-        outPacket.encodeInt(0); // nActiveEffectItemID
+        outPacket.encodeInt(user.getEffectItemId()); // nActiveEffectItemID
         outPacket.encodeInt(0); // nCompletedSetItemID
         outPacket.encodeInt(user.getPortableChairId()); // nPortableChairID
 
@@ -51,7 +51,10 @@ public final class UserPacket {
 
         outPacket.encodeByte(0); // nMiniRoomType
 
-        outPacket.encodeByte(false); // bADBoardRemote
+        outPacket.encodeByte(user.getAdBoard() != null); // bADBoardRemote
+        if (user.getAdBoard() != null) {
+            outPacket.encodeString(user.getAdBoard()); // sMsg
+        }
 
         outPacket.encodeByte(false); // coupleItem
         outPacket.encodeByte(false); // friendShipItem
@@ -103,11 +106,12 @@ public final class UserPacket {
         return outPacket;
     }
 
-    public static OutPacket userAdBoard(User user, String text) {
+    public static OutPacket userAdBoard(User user, String message) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_AD_BOARD);
-        outPacket.encodeByte(text != null);
-        if (text != null) {
-            outPacket.encodeString(text);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(message != null);
+        if (message != null) {
+            outPacket.encodeString(message);
         }
         return outPacket;
     }

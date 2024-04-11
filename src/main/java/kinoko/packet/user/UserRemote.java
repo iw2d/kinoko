@@ -145,6 +145,13 @@ public final class UserRemote {
         return outPacket;
     }
 
+    public static OutPacket setActiveEffectItem(User user, int itemId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_EFFECT_ITEM);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(itemId); // nItemID
+        return outPacket;
+    }
+
     public static OutPacket setActivePortableChair(User user, int itemId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_SET_ACTIVE_PORTABLE_CHAIR);
         outPacket.encodeInt(user.getCharacterId());

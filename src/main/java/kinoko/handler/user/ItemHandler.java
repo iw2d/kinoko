@@ -3,6 +3,7 @@ package kinoko.handler.user;
 import kinoko.handler.Handler;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.user.effect.PetEffectType;
@@ -62,7 +63,7 @@ public final class ItemHandler {
 
         // Check item
         if (!ItemConstants.isPetFoodItem(itemId)) {
-            log.error("Received USER_PET_FOOD_ITEM_USE_REQUEST with a non-pet food item {}", itemId);
+            log.error("Received USER_PET_FOOD_ITEM_USE_REQUEST with an invalid pet food item {}", itemId);
             user.dispose();
             return;
         }
@@ -162,6 +163,50 @@ public final class ItemHandler {
         }
     }
 
+    @Handler(InHeader.USER_CONSUME_CASH_ITEM_USE_REQUEST)
+    public static void handleUserConsumeCashItemUserRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int position = inPacket.decodeShort(); // nPOS
+        final int itemId = inPacket.decodeInt(); // nIdemID
+
+        // Resolve item
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item : {}", itemId);
+            user.dispose();
+            return;
+        }
+
+        try (var locked = user.acquire()) {
+            // Check item
+            final InventoryManager im = locked.get().getInventoryManager();
+            final Item item = im.getInventoryByType(InventoryType.CASH).getItem(position);
+            if (item == null || item.getItemId() != itemId) {
+                log.error("Tried to use an item in position {} as item ID : {}", position, itemId);
+                user.dispose();
+                return;
+            }
+
+            final CashItemType cashItemType = CashItemType.getByItemId(item.getItemId());
+            switch (cashItemType) {
+                case AD_BOARD -> {
+                    final String message = inPacket.decodeString();
+                    user.setAdBoard(message);
+                    user.getField().broadcastPacket(UserPacket.userAdBoard(user, message));
+                    user.dispose();
+                }
+                case null -> {
+                    log.error("Unknown cash item type for item ID : {}", item.getItemId());
+                    user.dispose();
+                }
+                default -> {
+                    log.error("Unhandled cash item type for item ID : {}", item.getItemId());
+                    user.dispose();
+                }
+            }
+        }
+    }
+
     @Handler(InHeader.PET_STAT_CHANGE_ITEM_USE_REQUEST)
     public static void handlePetStatChangeItemUseRequest(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong();
@@ -169,6 +214,13 @@ public final class ItemHandler {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nIdemID
+
+        // Resolve pet
+        if (user.getPetIndex(petSn).isEmpty()) {
+            log.error("Received PET_STAT_CHANGE_ITEM_USE_REQUEST for invalid pet SN : {}", petSn);
+            user.dispose();
+            return;
+        }
 
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
@@ -196,7 +248,7 @@ public final class ItemHandler {
         final User user = locked.get();
         final InventoryType inventoryType = InventoryType.getByItemId(itemId);
         if (inventoryType != InventoryType.CONSUME) {
-            log.error("Tried to use a non-consume item : {}", itemId);
+            log.error("Tried to use an invalid consume item : {}", itemId);
             return Optional.empty();
         }
         final InventoryManager im = user.getInventoryManager();

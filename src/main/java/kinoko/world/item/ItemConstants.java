@@ -1,10 +1,6 @@
 package kinoko.world.item;
 
 public final class ItemConstants {
-    public static int getItemPrefix(int itemId) {
-        return itemId / 10000;
-    }
-
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {
             return 2;
@@ -44,7 +40,7 @@ public final class ItemConstants {
     }
 
     public static boolean isPet(int itemId) {
-        return getItemPrefix(itemId) == 500;
+        return itemId / 10000 == 500;
     }
 
     public static boolean isPetEquipItem(int itemId) {
@@ -52,19 +48,19 @@ public final class ItemConstants {
     }
 
     public static boolean isPetFoodItem(int itemId) {
-        return getItemPrefix(itemId) == 212;
+        return itemId / 10000 == 212;
     }
 
     public static boolean isRechargeableItem(int itemId) {
-        return getItemPrefix(itemId) == 207 || getItemPrefix(itemId) == 233;
+        return itemId / 10000 == 207 || itemId / 10000 == 233;
     }
 
     public static boolean isJavelinItem(int itemId) {
-        return getItemPrefix(itemId) == 207;
+        return itemId / 10000 == 207;
     }
 
     public static boolean isPelletItem(int itemId) {
-        return getItemPrefix(itemId) == 233;
+        return itemId / 10000 == 233;
     }
 
     public static boolean isCorrectBulletItem(int weaponItemId, int itemId) {
@@ -87,7 +83,15 @@ public final class ItemConstants {
     }
 
     public static boolean isPortableChairItem(int itemId) {
-        return getItemPrefix(itemId) == 301;
+        return itemId / 10000 == 301;
+    }
+
+    public static boolean isCashEffectItem(int itemId) {
+        return itemId / 10000 == 501;
+    }
+
+    public static boolean isNonCashEffectItem(int itemId) {
+        return itemId / 10000 == 429;
     }
 
     public static boolean isMatchedItemIdGender(int itemId, int gender) {
@@ -99,7 +103,7 @@ public final class ItemConstants {
         if (!isMatchedItemIdGender(itemId, gender)) {
             return false;
         }
-        switch (getItemPrefix(itemId)) {
+        switch (itemId / 10000) {
             case 100 -> {
                 return bodyPart == BodyPart.CAP;
             }
