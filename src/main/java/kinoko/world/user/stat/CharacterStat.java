@@ -5,11 +5,14 @@ import kinoko.util.Encodable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 public final class CharacterStat implements Encodable {
+    private static final Logger log = LogManager.getLogger(CharacterStat.class);
     private int id;
     private String name;
     private byte gender;
@@ -247,6 +250,39 @@ public final class CharacterStat implements Encodable {
 
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public Map<Stat, Object> addAp(Stat stat) {
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        switch (stat) {
+            case MAX_HP -> {
+                final int incHp = StatConstants.getIncHpByAp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
+                setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.HP_MAX));
+                statMap.put(Stat.MAX_HP, getMaxHp());
+            }
+            case MAX_MP -> {
+                final int incMp = StatConstants.getIncMpByAp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
+                setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
+                statMap.put(Stat.MAX_MP, getMaxMp());
+            }
+            case STR -> {
+                setBaseStr((short) Math.min(getBaseStr() + 1, Short.MAX_VALUE));
+                statMap.put(Stat.STR, getBaseStr());
+            }
+            case DEX -> {
+                setBaseDex((short) Math.min(getBaseDex() + 1, Short.MAX_VALUE));
+                statMap.put(Stat.DEX, getBaseDex());
+            }
+            case INT -> {
+                setBaseInt((short) Math.min(getBaseInt() + 1, Short.MAX_VALUE));
+                statMap.put(Stat.INT, getBaseInt());
+            }
+            case LUK -> {
+                setBaseLuk((short) Math.min(getBaseLuk() + 1, Short.MAX_VALUE));
+                statMap.put(Stat.LUK, getBaseLuk());
+            }
+        }
+        return statMap;
+    }
 
     public Map<Stat, Object> addExp(int delta) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);

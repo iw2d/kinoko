@@ -437,6 +437,66 @@ public final class AdminCommands {
         }
     }
 
+    @Command("stat")
+    public static void stat(User user, String[] args) {
+        if (args.length != 3 || !Util.isInteger(args[2])) {
+            user.write(WvsContext.message(Message.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX)));
+            return;
+        }
+        final String stat = args[1].toLowerCase();
+        final int value = Integer.parseInt(args[2]);
+        try (var locked = user.acquire()) {
+            final CharacterStat cs = locked.get().getCharacterStat();
+            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+            switch (stat) {
+                case "hp" -> {
+                    cs.setMaxHp(value);
+                    statMap.put(Stat.HP, cs.getMaxHp());
+                }
+                case "mp" -> {
+                    cs.setMaxMp(value);
+                    statMap.put(Stat.MP, cs.getMaxMp());
+                }
+                case "str" -> {
+                    cs.setBaseStr((short) value);
+                    statMap.put(Stat.STR, cs.getBaseStr());
+                }
+                case "dex" -> {
+                    cs.setBaseDex((short) value);
+                    statMap.put(Stat.DEX, cs.getBaseDex());
+                }
+                case "int" -> {
+                    cs.setBaseInt((short) value);
+                    statMap.put(Stat.INT, cs.getBaseInt());
+                }
+                case "luk" -> {
+                    cs.setBaseLuk((short) value);
+                    statMap.put(Stat.LUK, cs.getBaseLuk());
+                }
+                case "ap" -> {
+                    cs.setAp((short) value);
+                    statMap.put(Stat.AP, cs.getAp());
+                }
+                case "sp" -> {
+                    if (JobConstants.isExtendSpJob(cs.getJob())) {
+                        cs.getSp().setSp(JobConstants.getJobLevel(cs.getJob()), value);
+                        statMap.put(Stat.SP, cs.getSp());
+                    } else {
+                        cs.getSp().setNonExtendSp(value);
+                        statMap.put(Stat.SP, cs.getSp().getNonExtendSp());
+                    }
+                }
+                default -> {
+                    user.write(WvsContext.message(Message.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX)));
+                    return;
+                }
+            }
+            user.validateStat();
+            user.write(WvsContext.statChanged(statMap, true));
+            user.write(WvsContext.message(Message.system("Set %s to %d", stat, value)));
+        }
+    }
+
     @Command("level")
     public static void level(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {

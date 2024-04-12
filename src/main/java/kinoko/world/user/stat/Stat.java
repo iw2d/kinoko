@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public enum Stat {
+    // CS
     SKIN(0x1),
     FACE(0x2),
     HAIR(0x4),
@@ -37,6 +38,15 @@ public enum Stat {
 
     public final int getValue() {
         return value;
+    }
+
+    public static Stat getByValue(int value) {
+        for (Stat stat : values()) {
+            if (stat.getValue() == value) {
+                return stat;
+            }
+        }
+        return null;
     }
 
     public static int from(Set<Stat> stats) {

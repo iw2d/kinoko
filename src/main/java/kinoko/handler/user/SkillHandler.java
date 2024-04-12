@@ -5,86 +5,20 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.world.job.JobConstants;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
-import kinoko.world.skill.*;
+import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillConstants;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Optional;
 import java.util.Set;
 
 public final class SkillHandler {
     private static final Logger log = LogManager.getLogger(SkillHandler.class);
-
-    @Handler(InHeader.USER_SKILL_UP_REQUEST)
-    public static void handleUserSkillUpRequest(User user, InPacket inPacket) {
-        inPacket.decodeInt(); // update_time
-        final int skillId = inPacket.decodeInt(); // nSkillID
-        try (var locked = user.acquire()) {
-            final SkillManager sm = user.getSkillManager();
-            final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
-            if (skillRecordResult.isEmpty()) {
-                log.error("Tried to add a skill {} not owned by user", skillId);
-                user.dispose();
-                return;
-            }
-            final SkillRecord skillRecord = skillRecordResult.get();
-            if (skillRecord.getSkillLevel() >= skillRecord.getMasterLevel()) {
-                log.error("Tried to add a skill {} at master level {}/{}", skillId, skillRecord.getSkillLevel(), skillRecord.getMasterLevel());
-                user.dispose();
-                return;
-            }
-            final int skillRoot = SkillConstants.getSkillRoot(skillId);
-            if (JobConstants.isBeginnerJob(skillRoot)) {
-                // Check if valid beginner skill
-                if (!SkillConstants.isBeginnerSpAddableSkill(skillId)) {
-                    log.error("Tried to add an invalid beginner skill {}", skillId);
-                    user.dispose();
-                    return;
-                }
-                // Compute sp spent on beginner skills
-                final int spentSp = sm.getSkillRecords().stream()
-                        .filter((sr) -> SkillConstants.isBeginnerSpAddableSkill(sr.getSkillId()))
-                        .mapToInt(SkillRecord::getSkillLevel)
-                        .sum();
-                // Beginner sp is calculated by level
-                final int totalSp;
-                if (JobConstants.isResistanceJob(skillRoot)) {
-                    totalSp = Math.min(user.getLevel(), 10) - 1; // max total sp = 9
-                } else {
-                    totalSp = Math.min(user.getLevel(), 7) - 1; // max total sp = 6
-                }
-                // Check if sp can be added
-                if (spentSp >= totalSp) {
-                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
-                    user.dispose();
-                    return;
-                }
-            } else if (JobConstants.isExtendSpJob(skillRoot)) {
-                final int jobLevel = JobConstants.getJobLevel(skillRoot);
-                if (!user.getCharacterStat().getSp().removeSp(jobLevel, 1)) {
-                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
-                    user.dispose();
-                    return;
-                }
-            } else {
-                if (!user.getCharacterStat().getSp().removeNonExtendSp(1)) {
-                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
-                    user.dispose();
-                    return;
-                }
-            }
-            // Add skill point and update client
-            skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
-            user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
-            user.updatePassiveSkillData();
-            user.validateStat();
-        }
-    }
 
     @Handler(InHeader.USER_SKILL_USE_REQUEST)
     public static void handleUserSkillUseRequest(User user, InPacket inPacket) {
