@@ -51,6 +51,10 @@ public final class ItemConstants {
         return itemId / 10000 == 212;
     }
 
+    public static boolean isPortalScrollItem(int itemId) {
+        return itemId / 10000 == 203;
+    }
+
     public static boolean isRechargeableItem(int itemId) {
         return itemId / 10000 == 207 || itemId / 10000 == 233;
     }

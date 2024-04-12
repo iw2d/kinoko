@@ -8,13 +8,18 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.user.effect.PetEffectType;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
+import kinoko.provider.MapProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemSpecType;
+import kinoko.provider.map.FieldOption;
+import kinoko.provider.map.PortalInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.GameConstants;
+import kinoko.world.field.Field;
 import kinoko.world.item.*;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
@@ -189,22 +194,112 @@ public final class ItemHandler {
 
             final CashItemType cashItemType = CashItemType.getByItemId(item.getItemId());
             switch (cashItemType) {
+                case SPEAKER_CHANNEL, SPEAKER_WORLD, SPEAKER_BRIDGE, SKULL_SPEAKER -> {
+                    final String message = inPacket.decodeString();
+                    if (cashItemType == CashItemType.SPEAKER_WORLD || cashItemType == CashItemType.SKULL_SPEAKER) {
+                        final boolean whisperIcon = inPacket.decodeBoolean();
+                    }
+                    // TODO
+                }
+                case ITEM_SPEAKER -> {
+                    // TODO
+                }
                 case AD_BOARD -> {
                     final String message = inPacket.decodeString();
                     user.setAdBoard(message);
                     user.getField().broadcastPacket(UserPacket.userAdBoard(user, message));
-                    user.dispose();
+                }
+                case KARMA_SCISSORS -> {
+                    // CUIKarmaDlg::_SendConsumeCashItemUseRequest
+                    final int inventoryType = inPacket.decodeInt(); // nTargetTI
+                    final int targetItemPos = inPacket.decodeInt(); // nTargetPOS
+                    // TODO
+                }
+                case ITEM_UPGRADE -> {
+                    // TODO
+                }
+                case CUBE_REVEAL -> {
+                    // CUIUnreleaseDlg::UnreleaseEquipItem
+                    final int equipItemPos = inPacket.decodeInt();
+                    // TODO
                 }
                 case null -> {
                     log.error("Unknown cash item type for item ID : {}", item.getItemId());
-                    user.dispose();
                 }
                 default -> {
                     log.error("Unhandled cash item type for item ID : {}", item.getItemId());
-                    user.dispose();
                 }
             }
+            user.dispose();
         }
+    }
+
+    @Handler(InHeader.USER_PORTAL_SCROLL_USE_REQUEST)
+    public static void handleUserPortalScrollUserRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int position = inPacket.decodeShort(); // nPOS
+        final int itemId = inPacket.decodeInt();
+
+        // Resolve item
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item : {}", itemId);
+            user.dispose();
+            return;
+        }
+
+        try (var locked = user.acquire()) {
+            // Check portal scroll can be used
+            final Field field = locked.get().getField();
+            if (field.hasFieldOption(FieldOption.PORTAL_SCROLL_LIMIT)) {
+                user.write(WvsContext.message(Message.system("You can't use it here in this map.")));
+                user.dispose();
+                return;
+            }
+            final int moveTo = itemInfoResult.get().getSpec(ItemSpecType.moveTo);
+            if (moveTo != GameConstants.UNDEFINED_FIELD_ID && MapProvider.isConnected(field.getFieldId(), moveTo)) {
+                user.write(WvsContext.message(Message.system("You cannot go to that place.")));
+                user.dispose();
+                return;
+            }
+
+            // Resolve target field
+            final int destinationFieldId = moveTo == GameConstants.UNDEFINED_FIELD_ID ? field.getReturnMap() : moveTo;
+            final Optional<Field> destinationFieldResult = user.getConnectedServer().getFieldById(destinationFieldId);
+            if (destinationFieldResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("You cannot go to that place.")));
+                user.dispose();
+                return;
+            }
+            final Field destinationField = destinationFieldResult.get();
+            final Optional<PortalInfo> destinationPortalResult = destinationField.getPortalByName(GameConstants.DEFAULT_PORTAL_NAME);
+            if (destinationPortalResult.isEmpty()) {
+                user.write(WvsContext.message(Message.system("You cannot go to that place.")));
+                user.dispose();
+                return;
+            }
+
+            // Consume item
+            final Optional<InventoryOperation> consumeItemResult = consumeItem(locked, position, itemId);
+            if (consumeItemResult.isEmpty()) {
+                user.dispose();
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(consumeItemResult.get(), true));
+
+            // Move to field
+            user.warp(destinationField, destinationPortalResult.get(), false, false);
+        }
+    }
+
+    @Handler(InHeader.USER_UPGRADE_ITEM_USE_REQUEST)
+    public static void handleUserUpgradeItemUserRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int upgradeItemPos = inPacket.decodeShort(); // nUPOS
+        final int equipItemPos = inPacket.decodeShort(); // nEPOS
+        final boolean whiteScroll = inPacket.decodeShort() > 1; // bWhiteScroll
+        final boolean enchantSkill = inPacket.decodeBoolean(); // bEnchantSkill
+        // TODO
     }
 
     @Handler(InHeader.PET_STAT_CHANGE_ITEM_USE_REQUEST)

@@ -51,6 +51,7 @@ public final class GameConstants {
     public static final int[] DEFAULT_QUICKSLOT_KEY_MAP = new int[]{ 0x2A, 0x52, 0x47, 0x49, 0x1D, 0x53, 0x4F, 0x51 }; // aDefaultQKM
 
     public static final int UNDEFINED_FIELD_ID = 999999999;
+    public static final String DEFAULT_PORTAL_NAME = "sp"; // spawn point
 
 
     // PET CONSTANTS ---------------------------------------------------------------------------------------------------

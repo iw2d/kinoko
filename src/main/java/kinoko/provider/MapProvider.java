@@ -14,11 +14,13 @@ import java.util.*;
 public final class MapProvider implements WzProvider {
     public static final Path MAP_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz");
     private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
+    private static final Map<Integer, Integer> areaCodes = new HashMap<>(); // key -> category
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadMapInfos(wzPackage);
+            loadAreaCodes(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Map.wz", e);
         }
@@ -26,6 +28,32 @@ public final class MapProvider implements WzProvider {
 
     public static Optional<MapInfo> getMapInfo(int mapId) {
         return Optional.ofNullable(mapInfos.get(mapId));
+    }
+
+    public static boolean isConnected(int fromFieldId, int toFieldId) {
+        // CWvsContext::IsConnected
+        if (fromFieldId / 1000000 % 100 == 9 || toFieldId / 1000000 % 100 == 9) {
+            return false;
+        }
+        if (fromFieldId / 10000 == 20009 || toFieldId / 10000 == 20009) {
+            return false;
+        }
+        final Integer fromCategory = areaCodes.get(fromFieldId);
+        if (fromCategory == null) {
+            return false;
+        }
+        return fromCategory.equals(areaCodes.get(toFieldId));
+    }
+
+    private static void loadAreaCodes(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
+            throw new ProviderError("Could not resolve Map.wz/Map");
+        }
+        for (var areaEntry : mapDirectory.getImages().get("AreaCode.img").getProperty().getItems().entrySet()) {
+            final int key = Integer.parseInt(areaEntry.getKey());
+            final int category = WzProvider.getInteger(areaEntry.getValue());
+            areaCodes.put(key, category);
+        }
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {

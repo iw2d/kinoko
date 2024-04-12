@@ -247,7 +247,7 @@ public final class MigrationHandler {
                     user.write(WvsContext.statChanged(Stat.HP, user.getHp(), true));
                 }
                 nextFieldId = user.getField().getReturnMap();
-                nextPortalName = "sp"; // spawn point
+                nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
             } else {
                 // Handle portal name
                 final Field currentField = user.getField();
