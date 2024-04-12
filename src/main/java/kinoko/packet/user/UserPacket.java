@@ -96,9 +96,9 @@ public final class UserPacket {
         return outPacket;
     }
 
-    public static OutPacket userChatRemote(int characterId, String characterName, ChatType type, String text) {
+    public static OutPacket userChatRemote(User user, String characterName, ChatType type, String text) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT_NLCPQ);
-        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(type.getValue()); // lType
         outPacket.encodeString(text); // sChat
         outPacket.encodeByte(false); // bOnlyBalloon
@@ -113,6 +113,18 @@ public final class UserPacket {
         if (message != null) {
             outPacket.encodeString(message);
         }
+        return outPacket;
+    }
+
+    public static OutPacket userItemUpgradeEffect(User user, boolean success, boolean cursed, boolean enchantSkill, boolean whiteScroll) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_ITEM_UPGRADE_EFFECT);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(success); // bSuccess
+        outPacket.encodeByte(cursed); // bCursed
+        outPacket.encodeByte(enchantSkill); // bEnchantSkill
+        outPacket.encodeInt(0); // nEnchantCategory
+        outPacket.encodeByte(whiteScroll); // bWhiteScroll
+        outPacket.encodeByte(false); // bRecoverable
         return outPacket;
     }
 }

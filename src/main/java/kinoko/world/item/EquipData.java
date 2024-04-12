@@ -1,9 +1,12 @@
 package kinoko.world.item;
 
+import kinoko.provider.WzProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
+
+import java.util.Map;
 
 public final class EquipData {
     private short incStr;
@@ -353,6 +356,59 @@ public final class EquipData {
 
     public void setDurability(int durability) {
         this.durability = durability;
+    }
+
+    public void applyScrollStats(Map<ItemInfoType, Object> scrollStats) {
+        for (var entry : scrollStats.entrySet()) {
+            final int value = WzProvider.getInteger(entry.getValue(), 0);
+            switch (entry.getKey()) {
+                case incSTR -> {
+                    setIncStr((short) Math.clamp(getIncStr() + value, 0, Short.MAX_VALUE));
+                }
+                case incDEX -> {
+                    setIncDex((short) Math.clamp(getIncDex() + value, 0, Short.MAX_VALUE));
+                }
+                case incINT -> {
+                    setIncInt((short) Math.clamp(getIncInt() + value, 0, Short.MAX_VALUE));
+                }
+                case incLUK -> {
+                    setIncLuk((short) Math.clamp(getIncLuk() + value, 0, Short.MAX_VALUE));
+                }
+                case incMHP, incMaxHP -> {
+                    setIncMaxHp((short) Math.clamp(getIncMaxHp() + value, 0, Short.MAX_VALUE));
+                }
+                case incMMP, incMaxMP -> {
+                    setIncMaxMp((short) Math.clamp(getIncMaxMp() + value, 0, Short.MAX_VALUE));
+                }
+                case incPAD -> {
+                    setIncPad((short) Math.clamp(getIncPad() + value, 0, Short.MAX_VALUE));
+                }
+                case incMAD -> {
+                    setIncMad((short) Math.clamp(getIncMad() + value, 0, Short.MAX_VALUE));
+                }
+                case incPDD -> {
+                    setIncPdd((short) Math.clamp(getIncPdd() + value, 0, Short.MAX_VALUE));
+                }
+                case incMDD -> {
+                    setIncMdd((short) Math.clamp(getIncMdd() + value, 0, Short.MAX_VALUE));
+                }
+                case incACC -> {
+                    setIncAcc((short) Math.clamp(getIncAcc() + value, 0, Short.MAX_VALUE));
+                }
+                case incEVA -> {
+                    setIncEva((short) Math.clamp(getIncEva() + value, 0, Short.MAX_VALUE));
+                }
+                case incCraft -> {
+                    setIncCraft((short) Math.clamp(getIncCraft() + value, 0, Short.MAX_VALUE));
+                }
+                case incSpeed -> {
+                    setIncSpeed((short) Math.clamp(getIncSpeed() + value, 0, Short.MAX_VALUE));
+                }
+                case incJump -> {
+                    setIncJump((short) Math.clamp(getIncJump() + value, 0, Short.MAX_VALUE));
+                }
+            }
+        }
     }
 
     public static EquipData from(ItemInfo itemInfo) {

@@ -56,8 +56,4 @@ public enum InventoryType {
     public static InventoryType getByPosition(InventoryType type, int position) {
         return (type == EQUIP && position < 0) ? EQUIPPED : type;
     }
-
-    public static InventoryType getByPosition(int value, int position) {
-        return getByPosition(getByValue(value), position);
-    }
 }

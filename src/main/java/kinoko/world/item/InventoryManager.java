@@ -142,7 +142,7 @@ public final class InventoryManager {
 
     public Optional<InventoryOperation> updateItem(int position, Item item) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
-        final Inventory inventory = getInventoryByType(inventoryType);
+        final Inventory inventory = getInventoryByType(InventoryType.getByPosition(inventoryType, position));
         if (inventory.getItem(position) != item) {
             return Optional.empty();
         }
@@ -155,7 +155,7 @@ public final class InventoryManager {
 
     public Optional<InventoryOperation> removeItem(int position, Item item, int quantity) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
-        final Inventory inventory = getInventoryByType(inventoryType);
+        final Inventory inventory = getInventoryByType(InventoryType.getByPosition(inventoryType, position));
         if (inventory.getItem(position) != item) {
             return Optional.empty();
         }

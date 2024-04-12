@@ -1,6 +1,8 @@
 package kinoko.world.item;
 
 public final class ItemConstants {
+    public static final int WHITE_SCROLL = 2340000;
+
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {
             return 2;
@@ -84,6 +86,85 @@ public final class ItemConstants {
             }
         }
         return false;
+    }
+
+    public static boolean isRecoverSlotItem(int itemId) {
+        return itemId / 100 == 20490; // clean slate scrolls
+    }
+
+    public static boolean isBlackUpgradeItem(int itemId) {
+        return itemId / 100 == 20491; // chaos scrolls
+    }
+
+    public static boolean isAccUpgradeItem(int itemId) {
+        return itemId / 100 == 20492; // scrolls for accessory
+    }
+
+    public static boolean isHyperUpgradeItem(int itemId) {
+        return itemId / 100 == 20493; // equip enhancement scrolls
+    }
+
+    public static boolean isItemOptionUpgradeItem(int itemId) {
+        return itemId / 100 == 20494; // potential scrolls
+    }
+
+    public static boolean isNewUpgradeItem(int itemId) {
+        return itemId / 1000 == 2046;
+    }
+
+    public static boolean isDurabilityUpgradeItem(int itemId) {
+        return itemId / 1000 == 2047;
+    }
+
+    public static boolean isCorrectUpgradeEquip(int upgradeItemId, int equipItemId) {
+        if (upgradeItemId / 10000 == 249 || upgradeItemId / 10000 == 247) {
+            return true;
+        }
+        if (upgradeItemId / 10000 != 204 || !isEquip(equipItemId)) {
+            return false;
+        }
+        if (isRecoverSlotItem(upgradeItemId) || isBlackUpgradeItem(upgradeItemId) && !isPetEquipItem(equipItemId) ||
+                isHyperUpgradeItem(upgradeItemId) || isItemOptionUpgradeItem(upgradeItemId)) {
+            return true;
+        }
+        final int upgradeItemType = (upgradeItemId - 2040000) / 100;
+        final int equipItemType = equipItemId / 10000 % 100;
+        if (isAccUpgradeItem(upgradeItemType)) {
+            return equipItemType >= 11 && equipItemType <= 13; // ring, pendant, belt
+        }
+        if (isNewUpgradeItem(upgradeItemId) || isDurabilityUpgradeItem(upgradeItemId)) {
+            switch (upgradeItemType) {
+                case 0 -> {
+                    return (equipItemType - 30) <= 9; // scroll for one-handed weapon
+                }
+                case 1 -> {
+                    return (equipItemType - 40) <= 9; // scroll for two-handed weapon
+                }
+                case 2 -> {
+                    return equipItemType == 0 || equipItemType > 3 && equipItemType <= 10; // scroll for armor
+                }
+                case 3 -> {
+                    switch (equipItemType) {
+                        case 1, 2, 3, 11, 12, 13, 14 -> {
+                            // scroll for accessory
+                            return true;
+                        }
+                        default -> {
+                            return false;
+                        }
+                    }
+                }
+                default -> {
+                    return true;
+                }
+            }
+        }
+        return upgradeItemType == equipItemType;
+    }
+
+    public static boolean isUpgradeScrollNoConsumeWhiteScroll(int itemId) {
+        // scroll for spikes on shoes, scroll for cape for cold protection, clean slate scrolls
+        return itemId == 2040727 || itemId == 2041058 || isRecoverSlotItem(itemId);
     }
 
     public static boolean isPortableChairItem(int itemId) {

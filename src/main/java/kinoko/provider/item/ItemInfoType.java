@@ -72,6 +72,13 @@ public enum ItemInfoType {
     incRandVol,
     incPERIOD,
 
+    success,
+    cursed,
+    recover,
+    randstat,
+    preventslip,
+    warmsupport,
+
     // Elemental Wand/Staff
     elemDefault,
     incRMAF,

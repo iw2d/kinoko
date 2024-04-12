@@ -12,12 +12,14 @@ import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
+import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
@@ -26,6 +28,8 @@ import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -299,7 +303,164 @@ public final class ItemHandler {
         final int equipItemPos = inPacket.decodeShort(); // nEPOS
         final boolean whiteScroll = inPacket.decodeShort() > 1; // bWhiteScroll
         final boolean enchantSkill = inPacket.decodeBoolean(); // bEnchantSkill
-        // TODO
+
+        try (var locked = user.acquire()) {
+            // Resolve upgrade item
+            final InventoryManager im = locked.get().getInventoryManager();
+            final Item upgradeItem = im.getInventoryByType(InventoryType.CONSUME).getItem(upgradeItemPos);
+            if (upgradeItem == null) {
+                log.error("Received USER_UPGRADE_ITEM_USE_REQUEST with upgrade item position {}", upgradeItemPos);
+                user.dispose();
+                return;
+            }
+            final Optional<ItemInfo> upgradeItemInfoResult = ItemProvider.getItemInfo(upgradeItem.getItemId());
+            if (upgradeItemInfoResult.isEmpty()) {
+                log.error("Could not resolve  item info for upgrade item ID : {}", upgradeItem.getItemId());
+                user.dispose();
+                return;
+            }
+            final ItemInfo upgradeItemInfo = upgradeItemInfoResult.get();
+
+            // Resolve equip item
+            final InventoryType equipInventoryType = InventoryType.getByPosition(InventoryType.EQUIP, equipItemPos);
+            final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPos);
+            if (equipItem == null) {
+                log.error("Received USER_UPGRADE_ITEM_USE_REQUEST with equip item position {}", upgradeItemPos);
+                user.dispose();
+                return;
+            }
+            final boolean recoverSlotItem = upgradeItemInfo.getInfo(ItemInfoType.recover) != 0;
+            final boolean requireUpgradeCount = !recoverSlotItem && !ItemConstants.isUpgradeScrollNoConsumeWhiteScroll(upgradeItem.getItemId());
+            final EquipData equipData = equipItem.getEquipData();
+            if (equipData == null || (requireUpgradeCount && equipData.getRuc() <= 0) || !ItemConstants.isCorrectUpgradeEquip(upgradeItem.getItemId(), equipItem.getItemId())) {
+                log.error("Tried to upgrade equip item {} with upgrade item {}", equipItem.getItemId(), upgradeItem.getItemId());
+                user.dispose();
+                return;
+            }
+            final Optional<ItemInfo> equipItemInfoResult = ItemProvider.getItemInfo(equipItem.getItemId());
+            if (equipItemInfoResult.isEmpty()) {
+                log.error("Could not resolve item info for equip item ID : {}", equipItem.getItemId());
+                user.dispose();
+                return;
+            }
+            final ItemInfo equipItemInfo = equipItemInfoResult.get();
+            if (recoverSlotItem && equipData.getRuc() >= equipItemInfo.getInfo(ItemInfoType.tuc)) {
+                log.error("Tried to use recover slot item {} on item {} in position {}", upgradeItem.getItemId(), equipItem.getItemId(), equipItemPos);
+                user.dispose();
+                return;
+            }
+
+            // Consume white scroll and upgrade scroll
+            if (whiteScroll && requireUpgradeCount) {
+                final Optional<List<InventoryOperation>> removeWhiteScrollResult = im.removeItem(ItemConstants.WHITE_SCROLL, 1);
+                if (removeWhiteScrollResult.isEmpty()) {
+                    log.error("Failed to consume a white scroll while upgrading equip item {}", equipItem.getItemId());
+                    user.dispose();
+                    return;
+                }
+                user.write(WvsContext.inventoryOperation(removeWhiteScrollResult.get(), false));
+            }
+            final Optional<InventoryOperation> removeUpgradeItemResult = im.removeItem(upgradeItemPos, upgradeItem, 1);
+            if (removeUpgradeItemResult.isEmpty()) {
+                throw new IllegalStateException(String.format("Could not remove upgrade item %d in position %d", upgradeItem.getItemId(), upgradeItemPos));
+            }
+            user.write(WvsContext.inventoryOperation(removeUpgradeItemResult.get(), false));
+
+            // Upgrade item
+            final boolean success = Util.succeedProp(upgradeItemInfo.getInfo(ItemInfoType.success, 100));
+            if (success) {
+                if (recoverSlotItem) {
+                    // Clean Slate Scroll
+                    equipData.setRuc((byte) (equipData.getRuc() + 1));
+                } else if (upgradeItemInfo.getInfo(ItemInfoType.preventslip) != 0) {
+                    // Scroll for Spikes on Shoes
+                    equipItem.addAttribute(ItemAttribute.EQUIP_PREVENT_SLIP);
+                    equipData.setCuc((byte) (equipData.getCuc() + 1));
+                } else if (upgradeItemInfo.getInfo(ItemInfoType.warmsupport) != 0) {
+                    // Scroll for Cape for Cold Protection
+                    equipItem.addAttribute(ItemAttribute.EQUIP_SUPPORT_WARM);
+                    equipData.setCuc((byte) (equipData.getCuc() + 1));
+                } else if (upgradeItemInfo.getInfo(ItemInfoType.randstat) != 0) {
+                    // Chaos scroll
+                    final int randMax = upgradeItemInfo.getInfo(ItemInfoType.incRandVol) != 0 ? 10 : 5; // miraculous chaos scroll
+                    final Map<ItemInfoType, Object> randStats = new HashMap<>();
+                    if (equipData.getIncStr() > 0) {
+                        randStats.put(ItemInfoType.incSTR, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncDex() > 0) {
+                        randStats.put(ItemInfoType.incDEX, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncInt() > 0) {
+                        randStats.put(ItemInfoType.incINT, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncLuk() > 0) {
+                        randStats.put(ItemInfoType.incLUK, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncMaxHp() > 0) {
+                        randStats.put(ItemInfoType.incMHP, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncMaxMp() > 0) {
+                        randStats.put(ItemInfoType.incMMP, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncPad() > 0) {
+                        randStats.put(ItemInfoType.incPAD, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncMad() > 0) {
+                        randStats.put(ItemInfoType.incMAD, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncPdd() > 0) {
+                        randStats.put(ItemInfoType.incPDD, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncMdd() > 0) {
+                        randStats.put(ItemInfoType.incMDD, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncAcc() > 0) {
+                        randStats.put(ItemInfoType.incACC, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncEva() > 0) {
+                        randStats.put(ItemInfoType.incEVA, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncCraft() > 0) {
+                        randStats.put(ItemInfoType.incCraft, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncSpeed() > 0) {
+                        randStats.put(ItemInfoType.incSpeed, Util.getRandom(-randMax, randMax));
+                    }
+                    if (equipData.getIncJump() > 0) {
+                        randStats.put(ItemInfoType.incJump, Util.getRandom(-randMax, randMax));
+                    }
+                    equipData.applyScrollStats(randStats);
+                    equipData.setCuc((byte) (equipData.getCuc() + 1));
+                } else {
+                    // Normal scrolls
+                    equipData.applyScrollStats(upgradeItemInfo.getItemInfos());
+                    equipData.setCuc((byte) (equipData.getCuc() + 1));
+                }
+            } else {
+                // Check if item should be destroyed
+                final int destroyRate = upgradeItemInfo.getInfo(ItemInfoType.cursed, 0);
+                if (Util.succeedProp(destroyRate)) {
+                    final Optional<InventoryOperation> destroyItemResult = im.removeItem(equipItemPos, equipItem);
+                    if (destroyItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not destroy equip item %d in position %d", equipItem.getItemId(), equipItemPos));
+                    }
+                    user.write(WvsContext.inventoryOperation(destroyItemResult.get(), true));
+                    user.getField().broadcastPacket(UserPacket.userItemUpgradeEffect(user, false, true, enchantSkill, whiteScroll && requireUpgradeCount));
+                    return;
+                }
+            }
+
+            // Decrement upgrade slot (if applicable) and update client
+            if (requireUpgradeCount && (success || !whiteScroll)) {
+                equipData.setRuc((byte) (equipData.getRuc() - 1));
+            }
+            final Optional<InventoryOperation> updateItemResult = im.updateItem(equipItemPos, equipItem);
+            if (updateItemResult.isEmpty()) {
+                throw new IllegalStateException(String.format("Could not update equip item %d in position %d", equipItem.getItemId(), equipItemPos));
+            }
+            user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
+            user.getField().broadcastPacket(UserPacket.userItemUpgradeEffect(user, success, false, enchantSkill, whiteScroll && requireUpgradeCount));
+        }
     }
 
     @Handler(InHeader.PET_STAT_CHANGE_ITEM_USE_REQUEST)
