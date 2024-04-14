@@ -257,6 +257,10 @@ public final class User extends Life implements Lockable<User> {
         return getBasicStat().getMaxMp();
     }
 
+    public int getSpeed() {
+        return getSecondaryStat().getSpeed();
+    }
+
     public void addExp(int exp) {
         final Map<Stat, Object> addExpResult = getCharacterStat().addExp(exp);
         write(WvsContext.statChanged(addExpResult, true));

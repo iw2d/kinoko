@@ -159,6 +159,22 @@ public final class UserRemote {
         return outPacket;
     }
 
+    public static OutPacket avatarModified(User user) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_AVATAR_MODIFIED);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(-1); // flag : AVATAR_LOOK = 0x1, AVATAR_SPEED = 0x2, AVATAR_CHOCO = 0x4
+        user.getCharacterData().getAvatarLook().encode(outPacket);
+        outPacket.encodeByte(user.getSpeed());
+        outPacket.encodeByte(0); // nCount
+
+        outPacket.encodeByte(false); // couple record
+        outPacket.encodeByte(false); // friend record
+        outPacket.encodeByte(false); // marriage record
+
+        outPacket.encodeInt(0); // nCompletedSetItemID
+        return outPacket;
+    }
+
     public static OutPacket effect(User user, Effect effect) {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_EFFECT_REMOTE);
         outPacket.encodeInt(user.getCharacterId());

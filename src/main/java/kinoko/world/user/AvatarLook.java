@@ -20,17 +20,31 @@ public final class AvatarLook implements Encodable {
 
     private Map<Integer, Integer> getHairEquip() {
         final Map<Integer, Integer> hairEquip = new HashMap<>();
-        // Equips
         for (var entry : equipped.getItems().entrySet()) {
             final int bodyPart = entry.getKey();
+            final int itemId = entry.getValue().getItemId();
             if (bodyPart > BodyPart.HAIR.getValue() && bodyPart < BodyPart.EQUIPPED_END.getValue()) {
-                hairEquip.put(bodyPart, entry.getValue().getItemId());
+                hairEquip.put(bodyPart, itemId);
             } else if (bodyPart >= BodyPart.CASH_BASE.getValue() && bodyPart < BodyPart.CASH_END.getValue()) {
                 // Cash Equips (overwrite), sorted map gives us entries in ascending order
-                hairEquip.put(bodyPart - BodyPart.CASH_BASE.getValue(), entry.getValue().getItemId());
+                hairEquip.put(bodyPart - BodyPart.CASH_BASE.getValue(), itemId);
             }
         }
         return hairEquip;
+    }
+
+    private Map<Integer, Integer> getUnseenEquip(Map<Integer, Integer> hairEquip) {
+        final Map<Integer, Integer> unseenEquip = new HashMap<>();
+        for (var entry : equipped.getItems().entrySet()) {
+            final int bodyPart = entry.getKey();
+            if (bodyPart > BodyPart.HAIR.getValue() && bodyPart < BodyPart.EQUIPPED_END.getValue()) {
+                final int itemId = entry.getValue().getItemId();
+                if (hairEquip.containsKey(bodyPart) && hairEquip.get(bodyPart) != itemId) {
+                    unseenEquip.put(bodyPart, itemId);
+                }
+            }
+        }
+        return unseenEquip;
     }
 
     @Override
@@ -39,16 +53,23 @@ public final class AvatarLook implements Encodable {
         outPacket.encodeByte(characterStat.getSkin()); // nSkin
         outPacket.encodeInt(characterStat.getFace()); // nFace
 
+        final Map<Integer, Integer> hairEquip = getHairEquip();
+        final Map<Integer, Integer> unseenEquip = getUnseenEquip(hairEquip);
+
         // anHairEquip
         outPacket.encodeByte(0);
         outPacket.encodeInt(characterStat.getHair()); // nHair
-        for (var entry : getHairEquip().entrySet()) {
+        for (var entry : hairEquip.entrySet()) {
             outPacket.encodeByte(entry.getKey());
             outPacket.encodeInt(entry.getValue());
         }
         outPacket.encodeByte(-1);
 
         // anUnseenEquip
+        for (var entry : unseenEquip.entrySet()) {
+            outPacket.encodeByte(entry.getKey());
+            outPacket.encodeInt(entry.getValue());
+        }
         outPacket.encodeByte(-1);
 
         // nWeaponStickerID

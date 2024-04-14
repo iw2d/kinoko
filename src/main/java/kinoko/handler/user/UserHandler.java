@@ -447,7 +447,11 @@ public final class UserHandler {
                 secondInventory.putItem(newPos, item);
                 user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
             }
-            user.validateStat();
+            // Update user
+            if (inventoryType == InventoryType.EQUIP) {
+                user.validateStat();
+                user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+            }
         }
     }
 
