@@ -44,6 +44,10 @@ public final class QuestResult implements Encodable {
         }
     }
 
+    public static QuestResult of(QuestResultType type) {
+        return new QuestResult(type);
+    }
+
     public static QuestResult success(int questId, int templateId, int nextQuestId) {
         final QuestResult questResult = new QuestResult(QuestResultType.SUCCESS);
         questResult.questId = questId;
@@ -52,8 +56,8 @@ public final class QuestResult implements Encodable {
         return questResult;
     }
 
-    public static QuestResult failed(int questId, QuestResultType type) {
-        final QuestResult questResult = new QuestResult(type);
+    public static QuestResult failedInventory(int questId) {
+        final QuestResult questResult = new QuestResult(QuestResultType.FAILED_INVENTORY);
         questResult.questId = questId;
         return questResult;
     }

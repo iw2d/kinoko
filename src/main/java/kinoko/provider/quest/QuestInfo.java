@@ -1,5 +1,6 @@
 package kinoko.provider.quest;
 
+import kinoko.packet.user.UserLocal;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.quest.act.*;
@@ -8,9 +9,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
-import kinoko.world.quest.QuestManager;
-import kinoko.world.quest.QuestRecord;
-import kinoko.world.quest.QuestState;
+import kinoko.world.quest.*;
 import kinoko.world.user.User;
 
 import java.util.*;
@@ -87,6 +86,22 @@ public final class QuestInfo {
                 "completeChecks=" + completeChecks + ']';
     }
 
+    public void restoreLostItems(Locked<User> locked, Set<Integer> lostItems) {
+        // Check that the quest has been started
+        final User user = locked.get();
+        final QuestManager qm = user.getQuestManager();
+        final Optional<QuestRecord> questRecordResult = qm.getQuestRecord(questId);
+        if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
+            user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+            return;
+        }
+        for (QuestAct questAct : getStartActs()) {
+            if (questAct instanceof QuestItemAct questItemAct) {
+                questItemAct.restoreLostItems(locked, lostItems);
+            }
+        }
+    }
+
     public Optional<QuestRecord> startQuest(Locked<User> locked) {
         // Check that the quest can be started
         for (QuestCheck startCheck : getStartChecks()) {
@@ -146,6 +161,11 @@ public final class QuestInfo {
         final Optional<QuestRecord> removeQuestRecordResult = qm.removeQuestRecord(questId);
         if (removeQuestRecordResult.isEmpty()) {
             return Optional.empty();
+        }
+        for (QuestAct questAct : getStartActs()) {
+            if (questAct instanceof QuestItemAct questItemAct) {
+                questItemAct.removeQuestItems(locked);
+            }
         }
         final QuestRecord qr = removeQuestRecordResult.get();
         qr.setState(QuestState.NONE);
@@ -254,7 +274,7 @@ public final class QuestInfo {
                     if (!(entry.getValue() instanceof WzListProperty itemList)) {
                         throw new ProviderError("Failed to resolve quest act item list");
                     }
-                    questActs.add(QuestItemAct.from(itemList));
+                    questActs.add(QuestItemAct.from(questId, itemList));
                 }
                 case "money" -> {
                     questActs.add(new QuestMoneyAct(WzProvider.getInteger(entry.getValue())));

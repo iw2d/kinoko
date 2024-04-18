@@ -129,15 +129,18 @@ public final class InventoryManager {
         return true;
     }
 
-    public boolean hasItem(int itemId, int quantity) {
-        boolean hasItem = false;
+    public int getItemCount(int itemId) {
+        int quantity = 0;
         for (Item item : getInventoryByItemId(itemId).getItems().values()) {
             if (item.getItemId() == itemId) {
-                hasItem = true;
-                quantity -= item.getQuantity();
+                quantity += item.getQuantity();
             }
         }
-        return hasItem && quantity <= 0;
+        return quantity;
+    }
+
+    public boolean hasItem(int itemId, int quantity) {
+        return getItemCount(itemId) >= quantity;
     }
 
     public Optional<InventoryOperation> updateItem(int position, Item item) {

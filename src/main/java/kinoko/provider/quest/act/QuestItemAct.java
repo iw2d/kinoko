@@ -9,20 +9,21 @@ import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
 import kinoko.util.Util;
-import kinoko.world.item.Inventory;
-import kinoko.world.item.InventoryOperation;
-import kinoko.world.item.InventoryType;
-import kinoko.world.item.Item;
+import kinoko.world.item.*;
+import kinoko.world.quest.QuestResult;
+import kinoko.world.quest.QuestResultType;
 import kinoko.world.user.User;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public final class QuestItemAct implements QuestAct {
+    private final int questId;
     private final Set<QuestItemData> items;
     private final List<QuestItemData> choices;
 
-    public QuestItemAct(Set<QuestItemData> items, List<QuestItemData> choices) {
+    public QuestItemAct(int questId, Set<QuestItemData> items, List<QuestItemData> choices) {
+        this.questId = questId;
         this.items = items;
         this.choices = choices;
     }
@@ -35,9 +36,96 @@ public final class QuestItemAct implements QuestAct {
         return choices;
     }
 
+    public void restoreLostItems(Locked<User> locked, Set<Integer> lostItems) {
+        final User user = locked.get();
+        final InventoryManager im = user.getInventoryManager();
+        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob()).stream()
+                .filter(itemData -> lostItems.contains(itemData.getItemId()))
+                .collect(Collectors.toUnmodifiableSet());
+        final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
+
+        // Calculate required slots and validate lost items
+        for (QuestItemData itemData : filteredItems) {
+            if (!itemData.isStatic() || itemData.getCount() <= 0) {
+                continue;
+            }
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+                return;
+            }
+            if (!itemInfoResult.get().isQuest()) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+                return;
+            }
+            final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
+            requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
+        }
+
+        // Check for required slots
+        for (var entry : requiredSlots.entrySet()) {
+            final Inventory inventory = im.getInventoryByType(entry.getKey());
+            final int remainingSlots = inventory.getRemaining();
+            if (remainingSlots < entry.getValue()) {
+                user.write(UserLocal.questResult(QuestResult.failedInventory(questId)));
+                return;
+            }
+        }
+
+        // Give missing items
+        for (QuestItemData itemData : filteredItems) {
+            if (!itemData.isStatic() || itemData.getCount() <= 0) {
+                continue;
+            }
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+                return;
+            }
+            final int count = itemData.getCount() - im.getItemCount(itemData.getItemId());
+            if (count <= 0) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+                return;
+            }
+            final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), count);
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+            if (addItemResult.isEmpty()) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+            user.write(UserLocal.effect(Effect.gainItem(item)));
+        }
+    }
+
+    public void removeQuestItems(Locked<User> locked) {
+        final User user = locked.get();
+        final InventoryManager im = user.getInventoryManager();
+
+        // Remove quest items
+        for (QuestItemData itemData : getItems()) {
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
+            if (itemInfoResult.isEmpty() || !itemInfoResult.get().isQuest()) {
+                continue;
+            }
+            final int count = im.getItemCount(itemData.getItemId());
+            if (count <= 0) {
+                continue;
+            }
+            final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemData.getItemId(), count);
+            if (removeItemResult.isEmpty()) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
+            user.write(UserLocal.effect(Effect.gainItem(itemData.getItemId(), count)));
+        }
+    }
+
     @Override
     public boolean canAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
+        final InventoryManager im = user.getInventoryManager();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Handle required slots for random items
@@ -53,6 +141,7 @@ public final class QuestItemAct implements QuestAct {
         // Handle required slots for choice items
         if (rewardIndex >= 0) {
             if (choices.size() < rewardIndex) {
+                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
                 return false;
             }
             final QuestItemData choiceItemData = choices.get(rewardIndex);
@@ -69,7 +158,8 @@ public final class QuestItemAct implements QuestAct {
                 final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
                 requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
             } else {
-                if (!user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount())) {
+                if (!im.hasItem(itemData.getItemId(), itemData.getCount())) {
+                    user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
                     return false;
                 }
             }
@@ -77,9 +167,10 @@ public final class QuestItemAct implements QuestAct {
 
         // Check for required slots
         for (var entry : requiredSlots.entrySet()) {
-            final Inventory inventory = user.getInventoryManager().getInventoryByType(entry.getKey());
+            final Inventory inventory = im.getInventoryByType(entry.getKey());
             final int remainingSlots = inventory.getRemaining();
             if (remainingSlots < entry.getValue()) {
+                user.write(UserLocal.questResult(QuestResult.failedInventory(questId)));
                 return false;
             }
         }
@@ -90,6 +181,7 @@ public final class QuestItemAct implements QuestAct {
     @Override
     public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
+        final InventoryManager im = user.getInventoryManager();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Take required items
@@ -98,7 +190,7 @@ public final class QuestItemAct implements QuestAct {
                 continue;
             }
             final int quantity = -itemData.getCount();
-            final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemData.getItemId(), quantity);
+            final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemData.getItemId(), quantity);
             if (removeItemResult.isEmpty()) {
                 return false;
             }
@@ -117,7 +209,7 @@ public final class QuestItemAct implements QuestAct {
                 return false;
             }
             final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), choiceItemData.getCount());
-            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
             if (addItemResult.isEmpty()) {
                 return false;
             }
@@ -135,7 +227,7 @@ public final class QuestItemAct implements QuestAct {
                 return false;
             }
             final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), itemData.getCount());
-            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
             if (addItemResult.isEmpty()) {
                 return false;
             }
@@ -155,7 +247,7 @@ public final class QuestItemAct implements QuestAct {
                 return false;
             }
             final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), itemData.getCount());
-            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
             if (addItemResult.isEmpty()) {
                 return false;
             }
@@ -172,10 +264,11 @@ public final class QuestItemAct implements QuestAct {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public static QuestItemAct from(WzListProperty itemList) {
+    public static QuestItemAct from(int questId, WzListProperty itemList) {
         final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList, 1);
         final List<QuestItemData> choices = QuestItemData.resolveChoiceItemData(itemList);
         return new QuestItemAct(
+                questId,
                 Collections.unmodifiableSet(items),
                 Collections.unmodifiableList(choices)
         );

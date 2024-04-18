@@ -695,11 +695,13 @@ public final class UserHandler {
         switch (questRequestType) {
             case LOST_ITEM -> {
                 final int size = inPacket.decodeInt();
-                final int[] lostItems = new int[size];
+                final Set<Integer> lostItems = new HashSet<>();
                 for (int i = 0; i < size; i++) {
-                    lostItems[i] = inPacket.decodeInt();
+                    lostItems.add(inPacket.decodeInt()); // item id
                 }
-                // TODO
+                try (var locked = user.acquire()) {
+                    questInfo.restoreLostItems(locked, lostItems);
+                }
             }
             case ACCEPT_QUEST -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
