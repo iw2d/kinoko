@@ -186,6 +186,7 @@ public final class UserRemote {
         final OutPacket outPacket = OutPacket.of(OutHeader.USER_TEMPORARY_STAT_SET);
         outPacket.encodeInt(user.getCharacterId());
         SecondaryStat.encodeForRemote(outPacket, setStats);
+        outPacket.encodeShort(0); // tDelay
         return outPacket;
     }
 
