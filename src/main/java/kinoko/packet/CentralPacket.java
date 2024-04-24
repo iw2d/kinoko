@@ -146,10 +146,11 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket partyResult(int characterId, int partyId) {
+    public static OutPacket partyResult(int characterId, int partyId, int partyMemberIndex) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.PARTY_RESULT);
         outPacket.encodeInt(characterId);
         outPacket.encodeInt(partyId);
+        outPacket.encodeInt(partyMemberIndex);
         return outPacket;
     }
 }

@@ -196,12 +196,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         // Remote user party ID is set on USER_CONNECT
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0));
+                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0, 0));
                             return;
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
                             final Party party = lockedParty.get();
-                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId()));
+                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
                             remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.load(party))));
                         }
                     }
@@ -214,7 +214,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         // Create party
                         final Party party = centralServerNode.createNewParty(remoteUser);
                         remoteUser.setPartyId(party.getPartyId());
-                        remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId()));
+                        remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
                         remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party)))); // You have created a new party.
                     }
                     case WITHDRAW_PARTY -> {
@@ -236,7 +236,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 final OutPacket outPacket = WvsContext.partyResult(PartyResult.disband(party, remoteUser)); // You have quit as the leader of the party. The party has been disbanded. | You have left the party since the party leader quit.
                                 forEachPartyMember(party, (member, node) -> {
                                     member.setPartyId(0);
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), 0));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), 0, 0));
                                     node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                                 });
                             } else {
@@ -249,11 +249,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 // Broadcast withdraw packet to party
                                 final OutPacket outPacket = WvsContext.partyResult(PartyResult.leave(party, remoteUser)); // You have left the party. | '%s' have left the party.
                                 forEachPartyMember(party, (member, node) -> {
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.getPartyId(), party.getMemberIndex(member))); // update member index
                                     node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                                 });
                                 // Update user
                                 remoteUser.setPartyId(0);
-                                remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0));
+                                remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0, 0));
                                 remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), outPacket));
                             }
                         }
@@ -282,7 +283,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == remoteUser.getCharacterId()) {
                                     member.setPartyId(party.getPartyId());
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.getPartyId()));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.getPartyId(), party.getMemberIndex(member)));
                                 }
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
@@ -295,7 +296,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             // Create party
                             final Party party = centralServerNode.createNewParty(remoteUser);
                             remoteUser.setPartyId(party.getPartyId());
-                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId()));
+                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
                             remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party)))); // You have created a new party.
                         }
                         // Resolve target
@@ -339,7 +340,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == targetId) {
                                     member.setPartyId(0);
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), 0));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), 0, 0));
                                 }
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });

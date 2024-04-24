@@ -9,7 +9,6 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -170,7 +169,7 @@ public final class SkillProcessor {
         field.broadcastPacket(UserRemote.attack(user, attack), user);
     }
 
-    public static void processSkill(Locked<User> locked, Skill skill, InPacket inPacket) {
+    public static void processSkill(Locked<User> locked, Skill skill) {
         final User user = locked.get();
 
         // Resolve skill info
@@ -239,13 +238,18 @@ public final class SkillProcessor {
         }
 
         // Skill-specific handling
-        JobHandler.handleSkill(locked, skill, inPacket);
+        JobHandler.handleSkill(locked, skill);
         user.write(WvsContext.skillUseResult());
 
         // Skill effects and party handling
-        user.getField().broadcastPacket(UserRemote.effect(user, SkillEffect.skillUse(skill.skillId, user.getLevel(), skill.slv)));
-        user.getField().getUserPool().forEachPartyMember(user, (member) -> {
-            // TODO
+        final Field field = user.getField();
+        field.broadcastPacket(UserRemote.effect(user, SkillEffect.skillUse(skill.skillId, skill.slv, user.getLevel())), user);
+        skill.forEachAffectedMember(user, user.getField(), (member) -> {
+            try (var lockedMember = member.acquire()) {
+                JobHandler.handleSkill(lockedMember, skill);
+                member.write(UserLocal.effect(SkillEffect.skillAffected(skill.skillId, skill.slv)));
+                field.broadcastPacket(UserRemote.effect(member, SkillEffect.skillAffected(skill.skillId, skill.slv)), member);
+            }
         });
     }
 

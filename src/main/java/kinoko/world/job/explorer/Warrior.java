@@ -3,7 +3,6 @@ package kinoko.world.job.explorer;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
@@ -141,7 +140,7 @@ public final class Warrior {
         }
     }
 
-    public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+    public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
         final int slv = skill.slv;
@@ -158,7 +157,7 @@ public final class Warrior {
             case MAGIC_CRASH_HERO:
             case MAGIC_CRASH_PALADIN:
             case MAGIC_CRASH_DRK:
-                Skill.forEachMob(inPacket, user.getField(), (mob) -> {
+                skill.forEachAffectedMob(user.getField(), (mob) -> {
                     if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         return;
                     }

@@ -3,7 +3,6 @@ package kinoko.world.job;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -73,7 +72,7 @@ public final class JobHandler {
         }
     }
 
-    public static void handleSkill(Locked<User> locked, Skill skill, InPacket inPacket) {
+    public static void handleSkill(Locked<User> locked, Skill skill) {
         final User user = locked.get();
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
@@ -217,55 +216,55 @@ public final class JobHandler {
                 final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
                 switch (Job.getById(skillRoot)) {
                     case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
-                        Warrior.handleSkill(user, skill, inPacket);
+                        Warrior.handleSkill(user, skill);
                         return;
                     }
                     case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST, BISHOP -> {
-                        Magician.handleSkill(user, skill, inPacket);
+                        Magician.handleSkill(user, skill);
                         return;
                     }
                     case ARCHER, HUNTER, RANGER, BOWMASTER, CROSSBOWMAN, SNIPER, MARKSMAN -> {
-                        Bowman.handleSkill(user, skill, inPacket);
+                        Bowman.handleSkill(user, skill);
                         return;
                     }
                     case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
-                        Thief.handleSkill(user, skill, inPacket);
+                        Thief.handleSkill(user, skill);
                         return;
                     }
                     case PIRATE, BRAWLER, MARAUDER, BUCCANEER, GUNSLINGER, OUTLAW, CORSAIR -> {
-                        Pirate.handleSkill(user, skill, inPacket);
+                        Pirate.handleSkill(user, skill);
                         return;
                     }
                     case DAWN_WARRIOR_1, DAWN_WARRIOR_2, DAWN_WARRIOR_3 -> {
-                        DawnWarrior.handleSkill(user, skill, inPacket);
+                        DawnWarrior.handleSkill(user, skill);
                         return;
                     }
                     case BLAZE_WIZARD_1, BLAZE_WIZARD_2, BLAZE_WIZARD_3 -> {
-                        BlazeWizard.handleSkill(user, skill, inPacket);
+                        BlazeWizard.handleSkill(user, skill);
                         return;
                     }
                     case WIND_ARCHER_1, WIND_ARCHER_2, WIND_ARCHER_3 -> {
-                        WindArcher.handleSkill(user, skill, inPacket);
+                        WindArcher.handleSkill(user, skill);
                         return;
                     }
                     case ARAN_1, ARAN_2, ARAN_3, ARAN_4 -> {
-                        Aran.handleSkill(user, skill, inPacket);
+                        Aran.handleSkill(user, skill);
                         return;
                     }
                     case EVAN_1, EVAN_2, EVAN_3, EVAN_4, EVAN_5, EVAN_6, EVAN_7, EVAN_8, EVAN_9, EVAN_10 -> {
-                        Evan.handleSkill(user, skill, inPacket);
+                        Evan.handleSkill(user, skill);
                         return;
                     }
                     case BATTLE_MAGE_1, BATTLE_MAGE_2, BATTLE_MAGE_3, BATTLE_MAGE_4 -> {
-                        BattleMage.handleSkill(user, skill, inPacket);
+                        BattleMage.handleSkill(user, skill);
                         return;
                     }
                     case WILD_HUNTER_1, WILD_HUNTER_2, WILD_HUNTER_3, WILD_HUNTER_4 -> {
-                        WildHunter.handleSkill(user, skill, inPacket);
+                        WildHunter.handleSkill(user, skill);
                         return;
                     }
                     case MECHANIC_1, MECHANIC_2, MECHANIC_3, MECHANIC_4 -> {
-                        Mechanic.handleSkill(user, skill, inPacket);
+                        Mechanic.handleSkill(user, skill);
                         return;
                     }
                 }

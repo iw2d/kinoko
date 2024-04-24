@@ -100,6 +100,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
             case PARTY_RESULT -> {
                 final int characterId = inPacket.decodeInt();
                 final int partyId = inPacket.decodeInt();
+                final int partyMemberIndex = inPacket.decodeInt();
                 // Resolve target user
                 final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
                 if (targetUserResult.isEmpty()) {
@@ -109,6 +110,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 try (var locked = targetUserResult.get().acquire()) {
                     final User user = locked.get();
                     user.setPartyId(partyId);
+                    user.setPartyMemberIndex(partyMemberIndex);
                     user.getField().getUserPool().forEachPartyMember(user, (member) -> {
                         try (var lockedMember = member.acquire()) {
                             user.write(UserRemote.receiveHp(lockedMember.get()));

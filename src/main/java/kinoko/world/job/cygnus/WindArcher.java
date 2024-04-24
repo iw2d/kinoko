@@ -1,6 +1,5 @@
 package kinoko.world.job.cygnus;
 
-import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
@@ -41,7 +40,7 @@ public final class WindArcher {
         }
     }
 
-    public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+    public static void handleSkill(User user, Skill skill) {
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

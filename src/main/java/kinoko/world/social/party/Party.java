@@ -72,6 +72,18 @@ public final class Party implements Encodable, Lockable<Party> {
                 .findFirst();
     }
 
+    public int getMemberIndex(RemoteUser remoteUser) {
+        for (int i = 0; i < GameConstants.PARTY_MAX; i++) {
+            if (i >= partyMembers.size()) {
+                break;
+            }
+            if (partyMembers.get(i).getCharacterId() == remoteUser.getCharacterId()) {
+                return i + 1; // used for affectedMemberBitMap
+            }
+        }
+        return 0;
+    }
+
     public boolean hasMember(int characterId) {
         return getMember(characterId).isPresent();
     }

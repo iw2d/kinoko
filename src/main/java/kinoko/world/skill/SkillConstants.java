@@ -52,6 +52,66 @@ public final class SkillConstants {
         return skillType == 1000 || skillType == 1001 || skillType == 1002;
     }
 
+    public static boolean isPartySkill(int skillId) {
+        if (skillId == Magician.HEAL) {
+            // CUserLocal::DoActiveSkill_Heal
+            return true;
+        }
+        // Usages of CUserLocal::DoActiveSkill_StatChange with dwTargetFlag & 2 (SCT_Party)
+        switch (skillId) {
+            // CUserLocal::DoActiveSkill
+            case Warrior.RAGE:
+            case Warrior.COMBAT_ORDERS:
+            case Magician.MEDITATION_FP:
+            case Magician.MEDITATION_IL:
+            case Magician.BLESS:
+            case Magician.DISPEL:
+            case Magician.HOLY_SYMBOL:
+            case Magician.HOLY_SHIELD:
+            case Magician.RESURRECTION:
+            case Bowman.SHARP_EYES_BM:
+            case Bowman.SHARP_EYES_MM:
+            case Thief.HASTE_NL:
+            case Thief.HASTE_SHAD:
+            case Thief.MESO_UP:
+            case Thief.THORNS:
+            case Pirate.SPEED_INFUSION:
+            case Pirate.TIME_LEAP:
+            case DawnWarrior.RAGE:
+            case BlazeWizard.MEDITATION:
+            case NightWalker.HASTE:
+            case ThunderBreaker.SPEED_INFUSION:
+            case Aran.COMBO_BARRIER:
+            case Evan.MAGIC_SHIELD:
+            case Evan.MAGIC_RESISTANCE:
+            case Evan.BLESSING_OF_THE_ONYX:
+            case Evan.SOUL_STONE:
+            case WildHunter.SHARP_EYES_WH:
+            case Warrior.MAPLE_WARRIOR_HERO:
+            case Warrior.MAPLE_WARRIOR_PALADIN:
+            case Warrior.MAPLE_WARRIOR_DRK:
+            case Magician.MAPLE_WARRIOR_FP:
+            case Magician.MAPLE_WARRIOR_IL:
+            case Magician.MAPLE_WARRIOR_BISH:
+            case Bowman.MAPLE_WARRIOR_BM:
+            case Bowman.MAPLE_WARRIOR_MM:
+            case Thief.MAPLE_WARRIOR_NL:
+            case Thief.MAPLE_WARRIOR_SHAD:
+            case Thief.MAPLE_WARRIOR_DB:
+            case Pirate.MAPLE_WARRIOR_BUCC:
+            case Pirate.MAPLE_WARRIOR_SAIR:
+            case Aran.MAPLE_WARRIOR_ARAN:
+            case Evan.MAPLE_WARRIOR_EVAN:
+            case BattleMage.MAPLE_WARRIOR_BAM:
+            case WildHunter.MAPLE_WARRIOR_WH:
+            case Mechanic.MAPLE_WARRIOR_MECH:
+            case WildHunter.JAGUAR_OSHI_DIGESTED: // CUserLocal::TryDoingSwallowBuff
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isEncodePositionSkill(int skillId) {
         if (isAntiRepeatBuffSkill(skillId)) {
             // CUserLocal::SendSkillUseRequest

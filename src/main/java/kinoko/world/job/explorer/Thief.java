@@ -3,7 +3,6 @@ package kinoko.world.job.explorer;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
@@ -117,7 +116,7 @@ public final class Thief {
         }
     }
 
-    public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+    public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
         final int slv = skill.slv;

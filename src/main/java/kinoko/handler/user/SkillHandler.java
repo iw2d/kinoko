@@ -5,6 +5,7 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
@@ -17,6 +18,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public final class SkillHandler {
@@ -28,25 +30,62 @@ public final class SkillHandler {
         final Skill skill = new Skill();
         skill.skillId = inPacket.decodeInt(); // nSkillID
         skill.slv = inPacket.decodeByte(); // nSLV
+
         if (skill.skillId == Mechanic.ROCK_N_SHOCK) {
+            // CUserLocal::DoActiveSkill_Summon
             skill.rockAndShockCount = inPacket.decodeByte();
             if (skill.rockAndShockCount == 2) {
-                skill.rockAndShockId1 = inPacket.decodeInt();
-                skill.rockAndShockId2 = inPacket.decodeInt();
+                skill.rockAndShock1 = inPacket.decodeInt();
+                skill.rockAndShock2 = inPacket.decodeInt();
             }
         }
+        if (skill.skillId == Citizen.CAPTURE) {
+            // CUserLocal::DoActiveSkill_MobCapture
+            skill.captureTargetMobId = inPacket.decodeInt();
+        }
         if (skill.skillId == Citizen.CALL_OF_THE_HUNTER) {
+            // CUserLocal::DoActiveSkill_SummonMonster
             skill.randomCapturedMobId = inPacket.decodeInt();
         }
         if (SkillConstants.isEncodePositionSkill(skill.skillId)) {
             skill.positionX = inPacket.decodeShort(); // GetPos()->x
             skill.positionY = inPacket.decodeShort(); // GetPos()->y
+            if (SkillConstants.isSummonSkill(skill.skillId)) {
+                // CUserLocal::DoActiveSkill_Summon
+                skill.summonLeft = inPacket.decodeBoolean();
+            }
         }
         if (skill.skillId == Thief.SHADOW_STARS) {
+            // CUserLocal::SendSkillUseRequest
             skill.spiritJavelinItemId = inPacket.decodeInt(); // nSpiritJavelinItemID
         }
+        if (SkillConstants.isPartySkill(skill.skillId) && inPacket.getRemaining() > 2) {
+            // CUserLocal::SendSkillUseRequest
+            skill.affectedMemberBitMap = inPacket.decodeByte();
+            if (skill.skillId == Magician.DISPEL) {
+                inPacket.decodeShort(); // tDelay
+            }
+        }
+        if (inPacket.getRemaining() > 2) {
+            // CUserLocal::SendSkillUseRequest
+            skill.mobCount = inPacket.decodeByte(); // nMobCount
+            skill.mobIds = new ArrayList<>();
+            for (int i = 0; i < skill.mobCount; i++) {
+                skill.mobIds.add(inPacket.decodeInt());
+                if (skill.skillId == Thief.CHAINS_OF_HELL) {
+                    // CUserLocal::TryDoingMonsterMagnet
+                    inPacket.decodeByte(); // anMobMove[k] == 3 || anMobMove[k] == 4
+                }
+            }
+        }
+        if (skill.skillId == Thief.CHAINS_OF_HELL || skill.skillId == Citizen.CALL_OF_THE_HUNTER || SkillConstants.isSummonSkill(skill.skillId)) {
+            // CUserLocal::TryDoingMonsterMagnet || CUserLocal::DoActiveSkill_SummonMonster || CUserLocal::DoActiveSkill_Summon
+            skill.left = inPacket.decodeBoolean(); // nMoveAction & 1
+        }
+        // ignore tDelay
+
         try (var locked = user.acquire()) {
-            SkillProcessor.processSkill(locked, skill, inPacket);
+            SkillProcessor.processSkill(locked, skill);
         }
     }
 
