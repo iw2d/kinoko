@@ -98,7 +98,8 @@ public final class Bowman {
             case GOLDEN_EAGLE:
             case PHOENIX:
             case FROSTPREY:
-                final Summoned birb = Summoned.from(user, si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
+                final Summoned birb = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
+                birb.setPosition(user.getField(), skill.positionX, skill.positionY);
                 user.addSummoned(birb);
                 return;
         }

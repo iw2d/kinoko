@@ -3,11 +3,14 @@ package kinoko.provider.map;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Rect;
+import kinoko.util.Util;
+import kinoko.world.GameConstants;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class MapInfo {
     private final int mapId;
@@ -89,6 +92,10 @@ public final class MapInfo {
         return fieldOptions;
     }
 
+    public boolean hasFieldOption(FieldOption fieldOption) {
+        return fieldOptions.contains(fieldOption);
+    }
+
     public FieldType getFieldType() {
         return fieldType;
     }
@@ -155,6 +162,17 @@ public final class MapInfo {
         return portalInfos.stream()
                 .filter(pi -> pi.getPortalName().equals(portalName))
                 .findFirst();
+    }
+
+    public Optional<PortalInfo> getRandomTownPortalPoint() {
+        final Set<PortalInfo> townPortalPoints = portalInfos.stream()
+                .filter((portalInfo) -> portalInfo.getPortalType() == PortalType.TOWN_PORTAL_POINT)
+                .collect(Collectors.toUnmodifiableSet());
+        final Optional<PortalInfo> townPortalResult = Util.getRandomFromCollection(townPortalPoints);
+        if (townPortalResult.isEmpty()) {
+            return getPortalByName(GameConstants.DEFAULT_PORTAL_NAME); // default to sp
+        }
+        return townPortalResult;
     }
 
     public Optional<Foothold> getFootholdById(int footholdId) {

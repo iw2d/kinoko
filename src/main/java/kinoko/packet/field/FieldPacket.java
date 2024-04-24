@@ -123,18 +123,18 @@ public final class FieldPacket {
 
     // CTownPortalPool::OnPacket ---------------------------------------------------------------------------------------
 
-    public static OutPacket townPortalCreated(User user, TownPortal townPortal, boolean enterField) {
+    public static OutPacket townPortalCreated(User user, TownPortal townPortal, boolean animate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_CREATED);
-        outPacket.encodeByte(enterField); // nState : create animation if false
+        outPacket.encodeByte(!animate); // nState : create animation if false
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         outPacket.encodeShort(townPortal.getX());
         outPacket.encodeShort(townPortal.getY());
         return outPacket;
     }
 
-    public static OutPacket townPortalRemoved(User user, boolean enterField) {
+    public static OutPacket townPortalRemoved(User user) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_REMOVED);
-        outPacket.encodeByte(enterField); // nState : remove animation if false
+        outPacket.encodeByte(false); // nState : remove animation if false
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         return outPacket;
     }

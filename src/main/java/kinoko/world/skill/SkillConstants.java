@@ -1,15 +1,14 @@
 package kinoko.world.skill;
 
 import kinoko.world.job.JobConstants;
-import kinoko.world.job.cygnus.NightWalker;
-import kinoko.world.job.cygnus.Noblesse;
-import kinoko.world.job.cygnus.ThunderBreaker;
-import kinoko.world.job.explorer.Beginner;
-import kinoko.world.job.explorer.Pirate;
-import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.cygnus.*;
+import kinoko.world.job.explorer.*;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.job.legend.Evan;
+import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
+import kinoko.world.job.resistance.Mechanic;
+import kinoko.world.job.resistance.WildHunter;
 
 import java.util.List;
 
@@ -54,7 +53,24 @@ public final class SkillConstants {
     }
 
     public static boolean isEncodePositionSkill(int skillId) {
-        return isAntiRepeatBuffSkill(skillId); // TODO
+        if (isAntiRepeatBuffSkill(skillId)) {
+            // CUserLocal::SendSkillUseRequest
+            return true;
+        }
+        if (isSummonSkill(skillId)) {
+            // CUserLocal::DoActiveSkill_Summon
+            return true;
+        }
+        switch (skillId) {
+            case Thief.SMOKESCREEN, BattleMage.PARTY_SHIELD: // CUserLocal::DoActiveSkill_SmokeShell
+            case Magician.MYSTIC_DOOR: // CUserLocal::DoActiveSkill_TownPortal
+            case Evan.RECOVERY_AURA: // CUserLocal::DoActiveSkill_RecoverAura
+            case Citizen.CALL_OF_THE_HUNTER: // CUserLocal::DoActiveSkill_SummonMonster
+            case Mechanic.OPEN_PORTAL_GX_9: // CUserLocal::DoActiveSkill_OpenGate
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static boolean isAntiRepeatBuffSkill(int skillId) {
@@ -112,6 +128,51 @@ public final class SkillConstants {
             case 32121007:
             case 33121007:
             case 35111013:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isSummonSkill(int skillId) {
+        // Usages of CUserLocal::DoActiveSkill_Summon
+        switch (skillId) {
+            // CUserLocal::DoActiveSkill
+            case Warrior.BEHOLDER:
+            case Magician.IFRIT:
+            case Magician.ELQUINES:
+            case Magician.SUMMON_DRAGON:
+            case Magician.BAHAMUT:
+            case Bowman.PUPPET_BM:
+            case Bowman.PUPPET_MM:
+            case Bowman.SILVER_HAWK:
+            case Bowman.GOLDEN_EAGLE:
+            case Bowman.PHOENIX:
+            case Bowman.FROSTPREY:
+            case Thief.DARK_FLARE_NL:
+            case Thief.DARK_FLARE_SHAD:
+            case Thief.MIRRORED_TARGET:
+            case Pirate.OCTOPUS:
+            case Pirate.GAVIOTA:
+            case Pirate.WRATH_OF_THE_OCTOPI:
+            case DawnWarrior.SOUL:
+            case BlazeWizard.FLAME:
+            case BlazeWizard.IFRIT:
+            case WindArcher.STORM:
+            case WindArcher.PUPPET:
+            case NightWalker.DARKNESS:
+            case ThunderBreaker.LIGHTNING:
+            case WildHunter.WILD_TRAP:
+            case WildHunter.SILVER_HAWK:
+            case Mechanic.ACCELERATION_BOT_EX_7:
+            case Mechanic.SATELLITE:
+            case Mechanic.SATELLITE_2:
+            case Mechanic.SATELLITE_3:
+            case Mechanic.HEALING_ROBOT_H_LX:
+            case Mechanic.BOTS_N_TOTS:
+            case Mechanic.AMPLIFIER_ROBOT_AF_11:
+            case WildHunter.ITS_RAINING_MINES_HIDDEN: // CUserLocal::TryDoingMine
+            case Mechanic.GIANT_ROBOT_SG_88: // CUserLocal::DoActiveSkill_RepeatSkill
                 return true;
             default:
                 return false;

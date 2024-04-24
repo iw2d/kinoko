@@ -13,6 +13,7 @@ import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.FriendResult;
 import kinoko.world.social.party.PartyResult;
+import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.config.SingleMacro;
@@ -208,6 +209,12 @@ public final class WvsContext {
     public static OutPacket friendResult(FriendResult friendResult) {
         final OutPacket outPacket = OutPacket.of(OutHeader.FRIEND_RESULT);
         friendResult.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket townPortal(TownPortal townPortal) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL);
+        townPortal.encode(outPacket);
         return outPacket;
     }
 

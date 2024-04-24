@@ -46,7 +46,9 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        System.out.println(user.getPartyId());
+        for (QuestRecord qr : user.getQuestManager().getQuestRecords()) {
+            System.out.println(qr.getQuestId());
+        }
         user.dispose();
     }
 
@@ -567,7 +569,7 @@ public final class AdminCommands {
         final int questId = Integer.parseInt(args[1]);
         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not find quest : {}", questId)));
+            user.write(WvsContext.message(Message.system("Could not find quest : %d", questId)));
             return;
         }
         try (var locked = user.acquire()) {

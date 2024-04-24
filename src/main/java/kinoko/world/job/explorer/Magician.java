@@ -1,12 +1,18 @@
 package kinoko.world.job.explorer;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public final class Magician {
     // MAGICIAN
@@ -113,6 +119,17 @@ public final class Magician {
     }
 
     public static void handleSkill(User user, Skill skill, InPacket inPacket) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+        switch (skillId) {
+            // BISHOP
+            case MYSTIC_DOOR:
+                final TownPortal townPortal = TownPortal.from(user.getField(), skill.positionX, skill.positionY);
+                townPortal.setExpireTime(Instant.now().plus(si.getDuration(slv), ChronoUnit.SECONDS));
+                user.getField().addTownPortal(user, townPortal);
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

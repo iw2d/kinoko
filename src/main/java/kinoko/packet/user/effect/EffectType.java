@@ -1,6 +1,7 @@
 package kinoko.packet.user.effect;
 
 public enum EffectType {
+    // UserEffect
     LEVEL_UP(0),
     SKILL_USE(1),
     SKILL_AFFECTED(2),

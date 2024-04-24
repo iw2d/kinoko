@@ -1,13 +1,14 @@
 package kinoko.world.field.summoned;
 
+import kinoko.provider.map.Foothold;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
+import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.user.AvatarLook;
-import kinoko.world.user.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -16,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public final class Summoned extends Life implements Encodable, Lockable<Summoned> {
     private final Lock lock = new ReentrantLock();
-    private final User owner;
     private final int skillId;
     private final int skillLevel;
     private final SummonedMoveAbility moveAbility;
@@ -28,8 +28,12 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
     private SummonedLeaveType leaveType = SummonedLeaveType.LEAVE_FIELD;
     private int hp = 1;
 
-    public Summoned(User owner, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, AvatarLook avatarLook, Instant expireTime) {
-        this.owner = owner;
+    private int rockAndShockCount;
+    private Summoned rockAndShock1;
+    private Summoned rockAndShock2;
+
+
+    public Summoned(int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, AvatarLook avatarLook, Instant expireTime) {
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.moveAbility = moveAbility;
@@ -38,17 +42,10 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
         this.expireTime = expireTime;
         // Life initialization
         setId(skillId); // id as skill id to prevent multiple summons
-        setX(owner.getX());
-        setY(owner.getY());
-        setFoothold(owner.getFoothold());
     }
 
-    public Summoned(User owner, int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
-        this(owner, skillId, skillLevel, moveAbility, assistType, null, expireTime);
-    }
-
-    public User getOwner() {
-        return owner;
+    public Summoned(int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
+        this(skillId, skillLevel, moveAbility, assistType, null, expireTime);
     }
 
     public int getSkillId() {
@@ -99,6 +96,13 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
         this.hp = hp;
     }
 
+    public void setPosition(Field field, int x, int y) {
+        setField(field);
+        setX(x);
+        setY(y);
+        setFoothold(field.getFootholdBelow(x, y).orElse(Foothold.EMPTY_FOOTHOLD).getFootholdId());
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         // CSummoned::Init
@@ -114,12 +118,14 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
             avatarLook.encode(outPacket); // AvatarLook::Decode
         }
         if (skillId == Mechanic.ROCK_N_SHOCK) {
-            outPacket.encodeByte(0); // nTeslaCoilState
-            if (false) { // TODO : rock n shock
-                for (int i = 0; i < 3; i++) {
-                    outPacket.encodeShort(0); // x
-                    outPacket.encodeShort(0); // y
-                }
+            outPacket.encodeByte(rockAndShockCount); // nTeslaCoilState
+            if (rockAndShockCount == 2) {
+                outPacket.encodeShort(rockAndShock1.getX());
+                outPacket.encodeShort(rockAndShock1.getX());
+                outPacket.encodeShort(rockAndShock2.getX());
+                outPacket.encodeShort(rockAndShock2.getX());
+                outPacket.encodeShort(getX());
+                outPacket.encodeShort(getY());
             }
         }
     }
@@ -134,9 +140,8 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
         lock.unlock();
     }
 
-    public static Summoned from(User user, SkillInfo si, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType) {
+    public static Summoned from(SkillInfo si, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType) {
         return new Summoned(
-                user,
                 si.getSkillId(),
                 slv,
                 moveAbility,

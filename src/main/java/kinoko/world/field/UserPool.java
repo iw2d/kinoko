@@ -8,6 +8,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -16,9 +17,12 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public final class UserPool extends FieldObjectPool<User> {
+    private final ConcurrentHashMap<User, TownPortal> townPortals = new ConcurrentHashMap<>();
+
     public UserPool(Field field) {
         super(field);
     }
@@ -50,6 +54,14 @@ public final class UserPool extends FieldObjectPool<User> {
             summoned.setFoothold(user.getFoothold());
             broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
         }
+
+        // Add town portals
+        townPortals.forEach((owner, townPortal) -> {
+            if (user.getCharacterId() == owner.getCharacterId() ||
+                    (user.getPartyId() != 0 && user.getPartyId() == owner.getPartyId())) {
+                user.write(FieldPacket.townPortalCreated(user, townPortal, false));
+            }
+        });
 
         // Update party
         forEachPartyMember(user, (member) -> {
@@ -134,7 +146,72 @@ public final class UserPool extends FieldObjectPool<User> {
                 }
             }
         }
+        // Expire town portals
+        final var townPortalIter = townPortals.entrySet().iterator();
+        while (townPortalIter.hasNext()) {
+            final Map.Entry<User, TownPortal> entry = townPortalIter.next();
+            final User owner = entry.getKey();
+            final TownPortal townPortal = entry.getValue();
+            if (now.isBefore(townPortal.getExpireTime())) {
+                continue;
+            }
+            townPortalIter.remove();
+            notifyRemoveTownPortal(owner);
+        }
     }
+
+
+    // CONTROLLER METHODS ----------------------------------------------------------------------------------------------
+
+    public void assignController(ControlledObject controlled) {
+        final Optional<User> controllerResult = controlled.getNearestObject(getObjects()); // closest user to controlled object
+        if (controllerResult.isEmpty()) {
+            controlled.setController(null);
+            return;
+        }
+        setController(controlled, controllerResult.get());
+    }
+
+    private void setController(ControlledObject controlled, User controller) {
+        controlled.setController(controller);
+        controller.write(controlled.changeControllerPacket(true));
+        broadcastPacket(controlled.changeControllerPacket(false), controller);
+    }
+
+
+    // TOWN PORTAL METHODS ---------------------------------------------------------------------------------------------
+
+    public void addTownPortal(User user, TownPortal townPortal) {
+        townPortals.put(user, townPortal);
+        user.setTownPortal(townPortal);
+        user.write(WvsContext.townPortal(townPortal));
+        if (user.getPartyId() != 0) {
+            forEachPartyMember(user, (member) -> {
+                member.write(FieldPacket.townPortalCreated(user, townPortal, true));
+            });
+            user.getConnectedServer().submitPartyUpdate(user, townPortal);
+        }
+    }
+
+    public void removeTownPortal(User user) {
+        if (townPortals.remove(user) != null) {
+            notifyRemoveTownPortal(user);
+        }
+    }
+
+    public void notifyRemoveTownPortal(User user) {
+        user.setTownPortal(null);
+        user.write(WvsContext.townPortal(TownPortal.EMPTY_PORTAL));
+        if (user.getPartyId() != 0) {
+            forEachPartyMember(user, (member) -> {
+                member.write(FieldPacket.townPortalRemoved(user));
+            });
+            user.getConnectedServer().submitPartyUpdate(user, TownPortal.EMPTY_PORTAL);
+        }
+    }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public void broadcastPacket(OutPacket outPacket) {
         broadcastPacket(outPacket, null);
@@ -158,20 +235,5 @@ public final class UserPool extends FieldObjectPool<User> {
                 }
             });
         }
-    }
-
-    public void assignController(ControlledObject controlled) {
-        final Optional<User> controllerResult = controlled.getNearestObject(getObjects()); // closest user to controlled object
-        if (controllerResult.isEmpty()) {
-            controlled.setController(null);
-            return;
-        }
-        setController(controlled, controllerResult.get());
-    }
-
-    private void setController(ControlledObject controlled, User controller) {
-        controlled.setController(controller);
-        controller.write(controlled.changeControllerPacket(true));
-        broadcastPacket(controlled.changeControllerPacket(false), controller);
     }
 }

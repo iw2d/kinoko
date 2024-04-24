@@ -30,7 +30,7 @@ public final class ScriptDispatcher {
     public static final String SCRIPT_LANGUAGE = "python";
 
     private static final Logger log = LogManager.getLogger(ScriptDispatcher.class);
-    private static final Map<ScriptType, Map<Integer, Tuple<ScriptManager, Context>>> scriptManagers = Map.of(
+    private static final Map<ScriptType, ConcurrentHashMap<Integer, Tuple<ScriptManager, Context>>> scriptManagers = Map.of(
             ScriptType.NPC, new ConcurrentHashMap<>(),
             ScriptType.PORTAL, new ConcurrentHashMap<>(),
             ScriptType.REACTOR, new ConcurrentHashMap<>(),

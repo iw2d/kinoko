@@ -7,11 +7,13 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
+import kinoko.server.node.FieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.GameConstants;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
+import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -27,6 +29,7 @@ public final class Field {
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
 
+    private final FieldStorage fieldStorage;
     private final MapInfo mapInfo;
     private final byte fieldKey;
     private final ScheduledFuture<?> fieldEventFuture;
@@ -41,7 +44,8 @@ public final class Field {
     private Instant nextDropExpire = Instant.now();
     private Instant nextReactorExpire = Instant.now();
 
-    public Field(MapInfo mapInfo) {
+    public Field(FieldStorage fieldStorage, MapInfo mapInfo) {
+        this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
@@ -53,6 +57,10 @@ public final class Field {
         this.reactorPool = new ReactorPool(this);
     }
 
+    public FieldStorage getFieldStorage() {
+        return fieldStorage;
+    }
+
     public int getFieldId() {
         return mapInfo.getMapId();
     }
@@ -62,7 +70,7 @@ public final class Field {
     }
 
     public boolean hasFieldOption(FieldOption fieldOption) {
-        return mapInfo.getFieldOptions().contains(fieldOption);
+        return mapInfo.hasFieldOption(fieldOption);
     }
 
     public FieldType getFieldType() {
@@ -172,8 +180,16 @@ public final class Field {
         userPool.removeUser(user);
     }
 
-    public static Field from(MapInfo mapInfo) {
-        final Field field = new Field(mapInfo);
+    public void addTownPortal(User user, TownPortal townPortal) {
+        userPool.addTownPortal(user, townPortal);
+    }
+
+    public void removeTownPortal(User user) {
+        userPool.removeTownPortal(user);
+    }
+
+    public static Field from(FieldStorage fieldStorage, MapInfo mapInfo) {
+        final Field field = new Field(fieldStorage, mapInfo);
         // Populate npc pool
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
             if (lifeInfo.getLifeType() != LifeType.NPC) {

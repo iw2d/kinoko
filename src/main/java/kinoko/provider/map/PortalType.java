@@ -26,12 +26,12 @@ public enum PortalType {
         return type;
     }
 
-    public static PortalType fromInt(int type) {
+    public static PortalType getByValue(int type) {
         for (PortalType pt : PortalType.values()) {
             if (pt.getType() == type) {
                 return pt;
             }
         }
-        throw new IllegalArgumentException("Unknown PortalType : " + type);
+        return null;
     }
 }

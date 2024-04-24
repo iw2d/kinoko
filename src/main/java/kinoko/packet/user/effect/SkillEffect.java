@@ -1,6 +1,10 @@
 package kinoko.packet.user.effect;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.explorer.Warrior;
+import kinoko.world.job.legend.Evan;
+import kinoko.world.job.resistance.Citizen;
 
 public final class SkillEffect extends Effect {
     private int skillId;
@@ -25,19 +29,19 @@ public final class SkillEffect extends Effect {
                 outPacket.encodeByte(charLevel); // nCharLevel
                 outPacket.encodeByte(skillLevel); // nSLV
                 switch (skillId) {
-                    case 1320006, 22160000 -> {
+                    case Warrior.BERSERK, Evan.DRAGON_FURY -> {
                         outPacket.encodeByte(enable); // bool -> CUser::LoadDarkForceEffect | CDragon::CreateEffect(1)
                     }
-                    case 4341005 -> {
+                    case Thief.CHAINS_OF_HELL -> {
                         outPacket.encodeByte(left); // bLeft
                         outPacket.encodeInt(info); // dwMobID
                     }
-                    case 30001062 -> {
+                    case Citizen.CALL_OF_THE_HUNTER -> {
                         outPacket.encodeByte(left); // bLeft
                         outPacket.encodeShort(positionX); // ptOffset.x
                         outPacket.encodeShort(positionY); // ptOffset.y
                     }
-                    case 30001061 -> {
+                    case Citizen.CAPTURE -> {
                         outPacket.encodeByte(info); // 0 : monster successfully captured, 1 : capture failed mosnter hp too high, 2 : monster cannot be captured
                     }
                 }
@@ -67,5 +71,20 @@ public final class SkillEffect extends Effect {
                 throw new IllegalStateException("Tried to encode unsupported effect type");
             }
         }
+    }
+
+    public static SkillEffect skillUse(int skillId, int skillLevel, int charLevel) {
+        final SkillEffect effect = new SkillEffect(EffectType.SKILL_USE);
+        effect.skillId = skillId;
+        effect.skillLevel = skillLevel;
+        effect.charLevel = charLevel;
+        return effect;
+    }
+
+    public static SkillEffect skillAffected(int skillId, int skillLevel) {
+        final SkillEffect effect = new SkillEffect(EffectType.SKILL_AFFECTED);
+        effect.skillId = skillId;
+        effect.skillLevel = skillLevel;
+        return effect;
     }
 }

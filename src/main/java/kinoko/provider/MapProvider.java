@@ -76,7 +76,8 @@ public final class MapProvider implements WzProvider {
                     linkedMaps.put(mapId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
                     continue;
                 }
-                mapInfos.put(mapId, resolveMapInfo(mapId, mapEntry.getValue(), infoProp));
+                final MapInfo mapInfo = resolveMapInfo(mapId, mapEntry.getValue(), infoProp);
+                mapInfos.put(mapId, mapInfo);
             }
         }
         // Process linked maps
@@ -158,7 +159,10 @@ public final class MapProvider implements WzProvider {
             if (!(portalEntry.getValue() instanceof WzListProperty portalProp)) {
                 throw new ProviderError("Failed to resolve portal property");
             }
-            final PortalType portalType = PortalType.fromInt(portalProp.get("pt"));
+            final PortalType portalType = PortalType.getByValue(portalProp.get("pt"));
+            if (portalType == null) {
+                throw new ProviderError("Failed to resolve portal type");
+            }
             portal.add(PortalInfo.from(portalType, portalId, portalProp));
         }
         return portal;

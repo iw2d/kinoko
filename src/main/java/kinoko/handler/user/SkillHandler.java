@@ -6,6 +6,8 @@ import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.resistance.Citizen;
+import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
@@ -26,9 +28,19 @@ public final class SkillHandler {
         final Skill skill = new Skill();
         skill.skillId = inPacket.decodeInt(); // nSkillID
         skill.slv = inPacket.decodeByte(); // nSLV
+        if (skill.skillId == Mechanic.ROCK_N_SHOCK) {
+            skill.rockAndShockCount = inPacket.decodeByte();
+            if (skill.rockAndShockCount == 2) {
+                skill.rockAndShockId1 = inPacket.decodeInt();
+                skill.rockAndShockId2 = inPacket.decodeInt();
+            }
+        }
+        if (skill.skillId == Citizen.CALL_OF_THE_HUNTER) {
+            skill.randomCapturedMobId = inPacket.decodeInt();
+        }
         if (SkillConstants.isEncodePositionSkill(skill.skillId)) {
-            skill.userX = inPacket.decodeShort(); // GetPos()->x
-            skill.userY = inPacket.decodeShort(); // GetPos()->y
+            skill.positionX = inPacket.decodeShort(); // GetPos()->x
+            skill.positionY = inPacket.decodeShort(); // GetPos()->y
         }
         if (skill.skillId == Thief.SHADOW_STARS) {
             skill.spiritJavelinItemId = inPacket.decodeInt(); // nSpiritJavelinItemID

@@ -24,6 +24,7 @@ import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResult;
+import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.*;
 
@@ -45,6 +46,7 @@ public final class User extends Life implements Lockable<User> {
     private final Map<Integer, Summoned> summoned = new HashMap<>();
 
     private Dialog dialog;
+    private TownPortal townPortal;
     private int partyId;
     private int effectItemId;
     private int portableChairId;
@@ -154,6 +156,14 @@ public final class User extends Life implements Lockable<User> {
 
     public void closeDialog() {
         setDialog(null);
+    }
+
+    public TownPortal getTownPortal() {
+        return townPortal;
+    }
+
+    public void setTownPortal(TownPortal townPortal) {
+        this.townPortal = townPortal;
     }
 
     public int getPartyId() {
@@ -449,6 +459,9 @@ public final class User extends Life implements Lockable<User> {
         getConnectedServer().notifyUserDisconnect(this);
         if (getField() != null) {
             getField().removeUser(this);
+        }
+        if (getTownPortal() != null) {
+            getTownPortal().getField().removeTownPortal(this);
         }
         if (!isInTransfer()) {
             getConnectedServer().submitUserPacketBroadcast(

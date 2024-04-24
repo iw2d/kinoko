@@ -5,13 +5,12 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
-import kinoko.provider.MapProvider;
-import kinoko.provider.map.MapInfo;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
 import kinoko.world.social.party.PartyRequest;
+import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +28,7 @@ public final class ChannelServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(ChannelServerNode.class);
     private final AtomicInteger requestIdCounter = new AtomicInteger(1);
     private final ConcurrentHashMap<Integer, CompletableFuture<?>> requestFutures = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Integer, Field> fieldStorage = new ConcurrentHashMap<>(); // TODO: convert to FieldStorage class
+    private final FieldStorage fieldStorage = new FieldStorage();
     private final int channelId;
     private final int channelPort;
     private ChannelFuture centralClientFuture;
@@ -145,18 +144,15 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.partyRequest(user.getCharacterId(), partyRequest));
     }
 
+    public void submitPartyUpdate(User user, TownPortal townPortal) {
+        // TODO
+    }
+
 
     // FIELD METHODS ---------------------------------------------------------------------------------------------------
 
-    public synchronized Optional<Field> getFieldById(int mapId) {
-        if (!fieldStorage.containsKey(mapId)) {
-            final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
-            if (mapInfoResult.isEmpty()) {
-                return Optional.empty();
-            }
-            fieldStorage.put(mapId, Field.from(mapInfoResult.get()));
-        }
-        return Optional.of(fieldStorage.get(mapId));
+    public Optional<Field> getFieldById(int mapId) {
+        return fieldStorage.getFieldById(mapId);
     }
 
 

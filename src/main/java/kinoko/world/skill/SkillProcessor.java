@@ -2,6 +2,7 @@ package kinoko.world.skill;
 
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.user.effect.SkillEffect;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.MobProvider;
 import kinoko.provider.SkillProvider;
@@ -240,6 +241,12 @@ public final class SkillProcessor {
         // Skill-specific handling
         JobHandler.handleSkill(locked, skill, inPacket);
         user.write(WvsContext.skillUseResult());
+
+        // Skill effects and party handling
+        user.getField().broadcastPacket(UserRemote.effect(user, SkillEffect.skillUse(skill.skillId, user.getLevel(), skill.slv)));
+        user.getField().getUserPool().forEachPartyMember(user, (member) -> {
+            // TODO
+        });
     }
 
     public static void processHit(Locked<User> locked, HitInfo hitInfo) {

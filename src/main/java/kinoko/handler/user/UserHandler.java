@@ -1229,6 +1229,12 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.ENTER_TOWN_PORTAL_REQUEST)
+    public static void handleEnterTownPortalRequest(User user, InPacket inPacket) {
+        final int ownerId = inPacket.decodeInt(); // dwCharacterId
+        // TODO
+    }
+
     @Handler(InHeader.FUNC_KEY_MAPPED_MODIFIED)
     public static void handleFuncKeyMappedModified(User user, InPacket inPacket) {
         final int type = inPacket.decodeInt();
