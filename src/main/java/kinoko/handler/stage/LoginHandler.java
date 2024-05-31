@@ -49,7 +49,7 @@ public final class LoginHandler {
         final byte gameStartMode = inPacket.decodeByte();
         final byte worldId = inPacket.decodeByte();
         final byte channelId = inPacket.decodeByte();
-        final byte[] address = inPacket.decodeArray(4);
+        final byte[] partnerCode = inPacket.decodeArray(4);
 
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
         if (accountResult.isEmpty()) {

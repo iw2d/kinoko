@@ -95,8 +95,8 @@ public final class WzReader implements AutoCloseable {
                 return readString(buffer);
             }
             case 0x01, 0x1B -> {
-                int stringOffset = buffer.getInt();
-                int originalPosition = buffer.position();
+                final int stringOffset = buffer.getInt();
+                final int originalPosition = buffer.position();
                 buffer.position(image.getOffset() + stringOffset);
                 final String string = readString(buffer);
                 buffer.position(originalPosition);
@@ -168,8 +168,8 @@ public final class WzReader implements AutoCloseable {
                 }
                 case 2 -> {
                     // string offset
-                    int stringOffset = buffer.getInt();
-                    int originalPosition = buffer.position();
+                    final int stringOffset = buffer.getInt();
+                    final int originalPosition = buffer.position();
                     buffer.position(parent.getStart() + stringOffset);
                     childType = buffer.get();
                     childName = readString(buffer);
@@ -289,8 +289,12 @@ public final class WzReader implements AutoCloseable {
                     items.put(itemName, intValue);
                 }
                 case 20 -> {
-                    final long longValue = buffer.getLong();
-                    items.put(itemName, longValue);
+                    final long value = buffer.get();
+                    if (value == Byte.MIN_VALUE) {
+                        items.put(itemName, buffer.getLong());
+                    } else {
+                        items.put(itemName, value);
+                    }
                 }
                 case 4 -> {
                     final byte floatType = buffer.get();
@@ -314,7 +318,6 @@ public final class WzReader implements AutoCloseable {
                 case 9 -> {
                     final int propertySize = buffer.getInt();
                     final int propertyOffset = buffer.position();
-                    buffer.position(propertyOffset);
                     final WzProperty property = readProperty(image, buffer);
                     items.put(itemName, property);
                     buffer.position(propertyOffset + propertySize);
