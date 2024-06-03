@@ -5,10 +5,10 @@ import kinoko.packet.field.MobPacket;
 import kinoko.packet.field.NpcPacket;
 import kinoko.packet.user.*;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.map.PortalInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
-import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -17,12 +17,9 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public final class UserPool extends FieldObjectPool<User> {
-    private final ConcurrentHashMap<User, TownPortal> townPortals = new ConcurrentHashMap<>();
-
     public UserPool(Field field) {
         super(field);
     }
@@ -54,14 +51,6 @@ public final class UserPool extends FieldObjectPool<User> {
             summoned.setFoothold(user.getFoothold());
             broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
         }
-
-        // Add town portals
-        townPortals.forEach((owner, townPortal) -> {
-            if (user.getCharacterId() == owner.getCharacterId() ||
-                    (user.getPartyId() != 0 && user.getPartyId() == owner.getPartyId())) {
-                user.write(FieldPacket.townPortalCreated(user, townPortal, false));
-            }
-        });
 
         // Update party
         forEachPartyMember(user, (member) -> {
@@ -95,6 +84,21 @@ public final class UserPool extends FieldObjectPool<User> {
         });
         field.getDropPool().forEach((drop) -> {
             user.write(FieldPacket.dropEnterField(drop, DropEnterType.ON_THE_FOOTHOLD));
+        });
+        field.getTownPortalPool().forEach((townPortal) -> {
+            final User owner = townPortal.getOwner();
+            if ((owner.getCharacterId() == user.getCharacterId() && owner.getPartyId() == 0) ||
+                    (owner.getPartyId() != 0 && owner.getPartyId() == user.getPartyId())) {
+                if (townPortal.getTownField() == field) {
+                    final Optional<PortalInfo> portalPointResult = townPortal.getTownPortalPoint();
+                    if (portalPointResult.isPresent()) {
+                        final PortalInfo portalPoint = portalPointResult.get();
+                        user.write(FieldPacket.townPortalCreated(owner.getCharacterId(), portalPoint.getX(), portalPoint.getY(), false));
+                    }
+                } else {
+                    user.write(FieldPacket.townPortalCreated(owner.getCharacterId(), townPortal.getX(), townPortal.getY(), false));
+                }
+            }
         });
     }
 
@@ -146,18 +150,6 @@ public final class UserPool extends FieldObjectPool<User> {
                 }
             }
         }
-        // Expire town portals
-        final var townPortalIter = townPortals.entrySet().iterator();
-        while (townPortalIter.hasNext()) {
-            final Map.Entry<User, TownPortal> entry = townPortalIter.next();
-            final User owner = entry.getKey();
-            final TownPortal townPortal = entry.getValue();
-            if (now.isBefore(townPortal.getExpireTime())) {
-                continue;
-            }
-            townPortalIter.remove();
-            notifyRemoveTownPortal(owner);
-        }
     }
 
 
@@ -176,38 +168,6 @@ public final class UserPool extends FieldObjectPool<User> {
         controlled.setController(controller);
         controller.write(controlled.changeControllerPacket(true));
         broadcastPacket(controlled.changeControllerPacket(false), controller);
-    }
-
-
-    // TOWN PORTAL METHODS ---------------------------------------------------------------------------------------------
-
-    public void addTownPortal(User user, TownPortal townPortal) {
-        townPortals.put(user, townPortal);
-        user.setTownPortal(townPortal);
-        user.write(WvsContext.townPortal(townPortal));
-        if (user.getPartyId() != 0) {
-            forEachPartyMember(user, (member) -> {
-                member.write(FieldPacket.townPortalCreated(user, townPortal, true));
-            });
-            user.getConnectedServer().submitPartyUpdate(user, townPortal);
-        }
-    }
-
-    public void removeTownPortal(User user) {
-        if (townPortals.remove(user) != null) {
-            notifyRemoveTownPortal(user);
-        }
-    }
-
-    public void notifyRemoveTownPortal(User user) {
-        user.setTownPortal(null);
-        user.write(WvsContext.townPortal(TownPortal.EMPTY_PORTAL));
-        if (user.getPartyId() != 0) {
-            forEachPartyMember(user, (member) -> {
-                member.write(FieldPacket.townPortalRemoved(user));
-            });
-            user.getConnectedServer().submitPartyUpdate(user, TownPortal.EMPTY_PORTAL);
-        }
     }
 
 

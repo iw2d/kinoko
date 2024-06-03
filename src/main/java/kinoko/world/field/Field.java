@@ -13,7 +13,6 @@ import kinoko.server.script.ScriptDispatcher;
 import kinoko.world.GameConstants;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
-import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -39,6 +38,7 @@ public final class Field {
     private final NpcPool npcPool;
     private final DropPool dropPool;
     private final ReactorPool reactorPool;
+    private final TownPortalPool townPortalPool;
 
     private Instant nextMobRespawn = Instant.now();
     private Instant nextDropExpire = Instant.now();
@@ -55,6 +55,7 @@ public final class Field {
         this.npcPool = new NpcPool(this);
         this.dropPool = new DropPool(this);
         this.reactorPool = new ReactorPool(this);
+        this.townPortalPool = new TownPortalPool(this);
     }
 
     public FieldStorage getFieldStorage() {
@@ -115,6 +116,10 @@ public final class Field {
 
     public ReactorPool getReactorPool() {
         return reactorPool;
+    }
+
+    public TownPortalPool getTownPortalPool() {
+        return townPortalPool;
     }
 
     public MapInfo getMapInfo() {
@@ -178,14 +183,6 @@ public final class Field {
 
     public void removeUser(User user) {
         userPool.removeUser(user);
-    }
-
-    public void addTownPortal(User user, TownPortal townPortal) {
-        userPool.addTownPortal(user, townPortal);
-    }
-
-    public void removeTownPortal(User user) {
-        userPool.removeTownPortal(user);
     }
 
     public static Field from(FieldStorage fieldStorage, MapInfo mapInfo) {

@@ -33,7 +33,7 @@ public final class UserLocal {
     }
 
     public static OutPacket teleport(boolean exclRequest, int portalId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_EFFECT_LOCAL);
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_TELEPORT);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeByte(portalId);
         return outPacket;

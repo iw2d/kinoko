@@ -6,6 +6,8 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.memo.MemoResult;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
+import kinoko.world.GameConstants;
+import kinoko.world.field.TownPortal;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
@@ -13,7 +15,6 @@ import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.FriendResult;
 import kinoko.world.social.party.PartyResult;
-import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.config.SingleMacro;
@@ -214,7 +215,21 @@ public final class WvsContext {
 
     public static OutPacket townPortal(TownPortal townPortal) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL);
-        townPortal.encode(outPacket);
+        outPacket.encodeInt(townPortal.getTownField().getFieldId()); // dwTownID
+        outPacket.encodeInt(townPortal.getField().getFieldId()); // dwFieldID
+        outPacket.encodeInt(townPortal.getSkillId()); // nSkillID
+        outPacket.encodeShort(townPortal.getX()); // ptFieldPortal.x
+        outPacket.encodeShort(townPortal.getY()); // ptFieldPortal.y
+        return outPacket;
+    }
+
+    public static OutPacket resetTownPortal() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL);
+        outPacket.encodeInt(GameConstants.UNDEFINED_FIELD_ID);
+        outPacket.encodeInt(GameConstants.UNDEFINED_FIELD_ID);
+        outPacket.encodeInt(0);
+        outPacket.encodeShort(0);
+        outPacket.encodeShort(0);
         return outPacket;
     }
 

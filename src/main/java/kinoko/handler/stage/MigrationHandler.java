@@ -147,6 +147,7 @@ public final class MigrationHandler {
             user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.setGender(user.getGender()));
+            user.write(WvsContext.resetTownPortal());
 
             // Add user to field
             final int fieldId = user.getCharacterStat().getPosMap();
@@ -165,7 +166,7 @@ public final class MigrationHandler {
                 targetPortal = portalResult.get();
             } else {
                 log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
-                targetPortal = targetField.getPortalById(0).orElseThrow(() -> new IllegalStateException("Could not resolve Portal"));
+                targetPortal = targetField.getPortalById(0).orElse(PortalInfo.EMPTY);
             }
 
             // Set field packet sent here

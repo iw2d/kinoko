@@ -3,14 +3,8 @@ package kinoko.provider.map;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Rect;
-import kinoko.util.Util;
-import kinoko.world.GameConstants;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public final class MapInfo {
     private final int mapId;
@@ -164,15 +158,11 @@ public final class MapInfo {
                 .findFirst();
     }
 
-    public Optional<PortalInfo> getRandomTownPortalPoint() {
-        final Set<PortalInfo> townPortalPoints = portalInfos.stream()
-                .filter((portalInfo) -> portalInfo.getPortalType() == PortalType.TOWN_PORTAL_POINT)
-                .collect(Collectors.toUnmodifiableSet());
-        final Optional<PortalInfo> townPortalResult = Util.getRandomFromCollection(townPortalPoints);
-        if (townPortalResult.isEmpty()) {
-            return getPortalByName(GameConstants.DEFAULT_PORTAL_NAME); // default to sp
-        }
-        return townPortalResult;
+    public List<PortalInfo> getTownPortalPoints() {
+        return portalInfos.stream()
+                .filter(pi -> pi.getPortalType().equals(PortalType.TOWN_PORTAL_POINT))
+                .sorted(Comparator.comparingInt(PortalInfo::getPortalId))
+                .toList();
     }
 
     public Optional<Foothold> getFootholdById(int footholdId) {
@@ -180,7 +170,6 @@ public final class MapInfo {
                 .filter(fh -> fh.getFootholdId() == footholdId)
                 .findFirst();
     }
-
 
     public Optional<Foothold> getFootholdBelow(int x, int y) {
         final FootholdNode.SearchResult result = new FootholdNode.SearchResult();

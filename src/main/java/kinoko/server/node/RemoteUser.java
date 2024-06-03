@@ -14,8 +14,9 @@ public final class RemoteUser implements Encodable {
     private int channelId;
     private int fieldId;
     private int partyId;
+    private RemoteTownPortal townPortal;
 
-    public RemoteUser(int accountId, int characterId, String characterName, int level, int job, int channelId, int fieldId, int partyId) {
+    public RemoteUser(int accountId, int characterId, String characterName, int level, int job, int channelId, int fieldId, int partyId, RemoteTownPortal townPortal) {
         this.accountId = accountId;
         this.characterId = characterId;
         this.characterName = characterName;
@@ -24,6 +25,7 @@ public final class RemoteUser implements Encodable {
         this.channelId = channelId;
         this.fieldId = fieldId;
         this.partyId = partyId;
+        this.townPortal = townPortal;
     }
 
     public int getAccountId() {
@@ -70,6 +72,14 @@ public final class RemoteUser implements Encodable {
         this.partyId = partyId;
     }
 
+    public RemoteTownPortal getTownPortal() {
+        return townPortal != null ? townPortal : RemoteTownPortal.EMPTY;
+    }
+
+    public void setTownPortal(RemoteTownPortal townPortal) {
+        this.townPortal = townPortal;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(accountId);
@@ -80,6 +90,10 @@ public final class RemoteUser implements Encodable {
         outPacket.encodeInt(channelId);
         outPacket.encodeInt(fieldId);
         outPacket.encodeInt(partyId);
+        outPacket.encodeByte(townPortal != null);
+        if (townPortal != null) {
+            townPortal.encode(outPacket);
+        }
     }
 
     public static RemoteUser decode(InPacket inPacket) {
@@ -91,6 +105,7 @@ public final class RemoteUser implements Encodable {
         final int channelId = inPacket.decodeInt();
         final int fieldId = inPacket.decodeInt();
         final int partyId = inPacket.decodeInt();
+        final RemoteTownPortal townPortal = inPacket.decodeBoolean() ? RemoteTownPortal.decode(inPacket) : null;
         return new RemoteUser(
                 accountId,
                 characterId,
@@ -99,7 +114,8 @@ public final class RemoteUser implements Encodable {
                 job,
                 channelId,
                 fieldId,
-                partyId
+                partyId,
+                townPortal
         );
     }
 
@@ -112,7 +128,8 @@ public final class RemoteUser implements Encodable {
                 user.getJob(),
                 user.getChannelId(),
                 user.getFieldId(),
-                user.getPartyId()
+                user.getPartyId(),
+                user.getTownPortal() != null ? RemoteTownPortal.from(user.getTownPortal()) : null
         );
     }
 }

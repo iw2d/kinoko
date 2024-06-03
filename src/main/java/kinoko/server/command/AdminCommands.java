@@ -46,9 +46,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        for (QuestRecord qr : user.getQuestManager().getQuestRecords()) {
-            System.out.println(qr.getQuestId());
-        }
+        System.out.println(user.getCharacterStat().getPortal());
         user.dispose();
     }
 

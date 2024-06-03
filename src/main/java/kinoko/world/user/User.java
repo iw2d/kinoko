@@ -13,6 +13,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.field.TownPortal;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedEnterType;
@@ -24,7 +25,6 @@ import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResult;
-import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.*;
 
@@ -165,6 +165,10 @@ public final class User extends Life implements Lockable<User> {
 
     public void setTownPortal(TownPortal townPortal) {
         this.townPortal = townPortal;
+    }
+
+    public int getTownPortalIndex() {
+        return getPartyId() != 0 ? getPartyMemberIndex() - 1 : 0;
     }
 
     public int getPartyId() {
@@ -442,15 +446,19 @@ public final class User extends Life implements Lockable<User> {
         return GameConstants.UNDEFINED_FIELD_ID;
     }
 
-    public void warp(Field destination, PortalInfo portal, boolean isMigrate, boolean isRevive) {
+    public void warp(Field destination, PortalInfo portalInfo, boolean isMigrate, boolean isRevive) {
+        warp(destination, portalInfo.getX(), portalInfo.getY(), portalInfo.getPortalId(), isMigrate, isRevive);
+    }
+
+    public void warp(Field destination, int x, int y, int portalId, boolean isMigrate, boolean isRevive) {
         if (getField() != null) {
             getField().removeUser(this);
         }
         setField(destination);
-        setX(portal.getX());
-        setY(portal.getY());
+        setX(x);
+        setY(y);
         getCharacterStat().setPosMap(destination.getFieldId());
-        getCharacterStat().setPortal((byte) portal.getPortalId());
+        getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
         getConnectedServer().notifyUserUpdate(this);
@@ -470,7 +478,8 @@ public final class User extends Life implements Lockable<User> {
             getField().removeUser(this);
         }
         if (getTownPortal() != null) {
-            getTownPortal().getField().removeTownPortal(this);
+            getTownPortal().destroy();
+            setTownPortal(null);
         }
         if (!isInTransfer()) {
             getConnectedServer().submitUserPacketBroadcast(

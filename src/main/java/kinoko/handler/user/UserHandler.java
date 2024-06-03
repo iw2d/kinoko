@@ -40,6 +40,7 @@ import kinoko.server.whisper.WhisperFlag;
 import kinoko.server.whisper.WhisperResult;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
+import kinoko.world.field.TownPortal;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
@@ -1232,7 +1233,28 @@ public final class UserHandler {
     @Handler(InHeader.ENTER_TOWN_PORTAL_REQUEST)
     public static void handleEnterTownPortalRequest(User user, InPacket inPacket) {
         final int ownerId = inPacket.decodeInt(); // dwCharacterId
-        // TODO
+        inPacket.decodeBoolean();
+        final Optional<TownPortal> townPortalResult = user.getField().getTownPortalPool().getById(ownerId);
+        if (townPortalResult.isEmpty()) {
+            log.error("Tried to enter unknown town portal id : {}", ownerId);
+            user.dispose();
+            return;
+        }
+        final TownPortal townPortal = townPortalResult.get();
+        final int townPortalId = 0x80 | townPortal.getOwner().getTownPortalIndex(); // CUserLocal::Init
+        if (townPortal.getTownField() == user.getField()) {
+            user.warp(townPortal.getField(), townPortal.getX(), townPortal.getY(), townPortalId, false, false);
+        } else {
+            final int x, y;
+            final Optional<PortalInfo> portalPointResult = townPortal.getTownPortalPoint();
+            if (portalPointResult.isPresent()) {
+                x = portalPointResult.get().getX();
+                y = portalPointResult.get().getY();
+            } else {
+                x = y = 0;
+            }
+            user.warp(townPortal.getTownField(), x, y, townPortalId, false, false);
+        }
     }
 
     @Handler(InHeader.FUNC_KEY_MAPPED_MODIFIED)

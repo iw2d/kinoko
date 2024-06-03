@@ -13,8 +13,6 @@ import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.reactor.Reactor;
-import kinoko.world.social.party.TownPortal;
-import kinoko.world.user.User;
 import kinoko.world.user.config.FuncKeyMapped;
 
 public final class FieldPacket {
@@ -123,19 +121,19 @@ public final class FieldPacket {
 
     // CTownPortalPool::OnPacket ---------------------------------------------------------------------------------------
 
-    public static OutPacket townPortalCreated(User user, TownPortal townPortal, boolean animate) {
+    public static OutPacket townPortalCreated(int characterId, int x, int y, boolean animate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_CREATED);
         outPacket.encodeByte(!animate); // nState : create animation if false
-        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
-        outPacket.encodeShort(townPortal.getX());
-        outPacket.encodeShort(townPortal.getY());
+        outPacket.encodeInt(characterId); // dwCharacterID
+        outPacket.encodeShort(x);
+        outPacket.encodeShort(y);
         return outPacket;
     }
 
-    public static OutPacket townPortalRemoved(User user) {
+    public static OutPacket townPortalRemoved(int characterId, boolean animate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_REMOVED);
-        outPacket.encodeByte(false); // nState : remove animation if false
-        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
+        outPacket.encodeByte(!animate); // nState : remove animation if false
+        outPacket.encodeInt(characterId); // dwCharacterID
         return outPacket;
     }
 

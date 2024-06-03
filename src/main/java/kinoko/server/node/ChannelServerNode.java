@@ -10,7 +10,6 @@ import kinoko.server.netty.*;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
 import kinoko.world.social.party.PartyRequest;
-import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -142,10 +141,6 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitPartyRequest(User user, PartyRequest partyRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.partyRequest(user.getCharacterId(), partyRequest));
-    }
-
-    public void submitPartyUpdate(User user, TownPortal townPortal) {
-        // TODO
     }
 
 

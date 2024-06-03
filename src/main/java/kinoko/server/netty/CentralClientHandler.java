@@ -3,6 +3,7 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.server.ServerConstants;
 import kinoko.server.header.CentralHeader;
@@ -111,6 +112,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     final User user = locked.get();
                     user.setPartyId(partyId);
                     user.setPartyMemberIndex(partyMemberIndex);
+                    user.write(FieldPacket.townPortalRemoved(user.getCharacterId(), false));
                     user.getField().getUserPool().forEachPartyMember(user, (member) -> {
                         try (var lockedMember = member.acquire()) {
                             user.write(UserRemote.receiveHp(lockedMember.get()));

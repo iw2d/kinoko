@@ -1,5 +1,6 @@
 package kinoko.world.social.party;
 
+import kinoko.server.node.RemoteTownPortal;
 import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
  * the instance stored in UserStorage.
  */
 public final class Party implements Encodable, Lockable<Party> {
-    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, "", 0, 0, GameConstants.CHANNEL_OFFLINE, GameConstants.UNDEFINED_FIELD_ID, -1);
+    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, "", 0, 0, GameConstants.CHANNEL_OFFLINE, GameConstants.UNDEFINED_FIELD_ID, 0, RemoteTownPortal.EMPTY);
     private final Lock lock = new ReentrantLock();
     private final int partyId;
     private final List<RemoteUser> partyMembers = new ArrayList<>();
@@ -125,7 +126,7 @@ public final class Party implements Encodable, Lockable<Party> {
         forEachMemberForPartyData((member) -> outPacket.encodeInt(member.getChannelId())); // anChannelID
         outPacket.encodeInt(partyBossId); // dwPartyBossCharacterID
         forEachMemberForPartyData((member) -> outPacket.encodeInt(member.getFieldId())); // adwFieldID
-        forEachMemberForPartyData((member) -> TownPortal.EMPTY_PORTAL.encodeForPartyData(outPacket)); // aTownPortal
+        forEachMemberForPartyData((member) -> member.getTownPortal().encode(outPacket)); // aTownPortal
         forEachMemberForPartyData((member) -> outPacket.encodeInt(0)); // aPQReward
         forEachMemberForPartyData((member) -> outPacket.encodeInt(0)); // aPQRewardType
         outPacket.encodeInt(0); // dwPQRewardMobTemplateID

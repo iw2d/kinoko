@@ -1,15 +1,18 @@
 package kinoko.world.social.party;
 
+import kinoko.server.node.RemoteTownPortal;
 import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.world.GameConstants;
+import kinoko.world.field.TownPortal;
 
 public final class PartyResult implements Encodable {
     private final PartyResultType resultType;
 
     private Party party;
     private RemoteUser member;
-    private TownPortal townPortal;
+    private RemoteTownPortal townPortal;
     private int int1;
     private boolean bool1;
     private boolean bool2;
@@ -36,7 +39,7 @@ public final class PartyResult implements Encodable {
             }
             case CREATE_NEW_PARTY_DONE -> {
                 outPacket.encodeInt(party.getPartyId()); // nPartyID
-                townPortal.encode(outPacket); // PARTYDATA::TOWNPORTAL
+                townPortal.encodeForPartyResult(outPacket);
             }
             case WITHDRAW_PARTY_DONE -> {
                 outPacket.encodeInt(party.getPartyId()); // nPartyID
@@ -85,7 +88,7 @@ public final class PartyResult implements Encodable {
             }
             case TOWN_PORTAL_CHANGED -> {
                 outPacket.encodeInt(int1); // member index
-                townPortal.encode(outPacket); // PARTYDATA::TOWNPORTAL
+                townPortal.encodeForPartyResult(outPacket); // PARTYDATA::TOWNPORTAL
             }
             case ADVER_APPLY -> {
                 outPacket.encodeInt(member.getCharacterId()); // dwApplierId
@@ -104,6 +107,14 @@ public final class PartyResult implements Encodable {
                 // Your request for a party didn't work due to an unexpected error.
             }
         }
+    }
+
+    public static void encodeTownPortal(OutPacket outPacket, TownPortal townPortal) {
+        outPacket.encodeInt(GameConstants.UNDEFINED_FIELD_ID);
+        outPacket.encodeInt(GameConstants.UNDEFINED_FIELD_ID);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
     }
 
     public static PartyResult of(PartyResultType resultType) {
@@ -128,10 +139,10 @@ public final class PartyResult implements Encodable {
         return result;
     }
 
-    public static PartyResult create(Party party) {
+    public static PartyResult create(Party party, RemoteTownPortal townPortal) {
         final PartyResult result = new PartyResult(PartyResultType.CREATE_NEW_PARTY_DONE);
         result.party = party;
-        result.townPortal = TownPortal.EMPTY_PORTAL;
+        result.townPortal = townPortal;
         return result;
     }
 

@@ -1,17 +1,18 @@
 package kinoko.world.job.explorer;
 
+import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.world.field.TownPortal;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.social.party.TownPortal;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 public final class Magician {
     // MAGICIAN
@@ -122,11 +123,22 @@ public final class Magician {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
         switch (skillId) {
+            // COMMON
+            case TELEPORT_FP:
+            case TELEPORT_IL:
+            case TELEPORT_BISH:
+                return;
             // BISHOP
             case MYSTIC_DOOR:
-                final TownPortal townPortal = TownPortal.from(user.getField(), skill.positionX, skill.positionY);
-                townPortal.setExpireTime(Instant.now().plus(si.getDuration(slv), ChronoUnit.SECONDS));
-                user.getField().addTownPortal(user, townPortal);
+                final Optional<TownPortal> townPortalResult = user.getField().getTownPortalPool().createFieldPortal(user, skillId, skill.positionX, skill.positionY);
+                if (townPortalResult.isPresent()) {
+                    final TownPortal townPortal = townPortalResult.get();
+                    user.setTownPortal(townPortal);
+                    user.write(WvsContext.townPortal(townPortal));
+                    user.getConnectedServer().notifyUserUpdate(user);
+                } else {
+                    user.write(WvsContext.message(Message.system("You cannot use the Mystic Door skill here.")));
+                }
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

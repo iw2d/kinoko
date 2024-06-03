@@ -130,8 +130,7 @@ public enum CentralHeader {
     USER_QUERY_REQUEST,
     USER_QUERY_RESULT,
     PARTY_REQUEST,
-    PARTY_RESULT,
-    PARTY_UPDATE;
+    PARTY_RESULT;
 
     private static final Map<Integer, CentralHeader> headerMap = new HashMap<>();
 

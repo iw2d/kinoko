@@ -4,6 +4,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.world.GameConstants;
 
 public final class PortalInfo {
+    public static final PortalInfo EMPTY = new PortalInfo(PortalType.START_POINT, 0, "", GameConstants.UNDEFINED_FIELD_ID, "", 0, 0, "");
     private final PortalType portalType;
     private final int portalId;
     private final String portalName;

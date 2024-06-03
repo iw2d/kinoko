@@ -76,8 +76,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Channel transfer - create migration request and reply with transfer info
                 final int requestId = inPacket.decodeInt();
                 final MigrationInfo migrationInfo = MigrationInfo.decode(inPacket);
-
-
                 // Resolve target channel
                 final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(migrationInfo.getChannelId());
                 if (targetNodeResult.isEmpty()) {
@@ -215,7 +213,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         final Party party = centralServerNode.createNewParty(remoteUser);
                         remoteUser.setPartyId(party.getPartyId());
                         remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
-                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party)))); // You have created a new party.
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party, remoteUser.getTownPortal())))); // You have created a new party.
                     }
                     case WITHDRAW_PARTY -> {
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
@@ -297,7 +295,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             final Party party = centralServerNode.createNewParty(remoteUser);
                             remoteUser.setPartyId(party.getPartyId());
                             remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party)))); // You have created a new party.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party, remoteUser.getTownPortal())))); // You have created a new party.
                         }
                         // Resolve target
                         final String targetName = partyRequest.getCharacterName();
