@@ -139,6 +139,10 @@ public final class JobHandler {
             case Thief.FLASH_JUMP_SHAD:
             case Thief.FLASH_JUMP_DB:
             case NightWalker.FLASH_JUMP:
+            case Magician.TELEPORT_FP:
+            case Magician.TELEPORT_IL:
+            case Magician.TELEPORT_BISH:
+            case BlazeWizard.TELEPORT:
                 return;
 
             // WEAPON BOOSTER ------------------------------------------------------------------------------------------

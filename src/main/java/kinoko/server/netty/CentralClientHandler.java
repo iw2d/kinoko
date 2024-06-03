@@ -112,13 +112,15 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     final User user = locked.get();
                     user.setPartyId(partyId);
                     user.setPartyMemberIndex(partyMemberIndex);
-                    user.write(FieldPacket.townPortalRemoved(user.getCharacterId(), false));
                     user.getField().getUserPool().forEachPartyMember(user, (member) -> {
                         try (var lockedMember = member.acquire()) {
                             user.write(UserRemote.receiveHp(lockedMember.get()));
                             lockedMember.get().write(UserRemote.receiveHp(user));
                         }
                     });
+                    if (user.getTownPortal() != null && user.getTownPortal().getTownField() == user.getField()) {
+                        user.write(FieldPacket.townPortalRemoved(user.getCharacterId(), false));
+                    }
                 }
 
             }

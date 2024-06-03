@@ -125,11 +125,6 @@ public final class Magician {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
         switch (skillId) {
-            // COMMON
-            case TELEPORT_FP:
-            case TELEPORT_IL:
-            case TELEPORT_BISH:
-                return;
             // BISHOP
             case MYSTIC_DOOR:
                 final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.SECONDS);
