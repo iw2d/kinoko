@@ -148,6 +148,15 @@ public final class UserPool extends FieldObjectPool<User> {
                     summonedIter.remove();
                     broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
                 }
+                // Expire town portal
+                if (user.getTownPortal() != null) {
+                    if (user.getTownPortal().getExpireTime().isBefore(now)) {
+                        user.getTownPortal().destroy();
+                        user.setTownPortal(null);
+                        user.write(WvsContext.resetTownPortal());
+                        user.getConnectedServer().notifyUserUpdate(user);
+                    }
+                }
             }
         }
     }

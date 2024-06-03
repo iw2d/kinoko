@@ -12,6 +12,8 @@ import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public final class Magician {
@@ -130,7 +132,8 @@ public final class Magician {
                 return;
             // BISHOP
             case MYSTIC_DOOR:
-                final Optional<TownPortal> townPortalResult = user.getField().getTownPortalPool().createFieldPortal(user, skillId, skill.positionX, skill.positionY);
+                final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.SECONDS);
+                final Optional<TownPortal> townPortalResult = user.getField().getTownPortalPool().createFieldPortal(user, skillId, skill.positionX, skill.positionY, expireTime);
                 if (townPortalResult.isPresent()) {
                     final TownPortal townPortal = townPortalResult.get();
                     user.setTownPortal(townPortal);

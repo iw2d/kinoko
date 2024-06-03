@@ -74,8 +74,7 @@ public final class SkillProcessor {
             }
             final SkillInfo si = skillInfoResult.get();
             // Check skill cooltime and cost
-            final int cooltime = si.getValue(SkillStat.cooltime, attack.slv);
-            if (cooltime > 0 && user.getSkillManager().hasSkillCooltime(attack.skillId)) {
+            if (user.getSkillManager().hasSkillCooltime(attack.skillId)) {
                 log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
                 return;
             }
@@ -117,6 +116,7 @@ public final class SkillProcessor {
             user.addHp(-hpCon);
             user.addMp(-mpCon);
             // Set cooltime
+            final int cooltime = si.getValue(SkillStat.cooltime, attack.slv);
             if (cooltime > 0) {
                 user.getSkillManager().setSkillCooltime(attack.skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
                 user.write(UserLocal.skillCooltimeSet(attack.skillId, cooltime));
@@ -181,8 +181,7 @@ public final class SkillProcessor {
         final SkillInfo si = skillInfoResult.get();
 
         // Check skill cooltime and cost
-        final int cooltime = si.getValue(SkillStat.cooltime, skill.slv);
-        if (cooltime > 0 && user.getSkillManager().hasSkillCooltime(skill.skillId)) {
+        if (user.getSkillManager().hasSkillCooltime(skill.skillId)) {
             log.error("Tried to use skill {} that is still on cooltime", skill.skillId);
             return;
         }
@@ -232,6 +231,7 @@ public final class SkillProcessor {
         user.addHp(-hpCon);
         user.addMp(-mpCon);
         // Set cooltime
+        final int cooltime = si.getValue(SkillStat.cooltime, skill.slv);
         if (cooltime > 0) {
             user.getSkillManager().setSkillCooltime(skill.skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
             user.write(UserLocal.skillCooltimeSet(skill.skillId, cooltime));

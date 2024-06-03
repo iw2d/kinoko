@@ -3,6 +3,7 @@ package kinoko.handler.user;
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.message.Message;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.explorer.Magician;
@@ -18,6 +19,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -85,6 +87,13 @@ public final class SkillHandler {
         // ignore tDelay
 
         try (var locked = user.acquire()) {
+            if (skill.skillId == Magician.MYSTIC_DOOR) {
+                if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
+                    user.write(WvsContext.message(Message.system("Please wait 5 seconds before casting Mystic Door again.")));
+                    user.dispose();
+                    return;
+                }
+            }
             SkillProcessor.processSkill(locked, skill);
         }
     }

@@ -4,6 +4,7 @@ import kinoko.packet.field.FieldPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.User;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public final class TownPortalPool extends FieldObjectPool<TownPortal> {
@@ -40,14 +41,14 @@ public final class TownPortalPool extends FieldObjectPool<TownPortal> {
         });
     }
 
-    public Optional<TownPortal> createFieldPortal(User user, int skillId, int x, int y) {
+    public Optional<TownPortal> createFieldPortal(User user, int skillId, int x, int y, Instant expireTime) {
         // Resolve town field
         final Optional<Field> returnMapResult = field.getFieldStorage().getFieldById(field.getReturnMap());
         if (returnMapResult.isEmpty() || returnMapResult.get() == field) {
             return Optional.empty();
         }
         // Create portal in town field
-        final Optional<TownPortal> townPortalResult = returnMapResult.get().getTownPortalPool().createTownPortal(user, skillId, field, x, y);
+        final Optional<TownPortal> townPortalResult = returnMapResult.get().getTownPortalPool().createTownPortal(user, skillId, field, x, y, expireTime);
         if (townPortalResult.isEmpty()) {
             return Optional.empty();
         }
@@ -57,9 +58,9 @@ public final class TownPortalPool extends FieldObjectPool<TownPortal> {
         return townPortalResult;
     }
 
-    private Optional<TownPortal> createTownPortal(User user, int skillId, Field targetField, int x, int y) {
+    private Optional<TownPortal> createTownPortal(User user, int skillId, Field targetField, int x, int y, Instant expireTime) {
         // Create portal
-        final TownPortal townPortal = TownPortal.from(user, skillId, field, targetField, x, y);
+        final TownPortal townPortal = TownPortal.from(user, skillId, field, targetField, x, y, expireTime);
         addTownPortal(townPortal);
         return Optional.of(townPortal);
     }

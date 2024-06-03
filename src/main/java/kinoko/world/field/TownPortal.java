@@ -4,6 +4,8 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,11 +13,15 @@ public final class TownPortal extends FieldObjectImpl {
     private final User owner;
     private final int skillId;
     private final Field townField;
+    private final Instant waitTime;
+    private final Instant expireTime;
 
-    public TownPortal(User owner, int skillId, Field townField) {
+    public TownPortal(User owner, int skillId, Field townField, Instant waitTime, Instant expireTime) {
         this.owner = owner;
         this.skillId = skillId;
         this.townField = townField;
+        this.waitTime = waitTime;
+        this.expireTime = expireTime;
     }
 
     public User getOwner() {
@@ -39,6 +45,14 @@ public final class TownPortal extends FieldObjectImpl {
         return Optional.of(portalInfo);
     }
 
+    public Instant getWaitTime() {
+        return waitTime;
+    }
+
+    public Instant getExpireTime() {
+        return expireTime;
+    }
+
     public void destroy() {
         getField().getTownPortalPool().removeTownPortal(this);
         getTownField().getTownPortalPool().removeTownPortal(this);
@@ -54,8 +68,8 @@ public final class TownPortal extends FieldObjectImpl {
                 '}';
     }
 
-    public static TownPortal from(User owner, int skillId, Field townField, Field targetField, int targetX, int targetY) {
-        final TownPortal townPortal = new TownPortal(owner, skillId, townField);
+    public static TownPortal from(User owner, int skillId, Field townField, Field targetField, int targetX, int targetY, Instant expireTime) {
+        final TownPortal townPortal = new TownPortal(owner, skillId, townField, Instant.now().plus(5, ChronoUnit.SECONDS), expireTime);
         townPortal.setId(owner.getId());
         townPortal.setField(targetField);
         townPortal.setX(targetX);
