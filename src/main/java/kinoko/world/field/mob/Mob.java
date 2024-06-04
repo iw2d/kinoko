@@ -47,10 +47,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
     private final Instant removeAfter;
+    private final int startFoothold;
 
     private MobAppearType appearType = MobAppearType.REGEN;
     private User controller;
-    private int currentFh;
     private int hp;
     private int mp;
     private Instant nextRecovery;
@@ -59,13 +59,13 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.template = template;
         this.spawnPoint = spawnPoint;
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
+        this.startFoothold = fh;
         // Life initialization
         setX(x);
         setY(y);
         setFoothold(fh);
         setMoveAction(5); // idk
         // Mob initialization
-        setCurrentFh(fh);
         setHp(template.getMaxHp());
         setMp(template.getMaxMp());
         nextRecovery = Instant.now();
@@ -141,14 +141,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setAppearType(MobAppearType appearType) {
         this.appearType = appearType;
-    }
-
-    public int getCurrentFh() {
-        return currentFh;
-    }
-
-    public void setCurrentFh(int currentFh) {
-        this.currentFh = currentFh;
     }
 
     public int getHp() {
@@ -341,7 +333,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         null,
                         getX(),
                         getY(),
-                        getCurrentFh()
+                        getFoothold()
                 );
                 reviveMob.setAppearType(MobAppearType.REVIVED);
                 getField().getMobPool().addMob(reviveMob);
@@ -387,8 +379,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         outPacket.encodeShort(getX()); // ptPosPrev.x
         outPacket.encodeShort(getY()); // ptPosPrev.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
-        outPacket.encodeShort(getCurrentFh()); // pvcMobActiveObj (current foothold)
-        outPacket.encodeShort(getFoothold()); // Foothold (start foothold)
+        outPacket.encodeShort(getFoothold()); // pvcMobActiveObj (current foothold)
+        outPacket.encodeShort(startFoothold); // Foothold (start foothold)
         outPacket.encodeByte(appearType.getValue()); // nAppearType
         if (appearType == MobAppearType.REVIVED || appearType.getValue() >= 0) {
             outPacket.encodeInt(0); // dwOption

@@ -100,7 +100,7 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
         setField(field);
         setX(x);
         setY(y);
-        setFoothold(field.getFootholdBelow(x, y).orElse(Foothold.EMPTY_FOOTHOLD).getFootholdId());
+        setFoothold(field.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
     }
 
     @Override

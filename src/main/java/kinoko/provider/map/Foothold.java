@@ -5,7 +5,6 @@ import kinoko.provider.wz.property.WzListProperty;
 import java.util.Objects;
 
 public final class Foothold {
-    public static final Foothold EMPTY_FOOTHOLD = new Foothold(0, 0, 0, 0, 0, 0, 0);
     private final int layerId;
     private final int groupId;
     private final int footholdId;

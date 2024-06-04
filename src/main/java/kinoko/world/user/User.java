@@ -5,6 +5,7 @@ import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.node.ChannelServerNode;
@@ -456,6 +457,7 @@ public final class User extends Life implements Lockable<User> {
         setField(destination);
         setX(x);
         setY(y);
+        setFoothold(destination.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
         getCharacterStat().setPosMap(destination.getFieldId());
         getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
