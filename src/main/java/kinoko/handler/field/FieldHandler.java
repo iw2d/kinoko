@@ -68,7 +68,7 @@ public final class FieldHandler {
                 }
             } else {
                 // Inventory full
-                if (im.canAddItem(drop.getItem()).isEmpty()) {
+                if (!im.canAddItem(drop.getItem())) {
                     user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
                     user.dispose();
                     return;
@@ -98,16 +98,18 @@ public final class FieldHandler {
 
             // Add drop to inventory
             if (drop.isMoney()) {
-                if (im.addMoney(drop.getMoney())) {
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                    user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
+                if (!im.addMoney(drop.getMoney())) {
+                    throw new IllegalStateException("Could not add money to inventory");
                 }
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
-                if (addItemResult.isPresent()) {
-                    user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-                    user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+                if (addItemResult.isEmpty()) {
+                    throw new IllegalStateException("Could not add item to inventory");
                 }
+                user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
             }
         }
     }

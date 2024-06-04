@@ -46,7 +46,6 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        System.out.println(user.getCharacterStat().getPortal());
         user.dispose();
     }
 
@@ -320,7 +319,9 @@ public final class AdminCommands {
             user.write(WvsContext.message(Message.system("Could not resolve portal for field ID : %d", fieldId)));
             return;
         }
-        user.warp(targetField, portalResult.get(), false, false);
+        try (var locked = user.acquire()) {
+            user.warp(targetField, portalResult.get(), false, false);
+        }
     }
 
     @Command({ "mob", "spawn" })

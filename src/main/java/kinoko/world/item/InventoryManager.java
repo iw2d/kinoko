@@ -2,13 +2,12 @@ package kinoko.world.item;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.util.Tuple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public final class InventoryManager {
     private static final Logger log = LogManager.getLogger(InventoryManager.class);
@@ -208,25 +207,10 @@ public final class InventoryManager {
     }
 
     public Optional<List<InventoryOperation>> addItem(Item originalItem) {
-        final Optional<List<InventoryOperation>> addItemResult = canAddItem(originalItem);
-        if (addItemResult.isEmpty()) {
-            return addItemResult;
-        }
-        applyInventoryOperations(addItemResult.get());
-        return addItemResult;
-    }
-
-    public Optional<List<InventoryOperation>> canAddItem(Item originalItem) {
         final List<InventoryOperation> inventoryOperations = new ArrayList<>();
         final InventoryType inventoryType = InventoryType.getByItemId(originalItem.getItemId());
         final Inventory inventory = getInventoryByType(inventoryType);
-        // Retrieve item info
-        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(originalItem.getItemId());
-        if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item ID : {}", originalItem.getItemId());
-            return Optional.empty();
-        }
-        final ItemInfo ii = itemInfoResult.get();
+        final int slotMax = ItemProvider.getItemInfo(originalItem.getItemId()).map(ItemInfo::getSlotMax).orElse(0);
         // Clone item and try adding item to inventory
         final Item item = new Item(originalItem);
         boolean canAddItem = false;
@@ -237,10 +221,10 @@ public final class InventoryManager {
                 if (existingItem.getItemId() != item.getItemId()) {
                     continue;
                 }
-                if (existingItem.getQuantity() >= ii.getSlotMax()) {
+                if (existingItem.getQuantity() >= slotMax) {
                     continue;
                 }
-                final int newQuantity = Math.min(existingItem.getQuantity() + item.getQuantity(), ii.getSlotMax());
+                final int newQuantity = Math.min(existingItem.getQuantity() + item.getQuantity(), slotMax);
                 final int delta = newQuantity - existingItem.getQuantity();
                 // Create item number operation for existing item and reduce item quantity
                 inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, entry.getKey(), newQuantity));
@@ -266,7 +250,60 @@ public final class InventoryManager {
         if (!canAddItem) {
             return Optional.empty();
         }
+        applyInventoryOperations(inventoryOperations);
         return Optional.of(inventoryOperations);
+    }
+
+    public boolean canAddItem(Item item) {
+        return canAddItems(Set.of(item));
+    }
+
+    public boolean canAddItems(Set<Item> items) {
+        final List<Tuple<Integer, Integer>> itemCountSet = items.stream()
+                .map((item) -> new Tuple<>(item.getItemId(), (int) item.getQuantity()))
+                .toList();
+        return canAddItems(itemCountSet);
+    }
+
+    public boolean canAddItems(List<Tuple<Integer, Integer>> items) {
+        final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
+        final Map<Integer, Integer> itemCounter = new HashMap<>(); // item id -> count
+        // Populate item counter map
+        for (var tuple : items) {
+            final int itemId = tuple.getLeft();
+            final int count = tuple.getRight();
+            itemCounter.put(itemId, itemCounter.getOrDefault(itemId, 0) + count);
+        }
+        // Check if item can be merged into existing stacks
+        for (int itemId : itemCounter.keySet()) {
+            final InventoryType inventoryType = InventoryType.getByItemId(itemId);
+            final Inventory inventory = getInventoryByType(inventoryType);
+            int count = itemCounter.get(itemId);
+            final int slotMax = ItemProvider.getItemInfo(itemId).map(ItemInfo::getSlotMax).orElse(0);
+            for (var entry : inventory.getItems().entrySet()) {
+                final Item existingItem = entry.getValue();
+                if (existingItem.getItemId() != itemId) {
+                    continue;
+                }
+                if (existingItem.getQuantity() >= slotMax) {
+                    continue;
+                }
+                final int newQuantity = Math.min(existingItem.getQuantity() + count, slotMax);
+                final int delta = newQuantity - existingItem.getQuantity();
+                count -= delta;
+            }
+            final int remainingStacks = Math.ceilDiv(count, slotMax);
+            requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + remainingStacks);
+        }
+        // Check required slots
+        for (var entry : requiredSlots.entrySet()) {
+            final Inventory inventory = getInventoryByType(entry.getKey());
+            final int remainingSlots = inventory.getRemaining();
+            if (remainingSlots < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void applyInventoryOperations(List<InventoryOperation> inventoryOperations) {

@@ -22,11 +22,9 @@ public final class BroadcastMessage implements Encodable {
 
     @Override
     public void encode(OutPacket outPacket) {
+        outPacket.encodeByte(type.getValue());
         if (type == BroadcastMessageType.SLIDE) {
             outPacket.encodeByte(bool1);
-            if (!bool1) {
-                return;
-            }
         }
 
         outPacket.encodeString(string1); // message

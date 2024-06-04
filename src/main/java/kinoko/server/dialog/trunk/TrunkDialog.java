@@ -27,8 +27,7 @@ public final class TrunkDialog implements Dialog {
         this.npc = npc;
     }
 
-    @Override
-    public void onPacket(Locked<User> locked, InPacket inPacket) {
+    public void handlePacket(Locked<User> locked, InPacket inPacket) {
         final User user = locked.get();
         final int type = inPacket.decodeByte();
         final TrunkRequestType requestType = TrunkRequestType.getByValue(type);
@@ -55,7 +54,7 @@ public final class TrunkDialog implements Dialog {
                         user.write(FieldPacket.trunkResult(TrunkResult.message("Due to an error, the trade did not happen.")));
                         return;
                     }
-                    if (im.canAddItem(item).isEmpty()) {
+                    if (!im.canAddItem(item)) {
                         user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_UNKNOWN)));
                         return;
                     }

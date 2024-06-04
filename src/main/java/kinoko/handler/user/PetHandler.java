@@ -268,7 +268,7 @@ public final class PetHandler {
                 }
             } else {
                 // Inventory full
-                if (im.canAddItem(drop.getItem()).isEmpty()) {
+                if (!im.canAddItem(drop.getItem())) {
                     user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
                     return;
                 }

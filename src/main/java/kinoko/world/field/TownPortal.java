@@ -59,6 +59,11 @@ public final class TownPortal extends FieldObjectImpl {
     }
 
     @Override
+    public int getId() {
+        return owner.getCharacterId();
+    }
+
+    @Override
     public String toString() {
         return "TownPortal{" +
                 "owner=" + owner.getCharacterId() +
@@ -70,7 +75,6 @@ public final class TownPortal extends FieldObjectImpl {
 
     public static TownPortal from(User owner, int skillId, Field townField, Field targetField, int targetX, int targetY, Instant expireTime) {
         final TownPortal townPortal = new TownPortal(owner, skillId, townField, Instant.now().plus(5, ChronoUnit.SECONDS), expireTime);
-        townPortal.setId(owner.getId());
         townPortal.setField(targetField);
         townPortal.setX(targetX);
         townPortal.setY(targetY);

@@ -6,6 +6,7 @@ import kinoko.provider.map.*;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
+import kinoko.server.dialog.miniroom.TradingRoom;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.node.FieldStorage;
 import kinoko.server.packet.OutPacket;
@@ -38,6 +39,7 @@ public final class Field {
     private final NpcPool npcPool;
     private final DropPool dropPool;
     private final ReactorPool reactorPool;
+    private final MiniRoomPool miniRoomPool;
     private final TownPortalPool townPortalPool;
 
     private Instant nextMobRespawn = Instant.now();
@@ -55,6 +57,7 @@ public final class Field {
         this.npcPool = new NpcPool(this);
         this.dropPool = new DropPool(this);
         this.reactorPool = new ReactorPool(this);
+        this.miniRoomPool = new MiniRoomPool(this);
         this.townPortalPool = new TownPortalPool(this);
     }
 
@@ -116,6 +119,10 @@ public final class Field {
 
     public ReactorPool getReactorPool() {
         return reactorPool;
+    }
+
+    public MiniRoomPool getMiniRoomPool() {
+        return miniRoomPool;
     }
 
     public TownPortalPool getTownPortalPool() {
@@ -183,6 +190,9 @@ public final class Field {
 
     public void removeUser(User user) {
         userPool.removeUser(user);
+        if (user.getDialog() instanceof TradingRoom tradingRoom) {
+            tradingRoom.cancelTrade(user);
+        }
     }
 
     public static Field from(FieldStorage fieldStorage, MapInfo mapInfo) {

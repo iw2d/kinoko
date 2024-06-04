@@ -112,8 +112,14 @@ public final class NioBufferOutPacket implements OutPacket {
 
     @Override
     public OutHeader getHeader() {
-        final short op = buffers[0].getShort(0);
-        return OutHeader.getByValue(op);
+        for (int i = 0; i < bufferIndex + 1; i++) {
+            final ByteBuffer buffer = buffers[i];
+            if (buffer.position() >= 2) {
+                final short op = buffer.getShort(0);
+                return OutHeader.getByValue(op);
+            }
+        }
+        return OutHeader.NO;
     }
 
     @Override

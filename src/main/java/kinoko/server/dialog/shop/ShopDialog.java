@@ -38,18 +38,7 @@ public final class ShopDialog implements Dialog, Encodable {
         this.items = items;
     }
 
-    @Override
-    public void encode(OutPacket outPacket) {
-        // CShopDlg::SetShopDlg
-        outPacket.encodeInt(npc.getTemplateId()); // dwNpcTemplateID
-        outPacket.encodeShort(items.size()); // nCount
-        for (ShopItem item : items) {
-            item.encode(outPacket);
-        }
-    }
-
-    @Override
-    public void onPacket(Locked<User> locked, InPacket inPacket) {
+    public void handlePacket(Locked<User> locked, InPacket inPacket) {
         final User user = locked.get();
         final int type = inPacket.decodeByte();
         final ShopRequestType requestType = ShopRequestType.getByValue(type);
@@ -170,7 +159,7 @@ public final class ShopDialog implements Dialog, Encodable {
                     user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
                     return;
                 }
-                final int slotMax = itemInfoResult.get().getSlotMax() + getIncSlotMax(user, item.getItemId());
+                final int slotMax = itemInfoResult.get().getSlotMax() + getIncSlotMax(locked, item.getItemId());
                 if (item.getQuantity() >= slotMax) {
                     user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
                     return;
@@ -202,13 +191,23 @@ public final class ShopDialog implements Dialog, Encodable {
         }
     }
 
+    @Override
+    public void encode(OutPacket outPacket) {
+        // CShopDlg::SetShopDlg
+        outPacket.encodeInt(npc.getTemplateId()); // dwNpcTemplateID
+        outPacket.encodeShort(items.size()); // nCount
+        for (ShopItem item : items) {
+            item.encode(outPacket);
+        }
+    }
+
     public static ShopDialog from(Npc npc) {
         final List<ShopItem> items = ShopProvider.getNpcShopItems(npc);
         return new ShopDialog(npc, items);
     }
 
-    private static int getIncSlotMax(User user, int itemId) {
-        final SkillManager sm = user.getSkillManager();
+    private static int getIncSlotMax(Locked<User> locked, int itemId) {
+        final SkillManager sm = locked.get().getSkillManager();
         int skillId = 0;
         if (ItemConstants.isJavelinItem(itemId)) {
             if (sm.getSkillLevel(Thief.CLAW_MASTERY) > 0) {

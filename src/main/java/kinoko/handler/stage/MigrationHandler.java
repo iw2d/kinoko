@@ -292,7 +292,9 @@ public final class MigrationHandler {
         inPacket.decodeInt(); // update_time
 
         // Remove user from field
-        user.getField().removeUser(user);
+        try (var locked = user.acquire()) {
+            user.getField().removeUser(user);
+        }
 
         // Update friends
         user.getConnectedServer().submitUserPacketBroadcast(

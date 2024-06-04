@@ -29,11 +29,10 @@ import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.*;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class User extends Life implements Lockable<User> {
-    private final Lock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
     private final Client client;
     private final CharacterData characterData;
 
@@ -487,6 +486,18 @@ public final class User extends Life implements Lockable<User> {
                     WvsContext.friendResult(FriendResult.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE))
             );
         }
+    }
+
+    /**
+     * This should be used in unfortunate cases where a method cannot accept a {@link kinoko.util.Locked<User>} to
+     * ensure that the method is called after acquiring the lock. It is preferable to submit a runnable to the
+     * {@link kinoko.server.event.EventScheduler} to acquire the lock in a separate thread, but sometimes we want our
+     * code to run first - e.g. before saving to database.
+     *
+     * @return true if the current thread has acquired the {@link kinoko.util.Lockable<User>} object.
+     */
+    public boolean isLocked() {
+        return lock.isHeldByCurrentThread();
     }
 
 

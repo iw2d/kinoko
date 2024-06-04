@@ -24,6 +24,12 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The inheritors of this abstract class will be the respective interfaces for the different types of Python scripts.
+ * The utility methods implemented by these classes are designed to be executed inside the Python context, which
+ * acquires and holds onto the user's lock during its execution, only releasing it while waiting for the user input in
+ * the case of {@link NpcScriptManager}.
+ */
 public abstract class ScriptManager {
     protected static final Logger log = LogManager.getLogger(ScriptManager.class);
     protected final User user;
@@ -164,18 +170,18 @@ public abstract class ScriptManager {
     public final boolean addItem(int itemId, int quantity) {
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item ID : {}", itemId);
             return false;
         }
         final ItemInfo ii = itemInfoResult.get();
         final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()));
         final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
-        if (addItemResult.isPresent()) {
-            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-            user.write(UserLocal.effect(Effect.gainItem(item)));
-            return true;
-        } else {
+        if (addItemResult.isEmpty()) {
             return false;
         }
+        user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+        user.write(UserLocal.effect(Effect.gainItem(item)));
+        return true;
     }
 
     public final boolean removeItem(int itemId, int quantity) {
