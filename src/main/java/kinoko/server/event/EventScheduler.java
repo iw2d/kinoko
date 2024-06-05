@@ -8,12 +8,13 @@ import java.util.concurrent.*;
 
 public final class EventScheduler {
     private static final Logger log = LogManager.getLogger(SkillProcessor.class);
+    private static final ThreadFactory virtualThreadFactory = Thread.ofVirtual().factory();
     private static ScheduledExecutorService scheduler;
     private static ExecutorService executor;
 
     public static void initialize() {
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        executor = Executors.newVirtualThreadPerTaskExecutor();
+        scheduler = Executors.newSingleThreadScheduledExecutor(virtualThreadFactory);
+        executor = Executors.newThreadPerTaskExecutor(virtualThreadFactory);
     }
 
     public static void shutdown() {

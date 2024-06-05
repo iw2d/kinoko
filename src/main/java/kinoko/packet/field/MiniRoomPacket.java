@@ -18,11 +18,14 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket inviteResult(InviteType inviteType) {
+    public static OutPacket inviteResult(InviteType inviteType, String targetName) {
         // CMiniRoomBaseDlg::OnInviteResultStatic
         final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
         outPacket.encodeByte(MiniRoomProtocol.MRP_InviteResult.getValue());
         outPacket.encodeByte(inviteType.getValue());
+        if (inviteType != InviteType.NO_CHARACTER) {
+            outPacket.encodeString(targetName); // sTargetName
+        }
         return outPacket;
     }
 

@@ -906,7 +906,6 @@ public final class UserHandler {
                             final TradingRoom tradingRoom = new TradingRoom(user);
                             field.getMiniRoomPool().addMiniRoom(tradingRoom);
                             user.setDialog(tradingRoom);
-                            user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                         }
                         case PERSONAL_SHOP, ENTRUSTED_SHOP -> {
                             // CWvsContext::SendOpenShopRequest
@@ -929,13 +928,12 @@ public final class UserHandler {
                     if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
                         log.error("Tried to invite user without a trading room");
                         user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
-                        user.setDialog(null);
                         return;
                     }
                     final int targetId = inPacket.decodeInt();
                     final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
                     if (targetResult.isEmpty()) {
-                        user.write(MiniRoomPacket.inviteResult(InviteType.NO_CHARACTER)); // Unable to find the character.
+                        user.write(MiniRoomPacket.inviteResult(InviteType.NO_CHARACTER, null)); // Unable to find the character.
                         user.setDialog(null);
                         field.getMiniRoomPool().removeMiniRoom(tradingRoom);
                         return;
@@ -943,11 +941,12 @@ public final class UserHandler {
                     try (var lockedTarget = targetResult.get().acquire()) {
                         final User target = lockedTarget.get();
                         if (target.getDialog() != null) {
-                            user.write(MiniRoomPacket.inviteResult(InviteType.CANNOT_INVITE)); // '%s' is doing something else right now.
+                            user.write(MiniRoomPacket.inviteResult(InviteType.CANNOT_INVITE, target.getCharacterName())); // '%s' is doing something else right now.
                             user.setDialog(null);
                             field.getMiniRoomPool().removeMiniRoom(tradingRoom);
                             return;
                         }
+                        user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                         target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TRADING_ROOM, user.getCharacterName(), tradingRoom.getId()));
                     }
                 }
@@ -968,7 +967,7 @@ public final class UserHandler {
                     // Close trading room
                     try (var lockedInviter = tradingRoom.getInviter().acquire()) {
                         final User inviter = lockedInviter.get();
-                        inviter.write(MiniRoomPacket.inviteResult(resultType));
+                        inviter.write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
                         inviter.setDialog(null);
                     }
                     field.getMiniRoomPool().removeMiniRoom(tradingRoom);

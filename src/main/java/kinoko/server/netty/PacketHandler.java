@@ -3,7 +3,6 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.handler.Handler;
-import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
 import kinoko.server.node.Client;
 import kinoko.server.packet.InPacket;
@@ -17,9 +16,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(PacketHandler.class);
+    private static final ThreadFactory executorThreadFactory = Thread.ofVirtual().factory();
+    private final Map<Client, ExecutorService> executorMap = new ConcurrentHashMap<>();
     private final Map<InHeader, Method> handlerMap;
 
     protected PacketHandler(Map<InHeader, Method> handlerMap) {
@@ -29,18 +34,19 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
     @Override
     public final void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        final short op = inPacket.decodeShort();
-        final InHeader header = InHeader.getByValue(op);
-        final Method handler = handlerMap.get(header);
-        if (header == null) {
-            log.debug("Unknown opcode {} | {}", Util.opToString(op), inPacket);
-        } else if (handler == null) {
-            if (!header.isIgnoreHeader()) {
-                log.debug("Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
-            }
-        } else {
-            log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
-            EventScheduler.submit(() -> {
+        final ExecutorService executor = executorMap.computeIfAbsent(client, (c) -> Executors.newSingleThreadExecutor(executorThreadFactory));
+        executor.submit(() -> {
+            final short op = inPacket.decodeShort();
+            final InHeader header = InHeader.getByValue(op);
+            final Method handler = handlerMap.get(header);
+            if (header == null) {
+                log.debug("Unknown opcode {} | {}", Util.opToString(op), inPacket);
+            } else if (handler == null) {
+                if (!header.isIgnoreHeader()) {
+                    log.debug("Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+                }
+            } else {
+                log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
                 try {
                     if (handler.getParameterTypes()[0] == Client.class) {
                         handler.invoke(this, client, inPacket);
@@ -53,8 +59,8 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
                     log.error("Exception caught while invoking packet handler", e);
                     e.printStackTrace();
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -64,6 +70,10 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
         if (client != null) {
             log.debug("Closing client");
             client.close();
+            final ExecutorService executor = executorMap.remove(client);
+            if (executor != null) {
+                executor.close();
+            }
         }
     }
 
