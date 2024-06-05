@@ -3,10 +3,11 @@ package kinoko.server.dialog.miniroom;
 import kinoko.packet.field.MiniRoomPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.util.Locked;
-import kinoko.world.item.InventoryManager;
-import kinoko.world.item.InventoryOperation;
-import kinoko.world.item.Item;
+import kinoko.world.GameConstants;
+import kinoko.world.item.*;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 
@@ -70,55 +71,151 @@ public final class TradingRoom extends MiniRoom {
         }
     }
 
+
+    // UTILITY METHODS -------------------------------------------------------------------------------------------------
+
     public User getInviter() {
         return inviter;
     }
 
-    public boolean addItem(Locked<User> locked, int itemId, int quantity, int slot) {
-        return false;
+    public boolean addItem(Locked<User> locked, InventoryType inventoryType, int position, int quantity, int index) {
+        // Resolve other user
+        final User user = locked.get();
+        final User other = user.getCharacterId() != inviter.getCharacterId() ? inviter : target;
+        if (other == null) {
+            return false;
+        }
+        // Check if item can be placed in the index
+        if (index < 1 || index > 9) {
+            return false;
+        }
+        if (items.get(getPosition(user)).containsKey(index)) {
+            return false;
+        }
+        // Resolve item
+        final InventoryManager im = user.getInventoryManager();
+        final Inventory inventory = im.getInventoryByType(inventoryType);
+        final Item item = inventory.getItem(position);
+        if (item == null) {
+            return false;
+        }
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+        final boolean isQuest = itemInfoResult.map(ItemInfo::isQuest).orElse(false);
+        final boolean isTradeBlock = itemInfoResult.map(ItemInfo::isTradeBlock).orElse(false);
+        if ((isQuest || isTradeBlock) && !item.isPossibleTrading()) {
+            return false;
+        }
+        if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
+                item.getQuantity() > quantity) {
+            // Update item count
+            item.setQuantity((short) (item.getQuantity() - quantity));
+            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()), true));
+            // Create partial item
+            final Item partialItem = new Item(item);
+            partialItem.setItemSn(user.getNextItemSn());
+            partialItem.setQuantity((short) quantity);
+            // Put item in trading room
+            items.get(getPosition(user)).put(index, partialItem);
+            user.write(MiniRoomPacket.TradingRoom.putItem(0, index, partialItem));
+            other.write(MiniRoomPacket.TradingRoom.putItem(1, index, partialItem));
+        } else {
+            // Remove full stack from inventory
+            if (!inventory.removeItem(position, item)) {
+                return false;
+            }
+            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, position), true));
+            // Put item in trading room
+            items.get(getPosition(user)).put(index, item);
+            user.write(MiniRoomPacket.TradingRoom.putItem(0, index, item));
+            other.write(MiniRoomPacket.TradingRoom.putItem(1, index, item));
+        }
+        return true;
     }
 
-    public boolean addMoney(Locked<User> locked, int money) {
-        return false;
+    public boolean addMoney(Locked<User> locked, int addMoney) {
+        // Resolve other user
+        final User user = locked.get();
+        final User other = user.getCharacterId() != inviter.getCharacterId() ? inviter : target;
+        if (other == null) {
+            return false;
+        }
+        // Check if money can be added to trading room
+        if (addMoney < 0) {
+            return false;
+        }
+        final long newMoney = ((long) money.get(getPosition(user))) + addMoney;
+        if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
+            return false;
+        }
+        // Move money
+        final InventoryManager im = user.getInventoryManager();
+        if (!im.addMoney(-addMoney)) {
+            return false;
+        }
+        user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+        money.put(getPosition(user), (int) newMoney);
+        user.write(MiniRoomPacket.TradingRoom.putMoney(0, (int) newMoney));
+        other.write(MiniRoomPacket.TradingRoom.putMoney(1, (int) newMoney));
+        return true;
+    }
+
+    public boolean confirmTrade(Locked<User> locked) {
+        // Resolve other user
+        final User user = locked.get();
+        final User other = user.getCharacterId() != inviter.getCharacterId() ? inviter : target;
+        if (other == null) {
+            return false;
+        }
+        // Confirm trade for user and update other
+        trade.put(getPosition(user), true);
+        other.write(MiniRoomPacket.TradingRoom.trade());
+        return trade.get(getPosition(other));
     }
 
     public boolean completeTrade(Locked<User> locked) {
-        // Check for confirmation
+        // Check for confirmations
         final User user = locked.get();
+        if (!trade.get(getPosition(user))) {
+            return false;
+        }
         final User other = user.getCharacterId() != inviter.getCharacterId() ? inviter : target;
         if (other == null || !trade.get(getPosition(other))) {
             return false;
         }
         try (var lockedOther = other.acquire()) {
             // Check that user can add items + money from other's position
-            final int indexForUser = getPosition(other);
-            final InventoryManager uim = user.getInventoryManager();
-            if (!uim.canAddItems(items.get(indexForUser).values().stream().collect(Collectors.toUnmodifiableSet()))) {
+            final Set<Item> itemsForUser = items.get(getPosition(other)).values().stream().collect(Collectors.toUnmodifiableSet());
+            final int moneyForUser = GameConstants.getTradeTax(money.get(getPosition(other)));
+            if (!user.getInventoryManager().canAddItems(itemsForUser)) {
                 user.write(WvsContext.message(Message.system("You do not have enough inventory space.")));
                 other.write(WvsContext.message(Message.system(user.getCharacterName() + " does not have enough inventory space.")));
                 return false;
             }
-            if (!uim.canAddMoney(money.get(indexForUser))) {
+            if (!user.getInventoryManager().canAddMoney(moneyForUser)) {
                 user.write(WvsContext.message(Message.system("You cannot hold any more mesos.")));
                 other.write(WvsContext.message(Message.system(user.getCharacterName() + " cannot hold any more mesos.")));
                 return false;
             }
             // Check that other can add items + money from user's position
-            final int indexForOther = getPosition(user);
-            final InventoryManager oim = other.getInventoryManager();
-            if (!oim.canAddItems(items.get(indexForOther).values().stream().collect(Collectors.toUnmodifiableSet()))) {
+            final Set<Item> itemsForOther = items.get(getPosition(user)).values().stream().collect(Collectors.toUnmodifiableSet());
+            final int moneyForOther = GameConstants.getTradeTax(money.get(getPosition(user)));
+            if (!other.getInventoryManager().canAddItems(itemsForOther)) {
                 other.write(WvsContext.message(Message.system("You do not have enough inventory space.")));
                 user.write(WvsContext.message(Message.system(user.getCharacterName() + " does not have enough inventory space.")));
                 return false;
             }
-            if (!oim.canAddMoney(money.get(indexForOther))) {
+            if (!other.getInventoryManager().canAddMoney(moneyForOther)) {
                 other.write(WvsContext.message(Message.system("You cannot hold any more mesos.")));
                 user.write(WvsContext.message(Message.system(user.getCharacterName() + " cannot hold any more mesos.")));
                 return false;
             }
             // Add all items + money
-            addItemsAndMoney(user, indexForUser);
-            addItemsAndMoney(other, indexForOther);
+            addItemsAndMoney(user, itemsForUser, moneyForUser);
+            addItemsAndMoney(other, itemsForOther, moneyForOther);
+            // Complete trade
+            broadcastPacket(MiniRoomPacket.leave(0, LeaveType.TRADE_DONE)); // Trade successful. Please check the results.
+            user.setDialog(null);
+            other.setDialog(null);
         }
         return true;
     }
@@ -128,36 +225,52 @@ public final class TradingRoom extends MiniRoom {
      *
      * @see User#isLocked()
      */
-    public void cancelTrade(User user) {
+    public void cancelTradeUnsafe(User user) {
         // Return items and update client
         assert user.isLocked();
-        addItemsAndMoney(user, getPosition(user));
-        user.write(MiniRoomPacket.leave(getPosition(user), LeaveType.USER_REQUEST)); // no message
+        addItemsAndMoney(user, items.get(getPosition(user)).values(), money.get(getPosition(user)));
+        user.write(MiniRoomPacket.leave(0, LeaveType.USER_REQUEST)); // no message
         user.setDialog(null);
         final User other = user.getCharacterId() != inviter.getCharacterId() ? inviter : target;
-        if (other == null) {
-            return;
-        }
-        try (var lockedOther = other.acquire()) {
-            // Return the other user's items and update their client
-            addItemsAndMoney(lockedOther.get(), getPosition(other));
-            other.write(MiniRoomPacket.leave(getPosition(user), LeaveType.CLOSED)); // Trade cancelled by the other character.
-            other.setDialog(null);
+        if (other != null) {
+            try (var lockedOther = other.acquire()) {
+                // Return the other user's items and update their client
+                addItemsAndMoney(lockedOther.get(), items.get(getPosition(other)).values(), money.get(getPosition(other)));
+                other.write(MiniRoomPacket.leave(1, LeaveType.CLOSED)); // Trade cancelled by the other character.
+                other.setDialog(null);
+            }
         }
     }
 
-    private void addItemsAndMoney(User user, int index) {
+    public void cancelTrade(Locked<User> locked, LeaveType leaveType) {
+        // Return items and update client
+        final User user = locked.get();
+        addItemsAndMoney(user, items.get(getPosition(user)).values(), money.get(getPosition(user)));
+        user.write(MiniRoomPacket.leave(0, leaveType));
+        user.setDialog(null);
+        final User other = user.getCharacterId() != inviter.getCharacterId() ? inviter : target;
+        if (other != null) {
+            try (var lockedOther = other.acquire()) {
+                // Return the other user's items and update their client
+                addItemsAndMoney(lockedOther.get(), items.get(getPosition(other)).values(), money.get(getPosition(other)));
+                other.write(MiniRoomPacket.leave(1, leaveType));
+                other.setDialog(null);
+            }
+        }
+    }
+
+    private void addItemsAndMoney(User user, Collection<Item> addItems, int addMoney) {
         assert user.isLocked();
         final InventoryManager im = user.getInventoryManager();
         final List<InventoryOperation> inventoryOperations = new ArrayList<>();
-        for (Item item : items.get(index).values()) {
+        for (Item item : addItems) {
             final Optional<List<InventoryOperation>> addResult = im.addItem(item);
             if (addResult.isEmpty()) {
                 throw new IllegalStateException("Failed to add item to inventory");
             }
             inventoryOperations.addAll(addResult.get());
         }
-        if (!im.addMoney(money.get(index))) {
+        if (!im.addMoney(addMoney)) {
             throw new IllegalStateException("Failed to add money");
         }
         user.write(WvsContext.inventoryOperation(inventoryOperations, false));

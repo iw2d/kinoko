@@ -3,6 +3,7 @@ package kinoko.packet.field;
 import kinoko.server.dialog.miniroom.*;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.item.Item;
 import kinoko.world.user.User;
 
 public final class MiniRoomPacket {
@@ -29,11 +30,11 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket enterBase(int position, User user) {
+    public static OutPacket enterBase(int userIndex, User user) {
         // CMiniRoomBaseDlg::OnEnterBase
         final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
         outPacket.encodeByte(MiniRoomProtocol.MRP_Enter.getValue());
-        outPacket.encodeByte(position);
+        outPacket.encodeByte(userIndex);
         user.getCharacterData().getAvatarLook().encode(outPacket); // CMiniRoomBaseDlg::DecodeAvatar
         outPacket.encodeString(user.getCharacterName()); // asUserID
         outPacket.encodeShort(user.getJob()); // anJobCode
@@ -67,18 +68,18 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket chat(int position, String text) {
+    public static OutPacket chat(int userIndex, String text) {
         // CMiniRoomBaseDlg::OnChat
         final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
         outPacket.encodeByte(MiniRoomProtocol.MRP_Chat.getValue());
         outPacket.encodeByte(MiniRoomProtocol.MRP_UserChat.getValue());
-        outPacket.encodeByte(position);
+        outPacket.encodeByte(userIndex);
         outPacket.encodeString(text); // sText
         return outPacket;
     }
 
-    public static OutPacket chat(int position, String characterName, String message) {
-        return chat(position, String.format("%s : %s", characterName, message));
+    public static OutPacket chat(int userIndex, String characterName, String message) {
+        return chat(userIndex, String.format("%s : %s", characterName, message));
     }
 
     public static OutPacket gameMessage(GameMessageType messageType, String characterName) {
@@ -91,13 +92,44 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket leave(int position, LeaveType leaveType) {
+    public static OutPacket leave(int userIndex, LeaveType leaveType) {
         // CMiniRoomBaseDlg::OnEnterBase
         final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
         outPacket.encodeByte(MiniRoomProtocol.MRP_Leave.getValue());
-        outPacket.encodeByte(position);
+        outPacket.encodeByte(userIndex);
         // *::OnLeave
         outPacket.encodeByte(leaveType.getValue());
         return outPacket;
+    }
+
+
+    public static class TradingRoom {
+        // CTradingRoomDlg::OnPacket -----------------------------------------------------------------------------------
+
+        public static OutPacket putItem(int userIndex, int index, Item item) {
+            // CTradingRoomDlg::OnPutItem
+            final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
+            outPacket.encodeByte(MiniRoomProtocol.TRP_PutItem.getValue());
+            outPacket.encodeByte(userIndex);
+            outPacket.encodeByte(index);
+            item.encode(outPacket); // GW_ItemSlotBase::Decode
+            return outPacket;
+        }
+
+        public static OutPacket putMoney(int userIndex, int newMoney) {
+            // CTradingRoomDlg::OnPutMoney
+            final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
+            outPacket.encodeByte(MiniRoomProtocol.TRP_PutMoney.getValue());
+            outPacket.encodeByte(userIndex);
+            outPacket.encodeInt(newMoney); // anMoney
+            return outPacket;
+        }
+
+        public static OutPacket trade() {
+            // CTradingRoomDlg::OnTrade
+            final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
+            outPacket.encodeByte(MiniRoomProtocol.TRP_Trade.getValue());
+            return outPacket;
+        }
     }
 }

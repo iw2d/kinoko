@@ -906,6 +906,7 @@ public final class UserHandler {
                             final TradingRoom tradingRoom = new TradingRoom(user);
                             field.getMiniRoomPool().addMiniRoom(tradingRoom);
                             user.setDialog(tradingRoom);
+                            user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                         }
                         case PERSONAL_SHOP, ENTRUSTED_SHOP -> {
                             // CWvsContext::SendOpenShopRequest
@@ -934,7 +935,7 @@ public final class UserHandler {
                     final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
                     if (targetResult.isEmpty()) {
                         user.write(MiniRoomPacket.inviteResult(InviteType.NO_CHARACTER, null)); // Unable to find the character.
-                        user.setDialog(null);
+                        tradingRoom.cancelTrade(locked, LeaveType.USER_REQUEST);
                         field.getMiniRoomPool().removeMiniRoom(tradingRoom);
                         return;
                     }
@@ -942,11 +943,10 @@ public final class UserHandler {
                         final User target = lockedTarget.get();
                         if (target.getDialog() != null) {
                             user.write(MiniRoomPacket.inviteResult(InviteType.CANNOT_INVITE, target.getCharacterName())); // '%s' is doing something else right now.
-                            user.setDialog(null);
+                            tradingRoom.cancelTrade(locked, LeaveType.USER_REQUEST);
                             field.getMiniRoomPool().removeMiniRoom(tradingRoom);
                             return;
                         }
-                        user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                         target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TRADING_ROOM, user.getCharacterName(), tradingRoom.getId()));
                     }
                 }
@@ -968,7 +968,7 @@ public final class UserHandler {
                     try (var lockedInviter = tradingRoom.getInviter().acquire()) {
                         final User inviter = lockedInviter.get();
                         inviter.write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
-                        inviter.setDialog(null);
+                        tradingRoom.cancelTrade(lockedInviter, LeaveType.USER_REQUEST);
                     }
                     field.getMiniRoomPool().removeMiniRoom(tradingRoom);
                 }
@@ -1020,12 +1020,63 @@ public final class UserHandler {
                         return;
                     }
                     if (miniRoom instanceof TradingRoom tradingRoom) {
-                        tradingRoom.cancelTrade(user);
+                        tradingRoom.cancelTradeUnsafe(user);
                     }
                     user.setDialog(null);
                     if (miniRoom.getField() != null) {
                         miniRoom.getField().getMiniRoomPool().removeMiniRoom(miniRoom);
                     }
+                }
+                case TRP_PutItem -> {
+                    // CTradingRoomDlg::PutItem
+                    if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
+                        log.error("Tried to put item without a trading room");
+                        return;
+                    }
+                    final int type = inPacket.decodeByte(); // nItemTI
+                    final InventoryType inventoryType = InventoryType.getByValue(type);
+                    if (inventoryType == null) {
+                        log.error("Unknown inventory type : {}", type);
+                        return;
+                    }
+                    final int position = inPacket.decodeShort(); // nSlotPosition
+                    final int quantity = inPacket.decodeShort(); // nInputNo_Result
+                    final int index = inPacket.decodeByte(); // ItemIndexFromPoint
+                    if (!tradingRoom.addItem(locked, inventoryType, position, quantity, index)) {
+                        log.error("Failed to add item to trading room");
+                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                    }
+                }
+                case TRP_PutMoney -> {
+                    // CTradingRoomDlg::PutMoney
+                    if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
+                        log.error("Tried to put money without a trading room");
+                        return;
+                    }
+                    final int addMoney = inPacket.decodeInt(); // nInputNo_Result
+                    if (!tradingRoom.addMoney(locked, addMoney)) {
+                        log.error("Failed to add money to trading room");
+                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                    }
+                }
+                case TRP_Trade -> {
+                    // CTradingRoomDlg::Trade
+                    if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
+                        log.error("Tried to confirm trade without a trading room");
+                        return;
+                    }
+                    // Confirm trade
+                    if (!tradingRoom.confirmTrade(locked)) {
+                        return;
+                    }
+                    // Complete trade
+                    if (!tradingRoom.completeTrade(locked)) {
+                        tradingRoom.cancelTrade(locked, LeaveType.TRADE_FAIL); // Trade unsuccessful.
+                    }
+                    tradingRoom.getField().getMiniRoomPool().removeMiniRoom(tradingRoom);
+                }
+                case TRP_ItemCRC -> {
+                    // ignored
                 }
                 case null -> {
                     log.error("Unknown mini room action {}", action);

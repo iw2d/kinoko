@@ -191,7 +191,10 @@ public final class Field {
     public void removeUser(User user) {
         userPool.removeUser(user);
         if (user.getDialog() instanceof TradingRoom tradingRoom) {
-            tradingRoom.cancelTrade(user);
+            tradingRoom.cancelTradeUnsafe(user);
+            if (tradingRoom.getField() != null) {
+                tradingRoom.getField().getMiniRoomPool().removeMiniRoom(tradingRoom);
+            }
         }
     }
 

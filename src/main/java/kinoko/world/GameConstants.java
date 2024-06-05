@@ -117,6 +117,23 @@ public final class GameConstants {
         }
     }
 
+    public static int getTradeTax(int money) {
+        if (money >= 100_000_000) {
+            return Math.round(money * 0.94f); // 6.00%
+        } else if (money >= 25_000_000) {
+            return Math.round(money * 0.95f); // 5.00%
+        } else if (money >= 10_000_000) {
+            return Math.round(money * 0.96f); // 4.00%
+        } else if (money >= 5_000_000) {
+            return Math.round(money * 0.97f); // 3.00%
+        } else if (money >= 1_000_000) {
+            return Math.round(money * 0.982f); // 1.80%
+        } else if (money >= 100_000) {
+            return Math.round(money * 0.992f); // 0.80%
+        }
+        return money;
+    }
+
     public static Tuple<Integer, Integer> getMoneyForMobLevel(int level) {
         // modern maple values, may not be accurate
         final double min;
