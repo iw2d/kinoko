@@ -20,9 +20,9 @@ public final class OmokGameRoom extends MiniGameRoom {
     @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
-        final User other = user.getCharacterId() != getOwner().getCharacterId() ? getOwner() : getGuest();
+        final User other = isOwner(user) ? getGuest() : getOwner();
         if (other == null) {
-            log.error("Received omok game room action {} without another player in the omok game room", mrp);
+            log.error("Received omok game room action {} without a guest in the room", mrp);
             return;
         }
         switch (mrp) {

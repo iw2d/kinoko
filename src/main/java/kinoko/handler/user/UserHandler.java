@@ -922,7 +922,7 @@ public final class UserHandler {
                             final int gameSpec = inPacket.decodeByte(); // nGameSpec
                             final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OMOK_ROOM ?
                                     new OmokGameRoom(title, password, gameSpec, user) :
-                                    new OmokGameRoom(title + " TODO memory game", password, gameSpec, user);
+                                    new MemoryGameRoom(title, password, gameSpec, user);
                             user.getField().getMiniRoomPool().addMiniRoom(miniGameRoom);
                             user.setDialog(miniGameRoom);
                             user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));

@@ -10,6 +10,7 @@ import kinoko.world.user.User;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class MiniGameRoom extends MiniRoom {
@@ -84,10 +85,7 @@ public abstract class MiniGameRoom extends MiniRoom {
 
     @Override
     public final boolean checkPassword(String password) {
-        if (this.password == null) {
-            return password == null;
-        }
-        return this.password.equals(password);
+        return Objects.equals(this.password, password);
     }
 
     @Override
@@ -120,7 +118,7 @@ public abstract class MiniGameRoom extends MiniRoom {
         final User user = locked.get();
         final User other = isOwner(user) ? getGuest() : getOwner();
         if (other == null) {
-            log.error("Received mini game room action {} without a guest in the mini game room", mrp);
+            log.error("Received mini game room action {} without a guest in the room", mrp);
             return;
         }
         switch (mrp) {
