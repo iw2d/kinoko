@@ -21,27 +21,20 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.ServerConfig;
-import kinoko.server.cashshop.*;
 import kinoko.server.command.CommandProcessor;
-import kinoko.server.dialog.miniroom.*;
-import kinoko.server.dialog.shop.ShopDialog;
-import kinoko.server.dialog.trunk.TrunkDialog;
-import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.header.InHeader;
-import kinoko.server.memo.Memo;
-import kinoko.server.memo.MemoRequestType;
-import kinoko.server.memo.MemoResult;
-import kinoko.server.memo.MemoType;
 import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.NpcScriptManager;
 import kinoko.server.script.ScriptAnswer;
 import kinoko.server.script.ScriptDispatcher;
-import kinoko.server.whisper.LocationResult;
-import kinoko.server.whisper.WhisperFlag;
-import kinoko.server.whisper.WhisperResult;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
+import kinoko.world.cashshop.*;
+import kinoko.world.dialog.miniroom.*;
+import kinoko.world.dialog.shop.ShopDialog;
+import kinoko.world.dialog.trunk.TrunkDialog;
+import kinoko.world.dialog.trunk.TrunkResult;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
@@ -57,10 +50,17 @@ import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.*;
+import kinoko.world.social.memo.Memo;
+import kinoko.world.social.memo.MemoRequestType;
+import kinoko.world.social.memo.MemoResult;
+import kinoko.world.social.memo.MemoType;
 import kinoko.world.social.party.PartyRequest;
 import kinoko.world.social.party.PartyRequestType;
 import kinoko.world.social.party.PartyResult;
 import kinoko.world.social.party.PartyResultType;
+import kinoko.world.social.whisper.LocationResult;
+import kinoko.world.social.whisper.WhisperFlag;
+import kinoko.world.social.whisper.WhisperResult;
 import kinoko.world.user.User;
 import kinoko.world.user.config.*;
 import kinoko.world.user.stat.CharacterStat;
@@ -874,6 +874,11 @@ public final class UserHandler {
                 log.error("Unhandled whisper flag : {}", whisperFlag);
             }
         }
+    }
+
+    @Handler(InHeader.MESSENGER)
+    public static void handleMessenger(User user, InPacket inPacket) {
+        // TODO
     }
 
     @Handler(InHeader.MINIROOM)

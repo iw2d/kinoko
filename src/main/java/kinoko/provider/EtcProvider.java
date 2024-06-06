@@ -5,7 +5,7 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.server.cashshop.Commodity;
+import kinoko.world.cashshop.Commodity;
 
 import java.io.IOException;
 import java.nio.file.Path;

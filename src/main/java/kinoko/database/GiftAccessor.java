@@ -1,6 +1,6 @@
 package kinoko.database;
 
-import kinoko.server.cashshop.Gift;
+import kinoko.world.cashshop.Gift;
 
 import java.util.List;
 import java.util.Optional;

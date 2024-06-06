@@ -1,8 +1,8 @@
 package kinoko.packet.stage;
 
-import kinoko.server.cashshop.CashItemResult;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.cashshop.CashItemResult;
 import kinoko.world.user.Account;
 
 public final class CashShopPacket {

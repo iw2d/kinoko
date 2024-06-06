@@ -1,8 +1,8 @@
 package kinoko.packet.field;
 
-import kinoko.server.dialog.miniroom.*;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.dialog.miniroom.*;
 import kinoko.world.item.Item;
 import kinoko.world.user.MiniGameRecord;
 import kinoko.world.user.User;

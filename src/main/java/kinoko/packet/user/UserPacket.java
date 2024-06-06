@@ -1,9 +1,9 @@
 package kinoko.packet.user;
 
 import kinoko.provider.map.FieldType;
-import kinoko.server.dialog.miniroom.MiniGameRoom;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.dialog.miniroom.MiniGameRoom;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.SecondaryStat;

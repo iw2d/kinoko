@@ -1,6 +1,6 @@
 package kinoko.world.field;
 
-import kinoko.server.dialog.miniroom.MiniRoom;
+import kinoko.world.dialog.miniroom.MiniRoom;
 
 public final class MiniRoomPool extends FieldObjectPool<MiniRoom> {
     public MiniRoomPool(Field field) {

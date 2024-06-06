@@ -1,6 +1,6 @@
 package kinoko.database;
 
-import kinoko.server.memo.Memo;
+import kinoko.world.social.memo.Memo;
 
 import java.util.List;
 import java.util.Optional;

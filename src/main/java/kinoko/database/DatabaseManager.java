@@ -14,7 +14,7 @@ import kinoko.database.cassandra.*;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
-import kinoko.server.cashshop.CashItemInfo;
+import kinoko.world.cashshop.CashItemInfo;
 import kinoko.world.item.EquipData;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;

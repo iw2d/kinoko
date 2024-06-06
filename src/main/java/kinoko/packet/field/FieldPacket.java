@@ -2,17 +2,17 @@ package kinoko.packet.field;
 
 import kinoko.packet.field.effect.FieldEffect;
 import kinoko.provider.map.FieldType;
-import kinoko.server.dialog.shop.ShopDialog;
-import kinoko.server.dialog.shop.ShopResultType;
-import kinoko.server.dialog.trunk.TrunkResult;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.server.whisper.WhisperResult;
 import kinoko.world.GameConstants;
+import kinoko.world.dialog.shop.ShopDialog;
+import kinoko.world.dialog.shop.ShopResultType;
+import kinoko.world.dialog.trunk.TrunkResult;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.reactor.Reactor;
+import kinoko.world.social.whisper.WhisperResult;
 import kinoko.world.user.config.FuncKeyMapped;
 
 public final class FieldPacket {
