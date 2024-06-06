@@ -63,19 +63,19 @@ public interface OutPacket {
     }
 
     static OutPacket of(byte[] data) {
-        final OutPacket outPacket = of();
+        final OutPacket outPacket = OutPacket.of();
         outPacket.encodeArray(data);
         return outPacket;
     }
 
     static OutPacket of(OutHeader op) {
-        final OutPacket outPacket = of();
+        final OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(op.getValue());
         return outPacket;
     }
 
     static OutPacket of(CentralHeader op) {
-        final OutPacket outPacket = of();
+        final OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(op.getValue());
         return outPacket;
     }

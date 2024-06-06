@@ -1,6 +1,7 @@
 package kinoko.packet.user;
 
 import kinoko.provider.map.FieldType;
+import kinoko.server.dialog.miniroom.MiniGameRoom;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.Pet;
@@ -49,7 +50,18 @@ public final class UserPacket {
         outPacket.encodeInt(0); // nTamingMobExp
         outPacket.encodeInt(0); // nTamingMobFatigue
 
-        outPacket.encodeByte(0); // nMiniRoomType
+        if (user.getDialog() instanceof MiniGameRoom miniGameRoom) {
+            outPacket.encodeByte(miniGameRoom.getType().getValue()); // nMiniRoomType
+            outPacket.encodeInt(miniGameRoom.getId()); // dwMiniRoomSN
+            outPacket.encodeString(miniGameRoom.getTitle()); // sMiniRoomTitle
+            outPacket.encodeByte(miniGameRoom.isPrivate()); // bPrivate
+            outPacket.encodeByte(miniGameRoom.getGameSpec()); // nGameKind
+            outPacket.encodeByte(miniGameRoom.getUsers().size()); // nCurUsers
+            outPacket.encodeByte(miniGameRoom.getMaxUsers()); // nMaxUsers
+            outPacket.encodeByte(!miniGameRoom.isOpen()); // bGameOn
+        } else {
+            outPacket.encodeByte(0); // nMiniRoomType
+        }
 
         outPacket.encodeByte(user.getAdBoard() != null); // bADBoardRemote
         if (user.getAdBoard() != null) {
@@ -113,6 +125,27 @@ public final class UserPacket {
         if (message != null) {
             outPacket.encodeString(message);
         }
+        return outPacket;
+    }
+
+    public static OutPacket userMiniGameRoomBalloon(User user, MiniGameRoom miniGameRoom) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_MINIROOM_BALLOON);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(miniGameRoom.getType().getValue()); // nMiniRoomType
+        outPacket.encodeInt(miniGameRoom.getId()); // dwMiniRoomSN
+        outPacket.encodeString(miniGameRoom.getTitle()); // sMiniRoomTitle
+        outPacket.encodeByte(miniGameRoom.isPrivate()); // bPrivate
+        outPacket.encodeByte(miniGameRoom.getGameSpec()); // nGameKind
+        outPacket.encodeByte(miniGameRoom.getUsers().size()); // nCurUsers
+        outPacket.encodeByte(miniGameRoom.getMaxUsers()); // nMaxUsers
+        outPacket.encodeByte(!miniGameRoom.isOpen()); // bGameOn
+        return outPacket;
+    }
+
+    public static OutPacket userRemoveMiniGameRoomBalloon(User user) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.USER_MINIROOM_BALLOON);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(0); // 0 -> CChatBalloon::DestroyMiniRoomBalloon
         return outPacket;
     }
 

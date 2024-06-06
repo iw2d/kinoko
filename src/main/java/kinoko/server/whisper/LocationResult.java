@@ -30,19 +30,19 @@ public final class LocationResult extends WhisperResult {
     }
 
     public static LocationResult sameChannel(String targetName, boolean isFriend, int fieldId) {
-        final LocationResult result = of(targetName, isFriend, LocationResultType.GAMESVR);
+        final LocationResult result = LocationResult.of(targetName, isFriend, LocationResultType.GAMESVR);
         result.int1 = fieldId;
         return result;
     }
 
     public static LocationResult otherChannel(String targetName, boolean isFriend, int channelId) {
-        final LocationResult result = of(targetName, isFriend, LocationResultType.OTHER_CHANNEL);
+        final LocationResult result = LocationResult.of(targetName, isFriend, LocationResultType.OTHER_CHANNEL);
         result.int1 = channelId;
         return result;
     }
 
     public static LocationResult cashshop(String targetName, boolean isFriend) {
-        return of(targetName, isFriend, LocationResultType.SHOPSVR);
+        return LocationResult.of(targetName, isFriend, LocationResultType.SHOPSVR);
     }
 
     public static LocationResult admin(String targetName) {

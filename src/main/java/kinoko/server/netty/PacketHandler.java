@@ -34,7 +34,7 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
     @Override
     public final void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        final ExecutorService executor = executorMap.computeIfAbsent(client, (c) -> Executors.newSingleThreadExecutor(executorThreadFactory));
+        final ExecutorService executor = executorMap.computeIfAbsent(client, (key) -> Executors.newSingleThreadExecutor(executorThreadFactory));
         executor.submit(() -> {
             final short op = inPacket.decodeShort();
             final InHeader header = InHeader.getByValue(op);

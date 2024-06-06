@@ -11,11 +11,9 @@ public final class MiniRoomPool extends FieldObjectPool<MiniRoom> {
         miniRoom.setField(field);
         miniRoom.setId(field.getNewObjectId());
         addObject(miniRoom);
-        miniRoom.enterFieldPacket().ifPresent(field::broadcastPacket);
     }
 
     public void removeMiniRoom(MiniRoom miniRoom) {
         removeObject(miniRoom);
-        miniRoom.leaveFieldPacket().ifPresent(field::broadcastPacket);
     }
 }

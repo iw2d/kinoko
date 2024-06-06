@@ -1,14 +1,21 @@
 package kinoko.server.dialog.miniroom;
 
 import kinoko.server.dialog.Dialog;
+import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Locked;
 import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-import java.util.Optional;
 
 public abstract class MiniRoom extends FieldObjectImpl implements Dialog {
+    protected static final Logger log = LogManager.getLogger(MiniRoom.class);
+
+    public abstract void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket);
+
     public abstract MiniRoomType getType();
 
     public abstract boolean checkPassword(String password);
@@ -19,7 +26,7 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog {
 
     public abstract Map<Integer, User> getUsers();
 
-    public int getPosition(User user) {
+    public final int getPosition(User user) {
         for (var entry : getUsers().entrySet()) {
             if (entry.getValue().getCharacterId() == user.getCharacterId()) {
                 return entry.getKey();
@@ -28,17 +35,15 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog {
         return -1;
     }
 
-    public void broadcastPacket(OutPacket outPacket) {
+    public final void broadcastPacket(OutPacket outPacket) {
         for (User user : getUsers().values()) {
             user.write(outPacket);
         }
     }
 
-    public Optional<OutPacket> enterFieldPacket() {
-        return Optional.empty();
-    }
-
-    public Optional<OutPacket> leaveFieldPacket() {
-        return Optional.empty();
+    public void close() {
+        if (getField() != null) {
+            getField().getMiniRoomPool().removeMiniRoom(this);
+        }
     }
 }

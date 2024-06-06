@@ -6,6 +6,7 @@ import kinoko.provider.map.*;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
+import kinoko.server.dialog.miniroom.MiniGameRoom;
 import kinoko.server.dialog.miniroom.TradingRoom;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.node.FieldStorage;
@@ -192,9 +193,8 @@ public final class Field {
         userPool.removeUser(user);
         if (user.getDialog() instanceof TradingRoom tradingRoom) {
             tradingRoom.cancelTradeUnsafe(user);
-            if (tradingRoom.getField() != null) {
-                tradingRoom.getField().getMiniRoomPool().removeMiniRoom(tradingRoom);
-            }
+        } else if (user.getDialog() instanceof MiniGameRoom miniGameRoom) {
+            miniGameRoom.leaveUnsafe(user);
         }
     }
 
