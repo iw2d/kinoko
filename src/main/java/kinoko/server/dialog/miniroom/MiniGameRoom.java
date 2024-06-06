@@ -82,6 +82,8 @@ public abstract class MiniGameRoom extends MiniRoom {
         this.nextTurn = nextTurn;
     }
 
+    protected abstract boolean isScorePenalty();
+
     @Override
     public final boolean checkPassword(String password) {
         return Objects.equals(this.password, password);
@@ -232,7 +234,9 @@ public abstract class MiniGameRoom extends MiniRoom {
         assert winner.isLocked();
         assert loser.isLocked();
         // Process score
-        winner.getCharacterData().getMiniGameRecord().processResult(getType(), resultType, loser.getCharacterData().getMiniGameRecord());
+        final boolean isDraw = resultType == GameResultType.DRAW;
+        final boolean scorePenalty = resultType == GameResultType.GIVEUP && isScorePenalty();
+        winner.getCharacterData().getMiniGameRecord().processResult(getType(), loser.getCharacterData().getMiniGameRecord(), isDraw, scorePenalty);
         // Update clients
         broadcastPacket(MiniRoomPacket.MiniGame.gameResult(resultType, this, getPosition(winner)));
         setReady(false);

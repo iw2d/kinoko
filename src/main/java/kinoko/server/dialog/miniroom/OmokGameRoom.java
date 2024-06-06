@@ -18,6 +18,11 @@ public final class OmokGameRoom extends MiniGameRoom {
     }
 
     @Override
+    public boolean isScorePenalty() {
+        return omokGame != null && omokGame.isScorePenalty();
+    }
+
+    @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
         final User other = isOwner(user) ? getGuest() : getOwner();

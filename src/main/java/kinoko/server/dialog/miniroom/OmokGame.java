@@ -10,6 +10,10 @@ public final class OmokGame {
     private final int[][] board = new int[BOARD_SIZE][BOARD_SIZE];
     private final List<Triple<Integer, Integer, Integer>> history = new ArrayList<>(); // x, y, type
 
+    public boolean isScorePenalty() {
+        return history.size() < 6;
+    }
+
     public boolean isValid(int x, int y) {
         return x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE && board[x][y] == 0;
     }

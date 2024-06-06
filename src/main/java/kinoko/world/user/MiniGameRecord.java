@@ -1,6 +1,5 @@
 package kinoko.world.user;
 
-import kinoko.server.dialog.miniroom.GameResultType;
 import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
 
@@ -103,9 +102,8 @@ public final class MiniGameRecord {
         }
     }
 
-    public void processResult(MiniRoomType miniRoomType, GameResultType resultType, MiniGameRecord other) {
-        // Elo rating system, not sure of the exact implementation in official - may need to stagger the k factor
-        final boolean isDraw = resultType == GameResultType.DRAW;
+    public void processResult(MiniRoomType miniRoomType, MiniGameRecord other, boolean isDraw, boolean scorePenalty) {
+        final double multiplier = scorePenalty ? 0.1 : 1.0;
         switch (miniRoomType) {
             case OMOK_ROOM -> {
                 // Update stats
@@ -117,10 +115,12 @@ public final class MiniGameRecord {
                     other.omokGameLosses++;
                 }
                 // Update ratings
-                final double r1 = computeRating(this.omokGameScore, other.omokGameScore, isDraw ? 0.5 : 1.0, 32);
-                final double r2 = computeRating(other.omokGameScore, this.omokGameScore, isDraw ? 0.5 : 0.0, 32);
-                this.omokGameScore = r1;
-                other.omokGameScore = r2;
+                final int k1 = this.omokGameScore > 3000 ? 20 : (this.getOmokGameTotal() > 50 ? 50 : 30);
+                final int k2 = other.omokGameScore > 3000 ? 20 : (other.getOmokGameTotal() > 50 ? 30 : 20);
+                final double r1 = computeScoreGain(this.omokGameScore, other.omokGameScore, isDraw ? 0.5 : 1.0, k1);
+                final double r2 = computeScoreGain(other.omokGameScore, this.omokGameScore, isDraw ? 0.5 : 0.0, k2);
+                this.omokGameScore += (r1 * multiplier);
+                other.omokGameScore += (r2 * multiplier);
             }
             case MEMORY_GAME_ROOM -> {
                 // Update stats
@@ -132,17 +132,27 @@ public final class MiniGameRecord {
                     other.memoryGameLosses++;
                 }
                 // Update ratings
-                final double r1 = computeRating(this.memoryGameScore, other.memoryGameScore, isDraw ? 0.5 : 1.0, 32);
-                final double r2 = computeRating(other.memoryGameScore, this.memoryGameScore, isDraw ? 0.5 : 0.0, 32);
-                this.memoryGameScore = r1;
-                other.memoryGameScore = r2;
+                final int k1 = this.memoryGameScore > 3000 ? 20 : (this.getMemoryGameTotal() > 50 ? 50 : 30);
+                final int k2 = other.memoryGameScore > 3000 ? 20 : (other.getMemoryGameTotal() > 50 ? 30 : 20);
+                final double r1 = computeScoreGain(this.memoryGameScore, other.memoryGameScore, isDraw ? 0.5 : 1.0, k1);
+                final double r2 = computeScoreGain(other.memoryGameScore, this.memoryGameScore, isDraw ? 0.5 : 0.0, k2);
+                this.memoryGameScore += (r1 * multiplier);
+                other.memoryGameScore += (r2 * multiplier);
             }
         }
     }
 
-    private static double computeRating(double r1, double r2, double score, int k) {
+    private int getOmokGameTotal() {
+        return omokGameWins + omokGameTies + omokGameLosses;
+    }
+
+    private int getMemoryGameTotal() {
+        return memoryGameWins + memoryGameTies + memoryGameLosses;
+    }
+
+    private static double computeScoreGain(double r1, double r2, double score, int k) {
         // Elo rating system, score = 1.0 (win) | 0.5 (tie) | 0.0 (loss)
         final double expectedScore = 1 / (1 + Math.pow(10, (r2 - r1) / 400));
-        return (r1 + k * (score - expectedScore));
+        return k * (score - expectedScore);
     }
 }

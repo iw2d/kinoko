@@ -10,6 +10,14 @@ public final class MemoryGame {
         this.shuffle = shuffleCards(gameSpec);
     }
 
+    public int getTotalScore() {
+        return score.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    public boolean isScorePenalty() {
+        return getTotalScore() < (shuffle.size() / 10);
+    }
+
     public List<Integer> getShuffle() {
         return shuffle;
     }
@@ -17,7 +25,7 @@ public final class MemoryGame {
     public TurnUpResult turnUpCard(int firstCard, int secondCard, int userIndex) {
         if (Objects.equals(shuffle.get(firstCard), shuffle.get(secondCard))) {
             score.put(userIndex, score.getOrDefault(userIndex, 0) + 2);
-            if (score.values().stream().mapToInt(Integer::intValue).sum() >= shuffle.size()) {
+            if (getTotalScore() >= shuffle.size()) {
                 final int half = shuffle.size() / 2;
                 if (score.get(userIndex) > half) {
                     return TurnUpResult.WIN;

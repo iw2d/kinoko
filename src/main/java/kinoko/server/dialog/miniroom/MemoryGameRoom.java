@@ -19,6 +19,11 @@ public final class MemoryGameRoom extends MiniGameRoom {
     }
 
     @Override
+    public boolean isScorePenalty() {
+        return memoryGame != null && memoryGame.isScorePenalty();
+    }
+
+    @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
         final User other = isOwner(user) ? getGuest() : getOwner();
