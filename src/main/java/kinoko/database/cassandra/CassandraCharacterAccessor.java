@@ -17,6 +17,7 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
+import kinoko.world.user.MiniGameRecord;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 
@@ -80,6 +81,9 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
         final ConfigManager cm = row.get(CharacterTable.CONFIG, ConfigManager.class);
         cd.setConfigManager(cm);
+
+        final MiniGameRecord mgr = row.get(CharacterTable.MINIGAME_RECORD, MiniGameRecord.class);
+        cd.setMiniGameRecord(mgr);
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(CharacterTable.ITEM_SN_COUNTER)));
         return cd;
@@ -226,6 +230,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendManager().getFriendMax()))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
+                        .setColumn(CharacterTable.MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
                         .build()

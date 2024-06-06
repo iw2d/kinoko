@@ -29,6 +29,10 @@ public interface OutPacket {
 
     void encodeInt(int value);
 
+    default void encodeInt(long value) {
+        encodeInt((int) value);
+    }
+
     default void encodeInt(boolean value) {
         encodeInt(value ? 1 : 0);
     }

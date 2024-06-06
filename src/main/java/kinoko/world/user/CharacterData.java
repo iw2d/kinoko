@@ -31,6 +31,7 @@ public final class CharacterData implements Encodable {
     private QuestManager questManager;
     private FriendManager friendManager;
     private ConfigManager configManager;
+    private MiniGameRecord miniGameRecord;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
 
@@ -88,6 +89,14 @@ public final class CharacterData implements Encodable {
 
     public void setConfigManager(ConfigManager configManager) {
         this.configManager = configManager;
+    }
+
+    public MiniGameRecord getMiniGameRecord() {
+        return miniGameRecord;
+    }
+
+    public void setMiniGameRecord(MiniGameRecord miniGameRecord) {
+        this.miniGameRecord = miniGameRecord;
     }
 
     public WildHunterInfo getWildHunterInfo() {

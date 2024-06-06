@@ -920,6 +920,21 @@ public final class UserHandler {
                             final boolean isPrivate = inPacket.decodeBoolean();
                             final String password = isPrivate ? inPacket.decodeString() : null;
                             final int gameSpec = inPacket.decodeByte(); // nGameSpec
+                            // Check for required item
+                            if (mrt == MiniRoomType.OMOK_ROOM) {
+                                final int requiredItem = ItemConstants.OMOK_SET_BASE + gameSpec;
+                                if (requiredItem < ItemConstants.OMOK_SET_BASE || requiredItem > ItemConstants.OMOK_SET_END ||
+                                        !user.getInventoryManager().hasItem(requiredItem, 1)) {
+                                    log.error("Tried to create omok game room without the required item");
+                                    return;
+                                }
+                            } else {
+                                if (!user.getInventoryManager().hasItem(ItemConstants.MATCH_CARDS, 1)) {
+                                    log.error("Tried to create memory game room without the required item");
+                                    return;
+                                }
+                            }
+                            // Create mini game room
                             final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OMOK_ROOM ?
                                     new OmokGameRoom(title, password, gameSpec, user) :
                                     new MemoryGameRoom(title, password, gameSpec, user);
@@ -1063,6 +1078,9 @@ public final class UserHandler {
                         log.error("Tried to leave from a mini room with unhandled type {}", miniRoom.getType());
                         user.setDialog(null);
                     }
+                }
+                case MRP_Balloon -> {
+                    // ignore?
                 }
                 default -> {
                     log.error("Unhandled mini room action {}", mrp);

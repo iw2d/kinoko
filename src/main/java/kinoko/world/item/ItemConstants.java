@@ -2,6 +2,9 @@ package kinoko.world.item;
 
 public final class ItemConstants {
     public static final int WHITE_SCROLL = 2340000;
+    public static final int OMOK_SET_BASE = 4080000;
+    public static final int OMOK_SET_END = 4080011;
+    public static final int MATCH_CARDS = 4080100;
 
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {

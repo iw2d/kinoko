@@ -5,7 +5,6 @@ import kinoko.packet.user.UserPacket;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
-import kinoko.world.user.MiniGameRecord;
 import kinoko.world.user.User;
 
 import java.util.HashSet;
@@ -232,9 +231,13 @@ public abstract class MiniGameRoom extends MiniRoom {
     protected final void gameResult(GameResultType resultType, User winner, User loser) {
         assert winner.isLocked();
         assert loser.isLocked();
-        broadcastPacket(MiniRoomPacket.MiniGame.gameResult(resultType, getPosition(winner), new MiniGameRecord(getType()), new MiniGameRecord(getType())));
+        // Process score
+        winner.getCharacterData().getMiniGameRecord().processResult(getType(), resultType, loser.getCharacterData().getMiniGameRecord());
+        // Update clients
+        broadcastPacket(MiniRoomPacket.MiniGame.gameResult(resultType, this, getPosition(winner)));
         setReady(false);
         setOpen(true);
+        updateBalloon();
         // Handle leave engage
         if (leaveEngage.contains(getOwner())) {
             leaveUnsafe(getOwner());

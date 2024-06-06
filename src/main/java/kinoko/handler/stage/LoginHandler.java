@@ -25,6 +25,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
+import kinoko.world.user.MiniGameRecord;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
@@ -291,6 +292,10 @@ public final class LoginHandler {
         // Initialize Config Manager
         final ConfigManager cm = ConfigManager.defaults();
         characterData.setConfigManager(cm);
+
+        // Initialize Mini Game Records
+        final MiniGameRecord mgr = new MiniGameRecord();
+        characterData.setMiniGameRecord(mgr);
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {

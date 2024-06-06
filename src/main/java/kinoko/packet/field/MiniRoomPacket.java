@@ -135,7 +135,7 @@ public final class MiniRoomPacket {
 
         public static OutPacket enter(int userIndex, User user, MiniRoomType miniGameType) {
             final OutPacket outPacket = MiniRoomPacket.enterBase(userIndex, user);
-            new MiniGameRecord(miniGameType).encode(outPacket); // TODO persist in DB
+            encodeMiniGameRecord(miniGameType, user, outPacket);
             return outPacket;
         }
 
@@ -143,7 +143,7 @@ public final class MiniRoomPacket {
             final OutPacket outPacket = MiniRoomPacket.enterResult(miniGameRoom, me);
             miniGameRoom.getUsers().forEach((i, user) -> {
                 outPacket.encodeByte(i);
-                new MiniGameRecord(miniGameRoom.getType()).encode(outPacket);
+                encodeMiniGameRecord(miniGameRoom.getType(), user, outPacket);
             });
             outPacket.encodeByte(-1);
             outPacket.encodeString(miniGameRoom.getTitle()); // sTitle
@@ -198,14 +198,14 @@ public final class MiniRoomPacket {
             return outPacket;
         }
 
-        public static OutPacket gameResult(GameResultType resultType, int winnerIndex, MiniGameRecord record0, MiniGameRecord record1) {
+        public static OutPacket gameResult(GameResultType resultType, MiniGameRoom miniGameRoom, int winnerIndex) {
             final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MGRP_GameResult);
             outPacket.encodeByte(resultType.getValue());
             if (resultType != GameResultType.DRAW) {
                 outPacket.encodeByte(winnerIndex); // nWinnerIdx
             }
-            record0.encode(outPacket); // apMGR[0]
-            record1.encode(outPacket); // apMGR[1]
+            encodeMiniGameRecord(miniGameRoom.getType(), miniGameRoom.getOwner(), outPacket); // apMGR[0]
+            encodeMiniGameRecord(miniGameRoom.getType(), miniGameRoom.getGuest(), outPacket); // apMGR[1]
             return outPacket;
         }
 
@@ -247,6 +247,11 @@ public final class MiniRoomPacket {
             outPacket.encodeByte(firstCard);
             outPacket.encodeByte(userIndex + (isMatch ? 2 : 0));
             return outPacket;
+        }
+
+        private static void encodeMiniGameRecord(MiniRoomType miniRoomType, User user, OutPacket outPacket) {
+            final MiniGameRecord miniGameRecord = user != null ? user.getCharacterData().getMiniGameRecord() : new MiniGameRecord();
+            miniGameRecord.encode(miniRoomType, outPacket);
         }
     }
 }
