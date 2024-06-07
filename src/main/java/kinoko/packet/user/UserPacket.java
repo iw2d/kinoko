@@ -83,7 +83,7 @@ public final class UserPacket {
         if (fieldType == FieldType.BATTLEFIELD || fieldType == FieldType.COCONUT) {
             // CField_BattleField::DecodeFieldSpecificData, CField_Coconut::DecodeFieldSpecificData
             outPacket.encodeByte(0); // nTeam
-        } else if (fieldType == FieldType.MONSTER_CARNIVAL || fieldType == FieldType.MONSTER_CARNIVAL_REVIVE) {
+        } else if (fieldType == FieldType.MONSTERCARNIVAL || fieldType == FieldType.MONSTERCARNIVALREVIVE) {
             // CField_MonsterCarnival::DecodeFieldSpecificData,  CField_MonsterCarnivalRevive::DecodeFieldSpecificData
             outPacket.encodeByte(0); // nTeamForMCarnival
         }

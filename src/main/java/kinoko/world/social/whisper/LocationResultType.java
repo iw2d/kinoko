@@ -2,11 +2,11 @@ package kinoko.world.social.whisper;
 
 public enum LocationResultType {
     // LR
-    NONE(0),
-    GAMESVR(1),
-    SHOPSVR(2),
-    OTHER_CHANNEL(3),
-    ADMIN(4);
+    None(0),
+    GameSvr(1),
+    ShopSvr(2),
+    OtherChannel(3),
+    Admin(4);
 
     private final int value;
 

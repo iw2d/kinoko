@@ -2,11 +2,11 @@ package kinoko.world.skill;
 
 public enum AttackIndex {
     // AttackIndex
-    MOB_PHYSICAL(0),
-    MOB_MAGIC(-1),
-    COUNTER(-2),
-    OBSTACLE(-3),
-    STAT(-4);
+    Mob_Physical(0),
+    Mob_Magic(-1),
+    Counter(-2),
+    Obstacle(-3),
+    Stat(-4);
 
     private final int value;
 

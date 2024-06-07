@@ -182,7 +182,7 @@ public final class MigrationHandler {
 
             // Loads friends from database and central server
             FriendManager.updateFriendsFromDatabase(locked);
-            FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LOAD_FRIEND_DONE);
+            FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LoadFriend_Done);
 
             // Notify friends
             channelServerNode.submitUserPacketBroadcast(
@@ -196,7 +196,7 @@ public final class MigrationHandler {
             }
 
             // Load party from central server
-            channelServerNode.submitPartyRequest(user, PartyRequest.of(PartyRequestType.LOAD_PARTY));
+            channelServerNode.submitPartyRequest(user, PartyRequest.of(PartyRequestType.LoadParty));
 
             // Check memos
             if (DatabaseManager.memoAccessor().hasMemo(user.getCharacterId())) {

@@ -2,9 +2,9 @@ package kinoko.world.user.config;
 
 public enum FuncKeyMappedType {
     // FuncKeyMapped
-    KEY_MODIFIED(0),
-    PET_CONSUME_ITEM_MODIFIED(1),
-    PET_CONSUME_MP_ITEM_MODIFIED(2);
+    KeyModified(0),
+    PetConsumeItemModified(1),
+    PetConsumeMPItemModified(2);
 
     private final byte value;
 

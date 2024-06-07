@@ -1,10 +1,11 @@
 package kinoko.world.item;
 
 public enum InventoryOperationType {
-    NEW_ITEM(0),
-    ITEM_NUMBER(1),
-    POSITION(2),
-    DEL_ITEM(3),
+    // ChangeLog
+    NewItem(0),
+    ItemNumber(1),
+    Position(2),
+    DelItem(3),
     EXP(4);
 
     private final int value;

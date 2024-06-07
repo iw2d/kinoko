@@ -7,10 +7,10 @@ public enum FuncKeyType {
     ITEM(2),
     EMOTION(3),
     MENU(4),
-    BASIC_ACTION(5),
-    BASIC_MOTION(6),
+    BASICACTION(5),
+    BASICMOTION(6),
     EFFECT(7),
-    MACRO_SKILL(8),
+    MACROSKILL(8),
     COUNT(8);
 
     private final byte value;

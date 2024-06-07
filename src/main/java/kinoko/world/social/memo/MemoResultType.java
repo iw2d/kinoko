@@ -2,13 +2,13 @@ package kinoko.world.social.memo;
 
 public enum MemoResultType {
     // MemoRes
-    LOAD(3),
-    SEND_SUCCEED(4),
-    SEND_WARNING(5),
-    SEND_CONFIRM_ONLINE(6),
+    Load(3),
+    Send_Succeed(4),
+    Send_Warning(5),
+    Send_ConfirmOnline(6),
 
     // MemoNotify
-    RECEIVE(7);
+    Receive(7);
 
     private final int value;
 

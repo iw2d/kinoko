@@ -2,31 +2,31 @@ package kinoko.world.social.whisper;
 
 public enum WhisperFlag {
     // WP
-    LOCATION(0x1),
-    WHISPER(0x2),
-    REQUEST(0x4),
-    RESULT(0x8),
-    RECEIVE(0x10),
-    BLOCKED(0x20),
-    LOCATION_F(0x40), // bTabFriend
-    MANAGER(0x80),
+    Location(0x1),
+    Whisper(0x2),
+    Request(0x4),
+    Result(0x8),
+    Receive(0x10),
+    Blocked(0x20),
+    Location_F(0x40), // bTabFriend
+    Manager(0x80),
 
     // Inbound flags
-    LOCATION_REQUEST(LOCATION.getValue() | REQUEST.getValue()),
-    LOCATION_REQUEST_F(LOCATION_F.getValue() | REQUEST.getValue()),
-    WHISPER_REQUEST(WHISPER.getValue() | REQUEST.getValue()),
-    WHISPER_REQUEST_MANAGER(WHISPER.getValue() | REQUEST.getValue() | MANAGER.getValue()),
+    LocationRequest(Location.getValue() | Request.getValue()),
+    LocationRequest_F(Location_F.getValue() | Request.getValue()),
+    WhisperRequest(Whisper.getValue() | Request.getValue()),
+    WhisperRequestmanager(Whisper.getValue() | Request.getValue() | Manager.getValue()),
 
     // Both inbound and outbound
-    WHISPER_BLOCKED(WHISPER.getValue() | BLOCKED.getValue()),
+    WhisperBlocked(Whisper.getValue() | Blocked.getValue()),
 
     // Outbound flags (CField::OnWhisper)
-    LOCATION_RESULT(LOCATION.getValue() | RESULT.getValue()),
-    LOCATION_RESULT_F(LOCATION_F.getValue() | RESULT.getValue()),
-    WHISPER_RESULT(WHISPER.getValue() | RESULT.getValue()),
-    WHISPER_RESULT_MANAGER(WHISPER.getValue() | RESULT.getValue() | MANAGER.getValue()),
-    WHISPER_RECEIVE(WHISPER.getValue() | RECEIVE.getValue()),
-    WHISPER_RECEIVE_MANAGER(WHISPER.getValue() | RECEIVE.getValue() | MANAGER.getValue());
+    LocationResult(Location.getValue() | Result.getValue()),
+    LocationResult_F(Location_F.getValue() | Result.getValue()),
+    WhisperResult(Whisper.getValue() | Result.getValue()),
+    WhisperResultManager(Whisper.getValue() | Result.getValue() | Manager.getValue()),
+    WhisperReceive(Whisper.getValue() | Receive.getValue()),
+    WhisperReceiveManager(Whisper.getValue() | Receive.getValue() | Manager.getValue());
 
 
     private final int value;

@@ -2,9 +2,9 @@ package kinoko.world.social.memo;
 
 public enum MemoRequestType {
     // MemoReq
-    SEND(0),
-    DELETE(1),
-    LOAD(2);
+    Send(0),
+    Delete(1),
+    Load(2);
 
     private final int value;
 

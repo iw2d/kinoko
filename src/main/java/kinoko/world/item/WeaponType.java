@@ -1,6 +1,7 @@
 package kinoko.world.item;
 
 public enum WeaponType {
+    // WT
     NONE(0),
     COUNT(17),
     EXCOUNT(18),

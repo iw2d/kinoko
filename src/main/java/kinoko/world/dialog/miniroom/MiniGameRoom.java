@@ -137,17 +137,17 @@ public abstract class MiniGameRoom extends MiniRoom {
             }
             case MGRP_GiveUpRequest -> {
                 setNextTurn(getPosition(user));
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.USER_GIVE_UP, user.getCharacterName()));
+                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserGiveUp, user.getCharacterName()));
                 try (var lockedOther = other.acquire()) {
                     gameResult(GameResultType.GIVEUP, other, user);
                 }
             }
             case MGRP_LeaveEngage -> {
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.USER_LEAVE_ENGAGE, user.getCharacterName()));
+                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngage, user.getCharacterName()));
                 leaveEngage.add(user);
             }
             case MGRP_LeaveEngageCancel -> {
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.USER_LEAVE_ENGAGE_CANCEL, user.getCharacterName()));
+                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngageCancel, user.getCharacterName()));
                 leaveEngage.remove(user);
             }
             case MGRP_Ready, MGRP_CancelReady -> {
@@ -167,7 +167,7 @@ public abstract class MiniGameRoom extends MiniRoom {
                     log.error("Tried to ban user during game");
                 }
                 try (var lockedOther = other.acquire()) {
-                    broadcastPacket(MiniRoomPacket.leave(getPosition(other), LeaveType.KICKED));
+                    broadcastPacket(MiniRoomPacket.leave(getPosition(other), LeaveType.Kicked));
                     other.setDialog(null);
                     setGuest(null);
                     updateBalloon();
@@ -215,14 +215,14 @@ public abstract class MiniGameRoom extends MiniRoom {
         // Close game if owner
         if (isOwner(user)) {
             if (other != null) {
-                other.write(MiniRoomPacket.leave(getPosition(other), LeaveType.HOST_OUT)); // The room is closed.
+                other.write(MiniRoomPacket.leave(getPosition(other), LeaveType.HostOut)); // The room is closed.
                 other.setDialog(null);
             }
-            user.write(MiniRoomPacket.leave(getPosition(user), LeaveType.USER_REQUEST)); // You have left the room.
+            user.write(MiniRoomPacket.leave(getPosition(user), LeaveType.UserRequest)); // You have left the room.
             user.setDialog(null);
             close();
         } else {
-            broadcastPacket(MiniRoomPacket.leave(getPosition(user), LeaveType.USER_REQUEST)); // You have left the room. | [%s] have left.
+            broadcastPacket(MiniRoomPacket.leave(getPosition(user), LeaveType.UserRequest)); // You have left the room. | [%s] have left.
             user.setDialog(null);
             setGuest(null);
             updateBalloon();

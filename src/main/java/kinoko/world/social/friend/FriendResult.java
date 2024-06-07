@@ -23,7 +23,7 @@ public final class FriendResult implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(resultType.getValue());
         switch (resultType) {
-            case LOAD_FRIEND_DONE, SET_FRIEND_DONE, DELETE_FRIEND_DONE -> {
+            case LoadFriend_Done, SetFriend_Done, DeleteFriend_Done -> {
                 // CWvsContext::CFriend::Reset
                 outPacket.encodeByte(friends.size());
                 // aFriend
@@ -35,12 +35,12 @@ public final class FriendResult implements Encodable {
                     outPacket.encodeInt(friend.isInShop());
                 }
             }
-            case NOTIFY_CHANGE_FRIEND_INFO -> {
+            case NotifyChange_FriendInfo -> {
                 // CWvsContext::CFriend::UpdateFriend
                 outPacket.encodeInt(friend.getFriendId()); // dwFriendID
                 friend.encode(outPacket);
             }
-            case INVITE -> {
+            case Invite -> {
                 outPacket.encodeInt(friend.getFriendId()); // dwFriendID
                 outPacket.encodeString(friend.getFriendName()); // sFriend
                 outPacket.encodeInt(0); // nLevel - unused
@@ -49,19 +49,19 @@ public final class FriendResult implements Encodable {
                 friend.encode(outPacket); // GW_Friend::Decode
                 outPacket.encodeByte(friend.isInShop());
             }
-            case SET_FRIEND_UNKNOWN, ACCEPT_FRIEND_UNKNOWN, DELETE_FRIEND_UNKNOWN, INC_MAX_COUNT_UNKNOWN -> {
+            case SetFriend_Unknown, AcceptFriend_Unknown, DeleteFriend_Unknown, INcMaxCount_Unknown -> {
                 outPacket.encodeByte(string1 != null && !string1.isEmpty());
                 outPacket.encodeString(string1);
             }
-            case NOTIFY -> {
+            case Notify -> {
                 outPacket.encodeInt(int1); // dwFriendID
                 outPacket.encodeByte(int2); // aInShop
                 outPacket.encodeInt(int3); // nChannelID
             }
-            case INC_MAX_COUNT_DONE -> {
+            case IncMaxCount_Done -> {
                 outPacket.encodeByte(int1); // nFriendMax
             }
-            case SET_FRIEND_FULL_ME, SET_FRIEND_FULL_OTHER, SET_FRIEND_ALREADY_SET, SET_FRIEND_MASTER, SET_FRIEND_UNKNOWN_USER, PLEASE_WAIT -> {
+            case SetFriend_FullMe, SetFriend_FullOther, SetFriend_AlreadySet, SetFriend_Master, SetFriend_UnknownUser, PleaseWait -> {
                 // no encodes
             }
             default -> {
@@ -81,13 +81,13 @@ public final class FriendResult implements Encodable {
     }
 
     public static FriendResult invite(Friend friend) {
-        final FriendResult result = new FriendResult(FriendResultType.INVITE);
+        final FriendResult result = new FriendResult(FriendResultType.Invite);
         result.friend = friend;
         return result;
     }
 
     public static FriendResult notify(int characterId, int channelId) {
-        final FriendResult result = new FriendResult(FriendResultType.NOTIFY);
+        final FriendResult result = new FriendResult(FriendResultType.Notify);
         result.int1 = characterId;
         result.int2 = 0;
         result.int3 = channelId;

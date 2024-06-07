@@ -2,13 +2,13 @@ package kinoko.world.social.friend;
 
 public enum FriendRequestType {
     // FriendReq
-    LOAD_FRIEND(0),
-    SET_FRIEND(1),
-    ACCEPT_FRIEND(2),
-    DELETE_FRIEND(3),
-    NOTIFY_LOGIN(4),
-    NOTIFY_LOGOUT(5),
-    INC_MAX_COUNT(6);
+    LoadFriend(0),
+    SetFriend(1),
+    AcceptFriend(2),
+    DeleteFriend(3),
+    NotifyLogin(4),
+    NotifyLogout(5),
+    IncMaxCount(6);
 
     private final int value;
 

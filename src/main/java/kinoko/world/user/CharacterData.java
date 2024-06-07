@@ -144,17 +144,17 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.MONEY)) {
             outPacket.encodeInt(inventoryManager.getMoney()); // nMoney
         }
-        if (flag.hasFlag(DBChar.INVENTORY_SIZE)) {
+        if (flag.hasFlag(DBChar.INVENTORYSIZE)) {
             outPacket.encodeByte(inventoryManager.getEquipInventory().getSize());
             outPacket.encodeByte(inventoryManager.getConsumeInventory().getSize());
             outPacket.encodeByte(inventoryManager.getInstallInventory().getSize());
             outPacket.encodeByte(inventoryManager.getEtcInventory().getSize());
             outPacket.encodeByte(inventoryManager.getCashInventory().getSize());
         }
-        if (flag.hasFlag(DBChar.EQUIP_EXT)) {
+        if (flag.hasFlag(DBChar.EQUIPEXT)) {
             outPacket.encodeFT(inventoryManager.getExtSlotExpire()); // aEquipExtExpire
         }
-        if (flag.hasFlag(DBChar.ITEM_SLOT_EQUIP)) {
+        if (flag.hasFlag(DBChar.ITEMSLOTEQUIP)) {
             final Map<Integer, Item> equippedItems = inventoryManager.getEquipped().getItems();
             // Normal Equipped Items
             for (var entry : equippedItems.entrySet()) {
@@ -201,35 +201,35 @@ public final class CharacterData implements Encodable {
             }
             outPacket.encodeShort(0);
         }
-        if (flag.hasFlag(DBChar.ITEM_SLOT_CONSUME)) {
+        if (flag.hasFlag(DBChar.ITEMSLOTCONSUME)) {
             for (var entry : inventoryManager.getConsumeInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (flag.hasFlag(DBChar.ITEM_SLOT_INSTALL)) {
+        if (flag.hasFlag(DBChar.ITEMSLOTINSTALL)) {
             for (var entry : inventoryManager.getInstallInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (flag.hasFlag(DBChar.ITEM_SLOT_ETC)) {
+        if (flag.hasFlag(DBChar.ITEMSLOTETC)) {
             for (var entry : inventoryManager.getEtcInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (flag.hasFlag(DBChar.ITEM_SLOT_CASH)) {
+        if (flag.hasFlag(DBChar.ITEMSLOTCASH)) {
             for (var entry : inventoryManager.getCashInventory().getItems().entrySet()) {
                 outPacket.encodeByte(entry.getKey());
                 entry.getValue().encode(outPacket);
             }
             outPacket.encodeByte(0);
         }
-        if (flag.hasFlag(DBChar.SKILL_RECORD)) {
+        if (flag.hasFlag(DBChar.SKILLRECORD)) {
             outPacket.encodeShort(skillManager.getSkillRecords().size());
             for (SkillRecord sr : skillManager.getSkillRecords()) {
                 outPacket.encodeInt(sr.getSkillId());
@@ -240,7 +240,7 @@ public final class CharacterData implements Encodable {
                 }
             }
         }
-        if (flag.hasFlag(DBChar.SKILL_COOLTIME)) {
+        if (flag.hasFlag(DBChar.SKILLCOOLTIME)) {
             final Map<Integer, Long> cooltimes = new HashMap<>();
             final Instant now = Instant.now();
             final var iter = skillManager.getSkillCooltimes().entrySet().iterator();
@@ -260,7 +260,7 @@ public final class CharacterData implements Encodable {
                 outPacket.encodeShort(entry.getValue().shortValue());
             }
         }
-        if (flag.hasFlag(DBChar.QUEST_RECORD)) {
+        if (flag.hasFlag(DBChar.QUESTRECORD)) {
             final Set<QuestRecord> questRecords = questManager.getStartedQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
@@ -268,7 +268,7 @@ public final class CharacterData implements Encodable {
                 outPacket.encodeString(qr.getValue());
             }
         }
-        if (flag.hasFlag(DBChar.QUEST_COMPLETE)) {
+        if (flag.hasFlag(DBChar.QUESTCOMPLETE)) {
             final Set<QuestRecord> questRecords = questManager.getCompletedQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
@@ -276,16 +276,16 @@ public final class CharacterData implements Encodable {
                 outPacket.encodeFT(qr.getCompletedTime());
             }
         }
-        if (flag.hasFlag(DBChar.MINIGAME_RECORD)) { // TODO
+        if (flag.hasFlag(DBChar.MINIGAMERECORD)) { // TODO
             outPacket.encodeShort(0); // short * (int, int, int, int, int)
             // GW_MiniGameRecord { nGameID, nWin, nDraw, nLose, nScore }
         }
-        if (flag.hasFlag(DBChar.COUPLE_RECORD)) { // TODO
+        if (flag.hasFlag(DBChar.COUPLERECORD)) { // TODO
             outPacket.encodeShort(0); // short * GW_CoupleRecord::Decode
             outPacket.encodeShort(0); // short * GW_FriendRecord::Decode
             outPacket.encodeShort(0); // short * GW_MarriageRecord::Decode
         }
-        if (flag.hasFlag(DBChar.MAP_TRANSFER)) { // TODO
+        if (flag.hasFlag(DBChar.MAPTRANSFER)) { // TODO
             // adwMapTransfer
             for (int mapId : new int[5]) {
                 outPacket.encodeInt(mapId);
@@ -295,10 +295,10 @@ public final class CharacterData implements Encodable {
                 outPacket.encodeInt(mapId);
             }
         }
-        if (flag.hasFlag(DBChar.NEW_YEAR_CARD)) {
+        if (flag.hasFlag(DBChar.NEWYEARCARD)) {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord
         }
-        if (flag.hasFlag(DBChar.QUEST_RECORD_EX)) {
+        if (flag.hasFlag(DBChar.QUESTRECORDEX)) {
             final Set<QuestRecord> questRecords = questManager.getExQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
@@ -306,14 +306,14 @@ public final class CharacterData implements Encodable {
                 outPacket.encodeString(qr.getValue());
             }
         }
-        if (flag.hasFlag(DBChar.WILD_HUNTER_INFO) &&
+        if (flag.hasFlag(DBChar.WILDHUNTERINFO) &&
                 JobConstants.isWildHunterJob(characterStat.getJob())) {
             wildHunterInfo.encode(outPacket);
         }
-        if (flag.hasFlag(DBChar.QUEST_COMPLETE_OLD)) {
+        if (flag.hasFlag(DBChar.QUESTCOMPLETEOLD)) {
             outPacket.encodeShort(0); // short * (short, FT)
         }
-        if (flag.hasFlag(DBChar.VISITOR_LOG)) {
+        if (flag.hasFlag(DBChar.VISITORLOG)) {
             outPacket.encodeShort(0); // short * (short, short)
         }
     }

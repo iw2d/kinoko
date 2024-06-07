@@ -2,15 +2,15 @@ package kinoko.world.dialog.trunk;
 
 public enum TrunkRequestType {
     // TrunkReq
-    LOAD(0),
-    SAVE(1),
-    CLOSE(2),
-    CHECK_SSN2(3),
-    GET_ITEM(4),
-    PUT_ITEM(5),
-    SORT_ITEM(6),
-    MONEY(7),
-    CLOSE_DIALOG(8);
+    Load(0),
+    Save(1),
+    Close(2),
+    CheckSSN2(3),
+    GetItem(4),
+    PutItem(5),
+    SortItem(6),
+    Money(7),
+    CloseDialog(8);
 
     private final int value;
 

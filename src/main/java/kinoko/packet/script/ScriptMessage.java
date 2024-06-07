@@ -61,47 +61,47 @@ public final class ScriptMessage implements Encodable {
                 outPacket.encodeByte(hasPrev); // bPrev
                 outPacket.encodeByte(hasNext); // bNext
             }
-            case SAY_IMAGE -> {
+            case SAYIMAGE -> {
                 outPacket.encodeByte(images.size());
                 for (String image : images) {
                     outPacket.encodeString(image); // sPath
                 }
             }
-            case ASK_YES_NO, ASK_ACCEPT, ASK_MENU -> {
+            case ASKYESNO, ASKACCEPT, ASKMENU -> {
                 outPacket.encodeString(text); // sText
             }
-            case ASK_TEXT -> {
+            case ASKTEXT -> {
                 outPacket.encodeString(text); // sText
                 outPacket.encodeString(textDefault); // sStrDefault
                 outPacket.encodeShort(textLengthMin); // nLenMin
                 outPacket.encodeShort(textLengthMax); // nLenMax
             }
-            case ASK_NUMBER -> {
+            case ASKNUMBER -> {
                 outPacket.encodeString(text); // sText
                 outPacket.encodeInt(numberDefault); // nDef
                 outPacket.encodeInt(numberMin); // nMin
                 outPacket.encodeInt(numberMax); // nMax
             }
-            case ASK_AVATAR, ASK_MEMBER_SHOP_AVATAR -> {
+            case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
                 outPacket.encodeString(text); // sText
                 outPacket.encodeByte(options.size());
                 for (Integer option : options) {
                     outPacket.encodeInt(option);
                 }
             }
-            case ASK_BOX_TEXT -> {
+            case ASKBOXTEXT -> {
                 outPacket.encodeString(text); // sText
                 outPacket.encodeString(textDefault); // sStrDefault
                 outPacket.encodeShort(textBoxColumns); // nCol
                 outPacket.encodeShort(textBoxLines); // nLine
             }
-            case ASK_SLIDE_MENU -> {
+            case ASKSLIDEMENU -> {
                 outPacket.encodeInt(0); // slide menu dialog type
                 // CSlideMenuDlgEX::SetSlideMenuDlg
                 outPacket.encodeInt(0); // unused
                 outPacket.encodeString(text); // #<DimensionalPortalType.getValue()>#<DimensionalPortalType.getDescription()>
             }
-            case ASK_QUIZ, ASK_SPEED_QUIZ, ASK_PET, ASK_PET_ALL -> {
+            case ASKQUIZ, ASKSPEEDQUIZ, ASKPET, ASKPETALL -> {
                 throw new IllegalArgumentException("Unsupported message type : " + messageType.name());
             }
         }
@@ -116,7 +116,7 @@ public final class ScriptMessage implements Encodable {
     }
 
     public static ScriptMessage sayImage(int speakerId, Set<ScriptMessageParam> messageParams, List<String> images) {
-        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.SAY_IMAGE, messageParams);
+        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.SAYIMAGE, messageParams);
         message.images = images;
         return message;
     }
@@ -129,7 +129,7 @@ public final class ScriptMessage implements Encodable {
     }
 
     public static ScriptMessage askText(int speakerId, Set<ScriptMessageParam> messageParams, String text, String textDefault, int textLengthMin, int textLengthMax) {
-        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASK_TEXT, messageParams);
+        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKTEXT, messageParams);
         message.text = text;
         message.textDefault = textDefault;
         message.textLengthMin = textLengthMin;
@@ -138,7 +138,7 @@ public final class ScriptMessage implements Encodable {
     }
 
     public static ScriptMessage askNumber(int speakerId, Set<ScriptMessageParam> messageParams, String text, int numberDefault, int numberMin, int numberMax) {
-        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASK_NUMBER, messageParams);
+        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKNUMBER, messageParams);
         message.text = text;
         message.numberDefault = numberDefault;
         message.numberMin = numberMin;
@@ -147,14 +147,14 @@ public final class ScriptMessage implements Encodable {
     }
 
     public static ScriptMessage askAvatar(int speakerId, Set<ScriptMessageParam> messageParams, String text, List<Integer> options) {
-        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASK_AVATAR, messageParams);
+        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKAVATAR, messageParams);
         message.text = text;
         message.options = options;
         return message;
     }
 
     public static ScriptMessage askBoxText(int speakerId, Set<ScriptMessageParam> messageParams, String text, String textDefault, int textBoxColumns, int textBoxLines) {
-        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASK_BOX_TEXT, messageParams);
+        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKBOXTEXT, messageParams);
         message.text = text;
         message.textDefault = textDefault;
         message.textBoxColumns = textBoxColumns;

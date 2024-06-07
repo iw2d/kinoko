@@ -2,10 +2,10 @@ package kinoko.world.dialog.shop;
 
 public enum ShopRequestType {
     // ShopReq
-    BUY(0),
-    SELL(1),
-    RECHARGE(2),
-    CLOSE(3);
+    Buy(0),
+    Sell(1),
+    Recharge(2),
+    Close(3);
 
     private final int value;
 

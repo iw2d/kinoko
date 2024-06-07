@@ -47,41 +47,41 @@ public final class ShopDialog implements Dialog, Encodable {
             return;
         }
         switch (requestType) {
-            case BUY -> {
+            case Buy -> {
                 final int index = inPacket.decodeShort(); // nBuySelected
                 final int itemId = inPacket.decodeInt(); // nItemID
                 final int count = inPacket.decodeShort(); // nCount
                 final int price = inPacket.decodeInt(); // DiscountPrice
                 // Check buy request matches with shop data
                 if (index >= items.size()) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 final ShopItem shopItem = items.get(index);
                 if (shopItem.getItemId() != itemId || shopItem.getMaxPerSlot() < count || shopItem.getPrice() != price) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 // Check if user has enough money
                 final long totalPrice = ((long) count) * price;
                 if (totalPrice > GameConstants.MONEY_MAX) {
-                    user.write(FieldPacket.shopResult(ShopResultType.BUY_NO_MONEY)); // You do not have enough mesos.
+                    user.write(FieldPacket.shopResult(ShopResultType.BuyNoMoney)); // You do not have enough mesos.
                     return;
                 }
                 final InventoryManager im = user.getInventoryManager();
                 if (!im.canAddMoney((int) -totalPrice)) {
-                    user.write(FieldPacket.shopResult(ShopResultType.BUY_NO_MONEY)); // You do not have enough mesos.
+                    user.write(FieldPacket.shopResult(ShopResultType.BuyNoMoney)); // You do not have enough mesos.
                     return;
                 }
                 // Check if user can add item to inventory
                 if (im.getInventoryByItemId(itemId).getRemaining() == 0) {
-                    user.write(FieldPacket.shopResult(ShopResultType.BUY_UNKNOWN)); // Please check if your inventory is full or not.
+                    user.write(FieldPacket.shopResult(ShopResultType.BuyUnknown)); // Please check if your inventory is full or not.
                     return;
                 }
                 // Create item
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
                 if (itemInfoResult.isEmpty()) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 final Item boughtItem = itemInfoResult.get().createItem(user.getNextItemSn(), count);
@@ -96,9 +96,9 @@ public final class ShopDialog implements Dialog, Encodable {
                 // Update client
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
                 user.write(WvsContext.inventoryOperation(addResult.get(), true));
-                user.write(FieldPacket.shopResult(ShopResultType.BUY_SUCCESS));
+                user.write(FieldPacket.shopResult(ShopResultType.BuySuccess));
             }
-            case SELL -> {
+            case Sell -> {
                 final int position = inPacket.decodeShort(); // nPOS
                 final int itemId = inPacket.decodeInt(); // nItemID
                 final int count = inPacket.decodeShort(); // nCount
@@ -107,20 +107,20 @@ public final class ShopDialog implements Dialog, Encodable {
                 final Inventory inventory = im.getInventoryByItemId(itemId);
                 final Item sellItem = inventory.getItem(position);
                 if (sellItem.getItemId() != itemId || sellItem.getQuantity() < count) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 // Resolve sell price
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
                 if (itemInfoResult.isEmpty()) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 final int price = itemInfoResult.get().getPrice();
                 final long totalPrice = ((long) price) * count;
                 // Check if user can add money
                 if (!im.canAddMoney((int) totalPrice)) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG, "You cannot hold any more mesos."));
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg, "You cannot hold any more mesos."));
                     return;
                 }
                 // Remove items and add money
@@ -134,45 +134,45 @@ public final class ShopDialog implements Dialog, Encodable {
                 // Update client
                 user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                user.write(FieldPacket.shopResult(ShopResultType.SELL_SUCCESS));
+                user.write(FieldPacket.shopResult(ShopResultType.SellSuccess));
             }
-            case RECHARGE -> {
+            case Recharge -> {
                 final int position = inPacket.decodeShort(); // nPos
                 final InventoryManager im = user.getInventoryManager();
                 final Item item = im.getConsumeInventory().getItem(position);
                 // Check if item is rechargeable
                 if (!ItemConstants.isRechargeableItem(item.getItemId())) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 final Optional<ShopItem> shopItemResult = items.stream()
                         .filter((shopitem) -> shopitem.getItemId() == item.getItemId() && shopitem.getUnitPrice() > 0)
                         .findFirst();
                 if (shopItemResult.isEmpty()) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 final ShopItem shopitem = shopItemResult.get();
                 // Resolve item slot max
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
                 if (itemInfoResult.isEmpty()) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 final int slotMax = itemInfoResult.get().getSlotMax() + getIncSlotMax(locked, item.getItemId());
                 if (item.getQuantity() >= slotMax) {
-                    user.write(FieldPacket.shopResult(ShopResultType.SERVER_MSG)); // Due to an error, the trade did not happen.
+                    user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
                 // Compute price and check if user has enough money
                 final int delta = slotMax - item.getQuantity();
                 final long totalPrice = (long) (delta * shopitem.getUnitPrice());
                 if (totalPrice > GameConstants.MONEY_MAX) {
-                    user.write(FieldPacket.shopResult(ShopResultType.RECHARGE_NO_MONEY)); // You do not have enough mesos.
+                    user.write(FieldPacket.shopResult(ShopResultType.RechargeNoMoney)); // You do not have enough mesos.
                     return;
                 }
                 if (!im.canAddMoney((int) -totalPrice)) {
-                    user.write(FieldPacket.shopResult(ShopResultType.RECHARGE_NO_MONEY)); // You do not have enough mesos.
+                    user.write(FieldPacket.shopResult(ShopResultType.RechargeNoMoney)); // You do not have enough mesos.
                     return;
                 }
                 // Deduct money and recharge item
@@ -183,9 +183,9 @@ public final class ShopDialog implements Dialog, Encodable {
                 // Update client
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
                 user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, position, item.getQuantity()), true));
-                user.write(FieldPacket.shopResult(ShopResultType.RECHARGE_SUCCESS));
+                user.write(FieldPacket.shopResult(ShopResultType.RechargeSuccess));
             }
-            case CLOSE -> {
+            case Close -> {
                 user.closeDialog();
             }
         }

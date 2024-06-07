@@ -11,7 +11,7 @@ public final class LocationResult extends WhisperResult {
 
     LocationResult(WhisperFlag flag, LocationResultType type, String targetName) {
         super(flag);
-        assert flag == WhisperFlag.LOCATION_RESULT || flag == WhisperFlag.LOCATION_RESULT_F;
+        assert flag == WhisperFlag.LocationResult || flag == WhisperFlag.LocationResult_F;
         this.type = type;
         this.targetName = targetName;
     }
@@ -22,7 +22,7 @@ public final class LocationResult extends WhisperResult {
         outPacket.encodeString(targetName); // sFind
         outPacket.encodeByte(type.getValue());
         outPacket.encodeInt(int1); // fieldId | channelId
-        if (flag == WhisperFlag.LOCATION_RESULT && type == LocationResultType.GAMESVR) {
+        if (flag == WhisperFlag.LocationResult && type == LocationResultType.GameSvr) {
             // s_bChase -> CField::SendTransferFieldRequest
             outPacket.encodeInt(positionX); // nTargetPosition_X
             outPacket.encodeInt(positionY); // nTargetPosition_Y
@@ -30,30 +30,30 @@ public final class LocationResult extends WhisperResult {
     }
 
     public static LocationResult sameChannel(String targetName, boolean isFriend, int fieldId) {
-        final LocationResult result = LocationResult.of(targetName, isFriend, LocationResultType.GAMESVR);
+        final LocationResult result = LocationResult.of(targetName, isFriend, LocationResultType.GameSvr);
         result.int1 = fieldId;
         return result;
     }
 
     public static LocationResult otherChannel(String targetName, boolean isFriend, int channelId) {
-        final LocationResult result = LocationResult.of(targetName, isFriend, LocationResultType.OTHER_CHANNEL);
+        final LocationResult result = LocationResult.of(targetName, isFriend, LocationResultType.OtherChannel);
         result.int1 = channelId;
         return result;
     }
 
     public static LocationResult cashshop(String targetName, boolean isFriend) {
-        return LocationResult.of(targetName, isFriend, LocationResultType.SHOPSVR);
+        return LocationResult.of(targetName, isFriend, LocationResultType.ShopSvr);
     }
 
     public static LocationResult admin(String targetName) {
-        return new LocationResult(WhisperFlag.LOCATION_RESULT, LocationResultType.ADMIN, targetName);
+        return new LocationResult(WhisperFlag.LocationResult, LocationResultType.Admin, targetName);
     }
 
     public static LocationResult none(String targetName) {
-        return new LocationResult(WhisperFlag.LOCATION_RESULT, LocationResultType.NONE, targetName);
+        return new LocationResult(WhisperFlag.LocationResult, LocationResultType.None, targetName);
     }
 
     private static LocationResult of(String targetName, boolean isFriend, LocationResultType type) {
-        return new LocationResult(isFriend ? WhisperFlag.LOCATION_RESULT_F : WhisperFlag.LOCATION_RESULT, type, targetName);
+        return new LocationResult(isFriend ? WhisperFlag.LocationResult_F : WhisperFlag.LocationResult, type, targetName);
     }
 }

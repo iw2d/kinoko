@@ -92,7 +92,7 @@ public final class QuestInfo {
         final QuestManager qm = user.getQuestManager();
         final Optional<QuestRecord> questRecordResult = qm.getQuestRecord(questId);
         if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
-            user.write(UserLocal.questResult(QuestResult.of(QuestResultType.FAILED_UNKNOWN)));
+            user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
             return;
         }
         for (QuestAct questAct : getStartActs()) {

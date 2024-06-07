@@ -14,7 +14,7 @@ public final class OmokGameRoom extends MiniGameRoom {
 
     @Override
     public MiniRoomType getType() {
-        return MiniRoomType.OMOK_ROOM;
+        return MiniRoomType.OmokRoom;
     }
 
     @Override
@@ -40,7 +40,7 @@ public final class OmokGameRoom extends MiniGameRoom {
                     if (count % 2 != 0) {
                         setNextTurn(getNextTurn() == 0 ? 1 : 0);
                     }
-                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.USER_RETREAT_SUCCESS, user.getCharacterName()));
+                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserRetreatSuccess, user.getCharacterName()));
                     broadcastPacket(MiniRoomPacket.MiniGame.retreatResult(true, count, getNextTurn()));
                 } else {
                     other.write(MiniRoomPacket.MiniGame.retreatResult(false, -1, -1));

@@ -20,29 +20,29 @@ public final class FieldEffect implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case SUMMON -> {
+            case Summmon -> {
                 outPacket.encodeByte(int1); // nType
                 outPacket.encodeInt(int2); // x
                 outPacket.encodeInt(int3); // y
             }
-            case TREMBLE -> {
+            case Tremble -> {
                 outPacket.encodeByte(int1); // bHeavyNShortTremble
                 outPacket.encodeInt(int2); // tDelay
             }
-            case OBJECT, SCREEN, SOUND -> {
+            case Object, Screen, Sound -> {
                 outPacket.encodeString(string1); // sName
             }
-            case MOB_HP_TAG -> {
+            case MobHPTag -> {
                 outPacket.encodeInt(int1); // dwMobID
                 outPacket.encodeInt(int2); // nHP
                 outPacket.encodeInt(int3); // nMaxHP
                 outPacket.encodeInt(int4); // nColor
                 outPacket.encodeInt(int5); // nBgColor
             }
-            case CHANGE_BGM -> {
+            case ChangeBGM -> {
                 outPacket.encodeString(string1); // BGM UOL
             }
-            case REWORD_RULLET -> {
+            case RewordRullet -> {
                 outPacket.encodeInt(int1); // nRewardJobIdx
                 outPacket.encodeInt(int2); // nRewardPartIdx
                 outPacket.encodeInt(int3); // nRewardLevIdx
@@ -51,7 +51,7 @@ public final class FieldEffect implements Encodable {
     }
 
     public static FieldEffect screen(String effectPath) {
-        final FieldEffect fieldEffect = new FieldEffect(FieldEffectType.SCREEN);
+        final FieldEffect fieldEffect = new FieldEffect(FieldEffectType.Screen);
         fieldEffect.string1 = effectPath; // Map.wz/Effect.img/%s
         return fieldEffect;
     }

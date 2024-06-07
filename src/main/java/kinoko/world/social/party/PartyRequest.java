@@ -33,13 +33,13 @@ public final class PartyRequest implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
         switch (requestType) {
-            case LOAD_PARTY, CREATE_NEW_PARTY, WITHDRAW_PARTY -> {
+            case LoadParty, CreateNewParty, WithdrawParty -> {
                 // no encodes
             }
-            case JOIN_PARTY, KICK_PARTY, CHANGE_PARTY_BOSS -> {
+            case JoinParty, KickParty, ChangePartyBoss -> {
                 outPacket.encodeInt(characterId);
             }
-            case INVITE_PARTY -> {
+            case InviteParty -> {
                 outPacket.encodeString(characterName);
             }
         }
@@ -49,13 +49,13 @@ public final class PartyRequest implements Encodable {
         final int type = inPacket.decodeByte();
         final PartyRequest partyRequest = new PartyRequest(PartyRequestType.getByValue(type));
         switch (partyRequest.getRequestType()) {
-            case LOAD_PARTY, CREATE_NEW_PARTY, WITHDRAW_PARTY -> {
+            case LoadParty, CreateNewParty, WithdrawParty -> {
                 // no decodes
             }
-            case JOIN_PARTY, KICK_PARTY, CHANGE_PARTY_BOSS -> {
+            case JoinParty, KickParty, ChangePartyBoss -> {
                 partyRequest.characterId = inPacket.decodeInt();
             }
-            case INVITE_PARTY -> {
+            case InviteParty -> {
                 partyRequest.characterName = inPacket.decodeString();
             }
             case null -> {
@@ -79,7 +79,7 @@ public final class PartyRequest implements Encodable {
     }
 
     public static PartyRequest invite(String characterName) {
-        final PartyRequest request = new PartyRequest(PartyRequestType.INVITE_PARTY);
+        final PartyRequest request = new PartyRequest(PartyRequestType.InviteParty);
         request.characterName = characterName;
         return request;
     }

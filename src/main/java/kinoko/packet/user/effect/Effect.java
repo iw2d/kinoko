@@ -19,11 +19,11 @@ public class Effect implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case LEVEL_UP, PLAY_PORTAL_SE, JOB_CHANGED, QUEST_COMPLETE, MOBSTER_BOOK_CARD_GET, ITEM_LEVEL_UP,
-                    ITEM_MAKER, EXP_ITEM_CONSUMED, BUFF, SOUL_STONE_USE, REPEAT_EFFECT_REMOVE, EVOL_RING -> {
+            case LevelUp, PlayPortalSE, JobChanged, QuestComplete, MonsterBookCardGet, ItemLevelUp,
+                    ItemMaker, ExpItemConsumed, Buff, SoulStoneUse, RepeatEffectRemove, EvolRing -> {
                 // no encodes
             }
-            case QUEST -> {
+            case Quest -> {
                 outPacket.encodeByte(bool1); // byte > 0 ? byte * (item gain message) : screen message
                 if (bool1) {
                     outPacket.encodeInt(int1); // nItemID
@@ -33,11 +33,11 @@ public class Effect implements Encodable {
                     outPacket.encodeInt(int1); // nEffect
                 }
             }
-            case PET -> {
+            case Pet -> {
                 outPacket.encodeByte(int1); // nType
                 outPacket.encodeByte(int2); // pet index
             }
-            case PROTECT_ON_DIE_ITEM_USE -> {
+            case ProtectOnDieItemUse -> {
                 outPacket.encodeByte(bool1); // is safety charm
                 if (bool1) {
                     outPacket.encodeByte(int1); // times left
@@ -46,49 +46,49 @@ public class Effect implements Encodable {
                     outPacket.encodeInt(int1); // nItemID
                 }
             }
-            case INC_DEC_HP_EFFECT -> {
+            case IncDecHPEffect -> {
                 outPacket.encodeByte(int1); // nDelta
             }
-            case BUFF_ITEM_EFFECT -> {
+            case BuffItemEffect -> {
                 outPacket.encodeInt(int1); // nItemID
             }
-            case SQUIB_EFFECT -> {
+            case SquibEffect -> {
                 outPacket.encodeString(string1); // sEffect
             }
-            case LOTTERY_USE -> {
+            case LotteryUse -> {
                 outPacket.encodeInt(int1); // nItemId
                 outPacket.encodeByte(bool1); // bool
                 if (bool1) {
                     outPacket.encodeString(string1); // sEffect
                 }
             }
-            case RESERVED_EFFECT -> {
+            case ReservedEffect -> {
                 outPacket.encodeString(string1); // sEffect
             }
-            case CONSUME_EFFECT -> {
+            case ConsumeEffect -> {
                 outPacket.encodeInt(int1); // nItemID (Item/Cash/0528.img/%d/effect)
             }
-            case UPGRADE_TOMB_ITEM_USE -> {
+            case UpgradeTombItemUse -> {
                 outPacket.encodeByte(int1); // number of wheels of destiny left
             }
-            case BATTLEFIELD_ITEM_USE -> {
+            case BattlefieldItemUse -> {
                 outPacket.encodeString(string1); // sEffect
             }
-            case AVATAR_ORIENTED -> {
+            case AvatarOriented -> {
                 outPacket.encodeString(string1); // sEffect
                 outPacket.encodeInt(0); // ignored
             }
-            case INCUBATOR_USE -> {
+            case IncubatorUse -> {
                 outPacket.encodeInt(int1); // nItemId
                 outPacket.encodeString(string1); // sEffect
             }
-            case PLAY_SOUND_WITH_MUTE_BGM -> {
+            case PlaySoundWithMuteBGM -> {
                 outPacket.encodeString(string1); // sName
             }
-            case INC_DEC_HP_EFFECT_EX -> {
+            case IncDecHPEffect_EX -> {
                 outPacket.encodeInt(int1); // nDelta
             }
-            case DELIVERY_QUEST_ITEM_USE -> {
+            case DeliveryQuestItemUse -> {
                 outPacket.encodeInt(int1); // nItemId
             }
             default -> {
@@ -98,28 +98,28 @@ public class Effect implements Encodable {
     }
 
     public static Effect levelUp() {
-        return new Effect(EffectType.LEVEL_UP);
+        return new Effect(EffectType.LevelUp);
     }
 
     public static Effect jobChanged() {
-        return new Effect(EffectType.JOB_CHANGED);
+        return new Effect(EffectType.JobChanged);
     }
 
     public static Effect pet(PetEffectType type, int petIndex) {
-        final Effect effect = new Effect(EffectType.PET);
+        final Effect effect = new Effect(EffectType.Pet);
         effect.int1 = type.getValue(); // nType
         effect.int2 = petIndex;
         return effect;
     }
 
     public static Effect avatarOriented(String effectPath) {
-        final Effect effect = new Effect(EffectType.AVATAR_ORIENTED);
+        final Effect effect = new Effect(EffectType.AvatarOriented);
         effect.string1 = effectPath; // sEffect
         return effect;
     }
 
     public static Effect squibEffect(String effectPath) {
-        final Effect effect = new Effect(EffectType.SQUIB_EFFECT);
+        final Effect effect = new Effect(EffectType.SquibEffect);
         effect.string1 = effectPath; // sEffect
         return effect;
     }
@@ -129,7 +129,7 @@ public class Effect implements Encodable {
     }
 
     public static Effect gainItem(int itemId, int quantity) {
-        final Effect effect = new Effect(EffectType.QUEST);
+        final Effect effect = new Effect(EffectType.Quest);
         effect.bool1 = true; // item gain message
         effect.int1 = itemId;
         effect.int2 = quantity;
@@ -137,6 +137,6 @@ public class Effect implements Encodable {
     }
 
     public static Effect questComplete() {
-        return new Effect(EffectType.QUEST_COMPLETE);
+        return new Effect(EffectType.QuestComplete);
     }
 }

@@ -30,11 +30,11 @@ public final class BroadcastMessage implements Encodable {
         outPacket.encodeString(string1); // message
 
         switch (type) {
-            case SPEAKER_WORLD, SKULL_SPEAKER -> {
+            case SPEAKERWORLD, SKULLSPEAKER -> {
                 outPacket.encodeByte(int1); // nChannelID
                 outPacket.encodeByte(bool1); // bWhisperIcon
             }
-            case ITEM_SPEAKER -> {
+            case ITEMSPEAKER -> {
                 outPacket.encodeByte(int1); // nChannelID
                 outPacket.encodeByte(bool1); // bWhisperIcon
                 outPacket.encodeByte(item != null);
@@ -42,10 +42,10 @@ public final class BroadcastMessage implements Encodable {
                     item.encode(outPacket); // GW_ItemSlotBase::Decode
                 }
             }
-            case SPEAKER_BRIDGE -> {
+            case SPEAKERBRIDGE -> {
                 outPacket.encodeByte(int1); // nChannelID
             }
-            case ART_SPEAKER_WORLD -> {
+            case ARTSPEAKERWORLD -> {
                 outPacket.encodeByte(int2); // length
                 if (int2 > 1) {
                     outPacket.encodeString(string2);
@@ -56,15 +56,15 @@ public final class BroadcastMessage implements Encodable {
                 outPacket.encodeByte(int1); // nChannelID
                 outPacket.encodeByte(bool1); // bWhisperIcon
             }
-            case BLOW_WEATHER -> {
+            case BLOWWEATHER -> {
                 outPacket.encodeInt(int1); // nItemID
             }
-            case GACHAPON_ANNOUNCE -> {
+            case GACHAPONANNOUNCE -> {
                 outPacket.encodeInt(int1); // nChannelID
                 outPacket.encodeString(string2); // strFieldName
                 item.encode(outPacket); // GW_ItemSlotBase::Decode
             }
-            case GACHAPON_ANNOUNCE_OPEN, GACHAPON_ANNOUNCE_COPY -> {
+            case GACHAPONANNOUNCE_OPEN, GACHAPONANNOUNCE_COPY -> {
                 outPacket.encodeString(string2); // strCharacterName
                 item.encode(outPacket); // GW_ItemSlotBase::Decode
             }

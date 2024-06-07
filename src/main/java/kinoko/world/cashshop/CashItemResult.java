@@ -37,13 +37,13 @@ public final class CashItemResult implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case LIMIT_GOODS_COUNT_CHANGED -> {
+            case LimitGoodsCount_Changed -> {
                 // CCashShop::OnCashItemResLimitGoodsCountChanged
                 outPacket.encodeInt(int1); // nItemId
                 outPacket.encodeInt(int2); // nSN
                 outPacket.encodeInt(int3); // nRemainCount
             }
-            case LOAD_LOCKER_DONE -> {
+            case LoadLocker_Done -> {
                 outPacket.encodeShort(cashItemInfos.size());
                 for (CashItemInfo cii : cashItemInfos) {
                     cii.encode(outPacket); // GW_CashItemInfo (55)
@@ -53,13 +53,13 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeShort(int3); // nBuyCharacterCount
                 outPacket.encodeShort(int4); // nCharacterCount
             }
-            case LOAD_GIFT_DONE -> {
+            case LoadGift_Done -> {
                 outPacket.encodeShort(gifts.size());
                 for (Gift gift : gifts) {
                     gift.encode(outPacket); // GW_GiftList (98)
                 }
             }
-            case LOAD_WISH_DONE, SET_WISH_DONE -> {
+            case LoadWish_Done, SetWish_Done -> {
                 for (int i = 0; i < 10; i++) {
                     if (i < intList.size()) {
                         outPacket.encodeInt(intList.get(i)); // sn
@@ -68,18 +68,18 @@ public final class CashItemResult implements Encodable {
                     }
                 }
             }
-            case BUY_DONE, FREE_CASH_ITEM_DONE, NAME_CHANGE_BUY_DONE, TRANSFER_WORLD_DONE -> {
+            case Buy_Done, FreeCashItem_Done, NameChangeBuy_Done, TransferWorld_Done -> {
                 cashItemInfo.encode(outPacket); // GW_CashItemInfo (55)
             }
-            case BUY_FAILED -> {
+            case Buy_Failed -> {
                 outPacket.encodeByte(reason.getValue());
-                if (reason == CashItemFailReason.NO_STOCK || reason == CashItemFailReason.NOT_AVAILABLE_TIME) {
+                if (reason == CashItemFailReason.NoStock || reason == CashItemFailReason.NotAvailableTime) {
                     outPacket.encodeInt(int1); // nCommSN
-                } else if (reason == CashItemFailReason.LIMIT_OVER_THE_ITEM) {
+                } else if (reason == CashItemFailReason.LimitOverTheItem) {
                     outPacket.encodeByte(int2); // You cannot make any more purchases in %d.\r\nPlease try again in %d.
                 }
             }
-            case USE_COUPON_DONE -> {
+            case UseCoupon_Done -> {
                 outPacket.encodeByte(cashItemInfos.size());
                 for (CashItemInfo cii : cashItemInfos) {
                     cii.encode(outPacket); // GW_CashItemInfo (55)
@@ -91,7 +91,7 @@ public final class CashItemResult implements Encodable {
                 }
                 outPacket.encodeInt(int2);
             }
-            case GIFT_COUPON_DONE -> {
+            case GiftCoupon_Done -> {
                 outPacket.encodeString(string1); // sRcvCharacterName
                 outPacket.encodeByte(cashItemInfos.size());
                 for (CashItemInfo cii : cashItemInfos) {
@@ -99,68 +99,68 @@ public final class CashItemResult implements Encodable {
                 }
                 outPacket.encodeInt(int1);
             }
-            case GIFT_DONE -> {
+            case Gift_Done -> {
                 outPacket.encodeString(string1); // sRcvCharacterName
                 outPacket.encodeInt(int1); // nItemID
                 outPacket.encodeShort(int2); // nCount
                 outPacket.encodeInt(int3); // nSpentNXCash
             }
-            case INC_SLOT_COUNT_DONE -> {
+            case IncSlotCount_Done -> {
                 outPacket.encodeByte(int1); // inventory type
                 outPacket.encodeShort(int2); // new size
             }
-            case INC_TRUNK_COUNT_DONE, INC_CHAR_SLOT_COUNT_DONE, INC_BUY_CHAR_COUNT_DONE -> {
+            case IncTrunkCount_Done, IncCharSlotCount_Done, IncBuyCharCount_Done -> {
                 outPacket.encodeShort(int1);
             }
-            case ENABLE_EQUIP_SLOT_EXT_DONE -> {
+            case EnableEquipSlotExt_Done -> {
                 outPacket.encodeShort(int1);
                 outPacket.encodeShort(int2); // short -> Util::FTAddDay
             }
-            case MOVE_L_TO_S_DONE -> {
+            case MoveLtoS_Done -> {
                 outPacket.encodeShort(int1); // nPOS
                 item.encode(outPacket); // GW_ItemSlotBase::Decode
             }
-            case MOVE_S_TO_L_DONE -> {
+            case MoveStoL_Done -> {
                 cashItemInfo.encode(outPacket); // GW_CashItemInfo (55)
             }
-            case DESTROY_DONE, EXPIRE_DONE -> {
+            case Destroy_Done, Expire_Done -> {
                 outPacket.encodeLong(long1); // liSN
             }
-            case REBATE_DONE -> {
+            case Rebate_Done -> {
                 outPacket.encodeLong(long1); // liSN
                 outPacket.encodeInt(int1); // Cash item has been deleted.\r\n(%d accumulated as MaplePoints)
             }
-            case COUPLE_DONE, FRIENDSHIP_DONE -> {
+            case Couple_Done, Friendship_Done -> {
                 cashItemInfo.encode(outPacket); // GW_CashItemInfo (55)
                 outPacket.encodeString(string1); // sRcvCharacterName
                 outPacket.encodeInt(int1); // nItemID
                 outPacket.encodeInt(int2); // nCount
             }
-            case BUY_PACKAGE_DONE -> {
+            case BuyPackage_Done -> {
                 outPacket.encodeByte(cashItemInfos.size());
                 for (CashItemInfo cii : cashItemInfos) {
                     cii.encode(outPacket); // GW_CashItemInfo (55)
                 }
                 outPacket.encodeShort(int1); // bonus maple points
             }
-            case GIFT_PACKAGE_DONE -> {
+            case GiftPackage_Done -> {
                 outPacket.encodeString(string1); // sRcvCharacterName
                 outPacket.encodeInt(int1); // nItemID
                 outPacket.encodeShort(0); // unused
                 outPacket.encodeShort(0); // ^
                 outPacket.encodeInt(int2); // [ %s ] \r\nwas sent to %s. \r\n%d NX Prepaid \r\nwere spent in the process.
             }
-            case BUY_NORMAL_DONE -> {
+            case BuyNormal_Done -> {
                 outPacket.encodeInt(longList.size());
                 for (long longItem : longList) {
                     outPacket.encodeLong(longItem);
                 }
             }
-            case PURCHASE_RECORD_DONE -> {
+            case PurchaseRecord_Done -> {
                 outPacket.encodeInt(int1);
                 outPacket.encodeByte(bool1); // nPurchaseRecord
             }
-            case CASH_GACHAPON_OPEN_DONE -> {
+            case CashGachaponOpen_Done -> {
                 outPacket.encodeLong(long1); // liSN
                 outPacket.encodeInt(int1); // nRemain
                 outPacket.encodeByte(bool1); // bIsCashItem
@@ -170,7 +170,7 @@ public final class CashItemResult implements Encodable {
                 outPacket.encodeInt(int2); // nItemID
                 outPacket.encodeInt(int3); // nCount
             }
-            case CASH_GACHAPON_COPY_DONE -> {
+            case CashGachaponCopy_Done -> {
                 outPacket.encodeByte(bool1); // bRandomItemCopy
                 outPacket.encodeByte(bool2);
                 outPacket.encodeInt(0); // unused
@@ -181,23 +181,23 @@ public final class CashItemResult implements Encodable {
                     cashItemInfo.encode(outPacket);
                 }
             }
-            case CHANGE_MAPLE_POINT_DONE -> {
+            case ChangeMaplePoint_Done -> {
                 outPacket.encodeLong(long1); // liSN to remove?
                 outPacket.encodeInt(int1); // You've received %d Maple Points.
             }
-            case CHANGE_MAPLE_POINT_FAILED -> {
+            case ChangeMaplePoint_Failed -> {
                 // You've failed in using a Maple Point Chip.
             }
-            case LOAD_LOCKER_FAILED, LOAD_GIFT_FAILED, LOAD_WISH_FAILED, SET_WISH_FAILED, USE_COUPON_FAILED,
-                    GIFT_FAILED, INC_SLOT_COUNT_FAILED, INC_TRUNK_COUNT_FAILED, INC_CHAR_SLOT_COUNT_FAILED,
-                    INC_BUY_CHAR_COUNT_FAILED, ENABLE_EQUIP_SLOT_EXT_FAILED, MOVE_L_TO_S_FAILED, MOVE_S_TO_L_FAILED,
-                    DESTROY_FAILED, EXPIRE_FAILED, REBATE_FAILED, PURCHASE_RECORD_FAILED, TRANSFER_WORLD_FAILED,
-                    CASH_GACHAPON_OPEN_FAILED, CASH_GACHAPON_COPY_FAILED -> {
+            case LoadLocker_Failed, LoadGift_Failed, LoadWish_Failed, SetWish_Failed, UseCoupon_Failed,
+                    Gift_Failed, IncSlotCount_Failed, IncTrunkCount_Failed, IncCharSlotCount_Failed,
+                    IncBuyCharCount_Failed, EnableEquipSlotExt_Failed, MoveLtoS_Failed, MoveStoL_Failed,
+                    DestroyFailed, Expire_Failed, Rebate_Failed, PurchaseRecord_Failed, TransferWorld_Failed,
+                    CashGachaponOpen_Failed, CashGachapon_Copy_Failed -> {
                 outPacket.encodeByte(reason.getValue()); // nReason
             }
-            case COUPLE_FAILED, BUY_PACKAGE_FAILED, GIFT_PACKAGE_FAILED, BUY_NORMAL_FAILED, FRIENDSHIP_FAILED -> {
+            case Couple_Failed, BuyPackage_Failed, GiftPackage_Failed, BuyNormal_Failed, Friendship_Failed -> {
                 outPacket.encodeByte(reason.getValue());
-                if (reason == CashItemFailReason.NO_STOCK || reason == CashItemFailReason.NOT_AVAILABLE_TIME) {
+                if (reason == CashItemFailReason.NoStock || reason == CashItemFailReason.NotAvailableTime) {
                     outPacket.encodeInt(int1); // nCommSN
                 }
             }
@@ -214,7 +214,7 @@ public final class CashItemResult implements Encodable {
     }
 
     public static CashItemResult loadLockerDone(Account account) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_LOCKER_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.LoadLocker_Done);
         result.cashItemInfos = account.getLocker().getCashItems(); // aCashItemInfo
         result.int1 = account.getTrunk().getSize(); // nTrunkCount
         result.int2 = account.getSlotCount(); // nCharacterSlotCount
@@ -224,20 +224,20 @@ public final class CashItemResult implements Encodable {
     }
 
     public static CashItemResult buyDone(CashItemInfo cashItemInfo) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.BUY_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.Buy_Done);
         result.cashItemInfo = cashItemInfo; // GW_CashItemInfo
         return result;
     }
 
     public static CashItemResult buyPackageDone(List<CashItemInfo> cashItemInfos) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.BUY_PACKAGE_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.BuyPackage_Done);
         result.cashItemInfos = cashItemInfos;
         result.int1 = 0; // bonus maple points
         return result;
     }
 
     public static CashItemResult giftDone(String receiverName, Commodity commodity) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.GIFT_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.Gift_Done);
         result.string1 = receiverName; // sRcvCharacterName
         result.int1 = commodity.getItemId(); // nItemID
         result.int2 = commodity.getCount(); // nCount
@@ -246,64 +246,64 @@ public final class CashItemResult implements Encodable {
     }
 
     public static CashItemResult loadGiftDone(List<Gift> gifts) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_GIFT_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.LoadGift_Done);
         result.gifts = gifts; // GW_GiftList
         return result;
     }
 
     public static CashItemResult loadWishDone(List<Integer> wishlist) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.LOAD_WISH_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.LoadWish_Done);
         result.intList = wishlist; // nWishList
         return result;
     }
 
     public static CashItemResult setWishDone(List<Integer> wishlist) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.SET_WISH_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.SetWish_Done);
         result.intList = wishlist; // nWishList
         return result;
     }
 
     public static CashItemResult incSlotCountDone(InventoryType inventoryType, int newSize) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.INC_SLOT_COUNT_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.IncSlotCount_Done);
         result.int1 = inventoryType.getValue(); // nTI
         result.int2 = newSize;
         return result;
     }
 
     public static CashItemResult incTrunkCountDone(int newSize) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.INC_TRUNK_COUNT_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.IncTrunkCount_Done);
         result.int1 = newSize; // nTrunkCount
         return result;
     }
 
     public static CashItemResult incCharSlotCountDone(int newSize) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.INC_CHAR_SLOT_COUNT_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.IncCharSlotCount_Done);
         result.int1 = newSize; // nCharacterSlotCount
         return result;
     }
 
     public static CashItemResult enableEquipSlotExtDone(int addDays) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.ENABLE_EQUIP_SLOT_EXT_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.EnableEquipSlotExt_Done);
         result.int1 = 0; // ext slot type?
         result.int2 = addDays;
         return result;
     }
 
     public static CashItemResult moveLtoSDone(int position, Item item) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.MOVE_L_TO_S_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.MoveLtoS_Done);
         result.int1 = position; // nPOS
         result.item = item; // GW_ItemSlotBase
         return result;
     }
 
     public static CashItemResult moveStoLDone(CashItemInfo cashItemInfo) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.MOVE_S_TO_L_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.MoveStoL_Done);
         result.cashItemInfo = cashItemInfo; // GW_CashItemInfo
         return result;
     }
 
     public static CashItemResult purchaseRecord(int commodityId, boolean purchaseRecord) {
-        final CashItemResult result = new CashItemResult(CashItemResultType.PURCHASE_RECORD_DONE);
+        final CashItemResult result = new CashItemResult(CashItemResultType.PurchaseRecord_Done);
         result.int1 = commodityId;
         result.bool1 = purchaseRecord;
         return result;

@@ -53,16 +53,16 @@ public final class InventoryOperation implements Encodable {
         outPacket.encodeByte(inventoryType.getValue());
         outPacket.encodeShort(position);
         switch (operationType) {
-            case NEW_ITEM -> {
+            case NewItem -> {
                 item.encode(outPacket); // GW_ItemSlotBase::Decode
             }
-            case ITEM_NUMBER -> {
+            case ItemNumber -> {
                 outPacket.encodeShort(newQuantity); // nNumber
             }
-            case POSITION -> {
+            case Position -> {
                 outPacket.encodeShort(newPosition);
             }
-            case DEL_ITEM -> {
+            case DelItem -> {
             }
             case EXP -> {
                 outPacket.encodeInt(item.getEquipData().getExp()); // pEquip.p->SetEXP
@@ -71,25 +71,25 @@ public final class InventoryOperation implements Encodable {
     }
 
     public static InventoryOperation newItem(InventoryType inventoryType, int position, Item item) {
-        final InventoryOperation op = new InventoryOperation(InventoryOperationType.NEW_ITEM, inventoryType, position);
+        final InventoryOperation op = new InventoryOperation(InventoryOperationType.NewItem, inventoryType, position);
         op.item = item;
         return op;
     }
 
     public static InventoryOperation itemNumber(InventoryType inventoryType, int position, int newQuantity) {
-        final InventoryOperation op = new InventoryOperation(InventoryOperationType.ITEM_NUMBER, inventoryType, position);
+        final InventoryOperation op = new InventoryOperation(InventoryOperationType.ItemNumber, inventoryType, position);
         op.newQuantity = newQuantity;
         return op;
     }
 
     public static InventoryOperation position(InventoryType inventoryType, int position, int newPosition) {
-        final InventoryOperation op = new InventoryOperation(InventoryOperationType.POSITION, inventoryType, position);
+        final InventoryOperation op = new InventoryOperation(InventoryOperationType.Position, inventoryType, position);
         op.newPosition = newPosition;
         return op;
     }
 
     public static InventoryOperation delItem(InventoryType inventoryType, int position) {
-        return new InventoryOperation(InventoryOperationType.DEL_ITEM, inventoryType, position);
+        return new InventoryOperation(InventoryOperationType.DelItem, inventoryType, position);
     }
 
     public static InventoryOperation exp(InventoryType inventoryType, int position, int newExp) {

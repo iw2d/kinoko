@@ -5,8 +5,8 @@ public enum FriendStatus {
     NORMAL(0),
     REQUEST(1),
     REFUSED(2),
-    CELL_AUTH(3),
-    MATE_ENABLE(4);
+    CELLAUTH(3),
+    MATEENABLE(4);
 
     private final int value;
 

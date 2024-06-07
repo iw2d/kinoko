@@ -163,8 +163,8 @@ public final class ItemHandler {
             // Update client
             user.write(WvsContext.inventoryOperation(updateResult.get(), false));
             if (levelUp) {
-                user.write(UserLocal.effect(Effect.pet(PetEffectType.LEVEL_UP, petIndex)));
-                user.getField().broadcastPacket(UserRemote.effect(user, Effect.pet(PetEffectType.LEVEL_UP, petIndex)), user);
+                user.write(UserLocal.effect(Effect.pet(PetEffectType.LevelUp, petIndex)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.pet(PetEffectType.LevelUp, petIndex)), user);
             }
 
             // Broadcast pet action
@@ -198,31 +198,31 @@ public final class ItemHandler {
 
             final CashItemType cashItemType = CashItemType.getByItemId(item.getItemId());
             switch (cashItemType) {
-                case SPEAKER_CHANNEL, SPEAKER_WORLD, SPEAKER_BRIDGE, SKULL_SPEAKER -> {
+                case SPEAKERCHANNEL, SPEAKERWORLD, SPEAKERBRIDGE, SKULLSPEAKER -> {
                     final String message = inPacket.decodeString();
-                    if (cashItemType == CashItemType.SPEAKER_WORLD || cashItemType == CashItemType.SKULL_SPEAKER) {
+                    if (cashItemType == CashItemType.SPEAKERWORLD || cashItemType == CashItemType.SKULLSPEAKER) {
                         final boolean whisperIcon = inPacket.decodeBoolean();
                     }
                     // TODO
                 }
-                case ITEM_SPEAKER -> {
+                case ITEMSPEAKER -> {
                     // TODO
                 }
-                case AD_BOARD -> {
+                case ADBOARD -> {
                     final String message = inPacket.decodeString();
                     user.setAdBoard(message);
                     user.getField().broadcastPacket(UserPacket.userAdBoard(user, message));
                 }
-                case KARMA_SCISSORS -> {
+                case KARMASCISSORS -> {
                     // CUIKarmaDlg::_SendConsumeCashItemUseRequest
                     final int inventoryType = inPacket.decodeInt(); // nTargetTI
                     final int targetItemPos = inPacket.decodeInt(); // nTargetPOS
                     // TODO
                 }
-                case ITEM_UPGRADE -> {
+                case ITEMUPGRADE -> {
                     // TODO
                 }
-                case CUBE_REVEAL -> {
+                case ITEM_UNRELEASE -> {
                     // CUIUnreleaseDlg::UnreleaseEquipItem
                     final int equipItemPos = inPacket.decodeInt();
                     // TODO
@@ -255,7 +255,7 @@ public final class ItemHandler {
         try (var locked = user.acquire()) {
             // Check portal scroll can be used
             final Field field = locked.get().getField();
-            if (field.hasFieldOption(FieldOption.PORTAL_SCROLL_LIMIT)) {
+            if (field.hasFieldOption(FieldOption.PORTALSCROLLLIMIT)) {
                 user.write(WvsContext.message(Message.system("You can't use it here in this map.")));
                 user.dispose();
                 return;

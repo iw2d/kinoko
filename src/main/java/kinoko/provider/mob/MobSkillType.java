@@ -8,15 +8,15 @@ import java.util.Map;
 
 public enum MobSkillType {
     // MOBSKILL
-    POWER_UP(100),
-    MAGIC_UP(101),
-    PGUARD_UP(102),
-    MGUARD_UP(103),
+    POWERUP(100),
+    MAGICUP(101),
+    PGUARDUP(102),
+    MGUARDUP(103),
     HASTE(104),
-    POWER_UP_M(110),
-    MAGIC_UP_M(111),
-    PGUARD_UP_M(112),
-    MGUARD_UP_M(113),
+    POWERUP_M(110),
+    MAGICUP_M(111),
+    PGUARDUP_M(112),
+    MGUARDUP_M(113),
     HEAL_M(114),
     HASTE_M(115),
     SEAL(120),
@@ -28,18 +28,18 @@ public enum MobSkillType {
     SLOW(126),
     DISPEL(127),
     ATTRACT(128),
-    BAN_MAP(129),
+    BANMAP(129),
     AREA_FIRE(130),
     AREA_POISON(131),
     REVERSE_INPUT(132),
     UNDEAD(133),
-    STOP_POTION(134),
-    STOP_MOTION(135),
+    STOPPORTION(134), // [sic]
+    STOPMOTION(135),
     FEAR(136),
     FROZEN(137),
-    PHYSICAL_IMMUNE(140),
-    MAGIC_IMMUNE(141),
-    HARD_SKIN(142),
+    PHYSICALIMMUNE(140),
+    MAGICIMMUNE(141),
+    HARDSKIN(142),
     PCOUNTER(143),
     MCOUNTER(144),
     PMCOUNTER(145),
@@ -50,10 +50,10 @@ public enum MobSkillType {
     ACC(154),
     EVA(155),
     SPEED(156),
-    SEAL_SKILL(157),
-    BALROG_COUNTER(158),
-    SPREAD_SKILL_FROM_USER(160),
-    HEAL_BY_DAMAGE(161),
+    SEALSKILL(157),
+    BALROGCOUNTER(158),
+    SPREADSKILLFROMUSER(160),
+    HEALBYDAMAGE(161),
     BIND(162),
     SUMMON(200),
     SUMMON_CUBE(201);
@@ -79,13 +79,13 @@ public enum MobSkillType {
 
     public final MobTemporaryStat getMobTemporaryStat() {
         return switch (this) {
-            case POWER_UP, POWER_UP_M -> MobTemporaryStat.PowerUp;
-            case MAGIC_UP, MAGIC_UP_M -> MobTemporaryStat.MagicUp;
-            case PGUARD_UP, PGUARD_UP_M -> MobTemporaryStat.PGuardUp;
-            case MGUARD_UP, MGUARD_UP_M -> MobTemporaryStat.MGuardUp;
+            case POWERUP, POWERUP_M -> MobTemporaryStat.PowerUp;
+            case MAGICUP, MAGICUP_M -> MobTemporaryStat.MagicUp;
+            case PGUARDUP, PGUARDUP_M -> MobTemporaryStat.PGuardUp;
+            case MGUARDUP, MGUARDUP_M -> MobTemporaryStat.MGuardUp;
             case HASTE, HASTE_M, SPEED -> MobTemporaryStat.Speed;
-            case PHYSICAL_IMMUNE -> MobTemporaryStat.PImmune;
-            case MAGIC_IMMUNE -> MobTemporaryStat.MImmune;
+            case PHYSICALIMMUNE -> MobTemporaryStat.PImmune;
+            case MAGICIMMUNE -> MobTemporaryStat.MImmune;
             case PAD -> MobTemporaryStat.PAD;
             case MAD -> MobTemporaryStat.MAD;
             case PDR -> MobTemporaryStat.PDR;
@@ -106,11 +106,11 @@ public enum MobSkillType {
             case POISON -> CharacterTemporaryStat.Poison;
             case SLOW -> CharacterTemporaryStat.Slow;
             case ATTRACT -> CharacterTemporaryStat.Attract;
-            case BAN_MAP -> CharacterTemporaryStat.BanMap;
+            case BANMAP -> CharacterTemporaryStat.BanMap;
             case REVERSE_INPUT -> CharacterTemporaryStat.ReverseInput;
             // case UNDEAD -> CharacterTemporaryStat.Undead;
-            case STOP_POTION -> CharacterTemporaryStat.StopPortion;
-            case STOP_MOTION -> CharacterTemporaryStat.StopMotion;
+            case STOPPORTION -> CharacterTemporaryStat.StopPortion;
+            case STOPMOTION -> CharacterTemporaryStat.StopMotion;
             case FEAR -> CharacterTemporaryStat.Fear;
             case FROZEN -> CharacterTemporaryStat.Frozen;
             default -> null;

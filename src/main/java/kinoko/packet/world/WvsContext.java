@@ -43,10 +43,10 @@ public final class WvsContext {
                     case JOB, STR, DEX, INT, LUK, AP, POP -> {
                         outPacket.encodeShort((short) statMap.get(stat));
                     }
-                    case FACE, HAIR, HP, MAX_HP, MP, MAX_MP, EXP, MONEY, TEMP_EXP -> {
+                    case FACE, HAIR, HP, MHP, MP, MMP, EXP, MONEY, TEMPEXP -> {
                         outPacket.encodeInt((int) statMap.get(stat));
                     }
-                    case PET_1, PET_2, PET_3 -> {
+                    case PETSN, PETSN2, PETSN3 -> {
                         outPacket.encodeLong((long) statMap.get(stat));
                     }
                     case SP -> {

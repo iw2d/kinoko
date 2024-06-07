@@ -8,7 +8,7 @@ public final class StatConstants {
     public static final int INC_MP_VARIANCE = 2; // 4 for pirates?
 
     public static boolean isAbilityUpStat(Stat stat) {
-        return stat == Stat.MAX_HP || stat == Stat.MAX_MP || stat == Stat.STR || stat == Stat.DEX || stat == Stat.INT || stat == Stat.LUK;
+        return stat == Stat.MHP || stat == Stat.MMP || stat == Stat.STR || stat == Stat.DEX || stat == Stat.INT || stat == Stat.LUK;
     }
 
     public static int getIncAp(int jobId) {

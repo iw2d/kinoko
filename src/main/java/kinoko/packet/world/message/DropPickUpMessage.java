@@ -11,7 +11,7 @@ public final class DropPickUpMessage extends Message {
     private int quantity;
 
     private DropPickUpMessage(DropPickUpMessageType pickUpMessageType) {
-        super(MessageType.DROP_PICK_UP);
+        super(MessageType.DropPickUp);
         this.pickUpMessageType = pickUpMessageType;
     }
 
@@ -19,7 +19,7 @@ public final class DropPickUpMessage extends Message {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case DROP_PICK_UP -> {
+            case DropPickUp -> {
                 outPacket.encodeByte(pickUpMessageType.getValue());
                 switch (pickUpMessageType) {
                     case MONEY -> {

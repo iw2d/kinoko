@@ -1,14 +1,15 @@
 package kinoko.packet.field.effect;
 
 public enum FieldEffectType {
-    SUMMON(0),
-    TREMBLE(1),
-    OBJECT(2),
-    SCREEN(3),
-    SOUND(4),
-    MOB_HP_TAG(5),
-    CHANGE_BGM(6),
-    REWORD_RULLET(7); // [sic]
+    // FieldEffect
+    Summmon(0),
+    Tremble(1),
+    Object(2),
+    Screen(3),
+    Sound(4),
+    MobHPTag(5),
+    ChangeBGM(6),
+    RewordRullet(7); // [sic]
 
     private final int value;
 

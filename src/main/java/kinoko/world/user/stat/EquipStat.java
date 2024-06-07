@@ -137,7 +137,7 @@ public final class EquipStat {
         final Inventory equipped = im.getEquipped();
         for (var entry : equipped.getItems().entrySet()) {
             final BodyPart bodyPart = BodyPart.getByValue(entry.getKey());
-            if (bodyPart == BodyPart.PENDANT_EXT && im.getExtSlotExpire().isBefore(Instant.now())) {
+            if (bodyPart == BodyPart.EXT_PENDANT1 && im.getExtSlotExpire().isBefore(Instant.now())) {
                 continue;
             }
             final Item item = entry.getValue();
@@ -218,11 +218,11 @@ public final class EquipStat {
 
             // Find applicable pet
             final Pet pet;
-            if (position == BodyPart.PET_EQUIP_1.getValue()) {
+            if (position == BodyPart.PETWEAR.getValue()) {
                 pet = user.getPet(0);
-            } else if (position == BodyPart.PET_EQUIP_2.getValue()) {
+            } else if (position == BodyPart.PETWEAR2.getValue()) {
                 pet = user.getPet(1);
-            } else if (position == BodyPart.PET_EQUIP_3.getValue()) {
+            } else if (position == BodyPart.PETWEAR3.getValue()) {
                 pet = user.getPet(2);
             } else {
                 pet = null;

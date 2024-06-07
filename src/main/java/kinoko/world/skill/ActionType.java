@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ActionType {
+    // ACT
     WALK1(0x0),
     WALK2(0x1),
     STAND1(0x2),

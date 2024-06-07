@@ -19,7 +19,7 @@ public class Message implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case QUEST_RECORD -> {
+            case QuestRecord -> {
                 outPacket.encodeShort(questRecord.getQuestId()); // nQuestID
                 outPacket.encodeByte(questRecord.getState().getValue());
                 switch (questRecord.getState()) {
@@ -34,25 +34,25 @@ public class Message implements Encodable {
                     }
                 }
             }
-            case CASH_ITEM_EXPIRE, INC_POP, INC_MONEY, INC_GP, GIVE_BUFF -> {
+            case CashItemExpire, IncPOP, IncMoney, IncGP, GiveBuff -> {
                 outPacket.encodeInt(int1); // nItemID
             }
-            case INC_SP -> {
+            case IncSP -> {
                 outPacket.encodeShort(int1); // nJob
                 outPacket.encodeByte(int2); // nSP
             }
-            case GENERAL_ITEM_EXPIRE, ITEM_PROTECT_EXPIRE, SKILL_EXPIRE -> {
+            case GeneralItemExpire, ItemProtectExpire, SkillExpire -> {
                 outPacket.encodeByte(1); // count
                 outPacket.encodeInt(int1); // nItemID / nSkillID
             }
-            case SYSTEM -> {
+            case System -> {
                 outPacket.encodeString(string1); // sChat
             }
-            case QUEST_RECORD_EX -> {
+            case QuestRecordEx -> {
                 outPacket.encodeShort(int1); // usQuestID
                 outPacket.encodeString(string1); // rawStr
             }
-            case ITEM_EXPIRE_REPLACE -> {
+            case ItemExpireReplace -> {
                 outPacket.encodeByte(1); // count
                 outPacket.encodeString(string1); // sChat
             }
@@ -63,45 +63,51 @@ public class Message implements Encodable {
     }
 
     public static Message questRecord(QuestRecord questRecord) {
-        final Message message = new Message(MessageType.QUEST_RECORD);
+        final Message message = new Message(MessageType.QuestRecord);
         message.questRecord = questRecord;
         return message;
     }
 
     public static Message questRecordEx(int questId, String value) {
-        final Message message = new Message(MessageType.QUEST_RECORD_EX);
+        final Message message = new Message(MessageType.QuestRecordEx);
         message.int1 = questId;
         message.string1 = value;
         return message;
     }
 
     public static Message incPop(int pop) {
-        final Message message = new Message(MessageType.INC_POP);
+        final Message message = new Message(MessageType.IncPOP);
         message.int1 = pop;
         return message;
     }
 
     public static Message incMoney(int money) {
-        final Message message = new Message(MessageType.INC_MONEY);
+        final Message message = new Message(MessageType.IncMoney);
         message.int1 = money;
         return message;
     }
 
     public static Message incSp(int job, int sp) {
-        final Message message = new Message(MessageType.INC_SP);
+        final Message message = new Message(MessageType.IncSP);
         message.int1 = job;
         message.int2 = sp;
         return message;
     }
 
+    public static Message skillExpired(int skillId) {
+        final Message message = new Message(MessageType.SkillExpire);
+        message.int1 = skillId;
+        return message;
+    }
+
     public static Message system(String text) {
-        final Message message = new Message(MessageType.SYSTEM);
+        final Message message = new Message(MessageType.System);
         message.string1 = text;
         return message;
     }
 
     public static Message system(String format, Object... args) {
-        final Message message = new Message(MessageType.SYSTEM);
+        final Message message = new Message(MessageType.System);
         message.string1 = String.format(format, args);
         return message;
     }

@@ -1,6 +1,7 @@
 package kinoko.provider.item;
 
 public enum ItemOptionType {
+    // Guessed type names from WZ.
     ANY_EQUIP(0),
     WEAPON(10),
     EXCEPT_WEAPON(11),

@@ -196,16 +196,16 @@ public final class ItemConstants {
                 return bodyPart == BodyPart.CAP;
             }
             case 101 -> {
-                return bodyPart == BodyPart.FACE_ACCESSORY;
+                return bodyPart == BodyPart.FACEACC;
             }
             case 102 -> {
-                return bodyPart == BodyPart.EYE_ACCESSORY;
+                return bodyPart == BodyPart.EYEACC;
             }
             case 103 -> {
-                return bodyPart == BodyPart.EAR_ACCESSORY;
+                return bodyPart == BodyPart.EARACC;
             }
             case 104, 105 -> {
-                return bodyPart == BodyPart.COAT || bodyPart == BodyPart.LONGCOAT;
+                return bodyPart == BodyPart.CLOTHES;
             }
             case 106 -> {
                 return bodyPart == BodyPart.PANTS;
@@ -214,7 +214,7 @@ public final class ItemConstants {
                 return bodyPart == BodyPart.SHOES;
             }
             case 108 -> {
-                return bodyPart == BodyPart.GLOVE;
+                return bodyPart == BodyPart.GLOVES;
             }
             case 109, 119, 134 -> {
                 return bodyPart == BodyPart.SHIELD;
@@ -223,14 +223,14 @@ public final class ItemConstants {
                 return bodyPart == BodyPart.CAPE;
             }
             case 111 -> {
-                return bodyPart == BodyPart.RING_1 ||
-                        bodyPart == BodyPart.RING_2 ||
-                        bodyPart == BodyPart.RING_3 ||
-                        bodyPart == BodyPart.RING_4;
+                return bodyPart == BodyPart.RING1 ||
+                        bodyPart == BodyPart.RING2 ||
+                        bodyPart == BodyPart.RING3 ||
+                        bodyPart == BodyPart.RING4;
             }
             case 112 -> {
                 return bodyPart == BodyPart.PENDANT ||
-                        bodyPart == BodyPart.PENDANT_EXT;
+                        bodyPart == BodyPart.EXT_PENDANT1;
             }
             case 113 -> {
                 return bodyPart == BodyPart.BELT;
@@ -258,51 +258,51 @@ public final class ItemConstants {
             }
             case 180 -> {
                 if (itemId == 1802100) {
-                    return bodyPart == BodyPart.PET_LABEL_RING_1 ||
-                            bodyPart == BodyPart.PET_LABEL_RING_2 ||
-                            bodyPart == BodyPart.PET_LABEL_RING_3;
+                    return bodyPart == BodyPart.PETRING_LABEL ||
+                            bodyPart == BodyPart.PETRING_LABEL2 ||
+                            bodyPart == BodyPart.PETRING_LABEL3;
                 }
-                return bodyPart == BodyPart.PET_EQUIP_1 ||
-                        bodyPart == BodyPart.PET_EQUIP_2 ||
-                        bodyPart == BodyPart.PET_EQUIP_3;
+                return bodyPart == BodyPart.PETWEAR ||
+                        bodyPart == BodyPart.PETWEAR2 ||
+                        bodyPart == BodyPart.PETWEAR3;
             }
             case 181 -> {
                 switch (itemId) {
                     case 1812000 -> {
-                        return bodyPart == BodyPart.PET_MESO_MAGNET_1 ||
-                                bodyPart == BodyPart.PET_MESO_MAGNET_2 ||
-                                bodyPart == BodyPart.PET_MESO_MAGNET_3;
+                        return bodyPart == BodyPart.PETABIL_MESO ||
+                                bodyPart == BodyPart.PETABIL_MESO2 ||
+                                bodyPart == BodyPart.PETABIL_MESO3;
                     }
                     case 1812001 -> {
-                        return bodyPart == BodyPart.PET_ITEM_POUCH_1 ||
-                                bodyPart == BodyPart.PET_ITEM_POUCH_2 ||
-                                bodyPart == BodyPart.PET_ITEM_POUCH_3;
+                        return bodyPart == BodyPart.PETABIL_ITEM ||
+                                bodyPart == BodyPart.PETABIL_ITEM2 ||
+                                bodyPart == BodyPart.PETABIL_ITEM3;
                     }
                     case 1812002 -> {
-                        return bodyPart == BodyPart.PET_AUTO_HP_POUCH;
+                        return bodyPart == BodyPart.PETABIL_HPCONSUME;
                     }
                     case 1812003 -> {
-                        return bodyPart == BodyPart.PET_AUTO_MP_POUCH;
+                        return bodyPart == BodyPart.PETABIL_MPCONSUME;
                     }
                     case 1812004 -> {
-                        return bodyPart == BodyPart.PET_WING_BOOTS_1 ||
-                                bodyPart == BodyPart.PET_WING_BOOTS_2 ||
-                                bodyPart == BodyPart.PET_WING_BOOTS_3;
+                        return bodyPart == BodyPart.PETABIL_SWEEPFORDROP ||
+                                bodyPart == BodyPart.PETABIL_SWEEPFORDROP2 ||
+                                bodyPart == BodyPart.PETABIL_SWEEPFORDROP3;
                     }
                     case 1812005 -> {
-                        return bodyPart == BodyPart.PET_BINOCULAR_1 ||
-                                bodyPart == BodyPart.PET_BINOCULAR_2 ||
-                                bodyPart == BodyPart.PET_BINOCULAR_3;
+                        return bodyPart == BodyPart.PETABIL_LONGRANGE ||
+                                bodyPart == BodyPart.PETABIL_LONGRANGE2 ||
+                                bodyPart == BodyPart.PETABIL_LONGRANGE3;
                     }
                     case 1812006 -> {
-                        return bodyPart == BodyPart.PET_MAGIC_SCALES_1 ||
-                                bodyPart == BodyPart.PET_MAGIC_SCALES_2 ||
-                                bodyPart == BodyPart.PET_MAGIC_SCALES_3;
+                        return bodyPart == BodyPart.PETABIL_PICKUPOTHERS ||
+                                bodyPart == BodyPart.PETABIL_PICKUPOTHERS2 ||
+                                bodyPart == BodyPart.PETABIL_PICKUPOTHERS3;
                     }
                     case 1812007 -> {
-                        return bodyPart == BodyPart.PET_ITEM_IGNORE_1 ||
-                                bodyPart == BodyPart.PET_ITEM_IGNORE_2 ||
-                                bodyPart == BodyPart.PET_ITEM_IGNORE_3;
+                        return bodyPart == BodyPart.PETABIL_IGNOREITEMS1 ||
+                                bodyPart == BodyPart.PETABIL_IGNOREITEMS2 ||
+                                bodyPart == BodyPart.PETABIL_IGNOREITEMS3;
                     }
                     default -> {
                         return false;
@@ -310,23 +310,23 @@ public final class ItemConstants {
                 }
             }
             case 182 -> {
-                return bodyPart == BodyPart.PET_LABEL_RING_1 ||
-                        bodyPart == BodyPart.PET_LABEL_RING_2 ||
-                        bodyPart == BodyPart.PET_LABEL_RING_3;
+                return bodyPart == BodyPart.PETRING_LABEL ||
+                        bodyPart == BodyPart.PETRING_LABEL2 ||
+                        bodyPart == BodyPart.PETRING_LABEL3;
             }
             case 183 -> {
-                return bodyPart == BodyPart.PET_QUOTE_RING_1 ||
-                        bodyPart == BodyPart.PET_QUOTE_RING_2 ||
-                        bodyPart == BodyPart.PET_QUOTE_RING_3;
+                return bodyPart == BodyPart.PETRING_QUOTE ||
+                        bodyPart == BodyPart.PETRING_QUOTE2 ||
+                        bodyPart == BodyPart.PETRING_QUOTE3;
             }
             case 190 -> {
-                return bodyPart == BodyPart.TAMING_MOB;
+                return bodyPart == BodyPart.TAMINGMOB;
             }
             case 191 -> {
                 return bodyPart == BodyPart.SADDLE;
             }
             case 192 -> {
-                return bodyPart == BodyPart.MOB_EQUIP;
+                return bodyPart == BodyPart.MOBEQUIP;
             }
             case 194 -> {
                 return bodyPart == BodyPart.DRAGON_MASK;

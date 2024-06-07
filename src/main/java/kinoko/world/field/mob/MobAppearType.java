@@ -1,6 +1,7 @@
 package kinoko.world.field.mob;
 
 public enum MobAppearType {
+    // MOBAPPEAR
     NORMAL(-1),
     REGEN(-2),
     REVIVED(-3),

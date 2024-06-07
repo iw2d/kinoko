@@ -28,7 +28,7 @@ public final class LoginPacket {
 
     public static OutPacket checkPasswordResultSuccess(Account account, byte[] clientKey) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
-        outPacket.encodeByte(LoginType.SUCCESS.getValue());
+        outPacket.encodeByte(LoginResultType.Success.getValue());
         outPacket.encodeByte(0); // 0 or 1
         outPacket.encodeInt(0);
 
@@ -50,7 +50,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket checkPasswordResultFail(LoginType failType) {
+    public static OutPacket checkPasswordResultFail(LoginResultType failType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
         outPacket.encodeByte(failType.getValue());
         outPacket.encodeByte(0);
@@ -60,7 +60,7 @@ public final class LoginPacket {
 
     public static OutPacket checkPasswordResultBlocked(int blockedType, Instant unblockDate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
-        outPacket.encodeByte(LoginType.BLOCKED.getValue());
+        outPacket.encodeByte(LoginResultType.Blocked.getValue());
         outPacket.encodeByte(0);
         outPacket.encodeInt(0);
         outPacket.encodeByte(blockedType);
@@ -114,7 +114,7 @@ public final class LoginPacket {
 
     public static OutPacket selectWorldResultSuccess(Account account) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
-        outPacket.encodeByte(LoginType.SUCCESS.getValue());
+        outPacket.encodeByte(LoginResultType.Success.getValue());
 
         outPacket.encodeByte(account.getCharacterList().size());
         for (AvatarData avatarData : account.getCharacterList()) {
@@ -129,7 +129,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectWorldResultFail(LoginType failType) {
+    public static OutPacket selectWorldResultFail(LoginResultType failType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
         outPacket.encodeByte(failType.getValue());
         return outPacket;
@@ -137,7 +137,7 @@ public final class LoginPacket {
 
     public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
-        outPacket.encodeByte(LoginType.SUCCESS.getValue());
+        outPacket.encodeByte(LoginResultType.Success.getValue());
         outPacket.encodeByte(0);
 
         outPacket.encodeArray(channelHost); // sin_addr
@@ -148,7 +148,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultFail(LoginType resultType) {
+    public static OutPacket selectCharacterResultFail(LoginResultType resultType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
         outPacket.encodeByte(resultType.getValue());
         outPacket.encodeByte(0); // Trouble logging in?
@@ -168,18 +168,18 @@ public final class LoginPacket {
 
     public static OutPacket createNewCharacterResultSuccess(CharacterData characterData) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
-        outPacket.encodeByte(LoginType.SUCCESS.getValue());
+        outPacket.encodeByte(LoginResultType.Success.getValue());
         AvatarData.from(characterData).encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket createNewCharacterResultFail(LoginType failType) {
+    public static OutPacket createNewCharacterResultFail(LoginResultType failType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
         outPacket.encodeByte(failType.getValue());
         return outPacket;
     }
 
-    public static OutPacket deleteCharacterResult(LoginType resultType, int characterId) {
+    public static OutPacket deleteCharacterResult(LoginResultType resultType, int characterId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.DELETE_CHARACTER_RESULT);
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(resultType.getValue());

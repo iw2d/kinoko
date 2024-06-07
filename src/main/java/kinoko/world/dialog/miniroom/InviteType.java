@@ -2,11 +2,11 @@ package kinoko.world.dialog.miniroom;
 
 public enum InviteType {
     // MRInvite
-    SUCCESS(0),
-    NO_CHARACTER(1),
-    CANNOT_INVITE(2),
-    REJECTED(3),
-    BLOCKED(4);
+    Success(0),
+    NoCharacter(1),
+    CannotInvite(2),
+    Rejected(3),
+    Blocked(4);
 
     private final int value;
 

@@ -39,13 +39,13 @@ public final class TrunkDialog implements Dialog {
         try (var lockedAccount = user.getAccount().acquire()) {
             final Trunk trunk = lockedAccount.get().getTrunk();
             switch (requestType) {
-                case GET_ITEM -> {
+                case GetItem -> {
                     inPacket.decodeByte(); // nItemID / 1000000, can be ignored
                     final int position = inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
                     // Check if user has enough money
                     final InventoryManager im = user.getInventoryManager();
                     if (im.getMoney() < npc.getTrunkGet()) {
-                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_NO_MONEY)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GetNoMoney)));
                         return;
                     }
                     // Check if user can move item from trunk to inventory
@@ -55,7 +55,7 @@ public final class TrunkDialog implements Dialog {
                         return;
                     }
                     if (!im.canAddItem(item)) {
-                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_UNKNOWN)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GetUnknown)));
                         return;
                     }
                     // Deduct money and move item
@@ -74,14 +74,14 @@ public final class TrunkDialog implements Dialog {
                     user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
                     user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                 }
-                case PUT_ITEM -> {
+                case PutItem -> {
                     final int position = inPacket.decodeShort(); // nPOS
                     final int itemId = inPacket.decodeInt(); // nItemID
                     final int quantity = inPacket.decodeShort(); // nCount
                     // Check if user has money and item
                     final InventoryManager im = user.getInventoryManager();
                     if (im.getMoney() < npc.getTrunkPut()) {
-                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_MONEY)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PutNoMoney)));
                         return;
                     }
                     final Item item = im.getInventoryByItemId(itemId).getItem(position);
@@ -91,7 +91,7 @@ public final class TrunkDialog implements Dialog {
                     }
                     // Check if trunk has space for item
                     if (trunk.getRemaining() == 0) {
-                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
+                        user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PutNoSpace)));
                         return;
                     }
                     // Deduct money and move item
@@ -108,19 +108,19 @@ public final class TrunkDialog implements Dialog {
                     user.write(FieldPacket.trunkResult(TrunkResult.putSuccess(trunk)));
                     user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                 }
-                case SORT_ITEM -> {
+                case SortItem -> {
                     // Sort items by item id (ascending), then quantity (descending)
                     trunk.getItems().sort(Comparator.comparing(Item::getItemId).thenComparing(Item::getQuantity, Comparator.reverseOrder()));
                     user.write(FieldPacket.trunkResult(TrunkResult.sortItem(trunk)));
                 }
-                case MONEY -> {
+                case Money -> {
                     final int money = inPacket.decodeInt(); // nMoney
                     final InventoryManager im = user.getInventoryManager();
                     if (money > 0) {
                         // CTrunkDlg::SendGetMoneyRequest
                         // Check if money can be moved from trunk to inventory
                         if (!trunk.canAddMoney(-money)) {
-                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GET_NO_MONEY)));
+                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.GetNoMoney)));
                             return;
                         }
                         if (!im.canAddMoney(money)) {
@@ -140,11 +140,11 @@ public final class TrunkDialog implements Dialog {
                         // CTrunkDlg::SendPutMoneyRequest
                         // Check if money can be moved from inventory to trunk
                         if (!im.canAddMoney(money)) {
-                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_MONEY)));
+                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PutNoMoney)));
                             return;
                         }
                         if (!trunk.canAddMoney(-money)) {
-                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PUT_NO_SPACE)));
+                            user.write(FieldPacket.trunkResult(TrunkResult.of(TrunkResultType.PutNoSpace)));
                             return;
                         }
                         // Move money
@@ -158,7 +158,7 @@ public final class TrunkDialog implements Dialog {
                         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                     }
                 }
-                case CLOSE_DIALOG -> {
+                case CloseDialog -> {
                     user.closeDialog();
                 }
             }

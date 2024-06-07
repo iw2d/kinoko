@@ -1,6 +1,7 @@
 package kinoko.world.item;
 
 public enum ItemType {
+    // ITEMSLOTTYPE
     EQUIP(1),
     BUNDLE(2),
     PET(3);

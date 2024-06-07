@@ -652,8 +652,8 @@ public final class AdminCommands {
                     Stat.DEX, cs.getBaseDex(),
                     Stat.INT, cs.getBaseInt(),
                     Stat.LUK, cs.getBaseLuk(),
-                    Stat.MAX_HP, cs.getMaxHp(),
-                    Stat.MAX_MP, cs.getMaxMp(),
+                    Stat.MHP, cs.getMaxHp(),
+                    Stat.MMP, cs.getMaxMp(),
                     Stat.EXP, cs.getExp()
             ), true));
 

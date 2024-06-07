@@ -25,7 +25,7 @@ public final class MiniRoomPacket {
         // CMiniRoomBaseDlg::OnInviteResultStatic
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_InviteResult);
         outPacket.encodeByte(inviteType.getValue());
-        if (inviteType != InviteType.NO_CHARACTER) {
+        if (inviteType != InviteType.NoCharacter) {
             outPacket.encodeString(targetName); // sTargetName
         }
         return outPacket;

@@ -1,6 +1,7 @@
 package kinoko.world.quest;
 
 public enum QuestState {
+    // QUEST_STATE
     NONE(0),
     PERFORM(1),
     COMPLETE(2),

@@ -3,7 +3,7 @@ package kinoko.handler.stage;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
-import kinoko.packet.stage.LoginType;
+import kinoko.packet.stage.LoginResultType;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
@@ -57,17 +57,17 @@ public final class LoginHandler {
             if (ServerConfig.AUTO_CREATE_ACCOUNT) {
                 DatabaseManager.accountAccessor().newAccount(username, password);
             }
-            c.write(LoginPacket.checkPasswordResultFail(LoginType.NOT_REGISTERED));
+            c.write(LoginPacket.checkPasswordResultFail(LoginResultType.NotRegistered));
             return;
         }
 
         final Account account = accountResult.get();
         if (c.getServerNode().isConnected(account)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginType.ALREADY_CONNECTED));
+            c.write(LoginPacket.checkPasswordResultFail(LoginResultType.AlreadyConnected));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginType.INCORRECT_PASSWORD));
+            c.write(LoginPacket.checkPasswordResultFail(LoginResultType.IncorrectPassword));
             return;
         }
 
@@ -100,7 +100,7 @@ public final class LoginHandler {
     public static void handleSelectWorld(Client c, InPacket inPacket) {
         final byte gameStartMode = inPacket.decodeByte();
         if (gameStartMode != 2) {
-            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginResultType.Unknown));
             return;
         }
 
@@ -112,18 +112,18 @@ public final class LoginHandler {
         final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
         final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(channelId);
         if (worldId != ServerConfig.WORLD_ID || childNodeResult.isEmpty()) {
-            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginResultType.Unknown));
             return;
         }
 
         // Check Account
         final Account account = c.getAccount();
         if (account == null) {
-            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginResultType.Unknown));
             return;
         }
         if (!c.getServerNode().isConnected(account)) {
-            c.write(LoginPacket.selectWorldResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectWorldResultFail(LoginResultType.Unknown));
             return;
         }
 
@@ -162,7 +162,7 @@ public final class LoginHandler {
 
         // Validate character
         if (!GameConstants.isValidCharacterName(name) || EtcProvider.isForbiddenName(name)) {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginType.INVALID_CHARACTER_NAME));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.InvalidCharacterName));
             return;
         }
         final Optional<RaceSelect> raceSelectResult = RaceSelect.getByRace(selectedRace);
@@ -194,7 +194,7 @@ public final class LoginHandler {
         // Create character
         final Optional<Integer> characterIdResult = DatabaseManager.characterAccessor().nextCharacterId();
         if (characterIdResult.isEmpty()) {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginType.TIMEOUT));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.Timeout));
             return;
         }
         final CharacterData characterData = new CharacterData(c.getAccount().getId());
@@ -249,7 +249,7 @@ public final class LoginHandler {
             }
             final BodyPart bodyPart;
             if (i == 4) {
-                bodyPart = BodyPart.COAT;
+                bodyPart = BodyPart.CLOTHES;
             } else if (i == 5) {
                 bodyPart = BodyPart.PANTS;
             } else if (i == 6) {
@@ -302,7 +302,7 @@ public final class LoginHandler {
             loadCharacterList(c);
             c.write(LoginPacket.createNewCharacterResultSuccess(characterData));
         } else {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginType.TIMEOUT));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.Timeout));
         }
     }
 
@@ -314,7 +314,7 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (ServerConfig.REQUIRE_SECONDARY_PASSWORD || account == null || !account.canSelectCharacter(characterId)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
         handleMigration(c, account, characterId);
@@ -328,20 +328,20 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) ||
                 !c.getServerNode().isConnected(account)) {
-            c.write(LoginPacket.deleteCharacterResult(LoginType.UNKNOWN, characterId));
+            c.write(LoginPacket.deleteCharacterResult(LoginResultType.Unknown, characterId));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
-            c.write(LoginPacket.deleteCharacterResult(LoginType.INCORRECT_SPW, characterId));
+            c.write(LoginPacket.deleteCharacterResult(LoginResultType.IncorrectSPW, characterId));
             return;
         }
         if (!DatabaseManager.characterAccessor().deleteCharacter(account.getId(), characterId)) {
-            c.write(LoginPacket.deleteCharacterResult(LoginType.DB_FAIL, characterId));
+            c.write(LoginPacket.deleteCharacterResult(LoginResultType.DBFail, characterId));
             return;
         }
 
         loadCharacterList(c);
-        c.write(LoginPacket.deleteCharacterResult(LoginType.SUCCESS, characterId));
+        c.write(LoginPacket.deleteCharacterResult(LoginResultType.Success, characterId));
     }
 
     @Handler(InHeader.ENABLE_SPW_REQUEST)
@@ -355,7 +355,7 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
                 account.hasSecondaryPassword() || !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
         handleMigration(c, account, characterId);
@@ -371,7 +371,7 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
                 !account.hasSecondaryPassword()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
@@ -390,7 +390,7 @@ public final class LoginHandler {
         // Check that client requirements are set
         if (c.getMachineId() == null || c.getMachineId().length != 16 || c.getClientKey() == null || c.getClientKey().length != 8) {
             log.error("Tried to submit migration request without client requirements for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
 
@@ -400,7 +400,7 @@ public final class LoginHandler {
         final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(targetChannelId);
         if (childNodeResult.isEmpty()) {
             log.error("Could not resolve target channel for migration request for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
         final RemoteChildNode targetNode = childNodeResult.get();
@@ -409,7 +409,7 @@ public final class LoginHandler {
         final MigrationInfo migrationInfo = MigrationInfo.from(targetChannelId, account.getId(), characterId, c.getMachineId(), c.getClientKey());
         if (!centralServerNode.submitMigrationRequest(migrationInfo)) {
             log.error("Failed to submit migration request for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginType.UNKNOWN));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
 

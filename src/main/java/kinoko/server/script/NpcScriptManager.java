@@ -124,22 +124,22 @@ public final class NpcScriptManager extends ScriptManager {
     }
 
     public boolean askYesNo(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_YES_NO, text));
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKYESNO, text));
         return handleAnswer().getAction() != 0;
     }
 
     public boolean askAccept(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_ACCEPT, text));
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKACCEPT, text));
         return handleAnswer().getAction() != 0;
     }
 
     public int askMenu(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_MENU, text));
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKMENU, text));
         return handleAnswer().getAnswer();
     }
 
     public int askSlideMenu(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASK_SLIDE_MENU, text));
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKSLIDEMENU, text));
         return handleAnswer().getAnswer();
     }
 

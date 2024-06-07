@@ -311,13 +311,13 @@ public final class InventoryManager {
             final InventoryType inventoryType = InventoryType.getByPosition(op.getInventoryType(), op.getPosition());
             final Inventory inventory = getInventoryByType(inventoryType);
             switch (op.getOperationType()) {
-                case NEW_ITEM -> {
+                case NewItem -> {
                     inventory.putItem(op.getPosition(), op.getItem());
                 }
-                case ITEM_NUMBER -> {
+                case ItemNumber -> {
                     inventory.getItem(op.getPosition()).setQuantity((short) op.getNewQuantity());
                 }
-                case POSITION -> {
+                case Position -> {
                     final Item firstItem = inventory.removeItem(op.getPosition());
                     if (op.getNewPosition() == 0) {
                         inventory.removeItem(op.getPosition(), firstItem);
@@ -328,7 +328,7 @@ public final class InventoryManager {
                         secondInventory.putItem(op.getNewPosition(), firstItem);
                     }
                 }
-                case DEL_ITEM -> {
+                case DelItem -> {
                     inventory.removeItem(op.getPosition());
                 }
                 case EXP -> {

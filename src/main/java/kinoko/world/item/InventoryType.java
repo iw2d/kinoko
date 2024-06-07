@@ -3,7 +3,8 @@ package kinoko.world.item;
 import kinoko.world.user.DBChar;
 
 public enum InventoryType {
-    EQUIPPED(0),
+    // IT
+    EQUIPPED(0), // added for implementation
     EQUIP(1),
     CONSUME(2),
     INSTALL(3),
@@ -22,11 +23,11 @@ public enum InventoryType {
 
     public final DBChar getFlag() {
         return switch (this) {
-            case EQUIPPED, EQUIP -> DBChar.ITEM_SLOT_EQUIP;
-            case CONSUME -> DBChar.ITEM_SLOT_CONSUME;
-            case INSTALL -> DBChar.ITEM_SLOT_INSTALL;
-            case ETC -> DBChar.ITEM_SLOT_ETC;
-            case CASH -> DBChar.ITEM_SLOT_CASH;
+            case EQUIPPED, EQUIP -> DBChar.ITEMSLOTEQUIP;
+            case CONSUME -> DBChar.ITEMSLOTCONSUME;
+            case INSTALL -> DBChar.ITEMSLOTINSTALL;
+            case ETC -> DBChar.ITEMSLOTETC;
+            case CASH -> DBChar.ITEMSLOTCASH;
         };
     }
 

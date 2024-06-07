@@ -45,7 +45,7 @@ public final class TradingRoom extends MiniRoom {
 
     @Override
     public MiniRoomType getType() {
-        return MiniRoomType.TRADING_ROOM;
+        return MiniRoomType.TradingRoom;
     }
 
     @Override
@@ -125,7 +125,7 @@ public final class TradingRoom extends MiniRoom {
                 }
                 // Complete trade
                 if (!completeTrade(locked)) {
-                    cancelTrade(locked, LeaveType.TRADE_FAIL); // Trade unsuccessful.
+                    cancelTrade(locked, LeaveType.TradeFail); // Trade unsuccessful.
                 }
             }
             case TRP_ItemCRC -> {
@@ -149,14 +149,14 @@ public final class TradingRoom extends MiniRoom {
         // Return items and update client
         assert user.isLocked();
         addItemsAndMoney(user, items.getOrDefault(user, Map.of()).values(), money.getOrDefault(user, 0));
-        user.write(MiniRoomPacket.leave(0, LeaveType.USER_REQUEST)); // no message
+        user.write(MiniRoomPacket.leave(0, LeaveType.UserRequest)); // no message
         user.setDialog(null);
         final User other = isInviter(user) ? getTarget() : getInviter();
         if (other != null) {
             try (var lockedOther = other.acquire()) {
                 // Return the other user's items and update their client
                 addItemsAndMoney(lockedOther.get(), items.getOrDefault(other, Map.of()).values(), money.getOrDefault(other, 0));
-                other.write(MiniRoomPacket.leave(1, LeaveType.CLOSED)); // Trade cancelled by the other character.
+                other.write(MiniRoomPacket.leave(1, LeaveType.Closed)); // Trade cancelled by the other character.
                 other.setDialog(null);
             }
         }
@@ -303,7 +303,7 @@ public final class TradingRoom extends MiniRoom {
             addItemsAndMoney(user, itemsForUser, moneyForUser);
             addItemsAndMoney(other, itemsForOther, moneyForOther);
             // Complete trade
-            broadcastPacket(MiniRoomPacket.leave(0, LeaveType.TRADE_DONE)); // Trade successful. Please check the results.
+            broadcastPacket(MiniRoomPacket.leave(0, LeaveType.TradeDone)); // Trade successful. Please check the results.
             user.setDialog(null);
             other.setDialog(null);
             close();

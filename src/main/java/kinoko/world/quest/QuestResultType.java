@@ -2,21 +2,21 @@ package kinoko.world.quest;
 
 public enum QuestResultType {
     // QuestRes
-    START_QUEST_TIMER(6),
-    END_QUEST_TIMER(7),
-    START_TIME_KEEP_QUEST_TIMER(8),
-    END_TIME_KEEP_QUEST_TIMER(9),
+    Start_QuestTimer(6),
+    End_QuestTimer(7),
+    Start_TimeKeepQuestTimer(8),
+    End_TimeKeepQuestTimer(9),
 
     // QuestRes_Act
-    SUCCESS(10),
-    FAILED_UNKNOWN(11),
-    FAILED_INVENTORY(12),
-    FAILED_MESO(13),
-    FAILED_PET(14), // unhandled
-    FAILED_EQUIPPED(15),
-    FAILED_ONLY_ITEM(16),
-    FAILED_TIME_OVER(17),
-    RESET_QUEST_TIMER(18);
+    Success(10),
+    Failed_Unknown(11),
+    Failed_Inventory(12),
+    Failed_Meso(13),
+    Failed_Pet(14),
+    Failed_Euipped(15),
+    Failed_OnlyItem(16),
+    Failed_TimeOver(17),
+    Reset_QuestTimer(18);
 
     private final byte value;
 

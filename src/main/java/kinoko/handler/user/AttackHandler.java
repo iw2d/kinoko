@@ -252,7 +252,7 @@ public final class AttackHandler {
         final int attackIndex = inPacket.decodeByte(); // nAttackIdx
 
         final HitInfo hitInfo = new HitInfo();
-        if (attackIndex > 0 || attackIndex == AttackIndex.MOB_PHYSICAL.getValue() || attackIndex == AttackIndex.MOB_MAGIC.getValue()) {
+        if (attackIndex > 0 || attackIndex == AttackIndex.Mob_Physical.getValue() || attackIndex == AttackIndex.Mob_Magic.getValue()) {
             hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
             hitInfo.damage = inPacket.decodeInt(); // nDamage
             hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
@@ -271,12 +271,12 @@ public final class AttackHandler {
                 inPacket.decodeShort(); // this->GetPos()->y
             }
             hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
-        } else if (attackIndex == AttackIndex.COUNTER.getValue() || attackIndex == AttackIndex.OBSTACLE.getValue()) {
+        } else if (attackIndex == AttackIndex.Counter.getValue() || attackIndex == AttackIndex.Obstacle.getValue()) {
             inPacket.decodeByte(); // 0
             hitInfo.damage = inPacket.decodeInt(); // nDamage
             hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
             inPacket.decodeByte(); // 0
-        } else if (attackIndex == AttackIndex.STAT.getValue()) {
+        } else if (attackIndex == AttackIndex.Stat.getValue()) {
             hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
             hitInfo.damage = inPacket.decodeInt(); // nDamage
             hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
@@ -290,8 +290,8 @@ public final class AttackHandler {
             // Resolve attack index and apply disease
             if (attackIndex > 0) {
                 if (!handleMobAttack(locked, attackIndex, hitInfo)) {
-                    log.error("Failed to resolve mob attack index : {}, defaulting to {}", attackIndex, AttackIndex.MOB_PHYSICAL);
-                    hitInfo.attackIndex = AttackIndex.MOB_PHYSICAL;
+                    log.error("Failed to resolve mob attack index : {}, defaulting to {}", attackIndex, AttackIndex.Mob_Physical);
+                    hitInfo.attackIndex = AttackIndex.Mob_Physical;
                 }
             } else {
                 hitInfo.attackIndex = AttackIndex.getByValue(attackIndex);
@@ -332,7 +332,7 @@ public final class AttackHandler {
             return false;
         }
         final MobAttack mobAttack = mobAttackResult.get();
-        hitInfo.attackIndex = mobAttack.isMagic() ? AttackIndex.MOB_MAGIC : AttackIndex.MOB_PHYSICAL;
+        hitInfo.attackIndex = mobAttack.isMagic() ? AttackIndex.Mob_Magic : AttackIndex.Mob_Physical;
 
         // Resolve mob skill, check if it applies a CTS
         final int skillId = mobAttack.getSkillId();

@@ -254,15 +254,15 @@ public final class CharacterStat implements Encodable {
     public Map<Stat, Object> addAp(Stat stat) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
         switch (stat) {
-            case MAX_HP -> {
+            case MHP -> {
                 final int incHp = StatConstants.getIncHpByAp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
                 setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.HP_MAX));
-                statMap.put(Stat.MAX_HP, getMaxHp());
+                statMap.put(Stat.MHP, getMaxHp());
             }
-            case MAX_MP -> {
+            case MMP -> {
                 final int incMp = StatConstants.getIncMpByAp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
                 setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
-                statMap.put(Stat.MAX_MP, getMaxMp());
+                statMap.put(Stat.MMP, getMaxMp());
             }
             case STR -> {
                 setBaseStr((short) Math.min(getBaseStr() + 1, Short.MAX_VALUE));
@@ -310,11 +310,11 @@ public final class CharacterStat implements Encodable {
         // Update max hp
         final int incHp = StatConstants.getIncHp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
         setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.HP_MAX));
-        statMap.put(Stat.MAX_HP, getMaxHp());
+        statMap.put(Stat.MHP, getMaxHp());
         // Update max mp
         final int incMp = StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
         setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
-        statMap.put(Stat.MAX_MP, getMaxMp());
+        statMap.put(Stat.MMP, getMaxMp());
         // Update ap (auto distribution for beginners)
         if (JobConstants.isBeginnerJob(getJob()) && getLevel() <= 11) {
             if (getLevel() <= 6) {

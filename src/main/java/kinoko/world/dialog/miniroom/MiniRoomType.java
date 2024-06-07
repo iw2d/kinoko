@@ -2,13 +2,13 @@ package kinoko.world.dialog.miniroom;
 
 public enum MiniRoomType {
     // MR
-    OMOK_ROOM(1),
-    MEMORY_GAME_ROOM(2),
-    TRADING_ROOM(3),
-    PERSONAL_SHOP(4),
-    ENTRUSTED_SHOP(5),
-    CASH_TRADING_ROOM(6),
-    TYPE_NO(7);
+    OmokRoom(1),
+    MemoryGameRoom(2),
+    TradingRoom(3),
+    PersonalShop(4),
+    EntrustedShop(5),
+    CashTradingRoom(6),
+    TypeNo(7);
 
     private final int value;
 

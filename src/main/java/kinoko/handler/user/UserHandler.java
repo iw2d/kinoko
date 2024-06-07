@@ -212,10 +212,10 @@ public final class UserHandler {
         }
         final NpcScriptManager scriptManager = scriptManagerResult.get();
         switch (lastMessageType) {
-            case SAY, SAY_IMAGE, ASK_YES_NO, ASK_ACCEPT -> {
+            case SAY, SAYIMAGE, ASKYESNO, ASKACCEPT -> {
                 scriptManager.submitAnswer(ScriptAnswer.withAction(action));
             }
-            case ASK_TEXT, ASK_BOX_TEXT -> {
+            case ASKTEXT, ASKBOXTEXT -> {
                 if (action == 1) {
                     final String answer = inPacket.decodeString(); // sInputStr_Result
                     scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
@@ -223,7 +223,7 @@ public final class UserHandler {
                     scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
                 }
             }
-            case ASK_NUMBER, ASK_MENU, ASK_SLIDE_MENU -> {
+            case ASKNUMBER, ASKMENU, ASKSLIDEMENU -> {
                 if (action == 1) {
                     final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
                     scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
@@ -231,7 +231,7 @@ public final class UserHandler {
                     scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
                 }
             }
-            case ASK_AVATAR, ASK_MEMBER_SHOP_AVATAR -> {
+            case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
                 if (action == 1) {
                     final byte answer = inPacket.decodeByte(); // nAvatarIndex
                     scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
@@ -416,7 +416,7 @@ public final class UserHandler {
                     partialItem.setItemSn(user.getNextItemSn());
                     partialItem.setQuantity(count);
                     // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, partialItem, 0);
+                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, 0);
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
                 } else {
                     // Full drop
@@ -427,7 +427,7 @@ public final class UserHandler {
                     // Remove item from client inventory
                     user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
                     // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NO_OWN, user, item, 0);
+                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, 0);
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
                 }
             } else {
@@ -630,7 +630,7 @@ public final class UserHandler {
                 user.dispose();
                 return;
             }
-            final Drop drop = Drop.money(DropOwnType.NO_OWN, user, money, user.getCharacterId());
+            final Drop drop = Drop.money(DropOwnType.NOOWN, user, money, user.getCharacterId());
             user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
             user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
         }
@@ -696,7 +696,7 @@ public final class UserHandler {
 
         final QuestRequestType questRequestType = QuestRequestType.getByValue(action);
         switch (questRequestType) {
-            case LOST_ITEM -> {
+            case LostItem -> {
                 final int size = inPacket.decodeInt();
                 final Set<Integer> lostItems = new HashSet<>();
                 for (int i = 0; i < size; i++) {
@@ -706,7 +706,7 @@ public final class UserHandler {
                     questInfo.restoreLostItems(locked, lostItems);
                 }
             }
-            case ACCEPT_QUEST -> {
+            case AcceptQuest -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final int itemPos = inPacket.decodeInt(); // CWvsContext.m_nQuestDeliveryItemPos
                 if (!questInfo.isAutoAlert()) {
@@ -725,7 +725,7 @@ public final class UserHandler {
                     user.validateStat();
                 }
             }
-            case COMPLETE_QUEST -> {
+            case CompleteQuest -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final int itemPos = inPacket.decodeInt(); // CWvsContext.m_nQuestDeliveryItemPos
                 if (!questInfo.isAutoAlert()) {
@@ -750,7 +750,7 @@ public final class UserHandler {
                 user.write(UserLocal.effect(Effect.questComplete()));
                 user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
             }
-            case RESIGN_QUEST -> {
+            case ResignQuest -> {
                 try (var locked = user.acquire()) {
                     final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(locked);
                     if (questRecordResult.isEmpty()) {
@@ -762,11 +762,11 @@ public final class UserHandler {
                     user.validateStat();
                 }
             }
-            case OPENING_SCRIPT, COMPLETE_SCRIPT -> {
+            case OpeningScript, CompleteScript -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
-                ScriptDispatcher.startQuestScript(user, templateId, questId, questRequestType == QuestRequestType.OPENING_SCRIPT);
+                ScriptDispatcher.startQuestScript(user, templateId, questId, questRequestType == QuestRequestType.OpeningScript);
             }
             case null -> {
                 log.error("Unknown quest action type : {}", action);
@@ -820,7 +820,7 @@ public final class UserHandler {
         inPacket.decodeInt(); // update_time
         final WhisperFlag whisperFlag = WhisperFlag.getByValue(flag);
         switch (whisperFlag) {
-            case LOCATION_REQUEST, LOCATION_REQUEST_F -> {
+            case LocationRequest, LocationRequest_F -> {
                 final String targetName = inPacket.decodeString();
                 // Query target user
                 final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
@@ -833,9 +833,9 @@ public final class UserHandler {
                     }
                     final RemoteUser remoteUser = userResult.get();
                     if (remoteUser.getChannelId() == user.getChannelId()) {
-                        user.write(FieldPacket.whisper(LocationResult.sameChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, remoteUser.getFieldId())));
+                        user.write(FieldPacket.whisper(LocationResult.sameChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, remoteUser.getFieldId())));
                     } else {
-                        user.write(FieldPacket.whisper(LocationResult.otherChannel(targetName, whisperFlag == WhisperFlag.LOCATION_REQUEST_F, remoteUser.getChannelId())));
+                        user.write(FieldPacket.whisper(LocationResult.otherChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, remoteUser.getChannelId())));
                     }
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
                     log.error("Exception caught while waiting for user query result", e);
@@ -843,7 +843,7 @@ public final class UserHandler {
                     e.printStackTrace();
                 }
             }
-            case WHISPER_REQUEST, WHISPER_REQUEST_MANAGER -> {
+            case WhisperRequest, WhisperRequestmanager -> {
                 final String targetName = inPacket.decodeString();
                 final String message = inPacket.decodeString();
                 // Query target user
@@ -863,7 +863,7 @@ public final class UserHandler {
                     e.printStackTrace();
                 }
             }
-            case WHISPER_BLOCKED -> {
+            case WhisperBlocked -> {
                 final String targetName = inPacket.decodeString();
                 user.getConnectedServer().submitUserPacketRequest(targetName, FieldPacket.whisper(WhisperResult.whisperBlocked(user.getCharacterName())));
             }
@@ -919,14 +919,14 @@ public final class UserHandler {
                     final int type = inPacket.decodeByte();
                     final MiniRoomType mrt = MiniRoomType.getByValue(type);
                     switch (mrt) {
-                        case OMOK_ROOM, MEMORY_GAME_ROOM -> {
+                        case OmokRoom, MemoryGameRoom -> {
                             // CWvsContext::SendCreateMiniGameRequest
                             final String title = inPacket.decodeString(); // sTitle
                             final boolean isPrivate = inPacket.decodeBoolean();
                             final String password = isPrivate ? inPacket.decodeString() : null;
                             final int gameSpec = inPacket.decodeByte(); // nGameSpec
                             // Check for required item
-                            if (mrt == MiniRoomType.OMOK_ROOM) {
+                            if (mrt == MiniRoomType.OmokRoom) {
                                 final int requiredItem = ItemConstants.OMOK_SET_BASE + gameSpec;
                                 if (requiredItem < ItemConstants.OMOK_SET_BASE || requiredItem > ItemConstants.OMOK_SET_END ||
                                         !user.getInventoryManager().hasItem(requiredItem, 1)) {
@@ -940,7 +940,7 @@ public final class UserHandler {
                                 }
                             }
                             // Create mini game room
-                            final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OMOK_ROOM ?
+                            final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OmokRoom ?
                                     new OmokGameRoom(title, password, gameSpec, user) :
                                     new MemoryGameRoom(title, password, gameSpec, user);
                             user.getField().getMiniRoomPool().addMiniRoom(miniGameRoom);
@@ -948,14 +948,14 @@ public final class UserHandler {
                             user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
                             miniGameRoom.updateBalloon();
                         }
-                        case TRADING_ROOM -> {
+                        case TradingRoom -> {
                             // CField::SendInviteTradingRoomMsg
                             final TradingRoom tradingRoom = new TradingRoom(user);
                             user.getField().getMiniRoomPool().addMiniRoom(tradingRoom);
                             user.setDialog(tradingRoom);
                             user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                         }
-                        case PERSONAL_SHOP, ENTRUSTED_SHOP -> {
+                        case PersonalShop, EntrustedShop -> {
                             // CWvsContext::SendOpenShopRequest
                             final String title = inPacket.decodeString(); // sTitle
                             inPacket.decodeByte(); // 0
@@ -981,18 +981,18 @@ public final class UserHandler {
                     final int targetId = inPacket.decodeInt();
                     final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
                     if (targetResult.isEmpty()) {
-                        user.write(MiniRoomPacket.inviteResult(InviteType.NO_CHARACTER, null)); // Unable to find the character.
-                        tradingRoom.cancelTrade(locked, LeaveType.USER_REQUEST);
+                        user.write(MiniRoomPacket.inviteResult(InviteType.NoCharacter, null)); // Unable to find the character.
+                        tradingRoom.cancelTrade(locked, LeaveType.UserRequest);
                         return;
                     }
                     try (var lockedTarget = targetResult.get().acquire()) {
                         final User target = lockedTarget.get();
                         if (target.getDialog() != null) {
-                            user.write(MiniRoomPacket.inviteResult(InviteType.CANNOT_INVITE, target.getCharacterName())); // '%s' is doing something else right now.
-                            tradingRoom.cancelTrade(locked, LeaveType.USER_REQUEST);
+                            user.write(MiniRoomPacket.inviteResult(InviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
+                            tradingRoom.cancelTrade(locked, LeaveType.UserRequest);
                             return;
                         }
-                        target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TRADING_ROOM, user.getCharacterName(), tradingRoom.getId()));
+                        target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TradingRoom, user.getCharacterName(), tradingRoom.getId()));
                     }
                 }
                 case MRP_InviteResult -> {
@@ -1013,7 +1013,7 @@ public final class UserHandler {
                     try (var lockedInviter = tradingRoom.getInviter().acquire()) {
                         final User inviter = lockedInviter.get();
                         inviter.write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
-                        tradingRoom.cancelTrade(lockedInviter, LeaveType.USER_REQUEST);
+                        tradingRoom.cancelTrade(lockedInviter, LeaveType.UserRequest);
                     }
                 }
                 case MRP_Enter -> {
@@ -1031,13 +1031,13 @@ public final class UserHandler {
                     // Resolve mini room
                     final Optional<MiniRoom> miniRoomResult = user.getField().getMiniRoomPool().getById(miniRoomId);
                     if (miniRoomResult.isEmpty()) {
-                        user.write(MiniRoomPacket.enterResult(EnterResultType.NO_ROOM)); // The room is already closed.
+                        user.write(MiniRoomPacket.enterResult(EnterResultType.NoRoom)); // The room is already closed.
                         return;
                     }
                     final MiniRoom miniRoom = miniRoomResult.get();
                     // Check password
                     if (!miniRoom.checkPassword(password)) {
-                        user.write(MiniRoomPacket.enterResult(EnterResultType.INVALID_PASSWORD)); // The password is incorrect.
+                        user.write(MiniRoomPacket.enterResult(EnterResultType.InvalidPassword)); // The password is incorrect.
                         return;
                     }
                     // Handle for each mini room type
@@ -1050,7 +1050,7 @@ public final class UserHandler {
                         user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                     } else if (miniRoom instanceof MiniGameRoom miniGameRoom) {
                         if (!miniGameRoom.addUser(user)) {
-                            user.write(MiniRoomPacket.enterResult(EnterResultType.FULL)); // You can't enter the room due to full capacity.
+                            user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
                             return;
                         }
                         user.setDialog(miniGameRoom);
@@ -1099,39 +1099,39 @@ public final class UserHandler {
         final int type = inPacket.decodeByte();
         final PartyRequestType requestType = PartyRequestType.getByValue(type);
         switch (requestType) {
-            case CREATE_NEW_PARTY -> {
+            case CreateNewParty -> {
                 // CField::SendCreateNewPartyMsg
                 if (user.getPartyId() != 0) {
-                    user.write(WvsContext.partyResult(PartyResult.of(PartyResultType.CREATE_NEW_PARTY_ALREADY_JOINED)));
+                    user.write(WvsContext.partyResult(PartyResult.of(PartyResultType.CreateNewParty_AlreadyJoined)));
                     return;
                 }
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.CREATE_NEW_PARTY));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.CreateNewParty));
             }
-            case WITHDRAW_PARTY -> {
+            case WithdrawParty -> {
                 // CField::SendWithdrawPartyMsg
                 inPacket.decodeByte(); // hardcoded 0
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.WITHDRAW_PARTY));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.WithdrawParty));
             }
-            case JOIN_PARTY -> {
+            case JoinParty -> {
                 // CWvsContext::OnPartyResult
                 final int inviterId = inPacket.decodeInt();
                 inPacket.decodeByte(); // unknown byte from INVITE_PARTY
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JOIN_PARTY, inviterId));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JoinParty, inviterId));
             }
-            case INVITE_PARTY -> {
+            case InviteParty -> {
                 // CField::SendJoinPartyMsg
                 final String targetName = inPacket.decodeString();
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.invite(targetName));
             }
-            case KICK_PARTY -> {
+            case KickParty -> {
                 // CField::SendKickPartyMsg
                 final int targetId = inPacket.decodeInt();
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.KICK_PARTY, targetId));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.KickParty, targetId));
             }
-            case CHANGE_PARTY_BOSS -> {
+            case ChangePartyBoss -> {
                 // CField::SendChangePartyBossMsg
                 final int targetId = inPacket.decodeInt();
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.CHANGE_PARTY_BOSS, targetId));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.ChangePartyBoss, targetId));
             }
             case null -> {
                 log.error("Unknown party request type : {}", type);
@@ -1147,18 +1147,18 @@ public final class UserHandler {
         final int type = inPacket.decodeByte();
         final PartyResultType resultType = PartyResultType.getByValue(type);
         switch (resultType) {
-            case INVITE_PARTY_SENT, INVITE_PARTY_BLOCKED_USER, INVITE_PARTY_ALREADY_INVITED,
-                    INVITE_PARTY_ALREADY_INVITED_BY_INVITER, INVITE_PARTY_REJECTED -> {
+            case InviteParty_Sent, InviteParty_BlockedUser, InviteParty_AlreadyInvited,
+                    InviteParty_AlreadyInvitedByInviter, InviteParty_Rejected -> {
                 final int inviterId = inPacket.decodeInt();
                 final String message = switch (resultType) {
                     // These messages are from the client string pool, but are not used (except for INVITE_PARTY_SENT)
-                    case INVITE_PARTY_SENT, INVITE_PARTY_BLOCKED_USER ->
+                    case InviteParty_Sent, InviteParty_BlockedUser ->
                             String.format("You have invited '%s' to your party.", user.getCharacterName());
-                    case INVITE_PARTY_ALREADY_INVITED ->
+                    case InviteParty_AlreadyInvited ->
                             String.format("'%s' is taking care of another invitation.", user.getCharacterName());
-                    case INVITE_PARTY_ALREADY_INVITED_BY_INVITER ->
+                    case InviteParty_AlreadyInvitedByInviter ->
                             String.format("You have already invited '%s' to your party.", user.getCharacterName());
-                    case INVITE_PARTY_REJECTED ->
+                    case InviteParty_Rejected ->
                             String.format("'%s' has declined the party request.", user.getCharacterName());
                     default -> {
                         throw new IllegalStateException("Unexpected party result type");
@@ -1166,9 +1166,9 @@ public final class UserHandler {
                 };
                 user.getConnectedServer().submitUserPacketReceive(inviterId, WvsContext.partyResult(PartyResult.message(message)));
             }
-            case INVITE_PARTY_ACCEPTED -> {
+            case InviteParty_Accepted -> {
                 final int inviterId = inPacket.decodeInt();
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JOIN_PARTY, inviterId));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.JoinParty, inviterId));
             }
             case null -> {
                 log.error("Unknown party result type : {}", type);
@@ -1184,13 +1184,13 @@ public final class UserHandler {
         final int type = inPacket.decodeByte();
         final FriendRequestType requestType = FriendRequestType.getByValue(type);
         switch (requestType) {
-            case LOAD_FRIEND -> {
+            case LoadFriend -> {
                 try (var locked = user.acquire()) {
                     FriendManager.updateFriendsFromDatabase(locked);
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LOAD_FRIEND_DONE);
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LoadFriend_Done);
                 }
             }
-            case SET_FRIEND -> {
+            case SetFriend -> {
                 final String targetName = inPacket.decodeString(); // sTarget
                 final String friendGroup = inPacket.decodeString(); // sFriendGroup
                 try (var locked = user.acquire()) {
@@ -1202,31 +1202,31 @@ public final class UserHandler {
                         final Friend friend = friendResult.get();
                         friend.setFriendGroup(friendGroup);
                         if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_Unknown))); // The request was denied due to an unknown error.
                             return;
                         }
                     } else {
                         // Create new friend - resolve target character id
                         final Optional<Tuple<Integer, Integer>> targetIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(targetName);
                         if (targetIdResult.isEmpty()) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_UNKNOWN_USER))); // That character is not registered.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_UnknownUser))); // That character is not registered.
                             return;
                         }
                         final int targetCharacterId = targetIdResult.get().getRight();
                         // Check if target can be added as a friend
                         final List<Friend> friends = fm.getRegisteredFriends();
                         if (friends.size() >= fm.getFriendMax()) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_FULL_ME))); // Your buddy list is full.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_FullMe))); // Your buddy list is full.
                             return;
                         }
                         if (friends.stream().anyMatch((friend) -> friend.getFriendId() == targetCharacterId)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_ALREADY_SET))); // That character is already registered as your buddy.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_AlreadySet))); // That character is already registered as your buddy.
                             return;
                         }
                         // Add target as friend, force creation
                         final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetName, friendGroup, FriendStatus.NORMAL);
                         if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SET_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_Unknown))); // The request was denied due to an unknown error.
                             return;
                         }
                         // Add user as a friend for target, not forced - existing friends, requests, and refused records
@@ -1239,10 +1239,10 @@ public final class UserHandler {
                     }
                     // Reload friends and update client
                     FriendManager.updateFriendsFromDatabase(locked);
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SET_FRIEND_DONE);
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SetFriend_Done);
                 }
             }
-            case ACCEPT_FRIEND -> {
+            case AcceptFriend -> {
                 final int friendId = inPacket.decodeInt();
                 try (var locked = user.acquire()) {
                     // Load friends from database
@@ -1250,23 +1250,23 @@ public final class UserHandler {
                     // Resolve friend from id
                     final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
                     if (friendResult.isEmpty()) {
-                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.ACCEPT_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.AcceptFriend_Unknown))); // The request was denied due to an unknown error.
                         return;
                     }
                     // Update friend status
                     final Friend friend = friendResult.get();
                     friend.setStatus(FriendStatus.NORMAL);
                     if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.ACCEPT_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.AcceptFriend_Unknown))); // The request was denied due to an unknown error.
                         return;
                     }
                     // Notify newly added friend (noop if offline)
                     user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
                     // Reload friends and update client
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SET_FRIEND_DONE);
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SetFriend_Done);
                 }
             }
-            case DELETE_FRIEND -> {
+            case DeleteFriend -> {
                 final int friendId = inPacket.decodeInt();
                 try (var locked = user.acquire()) {
                     // Load friends from database
@@ -1274,7 +1274,7 @@ public final class UserHandler {
                     // Resolve friend from id
                     final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
                     if (friendResult.isEmpty()) {
-                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DELETE_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DeleteFriend_Unknown))); // The request was denied due to an unknown error.
                         return;
                     }
                     final Friend friend = friendResult.get();
@@ -1283,20 +1283,20 @@ public final class UserHandler {
                     if (friend.getStatus() == FriendStatus.REQUEST) {
                         // Save friend request result
                         if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DELETE_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DeleteFriend_Unknown))); // The request was denied due to an unknown error.
                             return;
                         }
                     } else {
                         // Delete friend
                         if (!DatabaseManager.friendAccessor().deleteFriend(user.getCharacterId(), friend.getFriendId())) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DELETE_FRIEND_UNKNOWN))); // The request was denied due to an unknown error.
+                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DeleteFriend_Unknown))); // The request was denied due to an unknown error.
                             return;
                         }
                         // Notify deleted friend (noop if offline)
                         user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
                     }
                     // Reload friends and update client
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.DELETE_FRIEND_DONE);
+                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.DeleteFriend_Done);
                 }
             }
             case null -> {
@@ -1313,7 +1313,7 @@ public final class UserHandler {
         final int type = inPacket.decodeByte();
         final MemoRequestType requestType = MemoRequestType.getByValue(type);
         switch (requestType) {
-            case SEND -> {
+            case Send -> {
                 // CCashShop::OnCashItemResLoadGiftDone
                 final String receiverName = inPacket.decodeString();
                 final String message = inPacket.decodeString(); // sMsg
@@ -1330,20 +1330,20 @@ public final class UserHandler {
                 final Optional<Gift> giftResult = DatabaseManager.giftAccessor().getGiftByItemSn(itemSn);
                 if (giftResult.isEmpty()) {
                     log.error("Tried to send gift receipt memo for gift with item sn : {}", itemSn);
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 final Gift gift = giftResult.get();
                 if (!receiverName.equalsIgnoreCase(gift.getSender())) {
                     log.error("Tried to send gift receipt memo with mismatching sender name - expected : {}, actual : {}", gift.getSender(), receiverName);
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 // Resolve commodity
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(gift.getCommodityId());
                 if (commodityResult.isEmpty()) {
                     log.error("Failed to resolve gift commodity ID : {}", gift.getCommodityId());
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 final Set<CashItemInfo> cashItemInfos = new HashSet<>();
@@ -1354,7 +1354,7 @@ public final class UserHandler {
                         final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
                         if (cashItemInfoResult.isEmpty()) {
                             log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
-                            user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                             return;
                         }
                         cashItemInfos.add(cashItemInfoResult.get());
@@ -1364,7 +1364,7 @@ public final class UserHandler {
                     final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user);
                     if (cashItemInfoResult.isEmpty()) {
                         log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
-                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
                     cashItemInfos.add(cashItemInfoResult.get());
@@ -1379,7 +1379,7 @@ public final class UserHandler {
                     // Delete gift from DB and add to locker
                     if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
                         log.error("Failed to delete gift with sn : {}", gift.getGiftSn());
-                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
                     for (CashItemInfo cashItemInfo : cashItemInfos) {
@@ -1397,7 +1397,7 @@ public final class UserHandler {
                 // Create memo
                 final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
                 if (memoIdResult.isEmpty()) {
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 final Memo memo = new Memo(
@@ -1409,13 +1409,13 @@ public final class UserHandler {
                 );
                 // Save memo
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.GIFT_FAILED, CashItemFailReason.UNKNOWN))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 }
                 // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // memo result not required
                 // Notify memo recipient
                 user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, WvsContext.memoResult(MemoResult.receive()));
             }
-            case DELETE -> {
+            case Delete -> {
                 // CMemoListDlg::SetRet
                 final int size = inPacket.decodeByte(); // size
                 inPacket.decodeByte(); // number of memos where nFlag == 3 (INVITATION) -> number of slots required
@@ -1431,7 +1431,7 @@ public final class UserHandler {
                     if (memoType == MemoType.INVITATION) {
                         final int marriageId = inPacket.decodeInt(); // atoi(strMarriageNo)
                         log.error("Unhandled Marriage invitation memo for marriage ID : {}", marriageId);
-                    } else if (memoType == MemoType.INC_POP) {
+                    } else if (memoType == MemoType.INCPOP) {
                         try (var locked = user.acquire()) {
                             locked.get().addPop(1);
                             user.write(WvsContext.message(Message.incPop(1)));
@@ -1439,7 +1439,7 @@ public final class UserHandler {
                     }
                 }
             }
-            case LOAD -> {
+            case Load -> {
                 // CWvsContext::OnMemoNotify_Receive
                 final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
                 user.write(WvsContext.memoResult(MemoResult.load(memos)));
@@ -1489,7 +1489,7 @@ public final class UserHandler {
         try (var locked = user.acquire()) {
             final ConfigManager cm = locked.get().getConfigManager();
             switch (funcKeyMappedType) {
-                case KEY_MODIFIED -> {
+                case KeyModified -> {
                     final int size = inPacket.decodeInt(); // *(anChangedIdx.a - 1)
                     final Map<Integer, FuncKeyMapped> updates = new HashMap<>();
                     for (int i = 0; i < size; i++) {
@@ -1509,11 +1509,11 @@ public final class UserHandler {
                     }
                     cm.updateFuncKeyMap(updates);
                 }
-                case PET_CONSUME_ITEM_MODIFIED -> {
+                case PetConsumeItemModified -> {
                     final int itemId = inPacket.decodeInt(); // nPetConsumeItemID
                     cm.setPetConsumeItem(itemId);
                 }
-                case PET_CONSUME_MP_ITEM_MODIFIED -> {
+                case PetConsumeMPItemModified -> {
                     final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
                     cm.setPetConsumeMpItem(itemId);
                 }

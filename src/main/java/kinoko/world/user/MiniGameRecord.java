@@ -81,13 +81,13 @@ public final class MiniGameRecord {
     public void encode(MiniRoomType miniGameType, OutPacket outPacket) {
         outPacket.encodeInt(miniGameType.getValue());
         switch (miniGameType) {
-            case OMOK_ROOM -> {
+            case OmokRoom -> {
                 outPacket.encodeInt(omokGameWins);
                 outPacket.encodeInt(omokGameTies);
                 outPacket.encodeInt(omokGameLosses);
                 outPacket.encodeInt(Math.round(omokGameScore));
             }
-            case MEMORY_GAME_ROOM -> {
+            case MemoryGameRoom -> {
                 outPacket.encodeInt(memoryGameWins);
                 outPacket.encodeInt(memoryGameTies);
                 outPacket.encodeInt(memoryGameLosses);
@@ -105,7 +105,7 @@ public final class MiniGameRecord {
     public void processResult(MiniRoomType miniRoomType, MiniGameRecord other, boolean isDraw, boolean scorePenalty) {
         final double multiplier = scorePenalty ? 0.1 : 1.0;
         switch (miniRoomType) {
-            case OMOK_ROOM -> {
+            case OmokRoom -> {
                 // Update stats
                 if (isDraw) {
                     this.omokGameTies++;
@@ -122,7 +122,7 @@ public final class MiniGameRecord {
                 this.omokGameScore += (r1 * multiplier);
                 other.omokGameScore += (r2 * multiplier);
             }
-            case MEMORY_GAME_ROOM -> {
+            case MemoryGameRoom -> {
                 // Update stats
                 if (isDraw) {
                     this.memoryGameTies++;

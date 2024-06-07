@@ -2,12 +2,12 @@ package kinoko.world.quest;
 
 public enum QuestRequestType {
     // QuestReq
-    LOST_ITEM(0),
-    ACCEPT_QUEST(1),
-    COMPLETE_QUEST(2),
-    RESIGN_QUEST(3),
-    OPENING_SCRIPT(4),
-    COMPLETE_SCRIPT(5);
+    LostItem(0),
+    AcceptQuest(1),
+    CompleteQuest(2),
+    ResignQuest(3),
+    OpeningScript(4),
+    CompleteScript(5);
 
     private final int value;
 

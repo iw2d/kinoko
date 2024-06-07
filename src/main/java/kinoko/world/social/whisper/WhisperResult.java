@@ -19,21 +19,21 @@ public class WhisperResult implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(flag.getValue());
         switch (flag) {
-            case WHISPER_BLOCKED -> {
+            case WhisperBlocked -> {
                 outPacket.encodeString(characterName);
                 outPacket.encodeByte(bool1); // bool1 ? "Unable to find '%s'" : "'%s' have currently disabled whispers."
             }
-            case WHISPER_RESULT, WHISPER_RESULT_MANAGER -> {
+            case WhisperResult, WhisperResultManager -> {
                 outPacket.encodeString(characterName); // sReceiver
                 outPacket.encodeByte(bool1); // success
             }
-            case WHISPER_RECEIVE -> {
+            case WhisperReceive -> {
                 outPacket.encodeString(characterName);
                 outPacket.encodeByte(int1); // nChannelID
                 outPacket.encodeByte(bool1); // bFromAdmin
                 outPacket.encodeString(message);
             }
-            case WHISPER_RECEIVE_MANAGER -> {
+            case WhisperReceiveManager -> {
                 // CField::BlowWeather (item id : 5120025)
                 outPacket.encodeString(characterName);
                 outPacket.encodeByte(bool1); // unused
@@ -46,21 +46,21 @@ public class WhisperResult implements Encodable {
     }
 
     public static WhisperResult whisperBlocked(String targetCharacterName) {
-        final WhisperResult result = new WhisperResult(WhisperFlag.WHISPER_BLOCKED);
+        final WhisperResult result = new WhisperResult(WhisperFlag.WhisperBlocked);
         result.characterName = targetCharacterName;
         result.bool1 = false; // '%s' have currently disabled whispers.
         return result;
     }
 
     public static WhisperResult whisperResult(String targetCharacterName, boolean success) {
-        final WhisperResult result = new WhisperResult(WhisperFlag.WHISPER_RESULT);
+        final WhisperResult result = new WhisperResult(WhisperFlag.WhisperResult);
         result.characterName = targetCharacterName;
         result.bool1 = success;
         return result;
     }
 
     public static WhisperResult whisperReceive(int sourceChannelId, String sourceCharacterName, String message) {
-        final WhisperResult result = new WhisperResult(WhisperFlag.WHISPER_RECEIVE);
+        final WhisperResult result = new WhisperResult(WhisperFlag.WhisperReceive);
         result.characterName = sourceCharacterName;
         result.int1 = sourceChannelId; // nChannelID
         result.bool1 = false; // bFromAdmin

@@ -36,7 +36,7 @@ public final class FieldPacket {
         if (fieldType == FieldType.BATTLEFIELD || fieldType == FieldType.COCONUT) {
             // CField_BattleField::DecodeFieldSpecificData, CField_Coconut::DecodeFieldSpecificData
             outPacket.encodeByte(data); // nTeam
-        } else if (fieldType == FieldType.MONSTER_CARNIVAL || fieldType == FieldType.MONSTER_CARNIVAL_REVIVE) {
+        } else if (fieldType == FieldType.MONSTERCARNIVAL || fieldType == FieldType.MONSTERCARNIVALREVIVE) {
             // CField_MonsterCarnival::DecodeFieldSpecificData,  CField_MonsterCarnivalRevive::DecodeFieldSpecificData
             outPacket.encodeByte(data); // nTeamForMCarnival
         }
@@ -190,10 +190,10 @@ public final class FieldPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.SHOP_RESULT);
         outPacket.encodeByte(resultType.getValue());
         switch (resultType) {
-            case LIMIT_LEVEL_LESS, LIMIT_LEVEL_MORE -> {
+            case LimitLevel_Less, LimitLevel_More -> {
                 outPacket.encodeInt(0); // level
             }
-            case SERVER_MSG -> {
+            case ServerMsg -> {
                 outPacket.encodeByte(message != null && !message.isEmpty());
                 outPacket.encodeString(message);
             }

@@ -24,7 +24,7 @@ public final class SkillEffect extends Effect {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case SKILL_USE -> {
+            case SkillUse -> {
                 outPacket.encodeInt(skillId); // nSkillID
                 outPacket.encodeByte(charLevel); // nCharLevel
                 outPacket.encodeByte(skillLevel); // nSLV
@@ -49,16 +49,16 @@ public final class SkillEffect extends Effect {
                     outPacket.encodeByte(left); // bLeft
                 }
             }
-            case SKILL_AFFECTED, SKILL_SPECIAL_AFFECTED -> {
+            case SkillAffected, SkillSpecialAffected -> {
                 outPacket.encodeInt(skillId); // nSkillID
                 outPacket.encodeByte(skillLevel); // nSLV
             }
-            case SKILL_AFFECTED_SELECT -> {
+            case SkillAffected_Select -> {
                 outPacket.encodeInt(info); // nSelect
                 outPacket.encodeInt(skillId); // nSkillID
                 outPacket.encodeByte(skillLevel); // nSLV
             }
-            case SKILL_SPECIAL -> {
+            case SkillSpecial -> {
                 outPacket.encodeInt(skillId); // nSkillID
                 if (skillId == 4341003) {
                     outPacket.encodeInt(positionX); // nTimeBombX
@@ -74,7 +74,7 @@ public final class SkillEffect extends Effect {
     }
 
     public static SkillEffect skillUse(int skillId, int skillLevel, int charLevel) {
-        final SkillEffect effect = new SkillEffect(EffectType.SKILL_USE);
+        final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
         effect.charLevel = charLevel;
@@ -82,7 +82,7 @@ public final class SkillEffect extends Effect {
     }
 
     public static SkillEffect skillAffected(int skillId, int skillLevel) {
-        final SkillEffect effect = new SkillEffect(EffectType.SKILL_AFFECTED);
+        final SkillEffect effect = new SkillEffect(EffectType.SkillAffected);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
         return effect;

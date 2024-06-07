@@ -2,10 +2,10 @@ package kinoko.packet.user.effect;
 
 public enum PetEffectType {
     // PetEffect
-    LEVEL_UP(0),
-    TELEPORT(1),
-    HANG_ON_BACK(2),
-    EVOLUTION(3);
+    LevelUp(0),
+    Teleport(1),
+    HangOnBack(2),
+    Evolution(3);
 
     private final int value;
 

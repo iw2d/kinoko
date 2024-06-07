@@ -2,13 +2,13 @@ package kinoko.world.social.party;
 
 public enum PartyRequestType {
     // PartyReq
-    LOAD_PARTY(0),
-    CREATE_NEW_PARTY(1),
-    WITHDRAW_PARTY(2),
-    JOIN_PARTY(3),
-    INVITE_PARTY(4),
-    KICK_PARTY(5),
-    CHANGE_PARTY_BOSS(6);
+    LoadParty(0),
+    CreateNewParty(1),
+    WithdrawParty(2),
+    JoinParty(3),
+    InviteParty(4),
+    KickParty(5),
+    ChangePartyBoss(6);
 
     private final int value;
 

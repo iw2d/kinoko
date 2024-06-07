@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum MobActionType {
+    // MOBACT
     MOVE(0),
     STAND(1),
     JUMP(2),

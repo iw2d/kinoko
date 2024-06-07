@@ -18,28 +18,28 @@ public final class QuestResult implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(questResultType.getValue());
         switch (questResultType) {
-            case START_QUEST_TIMER -> {
+            case Start_QuestTimer -> {
                 outPacket.encodeShort(1);
                 outPacket.encodeShort(questId);
                 outPacket.encodeInt(time);
             }
-            case END_QUEST_TIMER -> {
+            case End_QuestTimer -> {
                 outPacket.encodeShort(1);
                 outPacket.encodeShort(questId);
             }
-            case START_TIME_KEEP_QUEST_TIMER -> {
+            case Start_TimeKeepQuestTimer -> {
                 outPacket.encodeShort(questId);
                 outPacket.encodeInt(time);
             }
-            case END_TIME_KEEP_QUEST_TIMER, FAILED_INVENTORY, FAILED_TIME_OVER, RESET_QUEST_TIMER -> {
+            case End_TimeKeepQuestTimer, Failed_Inventory, Failed_TimeOver, Reset_QuestTimer -> {
                 outPacket.encodeShort(questId);
             }
-            case SUCCESS -> {
+            case Success -> {
                 outPacket.encodeShort(questId);
                 outPacket.encodeInt(templateId);
                 outPacket.encodeShort(nextQuestId);
             }
-            case FAILED_MESO, FAILED_PET, FAILED_EQUIPPED, FAILED_ONLY_ITEM -> {
+            case Failed_Meso, Failed_Pet, Failed_Euipped, Failed_OnlyItem -> {
             }
         }
     }
@@ -49,7 +49,7 @@ public final class QuestResult implements Encodable {
     }
 
     public static QuestResult success(int questId, int templateId, int nextQuestId) {
-        final QuestResult questResult = new QuestResult(QuestResultType.SUCCESS);
+        final QuestResult questResult = new QuestResult(QuestResultType.Success);
         questResult.questId = questId;
         questResult.templateId = templateId;
         questResult.nextQuestId = nextQuestId;
@@ -57,7 +57,7 @@ public final class QuestResult implements Encodable {
     }
 
     public static QuestResult failedInventory(int questId) {
-        final QuestResult questResult = new QuestResult(QuestResultType.FAILED_INVENTORY);
+        final QuestResult questResult = new QuestResult(QuestResultType.Failed_Inventory);
         questResult.questId = questId;
         return questResult;
     }

@@ -387,17 +387,17 @@ public final class User extends Life implements Lockable<User> {
         if (petIndex == 0) {
             getCharacterStat().setPetSn1(petSn);
             if (!isMigrate) {
-                write(WvsContext.statChanged(Stat.PET_1, petSn, true));
+                write(WvsContext.statChanged(Stat.PETSN, petSn, true));
             }
         } else if (petIndex == 1) {
             getCharacterStat().setPetSn2(petSn);
             if (!isMigrate) {
-                write(WvsContext.statChanged(Stat.PET_2, petSn, true));
+                write(WvsContext.statChanged(Stat.PETSN2, petSn, true));
             }
         } else if (petIndex == 2) {
             getCharacterStat().setPetSn3(petSn);
             if (!isMigrate) {
-                write(WvsContext.statChanged(Stat.PET_3, petSn, true));
+                write(WvsContext.statChanged(Stat.PETSN3, petSn, true));
             }
         }
     }

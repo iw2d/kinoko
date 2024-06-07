@@ -301,7 +301,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 if (money <= 0) {
                     continue;
                 }
-                drops.add(Drop.money(DropOwnType.USER_OWN, this, money, owner.getCharacterId()));
+                drops.add(Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId()));
             } else {
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
                 if (itemInfoResult.isEmpty()) {
@@ -309,7 +309,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 }
                 final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
                 final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-                drops.add(Drop.item(DropOwnType.USER_OWN, this, item, owner.getCharacterId(), reward.getQuestId()));
+                drops.add(Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId()));
             }
         }
         // Add drops to field

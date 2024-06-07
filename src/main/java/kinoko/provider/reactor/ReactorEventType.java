@@ -1,9 +1,7 @@
 package kinoko.provider.reactor;
 
-/**
- * Guessed type names from WZ.
- */
 public enum ReactorEventType {
+    // Guessed type names from WZ.
     HIT(0),
     UNK_1(1),
     UNK_2(2),

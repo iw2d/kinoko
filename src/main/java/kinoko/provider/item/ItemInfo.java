@@ -87,7 +87,7 @@ public final class ItemInfo {
             }
         }
         // Check pet equip
-        if (ItemConstants.isCorrectBodyPart(getItemId(), BodyPart.PET_EQUIP_1, gender)) {
+        if (ItemConstants.isCorrectBodyPart(getItemId(), BodyPart.PETWEAR, gender)) {
             // CItemInfo::EQUIPITEM::IsItemSuitedForPet
             if (!ItemConstants.isPetEquipItem(getItemId()) || !ItemConstants.isPet(petTemplateId) ||
                     !ItemProvider.isPetEquipSuitable(getItemId(), petTemplateId)) {

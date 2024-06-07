@@ -18,17 +18,17 @@ public final class TrunkResult implements Encodable {
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
-        if (type == TrunkResultType.OPEN_TRUNK_DLG) {
+        if (type == TrunkResultType.OpenTrunkDlg) {
             outPacket.encodeInt(templateId); // dwNpcTemplateID
         }
         switch (type) {
-            case GET_SUCCESS, PUT_SUCCESS, SORT_ITEM, OPEN_TRUNK_DLG -> {
+            case GetSuccess, PutSuccess, SortItem, OpenTrunkDlg -> {
                 trunk.encode(outPacket);
             }
-            case MONEY_SUCCESS -> {
+            case MoneySuccess -> {
                 trunk.encodeItems(DBChar.MONEY, outPacket);
             }
-            case SERVER_MSG -> {
+            case ServerMsg -> {
                 outPacket.encodeByte(true);
                 outPacket.encodeString(message);
             }
@@ -40,38 +40,38 @@ public final class TrunkResult implements Encodable {
     }
 
     public static TrunkResult open(Trunk trunk, int templateId) {
-        final TrunkResult result = new TrunkResult(TrunkResultType.OPEN_TRUNK_DLG);
+        final TrunkResult result = new TrunkResult(TrunkResultType.OpenTrunkDlg);
         result.trunk = trunk;
         result.templateId = templateId;
         return result;
     }
 
     public static TrunkResult getSuccess(Trunk trunk) {
-        final TrunkResult result = new TrunkResult(TrunkResultType.GET_SUCCESS);
+        final TrunkResult result = new TrunkResult(TrunkResultType.GetSuccess);
         result.trunk = trunk;
         return result;
     }
 
     public static TrunkResult putSuccess(Trunk trunk) {
-        final TrunkResult result = new TrunkResult(TrunkResultType.PUT_SUCCESS);
+        final TrunkResult result = new TrunkResult(TrunkResultType.PutSuccess);
         result.trunk = trunk;
         return result;
     }
 
     public static TrunkResult sortItem(Trunk trunk) {
-        final TrunkResult result = new TrunkResult(TrunkResultType.SORT_ITEM);
+        final TrunkResult result = new TrunkResult(TrunkResultType.SortItem);
         result.trunk = trunk;
         return result;
     }
 
     public static TrunkResult moneySuccess(Trunk trunk) {
-        final TrunkResult result = new TrunkResult(TrunkResultType.MONEY_SUCCESS);
+        final TrunkResult result = new TrunkResult(TrunkResultType.MoneySuccess);
         result.trunk = trunk;
         return result;
     }
 
     public static TrunkResult message(String message) {
-        final TrunkResult result = new TrunkResult(TrunkResultType.SERVER_MSG);
+        final TrunkResult result = new TrunkResult(TrunkResultType.ServerMsg);
         result.message = message;
         return result;
     }

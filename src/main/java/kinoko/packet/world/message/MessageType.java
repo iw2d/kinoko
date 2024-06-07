@@ -1,21 +1,22 @@
 package kinoko.packet.world.message;
 
 public enum MessageType {
-    DROP_PICK_UP(0),
-    QUEST_RECORD(1),
-    CASH_ITEM_EXPIRE(2),
-    INC_EXP(3),
-    INC_SP(4),
-    INC_POP(5),
-    INC_MONEY(6),
-    INC_GP(7),
-    GIVE_BUFF(8),
-    GENERAL_ITEM_EXPIRE(9),
-    SYSTEM(10),
-    QUEST_RECORD_EX(11),
-    ITEM_PROTECT_EXPIRE(12),
-    ITEM_EXPIRE_REPLACE(13),
-    SKILL_EXPIRE(14);
+    // MS
+    DropPickUp(0),
+    QuestRecord(1),
+    CashItemExpire(2),
+    IncSEXP(3),
+    IncSP(4),
+    IncPOP(5),
+    IncMoney(6),
+    IncGP(7),
+    GiveBuff(8),
+    GeneralItemExpire(9),
+    System(10),
+    QuestRecordEx(11),
+    ItemProtectExpire(12),
+    ItemExpireReplace(13),
+    SkillExpire(14);
 
     private final byte value;
 

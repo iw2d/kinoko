@@ -1,13 +1,14 @@
 package kinoko.provider.map;
 
 public enum PortalType {
-    START_POINT(0),
+    // PORTALTYPE
+    STARTPOINT(0),
     INVISIBLE(1),
     VISIBLE(2),
     COLLISION(3),
     CHANGEABLE(4),
     CHANGEABLE_INVISIBLE(5),
-    TOWN_PORTAL_POINT(6),
+    TOWNPORTAL_POINT(6),
     SCRIPT(7),
     SCRIPT_INVISIBLE(8),
     COLLISION_SCRIPT(9),

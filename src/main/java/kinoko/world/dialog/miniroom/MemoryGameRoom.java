@@ -15,7 +15,7 @@ public final class MemoryGameRoom extends MiniGameRoom {
 
     @Override
     public MiniRoomType getType() {
-        return MiniRoomType.MEMORY_GAME_ROOM;
+        return MiniRoomType.MemoryGameRoom;
     }
 
     @Override

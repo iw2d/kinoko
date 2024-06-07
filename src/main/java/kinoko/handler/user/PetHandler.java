@@ -218,8 +218,8 @@ public final class PetHandler {
                 // Update client
                 user.write(WvsContext.inventoryOperation(updateResult.get(), false));
                 if (levelUp) {
-                    user.write(UserLocal.effect(Effect.pet(PetEffectType.LEVEL_UP, petIndex)));
-                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.pet(PetEffectType.LEVEL_UP, petIndex)), user);
+                    user.write(UserLocal.effect(Effect.pet(PetEffectType.LevelUp, petIndex)));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.pet(PetEffectType.LevelUp, petIndex)), user);
                 }
             }
 

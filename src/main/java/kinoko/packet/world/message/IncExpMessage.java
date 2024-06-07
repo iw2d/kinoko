@@ -9,14 +9,14 @@ public final class IncExpMessage extends Message {
     private boolean quest;
 
     private IncExpMessage() {
-        super(MessageType.INC_EXP);
+        super(MessageType.IncSEXP);
     }
 
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(type.getValue());
         switch (type) {
-            case INC_EXP -> {
+            case IncSEXP -> {
                 outPacket.encodeByte(white); // white
                 outPacket.encodeInt(exp); // exp
                 outPacket.encodeByte(quest); // bOnQuest
