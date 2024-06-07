@@ -24,7 +24,7 @@ import java.util.Optional;
 public final class SummonedHandler {
     private static final Logger log = LogManager.getLogger(SummonedHandler.class);
 
-    @Handler(InHeader.SUMMONED_MOVE)
+    @Handler(InHeader.SummonedMove)
     public static void handleSummonedMove(User user, InPacket inPacket) {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
@@ -40,7 +40,7 @@ public final class SummonedHandler {
         user.getField().broadcastPacket(SummonedPacket.summonedMove(user, summoned, movePath), user);
     }
 
-    @Handler(InHeader.SUMMONED_ATTACK)
+    @Handler(InHeader.SummonedAttack)
     public static void handleSummonedAttack(User user, InPacket inPacket) {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
@@ -50,7 +50,7 @@ public final class SummonedHandler {
             return;
         }
         final Summoned summoned = summonedResult.get();
-        final Attack attack = new Attack(OutHeader.SUMMONED_ATTACK);
+        final Attack attack = new Attack(OutHeader.SummonedAttack);
 
         inPacket.decodeInt(); // ~drInfo.dr0
         inPacket.decodeInt(); // ~drInfo.dr1

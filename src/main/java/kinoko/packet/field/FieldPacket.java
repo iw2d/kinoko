@@ -19,20 +19,20 @@ public final class FieldPacket {
     // CField::OnPacket ------------------------------------------------------------------------------------------------
 
     public static OutPacket transferFieldReqIgnored(TransferFieldType transferFieldType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TRANSFER_FIELD_REQ_IGNORED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TransferFieldReqIgnored);
         outPacket.encodeByte(transferFieldType.getValue());
         return outPacket;
     }
 
     public static OutPacket transferChannelReqIgnored(TransferChannelType transferChannelType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TRANSFER_CHANNEL_REQ_IGNORED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TransferChannelReqIgnored);
         outPacket.encodeByte(transferChannelType.getValue());
         return outPacket;
     }
 
     public static OutPacket fieldSpecificData(FieldType fieldType, int data) {
         // field->DecodeFieldSpecificData
-        final OutPacket outPacket = OutPacket.of(OutHeader.FIELD_SPECIFIC_DATA);
+        final OutPacket outPacket = OutPacket.of(OutHeader.FieldSpecificData);
         if (fieldType == FieldType.BATTLEFIELD || fieldType == FieldType.COCONUT) {
             // CField_BattleField::DecodeFieldSpecificData, CField_Coconut::DecodeFieldSpecificData
             outPacket.encodeByte(data); // nTeam
@@ -44,7 +44,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket groupMessage(GroupMessageType messageType, String characterName, String message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.GROUP_MESSAGE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.GroupMessage);
         outPacket.encodeByte(messageType.getValue());
         outPacket.encodeString(characterName); // sFrom
         outPacket.encodeString(message); // sMsg
@@ -52,19 +52,19 @@ public final class FieldPacket {
     }
 
     public static OutPacket whisper(WhisperResult whisperResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.WHISPER);
+        final OutPacket outPacket = OutPacket.of(OutHeader.Whisper);
         whisperResult.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket effect(FieldEffect fieldEffect) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.FIELD_EFFECT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.FieldEffect);
         fieldEffect.encode(outPacket);
         return outPacket;
     }
 
-    public static OutPacket quickSlotMappedInit(int[] quickslotKeyMap) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.QUICKSLOT_MAPPED_INIT);
+    public static OutPacket quickslotMappedInit(int[] quickslotKeyMap) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.QuickslotMappedInit);
         outPacket.encodeByte(true); // defaults if false
         // aQuickslotKeyMapped (32)
         assert quickslotKeyMap.length == GameConstants.QUICKSLOT_KEY_MAP_SIZE;
@@ -101,7 +101,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket dropLeaveField(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.DROP_LEAVE_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.DropLeaveField);
         outPacket.encodeByte(leaveType.getValue());
         outPacket.encodeInt(drop.getId());
         switch (leaveType) {
@@ -122,7 +122,7 @@ public final class FieldPacket {
     // CTownPortalPool::OnPacket ---------------------------------------------------------------------------------------
 
     public static OutPacket townPortalCreated(int characterId, int x, int y, boolean animate) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_CREATED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TownPortalCreated);
         outPacket.encodeByte(!animate); // nState : create animation if false
         outPacket.encodeInt(characterId); // dwCharacterID
         outPacket.encodeShort(x);
@@ -131,7 +131,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket townPortalRemoved(int characterId, boolean animate) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL_REMOVED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TownPortalRemoved);
         outPacket.encodeByte(!animate); // nState : remove animation if false
         outPacket.encodeInt(characterId); // dwCharacterID
         return outPacket;
@@ -141,7 +141,7 @@ public final class FieldPacket {
     // CReactorPool::OnPacket ------------------------------------------------------------------------------------------
 
     public static OutPacket reactorEnterField(Reactor reactor) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ReactorEnterField);
         outPacket.encodeInt(reactor.getId()); // dwID
         outPacket.encodeInt(reactor.getTemplateId()); // dwTemplateID
         outPacket.encodeByte(reactor.getState()); // nState
@@ -153,7 +153,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket reactorLeaveField(Reactor reactor) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ReactorEnterField);
         outPacket.encodeInt(reactor.getId());
         outPacket.encodeByte(reactor.getState()); // nState
         outPacket.encodeShort(reactor.getX()); // ptPos.x
@@ -162,7 +162,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket reactorChangeState(Reactor reactor, int delay, int eventIndex, int endDelay) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.REACTOR_CHANGE_STATE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ReactorChangeState);
         outPacket.encodeInt(reactor.getId());
         outPacket.encodeByte(reactor.getState()); // nState
         outPacket.encodeShort(reactor.getX()); // ptPos.x
@@ -177,7 +177,7 @@ public final class FieldPacket {
     // CShopDlg::OnPacket ----------------------------------------------------------------------------------------------
 
     public static OutPacket openShopDlg(ShopDialog dialog) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.OPEN_SHOP_DLG);
+        final OutPacket outPacket = OutPacket.of(OutHeader.OpenShopDlg);
         dialog.encode(outPacket);
         return outPacket;
     }
@@ -187,7 +187,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket shopResult(ShopResultType resultType, String message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SHOP_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ShopResult);
         outPacket.encodeByte(resultType.getValue());
         switch (resultType) {
             case LimitLevel_Less, LimitLevel_More -> {
@@ -205,7 +205,7 @@ public final class FieldPacket {
     // CTrunkDlg::OnPacket ---------------------------------------------------------------------------------------------
 
     public static OutPacket trunkResult(TrunkResult trunkResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TRUNK_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TrunkResult);
         trunkResult.encode(outPacket);
         return outPacket;
     }
@@ -214,7 +214,7 @@ public final class FieldPacket {
     // CFuncKeyMappedMan::OnPacket -------------------------------------------------------------------------------------
 
     public static OutPacket funcKeyMappedInit(FuncKeyMapped[] funcKeyMap) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.FUNC_KEY_MAPPED_INIT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.FuncKeyMappedInit);
         outPacket.encodeByte(false); // defaults if true
         // 89 * FUNC_KEY_MAPPED (5)
         assert funcKeyMap.length == GameConstants.FUNC_KEY_MAP_SIZE;
@@ -225,13 +225,13 @@ public final class FieldPacket {
     }
 
     public static OutPacket petConsumeItemInit(int itemId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_CONSUME_ITEM_INIT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetConsumeItemInit);
         outPacket.encodeInt(itemId); // nPetConsumeItemID
         return outPacket;
     }
 
     public static OutPacket petConsumeMpItemInit(int itemId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_CONSUME_MP_ITEM_INIT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetConsumeMPItemInit);
         outPacket.encodeInt(itemId); // nPetConsumeMPItemID
         return outPacket;
     }

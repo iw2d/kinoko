@@ -34,7 +34,7 @@ public final class FieldHandler {
 
     // BEGIN_DROPPOOL --------------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.DROP_PICK_UP_REQUEST)
+    @Handler(InHeader.DropPickUpRequest)
     public static void handleDropPickUpRequest(User user, InPacket inPacket) {
         final Field field = user.getField();
         final byte fieldKey = inPacket.decodeByte();
@@ -117,7 +117,7 @@ public final class FieldHandler {
 
     // BEGIN_REACTORPOOL -----------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.REACTOR_HIT)
+    @Handler(InHeader.ReactorHit)
     public static void handleReactorHit(User user, InPacket inPacket) {
         final int objectId = inPacket.decodeInt(); // dwID
         inPacket.decodeInt(); // skillReactor?
@@ -151,7 +151,7 @@ public final class FieldHandler {
         }
     }
 
-    @Handler(InHeader.REACTOR_TOUCH)
+    @Handler(InHeader.ReactorTouch)
     public static void handleReactorTouch(User user, InPacket inPacket) {
         final int objectId = inPacket.decodeInt(); // dwID
         final boolean inside = inPacket.decodeBoolean(); // PtInRect
@@ -174,7 +174,7 @@ public final class FieldHandler {
         }
     }
 
-    @Handler(InHeader.REQUIRE_FIELD_OBSTACLE_STATUS)
+    @Handler(InHeader.RequireFieldObstacleStatus)
     public static void handleRequireFieldObstacleStatus(User user, InPacket inPacket) {
     }
 }

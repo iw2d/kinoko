@@ -17,7 +17,7 @@ public final class CashShopPacket {
     }
 
     public static OutPacket queryCashResult(int nxCredit, int maplePoint, int nxPrepaid) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CASHSHOP_QUERY_CASH_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopQueryCashResult);
         outPacket.encodeInt(nxCredit); // nNexonCash
         outPacket.encodeInt(maplePoint); // nMaplePoint
         outPacket.encodeInt(nxPrepaid); // nPrepaidNXCash
@@ -25,7 +25,7 @@ public final class CashShopPacket {
     }
 
     public static OutPacket cashItemResult(CashItemResult cashItemResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CASHSHOP_CASH_ITEM_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
         cashItemResult.encode(outPacket);
         return outPacket;
     }

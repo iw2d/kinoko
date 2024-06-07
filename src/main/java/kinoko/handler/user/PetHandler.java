@@ -37,7 +37,7 @@ import java.util.Optional;
 public final class PetHandler {
     private static final Logger log = LogManager.getLogger(PetHandler.class);
 
-    @Handler(InHeader.USER_DESTROY_PET_ITEM_REQUEST)
+    @Handler(InHeader.UserDestroyPetItemRequest)
     public static void handleUserDestroyPetItemRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final long petSn = inPacket.decodeLong(); // liCashItemSN
@@ -61,7 +61,7 @@ public final class PetHandler {
         }
     }
 
-    @Handler(InHeader.USER_ACTIVATE_PET_REQUEST)
+    @Handler(InHeader.UserActivatePetRequest)
     public static void handleUserActivatePetRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
@@ -112,7 +112,7 @@ public final class PetHandler {
         }
     }
 
-    @Handler(InHeader.PET_MOVE)
+    @Handler(InHeader.PetMove)
     public static void handlePetMove(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         final MovePath movePath = MovePath.decode(inPacket);
@@ -131,7 +131,7 @@ public final class PetHandler {
         user.getField().broadcastPacket(PetPacket.petMove(user, petIndex, movePath), user);
     }
 
-    @Handler(InHeader.PET_ACTION)
+    @Handler(InHeader.PetAction)
     public static void handlePetAction(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         inPacket.decodeInt(); // update_time
@@ -152,7 +152,7 @@ public final class PetHandler {
         user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat), user);
     }
 
-    @Handler(InHeader.PET_INTERACTION_REQUEST)
+    @Handler(InHeader.PetInteractionRequest)
     public static void handlePetInteractionRequest(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
@@ -228,7 +228,7 @@ public final class PetHandler {
         }
     }
 
-    @Handler(InHeader.PET_DROP_PICK_UP_REQUEST)
+    @Handler(InHeader.PetDropPickUpRequest)
     public static void handlePetDropPickUpRequest(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);

@@ -36,8 +36,8 @@ import java.util.Optional;
 public final class ItemHandler {
     private static final Logger log = LogManager.getLogger(ItemHandler.class);
 
-    @Handler(InHeader.USER_STAT_CHANGE_ITEM_USE_REQUEST)
-    public static void handleUserStatChangeItemRequest(User user, InPacket inPacket) {
+    @Handler(InHeader.UserStatChangeItemUseRequest)
+    public static void handleUserStatChangeItemUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
@@ -64,7 +64,7 @@ public final class ItemHandler {
         }
     }
 
-    @Handler(InHeader.USER_PET_FOOD_ITEM_USE_REQUEST)
+    @Handler(InHeader.UserPetFoodItemUseRequest)
     public static void handleUserPetFoodItemUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
@@ -172,8 +172,8 @@ public final class ItemHandler {
         }
     }
 
-    @Handler(InHeader.USER_CONSUME_CASH_ITEM_USE_REQUEST)
-    public static void handleUserConsumeCashItemUserRequest(User user, InPacket inPacket) {
+    @Handler(InHeader.UserConsumeCashItemUseRequest)
+    public static void handleUserConsumeCashItemUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nIdemID
@@ -238,8 +238,8 @@ public final class ItemHandler {
         }
     }
 
-    @Handler(InHeader.USER_PORTAL_SCROLL_USE_REQUEST)
-    public static void handleUserPortalScrollUserRequest(User user, InPacket inPacket) {
+    @Handler(InHeader.UserPortalScrollUseRequest)
+    public static void handleUserPortalScrollUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt();
@@ -296,8 +296,8 @@ public final class ItemHandler {
         }
     }
 
-    @Handler(InHeader.USER_UPGRADE_ITEM_USE_REQUEST)
-    public static void handleUserUpgradeItemUserRequest(User user, InPacket inPacket) {
+    @Handler(InHeader.UserUpgradeItemUseRequest)
+    public static void handleUserUpgradeItemUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int upgradeItemPos = inPacket.decodeShort(); // nUPOS
         final int equipItemPos = inPacket.decodeShort(); // nEPOS
@@ -463,7 +463,7 @@ public final class ItemHandler {
         }
     }
 
-    @Handler(InHeader.PET_STAT_CHANGE_ITEM_USE_REQUEST)
+    @Handler(InHeader.PetStatChangeItemUseRequest)
     public static void handlePetStatChangeItemUseRequest(User user, InPacket inPacket) {
         final long petSn = inPacket.decodeLong();
         inPacket.decodeBoolean(); // bBuffSkill

@@ -30,7 +30,7 @@ public final class WvsContext {
     }
 
     public static OutPacket statChanged(Map<Stat, Object> statMap, boolean exclRequest) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.STAT_CHANGED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.StatChanged);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
 
         outPacket.encodeInt(Stat.from(statMap.keySet()));
@@ -66,7 +66,7 @@ public final class WvsContext {
     }
 
     public static OutPacket temporaryStatSet(Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_SET);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TemporaryStatSet);
         SecondaryStat.encodeForLocal(outPacket, setStats);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
@@ -74,7 +74,7 @@ public final class WvsContext {
     }
 
     public static OutPacket temporaryStatReset(Set<CharacterTemporaryStat> resetStats) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TEMPORARY_STAT_RESET);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TemporaryStatReset);
         SecondaryStat.encodeReset(outPacket, resetStats);
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
@@ -85,7 +85,7 @@ public final class WvsContext {
     }
 
     public static OutPacket changeSkillRecordResult(Set<SkillRecord> skillRecords, boolean exclRequest) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHANGE_SKILL_RECORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ChangeSkillRecordResult);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeShort(skillRecords.size());
         for (SkillRecord sr : skillRecords) {
@@ -99,19 +99,19 @@ public final class WvsContext {
     }
 
     public static OutPacket skillUseResult() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SKILL_USE_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SkillUseResult);
         outPacket.encodeByte(0); // unused, packet sets bExclRequestSent = 0
         return outPacket;
     }
 
     public static OutPacket message(Message message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MESSAGE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.Message);
         message.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket memoResult(MemoResult memoResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MEMO_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MemoResult);
         memoResult.encode(outPacket);
         return outPacket;
     }
@@ -121,7 +121,7 @@ public final class WvsContext {
     }
 
     public static OutPacket inventoryOperation(List<InventoryOperation> inventoryOperations, boolean exclRequest) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.INVENTORY_OPERATION);
+        final OutPacket outPacket = OutPacket.of(OutHeader.InventoryOperation);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeByte(inventoryOperations.size());
         for (InventoryOperation op : inventoryOperations) {
@@ -132,27 +132,27 @@ public final class WvsContext {
     }
 
     public static OutPacket gatherItemResult(InventoryType inventoryType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.GATHER_ITEM_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.GatherItemResult);
         outPacket.encodeByte(0); // ignored
         outPacket.encodeByte(inventoryType.getValue());
         return outPacket;
     }
 
     public static OutPacket sortItemResult(InventoryType inventoryType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SORT_ITEM_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SortItemResult);
         outPacket.encodeByte(0); // ignored
         outPacket.encodeByte(inventoryType.getValue());
         return outPacket;
     }
 
     public static OutPacket setGender(int gender) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SET_GENDER);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SetGender);
         outPacket.encodeByte(gender); // nGender
         return outPacket;
     }
 
     public static OutPacket characterInfo(User user) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHARACTER_INFO);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CharacterInfo);
         // CWvsContext::OnCharacterInfo, TODO: add missing information
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         outPacket.encodeByte(user.getLevel()); // nLevel
@@ -202,19 +202,19 @@ public final class WvsContext {
     }
 
     public static OutPacket partyResult(PartyResult partyResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PARTY_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PartyResult);
         partyResult.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket friendResult(FriendResult friendResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.FRIEND_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.FriendResult);
         friendResult.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket townPortal(TownPortal townPortal) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TownPortal);
         outPacket.encodeInt(townPortal.getTownField().getFieldId()); // dwTownID
         outPacket.encodeInt(townPortal.getField().getFieldId()); // dwFieldID
         outPacket.encodeInt(townPortal.getSkillId()); // nSkillID
@@ -224,7 +224,7 @@ public final class WvsContext {
     }
 
     public static OutPacket resetTownPortal() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TOWN_PORTAL);
+        final OutPacket outPacket = OutPacket.of(OutHeader.TownPortal);
         outPacket.encodeInt(GameConstants.UNDEFINED_FIELD_ID);
         outPacket.encodeInt(GameConstants.UNDEFINED_FIELD_ID);
         outPacket.encodeInt(0);
@@ -234,13 +234,13 @@ public final class WvsContext {
     }
 
     public static OutPacket broadcastMsg(BroadcastMessage message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.BROADCAST_MSG);
+        final OutPacket outPacket = OutPacket.of(OutHeader.BroadcastMsg);
         message.encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket macroSysDataInit(List<SingleMacro> macroSysData) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MACRO_SYS_DATA_INIT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MacroSysDataInit);
         outPacket.encodeByte(macroSysData.size());
         for (SingleMacro macroSysDatum : macroSysData) {
             macroSysDatum.encode(outPacket); // SINGLEMACRO::Decode

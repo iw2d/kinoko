@@ -7,7 +7,7 @@ public final class ScriptPacket {
     // ScriptMan::OnPacket ---------------------------------------------------------------------------------------------
 
     public static OutPacket scriptMessage(ScriptMessage scriptMessage) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SCRIPT_MESSAGE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ScriptMessage);
         scriptMessage.encode(outPacket);
         return outPacket;
     }

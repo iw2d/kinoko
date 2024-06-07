@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class LoginHandler {
     private static final Logger log = LogManager.getLogger(LoginHandler.class);
 
-    @Handler(InHeader.CHECK_PASSWORD)
+    @Handler(InHeader.CheckPassword)
     public static void handleCheckPassword(Client c, InPacket inPacket) {
         final String username = inPacket.decodeString();
         final String password = inPacket.decodeString();
@@ -77,7 +77,7 @@ public final class LoginHandler {
         c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
     }
 
-    @Handler({ InHeader.WORLD_INFO_REQUEST, InHeader.WORLD_REQUEST })
+    @Handler({ InHeader.WorldInfoRequest, InHeader.WorldRequest })
     public static void handleWorldRequest(Client c, InPacket inPacket) {
         final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
         c.write(LoginPacket.worldInformation(centralServerNode.getConnectedNodes()));
@@ -85,18 +85,18 @@ public final class LoginHandler {
         c.write(LoginPacket.latestConnectedWorld(ServerConfig.WORLD_ID));
     }
 
-    @Handler(InHeader.VIEW_ALL_CHAR)
+    @Handler(InHeader.ViewAllChar)
     public static void handleViewAllChar(Client c, InPacket inPacket) {
         c.write(LoginPacket.viewAllCharResult());
     }
 
-    @Handler(InHeader.CHECK_USER_LIMIT)
+    @Handler(InHeader.CheckUserLimit)
     public static void handleCheckUserLimit(Client c, InPacket inPacket) {
         final int worldId = inPacket.decodeShort();
         c.write(LoginPacket.checkUserLimitResult());
     }
 
-    @Handler(InHeader.SELECT_WORLD)
+    @Handler(InHeader.SelectWorld)
     public static void handleSelectWorld(Client c, InPacket inPacket) {
         final byte gameStartMode = inPacket.decodeByte();
         if (gameStartMode != 2) {
@@ -132,7 +132,7 @@ public final class LoginHandler {
         c.write(LoginPacket.selectWorldResultSuccess(account));
     }
 
-    @Handler(InHeader.CHECK_DUPLICATED_ID)
+    @Handler(InHeader.CheckDuplicatedID)
     public static void handleCheckDuplicatedId(Client c, InPacket inPacket) {
         final String name = inPacket.decodeString();
         // Validation done on client side, server side validation in NEW_CHAR handler
@@ -143,7 +143,7 @@ public final class LoginHandler {
         }
     }
 
-    @Handler(InHeader.CREATE_NEW_CHARACTER)
+    @Handler(InHeader.CreateNewCharacter)
     public static void handleCreateNewCharacter(Client c, InPacket inPacket) {
         final String name = inPacket.decodeString();
         final int selectedRace = inPacket.decodeInt();
@@ -306,7 +306,7 @@ public final class LoginHandler {
         }
     }
 
-    @Handler(InHeader.SELECT_CHARACTER)
+    @Handler(InHeader.SelectCharacter)
     public static void handleSelectCharacter(Client c, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
@@ -320,7 +320,7 @@ public final class LoginHandler {
         handleMigration(c, account, characterId);
     }
 
-    @Handler(InHeader.DELETE_CHARACTER)
+    @Handler(InHeader.DeleteCharacter)
     public static void handleDeleteCharacter(Client c, InPacket inPacket) {
         final String secondaryPassword = inPacket.decodeString();
         final int characterId = inPacket.decodeInt();
@@ -344,7 +344,7 @@ public final class LoginHandler {
         c.write(LoginPacket.deleteCharacterResult(LoginResultType.Success, characterId));
     }
 
-    @Handler(InHeader.ENABLE_SPW_REQUEST)
+    @Handler(InHeader.EnableSPWRequest)
     public static void handleEnableSpwRequest(Client c, InPacket inPacket) {
         inPacket.decodeByte(); // 1
         final int characterId = inPacket.decodeInt(); // dwCharacterID
@@ -361,7 +361,7 @@ public final class LoginHandler {
         handleMigration(c, account, characterId);
     }
 
-    @Handler(InHeader.CHECK_SPW_REQUEST)
+    @Handler(InHeader.CheckSPWRequest)
     public static void handleCheckSpwRequest(Client c, InPacket inPacket) {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
         final int characterId = inPacket.decodeInt(); // dwCharacterID

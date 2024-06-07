@@ -11,17 +11,17 @@ import org.apache.logging.log4j.Logger;
 public final class ClientHandler {
     private static final Logger log = LogManager.getLogger(ClientHandler.class);
 
-    @Handler(InHeader.ALIVE_ACK)
+    @Handler(InHeader.AliveAck)
     public static void handleAliveAck(Client c, InPacket inPacket) {
     }
 
-    @Handler(InHeader.EXCEPTION_LOG)
+    @Handler(InHeader.ExceptionLog)
     public static void handleExceptionLog(Client c, InPacket inPacket) {
         final String data = inPacket.decodeString();
         log.error("Exception log : {}", data);
     }
 
-    @Handler(InHeader.CLIENT_DUMP_LOG)
+    @Handler(InHeader.ClientDumpLog)
     public static void handleClientDumpLog(Client c, InPacket inPacket) {
         final short callType = inPacket.decodeShort();
         final int errorType = inPacket.decodeInt();

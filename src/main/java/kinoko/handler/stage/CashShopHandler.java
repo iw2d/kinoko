@@ -26,14 +26,14 @@ import java.util.*;
 public final class CashShopHandler {
     private static final Logger log = LogManager.getLogger(CashShopHandler.class);
 
-    @Handler(InHeader.CASHSHOP_QUERY_CASH_REQUEST)
+    @Handler(InHeader.CashShopQueryCashRequest)
     public static void handleQueryCashRequest(User user, InPacket inPacket) {
         try (var lockedAccount = user.getAccount().acquire()) {
             user.write(CashShopPacket.queryCashResult(lockedAccount.get()));
         }
     }
 
-    @Handler(InHeader.CASHSHOP_CASH_ITEM_REQUEST)
+    @Handler(InHeader.CashShopCashItemRequest)
     public static void handleCashItemRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final CashItemRequestType requestType = CashItemRequestType.getByValue(type);

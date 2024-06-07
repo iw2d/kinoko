@@ -53,7 +53,7 @@ import java.util.concurrent.TimeoutException;
 public final class MigrationHandler {
     private static final Logger log = LogManager.getLogger(MigrationHandler.class);
 
-    @Handler(InHeader.MIGRATE_IN)
+    @Handler(InHeader.MigrateIn)
     public static void handleMigrateIn(Client c, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final byte[] machineId = inPacket.decodeArray(16);
@@ -176,7 +176,7 @@ public final class MigrationHandler {
             final ConfigManager cm = user.getConfigManager();
             user.write(WvsContext.macroSysDataInit(cm.getMacroSysData()));
             user.write(FieldPacket.funcKeyMappedInit(cm.getFuncKeyMap()));
-            user.write(FieldPacket.quickSlotMappedInit(cm.getQuickslotKeyMap()));
+            user.write(FieldPacket.quickslotMappedInit(cm.getQuickslotKeyMap()));
             user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
             user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
@@ -205,7 +205,7 @@ public final class MigrationHandler {
         }
     }
 
-    @Handler(InHeader.USER_TRANSFER_FIELD_REQUEST)
+    @Handler(InHeader.UserTransferFieldRequest)
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         // Returning from CashShop
         if (inPacket.getRemaining() == 0) {
@@ -280,14 +280,14 @@ public final class MigrationHandler {
         }
     }
 
-    @Handler(InHeader.USER_TRANSFER_CHANNEL_REQUEST)
+    @Handler(InHeader.UserTransferChannelRequest)
     public static void handleUserTransferChannelRequest(User user, InPacket inPacket) {
         final byte channelId = inPacket.decodeByte();
         inPacket.decodeInt(); // update_time
         handleTransfer(user, channelId);
     }
 
-    @Handler(InHeader.USER_MIGRATE_TO_CASHSHOP_REQUEST)
+    @Handler(InHeader.UserMigrateToCashShopRequest)
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 

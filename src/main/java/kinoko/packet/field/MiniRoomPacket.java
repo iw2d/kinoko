@@ -98,7 +98,7 @@ public final class MiniRoomPacket {
     }
 
     private static OutPacket of(MiniRoomProtocol miniRoomProtocol) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MINIROOM);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MiniRoom);
         outPacket.encodeByte(miniRoomProtocol.getValue());
         return outPacket;
     }

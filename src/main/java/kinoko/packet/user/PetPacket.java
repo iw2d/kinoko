@@ -12,7 +12,7 @@ public final class PetPacket {
     // CUser::OnPetPacket ----------------------------------------------------------------------------------------------
 
     public static OutPacket petActivated(User user, Pet pet) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTIVATED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetActivated);
         outPacket.encodeInt(user.getCharacterId());
         // this->OnPetActivated
         outPacket.encodeByte(pet.getPetIndex()); // nIdx
@@ -23,7 +23,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petDeactivated(User user, int petIndex, int reason) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTIVATED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetActivated);
         outPacket.encodeInt(user.getCharacterId());
         // this->OnPetActivated
         outPacket.encodeByte(petIndex);
@@ -37,7 +37,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petMove(User user, int petIndex, MovePath movePath) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_MOVE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetMove);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         movePath.encode(outPacket);
@@ -45,7 +45,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petAction(User user, int petIndex, int type, int action, String chat) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTION);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetAction);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeByte(type);
@@ -55,7 +55,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petNameChanged(User user, int petIndex, String name) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_NAME_CHANGED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetNameChanged);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeString(name); // sName
@@ -64,7 +64,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petLoadExceptionList(User user, int petIndex, long petSn, List<Integer> exceptionList) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_LOAD_EXCEPTION_LIST);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetLoadExceptionList);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeLong(petSn); // liPetSN
@@ -74,7 +74,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petActionInteract(User user, int petIndex, int action, boolean success, boolean chatBalloon) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTION_COMMAND);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetActionCommand);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeByte(PetActionType.INTERACT.getValue());
@@ -85,7 +85,7 @@ public final class PetPacket {
     }
 
     public static OutPacket petActionFeed(User user, int petIndex, boolean success, boolean chatBalloon) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PET_ACTION_COMMAND);
+        final OutPacket outPacket = OutPacket.of(OutHeader.PetActionCommand);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeByte(PetActionType.FEED.getValue());

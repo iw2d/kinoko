@@ -26,7 +26,7 @@ import java.util.Set;
 public final class SkillHandler {
     private static final Logger log = LogManager.getLogger(SkillHandler.class);
 
-    @Handler(InHeader.USER_SKILL_USE_REQUEST)
+    @Handler(InHeader.UserSkillUseRequest)
     public static void handleUserSkillUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final Skill skill = new Skill();
@@ -98,7 +98,7 @@ public final class SkillHandler {
         }
     }
 
-    @Handler(InHeader.USER_SKILL_CANCEL_REQUEST)
+    @Handler(InHeader.UserSkillCancelRequest)
     public static void handleUserSkillCancelRequest(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
         try (var locked = user.acquire()) {
@@ -113,7 +113,7 @@ public final class SkillHandler {
         }
     }
 
-    @Handler(InHeader.USER_SKILL_PREPARE_REQUEST)
+    @Handler(InHeader.UserSkillPrepareRequest)
     public static void handleUserSkillPrepareRequest(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
         final int slv = inPacket.decodeByte(); // nSLV
@@ -125,7 +125,7 @@ public final class SkillHandler {
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
 
-    @Handler(InHeader.USER_CALC_DAMAGE_STAT_SET_REQUEST)
+    @Handler(InHeader.UserCalcDamageStatSetRequest)
     public static void handleUserCalcDamageStatSetRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {
             user.updatePassiveSkillData();
@@ -133,7 +133,7 @@ public final class SkillHandler {
         }
     }
 
-    @Handler(InHeader.PASSIVE_SKILL_INFO_UPDATE)
+    @Handler(InHeader.PassiveskillInfoUpdate)
     public static void handlePassiveSkillInfoUpdate(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         try (var locked = user.acquire()) {

@@ -28,10 +28,10 @@ import java.util.Optional;
 public final class AttackHandler {
     private static final Logger log = LogManager.getLogger(AttackHandler.class);
 
-    @Handler(InHeader.USER_MELEE_ATTACK)
+    @Handler(InHeader.UserMeleeAttack)
     public static void handlerUserMeleeAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingMeleeAttack, CUserLocal::TryDoingNormalAttack
-        final Attack attack = new Attack(OutHeader.USER_MELEE_ATTACK);
+        final Attack attack = new Attack(OutHeader.UserMeleeAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getField().getFieldKey() != fieldKey) {
             user.dispose();
@@ -79,10 +79,10 @@ public final class AttackHandler {
         }
     }
 
-    @Handler(InHeader.USER_SHOOT_ATTACK)
+    @Handler(InHeader.UserShootAttack)
     public static void handlerUserShootAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingShootAttack
-        final Attack attack = new Attack(OutHeader.USER_SHOOT_ATTACK);
+        final Attack attack = new Attack(OutHeader.UserShootAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getField().getFieldKey() != fieldKey) {
             user.dispose();
@@ -139,10 +139,10 @@ public final class AttackHandler {
         }
     }
 
-    @Handler(InHeader.USER_MAGIC_ATTACK)
+    @Handler(InHeader.UserMagicAttack)
     public static void handlerUserMagicAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingMagicAttack
-        final Attack attack = new Attack(OutHeader.USER_MAGIC_ATTACK);
+        final Attack attack = new Attack(OutHeader.UserMagicAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getField().getFieldKey() != fieldKey) {
             user.dispose();
@@ -191,10 +191,10 @@ public final class AttackHandler {
         }
     }
 
-    @Handler(InHeader.USER_BODY_ATTACK)
+    @Handler(InHeader.UserBodyAttack)
     public static void handlerUserBodyAttack(User user, InPacket inPacket) {
         // CUserLocal::TryDoingBodyAttack
-        final Attack attack = new Attack(OutHeader.USER_BODY_ATTACK);
+        final Attack attack = new Attack(OutHeader.UserBodyAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getField().getFieldKey() != fieldKey) {
             user.dispose();
@@ -232,7 +232,7 @@ public final class AttackHandler {
         }
     }
 
-    @Handler(InHeader.USER_MOVING_SHOOT_ATTACK_PREPARE)
+    @Handler(InHeader.UserMovingShootAttackPrepare)
     public static void handleMovingShootAttackPrepare(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
         final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
@@ -245,7 +245,7 @@ public final class AttackHandler {
         user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
 
-    @Handler(InHeader.USER_HIT)
+    @Handler(InHeader.UserHit)
     public static void handleUserHit(User user, InPacket inPacket) {
         // CUserLocal::SetDamaged, CUserLocal::Update
         inPacket.decodeInt(); // get_update_time()

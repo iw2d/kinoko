@@ -92,7 +92,7 @@ public final class MessengerPacket {
     }
 
     private static OutPacket of(MessengerProtocol messengerProtocol) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MESSENGER);
+        final OutPacket outPacket = OutPacket.of(OutHeader.Messenger);
         outPacket.encodeByte(messengerProtocol.getValue());
         return outPacket;
     }

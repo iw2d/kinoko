@@ -90,15 +90,15 @@ public final class PartyResult implements Encodable {
                 outPacket.encodeInt(int1); // member index
                 townPortal.encodeForPartyResult(outPacket); // PARTYDATA::TOWNPORTAL
             }
-            case ADVER_APPLY -> {
-                outPacket.encodeInt(member.getCharacterId()); // dwApplierId
-                outPacket.encodeString(member.getCharacterName()); // sApplierName
-                outPacket.encodeInt(member.getLevel()); // nLevel
-                outPacket.encodeInt(member.getJob()); // nJobCode
-            }
+//            case ADVER_APPLY -> {
+//                outPacket.encodeInt(member.getCharacterId()); // dwApplierId
+//                outPacket.encodeString(member.getCharacterName()); // sApplierName
+//                outPacket.encodeInt(member.getLevel()); // nLevel
+//                outPacket.encodeInt(member.getJob()); // nJobCode
+//            }
             case CreateNewParty_AlreadyJoined, CreateNewParty_Beginner, WithdrawParty_NotJoined,
                     JoinParty_Done2, JoinParty_AlreadyJoined, JoinParty_AlreadyFull, JoinParty_OverDesiredSize,
-                    KICK_PARTY_FIELD_LIMIT, ChangePartyBoss_NotSameField, ChangePartyBoss_NoMemberInSameField,
+                    KickParty_FieldLimit, ChangePartyBoss_NotSameField, ChangePartyBoss_NoMemberInSameField,
                     ChangePartyBoss_NotSameChannel, AdminCannotCreate, FailToRequestPQReward,
                     CanNotInThisField -> {
                 // no encodes

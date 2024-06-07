@@ -16,7 +16,7 @@ import java.util.Optional;
 public final class NpcHandler {
     private static final Logger log = LogManager.getLogger(NpcHandler.class);
 
-    @Handler(InHeader.NPC_MOVE)
+    @Handler(InHeader.NpcMove)
     public static void handleNpcMove(User user, InPacket inPacket) {
         final int objectId = inPacket.decodeInt(); // dwNpcId
         final byte oneTimeAction = inPacket.decodeByte(); // nOneTimeAction

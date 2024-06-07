@@ -11,7 +11,7 @@ import kinoko.world.user.stat.SecondaryStat;
 public final class UserPacket {
     // CUserPool::OnPacket ---------------------------------------------------------------------------------------------
     public static OutPacket userEnterField(User user) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserEnterField);
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         // CUserRemote::Init
         outPacket.encodeByte(user.getLevel()); // nLevel
@@ -91,7 +91,7 @@ public final class UserPacket {
     }
 
     public static OutPacket userLeaveField(User user) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_LEAVE_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserLeaveField);
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterId
         return outPacket;
     }
@@ -100,7 +100,7 @@ public final class UserPacket {
     // CUserPool::OnUserCommonPacket -----------------------------------------------------------------------------------
 
     public static OutPacket userChat(User user, ChatType type, String text, boolean onlyBalloon) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserChat);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(type.getValue()); // lType
         outPacket.encodeString(text); // sChat
@@ -109,7 +109,7 @@ public final class UserPacket {
     }
 
     public static OutPacket userChatRemote(User user, String characterName, ChatType type, String text) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_CHAT_NLCPQ);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserChatNLCPQ);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(type.getValue()); // lType
         outPacket.encodeString(text); // sChat
@@ -119,7 +119,7 @@ public final class UserPacket {
     }
 
     public static OutPacket userAdBoard(User user, String message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_AD_BOARD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserADBoard);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(message != null);
         if (message != null) {
@@ -128,8 +128,8 @@ public final class UserPacket {
         return outPacket;
     }
 
-    public static OutPacket userMiniGameRoomBalloon(User user, MiniGameRoom miniGameRoom) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_MINIROOM_BALLOON);
+    public static OutPacket userMiniRoomBalloon(User user, MiniGameRoom miniGameRoom) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserMiniRoomBalloon);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(miniGameRoom.getType().getValue()); // nMiniRoomType
         outPacket.encodeInt(miniGameRoom.getId()); // dwMiniRoomSN
@@ -142,15 +142,15 @@ public final class UserPacket {
         return outPacket;
     }
 
-    public static OutPacket userRemoveMiniGameRoomBalloon(User user) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_MINIROOM_BALLOON);
+    public static OutPacket userMiniRoomBalloonRemove(User user) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserMiniRoomBalloon);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(0); // 0 -> CChatBalloon::DestroyMiniRoomBalloon
         return outPacket;
     }
 
     public static OutPacket userItemUpgradeEffect(User user, boolean success, boolean cursed, boolean enchantSkill, boolean whiteScroll) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.USER_ITEM_UPGRADE_EFFECT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserItemUpgradeEffect);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(success); // bSuccess
         outPacket.encodeByte(cursed); // bCursed

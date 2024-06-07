@@ -9,7 +9,7 @@ public final class NpcPacket {
     // CNpcPool::OnPacket ----------------------------------------------------------------------------------------------
 
     public static OutPacket npcEnterField(Npc npc) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.NpcEnterField);
         outPacket.encodeInt(npc.getId()); // dwNpcID
         outPacket.encodeInt(npc.getTemplateId()); // dwTemplateID
         npc.encode(outPacket);
@@ -17,13 +17,13 @@ public final class NpcPacket {
     }
 
     public static OutPacket npcLeaveField(Npc npc) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_LEAVE_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.NpcLeaveField);
         outPacket.encodeInt(npc.getId()); // dwNpcID
         return outPacket;
     }
 
     public static OutPacket npcChangeController(Npc npc, boolean forController) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_CHANGE_CONTROLLER);
+        final OutPacket outPacket = OutPacket.of(OutHeader.NpcChangeController);
         outPacket.encodeByte(forController);
         outPacket.encodeInt(npc.getId()); // dwNpcID
         if (forController) {
@@ -37,7 +37,7 @@ public final class NpcPacket {
     // CNpcPool::OnNpcPacket -------------------------------------------------------------------------------------------
 
     public static OutPacket npcMove(Npc npc, byte oneTimeAction, byte chatIndex, MovePath movePath) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.NPC_MOVE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.NpcMove);
         outPacket.encodeInt(npc.getId());
         outPacket.encodeByte(oneTimeAction);
         outPacket.encodeByte(chatIndex);

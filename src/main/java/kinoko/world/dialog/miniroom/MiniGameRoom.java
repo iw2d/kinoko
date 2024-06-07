@@ -186,14 +186,14 @@ public abstract class MiniGameRoom extends MiniRoom {
     @Override
     public final void close() {
         super.close();
-        getOwner().getField().broadcastPacket(UserPacket.userRemoveMiniGameRoomBalloon(getOwner()));
+        getOwner().getField().broadcastPacket(UserPacket.userMiniRoomBalloonRemove(getOwner()));
     }
 
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
 
     public final void updateBalloon() {
-        getOwner().getField().broadcastPacket(UserPacket.userMiniGameRoomBalloon(getOwner(), this));
+        getOwner().getField().broadcastPacket(UserPacket.userMiniRoomBalloon(getOwner(), this));
     }
 
     /**

@@ -6,7 +6,7 @@ import kinoko.server.packet.OutPacket;
 public final class ClientPacket {
     public static OutPacket migrateCommand(byte[] channelHost, int channelPort) {
         assert channelHost.length == 4;
-        final OutPacket outPacket = OutPacket.of(OutHeader.MIGRATE_COMMAND);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MigrateCommand);
         outPacket.encodeByte(true);
         outPacket.encodeArray(channelHost);
         outPacket.encodeShort(channelPort);
@@ -14,6 +14,6 @@ public final class ClientPacket {
     }
 
     public static OutPacket aliveReq() {
-        return OutPacket.of(OutHeader.ALIVE_REQ);
+        return OutPacket.of(OutHeader.AliveReq);
     }
 }

@@ -27,7 +27,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkPasswordResultSuccess(Account account, byte[] clientKey) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckPasswordResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
         outPacket.encodeByte(0); // 0 or 1
         outPacket.encodeInt(0);
@@ -51,7 +51,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkPasswordResultFail(LoginResultType failType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckPasswordResult);
         outPacket.encodeByte(failType.getValue());
         outPacket.encodeByte(0);
         outPacket.encodeInt(0);
@@ -59,7 +59,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket checkPasswordResultBlocked(int blockedType, Instant unblockDate) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_PASSWORD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckPasswordResult);
         outPacket.encodeByte(LoginResultType.Blocked.getValue());
         outPacket.encodeByte(0);
         outPacket.encodeInt(0);
@@ -69,7 +69,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket viewAllCharResult() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.VIEW_ALL_CHAR_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
         outPacket.encodeByte(6);
         outPacket.encodeByte(true);
         outPacket.encodeString("This feature is disabled");
@@ -77,7 +77,7 @@ public final class LoginPacket {
     }
 
     public static OutPacket worldInformation(List<RemoteChildNode> connectedNodes) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
+        final OutPacket outPacket = OutPacket.of(OutHeader.WorldInformation);
         outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
         outPacket.encodeString(ServerConfig.WORLD_NAME);
         outPacket.encodeByte(0); // nWorldState
@@ -100,20 +100,20 @@ public final class LoginPacket {
     }
 
     public static OutPacket worldInformationEnd() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.WORLD_INFORMATION);
+        final OutPacket outPacket = OutPacket.of(OutHeader.WorldInformation);
         outPacket.encodeByte(-1); // nWorldID
         return outPacket;
     }
 
     public static OutPacket checkUserLimitResult() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_USER_LIMIT_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckUserLimitResult);
         outPacket.encodeByte(false); // bOverUserLimit
         outPacket.encodeByte(0); // bPopulateLevel (0 = Normal, 1 = Populated, 2 = Full)
         return outPacket;
     }
 
     public static OutPacket selectWorldResultSuccess(Account account) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SelectWorldResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
 
         outPacket.encodeByte(account.getCharacterList().size());
@@ -130,13 +130,13 @@ public final class LoginPacket {
     }
 
     public static OutPacket selectWorldResultFail(LoginResultType failType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_WORLD_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SelectWorldResult);
         outPacket.encodeByte(failType.getValue());
         return outPacket;
     }
 
     public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SelectCharacterResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
         outPacket.encodeByte(0);
 
@@ -149,14 +149,14 @@ public final class LoginPacket {
     }
 
     public static OutPacket selectCharacterResultFail(LoginResultType resultType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SELECT_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SelectCharacterResult);
         outPacket.encodeByte(resultType.getValue());
         outPacket.encodeByte(0); // Trouble logging in?
         return outPacket;
     }
 
     public static OutPacket checkDuplicatedIdResult(String name, int idResultType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_DUPLICATED_ID_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckDuplicatedIDResult);
         outPacket.encodeString(name);
         outPacket.encodeByte(idResultType);
         // 0: Success
@@ -167,33 +167,33 @@ public final class LoginPacket {
     }
 
     public static OutPacket createNewCharacterResultSuccess(CharacterData characterData) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CreateNewCharacterResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
         AvatarData.from(characterData).encode(outPacket);
         return outPacket;
     }
 
     public static OutPacket createNewCharacterResultFail(LoginResultType failType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CREATE_NEW_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CreateNewCharacterResult);
         outPacket.encodeByte(failType.getValue());
         return outPacket;
     }
 
     public static OutPacket deleteCharacterResult(LoginResultType resultType, int characterId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.DELETE_CHARACTER_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.DeleteCharacterResult);
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(resultType.getValue());
         return outPacket;
     }
 
     public static OutPacket latestConnectedWorld(int worldId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.LATEST_CONNECTED_WORLD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.LatestConnectedWorld);
         outPacket.encodeInt(worldId);
         return outPacket;
     }
 
     public static OutPacket checkSecondaryPasswordResult() {
-        final OutPacket outPacket = OutPacket.of(OutHeader.CHECK_SPW_RESULT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckSPWResult);
         outPacket.encodeByte(-1); // ignored
         return outPacket;
     }

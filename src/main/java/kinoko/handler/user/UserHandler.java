@@ -79,7 +79,7 @@ import java.util.concurrent.TimeoutException;
 public final class UserHandler {
     private static final Logger log = LogManager.getLogger(UserHandler.class);
 
-    @Handler(InHeader.USER_MOVE)
+    @Handler(InHeader.UserMove)
     public static void handleUserMove(User user, InPacket inPacket) {
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // 0
@@ -99,7 +99,7 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserRemote.move(user, movePath), user);
     }
 
-    @Handler(InHeader.USER_SIT_REQUEST)
+    @Handler(InHeader.UserSitRequest)
     public static void handleUserSitRequest(User user, InPacket inPacket) {
         // CUserLocal::HandleXKeyDown, CWvsContext::SendGetUpFromChairRequest
         final short fieldSeatId = inPacket.decodeShort();
@@ -107,7 +107,7 @@ public final class UserHandler {
         user.write(UserLocal.sitResult(fieldSeatId != -1, fieldSeatId)); // broadcast not required
     }
 
-    @Handler(InHeader.USER_PORTABLE_CHAIR_SIT_REQUEST)
+    @Handler(InHeader.UserPortableChairSitRequest)
     public static void handleUserPortableChairSitRequest(User user, InPacket inPacket) {
         // CWvsContext::SendSitOnPortableChairRequest
         final int itemId = inPacket.decodeInt(); // nItemID
@@ -121,7 +121,7 @@ public final class UserHandler {
         user.dispose();
     }
 
-    @Handler(InHeader.USER_CHAT)
+    @Handler(InHeader.UserChat)
     public static void handleUserChat(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final String text = inPacket.decodeString(); // sText
@@ -132,13 +132,13 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserPacket.userChat(user, ChatType.NORMAL, text, onlyBalloon));
     }
 
-    @Handler(InHeader.USER_AD_BOARD_CLOSE)
+    @Handler(InHeader.UserADBoardClose)
     public static void handleUserAdBoardClose(User user, InPacket inPacket) {
         user.setAdBoard(null);
         user.getField().broadcastPacket(UserPacket.userAdBoard(user, null));
     }
 
-    @Handler(InHeader.USER_EMOTION)
+    @Handler(InHeader.UserEmotion)
     public static void handleUserEmotion(User user, InPacket inPacket) {
         final int emotion = inPacket.decodeInt(); // nEmotion
         final int duration = inPacket.decodeInt(); // nDuration
@@ -146,7 +146,7 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserRemote.emotion(user, emotion, duration, isByItemOption), user);
     }
 
-    @Handler(InHeader.USER_ACTIVATE_EFFECT_ITEM)
+    @Handler(InHeader.UserActivateEffectItem)
     public static void handleUserActivateEffectItem(User user, InPacket inPacket) {
         final int itemId = inPacket.decodeInt(); // nEffectItemID
         if (itemId != 0 && !ItemConstants.isCashEffectItem(itemId) && !ItemConstants.isNonCashEffectItem(itemId)) {
@@ -159,7 +159,7 @@ public final class UserHandler {
 
     // NPC HANDLERS ----------------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.USER_SELECT_NPC)
+    @Handler(InHeader.UserSelectNpc)
     public static void handleUserSelectNpc(User user, InPacket inPacket) {
         final int objectId = inPacket.decodeInt(); // dwNpcId
         final short x = inPacket.decodeShort(); // ptUserPos.x
@@ -196,7 +196,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_SCRIPT_MESSAGE_ANSWER)
+    @Handler(InHeader.UserScriptMessageAnswer)
     public static void handleUserScriptMessageAnswer(User user, InPacket inPacket) {
         final byte type = inPacket.decodeByte(); // nMsgType
         final byte action = inPacket.decodeByte();
@@ -245,7 +245,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_SHOP_REQUEST)
+    @Handler(InHeader.UserShopRequest)
     public static void handleUserShopRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {
             if (!(user.getDialog() instanceof ShopDialog shopDialog)) {
@@ -256,7 +256,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_TRUNK_REQUEST)
+    @Handler(InHeader.UserTrunkRequest)
     public static void handleUserTrunkRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {
             if (!(user.getDialog() instanceof TrunkDialog trunkDialog)) {
@@ -270,7 +270,7 @@ public final class UserHandler {
 
     // INVENTORY HANDLERS ----------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.USER_GATHER_ITEM_REQUEST)
+    @Handler(InHeader.UserGatherItemRequest)
     public static void handlerUserGatherItemRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final InventoryType inventoryType = InventoryType.getByValue(inPacket.decodeByte()); // nType
@@ -333,7 +333,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_SORT_ITEM_REQUEST)
+    @Handler(InHeader.UserSortItemRequest)
     public static void handlerUserSortItemRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final InventoryType inventoryType = InventoryType.getByValue(inPacket.decodeByte()); // nType
@@ -377,7 +377,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_CHANGE_SLOT_POSITION_REQUEST)
+    @Handler(InHeader.UserChangeSlotPositionRequest)
     public static void handleUserChangeSlotPositionRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int type = inPacket.decodeByte(); // nType
@@ -461,7 +461,7 @@ public final class UserHandler {
 
     // STAT HANDLERS ---------------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.USER_ABILITY_UP_REQUEST)
+    @Handler(InHeader.UserAbilityUpRequest)
     public static void handleUserAbilityUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int flag = inPacket.decodeInt(); // dwFlag
@@ -488,7 +488,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_ABILITY_MASS_UP_REQUEST)
+    @Handler(InHeader.UserAbilityMassUpRequest)
     public static void handleUserAbilityMassUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int size = inPacket.decodeInt();
@@ -529,8 +529,8 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_STAT_CHANGE_REQUEST)
-    public static void handleUserStatChangeRequest(User user, InPacket inPacket) {
+    @Handler(InHeader.UserChangeStatRequest)
+    public static void handleUserChangeStatRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int mask = inPacket.decodeInt(); // 0x1400
         if (mask != 0x1400) {
@@ -551,7 +551,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_SKILL_UP_REQUEST)
+    @Handler(InHeader.UserSkillUpRequest)
     public static void handleUserSkillUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int skillId = inPacket.decodeInt(); // nSkillID
@@ -620,7 +620,7 @@ public final class UserHandler {
 
     // OTHER HANDLERS --------------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.USER_DROP_MONEY_REQUEST)
+    @Handler(InHeader.UserDropMoneyRequest)
     public static void handleUserDropMoneyRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int money = inPacket.decodeInt(); // nAmount
@@ -636,7 +636,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_CHARACTER_INFO_REQUEST)
+    @Handler(InHeader.UserCharacterInfoRequest)
     public static void handleUserCharacterInfoRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int characterId = inPacket.decodeInt(); // dwCharacterId
@@ -649,7 +649,7 @@ public final class UserHandler {
         user.write(WvsContext.characterInfo(userResult.get()));
     }
 
-    @Handler(InHeader.USER_PORTAL_SCRIPT_REQUEST)
+    @Handler(InHeader.UserPortalScriptRequest)
     public static void handleUserPortalScriptRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getField().getFieldKey() != fieldKey) {
@@ -667,7 +667,7 @@ public final class UserHandler {
         ScriptDispatcher.startPortalScript(user, portalResult.get());
     }
 
-    @Handler(InHeader.USER_PORTAL_TELEPORT_REQUEST)
+    @Handler(InHeader.UserPortalTeleportRequest)
     public static void handleUserPortalTeleportRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getField().getFieldKey() != fieldKey) {
@@ -682,7 +682,7 @@ public final class UserHandler {
         // let USER_MOVE packets update user position
     }
 
-    @Handler(InHeader.USER_QUEST_REQUEST)
+    @Handler(InHeader.UserQuestRequest)
     public static void handleUserQuestRequest(User user, InPacket inPacket) {
         final byte action = inPacket.decodeByte();
         final int questId = Short.toUnsignedInt(inPacket.decodeShort()); // usQuestID
@@ -777,7 +777,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.USER_MACRO_SYS_DATA_MODIFIED)
+    @Handler(InHeader.UserMacroSysDataModified)
     public static void handleUserMacroSysDataModified(User user, InPacket inPacket) {
         // MACROSYSDATA::Encode
         final List<SingleMacro> macroSysData = new ArrayList<>();
@@ -793,7 +793,7 @@ public final class UserHandler {
 
     // SOCIAL HANDLERS -------------------------------------------------------------------------------------------------
 
-    @Handler(InHeader.GROUP_MESSAGE)
+    @Handler(InHeader.GroupMessage)
     public static void handleGroupMessage(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int type = inPacket.decodeByte(); // nChatTarget
@@ -814,7 +814,7 @@ public final class UserHandler {
         user.getConnectedServer().submitUserPacketBroadcast(targetIds, FieldPacket.groupMessage(messageType, user.getCharacterName(), text));
     }
 
-    @Handler(InHeader.WHISPER)
+    @Handler(InHeader.Whisper)
     public static void handleWhisper(User user, InPacket inPacket) {
         final int flag = inPacket.decodeByte();
         inPacket.decodeInt(); // update_time
@@ -876,12 +876,12 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.MESSENGER)
+    @Handler(InHeader.Messenger)
     public static void handleMessenger(User user, InPacket inPacket) {
         // TODO
     }
 
-    @Handler(InHeader.MINIROOM)
+    @Handler(InHeader.MiniRoom)
     public static void handleMiniRoom(User user, InPacket inPacket) {
         final int action = inPacket.decodeByte();
         final MiniRoomProtocol mrp = MiniRoomProtocol.getByValue(action);
@@ -1094,7 +1094,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.PARTY_REQUEST)
+    @Handler(InHeader.PartyRequest)
     public static void handlePartyRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final PartyRequestType requestType = PartyRequestType.getByValue(type);
@@ -1142,7 +1142,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.PARTY_RESULT)
+    @Handler(InHeader.PartyResult)
     public static void handlePartyResult(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final PartyResultType resultType = PartyResultType.getByValue(type);
@@ -1179,7 +1179,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.FRIEND_REQUEST)
+    @Handler(InHeader.FriendRequest)
     public static void handleFriendRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final FriendRequestType requestType = FriendRequestType.getByValue(type);
@@ -1308,7 +1308,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.MEMO_REQUEST)
+    @Handler(InHeader.MemoRequest)
     public static void handleMemoRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final MemoRequestType requestType = MemoRequestType.getByValue(type);
@@ -1453,7 +1453,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.ENTER_TOWN_PORTAL_REQUEST)
+    @Handler(InHeader.EnterTownPortalRequest)
     public static void handleEnterTownPortalRequest(User user, InPacket inPacket) {
         final int ownerId = inPacket.decodeInt(); // dwCharacterId
         inPacket.decodeBoolean();
@@ -1482,7 +1482,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.FUNC_KEY_MAPPED_MODIFIED)
+    @Handler(InHeader.FuncKeyMappedModified)
     public static void handleFuncKeyMappedModified(User user, InPacket inPacket) {
         final int type = inPacket.decodeInt();
         final FuncKeyMappedType funcKeyMappedType = FuncKeyMappedType.getByValue(type);
@@ -1527,12 +1527,12 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.UPDATE_GM_BOARD)
+    @Handler(InHeader.UpdateGMBoard)
     public static void handleUpdateGmBoard(User user, InPacket inPacket) {
         inPacket.decodeInt(); // nGameOpt_OpBoardIndex
     }
 
-    @Handler(InHeader.QUICKSLOT_KEY_MAPPED_MODIFIED)
+    @Handler(InHeader.QuickslotKeyMappedModified)
     public static void handleQuickslotKeyMappedModified(User user, InPacket inPacket) {
         final int[] quickslotKeyMap = new int[GameConstants.QUICKSLOT_KEY_MAP_SIZE];
         for (int i = 0; i < quickslotKeyMap.length; i++) {
@@ -1540,11 +1540,11 @@ public final class UserHandler {
         }
         try (var locked = user.acquire()) {
             final ConfigManager cm = locked.get().getConfigManager();
-            cm.updateQuickSlotKeyMap(quickslotKeyMap);
+            cm.updateQuickslotKeyMap(quickslotKeyMap);
         }
     }
 
-    @Handler(InHeader.UPDATE_SCREEN_SETTING)
+    @Handler(InHeader.UpdateScreenSetting)
     public static void handleUpdateScreenSetting(User user, InPacket inPacket) {
         inPacket.decodeByte(); // bSysOpt_LargeScreen
         inPacket.decodeByte(); // bSysOpt_WindowedMode

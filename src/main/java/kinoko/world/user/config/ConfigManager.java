@@ -63,7 +63,7 @@ public final class ConfigManager {
         }
     }
 
-    public void updateQuickSlotKeyMap(int[] quickslotKeyMap) {
+    public void updateQuickslotKeyMap(int[] quickslotKeyMap) {
         System.arraycopy(quickslotKeyMap, 0, this.quickslotKeyMap, 0, GameConstants.QUICKSLOT_KEY_MAP_SIZE);
     }
 

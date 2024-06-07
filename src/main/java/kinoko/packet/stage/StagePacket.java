@@ -12,7 +12,7 @@ public final class StagePacket {
     // CStage::OnPacket ------------------------------------------------------------------------------------------------
 
     public static OutPacket setField(User user, int channelId, boolean isMigrate, boolean isRevive) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SET_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SetField);
         outPacket.encodeShort(0); // CClientOptMan::DecodeOpt
         outPacket.encodeInt(channelId); // nChannelID
         outPacket.encodeInt(0); // dwOldDriverID
@@ -48,7 +48,7 @@ public final class StagePacket {
     }
 
     public static OutPacket setCashShop(User user) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SET_CASHSHOP);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SetCashShop);
         user.getCharacterData().encode(outPacket);
 
         // CCashShop::LoadData

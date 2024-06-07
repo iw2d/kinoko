@@ -13,7 +13,7 @@ public final class SummonedPacket {
     // CSummonedPool::OnPacket -----------------------------------------------------------------------------------------
 
     public static OutPacket summonedEnterField(User user, Summoned summoned) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SummonedEnterField);
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         // CSummonedPool::OnCreated
         outPacket.encodeInt(summoned.getId()); // dwSummonedID
@@ -25,7 +25,7 @@ public final class SummonedPacket {
     }
 
     public static OutPacket summonedLeaveField(User user, Summoned summoned) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_LEAVE_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SummonedLeaveField);
         outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         // CSummonedPool::OnRemoved
         outPacket.encodeInt(summoned.getId()); // dwSummonedID
@@ -34,7 +34,7 @@ public final class SummonedPacket {
     }
 
     public static OutPacket summonedMove(User user, Summoned summoned, MovePath movePath) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_MOVE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SummonedMove);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         movePath.encode(outPacket);
@@ -42,7 +42,7 @@ public final class SummonedPacket {
     }
 
     public static OutPacket summonedAttack(User user, Summoned summoned, Attack attack) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_ATTACK);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SummonedAttack);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnAttack
@@ -59,7 +59,7 @@ public final class SummonedPacket {
     }
 
     public static OutPacket summonedSkill(User user, Summoned summoned) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_SKILL);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SummonedSkill);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnSkill
@@ -68,7 +68,7 @@ public final class SummonedPacket {
     }
 
     public static OutPacket summonedHit(User user, Summoned summoned, HitInfo hitInfo) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SUMMONED_HIT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.SummonedHit);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnHit

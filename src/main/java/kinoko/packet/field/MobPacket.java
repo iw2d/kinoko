@@ -12,7 +12,7 @@ public final class MobPacket {
     // CMobPool::OnPacket ----------------------------------------------------------------------------------------------
 
     public static OutPacket mobEnterField(Mob mob) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobEnterField);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
@@ -22,7 +22,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobLeaveField(Mob mob) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_LEAVE_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobLeaveField);
         outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(1); // nDeadType
         // if nDeadType == 4, encodeInt(dwSwallowCharacterID);
@@ -30,7 +30,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobChangeController(Mob mob, boolean forController) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CHANGE_CONTROLLER);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobChangeController);
         outPacket.encodeByte(forController);
         outPacket.encodeInt(mob.getId()); // dwMobId
         if (forController) {
@@ -47,7 +47,7 @@ public final class MobPacket {
     // CMobPool::OnMobPacket -------------------------------------------------------------------------------------------
 
     public static OutPacket mobMove(Mob mob, MobAttackInfo mai, MovePath movePath) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_MOVE);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobMove);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(false); // bNotForceLandingWhenDiscard
         outPacket.encodeByte(false); // bNotChangeAction
@@ -78,7 +78,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CTRL_ACK);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobCtrlAck);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
         outPacket.encodeByte(nextAttackPossible); // bNextAttackPossible
@@ -89,7 +89,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobStatSet(Mob mob, Map<MobTemporaryStat, MobStatOption> setStats, Set<BurnedInfo> setBurnedInfos) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_SET);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobStatSet);
         outPacket.encodeInt(mob.getId()); // dwMobId
         // CMob::ProcessStatSet
         MobStat.encode(outPacket, setStats, setBurnedInfos);
@@ -100,7 +100,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobStatReset(Mob mob, Set<MobTemporaryStat> resetStats, Set<BurnedInfo> resetBurnedInfos) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_STAT_RESET);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobStatReset);
         outPacket.encodeInt(mob.getId()); // dwMobId
         MobStat.encodeReset(outPacket, resetStats, resetBurnedInfos);
         outPacket.encodeByte(true); // nCalcDamageStatIndex
@@ -109,7 +109,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobDamaged(Mob mob, int damage) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_DAMAGED);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobDamaged);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(0); // (byte != 2) -> CMob::ShowDamage
         outPacket.encodeInt(damage); // nDamage
@@ -121,7 +121,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobSpecialEffectBySkill(Mob mob, int skillId, int characterId, int delay) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_SPECIAL_EFFECT_BY_SKILL);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobSpecialEffectBySkill);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeInt(skillId); // nSkillID
         outPacket.encodeInt(characterId); // dwCharacterID, only used for mortal blow?
@@ -130,14 +130,14 @@ public final class MobPacket {
     }
 
     public static OutPacket mobHpIndicator(Mob mob, int percentage) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_HP_INDICATOR);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobHPIndicator);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(percentage); // nHPpercentage
         return outPacket;
     }
 
     public static OutPacket mobCatchEffect(Mob mob, boolean success, boolean delay) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_CATCH_EFFECT);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobCatchEffect);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(success); // bSuccess
         outPacket.encodeByte(delay); // tDelay = bool ? 270 : 0
@@ -145,7 +145,7 @@ public final class MobPacket {
     }
 
     public static OutPacket mobEffectByItem(Mob mob, int itemId, boolean success) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MOB_EFFECT_BY_ITEM);
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobEffectByItem);
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeInt(itemId); // nItemID
         outPacket.encodeByte(success); // bSuccess

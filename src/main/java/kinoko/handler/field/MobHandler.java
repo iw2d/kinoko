@@ -30,7 +30,7 @@ import java.util.*;
 public final class MobHandler {
     private static final Logger log = LogManager.getLogger(MobHandler.class);
 
-    @Handler(InHeader.MOB_MOVE)
+    @Handler(InHeader.MobMove)
     public static void handleMobMove(User user, InPacket inPacket) {
         // CMob::GenerateMovePath
         final int objectId = inPacket.decodeInt(); // dwMobID
@@ -94,7 +94,7 @@ public final class MobHandler {
         }
     }
 
-    @Handler(InHeader.MOB_APPLY_CTRL)
+    @Handler(InHeader.MobApplyCtrl)
     public static void handleMobApplyCtrl(User user, InPacket inPacket) {
         // CMob::ApplyControl
         inPacket.decodeInt(); // dwMobID
