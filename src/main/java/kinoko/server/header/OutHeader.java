@@ -356,8 +356,8 @@ public enum OutHeader {
     EmployeeMiniRoomBalloon(321),
 
     // CDropPool::OnPacket
-    DROP_ENTER_FIELD(322),
-    DROP_RELEASE_ALL_FREEZE(323),
+    DropEnterField(322),
+    DropReleaseAllFreeze(323),
     DropLeaveField(324),
 
     // CMessageBoxPool::OnPacket
@@ -547,8 +547,10 @@ public enum OutHeader {
             NpcLeaveField,
             NpcChangeController,
             NpcMove,
-            DROP_ENTER_FIELD,
-            DropLeaveField
+            DropEnterField,
+            DropLeaveField,
+            QuickslotMappedInit,
+            FuncKeyMappedInit
     );
 
     static {

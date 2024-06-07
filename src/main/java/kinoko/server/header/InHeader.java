@@ -316,7 +316,7 @@ public enum InHeader {
     ITCQueryCashRequest(307),
     ITCItemRequest(308),
     // END_ITC(309),
-    BEGIN_CHARACTERSALE(310),
+    // BEGIN_CHARACTERSALE(310),
     CheckDuplicatedIDInCS(311),
     // END_CHARACTERSALE(312),
     LogoutGiftSelect(313),
@@ -326,6 +326,8 @@ public enum InHeader {
     private static final Set<InHeader> ignoreHeaders = Set.of(
             CreateSecurityHandle,
             UpdateScreenSetting,
+            FuncKeyMappedModified,
+            QuickslotKeyMappedModified,
             UserMove,
             UserEmotion,
             UserChangeStatRequest,
@@ -334,7 +336,8 @@ public enum InHeader {
             SummonedMove,
             MobMove,
             MobApplyCtrl,
-            NpcMove
+            NpcMove,
+            CANCEL_INVITE_PARTY_MATCH
     );
 
     static {

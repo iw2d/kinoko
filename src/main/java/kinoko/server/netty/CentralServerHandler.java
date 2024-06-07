@@ -40,9 +40,9 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
         final int op = inPacket.decodeShort();
         final CentralHeader header = CentralHeader.getByValue(op);
-        log.log(Level.DEBUG, "[CentralServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
+        log.log(Level.TRACE, "[CentralServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         switch (header) {
-            case INITIALIZE_RESULT -> {
+            case InitializeResult -> {
                 final int channelId = inPacket.decodeInt();
                 final byte[] channelHost = inPacket.decodeArray(4);
                 final int channelPort = inPacket.decodeInt();
@@ -52,7 +52,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 remoteChildNode.setChannelPort(channelPort);
                 centralServerNode.addChildNode(remoteChildNode);
             }
-            case SHUTDOWN_RESULT -> {
+            case ShutdownResult -> {
                 final int channelId = inPacket.decodeInt();
                 final boolean success = inPacket.decodeBoolean();
                 if (!success) {
@@ -62,7 +62,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 centralServerNode.removeChildNode(channelId);
             }
-            case MIGRATE_REQUEST -> {
+            case MigrateRequest -> {
                 // Channel migration - complete stored migration request
                 final int requestId = inPacket.decodeInt();
                 final int accountId = inPacket.decodeInt();
@@ -72,7 +72,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 final Optional<MigrationInfo> migrationResult = centralServerNode.completeMigrationRequest(remoteChildNode.getChannelId(), accountId, characterId, machineId, clientKey);
                 remoteChildNode.write(CentralPacket.migrateResult(requestId, migrationResult.orElse(null)));
             }
-            case TRANSFER_REQUEST -> {
+            case TransferRequest -> {
                 // Channel transfer - create migration request and reply with transfer info
                 final int requestId = inPacket.decodeInt();
                 final MigrationInfo migrationInfo = MigrationInfo.decode(inPacket);
@@ -96,17 +96,17 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         targetNode.getChannelPort()
                 )));
             }
-            case USER_CONNECT -> {
+            case UserConnect -> {
                 final RemoteUser remoteUser = RemoteUser.decode(inPacket);
                 centralServerNode.addUser(remoteUser);
                 updatePartyMember(remoteUser);
             }
-            case USER_UPDATE -> {
+            case UserUpdate -> {
                 final RemoteUser remoteUser = RemoteUser.decode(inPacket);
                 centralServerNode.updateUser(remoteUser);
                 updatePartyMember(remoteUser);
             }
-            case USER_DISCONNECT -> {
+            case UserDisconnect -> {
                 final RemoteUser remoteUser = RemoteUser.decode(inPacket);
                 centralServerNode.removeUser(remoteUser);
                 if (!centralServerNode.isMigrating(remoteUser.getAccountId())) {
@@ -115,7 +115,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     updatePartyMember(remoteUser);
                 }
             }
-            case USER_PACKET_REQUEST -> {
+            case UserPacketRequest -> {
                 final String characterName = inPacket.decodeString();
                 final int packetLength = inPacket.decodeInt();
                 final byte[] packetData = inPacket.decodeArray(packetLength);
@@ -131,10 +131,10 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     log.error("Failed to resolve channel ID {}", target.getChannelId() + 1);
                     return;
                 }
-                // Send USER_PACKET_RECEIVE to target channel node
+                // Send UserPacketReceive to target channel node
                 targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), OutPacket.of(packetData)));
             }
-            case USER_PACKET_RECEIVE -> {
+            case UserPacketReceive -> {
                 final int characterId = inPacket.decodeInt();
                 final int packetLength = inPacket.decodeInt();
                 final byte[] packetData = inPacket.decodeArray(packetLength);
@@ -150,10 +150,10 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     log.error("Failed to resolve channel ID {}", target.getChannelId() + 1);
                     return;
                 }
-                // Send USER_PACKET_RECEIVE to target channel node
+                // Send UserPacketReceive to target channel node
                 targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), OutPacket.of(packetData)));
             }
-            case USER_PACKET_BROADCAST -> {
+            case UserPacketBroadcast -> {
                 final int size = inPacket.decodeInt();
                 final Set<Integer> characterIds = new HashSet<>();
                 for (int i = 0; i < size; i++) {
@@ -165,7 +165,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     childNode.write(CentralPacket.userPacketBroadcast(characterIds, OutPacket.of(packetData)));
                 }
             }
-            case USER_QUERY_REQUEST -> {
+            case UserQueryRequest -> {
                 // Resolve queried users
                 final int requestId = inPacket.decodeInt();
                 final int size = inPacket.decodeInt();
@@ -178,20 +178,20 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Reply with queried remote users
                 remoteChildNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));
             }
-            case PARTY_REQUEST -> {
+            case PartyRequest -> {
                 final int characterId = inPacket.decodeInt();
                 final PartyRequest partyRequest = PartyRequest.decode(inPacket);
                 // Resolve requester user
                 final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
                 if (remoteUserResult.isEmpty()) {
-                    log.error("Failed to resolve user with character ID : {} for PARTY_REQUEST", characterId);
+                    log.error("Failed to resolve user with character ID : {} for PartyRequest", characterId);
                     return;
                 }
                 final RemoteUser remoteUser = remoteUserResult.get();
                 // Process request
                 switch (partyRequest.getRequestType()) {
                     case LoadParty -> {
-                        // Remote user party ID is set on USER_CONNECT
+                        // Remote user party ID is set on UserConnect
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isEmpty()) {
                             remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0, 0));

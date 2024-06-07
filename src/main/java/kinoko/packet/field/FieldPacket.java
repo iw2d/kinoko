@@ -77,7 +77,7 @@ public final class FieldPacket {
     // CDropPool::OnPacket ---------------------------------------------------------------------------------------------
 
     public static OutPacket dropEnterField(Drop drop, DropEnterType enterType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.DROP_ENTER_FIELD);
+        final OutPacket outPacket = OutPacket.of(OutHeader.DropEnterField);
         outPacket.encodeByte(enterType.getValue()); // nEnterType
         outPacket.encodeInt(drop.getId()); // DROP->dwId
         outPacket.encodeByte(drop.isMoney()); // DROP->bIsMoney

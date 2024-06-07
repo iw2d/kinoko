@@ -6,7 +6,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
 /**
- * Utility class for {@link CentralHeader#PARTY_REQUEST}
+ * Utility class for {@link CentralHeader#PartyRequest}
  */
 public final class PartyRequest implements Encodable {
     private final PartyRequestType requestType;

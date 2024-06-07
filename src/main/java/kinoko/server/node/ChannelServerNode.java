@@ -30,12 +30,14 @@ public final class ChannelServerNode extends ServerNode {
     private final FieldStorage fieldStorage = new FieldStorage();
     private final int channelId;
     private final int channelPort;
+    private boolean isShutdown;
     private ChannelFuture centralClientFuture;
     private ChannelFuture channelServerFuture;
 
     public ChannelServerNode(int channelId, int channelPort) {
         this.channelId = channelId;
         this.channelPort = channelPort;
+        this.isShutdown = false;
     }
 
     public int getChannelId() {
@@ -50,6 +52,9 @@ public final class ChannelServerNode extends ServerNode {
         return requestIdCounter.getAndIncrement();
     }
 
+    public boolean isShutdown() {
+        return isShutdown;
+    }
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
 
@@ -202,6 +207,7 @@ public final class ChannelServerNode extends ServerNode {
         // Close central client
         centralClientFuture.channel().writeAndFlush(CentralPacket.shutdownResult(channelId, true));
         centralClientFuture.channel().close().sync();
+        isShutdown = true;
         log.info("Central client {} closed", channelId + 1);
     }
 }

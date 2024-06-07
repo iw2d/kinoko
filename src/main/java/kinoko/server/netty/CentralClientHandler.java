@@ -35,44 +35,44 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
     protected void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
         final int op = inPacket.decodeShort();
         final CentralHeader header = CentralHeader.getByValue(op);
-        log.log(Level.DEBUG, "[ChannelServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
+        log.log(Level.TRACE, "[ChannelServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         switch (header) {
-            case INITIALIZE_REQUEST -> {
+            case InitializeRequest -> {
                 ctx.channel().writeAndFlush(CentralPacket.initializeResult(channelServerNode.getChannelId(), ServerConstants.SERVER_HOST, channelServerNode.getChannelPort()));
             }
-            case SHUTDOWN_REQUEST -> {
+            case ShutdownRequest -> {
                 try {
                     channelServerNode.shutdown();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-            case MIGRATE_RESULT -> {
+            case MigrateResult -> {
                 final int requestId = inPacket.decodeInt();
                 final boolean success = inPacket.decodeBoolean();
                 final MigrationInfo migrationResult = success ? MigrationInfo.decode(inPacket) : null;
                 channelServerNode.completeMigrationRequest(requestId, migrationResult);
             }
-            case TRANSFER_RESULT -> {
+            case TransferResult -> {
                 final int requestId = inPacket.decodeInt();
                 final boolean success = inPacket.decodeBoolean();
                 final TransferInfo transferResult = success ? TransferInfo.decode(inPacket) : null;
                 channelServerNode.completeTransferRequest(requestId, transferResult);
             }
-            case USER_PACKET_RECEIVE -> {
+            case UserPacketReceive -> {
                 final int characterId = inPacket.decodeInt();
                 final int packetLength = inPacket.decodeInt();
                 final byte[] packetData = inPacket.decodeArray(packetLength);
                 // Resolve target user
                 final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
                 if (targetUserResult.isEmpty()) {
-                    log.error("Could not resolve target user for USER_PACKET_RECEIVE");
+                    log.error("Could not resolve target user for UserPacketReceive");
                     return;
                 }
                 // Write to target client
                 targetUserResult.get().write(OutPacket.of(packetData));
             }
-            case USER_PACKET_BROADCAST -> {
+            case UserPacketBroadcast -> {
                 final int size = inPacket.decodeInt();
                 final Set<Integer> characterIds = new HashSet<>();
                 for (int i = 0; i < size; i++) {
@@ -89,7 +89,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     targetUserResult.get().write(outPacket);
                 }
             }
-            case USER_QUERY_RESULT -> {
+            case UserQueryResult -> {
                 final int requestId = inPacket.decodeInt();
                 final int size = inPacket.decodeInt();
                 final Set<RemoteUser> remoteUsers = new HashSet<>();
@@ -98,14 +98,14 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 }
                 channelServerNode.completeUserQueryRequest(requestId, remoteUsers);
             }
-            case PARTY_RESULT -> {
+            case PartyResult -> {
                 final int characterId = inPacket.decodeInt();
                 final int partyId = inPacket.decodeInt();
                 final int partyMemberIndex = inPacket.decodeInt();
                 // Resolve target user
                 final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
                 if (targetUserResult.isEmpty()) {
-                    log.error("Could not resolve target user for PARTY_RESULT");
+                    log.error("Could not resolve target user for PartyResult");
                     return;
                 }
                 try (var locked = targetUserResult.get().acquire()) {
@@ -135,6 +135,9 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
+        if (channelServerNode.isShutdown()) {
+            return;
+        }
         log.error("Central client {} lost connection to central server", channelServerNode.getChannelId() + 1);
     }
 
