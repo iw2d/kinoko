@@ -128,7 +128,7 @@ public final class CharacterData implements Encodable {
     }
 
     public AvatarLook getAvatarLook() {
-        return AvatarLook.from(characterStat, inventoryManager.getEquipped());
+        return AvatarLook.from(characterStat, inventoryManager.getEquipped(), inventoryManager.getCashInventory());
     }
 
     public void encodeCharacterData(DBChar flag, OutPacket outPacket) {

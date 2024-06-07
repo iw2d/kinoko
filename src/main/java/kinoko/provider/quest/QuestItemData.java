@@ -78,7 +78,7 @@ public final class QuestItemData {
             if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
                 throw new ProviderError("Failed to resolve quest item list");
             }
-            final QuestItemData itemData = from(itemProp, defaultCount);
+            final QuestItemData itemData = QuestItemData.from(itemProp, defaultCount);
             assert !(itemData.getCount() <= 0 && itemData.getProp() != -1);
             items.add(itemData);
         }
@@ -95,7 +95,7 @@ public final class QuestItemData {
             if (prop != -1) {
                 continue;
             }
-            final QuestItemData itemData = from(itemProp, 1);
+            final QuestItemData itemData = QuestItemData.from(itemProp, 1);
             assert !(itemData.getCount() <= 0 && itemData.getProp() != -1);
             items.add(itemData);
         }

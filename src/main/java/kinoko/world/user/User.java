@@ -49,6 +49,7 @@ public final class User extends Life implements Lockable<User> {
     private TownPortal townPortal;
     private int partyId;
     private int partyMemberIndex;
+    private int messengerId;
     private int effectItemId;
     private int portableChairId;
     private String adBoard;
@@ -185,6 +186,14 @@ public final class User extends Life implements Lockable<User> {
 
     public void setPartyMemberIndex(int partyMemberIndex) {
         this.partyMemberIndex = partyMemberIndex;
+    }
+
+    public int getMessengerId() {
+        return messengerId;
+    }
+
+    public void setMessengerId(int messengerId) {
+        this.messengerId = messengerId;
     }
 
     public int getEffectItemId() {

@@ -26,7 +26,7 @@ public final class ItemOptionLevelData {
             if (!(levelEntry.getValue() instanceof WzListProperty levelProp)) {
                 throw new ProviderError("Failed to resolve item option level prop");
             }
-            levelData.put(level, from(levelProp));
+            levelData.put(level, ItemOptionLevelData.from(levelProp));
         }
         return Collections.unmodifiableMap(levelData);
     }

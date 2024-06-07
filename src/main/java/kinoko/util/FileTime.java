@@ -24,11 +24,11 @@ public final class FileTime {
     }
 
     public static FileTime now() {
-        return from(Instant.now());
+        return FileTime.from(Instant.now());
     }
 
     public static FileTime from(Instant timestamp) {
-        return from(timestamp.toEpochMilli() * 10000L + FT_OFFSET);
+        return FileTime.from(timestamp.toEpochMilli() * 10000L + FT_OFFSET);
     }
 
     public static FileTime from(long value) {
