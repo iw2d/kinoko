@@ -12,7 +12,6 @@ import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.reactor.Reactor;
-import kinoko.world.social.whisper.WhisperResult;
 import kinoko.world.user.config.FuncKeyMapped;
 
 public final class FieldPacket {
@@ -48,12 +47,6 @@ public final class FieldPacket {
         outPacket.encodeByte(messageType.getValue());
         outPacket.encodeString(characterName); // sFrom
         outPacket.encodeString(message); // sMsg
-        return outPacket;
-    }
-
-    public static OutPacket whisper(WhisperResult whisperResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.Whisper);
-        whisperResult.encode(outPacket);
         return outPacket;
     }
 

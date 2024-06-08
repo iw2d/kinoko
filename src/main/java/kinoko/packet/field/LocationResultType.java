@@ -1,4 +1,4 @@
-package kinoko.world.social.whisper;
+package kinoko.packet.field;
 
 public enum LocationResultType {
     // LR
