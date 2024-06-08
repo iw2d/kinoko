@@ -122,7 +122,20 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                         user.write(FieldPacket.townPortalRemoved(user.getCharacterId(), false));
                     }
                 }
-
+            }
+            case MessengerResult -> {
+                final int characterId = inPacket.decodeInt();
+                final int messengerId = inPacket.decodeInt();
+                // Resolve target user
+                final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
+                if (targetUserResult.isEmpty()) {
+                    log.error("Could not resolve target user for MessengerResult");
+                    return;
+                }
+                try (var locked = targetUserResult.get().acquire()) {
+                    final User user = locked.get();
+                    user.setMessengerId(messengerId);
+                }
             }
             case null -> {
                 log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);

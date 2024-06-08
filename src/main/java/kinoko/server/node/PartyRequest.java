@@ -14,7 +14,7 @@ public final class PartyRequest implements Encodable {
     private int characterId;
     private String characterName;
 
-    public PartyRequest(PartyRequestType requestType) {
+    PartyRequest(PartyRequestType requestType) {
         this.requestType = requestType;
     }
 
@@ -49,7 +49,7 @@ public final class PartyRequest implements Encodable {
     public static PartyRequest decode(InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final PartyRequest partyRequest = new PartyRequest(PartyRequestType.getByValue(type));
-        switch (partyRequest.getRequestType()) {
+        switch (partyRequest.requestType) {
             case LoadParty, CreateNewParty, WithdrawParty -> {
                 // no decodes
             }

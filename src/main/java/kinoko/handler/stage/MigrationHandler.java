@@ -119,6 +119,8 @@ public final class MigrationHandler {
 
         // Initialize User
         final User user = new User(c, characterData);
+        user.setMessengerId(migrationResult.getMessengerId()); // this is required before user connect
+
         if (channelServerNode.isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
             c.close();
@@ -192,6 +194,9 @@ public final class MigrationHandler {
 
             // Load party from central server
             channelServerNode.submitPartyRequest(user, PartyRequest.of(PartyRequestType.LoadParty));
+
+            // Load messenger from central server
+            channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
 
             // Check memos
             if (DatabaseManager.memoAccessor().hasMemo(user.getCharacterId())) {

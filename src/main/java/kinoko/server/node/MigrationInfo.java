@@ -23,10 +23,11 @@ public final class MigrationInfo implements Encodable {
     private final Instant expireTime;
 
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats;
+    private final int messengerId;
     private final int effectItemId;
     private final String adBoard;
 
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, Instant expireTime, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, int effectItemId, String adBoard) {
+    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, Instant expireTime, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, int messengerId, int effectItemId, String adBoard) {
         assert machineId.length == 16 && clientKey.length == 8;
         this.channelId = channelId;
         this.accountId = accountId;
@@ -35,6 +36,7 @@ public final class MigrationInfo implements Encodable {
         this.clientKey = clientKey;
         this.expireTime = expireTime;
         this.temporaryStats = temporaryStats;
+        this.messengerId = messengerId;
         this.effectItemId = effectItemId;
         this.adBoard = adBoard;
     }
@@ -61,6 +63,10 @@ public final class MigrationInfo implements Encodable {
 
     public Map<CharacterTemporaryStat, TemporaryStatOption> getTemporaryStats() {
         return temporaryStats;
+    }
+
+    public int getMessengerId() {
+        return messengerId;
     }
 
     public int getEffectItemId() {
@@ -91,6 +97,7 @@ public final class MigrationInfo implements Encodable {
                 ", clientKey=" + Arrays.toString(clientKey) +
                 ", expireTime=" + expireTime +
                 ", temporaryStats=" + temporaryStats +
+                ", messengerId=" + messengerId +
                 ", effectItemId=" + effectItemId +
                 ", adBoard='" + adBoard + '\'' +
                 '}';
@@ -106,6 +113,7 @@ public final class MigrationInfo implements Encodable {
         outPacket.encodeLong(expireTime.toEpochMilli());
 
         encodeTemporaryStats(outPacket, temporaryStats);
+        outPacket.encodeInt(messengerId);
         outPacket.encodeInt(effectItemId);
         outPacket.encodeByte(adBoard != null);
         if (adBoard != null) {
@@ -122,9 +130,10 @@ public final class MigrationInfo implements Encodable {
         final long expireTime = inPacket.decodeLong();
 
         final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = decodeTemporaryStats(inPacket);
+        final int messengerId = inPacket.decodeInt();
         final int effectItemId = inPacket.decodeInt();
         final String adBoard = inPacket.decodeBoolean() ? inPacket.decodeString() : null;
-        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, Instant.ofEpochMilli(expireTime), temporaryStats, effectItemId, adBoard);
+        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, Instant.ofEpochMilli(expireTime), temporaryStats, messengerId, effectItemId, adBoard);
     }
 
     public static MigrationInfo from(User user, int targetChannelId) {
@@ -136,6 +145,7 @@ public final class MigrationInfo implements Encodable {
                 user.getClient().getClientKey(),
                 Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS),
                 user.getSecondaryStat().getTemporaryStats(),
+                user.getMessengerId(),
                 user.getEffectItemId(),
                 user.getAdBoard()
         );
@@ -150,6 +160,7 @@ public final class MigrationInfo implements Encodable {
                 clientKey,
                 Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS),
                 Map.of(),
+                0,
                 0,
                 null
         );

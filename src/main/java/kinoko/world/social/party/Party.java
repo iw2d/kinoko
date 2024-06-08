@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * the instance stored in UserStorage.
  */
 public final class Party implements Encodable, Lockable<Party> {
-    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, "", 0, 0, GameConstants.CHANNEL_OFFLINE, GameConstants.UNDEFINED_FIELD_ID, 0, RemoteTownPortal.EMPTY);
+    private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, "", 0, 0, GameConstants.CHANNEL_OFFLINE, GameConstants.UNDEFINED_FIELD_ID, 0, 0, RemoteTownPortal.EMPTY);
     private final Lock lock = new ReentrantLock();
     private final int partyId;
     private final List<RemoteUser> partyMembers = new ArrayList<>();
@@ -106,7 +106,7 @@ public final class Party implements Encodable, Lockable<Party> {
         }
     }
 
-    public void forEachMemberForPartyData(Consumer<RemoteUser> consumer) {
+    private void forEachMemberForPartyData(Consumer<RemoteUser> consumer) {
         for (int i = 0; i < GameConstants.PARTY_MAX; i++) {
             if (i < partyMembers.size()) {
                 consumer.accept(partyMembers.get(i));

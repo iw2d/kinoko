@@ -55,7 +55,7 @@ public final class MessengerPacket {
 
     public static OutPacket blocked(String characterName, boolean blocked) {
         // CUIMessenger::OnBlocked
-        final OutPacket outPacket = MessengerPacket.of(MessengerProtocol.MSMP_InviteResult);
+        final OutPacket outPacket = MessengerPacket.of(MessengerProtocol.MSMP_Blocked);
         outPacket.encodeString(characterName); // sBlockedUser
         outPacket.encodeByte(blocked); // '%s' is currently not accepting chat. | '%s' denied the request.
         return outPacket;
@@ -68,10 +68,6 @@ public final class MessengerPacket {
         return outPacket;
     }
 
-    public static OutPacket chat(String characterName, String message) {
-        return chat(String.format("%s : %s", characterName, message));
-    }
-
     public static OutPacket avatar(int userIndex, AvatarLook avatarLook) {
         // CUIMessenger::OnAvatar
         final OutPacket outPacket = MessengerPacket.of(MessengerProtocol.MSMP_Avatar);
@@ -81,7 +77,7 @@ public final class MessengerPacket {
     }
 
     public static OutPacket migrated(Map<Integer, MessengerUser> users) {
-        // CUIMessenger::OnMigrated
+        // CUIMessenger::OnMigrated - doesn't work?
         final OutPacket outPacket = MessengerPacket.of(MessengerProtocol.MSMP_Migrated);
         for (var entry : users.entrySet()) {
             outPacket.encodeByte(entry.getKey()); // user index

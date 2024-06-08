@@ -1,10 +1,7 @@
 package kinoko.packet;
 
 import kinoko.server.header.CentralHeader;
-import kinoko.server.node.MigrationInfo;
-import kinoko.server.node.PartyRequest;
-import kinoko.server.node.RemoteUser;
-import kinoko.server.node.TransferInfo;
+import kinoko.server.node.*;
 import kinoko.server.packet.OutPacket;
 
 import java.util.Set;
@@ -151,6 +148,20 @@ public final class CentralPacket {
         outPacket.encodeInt(characterId);
         outPacket.encodeInt(partyId);
         outPacket.encodeInt(partyMemberIndex);
+        return outPacket;
+    }
+
+    public static OutPacket messengerRequest(int characterId, MessengerRequest messengerRequest) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MessengerRequest);
+        outPacket.encodeInt(characterId);
+        messengerRequest.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket messengerResult(int characterId, int messengerId) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MessengerResult);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(messengerId);
         return outPacket;
     }
 }

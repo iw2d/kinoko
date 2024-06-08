@@ -14,6 +14,7 @@ import kinoko.provider.quest.QuestInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.MessengerRequest;
 import kinoko.server.node.PartyRequest;
 import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.InPacket;
@@ -44,6 +45,7 @@ import kinoko.world.social.friend.*;
 import kinoko.world.social.memo.Memo;
 import kinoko.world.social.memo.MemoRequestType;
 import kinoko.world.social.memo.MemoType;
+import kinoko.world.social.messenger.MessengerProtocol;
 import kinoko.world.social.party.PartyRequestType;
 import kinoko.world.social.party.PartyResultType;
 import kinoko.world.social.whisper.WhisperFlag;
@@ -813,16 +815,16 @@ public final class UserHandler {
                 final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
                 try {
                     final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-                    final Optional<RemoteUser> userResult = queryResult.stream().findFirst();
-                    if (userResult.isEmpty()) {
+                    final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
+                    if (targetResult.isEmpty()) {
                         user.write(WhisperPacket.locationResultNone(targetName));
                         return;
                     }
-                    final RemoteUser remoteUser = userResult.get();
-                    if (remoteUser.getChannelId() == user.getChannelId()) {
-                        user.write(WhisperPacket.locationResultSameChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, remoteUser.getFieldId()));
+                    final RemoteUser target = targetResult.get();
+                    if (target.getChannelId() == user.getChannelId()) {
+                        user.write(WhisperPacket.locationResultSameChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, target.getFieldId()));
                     } else {
-                        user.write(WhisperPacket.locationResultOtherChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, remoteUser.getChannelId()));
+                        user.write(WhisperPacket.locationResultOtherChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, target.getChannelId()));
                     }
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
                     log.error("Exception caught while waiting for user query result", e);
@@ -865,7 +867,62 @@ public final class UserHandler {
 
     @Handler(InHeader.Messenger)
     public static void handleMessenger(User user, InPacket inPacket) {
-        // TODO
+        final int action = inPacket.decodeByte();
+        final MessengerProtocol msmp = MessengerProtocol.getByValue(action);
+        switch (msmp) {
+            case MSMP_Enter -> {
+                // CUIMessenger::OnCreate
+                final int messengerId = inPacket.decodeInt(); // pData (dwJoinSN)
+                user.getConnectedServer().submitMessengerRequest(user, MessengerRequest.enter(messengerId, user));
+            }
+            case MSMP_Leave -> {
+                // CUIMessenger::OnDestroy
+                user.getConnectedServer().submitMessengerRequest(user, MessengerRequest.leave());
+            }
+            case MSMP_Invite -> {
+                // CUIMessenger::SendInviteMsg
+                if (user.getMessengerId() == 0) {
+                    log.error("Tried to send messenger invite without an associated messenger ID");
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
+                    return;
+                }
+                final String targetName = inPacket.decodeString(); // sTarget
+                // Query target user
+                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
+                try {
+                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                    final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
+                    if (targetResult.isEmpty()) {
+                        user.write(MessengerPacket.inviteResult(targetName, false));
+                        return;
+                    }
+                    user.getConnectedServer().submitUserPacketReceive(targetResult.get().getCharacterId(), MessengerPacket.invite(user, user.getMessengerId()));
+                    user.write(MessengerPacket.inviteResult(targetName, true));
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    log.error("Exception caught while waiting for user query result", e);
+                    user.write(MessengerPacket.inviteResult(targetName, false));
+                    e.printStackTrace();
+                }
+            }
+            case MSMP_Blocked -> {
+                // CUIMessenger::OnInvite
+                final String inviterName = inPacket.decodeString(); // sInviter
+                inPacket.decodeString(); // sCharacterName
+                final boolean blocked = inPacket.decodeBoolean(); // hardcoded 1
+                user.getConnectedServer().submitUserPacketRequest(inviterName, MessengerPacket.blocked(user.getCharacterName(), blocked));
+            }
+            case MSMP_Chat -> {
+                // CUIMessenger::ProcessChat | CUIMessenger::Update
+                final String message = inPacket.decodeString();
+                user.getConnectedServer().submitMessengerRequest(user, MessengerRequest.chat(message));
+            }
+            case null -> {
+                log.error("Unknown messenger action {}", action);
+            }
+            default -> {
+                log.error("Unhandled messenger action {}", action);
+            }
+        }
     }
 
     @Handler(InHeader.MiniRoom)

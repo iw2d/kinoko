@@ -141,10 +141,14 @@ public final class ChannelServerNode extends ServerNode {
     }
 
 
-    // PARTY METHODS ---------------------------------------------------------------------------------------------------
+    // OTHER CENTRAL REQUESTS ------------------------------------------------------------------------------------------
 
     public void submitPartyRequest(User user, PartyRequest partyRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.partyRequest(user.getCharacterId(), partyRequest));
+    }
+
+    public void submitMessengerRequest(User user, MessengerRequest messengerRequest) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.messengerRequest(user.getCharacterId(), messengerRequest));
     }
 
 

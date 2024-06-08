@@ -14,9 +14,10 @@ public final class RemoteUser implements Encodable {
     private int channelId;
     private int fieldId;
     private int partyId;
+    private int messengerId;
     private RemoteTownPortal townPortal;
 
-    public RemoteUser(int accountId, int characterId, String characterName, int level, int job, int channelId, int fieldId, int partyId, RemoteTownPortal townPortal) {
+    public RemoteUser(int accountId, int characterId, String characterName, int level, int job, int channelId, int fieldId, int partyId, int messengerId, RemoteTownPortal townPortal) {
         this.accountId = accountId;
         this.characterId = characterId;
         this.characterName = characterName;
@@ -25,6 +26,7 @@ public final class RemoteUser implements Encodable {
         this.channelId = channelId;
         this.fieldId = fieldId;
         this.partyId = partyId;
+        this.messengerId = messengerId;
         this.townPortal = townPortal;
     }
 
@@ -72,6 +74,14 @@ public final class RemoteUser implements Encodable {
         this.partyId = partyId;
     }
 
+    public int getMessengerId() {
+        return messengerId;
+    }
+
+    public void setMessengerId(int messengerId) {
+        this.messengerId = messengerId;
+    }
+
     public RemoteTownPortal getTownPortal() {
         return townPortal != null ? townPortal : RemoteTownPortal.EMPTY;
     }
@@ -90,6 +100,7 @@ public final class RemoteUser implements Encodable {
         outPacket.encodeInt(channelId);
         outPacket.encodeInt(fieldId);
         outPacket.encodeInt(partyId);
+        outPacket.encodeInt(messengerId);
         outPacket.encodeByte(townPortal != null);
         if (townPortal != null) {
             townPortal.encode(outPacket);
@@ -105,6 +116,7 @@ public final class RemoteUser implements Encodable {
         final int channelId = inPacket.decodeInt();
         final int fieldId = inPacket.decodeInt();
         final int partyId = inPacket.decodeInt();
+        final int messengerId = inPacket.decodeInt();
         final RemoteTownPortal townPortal = inPacket.decodeBoolean() ? RemoteTownPortal.decode(inPacket) : null;
         return new RemoteUser(
                 accountId,
@@ -115,6 +127,7 @@ public final class RemoteUser implements Encodable {
                 channelId,
                 fieldId,
                 partyId,
+                messengerId,
                 townPortal
         );
     }
@@ -129,6 +142,7 @@ public final class RemoteUser implements Encodable {
                 user.getChannelId(),
                 user.getFieldId(),
                 user.getPartyId(),
+                user.getMessengerId(),
                 user.getTownPortal() != null ? RemoteTownPortal.from(user.getTownPortal()) : null
         );
     }

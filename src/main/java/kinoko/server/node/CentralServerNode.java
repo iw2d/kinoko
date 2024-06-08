@@ -7,6 +7,8 @@ import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
+import kinoko.world.social.messenger.Messenger;
+import kinoko.world.social.messenger.MessengerUser;
 import kinoko.world.social.party.Party;
 import kinoko.world.user.Account;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +26,7 @@ public final class CentralServerNode extends ServerNode {
     private final MigrationStorage migrationStorage = new MigrationStorage();
     private final UserStorage userStorage = new UserStorage();
     private final PartyStorage partyStorage = new PartyStorage();
+    private final MessengerStorage messengerStorage = new MessengerStorage();
 
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
@@ -117,6 +120,27 @@ public final class CentralServerNode extends ServerNode {
 
     public Optional<Party> getPartyByCharacterId(int characterId) {
         return partyStorage.getPartyByCharacterId(characterId);
+    }
+
+
+    // MESSENGER METHODS -----------------------------------------------------------------------------------------------
+
+    public Messenger createNewMessenger(RemoteUser remoteUser, MessengerUser messengerUser) {
+        final Messenger messenger = new Messenger(messengerStorage.getNewMessengerId());
+        messenger.addUser(remoteUser, messengerUser);
+        messengerStorage.addMessenger(messenger);
+        return messenger;
+    }
+
+    public boolean removeMessenger(Messenger messenger) {
+        return messengerStorage.removeMessenger(messenger);
+    }
+
+    public Optional<Messenger> getMessengerById(int messengerId) {
+        if (messengerId == 0) {
+            return Optional.empty();
+        }
+        return messengerStorage.getMessengerById(messengerId);
     }
 
 

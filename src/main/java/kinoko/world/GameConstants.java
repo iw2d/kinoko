@@ -42,6 +42,7 @@ public final class GameConstants {
 
     public static final int PARTY_MAX = 6;
     public static final int EXPEDITION_MAX = 5;
+    public static final int MESSENGER_MAX = 3;
 
     public static final int MACRO_SYS_DATA_SIZE = 5;
     public static final int MACRO_SKILL_COUNT = 3;
