@@ -1,4 +1,4 @@
-package kinoko.packet.user.effect;
+package kinoko.world.user.effect;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -105,13 +105,6 @@ public class Effect implements Encodable {
         return new Effect(EffectType.JobChanged);
     }
 
-    public static Effect pet(PetEffectType type, int petIndex) {
-        final Effect effect = new Effect(EffectType.Pet);
-        effect.int1 = type.getValue(); // nType
-        effect.int2 = petIndex;
-        return effect;
-    }
-
     public static Effect avatarOriented(String effectPath) {
         final Effect effect = new Effect(EffectType.AvatarOriented);
         effect.string1 = effectPath; // sEffect
@@ -138,5 +131,27 @@ public class Effect implements Encodable {
 
     public static Effect questComplete() {
         return new Effect(EffectType.QuestComplete);
+    }
+
+    public static SkillEffect skillUse(int skillId, int skillLevel, int charLevel) {
+        final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
+        effect.skillId = skillId;
+        effect.skillLevel = skillLevel;
+        effect.charLevel = charLevel;
+        return effect;
+    }
+
+    public static SkillEffect skillAffected(int skillId, int skillLevel) {
+        final SkillEffect effect = new SkillEffect(EffectType.SkillAffected);
+        effect.skillId = skillId;
+        effect.skillLevel = skillLevel;
+        return effect;
+    }
+
+    public static Effect petLevelUp(int petIndex) {
+        final Effect effect = new Effect(EffectType.Pet);
+        effect.int1 = PetEffectType.LevelUp.getValue(); // nType
+        effect.int2 = petIndex;
+        return effect;
     }
 }

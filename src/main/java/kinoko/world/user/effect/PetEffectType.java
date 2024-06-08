@@ -1,4 +1,4 @@
-package kinoko.packet.user.effect;
+package kinoko.world.user.effect;
 
 public enum PetEffectType {
     // PetEffect

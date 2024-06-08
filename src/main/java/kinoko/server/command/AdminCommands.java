@@ -1,7 +1,6 @@
 package kinoko.server.command;
 
 import kinoko.packet.user.UserLocal;
-import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.*;
@@ -36,6 +35,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.Stat;

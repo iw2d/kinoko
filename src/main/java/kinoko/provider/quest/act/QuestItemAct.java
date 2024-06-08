@@ -1,7 +1,6 @@
 package kinoko.provider.quest.act;
 
 import kinoko.packet.user.UserLocal;
-import kinoko.packet.user.effect.Effect;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
@@ -13,6 +12,7 @@ import kinoko.world.item.*;
 import kinoko.world.quest.QuestResult;
 import kinoko.world.quest.QuestResultType;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 
 import java.util.*;
 import java.util.stream.Collectors;

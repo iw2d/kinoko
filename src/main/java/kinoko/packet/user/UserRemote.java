@@ -1,6 +1,5 @@
 package kinoko.packet.user;
 
-import kinoko.packet.user.effect.Effect;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.life.MovePath;
@@ -9,6 +8,7 @@ import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;

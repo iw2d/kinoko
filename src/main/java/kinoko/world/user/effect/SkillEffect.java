@@ -1,4 +1,4 @@
-package kinoko.packet.user.effect;
+package kinoko.world.user.effect;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.world.job.explorer.Thief;
@@ -7,14 +7,14 @@ import kinoko.world.job.legend.Evan;
 import kinoko.world.job.resistance.Citizen;
 
 public final class SkillEffect extends Effect {
-    private int skillId;
-    private int skillLevel;
-    private int charLevel;
-    private boolean enable;
-    private boolean left;
-    private int info;
-    private short positionX;
-    private short positionY;
+    public int skillId;
+    public int skillLevel;
+    public int charLevel;
+    public boolean enable;
+    public boolean left;
+    public int info;
+    public short positionX;
+    public short positionY;
 
     SkillEffect(EffectType type) {
         super(type);
@@ -71,20 +71,5 @@ public final class SkillEffect extends Effect {
                 throw new IllegalStateException("Tried to encode unsupported effect type");
             }
         }
-    }
-
-    public static SkillEffect skillUse(int skillId, int skillLevel, int charLevel) {
-        final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
-        effect.skillId = skillId;
-        effect.skillLevel = skillLevel;
-        effect.charLevel = charLevel;
-        return effect;
-    }
-
-    public static SkillEffect skillAffected(int skillId, int skillLevel) {
-        final SkillEffect effect = new SkillEffect(EffectType.SkillAffected);
-        effect.skillId = skillId;
-        effect.skillLevel = skillLevel;
-        return effect;
     }
 }

@@ -2,7 +2,6 @@ package kinoko.world.skill;
 
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
-import kinoko.packet.user.effect.SkillEffect;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.MobProvider;
 import kinoko.provider.SkillProvider;
@@ -20,6 +19,7 @@ import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 import kinoko.world.user.stat.Stat;
@@ -243,12 +243,12 @@ public final class SkillProcessor {
 
         // Skill effects and party handling
         final Field field = user.getField();
-        field.broadcastPacket(UserRemote.effect(user, SkillEffect.skillUse(skill.skillId, skill.slv, user.getLevel())), user);
+        field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skill.skillId, skill.slv, user.getLevel())), user);
         skill.forEachAffectedMember(user, user.getField(), (member) -> {
             try (var lockedMember = member.acquire()) {
                 JobHandler.handleSkill(lockedMember, skill);
-                member.write(UserLocal.effect(SkillEffect.skillAffected(skill.skillId, skill.slv)));
-                field.broadcastPacket(UserRemote.effect(member, SkillEffect.skillAffected(skill.skillId, skill.slv)), member);
+                member.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
+                field.broadcastPacket(UserRemote.effect(member, Effect.skillAffected(skill.skillId, skill.slv)), member);
             }
         });
     }

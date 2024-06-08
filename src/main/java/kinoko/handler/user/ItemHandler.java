@@ -5,8 +5,6 @@ import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
-import kinoko.packet.user.effect.Effect;
-import kinoko.packet.user.effect.PetEffectType;
 import kinoko.packet.world.WvsContext;
 import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
@@ -25,6 +23,7 @@ import kinoko.world.field.Field;
 import kinoko.world.item.*;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -163,8 +162,8 @@ public final class ItemHandler {
             // Update client
             user.write(WvsContext.inventoryOperation(updateResult.get(), false));
             if (levelUp) {
-                user.write(UserLocal.effect(Effect.pet(PetEffectType.LevelUp, petIndex)));
-                user.getField().broadcastPacket(UserRemote.effect(user, Effect.pet(PetEffectType.LevelUp, petIndex)), user);
+                user.write(UserLocal.effect(Effect.petLevelUp(petIndex)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.petLevelUp(petIndex)), user);
             }
 
             // Broadcast pet action
