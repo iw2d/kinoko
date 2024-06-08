@@ -1,7 +1,7 @@
 package kinoko.world.social.friend;
 
 import kinoko.database.DatabaseManager;
-import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.FriendPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.node.RemoteUser;
 import kinoko.util.Locked;
@@ -107,7 +107,7 @@ public final class FriendManager {
                     friend.setChannelId(GameConstants.CHANNEL_OFFLINE);
                 }
             }
-            user.write(WvsContext.friendResult(FriendResult.reset(resultType, fm.getRegisteredFriends())));
+            user.write(FriendPacket.reset(resultType, fm.getRegisteredFriends()));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.error("Exception caught while waiting for user query result", e);
             e.printStackTrace();

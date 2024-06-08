@@ -10,9 +10,7 @@ import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.social.friend.FriendResult;
 import kinoko.world.social.memo.MemoResult;
-import kinoko.world.social.party.PartyResult;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.config.SingleMacro;
@@ -190,18 +188,6 @@ public final class WvsContext {
                 .toList();
         outPacket.encodeInt(chairs.size());
         chairs.forEach((item) -> outPacket.encodeInt(item.getItemId()));
-        return outPacket;
-    }
-
-    public static OutPacket partyResult(PartyResult partyResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.PartyResult);
-        partyResult.encode(outPacket);
-        return outPacket;
-    }
-
-    public static OutPacket friendResult(FriendResult friendResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.FriendResult);
-        friendResult.encode(outPacket);
         return outPacket;
     }
 

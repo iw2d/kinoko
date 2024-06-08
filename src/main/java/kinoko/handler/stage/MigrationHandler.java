@@ -8,6 +8,7 @@ import kinoko.packet.field.TransferChannelType;
 import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
+import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
@@ -25,7 +26,6 @@ import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
 import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
-import kinoko.world.social.friend.FriendResult;
 import kinoko.world.social.friend.FriendResultType;
 import kinoko.world.social.memo.MemoResult;
 import kinoko.world.social.party.PartyRequest;
@@ -186,12 +186,12 @@ public final class MigrationHandler {
             // Notify friends
             channelServerNode.submitUserPacketBroadcast(
                     user.getFriendManager().getBroadcastTargets(),
-                    WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId()))
+                    FriendPacket.notify(user.getCharacterId(), user.getChannelId())
             );
 
             // Process friend requests
             for (Friend friend : user.getFriendManager().getFriendRequests()) {
-                user.write(WvsContext.friendResult(FriendResult.invite(friend)));
+                user.write(FriendPacket.invite(friend));
             }
 
             // Load party from central server
@@ -298,7 +298,7 @@ public final class MigrationHandler {
         // Update friends
         user.getConnectedServer().submitUserPacketBroadcast(
                 user.getFriendManager().getBroadcastTargets(),
-                WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), GameConstants.CHANNEL_SHOP))
+                FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_SHOP)
         );
 
         // Load gifts

@@ -7,9 +7,7 @@ import kinoko.packet.field.GroupMessageType;
 import kinoko.packet.field.MiniRoomPacket;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.user.*;
-import kinoko.packet.world.BroadcastPacket;
-import kinoko.packet.world.MessagePacket;
-import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.*;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.item.ItemInfo;
@@ -51,7 +49,6 @@ import kinoko.world.social.memo.MemoResult;
 import kinoko.world.social.memo.MemoType;
 import kinoko.world.social.party.PartyRequest;
 import kinoko.world.social.party.PartyRequestType;
-import kinoko.world.social.party.PartyResult;
 import kinoko.world.social.party.PartyResultType;
 import kinoko.world.social.whisper.LocationResult;
 import kinoko.world.social.whisper.WhisperFlag;
@@ -1098,7 +1095,7 @@ public final class UserHandler {
             case CreateNewParty -> {
                 // CField::SendCreateNewPartyMsg
                 if (user.getPartyId() != 0) {
-                    user.write(WvsContext.partyResult(PartyResult.of(PartyResultType.CreateNewParty_AlreadyJoined)));
+                    user.write(PartyPacket.of(PartyResultType.CreateNewParty_AlreadyJoined));
                     return;
                 }
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.of(PartyRequestType.CreateNewParty));
@@ -1160,7 +1157,7 @@ public final class UserHandler {
                         throw new IllegalStateException("Unexpected party result type");
                     }
                 };
-                user.getConnectedServer().submitUserPacketReceive(inviterId, WvsContext.partyResult(PartyResult.message(message)));
+                user.getConnectedServer().submitUserPacketReceive(inviterId, PartyPacket.serverMsg(message));
             }
             case InviteParty_Accepted -> {
                 final int inviterId = inPacket.decodeInt();
@@ -1198,31 +1195,31 @@ public final class UserHandler {
                         final Friend friend = friendResult.get();
                         friend.setFriendGroup(friendGroup);
                         if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_Unknown))); // The request was denied due to an unknown error.
+                            user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
                             return;
                         }
                     } else {
                         // Create new friend - resolve target character id
                         final Optional<Tuple<Integer, Integer>> targetIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(targetName);
                         if (targetIdResult.isEmpty()) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_UnknownUser))); // That character is not registered.
+                            user.write(FriendPacket.setFriendUnknownUser()); // That character is not registered.
                             return;
                         }
                         final int targetCharacterId = targetIdResult.get().getRight();
                         // Check if target can be added as a friend
                         final List<Friend> friends = fm.getRegisteredFriends();
                         if (friends.size() >= fm.getFriendMax()) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_FullMe))); // Your buddy list is full.
+                            user.write(FriendPacket.setFriendFullMe()); // Your buddy list is full.
                             return;
                         }
                         if (friends.stream().anyMatch((friend) -> friend.getFriendId() == targetCharacterId)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_AlreadySet))); // That character is already registered as your buddy.
+                            user.write(FriendPacket.setFriendAlreadySet()); // That character is already registered as your buddy.
                             return;
                         }
                         // Add target as friend, force creation
                         final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetName, friendGroup, FriendStatus.NORMAL);
                         if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.SetFriend_Unknown))); // The request was denied due to an unknown error.
+                            user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
                             return;
                         }
                         // Add user as a friend for target, not forced - existing friends, requests, and refused records
@@ -1230,7 +1227,7 @@ public final class UserHandler {
                         if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
                             // Send invite to target if request was created
                             // This operation is a noop if target offline, the request will be processed on target login
-                            user.getConnectedServer().submitUserPacketRequest(targetName, WvsContext.friendResult(FriendResult.invite(friendForTarget)));
+                            user.getConnectedServer().submitUserPacketRequest(targetName, FriendPacket.invite(friendForTarget));
                         }
                     }
                     // Reload friends and update client
@@ -1246,18 +1243,18 @@ public final class UserHandler {
                     // Resolve friend from id
                     final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
                     if (friendResult.isEmpty()) {
-                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.AcceptFriend_Unknown))); // The request was denied due to an unknown error.
+                        user.write(FriendPacket.acceptFriendUnknown()); // The request was denied due to an unknown error.
                         return;
                     }
                     // Update friend status
                     final Friend friend = friendResult.get();
                     friend.setStatus(FriendStatus.NORMAL);
                     if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.AcceptFriend_Unknown))); // The request was denied due to an unknown error.
+                        user.write(FriendPacket.acceptFriendUnknown()); // The request was denied due to an unknown error.
                         return;
                     }
                     // Notify newly added friend (noop if offline)
-                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), user.getChannelId())));
+                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), user.getChannelId()));
                     // Reload friends and update client
                     FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SetFriend_Done);
                 }
@@ -1270,7 +1267,7 @@ public final class UserHandler {
                     // Resolve friend from id
                     final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
                     if (friendResult.isEmpty()) {
-                        user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DeleteFriend_Unknown))); // The request was denied due to an unknown error.
+                        user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
                         return;
                     }
                     final Friend friend = friendResult.get();
@@ -1279,17 +1276,17 @@ public final class UserHandler {
                     if (friend.getStatus() == FriendStatus.REQUEST) {
                         // Save friend request result
                         if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DeleteFriend_Unknown))); // The request was denied due to an unknown error.
+                            user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
                             return;
                         }
                     } else {
                         // Delete friend
                         if (!DatabaseManager.friendAccessor().deleteFriend(user.getCharacterId(), friend.getFriendId())) {
-                            user.write(WvsContext.friendResult(FriendResult.of(FriendResultType.DeleteFriend_Unknown))); // The request was denied due to an unknown error.
+                            user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
                             return;
                         }
                         // Notify deleted friend (noop if offline)
-                        user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), WvsContext.friendResult(FriendResult.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE)));
+                        user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE));
                     }
                     // Reload friends and update client
                     FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.DeleteFriend_Done);

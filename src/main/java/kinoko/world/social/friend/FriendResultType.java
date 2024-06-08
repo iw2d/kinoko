@@ -17,7 +17,7 @@ public enum FriendResultType {
     DeleteFriend_Unknown(19),
     Notify(20),
     IncMaxCount_Done(21),
-    INcMaxCount_Unknown(22),
+    IncMaxCount_Unknown(22),
     PleaseWait(23);
 
     private final int value;

@@ -3,7 +3,7 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.packet.CentralPacket;
-import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.PartyPacket;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.node.*;
 import kinoko.server.packet.InPacket;
@@ -12,7 +12,6 @@ import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.social.party.Party;
 import kinoko.world.social.party.PartyRequest;
-import kinoko.world.social.party.PartyResult;
 import kinoko.world.social.party.PartyResultType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -200,25 +199,25 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         try (var lockedParty = partyResult.get().acquire()) {
                             final Party party = lockedParty.get();
                             remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.load(party))));
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.loadPartyDone(party)));
                         }
                     }
                     case CreateNewParty -> {
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isPresent()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.CreateNewParty_AlreadyJoined)))); // Already have joined a party.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.CreateNewParty_AlreadyJoined))); // Already have joined a party.
                             return;
                         }
                         // Create party
                         final Party party = centralServerNode.createNewParty(remoteUser);
                         remoteUser.setPartyId(party.getPartyId());
                         remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
-                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party, remoteUser.getTownPortal())))); // You have created a new party.
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.createNewPartyDone(party, remoteUser.getTownPortal()))); // You have created a new party.
                     }
                     case WithdrawParty -> {
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.WithdrawParty_NotJoined)))); // You have yet to join a party.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.WithdrawParty_NotJoined))); // You have yet to join a party.
                             return;
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
@@ -227,11 +226,11 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 // Disband party
                                 if (!centralServerNode.removeParty(party)) {
                                     log.error("Failed to disband party {}", party.getPartyId());
-                                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.WithdrawParty_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.WithdrawParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                                     return;
                                 }
                                 // Broadcast disband packet to party and update party ids
-                                final OutPacket outPacket = WvsContext.partyResult(PartyResult.disband(party, remoteUser)); // You have quit as the leader of the party. The party has been disbanded. | You have left the party since the party leader quit.
+                                final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, remoteUser, true, false); // You have quit as the leader of the party. The party has been disbanded. | You have left the party since the party leader quit.
                                 forEachPartyMember(party, (member, node) -> {
                                     member.setPartyId(0);
                                     node.write(CentralPacket.partyResult(member.getCharacterId(), 0, 0));
@@ -241,11 +240,11 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 // Remove member
                                 if (!party.removeMember(remoteUser)) {
                                     log.error("Failed to remove member with character ID {} from party {}", remoteUser.getCharacterId(), party.getPartyId());
-                                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.WithdrawParty_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.WithdrawParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                                     return;
                                 }
                                 // Broadcast withdraw packet to party
-                                final OutPacket outPacket = WvsContext.partyResult(PartyResult.leave(party, remoteUser)); // You have left the party. | '%s' have left the party.
+                                final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, remoteUser, false, false); // You have left the party. | '%s' have left the party.
                                 forEachPartyMember(party, (member, node) -> {
                                     node.write(CentralPacket.partyResult(member.getCharacterId(), party.getPartyId(), party.getMemberIndex(member))); // update member index
                                     node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
@@ -260,24 +259,24 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     case JoinParty -> {
                         // Check current party
                         if (remoteUser.getPartyId() != 0) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.JoinParty_Unknown)))); // Already have joined a party.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Already have joined a party.
                             return;
                         }
                         // Resolve party
                         final int inviterId = partyRequest.getCharacterId();
                         final Optional<Party> partyResult = centralServerNode.getPartyByCharacterId(inviterId);
                         if (partyResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.JoinParty_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                             return;
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
                             final Party party = lockedParty.get();
                             if (!party.addMember(remoteUser)) {
-                                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.JoinParty_AlreadyFull)))); // The party you're trying to join is already in full capacity.
+                                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_AlreadyFull))); // The party you're trying to join is already in full capacity.
                                 return;
                             }
                             // Broadcast join packet to party
-                            final OutPacket outPacket = WvsContext.partyResult(PartyResult.join(party, remoteUser)); // You have joined the party | '%s' has joined the party.
+                            final OutPacket outPacket = PartyPacket.joinPartyDone(party, remoteUser); // You have joined the party | '%s' has joined the party.
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == remoteUser.getCharacterId()) {
                                     member.setPartyId(party.getPartyId());
@@ -295,33 +294,33 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             final Party party = centralServerNode.createNewParty(remoteUser);
                             remoteUser.setPartyId(party.getPartyId());
                             remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.create(party, remoteUser.getTownPortal())))); // You have created a new party.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.createNewPartyDone(party, remoteUser.getTownPortal()))); // You have created a new party.
                         }
                         // Resolve target
                         final String targetName = partyRequest.getCharacterName();
                         final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterName(targetName); // target name
                         if (targetResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.message(String.format("Unable to find '%s'", targetName)))));
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.serverMsg(String.format("Unable to find '%s'", targetName))));
                             return;
                         }
                         final RemoteUser target = targetResult.get();
                         if (target.getPartyId() != 0) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.message(String.format("'%s' is already in a party.", targetName)))));
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.serverMsg(String.format("'%s' is already in a party.", targetName))));
                             return;
                         }
                         // Resolve target node
                         final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
                         if (targetNodeResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.message(String.format("Unable to find '%s'", targetName)))));
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.serverMsg(String.format("Unable to find '%s'", targetName))));
                             return;
                         }
                         // Send party invite to target
-                        targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), WvsContext.partyResult(PartyResult.invite(remoteUser))));
+                        targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), PartyPacket.inviteParty(remoteUser)));
                     }
                     case KickParty -> {
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.KickParty_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.KickParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                             return;
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
@@ -330,11 +329,11 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             final int targetId = partyRequest.getCharacterId();
                             final Optional<RemoteUser> targetMember = party.getMember(targetId);
                             if (party.getPartyBossId() != remoteUser.getCharacterId() || targetMember.isEmpty() || !party.removeMember(targetMember.get())) {
-                                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), WvsContext.partyResult(PartyResult.of(PartyResultType.KickParty_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.KickParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                                 return;
                             }
                             // Broadcast kick packet to party
-                            final OutPacket outPacket = WvsContext.partyResult(PartyResult.kick(party, targetMember.get())); // You have been expelled from the party. | '%s' have been expelled from the party.
+                            final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, targetMember.get(), false, true); // You have been expelled from the party. | '%s' have been expelled from the party.
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == targetId) {
                                     member.setPartyId(0);
@@ -347,7 +346,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     case ChangePartyBoss -> {
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(characterId, WvsContext.partyResult(PartyResult.of(PartyResultType.ChangePartyBoss_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                            remoteChildNode.write(CentralPacket.userPacketReceive(characterId, PartyPacket.of(PartyResultType.ChangePartyBoss_Unknown))); // Your request for a party didn't work due to an unexpected error.
                             return;
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
@@ -355,11 +354,11 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             final Party party = lockedParty.get();
                             final int targetId = partyRequest.getCharacterId();
                             if (!party.setPartyBossId(remoteUser.getCharacterId(), targetId)) {
-                                remoteChildNode.write(CentralPacket.userPacketReceive(characterId, WvsContext.partyResult(PartyResult.of(PartyResultType.ChangePartyBoss_Unknown)))); // Your request for a party didn't work due to an unexpected error.
+                                remoteChildNode.write(CentralPacket.userPacketReceive(characterId, PartyPacket.of(PartyResultType.ChangePartyBoss_Unknown))); // Your request for a party didn't work due to an unexpected error.
                                 return;
                             }
                             // Broadcast packet to party
-                            final OutPacket outPacket = WvsContext.partyResult(PartyResult.changeBoss(targetId, false)); // %s has become the leader of the party.
+                            final OutPacket outPacket = PartyPacket.changePartyBossDone(targetId, false); // %s has become the leader of the party.
                             forEachPartyMember(party, (member, node) -> {
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
@@ -401,7 +400,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             remoteUser.setPartyId(party.getPartyId());
             // Update user for all members
             party.updateMember(remoteUser);
-            final OutPacket outPacket = WvsContext.partyResult(PartyResult.load(party));
+            final OutPacket outPacket = PartyPacket.loadPartyDone(party);
             forEachPartyMember(party, (member, node) -> {
                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
             });
