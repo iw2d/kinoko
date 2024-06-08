@@ -11,7 +11,6 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.social.party.Party;
-import kinoko.world.social.party.PartyRequest;
 import kinoko.world.social.party.PartyResultType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

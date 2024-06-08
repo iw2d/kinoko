@@ -2,10 +2,10 @@ package kinoko.packet;
 
 import kinoko.server.header.CentralHeader;
 import kinoko.server.node.MigrationInfo;
+import kinoko.server.node.PartyRequest;
 import kinoko.server.node.RemoteUser;
 import kinoko.server.node.TransferInfo;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.social.party.PartyRequest;
 
 import java.util.Set;
 
