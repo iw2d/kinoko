@@ -1,11 +1,11 @@
-package kinoko.packet.world.message;
+package kinoko.packet.world;
 
 public enum MessageType {
     // MS
     DropPickUp(0),
     QuestRecord(1),
     CashItemExpire(2),
-    IncSEXP(3),
+    IncEXP(3),
     IncSP(4),
     IncPOP(5),
     IncMoney(6),

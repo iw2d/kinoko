@@ -5,8 +5,8 @@ import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
 import kinoko.provider.item.ItemInfo;
@@ -255,13 +255,13 @@ public final class ItemHandler {
             // Check portal scroll can be used
             final Field field = locked.get().getField();
             if (field.hasFieldOption(FieldOption.PORTALSCROLLLIMIT)) {
-                user.write(WvsContext.message(Message.system("You can't use it here in this map.")));
+                user.write(MessagePacket.system("You can't use it here in this map."));
                 user.dispose();
                 return;
             }
             final int moveTo = itemInfoResult.get().getSpec(ItemSpecType.moveTo);
             if (moveTo != GameConstants.UNDEFINED_FIELD_ID && MapProvider.isConnected(field.getFieldId(), moveTo)) {
-                user.write(WvsContext.message(Message.system("You cannot go to that place.")));
+                user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();
                 return;
             }
@@ -270,14 +270,14 @@ public final class ItemHandler {
             final int destinationFieldId = moveTo == GameConstants.UNDEFINED_FIELD_ID ? field.getReturnMap() : moveTo;
             final Optional<Field> destinationFieldResult = user.getConnectedServer().getFieldById(destinationFieldId);
             if (destinationFieldResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("You cannot go to that place.")));
+                user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();
                 return;
             }
             final Field destinationField = destinationFieldResult.get();
             final Optional<PortalInfo> destinationPortalResult = destinationField.getPortalByName(GameConstants.DEFAULT_PORTAL_NAME);
             if (destinationPortalResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("You cannot go to that place.")));
+                user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();
                 return;
             }

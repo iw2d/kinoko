@@ -4,6 +4,7 @@ import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.field.NpcPacket;
 import kinoko.packet.user.*;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.packet.OutPacket;
@@ -149,11 +150,13 @@ public final class UserPool extends FieldObjectPool<User> {
                     broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
                 }
                 // Expire town portal
-                if (user.getTownPortal() != null) {
-                    if (user.getTownPortal().getExpireTime().isBefore(now)) {
-                        user.getTownPortal().destroy();
+                final TownPortal townPortal = user.getTownPortal();
+                if (townPortal != null) {
+                    if (townPortal.getExpireTime().isBefore(now)) {
+                        townPortal.destroy();
                         user.setTownPortal(null);
                         user.write(WvsContext.resetTownPortal());
+                        user.write(MessagePacket.skillExpire(townPortal.getSkillId()));
                         user.getConnectedServer().notifyUserUpdate(user);
                     }
                 }

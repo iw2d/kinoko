@@ -2,8 +2,8 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.explorer.Magician;
@@ -89,7 +89,7 @@ public final class SkillHandler {
         try (var locked = user.acquire()) {
             if (skill.skillId == Magician.MYSTIC_DOOR) {
                 if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
-                    user.write(WvsContext.message(Message.system("Please wait 5 seconds before casting Mystic Door again.")));
+                    user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));
                     user.dispose();
                     return;
                 }

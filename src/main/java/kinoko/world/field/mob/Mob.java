@@ -1,9 +1,7 @@
 package kinoko.world.field.mob;
 
 import kinoko.packet.field.MobPacket;
-import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.IncExpMessage;
-import kinoko.packet.world.message.Message;
+import kinoko.packet.world.MessagePacket;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
 import kinoko.provider.QuestProvider;
@@ -248,7 +246,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                     final User attacker = locked.get();
                     final int splitExp = (int) (((double) attackerDamage / getMaxHp()) * totalExp);
                     attacker.addExp(splitExp);
-                    attacker.write(WvsContext.message(IncExpMessage.mob(attacker.getCharacterId() == topAttackerId, splitExp, 0)));
+                    attacker.write(MessagePacket.incExp(splitExp, 0, attacker.getCharacterId() == topAttackerId, false));
                     // Process mob kill for quest
                     for (QuestRecord qr : attacker.getQuestManager().getStartedQuests()) {
                         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
@@ -259,7 +257,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         if (questProgressResult.isEmpty()) {
                             continue;
                         }
-                        attacker.write(WvsContext.message(Message.questRecord(questProgressResult.get())));
+                        attacker.write(MessagePacket.questRecord(questProgressResult.get()));
                         attacker.validateStat();
                     }
                 }

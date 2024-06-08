@@ -4,8 +4,8 @@ import kinoko.handler.Handler;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.DropPickUpMessage;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.item.PetInteraction;
@@ -262,25 +262,25 @@ public final class PetHandler {
             if (drop.isMoney()) {
                 final long newMoney = ((long) im.getMoney()) + drop.getMoney();
                 if (newMoney > GameConstants.MONEY_MAX) {
-                    user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                    user.write(MessagePacket.unavailableForPickUp());
                     return;
                 }
             } else {
                 // Inventory full
                 if (!im.canAddItem(drop.getItem())) {
-                    user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                    user.write(MessagePacket.cannotGetAnymoreItems());
                     return;
                 }
                 // Quest item handling
                 if (drop.isQuest()) {
                     final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
                     if (questRecordResult.isEmpty()) {
-                        user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                        user.write(MessagePacket.unavailableForPickUp());
                         return;
                     }
                     final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
                     if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
-                        user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                        user.write(MessagePacket.cannotGetAnymoreItems());
                         return;
                     }
                 }
@@ -295,13 +295,13 @@ public final class PetHandler {
             if (drop.isMoney()) {
                 if (im.addMoney(drop.getMoney())) {
                     user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
-                    user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
+                    user.write(MessagePacket.pickUpMoney(drop.getMoney(), false));
                 }
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
                 if (addItemResult.isPresent()) {
                     user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
-                    user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+                    user.write(MessagePacket.pickUpItem(drop.getItem()));
                 }
             }
         }

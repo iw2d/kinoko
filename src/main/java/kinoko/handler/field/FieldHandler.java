@@ -1,8 +1,8 @@
 package kinoko.handler.field;
 
 import kinoko.handler.Handler;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.DropPickUpMessage;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
@@ -62,14 +62,14 @@ public final class FieldHandler {
             if (drop.isMoney()) {
                 final long newMoney = ((long) im.getMoney()) + drop.getMoney();
                 if (newMoney > GameConstants.MONEY_MAX) {
-                    user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                    user.write(MessagePacket.unavailableForPickUp());
                     user.dispose();
                     return;
                 }
             } else {
                 // Inventory full
                 if (!im.canAddItem(drop.getItem())) {
-                    user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                    user.write(MessagePacket.cannotGetAnymoreItems());
                     user.dispose();
                     return;
                 }
@@ -77,13 +77,13 @@ public final class FieldHandler {
                 if (drop.isQuest()) {
                     final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
                     if (questRecordResult.isEmpty()) {
-                        user.write(WvsContext.message(DropPickUpMessage.unavailableForPickUp()));
+                        user.write(MessagePacket.unavailableForPickUp());
                         user.dispose();
                         return;
                     }
                     final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
                     if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
-                        user.write(WvsContext.message(DropPickUpMessage.cannotGetAnymoreItems()));
+                        user.write(MessagePacket.cannotGetAnymoreItems());
                         user.dispose();
                         return;
                     }
@@ -102,14 +102,14 @@ public final class FieldHandler {
                     throw new IllegalStateException("Could not add money to inventory");
                 }
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                user.write(WvsContext.message(DropPickUpMessage.money(drop.getMoney(), false)));
+                user.write(MessagePacket.pickUpMoney(drop.getMoney(), false));
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
                 if (addItemResult.isEmpty()) {
                     throw new IllegalStateException("Could not add item to inventory");
                 }
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-                user.write(WvsContext.message(DropPickUpMessage.item(drop.getItem())));
+                user.write(MessagePacket.pickUpItem(drop.getItem()));
             }
         }
     }

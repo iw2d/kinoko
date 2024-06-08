@@ -1,8 +1,8 @@
 package kinoko.server.command;
 
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
@@ -54,18 +54,18 @@ public final class AdminCommands {
         ScriptDispatcher.removeScriptManager(user);
         user.closeDialog();
         user.dispose();
-        user.write(WvsContext.message(Message.system("You have been disposed.")));
+        user.write(MessagePacket.system("You have been disposed."));
     }
 
     @Command("info")
     public static void info(User user, String[] args) {
         final Field field = user.getField();
-        user.write(WvsContext.message(Message.system("HP : %d / %d, MP : %d / %d", user.getHp(), user.getMaxHp(), user.getMp(), user.getMaxMp())));
-        user.write(WvsContext.message(Message.system("Field ID : %d", field.getFieldId())));
+        user.write(MessagePacket.system("HP : %d / %d, MP : %d / %d", user.getHp(), user.getMaxHp(), user.getMp(), user.getMaxMp()));
+        user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
         final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getFootholdId())).orElse("unk");
-        user.write(WvsContext.message(Message.system("  x : %d, y : %d, fh : %d (%s)", user.getX(), user.getY(), user.getFoothold(), footholdBelow)));
+        user.write(MessagePacket.system("  x : %d, y : %d, fh : %d (%s)", user.getX(), user.getY(), user.getFoothold(), footholdBelow));
         // Compute nearest portal
         double nearestDistance = Double.MAX_VALUE;
         PortalInfo nearestPortal = null;
@@ -77,23 +77,23 @@ public final class AdminCommands {
             }
         }
         if (nearestPortal != null && nearestDistance < 100) {
-            user.write(WvsContext.message(Message.system("Portal name : %s (%d)", nearestPortal.getPortalName(), nearestPortal.getPortalId())));
-            user.write(WvsContext.message(Message.system("  x : %d, y : %d, script : %s",
-                    nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript())));
+            user.write(MessagePacket.system("Portal name : %s (%d)", nearestPortal.getPortalName(), nearestPortal.getPortalId()));
+            user.write(MessagePacket.system("  x : %d, y : %d, script : %s",
+                    nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript()));
         }
         // Compute nearest mob
         final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(new Rect(-100, -100, 100, 100))));
         if (nearestMobResult.isPresent()) {
             final Mob nearestMob = nearestMobResult.get();
-            user.write(WvsContext.message(Message.system("%s", nearestMob.toString())));
-            user.write(WvsContext.message(Message.system("  Controller : %s", nearestMob.getController().getCharacterName())));
+            user.write(MessagePacket.system("%s", nearestMob.toString()));
+            user.write(MessagePacket.system("  Controller : %s", nearestMob.getController().getCharacterName()));
         }
     }
 
     @Command({ "find", "lookup" })
     public static void find(User user, String[] args) {
         if (args.length < 3) {
-            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final String type = args[1];
@@ -112,9 +112,9 @@ public final class AdminCommands {
                     if (searchResult.size() == 1) {
                         itemId = searchResult.get(0).getKey();
                     } else {
-                        user.write(WvsContext.message(Message.system("Results for item name : \"%s\"", query)));
+                        user.write(MessagePacket.system("Results for item name : \"%s\"", query));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                            user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue()));
                         }
                         return;
                     }
@@ -122,21 +122,21 @@ public final class AdminCommands {
             }
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
             if (itemInfoResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("Could not find item with %s : %s", isNumber ? "ID" : "name", query)));
+                user.write(MessagePacket.system("Could not find item with %s : %s", isNumber ? "ID" : "name", query));
                 return;
             }
             final ItemInfo ii = itemInfoResult.get();
-            user.write(WvsContext.message(Message.system("Item : %s (%d)", StringProvider.getItemName(itemId), itemId)));
+            user.write(MessagePacket.system("Item : %s (%d)", StringProvider.getItemName(itemId), itemId));
             if (!ii.getItemInfos().isEmpty()) {
-                user.write(WvsContext.message(Message.system("  info")));
+                user.write(MessagePacket.system("  info"));
                 for (var entry : ii.getItemInfos().entrySet()) {
-                    user.write(WvsContext.message(Message.system("    %s : %s", entry.getKey().name(), entry.getValue().toString())));
+                    user.write(MessagePacket.system("    %s : %s", entry.getKey().name(), entry.getValue().toString()));
                 }
             }
             if (!ii.getItemSpecs().isEmpty()) {
-                user.write(WvsContext.message(Message.system("  spec")));
+                user.write(MessagePacket.system("  spec"));
                 for (var entry : ii.getItemSpecs().entrySet()) {
-                    user.write(WvsContext.message(Message.system("    %s : %s", entry.getKey().name(), entry.getValue().toString())));
+                    user.write(MessagePacket.system("    %s : %s", entry.getKey().name(), entry.getValue().toString()));
                 }
             }
         } else if (type.equalsIgnoreCase("map")) {
@@ -152,9 +152,9 @@ public final class AdminCommands {
                     if (searchResult.size() == 1) {
                         mapId = searchResult.get(0).getKey();
                     } else {
-                        user.write(WvsContext.message(Message.system("Results for map name : \"%s\"", query)));
+                        user.write(MessagePacket.system("Results for map name : \"%s\"", query));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                            user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue()));
                         }
                         return;
                     }
@@ -162,15 +162,15 @@ public final class AdminCommands {
             }
             final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
             if (mapInfoResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("Could not find map with %s : %s", isNumber ? "ID" : "name", query)));
+                user.write(MessagePacket.system("Could not find map with %s : %s", isNumber ? "ID" : "name", query));
                 return;
             }
             final MapInfo mapInfo = mapInfoResult.get();
-            user.write(WvsContext.message(Message.system("Map : %s (%d)", StringProvider.getMapName(mapId), mapId)));
-            user.write(WvsContext.message(Message.system("  type : %s", mapInfo.getFieldType().name())));
-            user.write(WvsContext.message(Message.system("  returnMap : %d", mapInfo.getReturnMap())));
-            user.write(WvsContext.message(Message.system("  onFirstUserEnter : %s", mapInfo.getOnFirstUserEnter())));
-            user.write(WvsContext.message(Message.system("  onUserEnter : %s", mapInfo.getOnUserEnter())));
+            user.write(MessagePacket.system("Map : %s (%d)", StringProvider.getMapName(mapId), mapId));
+            user.write(MessagePacket.system("  type : %s", mapInfo.getFieldType().name()));
+            user.write(MessagePacket.system("  returnMap : %d", mapInfo.getReturnMap()));
+            user.write(MessagePacket.system("  onFirstUserEnter : %s", mapInfo.getOnFirstUserEnter()));
+            user.write(MessagePacket.system("  onUserEnter : %s", mapInfo.getOnUserEnter()));
         } else if (type.equalsIgnoreCase("mob")) {
             int mobId = -1;
             if (isNumber) {
@@ -184,9 +184,9 @@ public final class AdminCommands {
                     if (searchResult.size() == 1) {
                         mobId = searchResult.get(0).getKey();
                     } else {
-                        user.write(WvsContext.message(Message.system("Results for mob name : \"%s\"", query)));
+                        user.write(MessagePacket.system("Results for mob name : \"%s\"", query));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                            user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue()));
                         }
                         return;
                     }
@@ -194,12 +194,12 @@ public final class AdminCommands {
             }
             final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
             if (mobTemplateResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("Could not find mob with %s : %s", isNumber ? "ID" : "name", query)));
+                user.write(MessagePacket.system("Could not find mob with %s : %s", isNumber ? "ID" : "name", query));
                 return;
             }
             final MobTemplate mobTemplate = mobTemplateResult.get();
-            user.write(WvsContext.message(Message.system("Mob : %s (%d)", StringProvider.getMobName(mobId), mobId)));
-            user.write(WvsContext.message(Message.system("  level : %d", mobTemplate.getLevel())));
+            user.write(MessagePacket.system("Mob : %s (%d)", StringProvider.getMobName(mobId), mobId));
+            user.write(MessagePacket.system("  level : %d", mobTemplate.getLevel()));
         } else if (type.equalsIgnoreCase("npc")) {
             int npcId = -1;
             if (isNumber) {
@@ -213,9 +213,9 @@ public final class AdminCommands {
                     if (searchResult.size() == 1) {
                         npcId = searchResult.get(0).getKey();
                     } else {
-                        user.write(WvsContext.message(Message.system("Results for npc name : \"%s\"", query)));
+                        user.write(MessagePacket.system("Results for npc name : \"%s\"", query));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue())));
+                            user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue()));
                         }
                         return;
                     }
@@ -223,12 +223,12 @@ public final class AdminCommands {
             }
             final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(npcId);
             if (npcTemplateResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("Could not find npc with %s : %s", isNumber ? "ID" : "name", query)));
+                user.write(MessagePacket.system("Could not find npc with %s : %s", isNumber ? "ID" : "name", query));
                 return;
             }
             final NpcTemplate npcTemplate = npcTemplateResult.get();
-            user.write(WvsContext.message(Message.system("Npc : %s (%d)", StringProvider.getNpcName(npcId), npcId)));
-            user.write(WvsContext.message(Message.system("  script : %s", npcTemplate.getScript())));
+            user.write(MessagePacket.system("Npc : %s (%d)", StringProvider.getNpcName(npcId), npcId));
+            user.write(MessagePacket.system("  script : %s", npcTemplate.getScript()));
         } else if (type.equalsIgnoreCase("skill")) {
             int skillId = -1;
             if (isNumber) {
@@ -242,9 +242,9 @@ public final class AdminCommands {
                     if (searchResult.size() == 1) {
                         skillId = searchResult.get(0).getKey();
                     } else {
-                        user.write(WvsContext.message(Message.system("Results for skill name : \"%s\"", query)));
+                        user.write(MessagePacket.system("Results for skill name : \"%s\"", query));
                         for (var entry : searchResult) {
-                            user.write(WvsContext.message(Message.system("  %d : %s", entry.getKey(), entry.getValue().getName())));
+                            user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue().getName()));
                         }
                         return;
                     }
@@ -252,71 +252,71 @@ public final class AdminCommands {
             }
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("Could not find skill with %s : %s", isNumber ? "ID" : "name", query)));
+                user.write(MessagePacket.system("Could not find skill with %s : %s", isNumber ? "ID" : "name", query));
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            user.write(WvsContext.message(Message.system("Skill : %s (%d)", StringProvider.getSkillName(skillId), skillId)));
+            user.write(MessagePacket.system("Skill : %s (%d)", StringProvider.getSkillName(skillId), skillId));
         } else if (type.equalsIgnoreCase("commodity")) {
             if (!isNumber) {
-                user.write(WvsContext.message(Message.system("Can only lookup commodity by ID")));
+                user.write(MessagePacket.system("Can only lookup commodity by ID"));
                 return;
             }
             final int commodityId = Integer.parseInt(query);
             final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
             if (commodityResult.isEmpty()) {
-                user.write(WvsContext.message(Message.system("Could not find commodity with ID : %d", commodityId)));
+                user.write(MessagePacket.system("Could not find commodity with ID : %d", commodityId));
                 return;
             }
             final Commodity commodity = commodityResult.get();
-            user.write(WvsContext.message(Message.system("Commodity : %d", commodityId)));
-            user.write(WvsContext.message(Message.system("  itemId : %d (%s)", commodity.getItemId(), StringProvider.getItemName(commodity.getItemId()))));
-            user.write(WvsContext.message(Message.system("  count : %d", commodity.getCount())));
-            user.write(WvsContext.message(Message.system("  price : %d", commodity.getPrice())));
-            user.write(WvsContext.message(Message.system("  period : %d", commodity.getPeriod())));
-            user.write(WvsContext.message(Message.system("  gender : %d", commodity.getGender())));
+            user.write(MessagePacket.system("Commodity : %d", commodityId));
+            user.write(MessagePacket.system("  itemId : %d (%s)", commodity.getItemId(), StringProvider.getItemName(commodity.getItemId())));
+            user.write(MessagePacket.system("  count : %d", commodity.getCount()));
+            user.write(MessagePacket.system("  price : %d", commodity.getPrice()));
+            user.write(MessagePacket.system("  period : %d", commodity.getPeriod()));
+            user.write(MessagePacket.system("  gender : %d", commodity.getGender()));
         } else {
-            user.write(WvsContext.message(Message.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX));
         }
     }
 
     @Command("npc")
     public static void npc(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %snpc <npc template ID>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %snpc <npc template ID>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int templateId = Integer.parseInt(args[1]);
         final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
         if (npcTemplateResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not resolve npc ID : %d", templateId)));
+            user.write(MessagePacket.system("Could not resolve npc ID : %d", templateId));
             return;
         }
         final String scriptName = npcTemplateResult.get().getScript();
         if (scriptName == null || scriptName.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not find script for npc ID : %d", templateId)));
+            user.write(MessagePacket.system("Could not find script for npc ID : %d", templateId));
             return;
         }
-        user.write(WvsContext.message(Message.system("Starting script for npc ID : %d, script : %s", templateId, scriptName)));
+        user.write(MessagePacket.system("Starting script for npc ID : %d, script : %s", templateId, scriptName));
         ScriptDispatcher.startNpcScript(user, templateId, scriptName);
     }
 
     @Command("map")
     public static void map(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %smap <field ID to warp to>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %smap <field ID to warp to>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int fieldId = Integer.parseInt(args[1]);
         final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
         if (fieldResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not resolve field ID : %d", fieldId)));
+            user.write(MessagePacket.system("Could not resolve field ID : %d", fieldId));
             return;
         }
         final Field targetField = fieldResult.get();
         final Optional<PortalInfo> portalResult = targetField.getPortalById(0);
         if (portalResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not resolve portal for field ID : %d", fieldId)));
+            user.write(MessagePacket.system("Could not resolve portal for field ID : %d", fieldId));
             return;
         }
         try (var locked = user.acquire()) {
@@ -327,13 +327,13 @@ public final class AdminCommands {
     @Command({ "mob", "spawn" })
     public static void mob(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %smob <mob template ID to spawn>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %smob <mob template ID to spawn>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int mobId = Integer.parseInt(args[1]);
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
         if (mobTemplateResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not resolve mob ID : %d", mobId)));
+            user.write(MessagePacket.system("Could not resolve mob ID : %d", mobId));
             return;
         }
         final Field field = user.getField();
@@ -352,7 +352,7 @@ public final class AdminCommands {
     @Command("item")
     public static void item(User user, String[] args) {
         if (args.length < 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int itemId = Integer.parseInt(args[1]);
@@ -362,12 +362,12 @@ public final class AdminCommands {
         } else if (args.length == 3 && Util.isInteger(args[2])) {
             quantity = Integer.parseInt(args[2]);
         } else {
-            user.write(WvsContext.message(Message.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not resolve item ID : %d", itemId)));
+            user.write(MessagePacket.system("Could not resolve item ID : %d", itemId));
             return;
         }
         final ItemInfo ii = itemInfoResult.get();
@@ -381,7 +381,7 @@ public final class AdminCommands {
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
                 user.write(UserLocal.effect(Effect.gainItem(item)));
             } else {
-                user.write(WvsContext.message(Message.system("Failed to add item ID %d (%d) to inventory", itemId, quantity)));
+                user.write(MessagePacket.system("Failed to add item ID %d (%d) to inventory", itemId, quantity));
             }
         }
     }
@@ -389,7 +389,7 @@ public final class AdminCommands {
     @Command({ "meso", "money" })
     public static void meso(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %smeso <new mesos>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %smeso <new mesos>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int money = Integer.parseInt(args[1]);
@@ -403,21 +403,21 @@ public final class AdminCommands {
     @Command("nx")
     public static void nx(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %snx <value>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %snx <value>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int nx = Integer.parseInt(args[1]);
         try (var lockedAccount = user.getAccount().acquire()) {
             final Account account = lockedAccount.get();
             account.setNxPrepaid(nx);
-            user.write(WvsContext.message(Message.system("Set NX prepaid to %d", nx)));
+            user.write(MessagePacket.system("Set NX prepaid to %d", nx));
         }
     }
 
     @Command("hp")
     public static void hp(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %shp <new hp>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %shp <new hp>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int newHp = Integer.parseInt(args[1]);
@@ -429,7 +429,7 @@ public final class AdminCommands {
     @Command("mp")
     public static void mp(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %smp <new mp>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %smp <new mp>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int newMp = Integer.parseInt(args[1]);
@@ -441,7 +441,7 @@ public final class AdminCommands {
     @Command("stat")
     public static void stat(User user, String[] args) {
         if (args.length != 3 || !Util.isInteger(args[2])) {
-            user.write(WvsContext.message(Message.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final String stat = args[1].toLowerCase();
@@ -488,25 +488,25 @@ public final class AdminCommands {
                     }
                 }
                 default -> {
-                    user.write(WvsContext.message(Message.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX)));
+                    user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX));
                     return;
                 }
             }
             user.validateStat();
             user.write(WvsContext.statChanged(statMap, true));
-            user.write(WvsContext.message(Message.system("Set %s to %d", stat, value)));
+            user.write(MessagePacket.system("Set %s to %d", stat, value));
         }
     }
 
     @Command("level")
     public static void level(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %slevel <new level>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %slevel <new level>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int level = Integer.parseInt(args[1]);
         if (level < 1 || level > GameConstants.LEVEL_MAX) {
-            user.write(WvsContext.message(Message.system("Could not change level to : {}", level)));
+            user.write(MessagePacket.system("Could not change level to : {}", level));
             return;
         }
         try (var locked = user.acquire()) {
@@ -520,12 +520,12 @@ public final class AdminCommands {
     @Command("job")
     public static void job(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %sjob <job id>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sjob <job id>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int jobId = Integer.parseInt(args[1]);
         if (Job.getById(jobId) == null) {
-            user.write(WvsContext.message(Message.system("Could not change to unknown job : {}", jobId)));
+            user.write(MessagePacket.system("Could not change to unknown job : {}", jobId));
             return;
         }
         try (var locked = user.acquire()) {
@@ -536,14 +536,14 @@ public final class AdminCommands {
     @Command("skill")
     public static void skill(User user, String[] args) {
         if (args.length != 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2])) {
-            user.write(WvsContext.message(Message.system("Syntax : %sskill <skill id> <skill level>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sskill <skill id> <skill level>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int skillId = Integer.parseInt(args[1]);
         final int slv = Integer.parseInt(args[2]);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not find skill : {}", skillId)));
+            user.write(MessagePacket.system("Could not find skill : {}", skillId));
             return;
         }
         final SkillInfo si = skillInfoResult.get();
@@ -562,18 +562,18 @@ public final class AdminCommands {
     @Command("startquest")
     public static void startQuest(User user, String[] args) {
         if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %sstartquest <quest id>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %sstartquest <quest id>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int questId = Integer.parseInt(args[1]);
         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not find quest : %d", questId)));
+            user.write(MessagePacket.system("Could not find quest : %d", questId));
             return;
         }
         try (var locked = user.acquire()) {
             final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
-            user.write(WvsContext.message(Message.questRecord(qr)));
+            user.write(MessagePacket.questRecord(qr));
             user.validateStat();
         }
     }
@@ -581,14 +581,14 @@ public final class AdminCommands {
     @Command("questex")
     public static void questex(User user, String[] args) {
         if (args.length != 3 || !Util.isInteger(args[1])) {
-            user.write(WvsContext.message(Message.system("Syntax : %squestex <quest id> <qr value>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %squestex <quest id> <qr value>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int questId = Integer.parseInt(args[1]);
         final String infoValue = args[2];
         try (var locked = user.acquire()) {
             final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, infoValue);
-            user.write(WvsContext.message(Message.questRecord(qr)));
+            user.write(MessagePacket.questRecord(qr));
             user.validateStat();
         }
     }
@@ -605,25 +605,25 @@ public final class AdminCommands {
     @Command("mobskill")
     public static void mobskill(User user, String[] args) {
         if (args.length != 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2])) {
-            user.write(WvsContext.message(Message.system("Syntax : %smobskill <skill id> <level>", ServerConfig.COMMAND_PREFIX)));
+            user.write(MessagePacket.system("Syntax : %smobskill <skill id> <level>", ServerConfig.COMMAND_PREFIX));
             return;
         }
         final int skillId = Integer.parseInt(args[1]);
         final int slv = Integer.parseInt(args[2]);
         final MobSkillType skillType = MobSkillType.getByValue(skillId);
         if (skillType == null) {
-            user.write(WvsContext.message(Message.system("Could not resolve mob skill %d", skillId)));
+            user.write(MessagePacket.system("Could not resolve mob skill %d", skillId));
             return;
         }
         final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
         if (cts == null) {
-            user.write(WvsContext.message(Message.system("Could not resolve mob skill {} does not apply a CTS", skillType)));
+            user.write(MessagePacket.system("Could not resolve mob skill {} does not apply a CTS", skillType));
             return;
         }
         // Apply mob skill
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            user.write(WvsContext.message(Message.system("Could not resolve mob skill info %d", skillId)));
+            user.write(MessagePacket.system("Could not resolve mob skill info %d", skillId));
             return;
         }
         final SkillInfo si = skillInfoResult.get();

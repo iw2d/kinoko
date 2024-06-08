@@ -1,4 +1,4 @@
-package kinoko.packet.field.effect;
+package kinoko.packet.field;
 
 public enum FieldEffectType {
     // FieldEffect

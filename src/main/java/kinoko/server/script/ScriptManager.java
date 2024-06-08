@@ -1,12 +1,10 @@
 package kinoko.server.script;
 
-import kinoko.packet.field.FieldPacket;
-import kinoko.packet.field.effect.FieldEffect;
+import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.IncExpMessage;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
@@ -87,7 +85,7 @@ public abstract class ScriptManager {
     }
 
     public final void message(String message) {
-        user.write(WvsContext.message(Message.system(message)));
+        user.write(MessagePacket.system(message));
     }
 
     public final void avatarOriented(String effectPath) {
@@ -115,7 +113,7 @@ public abstract class ScriptManager {
     }
 
     public final void screenEffect(String effectPath) {
-        user.write(FieldPacket.effect(FieldEffect.screen(effectPath)));
+        user.write(FieldEffectPacket.screen(effectPath));
     }
 
     public final int getFieldId() {
@@ -147,7 +145,7 @@ public abstract class ScriptManager {
 
     public final void addExp(int exp) {
         user.addExp(exp);
-        user.write(WvsContext.message(IncExpMessage.quest(exp)));
+        user.write(MessagePacket.incExp(exp, 0, true, true));
     }
 
 
@@ -159,7 +157,7 @@ public abstract class ScriptManager {
             return false;
         }
         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
-        user.write(WvsContext.message(Message.incMoney(money)));
+        user.write(MessagePacket.incMoney(money));
         return true;
     }
 
@@ -212,13 +210,13 @@ public abstract class ScriptManager {
 
     public void forceStartQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
-        user.write(WvsContext.message(Message.questRecord(qr)));
+        user.write(MessagePacket.questRecord(qr));
         user.validateStat();
     }
 
     public void forceCompleteQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
-        user.write(WvsContext.message(Message.questRecord(qr)));
+        user.write(MessagePacket.questRecord(qr));
         user.validateStat();
         // Quest complete effect
         user.write(UserLocal.effect(Effect.questComplete()));

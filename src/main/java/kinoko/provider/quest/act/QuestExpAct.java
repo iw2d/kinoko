@@ -1,7 +1,6 @@
 package kinoko.provider.quest.act;
 
-import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.IncExpMessage;
+import kinoko.packet.world.MessagePacket;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
 
@@ -21,7 +20,7 @@ public final class QuestExpAct implements QuestAct {
     public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         user.addExp(exp);
-        user.write(WvsContext.message(IncExpMessage.quest(exp)));
+        user.write(MessagePacket.incExp(exp, 0, true, true));
         return true;
     }
 }

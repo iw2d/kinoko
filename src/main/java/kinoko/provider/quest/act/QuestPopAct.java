@@ -1,7 +1,6 @@
 package kinoko.provider.quest.act;
 
-import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
+import kinoko.packet.world.MessagePacket;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
 
@@ -21,7 +20,7 @@ public final class QuestPopAct implements QuestAct {
     public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         user.addPop(pop);
-        user.write(WvsContext.message(Message.incPop(pop)));
+        user.write(MessagePacket.incPop(pop));
         return true;
     }
 }

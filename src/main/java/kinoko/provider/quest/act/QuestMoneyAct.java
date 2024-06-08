@@ -1,7 +1,7 @@
 package kinoko.provider.quest.act;
 
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.util.Locked;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
@@ -28,7 +28,7 @@ public final class QuestMoneyAct implements QuestAct {
             return false;
         }
         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
-        user.write(WvsContext.message(Message.incMoney(money)));
+        user.write(MessagePacket.incMoney(money));
         return true;
     }
 }

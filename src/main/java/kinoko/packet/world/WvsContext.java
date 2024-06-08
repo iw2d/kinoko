@@ -1,7 +1,5 @@
 package kinoko.packet.world;
 
-import kinoko.packet.world.broadcast.BroadcastMessage;
-import kinoko.packet.world.message.Message;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
@@ -101,12 +99,6 @@ public final class WvsContext {
     public static OutPacket skillUseResult() {
         final OutPacket outPacket = OutPacket.of(OutHeader.SkillUseResult);
         outPacket.encodeByte(0); // unused, packet sets bExclRequestSent = 0
-        return outPacket;
-    }
-
-    public static OutPacket message(Message message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.Message);
-        message.encode(outPacket);
         return outPacket;
     }
 
@@ -230,12 +222,6 @@ public final class WvsContext {
         outPacket.encodeInt(0);
         outPacket.encodeShort(0);
         outPacket.encodeShort(0);
-        return outPacket;
-    }
-
-    public static OutPacket broadcastMsg(BroadcastMessage message) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.BroadcastMsg);
-        message.encode(outPacket);
         return outPacket;
     }
 

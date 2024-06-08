@@ -1,6 +1,5 @@
 package kinoko.packet.field;
 
-import kinoko.packet.field.effect.FieldEffect;
 import kinoko.provider.map.FieldType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
@@ -54,12 +53,6 @@ public final class FieldPacket {
     public static OutPacket whisper(WhisperResult whisperResult) {
         final OutPacket outPacket = OutPacket.of(OutHeader.Whisper);
         whisperResult.encode(outPacket);
-        return outPacket;
-    }
-
-    public static OutPacket effect(FieldEffect fieldEffect) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.FieldEffect);
-        fieldEffect.encode(outPacket);
         return outPacket;
     }
 

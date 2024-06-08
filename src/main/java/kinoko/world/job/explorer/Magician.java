@@ -1,7 +1,7 @@
 package kinoko.world.job.explorer;
 
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.world.field.TownPortal;
@@ -135,7 +135,7 @@ public final class Magician {
                     user.write(WvsContext.townPortal(townPortal));
                     user.getConnectedServer().notifyUserUpdate(user);
                 } else {
-                    user.write(WvsContext.message(Message.system("You cannot use the Mystic Door skill here.")));
+                    user.write(MessagePacket.system("You cannot use the Mystic Door skill here."));
                 }
                 return;
         }

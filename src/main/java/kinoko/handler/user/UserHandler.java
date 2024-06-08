@@ -11,9 +11,9 @@ import kinoko.packet.user.ChatType;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.BroadcastPacket;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.broadcast.BroadcastMessage;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.item.ItemInfo;
@@ -720,7 +720,7 @@ public final class UserHandler {
                         user.dispose();
                         return;
                     }
-                    user.write(WvsContext.message(Message.questRecord(startQuestResult.get())));
+                    user.write(MessagePacket.questRecord(startQuestResult.get()));
                     user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
                     user.validateStat();
                 }
@@ -742,7 +742,7 @@ public final class UserHandler {
                     }
                     final QuestRecord questRecord = questCompleteResult.get().getLeft();
                     final int nextQuest = questCompleteResult.get().getRight();
-                    user.write(WvsContext.message(Message.questRecord(questRecord)));
+                    user.write(MessagePacket.questRecord(questRecord));
                     user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
                     user.validateStat();
                 }
@@ -757,7 +757,7 @@ public final class UserHandler {
                         log.error("Failed to resign quest : {}", questId);
                         return;
                     }
-                    user.write(WvsContext.message(Message.questRecord(questRecordResult.get())));
+                    user.write(MessagePacket.questRecord(questRecordResult.get()));
                     user.write(UserLocal.resignQuestReturn(questId));
                     user.validateStat();
                 }
@@ -913,7 +913,7 @@ public final class UserHandler {
                 case MRP_Create -> {
                     if (user.getDialog() != null) {
                         log.error("Tried to create mini room with another dialog open");
-                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                         return;
                     }
                     final int type = inPacket.decodeByte();
@@ -975,7 +975,7 @@ public final class UserHandler {
                     // CField::SendInviteTradingRoomMsg
                     if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
                         log.error("Tried to invite user without a trading room");
-                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                         return;
                     }
                     final int targetId = inPacket.decodeInt();
@@ -1021,7 +1021,7 @@ public final class UserHandler {
                     // CUserLocal::HandleLButtonDblClk
                     if (user.getDialog() != null) {
                         log.error("Tried to enter mini room with another dialog open");
-                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                         return;
                     }
                     final int miniRoomId = inPacket.decodeInt(); // dwSN
@@ -1043,7 +1043,7 @@ public final class UserHandler {
                     // Handle for each mini room type
                     if (miniRoom instanceof TradingRoom tradingRoom) {
                         if (!tradingRoom.addUser(user)) {
-                            user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                            user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                             return;
                         }
                         user.setDialog(tradingRoom);
@@ -1057,7 +1057,7 @@ public final class UserHandler {
                         user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
                     } else {
                         log.error("Tried to enter mini room with unhandled type : {}", miniRoom.getType());
-                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                     }
                 }
                 case MRP_Chat -> {
@@ -1373,7 +1373,7 @@ public final class UserHandler {
                 try (var lockedAccount = user.getAccount().acquire()) {
                     final Locker locker = lockedAccount.get().getLocker();
                     if (locker.getRemaining() < cashItemInfos.size()) {
-                        user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("Could not receive gift as the locker is full.")));
+                        user.write(BroadcastPacket.alert("Could not receive gift as the locker is full."));
                         return;
                     }
                     // Delete gift from DB and add to locker
@@ -1434,7 +1434,7 @@ public final class UserHandler {
                     } else if (memoType == MemoType.INCPOP) {
                         try (var locked = user.acquire()) {
                             locked.get().addPop(1);
-                            user.write(WvsContext.message(Message.incPop(1)));
+                            user.write(MessagePacket.incPop(1));
                         }
                     }
                 }

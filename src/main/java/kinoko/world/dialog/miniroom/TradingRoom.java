@@ -1,9 +1,9 @@
 package kinoko.world.dialog.miniroom;
 
 import kinoko.packet.field.MiniRoomPacket;
+import kinoko.packet.world.BroadcastPacket;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.packet.world.broadcast.BroadcastMessage;
-import kinoko.packet.world.message.Message;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.InPacket;
@@ -104,7 +104,7 @@ public final class TradingRoom extends MiniRoom {
                 final int index = inPacket.decodeByte(); // ItemIndexFromPoint
                 if (!addItem(locked, inventoryType, position, quantity, index)) {
                     log.error("Failed to add item to trading room");
-                    user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                 }
             }
             case TRP_PutMoney -> {
@@ -112,7 +112,7 @@ public final class TradingRoom extends MiniRoom {
                 final int addMoney = inPacket.decodeInt(); // nInputNo_Result
                 if (!addMoney(locked, addMoney)) {
                     log.error("Failed to add money to trading room");
-                    user.write(WvsContext.broadcastMsg(BroadcastMessage.alert("This request has failed due to an unknown error.")));
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                 }
             }
             case TRP_Trade -> {
@@ -277,26 +277,26 @@ public final class TradingRoom extends MiniRoom {
             final Set<Item> itemsForUser = items.getOrDefault(other, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
             final int moneyForUser = GameConstants.getTradeTax(money.getOrDefault(other, 0));
             if (!user.getInventoryManager().canAddItems(itemsForUser)) {
-                user.write(WvsContext.message(Message.system("You do not have enough inventory space.")));
-                other.write(WvsContext.message(Message.system(user.getCharacterName() + " does not have enough inventory space.")));
+                user.write(MessagePacket.system("You do not have enough inventory space."));
+                other.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
                 return false;
             }
             if (!user.getInventoryManager().canAddMoney(moneyForUser)) {
-                user.write(WvsContext.message(Message.system("You cannot hold any more mesos.")));
-                other.write(WvsContext.message(Message.system(user.getCharacterName() + " cannot hold any more mesos.")));
+                user.write(MessagePacket.system("You cannot hold any more mesos."));
+                other.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
                 return false;
             }
             // Check that other can add items + money from user's position
             final Set<Item> itemsForOther = items.getOrDefault(user, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
             final int moneyForOther = GameConstants.getTradeTax(money.getOrDefault(user, 0));
             if (!other.getInventoryManager().canAddItems(itemsForOther)) {
-                other.write(WvsContext.message(Message.system("You do not have enough inventory space.")));
-                user.write(WvsContext.message(Message.system(user.getCharacterName() + " does not have enough inventory space.")));
+                other.write(MessagePacket.system("You do not have enough inventory space."));
+                user.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
                 return false;
             }
             if (!other.getInventoryManager().canAddMoney(moneyForOther)) {
-                other.write(WvsContext.message(Message.system("You cannot hold any more mesos.")));
-                user.write(WvsContext.message(Message.system(user.getCharacterName() + " cannot hold any more mesos.")));
+                other.write(MessagePacket.system("You cannot hold any more mesos."));
+                user.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
                 return false;
             }
             // Add all items + money

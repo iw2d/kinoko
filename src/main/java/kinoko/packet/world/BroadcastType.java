@@ -1,6 +1,6 @@
-package kinoko.packet.world.broadcast;
+package kinoko.packet.world;
 
-public enum BroadcastMessageType {
+public enum BroadcastType {
     // BM
     ALL(0),
     NOTICE(0),
@@ -29,7 +29,7 @@ public enum BroadcastMessageType {
 
     private final int value;
 
-    BroadcastMessageType(int value) {
+    BroadcastType(int value) {
         this.value = value;
     }
 
