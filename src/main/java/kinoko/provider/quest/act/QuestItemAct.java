@@ -1,5 +1,6 @@
 package kinoko.provider.quest.act;
 
+import kinoko.packet.user.QuestPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
@@ -9,8 +10,6 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.item.*;
-import kinoko.world.quest.QuestResult;
-import kinoko.world.quest.QuestResultType;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 
@@ -51,11 +50,11 @@ public final class QuestItemAct implements QuestAct {
             }
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
             if (itemInfoResult.isEmpty()) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return;
             }
             if (!itemInfoResult.get().isQuest()) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return;
             }
             final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
@@ -67,7 +66,7 @@ public final class QuestItemAct implements QuestAct {
             final Inventory inventory = im.getInventoryByType(entry.getKey());
             final int remainingSlots = inventory.getRemaining();
             if (remainingSlots < entry.getValue()) {
-                user.write(UserLocal.questResult(QuestResult.failedInventory(questId)));
+                user.write(QuestPacket.failedInventory(questId));
                 return;
             }
         }
@@ -79,18 +78,18 @@ public final class QuestItemAct implements QuestAct {
             }
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemData.getItemId());
             if (itemInfoResult.isEmpty()) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return;
             }
             final int count = itemData.getCount() - im.getItemCount(itemData.getItemId());
             if (count <= 0) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return;
             }
             final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), count);
             final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
             if (addItemResult.isEmpty()) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return;
             }
             user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
@@ -114,7 +113,7 @@ public final class QuestItemAct implements QuestAct {
             }
             final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemData.getItemId(), count);
             if (removeItemResult.isEmpty()) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return;
             }
             user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
@@ -141,7 +140,7 @@ public final class QuestItemAct implements QuestAct {
         // Handle required slots for choice items
         if (rewardIndex >= 0) {
             if (choices.size() < rewardIndex) {
-                user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                user.write(QuestPacket.failedUnknown());
                 return false;
             }
             final QuestItemData choiceItemData = choices.get(rewardIndex);
@@ -159,7 +158,7 @@ public final class QuestItemAct implements QuestAct {
                 requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
             } else {
                 if (!im.hasItem(itemData.getItemId(), itemData.getCount())) {
-                    user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+                    user.write(QuestPacket.failedUnknown());
                     return false;
                 }
             }
@@ -170,7 +169,7 @@ public final class QuestItemAct implements QuestAct {
             final Inventory inventory = im.getInventoryByType(entry.getKey());
             final int remainingSlots = inventory.getRemaining();
             if (remainingSlots < entry.getValue()) {
-                user.write(UserLocal.questResult(QuestResult.failedInventory(questId)));
+                user.write(QuestPacket.failedInventory(questId));
                 return false;
             }
         }

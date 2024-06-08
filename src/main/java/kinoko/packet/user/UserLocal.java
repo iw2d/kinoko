@@ -3,7 +3,6 @@ package kinoko.packet.user;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.dialog.UIType;
-import kinoko.world.quest.QuestResult;
 import kinoko.world.user.effect.Effect;
 
 public final class UserLocal {
@@ -36,12 +35,6 @@ public final class UserLocal {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTeleport);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeByte(portalId);
-        return outPacket;
-    }
-
-    public static OutPacket questResult(QuestResult questResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.UserQuestResult);
-        questResult.encode(outPacket);
         return outPacket;
     }
 

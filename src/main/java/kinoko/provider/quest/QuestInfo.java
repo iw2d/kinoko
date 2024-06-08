@@ -1,6 +1,6 @@
 package kinoko.provider.quest;
 
-import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.QuestPacket;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.quest.act.*;
@@ -9,7 +9,9 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
-import kinoko.world.quest.*;
+import kinoko.world.quest.QuestManager;
+import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
 
 import java.util.*;
@@ -92,7 +94,7 @@ public final class QuestInfo {
         final QuestManager qm = user.getQuestManager();
         final Optional<QuestRecord> questRecordResult = qm.getQuestRecord(questId);
         if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
-            user.write(UserLocal.questResult(QuestResult.of(QuestResultType.Failed_Unknown)));
+            user.write(QuestPacket.failedUnknown());
             return;
         }
         for (QuestAct questAct : getStartActs()) {

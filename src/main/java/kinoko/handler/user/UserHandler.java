@@ -6,10 +6,7 @@ import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.GroupMessageType;
 import kinoko.packet.field.MiniRoomPacket;
 import kinoko.packet.stage.CashShopPacket;
-import kinoko.packet.user.ChatType;
-import kinoko.packet.user.UserLocal;
-import kinoko.packet.user.UserPacket;
-import kinoko.packet.user.UserRemote;
+import kinoko.packet.user.*;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
@@ -44,7 +41,6 @@ import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRequestType;
-import kinoko.world.quest.QuestResult;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
@@ -721,7 +717,7 @@ public final class UserHandler {
                         return;
                     }
                     user.write(MessagePacket.questRecord(startQuestResult.get()));
-                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, 0)));
+                    user.write(QuestPacket.success(questId, templateId, 0));
                     user.validateStat();
                 }
             }
@@ -743,7 +739,7 @@ public final class UserHandler {
                     final QuestRecord questRecord = questCompleteResult.get().getLeft();
                     final int nextQuest = questCompleteResult.get().getRight();
                     user.write(MessagePacket.questRecord(questRecord));
-                    user.write(UserLocal.questResult(QuestResult.success(questId, templateId, nextQuest)));
+                    user.write(QuestPacket.success(questId, templateId, nextQuest));
                     user.validateStat();
                 }
                 // Quest complete effect
