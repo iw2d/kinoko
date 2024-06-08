@@ -1,7 +1,5 @@
 package kinoko.server.script;
 
-import kinoko.packet.script.ScriptMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 

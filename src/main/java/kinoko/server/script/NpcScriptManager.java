@@ -1,9 +1,6 @@
 package kinoko.server.script;
 
-import kinoko.packet.script.ScriptMessage;
-import kinoko.packet.script.ScriptMessageParam;
-import kinoko.packet.script.ScriptMessageType;
-import kinoko.packet.script.ScriptPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.world.user.User;
 
 import java.util.EnumSet;
@@ -55,7 +52,7 @@ public final class NpcScriptManager extends ScriptManager {
 
     private void sendMessage(ScriptMessage scriptMessage) {
         scriptMemory.recordMessage(scriptMessage);
-        user.write(ScriptPacket.scriptMessage(scriptMessage));
+        user.write(FieldPacket.scriptMessage(scriptMessage));
     }
 
     private ScriptAnswer handleAnswer() {
@@ -69,11 +66,11 @@ public final class NpcScriptManager extends ScriptManager {
             dispose();
         } else if (answer.getAction() == 0 && scriptMemory.isPrevPossible()) {
             // prev message in memory
-            user.write(ScriptPacket.scriptMessage(scriptMemory.prevMessage()));
+            user.write(FieldPacket.scriptMessage(scriptMemory.prevMessage()));
             return handleAnswer();
         } else if (scriptMemory.isInMemory()) {
             // next message in memory
-            user.write(ScriptPacket.scriptMessage(scriptMemory.nextMessage()));
+            user.write(FieldPacket.scriptMessage(scriptMemory.nextMessage()));
             return handleAnswer();
         }
         return answer;

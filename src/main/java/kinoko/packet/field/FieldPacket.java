@@ -3,6 +3,7 @@ package kinoko.packet.field;
 import kinoko.provider.map.FieldType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.shop.ShopResultType;
@@ -163,6 +164,15 @@ public final class FieldPacket {
         outPacket.encodeShort(delay);
         outPacket.encodeByte(eventIndex); // nProperEventIdx
         outPacket.encodeByte(endDelay); // tStateEnd = update_time + 100 * byte
+        return outPacket;
+    }
+
+
+    // CScriptMan::OnPacket ---------------------------------------------------------------------------------------------
+
+    public static OutPacket scriptMessage(ScriptMessage scriptMessage) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ScriptMessage);
+        scriptMessage.encode(outPacket);
         return outPacket;
     }
 
