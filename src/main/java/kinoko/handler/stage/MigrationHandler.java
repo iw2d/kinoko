@@ -9,6 +9,7 @@ import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.world.FriendPacket;
+import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
@@ -27,7 +28,6 @@ import kinoko.world.item.ItemType;
 import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResultType;
-import kinoko.world.social.memo.MemoResult;
 import kinoko.world.social.party.PartyRequest;
 import kinoko.world.social.party.PartyRequestType;
 import kinoko.world.user.Account;
@@ -199,7 +199,7 @@ public final class MigrationHandler {
 
             // Check memos
             if (DatabaseManager.memoAccessor().hasMemo(user.getCharacterId())) {
-                user.write(WvsContext.memoResult(MemoResult.receive()));
+                user.write(MemoPacket.receive());
             }
         }
     }

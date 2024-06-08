@@ -7,7 +7,6 @@ import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.shop.ShopResultType;
-import kinoko.world.dialog.trunk.TrunkResult;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
@@ -194,15 +193,6 @@ public final class FieldPacket {
                 outPacket.encodeString(message);
             }
         }
-        return outPacket;
-    }
-
-
-    // CTrunkDlg::OnPacket ---------------------------------------------------------------------------------------------
-
-    public static OutPacket trunkResult(TrunkResult trunkResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.TrunkResult);
-        trunkResult.encode(outPacket);
         return outPacket;
     }
 

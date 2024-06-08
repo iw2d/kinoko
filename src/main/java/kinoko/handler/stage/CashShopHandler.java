@@ -3,7 +3,7 @@ package kinoko.handler.stage;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.CashShopPacket;
-import kinoko.packet.world.WvsContext;
+import kinoko.packet.world.MemoPacket;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
@@ -12,7 +12,6 @@ import kinoko.world.GameConstants;
 import kinoko.world.cashshop.*;
 import kinoko.world.item.*;
 import kinoko.world.social.memo.Memo;
-import kinoko.world.social.memo.MemoResult;
 import kinoko.world.social.memo.MemoType;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
@@ -183,7 +182,7 @@ public final class CashShopHandler {
                 }
 
                 // Notify memo recipient
-                user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, WvsContext.memoResult(MemoResult.receive()));
+                user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, MemoPacket.receive());
             }
             case SetWish -> {
                 // CCashShop::OnSetWish

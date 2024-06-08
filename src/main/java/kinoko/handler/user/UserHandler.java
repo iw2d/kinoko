@@ -2,10 +2,7 @@ package kinoko.handler.user;
 
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
-import kinoko.packet.field.FieldPacket;
-import kinoko.packet.field.GroupMessageType;
-import kinoko.packet.field.MiniRoomPacket;
-import kinoko.packet.field.WhisperPacket;
+import kinoko.packet.field.*;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.user.*;
 import kinoko.packet.world.*;
@@ -29,7 +26,6 @@ import kinoko.world.cashshop.*;
 import kinoko.world.dialog.miniroom.*;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.trunk.TrunkDialog;
-import kinoko.world.dialog.trunk.TrunkResult;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
@@ -46,7 +42,6 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.*;
 import kinoko.world.social.memo.Memo;
 import kinoko.world.social.memo.MemoRequestType;
-import kinoko.world.social.memo.MemoResult;
 import kinoko.world.social.memo.MemoType;
 import kinoko.world.social.party.PartyRequest;
 import kinoko.world.social.party.PartyRequestType;
@@ -178,7 +173,7 @@ public final class UserHandler {
                 user.setDialog(trunkDialog);
                 // Lock account to access trunk
                 try (var lockedAccount = user.getAccount().acquire()) {
-                    user.write(FieldPacket.trunkResult(TrunkResult.open(lockedAccount.get().getTrunk(), npc.getTemplateId())));
+                    user.write(TrunkPacket.openTrunkDlg(npc.getTemplateId(), lockedAccount.get().getTrunk()));
                 }
             } else {
                 final ShopDialog shopDialog = ShopDialog.from(npc);
@@ -1382,7 +1377,7 @@ public final class UserHandler {
                 // Resolve receiver
                 final Optional<Tuple<Integer, Integer>> receiverIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(receiverName);
                 if (receiverIdResult.isEmpty()) {
-                    user.write(WvsContext.memoResult(MemoResult.sendWarningName())); // Please check the name of the receiving character.
+                    user.write(MemoPacket.sendWarningName()); // Please check the name of the receiving character.
                     return;
                 }
                 final int receiverCharacterId = receiverIdResult.get().getRight();
@@ -1403,9 +1398,9 @@ public final class UserHandler {
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
                     user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 }
-                // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // memo result not required
+                // user.write(MemoPacket.sendSucceed()); // memo result not required
                 // Notify memo recipient
-                user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, WvsContext.memoResult(MemoResult.receive()));
+                user.getConnectedServer().submitUserPacketReceive(receiverCharacterId, MemoPacket.receive());
             }
             case Delete -> {
                 // CMemoListDlg::SetRet
@@ -1434,7 +1429,7 @@ public final class UserHandler {
             case Load -> {
                 // CWvsContext::OnMemoNotify_Receive
                 final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
-                user.write(WvsContext.memoResult(MemoResult.load(memos)));
+                user.write(MemoPacket.load(memos));
             }
             case null -> {
                 log.error("Unknown memo request type : {}", type);

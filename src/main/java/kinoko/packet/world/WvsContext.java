@@ -10,7 +10,6 @@ import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.social.memo.MemoResult;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.config.SingleMacro;
@@ -97,12 +96,6 @@ public final class WvsContext {
     public static OutPacket skillUseResult() {
         final OutPacket outPacket = OutPacket.of(OutHeader.SkillUseResult);
         outPacket.encodeByte(0); // unused, packet sets bExclRequestSent = 0
-        return outPacket;
-    }
-
-    public static OutPacket memoResult(MemoResult memoResult) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.MemoResult);
-        memoResult.encode(outPacket);
         return outPacket;
     }
 
