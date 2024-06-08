@@ -5,7 +5,7 @@ public enum CashItemFailReason {
     Unknown(0),
     Timeout(1),
     CashDaemonDBError(2),
-    NORemainCash(3),
+    NoRemainCash(3),
     GiftUnderAge(4),
     GiftLimitOver(5),
     GiftSameAccount(6),

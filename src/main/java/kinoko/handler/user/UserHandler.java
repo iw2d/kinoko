@@ -1330,20 +1330,20 @@ public final class UserHandler {
                 final Optional<Gift> giftResult = DatabaseManager.giftAccessor().getGiftByItemSn(itemSn);
                 if (giftResult.isEmpty()) {
                     log.error("Tried to send gift receipt memo for gift with item sn : {}", itemSn);
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 final Gift gift = giftResult.get();
                 if (!receiverName.equalsIgnoreCase(gift.getSender())) {
                     log.error("Tried to send gift receipt memo with mismatching sender name - expected : {}, actual : {}", gift.getSender(), receiverName);
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 // Resolve commodity
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(gift.getCommodityId());
                 if (commodityResult.isEmpty()) {
                     log.error("Failed to resolve gift commodity ID : {}", gift.getCommodityId());
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 final Set<CashItemInfo> cashItemInfos = new HashSet<>();
@@ -1354,7 +1354,7 @@ public final class UserHandler {
                         final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
                         if (cashItemInfoResult.isEmpty()) {
                             log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
-                            user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                             return;
                         }
                         cashItemInfos.add(cashItemInfoResult.get());
@@ -1364,7 +1364,7 @@ public final class UserHandler {
                     final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user);
                     if (cashItemInfoResult.isEmpty()) {
                         log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
-                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
                     cashItemInfos.add(cashItemInfoResult.get());
@@ -1379,13 +1379,13 @@ public final class UserHandler {
                     // Delete gift from DB and add to locker
                     if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
                         log.error("Failed to delete gift with sn : {}", gift.getGiftSn());
-                        user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                         return;
                     }
                     for (CashItemInfo cashItemInfo : cashItemInfos) {
                         locker.addCashItem(cashItemInfo);
                     }
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.loadLockerDone(lockedAccount.get())));
+                    user.write(CashShopPacket.loadLockerDone(lockedAccount.get()));
                 }
                 // Resolve receiver
                 final Optional<Tuple<Integer, Integer>> receiverIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(receiverName);
@@ -1397,7 +1397,7 @@ public final class UserHandler {
                 // Create memo
                 final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
                 if (memoIdResult.isEmpty()) {
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                     return;
                 }
                 final Memo memo = new Memo(
@@ -1409,7 +1409,7 @@ public final class UserHandler {
                 );
                 // Save memo
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
-                    user.write(CashShopPacket.cashItemResult(CashItemResult.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown))); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
                 }
                 // user.write(WvsContext.memoResult(MemoResult.sendSucceed())); // memo result not required
                 // Notify memo recipient

@@ -18,7 +18,6 @@ import kinoko.server.node.MigrationInfo;
 import kinoko.server.node.TransferInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
-import kinoko.world.cashshop.CashItemResult;
 import kinoko.world.cashshop.Gift;
 import kinoko.world.field.Field;
 import kinoko.world.item.Inventory;
@@ -310,9 +309,9 @@ public final class MigrationHandler {
 
             // Load cash shop
             user.write(StagePacket.setCashShop(user));
-            user.write(CashShopPacket.cashItemResult(CashItemResult.loadGiftDone(gifts)));
-            user.write(CashShopPacket.cashItemResult(CashItemResult.loadLockerDone(account)));
-            user.write(CashShopPacket.cashItemResult(CashItemResult.loadWishDone(account.getWishlist())));
+            user.write(CashShopPacket.loadGiftDone(gifts));
+            user.write(CashShopPacket.loadLockerDone(account));
+            user.write(CashShopPacket.loadWishDone(account.getWishlist()));
             user.write(CashShopPacket.queryCashResult(account));
         }
     }
