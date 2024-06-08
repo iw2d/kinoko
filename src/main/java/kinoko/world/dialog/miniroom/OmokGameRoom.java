@@ -54,6 +54,7 @@ public final class OmokGameRoom extends MiniGameRoom {
                 omokGame = new OmokGame();
                 setOpen(false);
                 updateBalloon();
+                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.GameStart, ""));
                 broadcastPacket(MiniRoomPacket.MiniGame.omokStart(getNextTurn() == 0 ? 1 : 0));
             }
             case ORP_PutStoneChecker -> {

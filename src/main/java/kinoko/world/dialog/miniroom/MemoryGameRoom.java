@@ -40,6 +40,7 @@ public final class MemoryGameRoom extends MiniGameRoom {
                 memoryGame = new MemoryGame(getGameSpec());
                 setOpen(false);
                 updateBalloon();
+                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.GameStart, ""));
                 broadcastPacket(MiniRoomPacket.MiniGame.memoryGameStart(getNextTurn() == 0 ? 1 : 0, memoryGame.getShuffle()));
             }
             case MGP_TurnUpCard -> {
