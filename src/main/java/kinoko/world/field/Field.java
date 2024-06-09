@@ -42,6 +42,7 @@ public final class Field {
     private final ReactorPool reactorPool;
     private final MiniRoomPool miniRoomPool;
     private final TownPortalPool townPortalPool;
+    private final AffectedAreaPool affectedAreaPool;
 
     private Instant nextMobRespawn = Instant.now();
     private Instant nextDropExpire = Instant.now();
@@ -60,6 +61,7 @@ public final class Field {
         this.reactorPool = new ReactorPool(this);
         this.miniRoomPool = new MiniRoomPool(this);
         this.townPortalPool = new TownPortalPool(this);
+        this.affectedAreaPool = new AffectedAreaPool(this);
     }
 
     public FieldStorage getFieldStorage() {
@@ -130,6 +132,10 @@ public final class Field {
         return townPortalPool;
     }
 
+    public AffectedAreaPool getAffectedAreaPool() {
+        return affectedAreaPool;
+    }
+
     public MapInfo getMapInfo() {
         return mapInfo;
     }
@@ -162,6 +168,7 @@ public final class Field {
         }
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
+        affectedAreaPool.expireAffectedAreas(now);
     }
 
 

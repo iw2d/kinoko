@@ -5,9 +5,6 @@ import kinoko.world.job.JobConstants;
 import kinoko.world.user.stat.CharacterStat;
 
 public final class CalcDamage {
-    public static int calcBaseDamage(int p1, int p2, int p3, int ad, double k) {
-        return (int) ((double) (p3 + p2 + 4 * p1) / 100.0 * ((double) ad * k) + 0.5);
-    }
 
     public static double calcDamageByWT(WeaponType wt, CharacterStat cs, int pad, int mad) {
         final int jobId = cs.getJob();
@@ -53,7 +50,11 @@ public final class CalcDamage {
         }
     }
 
-    public static double getMasteryConstByWT(WeaponType wt) {
+    private static int calcBaseDamage(int p1, int p2, int p3, int ad, double k) {
+        return (int) ((double) (p3 + p2 + 4 * p1) / 100.0 * ((double) ad * k) + 0.5);
+    }
+
+    private static double getMasteryConstByWT(WeaponType wt) {
         switch (wt) {
             case WAND, STAFF -> {
                 return 0.25;

@@ -42,10 +42,6 @@ public final class MobPool extends FieldObjectPool<Mob> {
     public void updateMobs(Instant now) {
         for (Mob mob : getObjects()) {
             try (var lockedMob = mob.acquire()) {
-                // Try recovering hp/mp
-                mob.recovery(now);
-                // Try removing mob (removeAfter)
-                mob.remove(now);
                 // Expire temporary stat
                 final Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireResult = lockedMob.get().getMobStat().expireMobStat(now);
                 final Set<MobTemporaryStat> resetStats = expireResult.getLeft();
@@ -53,6 +49,14 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 if (!resetStats.isEmpty()) {
                     field.broadcastPacket(MobPacket.mobStatReset(mob, resetStats, resetBurnedInfos));
                 }
+                // Handle affected areas
+                field.getAffectedAreaPool().forEach((affectedArea) -> {
+                    affectedArea.handleMobInside(lockedMob);
+                });
+                // Try recovering hp/mp
+                mob.recovery(now);
+                // Try removing mob (removeAfter)
+                mob.remove(now);
             }
         }
     }

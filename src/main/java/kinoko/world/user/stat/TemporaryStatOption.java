@@ -46,11 +46,11 @@ public class TemporaryStatOption implements Encodable {
         );
     }
 
-    public DiceInfo getDiceInfo() {
+    public final DiceInfo getDiceInfo() {
         return diceInfo;
     }
 
-    public Instant getExpireTime() {
+    public final Instant getExpireTime() {
         return expireTime;
     }
 

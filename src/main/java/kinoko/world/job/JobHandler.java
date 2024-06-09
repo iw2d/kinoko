@@ -214,65 +214,53 @@ public final class JobHandler {
             case Mechanic.HEROS_WILL_MECH:
                 // TODO
                 return;
-
-            // CLASS SPECIFIC SKILLS -----------------------------------------------------------------------------------
-            default:
-                final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
-                switch (Job.getById(skillRoot)) {
-                    case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
-                        Warrior.handleSkill(user, skill);
-                        return;
-                    }
-                    case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST, BISHOP -> {
-                        Magician.handleSkill(user, skill);
-                        return;
-                    }
-                    case ARCHER, HUNTER, RANGER, BOWMASTER, CROSSBOWMAN, SNIPER, MARKSMAN -> {
-                        Bowman.handleSkill(user, skill);
-                        return;
-                    }
-                    case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
-                        Thief.handleSkill(user, skill);
-                        return;
-                    }
-                    case PIRATE, BRAWLER, MARAUDER, BUCCANEER, GUNSLINGER, OUTLAW, CORSAIR -> {
-                        Pirate.handleSkill(user, skill);
-                        return;
-                    }
-                    case DAWN_WARRIOR_1, DAWN_WARRIOR_2, DAWN_WARRIOR_3 -> {
-                        DawnWarrior.handleSkill(user, skill);
-                        return;
-                    }
-                    case BLAZE_WIZARD_1, BLAZE_WIZARD_2, BLAZE_WIZARD_3 -> {
-                        BlazeWizard.handleSkill(user, skill);
-                        return;
-                    }
-                    case WIND_ARCHER_1, WIND_ARCHER_2, WIND_ARCHER_3 -> {
-                        WindArcher.handleSkill(user, skill);
-                        return;
-                    }
-                    case ARAN_1, ARAN_2, ARAN_3, ARAN_4 -> {
-                        Aran.handleSkill(user, skill);
-                        return;
-                    }
-                    case EVAN_1, EVAN_2, EVAN_3, EVAN_4, EVAN_5, EVAN_6, EVAN_7, EVAN_8, EVAN_9, EVAN_10 -> {
-                        Evan.handleSkill(user, skill);
-                        return;
-                    }
-                    case BATTLE_MAGE_1, BATTLE_MAGE_2, BATTLE_MAGE_3, BATTLE_MAGE_4 -> {
-                        BattleMage.handleSkill(user, skill);
-                        return;
-                    }
-                    case WILD_HUNTER_1, WILD_HUNTER_2, WILD_HUNTER_3, WILD_HUNTER_4 -> {
-                        WildHunter.handleSkill(user, skill);
-                        return;
-                    }
-                    case MECHANIC_1, MECHANIC_2, MECHANIC_3, MECHANIC_4 -> {
-                        Mechanic.handleSkill(user, skill);
-                        return;
-                    }
-                }
         }
-        log.error("Unhandled skill {}", skill.skillId);
+
+        // CLASS SPECIFIC SKILLS ---------------------------------------------------------------------------------------
+        final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
+        switch (Job.getById(skillRoot)) {
+            case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
+                Warrior.handleSkill(user, skill);
+            }
+            case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST, BISHOP -> {
+                Magician.handleSkill(user, skill);
+            }
+            case ARCHER, HUNTER, RANGER, BOWMASTER, CROSSBOWMAN, SNIPER, MARKSMAN -> {
+                Bowman.handleSkill(user, skill);
+            }
+            case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
+                Thief.handleSkill(user, skill);
+            }
+            case PIRATE, BRAWLER, MARAUDER, BUCCANEER, GUNSLINGER, OUTLAW, CORSAIR -> {
+                Pirate.handleSkill(user, skill);
+            }
+            case DAWN_WARRIOR_1, DAWN_WARRIOR_2, DAWN_WARRIOR_3 -> {
+                DawnWarrior.handleSkill(user, skill);
+            }
+            case BLAZE_WIZARD_1, BLAZE_WIZARD_2, BLAZE_WIZARD_3 -> {
+                BlazeWizard.handleSkill(user, skill);
+            }
+            case WIND_ARCHER_1, WIND_ARCHER_2, WIND_ARCHER_3 -> {
+                WindArcher.handleSkill(user, skill);
+            }
+            case ARAN_1, ARAN_2, ARAN_3, ARAN_4 -> {
+                Aran.handleSkill(user, skill);
+            }
+            case EVAN_1, EVAN_2, EVAN_3, EVAN_4, EVAN_5, EVAN_6, EVAN_7, EVAN_8, EVAN_9, EVAN_10 -> {
+                Evan.handleSkill(user, skill);
+            }
+            case BATTLE_MAGE_1, BATTLE_MAGE_2, BATTLE_MAGE_3, BATTLE_MAGE_4 -> {
+                BattleMage.handleSkill(user, skill);
+            }
+            case WILD_HUNTER_1, WILD_HUNTER_2, WILD_HUNTER_3, WILD_HUNTER_4 -> {
+                WildHunter.handleSkill(user, skill);
+            }
+            case MECHANIC_1, MECHANIC_2, MECHANIC_3, MECHANIC_4 -> {
+                Mechanic.handleSkill(user, skill);
+            }
+            default -> {
+                log.error("Unhandled skill {}", skill.skillId);
+            }
+        }
     }
 }

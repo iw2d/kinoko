@@ -22,7 +22,7 @@ public final class MobStatOption implements Encodable {
     }
 
     public MobStatOption(int nOption, int rOption, int tOption) {
-        this(nOption, rOption, tOption, Instant.now().plus(tOption, ChronoUnit.MILLIS));
+        this(nOption, rOption, tOption, tOption == 0 ? Instant.MAX : Instant.now().plus(tOption, ChronoUnit.MILLIS));
     }
 
     public Instant getExpireTime() {

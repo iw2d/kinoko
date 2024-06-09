@@ -20,25 +20,51 @@ public final class MobStat {
         return burnedInfos;
     }
 
+    public void addBurnedInfo(BurnedInfo burnedInfo) {
+        burnedInfos.put(new Tuple<>(burnedInfo.getCharacterId(), burnedInfo.getSkillId()), burnedInfo);
+    }
+
+    public boolean hasBurnedInfo(int characterId, int skillId) {
+        return burnedInfos.containsKey(new Tuple<>(characterId, skillId));
+    }
+
     public void clear() {
         temporaryStats.clear();
         burnedInfos.clear();
     }
 
     public Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireMobStat(Instant now) {
+        // Expire temporary stats
         final Set<MobTemporaryStat> resetStats = new HashSet<>();
-        final Set<BurnedInfo> resetBurnedInfos = new HashSet<>();
-        final var iter = getTemporaryStats().entrySet().iterator();
-        while (iter.hasNext()) {
-            final Map.Entry<MobTemporaryStat, MobStatOption> entry = iter.next();
+        final var statIter = temporaryStats.entrySet().iterator();
+        while (statIter.hasNext()) {
+            final Map.Entry<MobTemporaryStat, MobStatOption> entry = statIter.next();
             final MobTemporaryStat mts = entry.getKey();
             final MobStatOption option = entry.getValue();
             // Check temporary stat expire time and remove mts
             if (now.isBefore(option.getExpireTime())) {
                 continue;
             }
-            iter.remove();
+            statIter.remove();
             resetStats.add(mts);
+        }
+        // Expire burned infos
+        final Set<BurnedInfo> resetBurnedInfos = new HashSet<>();
+        final var burnIter = burnedInfos.entrySet().iterator();
+        while (burnIter.hasNext()) {
+            final Map.Entry<Tuple<Integer, Integer>, BurnedInfo> entry = burnIter.next();
+            final BurnedInfo burnedInfo = entry.getValue();
+            // Check burned info expire time and remove
+            if (now.isBefore(burnedInfo.getExpireTime())) {
+                continue;
+            }
+            burnIter.remove();
+            resetBurnedInfos.add(burnedInfo);
+        }
+        // Remove Burned MTS if applicable
+        if (!resetBurnedInfos.isEmpty() && burnedInfos.isEmpty()) {
+            temporaryStats.remove(MobTemporaryStat.Burned);
+            resetStats.add(MobTemporaryStat.Burned);
         }
         return new Tuple<>(resetStats, resetBurnedInfos);
     }
@@ -62,13 +88,8 @@ public final class MobStat {
         }
         if (statFlag.hasFlag(MobTemporaryStat.Burned)) {
             outPacket.encodeInt(setBurnedInfos.size()); // uCount;
-            for (BurnedInfo bi : setBurnedInfos) {
-                outPacket.encodeInt(bi.characterId); // dwCharacterID
-                outPacket.encodeInt(bi.skillId); // nSkillID
-                outPacket.encodeInt(bi.damage); // nDamage
-                outPacket.encodeInt(bi.interval); // tInterval
-                outPacket.encodeInt(bi.end); // tEnd
-                outPacket.encodeInt(bi.dotCount); // nDotCount
+            for (BurnedInfo burnedInfo : setBurnedInfos) {
+                burnedInfo.encode(outPacket);
             }
         }
         if (statFlag.hasFlag(MobTemporaryStat.PCounter)) {
@@ -92,9 +113,9 @@ public final class MobStat {
         // MobStat::Reset
         if (statFlag.hasFlag(MobTemporaryStat.Burned)) {
             outPacket.encodeInt(resetBurnedInfos.size());
-            for (BurnedInfo bi : resetBurnedInfos) {
-                outPacket.encodeInt(bi.characterId); // dwCharacterID
-                outPacket.encodeInt(bi.skillId); // nSkillID
+            for (BurnedInfo burnedInfo : resetBurnedInfos) {
+                outPacket.encodeInt(burnedInfo.getCharacterId()); // dwCharacterID
+                outPacket.encodeInt(burnedInfo.getSkillId()); // nSkillID
             }
         }
     }

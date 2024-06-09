@@ -4,6 +4,7 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
+import kinoko.world.field.Field;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.job.JobHandler;
@@ -116,11 +117,12 @@ public final class Warrior {
         final int skillId = attack.skillId;
         final int slv = attack.slv;
 
+        final Field field = user.getField();
         switch (skillId) {
             // HERO
             case PANIC:
                 resetComboCounter(user);
-                Attack.forEachMob(attack, user.getField(), (mob) -> {
+                attack.forEachMob(field, (mob) -> {
                     if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         return;
                     }
@@ -131,7 +133,7 @@ public final class Warrior {
                 resetComboCounter(user);
                 // Fallthrough intended
             case SHOUT:
-                Attack.forEachMob(attack, user.getField(), (mob) -> {
+                attack.forEachMob(field, (mob) -> {
                     if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         return;
                     }
@@ -145,6 +147,7 @@ public final class Warrior {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
+        final Field field = user.getField();
         switch (skillId) {
             // COMMON
             case IRON_BODY:
@@ -157,7 +160,7 @@ public final class Warrior {
             case MAGIC_CRASH_HERO:
             case MAGIC_CRASH_PALADIN:
             case MAGIC_CRASH_DRK:
-                skill.forEachAffectedMob(user.getField(), (mob) -> {
+                skill.forEachAffectedMob(field, (mob) -> {
                     if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         return;
                     }

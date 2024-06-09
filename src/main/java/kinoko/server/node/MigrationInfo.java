@@ -185,7 +185,9 @@ public final class MigrationInfo implements Encodable {
             outPacket.encodeInt(option.nOption);
             outPacket.encodeInt(option.rOption);
             outPacket.encodeInt(option.tOption);
-            outPacket.encodeLong(option.getExpireTime().toEpochMilli());
+            if (option.tOption != 0) {
+                outPacket.encodeLong(option.getExpireTime().toEpochMilli());
+            }
             // Extra information
             switch (type) {
                 case DICE_INFO -> {
@@ -214,7 +216,7 @@ public final class MigrationInfo implements Encodable {
             final int nOption = inPacket.decodeInt();
             final int rOption = inPacket.decodeInt();
             final int tOption = inPacket.decodeInt();
-            final Instant expireTime = Instant.ofEpochMilli(inPacket.decodeLong());
+            final Instant expireTime = tOption != 0 ? Instant.ofEpochMilli(inPacket.decodeLong()) : Instant.MAX;
             switch (type) {
                 case NORMAL -> {
                     temporaryStats.put(cts, new TemporaryStatOption(nOption, rOption, tOption, expireTime));

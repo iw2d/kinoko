@@ -7,6 +7,7 @@ import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.shop.ShopResultType;
+import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
@@ -101,6 +102,21 @@ public final class FieldPacket {
                 outPacket.encodeShort(0); // delay
             }
         }
+        return outPacket;
+    }
+
+
+    // CAffectedAreaPool::OnPacket -------------------------------------------------------------------------------------
+
+    public static OutPacket affectedAreaCreated(AffectedArea affectedArea) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.AffectedAreaCreated);
+        affectedArea.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket affectedAreaRemoved(AffectedArea affectedArea) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.AffectedAreaRemoved);
+        outPacket.encodeInt(affectedArea.getId());
         return outPacket;
     }
 

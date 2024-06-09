@@ -203,6 +203,13 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, Set.of()));
     }
 
+    public void setBurnedInfo(BurnedInfo burnedInfo) {
+        final MobStatOption option = MobStatOption.of(0, burnedInfo.getSkillId(), 0);
+        getMobStat().getTemporaryStats().put(MobTemporaryStat.Burned, option);
+        getMobStat().addBurnedInfo(burnedInfo);
+        getField().broadcastPacket(MobPacket.mobStatSet(this, Map.of(MobTemporaryStat.Burned, option), Set.of(burnedInfo)));
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 

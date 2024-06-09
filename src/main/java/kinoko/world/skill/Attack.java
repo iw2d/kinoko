@@ -96,8 +96,8 @@ public final class Attack {
     }
 
 
-    public static void forEachMob(Attack attack, Field field, Consumer<Mob> consumer) {
-        for (AttackInfo ai : attack.getAttackInfo()) {
+    public void forEachMob(Field field, Consumer<Mob> consumer) {
+        for (AttackInfo ai : getAttackInfo()) {
             final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
                 continue;

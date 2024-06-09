@@ -101,6 +101,9 @@ public final class UserPool extends FieldObjectPool<User> {
                 }
             }
         });
+        field.getAffectedAreaPool().forEach((affectedArea) -> {
+            user.write(FieldPacket.affectedAreaCreated(affectedArea));
+        });
     }
 
     public synchronized boolean removeUser(User user) {
@@ -120,6 +123,9 @@ public final class UserPool extends FieldObjectPool<User> {
                 assignController(mob);
             }
         });
+
+        // Remove affected areas
+        field.getAffectedAreaPool().removeByOwnerId(user.getCharacterId());
         return true;
     }
 

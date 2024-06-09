@@ -4,7 +4,10 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
+import kinoko.world.field.affectedarea.AffectedArea;
+import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
@@ -114,9 +117,26 @@ public final class Magician {
     private static final Logger log = LogManager.getLogger(JobHandler.class);
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            // FP
+            case POISON_BREATH, ELEMENT_COMPOSITION_FP -> {
+                final BurnedInfo burnedInfo = BurnedInfo.from(user, si, slv);
+                attack.forEachMob(field, (mob) -> {
+                    if (mob.isBoss()) {
+                        return;
+                    }
+                    mob.setBurnedInfo(burnedInfo);
+                });
+            }
+            case POISON_MIST -> {
+                final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
+                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
+            }
         }
     }
 
@@ -124,11 +144,18 @@ public final class Magician {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
         final int slv = skill.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
             // BISHOP
             case MYSTIC_DOOR:
-                final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.SECONDS);
-                final Optional<TownPortal> townPortalResult = user.getField().getTownPortalPool().createFieldPortal(user, skillId, skill.positionX, skill.positionY, expireTime);
+                final Optional<TownPortal> townPortalResult = field.getTownPortalPool().createFieldPortal(
+                        user,
+                        skillId,
+                        skill.positionX,
+                        skill.positionY,
+                        Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS)
+                );
                 if (townPortalResult.isPresent()) {
                     final TownPortal townPortal = townPortalResult.get();
                     user.setTownPortal(townPortal);
