@@ -25,7 +25,6 @@ import kinoko.world.item.ItemType;
 import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResultType;
-import kinoko.world.social.party.PartyRequestType;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.Pet;
@@ -120,7 +119,6 @@ public final class MigrationHandler {
         // Initialize User
         final User user = new User(c, characterData);
         user.setMessengerId(migrationResult.getMessengerId()); // this is required before user connect
-
         if (channelServerNode.isConnected(user)) {
             log.error("Tried to connect to channel server while already connected");
             c.close();
@@ -193,7 +191,7 @@ public final class MigrationHandler {
             }
 
             // Load party from central server
-            channelServerNode.submitPartyRequest(user, PartyRequest.of(PartyRequestType.LoadParty));
+            channelServerNode.submitPartyRequest(user, PartyRequest.loadParty());
 
             // Load messenger from central server
             channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());

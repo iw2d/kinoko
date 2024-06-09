@@ -69,19 +69,39 @@ public final class PartyRequest implements Encodable {
         return partyRequest;
     }
 
-    public static PartyRequest of(PartyRequestType requestType) {
-        return new PartyRequest(requestType);
+    public static PartyRequest loadParty() {
+        return new PartyRequest(PartyRequestType.LoadParty);
     }
 
-    public static PartyRequest of(PartyRequestType requestType, int characterId) {
-        final PartyRequest request = new PartyRequest(requestType);
-        request.characterId = characterId;
+    public static PartyRequest createNewParty() {
+        return new PartyRequest(PartyRequestType.CreateNewParty);
+    }
+
+    public static PartyRequest withdrawParty() {
+        return new PartyRequest(PartyRequestType.WithdrawParty);
+    }
+
+    public static PartyRequest joinParty(int inviterId) {
+        final PartyRequest request = new PartyRequest(PartyRequestType.JoinParty);
+        request.characterId = inviterId;
         return request;
     }
 
     public static PartyRequest invite(String characterName) {
         final PartyRequest request = new PartyRequest(PartyRequestType.InviteParty);
         request.characterName = characterName;
+        return request;
+    }
+
+    public static PartyRequest kickParty(int targetId) {
+        final PartyRequest request = new PartyRequest(PartyRequestType.KickParty);
+        request.characterId = targetId;
+        return request;
+    }
+
+    public static PartyRequest changePartyBoss(int targetId) {
+        final PartyRequest request = new PartyRequest(PartyRequestType.ChangePartyBoss);
+        request.characterId = targetId;
         return request;
     }
 }
