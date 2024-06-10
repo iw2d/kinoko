@@ -129,7 +129,7 @@ public final class UserRemote {
         }
         outPacket.encodeByte(hitInfo.guard); // bGuard
         outPacket.encodeByte(hitInfo.stance);
-        outPacket.encodeInt(hitInfo.damage);
+        outPacket.encodeInt(hitInfo.finalDamage);
         if (hitInfo.damage == -1) {
             outPacket.encodeInt(hitInfo.missSkillId); // CUser::ShowSkillSpecialEffect, CAvatar::SetEmotion for 4120002, 4220002
         }

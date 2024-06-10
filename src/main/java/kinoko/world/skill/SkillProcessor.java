@@ -299,12 +299,12 @@ public final class SkillProcessor {
         final int blueAuraReduce = getBlueAuraReduce(user, damage); // TODO distribute damage
 
         // Final damage
-        hitInfo.damage = damage - powerGuardReduce - mesoGuardReduce - achillesReduce - comboBarrierReduce - magicGuardReduce - magicShieldReduce - blueAuraReduce;
-        log.debug("Hit delta : {} = {} - {} - {} - {} - {} - {} - {} - {}", hitInfo.damage, damage, powerGuardReduce, mesoGuardReduce, achillesReduce, comboBarrierReduce, magicGuardReduce, magicShieldReduce, blueAuraReduce);
+        hitInfo.finalDamage = damage - powerGuardReduce - mesoGuardReduce - achillesReduce - comboBarrierReduce - magicGuardReduce - magicShieldReduce - blueAuraReduce;
+        log.debug("Hit delta : {} = {} - {} - {} - {} - {} - {} - {} - {}", hitInfo.finalDamage, damage, powerGuardReduce, mesoGuardReduce, achillesReduce, comboBarrierReduce, magicGuardReduce, magicShieldReduce, blueAuraReduce);
 
         // Process hit damage
-        if (hitInfo.damage > 0) {
-            user.addHp(-hitInfo.damage);
+        if (hitInfo.finalDamage > 0) {
+            user.addHp(-hitInfo.finalDamage);
         }
 
         user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
