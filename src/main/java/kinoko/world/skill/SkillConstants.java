@@ -25,12 +25,11 @@ public final class SkillConstants {
             Aran.BLESSING_OF_THE_FAIRY,
             Evan.BLESSING_OF_THE_FAIRY
     );
-
     public static final List<Integer> WILD_HUNTER_JAGUARS = List.of(
             1932015, 1932030, 1932031, 1932032, 1932033, 1932036
     );
-
     public static final int MECHANIC_VEHICLE = 1932016;
+    public static int ENERGY_CHARGE_MAX = 10000;
 
     public static int getSkillRoot(int skillId) {
         return skillId / 10000;
@@ -42,6 +41,10 @@ public final class SkillConstants {
         } else {
             return skillId + 10000000 * (jobId / 1000);
         }
+    }
+
+    public static int getEnergyChargeSkill(int jobId) {
+        return JobConstants.isCygnusJob(jobId) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE;
     }
 
     public static boolean isBeginnerSpAddableSkill(int skillId) {

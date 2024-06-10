@@ -20,19 +20,22 @@ import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.SecondaryStat;
-import kinoko.world.user.stat.Stat;
-import kinoko.world.user.stat.TemporaryStatOption;
+import kinoko.world.user.stat.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class SkillProcessor {
     private static final Logger log = LogManager.getLogger(SkillProcessor.class);
+
+
+    // PROCESS ATTACK --------------------------------------------------------------------------------------------------
 
     public static void processAttack(Locked<User> locked, Attack attack) {
         final User user = locked.get();
@@ -124,29 +127,9 @@ public final class SkillProcessor {
         }
 
         // CTS updates on attack
-        final SkillManager sm = user.getSkillManager();
-        final Map<CharacterTemporaryStat, TemporaryStatOption> updateStats = new HashMap<>();
-        for (var entry : user.getSecondaryStat().getTemporaryStats().entrySet()) {
-            final CharacterTemporaryStat cts = entry.getKey();
-            final TemporaryStatOption option = entry.getValue();
-            switch (cts) {
-                case ComboCounter -> {
-                    if (attack.getMobCount() > 0) {
-                        final int maxCombo = 1 + Math.max(
-                                sm.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
-                                sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
-                        );
-                        final int doubleProp = sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
-                        final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
-                        if (newCombo > option.nOption) {
-                            updateStats.put(cts, option.update(newCombo));
-                        }
-                    }
-                }
-            }
-        }
-        if (!updateStats.isEmpty()) {
-            user.setTemporaryStat(updateStats);
+        if (attack.getMobCount() > 0) {
+            handleComboAttack(user);
+            handleEnergyCharge(user);
         }
 
         // Skill specific handling
@@ -168,6 +151,51 @@ public final class SkillProcessor {
 
         field.broadcastPacket(UserRemote.attack(user, attack), user);
     }
+
+    private static void handleComboAttack(User user) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
+        if (option.nOption == 0) {
+            return;
+        }
+        final SkillManager sm = user.getSkillManager();
+        final int maxCombo = 1 + Math.max(
+                sm.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
+                sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
+        );
+        final int doubleProp = sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
+        final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
+        if (newCombo > option.nOption) {
+            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(newCombo));
+        }
+    }
+
+    private static void handleEnergyCharge(User user) {
+        final int skillId = SkillConstants.getEnergyChargeSkill(user.getJob());
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for energy charge skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final SecondaryStat ss = user.getSecondaryStat();
+        final int energyCharge = ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption;
+        if (energyCharge < SkillConstants.ENERGY_CHARGE_MAX) {
+            final TwoStateTemporaryStat option = TwoStateTemporaryStat.ofTwoState(
+                    CharacterTemporaryStat.EnergyCharged,
+                    Math.min(energyCharge + si.getValue(SkillStat.x, slv), SkillConstants.ENERGY_CHARGE_MAX),
+                    skillId,
+                    si.getDuration(slv)
+            );
+            user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
+        }
+    }
+
+
+    // PROCESS SKILL ---------------------------------------------------------------------------------------------------
 
     public static void processSkill(Locked<User> locked, Skill skill) {
         final User user = locked.get();
@@ -252,6 +280,9 @@ public final class SkillProcessor {
             }
         });
     }
+
+
+    // PROCESS HIT -----------------------------------------------------------------------------------------------------
 
     public static void processHit(Locked<User> locked, HitInfo hitInfo) {
         final User user = locked.get();

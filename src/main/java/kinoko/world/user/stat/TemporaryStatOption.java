@@ -3,7 +3,6 @@ package kinoko.world.user.stat;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -40,7 +39,7 @@ public class TemporaryStatOption implements Encodable {
         return new TemporaryStatOption(
                 newNOption,
                 rOption,
-                (int) Duration.between(Instant.now(), expireTime).toMillis(),
+                tOption != 0 ? (int) (getRemainingMillis()) : 0,
                 diceInfo,
                 expireTime
         );
@@ -52,6 +51,10 @@ public class TemporaryStatOption implements Encodable {
 
     public final Instant getExpireTime() {
         return expireTime;
+    }
+
+    public final long getRemainingMillis() {
+        return expireTime.toEpochMilli() - Instant.now().toEpochMilli();
     }
 
     @Override

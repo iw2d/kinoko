@@ -9,10 +9,9 @@ import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.item.WeaponType;
 import kinoko.world.job.JobConstants;
-import kinoko.world.job.cygnus.ThunderBreaker;
-import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.skill.PassiveSkillData;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.stat.BasicStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -160,7 +159,7 @@ public final class CalcDamage {
             // this->aTemporaryStat[0].p->IsActivated
             return incPad;
         }
-        final int ecPad = sm.getSkillStatValue(JobConstants.isCygnusJob(user.getJob()) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE, SkillStat.pad);
+        final int ecPad = sm.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.pad);
         return Math.max(incPad, ecPad);
     }
 
@@ -173,7 +172,7 @@ public final class CalcDamage {
             // this->aTemporaryStat[0].p->IsActivated (unnecessary, since Energy Charge does not have any epad stat)
             return incEpad;
         }
-        final int ecEpad = sm.getSkillStatValue(JobConstants.isCygnusJob(user.getJob()) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE, SkillStat.epad);
+        final int ecEpad = sm.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.epad);
         return Math.max(incEpad, ecEpad);
     }
 
