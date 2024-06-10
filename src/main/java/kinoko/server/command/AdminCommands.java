@@ -34,6 +34,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
+import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
@@ -61,6 +62,7 @@ public final class AdminCommands {
     public static void info(User user, String[] args) {
         final Field field = user.getField();
         user.write(MessagePacket.system("HP : %d / %d, MP : %d / %d", user.getHp(), user.getMaxHp(), user.getMp(), user.getMaxMp()));
+        user.write(MessagePacket.system("Damage : %d", (int) CalcDamage.calcDamageMax(user)));
         user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());

@@ -4,6 +4,8 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.world.GameConstants;
+import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -61,13 +63,14 @@ public final class BurnedInfo implements Encodable {
     }
 
     public static BurnedInfo from(User user, SkillInfo si, int slv) {
+        final double damage = CalcDamage.calcDamageMax(user) * ((double) si.getValue(SkillStat.damage, slv) / 100);
         final int interval = si.getValue(SkillStat.dotInterval, slv) * 1000;
         final int duration = si.getValue(SkillStat.dotTime, slv) * 1000;
         final Instant expireTime = Instant.now().plus(duration, ChronoUnit.MILLIS);
         return new BurnedInfo(
                 user.getCharacterId(),
                 si.getSkillId(),
-                1337, // TODO: calculate damage
+                (int) Math.min(damage, GameConstants.DAMAGE_MAX),
                 interval,
                 duration / interval,
                 expireTime

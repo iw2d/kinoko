@@ -182,8 +182,8 @@ public final class BasicStat {
         mpIncRateFromCts += ss.getOption(CharacterTemporaryStat.MaxMP).nOption;
 
         // Max hp/mp rate increases
-        this.maxHp += this.maxHp * (incMaxHpR + option.incMaxHpR + hpIncRateFromCts + psd.mhpR) / 100;
-        this.maxMp += this.maxMp * (incMaxMpR + option.incMaxMpR + mpIncRateFromCts + psd.mmpR) / 100;
+        this.maxHp += this.maxHp * (incMaxHpR + option.incMaxHpR + hpIncRateFromCts + psd.getMhpR()) / 100;
+        this.maxMp += this.maxMp * (incMaxMpR + option.incMaxMpR + mpIncRateFromCts + psd.getMmpR()) / 100;
 
         // Max hp/mp cap
         this.maxHp = Math.min(this.maxHp, GameConstants.HP_MAX);

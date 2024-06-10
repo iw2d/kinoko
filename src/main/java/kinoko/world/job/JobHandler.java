@@ -143,6 +143,12 @@ public final class JobHandler {
             case Magician.TELEPORT_IL:
             case Magician.TELEPORT_BISH:
             case BlazeWizard.TELEPORT:
+                // noop
+                return;
+            case Magician.MEDITATION_FP:
+            case Magician.MEDITATION_IL:
+            case BlazeWizard.MEDITATION:
+                user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, si.getDuration(slv)));
                 return;
 
             // WEAPON BOOSTER ------------------------------------------------------------------------------------------

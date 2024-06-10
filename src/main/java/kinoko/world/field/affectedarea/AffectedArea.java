@@ -39,8 +39,28 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         this.expireTime = expireTime;
     }
 
+    public AffectedAreaType getType() {
+        return type;
+    }
+
     public FieldObject getOwner() {
         return owner;
+    }
+
+    public int getSkillId() {
+        return skillId;
+    }
+
+    public int getSkillLevel() {
+        return skillLevel;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public Rect getRect() {
+        return rect;
     }
 
     public Instant getExpireTime() {

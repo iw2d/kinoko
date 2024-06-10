@@ -13,36 +13,156 @@ import java.util.List;
 import java.util.Optional;
 
 public final class PassiveSkillData {
-    public final List<AdditionPsd> additionPsd = new ArrayList<>();
-    public int mhpR;
-    public int mmpR;
-    public int cr;
-    public int cdMin;
-    public int accR;
-    public int evaR;
-    public int ar;
-    public int er;
-    public int pddR;
-    public int mddR;
-    public int pdR;
-    public int mdR;
-    public int dipR;
-    public int pdamR;
-    public int mdamR;
-    public int padR;
-    public int madR;
-    public int expR;
-    public int impR;
-    public int asrR;
-    public int terR;
-    public int mesoR;
-    public int padX;
-    public int madX;
-    public int imdR;
-    public int psdJump;
-    public int psdSpeed;
-    public int ocR;
-    public int dcR;
+    private final List<AdditionPsd> additionPsd = new ArrayList<>();
+    private int mhpR;
+    private int mmpR;
+    private int cr;
+    private int cdMin;
+    private int accR;
+    private int evaR;
+    private int ar;
+    private int er;
+    private int pddR;
+    private int mddR;
+    private int pdR;
+    private int mdR;
+    private int dipR;
+    private int pdamR;
+    private int mdamR;
+    private int padR;
+    private int madR;
+    private int expR;
+    private int impR;
+    private int asrR;
+    private int terR;
+    private int mesoR;
+    private int padX;
+    private int madX;
+    private int imdR;
+    private int psdJump;
+    private int psdSpeed;
+    private int ocR;
+    private int dcR;
+
+    public List<AdditionPsd> getAdditionPsd() {
+        return additionPsd;
+    }
+
+    public int getMhpR() {
+        return mhpR;
+    }
+
+    public int getMmpR() {
+        return mmpR;
+    }
+
+    public int getCr() {
+        return cr;
+    }
+
+    public int getCdMin() {
+        return cdMin;
+    }
+
+    public int getAccR() {
+        return accR;
+    }
+
+    public int getEvaR() {
+        return evaR;
+    }
+
+    public int getAr() {
+        return ar;
+    }
+
+    public int getEr() {
+        return er;
+    }
+
+    public int getPddR() {
+        return pddR;
+    }
+
+    public int getMddR() {
+        return mddR;
+    }
+
+    public int getPdR() {
+        return pdR;
+    }
+
+    public int getMdR() {
+        return mdR;
+    }
+
+    public int getDipR() {
+        return dipR;
+    }
+
+    public int getPdamR() {
+        return pdamR;
+    }
+
+    public int getMdamR() {
+        return mdamR;
+    }
+
+    public int getPadR() {
+        return padR;
+    }
+
+    public int getMadR() {
+        return madR;
+    }
+
+    public int getExpR() {
+        return expR;
+    }
+
+    public int getImpR() {
+        return impR;
+    }
+
+    public int getAsrR() {
+        return asrR;
+    }
+
+    public int getTerR() {
+        return terR;
+    }
+
+    public int getMesoR() {
+        return mesoR;
+    }
+
+    public int getPadX() {
+        return padX;
+    }
+
+    public int getMadX() {
+        return madX;
+    }
+
+    public int getImdR() {
+        return imdR;
+    }
+
+    public int getPsdJump() {
+        return psdJump;
+    }
+
+    public int getPsdSpeed() {
+        return psdSpeed;
+    }
+
+    public int getOcR() {
+        return ocR;
+    }
+
+    public int getDcR() {
+        return dcR;
+    }
 
     public void setFrom(BasicStat bs, SecondaryStat ss, SkillManager sm) {
         clearData();

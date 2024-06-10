@@ -208,6 +208,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getMobStat().getTemporaryStats().put(MobTemporaryStat.Burned, option);
         getMobStat().addBurnedInfo(burnedInfo);
         getField().broadcastPacket(MobPacket.mobStatSet(this, Map.of(MobTemporaryStat.Burned, option), Set.of(burnedInfo)));
+        // TODO: damage task
     }
 
 

@@ -135,6 +135,10 @@ public final class JobConstants {
         return jobId % 1000 / 100 == 8;
     }
 
+    public static boolean canUseBareHand(int jobId) {
+        return getJobCategory(jobId) == 5;
+    }
+
     public static Set<Integer> getSkillRootFromJob(int jobId) {
         final Set<Integer> jobs = new HashSet<>();
         if (Job.getById(jobId) == null) {
