@@ -15,6 +15,7 @@ import kinoko.world.user.Account;
 import java.net.InetAddress;
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class ServerNode {
     private static final Random random = new SecureRandom();
@@ -22,18 +23,39 @@ public abstract class ServerNode {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
+    private final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
+    private boolean isShutdown = false;
+
     public abstract void initialize() throws Exception;
 
     public abstract void shutdown() throws Exception;
 
     public abstract boolean isConnected(Account account);
 
+    public final CompletableFuture<Void> getShutdownFuture() {
+        return shutdownFuture;
+    }
+
+    public final boolean isShutdown() {
+        return isShutdown;
+    }
+
+    public final void startShutdown() {
+        this.isShutdown = true;
+    }
+
     public final void addClient(Client client) {
+        if (isShutdown) {
+            throw new IllegalStateException("Tried to add client after shutdown");
+        }
         clientStorage.addClient(client);
     }
 
     public final void removeClient(Client client) {
         clientStorage.removeClient(client);
+        if (isShutdown && clientStorage.isEmpty()) {
+            shutdownFuture.complete(null);
+        }
     }
 
     protected final ChannelFuture startClient(ChannelInitializer<SocketChannel> initializer, InetAddress host, int port) {

@@ -520,7 +520,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         final RemoteChildNode remoteChildNode = ctx.channel().attr(RemoteChildNode.NODE_KEY).get();
-        if (remoteChildNode != null) {
+        if (remoteChildNode != null && !centralServerNode.isShutdown()) {
             log.error("Lost connection to channel {}", remoteChildNode.getChannelId());
         }
     }

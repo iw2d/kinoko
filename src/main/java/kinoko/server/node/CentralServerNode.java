@@ -5,6 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
+import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
 import kinoko.world.social.messenger.Messenger;
@@ -19,6 +20,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public final class CentralServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(CentralServerNode.class);
@@ -193,12 +195,14 @@ public final class CentralServerNode extends ServerNode {
     @Override
     public void shutdown() throws InterruptedException {
         // Close client channels
+        startShutdown();
         for (Client client : clientStorage.getConnectedClients()) {
             client.close();
         }
 
         // Close login server
         loginServerFuture.channel().close().sync();
+        getShutdownFuture().orTimeout(ServerConfig.SHUTDOWN_TIMEOUT, TimeUnit.SECONDS);
         log.info("Login server closed");
 
         // Shutdown child nodes

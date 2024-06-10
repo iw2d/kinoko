@@ -8,6 +8,7 @@ public final class ServerConfig {
     public static final int CHANNELS_PER_WORLD = 5;
     public static final int CENTRAL_REQUEST_TTL = 5;
     public static final int FIELD_TICK_INTERVAL = 100; // 100 ms tick
+    public static final int SHUTDOWN_TIMEOUT = 30;
 
     public static final boolean AUTO_CREATE_ACCOUNT = true;
     public static final boolean REQUIRE_SECONDARY_PASSWORD = true;

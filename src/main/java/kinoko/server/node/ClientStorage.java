@@ -83,4 +83,13 @@ public final class ClientStorage {
             lock.unlock();
         }
     }
+
+    public boolean isEmpty() {
+        lock.lock();
+        try {
+            return mapByAccountId.isEmpty();
+        } finally {
+            lock.unlock();
+        }
+    }
 }

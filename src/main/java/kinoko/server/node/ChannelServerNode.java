@@ -5,6 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
+import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.netty.*;
 import kinoko.server.packet.OutPacket;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ChannelServerNode extends ServerNode {
@@ -29,14 +31,12 @@ public final class ChannelServerNode extends ServerNode {
     private final FieldStorage fieldStorage = new FieldStorage();
     private final int channelId;
     private final int channelPort;
-    private boolean isShutdown;
     private ChannelFuture centralClientFuture;
     private ChannelFuture channelServerFuture;
 
     public ChannelServerNode(int channelId, int channelPort) {
         this.channelId = channelId;
         this.channelPort = channelPort;
-        this.isShutdown = false;
     }
 
     public int getChannelId() {
@@ -51,9 +51,6 @@ public final class ChannelServerNode extends ServerNode {
         return requestIdCounter.getAndIncrement();
     }
 
-    public boolean isShutdown() {
-        return isShutdown;
-    }
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
 
@@ -199,18 +196,19 @@ public final class ChannelServerNode extends ServerNode {
     @Override
     public void shutdown() throws InterruptedException {
         // Close client channels
+        startShutdown();
         for (Client client : clientStorage.getConnectedClients()) {
             client.close();
         }
 
         // Close channel server
         channelServerFuture.channel().close().sync();
+        getShutdownFuture().orTimeout(ServerConfig.SHUTDOWN_TIMEOUT, TimeUnit.SECONDS);
         log.info("Channel {} closed", channelId + 1);
 
         // Close central client
         centralClientFuture.channel().writeAndFlush(CentralPacket.shutdownResult(channelId, true));
         centralClientFuture.channel().close().sync();
-        isShutdown = true;
         log.info("Central client {} closed", channelId + 1);
     }
 }
