@@ -375,12 +375,12 @@ public final class SecondaryStat {
             getStatFromSkill(sm, BattleMage.STAFF_MASTERY);
         } else if (JobConstants.isBlazeWizardJob(bs.getJob())) {
             getStatFromSkill(sm, BlazeWizard.SPELL_MASTERY);
-        } else if (JobConstants.isBishopJob(bs.getJob())) {
-            getStatFromSkill(sm, Magician.SPELL_MASTERY_BISH);
-        } else if (JobConstants.isIceLightningJob(bs.getJob())) {
-            getStatFromSkill(sm, Magician.SPELL_MASTERY_IL);
         } else if (JobConstants.isFirePoisonJob(bs.getJob())) {
             getStatFromSkill(sm, Magician.SPELL_MASTERY_FP);
+        } else if (JobConstants.isIceLightningJob(bs.getJob())) {
+            getStatFromSkill(sm, Magician.SPELL_MASTERY_IL);
+        } else if (JobConstants.isBishopJob(bs.getJob())) {
+            getStatFromSkill(sm, Magician.SPELL_MASTERY_BISH);
         }
 
         // get_increase_speed

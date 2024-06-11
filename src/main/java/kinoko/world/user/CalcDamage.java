@@ -3,13 +3,20 @@ package kinoko.world.user;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.skill.SkillStat;
+import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.item.WeaponType;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.cygnus.*;
+import kinoko.world.job.explorer.*;
 import kinoko.world.job.legend.Aran;
+import kinoko.world.job.legend.Evan;
+import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.job.resistance.Mechanic;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
@@ -20,6 +27,12 @@ import kinoko.world.user.stat.SecondaryStat;
 import java.util.Optional;
 
 public final class CalcDamage {
+
+    public static Tuple<Double, Double> calcDamageRange(User user) {
+        final double damageMax = calcDamageMax(user);
+        final double damageMin = getTotalMastery(user) * damageMax + 0.5;
+        return new Tuple<>(damageMin, damageMax);
+    }
 
     public static double calcDamageMax(User user) {
         final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
@@ -79,20 +92,6 @@ public final class CalcDamage {
 
     private static int calcBaseDamage(int p1, int p2, int p3, int ad, double k) {
         return (int) ((double) (p3 + p2 + 4 * p1) / 100.0 * ((double) ad * k) + 0.5);
-    }
-
-    private static double getMasteryConstByWT(WeaponType wt) {
-        switch (wt) {
-            case WAND, STAFF -> {
-                return 0.25;
-            }
-            case BOW, CROSSBOW, THROWINGGLOVE, GUN -> {
-                return 0.15;
-            }
-            default -> {
-                return 0.2;
-            }
-        }
     }
 
 
@@ -184,5 +183,124 @@ public final class CalcDamage {
                 .filter((item) -> ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), item.getItemId()) && item.getQuantity() >= 1)
                 .findFirst();
         return bulletItemResult.map(Item::getItemId).orElse(0);
+    }
+
+
+    // MASTERY METHODS -------------------------------------------------------------------------------------------------
+
+    public static double getTotalMastery(User user) {
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+        final double weaponMastery = getWeaponMastery(user, weaponType) / 100.0;
+        return Math.min(weaponMastery, GameConstants.MASTERY_MAX) + getMasteryConstByWT(weaponType);
+    }
+
+    public static int getWeaponMastery(User user, WeaponType weaponType) {
+        // get_weapon_mastery
+        switch (weaponType) {
+            case OH_SWORD, TH_SWORD -> {
+                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO, Warrior.WEAPON_MASTERY_PALADIN, DawnWarrior.SWORD_MASTERY);
+            }
+            case OH_AXE, TH_AXE -> {
+                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO);
+            }
+            case OH_MACE, TH_MACE -> {
+                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_PALADIN);
+            }
+            case DAGGER -> {
+                final Item shield = user.getInventoryManager().getEquipped().getItem(BodyPart.SHIELD.getValue());
+                if (shield != null && WeaponType.getByItemId(shield.getItemId()) == WeaponType.SUB_DAGGER) {
+                    return getMasteryFromSkill(user, Thief.KATARA_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Thief.DAGGER_MASTERY);
+                }
+            }
+            case WAND, STAFF -> {
+                // get_magic_mastery
+                if (JobConstants.isEvanJob(user.getJob())) {
+                    return getMasteryFromSkill(user, Evan.MAGIC_MASTERY, Evan.SPELL_MASTERY);
+                } else if (JobConstants.isBattleMageJob(user.getJob())) {
+                    return getMasteryFromSkill(user, BattleMage.STAFF_MASTERY);
+                } else if (JobConstants.isBlazeWizardJob(user.getJob())) {
+                    return getMasteryFromSkill(user, BlazeWizard.SPELL_MASTERY);
+                } else if (JobConstants.isFirePoisonJob(user.getJob())) {
+                    return getMasteryFromSkill(user, Magician.SPELL_MASTERY_FP);
+                } else if (JobConstants.isIceLightningJob(user.getJob())) {
+                    return getMasteryFromSkill(user, Magician.SPELL_MASTERY_IL);
+                } else if (JobConstants.isBishopJob(user.getJob())) {
+                    return getMasteryFromSkill(user, Magician.SPELL_MASTERY_BISH);
+                }
+            }
+            case SPEAR -> {
+                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_DRK) + user.getSecondaryStat().getOption(CharacterTemporaryStat.Beholder).nOption;
+            }
+            case POLEARM -> {
+                if (JobConstants.isAranJob(user.getJob())) {
+                    return getMasteryFromSkill(user, Aran.HIGH_MASTERY, Aran.POLEARM_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_DRK) + user.getSecondaryStat().getOption(CharacterTemporaryStat.Beholder).nOption;
+                }
+            }
+            case BOW -> {
+                if (JobConstants.isCygnusJob(user.getJob())) {
+                    return getMasteryFromSkill(user, WindArcher.BOW_EXPERT, WindArcher.BOW_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Bowman.BOW_EXPERT, Bowman.BOW_MASTERY);
+                }
+            }
+            case CROSSBOW -> {
+                if (JobConstants.isWildHunterJob(user.getJob())) {
+                    return getMasteryFromSkill(user, WildHunter.CROSSBOW_EXPERT, WildHunter.CROSSBOW_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Bowman.MARKSMAN_BOOST, Bowman.CROSSBOW_MASTERY);
+                }
+            }
+            case THROWINGGLOVE -> {
+                if (JobConstants.isCygnusJob(user.getJob())) {
+                    return getMasteryFromSkill(user, NightWalker.CLAW_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Thief.CLAW_MASTERY);
+                }
+            }
+            case KNUCKLE -> {
+                if (JobConstants.isCygnusJob(user.getJob())) {
+                    return getMasteryFromSkill(user, ThunderBreaker.KNUCKLE_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Pirate.KNUCKLE_MASTERY);
+                }
+            }
+            case GUN -> {
+                if (JobConstants.isMechanicJob(user.getJob())) {
+                    return getMasteryFromSkill(user, Mechanic.EXTREME_MECH, Mechanic.MECHANIC_MASTERY);
+                } else {
+                    return getMasteryFromSkill(user, Pirate.GUN_MASTERY);
+                }
+            }
+        }
+        return 0;
+    }
+
+    private static int getMasteryFromSkill(User user, int... skillIds) {
+        for (int skillId : skillIds) {
+            final int mastery = user.getSkillManager().getSkillStatValue(skillId, SkillStat.mastery);
+            if (mastery > 0) {
+                return mastery;
+            }
+        }
+        return 0;
+    }
+
+    private static double getMasteryConstByWT(WeaponType wt) {
+        switch (wt) {
+            case WAND, STAFF -> {
+                return 0.25;
+            }
+            case BOW, CROSSBOW, THROWINGGLOVE, GUN -> {
+                return 0.15;
+            }
+            default -> {
+                return 0.2;
+            }
+        }
     }
 }

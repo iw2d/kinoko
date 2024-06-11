@@ -34,6 +34,7 @@ public final class GameConstants {
     public static final int[] EXP_TABLE = initializeExpTable();
 
     public static final int DAMAGE_MAX = 999_999;
+    public static final double MASTERY_MAX = 0.95;
 
     public static final String DEFAULT_FRIEND_GROUP = "Group Unknown";
     public static final int FRIEND_MAX = 100;
