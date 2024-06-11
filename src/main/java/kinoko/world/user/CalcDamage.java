@@ -4,6 +4,7 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Tuple;
+import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;
@@ -24,9 +25,18 @@ import kinoko.world.user.stat.BasicStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 
+import java.security.SecureRandom;
 import java.util.Optional;
+import java.util.Random;
 
 public final class CalcDamage {
+    private static final Random damageRandom = new SecureRandom();
+
+    public static int getRandomDamage(User user) {
+        final Tuple<Double, Double> damageRange = CalcDamage.calcDamageRange(user);
+        final double randomDamage = damageRandom.nextDouble(damageRange.getLeft(), damageRange.getRight());
+        return (int) Math.min(randomDamage, GameConstants.DAMAGE_MAX);
+    }
 
     public static Tuple<Double, Double> calcDamageRange(User user) {
         final double damageMax = calcDamageMax(user);

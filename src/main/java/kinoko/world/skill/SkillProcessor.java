@@ -12,6 +12,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.OutHeader;
 import kinoko.util.Locked;
+import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -158,8 +159,8 @@ public final class SkillProcessor {
                     // Handle heaven's hammer
                     if (mob.isBoss()) {
                         final int damage = user.getSkillManager().getSkillStatValue(Warrior.HEAVENS_HAMMER, SkillStat.damage);
-                        totalDamage = (int) Math.min(
-                                CalcDamage.calcDamageMax(user) * damage / 100,
+                        totalDamage = Math.min(
+                                CalcDamage.getRandomDamage(user) * damage / 100,
                                 GameConstants.DAMAGE_MAX
                         );
                         field.broadcastPacket(MobPacket.mobDamaged(mob, totalDamage));
@@ -543,8 +544,10 @@ public final class SkillProcessor {
             if (mob.getFixedDamage() > 0) {
                 totalDamage = mob.getFixedDamage();
             } else {
-                final double userDamage = CalcDamage.calcDamageMax(user); // TODO: use a range
-                totalDamage = (int) Math.min(userDamage * si.getValue(SkillStat.damage, slv) / 100, GameConstants.DAMAGE_MAX);
+                totalDamage = Math.min(
+                        CalcDamage.getRandomDamage(user) * si.getValue(SkillStat.damage, slv) / 100,
+                        GameConstants.DAMAGE_MAX
+                );
             }
             // Create attack
             final Attack attack = new Attack(OutHeader.SummonedAttack);
