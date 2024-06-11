@@ -101,7 +101,7 @@ public final class UserHandler {
         // CWvsContext::SendSitOnPortableChairRequest
         final int itemId = inPacket.decodeInt(); // nItemID
         if (!ItemConstants.isPortableChairItem(itemId)) {
-            log.error("Received USER_PORTABLE_CHAIR_SIT_REQUEST with a non-portable chair item ID : {}", itemId);
+            log.error("Received UserPortableChairSitRequest with a non-portable chair item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -139,7 +139,7 @@ public final class UserHandler {
     public static void handleUserActivateEffectItem(User user, InPacket inPacket) {
         final int itemId = inPacket.decodeInt(); // nEffectItemID
         if (itemId != 0 && !ItemConstants.isCashEffectItem(itemId) && !ItemConstants.isNonCashEffectItem(itemId)) {
-            log.error("Received USER_ACTIVATE_EFFECT_ITEM with invalid effect item : {}", itemId);
+            log.error("Received UserActivateEffectItem with invalid effect item : {}", itemId);
         }
         user.setEffectItemId(itemId);
         user.getField().broadcastPacket(UserRemote.setActiveEffectItem(user, itemId), user); // self-cast not required
@@ -238,7 +238,7 @@ public final class UserHandler {
     public static void handleUserShopRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {
             if (!(user.getDialog() instanceof ShopDialog shopDialog)) {
-                log.error("Received USER_SHOP_REQUEST without associated shop dialog");
+                log.error("Received UserShopRequest without associated shop dialog");
                 return;
             }
             shopDialog.handlePacket(locked, inPacket);
@@ -249,7 +249,7 @@ public final class UserHandler {
     public static void handleUserTrunkRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {
             if (!(user.getDialog() instanceof TrunkDialog trunkDialog)) {
-                log.error("Received USER_TRUNK_REQUEST without associated trunk dialog");
+                log.error("Received UserTrunkRequest without associated trunk dialog");
                 return;
             }
             trunkDialog.handlePacket(locked, inPacket);

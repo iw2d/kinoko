@@ -239,7 +239,7 @@ public final class AttackHandler {
         final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
         final int slv = user.getSkillManager().getSkillLevel(skillId);
         if (slv == 0) {
-            log.error("Received USER_MOVING_SHOOT_ATTACK_PREPARE for skill {}, but its level is 0", skillId);
+            log.error("Received UserMovingShootAttackPrepare for skill {}, but its level is 0", skillId);
             return;
         }
         user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);

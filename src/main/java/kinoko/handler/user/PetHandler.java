@@ -70,7 +70,7 @@ public final class PetHandler {
             final InventoryManager im = locked.get().getInventoryManager();
             final Item item = im.getCashInventory().getItem(position);
             if (item == null || item.getItemType() != ItemType.PET) {
-                log.error("Received USER_ACTIVATE_PET_REQUEST with incorrect position {}", position);
+                log.error("Received UserActivatePetRequest with incorrect position {}", position);
                 user.dispose();
                 return;
             }
@@ -117,13 +117,13 @@ public final class PetHandler {
         final MovePath movePath = MovePath.decode(inPacket);
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
-            log.error("Received PET_MOVE for invalid pet sn : {}", petSn);
+            log.error("Received PetMove for invalid pet sn : {}", petSn);
             return;
         }
         final int petIndex = petIndexResult.get();
         final Pet pet = user.getPet(petIndex);
         if (pet == null) {
-            log.error("Received PET_MOVE for invalid pet index : {}", petIndex);
+            log.error("Received PetMove for invalid pet index : {}", petIndex);
             return;
         }
         movePath.applyTo(pet);
@@ -139,13 +139,13 @@ public final class PetHandler {
         final String chat = inPacket.decodeString(); // sChat
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
-            log.error("Received PET_ACTION for invalid pet sn : {}", petSn);
+            log.error("Received PetAction for invalid pet sn : {}", petSn);
             return;
         }
         final int petIndex = petIndexResult.get();
         final Pet pet = user.getPet(petIndex);
         if (pet == null) {
-            log.error("Received PET_ACTION for invalid pet index : {}", petIndex);
+            log.error("Received PetAction for invalid pet index : {}", petIndex);
             return;
         }
         user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat), user);
@@ -156,7 +156,7 @@ public final class PetHandler {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
-            log.error("Received PET_INTERACTION_REQUEST for invalid pet sn : {}", petSn);
+            log.error("Received PetInteractionRequest for invalid pet sn : {}", petSn);
             return;
         }
         inPacket.decodeByte(); // bCommandWithName
@@ -167,7 +167,7 @@ public final class PetHandler {
             final int petIndex = petIndexResult.get();
             final Pet pet = user.getPet(petIndex);
             if (pet == null) {
-                log.error("Received PET_INTERACTION_REQUEST for invalid pet index : {}", petIndex);
+                log.error("Received PetInteractionRequest for invalid pet index : {}", petIndex);
                 return;
             }
             final Optional<PetInteraction> interactionResult = ItemProvider.getPetInteraction(pet.getTemplateId(), action);
@@ -232,7 +232,7 @@ public final class PetHandler {
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
-            log.error("Received PET_DROP_PICK_UP_REQUEST for invalid pet sn : {}", petSn);
+            log.error("Received PetDropPickUpRequest for invalid pet sn : {}", petSn);
             return;
         }
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey

@@ -71,7 +71,7 @@ public final class ItemHandler {
 
         // Check item
         if (!ItemConstants.isPetFoodItem(itemId)) {
-            log.error("Received USER_PET_FOOD_ITEM_USE_REQUEST with an invalid pet food item {}", itemId);
+            log.error("Received UserPetFoodItemUseRequest with an invalid pet food item {}", itemId);
             user.dispose();
             return;
         }
@@ -308,7 +308,7 @@ public final class ItemHandler {
             final InventoryManager im = locked.get().getInventoryManager();
             final Item upgradeItem = im.getInventoryByType(InventoryType.CONSUME).getItem(upgradeItemPos);
             if (upgradeItem == null) {
-                log.error("Received USER_UPGRADE_ITEM_USE_REQUEST with upgrade item position {}", upgradeItemPos);
+                log.error("Received UserUpgradeItemUseRequest with upgrade item position {}", upgradeItemPos);
                 user.dispose();
                 return;
             }
@@ -324,7 +324,7 @@ public final class ItemHandler {
             final InventoryType equipInventoryType = InventoryType.getByPosition(InventoryType.EQUIP, equipItemPos);
             final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPos);
             if (equipItem == null) {
-                log.error("Received USER_UPGRADE_ITEM_USE_REQUEST with equip item position {}", upgradeItemPos);
+                log.error("Received UserUpgradeItemUseRequest with equip item position {}", upgradeItemPos);
                 user.dispose();
                 return;
             }
@@ -472,7 +472,7 @@ public final class ItemHandler {
 
         // Resolve pet
         if (user.getPetIndex(petSn).isEmpty()) {
-            log.error("Received PET_STAT_CHANGE_ITEM_USE_REQUEST for invalid pet SN : {}", petSn);
+            log.error("Received PetStatChangeItemUseRequest for invalid pet SN : {}", petSn);
             user.dispose();
             return;
         }

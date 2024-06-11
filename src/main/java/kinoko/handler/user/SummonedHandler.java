@@ -30,7 +30,7 @@ public final class SummonedHandler {
 
         final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
-            log.error("Received SUMMONED_MOVE for invalid object with ID : {}", summonedId);
+            log.error("Received SummonedMove for invalid object with ID : {}", summonedId);
             return;
         }
         final Summoned summoned = summonedResult.get();
@@ -46,7 +46,7 @@ public final class SummonedHandler {
 
         final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
-            log.error("Received SUMMONED_ATTACK for invalid object with ID : {}", summonedId);
+            log.error("Received SummonedAttack for invalid object with ID : {}", summonedId);
             return;
         }
         final Summoned summoned = summonedResult.get();
@@ -99,7 +99,7 @@ public final class SummonedHandler {
         }
         final SummonedAttackInfo sai = summonedAttackInfoResult.get();
         if (sai.getMobCount() < attack.getMobCount()) {
-            log.error("Received SUMMON_ATTACK with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.getMobCount());
+            log.error("Received SummonedAttack with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.getMobCount());
             return;
         }
 

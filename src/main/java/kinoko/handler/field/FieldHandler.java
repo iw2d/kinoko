@@ -128,7 +128,7 @@ public final class FieldHandler {
         final Field field = user.getField();
         final Optional<Reactor> reactorResult = field.getReactorPool().getById(objectId);
         if (reactorResult.isEmpty()) {
-            log.error("Received REACTOR_HIT for invalid object with ID : {}", objectId);
+            log.error("Received ReactorHit for invalid object with ID : {}", objectId);
             return;
         }
         try (var lockedReactor = reactorResult.get().acquire()) {
@@ -159,7 +159,7 @@ public final class FieldHandler {
         final Field field = user.getField();
         final Optional<Reactor> reactorResult = field.getReactorPool().getById(objectId);
         if (reactorResult.isEmpty()) {
-            log.error("Received handleReactorTouch for invalid object with ID : {}", objectId);
+            log.error("Received ReactorTouch for invalid object with ID : {}", objectId);
             return;
         }
         try (var lockedReactor = reactorResult.get().acquire()) {
