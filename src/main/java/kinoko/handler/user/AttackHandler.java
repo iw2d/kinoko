@@ -260,8 +260,8 @@ public final class AttackHandler {
             hitInfo.dir = inPacket.decodeByte(); // nDir
             hitInfo.reflect = inPacket.decodeByte(); // nX = 0
             hitInfo.guard = inPacket.decodeByte(); // bGuard
-            final byte knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
-            if (knockback > 1 || hitInfo.reflect != 0) {
+            hitInfo.knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
+            if (hitInfo.knockback > 1 || hitInfo.reflect != 0) {
                 hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
                 hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
                 hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction

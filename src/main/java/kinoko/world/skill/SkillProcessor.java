@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
@@ -13,11 +14,14 @@ import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.item.*;
 import kinoko.world.job.JobHandler;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
+import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.*;
@@ -143,9 +147,26 @@ public final class SkillProcessor {
                 continue;
             }
             // Acquire and damage mob
-            final int totalDamage = Arrays.stream(ai.damage).sum();
             try (var lockedMob = mobResult.get().acquire()) {
-                lockedMob.get().damage(user, totalDamage);
+                final Mob mob = lockedMob.get();
+                final int totalDamage;
+                if (attack.skillId == Warrior.HEAVENS_HAMMER) {
+                    // Handle heaven's hammer
+                    if (mob.isBoss()) {
+                        final int damage = user.getSkillManager().getSkillStatValue(Warrior.HEAVENS_HAMMER, SkillStat.damage);
+                        totalDamage = (int) Math.min(
+                                CalcDamage.calcDamageMax(user) * damage / 100,
+                                GameConstants.DAMAGE_MAX
+                        );
+                        field.broadcastPacket(MobPacket.mobDamaged(mob, totalDamage));
+                    } else {
+                        totalDamage = mob.getHp() - 1;
+                    }
+                } else {
+                    // Sum of damage lines
+                    totalDamage = Arrays.stream(ai.damage).sum();
+                }
+                mob.damage(user, totalDamage);
             }
         }
 
@@ -288,6 +309,7 @@ public final class SkillProcessor {
         final User user = locked.get();
         final int damage = hitInfo.damage;
 
+        // Compute damage reductions
         final int powerGuardReduce = handlePowerGuard(user, hitInfo);
         final int mesoGuardReduce = handleMesoGuard(user, hitInfo);
 
@@ -306,8 +328,11 @@ public final class SkillProcessor {
         if (hitInfo.finalDamage > 0) {
             user.addHp(-hitInfo.finalDamage);
         }
-
         user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
+
+        // Process on hit effects
+        handleGuardian(user, hitInfo);
+        handleDivineShield(user, hitInfo);
     }
 
     private static int handlePowerGuard(User user, HitInfo hitInfo) {
@@ -415,5 +440,64 @@ public final class SkillProcessor {
         }
         final int x = skillInfoResult.get().getValue(SkillStat.x, option.nOption);
         return damage * x / 100;
+    }
+
+    private static void handleGuardian(User user, HitInfo hitInfo) {
+        if (hitInfo.knockback <= 1) {
+            return;
+        }
+        final int stunDuration = user.getSkillManager().getSkillStatValue(Warrior.GUARDIAN, SkillStat.time);
+        if (stunDuration == 0) {
+            return;
+        }
+        final Optional<Mob> knockbackMobResult = user.getField().getMobPool().getById(hitInfo.reflectMobId);
+        if (knockbackMobResult.isPresent()) {
+            // Acquire and stun mob
+            try (var lockedMob = knockbackMobResult.get().acquire()) {
+                lockedMob.get().setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, Warrior.GUARDIAN, stunDuration * 1000));
+            }
+        }
+    }
+
+    private static void handleDivineShield(User user, HitInfo hitInfo) {
+        if (hitInfo.attackIndex.getValue() <= AttackIndex.Counter.getValue()) {
+            return;
+        }
+        // Resolve skill
+        final int skillId = Warrior.DIVINE_SHIELD;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for divine shield skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final SkillManager sm = user.getSkillManager();
+        // Check current stack count
+        final SecondaryStat ss = user.getSecondaryStat();
+        final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.BlessingArmor);
+        final TemporaryStatOption incPadOption = ss.getOption(CharacterTemporaryStat.BlessingArmorIncPAD);
+        if (option.nOption > 0 && incPadOption.nOption > 0) {
+            // Decrement divine shield count
+            final int newCount = option.nOption - 1;
+            if (newCount > 0) {
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.BlessingArmor, option.update(newCount),
+                        CharacterTemporaryStat.BlessingArmorIncPAD, incPadOption
+                ));
+            } else {
+                user.resetTemporaryStat(skillId);
+            }
+        } else {
+            // Try giving divine shield buff
+            final int slv = sm.getSkillLevel(skillId);
+            if (slv == 0 || sm.hasSkillCooltime(skillId) || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                return;
+            }
+            user.setTemporaryStat(Map.of(
+                    CharacterTemporaryStat.BlessingArmor, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                    CharacterTemporaryStat.BlessingArmorIncPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))
+            ));
+            sm.setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.cooltime, slv), ChronoUnit.SECONDS));
+        }
     }
 }

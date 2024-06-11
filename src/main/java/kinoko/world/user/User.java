@@ -351,7 +351,15 @@ public final class User extends Life implements Lockable<User> {
         updatePassiveSkillData();
         validateStat();
         write(WvsContext.temporaryStatSet(setStats));
-        getField().broadcastPacket(UserRemote.temporaryStatSet(this, setStats));
+        getField().broadcastPacket(UserRemote.temporaryStatSet(this, setStats), this);
+    }
+
+    public void resetTemporaryStat(int skillId) {
+        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStat(skillId);
+        updatePassiveSkillData();
+        validateStat();
+        write(WvsContext.temporaryStatReset(resetStats));
+        getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
     }
 
 

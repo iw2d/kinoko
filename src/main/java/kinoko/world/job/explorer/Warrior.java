@@ -1,5 +1,7 @@
 package kinoko.world.job.explorer;
 
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -11,6 +13,7 @@ import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
@@ -110,6 +113,7 @@ public final class Warrior {
     public static final int RUSH_DRK = 1321003;
     public static final int BEHOLDER = 1321007;
     public static final int HEROS_WILL_DRK = 1321010;
+
     private static final Logger log = LogManager.getLogger(JobHandler.class);
 
     public static void handleAttack(User user, Attack attack) {
@@ -139,6 +143,19 @@ public final class Warrior {
                     }
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                 });
+                return;
+
+            // PALADIN
+            case BLAST:
+                attack.forEachMob(field, (mob) -> {
+                    if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        return;
+                    }
+                    mob.damage(user, mob.getHp());
+                });
+            case HEAVENS_HAMMER:
+                // Handled in SkillProcessor.processAttack
+
         }
     }
 
@@ -187,9 +204,24 @@ public final class Warrior {
 
             // PALADIN
             case THREATEN:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (mob.isBoss()) {
+                        return;
+                    }
+                    mob.setTemporaryStat(Map.of(
+                            MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.MAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.z, slv), skillId, si.getValue(SkillStat.subTime, slv) * 1000)
+                    ));
+                });
                 return;
             case HP_RECOVERY:
-                user.addHp(user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100);
+                final int hpRecovery = user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100;
+                user.addHp(hpRecovery);
+                user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
                 return;
             case COMBAT_ORDERS:
                 user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));

@@ -111,6 +111,12 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static Effect incDecHpEffect(int delta) {
+        final Effect effect = new Effect(EffectType.IncDecHPEffect_EX);
+        effect.int1 = delta; // nDelta
+        return effect;
+    }
+
     public static Effect squibEffect(String effectPath) {
         final Effect effect = new Effect(EffectType.SquibEffect);
         effect.string1 = effectPath; // sEffect

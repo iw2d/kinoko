@@ -132,11 +132,14 @@ public enum CharacterTemporaryStat implements BitIndex {
     Dash_Jump(124),
     RideVehicle(125),
     PartyBooster(126),
-    GuidedBullet(127);
+    GuidedBullet(127),
 
     // cannot send these CTS in v95 due to flag size
-    // Undead(128),
-    // SummonBomb(129);
+    Undead(128),
+    SummonBomb(129),
+
+    // only used server-side
+    BlessingArmorIncPAD(1000);
 
     public static final int FLAG_SIZE = 128;
     public static final List<CharacterTemporaryStat> LOCAL_ENCODE_ORDER = List.of(
@@ -152,7 +155,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             MagicResistance, SoulStone, Flying, Frozen, AssistCharge, Enrage, SuddenDeath, NotDamaged, FinalCut,
             ThornsEffect, SwallowAttackDamage, MorewildDamageUp, Mine, Cyclone, SwallowCritical, SwallowMaxMP,
             SwallowDefence, SwallowEvasion, Conversion, Revive, Sneak, Mechanic, Aura, DarkAura, BlueAura, YellowAura,
-            SuperBody, MorewildMaxHP, Dice, BlessingArmor, DamR, TeleportMasteryOn, CombatOrders, Beholder //, SummonBomb
+            SuperBody, MorewildMaxHP, Dice, BlessingArmor, DamR, TeleportMasteryOn, CombatOrders, Beholder, SummonBomb
     );
     public static final List<CharacterTemporaryStat> REMOTE_ENCODE_ORDER = List.of(
             Speed, ComboCounter, WeaponCharge, Stun, Darkness, Seal, Weakness, Curse, Poison, ShadowPartner, DarkSight,
@@ -162,7 +165,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             Sneak, MorewildDamageUp, Mechanic, DarkAura, BlueAura, YellowAura, BlessingArmor
     );
     public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
-            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet //, Undead
+            EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet, Undead
     );
     public static final List<CharacterTemporaryStat> SWALLOW_BUFF_STAT = List.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion
@@ -178,8 +181,8 @@ public enum CharacterTemporaryStat implements BitIndex {
 
     CharacterTemporaryStat(int value) {
         this.value = value;
-        this.arrayIndex = (value % FLAG_SIZE) / 32;
-        this.bitPosition = 1 << ((value % FLAG_SIZE) % 32);
+        this.arrayIndex = value / 32;
+        this.bitPosition = 1 << (value % 32);
     }
 
     @Override

@@ -15,10 +15,16 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
     }
 
     public boolean hasFlag(T bitIndex) {
+        if (bitIndex.getArrayIndex() >= flags.length) {
+            return false;
+        }
         return (flags[bitIndex.getArrayIndex()] & bitIndex.getBitPosition()) != 0;
     }
 
     public void setFlag(T bitIndex) {
+        if (bitIndex.getArrayIndex() >= flags.length) {
+            return;
+        }
         this.flags[bitIndex.getArrayIndex()] |= bitIndex.getBitPosition();
     }
 

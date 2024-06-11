@@ -13,6 +13,7 @@ public final class HitInfo {
     public byte dir;
     public byte reflect;
     public byte guard;
+    public byte knockback;
     public byte powerGuard;
     public int reflectMobId;
     public byte reflectMobAction;
@@ -37,6 +38,7 @@ public final class HitInfo {
                 ", dir=" + dir +
                 ", reflect=" + reflect +
                 ", guard=" + guard +
+                ", knockback=" + knockback +
                 ", powerGuard=" + powerGuard +
                 ", reflectMobId=" + reflectMobId +
                 ", reflectMobAction=" + reflectMobAction +

@@ -107,6 +107,7 @@ public final class SkillHandler {
                 log.error("Tried to cancel skill {}", skillId);
                 return;
             }
+            user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.temporaryStatReset(resetStats));
             user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);

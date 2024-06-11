@@ -50,6 +50,8 @@ public final class SecondaryStat {
     private int speed;
     private int jump;
 
+    private int blessingArmorIncPad;
+
     public Map<CharacterTemporaryStat, TemporaryStatOption> getTemporaryStats() {
         return temporaryStats;
     }
@@ -112,6 +114,14 @@ public final class SecondaryStat {
 
     public int getJump() {
         return jump;
+    }
+
+    public int getBlessingArmorIncPad() {
+        return blessingArmorIncPad;
+    }
+
+    public void setBlessingArmorIncPad(int blessingArmorIncPad) {
+        this.blessingArmorIncPad = blessingArmorIncPad;
     }
 
 
@@ -523,7 +533,7 @@ public final class SecondaryStat {
         }
 
         if (statFlag.hasFlag(CharacterTemporaryStat.BlessingArmor)) {
-            outPacket.encodeInt(stats.get(CharacterTemporaryStat.BlessingArmor).nOption); // nBlessingArmorIncPAD
+            outPacket.encodeInt(stats.get(CharacterTemporaryStat.BlessingArmorIncPAD).nOption); // nBlessingArmorIncPAD
         }
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {

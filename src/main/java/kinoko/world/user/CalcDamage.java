@@ -23,7 +23,6 @@ public final class CalcDamage {
 
     public static double calcDamageMax(User user) {
         final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-        System.out.println(weaponItem);
         final WeaponType weaponType;
         if (weaponItem == null) {
             weaponType = JobConstants.canUseBareHand(user.getJob()) ? WeaponType.BAREHAND : WeaponType.NONE;
@@ -105,7 +104,7 @@ public final class CalcDamage {
         final SecondaryStat ss = user.getSecondaryStat();
         final PassiveSkillData psd = user.getPassiveSkillData();
         // nPAD + incPAD + incEPAD + nPsdPADX + nBlessingArmorIncPAD
-        int pad = ss.getPad() + getIncPad(user) + getIncEpad(user) + psd.getPadX() + ss.getOption(CharacterTemporaryStat.BlessingArmor).nOption;
+        int pad = ss.getPad() + getIncPad(user) + getIncEpad(user) + psd.getPadX() + ss.getOption(CharacterTemporaryStat.BlessingArmorIncPAD).nOption;
         // CItemInfo::GetBulletPAD
         final int bulletItemId = getBulletItemId(user);
         if (bulletItemId != 0 && !JobConstants.isMechanicJob(user.getJob())) {
