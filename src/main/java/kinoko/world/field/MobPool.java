@@ -4,7 +4,6 @@ import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
 import kinoko.util.Rect;
-import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.*;
 
@@ -42,10 +41,29 @@ public final class MobPool extends FieldObjectPool<Mob> {
     public void updateMobs(Instant now) {
         for (Mob mob : getObjects()) {
             try (var lockedMob = mob.acquire()) {
+                // Handle burn
+                final Set<BurnedInfo> resetBurnedInfos = new HashSet<>();
+                final var iter = mob.getMobStat().getBurnedInfos().values().iterator();
+                while (iter.hasNext()) {
+                    final BurnedInfo burnedInfo = iter.next();
+                    if (now.isBefore(burnedInfo.getNextUpdate())) {
+                        continue;
+                    }
+                    mob.burn(burnedInfo.getCharacterId(), burnedInfo.getDamage());
+                    if (burnedInfo.getDotCount() > 1) {
+                        burnedInfo.setDotCount(burnedInfo.getDotCount() - 1);
+                        burnedInfo.setLastUpdate(now);
+                    } else {
+                        iter.remove();
+                        resetBurnedInfos.add(burnedInfo);
+                    }
+                }
                 // Expire temporary stat
-                final Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireResult = mob.getMobStat().expireMobStat(now);
-                final Set<MobTemporaryStat> resetStats = expireResult.getLeft();
-                final Set<BurnedInfo> resetBurnedInfos = expireResult.getRight();
+                final Set<MobTemporaryStat> resetStats = mob.getMobStat().expireMobStat(now);
+                if (!resetBurnedInfos.isEmpty() && mob.getMobStat().getBurnedInfos().isEmpty()) {
+                    mob.getMobStat().getTemporaryStats().remove(MobTemporaryStat.Burned);
+                    resetStats.add(MobTemporaryStat.Burned);
+                }
                 if (!resetStats.isEmpty()) {
                     field.broadcastPacket(MobPacket.mobStatReset(mob, resetStats, resetBurnedInfos));
                 }

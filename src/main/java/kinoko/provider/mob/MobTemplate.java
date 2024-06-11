@@ -22,14 +22,17 @@ public final class MobTemplate {
     private final boolean boss;
     private final boolean noFlip;
     private final boolean damagedByMob;
+    private final boolean onlyNormalAttack;
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
+    private final Set<Integer> damagedBySkill;
     private final List<Integer> revives;
     private final int reviveDelay;
 
     public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery,
                        int fixedDamage, int removeAfter, boolean boss, boolean noFlip, boolean damagedByMob,
-                       Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills, List<Integer> revives, int reviveDelay) {
+                       boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
+                       Set<Integer> damagedBySkill, List<Integer> revives, int reviveDelay) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -42,8 +45,10 @@ public final class MobTemplate {
         this.boss = boss;
         this.noFlip = noFlip;
         this.damagedByMob = damagedByMob;
+        this.onlyNormalAttack = onlyNormalAttack;
         this.attacks = attacks;
         this.skills = skills;
+        this.damagedBySkill = damagedBySkill;
         this.revives = revives;
         this.reviveDelay = reviveDelay;
     }
@@ -96,6 +101,16 @@ public final class MobTemplate {
         return damagedByMob;
     }
 
+    public boolean isVulnerableTo(int skillId) {
+        if (onlyNormalAttack && skillId != 0) {
+            return false;
+        }
+        if (damagedBySkill.isEmpty()) {
+            return true;
+        }
+        return damagedBySkill.contains(skillId);
+    }
+
     public Map<Integer, MobAttack> getAttacks() {
         return attacks;
     }
@@ -135,8 +150,10 @@ public final class MobTemplate {
                 ", boss=" + boss +
                 ", noFlip=" + noFlip +
                 ", damagedByMob=" + damagedByMob +
+                ", onlyNormalAttack=" + onlyNormalAttack +
                 ", attacks=" + attacks +
                 ", skills=" + skills +
+                ", damagedBySelectedSkill=" + damagedBySkill +
                 ", revives=" + revives +
                 ", reviveDelay=" + reviveDelay +
                 '}';
@@ -154,8 +171,10 @@ public final class MobTemplate {
         boolean boss = false;
         boolean noFlip = false;
         boolean damagedByMob = false;
+        boolean onlyNormalAttack = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
+        final Set<Integer> damagedBySkill = new HashSet<>();
         final List<Integer> revives = new ArrayList<>();
         // Process attacks
         for (var entry : mobProp.getItems().entrySet()) {
@@ -232,6 +251,9 @@ public final class MobTemplate {
                 case "damagedByMob" -> {
                     damagedByMob = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
+                case "onlyNormalAttack" -> {
+                    onlyNormalAttack = WzProvider.getInteger(infoEntry.getValue()) != 0;
+                }
                 case "skill" -> {
                     if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
                         throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
@@ -251,6 +273,15 @@ public final class MobTemplate {
                                 skillId,
                                 WzProvider.getInteger(skillProp.get("level"))
                         ));
+                    }
+                }
+                case "damagedBySelectedSkill" -> {
+                    if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
+                        throw new ProviderError("Failed to resolve damagedBySelectedSkill for mob : %d", mobId);
+                    }
+                    for (var skillEntry : skillEntries.getItems().entrySet()) {
+                        final int skillId = WzProvider.getInteger(skillEntry.getValue());
+                        damagedBySkill.add(skillId);
                     }
                 }
                 case "revive" -> {
@@ -315,8 +346,10 @@ public final class MobTemplate {
                 removeAfter, boss,
                 noFlip,
                 damagedByMob,
+                onlyNormalAttack,
                 Collections.unmodifiableMap(attacks),
                 Collections.unmodifiableMap(skills),
+                Collections.unmodifiableSet(damagedBySkill),
                 Collections.unmodifiableList(revives),
                 reviveDelay);
     }

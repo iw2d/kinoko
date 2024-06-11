@@ -4,6 +4,8 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.affectedarea.AffectedArea;
@@ -125,10 +127,10 @@ public final class Magician {
         final Field field = user.getField();
         switch (skillId) {
             // FP
-            case POISON_BREATH, ELEMENT_COMPOSITION_FP -> {
+            case POISON_BREATH, ELEMENT_COMPOSITION_FP, PARALYZE -> {
                 final BurnedInfo burnedInfo = BurnedInfo.from(user, si, slv);
                 attack.forEachMob(field, (mob) -> {
-                    if (mob.isBoss()) {
+                    if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         return;
                     }
                     mob.setBurnedInfo(burnedInfo);

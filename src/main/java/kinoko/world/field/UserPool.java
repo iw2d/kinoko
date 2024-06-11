@@ -16,7 +16,6 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -155,10 +154,9 @@ public final class UserPool extends FieldObjectPool<User> {
                     user.write(UserLocal.skillCooltimeSet(skillId, 0));
                 }
                 // Expire summoned
-                final var summonedIter = user.getSummoned().entrySet().iterator();
+                final var summonedIter = user.getSummoned().values().iterator();
                 while (summonedIter.hasNext()) {
-                    final Map.Entry<Integer, Summoned> entry = summonedIter.next();
-                    final Summoned summoned = entry.getValue();
+                    final Summoned summoned = summonedIter.next();
                     if (now.isBefore(summoned.getExpireTime())) {
                         continue;
                     }

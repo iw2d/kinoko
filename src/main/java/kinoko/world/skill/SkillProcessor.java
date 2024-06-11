@@ -12,7 +12,6 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.OutHeader;
 import kinoko.util.Locked;
-import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;

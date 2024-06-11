@@ -47,10 +47,10 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         final Instant now = Instant.now();
         if (time.isAfter(now)) {
             outPacket.encodeByte(false);
-            outPacket.encodeInt((int) (time.toEpochMilli() - now.toEpochMilli()));
+            outPacket.encodeInt(time.toEpochMilli() - now.toEpochMilli());
         } else {
             outPacket.encodeByte(true);
-            outPacket.encodeInt((int) (now.toEpochMilli() - time.toEpochMilli()));
+            outPacket.encodeInt(now.toEpochMilli() - time.toEpochMilli());
         }
     }
 

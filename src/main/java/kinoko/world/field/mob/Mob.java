@@ -105,6 +105,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         return template.isDamagedByMob();
     }
 
+    public boolean isVulnerableTo(int skillId) {
+        return template.isVulnerableTo(skillId);
+    }
+
     public Optional<MobAttack> getAttack(int attackIndex) {
         return template.getAttack(attackIndex);
     }
@@ -204,11 +208,23 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void setBurnedInfo(BurnedInfo burnedInfo) {
+        // Set mob stat and burned info
         final MobStatOption option = MobStatOption.of(0, burnedInfo.getSkillId(), 0);
         getMobStat().getTemporaryStats().put(MobTemporaryStat.Burned, option);
         getMobStat().addBurnedInfo(burnedInfo);
-        getField().broadcastPacket(MobPacket.mobStatSet(this, Map.of(MobTemporaryStat.Burned, option), Set.of(burnedInfo)));
-        // TODO: damage task
+        // Broadcast packet
+        final Set<BurnedInfo> burnedInfos = getMobStat().getBurnedInfos().values().stream().collect(Collectors.toUnmodifiableSet());
+        getField().broadcastPacket(MobPacket.mobStatSet(this, Map.of(MobTemporaryStat.Burned, option), burnedInfos));
+    }
+
+    public void burn(int attackerId, int burnDamage) {
+        // Process damage
+        final int actualDamage = Math.min(getHp() - 1, burnDamage);
+        setHp(getHp() - actualDamage);
+        damageDone.put(attackerId, damageDone.getOrDefault(attackerId, 0) + actualDamage);
+        // Show mob hp indicator
+        final double percentage = (double) getHp() / getMaxHp();
+        getField().broadcastPacket(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
     }
 
     public void damage(User attacker, int totalDamage) {
@@ -373,7 +389,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     @Override
     public String toString() {
-        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d, boss : %b }", getTemplateId(), getId(), getHp(), getMp(), isBoss());
+        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d, boss : %b, burn : %s }", getTemplateId(), getId(), getHp(), getMp(), isBoss(), getMobStat().getBurnedInfos());
     }
 
     @Override

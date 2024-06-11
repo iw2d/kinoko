@@ -74,7 +74,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         }
         switch (skillId) {
             case Magician.POISON_MIST -> {
-                if (mob.isBoss() || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId)) {
+                if (mob.getHp() == 1 || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId)) {
                     return;
                 }
                 final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);

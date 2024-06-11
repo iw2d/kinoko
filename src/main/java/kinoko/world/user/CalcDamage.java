@@ -4,7 +4,6 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Tuple;
-import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;

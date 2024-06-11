@@ -33,8 +33,7 @@ public final class MobStat {
         burnedInfos.clear();
     }
 
-    public Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireMobStat(Instant now) {
-        // Expire temporary stats
+    public Set<MobTemporaryStat> expireMobStat(Instant now) {
         final Set<MobTemporaryStat> resetStats = new HashSet<>();
         final var statIter = temporaryStats.entrySet().iterator();
         while (statIter.hasNext()) {
@@ -48,25 +47,7 @@ public final class MobStat {
             statIter.remove();
             resetStats.add(mts);
         }
-        // Expire burned infos
-        final Set<BurnedInfo> resetBurnedInfos = new HashSet<>();
-        final var burnIter = burnedInfos.entrySet().iterator();
-        while (burnIter.hasNext()) {
-            final Map.Entry<Tuple<Integer, Integer>, BurnedInfo> entry = burnIter.next();
-            final BurnedInfo burnedInfo = entry.getValue();
-            // Check burned info expire time and remove
-            if (now.isBefore(burnedInfo.getExpireTime())) {
-                continue;
-            }
-            burnIter.remove();
-            resetBurnedInfos.add(burnedInfo);
-        }
-        // Remove Burned MTS if applicable
-        if (!resetBurnedInfos.isEmpty() && burnedInfos.isEmpty()) {
-            temporaryStats.remove(MobTemporaryStat.Burned);
-            resetStats.add(MobTemporaryStat.Burned);
-        }
-        return new Tuple<>(resetStats, resetBurnedInfos);
+        return resetStats;
     }
 
     public static void encode(OutPacket outPacket, MobStat ms) {
