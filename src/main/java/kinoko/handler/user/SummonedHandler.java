@@ -11,9 +11,9 @@ import kinoko.world.field.Field;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,7 +105,7 @@ public final class SummonedHandler {
 
         // Skill specific handling
         try (var locked = user.acquire()) {
-            JobHandler.handleAttack(locked, attack);
+            SkillDispatcher.handleAttack(locked, attack);
         }
 
         // Process attack damage

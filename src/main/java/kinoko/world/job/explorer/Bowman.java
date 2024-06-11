@@ -5,9 +5,9 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,7 +77,8 @@ public final class Bowman {
     public static final int BLIND = 3221006;
     public static final int SNIPE = 3221007;
     public static final int HEROS_WILL_MM = 3221008;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

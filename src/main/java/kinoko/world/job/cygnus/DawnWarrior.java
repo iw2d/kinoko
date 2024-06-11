@@ -1,8 +1,8 @@
 package kinoko.world.job.cygnus;
 
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,8 @@ public final class DawnWarrior {
     public static final int BRANDISH = 11111004;
     public static final int SOUL_DRIVER = 11111006;
     public static final int SOUL_CHARGE = 11111007;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

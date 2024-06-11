@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public final class SkillManager {
     private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
     private final Map<Integer, Instant> skillCooltimes = new HashMap<>();
+    private final Map<Integer, Instant> skillSchedules = new HashMap<>();
 
     // SKILL RECORD METHODS --------------------------------------------------------------------------------------------
 
@@ -33,7 +34,6 @@ public final class SkillManager {
         return skillCooltimes;
     }
 
-
     public boolean hasSkillCooltime(int skillId) {
         final Instant nextAvailable = skillCooltimes.get(skillId);
         return nextAvailable != null && nextAvailable.isAfter(Instant.now());
@@ -45,7 +45,7 @@ public final class SkillManager {
 
     public Set<Integer> expireSkillCooltime(Instant now) {
         final Set<Integer> resetCooltimes = new HashSet<>();
-        final var iter = getSkillCooltimes().entrySet().iterator();
+        final var iter = skillCooltimes.entrySet().iterator();
         while (iter.hasNext()) {
             final Map.Entry<Integer, Instant> entry = iter.next();
             final int skillId = entry.getKey();
@@ -58,6 +58,21 @@ public final class SkillManager {
             resetCooltimes.add(skillId);
         }
         return resetCooltimes;
+    }
+
+
+    // SKILL SCHEDULE METHODS ------------------------------------------------------------------------------------------
+
+    public Map<Integer, Instant> getSkillSchedules() {
+        return skillSchedules;
+    }
+
+    public Instant getSkillSchedule(int skillId) {
+        return skillSchedules.getOrDefault(skillId, Instant.MAX);
+    }
+
+    public void setSkillSchedule(int skillId, Instant nextSchedule) {
+        skillSchedules.put(skillId, nextSchedule);
     }
 
 

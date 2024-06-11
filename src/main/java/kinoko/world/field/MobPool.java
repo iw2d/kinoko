@@ -43,7 +43,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
         for (Mob mob : getObjects()) {
             try (var lockedMob = mob.acquire()) {
                 // Expire temporary stat
-                final Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireResult = lockedMob.get().getMobStat().expireMobStat(now);
+                final Tuple<Set<MobTemporaryStat>, Set<BurnedInfo>> expireResult = mob.getMobStat().expireMobStat(now);
                 final Set<MobTemporaryStat> resetStats = expireResult.getLeft();
                 final Set<BurnedInfo> resetBurnedInfos = expireResult.getRight();
                 if (!resetStats.isEmpty()) {

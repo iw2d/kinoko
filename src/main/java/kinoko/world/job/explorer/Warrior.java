@@ -9,9 +9,9 @@ import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -19,6 +19,8 @@ import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 public final class Warrior {
@@ -114,7 +116,7 @@ public final class Warrior {
     public static final int BEHOLDER = 1321007;
     public static final int HEROS_WILL_DRK = 1321010;
 
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
@@ -155,7 +157,12 @@ public final class Warrior {
                 });
             case HEAVENS_HAMMER:
                 // Handled in SkillProcessor.processAttack
+                return;
 
+            // DARK KNIGHT
+            case SACRIFICE:
+            case DRAGON_ROAR:
+                user.addHp(-(user.getMaxHp() / si.getValue(SkillStat.x, slv)));
         }
     }
 
@@ -241,7 +248,11 @@ public final class Warrior {
                 ));
                 return;
             case DRAGON_BLOOD:
-                user.setTemporaryStat(CharacterTemporaryStat.DragonBlood, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.DragonBlood, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv))
+                ));
+                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
                 return;
             case BEHOLDER:
                 // TODO summoned

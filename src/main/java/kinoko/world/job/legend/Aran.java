@@ -1,8 +1,8 @@
 package kinoko.world.job.legend;
 
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +52,8 @@ public final class Aran {
     public static final int MAPLE_WARRIOR_ARAN = 21121000;
     public static final int FREEZE_STANDING = 21121003;
     public static final int HEROS_WILL_ARAN = 21121008;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

@@ -17,7 +17,6 @@ import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.item.*;
-import kinoko.world.job.JobHandler;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
@@ -137,7 +136,7 @@ public final class SkillProcessor {
         }
 
         // Skill specific handling
-        JobHandler.handleAttack(locked, attack);
+        SkillDispatcher.handleAttack(locked, attack);
 
         // Process attack damage
         final Field field = user.getField();
@@ -287,7 +286,7 @@ public final class SkillProcessor {
         }
 
         // Skill-specific handling
-        JobHandler.handleSkill(locked, skill);
+        SkillDispatcher.handleSkill(locked, skill);
         user.write(WvsContext.skillUseResult());
 
         // Skill effects and party handling
@@ -295,7 +294,7 @@ public final class SkillProcessor {
         field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skill.skillId, skill.slv, user.getLevel())), user);
         skill.forEachAffectedMember(user, user.getField(), (member) -> {
             try (var lockedMember = member.acquire()) {
-                JobHandler.handleSkill(lockedMember, skill);
+                SkillDispatcher.handleSkill(lockedMember, skill);
                 member.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
                 field.broadcastPacket(UserRemote.effect(member, Effect.skillAffected(skill.skillId, skill.slv)), member);
             }
@@ -474,15 +473,14 @@ public final class SkillProcessor {
         final SkillManager sm = user.getSkillManager();
         // Check current stack count
         final SecondaryStat ss = user.getSecondaryStat();
-        final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.BlessingArmor);
-        final TemporaryStatOption incPadOption = ss.getOption(CharacterTemporaryStat.BlessingArmorIncPAD);
-        if (option.nOption > 0 && incPadOption.nOption > 0) {
+        if (ss.hasOption(CharacterTemporaryStat.BlessingArmor) && ss.hasOption(CharacterTemporaryStat.BlessingArmor)) {
             // Decrement divine shield count
+            final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.BlessingArmor);
             final int newCount = option.nOption - 1;
             if (newCount > 0) {
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.BlessingArmor, option.update(newCount),
-                        CharacterTemporaryStat.BlessingArmorIncPAD, incPadOption
+                        CharacterTemporaryStat.BlessingArmorIncPAD, ss.getOption(CharacterTemporaryStat.BlessingArmorIncPAD) // required for TemporaryStatSet
                 ));
             } else {
                 user.resetTemporaryStat(skillId);
@@ -498,6 +496,44 @@ public final class SkillProcessor {
                     CharacterTemporaryStat.BlessingArmorIncPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))
             ));
             sm.setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.cooltime, slv), ChronoUnit.SECONDS));
+        }
+    }
+
+
+    // PROCESS UPDATE --------------------------------------------------------------------------------------------------
+
+    public static void processUpdate(Locked<User> locked, Instant now) {
+        final User user = locked.get();
+        if (user.getHp() <= 0) {
+            return;
+        }
+        final SkillManager sm = user.getSkillManager();
+        final SecondaryStat ss = user.getSecondaryStat();
+
+        // Handle Recovery
+        if (ss.hasOption(CharacterTemporaryStat.Regen)) {
+            final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.Regen);
+            if (now.isAfter(sm.getSkillSchedule(option.rOption))) {
+                final int hpRecovery = option.nOption;
+                user.addHp(hpRecovery);
+                user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
+                sm.setSkillSchedule(option.rOption, now.plus(5, ChronoUnit.SECONDS));
+            }
+        }
+
+        // Handle Dragon Blood
+        if (ss.hasOption(CharacterTemporaryStat.DragonBlood)) {
+            final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.DragonBlood);
+            if (now.isAfter(sm.getSkillSchedule(option.rOption))) {
+                final int hpConsume = option.nOption;
+                if (user.getHp() < hpConsume * 4) {
+                    user.resetTemporaryStat(option.rOption);
+                } else {
+                    user.addHp(-hpConsume);
+                    sm.setSkillSchedule(option.rOption, now.plus(1, ChronoUnit.SECONDS));
+                }
+            }
         }
     }
 }

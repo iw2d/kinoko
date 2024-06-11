@@ -1,9 +1,10 @@
-package kinoko.world.job;
+package kinoko.world.skill;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Locked;
+import kinoko.world.job.Job;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
 import kinoko.world.job.legend.Aran;
@@ -12,19 +13,18 @@ import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
-import kinoko.world.skill.Attack;
-import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
-public final class JobHandler {
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+public final class SkillDispatcher {
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(Locked<User> locked, Attack attack) {
         final User user = locked.get();
@@ -84,6 +84,7 @@ public final class JobHandler {
             case Aran.RECOVERY:
             case Evan.RECOVER:
                 user.setTemporaryStat(CharacterTemporaryStat.Regen, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(5, ChronoUnit.SECONDS));
                 return;
             case Beginner.NIMBLE_FEET:
             case Noblesse.NIMBLE_FEET:

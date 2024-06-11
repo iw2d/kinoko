@@ -50,8 +50,6 @@ public final class SecondaryStat {
     private int speed;
     private int jump;
 
-    private int blessingArmorIncPad;
-
     public Map<CharacterTemporaryStat, TemporaryStatOption> getTemporaryStats() {
         return temporaryStats;
     }
@@ -116,14 +114,6 @@ public final class SecondaryStat {
         return jump;
     }
 
-    public int getBlessingArmorIncPad() {
-        return blessingArmorIncPad;
-    }
-
-    public void setBlessingArmorIncPad(int blessingArmorIncPad) {
-        this.blessingArmorIncPad = blessingArmorIncPad;
-    }
-
 
     // TEMPORARY STAT METHODS ------------------------------------------------------------------------------------------
 
@@ -133,6 +123,10 @@ public final class SecondaryStat {
 
     public TemporaryStatOption getOption(CharacterTemporaryStat cts) {
         return temporaryStats.getOrDefault(cts, TemporaryStatOption.EMPTY);
+    }
+
+    public boolean hasOption(CharacterTemporaryStat cts) {
+        return getOption(cts).nOption > 0;
     }
 
     public int getRidingVehicle() {
@@ -397,10 +391,10 @@ public final class SecondaryStat {
         } else if (JobConstants.isWindArcherJob(bs.getJob())) {
             getStatFromSkill(sm, WindArcher.THRUST);
         }
-        if (getOption(CharacterTemporaryStat.YellowAura).nOption > 0) {
+        if (hasOption(CharacterTemporaryStat.YellowAura)) {
             final Optional<SkillInfo> yellowAuraResult = SkillProvider.getSkillInfoById(getOption(CharacterTemporaryStat.YellowAura).rOption);
             yellowAuraResult.ifPresent((si) -> this.speed += si.getValue(SkillStat.x, getOption(CharacterTemporaryStat.YellowAura).nOption));
-            if (getOption(CharacterTemporaryStat.SuperBody).nOption > 0) {
+            if (hasOption(CharacterTemporaryStat.SuperBody)) {
                 final Optional<SkillInfo> bodyBoostResult = SkillProvider.getSkillInfoById(BattleMage.BODY_BOOST_YELLOW_AURA);
                 bodyBoostResult.ifPresent((si) -> this.speed += si.getValue(SkillStat.x, getOption(CharacterTemporaryStat.SuperBody).nOption));
             }

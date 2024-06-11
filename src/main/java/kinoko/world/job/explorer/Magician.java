@@ -8,9 +8,9 @@ import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.mob.BurnedInfo;
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -114,7 +114,8 @@ public final class Magician {
     public static final int ANGEL_RAY = 2321007;
     public static final int GENESIS = 2321008;
     public static final int HEROS_WILL_BISH = 2321009;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();

@@ -1,8 +1,8 @@
 package kinoko.world.job.resistance;
 
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +47,8 @@ public final class Mechanic {
     public static final int BOTS_N_TOTS_DUMMY = 35121011;
     public static final int LASER_BLAST = 35121012;
     public static final int MECH_SIEGE_MODE_2 = 35121013;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

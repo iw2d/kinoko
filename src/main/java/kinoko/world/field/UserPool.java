@@ -10,6 +10,7 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -132,20 +133,22 @@ public final class UserPool extends FieldObjectPool<User> {
     public void updateUsers(Instant now) {
         for (User user : getObjects()) {
             try (var locked = user.acquire()) {
+                // Handle CTS updates on tick
+                SkillProcessor.processUpdate(locked, now);
                 // Expire temporary stat
-                final Set<CharacterTemporaryStat> resetStats = locked.get().getSecondaryStat().expireTemporaryStat(now);
+                final Set<CharacterTemporaryStat> resetStats = user.getSecondaryStat().expireTemporaryStat(now);
                 if (!resetStats.isEmpty()) {
                     user.validateStat();
                     user.write(WvsContext.temporaryStatReset(resetStats));
                     broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);
                 }
                 // Expire skill cooltimes
-                final Set<Integer> resetCooltimes = locked.get().getSkillManager().expireSkillCooltime(now);
+                final Set<Integer> resetCooltimes = user.getSkillManager().expireSkillCooltime(now);
                 for (int skillId : resetCooltimes) {
                     user.write(UserLocal.skillCooltimeSet(skillId, 0));
                 }
                 // Expire summoned
-                final var summonedIter = locked.get().getSummoned().entrySet().iterator();
+                final var summonedIter = user.getSummoned().entrySet().iterator();
                 while (summonedIter.hasNext()) {
                     final Map.Entry<Integer, Summoned> entry = summonedIter.next();
                     final Summoned summoned = entry.getValue();

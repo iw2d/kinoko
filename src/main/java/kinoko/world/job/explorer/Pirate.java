@@ -1,8 +1,8 @@
 package kinoko.world.job.explorer;
 
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,7 +75,8 @@ public final class Pirate {
     public static final int BATTLESHIP_TORPEDO = 5221008;
     public static final int HYPNOTIZE = 5221009;
     public static final int HEROS_WILL_SAIR = 5221010;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

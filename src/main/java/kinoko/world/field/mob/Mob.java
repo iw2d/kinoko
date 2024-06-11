@@ -158,7 +158,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
 
-    // STAT METHODS ----------------------------------------------------------------------------------------------------
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public void heal(int hp) {
         setHp(Math.min(getHp() + hp, getMaxHp()));
@@ -210,9 +210,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getField().broadcastPacket(MobPacket.mobStatSet(this, Map.of(MobTemporaryStat.Burned, option), Set.of(burnedInfo)));
         // TODO: damage task
     }
-
-
-    // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public void damage(User attacker, int totalDamage) {
         // Process damage

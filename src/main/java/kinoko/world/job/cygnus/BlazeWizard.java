@@ -1,8 +1,8 @@
 package kinoko.world.job.cygnus;
 
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,8 @@ public final class BlazeWizard {
     public static final int IFRIT = 12111004;
     public static final int FLAME_GEAR = 12111005;
     public static final int FIRE_STRIKE = 12111006;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

@@ -2,9 +2,9 @@ package kinoko.world.job.resistance;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
-import kinoko.world.job.JobHandler;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
@@ -54,7 +54,8 @@ public final class BattleMage {
     public static final int PARTY_SHIELD = 32121006;
     public static final int MAPLE_WARRIOR_BAM = 32121007;
     public static final int HEROS_WILL_BAM = 32121008;
-    private static final Logger log = LogManager.getLogger(JobHandler.class);
+
+    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;
