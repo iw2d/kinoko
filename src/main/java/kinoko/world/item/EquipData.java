@@ -80,7 +80,7 @@ public final class EquipData {
         this.durability = equipData.durability;
     }
 
-    public void encode(Item item, OutPacket outPacket) {
+    public void encode(OutPacket outPacket, Item item) {
         outPacket.encodeByte(getRuc()); // nRUC
         outPacket.encodeByte(getCuc()); // nCUC
 

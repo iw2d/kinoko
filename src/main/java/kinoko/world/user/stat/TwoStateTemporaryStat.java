@@ -29,7 +29,7 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         // TemporaryStatBase<long>::DecodeForClient
         outPacket.encodeInt(nOption); // m_value
         outPacket.encodeInt(rOption); // m_reason
-        encodeTime(lastUpdated, outPacket); // tLastUpdated
+        encodeTime(outPacket, lastUpdated); // tLastUpdated
 
         if (twoStateType == TwoStateType.EXPIRE_BASED_ON_CURRENT_TIME) {
             // tCurrentTime
@@ -42,7 +42,7 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         }
     }
 
-    private void encodeTime(Instant time, OutPacket outPacket) {
+    private void encodeTime(OutPacket outPacket, Instant time) {
         // tLastUpdated = `anonymous namespace'::DecodeTime
         final Instant now = Instant.now();
         if (time.isAfter(now)) {

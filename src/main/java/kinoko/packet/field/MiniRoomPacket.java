@@ -135,7 +135,7 @@ public final class MiniRoomPacket {
 
         public static OutPacket enter(int userIndex, User user, MiniRoomType miniGameType) {
             final OutPacket outPacket = MiniRoomPacket.enterBase(userIndex, user);
-            encodeMiniGameRecord(miniGameType, user, outPacket);
+            encodeMiniGameRecord(outPacket, miniGameType, user);
             return outPacket;
         }
 
@@ -143,7 +143,7 @@ public final class MiniRoomPacket {
             final OutPacket outPacket = MiniRoomPacket.enterResult(miniGameRoom, me);
             miniGameRoom.getUsers().forEach((i, user) -> {
                 outPacket.encodeByte(i);
-                encodeMiniGameRecord(miniGameRoom.getType(), user, outPacket);
+                encodeMiniGameRecord(outPacket, miniGameRoom.getType(), user);
             });
             outPacket.encodeByte(-1);
             outPacket.encodeString(miniGameRoom.getTitle()); // sTitle
@@ -204,8 +204,8 @@ public final class MiniRoomPacket {
             if (resultType != GameResultType.DRAW) {
                 outPacket.encodeByte(winnerIndex); // nWinnerIdx
             }
-            encodeMiniGameRecord(miniGameRoom.getType(), miniGameRoom.getOwner(), outPacket); // apMGR[0]
-            encodeMiniGameRecord(miniGameRoom.getType(), miniGameRoom.getGuest(), outPacket); // apMGR[1]
+            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getOwner()); // apMGR[0]
+            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getGuest()); // apMGR[1]
             return outPacket;
         }
 
@@ -249,7 +249,7 @@ public final class MiniRoomPacket {
             return outPacket;
         }
 
-        private static void encodeMiniGameRecord(MiniRoomType miniRoomType, User user, OutPacket outPacket) {
+        private static void encodeMiniGameRecord(OutPacket outPacket, MiniRoomType miniRoomType, User user) {
             final MiniGameRecord miniGameRecord = user != null ? user.getCharacterData().getMiniGameRecord() : new MiniGameRecord();
             miniGameRecord.encode(miniRoomType, outPacket);
         }

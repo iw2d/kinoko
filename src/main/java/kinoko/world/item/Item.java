@@ -49,11 +49,11 @@ public final class Item implements Encodable {
         switch (getItemType()) {
             case EQUIP -> {
                 // GW_ItemSlotEquip::RawDecode
-                equipData.encode(this, outPacket);
+                equipData.encode(outPacket, this);
             }
             case PET -> {
                 // GW_ItemSlotPet::RawDecode
-                petData.encode(this, outPacket);
+                petData.encode(outPacket, this);
             }
             default -> {
                 // GW_ItemSlotBundle::RawDecode

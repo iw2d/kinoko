@@ -26,7 +26,7 @@ public final class PetData {
         this.remainLife = petData.remainLife;
     }
 
-    public void encode(Item item, OutPacket outPacket) {
+    public void encode(OutPacket outPacket, Item item) {
         outPacket.encodeString(getPetName(), 13); // sPetName
         outPacket.encodeByte(getLevel()); // nLevel
         outPacket.encodeShort(getTameness()); // nTameness
