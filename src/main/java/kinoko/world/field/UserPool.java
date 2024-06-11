@@ -54,6 +54,7 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Add user summoned
         for (Summoned summoned : user.getSummoned().values()) {
+            summoned.setField(field);
             summoned.setX(user.getX());
             summoned.setY(user.getY());
             summoned.setFoothold(user.getFoothold());

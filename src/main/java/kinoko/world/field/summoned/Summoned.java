@@ -103,6 +103,14 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
         setFoothold(field.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
     }
 
+    public boolean canMigrate() {
+        if (getHp() <= 0 || Instant.now().isAfter(expireTime)) {
+            return false;
+        }
+        return moveAbility == SummonedMoveAbility.WALK ||
+                moveAbility == SummonedMoveAbility.FLY;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         // CSummoned::Init

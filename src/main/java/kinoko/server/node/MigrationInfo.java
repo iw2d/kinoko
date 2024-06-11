@@ -5,6 +5,11 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Encodable;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedEnterType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
+import kinoko.world.user.AvatarLook;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.*;
 
@@ -22,12 +27,15 @@ public final class MigrationInfo implements Encodable {
     private final byte[] clientKey;
     private final Instant expireTime;
 
-    private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats; // TODO SUMMONED
+    private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats;
+    private final Map<Integer, Summoned> summoned;
     private final int messengerId;
     private final int effectItemId;
     private final String adBoard;
 
-    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey, Instant expireTime, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats, int messengerId, int effectItemId, String adBoard) {
+    public MigrationInfo(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey,
+                         Instant expireTime, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats,
+                         Map<Integer, Summoned> summoned, int messengerId, int effectItemId, String adBoard) {
         assert machineId.length == 16 && clientKey.length == 8;
         this.channelId = channelId;
         this.accountId = accountId;
@@ -36,6 +44,7 @@ public final class MigrationInfo implements Encodable {
         this.clientKey = clientKey;
         this.expireTime = expireTime;
         this.temporaryStats = temporaryStats;
+        this.summoned = summoned;
         this.messengerId = messengerId;
         this.effectItemId = effectItemId;
         this.adBoard = adBoard;
@@ -63,6 +72,10 @@ public final class MigrationInfo implements Encodable {
 
     public Map<CharacterTemporaryStat, TemporaryStatOption> getTemporaryStats() {
         return temporaryStats;
+    }
+
+    public Map<Integer, Summoned> getSummoned() {
+        return summoned;
     }
 
     public int getMessengerId() {
@@ -97,6 +110,7 @@ public final class MigrationInfo implements Encodable {
                 ", clientKey=" + Arrays.toString(clientKey) +
                 ", expireTime=" + expireTime +
                 ", temporaryStats=" + temporaryStats +
+                ", summoned=" + summoned +
                 ", messengerId=" + messengerId +
                 ", effectItemId=" + effectItemId +
                 ", adBoard='" + adBoard + '\'' +
@@ -113,6 +127,7 @@ public final class MigrationInfo implements Encodable {
         outPacket.encodeLong(expireTime.toEpochMilli());
 
         encodeTemporaryStats(outPacket, temporaryStats);
+        encodeSummonedMap(outPacket, summoned);
         outPacket.encodeInt(messengerId);
         outPacket.encodeInt(effectItemId);
         outPacket.encodeByte(adBoard != null);
@@ -130,13 +145,21 @@ public final class MigrationInfo implements Encodable {
         final long expireTime = inPacket.decodeLong();
 
         final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = decodeTemporaryStats(inPacket);
+        final Map<Integer, Summoned> summoned = decodeSummonedMap(inPacket);
         final int messengerId = inPacket.decodeInt();
         final int effectItemId = inPacket.decodeInt();
         final String adBoard = inPacket.decodeBoolean() ? inPacket.decodeString() : null;
-        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, Instant.ofEpochMilli(expireTime), temporaryStats, messengerId, effectItemId, adBoard);
+        return new MigrationInfo(channelId, accountId, characterId, machineId, clientKey, Instant.ofEpochMilli(expireTime), temporaryStats, summoned, messengerId, effectItemId, adBoard);
     }
 
     public static MigrationInfo from(User user, int targetChannelId) {
+        // Filter summoned
+        final Map<Integer, Summoned> summoned = new HashMap<>();
+        for (var entry : user.getSummoned().entrySet()) {
+            if (entry.getValue().canMigrate()) {
+                summoned.put(entry.getKey(), entry.getValue());
+            }
+        }
         return new MigrationInfo(
                 targetChannelId,
                 user.getAccountId(),
@@ -145,6 +168,7 @@ public final class MigrationInfo implements Encodable {
                 user.getClient().getClientKey(),
                 Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS),
                 user.getSecondaryStat().getTemporaryStats(),
+                summoned,
                 user.getMessengerId(),
                 user.getEffectItemId(),
                 user.getAdBoard()
@@ -159,6 +183,7 @@ public final class MigrationInfo implements Encodable {
                 machineId,
                 clientKey,
                 Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS),
+                Map.of(),
                 Map.of(),
                 0,
                 0,
@@ -239,6 +264,54 @@ public final class MigrationInfo implements Encodable {
             }
         }
         return temporaryStats;
+    }
+
+    private static void encodeSummonedMap(OutPacket outPacket, Map<Integer, Summoned> summoned) {
+        outPacket.encodeInt(summoned.size());
+        for (var entry : summoned.entrySet()) {
+            outPacket.encodeInt(entry.getKey());
+            encodeSummoned(outPacket, entry.getValue());
+        }
+    }
+
+
+    // SUMMONED --------------------------------------------------------------------------------------------------------
+
+    private static void encodeSummoned(OutPacket outPacket, Summoned summoned) {
+        outPacket.encodeInt(summoned.getSkillId());
+        outPacket.encodeInt(summoned.getSkillLevel());
+        outPacket.encodeInt(summoned.getHp());
+        outPacket.encodeByte(summoned.getMoveAbility().getValue());
+        outPacket.encodeByte(summoned.getAssistType().getValue());
+        outPacket.encodeByte(summoned.getAvatarLook() != null);
+        if (summoned.getAvatarLook() != null) {
+            summoned.getAvatarLook().encode(outPacket);
+        }
+        outPacket.encodeLong(summoned.getExpireTime().getEpochSecond());
+    }
+
+    private static Map<Integer, Summoned> decodeSummonedMap(InPacket inPacket) {
+        final Map<Integer, Summoned> summoned = new HashMap<>();
+        final int size = inPacket.decodeInt();
+        for (int i = 0; i < size; i++) {
+            final int summonedId = inPacket.decodeInt();
+            summoned.put(summonedId, decodeSummoned(inPacket));
+        }
+        return summoned;
+    }
+
+    private static Summoned decodeSummoned(InPacket inPacket) {
+        final int skillId = inPacket.decodeInt();
+        final int skillLevel = inPacket.decodeInt();
+        final int summonedHp = inPacket.decodeInt();
+        final SummonedMoveAbility moveAbility = SummonedMoveAbility.getByValue(inPacket.decodeByte());
+        final SummonedAssistType assistType = SummonedAssistType.getByValue(inPacket.decodeByte());
+        final AvatarLook avatarLook = inPacket.decodeBoolean() ? AvatarLook.decode(inPacket) : null;
+        final Instant expireTime = Instant.ofEpochSecond(inPacket.decodeLong());
+        final Summoned summoned = new Summoned(skillId, skillLevel, moveAbility, assistType, avatarLook, expireTime);
+        summoned.setHp(summonedHp);
+        summoned.setEnterType(SummonedEnterType.DEFAULT);
+        return summoned;
     }
 
     private enum TemporaryStatOptionType {

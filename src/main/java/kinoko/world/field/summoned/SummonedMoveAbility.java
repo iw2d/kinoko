@@ -19,4 +19,13 @@ public enum SummonedMoveAbility {
     public final int getValue() {
         return value;
     }
+
+    public static SummonedMoveAbility getByValue(int value) {
+        for (SummonedMoveAbility type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

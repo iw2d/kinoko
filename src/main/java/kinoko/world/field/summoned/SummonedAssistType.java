@@ -19,4 +19,13 @@ public enum SummonedAssistType {
     public final int getValue() {
         return value;
     }
+
+    public static SummonedAssistType getByValue(int value) {
+        for (SummonedAssistType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
 }
