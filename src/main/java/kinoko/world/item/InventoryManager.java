@@ -236,15 +236,11 @@ public final class InventoryManager {
             }
         }
         if (item.getQuantity() > 0) {
-            // Find available slot
-            for (int i = 1; i <= inventory.getSize(); i++) { // slots are 1-based in client
-                if (inventory.getItem(i) != null) {
-                    continue;
-                }
-                // Create new item operation
-                inventoryOperations.add(InventoryOperation.newItem(inventoryType, i, item));
+            // Create new item operation
+            final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(inventory);
+            if (availablePositionResult.isPresent()) {
+                inventoryOperations.add(InventoryOperation.newItem(inventoryType, availablePositionResult.get(), item));
                 canAddItem = true;
-                break;
             }
         }
         if (!canAddItem) {
@@ -337,5 +333,15 @@ public final class InventoryManager {
                 }
             }
         }
+    }
+
+    public static Optional<Integer> getAvailablePosition(Inventory inventory) {
+        for (int i = 1; i <= inventory.getSize(); i++) { // slots are 1-based in client
+            if (inventory.getItem(i) != null) {
+                continue;
+            }
+            return Optional.of(i);
+        }
+        return Optional.empty();
     }
 }

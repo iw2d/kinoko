@@ -348,4 +348,39 @@ public final class ItemConstants {
             }
         }
     }
+
+    public static BodyPart getExclusiveEquipItemBodyPart(Inventory equipped, int itemId) {
+        // CItemInfo::GetExclusiveEquipItemBodyPart
+        final BodyPart result = getExclusiveWeaponShieldBodyPart(equipped, itemId);
+        if (result != null) {
+            return result;
+        }
+        return getExclusiveClothesBodyPart(equipped, itemId);
+    }
+
+    private static BodyPart getExclusiveWeaponShieldBodyPart(Inventory equipped, int itemId) {
+        // CItemInfo::GetExclusiveWeaponShieldBodyPart
+        final Item weapon = equipped.getItem(BodyPart.WEAPON.getValue());
+        final Item shield = equipped.getItem(BodyPart.SHIELD.getValue());
+        if (itemId / 100000 == 14 && shield != null) {
+            return BodyPart.SHIELD;
+        }
+        if (itemId / 10000 == 109 && weapon != null && weapon.getItemId() / 100000 == 14) {
+            return BodyPart.WEAPON;
+        }
+        return null;
+    }
+
+    private static BodyPart getExclusiveClothesBodyPart(Inventory equipped, int itemId) {
+        // CItemInfo::GetExclusiveClothesBodyPart
+        final Item clothes = equipped.getItem(BodyPart.CLOTHES.getValue());
+        final Item pants = equipped.getItem(BodyPart.PANTS.getValue());
+        if (itemId / 10000 == 105 && pants != null) {
+            return BodyPart.PANTS;
+        }
+        if (itemId / 10000 == 106 && clothes != null && clothes.getItemId() / 10000 == 105) {
+            return BodyPart.CLOTHES;
+        }
+        return null;
+    }
 }

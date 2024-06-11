@@ -433,6 +433,23 @@ public final class UserHandler {
                         user.dispose();
                         return;
                     }
+                    final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId());
+                    if (exclusiveBodyPart != null) {
+                        // Move exclusive body part equip item to inventory
+                        final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue());
+                        final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(im.getEquipInventory());
+                        if (availablePositionResult.isEmpty()) {
+                            log.error("No room in inventory remove exclusive equip item body part item ID {} in position {}", exclusiveEquipItem.getItemId(), exclusiveBodyPart);
+                            user.dispose();
+                            return;
+                        }
+                        final int availablePosition = availablePositionResult.get();
+                        if (!secondInventory.removeItem(exclusiveBodyPart.getValue(), exclusiveEquipItem)) {
+                            throw new IllegalStateException("Could not remove exclusive equip item");
+                        }
+                        im.getEquipInventory().putItem(availablePosition, exclusiveEquipItem);
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.position(InventoryType.EQUIP, -exclusiveBodyPart.getValue(), availablePosition), false)); // client uses negative index for equipped
+                    }
                 }
                 // Swap item position and update client
                 inventory.putItem(oldPos, secondItem);
