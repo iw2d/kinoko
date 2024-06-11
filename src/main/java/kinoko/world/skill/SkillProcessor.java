@@ -1,6 +1,7 @@
 package kinoko.world.skill;
 
 import kinoko.packet.field.MobPacket;
+import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
@@ -9,13 +10,17 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.header.OutHeader;
 import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobActionType;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
@@ -332,6 +337,7 @@ public final class SkillProcessor {
         // Process on hit effects
         handleGuardian(user, hitInfo);
         handleDivineShield(user, hitInfo);
+        handleBeholderCounter(user, hitInfo);
     }
 
     private static int handlePowerGuard(User user, HitInfo hitInfo) {
@@ -496,6 +502,61 @@ public final class SkillProcessor {
                     CharacterTemporaryStat.BlessingArmorIncPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))
             ));
             sm.setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.cooltime, slv), ChronoUnit.SECONDS));
+        }
+    }
+
+    private static void handleBeholderCounter(User user, HitInfo hitInfo) {
+        if (hitInfo.attackIndex.getValue() <= AttackIndex.Counter.getValue()) {
+            return;
+        }
+        // Resolve summoned
+        final Optional<Summoned> summonedResult = user.getSummonedById(Warrior.BEHOLDER);
+        if (summonedResult.isEmpty()) {
+            return;
+        }
+        final Summoned summoned = summonedResult.get();
+        // Resolve skill info
+        final SkillManager sm = user.getSkillManager();
+        final int skillId = Warrior.HEX_OF_THE_BEHOLDER_COUNTER;
+        final int slv = sm.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve hex of the beholder counter skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        // Resolve target mob
+        final Optional<Mob> mobResult = user.getField().getMobPool().getById(hitInfo.mobId);
+        if (mobResult.isEmpty()) {
+            return;
+        }
+        try (var lockedMob = mobResult.get().acquire()) {
+            final Mob mob = lockedMob.get();
+            if (mob.getHp() <= 0) {
+                return;
+            }
+            // Compute damage
+            final int totalDamage;
+            if (mob.getFixedDamage() > 0) {
+                totalDamage = mob.getFixedDamage();
+            } else {
+                final double userDamage = CalcDamage.calcDamageMax(user); // TODO: use a range
+                totalDamage = (int) Math.min(userDamage * si.getValue(SkillStat.damage, slv) / 100, GameConstants.DAMAGE_MAX);
+            }
+            // Create attack
+            final Attack attack = new Attack(OutHeader.SummonedAttack);
+            attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);
+            final AttackInfo attackInfo = new AttackInfo();
+            attackInfo.mobId = mob.getId();
+            attackInfo.hitAction = MobActionType.HIT1.getValue();
+            attackInfo.damage[0] = totalDamage;
+            attack.getAttackInfo().add(attackInfo);
+            // Process damage and broadcast
+            mob.damage(user, totalDamage);
+            user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
         }
     }
 

@@ -141,12 +141,16 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
     }
 
     public static Summoned from(SkillInfo si, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType) {
+        return Summoned.from(si.getSkillId(), slv, moveAbility, assistType, si.getDuration(slv));
+    }
+
+    public static Summoned from(int skillId, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType, int duration) {
         return new Summoned(
-                si.getSkillId(),
+                skillId,
                 slv,
                 moveAbility,
                 assistType,
-                Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS)
+                Instant.now().plus(duration, ChronoUnit.MILLIS)
         );
     }
 }

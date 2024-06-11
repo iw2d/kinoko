@@ -9,6 +9,9 @@ import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
@@ -22,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.Optional;
 
 public final class Warrior {
     // WARRIOR
@@ -125,6 +129,17 @@ public final class Warrior {
 
         final Field field = user.getField();
         switch (skillId) {
+            // COMMON
+            case MONSTER_MAGNET_HERO:
+            case MONSTER_MAGNET_DRK:
+                attack.forEachMob(field, (mob) -> {
+                    if (mob.isBoss()) {
+                        return;
+                    }
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                });
+                return;
+
             // HERO
             case PANIC:
                 resetComboCounter(user);
@@ -254,17 +269,86 @@ public final class Warrior {
                 ));
                 user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
                 return;
+            case AURA_OF_THE_BEHOLDER:
+                final int healAmount = si.getValue(SkillStat.hp, slv);
+                user.addHp(healAmount);
+                user.write(UserLocal.effect(Effect.incDecHpEffect(healAmount)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(healAmount)), user);
+                handleBeholderEffect(user);
+                return;
+            case HEX_OF_THE_BEHOLDER:
+                switch (skill.summonBuffType) {
+                    case 0 -> {
+                        user.setTemporaryStat(CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, si.getDuration(slv))); // BUFF_PDD
+                    }
+                    case 1 -> {
+                        user.setTemporaryStat(CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, si.getDuration(slv))); // BUFF_MDD
+                    }
+                    case 2 -> {
+                        user.setTemporaryStat(CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, si.getDuration(slv))); // BUFF_ACC
+                    }
+                    case 3 -> {
+                        user.setTemporaryStat(CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, si.getDuration(slv))); // BUFF_EVA
+                    }
+                    case 4 -> {
+                        user.setTemporaryStat(CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))); // BUFF_PAD
+                    }
+                    default -> {
+                        log.error("Received summon buff type {} for skill ID {}", skill.summonBuffType, skillId);
+                        return;
+                    }
+                }
+                handleBeholderEffect(user);
+                return;
             case BEHOLDER:
-                // TODO summoned
+                final int beholderDuration = si.getValue(SkillStat.x, slv) * 60 * 1000; // x min
+                final Summoned beholder = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.HEAL, beholderDuration);
+                beholder.setPosition(user.getField(), skill.positionX, skill.positionY);
+                user.addSummoned(beholder);
+                user.setTemporaryStat(CharacterTemporaryStat.Beholder, TemporaryStatOption.of(si.getValue(SkillStat.mastery, slv), skillId, beholderDuration));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
     }
 
-    private static void resetComboCounter(User user) {
+    public static void resetComboCounter(User user) {
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
         if (option.nOption > 1) {
             user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(1));
         }
+    }
+
+    public static void handleBerserkEffect(User user) {
+        final int skillId = Warrior.BERSERK;
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Effect berserkEffect = Effect.skillUseEnable(skillId, slv, user.getLevel(), isBerserkEffect(user));
+        user.write(UserLocal.effect(berserkEffect));
+        user.getField().broadcastPacket(UserRemote.effect(user, berserkEffect), user);
+    }
+
+    public static boolean isBerserkEffect(User user) {
+        final int skillId = Warrior.BERSERK;
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        if (slv == 0) {
+            return false;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for berserk skill ID : {}", skillId);
+            return false;
+        }
+        final int threshold = skillInfoResult.get().getValue(SkillStat.x, user.getSkillManager().getSkillLevel(skillId));
+        final double percentage = (double) user.getHp() / user.getMaxHp();
+        return (percentage * 100) > threshold;
+    }
+
+    public static void handleBeholderEffect(User user) {
+        final int skillId = Warrior.BEHOLDER;
+        final Effect beholderEffect = Effect.skillAffected(skillId, user.getSkillManager().getSkillLevel(skillId));
+        user.write(UserLocal.effect(beholderEffect));
+        user.getField().broadcastPacket(UserRemote.effect(user, beholderEffect), user);
     }
 }

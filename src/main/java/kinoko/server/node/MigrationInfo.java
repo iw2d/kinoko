@@ -22,7 +22,7 @@ public final class MigrationInfo implements Encodable {
     private final byte[] clientKey;
     private final Instant expireTime;
 
-    private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats;
+    private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats; // TODO SUMMONED
     private final int messengerId;
     private final int effectItemId;
     private final String adBoard;

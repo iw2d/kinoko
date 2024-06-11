@@ -8,6 +8,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
@@ -107,6 +108,9 @@ public final class SkillHandler {
                 log.error("Tried to cancel skill {}", skillId);
                 return;
             }
+            if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
+                user.removeSummoned(Warrior.BEHOLDER);
+            }
             user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.temporaryStatReset(resetStats));
@@ -131,6 +135,9 @@ public final class SkillHandler {
         try (var locked = user.acquire()) {
             user.updatePassiveSkillData();
             user.validateStat();
+
+            // Handle effects
+            Warrior.handleBerserkEffect(user);
         }
     }
 

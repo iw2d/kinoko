@@ -29,6 +29,7 @@ public final class Skill {
 
     public boolean left;
     public boolean summonLeft;
+    public byte summonBuffType;
 
     public void forEachAffectedMember(User caster, Field field, Consumer<User> consumer) {
         if (affectedMemberBitMap == 0x80) {

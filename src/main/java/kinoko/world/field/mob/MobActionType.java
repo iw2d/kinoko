@@ -1,8 +1,5 @@
 package kinoko.world.field.mob;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum MobActionType {
     // MOBACT
     MOVE(0),
@@ -51,26 +48,13 @@ public enum MobActionType {
     EYE(42),
     NO(43);
 
-    private static final Map<Integer, MobActionType> typeMap;
-
-    static {
-        typeMap = new HashMap<>();
-        for (MobActionType type : values()) {
-            typeMap.put(type.getValue(), type);
-        }
-    }
-
-    private final int value;
+    private final byte value;
 
     MobActionType(int value) {
-        this.value = value;
+        this.value = (byte) value;
     }
 
-    public final int getValue() {
+    public final byte getValue() {
         return value;
-    }
-
-    public static MobActionType getByValue(int value) {
-        return typeMap.get(value);
     }
 }

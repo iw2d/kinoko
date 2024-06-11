@@ -31,6 +31,12 @@ public final class UserPool extends FieldObjectPool<User> {
         forEach((existingUser) -> {
             try (var locked = existingUser.acquire()) {
                 user.write(UserPacket.userEnterField(locked.get()));
+                for (Pet pet : existingUser.getPets()) {
+                    user.write(PetPacket.petActivated(existingUser, pet));
+                }
+                for (Summoned summoned : existingUser.getSummoned().values()) {
+                    user.write(SummonedPacket.summonedEnterField(existingUser, summoned));
+                }
             }
         });
 

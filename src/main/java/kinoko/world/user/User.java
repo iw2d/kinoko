@@ -442,8 +442,8 @@ public final class User extends Life implements Lockable<User> {
         summoned.setEnterType(SummonedEnterType.DEFAULT);
     }
 
-    public void removeSummoned(Summoned summoned) {
-        final Summoned existing = getSummoned().get(summoned.getId());
+    public void removeSummoned(int summonedId) {
+        final Summoned existing = getSummoned().get(summonedId);
         if (existing != null) {
             getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
         }

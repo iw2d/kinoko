@@ -240,6 +240,7 @@ public final class MigrationHandler {
                 if (isRevive) {
                     // Handle revive
                     user.getSecondaryStat().clear();
+                    user.getSummoned().clear();
                     user.updatePassiveSkillData();
                     user.validateStat();
                     user.setHp(50);

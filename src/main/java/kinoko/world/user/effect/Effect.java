@@ -147,6 +147,15 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static SkillEffect skillUseEnable(int skillId, int skillLevel, int charLevel, boolean enable) {
+        final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
+        effect.skillId = skillId;
+        effect.skillLevel = skillLevel;
+        effect.charLevel = charLevel;
+        effect.enable = enable;
+        return effect;
+    }
+
     public static SkillEffect skillAffected(int skillId, int skillLevel) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillAffected);
         effect.skillId = skillId;

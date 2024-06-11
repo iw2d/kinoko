@@ -11,8 +11,10 @@ import kinoko.world.field.Field;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.job.explorer.Warrior;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
+import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +30,7 @@ public final class SummonedHandler {
     public static void handleSummonedMove(User user, InPacket inPacket) {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
+        // Resolve summoned
         final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
             log.error("Received SummonedMove for invalid object with ID : {}", summonedId);
@@ -37,13 +40,14 @@ public final class SummonedHandler {
 
         final MovePath movePath = MovePath.decode(inPacket);
         movePath.applyTo(summoned);
-        user.getField().broadcastPacket(SummonedPacket.summonedMove(user, summoned, movePath), user);
+        summoned.getField().broadcastPacket(SummonedPacket.summonedMove(user, summoned, movePath), user);
     }
 
     @Handler(InHeader.SummonedAttack)
     public static void handleSummonedAttack(User user, InPacket inPacket) {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
+        // Resolve summoned
         final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
             log.error("Received SummonedAttack for invalid object with ID : {}", summonedId);
@@ -76,6 +80,7 @@ public final class SummonedHandler {
         for (int i = 0; i < attack.getMobCount(); i++) {
             final AttackInfo ai = new AttackInfo();
             ai.mobId = inPacket.decodeInt(); // mobID
+            inPacket.decodeInt(); // dwTemplateID
             ai.hitAction = inPacket.decodeByte(); // nHitAction
             ai.actionAndDir = inPacket.decodeByte(); // nForeAction & 0x7F | (bLeft << 7)
             inPacket.decodeByte(); // nFrameIdx
@@ -109,7 +114,7 @@ public final class SummonedHandler {
         }
 
         // Process attack damage
-        final Field field = user.getField();
+        final Field field = summoned.getField();
         for (AttackInfo ai : attack.getAttackInfo()) {
             final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
@@ -123,5 +128,35 @@ public final class SummonedHandler {
         }
 
         field.broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack), user);
+    }
+
+    @Handler(InHeader.SummonedSkill)
+    public static void handleSummonedSkill(User user, InPacket inPacket) {
+        final int summonedId = inPacket.decodeInt(); // dwSummonedID
+
+        // Resolve summoned
+        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
+        if (summonedResult.isEmpty()) {
+            log.error("Received SummonedAttack for invalid object with ID : {}", summonedId);
+            return;
+        }
+        final Summoned summoned = summonedResult.get();
+
+        final Skill skill = new Skill();
+        skill.skillId = inPacket.decodeInt(); // nSkillID
+        skill.slv = user.getSkillManager().getSkillLevel(skill.skillId);
+
+        final byte actionAndDir = inPacket.decodeByte(); // (nMoveAction << 7) | (nAttackAction & 0x7F)
+
+        if (skill.skillId == Warrior.HEX_OF_THE_BEHOLDER) {
+            skill.summonBuffType = inPacket.decodeByte();
+        }
+
+        // Skill specific handling
+        try (var locked = user.acquire()) {
+            SkillDispatcher.handleSkill(locked, skill);
+        }
+
+        summoned.getField().broadcastPacket(SummonedPacket.summonedSkill(user, summoned, actionAndDir));
     }
 }

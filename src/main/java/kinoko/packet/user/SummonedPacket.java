@@ -48,7 +48,7 @@ public final class SummonedPacket {
         // CSummoned::OnAttack
         outPacket.encodeByte(user.getLevel()); // nCharLevel
         outPacket.encodeByte(attack.actionAndDir);
-        outPacket.encodeByte(attack.getMobCount()); // nMobCount
+        outPacket.encodeByte(attack.getAttackInfo().size()); // nMobCount
         for (AttackInfo ai : attack.getAttackInfo()) {
             outPacket.encodeInt(ai.mobId); // ATTACKINFO->dwMobID
             outPacket.encodeByte(ai.hitAction); // ATTACKINFO->nHitAction
@@ -58,12 +58,12 @@ public final class SummonedPacket {
         return outPacket;
     }
 
-    public static OutPacket summonedSkill(User user, Summoned summoned) {
+    public static OutPacket summonedSkill(User user, Summoned summoned, byte actionAndDir) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SummonedSkill);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnSkill
-        outPacket.encodeByte(0); // actionAndDir
+        outPacket.encodeByte(actionAndDir); // actionAndDir
         return outPacket;
     }
 

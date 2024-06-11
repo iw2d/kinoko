@@ -4,6 +4,7 @@ import kinoko.provider.map.FieldType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.dialog.miniroom.MiniGameRoom;
+import kinoko.world.job.explorer.Warrior;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.SecondaryStat;
@@ -72,7 +73,12 @@ public final class UserPacket {
         outPacket.encodeByte(false); // friendShipItem
         outPacket.encodeByte(false); // marriageRecord
 
-        outPacket.encodeByte(0); // CUser::DarkForceEffect | CDragon::CreateEffect | CUser::LoadSwallowingEffect
+        // CUser::DarkForceEffect | CDragon::CreateEffect | CUser::LoadSwallowingEffect
+        byte effectFlag = 0;
+        if (Warrior.isBerserkEffect(user)) {
+            effectFlag |= 0x1;
+        }
+        outPacket.encodeByte(effectFlag);
 
         outPacket.encodeByte(false); // bool -> int * int (CUserPool::OnNewYearCardRecordAdd)
         outPacket.encodeInt(0); // nPhase
