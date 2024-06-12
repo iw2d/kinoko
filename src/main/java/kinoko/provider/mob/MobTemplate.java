@@ -2,6 +2,7 @@ package kinoko.provider.mob;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
+import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.wz.property.WzCanvasProperty;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.provider.wz.property.WzUolProperty;
@@ -25,6 +26,7 @@ public final class MobTemplate {
     private final boolean onlyNormalAttack;
     private final Map<Integer, MobAttack> attacks;
     private final Map<Integer, MobSkill> skills;
+    private final Map<ElementAttribute, DamagedAttribute> damagedElemAttr;
     private final Set<Integer> damagedBySkill;
     private final List<Integer> revives;
     private final int reviveDelay;
@@ -32,7 +34,8 @@ public final class MobTemplate {
     public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery,
                        int fixedDamage, int removeAfter, boolean boss, boolean noFlip, boolean damagedByMob,
                        boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
-                       Set<Integer> damagedBySkill, List<Integer> revives, int reviveDelay) {
+                       Map<ElementAttribute, DamagedAttribute> damagedElemAttr, Set<Integer> damagedBySkill,
+                       List<Integer> revives, int reviveDelay) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -48,6 +51,7 @@ public final class MobTemplate {
         this.onlyNormalAttack = onlyNormalAttack;
         this.attacks = attacks;
         this.skills = skills;
+        this.damagedElemAttr = damagedElemAttr;
         this.damagedBySkill = damagedBySkill;
         this.revives = revives;
         this.reviveDelay = reviveDelay;
@@ -101,6 +105,10 @@ public final class MobTemplate {
         return damagedByMob;
     }
 
+    public boolean isOnlyNormalAttack() {
+        return onlyNormalAttack;
+    }
+
     public boolean isVulnerableTo(int skillId) {
         if (onlyNormalAttack && skillId != 0) {
             return false;
@@ -125,6 +133,14 @@ public final class MobTemplate {
 
     public Optional<MobSkill> getSkill(int skillIndex) {
         return Optional.ofNullable(getSkills().get(skillIndex));
+    }
+
+    public Map<ElementAttribute, DamagedAttribute> getDamagedElemAttr() {
+        return damagedElemAttr;
+    }
+
+    public Set<Integer> getDamagedBySkill() {
+        return damagedBySkill;
     }
 
     public List<Integer> getRevives() {
@@ -153,7 +169,8 @@ public final class MobTemplate {
                 ", onlyNormalAttack=" + onlyNormalAttack +
                 ", attacks=" + attacks +
                 ", skills=" + skills +
-                ", damagedBySelectedSkill=" + damagedBySkill +
+                ", damagedElemAttr=" + damagedElemAttr +
+                ", damagedBySkill=" + damagedBySkill +
                 ", revives=" + revives +
                 ", reviveDelay=" + reviveDelay +
                 '}';
@@ -174,6 +191,7 @@ public final class MobTemplate {
         boolean onlyNormalAttack = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
+        final Map<ElementAttribute, DamagedAttribute> damagedElemAttr = new HashMap<>();
         final Set<Integer> damagedBySkill = new HashSet<>();
         final List<Integer> revives = new ArrayList<>();
         // Process attacks
@@ -275,6 +293,14 @@ public final class MobTemplate {
                         ));
                     }
                 }
+                case "elemAttr" -> {
+                    final String value = WzProvider.getString(infoEntry.getValue());
+                    for (int i = 0; i < value.length(); i += 2) {
+                        final ElementAttribute elemAttr = ElementAttribute.getByValue(value.charAt(i));
+                        final DamagedAttribute damagedAttr = DamagedAttribute.getByValue(value.charAt(i + 1));
+                        damagedElemAttr.put(elemAttr, damagedAttr);
+                    }
+                }
                 case "damagedBySelectedSkill" -> {
                     if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
                         throw new ProviderError("Failed to resolve damagedBySelectedSkill for mob : %d", mobId);
@@ -349,6 +375,7 @@ public final class MobTemplate {
                 onlyNormalAttack,
                 Collections.unmodifiableMap(attacks),
                 Collections.unmodifiableMap(skills),
+                Collections.unmodifiableMap(damagedElemAttr),
                 Collections.unmodifiableSet(damagedBySkill),
                 Collections.unmodifiableList(revives),
                 reviveDelay);

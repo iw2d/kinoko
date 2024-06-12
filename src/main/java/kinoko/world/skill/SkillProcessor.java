@@ -19,13 +19,9 @@ import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
-import kinoko.world.job.JobConstants;
-import kinoko.world.job.cygnus.BlazeWizard;
-import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
-import kinoko.world.job.legend.Evan;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
@@ -702,7 +698,8 @@ public final class SkillProcessor {
 
     public static int getMpCon(User user, int skillId, int mpCon) {
         // CSkillInfo::CheckConsumeForActiveSkill
-        mpCon = mpCon * getAmplificationIncMpCon(user, skillId) / 100;
+        final int incMpCon = 100 + user.getSkillManager().getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.x);
+        mpCon = mpCon * incMpCon / 100;
         // Check CTS affecting mpCon
         final SecondaryStat ss = user.getSecondaryStat();
         if (ss.hasOption(CharacterTemporaryStat.Infinity)) {
@@ -716,22 +713,5 @@ public final class SkillProcessor {
             mpCon += ss.getOption(CharacterTemporaryStat.TeleportMasteryOn).nOption;
         }
         return mpCon;
-    }
-
-    private static int getAmplificationIncMpCon(User user, int skillId) {
-        // get_amplification
-        final SkillManager sm = user.getSkillManager();
-        int incMpCon = 100;
-        if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 211)) {
-            incMpCon += sm.getSkillStatValue(Magician.ELEMENT_AMPLIFICATION_FP, SkillStat.x);
-        } else if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 221)) {
-            incMpCon += sm.getSkillStatValue(Magician.ELEMENT_AMPLIFICATION_IL, SkillStat.x);
-        } else if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 1211)) {
-            incMpCon += sm.getSkillStatValue(BlazeWizard.ELEMENT_AMPLIFICATION, SkillStat.x);
-        } else if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 2215)) {
-            incMpCon += sm.getSkillStatValue(Evan.MAGIC_AMPLIFICATION, SkillStat.x);
-        }
-        // TODO: skills not affected by amplification
-        return incMpCon;
     }
 }

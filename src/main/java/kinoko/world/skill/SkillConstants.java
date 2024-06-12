@@ -50,8 +50,9 @@ public final class SkillConstants {
             return Magician.MP_EATER_IL;
         } else if (JobConstants.isBishopJob(jobId)) {
             return Magician.MP_EATER_BISH;
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     public static int getBuffMasterySkill(int jobId) {
@@ -61,8 +62,23 @@ public final class SkillConstants {
             return Magician.BUFF_MASTERY_IL;
         } else if (JobConstants.isBishopJob(jobId)) {
             return Magician.BUFF_MASTERY_BISH;
+        } else {
+            return 0;
         }
-        return 0;
+    }
+
+    public static int getAmplificationSkill(int jobId) {
+        if (JobConstants.isFirePoisonJob(jobId)) {
+            return Magician.ELEMENT_AMPLIFICATION_FP;
+        } else if (JobConstants.isIceLightningJob(jobId)) {
+            return Magician.ELEMENT_AMPLIFICATION_IL;
+        } else if (JobConstants.isBlazeWizardJob(jobId)) {
+            return BlazeWizard.ELEMENT_AMPLIFICATION;
+        } else if (JobConstants.isEvanJob(jobId)) {
+            return Evan.MAGIC_AMPLIFICATION;
+        } else {
+            return 0;
+        }
     }
 
     public static int getEnergyChargeSkill(int jobId) {

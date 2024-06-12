@@ -79,7 +79,7 @@ public enum ItemInfoType {
     preventslip,
     warmsupport,
 
-    // Elemental Wand/Staff
+    // Elemental Wand/Staff - unused in v95
     elemDefault,
     incRMAF,
     incRMAI,
@@ -102,6 +102,7 @@ public enum ItemInfoType {
     tuc,
     IUCMax,
     setKey,
+    addition,
 
     recoveryHP,
     recoveryMP;

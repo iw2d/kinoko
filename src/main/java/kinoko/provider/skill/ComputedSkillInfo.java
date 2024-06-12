@@ -32,8 +32,9 @@ public final class ComputedSkillInfo implements SkillInfo {
     private final Map<SkillStat, Expression> stats;
     private final Map<SkillStat, String> strings;
     private final Rect rect;
+    private final ElementAttribute elemAttr;
 
-    public ComputedSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, Expression> stats, Map<SkillStat, String> strings, Rect rect) {
+    public ComputedSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, Expression> stats, Map<SkillStat, String> strings, Rect rect, ElementAttribute elemAttr) {
         this.id = id;
         this.maxLevel = maxLevel;
         this.invisible = invisible;
@@ -42,6 +43,7 @@ public final class ComputedSkillInfo implements SkillInfo {
         this.stats = stats;
         this.strings = strings;
         this.rect = rect;
+        this.elemAttr = elemAttr;
     }
 
     public Map<SkillStat, Expression> getStats() {
@@ -93,6 +95,11 @@ public final class ComputedSkillInfo implements SkillInfo {
     }
 
     @Override
+    public ElementAttribute getElementAttribute() {
+        return elemAttr;
+    }
+
+    @Override
     public String toString() {
         return "ComputedSkillInfo{" +
                 "id=" + id +
@@ -101,7 +108,9 @@ public final class ComputedSkillInfo implements SkillInfo {
                 ", psd=" + psd +
                 ", psdSkills=" + psdSkills +
                 ", stats=" + stats +
+                ", strings=" + strings +
                 ", rect=" + rect +
+                ", elemAttr=" + elemAttr +
                 '}';
     }
 
@@ -141,6 +150,16 @@ public final class ComputedSkillInfo implements SkillInfo {
                 psdSkills.add(Integer.parseInt(entry.getKey()));
             }
         }
+        final ElementAttribute elemAttr;
+        final String elemAttrString = skillProp.get("elemAttr");
+        if (elemAttrString != null) {
+            if (elemAttrString.length() != 1) {
+                throw new ProviderError("Failed to resolve skill element attribute");
+            }
+            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
+        } else {
+            elemAttr = ElementAttribute.PHYSICAL;
+        }
         return new ComputedSkillInfo(
                 skillId,
                 maxLevel,
@@ -149,7 +168,8 @@ public final class ComputedSkillInfo implements SkillInfo {
                 Collections.unmodifiableList(psdSkills),
                 Collections.unmodifiableMap(stats),
                 Collections.unmodifiableMap(strings),
-                rect
+                rect,
+                elemAttr
         );
     }
 }

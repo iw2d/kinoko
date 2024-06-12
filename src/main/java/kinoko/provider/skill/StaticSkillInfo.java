@@ -15,8 +15,9 @@ public final class StaticSkillInfo implements SkillInfo {
     private final List<Integer> psdSkills;
     private final Map<SkillStat, List<Integer>> stats;
     private final Rect rect;
+    private final ElementAttribute elemAttr;
 
-    public StaticSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, List<Integer>> stats, Rect rect) {
+    public StaticSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, List<Integer>> stats, Rect rect, ElementAttribute elemAttr) {
         this.id = id;
         this.maxLevel = maxLevel;
         this.invisible = invisible;
@@ -24,6 +25,7 @@ public final class StaticSkillInfo implements SkillInfo {
         this.psdSkills = psdSkills;
         this.stats = stats;
         this.rect = rect;
+        this.elemAttr = elemAttr;
     }
 
     public Map<SkillStat, List<Integer>> getStats() {
@@ -69,6 +71,11 @@ public final class StaticSkillInfo implements SkillInfo {
     }
 
     @Override
+    public ElementAttribute getElementAttribute() {
+        return elemAttr;
+    }
+
+    @Override
     public String toString() {
         return "StaticSkillInfo{" +
                 "id=" + id +
@@ -78,6 +85,7 @@ public final class StaticSkillInfo implements SkillInfo {
                 ", psdSkills=" + psdSkills +
                 ", stats=" + stats +
                 ", rect=" + rect +
+                ", elemAttr=" + elemAttr +
                 '}';
     }
 
@@ -126,6 +134,16 @@ public final class StaticSkillInfo implements SkillInfo {
                 psdSkills.add(Integer.parseInt(entry.getKey()));
             }
         }
+        final ElementAttribute elemAttr;
+        final String elemAttrString = skillProp.get("elemAttr");
+        if (elemAttrString != null) {
+            if (elemAttrString.length() != 1) {
+                throw new ProviderError("Failed to resolve skill element attribute");
+            }
+            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
+        } else {
+            elemAttr = ElementAttribute.PHYSICAL;
+        }
         return new StaticSkillInfo(
                 skillId,
                 maxLevel,
@@ -133,7 +151,8 @@ public final class StaticSkillInfo implements SkillInfo {
                 WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
                 Collections.unmodifiableList(psdSkills),
                 stats,
-                rect
+                rect,
+                elemAttr
         );
     }
 }

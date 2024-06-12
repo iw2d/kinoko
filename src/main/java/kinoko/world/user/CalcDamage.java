@@ -2,6 +2,8 @@ package kinoko.world.user;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfoType;
+import kinoko.provider.mob.DamagedAttribute;
+import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
@@ -25,6 +27,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 
 import java.security.SecureRandom;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -42,6 +45,53 @@ public final class CalcDamage {
         final double damageMin = getTotalMastery(user) * damageMax + 0.5;
         return new Tuple<>(damageMin, damageMax);
     }
+
+
+    // MAGIC DAMAGE ----------------------------------------------------------------------------------------------------
+
+    private static double getDamageAdjustedByElemAttr(User user, double damage, int skillId, ElementAttribute elemAttr, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
+        // get_damage_adjusted_by_elemAttr
+        final double adjustByBuff = user.getSecondaryStat().getOption(CharacterTemporaryStat.ElementalReset).nOption;
+        final double boost = 0.0; // only available through item info.addition.elemBoost, ignore
+        if (skillId == Bowman.INFERNO || skillId == Bowman.BLIZZARD) {
+            final int x = user.getSkillManager().getSkillStatValue(skillId, SkillStat.x);
+            return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), x / 100.0, boost);
+        } else if (skillId == Magician.ELEMENT_COMPOSITION_FP) {
+            final double half = damage * 0.5; // only poison attr gets boost
+            return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.FIRE, DamagedAttribute.NONE), 1.0, 0.0) +
+                    getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.POISON, DamagedAttribute.NONE), 1.0, boost);
+        } else if (skillId == Magician.ELEMENT_COMPOSITION_IL) {
+            final double half = damage * 0.5; // only light attr gets boost
+            return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.ICE, DamagedAttribute.NONE), 1.0, 0.0) +
+                    getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.LIGHT, DamagedAttribute.NONE), 1.0, boost);
+        }
+        return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), adjustByBuff, boost);
+    }
+
+    private static double getDamageAdjustedByElemAttr(double damage, DamagedAttribute damagedAttr, double adjust, double boost) {
+        // get_damage_adjusted_by_elemAttr
+        switch (damagedAttr) {
+            case DAMAGE0 -> {
+                return (1.0 - adjust) * damage;
+            }
+            case DAMAGE50 -> {
+                return (1.0 - (adjust * 0.5 + boost)) * damage;
+            }
+            case DAMAGE150 -> {
+                final double result = (adjust * 0.5 + boost + 1.0) * damage;
+                if (damage >= result) {
+                    return damage;
+                }
+                return Math.min(result, GameConstants.DAMAGE_MAX);
+            }
+            default -> {
+                return damage;
+            }
+        }
+    }
+
+
+    // COMMON DAMAGE ---------------------------------------------------------------------------------------------------
 
     public static double calcDamageMax(User user) {
         final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());

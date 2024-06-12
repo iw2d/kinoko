@@ -331,6 +331,8 @@ public final class User extends Life implements Lockable<User> {
         // SecondaryStat::SetFrom
         getSecondaryStat().setFrom(getBasicStat(), getForcedStat(), getSkillManager(), realEquip);
 
+        // CWvsContext::ValidateAdditionalItemEffect - ignore
+
         // Adjust hp and mp
         if (getHp() > getMaxHp()) {
             setHp(getMaxHp());

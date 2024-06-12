@@ -5,13 +5,14 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
 
-public final class Thief {
+public final class Thief extends SkillDispatcher {
     // ROGUE
     public static final int NIMBLE_BODY = 4000000;
     public static final int KEEN_EYES = 4000001;
