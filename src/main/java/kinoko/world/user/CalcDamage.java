@@ -4,9 +4,11 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.mob.DamagedAttribute;
 import kinoko.provider.skill.ElementAttribute;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
@@ -49,13 +51,76 @@ public final class CalcDamage {
 
     // MAGIC DAMAGE ----------------------------------------------------------------------------------------------------
 
-    private static double getDamageAdjustedByElemAttr(User user, double damage, int skillId, ElementAttribute elemAttr, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
+    public static int calcMagicDamage(User user, SkillInfo si, int slv, Mob mob) {
+        // CalcDamage::MDamage
+        final PassiveSkillData psd = user.getPassiveSkillData();
+        final int psdCr = psd.getCr() + psd.getAdditionPsd().stream().mapToInt((a) -> a.cr).sum();
+        final int psdCdMin = psd.getCdMin() + psd.getAdditionPsd().stream().mapToInt((a) -> a.cdMin).sum();
+        final int psdMdamR = psd.getMdamR() + psd.getAdditionPsd().stream().mapToInt((a) -> a.mdamR).sum();
+        final int psdImpR = psd.getImpR() + psd.getAdditionPsd().stream().mapToInt((a) -> a.impR).sum();
+        final int psdDipR = psd.getDipR() + psd.getAdditionPsd().stream().mapToInt((a) -> a.dipR).sum();
+
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+
+        final int acc = getAcc(user);
+        final int mad = getMad(user);
+        int mastery = getWeaponMastery(user, weaponType);
+        if (mastery == 0) {
+            mastery = si.getValue(SkillStat.mastery, slv);
+        }
+        final double k = getMasteryConstByWT(weaponType);
+        final int amp = user.getSkillManager().getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.y);
+
+        int cr = 5;
+        int cd = 0;
+        if (JobConstants.isEvanJob(user.getJob())) {
+            cr = user.getSkillManager().getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.prop) + 5;
+            cd = user.getSkillManager().getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.damage);
+        }
+        final int sharpEyes = user.getSecondaryStat().getOption(CharacterTemporaryStat.SharpEyes).nOption;
+        final int thornsEffect = user.getSecondaryStat().getOption(CharacterTemporaryStat.ThornsEffect).nOption;
+        cr = cr + Math.max(sharpEyes >> 8, thornsEffect >> 8) + psdCr; // ignore cd->critical.nProb
+        cd = cd + Math.max(sharpEyes & 0xFF, thornsEffect & 0xFF); // ignore cd->critical.nDamage
+
+        double damage = calcDamageByWT(weaponType, user.getBasicStat(), 0, mad);
+        // damage = adjustRandomDamage(damage, rand, k, mastery);
+        damage = (damage + psdMdamR * damage / 100.0) * amp / 100.0;
+        damage = getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+
+        // Process ms->nMDR, ms->nMDR_ v.s. nPsdIMPR + nIgnoreTargetDEF
+        // Process ms->nMGuardUp_
+
+        final int skillDamage = si.getValue(SkillStat.damage, slv);
+        if (skillDamage > 0) {
+            damage = skillDamage / 100.0 * damage;
+        }
+
+        // Process critical damage
+        cd = Math.max(cd + psdCdMin + 20, 50);
+        // damage = get_rand(rand, cd / 100.0, 50.0) * damage + damage;
+        // Ignore - weakness skills (9000 - 9002), cd->aMobCategoryDamage, cd->boss.nDamage
+        // Process tKeyDown
+        // Process nDojangBerserk, nWeakness, nAR01Mad, paralyze damage decrease (2121006)
+        // Ignore cd->aSkill
+
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Infinity)) {
+            final int infinityDamR = user.getSecondaryStat().getOption(CharacterTemporaryStat.Infinity).nOption - 1;
+            damage = damage + infinityDamR * damage / 100.0;
+        }
+        final int damR = psdDipR + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+        damage = damage + damR * damage / 100.0;
+
+        return (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
+    }
+
+    public static double getDamageAdjustedByElemAttr(User user, double damage, SkillInfo si, int slv, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
         // get_damage_adjusted_by_elemAttr
-        final double adjustByBuff = user.getSecondaryStat().getOption(CharacterTemporaryStat.ElementalReset).nOption;
+        final double adjustByBuff = 1.0 - user.getSecondaryStat().getOption(CharacterTemporaryStat.ElementalReset).nOption / 100.0;
         final double boost = 0.0; // only available through item info.addition.elemBoost, ignore
+        final int skillId = si.getSkillId();
         if (skillId == Bowman.INFERNO || skillId == Bowman.BLIZZARD) {
-            final int x = user.getSkillManager().getSkillStatValue(skillId, SkillStat.x);
-            return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), x / 100.0, boost);
+            return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), si.getValue(SkillStat.x, slv) / 100.0, boost);
         } else if (skillId == Magician.ELEMENT_COMPOSITION_FP) {
             final double half = damage * 0.5; // only poison attr gets boost
             return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.FIRE, DamagedAttribute.NONE), 1.0, 0.0) +
@@ -65,7 +130,7 @@ public final class CalcDamage {
             return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.ICE, DamagedAttribute.NONE), 1.0, 0.0) +
                     getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.LIGHT, DamagedAttribute.NONE), 1.0, boost);
         }
-        return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), adjustByBuff, boost);
+        return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), adjustByBuff, boost);
     }
 
     private static double getDamageAdjustedByElemAttr(double damage, DamagedAttribute damagedAttr, double adjust, double boost) {
@@ -150,7 +215,24 @@ public final class CalcDamage {
     }
 
     private static int calcBaseDamage(int p1, int p2, int p3, int ad, double k) {
+        // `anonymous namespace'::calc_base_damage
         return (int) ((double) (p3 + p2 + 4 * p1) / 100.0 * ((double) ad * k) + 0.5);
+    }
+
+    private static double adjustRandomDamage(double damage, int rand, double k, int mastery) {
+        // `anonymous namespace'::adjust_ramdom_damage
+        final double totalMastery = Math.max(mastery / 100.0 + k, GameConstants.MASTERY_MAX);
+        return getRand(rand, damage, totalMastery * damage + 0.5);
+    }
+
+    private static double getRand(int rand, double f0, double f1) {
+        if (f0 == f1) {
+            return f0;
+        } else if (f0 < f1) {
+            return f0 + (rand % 10_000_000) * (f1 - f0) / 9_999_999.0;
+        } else {
+            return f1 + (rand % 10_000_000) * (f0 - f1) / 9_999_999.0;
+        }
     }
 
 
@@ -207,30 +289,52 @@ public final class CalcDamage {
         return Math.clamp(mad, 0, GameConstants.MAD_MAX);
     }
 
+    public static int getAcc(User user) {
+        // SecondaryStat::GetAcc
+        final BasicStat bs = user.getBasicStat();
+        final SecondaryStat ss = user.getSecondaryStat();
+        final PassiveSkillData psd = user.getPassiveSkillData();
+        final int baseAcc = (int) (bs.getLuk() + bs.getDex() * 1.2);
+        // nBaseACC + nACC + nIncACC
+        int acc = baseAcc + ss.getAcc() + getIncAcc(user);
+        // Apply accR
+        final int totalAccR = psd.getAccR() + ss.getItemAccR();
+        if (totalAccR > 0) {
+            acc += acc * totalAccR / 100;
+        }
+        return Math.clamp(acc, 0, GameConstants.ACC_MAX);
+    }
+
     private static int getIncPad(User user) {
         // SecondaryStat::GetIncPAD
-        final SkillManager sm = user.getSkillManager();
-        final SecondaryStat ss = user.getSecondaryStat();
-        final int incPad = ss.getOption(CharacterTemporaryStat.PAD).nOption;
-        if (ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption < 10000) {
+        final int incPad = user.getSecondaryStat().getOption(CharacterTemporaryStat.PAD).nOption;
+        if (user.getSecondaryStat().getOption(CharacterTemporaryStat.EnergyCharged).nOption < 10000) {
             // this->aTemporaryStat[0].p->IsActivated
             return incPad;
         }
-        final int ecPad = sm.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.pad);
+        final int ecPad = user.getSkillManager().getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.pad);
         return Math.max(incPad, ecPad);
     }
 
     private static int getIncEpad(User user) {
         // SecondaryStat::GetIncEPAD
-        final SkillManager sm = user.getSkillManager();
-        final SecondaryStat ss = user.getSecondaryStat();
-        final int incEpad = ss.getOption(CharacterTemporaryStat.EPAD).nOption;
-        if (ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption < 10000) {
+        final int incEpad = user.getSecondaryStat().getOption(CharacterTemporaryStat.EPAD).nOption;
+        if (user.getSecondaryStat().getOption(CharacterTemporaryStat.EnergyCharged).nOption < 10000) {
             // this->aTemporaryStat[0].p->IsActivated (unnecessary, since Energy Charge does not have any epad stat)
             return incEpad;
         }
-        final int ecEpad = sm.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.epad);
+        final int ecEpad = user.getSkillManager().getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.epad);
         return Math.max(incEpad, ecEpad);
+    }
+
+    private static int getIncAcc(User user) {
+        // SecondaryStat::GetIncACC
+        final int incAcc = user.getSecondaryStat().getOption(CharacterTemporaryStat.ACC).nOption;
+        if (user.getSecondaryStat().getOption(CharacterTemporaryStat.EnergyCharged).nOption < 10000) {
+            return incAcc;
+        }
+        final int ecAcc = user.getSkillManager().getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.acc);
+        return Math.max(incAcc, ecAcc);
     }
 
     private static int getBulletItemId(User user) {

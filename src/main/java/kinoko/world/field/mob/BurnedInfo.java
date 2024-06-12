@@ -86,14 +86,18 @@ public final class BurnedInfo implements Encodable {
         outPacket.encodeInt(dotCount); // nDotCount
     }
 
-    public static BurnedInfo from(User user, SkillInfo si, int slv) {
-        final double damage = CalcDamage.calcDamageMax(user) * ((double) si.getValue(SkillStat.dot, slv) / 100); // TODO use MDamage
+    public static BurnedInfo from(User user, SkillInfo si, int slv, Mob mob) {
+        // Calculate damage - only affected by damage range and element attribute
+        double damage = CalcDamage.calcDamageMax(user) * ((double) si.getValue(SkillStat.dot, slv) / 100);
+        damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+        damage = Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
+        // Create burned info
         final int interval = si.getValue(SkillStat.dotInterval, slv) * 1000;
         final int duration = si.getValue(SkillStat.dotTime, slv) * 1000;
         return new BurnedInfo(
                 user.getCharacterId(),
                 si.getSkillId(),
-                (int) Math.min(damage, GameConstants.DAMAGE_MAX),
+                (int) damage,
                 interval,
                 duration / interval
         );

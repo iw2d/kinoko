@@ -144,7 +144,7 @@ public final class Magician extends SkillDispatcher {
             case FIRE_DEMON:
             case METEOR_SHOWER:
                 attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv));
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
                 });
                 break;
             case POISON_MIST:
@@ -154,18 +154,18 @@ public final class Magician extends SkillDispatcher {
             case ELEMENT_COMPOSITION_FP:
                 attack.forEachMob(field, (mob) -> {
                     if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv));
+                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
                     }
                 });
                 break;
             case PARALYZE:
                 attack.forEachMob(field, (mob) -> {
                     if (mob.isBoss()) {
-                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv));
+                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
                     } else {
                         mob.setTemporaryStat(
                                 Map.of(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv))),
-                                BurnedInfo.from(user, si, slv)
+                                BurnedInfo.from(user, si, slv, mob)
                         );
                     }
                 });

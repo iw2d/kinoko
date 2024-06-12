@@ -95,7 +95,7 @@ public final class ComputedSkillInfo implements SkillInfo {
     }
 
     @Override
-    public ElementAttribute getElementAttribute() {
+    public ElementAttribute getElemAttr() {
         return elemAttr;
     }
 

@@ -7,11 +7,13 @@ import kinoko.provider.MobProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.mob.DamagedAttribute;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
+import kinoko.provider.skill.ElementAttribute;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -108,6 +110,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public boolean isVulnerableTo(int skillId) {
         return template.isVulnerableTo(skillId);
+    }
+
+    public Map<ElementAttribute, DamagedAttribute> getDamagedElemAttr() {
+        return template.getDamagedElemAttr();
     }
 
     public Optional<MobAttack> getAttack(int attackIndex) {

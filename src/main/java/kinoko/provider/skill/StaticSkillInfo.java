@@ -71,7 +71,7 @@ public final class StaticSkillInfo implements SkillInfo {
     }
 
     @Override
-    public ElementAttribute getElementAttribute() {
+    public ElementAttribute getElemAttr() {
         return elemAttr;
     }
 

@@ -129,10 +129,9 @@ public final class Warrior extends SkillDispatcher {
             case MONSTER_MAGNET_HERO:
             case MONSTER_MAGNET_DRK:
                 attack.forEachMob(field, (mob) -> {
-                    if (mob.isBoss()) {
-                        return;
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
-                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                 });
                 return;
 
@@ -140,10 +139,9 @@ public final class Warrior extends SkillDispatcher {
             case PANIC:
                 resetComboCounter(user);
                 attack.forEachMob(field, (mob) -> {
-                    if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        return;
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                     }
-                    mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 });
                 break;
             case COMA:
@@ -151,20 +149,18 @@ public final class Warrior extends SkillDispatcher {
                 // Fallthrough intended
             case SHOUT:
                 attack.forEachMob(field, (mob) -> {
-                    if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        return;
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
-                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                 });
                 break;
 
             // PALADIN
             case BLAST:
                 attack.forEachMob(field, (mob) -> {
-                    if (mob.isBoss() || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        return;
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.damage(user, mob.getHp());
                     }
-                    mob.damage(user, mob.getHp());
                 });
             case HEAVENS_HAMMER:
                 // Handled in SkillProcessor.processAttack
@@ -191,10 +187,9 @@ public final class Warrior extends SkillDispatcher {
             case MAGIC_CRASH_PALADIN:
             case MAGIC_CRASH_DRK:
                 skill.forEachAffectedMob(field, (mob) -> {
-                    if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        return;
+                    if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
-                    mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)));
                 });
                 return;
             case POWER_STANCE_HERO:
@@ -218,16 +213,15 @@ public final class Warrior extends SkillDispatcher {
             // PALADIN
             case THREATEN:
                 skill.forEachAffectedMob(field, (mob) -> {
-                    if (mob.isBoss()) {
-                        return;
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(Map.of(
+                                MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.MAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.z, slv), skillId, si.getValue(SkillStat.subTime, slv) * 1000)
+                        ));
                     }
-                    mob.setTemporaryStat(Map.of(
-                            MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                            MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                            MobTemporaryStat.MAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                            MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                            MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.z, slv), skillId, si.getValue(SkillStat.subTime, slv) * 1000)
-                    ));
                 });
                 return;
             case HP_RECOVERY:

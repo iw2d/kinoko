@@ -22,7 +22,7 @@ public interface SkillInfo {
 
     Rect getRect();
 
-    ElementAttribute getElementAttribute();
+    ElementAttribute getElemAttr();
 
     default int getDuration(int slv) {
         return getValue(SkillStat.time, slv) * 1000;
