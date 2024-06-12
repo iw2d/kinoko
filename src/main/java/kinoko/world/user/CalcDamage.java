@@ -6,7 +6,6 @@ import kinoko.provider.mob.DamagedAttribute;
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.item.BodyPart;
@@ -28,37 +27,35 @@ import kinoko.world.user.stat.BasicStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 
-import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 public final class CalcDamage {
-    private static final Random damageRandom = new SecureRandom();
 
-    public static int getRandomDamage(User user) {
-        final Tuple<Double, Double> damageRange = CalcDamage.calcDamageRange(user);
-        final double randomDamage = damageRandom.nextDouble(damageRange.getLeft(), damageRange.getRight());
-        return (int) Math.min(randomDamage, GameConstants.DAMAGE_MAX);
+    public static double calcDamageMax(User user) {
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+        return calcDamageByWT(weaponType, user.getBasicStat(), getPad(user), getMad(user));
     }
 
-    public static Tuple<Double, Double> calcDamageRange(User user) {
-        final double damageMax = calcDamageMax(user);
-        final double damageMin = getTotalMastery(user) * damageMax + 0.5;
-        return new Tuple<>(damageMin, damageMax);
+    public static double calcDamageMin(User user) {
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+        final double k = getMasteryConstByWT(weaponType);
+        final int mastery = getWeaponMastery(user, weaponType);
+        return Math.max(mastery / 100.0 + k, GameConstants.MASTERY_MAX) * calcDamageMax(user) + 0.5;
     }
 
 
-    // MAGIC DAMAGE ----------------------------------------------------------------------------------------------------
+    // MAGICAL DAMAGE --------------------------------------------------------------------------------------------------
 
-    public static int calcMagicDamage(User user, SkillInfo si, int slv, Mob mob) {
+    public static int calcMDamage(User user, SkillInfo si, int slv, Mob mob) {
         // CalcDamage::MDamage
-        final PassiveSkillData psd = user.getPassiveSkillData();
-        final int psdCr = psd.getCr() + psd.getAdditionPsd().stream().mapToInt((a) -> a.cr).sum();
-        final int psdCdMin = psd.getCdMin() + psd.getAdditionPsd().stream().mapToInt((a) -> a.cdMin).sum();
-        final int psdMdamR = psd.getMdamR() + psd.getAdditionPsd().stream().mapToInt((a) -> a.mdamR).sum();
-        final int psdImpR = psd.getImpR() + psd.getAdditionPsd().stream().mapToInt((a) -> a.impR).sum();
-        final int psdDipR = psd.getDipR() + psd.getAdditionPsd().stream().mapToInt((a) -> a.dipR).sum();
+        final int psdCr = user.getPassiveSkillData().getAllCr();
+        final int psdCdMin = user.getPassiveSkillData().getAllCdMin();
+        final int psdMdamR = user.getPassiveSkillData().getAllMdamR();
+        final int psdImpR = user.getPassiveSkillData().getAllImpR();
+        final int psdDipR = user.getPassiveSkillData().getAllDipR();
 
         final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
         final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
@@ -114,62 +111,10 @@ public final class CalcDamage {
         return (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
     }
 
-    public static double getDamageAdjustedByElemAttr(User user, double damage, SkillInfo si, int slv, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
-        // get_damage_adjusted_by_elemAttr
-        final double adjustByBuff = 1.0 - user.getSecondaryStat().getOption(CharacterTemporaryStat.ElementalReset).nOption / 100.0;
-        final double boost = 0.0; // only available through item info.addition.elemBoost, ignore
-        final int skillId = si.getSkillId();
-        if (skillId == Bowman.INFERNO || skillId == Bowman.BLIZZARD) {
-            return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), si.getValue(SkillStat.x, slv) / 100.0, boost);
-        } else if (skillId == Magician.ELEMENT_COMPOSITION_FP) {
-            final double half = damage * 0.5; // only poison attr gets boost
-            return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.FIRE, DamagedAttribute.NONE), 1.0, 0.0) +
-                    getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.POISON, DamagedAttribute.NONE), 1.0, boost);
-        } else if (skillId == Magician.ELEMENT_COMPOSITION_IL) {
-            final double half = damage * 0.5; // only light attr gets boost
-            return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.ICE, DamagedAttribute.NONE), 1.0, 0.0) +
-                    getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.LIGHT, DamagedAttribute.NONE), 1.0, boost);
-        }
-        return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), adjustByBuff, boost);
-    }
 
-    private static double getDamageAdjustedByElemAttr(double damage, DamagedAttribute damagedAttr, double adjust, double boost) {
-        // get_damage_adjusted_by_elemAttr
-        switch (damagedAttr) {
-            case DAMAGE0 -> {
-                return (1.0 - adjust) * damage;
-            }
-            case DAMAGE50 -> {
-                return (1.0 - (adjust * 0.5 + boost)) * damage;
-            }
-            case DAMAGE150 -> {
-                final double result = (adjust * 0.5 + boost + 1.0) * damage;
-                if (damage >= result) {
-                    return damage;
-                }
-                return Math.min(result, GameConstants.DAMAGE_MAX);
-            }
-            default -> {
-                return damage;
-            }
-        }
-    }
+    // COMMON ----------------------------------------------------------------------------------------------------------
 
-
-    // COMMON DAMAGE ---------------------------------------------------------------------------------------------------
-
-    public static double calcDamageMax(User user) {
-        final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-        final WeaponType weaponType;
-        if (weaponItem == null) {
-            weaponType = JobConstants.canUseBareHand(user.getJob()) ? WeaponType.BAREHAND : WeaponType.NONE;
-        } else {
-            weaponType = WeaponType.getByItemId(weaponItem.getItemId());
-        }
-        return calcDamageByWT(weaponType, user.getBasicStat(), getPad(user), getMad(user));
-    }
-
-    private static double calcDamageByWT(WeaponType wt, BasicStat bs, int pad, int mad) {
+    public static double calcDamageByWT(WeaponType wt, BasicStat bs, int pad, int mad) {
         // CalcDamage::CalcDamageByWT
         final int jobId = bs.getJob();
         if (JobConstants.isBeginnerJob(jobId)) {
@@ -219,13 +164,14 @@ public final class CalcDamage {
         return (int) ((double) (p3 + p2 + 4 * p1) / 100.0 * ((double) ad * k) + 0.5);
     }
 
-    private static double adjustRandomDamage(double damage, int rand, double k, int mastery) {
+    public static double adjustRandomDamage(double damage, int rand, double k, int mastery) {
         // `anonymous namespace'::adjust_ramdom_damage
         final double totalMastery = Math.max(mastery / 100.0 + k, GameConstants.MASTERY_MAX);
         return getRand(rand, damage, totalMastery * damage + 0.5);
     }
 
     private static double getRand(int rand, double f0, double f1) {
+        // get_rand
         if (f0 == f1) {
             return f0;
         } else if (f0 < f1) {
@@ -351,13 +297,6 @@ public final class CalcDamage {
 
     // MASTERY METHODS -------------------------------------------------------------------------------------------------
 
-    public static double getTotalMastery(User user) {
-        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
-        final double weaponMastery = getWeaponMastery(user, weaponType) / 100.0;
-        return Math.min(weaponMastery, GameConstants.MASTERY_MAX) + getMasteryConstByWT(weaponType);
-    }
-
     public static int getWeaponMastery(User user, WeaponType weaponType) {
         // get_weapon_mastery
         switch (weaponType) {
@@ -467,7 +406,7 @@ public final class CalcDamage {
         return 0;
     }
 
-    private static double getMasteryConstByWT(WeaponType wt) {
+    public static double getMasteryConstByWT(WeaponType wt) {
         switch (wt) {
             case WAND, STAFF -> {
                 return 0.25;
@@ -477,6 +416,80 @@ public final class CalcDamage {
             }
             default -> {
                 return 0.2;
+            }
+        }
+    }
+
+
+    // ELEMENT METHODS -------------------------------------------------------------------------------------------------
+
+    public static double getDamageAdjustedByElemAttr(User user, double damage, SkillInfo si, int slv, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
+        // get_damage_adjusted_by_elemAttr
+        final double adjust = 1.0 - user.getSecondaryStat().getOption(CharacterTemporaryStat.ElementalReset).nOption / 100.0;
+        final double boost = 0.0; // only available through item info.addition.elemBoost, ignore
+        final int skillId = si.getSkillId();
+        if (skillId == Bowman.INFERNO || skillId == Bowman.BLIZZARD) {
+            return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), si.getValue(SkillStat.x, slv) / 100.0, boost);
+        } else if (skillId == Magician.ELEMENT_COMPOSITION_FP) {
+            final double half = damage * 0.5; // only poison attr gets boost
+            return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.FIRE, DamagedAttribute.NONE), 1.0, 0.0) +
+                    getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.POISON, DamagedAttribute.NONE), 1.0, boost);
+        } else if (skillId == Magician.ELEMENT_COMPOSITION_IL) {
+            final double half = damage * 0.5; // only light attr gets boost
+            return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.ICE, DamagedAttribute.NONE), 1.0, 0.0) +
+                    getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.LIGHT, DamagedAttribute.NONE), 1.0, boost);
+        }
+        return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), adjust, boost);
+    }
+
+    public static double getDamageAdjustedByChargedElemAttr(User user, double damage, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
+        // get_damage_adjusted_by_charged_elemAttr
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.WeaponCharge)) {
+            return damage;
+        }
+        final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge).rOption;
+        final ElementAttribute elemAttr = SkillConstants.getElementByChargedSkillId(skillId);
+        if (elemAttr == ElementAttribute.PHYSICAL) {
+            return damage;
+        }
+        final double adjust = user.getSkillManager().getSkillStatValue(skillId, SkillStat.z) / 100.0;
+        final double amp = user.getSkillManager().getSkillStatValue(skillId, SkillStat.damage) / 100.0;
+        return getDamageAdjustedByElemAttr(amp * damage, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), adjust, 0.0);
+    }
+
+    public static double getDamageAdjustedByAssistChargedElemAttr(User user, double damage, Map<ElementAttribute, DamagedAttribute> damagedElemAttr) {
+        // get_damage_adjusted_by_assist_charged_elemAttr
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.AssistCharge)) {
+            return damage;
+        }
+        final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.AssistCharge).rOption;
+        final ElementAttribute elemAttr = SkillConstants.getElementByChargedSkillId(skillId);
+        if (elemAttr == ElementAttribute.PHYSICAL) {
+            return damage;
+        }
+        final double adjust = user.getSkillManager().getSkillStatValue(skillId, SkillStat.z) / 100.0;
+        final double amp = user.getSkillManager().getSkillStatValue(skillId, SkillStat.damage) / 100.0;
+        return getDamageAdjustedByElemAttr((amp - 1.0) * damage * 0.5, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), adjust, 0.0);
+    }
+
+    private static double getDamageAdjustedByElemAttr(double damage, DamagedAttribute damagedAttr, double adjust, double boost) {
+        // get_damage_adjusted_by_elemAttr
+        switch (damagedAttr) {
+            case DAMAGE0 -> {
+                return (1.0 - adjust) * damage;
+            }
+            case DAMAGE50 -> {
+                return (1.0 - (adjust * 0.5 + boost)) * damage;
+            }
+            case DAMAGE150 -> {
+                final double result = (adjust * 0.5 + boost + 1.0) * damage;
+                if (damage >= result) {
+                    return damage;
+                }
+                return Math.min(result, GameConstants.DAMAGE_MAX);
+            }
+            default -> {
+                return damage;
             }
         }
     }

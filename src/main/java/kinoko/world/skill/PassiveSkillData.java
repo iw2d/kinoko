@@ -164,6 +164,34 @@ public final class PassiveSkillData {
         return dcR;
     }
 
+    public int getAllCr() {
+        return cr + additionPsd.stream().mapToInt(a -> a.cr).sum();
+    }
+
+    public int getAllCdMin() {
+        return cdMin + additionPsd.stream().mapToInt(a -> a.cdMin).sum();
+    }
+
+    public int getAllAr() {
+        return ar + additionPsd.stream().mapToInt(a -> a.ar).sum();
+    }
+
+    public int getAllDipR() {
+        return dipR + additionPsd.stream().mapToInt(a -> a.dipR).sum();
+    }
+
+    public int getAllPdamR() {
+        return pdamR + additionPsd.stream().mapToInt(a -> a.pdamR).sum();
+    }
+
+    public int getAllMdamR() {
+        return mdamR + additionPsd.stream().mapToInt(a -> a.mdamR).sum();
+    }
+
+    public int getAllImpR() {
+        return impR + additionPsd.stream().mapToInt(a -> a.impR).sum();
+    }
+
     public void setFrom(BasicStat bs, SecondaryStat ss, SkillManager sm) {
         clearData();
         // No guild skills in v95

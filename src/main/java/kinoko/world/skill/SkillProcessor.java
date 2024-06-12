@@ -222,12 +222,31 @@ public final class SkillProcessor {
     }
 
     private static int calculateHeavensHammer(User user, Mob mob) {
-        final int damage = user.getSkillManager().getSkillStatValue(Warrior.HEAVENS_HAMMER, SkillStat.damage);
-        final int totalDamage = Math.min(
-                CalcDamage.getRandomDamage(user) * damage / 100, // TODO: use PDamage
-                GameConstants.DAMAGE_MAX
-        );
-        return Math.min(totalDamage, mob.getHp() - 1);
+        // Resolve skill info
+        final int skillId = Warrior.HEAVENS_HAMMER;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mp eater skill ID : {}", skillId);
+            return 0;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        // Calculate damage
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+        final int mastery = CalcDamage.getWeaponMastery(user, weaponType);
+        final double k = CalcDamage.getMasteryConstByWT(weaponType);
+        final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
+        double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
+        damage = damage + user.getPassiveSkillData().getAllPdamR() * damage / 100.0;
+        damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+        damage = CalcDamage.getDamageAdjustedByChargedElemAttr(user, damage, mob.getDamagedElemAttr());
+        damage += CalcDamage.getDamageAdjustedByAssistChargedElemAttr(user, damage, mob.getDamagedElemAttr());
+        final int skillDamage = si.getValue(SkillStat.damage, slv);
+        if (skillDamage > 0) {
+            damage = skillDamage / 100.0 * damage;
+        }
+        return Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getHp() - 1);
     }
 
     private static int calculateMpEater(User user, Mob mob) {
@@ -590,15 +609,18 @@ public final class SkillProcessor {
             if (mob.getHp() <= 0) {
                 return;
             }
-            // Compute damage
-            final int totalDamage;
-            if (mob.getFixedDamage() > 0) {
-                totalDamage = mob.getFixedDamage();
-            } else {
-                totalDamage = Math.min(
-                        CalcDamage.getRandomDamage(user) * si.getValue(SkillStat.damage, slv) / 100,
-                        GameConstants.DAMAGE_MAX
-                );
+            // Calculate damage
+            final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+            final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+            final int mastery = CalcDamage.getWeaponMastery(user, weaponType);
+            final double k = CalcDamage.getMasteryConstByWT(weaponType);
+            final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
+            double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
+            damage = damage + user.getPassiveSkillData().getAllPdamR() * damage / 100.0;
+            damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+            final int skillDamage = si.getValue(SkillStat.damage, slv);
+            if (skillDamage > 0) {
+                damage = skillDamage / 100.0 * damage;
             }
             // Create attack
             final Attack attack = new Attack(OutHeader.SummonedAttack);
@@ -606,10 +628,10 @@ public final class SkillProcessor {
             final AttackInfo attackInfo = new AttackInfo();
             attackInfo.mobId = mob.getId();
             attackInfo.hitAction = MobActionType.HIT1.getValue();
-            attackInfo.damage[0] = totalDamage;
+            attackInfo.damage[0] = (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
             attack.getAttackInfo().add(attackInfo);
             // Process damage and broadcast
-            mob.damage(user, totalDamage);
+            mob.damage(user, attackInfo.damage[0]);
             user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
         }
     }

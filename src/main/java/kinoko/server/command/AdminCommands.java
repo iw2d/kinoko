@@ -18,7 +18,6 @@ import kinoko.provider.skill.SkillStringInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Rect;
-import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.cashshop.CashShop;
@@ -63,9 +62,8 @@ public final class AdminCommands {
     public static void info(User user, String[] args) {
         // User stats
         final Field field = user.getField();
-        final Tuple<Double, Double> damageRange = CalcDamage.calcDamageRange(user);
         user.write(MessagePacket.system("HP : %d / %d, MP : %d / %d", user.getHp(), user.getMaxHp(), user.getMp(), user.getMaxMp()));
-        user.write(MessagePacket.system("Damage : %d ~ %d", damageRange.getLeft().intValue(), damageRange.getRight().intValue()));
+        user.write(MessagePacket.system("Damage : %d ~ %d", CalcDamage.calcDamageMin(user), CalcDamage.calcDamageMax(user)));
         user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());

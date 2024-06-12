@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.provider.skill.ElementAttribute;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -83,6 +84,24 @@ public final class SkillConstants {
 
     public static int getEnergyChargeSkill(int jobId) {
         return JobConstants.isCygnusJob(jobId) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE;
+    }
+
+    public static ElementAttribute getElementByChargedSkillId(int skillId) {
+        switch (skillId) {
+            case Warrior.FIRE_CHARGE:
+                return ElementAttribute.FIRE;
+            case Warrior.ICE_CHARGE:
+            case Aran.SNOW_CHARGE:
+                return ElementAttribute.ICE;
+            case Warrior.LIGHTNING_CHARGE:
+            case ThunderBreaker.LIGHTNING_CHARGE:
+                return ElementAttribute.LIGHT;
+            case Warrior.DIVINE_CHARGE:
+            case DawnWarrior.SOUL_CHARGE:
+                return ElementAttribute.HOLY;
+            default:
+                return ElementAttribute.PHYSICAL;
+        }
     }
 
     public static boolean isBeginnerSpAddableSkill(int skillId) {
