@@ -4,10 +4,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class BlazeWizard {
+public final class BlazeWizard extends SkillDispatcher {
     // BLAZE_WIZARD_1
     public static final int MP_BOOST = 12000005;
     public static final int MAGIC_GUARD = 12001001;
@@ -31,8 +29,6 @@ public final class BlazeWizard {
     public static final int IFRIT = 12111004;
     public static final int FLAME_GEAR = 12111005;
     public static final int FIRE_STRIKE = 12111006;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

@@ -21,15 +21,13 @@ import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 
-public final class Magician {
+public final class Magician extends SkillDispatcher {
     // MAGICIAN
     public static final int MP_BOOST = 2000006;
     public static final int MAGIC_GUARD = 2001002;
@@ -125,8 +123,6 @@ public final class Magician {
     public static final int GENESIS = 2321008;
     public static final int HEROS_WILL_BISH = 2321009;
 
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
-
     public static void handleAttack(User user, Attack attack) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
@@ -185,6 +181,9 @@ public final class Magician {
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
+            case MAGIC_GUARD:
+                user.setTemporaryStat(CharacterTemporaryStat.MagicGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
             case SLOW_FP:
             case SLOW_IL:
                 skill.forEachAffectedMob(field, (mob) -> {
@@ -210,12 +209,12 @@ public final class Magician {
             case MANA_REFLECTION_FP:
             case MANA_REFLECTION_IL:
             case MANA_REFLECTION_BISH:
-                user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
             case INFINITY_FP:
             case INFINITY_IL:
             case INFINITY_BISH:
-                user.setTemporaryStat(CharacterTemporaryStat.Infinity, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.Infinity, TemporaryStatOption.of(1, skillId, getBuffedDuration(user, si.getDuration(slv))));
                 user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(4, ChronoUnit.SECONDS)); // every 4 secs
                 return;
             case IFRIT:

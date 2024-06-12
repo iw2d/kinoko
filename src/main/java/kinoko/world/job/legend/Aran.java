@@ -4,10 +4,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class Aran {
+public final class Aran extends SkillDispatcher {
     // ARAN_BEGINNER
     public static final int BLESSING_OF_THE_FAIRY = 20000012;
     public static final int FOLLOW_THE_LEAD = 20000024;
@@ -52,8 +50,6 @@ public final class Aran {
     public static final int MAPLE_WARRIOR_ARAN = 21121000;
     public static final int FREEZE_STANDING = 21121003;
     public static final int HEROS_WILL_ARAN = 21121008;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

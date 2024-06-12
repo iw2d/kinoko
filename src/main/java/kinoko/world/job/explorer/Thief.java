@@ -5,12 +5,11 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 public final class Thief {
     // ROGUE
@@ -108,8 +107,6 @@ public final class Thief {
     public static final int THORNS = 4341007;
     public static final int HEROS_WILL_DB = 4341008;
 
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
-
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -124,6 +121,16 @@ public final class Thief {
 
         switch (skillId) {
             // COMMON
+            case DARK_SIGHT:
+                if (slv == si.getMaxLevel()) {
+                    user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                } else {
+                    user.setTemporaryStat(Map.of(
+                            CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            CharacterTemporaryStat.Slow, TemporaryStatOption.of(100 - si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                    ));
+                }
+                return;
 
             // SHADOWER
             case MESO_GUARD:

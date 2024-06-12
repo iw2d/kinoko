@@ -9,10 +9,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class Bowman {
+public final class Bowman extends SkillDispatcher {
     // ARCHER
     public static final int CRITICAL_SHOT = 3000001;
     public static final int THE_EYE_OF_AMAZON = 3000002;
@@ -77,8 +75,6 @@ public final class Bowman {
     public static final int BLIND = 3221006;
     public static final int SNIPE = 3221007;
     public static final int HEROS_WILL_MM = 3221008;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

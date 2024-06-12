@@ -8,10 +8,8 @@ import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class BattleMage {
+public final class BattleMage extends SkillDispatcher {
     // BATTLE_MAGE_1
     public static final int TRIPLE_BLOW = 32001000;
     public static final int THE_FINISHER = 32001001;
@@ -54,8 +52,6 @@ public final class BattleMage {
     public static final int PARTY_SHIELD = 32121006;
     public static final int MAPLE_WARRIOR_BAM = 32121007;
     public static final int HEROS_WILL_BAM = 32121008;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

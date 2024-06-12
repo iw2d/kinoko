@@ -1,6 +1,5 @@
 package kinoko.world.skill;
 
-import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -145,38 +144,43 @@ public final class SkillProcessor {
         // Skill specific handling
         SkillDispatcher.handleAttack(locked, attack);
 
-        // Process attack damage
-        final Field field = user.getField();
+        // Process attack
+        int totalMpDamage = 0;
         for (AttackInfo ai : attack.getAttackInfo()) {
-            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+            final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
                 continue;
             }
             // Acquire and damage mob
             try (var lockedMob = mobResult.get().acquire()) {
                 final Mob mob = lockedMob.get();
-                final int totalDamage;
+                int totalDamage = Arrays.stream(ai.damage).sum();
+                int mpDamage = 0;
+
+                // Handle Heaven's Hammer
                 if (attack.skillId == Warrior.HEAVENS_HAMMER) {
-                    // Handle heaven's hammer
-                    if (mob.isBoss()) {
-                        final int damage = user.getSkillManager().getSkillStatValue(Warrior.HEAVENS_HAMMER, SkillStat.damage);
-                        totalDamage = Math.min(
-                                CalcDamage.getRandomDamage(user) * damage / 100,
-                                GameConstants.DAMAGE_MAX
-                        );
-                        field.broadcastPacket(MobPacket.mobDamaged(mob, totalDamage));
-                    } else {
-                        totalDamage = mob.getHp() - 1;
-                    }
-                } else {
-                    // Sum of damage lines
-                    totalDamage = Arrays.stream(ai.damage).sum();
+                    totalDamage = calculateHeavensHammer(user, mob);
                 }
+                // Handle MP Eater
+                if (attack.skillId != 0) {
+                    mpDamage = calculateMpEater(user, mob);
+                }
+                // Process damage
                 mob.damage(user, totalDamage);
+                mob.setMp(mob.getMp() - mpDamage);
+                totalMpDamage += mpDamage;
             }
         }
+        user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
 
-        field.broadcastPacket(UserRemote.attack(user, attack), user);
+        // Process mp eater
+        if (totalMpDamage > 0) {
+            final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
+            final int slv = user.getSkillManager().getSkillLevel(skillId);
+            user.addMp(totalMpDamage);
+            user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
+            user.getField().broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
+        }
     }
 
     private static void handleComboAttack(User user) {
@@ -219,6 +223,34 @@ public final class SkillProcessor {
             );
             user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
         }
+    }
+
+    private static int calculateHeavensHammer(User user, Mob mob) {
+        final int damage = user.getSkillManager().getSkillStatValue(Warrior.HEAVENS_HAMMER, SkillStat.damage);
+        final int totalDamage = Math.min(
+                CalcDamage.getRandomDamage(user) * damage / 100, // TODO: use PDamage
+                GameConstants.DAMAGE_MAX
+        );
+        return Math.min(totalDamage, mob.getHp() - 1);
+    }
+
+    private static int calculateMpEater(User user, Mob mob) {
+        final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        if (slv == 0) {
+            return 0;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mp eater skill ID : {}", skillId);
+            return 0;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            return 0;
+        }
+        final int delta = mob.getMaxMp() * si.getValue(SkillStat.x, slv) / 100;
+        return Math.clamp(delta, 0, mob.getMp());
     }
 
 

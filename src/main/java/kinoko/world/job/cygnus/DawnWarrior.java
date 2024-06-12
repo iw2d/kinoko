@@ -4,10 +4,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class DawnWarrior {
+public final class DawnWarrior extends SkillDispatcher {
     // DAWN_WARRIOR_1
     public static final int HP_BOOST = 11000005;
     public static final int IRON_BODY = 11001001;
@@ -30,8 +28,6 @@ public final class DawnWarrior {
     public static final int BRANDISH = 11111004;
     public static final int SOUL_DRIVER = 11111006;
     public static final int SOUL_CHARGE = 11111007;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

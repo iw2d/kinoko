@@ -19,15 +19,13 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 
-public final class Warrior {
+public final class Warrior extends SkillDispatcher {
     // WARRIOR
     public static final int HP_BOOST = 1000006;
     public static final int IRON_BODY = 1001003;
@@ -119,8 +117,6 @@ public final class Warrior {
     public static final int RUSH_DRK = 1321003;
     public static final int BEHOLDER = 1321007;
     public static final int HEROS_WILL_DRK = 1321010;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
@@ -240,8 +236,11 @@ public final class Warrior {
                 user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
                 user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
                 return;
-            case COMBAT_ORDERS:
-                user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+            case FIRE_CHARGE:
+            case ICE_CHARGE:
+            case LIGHTNING_CHARGE:
+            case DIVINE_CHARGE:
+                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
             // DARK KNIGHT
@@ -249,12 +248,6 @@ public final class Warrior {
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, si.getDuration(slv))
-                ));
-                return;
-            case HYPER_BODY:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.MaxHP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.MaxMP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
                 ));
                 return;
             case DRAGON_BLOOD:

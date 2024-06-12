@@ -232,7 +232,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void burn(int attackerId, int burnDamage) {
-        // Process damage
+        // Apply damage
         final int actualDamage = Math.min(getHp() - 1, burnDamage);
         setHp(getHp() - actualDamage);
         damageDone.put(attackerId, damageDone.getOrDefault(attackerId, 0) + actualDamage);
@@ -242,7 +242,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void damage(User attacker, int totalDamage) {
-        // Process damage
+        // Apply damage
         final int actualDamage = Math.min(getHp(), totalDamage);
         setHp(getHp() - actualDamage);
         damageDone.put(attacker.getCharacterId(), damageDone.getOrDefault(attacker.getCharacterId(), 0) + actualDamage);

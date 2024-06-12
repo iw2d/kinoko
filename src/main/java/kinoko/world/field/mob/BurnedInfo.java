@@ -87,7 +87,7 @@ public final class BurnedInfo implements Encodable {
     }
 
     public static BurnedInfo from(User user, SkillInfo si, int slv) {
-        final double damage = CalcDamage.calcDamageMax(user) * ((double) si.getValue(SkillStat.dot, slv) / 100);
+        final double damage = CalcDamage.calcDamageMax(user) * ((double) si.getValue(SkillStat.dot, slv) / 100); // TODO use MDamage
         final int interval = si.getValue(SkillStat.dotInterval, slv) * 1000;
         final int duration = si.getValue(SkillStat.dotTime, slv) * 1000;
         return new BurnedInfo(

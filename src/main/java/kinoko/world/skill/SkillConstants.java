@@ -43,6 +43,28 @@ public final class SkillConstants {
         }
     }
 
+    public static int getMpEaterSkill(int jobId) {
+        if (JobConstants.isFirePoisonJob(jobId)) {
+            return Magician.MP_EATER_FP;
+        } else if (JobConstants.isIceLightningJob(jobId)) {
+            return Magician.MP_EATER_IL;
+        } else if (JobConstants.isBishopJob(jobId)) {
+            return Magician.MP_EATER_BISH;
+        }
+        return 0;
+    }
+
+    public static int getBuffMasterySkill(int jobId) {
+        if (JobConstants.isFirePoisonJob(jobId)) {
+            return Magician.BUFF_MASTERY_FP;
+        } else if (JobConstants.isIceLightningJob(jobId)) {
+            return Magician.BUFF_MASTERY_IL;
+        } else if (JobConstants.isBishopJob(jobId)) {
+            return Magician.BUFF_MASTERY_BISH;
+        }
+        return 0;
+    }
+
     public static int getEnergyChargeSkill(int jobId) {
         return JobConstants.isCygnusJob(jobId) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE;
     }

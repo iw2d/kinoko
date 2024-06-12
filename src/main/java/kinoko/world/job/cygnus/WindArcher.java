@@ -4,10 +4,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class WindArcher {
+public final class WindArcher extends SkillDispatcher {
     // WIND_ARCHER_1
     public static final int CRITICAL_SHOT = 13000000;
     public static final int THE_EYE_OF_AMAZON = 13000001;
@@ -31,8 +29,6 @@ public final class WindArcher {
     public static final int EAGLE_EYE = 13111005;
     public static final int WIND_PIERCING = 13111006;
     public static final int WIND_SHOT = 13111007;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;

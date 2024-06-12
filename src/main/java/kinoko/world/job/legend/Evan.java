@@ -4,10 +4,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class Evan {
+public final class Evan extends SkillDispatcher {
     // EVAN_BEGINNER
     public static final int BLESSING_OF_THE_FAIRY = 20010012;
     public static final int THREE_SNAILS = 20011000;
@@ -59,8 +57,6 @@ public final class Evan {
     public static final int BLAZE = 22181001;
     public static final int DARK_FOG = 22181002;
     public static final int SOUL_STONE = 22181003;
-
-    private static final Logger log = LogManager.getLogger(SkillDispatcher.class);
 
     public static void handleAttack(User user, Attack attack) {
         final int skillId = attack.skillId;
