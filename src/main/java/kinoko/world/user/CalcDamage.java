@@ -362,7 +362,21 @@ public final class CalcDamage {
         // get_weapon_mastery
         switch (weaponType) {
             case OH_SWORD, TH_SWORD -> {
-                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO, Warrior.WEAPON_MASTERY_PALADIN, DawnWarrior.SWORD_MASTERY);
+                int mastery = getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO);
+                if (mastery > 0) {
+                    return mastery;
+                }
+                mastery = getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_PALADIN);
+                if (mastery > 0) {
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.WeaponCharge)) {
+                        final int masteryFromCharge = getMasteryFromSkill(user, Warrior.ADVANCED_CHARGE);
+                        if (masteryFromCharge > 0) {
+                            return masteryFromCharge;
+                        }
+                    }
+                    return mastery;
+                }
+                return getMasteryFromSkill(user, DawnWarrior.SWORD_MASTERY);
             }
             case OH_AXE, TH_AXE -> {
                 return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO);

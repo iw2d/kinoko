@@ -156,6 +156,13 @@ public final class Warrior extends SkillDispatcher {
                 break;
 
             // PALADIN
+            case CHARGED_BLOW:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
             case BLAST:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
@@ -232,9 +239,11 @@ public final class Warrior extends SkillDispatcher {
                 return;
             case FIRE_CHARGE:
             case ICE_CHARGE:
-            case LIGHTNING_CHARGE:
             case DIVINE_CHARGE:
-                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case LIGHTNING_CHARGE:
+                user.setTemporaryStat(CharacterTemporaryStat.AssistCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
 
             // DARK KNIGHT
