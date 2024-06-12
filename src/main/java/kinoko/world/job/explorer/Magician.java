@@ -10,15 +10,23 @@ import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Optional;
 
 public final class Magician {
@@ -126,20 +134,46 @@ public final class Magician {
 
         final Field field = user.getField();
         switch (skillId) {
-            // FP
-            case POISON_BREATH, ELEMENT_COMPOSITION_FP, PARALYZE -> {
-                final BurnedInfo burnedInfo = BurnedInfo.from(user, si, slv);
+            // COMMON
+            case TELEPORT_MASTERY_FP:
                 attack.forEachMob(field, (mob) -> {
-                    if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        return;
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
-                    mob.setBurnedInfo(burnedInfo);
                 });
-            }
-            case POISON_MIST -> {
+                break;
+
+            // FP
+            case POISON_BREATH:
+            case FIRE_DEMON:
+            case METEOR_SHOWER:
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv));
+                });
+                break;
+            case POISON_MIST:
                 final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
                 user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
-            }
+                break;
+            case ELEMENT_COMPOSITION_FP:
+                attack.forEachMob(field, (mob) -> {
+                    if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv));
+                    }
+                });
+                break;
+            case PARALYZE:
+                attack.forEachMob(field, (mob) -> {
+                    if (mob.isBoss()) {
+                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv));
+                    } else {
+                        mob.setTemporaryStat(
+                                Map.of(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv))),
+                                BurnedInfo.from(user, si, slv)
+                        );
+                    }
+                });
+                break;
         }
     }
 
@@ -150,7 +184,54 @@ public final class Magician {
 
         final Field field = user.getField();
         switch (skillId) {
+            // COMMON
+            case SLOW_FP:
+            case SLOW_IL:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isSlowUsed()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                        mob.setSlowUsed(true); // cannot be used on the same monsters more than twice in a row
+                    }
+                });
+                return;
+            case SEAL_FP:
+            case SEAL_IL:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Seal, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                return;
+            case TELEPORT_MASTERY_FP:
+            case TELEPORT_MASTERY_IL:
+            case TELEPORT_MASTERY_BISH:
+                user.setTemporaryStat(CharacterTemporaryStat.TeleportMasteryOn, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0));
+                return;
+            case MANA_REFLECTION_FP:
+            case MANA_REFLECTION_IL:
+            case MANA_REFLECTION_BISH:
+                user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
+            case INFINITY_FP:
+            case INFINITY_IL:
+            case INFINITY_BISH:
+                user.setTemporaryStat(CharacterTemporaryStat.Infinity, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(4, ChronoUnit.SECONDS)); // every 4 secs
+                return;
+            case IFRIT:
+            case ELQUINES:
+            case BAHAMUT:
+                final Summoned summoned = Summoned.from(si, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK);
+                summoned.setPosition(user.getField(), skill.positionX, skill.positionY);
+                user.addSummoned(summoned);
+                return;
+
             // BISHOP
+            case SUMMON_DRAGON:
+                final Summoned dragon = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
+                dragon.setPosition(user.getField(), skill.positionX, skill.positionY);
+                user.addSummoned(dragon);
+                return;
             case MYSTIC_DOOR:
                 final Optional<TownPortal> townPortalResult = field.getTownPortalPool().createFieldPortal(
                         user,

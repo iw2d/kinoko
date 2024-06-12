@@ -52,7 +52,7 @@ public final class SkillManager {
             final Instant nextAvailable = entry.getValue();
             // Check skill cooltime and remove
             if (now.isBefore(nextAvailable)) {
-                continue;
+                // continue;
             }
             iter.remove();
             resetCooltimes.add(skillId);
@@ -69,6 +69,10 @@ public final class SkillManager {
 
     public Instant getSkillSchedule(int skillId) {
         return skillSchedules.getOrDefault(skillId, Instant.MAX);
+    }
+
+    public boolean hasSkillSchedule(int skillId) {
+        return skillSchedules.containsKey(skillId);
     }
 
     public void setSkillSchedule(int skillId, Instant nextSchedule) {

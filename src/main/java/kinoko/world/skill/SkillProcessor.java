@@ -5,9 +5,7 @@ import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
-import kinoko.provider.MobProvider;
 import kinoko.provider.SkillProvider;
-import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.OutHeader;
@@ -22,9 +20,13 @@ import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
+import kinoko.world.job.JobConstants;
+import kinoko.world.job.cygnus.BlazeWizard;
+import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
+import kinoko.world.job.legend.Evan;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
@@ -80,7 +82,7 @@ public final class SkillProcessor {
             // Resolve skill info
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
             if (skillInfoResult.isEmpty()) {
-                log.error("Failed to resolve skill info for skill : {}", attack.skillId);
+                log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
@@ -89,12 +91,12 @@ public final class SkillProcessor {
                 log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
                 return;
             }
-            final int hpCon = si.getValue(SkillStat.hpCon, attack.slv);
+            final int hpCon = getHpCon(user, attack.skillId, si.getValue(SkillStat.hpCon, attack.slv));
             if (user.getHp() <= hpCon) {
                 log.error("Tried to use skill {} without enough hp, current : {}, required : {}", attack.skillId, user.getHp(), hpCon);
                 return;
             }
-            final int mpCon = si.getValue(SkillStat.mpCon, attack.slv);
+            final int mpCon = getMpCon(user, attack.skillId, si.getValue(SkillStat.mpCon, attack.slv));
             if (user.getMp() < mpCon) {
                 log.error("Tried to use skill {} without enough mp, current : {}, required : {}", attack.skillId, user.getMp(), mpCon);
                 return;
@@ -228,7 +230,7 @@ public final class SkillProcessor {
         // Resolve skill info
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skill.skillId);
         if (skillInfoResult.isEmpty()) {
-            log.error("Failed to resolve skill info for skill : {}", skill.skillId);
+            log.error("Could not resolve skill info for skill ID : {}", skill.skillId);
             return;
         }
         final SkillInfo si = skillInfoResult.get();
@@ -238,12 +240,12 @@ public final class SkillProcessor {
             log.error("Tried to use skill {} that is still on cooltime", skill.skillId);
             return;
         }
-        final int hpCon = si.getValue(SkillStat.hpCon, skill.slv);
+        final int hpCon = getHpCon(user, skill.skillId, si.getValue(SkillStat.hpCon, skill.slv));
         if (user.getHp() <= hpCon) {
             log.error("Tried to use skill {} without enough hp, current : {}, required : {}", skill.skillId, user.getHp(), hpCon);
             return;
         }
-        final int mpCon = si.getValue(SkillStat.mpCon, skill.slv);
+        final int mpCon = getMpCon(user, skill.skillId, si.getValue(SkillStat.mpCon, skill.slv));
         if (user.getMp() < mpCon) {
             log.error("Tried to use skill {} without enough mp, current : {}, required : {}", skill.skillId, user.getMp(), mpCon);
             return;
@@ -314,7 +316,7 @@ public final class SkillProcessor {
         final int damage = hitInfo.damage;
 
         // Compute damage reductions
-        final int powerGuardReduce = handlePowerGuard(user, hitInfo);
+        final int powerGuardReduce = handleReflect(user, hitInfo);
         final int mesoGuardReduce = handleMesoGuard(user, hitInfo);
 
         final int achillesReduce = getAchillesReduce(user, damage);
@@ -340,25 +342,48 @@ public final class SkillProcessor {
         handleBeholderCounter(user, hitInfo);
     }
 
-    private static int handlePowerGuard(User user, HitInfo hitInfo) {
-        final int fixedDamage = MobProvider.getMobTemplate(hitInfo.templateId).map(MobTemplate::getFixedDamage).orElse(0);
-        final int reflectDamage = fixedDamage > 0 ? fixedDamage : hitInfo.damage * hitInfo.reflect / 100;
-        if (reflectDamage > 0) {
-            final Optional<Mob> reflectMobResult = user.getField().getMobPool().getById(hitInfo.reflectMobId);
-            if (reflectMobResult.isPresent()) {
-                // Acquire and damage mob
-                try (var lockedMob = reflectMobResult.get().acquire()) {
-                    lockedMob.get().damage(user, reflectDamage);
-                }
-            }
+    private static int handleReflect(User user, HitInfo hitInfo) {
+        // Resolve target
+        final Optional<Mob> mobResult = user.getField().getMobPool().getById(hitInfo.reflectMobId);
+        if (mobResult.isEmpty()) {
+            return 0;
         }
-        return reflectDamage;
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.PowerGuard)) {
+            // Power Guard - reflect nPowerGuard %, subtract reflected amount
+            final int percentage = user.getSecondaryStat().getOption(CharacterTemporaryStat.PowerGuard).nOption;
+            try (var lockedMob = mobResult.get().acquire()) {
+                final Mob mob = lockedMob.get();
+                final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() * percentage / 100);
+                final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
+                // Process reflect damage and return amount to subtract from hit damage
+                mob.damage(user, finalDamage);
+                return finalDamage;
+            }
+        } else if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
+            // Mana Reflection - reflect si.getValue(SkillStat.x, nManaReflection) %
+            final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ManaReflection);
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
+            if (skillInfoResult.isPresent()) {
+                final int percentage = skillInfoResult.get().getValue(SkillStat.x, option.nOption);
+                try (var lockedMob = mobResult.get().acquire()) {
+                    final Mob mob = lockedMob.get();
+                    final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() / 20); // skill description says 20% of max hp, but coded incorrectly in client
+                    final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
+                    mob.damage(user, finalDamage);
+                    // no amount is subtracted from hit damage
+                }
+            } else {
+                log.error("Could not resolve skill info for mana reflection skill ID : {}", option.rOption);
+            }
+        } else {
+            log.error("Reflect on mob ID {} without PowerGuard or ManaReflection CTS", hitInfo.reflectMobId);
+        }
+        return 0;
     }
 
     private static int handleMesoGuard(User user, HitInfo hitInfo) {
         // CalcDamage::GetMesoGuardReduce
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.MesoGuard);
-        if (option.nOption == 0) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoGuard)) {
             return 0;
         }
         // Calculate reduction rate
@@ -404,21 +429,20 @@ public final class SkillProcessor {
     }
 
     private static int getComboBarrierReduce(User user, int damage, int achillesReduce) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboBarrier);
-        if (option.nOption == 0) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.ComboBarrier)) {
             return 0;
         }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboBarrier);
         return (damage - achillesReduce) * (1000 - option.nOption) / 1000;
     }
 
     private static int getMagicGuardReduce(User user, int damage) {
-        final SecondaryStat ss = user.getSecondaryStat();
-        final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.MagicGuard);
-        if (option.nOption == 0) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.MagicGuard)) {
             return 0;
         }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.MagicGuard);
         final int mpDamage = damage * option.nOption / 100;
-        if (ss.getOption(CharacterTemporaryStat.Infinity).nOption != 0) {
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Infinity)) {
             return mpDamage;
         } else {
             return Math.min(mpDamage, user.getMp());
@@ -426,18 +450,18 @@ public final class SkillProcessor {
     }
 
     private static int getMagicShieldReduce(User user, int damage) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.MagicShield);
-        if (option.nOption == 0) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.MagicShield)) {
             return 0;
         }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.MagicShield);
         return damage * option.nOption / 100;
     }
 
     private static int getBlueAuraReduce(User user, int damage) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.BlueAura);
-        if (option.nOption == 0) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.BlueAura)) {
             return 0;
         }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.BlueAura);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
         if (skillInfoResult.isEmpty()) {
             log.error("Could not resolve skill info for blue aura cts reason : {}", option.rOption);
@@ -570,33 +594,112 @@ public final class SkillProcessor {
         if (user.getHp() <= 0) {
             return;
         }
-        final SkillManager sm = user.getSkillManager();
+
+        handleRecovery(user, now);
+        handleDragonBlood(user, now);
+        handleInfinity(user, now);
+    }
+
+    private static void handleRecovery(User user, Instant now) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Regen)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Regen);
+        final int skillId = option.rOption;
+        if (now.isAfter(user.getSkillManager().getSkillSchedule(skillId))) {
+            final int hpRecovery = option.nOption;
+            user.addHp(hpRecovery);
+            user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
+            user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
+            user.getSkillManager().setSkillSchedule(skillId, now.plus(5, ChronoUnit.SECONDS));
+        }
+    }
+
+    private static void handleDragonBlood(User user, Instant now) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.DragonBlood)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.DragonBlood);
+        final int skillId = option.rOption;
+        if (now.isAfter(user.getSkillManager().getSkillSchedule(skillId))) {
+            final int hpConsume = option.nOption;
+            if (user.getHp() < hpConsume * 4) {
+                // Skill is canceled when you don't have enough HP to be consumed in the next 4 seconds
+                user.resetTemporaryStat(skillId);
+                return;
+            }
+            user.addHp(-hpConsume);
+            user.getSkillManager().setSkillSchedule(skillId, now.plus(1, ChronoUnit.SECONDS));
+        }
+    }
+
+    private static void handleInfinity(User user, Instant now) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Infinity)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Infinity);
+        final int skillId = option.rOption;
+        if (now.isAfter(user.getSkillManager().getSkillSchedule(option.rOption))) {
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not resolve skill info for infinity skill ID : {}", skillId);
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            final int slv = user.getSkillManager().getSkillLevel(skillId);
+            final int percentage = si.getValue(SkillStat.y, slv);
+            // Recover hp and mp
+            user.addHp(user.getMaxHp() * percentage / 100);
+            user.addMp(user.getMaxMp() * percentage / 100);
+            // Increase magic att %
+            final int damage = si.getValue(SkillStat.damage, slv);
+            user.setTemporaryStat(CharacterTemporaryStat.Infinity, option.update(option.nOption + damage));
+            user.getSkillManager().setSkillSchedule(option.rOption, now.plus(4, ChronoUnit.SECONDS));
+        }
+    }
+
+
+    // COMMON ----------------------------------------------------------------------------------------------------------
+
+    public static int getHpCon(User user, int skillId, int hpCon) {
+        if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR) {
+            return user.getMaxHp() * user.getSkillManager().getSkillStatValue(skillId, SkillStat.x) / 100;
+        }
+        return hpCon;
+    }
+
+    public static int getMpCon(User user, int skillId, int mpCon) {
+        // CSkillInfo::CheckConsumeForActiveSkill
+        mpCon = mpCon * getAmplificationIncMpCon(user, skillId) / 100;
+        // Check CTS affecting mpCon
         final SecondaryStat ss = user.getSecondaryStat();
-
-        // Handle Recovery
-        if (ss.hasOption(CharacterTemporaryStat.Regen)) {
-            final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.Regen);
-            if (now.isAfter(sm.getSkillSchedule(option.rOption))) {
-                final int hpRecovery = option.nOption;
-                user.addHp(hpRecovery);
-                user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
-                user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
-                sm.setSkillSchedule(option.rOption, now.plus(5, ChronoUnit.SECONDS));
-            }
+        if (ss.hasOption(CharacterTemporaryStat.Infinity)) {
+            mpCon = 0;
         }
-
-        // Handle Dragon Blood
-        if (ss.hasOption(CharacterTemporaryStat.DragonBlood)) {
-            final TemporaryStatOption option = ss.getOption(CharacterTemporaryStat.DragonBlood);
-            if (now.isAfter(sm.getSkillSchedule(option.rOption))) {
-                final int hpConsume = option.nOption;
-                if (user.getHp() < hpConsume * 4) {
-                    user.resetTemporaryStat(option.rOption);
-                } else {
-                    user.addHp(-hpConsume);
-                    sm.setSkillSchedule(option.rOption, now.plus(1, ChronoUnit.SECONDS));
-                }
-            }
+        if (ss.hasOption(CharacterTemporaryStat.Concentration)) {
+            final int percentage = 100 - ss.getOption(CharacterTemporaryStat.Concentration).nOption;
+            mpCon = (int) (percentage * mpCon / 100.0 + 0.99);
         }
+        if (SkillConstants.isTeleportSkill(skillId) && ss.hasOption(CharacterTemporaryStat.TeleportMasteryOn)) {
+            mpCon += ss.getOption(CharacterTemporaryStat.TeleportMasteryOn).nOption;
+        }
+        return mpCon;
+    }
+
+    private static int getAmplificationIncMpCon(User user, int skillId) {
+        // get_amplification
+        final SkillManager sm = user.getSkillManager();
+        int incMpCon = 100;
+        if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 211)) {
+            incMpCon += sm.getSkillStatValue(Magician.ELEMENT_AMPLIFICATION_FP, SkillStat.x);
+        } else if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 221)) {
+            incMpCon += sm.getSkillStatValue(Magician.ELEMENT_AMPLIFICATION_IL, SkillStat.x);
+        } else if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 1211)) {
+            incMpCon += sm.getSkillStatValue(BlazeWizard.ELEMENT_AMPLIFICATION, SkillStat.x);
+        } else if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 2215)) {
+            incMpCon += sm.getSkillStatValue(Evan.MAGIC_AMPLIFICATION, SkillStat.x);
+        }
+        // TODO: skills not affected by amplification
+        return incMpCon;
     }
 }

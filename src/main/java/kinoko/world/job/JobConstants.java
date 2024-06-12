@@ -167,4 +167,11 @@ public final class JobConstants {
         }
         return jobs;
     }
+
+    public static boolean isCorrectJobForSkillRoot(int jobId, int skillRoot) {
+        if (skillRoot % 100 == 0) {
+            return skillRoot / 100 == jobId / 100;
+        }
+        return skillRoot / 10 == jobId / 10 && jobId % 10 >= skillRoot % 10;
+    }
 }

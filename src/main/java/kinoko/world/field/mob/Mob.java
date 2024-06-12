@@ -51,6 +51,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private User controller;
     private int hp;
     private int mp;
+    private boolean slowUsed;
     private Instant nextRecovery;
 
     public Mob(MobTemplate template, MobSpawnPoint spawnPoint, int x, int y, int fh) {
@@ -161,6 +162,14 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.mp = mp;
     }
 
+    public boolean isSlowUsed() {
+        return slowUsed;
+    }
+
+    public void setSlowUsed(boolean slowUsed) {
+        this.slowUsed = slowUsed;
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
@@ -207,14 +216,19 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, Set.of()));
     }
 
-    public void setBurnedInfo(BurnedInfo burnedInfo) {
-        // Set mob stat and burned info
-        final MobStatOption option = MobStatOption.of(0, burnedInfo.getSkillId(), 0);
-        getMobStat().getTemporaryStats().put(MobTemporaryStat.Burned, option);
+    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats, BurnedInfo burnedInfo) {
+        setStats = new HashMap<>(setStats);
+        setStats.put(MobTemporaryStat.Burned, MobStatOption.of(1, burnedInfo.getSkillId(), 0));
+        for (var entry : setStats.entrySet()) {
+            getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
+        }
         getMobStat().addBurnedInfo(burnedInfo);
-        // Broadcast packet
         final Set<BurnedInfo> burnedInfos = getMobStat().getBurnedInfos().values().stream().collect(Collectors.toUnmodifiableSet());
-        getField().broadcastPacket(MobPacket.mobStatSet(this, Map.of(MobTemporaryStat.Burned, option), burnedInfos));
+        getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, burnedInfos));
+    }
+
+    public void setBurnedInfo(BurnedInfo burnedInfo) {
+        setTemporaryStat(Map.of(), burnedInfo);
     }
 
     public void burn(int attackerId, int burnDamage) {

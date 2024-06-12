@@ -82,8 +82,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
                     log.error("Failed to resolve skill info for affected area : {}", skillId);
                     return;
                 }
-                final BurnedInfo burnedInfo = BurnedInfo.from((User) owner, skillInfoResult.get(), skillLevel);
-                mob.setBurnedInfo(burnedInfo);
+                mob.setBurnedInfo(BurnedInfo.from((User) owner, skillInfoResult.get(), skillLevel));
             }
         }
     }

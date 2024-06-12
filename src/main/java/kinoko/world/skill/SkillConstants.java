@@ -55,6 +55,21 @@ public final class SkillConstants {
         return skillType == 1000 || skillType == 1001 || skillType == 1002;
     }
 
+
+    public static boolean isTeleportSkill(int skillId) {
+        switch (skillId) {
+            case Magician.TELEPORT_FP:
+            case Magician.TELEPORT_IL:
+            case Magician.TELEPORT_BISH:
+            case BlazeWizard.TELEPORT:
+            case Evan.TELEPORT:
+            case BattleMage.TELEPORT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isPartySkill(int skillId) {
         if (skillId == Magician.HEAL) {
             // CUserLocal::DoActiveSkill_Heal

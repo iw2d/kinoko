@@ -149,7 +149,7 @@ public final class Warrior {
                     }
                     mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 });
-                return;
+                break;
             case COMA:
                 resetComboCounter(user);
                 // Fallthrough intended
@@ -160,7 +160,7 @@ public final class Warrior {
                     }
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                 });
-                return;
+                break;
 
             // PALADIN
             case BLAST:
@@ -172,12 +172,7 @@ public final class Warrior {
                 });
             case HEAVENS_HAMMER:
                 // Handled in SkillProcessor.processAttack
-                return;
-
-            // DARK KNIGHT
-            case SACRIFICE:
-            case DRAGON_ROAR:
-                user.addHp(-(user.getMaxHp() / si.getValue(SkillStat.x, slv)));
+                break;
         }
     }
 

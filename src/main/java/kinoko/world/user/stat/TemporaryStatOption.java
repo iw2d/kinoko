@@ -61,7 +61,7 @@ public class TemporaryStatOption implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeShort(nOption);
         outPacket.encodeInt(rOption);
-        outPacket.encodeInt(tOption);
+        outPacket.encodeInt(tOption != 0 ? tOption : Integer.MAX_VALUE);
     }
 
     public static TemporaryStatOption of(int nOption, int rOption, int tOption) {

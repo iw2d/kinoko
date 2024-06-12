@@ -135,13 +135,12 @@ public final class MigrationHandler {
             initializePet(user, 1, cs.getPetSn2());
             initializePet(user, 2, cs.getPetSn3());
 
-            // Initialize summoned
-            user.getSummoned().putAll(migrationResult.getSummoned());
-
             // Initialize user data
+            user.getSecondaryStat().getTemporaryStats().putAll(migrationResult.getTemporaryStats());
+            user.getSkillManager().getSkillSchedules().putAll(migrationResult.getSchedules());
+            user.getSummoned().putAll(migrationResult.getSummoned());
             user.setEffectItemId(migrationResult.getEffectItemId());
             user.setAdBoard(migrationResult.getAdBoard());
-            user.getSecondaryStat().getTemporaryStats().putAll(migrationResult.getTemporaryStats());
             user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.setGender(user.getGender()));
