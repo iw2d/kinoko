@@ -8,6 +8,8 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
@@ -20,6 +22,7 @@ import kinoko.world.job.legend.Evan;
 import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
+import kinoko.world.skill.ActionType;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
@@ -44,6 +47,197 @@ public final class CalcDamage {
         final double k = getMasteryConstByWT(weaponType);
         final int mastery = getWeaponMastery(user, weaponType);
         return Math.max(mastery / 100.0 + k, GameConstants.MASTERY_MAX) * calcDamageMax(user) + 0.5;
+    }
+
+
+    // PHYSICAL DAMAGE -------------------------------------------------------------------------------------------------
+
+    public static double calcPDamage(User user, double damage, SkillInfo si, int slv, Mob mob, ActionType actionType) {
+        // nPsdPDamR
+        damage = damage + user.getPassiveSkillData().getAllPdamR() + damage / 100.0;
+        // Level disadvantage
+        if (mob.getLevel() > user.getLevel()) {
+            damage = (100.0 - (mob.getLevel() - user.getLevel())) / 100.0 * damage;
+        }
+        // Damage adjusted by elem attr
+        damage = getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+        damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+        damage = CalcDamage.getDamageAdjustedByChargedElemAttr(user, damage, mob.getDamagedElemAttr());
+        damage += CalcDamage.getDamageAdjustedByAssistChargedElemAttr(user, damage, mob.getDamagedElemAttr());
+        // ms->nPDR
+        final int skillId = si.getSkillId();
+        if (skillId != Warrior.SACRIFICE && skillId != Thief.ASSAULTER && skillId != Pirate.DEMOLITION) {
+            final MobStatOption option = mob.getMobStat().getOption(MobTemporaryStat.PDR);
+            final int mobBasePdr = mob.getTemplate().getPdr();
+            final int mobTotalPdr;
+            if (mobBasePdr != 0 && option.rOption == Warrior.THREATEN && mob.getTemplateId() / 10000 != 882) {
+                mobTotalPdr = (int) ((option.nOption / 100.0 + 1.0) * mobBasePdr);
+            } else {
+                mobTotalPdr = mobBasePdr + option.nOption;
+            }
+            final int mobFinalPdr = Math.clamp(mobTotalPdr, 0, 100);
+            // nPsdIMPR + nIgnoreTargetDEF
+            final int totalIgnoreDef = Math.min(user.getPassiveSkillData().getAllImpR(), 100);
+            final double multiplier = totalIgnoreDef * mobFinalPdr / -100 + mobFinalPdr;
+            damage = (100.0 - multiplier) / 100.0 * damage;
+        }
+        // Skill damage
+        final SkillManager sm = user.getSkillManager();
+        final SecondaryStat ss = user.getSecondaryStat();
+        final int skillDamage = getSkillPDamage(user, si, slv, mob, 0);
+        if (skillDamage > 0) {
+            damage = skillDamage / 100.0 * damage;
+        }
+        final int comboDamageParam = getComboDamageParam(user, si, slv);
+        if (comboDamageParam > 0) {
+            damage = damage * comboDamageParam / 100.0;
+        }
+        final int enrageDamageRate = ss.getOption(CharacterTemporaryStat.Enrage).nOption / 100;
+        if (enrageDamageRate > 0) {
+            damage = (enrageDamageRate + 100) / 100.0 * damage;
+        }
+        // Process critical damage
+        if (skillId != Thief.ASSASSINATE || actionType == ActionType.ASSASSINATIONS) {
+            // cd = cdFromSkills + nPsdCDMin + 20;
+            // cd = Math.min(cd, nTempCriticalAttackParam + 50);
+            // multiplier = get_rand(rand, cd, nTempCriticalAttackParam + 50.0) / 100.0;
+            // damage = multiplier * damage? + damage; // multiplied damage is before applying comboDamageParam and enrageDamageRate?
+        }
+        if (skillId != Warrior.SACRIFICE) {
+            final int mobPGuardUp = mob.getMobStat().getOption(MobTemporaryStat.PGuardUp).nOption;
+            if (mobPGuardUp > 0) {
+                damage = mobPGuardUp * damage / 100.0;
+            }
+        }
+        // TODO : Handle shadow partner, assassinate scaling with dark sight
+        if (ss.hasOption(CharacterTemporaryStat.WindWalk)) {
+            damage = sm.getSkillStatValue(WindArcher.WIND_WALK, SkillStat.damage) / 100.0 * damage;
+        }
+        if (ss.hasOption(CharacterTemporaryStat.DarkSight)) {
+            if (sm.getSkillLevel(NightWalker.VANISH) > 0) {
+                damage = sm.getSkillStatValue(NightWalker.VANISH, SkillStat.damage) / 100.0 * damage;
+            }
+        }
+        if (mob.getMobStat().hasOption(MobTemporaryStat.Stun) || mob.getMobStat().hasOption(MobTemporaryStat.Blind)) {
+            if (sm.getSkillLevel(Warrior.CHANCE_ATTACK) > 0) {
+                damage = sm.getSkillStatValue(Warrior.CHANCE_ATTACK, SkillStat.damage) / 100.0 * damage;
+            }
+        }
+        // Ignore - weakness skills (9000 - 9002), cd->aMobCategoryDamage, cd->boss.nDamage
+        // TODO : Process tKeyDown, guided bullet damage, nDojangBerserk
+        if (ss.hasOption(CharacterTemporaryStat.SuddenDeath) && !SkillConstants.isDualAddDamageExceptSkill(skillId)) {
+            damage = ss.getOption(CharacterTemporaryStat.SuddenDeath).nOption * damage / 100.0;
+        }
+        if (ss.hasOption(CharacterTemporaryStat.FinalCut) && !SkillConstants.isDualAddDamageExceptSkill(skillId)) {
+            damage = ss.getOption(CharacterTemporaryStat.FinalCut).nOption * damage / 100.0;
+        }
+        // TODO : nAR01Pad
+        if (SkillConstants.isJaguarMeleeAttackSkill(skillId)) {
+            if (sm.getSkillLevel(WildHunter.JAGUAR_BOOST) > 0) {
+                final int jaguarBoost = sm.getSkillStatValue(WildHunter.JAGUAR_BOOST, SkillStat.damage) + 100;
+                damage = jaguarBoost * damage / 100.0;
+            }
+        }
+        // TODO : handle shadow meso
+        // Ignore - cd->aSkill
+        // nTotalDAMr + nPsdDIPR + nBossDAMr + nDamR
+        int damR = user.getPassiveSkillData().getAllDipR() + ss.getOption(CharacterTemporaryStat.DamR).nOption;
+        damage = damage + damR * damage / 100.0;
+        return Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
+    }
+
+    private static int getSkillPDamage(User user, SkillInfo si, int slv, Mob mob, int i) {
+        final SkillManager sm = user.getSkillManager();
+        final int skillId = si.getSkillId();
+        int damage = si.getValue(SkillStat.damage, slv);
+        if (skillId == Mechanic.GIANT_ROBOT_SG_88) {
+            damage = si.getValue(SkillStat.y, slv);
+        }
+        if (skillId == Bowman.STRAFE_MM) {
+            if (sm.getSkillLevel(Bowman.ULTIMATE_STRAFE) > 0) {
+                damage = sm.getSkillStatValue(Bowman.ULTIMATE_STRAFE, SkillStat.damage);
+            }
+        } else if (skillId == WildHunter.EXPLODING_ARROWS) {
+            if (i == si.getValue(SkillStat.attackCount, slv) - 1) {
+                damage = si.getValue(SkillStat.x, slv);
+            }
+        }
+        if (sm.getSkillLevel(Pirate.BRAWLING_MASTERY) > 0) {
+            switch (skillId) {
+                case Pirate.BACKSPIN_BLOW -> {
+                    damage += sm.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.x);
+                }
+                case Pirate.DOUBLE_UPPERCUT -> {
+                    damage += sm.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.y);
+                }
+                case Pirate.CORKSCREW_BLOW -> {
+                    damage += sm.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.z);
+                }
+            }
+        }
+        if (skillId == Pirate.FLAMETHROWER || skillId == Pirate.ICE_SPLITTER) {
+            if (sm.getSkillLevel(Pirate.ELEMENTAL_BOOST) > 0) {
+                damage += sm.getSkillStatValue(Pirate.ELEMENTAL_BOOST, SkillStat.damage);
+            }
+        }
+        if (damage > 0) {
+            damage += mob.getMobStat().getOption(MobTemporaryStat.RiseByToss).nOption;
+            if (skillId == Warrior.POWER_STRIKE || skillId == Warrior.SLASH_BLAST) {
+                final int enhancedBasicsId = SkillConstants.getEnhancedBasicsSkill(user.getJob());
+                if (sm.getSkillLevel(enhancedBasicsId) > 0) {
+                    damage += sm.getSkillStatValue(enhancedBasicsId, skillId == Warrior.POWER_STRIKE ? SkillStat.x : SkillStat.y);
+                }
+            } else if (skillId == Bowman.ARROW_BLOW || skillId == Bowman.DOUBLE_SHOT) {
+                final int enhancedBasicsId = SkillConstants.getEnhancedBasicsSkill(user.getJob());
+                if (sm.getSkillLevel(enhancedBasicsId) > 0) {
+                    damage += sm.getSkillStatValue(enhancedBasicsId, skillId == Bowman.ARROW_BLOW ? SkillStat.x : SkillStat.y);
+                }
+            }
+        }
+        if (skillId == Thief.MESO_EXPLOSION) {
+            if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 422)) {
+                if (sm.getSkillLevel(Thief.MESO_MASTERY) > 0) {
+                    damage += sm.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.x);
+                }
+            }
+        }
+        if (skillId == Warrior.CHARGED_BLOW) {
+            final int advancedChargeDamage = sm.getSkillStatValue(Warrior.ADVANCED_CHARGE, SkillStat.damage);
+            if (advancedChargeDamage > 0) {
+                damage = advancedChargeDamage;
+            }
+        }
+        return damage;
+    }
+
+    private static int getComboDamageParam(User user, SkillInfo si, int slv) {
+        // get_combo_damage_param
+        int comboCounter = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter).nOption - 1;
+        if (comboCounter < 1) {
+            return 0;
+        }
+        final SkillManager sm = user.getSkillManager();
+        final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
+        final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
+        if (sm.getSkillLevel(comboAttackId) == 0) {
+            return 0;
+        }
+        final int maxCombo;
+        int damagePerCombo = sm.getSkillStatValue(comboAttackId, SkillStat.damR); // nDIPr
+        if (sm.getSkillLevel(advancedComboId) > 0) {
+            damagePerCombo += sm.getSkillStatValue(advancedComboId, SkillStat.damR); // nDIPr
+            maxCombo = sm.getSkillStatValue(advancedComboId, SkillStat.x);
+        } else {
+            maxCombo = sm.getSkillStatValue(comboAttackId, SkillStat.x);
+        }
+        comboCounter = Math.min(comboCounter, maxCombo);
+        if (si.getSkillId() == Warrior.COMA || si.getSkillId() == Warrior.PANIC || si.getSkillId() == DawnWarrior.PANIC || si.getSkillId() == DawnWarrior.COMA) {
+            if (slv == 0) {
+                return 0;
+            }
+            damagePerCombo += si.getValue(SkillStat.y, slv);
+        }
+        return comboCounter * damagePerCombo + 100;
     }
 
 
@@ -85,8 +279,8 @@ public final class CalcDamage {
         damage = (damage + psdMdamR * damage / 100.0) * amp / 100.0;
         damage = getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
 
-        // Process ms->nMDR, ms->nMDR_ v.s. nPsdIMPR + nIgnoreTargetDEF
-        // Process ms->nMGuardUp_
+        // TODO : Process ms->nMDR, ms->nMDR_ v.s. nPsdIMPR + nIgnoreTargetDEF
+        // TODO : Process ms->nMGuardUp_
 
         final int skillDamage = si.getValue(SkillStat.damage, slv);
         if (skillDamage > 0) {
@@ -97,10 +291,9 @@ public final class CalcDamage {
         cd = Math.max(cd + psdCdMin + 20, 50);
         // damage = get_rand(rand, cd / 100.0, 50.0) * damage + damage;
         // Ignore - weakness skills (9000 - 9002), cd->aMobCategoryDamage, cd->boss.nDamage
-        // Process tKeyDown
-        // Process nDojangBerserk, nWeakness, nAR01Mad, paralyze damage decrease (2121006)
+        // TODO : Process tKeyDown, guided bullet damage, nDojangBerserk, nWeakness, nAR01Mad, paralyze damage decrease
         // Ignore cd->aSkill
-
+        // TODO : nBossDAMr?
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Infinity)) {
             final int infinityDamR = user.getSecondaryStat().getOption(CharacterTemporaryStat.Infinity).nOption - 1;
             damage = damage + infinityDamR * damage / 100.0;

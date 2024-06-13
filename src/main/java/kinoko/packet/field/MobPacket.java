@@ -113,7 +113,7 @@ public final class MobPacket {
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(0); // (byte != 2) -> CMob::ShowDamage
         outPacket.encodeInt(damage); // nDamage
-        if (mob.isDamagedByMob()) { // this->m_pTemplate->bDamagedByMob
+        if (mob.getTemplate().isDamagedByMob()) { // this->m_pTemplate->bDamagedByMob
             outPacket.encodeInt(mob.getHp());
             outPacket.encodeInt(mob.getMaxHp());
         }

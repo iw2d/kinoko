@@ -72,8 +72,12 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         nextRecovery = Instant.now();
     }
 
+    public MobTemplate getTemplate() {
+        return template;
+    }
+
     public int getTemplateId() {
-        return this.template.getId();
+        return template.getId();
     }
 
     public int getLevel() {
@@ -102,14 +106,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public boolean isBoss() {
         return template.isBoss();
-    }
-
-    public boolean isDamagedByMob() {
-        return template.isDamagedByMob();
-    }
-
-    public boolean isVulnerableTo(int skillId) {
-        return template.isVulnerableTo(skillId);
     }
 
     public Map<ElementAttribute, DamagedAttribute> getDamagedElemAttr() {

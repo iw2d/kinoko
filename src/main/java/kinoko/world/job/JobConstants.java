@@ -56,6 +56,18 @@ public final class JobConstants {
         return jobId % 1000 == 0 || jobId == 2001;
     }
 
+    public static boolean isHeroJob(int jobId) {
+        return jobId / 10 == 11;
+    }
+
+    public static boolean isPaladinJob(int jobId) {
+        return jobId / 10 == 12;
+    }
+
+    public static boolean isDarkKnightJob(int jobId) {
+        return jobId / 10 == 13;
+    }
+
     public static boolean isFirePoisonJob(int jobId) {
         return jobId / 10 == 21;
     }

@@ -215,6 +215,7 @@ public final class Warrior extends SkillDispatcher {
             case ENRAGE:
                 final int nEnrage = si.getValue(SkillStat.x, slv) * 100 + si.getValue(SkillStat.mobCount, slv); // damR = n / 100, nCount = n % 100
                 user.setTemporaryStat(CharacterTemporaryStat.Enrage, TemporaryStatOption.of(nEnrage, skillId, si.getDuration(slv)));
+                resetComboCounter(user);
                 return;
 
             // PALADIN

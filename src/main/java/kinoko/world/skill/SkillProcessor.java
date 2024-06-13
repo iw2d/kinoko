@@ -246,6 +246,8 @@ public final class SkillProcessor {
         if (skillDamage > 0) {
             damage = skillDamage / 100.0 * damage;
         }
+        final int damR = user.getPassiveSkillData().getAllDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+        damage = damage + damR * damage / 100.0;
         return Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getHp() - 1);
     }
 
@@ -622,6 +624,8 @@ public final class SkillProcessor {
             if (skillDamage > 0) {
                 damage = skillDamage / 100.0 * damage;
             }
+            final int damR = user.getPassiveSkillData().getAllDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+            damage = damage + damR * damage / 100.0;
             // Create attack
             final Attack attack = new Attack(OutHeader.SummonedAttack);
             attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);

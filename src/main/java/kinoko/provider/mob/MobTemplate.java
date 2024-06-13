@@ -16,6 +16,12 @@ public final class MobTemplate {
     private final int exp;
     private final int maxHp;
     private final int maxMp;
+    private final int pad;
+    private final int pdr;
+    private final int mad;
+    private final int mdr;
+    private final int acc;
+    private final int eva;
     private final int hpRecovery;
     private final int mpRecovery;
     private final int fixedDamage;
@@ -31,9 +37,10 @@ public final class MobTemplate {
     private final List<Integer> revives;
     private final int reviveDelay;
 
-    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int hpRecovery, int mpRecovery,
-                       int fixedDamage, int removeAfter, boolean boss, boolean noFlip, boolean damagedByMob,
-                       boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
+    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int pad, int pdr, int mad, int mdr,
+                       int acc, int eva, int hpRecovery, int mpRecovery, int fixedDamage, int removeAfter,
+                       boolean boss, boolean noFlip, boolean damagedByMob, boolean onlyNormalAttack,
+                       Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
                        Map<ElementAttribute, DamagedAttribute> damagedElemAttr, Set<Integer> damagedBySkill,
                        List<Integer> revives, int reviveDelay) {
         this.id = id;
@@ -41,6 +48,12 @@ public final class MobTemplate {
         this.exp = exp;
         this.maxHp = maxHp;
         this.maxMp = maxMp;
+        this.pad = pad;
+        this.pdr = pdr;
+        this.mad = mad;
+        this.mdr = mdr;
+        this.acc = acc;
+        this.eva = eva;
         this.hpRecovery = hpRecovery;
         this.mpRecovery = mpRecovery;
         this.fixedDamage = fixedDamage;
@@ -75,6 +88,30 @@ public final class MobTemplate {
 
     public int getMaxMp() {
         return maxMp;
+    }
+
+    public int getPad() {
+        return pad;
+    }
+
+    public int getPdr() {
+        return pdr;
+    }
+
+    public int getMad() {
+        return mad;
+    }
+
+    public int getMdr() {
+        return mdr;
+    }
+
+    public int getAcc() {
+        return acc;
+    }
+
+    public int getEva() {
+        return eva;
     }
 
     public int getHpRecovery() {
@@ -159,6 +196,12 @@ public final class MobTemplate {
                 ", exp=" + exp +
                 ", maxHp=" + maxHp +
                 ", maxMp=" + maxMp +
+                ", pad=" + pad +
+                ", pdr=" + pdr +
+                ", mad=" + mad +
+                ", mdr=" + mdr +
+                ", acc=" + acc +
+                ", eva=" + eva +
                 ", hpRecovery=" + hpRecovery +
                 ", mpRecovery=" + mpRecovery +
                 ", fixedDamage=" + fixedDamage +
@@ -181,6 +224,12 @@ public final class MobTemplate {
         int exp = 0;
         int maxHP = 0;
         int maxMP = 0;
+        int pad = 0;
+        int pdr = 0;
+        int mad = 0;
+        int mdr = 0;
+        int acc = 0;
+        int eva = 0;
         int hpRecovery = 0;
         int mpRecovery = 0;
         int fixedDamage = 0;
@@ -247,6 +296,24 @@ public final class MobTemplate {
                 }
                 case "maxMP" -> {
                     maxMP = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "PADamage" -> {
+                    pad = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "PDRate" -> {
+                    pdr = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "MADamage" -> {
+                    mad = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "MDRate" -> {
+                    mdr = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "acc" -> {
+                    acc = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "eva" -> {
+                    eva = WzProvider.getInteger(infoEntry.getValue());
                 }
                 case "hpRecovery" -> {
                     hpRecovery = WzProvider.getInteger(infoEntry.getValue());
@@ -366,6 +433,12 @@ public final class MobTemplate {
                 exp,
                 maxHP,
                 maxMP,
+                pad,
+                pdr,
+                mad,
+                mdr,
+                acc,
+                eva,
                 hpRecovery,
                 mpRecovery,
                 fixedDamage,

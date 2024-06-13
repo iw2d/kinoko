@@ -33,6 +33,14 @@ public final class MobStat {
         burnedInfos.clear();
     }
 
+    public MobStatOption getOption(MobTemporaryStat mts) {
+        return temporaryStats.getOrDefault(mts, MobStatOption.EMPTY);
+    }
+
+    public boolean hasOption(MobTemporaryStat mts) {
+        return getOption(mts).nOption > 0;
+    }
+
     public Set<MobTemporaryStat> expireMobStat(Instant now) {
         final Set<MobTemporaryStat> resetStats = new HashSet<>();
         final var statIter = temporaryStats.entrySet().iterator();

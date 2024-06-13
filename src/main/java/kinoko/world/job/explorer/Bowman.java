@@ -20,7 +20,7 @@ public final class Bowman extends SkillDispatcher {
     // HUNTER
     public static final int BOW_MASTERY = 3100000;
     public static final int FINAL_ATTACK_BOW = 3100001;
-    public static final int ENHANCED_BASICS_BOW = 3100006;
+    public static final int ENHANCED_BASICS_BM = 3100006;
     public static final int BOW_BOOSTER = 3101002;
     public static final int POWER_KNOCKBACK_BM = 3101003;
     public static final int SOUL_ARROW_BM = 3101004;

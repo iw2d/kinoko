@@ -44,6 +44,30 @@ public final class SkillConstants {
         }
     }
 
+    public static int getEnhancedBasicsSkill(int jobId) {
+        if (JobConstants.isHeroJob(jobId)) {
+            return Warrior.ENHANCED_BASICS_HERO;
+        } else if (JobConstants.isPaladinJob(jobId)) {
+            return Warrior.ENHANCED_BASICS_PALADIN;
+        } else if (JobConstants.isDarkKnightJob(jobId)) {
+            return Warrior.ENHANCED_BASICS_DRK;
+        } else if (JobConstants.isBowmasterJob(jobId)) {
+            return Bowman.ENHANCED_BASICS_BM;
+        } else if (JobConstants.isMarksmanJob(jobId)) {
+            return Bowman.ENHANCED_BASICS_MM;
+        } else {
+            return 0;
+        }
+    }
+
+    public static int getComboAttackSkill(int jobId) {
+        return JobConstants.isCygnusJob(jobId) ? DawnWarrior.COMBO_ATTACK : Warrior.COMBO_ATTACK;
+    }
+
+    public static int getAdvancedComboSkill(int jobId) {
+        return JobConstants.isCygnusJob(jobId) ? DawnWarrior.ADVANCED_COMBO : Warrior.ADVANCED_COMBO_ATTACK;
+    }
+
     public static int getMpEaterSkill(int jobId) {
         if (JobConstants.isFirePoisonJob(jobId)) {
             return Magician.MP_EATER_FP;
@@ -396,6 +420,10 @@ public final class SkillConstants {
             default:
                 return false;
         }
+    }
+
+    public static boolean isDualAddDamageExceptSkill(int skillId) {
+        return skillId >= 4341002 && skillId <= 4341004;
     }
 
     public static boolean isJaguarMeleeAttackSkill(int skillId) {
