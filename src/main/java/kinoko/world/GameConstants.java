@@ -174,6 +174,22 @@ public final class GameConstants {
         return new Tuple<>((int) (min * level), (int) (max * level));
     }
 
+    public static int getPartyBonusExp(int exp, int memberCount) {
+        // Party bonus for members in party : 0%, 10%, 15%, 20%, 25%, 30%
+        if (memberCount < 2) {
+            return 0;
+        }
+        final double bonus = 0.05 * Math.min(memberCount, PARTY_MAX);
+        return (int) (exp * bonus);
+    }
+
+    public static int getHolySymbolBonus(int x, int memberCount) {
+        if (memberCount < 2) {
+            return Math.min(x, 10);
+        }
+        return Math.min(x, 50);
+    }
+
     public static int getNextLevelExp(int level) {
         return EXP_TABLE[level];
     }

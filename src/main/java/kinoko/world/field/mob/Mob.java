@@ -28,6 +28,7 @@ import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -264,28 +265,99 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
     }
 
+    /**
+     * Distribute exp by damage dealt, share exp with party if:
+     * <pre>
+     * 1) dealt damage,
+     * 2) within 5 levels of mob, or
+     * 3) within 5 levels of a member satisfying either (1) or (2)
+     *
+     * Exp for highest damage : (0.6 + 0.4 * level / totalPartyLevel) + partyBonus
+     * Exp for other members : (0.4 * level / totalPartyLevel) + partyBonus
+     * </pre>
+     */
     private void distributeExp() {
+        // Calculate exp split based on damage dealt
         final int totalExp = template.getExp();
-        final int topAttackerId = damageDone.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(-1);
+        final Map<User, Integer> expSplit = new HashMap<>(); // user -> exp
+        final Map<Integer, Set<User>> partyMembers = new HashMap<>(); // party id -> members
         for (var entry : damageDone.entrySet()) {
-            final int attackerDamage = entry.getValue();
-            final Optional<User> attackerResult = getField().getUserPool().getById(entry.getKey());
-            if (attackerResult.isEmpty()) {
+            final int characterId = entry.getKey();
+            final Optional<User> userResult = getField().getUserPool().getById(characterId);
+            if (userResult.isEmpty()) {
                 continue;
             }
-            // Schedule event as user lock is required
+            final User user = userResult.get();
+            final int splitExp = (int) ((double) entry.getValue() / getMaxHp() * totalExp);
+            expSplit.put(user, splitExp);
+            // Gather party members satisfying (1) and (2)
+            final int partyId = user.getPartyId();
+            if (partyId != 0) {
+                partyMembers.computeIfAbsent(partyId, (id) -> new HashSet<>()).add(user);
+                getField().getUserPool().forEachPartyMember(user, (member) -> {
+                    if (damageDone.containsKey(member.getCharacterId()) || member.getLevel() + 5 >= getLevel()) {
+                        partyMembers.get(partyId).add(member);
+                    }
+                });
+            }
+        }
+        // Gather party members satisfying (3)
+        for (Set<User> members : partyMembers.values()) {
+            final Set<User> leechers = new HashSet<>();
+            for (User member : members) {
+                getField().getUserPool().forEachPartyMember(member, (leecher) -> {
+                    if (leecher.getLevel() + 5 >= member.getLevel()) {
+                        leechers.add(leecher);
+                    }
+                });
+            }
+            members.addAll(leechers);
+        }
+        // Calculate final exp split
+        final Map<User, Integer> finalExpSplit = new HashMap<>();
+        for (var entry : expSplit.entrySet()) {
+            final User user = entry.getKey();
+            final int exp = entry.getValue();
+            final Set<User> members = partyMembers.get(user.getPartyId());
+            if (members != null) {
+                final int totalPartyLevel = members.stream().mapToInt(User::getLevel).sum();
+                for (User member : members) {
+                    finalExpSplit.put(member, finalExpSplit.getOrDefault(member, 0) +
+                            (int) (user == member ? 0.6 * exp : 0.0) +
+                            (int) (0.4 * exp * member.getLevel() / totalPartyLevel)
+                    );
+                }
+            } else {
+                finalExpSplit.put(user, finalExpSplit.getOrDefault(user, 0) + exp);
+            }
+        }
+        final User highestDamageDone = finalExpSplit.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElseThrow();
+        for (var entry : finalExpSplit.entrySet()) {
+            final User user = entry.getKey();
+            final int exp = entry.getValue();
+            final int memberCount = partyMembers.getOrDefault(user.getPartyId(), Set.of()).size();
+            final int partyBonus = GameConstants.getPartyBonusExp(exp, memberCount);
             EventScheduler.addEvent(() -> {
-                try (var locked = attackerResult.get().acquire()) {
+                try (var locked = user.acquire()) {
                     // Distribute exp
-                    final User attacker = locked.get();
-                    final int splitExp = (int) (((double) attackerDamage / getMaxHp()) * totalExp);
-                    attacker.addExp(splitExp);
-                    attacker.write(MessagePacket.incExp(splitExp, 0, attacker.getCharacterId() == topAttackerId, false));
+                    if (locked.get().getField() != getField()) {
+                        return;
+                    }
+                    int finalExp = exp;
+                    int finalPartyBonus = partyBonus;
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.HolySymbol)) {
+                        final int bonus = GameConstants.getHolySymbolBonus(user.getSecondaryStat().getOption(CharacterTemporaryStat.HolySymbol).nOption, memberCount);
+                        final double multiplier = (bonus + 100) / 100.0;
+                        finalExp = (int) (finalExp * multiplier);
+                        finalPartyBonus = (int) (finalPartyBonus * multiplier);
+                    }
+                    user.addExp(finalExp + finalPartyBonus);
+                    user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
                     // Process mob kill for quest
-                    for (QuestRecord qr : attacker.getQuestManager().getStartedQuests()) {
+                    for (QuestRecord qr : user.getQuestManager().getStartedQuests()) {
                         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
                         if (questInfoResult.isEmpty()) {
                             continue;
@@ -294,8 +366,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         if (questProgressResult.isEmpty()) {
                             continue;
                         }
-                        attacker.write(MessagePacket.questRecord(questProgressResult.get()));
-                        attacker.validateStat();
+                        user.write(MessagePacket.questRecord(questProgressResult.get()));
+                        user.validateStat();
                     }
                 }
             }, 0);
