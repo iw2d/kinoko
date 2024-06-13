@@ -140,6 +140,14 @@ public final class Magician extends SkillDispatcher {
                     mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
                 });
                 break;
+            case THUNDER_SPEAR:
+            case SHINING_RAY:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
             case TELEPORT_MASTERY_FP:
             case TELEPORT_MASTERY_IL:
             case TELEPORT_MASTERY_BISH:
@@ -183,13 +191,6 @@ public final class Magician extends SkillDispatcher {
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
-            case THUNDER_SPEAR:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
                 });
                 break;
@@ -256,9 +257,19 @@ public final class Magician extends SkillDispatcher {
                 return;
 
             // BISHOP
+            case HEAL:
+                final int healPercentage = si.getValue(SkillStat.hp, slv) / skill.getAffectedMemberCount();
+                user.addHp(user.getMaxHp() * healPercentage / 100);
+                return;
             case INVINCIBLE:
                 user.setTemporaryStat(CharacterTemporaryStat.Invincible, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
+            case DOOM:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Doom, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
             case SUMMON_DRAGON:
                 final Summoned dragon = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
                 dragon.setPosition(user.getField(), skill.positionX, skill.positionY);

@@ -4,6 +4,7 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Locked;
+import kinoko.util.Util;
 import kinoko.world.job.Job;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -22,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class SkillDispatcher {
     protected static final Logger log = LogManager.getLogger(SkillDispatcher.class);
@@ -106,7 +108,7 @@ public abstract class SkillDispatcher {
                 user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
-            // PARTY BUFF SKILLS ---------------------------------------------------------------------------------------
+            // PARTY SKILLS --------------------------------------------------------------------------------------------
             case Warrior.COMBAT_ORDERS:
                 user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
@@ -129,6 +131,40 @@ public abstract class SkillDispatcher {
             case Magician.MEDITATION_IL:
             case BlazeWizard.MEDITATION:
                 user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case Magician.BLESS:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
+                        CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
+                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
+                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
+                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
+                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, getBuffedDuration(user, si.getDuration(slv)))
+                ));
+                return;
+            case Magician.DISPEL:
+                if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    user.resetTemporaryStats(Set.of(
+                            CharacterTemporaryStat.Poison,
+                            CharacterTemporaryStat.Seal,
+                            CharacterTemporaryStat.Darkness,
+                            CharacterTemporaryStat.Weakness,
+                            CharacterTemporaryStat.Curse,
+                            CharacterTemporaryStat.Slow
+                    ));
+                }
+                return;
+            case Magician.HOLY_SYMBOL:
+                user.setTemporaryStat(CharacterTemporaryStat.HolySymbol, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case Magician.HOLY_SHIELD:
+                user.setTemporaryStat(CharacterTemporaryStat.Holyshield, TemporaryStatOption.of(1, skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case Magician.RESURRECTION:
+                if (user.getHp() <= 0) {
+                    user.setHp(user.getMaxHp());
+                    user.setMp(user.getMaxMp());
+                }
                 return;
 
             // COMMON SKILLS -------------------------------------------------------------------------------------------
@@ -194,7 +230,19 @@ public abstract class SkillDispatcher {
             case BattleMage.HEROS_WILL_BAM:
             case WildHunter.HEROS_WILL_WH:
             case Mechanic.HEROS_WILL_MECH:
-                // TODO
+                user.resetTemporaryStats(Set.of(
+                        CharacterTemporaryStat.Poison,
+                        CharacterTemporaryStat.Seal,
+                        CharacterTemporaryStat.Darkness,
+                        CharacterTemporaryStat.Weakness,
+                        CharacterTemporaryStat.Curse,
+                        CharacterTemporaryStat.Slow,
+                        CharacterTemporaryStat.Attract,
+                        CharacterTemporaryStat.ReverseInput,
+                        CharacterTemporaryStat.StopPortion,
+                        CharacterTemporaryStat.StopMotion,
+                        CharacterTemporaryStat.Undead
+                ));
                 return;
 
             // NOOP SKILLS ---------------------------------------------------------------------------------------------

@@ -405,7 +405,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     @Override
     public String toString() {
-        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d, boss : %b, burn : %s }", getTemplateId(), getId(), getHp(), getMp(), isBoss(), getMobStat().getBurnedInfos());
+        return String.format("Mob { %d, oid : %d, hp : %d, mp : %d, controller : %s }", getTemplateId(), getId(), getHp(), getMp(), getController() != null ? getController().getCharacterName() : "null");
     }
 
     @Override

@@ -30,6 +30,7 @@ import kinoko.world.skill.SkillManager;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public final class SecondaryStat {
@@ -138,35 +139,24 @@ public final class SecondaryStat {
     }
 
     public Set<CharacterTemporaryStat> resetTemporaryStat(int skillId) {
-        final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
-        final var iter = getTemporaryStats().entrySet().iterator();
-        while (iter.hasNext()) {
-            final Map.Entry<CharacterTemporaryStat, TemporaryStatOption> entry = iter.next();
-            final CharacterTemporaryStat cts = entry.getKey();
-            final TemporaryStatOption option = entry.getValue();
-            // Check skill reason and remove cts
-            if (option.rOption != skillId) {
-                continue;
-            }
-            iter.remove();
-            resetStats.add(cts);
-        }
-        return resetStats;
+        return resetTemporaryStats((cts, option) -> option.rOption == skillId);
     }
 
-    public Set<CharacterTemporaryStat> expireTemporaryStat(Instant now) {
+    public Set<CharacterTemporaryStat> expireTemporaryStats(Instant now) {
+        return resetTemporaryStats((cts, option) -> now.isAfter(option.getExpireTime()));
+    }
+
+    public Set<CharacterTemporaryStat> resetTemporaryStats(BiPredicate<CharacterTemporaryStat, TemporaryStatOption> predicate) {
         final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
         final var iter = getTemporaryStats().entrySet().iterator();
         while (iter.hasNext()) {
             final Map.Entry<CharacterTemporaryStat, TemporaryStatOption> entry = iter.next();
             final CharacterTemporaryStat cts = entry.getKey();
             final TemporaryStatOption option = entry.getValue();
-            // Check temporary stat expire time and remove cts
-            if (now.isBefore(option.getExpireTime())) {
-                continue;
+            if (predicate.test(cts, option)) {
+                iter.remove();
+                resetStats.add(cts);
             }
-            iter.remove();
-            resetStats.add(cts);
         }
         return resetStats;
     }

@@ -364,6 +364,14 @@ public final class User extends Life implements Lockable<User> {
         getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
     }
 
+    public void resetTemporaryStats(Set<CharacterTemporaryStat> stats) {
+        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStats((cts, option) -> stats.contains(cts));
+        updatePassiveSkillData();
+        validateStat();
+        write(WvsContext.temporaryStatReset(resetStats));
+        getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
+    }
+
 
     // PET METHODS --------------------------------------------------------------------------------------------
 

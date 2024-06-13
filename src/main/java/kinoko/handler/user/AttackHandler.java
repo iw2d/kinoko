@@ -248,11 +248,10 @@ public final class AttackHandler {
     @Handler(InHeader.UserHit)
     public static void handleUserHit(User user, InPacket inPacket) {
         // CUserLocal::SetDamaged, CUserLocal::Update
-        inPacket.decodeInt(); // get_update_time()
-        final int attackIndex = inPacket.decodeByte(); // nAttackIdx
-
         final HitInfo hitInfo = new HitInfo();
-        if (attackIndex > 0 || attackIndex == AttackIndex.Mob_Physical.getValue() || attackIndex == AttackIndex.Mob_Magic.getValue()) {
+        inPacket.decodeInt(); // get_update_time()
+        hitInfo.attackIndex = inPacket.decodeByte(); // nAttackIdx
+        if (hitInfo.attackIndex > -2) {
             hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
             hitInfo.damage = inPacket.decodeInt(); // nDamage
             hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
@@ -271,30 +270,24 @@ public final class AttackHandler {
                 inPacket.decodeShort(); // this->GetPos()->y
             }
             hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
-        } else if (attackIndex == AttackIndex.Counter.getValue() || attackIndex == AttackIndex.Obstacle.getValue()) {
+        } else if (hitInfo.attackIndex == AttackIndex.Counter.getValue() || hitInfo.attackIndex == AttackIndex.Obstacle.getValue()) {
             inPacket.decodeByte(); // 0
             hitInfo.damage = inPacket.decodeInt(); // nDamage
             hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
             inPacket.decodeByte(); // 0
-        } else if (attackIndex == AttackIndex.Stat.getValue()) {
+        } else if (hitInfo.attackIndex == AttackIndex.Stat.getValue()) {
             hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
             hitInfo.damage = inPacket.decodeInt(); // nDamage
             hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
             hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
         } else {
-            log.error("Unknown attack index received : {}", attackIndex);
+            log.error("Unknown attack index received : {}", hitInfo.attackIndex);
             return;
         }
 
         try (var locked = user.acquire()) {
-            // Resolve attack index and apply disease
-            if (attackIndex > 0) {
-                if (!handleMobAttack(locked, attackIndex, hitInfo)) {
-                    log.error("Failed to resolve mob attack index : {}, defaulting to {}", attackIndex, AttackIndex.Mob_Physical);
-                    hitInfo.attackIndex = AttackIndex.Mob_Physical;
-                }
-            } else {
-                hitInfo.attackIndex = AttackIndex.getByValue(attackIndex);
+            if (hitInfo.attackIndex > 0) {
+                handleMobAttack(locked, hitInfo);
             }
             SkillProcessor.processHit(locked, hitInfo);
         }
@@ -321,38 +314,41 @@ public final class AttackHandler {
         }
     }
 
-    private static boolean handleMobAttack(Locked<User> locked, int attackIndex, HitInfo hitInfo) {
+    private static void handleMobAttack(Locked<User> locked, HitInfo hitInfo) {
         // Resolve mob attack and attack index
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(hitInfo.templateId);
         if (mobTemplateResult.isEmpty()) {
-            return false;
+            log.error("Could not resolve mob template ID : {}", hitInfo.templateId);
+            return;
         }
-        final Optional<MobAttack> mobAttackResult = mobTemplateResult.get().getAttack(attackIndex);
+        final Optional<MobAttack> mobAttackResult = mobTemplateResult.get().getAttack(hitInfo.attackIndex);
         if (mobAttackResult.isEmpty()) {
-            return false;
+            return;
         }
         final MobAttack mobAttack = mobAttackResult.get();
-        hitInfo.attackIndex = mobAttack.isMagic() ? AttackIndex.Mob_Magic : AttackIndex.Mob_Physical;
 
         // Resolve mob skill, check if it applies a CTS
         final int skillId = mobAttack.getSkillId();
         final MobSkillType skillType = MobSkillType.getByValue(skillId);
         if (skillType == null) {
-            return true;
+            log.error("Could not resolve mob skill type for mob skill ID : {}", skillId);
+            return;
         }
         final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
         if (cts == null) {
-            return true;
+            return;
         }
 
         // Apply mob skill
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
-        if (skillInfoResult.isEmpty()) {
-            return true;
+        if (!locked.get().getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not resolve skill info for mob skill ID : {}", skillId);
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            final int slv = mobAttack.getSkillLevel();
+            locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
         }
-        final SkillInfo si = skillInfoResult.get();
-        final int slv = mobAttack.getSkillLevel();
-        locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
-        return true;
     }
 }

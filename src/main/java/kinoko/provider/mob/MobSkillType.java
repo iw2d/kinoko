@@ -108,7 +108,7 @@ public enum MobSkillType {
             case ATTRACT -> CharacterTemporaryStat.Attract;
             case BANMAP -> CharacterTemporaryStat.BanMap;
             case REVERSE_INPUT -> CharacterTemporaryStat.ReverseInput;
-            // case UNDEAD -> CharacterTemporaryStat.Undead;
+            case UNDEAD -> CharacterTemporaryStat.Undead;
             case STOPPORTION -> CharacterTemporaryStat.StopPortion;
             case STOPMOTION -> CharacterTemporaryStat.StopMotion;
             case FEAR -> CharacterTemporaryStat.Fear;

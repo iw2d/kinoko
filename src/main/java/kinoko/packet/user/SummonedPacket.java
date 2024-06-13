@@ -72,9 +72,9 @@ public final class SummonedPacket {
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(summoned.getId());
         // CSummoned::OnHit
-        outPacket.encodeByte(hitInfo.attackIndex.getValue()); // nAttackIdx
+        outPacket.encodeByte(hitInfo.attackIndex); // nAttackIdx
         outPacket.encodeInt(hitInfo.damage); // nDamage
-        if (hitInfo.attackIndex.getValue() > -2) {
+        if (hitInfo.attackIndex > -2) {
             outPacket.encodeInt(hitInfo.mobId); // dwMobTemplateID
             outPacket.encodeByte(hitInfo.dir); // bLeft
         }

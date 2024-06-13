@@ -538,7 +538,7 @@ public final class SkillProcessor {
     }
 
     private static void handleDivineShield(User user, HitInfo hitInfo) {
-        if (hitInfo.attackIndex.getValue() <= AttackIndex.Counter.getValue()) {
+        if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
             return;
         }
         // Resolve skill
@@ -579,7 +579,7 @@ public final class SkillProcessor {
     }
 
     private static void handleBeholderCounter(User user, HitInfo hitInfo) {
-        if (hitInfo.attackIndex.getValue() <= AttackIndex.Counter.getValue()) {
+        if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
             return;
         }
         // Resolve summoned

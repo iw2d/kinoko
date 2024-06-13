@@ -8,6 +8,7 @@ import kinoko.provider.mob.MobSkill;
 import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
@@ -175,7 +176,11 @@ public final class MobHandler {
             }
             targetMobs.add(mob);
             for (Mob targetMob : targetMobs) {
-                targetMob.setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                EventScheduler.submit(() -> {
+                    try (var lockedTarget = targetMob.acquire()) {
+                        lockedTarget.get().setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                    }
+                });
             }
             return true;
         }
@@ -188,7 +193,13 @@ public final class MobHandler {
                 targetUsers.addAll(mob.getField().getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
             }
             for (User targetUser : targetUsers) {
-                targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                EventScheduler.submit(() -> {
+                    try (var lockedTarget = targetUser.acquire()) {
+                        if (!lockedTarget.get().getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+                            lockedTarget.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                        }
+                    }
+                });
             }
             return true;
         }
@@ -204,8 +215,12 @@ public final class MobHandler {
                 final int x = si.getValue(SkillStat.x, slv);
                 final int y = si.getValue(SkillStat.y, slv);
                 for (Mob targetMob : targetMobs) {
-                    final int healAmount = x + Util.getRandom(y);
-                    targetMob.heal(healAmount);
+                    EventScheduler.submit(() -> {
+                        try (var lockedTarget = targetMob.acquire()) {
+                            final int healAmount = x + Util.getRandom(y);
+                            lockedTarget.get().heal(healAmount);
+                        }
+                    });
                 }
             }
             case PCOUNTER -> {
