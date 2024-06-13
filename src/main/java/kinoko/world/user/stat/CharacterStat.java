@@ -5,14 +5,11 @@ import kinoko.util.Encodable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 public final class CharacterStat implements Encodable {
-    private static final Logger log = LogManager.getLogger(CharacterStat.class);
     private int id;
     private String name;
     private byte gender;
@@ -251,7 +248,7 @@ public final class CharacterStat implements Encodable {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
-    public Map<Stat, Object> addAp(Stat stat) {
+    public Map<Stat, Object> addAp(Stat stat, int totalInt) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
         switch (stat) {
             case MHP -> {
@@ -260,7 +257,7 @@ public final class CharacterStat implements Encodable {
                 statMap.put(Stat.MHP, getMaxHp());
             }
             case MMP -> {
-                final int incMp = StatConstants.getIncMpByAp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
+                final int incMp = StatConstants.getIncMpByAp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE) + (totalInt / 10);
                 setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
                 statMap.put(Stat.MMP, getMaxMp());
             }
@@ -284,7 +281,7 @@ public final class CharacterStat implements Encodable {
         return statMap;
     }
 
-    public Map<Stat, Object> addExp(int delta) {
+    public Map<Stat, Object> addExp(int delta, int totalInt) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
         if (getLevel() >= GameConstants.LEVEL_MAX) {
             return statMap;
@@ -292,14 +289,14 @@ public final class CharacterStat implements Encodable {
         long newExp = ((long) getExp()) + delta;
         while (newExp >= GameConstants.getNextLevelExp(getLevel())) {
             newExp -= GameConstants.getNextLevelExp(getLevel());
-            statMap.putAll(levelUp());
+            statMap.putAll(levelUp(totalInt));
         }
         setExp((int) newExp);
         statMap.put(Stat.EXP, (int) newExp);
         return statMap;
     }
 
-    public Map<Stat, Object> levelUp() {
+    public Map<Stat, Object> levelUp(int totalInt) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
         if (getLevel() >= GameConstants.LEVEL_MAX) {
             return statMap;
@@ -312,7 +309,7 @@ public final class CharacterStat implements Encodable {
         setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.HP_MAX));
         statMap.put(Stat.MHP, getMaxHp());
         // Update max mp
-        final int incMp = StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE);
+        final int incMp = StatConstants.getIncMp(getJob()) + Util.getRandom(StatConstants.INC_MP_VARIANCE) + (totalInt / 10);
         setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
         statMap.put(Stat.MMP, getMaxMp());
         // Update ap (auto distribution for beginners)

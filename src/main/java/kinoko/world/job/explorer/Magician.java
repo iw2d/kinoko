@@ -270,6 +270,7 @@ public final class Magician extends SkillDispatcher {
                         mob.setTemporaryStat(MobTemporaryStat.Doom, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
                 });
+                return;
             case SUMMON_DRAGON:
                 final Summoned dragon = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
                 dragon.setPosition(user.getField(), skill.positionX, skill.positionY);

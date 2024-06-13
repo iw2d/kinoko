@@ -485,7 +485,7 @@ public final class UserHandler {
                 user.dispose();
                 return;
             }
-            final Map<Stat, Object> addApResult = cs.addAp(stat);
+            final Map<Stat, Object> addApResult = cs.addAp(stat, user.getBasicStat().getInt());
             cs.setAp((short) (cs.getAp() - 1));
             addApResult.put(Stat.AP, cs.getAp());
             // Update client
@@ -524,7 +524,7 @@ public final class UserHandler {
                 final Stat stat = entry.getKey();
                 final int value = entry.getValue();
                 for (int i = 0; i < value; i++) {
-                    addApResult.putAll(cs.addAp(stat));
+                    addApResult.putAll(cs.addAp(stat, user.getBasicStat().getInt()));
                 }
             }
             cs.setAp((short) (cs.getAp() - requiredAp));
