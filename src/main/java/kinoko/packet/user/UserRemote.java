@@ -118,17 +118,17 @@ public final class UserRemote {
         if (attackIndex > -2) {
             outPacket.encodeInt(hitInfo.templateId); // dwTemplateID
             outPacket.encodeByte(hitInfo.dir); // bLeft
+            outPacket.encodeByte(hitInfo.reflect);
+            if (hitInfo.reflect != 0) {
+                outPacket.encodeByte(hitInfo.powerGuard);
+                outPacket.encodeInt(hitInfo.reflectMobId);
+                outPacket.encodeByte(hitInfo.reflectMobAction); // nHitAction
+                outPacket.encodeShort(hitInfo.reflectMobX); // ptHit.x
+                outPacket.encodeShort(hitInfo.reflectMobY); // ptHit.y
+            }
+            outPacket.encodeByte(hitInfo.guard); // bGuard
+            outPacket.encodeByte(hitInfo.stance);
         }
-        outPacket.encodeByte(hitInfo.reflect);
-        if (hitInfo.reflect != 0) {
-            outPacket.encodeByte(hitInfo.powerGuard);
-            outPacket.encodeInt(hitInfo.reflectMobId);
-            outPacket.encodeByte(hitInfo.reflectMobAction); // nHitAction
-            outPacket.encodeShort(hitInfo.reflectMobX); // ptHit.x
-            outPacket.encodeShort(hitInfo.reflectMobY); // ptHit.y
-        }
-        outPacket.encodeByte(hitInfo.guard); // bGuard
-        outPacket.encodeByte(hitInfo.stance);
         outPacket.encodeInt(hitInfo.finalDamage);
         if (hitInfo.damage == -1) {
             outPacket.encodeInt(hitInfo.missSkillId); // CUser::ShowSkillSpecialEffect, CAvatar::SetEmotion for 4120002, 4220002

@@ -15,7 +15,7 @@ public final class Skill {
     public int positionX;
     public int positionY;
 
-    public int affectedMemberBitMap = 0x80; // default when nPartyID = 0 (CUserLocal::FindParty)
+    public int affectedMemberBitMap = Byte.MIN_VALUE; // default when nPartyID = 0 (CUserLocal::FindParty)
 
     public int mobCount;
     public List<Integer> mobIds;
@@ -31,8 +31,15 @@ public final class Skill {
     public boolean summonLeft;
     public byte summonBuffType;
 
+    public int getAffectedMemberCount() {
+        if (affectedMemberBitMap == Byte.MIN_VALUE) {
+            return 1;
+        }
+        return Integer.bitCount(affectedMemberBitMap);
+    }
+
     public void forEachAffectedMember(User caster, Field field, Consumer<User> consumer) {
-        if (affectedMemberBitMap == 0x80) {
+        if (affectedMemberBitMap == Byte.MIN_VALUE) {
             return;
         }
         field.getUserPool().forEachPartyMember(caster, (member) -> {
