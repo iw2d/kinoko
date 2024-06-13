@@ -208,6 +208,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
     }
 
+    public void setBurnedInfo(BurnedInfo burnedInfo) {
+        setTemporaryStat(Map.of(), burnedInfo);
+    }
+
     public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {
         setTemporaryStat(Map.of(mts, option));
     }
@@ -230,8 +234,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, burnedInfos));
     }
 
-    public void setBurnedInfo(BurnedInfo burnedInfo) {
-        setTemporaryStat(Map.of(), burnedInfo);
+    public void resetTemporaryStat(Set<MobTemporaryStat> stats) {
+        final Set<MobTemporaryStat> resetStats = getMobStat().resetTemporaryStat((mts, option) -> stats.contains(mts));
+        getField().broadcastPacket(MobPacket.mobStatReset(this, resetStats, Set.of()));
     }
 
     public void burn(int attackerId, int burnDamage) {

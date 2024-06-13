@@ -139,14 +139,14 @@ public final class SecondaryStat {
     }
 
     public Set<CharacterTemporaryStat> resetTemporaryStat(int skillId) {
-        return resetTemporaryStats((cts, option) -> option.rOption == skillId);
+        return resetTemporaryStat((cts, option) -> option.rOption == skillId);
     }
 
-    public Set<CharacterTemporaryStat> expireTemporaryStats(Instant now) {
-        return resetTemporaryStats((cts, option) -> now.isAfter(option.getExpireTime()));
+    public Set<CharacterTemporaryStat> expireTemporaryStat(Instant now) {
+        return resetTemporaryStat((cts, option) -> now.isAfter(option.getExpireTime()));
     }
 
-    public Set<CharacterTemporaryStat> resetTemporaryStats(BiPredicate<CharacterTemporaryStat, TemporaryStatOption> predicate) {
+    public Set<CharacterTemporaryStat> resetTemporaryStat(BiPredicate<CharacterTemporaryStat, TemporaryStatOption> predicate) {
         final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
         final var iter = getTemporaryStats().entrySet().iterator();
         while (iter.hasNext()) {

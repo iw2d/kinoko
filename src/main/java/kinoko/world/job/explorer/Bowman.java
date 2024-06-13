@@ -159,6 +159,7 @@ public final class Bowman extends SkillDispatcher {
             case PUPPET_BM:
             case PUPPET_MM:
                 final Summoned puppet = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE);
+                puppet.setHp(si.getValue(SkillStat.x, slv));
                 puppet.setPosition(field, skill.positionX, skill.positionY);
                 user.addSummoned(puppet);
                 return;

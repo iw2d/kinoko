@@ -3,6 +3,13 @@ package kinoko.world.job.explorer;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
@@ -11,6 +18,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
+import java.util.Set;
 
 public final class Thief extends SkillDispatcher {
     // ROGUE
@@ -41,8 +49,8 @@ public final class Thief extends SkillDispatcher {
     public static final int VENOMOUS_STAR = 4120005;
     public static final int EXPERT_THROWING_STAR_HANDLING = 4120010;
     public static final int MAPLE_WARRIOR_NL = 4121000;
-    public static final int TAUNT = 4121003;
-    public static final int NINJA_AMBUSH = 4121004;
+    public static final int TAUNT_NL = 4121003;
+    public static final int NINJA_AMBUSH_NL = 4121004;
     public static final int SHADOW_STARS = 4121006;
     public static final int TRIPLE_THROW = 4121007;
     public static final int NINJA_STORM = 4121008;
@@ -109,9 +117,39 @@ public final class Thief extends SkillDispatcher {
     public static final int HEROS_WILL_DB = 4341008;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case DISORDER:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(Map.of(
+                                MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                        ));
+                    }
+                });
+                break;
+            case SHADOW_MESO:
+                attack.forEachMob(field, (mob) -> {
+                    mob.resetTemporaryStat(Set.of(MobTemporaryStat.PGuardUp, MobTemporaryStat.MGuardUp));
+                });
+                break;
+            case TAUNT_NL:
+            case TAUNT_SHAD:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(Map.of(
+                                MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
+                        ));
+                    }
+                });
+                break;
         }
     }
 
@@ -120,6 +158,7 @@ public final class Thief extends SkillDispatcher {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
+        final Field field = user.getField();
         switch (skillId) {
             // COMMON
             case DARK_SIGHT:
@@ -132,8 +171,34 @@ public final class Thief extends SkillDispatcher {
                     ));
                 }
                 return;
+            case SHADOW_PARTNER_NL:
+            case SHADOW_PARTNER_SHAD:
+            case MIRROR_IMAGE:
+                user.setTemporaryStat(CharacterTemporaryStat.ShadowPartner, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case DARK_FLARE_NL:
+            case DARK_FLARE_SHAD:
+                final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
+                darkFlare.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(darkFlare);
+                return;
+            case NINJA_AMBUSH_NL:
+            case NINJA_AMBUSH_SHAD:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    mob.setTemporaryStat(MobTemporaryStat.Ambush, MobStatOption.of(1337, skillId, si.getDuration(slv)));
+                });
+                return;
 
-            // SHADOWER
+            case SHADOW_WEB:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Web, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case SHADOW_STARS:
+                user.setTemporaryStat(CharacterTemporaryStat.SpiritJavelin, TemporaryStatOption.of(skill.spiritJavelinItemId - 2069999, skillId, si.getDuration(slv)));
+                return;
             case MESO_GUARD:
                 user.setTemporaryStat(CharacterTemporaryStat.MesoGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;

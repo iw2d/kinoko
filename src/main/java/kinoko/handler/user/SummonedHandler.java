@@ -11,11 +11,9 @@ import kinoko.world.field.Field;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.job.explorer.Warrior;
-import kinoko.world.skill.Attack;
-import kinoko.world.skill.AttackInfo;
-import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -128,6 +126,36 @@ public final class SummonedHandler {
         }
 
         field.broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack), user);
+    }
+
+    @Handler(InHeader.SummonedHit)
+    public static void handleSummonedHit(User user, InPacket inPacket) {
+        final int summonedId = inPacket.decodeInt(); // dwSummonedID
+
+        // Resolve summoned
+        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
+        if (summonedResult.isEmpty()) {
+            log.error("Received SummonedHit for invalid object with ID : {}", summonedId);
+            return;
+        }
+        final Summoned summoned = summonedResult.get();
+
+        final HitInfo hitInfo = new HitInfo();
+        hitInfo.attackIndex = inPacket.decodeByte();
+        hitInfo.damage = inPacket.decodeInt();
+        if (hitInfo.attackIndex > -2) {
+            hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
+            hitInfo.dir = inPacket.decodeByte();
+        }
+
+        user.getField().broadcastPacket(SummonedPacket.summonedHit(user, summoned, hitInfo));
+        try (var lockedSummoned = summoned.acquire()) {
+            summoned.setHp(summoned.getHp() - hitInfo.damage);
+            if (summoned.getHp() <= 0) {
+                summoned.setLeaveType(SummonedLeaveType.SUMMONED_DEAD);
+                user.removeSummoned(summonedId);
+            }
+        }
     }
 
     @Handler(InHeader.SummonedSkill)

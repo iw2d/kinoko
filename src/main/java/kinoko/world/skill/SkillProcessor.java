@@ -142,7 +142,8 @@ public final class SkillProcessor {
         SkillDispatcher.handleAttack(locked, attack);
 
         // Process attack
-        int totalMpDamage = 0;
+        int hpGain = 0;
+        int mpGain = 0;
         for (AttackInfo ai : attack.getAttackInfo()) {
             final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
@@ -158,6 +159,10 @@ public final class SkillProcessor {
                 if (attack.skillId == Warrior.HEAVENS_HAMMER) {
                     totalDamage = calculateHeavensHammer(user, mob);
                 }
+                // Handle Drain
+                if (attack.skillId == Thief.DRAIN) {
+                    hpGain = Math.min(Math.min(totalDamage, user.getMaxHp() / 2), mob.getMaxHp());
+                }
                 // Handle MP Eater
                 if (attack.skillId != 0) {
                     mpDamage = calculateMpEater(user, mob);
@@ -165,16 +170,19 @@ public final class SkillProcessor {
                 // Process damage
                 mob.damage(user, totalDamage);
                 mob.setMp(mob.getMp() - mpDamage);
-                totalMpDamage += mpDamage;
+                mpGain += mpDamage;
             }
         }
         user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
 
-        // Process mp eater
-        if (totalMpDamage > 0) {
+        if (hpGain > 0) {
+            user.addHp(hpGain);
+        }
+        if (mpGain > 0) {
+            user.addMp(mpGain);
+            // Show MP eater effect
             final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
             final int slv = user.getSkillManager().getSkillLevel(skillId);
-            user.addMp(totalMpDamage);
             user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
             user.getField().broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
         }

@@ -142,7 +142,7 @@ public final class UserPool extends FieldObjectPool<User> {
                 // Handle CTS updates on tick
                 SkillProcessor.processUpdate(locked, now);
                 // Expire temporary stat
-                final Set<CharacterTemporaryStat> resetStats = user.getSecondaryStat().expireTemporaryStats(now);
+                final Set<CharacterTemporaryStat> resetStats = user.getSecondaryStat().expireTemporaryStat(now);
                 if (!resetStats.isEmpty()) {
                     user.validateStat();
                     user.write(WvsContext.temporaryStatReset(resetStats));

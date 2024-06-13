@@ -75,7 +75,7 @@ public final class SummonedPacket {
         outPacket.encodeByte(hitInfo.attackIndex); // nAttackIdx
         outPacket.encodeInt(hitInfo.damage); // nDamage
         if (hitInfo.attackIndex > -2) {
-            outPacket.encodeInt(hitInfo.mobId); // dwMobTemplateID
+            outPacket.encodeInt(hitInfo.templateId); // dwMobTemplateID
             outPacket.encodeByte(hitInfo.dir); // bLeft
         }
         return outPacket;

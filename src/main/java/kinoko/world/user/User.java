@@ -364,8 +364,8 @@ public final class User extends Life implements Lockable<User> {
         getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
     }
 
-    public void resetTemporaryStats(Set<CharacterTemporaryStat> stats) {
-        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStats((cts, option) -> stats.contains(cts));
+    public void resetTemporaryStat(Set<CharacterTemporaryStat> stats) {
+        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStat((cts, option) -> stats.contains(cts));
         updatePassiveSkillData();
         validateStat();
         write(WvsContext.temporaryStatReset(resetStats));
@@ -453,7 +453,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void removeSummoned(int summonedId) {
-        final Summoned existing = getSummoned().get(summonedId);
+        final Summoned existing = getSummoned().remove(summonedId);
         if (existing != null) {
             getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
         }

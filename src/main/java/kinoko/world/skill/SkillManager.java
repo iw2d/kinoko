@@ -52,7 +52,7 @@ public final class SkillManager {
             final Instant nextAvailable = entry.getValue();
             // Check skill cooltime and remove
             if (now.isBefore(nextAvailable)) {
-                continue;
+                // continue;
             }
             iter.remove();
             resetCooltimes.add(skillId);

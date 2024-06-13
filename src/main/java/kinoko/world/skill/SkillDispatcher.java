@@ -144,7 +144,7 @@ public abstract class SkillDispatcher {
                 return;
             case Magician.DISPEL:
                 if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                    user.resetTemporaryStats(Set.of(
+                    user.resetTemporaryStat(Set.of(
                             CharacterTemporaryStat.Poison,
                             CharacterTemporaryStat.Seal,
                             CharacterTemporaryStat.Darkness,
@@ -236,7 +236,7 @@ public abstract class SkillDispatcher {
             case BattleMage.HEROS_WILL_BAM:
             case WildHunter.HEROS_WILL_WH:
             case Mechanic.HEROS_WILL_MECH:
-                user.resetTemporaryStats(Set.of(
+                user.resetTemporaryStat(Set.of(
                         CharacterTemporaryStat.Poison,
                         CharacterTemporaryStat.Seal,
                         CharacterTemporaryStat.Darkness,

@@ -6,6 +6,7 @@ import kinoko.util.Tuple;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public final class MobStat {
@@ -41,19 +42,21 @@ public final class MobStat {
         return getOption(mts).nOption > 0;
     }
 
-    public Set<MobTemporaryStat> expireMobStat(Instant now) {
+    public Set<MobTemporaryStat> expireTemporaryStat(Instant now) {
+        return resetTemporaryStat((mts, option) -> now.isAfter(option.getExpireTime()));
+    }
+
+    public Set<MobTemporaryStat> resetTemporaryStat(BiPredicate<MobTemporaryStat, MobStatOption> predicate) {
         final Set<MobTemporaryStat> resetStats = new HashSet<>();
-        final var statIter = temporaryStats.entrySet().iterator();
-        while (statIter.hasNext()) {
-            final Map.Entry<MobTemporaryStat, MobStatOption> entry = statIter.next();
+        final var iter = temporaryStats.entrySet().iterator();
+        while (iter.hasNext()) {
+            final Map.Entry<MobTemporaryStat, MobStatOption> entry = iter.next();
             final MobTemporaryStat mts = entry.getKey();
             final MobStatOption option = entry.getValue();
-            // Check temporary stat expire time and remove mts
-            if (now.isBefore(option.getExpireTime())) {
-                continue;
+            if (predicate.test(mts, option)) {
+                iter.remove();
+                resetStats.add(mts);
             }
-            statIter.remove();
-            resetStats.add(mts);
         }
         return resetStats;
     }

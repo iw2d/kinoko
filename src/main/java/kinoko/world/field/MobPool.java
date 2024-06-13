@@ -59,7 +59,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
                     }
                 }
                 // Expire temporary stat
-                final Set<MobTemporaryStat> resetStats = mob.getMobStat().expireMobStat(now);
+                final Set<MobTemporaryStat> resetStats = mob.getMobStat().expireTemporaryStat(now);
                 if (!resetBurnedInfos.isEmpty() && mob.getMobStat().getBurnedInfos().isEmpty()) {
                     mob.getMobStat().getTemporaryStats().remove(MobTemporaryStat.Burned);
                     resetStats.add(MobTemporaryStat.Burned);
