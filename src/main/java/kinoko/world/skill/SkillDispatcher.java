@@ -166,6 +166,12 @@ public abstract class SkillDispatcher {
                     user.setMp(user.getMaxMp());
                 }
                 return;
+            case Bowman.SHARP_EYES_BM:
+            case Bowman.SHARP_EYES_MM:
+            case WildHunter.SHARP_EYES_WH:
+                final int sharpEyes = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
+                user.setTemporaryStat(CharacterTemporaryStat.SharpEyes, TemporaryStatOption.of(sharpEyes, skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
 
             // COMMON SKILLS -------------------------------------------------------------------------------------------
             case Warrior.WEAPON_BOOSTER_HERO:

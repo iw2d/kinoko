@@ -102,6 +102,9 @@ public final class SkillHandler {
     @Handler(InHeader.UserSkillCancelRequest)
     public static void handleUserSkillCancelRequest(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
+        if (SkillConstants.isKeydownSkill(skillId)) {
+            return;
+        }
         try (var locked = user.acquire()) {
             final Set<CharacterTemporaryStat> resetStats = locked.get().getSecondaryStat().resetTemporaryStat(skillId);
             if (resetStats.isEmpty()) {

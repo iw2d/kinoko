@@ -2,6 +2,12 @@ package kinoko.world.job.explorer;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
@@ -9,6 +15,10 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
+
+import java.util.Map;
 
 public final class Bowman extends SkillDispatcher {
     // ARCHER
@@ -77,9 +87,55 @@ public final class Bowman extends SkillDispatcher {
     public static final int HEROS_WILL_MM = 3221008;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case ARROW_BOMB:
+            case SILVER_HAWK:
+            case GOLDEN_EAGLE:
+            case PHOENIX: // knock-down?
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case INFERNO:
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                });
+                break;
+            case VENGEANCE:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case HAMSTRING:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case BLIZZARD:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case BLIND:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 
@@ -88,15 +144,37 @@ public final class Bowman extends SkillDispatcher {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
+        final Field field = user.getField();
         switch (skillId) {
-            // COMMON
+            case FOCUS:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case SOUL_ARROW_BM:
+            case SOUL_ARROW_MM:
+                user.setTemporaryStat(CharacterTemporaryStat.SoulArrow, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case PUPPET_BM:
+            case PUPPET_MM:
+                final Summoned puppet = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE);
+                puppet.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(puppet);
+                return;
             case SILVER_HAWK:
             case GOLDEN_EAGLE:
             case PHOENIX:
             case FROSTPREY:
                 final Summoned birb = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
-                birb.setPosition(user.getField(), skill.positionX, skill.positionY);
+                birb.setPosition(field, skill.positionX, skill.positionY);
                 user.addSummoned(birb);
+                return;
+            case CONCENTRATE:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Concentration, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))
+                ));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

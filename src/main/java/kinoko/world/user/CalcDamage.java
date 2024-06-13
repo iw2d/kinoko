@@ -46,7 +46,9 @@ public final class CalcDamage {
         final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
         final double k = getMasteryConstByWT(weaponType);
         final int mastery = getWeaponMastery(user, weaponType);
-        return Math.max(mastery / 100.0 + k, GameConstants.MASTERY_MAX) * calcDamageMax(user) + 0.5;
+        // Note : for CUIStatDetail::Draw, totalMastery = k + min(mastery, 0.95)
+        // whereas in the actual calculation (adjust_ramdom_damage), totalMastery = min(mastery + k, 0.95)
+        return (k + Math.min(mastery / 100.0, GameConstants.MASTERY_MAX)) * calcDamageMax(user) + 0.5;
     }
 
 
@@ -359,7 +361,7 @@ public final class CalcDamage {
 
     public static double adjustRandomDamage(double damage, int rand, double k, int mastery) {
         // `anonymous namespace'::adjust_ramdom_damage
-        final double totalMastery = Math.max(mastery / 100.0 + k, GameConstants.MASTERY_MAX);
+        final double totalMastery = Math.min(mastery / 100.0 + k, GameConstants.MASTERY_MAX);
         return getRand(rand, damage, totalMastery * damage + 0.5);
     }
 

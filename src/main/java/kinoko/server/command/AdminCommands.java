@@ -63,7 +63,7 @@ public final class AdminCommands {
         // User stats
         final Field field = user.getField();
         user.write(MessagePacket.system("HP : %d / %d, MP : %d / %d", user.getHp(), user.getMaxHp(), user.getMp(), user.getMaxMp()));
-        user.write(MessagePacket.system("Damage : %d ~ %d", CalcDamage.calcDamageMin(user), CalcDamage.calcDamageMax(user)));
+        user.write(MessagePacket.system("Damage : %d ~ %d", (int) CalcDamage.calcDamageMin(user), (int) CalcDamage.calcDamageMax(user)));
         user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());

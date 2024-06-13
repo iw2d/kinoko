@@ -19,6 +19,7 @@ import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
+import kinoko.world.job.explorer.Bowman;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
@@ -389,6 +390,7 @@ public final class SkillProcessor {
         handleGuardian(user, hitInfo);
         handleDivineShield(user, hitInfo);
         handleBeholderCounter(user, hitInfo);
+        handleVengeance(user, hitInfo);
     }
 
     private static int handleReflect(User user, HitInfo hitInfo) {
@@ -637,6 +639,16 @@ public final class SkillProcessor {
             // Process damage and broadcast
             mob.damage(user, attackInfo.damage[0]);
             user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
+        }
+    }
+
+    private static void handleVengeance(User user, HitInfo hitInfo) {
+        if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
+            return;
+        }
+        final int prop = user.getSkillManager().getSkillStatValue(Bowman.VENGEANCE, SkillStat.prop);
+        if (prop != 0 && Util.succeedProp(prop)) {
+            user.write(UserLocal.requestVengeance());
         }
     }
 

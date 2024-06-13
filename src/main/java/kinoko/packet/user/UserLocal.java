@@ -3,6 +3,7 @@ package kinoko.packet.user;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.dialog.UIType;
+import kinoko.world.job.explorer.Bowman;
 import kinoko.world.user.effect.Effect;
 
 public final class UserLocal {
@@ -97,6 +98,16 @@ public final class UserLocal {
         outPacket.encodeShort(type.getValue()); // lType
         outPacket.encodeString(text); // sChat
         return outPacket;
+    }
+
+    public static OutPacket requestVengeance() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserRequestVengeance);
+        outPacket.encodeInt(Bowman.VENGEANCE);
+        return outPacket;
+    }
+
+    public static OutPacket requestExJablin() {
+        return OutPacket.of(OutHeader.UserRequestExJablin);
     }
 
     public static OutPacket skillCooltimeSet(int skillId, int remainSeconds) {
