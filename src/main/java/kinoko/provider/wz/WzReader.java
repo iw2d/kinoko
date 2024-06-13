@@ -280,7 +280,7 @@ public final class WzReader implements AutoCloseable {
                 case 0 -> {
                     items.put(itemName, null);
                 }
-                case 2, 11 -> {
+                case 2, 18 -> {
                     final short shortValue = buffer.getShort();
                     items.put(itemName, shortValue);
                 }
