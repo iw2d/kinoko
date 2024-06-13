@@ -131,7 +131,18 @@ public final class Magician extends SkillDispatcher {
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
+            case POISON_BREATH:
+            case FIRE_DEMON:
+            case ICE_DEMON:
+            case METEOR_SHOWER:
+            case BLIZZARD:
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                });
+                break;
             case TELEPORT_MASTERY_FP:
+            case TELEPORT_MASTERY_IL:
+            case TELEPORT_MASTERY_BISH:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
@@ -140,13 +151,6 @@ public final class Magician extends SkillDispatcher {
                 break;
 
             // FP
-            case POISON_BREATH:
-            case FIRE_DEMON:
-            case METEOR_SHOWER:
-                attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
-                });
-                break;
             case POISON_MIST:
                 final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
                 user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
@@ -170,6 +174,25 @@ public final class Magician extends SkillDispatcher {
                     }
                 });
                 break;
+
+            // IL
+            case COLD_BEAM:
+            case ICE_STRIKE:
+            case ELEMENT_COMPOSITION_IL:
+            case ELQUINES:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case THUNDER_SPEAR:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 
@@ -183,6 +206,9 @@ public final class Magician extends SkillDispatcher {
             // COMMON
             case MAGIC_GUARD:
                 user.setTemporaryStat(CharacterTemporaryStat.MagicGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case MAGIC_ARMOR:
+                user.setTemporaryStat(CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
             case SLOW_FP:
             case SLOW_IL:
@@ -206,6 +232,10 @@ public final class Magician extends SkillDispatcher {
             case TELEPORT_MASTERY_BISH:
                 user.setTemporaryStat(CharacterTemporaryStat.TeleportMasteryOn, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0));
                 return;
+            case ELEMENTAL_DECREASE_FP:
+            case ELEMENTAL_DECREASE_IL:
+                user.setTemporaryStat(CharacterTemporaryStat.ElementalReset, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
             case MANA_REFLECTION_FP:
             case MANA_REFLECTION_IL:
             case MANA_REFLECTION_BISH:
@@ -226,6 +256,9 @@ public final class Magician extends SkillDispatcher {
                 return;
 
             // BISHOP
+            case INVINCIBLE:
+                user.setTemporaryStat(CharacterTemporaryStat.Invincible, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
             case SUMMON_DRAGON:
                 final Summoned dragon = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
                 dragon.setPosition(user.getField(), skill.positionX, skill.positionY);
