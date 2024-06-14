@@ -1,7 +1,9 @@
 package kinoko.world.user;
 
+import kinoko.provider.map.Foothold;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
@@ -13,10 +15,6 @@ public final class Pet extends Life implements Encodable {
     public Pet(User owner, Item item) {
         this.owner = owner;
         this.item = item;
-        // Life initialization
-        setX(owner.getX());
-        setY(owner.getY());
-        setFoothold(owner.getFoothold());
     }
 
     public User getOwner() {
@@ -57,6 +55,13 @@ public final class Pet extends Life implements Encodable {
 
     public int getPetIndex() {
         return owner.getPetIndex(getItemSn()).orElseThrow();
+    }
+
+    public void setPosition(Field field, int x, int y) {
+        setField(field);
+        setX(x);
+        setY(y);
+        setFoothold(field.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
     }
 
     @Override

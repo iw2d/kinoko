@@ -169,17 +169,12 @@ public final class SkillProcessor {
                 final Mob mob = lockedMob.get();
                 int totalDamage = Arrays.stream(ai.damage).sum();
                 int mpDamage = 0;
-
-                // Handle Heaven's Hammer
+                // Handle skills
                 if (attack.skillId == Warrior.HEAVENS_HAMMER) {
                     totalDamage = calculateHeavensHammer(user, mob);
-                }
-                // Handle Drain
-                if (attack.skillId == Thief.DRAIN) {
+                } else if (attack.skillId == Thief.DRAIN) {
                     hpGain = Math.min(Math.min(totalDamage, user.getMaxHp() / 2), mob.getMaxHp());
-                }
-                // Handle MP Eater
-                if (attack.skillId != 0) {
+                } else if (attack.skillId != 0) {
                     mpDamage = calculateMpEater(user, mob);
                 }
                 // Process damage
@@ -435,7 +430,7 @@ public final class SkillProcessor {
         handleDivineShield(user, hitInfo);
         handleBeholderCounter(user, hitInfo);
         handleVengeance(user, hitInfo);
-        // TODO : handle dark flare
+        handleDarkFlare(user, hitInfo);
     }
 
     private static int handleReflect(User user, HitInfo hitInfo) {
@@ -681,9 +676,9 @@ public final class SkillProcessor {
             attackInfo.hitAction = MobActionType.HIT1.getValue();
             attackInfo.damage[0] = (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
             attack.getAttackInfo().add(attackInfo);
-            // Process damage and broadcast
-            mob.damage(user, attackInfo.damage[0]);
+            // Broadcast packet and process damage
             user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
+            mob.damage(user, attackInfo.damage[0]);
         }
     }
 
@@ -695,6 +690,50 @@ public final class SkillProcessor {
         if (prop != 0 && Util.succeedProp(prop)) {
             user.write(UserLocal.requestVengeance());
         }
+    }
+
+    private static void handleDarkFlare(User user, HitInfo hitInfo) {
+        if (hitInfo.attackIndex <= AttackIndex.Counter.getValue() || hitInfo.damage <= 0) {
+            return;
+        }
+        user.getField().getUserPool().forEachPartySummoned(user, (member, summoned) -> {
+            if (summoned.getSkillId() != Thief.DARK_FLARE_NL && summoned.getSkillId() != Thief.DARK_FLARE_SHAD) {
+                return;
+            }
+            if (!summoned.getRect().isInsideRect(user.getX(), user.getY())) {
+                return;
+            }
+            // Resolve skill info
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(summoned.getSkillId());
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not resolve skill info for dark flare skill ID : {}", summoned.getSkillId());
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            final double damage = si.getValue(SkillStat.x, summoned.getSkillLevel()) / 100.0 * hitInfo.damage;
+            // Resolve target mob
+            final Optional<Mob> mobResult = user.getField().getMobPool().getById(hitInfo.mobId);
+            if (mobResult.isEmpty()) {
+                return;
+            }
+            try (var lockedMob = mobResult.get().acquire()) {
+                final Mob mob = lockedMob.get();
+                if (mob.getHp() <= 0) {
+                    return;
+                }
+                // Create attack
+                final Attack attack = new Attack(OutHeader.SummonedAttack);
+                attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);
+                final AttackInfo attackInfo = new AttackInfo();
+                attackInfo.mobId = mob.getId();
+                attackInfo.hitAction = MobActionType.HIT1.getValue();
+                attackInfo.damage[0] = Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getMaxHp() / 2);
+                attack.getAttackInfo().add(attackInfo);
+                // Broadcast packet and process damage
+                user.getField().broadcastPacket(SummonedPacket.summonedAttack(member, summoned, attack));
+                mob.damage(user, attackInfo.damage[0]);
+            }
+        });
     }
 
 

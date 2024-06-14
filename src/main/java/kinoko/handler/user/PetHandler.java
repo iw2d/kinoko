@@ -87,6 +87,7 @@ public final class PetHandler {
                 }
                 // Create and set pet
                 final Pet pet = Pet.from(user, item);
+                pet.setPosition(user.getField(), user.getX(), user.getY());
                 if (!hasFollowTheLead || bossPet) {
                     user.setPet(pet, 0, false);
                 } else {

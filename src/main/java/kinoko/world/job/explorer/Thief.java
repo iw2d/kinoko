@@ -14,6 +14,7 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
@@ -183,6 +184,7 @@ public final class Thief extends SkillDispatcher {
             case DARK_FLARE_SHAD:
                 final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK_COUNTER);
                 darkFlare.setPosition(field, skill.positionX, skill.positionY);
+                darkFlare.setRect(SkillConstants.DARK_FLARE_RANGE.translate(skill.positionX, skill.positionY));
                 user.addSummoned(darkFlare);
                 return;
             case NINJA_AMBUSH_NL:

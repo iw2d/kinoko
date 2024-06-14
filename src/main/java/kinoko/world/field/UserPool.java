@@ -18,6 +18,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public final class UserPool extends FieldObjectPool<User> {
@@ -45,18 +46,13 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Add user pets
         for (Pet pet : user.getPets()) {
-            pet.setX(user.getX());
-            pet.setY(user.getY());
-            pet.setFoothold(user.getFoothold());
+            pet.setPosition(field, user.getX(), user.getY());
             broadcastPacket(PetPacket.petActivated(user, pet));
         }
 
         // Add user summoned
         for (Summoned summoned : user.getSummoned().values()) {
-            summoned.setField(field);
-            summoned.setX(user.getX());
-            summoned.setY(user.getY());
-            summoned.setFoothold(user.getFoothold());
+            summoned.setPosition(field, user.getX(), user.getY());
             broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
         }
 
@@ -130,6 +126,16 @@ public final class UserPool extends FieldObjectPool<User> {
                 assignController(mob);
             }
         });
+
+        // Remove summoned
+        final var iter = user.getSummoned().values().iterator();
+        while (iter.hasNext()) {
+            final Summoned summoned = iter.next();
+            if (!summoned.canMigrate()) {
+                broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
+                iter.remove();
+            }
+        }
 
         // Remove affected areas
         field.getAffectedAreaPool().removeByOwnerId(user.getCharacterId());
@@ -212,6 +218,9 @@ public final class UserPool extends FieldObjectPool<User> {
         });
     }
 
+    /**
+     * Does not include user.
+     */
     public void forEachPartyMember(User user, Consumer<User> consumer) {
         final int partyId = user.getPartyId();
         if (partyId != 0) {
@@ -220,6 +229,22 @@ public final class UserPool extends FieldObjectPool<User> {
                     consumer.accept(member);
                 }
             });
+        }
+    }
+
+    /**
+     * Includes Summoned owned by user.
+     */
+    public void forEachPartySummoned(User user, BiConsumer<User, Summoned> consumer) {
+        final int partyId = user.getPartyId();
+        if (partyId != 0) {
+            forEach((member) -> {
+                if (member.getPartyId() == partyId) {
+                    member.getSummoned().forEach((id, summoned) -> consumer.accept(member, summoned));
+                }
+            });
+        } else {
+            user.getSummoned().forEach((id, summoned) -> consumer.accept(user, summoned));
         }
     }
 }

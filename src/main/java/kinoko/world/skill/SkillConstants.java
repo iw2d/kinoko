@@ -1,6 +1,7 @@
 package kinoko.world.skill;
 
 import kinoko.provider.skill.ElementAttribute;
+import kinoko.util.Rect;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -30,7 +31,8 @@ public final class SkillConstants {
             1932015, 1932030, 1932031, 1932032, 1932033, 1932036
     );
     public static final int MECHANIC_VEHICLE = 1932016;
-    public static int ENERGY_CHARGE_MAX = 10000;
+    public static final int ENERGY_CHARGE_MAX = 10000;
+    public static final Rect DARK_FLARE_RANGE = new Rect(-400, -200, 400, 200);
 
     public static int getSkillRoot(int skillId) {
         return skillId / 10000;

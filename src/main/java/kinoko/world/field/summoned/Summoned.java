@@ -5,6 +5,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
+import kinoko.util.Rect;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
 import kinoko.world.job.resistance.Mechanic;
@@ -26,6 +27,7 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
 
     private SummonedEnterType enterType = SummonedEnterType.CREATE_SUMMONED;
     private SummonedLeaveType leaveType = SummonedLeaveType.LEAVE_FIELD;
+    private Rect rect;
     private int hp = 1;
 
     private int rockAndShockCount;
@@ -86,6 +88,14 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
 
     public void setLeaveType(SummonedLeaveType leaveType) {
         this.leaveType = leaveType;
+    }
+
+    public Rect getRect() {
+        return rect;
+    }
+
+    public void setRect(Rect rect) {
+        this.rect = rect;
     }
 
     public int getHp() {
