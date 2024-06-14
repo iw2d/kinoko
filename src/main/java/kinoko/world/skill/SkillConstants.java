@@ -106,6 +106,18 @@ public final class SkillConstants {
         }
     }
 
+    public static int getVenomSkill(int jobId) {
+        if (JobConstants.isNightLordJob(jobId)) {
+            return Thief.VENOMOUS_STAR;
+        } else if (JobConstants.isShadowerJob(jobId)) {
+            return Thief.VENOMOUS_STAB;
+        } else if (JobConstants.isDualJob(jobId)) {
+            return Thief.VENOM_DB;
+        } else {
+            return 0;
+        }
+    }
+
     public static int getEnergyChargeSkill(int jobId) {
         return JobConstants.isCygnusJob(jobId) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE;
     }

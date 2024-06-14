@@ -4,7 +4,9 @@ import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.OutHeader;
@@ -12,10 +14,7 @@ import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
-import kinoko.world.field.mob.Mob;
-import kinoko.world.field.mob.MobActionType;
-import kinoko.world.field.mob.MobStatOption;
-import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.mob.*;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
@@ -109,17 +108,33 @@ public final class SkillProcessor {
                 user.write(WvsContext.inventoryOperation(removeResult.get(), true));
             }
             final int bulletCon = si.getBulletCon(attack.slv);
-            if (bulletCon > 0 && attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
-                // Resolve bullet item
-                final int bulletCount = bulletCon * (attack.isShadowPartner() ? 2 : 1);
-                final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
-                if (bulletItem == null || bulletItem.getQuantity() < bulletCount) {
-                    log.error("Tried to use skill {} without enough bullets", attack.skillId);
-                    return;
+            if (bulletCon > 0) {
+                final int exJablinProp = user.getSkillManager().getSkillStatValue(Thief.EXPERT_THROWING_STAR_HANDLING, SkillStat.prop);
+                final boolean exJablin = exJablinProp != 0 && Util.succeedProp(exJablinProp);
+                if (exJablin) {
+                    user.write(UserLocal.requestExJablin());
                 }
-                // Consume bullets
-                bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
-                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
+                    final int bulletCount = bulletCon * (attack.isShadowPartner() ? 2 : 1);
+                    final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
+                    if (bulletItem == null || bulletItem.getQuantity() < bulletCount) {
+                        log.error("Tried to use skill {} without enough bullets", attack.skillId);
+                        return;
+                    }
+                    if (exJablin) {
+                        // Recharge 1 throwing star if possible
+                        final int slotMax = ItemProvider.getItemInfo(bulletItem.getItemId()).map(ItemInfo::getSlotMax).orElse(0);
+                        if (bulletItem.getQuantity() < slotMax) {
+                            bulletItem.setQuantity((short) (bulletItem.getQuantity() + 1));
+                            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                        }
+                        user.write(UserLocal.requestExJablin());
+                    } else {
+                        // Consume bullets
+                        bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                    }
+                }
             }
             // Consume hp/mp
             user.addHp(-hpCon);
@@ -171,6 +186,10 @@ public final class SkillProcessor {
                 mob.damage(user, totalDamage);
                 mob.setMp(mob.getMp() - mpDamage);
                 mpGain += mpDamage;
+                // Process on-hit effects
+                if (mob.getHp() > 0) {
+                    handleVenom(user, mob);
+                }
             }
         }
         user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
@@ -277,6 +296,23 @@ public final class SkillProcessor {
         }
         final int delta = mob.getMaxMp() * si.getValue(SkillStat.x, slv) / 100;
         return Math.clamp(delta, 0, mob.getMp());
+    }
+
+    private static void handleVenom(User user, Mob mob) {
+        final int skillId = SkillConstants.getVenomSkill(user.getJob());
+        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for venom skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+        }
     }
 
 
@@ -399,6 +435,7 @@ public final class SkillProcessor {
         handleDivineShield(user, hitInfo);
         handleBeholderCounter(user, hitInfo);
         handleVengeance(user, hitInfo);
+        // TODO : handle dark flare
     }
 
     private static int handleReflect(User user, HitInfo hitInfo) {

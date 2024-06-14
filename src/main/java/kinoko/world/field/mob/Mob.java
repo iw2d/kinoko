@@ -165,6 +165,14 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.mp = mp;
     }
 
+    public int getExp() {
+        if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
+            final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
+            return (int) (template.getExp() * multiplier);
+        }
+        return template.getExp();
+    }
+
     public boolean isSlowUsed() {
         return slowUsed;
     }
@@ -283,7 +291,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
      */
     private void distributeExp() {
         // Calculate exp split based on damage dealt
-        final int totalExp = template.getExp();
+        final int totalExp = getExp();
         final Map<User, Integer> expSplit = new HashMap<>(); // user -> exp
         final Map<Integer, Set<User>> partyMembers = new HashMap<>(); // party id -> members
         for (var entry : damageDone.entrySet()) {
@@ -404,7 +412,12 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 }
             }
             // Drop probability
-            if (Util.getRandom().nextDouble() > reward.getProb()) {
+            double probability = reward.getProb();
+            if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
+                final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
+                probability = probability * multiplier;
+            }
+            if (Util.getRandom().nextDouble() > probability) {
                 continue;
             }
             // Create drop

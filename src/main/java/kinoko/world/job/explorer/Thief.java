@@ -4,7 +4,9 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
+import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -13,6 +15,7 @@ import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
@@ -106,7 +109,7 @@ public final class Thief extends SkillDispatcher {
     public static final int UPPER_STAB = 4331004;
     public static final int FLYING_ASSAULTER = 4331005;
     // BLADE_MASTER
-    public static final int VENOM = 4340001;
+    public static final int VENOM_DB = 4340001;
     public static final int MAPLE_WARRIOR_DB = 4341000;
     public static final int FINAL_CUT = 4341002;
     public static final int MONSTER_BOMB = 4341003;
@@ -178,17 +181,19 @@ public final class Thief extends SkillDispatcher {
                 return;
             case DARK_FLARE_NL:
             case DARK_FLARE_SHAD:
-                final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
+                final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK_COUNTER);
                 darkFlare.setPosition(field, skill.positionX, skill.positionY);
                 user.addSummoned(darkFlare);
                 return;
             case NINJA_AMBUSH_NL:
             case NINJA_AMBUSH_SHAD:
+                final int damage = (int) Math.clamp(CalcDamage.calcDamageMax(user) * si.getValue(SkillStat.damage, slv) / 100, 1.0, GameConstants.DAMAGE_MAX);
                 skill.forEachAffectedMob(field, (mob) -> {
-                    mob.setTemporaryStat(MobTemporaryStat.Ambush, MobStatOption.of(1337, skillId, si.getDuration(slv)));
+                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId, damage, 1000, si.getValue(SkillStat.time, slv)));
                 });
                 return;
 
+            // NL
             case SHADOW_WEB:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {

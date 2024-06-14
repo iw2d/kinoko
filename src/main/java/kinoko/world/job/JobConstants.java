@@ -88,16 +88,24 @@ public final class JobConstants {
         return jobId / 10 == 32;
     }
 
+    public static boolean isNightLordJob(int jobId) {
+        return jobId / 10 == 41;
+    }
+
+    public static boolean isShadowerJob(int jobId) {
+        return jobId / 10 == 42;
+    }
+
+    public static boolean isDualJob(int jobId) {
+        return jobId / 10 == 43;
+    }
+
     public static boolean isAranJob(int jobId) {
         return jobId / 100 == 21 || jobId == 2000;
     }
 
     public static boolean isEvanJob(int jobId) {
         return jobId / 100 == 22 || jobId == 2001;
-    }
-
-    public static boolean isDualJob(int jobId) {
-        return jobId / 10 == 43;
     }
 
     public static boolean isDualJobBorn(int jobId, int subJob) {
