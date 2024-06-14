@@ -321,7 +321,7 @@ public final class Warrior extends SkillDispatcher {
 
     public static void handleBerserkEffect(User user) {
         final int skillId = Warrior.BERSERK;
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
         }
@@ -332,7 +332,7 @@ public final class Warrior extends SkillDispatcher {
 
     public static boolean isBerserkEffect(User user) {
         final int skillId = Warrior.BERSERK;
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return false;
         }
@@ -341,14 +341,14 @@ public final class Warrior extends SkillDispatcher {
             log.error("Could not resolve skill info for berserk skill ID : {}", skillId);
             return false;
         }
-        final int threshold = skillInfoResult.get().getValue(SkillStat.x, user.getSkillManager().getSkillLevel(skillId));
+        final int threshold = skillInfoResult.get().getValue(SkillStat.x, user.getSkillLevel(skillId));
         final double percentage = (double) user.getHp() / user.getMaxHp();
         return (percentage * 100) > threshold;
     }
 
     public static void handleBeholderEffect(User user) {
         final int skillId = Warrior.BEHOLDER;
-        final Effect beholderEffect = Effect.skillAffected(skillId, user.getSkillManager().getSkillLevel(skillId));
+        final Effect beholderEffect = Effect.skillAffected(skillId, user.getSkillLevel(skillId));
         user.write(UserLocal.effect(beholderEffect));
         user.getField().broadcastPacket(UserRemote.effect(user, beholderEffect), user);
     }

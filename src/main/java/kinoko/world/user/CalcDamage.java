@@ -84,7 +84,6 @@ public final class CalcDamage {
             damage = (100.0 - multiplier) / 100.0 * damage;
         }
         // Skill damage
-        final SkillManager sm = user.getSkillManager();
         final SecondaryStat ss = user.getSecondaryStat();
         final int skillDamage = getSkillPDamage(user, si, slv, mob, 0);
         if (skillDamage > 0) {
@@ -113,16 +112,16 @@ public final class CalcDamage {
         }
         // TODO : Handle shadow partner, assassinate scaling with dark sight
         if (ss.hasOption(CharacterTemporaryStat.WindWalk)) {
-            damage = sm.getSkillStatValue(WindArcher.WIND_WALK, SkillStat.damage) / 100.0 * damage;
+            damage = user.getSkillStatValue(WindArcher.WIND_WALK, SkillStat.damage) / 100.0 * damage;
         }
         if (ss.hasOption(CharacterTemporaryStat.DarkSight)) {
-            if (sm.getSkillLevel(NightWalker.VANISH) > 0) {
-                damage = sm.getSkillStatValue(NightWalker.VANISH, SkillStat.damage) / 100.0 * damage;
+            if (user.getSkillLevel(NightWalker.VANISH) > 0) {
+                damage = user.getSkillStatValue(NightWalker.VANISH, SkillStat.damage) / 100.0 * damage;
             }
         }
         if (mob.getMobStat().hasOption(MobTemporaryStat.Stun) || mob.getMobStat().hasOption(MobTemporaryStat.Blind)) {
-            if (sm.getSkillLevel(Warrior.CHANCE_ATTACK) > 0) {
-                damage = sm.getSkillStatValue(Warrior.CHANCE_ATTACK, SkillStat.damage) / 100.0 * damage;
+            if (user.getSkillLevel(Warrior.CHANCE_ATTACK) > 0) {
+                damage = user.getSkillStatValue(Warrior.CHANCE_ATTACK, SkillStat.damage) / 100.0 * damage;
             }
         }
         // Ignore - weakness skills (9000 - 9002), cd->aMobCategoryDamage, cd->boss.nDamage
@@ -135,8 +134,8 @@ public final class CalcDamage {
         }
         // TODO : nAR01Pad
         if (SkillConstants.isJaguarMeleeAttackSkill(skillId)) {
-            if (sm.getSkillLevel(WildHunter.JAGUAR_BOOST) > 0) {
-                final int jaguarBoost = sm.getSkillStatValue(WildHunter.JAGUAR_BOOST, SkillStat.damage) + 100;
+            if (user.getSkillLevel(WildHunter.JAGUAR_BOOST) > 0) {
+                final int jaguarBoost = user.getSkillStatValue(WildHunter.JAGUAR_BOOST, SkillStat.damage) + 100;
                 damage = jaguarBoost * damage / 100.0;
             }
         }
@@ -156,55 +155,55 @@ public final class CalcDamage {
             damage = si.getValue(SkillStat.y, slv);
         }
         if (skillId == Bowman.STRAFE_MM) {
-            if (sm.getSkillLevel(Bowman.ULTIMATE_STRAFE) > 0) {
-                damage = sm.getSkillStatValue(Bowman.ULTIMATE_STRAFE, SkillStat.damage);
+            if (user.getSkillLevel(Bowman.ULTIMATE_STRAFE) > 0) {
+                damage = user.getSkillStatValue(Bowman.ULTIMATE_STRAFE, SkillStat.damage);
             }
         } else if (skillId == WildHunter.EXPLODING_ARROWS) {
             if (i == si.getValue(SkillStat.attackCount, slv) - 1) {
                 damage = si.getValue(SkillStat.x, slv);
             }
         }
-        if (sm.getSkillLevel(Pirate.BRAWLING_MASTERY) > 0) {
+        if (user.getSkillLevel(Pirate.BRAWLING_MASTERY) > 0) {
             switch (skillId) {
                 case Pirate.BACKSPIN_BLOW -> {
-                    damage += sm.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.x);
+                    damage += user.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.x);
                 }
                 case Pirate.DOUBLE_UPPERCUT -> {
-                    damage += sm.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.y);
+                    damage += user.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.y);
                 }
                 case Pirate.CORKSCREW_BLOW -> {
-                    damage += sm.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.z);
+                    damage += user.getSkillStatValue(Pirate.BRAWLING_MASTERY, SkillStat.z);
                 }
             }
         }
         if (skillId == Pirate.FLAMETHROWER || skillId == Pirate.ICE_SPLITTER) {
-            if (sm.getSkillLevel(Pirate.ELEMENTAL_BOOST) > 0) {
-                damage += sm.getSkillStatValue(Pirate.ELEMENTAL_BOOST, SkillStat.damage);
+            if (user.getSkillLevel(Pirate.ELEMENTAL_BOOST) > 0) {
+                damage += user.getSkillStatValue(Pirate.ELEMENTAL_BOOST, SkillStat.damage);
             }
         }
         if (damage > 0) {
             damage += mob.getMobStat().getOption(MobTemporaryStat.RiseByToss).nOption;
             if (skillId == Warrior.POWER_STRIKE || skillId == Warrior.SLASH_BLAST) {
                 final int enhancedBasicsId = SkillConstants.getEnhancedBasicsSkill(user.getJob());
-                if (sm.getSkillLevel(enhancedBasicsId) > 0) {
-                    damage += sm.getSkillStatValue(enhancedBasicsId, skillId == Warrior.POWER_STRIKE ? SkillStat.x : SkillStat.y);
+                if (user.getSkillLevel(enhancedBasicsId) > 0) {
+                    damage += user.getSkillStatValue(enhancedBasicsId, skillId == Warrior.POWER_STRIKE ? SkillStat.x : SkillStat.y);
                 }
             } else if (skillId == Bowman.ARROW_BLOW || skillId == Bowman.DOUBLE_SHOT) {
                 final int enhancedBasicsId = SkillConstants.getEnhancedBasicsSkill(user.getJob());
-                if (sm.getSkillLevel(enhancedBasicsId) > 0) {
-                    damage += sm.getSkillStatValue(enhancedBasicsId, skillId == Bowman.ARROW_BLOW ? SkillStat.x : SkillStat.y);
+                if (user.getSkillLevel(enhancedBasicsId) > 0) {
+                    damage += user.getSkillStatValue(enhancedBasicsId, skillId == Bowman.ARROW_BLOW ? SkillStat.x : SkillStat.y);
                 }
             }
         }
         if (skillId == Thief.MESO_EXPLOSION) {
             if (JobConstants.isCorrectJobForSkillRoot(user.getJob(), 422)) {
-                if (sm.getSkillLevel(Thief.MESO_MASTERY) > 0) {
-                    damage += sm.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.x);
+                if (user.getSkillLevel(Thief.MESO_MASTERY) > 0) {
+                    damage += user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.x);
                 }
             }
         }
         if (skillId == Warrior.CHARGED_BLOW) {
-            final int advancedChargeDamage = sm.getSkillStatValue(Warrior.ADVANCED_CHARGE, SkillStat.damage);
+            final int advancedChargeDamage = user.getSkillStatValue(Warrior.ADVANCED_CHARGE, SkillStat.damage);
             if (advancedChargeDamage > 0) {
                 damage = advancedChargeDamage;
             }
@@ -221,16 +220,16 @@ public final class CalcDamage {
         final SkillManager sm = user.getSkillManager();
         final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
         final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
-        if (sm.getSkillLevel(comboAttackId) == 0) {
+        if (user.getSkillLevel(comboAttackId) == 0) {
             return 0;
         }
         final int maxCombo;
-        int damagePerCombo = sm.getSkillStatValue(comboAttackId, SkillStat.damR); // nDIPr
-        if (sm.getSkillLevel(advancedComboId) > 0) {
-            damagePerCombo += sm.getSkillStatValue(advancedComboId, SkillStat.damR); // nDIPr
-            maxCombo = sm.getSkillStatValue(advancedComboId, SkillStat.x);
+        int damagePerCombo = user.getSkillStatValue(comboAttackId, SkillStat.damR); // nDIPr
+        if (user.getSkillLevel(advancedComboId) > 0) {
+            damagePerCombo += user.getSkillStatValue(advancedComboId, SkillStat.damR); // nDIPr
+            maxCombo = user.getSkillStatValue(advancedComboId, SkillStat.x);
         } else {
-            maxCombo = sm.getSkillStatValue(comboAttackId, SkillStat.x);
+            maxCombo = user.getSkillStatValue(comboAttackId, SkillStat.x);
         }
         comboCounter = Math.min(comboCounter, maxCombo);
         if (si.getSkillId() == Warrior.COMA || si.getSkillId() == Warrior.PANIC || si.getSkillId() == DawnWarrior.PANIC || si.getSkillId() == DawnWarrior.COMA) {
@@ -263,13 +262,13 @@ public final class CalcDamage {
             mastery = si.getValue(SkillStat.mastery, slv);
         }
         final double k = getMasteryConstByWT(weaponType);
-        final int amp = user.getSkillManager().getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.y);
+        final int amp = user.getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.y);
 
         int cr = 5;
         int cd = 0;
         if (JobConstants.isEvanJob(user.getJob())) {
-            cr = user.getSkillManager().getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.prop) + 5;
-            cd = user.getSkillManager().getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.damage);
+            cr = user.getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.prop) + 5;
+            cd = user.getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.damage);
         }
         final int sharpEyes = user.getSecondaryStat().getOption(CharacterTemporaryStat.SharpEyes).nOption;
         final int thornsEffect = user.getSecondaryStat().getOption(CharacterTemporaryStat.ThornsEffect).nOption;
@@ -395,9 +394,9 @@ public final class CalcDamage {
         final int comboAbilityBuff = ss.getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption;
         if (comboAbilityBuff != 0) {
             final int comboSkillId = user.getJob() != 200 ? Aran.COMBO_ABILITY : 20000017; // tutorial skill?
-            final int maxStacks = sm.getSkillStatValue(comboSkillId, SkillStat.x);
+            final int maxStacks = user.getSkillStatValue(comboSkillId, SkillStat.x);
             final int stacks = Math.max(comboAbilityBuff / 10, maxStacks);
-            pad += stacks * sm.getSkillStatValue(comboSkillId, SkillStat.y);
+            pad += stacks * user.getSkillStatValue(comboSkillId, SkillStat.y);
         }
         // Apply padR
         final int statPadR = ss.getOption(CharacterTemporaryStat.MaxLevelBuff).nOption +
@@ -453,7 +452,7 @@ public final class CalcDamage {
             // this->aTemporaryStat[0].p->IsActivated
             return incPad;
         }
-        final int ecPad = user.getSkillManager().getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.pad);
+        final int ecPad = user.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.pad);
         return Math.max(incPad, ecPad);
     }
 
@@ -464,7 +463,7 @@ public final class CalcDamage {
             // this->aTemporaryStat[0].p->IsActivated (unnecessary, since Energy Charge does not have any epad stat)
             return incEpad;
         }
-        final int ecEpad = user.getSkillManager().getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.epad);
+        final int ecEpad = user.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.epad);
         return Math.max(incEpad, ecEpad);
     }
 
@@ -474,7 +473,7 @@ public final class CalcDamage {
         if (user.getSecondaryStat().getOption(CharacterTemporaryStat.EnergyCharged).nOption < 10000) {
             return incAcc;
         }
-        final int ecAcc = user.getSkillManager().getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.acc);
+        final int ecAcc = user.getSkillStatValue(SkillConstants.getEnergyChargeSkill(user.getJob()), SkillStat.acc);
         return Math.max(incAcc, ecAcc);
     }
 
@@ -593,7 +592,7 @@ public final class CalcDamage {
 
     private static int getMasteryFromSkill(User user, int... skillIds) {
         for (int skillId : skillIds) {
-            final int mastery = user.getSkillManager().getSkillStatValue(skillId, SkillStat.mastery);
+            final int mastery = user.getSkillStatValue(skillId, SkillStat.mastery);
             if (mastery > 0) {
                 return mastery;
             }
@@ -647,8 +646,8 @@ public final class CalcDamage {
         if (elemAttr == ElementAttribute.PHYSICAL) {
             return damage;
         }
-        final double adjust = user.getSkillManager().getSkillStatValue(skillId, SkillStat.z) / 100.0;
-        final double amp = user.getSkillManager().getSkillStatValue(skillId, SkillStat.damage) / 100.0;
+        final double adjust = user.getSkillStatValue(skillId, SkillStat.z) / 100.0;
+        final double amp = user.getSkillStatValue(skillId, SkillStat.damage) / 100.0;
         return getDamageAdjustedByElemAttr(amp * damage, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), adjust, 0.0);
     }
 
@@ -662,8 +661,8 @@ public final class CalcDamage {
         if (elemAttr == ElementAttribute.PHYSICAL) {
             return damage;
         }
-        final double adjust = user.getSkillManager().getSkillStatValue(skillId, SkillStat.z) / 100.0;
-        final double amp = user.getSkillManager().getSkillStatValue(skillId, SkillStat.damage) / 100.0;
+        final double adjust = user.getSkillStatValue(skillId, SkillStat.z) / 100.0;
+        final double amp = user.getSkillStatValue(skillId, SkillStat.damage) / 100.0;
         return getDamageAdjustedByElemAttr((amp - 1.0) * damage * 0.5, damagedElemAttr.getOrDefault(elemAttr, DamagedAttribute.NONE), adjust, 0.0);
     }
 

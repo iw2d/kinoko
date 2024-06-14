@@ -216,7 +216,7 @@ public final class BasicStat {
             return 0;
         }
         final SkillInfo si = skillInfoResult.get();
-        final int slv = sm.getSkillLevel(WildHunter.JAGUAR_RIDER);
+        final int slv = SkillManager.getSkillLevel(ss, sm, WildHunter.JAGUAR_RIDER);
         return si.getValue(SkillStat.z, slv);
     }
 

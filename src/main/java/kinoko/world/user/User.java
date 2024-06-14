@@ -5,8 +5,10 @@ import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.SkillProvider;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
@@ -313,6 +315,18 @@ public final class User extends Life implements Lockable<User> {
         write(WvsContext.statChanged(Stat.POP, newPop, true));
     }
 
+    public int getSkillLevel(int skillId) {
+        return SkillManager.getSkillLevel(getSecondaryStat(), getSkillManager(), skillId);
+    }
+
+    public int getSkillStatValue(int skillId, SkillStat stat) {
+        final int slv = getSkillLevel(skillId);
+        if (slv == 0) {
+            return 0;
+        }
+        return SkillProvider.getSkillInfoById(skillId).map(skillInfo -> skillInfo.getValue(stat, slv)).orElse(0);
+    }
+
     public void updatePassiveSkillData() {
         getPassiveSkillData().setFrom(getBasicStat(), getSecondaryStat(), getSkillManager());
     }
@@ -325,7 +339,7 @@ public final class User extends Life implements Lockable<User> {
         getBasicStat().setFrom(getCharacterStat(), getForcedStat(), getSecondaryStat(), getSkillManager(), getPassiveSkillData(), realEquip);
 
         // SecondaryStat::SetFrom
-        getSecondaryStat().setFrom(getBasicStat(), getForcedStat(), getSkillManager(), realEquip);
+        getSecondaryStat().setFrom(getBasicStat(), getForcedStat(), getSecondaryStat(), getSkillManager(), realEquip);
 
         // CWvsContext::ValidateAdditionalItemEffect - ignore
 

@@ -205,18 +205,18 @@ public final class PassiveSkillData {
             final SkillInfo si = skillInfoResult.get();
             if (si.isPsd() && (si.getSkillId() != Mechanic.PERFECT_ARMOR || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
                 if (si.getSkillId() == Mechanic.MECH_SIEGE_MODE_2) {
-                    addPassiveSkillData(si, sm.getSkillLevel(Mechanic.MECH_SIEGE_MODE));
+                    addPassiveSkillData(si, SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE));
                 } else {
-                    addPassiveSkillData(si, skillRecord.getSkillLevel());
+                    addPassiveSkillData(si, SkillManager.getSkillLevel(ss, sm, skillRecord.getSkillId()));
                 }
             }
         }
 
         // Special handling for Mech: Siege Mode
         if (JobConstants.isMechanicJob(bs.getJob())) {
-            if (sm.getSkillLevel(Mechanic.MECH_MISSILE_TANK) > 0) {
+            if (SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE) > 0) {
                 final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(Mechanic.MECH_SIEGE_MODE_2);
-                skillInfoResult.ifPresent(skillInfo -> addPassiveSkillData(skillInfo, sm.getSkillLevel(Mechanic.MECH_SIEGE_MODE)));
+                skillInfoResult.ifPresent(skillInfo -> addPassiveSkillData(skillInfo, SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE)));
             }
         }
 

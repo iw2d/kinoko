@@ -14,6 +14,8 @@ public interface SkillInfo {
 
     boolean isInvisible();
 
+    boolean isCombatOrders();
+
     boolean isPsd();
 
     List<Integer> getPsdSkills();

@@ -471,8 +471,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             if (money <= 0) {
                 return Optional.empty();
             }
-            if (owner.getSkillManager().getSkillLevel(Thief.MESO_MASTERY) > 0) {
-                final double multiplier = (owner.getSkillManager().getSkillStatValue(Thief.MESO_MASTERY, SkillStat.mesoR) + 100) / 100.0;
+            if (owner.getSkillLevel(Thief.MESO_MASTERY) > 0) {
+                final double multiplier = (owner.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.mesoR) + 100) / 100.0;
                 money = (int) (money * multiplier);
             }
             if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUp)) {

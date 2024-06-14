@@ -11,16 +11,18 @@ public final class StaticSkillInfo implements SkillInfo {
     private final int id;
     private final int maxLevel;
     private final boolean invisible;
+    private final boolean combatOrders;
     private final boolean psd;
     private final List<Integer> psdSkills;
     private final Map<SkillStat, List<Integer>> stats;
     private final Rect rect;
     private final ElementAttribute elemAttr;
 
-    public StaticSkillInfo(int id, int maxLevel, boolean invisible, boolean psd, List<Integer> psdSkills, Map<SkillStat, List<Integer>> stats, Rect rect, ElementAttribute elemAttr) {
+    public StaticSkillInfo(int id, int maxLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, Map<SkillStat, List<Integer>> stats, Rect rect, ElementAttribute elemAttr) {
         this.id = id;
         this.maxLevel = maxLevel;
         this.invisible = invisible;
+        this.combatOrders = combatOrders;
         this.psd = psd;
         this.psdSkills = psdSkills;
         this.stats = stats;
@@ -45,6 +47,11 @@ public final class StaticSkillInfo implements SkillInfo {
     @Override
     public boolean isInvisible() {
         return invisible;
+    }
+
+    @Override
+    public boolean isCombatOrders() {
+        return combatOrders;
     }
 
     @Override
@@ -81,6 +88,7 @@ public final class StaticSkillInfo implements SkillInfo {
                 "id=" + id +
                 ", maxLevel=" + maxLevel +
                 ", invisible=" + invisible +
+                ", combatOrders=" + combatOrders +
                 ", psd=" + psd +
                 ", psdSkills=" + psdSkills +
                 ", stats=" + stats +
@@ -148,6 +156,7 @@ public final class StaticSkillInfo implements SkillInfo {
                 skillId,
                 maxLevel,
                 WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("combatOrders"), 0) != 0,
                 WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
                 Collections.unmodifiableList(psdSkills),
                 stats,

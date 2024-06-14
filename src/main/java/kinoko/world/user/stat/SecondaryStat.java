@@ -164,7 +164,7 @@ public final class SecondaryStat {
 
     // VALIDATE STAT METHODS -------------------------------------------------------------------------------------------
 
-    public void setFrom(BasicStat bs, ForcedStat fs, SkillManager sm, Map<Integer, Item> realEquip) {
+    public void setFrom(BasicStat bs, ForcedStat fs, SecondaryStat ss, SkillManager sm, Map<Integer, Item> realEquip) {
         this.pad = 0;
         this.pdd = 0;
         this.mad = 0;
@@ -253,7 +253,7 @@ public final class SecondaryStat {
                 continue;
             }
             final SkillInfo si = skillInfoResult.get();
-            final int slv = sm.getSkillLevel(skillId);
+            final int slv = SkillManager.getSkillLevel(ss, sm, skillId);
             if (slv == 0) {
                 continue;
             }
@@ -277,7 +277,7 @@ public final class SecondaryStat {
 
         // Jaguar Rider
         if (SkillConstants.WILD_HUNTER_JAGUARS.contains(getRidingVehicle())) {
-            final int slv = sm.getSkillLevel(WildHunter.JAGUAR_RIDER);
+            final int slv = SkillManager.getSkillLevel(ss, sm, WildHunter.JAGUAR_RIDER);
             if (slv > 0) {
                 SkillProvider.getSkillInfoById(WildHunter.JAGUAR_RIDER).ifPresent((si) -> {
                     this.eva += si.getValue(SkillStat.y, slv);
@@ -289,97 +289,97 @@ public final class SecondaryStat {
         final WeaponType wt = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
         switch (wt) {
             case OH_SWORD, TH_SWORD -> {
-                getStatFromSkill(sm, Warrior.WEAPON_MASTERY_HERO, Warrior.WEAPON_MASTERY_PALADIN, DawnWarrior.SWORD_MASTERY);
+                getStatFromSkill(ss, sm, Warrior.WEAPON_MASTERY_HERO, Warrior.WEAPON_MASTERY_PALADIN, DawnWarrior.SWORD_MASTERY);
             }
             case OH_AXE, TH_AXE -> {
-                getStatFromSkill(sm, Warrior.WEAPON_MASTERY_HERO);
+                getStatFromSkill(ss, sm, Warrior.WEAPON_MASTERY_HERO);
             }
             case OH_MACE, TH_MACE -> {
-                getStatFromSkill(sm, Warrior.WEAPON_MASTERY_PALADIN);
+                getStatFromSkill(ss, sm, Warrior.WEAPON_MASTERY_PALADIN);
             }
             case DAGGER -> {
                 final Item shield = realEquip.get(BodyPart.SHIELD.getValue());
                 if (shield != null && WeaponType.getByItemId(shield.getItemId()) == WeaponType.SUB_DAGGER) {
-                    getStatFromSkill(sm, Thief.KATARA_MASTERY);
+                    getStatFromSkill(ss, sm, Thief.KATARA_MASTERY);
                 } else {
-                    getStatFromSkill(sm, Thief.DAGGER_MASTERY);
+                    getStatFromSkill(ss, sm, Thief.DAGGER_MASTERY);
                 }
             }
             case SPEAR -> {
-                getStatFromSkill(sm, Warrior.WEAPON_MASTERY_DRK);
+                getStatFromSkill(ss, sm, Warrior.WEAPON_MASTERY_DRK);
             }
             case POLEARM -> {
                 if (JobConstants.isAranJob(bs.getJob())) {
-                    getStatFromSkill(sm, Aran.POLEARM_MASTERY);
-                    getStatFromSkill(sm, Aran.HIGH_MASTERY);
+                    getStatFromSkill(ss, sm, Aran.POLEARM_MASTERY);
+                    getStatFromSkill(ss, sm, Aran.HIGH_MASTERY);
                 } else {
-                    getStatFromSkill(sm, Warrior.WEAPON_BOOSTER_DRK);
+                    getStatFromSkill(ss, sm, Warrior.WEAPON_BOOSTER_DRK);
                 }
             }
             case BOW -> {
                 if (JobConstants.isCygnusJob(bs.getJob())) {
-                    getStatFromSkill(sm, WindArcher.BOW_MASTERY);
-                    getStatFromSkill(sm, WindArcher.BOW_EXPERT);
+                    getStatFromSkill(ss, sm, WindArcher.BOW_MASTERY);
+                    getStatFromSkill(ss, sm, WindArcher.BOW_EXPERT);
                 } else {
-                    getStatFromSkill(sm, Bowman.BOW_MASTERY);
-                    getStatFromSkill(sm, Bowman.BOW_EXPERT);
+                    getStatFromSkill(ss, sm, Bowman.BOW_MASTERY);
+                    getStatFromSkill(ss, sm, Bowman.BOW_EXPERT);
                 }
             }
             case CROSSBOW -> {
                 if (JobConstants.isWildHunterJob(bs.getJob())) {
-                    getStatFromSkill(sm, WildHunter.CROSSBOW_MASTERY);
-                    getStatFromSkill(sm, WildHunter.CROSSBOW_EXPERT);
+                    getStatFromSkill(ss, sm, WildHunter.CROSSBOW_MASTERY);
+                    getStatFromSkill(ss, sm, WildHunter.CROSSBOW_EXPERT);
                 } else {
-                    getStatFromSkill(sm, Bowman.CROSSBOW_MASTERY);
-                    getStatFromSkill(sm, Bowman.MARKSMAN_BOOST);
+                    getStatFromSkill(ss, sm, Bowman.CROSSBOW_MASTERY);
+                    getStatFromSkill(ss, sm, Bowman.MARKSMAN_BOOST);
                 }
             }
             case THROWINGGLOVE -> {
                 if (JobConstants.isCygnusJob(bs.getJob())) {
-                    getStatFromSkill(sm, NightWalker.CLAW_MASTERY);
+                    getStatFromSkill(ss, sm, NightWalker.CLAW_MASTERY);
                 } else {
-                    getStatFromSkill(sm, Thief.CLAW_MASTERY);
+                    getStatFromSkill(ss, sm, Thief.CLAW_MASTERY);
                 }
             }
             case KNUCKLE -> {
                 if (JobConstants.isCygnusJob(bs.getJob())) {
-                    getStatFromSkill(sm, ThunderBreaker.KNUCKLE_MASTERY);
+                    getStatFromSkill(ss, sm, ThunderBreaker.KNUCKLE_MASTERY);
                 } else {
-                    getStatFromSkill(sm, Pirate.KNUCKLE_MASTERY);
+                    getStatFromSkill(ss, sm, Pirate.KNUCKLE_MASTERY);
                 }
             }
             case GUN -> {
                 if (JobConstants.isMechanicJob(bs.getJob())) {
-                    getStatFromSkill(sm, Mechanic.EXTREME_MECH, Mechanic.MECHANIC_MASTERY);
+                    getStatFromSkill(ss, sm, Mechanic.EXTREME_MECH, Mechanic.MECHANIC_MASTERY);
                 } else {
-                    getStatFromSkill(sm, Pirate.GUN_MASTERY);
+                    getStatFromSkill(ss, sm, Pirate.GUN_MASTERY);
                 }
             }
         }
 
         // get_magic_mastery
         if (JobConstants.isEvanJob(bs.getJob())) {
-            getStatFromSkill(sm, Evan.SPELL_MASTERY);
-            getStatFromSkill(sm, Evan.MAGIC_MASTERY);
+            getStatFromSkill(ss, sm, Evan.SPELL_MASTERY);
+            getStatFromSkill(ss, sm, Evan.MAGIC_MASTERY);
         } else if (JobConstants.isBattleMageJob(bs.getJob())) {
-            getStatFromSkill(sm, BattleMage.STAFF_MASTERY);
+            getStatFromSkill(ss, sm, BattleMage.STAFF_MASTERY);
         } else if (JobConstants.isBlazeWizardJob(bs.getJob())) {
-            getStatFromSkill(sm, BlazeWizard.SPELL_MASTERY);
+            getStatFromSkill(ss, sm, BlazeWizard.SPELL_MASTERY);
         } else if (JobConstants.isFirePoisonJob(bs.getJob())) {
-            getStatFromSkill(sm, Magician.SPELL_MASTERY_FP);
+            getStatFromSkill(ss, sm, Magician.SPELL_MASTERY_FP);
         } else if (JobConstants.isIceLightningJob(bs.getJob())) {
-            getStatFromSkill(sm, Magician.SPELL_MASTERY_IL);
+            getStatFromSkill(ss, sm, Magician.SPELL_MASTERY_IL);
         } else if (JobConstants.isBishopJob(bs.getJob())) {
-            getStatFromSkill(sm, Magician.SPELL_MASTERY_BISH);
+            getStatFromSkill(ss, sm, Magician.SPELL_MASTERY_BISH);
         }
 
         // get_increase_speed
         if (JobConstants.isBowmasterJob(bs.getJob())) {
-            getStatFromSkill(sm, Bowman.THRUST_BM);
+            getStatFromSkill(ss, sm, Bowman.THRUST_BM);
         } else if (JobConstants.isMarksmanJob(bs.getJob())) {
-            getStatFromSkill(sm, Bowman.THRUST_MM);
+            getStatFromSkill(ss, sm, Bowman.THRUST_MM);
         } else if (JobConstants.isWindArcherJob(bs.getJob())) {
-            getStatFromSkill(sm, WindArcher.THRUST);
+            getStatFromSkill(ss, sm, WindArcher.THRUST);
         }
         if (hasOption(CharacterTemporaryStat.YellowAura)) {
             final Optional<SkillInfo> yellowAuraResult = SkillProvider.getSkillInfoById(getOption(CharacterTemporaryStat.YellowAura).rOption);
@@ -453,14 +453,14 @@ public final class SecondaryStat {
         }
     }
 
-    private void getStatFromSkill(SkillManager sm, int... skillIds) {
+    private void getStatFromSkill(SecondaryStat ss, SkillManager sm, int... skillIds) {
         for (int skillId : skillIds) {
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
                 continue;
             }
             final SkillInfo si = skillInfoResult.get();
-            final int slv = sm.getSkillLevel(skillId);
+            final int slv = SkillManager.getSkillLevel(ss, sm, skillId);
             if (slv == 0) {
                 continue;
             }

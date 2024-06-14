@@ -4,9 +4,7 @@ import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.ShopProvider;
-import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
-import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
@@ -19,7 +17,6 @@ import kinoko.world.item.*;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
-import kinoko.world.skill.SkillManager;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
@@ -159,7 +156,7 @@ public final class ShopDialog implements Dialog, Encodable {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
-                final int slotMax = itemInfoResult.get().getSlotMax() + getIncSlotMax(locked, item.getItemId());
+                final int slotMax = itemInfoResult.get().getSlotMax() + getIncSlotMax(user, item.getItemId());
                 if (item.getQuantity() >= slotMax) {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
@@ -206,24 +203,19 @@ public final class ShopDialog implements Dialog, Encodable {
         return new ShopDialog(npc, items);
     }
 
-    private static int getIncSlotMax(Locked<User> locked, int itemId) {
-        final SkillManager sm = locked.get().getSkillManager();
+    private static int getIncSlotMax(User user, int itemId) {
         int skillId = 0;
         if (ItemConstants.isJavelinItem(itemId)) {
-            if (sm.getSkillLevel(Thief.CLAW_MASTERY) > 0) {
+            if (user.getSkillLevel(Thief.CLAW_MASTERY) > 0) {
                 skillId = Thief.CLAW_MASTERY;
-            } else if (sm.getSkillLevel(NightWalker.CLAW_MASTERY) > 0) {
+            } else if (user.getSkillLevel(NightWalker.CLAW_MASTERY) > 0) {
                 skillId = NightWalker.CLAW_MASTERY;
             }
         } else if (ItemConstants.isPelletItem(itemId)) {
-            if (sm.getSkillLevel(Pirate.GUN_MASTERY) > 0) {
+            if (user.getSkillLevel(Pirate.GUN_MASTERY) > 0) {
                 skillId = Pirate.GUN_MASTERY;
             }
         }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
-        if (skillInfoResult.isEmpty()) {
-            return 0;
-        }
-        return skillInfoResult.get().getValue(SkillStat.y, sm.getSkillLevel(skillId));
+        return user.getSkillStatValue(skillId, SkillStat.y);
     }
 }

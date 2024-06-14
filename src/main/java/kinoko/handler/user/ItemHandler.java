@@ -599,7 +599,7 @@ public final class ItemHandler {
     }
 
     private static int getItemBonusRecovery(User user, int recovery) {
-        final int bonusRecoveryRate = user.getSkillManager().getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
+        final int bonusRecoveryRate = user.getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
         if (bonusRecoveryRate != 0) {
             return recovery * bonusRecoveryRate / 100;
         }
@@ -607,7 +607,7 @@ public final class ItemHandler {
     }
 
     private static int getItemBonusDuration(User user, int duration) {
-        final int bonusDurationRate = user.getSkillManager().getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
+        final int bonusDurationRate = user.getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
         if (bonusDurationRate != 0) {
             return duration * bonusDurationRate / 100;
         }

@@ -172,7 +172,7 @@ public final class SummonedHandler {
 
         final Skill skill = new Skill();
         skill.skillId = inPacket.decodeInt(); // nSkillID
-        skill.slv = user.getSkillManager().getSkillLevel(skill.skillId);
+        skill.slv = user.getSkillLevel(skill.skillId);
 
         final byte actionAndDir = inPacket.decodeByte(); // (nMoveAction << 7) | (nAttackAction & 0x7F)
 

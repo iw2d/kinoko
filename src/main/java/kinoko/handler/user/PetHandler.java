@@ -79,7 +79,7 @@ public final class PetHandler {
             final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
             if (petIndexResult.isEmpty()) {
                 // Check if max number of pets active
-                final boolean hasFollowTheLead = user.getSkillManager().getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
+                final boolean hasFollowTheLead = user.getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
                 if (user.getPets().size() >= (hasFollowTheLead ? GameConstants.PET_COUNT_MAX : 1)) {
                     log.error("Tried to activate pet while having max number of pets active");
                     user.dispose();

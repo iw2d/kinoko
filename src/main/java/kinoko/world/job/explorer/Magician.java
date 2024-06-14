@@ -343,7 +343,7 @@ public final class Magician extends SkillDispatcher {
 
     private static int getBuffedDuration(User user, int duration) {
         final int skillId = SkillConstants.getBuffMasterySkill(user.getJob());
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return duration;
         }

@@ -72,7 +72,7 @@ public final class SkillProcessor {
         // Process skill
         if (attack.skillId != 0) {
             // Set skill level
-            attack.slv = user.getSkillManager().getSkillLevel(attack.skillId);
+            attack.slv = user.getSkillLevel(attack.skillId);
             if (attack.slv == 0) {
                 log.error("Tried to attack with skill {} not learned by user", attack.skillId);
                 return;
@@ -112,7 +112,7 @@ public final class SkillProcessor {
             }
             final int bulletCon = si.getBulletCon(attack.slv);
             if (bulletCon > 0) {
-                final int exJablinProp = user.getSkillManager().getSkillStatValue(Thief.EXPERT_THROWING_STAR_HANDLING, SkillStat.prop);
+                final int exJablinProp = user.getSkillStatValue(Thief.EXPERT_THROWING_STAR_HANDLING, SkillStat.prop);
                 final boolean exJablin = exJablinProp != 0 && Util.succeedProp(exJablinProp);
                 if (exJablin) {
                     user.write(UserLocal.requestExJablin());
@@ -200,7 +200,7 @@ public final class SkillProcessor {
             user.addMp(mpGain);
             // Show MP eater effect
             final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
-            final int slv = user.getSkillManager().getSkillLevel(skillId);
+            final int slv = user.getSkillLevel(skillId);
             user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
             user.getField().broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
         }
@@ -211,12 +211,11 @@ public final class SkillProcessor {
         if (option.nOption == 0) {
             return;
         }
-        final SkillManager sm = user.getSkillManager();
         final int maxCombo = 1 + Math.max(
-                sm.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
-                sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
+                user.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
+                user.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
         );
-        final int doubleProp = sm.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
+        final int doubleProp = user.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
         final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
         if (newCombo > option.nOption) {
             user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(newCombo));
@@ -225,7 +224,7 @@ public final class SkillProcessor {
 
     private static void handleEnergyCharge(User user) {
         final int skillId = SkillConstants.getEnergyChargeSkill(user.getJob());
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
         }
@@ -257,7 +256,7 @@ public final class SkillProcessor {
             return 0;
         }
         final SkillInfo si = skillInfoResult.get();
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         // Calculate damage
         final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
         final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
@@ -280,7 +279,7 @@ public final class SkillProcessor {
 
     private static int calculateMpEater(User user, Mob mob) {
         final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return 0;
         }
@@ -299,7 +298,7 @@ public final class SkillProcessor {
 
     private static void handleVenom(User user, Mob mob) {
         final int skillId = SkillConstants.getVenomSkill(user.getJob());
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
         }
@@ -327,7 +326,7 @@ public final class SkillProcessor {
         final SkillInfo si = skillInfoResult.get();
         final int money = si.getValue(SkillStat.x, option.nOption); // nOption = slv
         final int prop = si.getValue(SkillStat.prop, option.nOption) +
-                user.getSkillManager().getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
+                user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
         if (money > 0 && Util.succeedProp(prop)) {
             final Drop drop = Drop.money(DropOwnType.USEROWN, mob, money, user.getCharacterId());
             user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT);
@@ -502,9 +501,8 @@ public final class SkillProcessor {
             return 0;
         }
         // Calculate reduction rate
-        final SkillManager sm = user.getSkillManager();
-        final int mesoGuardRate = Math.clamp(50 + sm.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.v), 50, 100); // hard coded 50
-        final int mesoRequiredRate = Math.max(0, sm.getSkillStatValue(Thief.MESO_GUARD, SkillStat.x) - sm.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.w));
+        final int mesoGuardRate = Math.clamp(50 + user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.v), 50, 100); // hard coded 50
+        final int mesoRequiredRate = Math.max(0, user.getSkillStatValue(Thief.MESO_GUARD, SkillStat.x) - user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.w));
         // Calculate damage reduction
         final int realDamage = Math.clamp(hitInfo.damage, 1, GameConstants.DAMAGE_MAX);
         final int mesoGuardReduce = realDamage * mesoGuardRate / 100;
@@ -539,7 +537,7 @@ public final class SkillProcessor {
         if (skillId == 0) {
             return 0;
         }
-        final int x = user.getSkillManager().getSkillStatValue(skillId, SkillStat.x);
+        final int x = user.getSkillStatValue(skillId, SkillStat.x);
         return damage * (1000 - x) / 1000;
     }
 
@@ -590,7 +588,7 @@ public final class SkillProcessor {
         if (hitInfo.knockback <= 1) {
             return;
         }
-        final int stunDuration = user.getSkillManager().getSkillStatValue(Warrior.GUARDIAN, SkillStat.time);
+        final int stunDuration = user.getSkillStatValue(Warrior.GUARDIAN, SkillStat.time);
         if (stunDuration == 0) {
             return;
         }
@@ -615,7 +613,7 @@ public final class SkillProcessor {
             return;
         }
         final SkillInfo si = skillInfoResult.get();
-        final SkillManager sm = user.getSkillManager();
+        final int slv = user.getSkillLevel(skillId);
         // Check current stack count
         final SecondaryStat ss = user.getSecondaryStat();
         if (ss.hasOption(CharacterTemporaryStat.BlessingArmor) && ss.hasOption(CharacterTemporaryStat.BlessingArmor)) {
@@ -629,18 +627,17 @@ public final class SkillProcessor {
                 ));
             } else {
                 user.resetTemporaryStat(skillId);
+                user.getSkillManager().setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.cooltime, slv), ChronoUnit.SECONDS));
             }
         } else {
             // Try giving divine shield buff
-            final int slv = sm.getSkillLevel(skillId);
-            if (slv == 0 || sm.hasSkillCooltime(skillId) || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            if (slv == 0 || user.getSkillManager().hasSkillCooltime(skillId) || !Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                 return;
             }
             user.setTemporaryStat(Map.of(
                     CharacterTemporaryStat.BlessingArmor, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                     CharacterTemporaryStat.BlessingArmorIncPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))
             ));
-            sm.setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.cooltime, slv), ChronoUnit.SECONDS));
         }
     }
 
@@ -655,9 +652,8 @@ public final class SkillProcessor {
         }
         final Summoned summoned = summonedResult.get();
         // Resolve skill info
-        final SkillManager sm = user.getSkillManager();
         final int skillId = Warrior.HEX_OF_THE_BEHOLDER_COUNTER;
-        final int slv = sm.getSkillLevel(skillId);
+        final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
         }
@@ -710,7 +706,7 @@ public final class SkillProcessor {
         if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
             return;
         }
-        final int prop = user.getSkillManager().getSkillStatValue(Bowman.VENGEANCE, SkillStat.prop);
+        final int prop = user.getSkillStatValue(Bowman.VENGEANCE, SkillStat.prop);
         if (prop != 0 && Util.succeedProp(prop)) {
             user.write(UserLocal.requestVengeance());
         }
@@ -820,7 +816,7 @@ public final class SkillProcessor {
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            final int slv = user.getSkillManager().getSkillLevel(skillId);
+            final int slv = user.getSkillLevel(skillId);
             final int percentage = si.getValue(SkillStat.y, slv);
             // Recover hp and mp
             user.addHp(user.getMaxHp() * percentage / 100);
@@ -837,14 +833,14 @@ public final class SkillProcessor {
 
     public static int getHpCon(User user, int skillId, int hpCon) {
         if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR) {
-            return user.getMaxHp() * user.getSkillManager().getSkillStatValue(skillId, SkillStat.x) / 100;
+            return user.getMaxHp() * user.getSkillStatValue(skillId, SkillStat.x) / 100;
         }
         return hpCon;
     }
 
     public static int getMpCon(User user, int skillId, int mpCon) {
         // CSkillInfo::CheckConsumeForActiveSkill
-        final int incMpCon = 100 + user.getSkillManager().getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.x);
+        final int incMpCon = 100 + user.getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.x);
         mpCon = mpCon * incMpCon / 100;
         // Check CTS affecting mpCon
         final SecondaryStat ss = user.getSecondaryStat();

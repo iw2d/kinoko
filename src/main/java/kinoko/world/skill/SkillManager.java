@@ -2,7 +2,8 @@ package kinoko.world.skill;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
-import kinoko.provider.skill.SkillStat;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.SecondaryStat;
 
 import java.time.Instant;
 import java.util.*;
@@ -52,7 +53,7 @@ public final class SkillManager {
             final Instant nextAvailable = entry.getValue();
             // Check skill cooltime and remove
             if (now.isBefore(nextAvailable)) {
-                // continue;
+                continue;
             }
             iter.remove();
             resetCooltimes.add(skillId);
@@ -80,22 +81,16 @@ public final class SkillManager {
     }
 
 
-    // HELPER METHODS --------------------------------------------------------------------------------------------------
+    // STATIC METHODS --------------------------------------------------------------------------------------------------
 
-    public int getSkillLevel(int skillId) {
-        final SkillRecord skillRecord = skillRecords.get(skillId);
-        if (skillRecord == null) {
+    public static int getSkillLevel(SecondaryStat ss, SkillManager sm, int skillId) {
+        final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
+        if (skillRecordResult.isEmpty()) {
             return 0;
         }
-        return skillRecord.getSkillLevel();
-    }
-
-    public int getSkillStatValue(int skillId, SkillStat stat) {
-        final int slv = getSkillLevel(skillId);
-        if (slv == 0) {
-            return 0;
+        if (SkillProvider.getSkillInfoById(skillId).map(SkillInfo::isCombatOrders).orElse(false)) {
+            return skillRecordResult.get().getSkillLevel() + ss.getOption(CharacterTemporaryStat.CombatOrders).nOption;
         }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
-        return skillInfoResult.map(skillInfo -> skillInfo.getValue(stat, slv)).orElse(0);
+        return skillRecordResult.get().getSkillLevel();
     }
 }
