@@ -202,6 +202,14 @@ public final class Thief extends SkillDispatcher {
                     ));
                 }
                 return;
+            case HASTE_NL:
+            case HASTE_SHAD:
+            case SELF_HASTE:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
+                ));
+                return;
             case SHADOW_PARTNER_NL:
             case SHADOW_PARTNER_SHAD:
             case MIRROR_IMAGE:
@@ -223,6 +231,9 @@ public final class Thief extends SkillDispatcher {
                 return;
 
             // NL
+            case MESO_UP:
+                user.setTemporaryStat(CharacterTemporaryStat.MesoUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
             case SHADOW_WEB:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {

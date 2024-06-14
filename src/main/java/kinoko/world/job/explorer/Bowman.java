@@ -177,6 +177,11 @@ public final class Bowman extends SkillDispatcher {
                         CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv))
                 ));
                 return;
+            case SHARP_EYES_BM:
+            case SHARP_EYES_MM:
+                final int sharpEyes = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
+                user.setTemporaryStat(CharacterTemporaryStat.SharpEyes, TemporaryStatOption.of(sharpEyes, skillId, si.getDuration(slv)));
+                return;
         }
         log.error("Unhandled skill {}", skill.skillId);
     }

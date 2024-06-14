@@ -4,7 +4,6 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Locked;
-import kinoko.util.Util;
 import kinoko.world.job.Job;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -108,78 +107,6 @@ public abstract class SkillDispatcher {
                 user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
-            // PARTY SKILLS --------------------------------------------------------------------------------------------
-            case Warrior.COMBAT_ORDERS:
-                user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
-                return;
-            case Warrior.HYPER_BODY:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.MaxHP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.MaxMP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv)))
-                ));
-                return;
-            case Thief.HASTE_NL:
-            case Thief.HASTE_SHAD:
-            case Thief.SELF_HASTE:
-            case NightWalker.HASTE:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, getBuffedDuration(user, si.getDuration(slv)))
-                ));
-                return;
-            case Thief.MESO_UP:
-                user.setTemporaryStat(CharacterTemporaryStat.MesoUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
-                return;
-            case Magician.MEDITATION_FP:
-            case Magician.MEDITATION_IL:
-            case BlazeWizard.MEDITATION:
-                user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
-                return;
-            case Magician.HEAL:
-                final int healPercentage = si.getValue(SkillStat.hp, slv) / skill.getAffectedMemberCount();
-                user.addHp(user.getMaxHp() * healPercentage / 100);
-                return;
-            case Magician.BLESS:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
-                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, getBuffedDuration(user, si.getDuration(slv)))
-                ));
-                return;
-            case Magician.DISPEL:
-                if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                    user.resetTemporaryStat(Set.of(
-                            CharacterTemporaryStat.Poison,
-                            CharacterTemporaryStat.Seal,
-                            CharacterTemporaryStat.Darkness,
-                            CharacterTemporaryStat.Weakness,
-                            CharacterTemporaryStat.Curse,
-                            CharacterTemporaryStat.Slow
-                    ));
-                }
-                return;
-            case Magician.HOLY_SYMBOL:
-                user.setTemporaryStat(CharacterTemporaryStat.HolySymbol, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
-                return;
-            case Magician.HOLY_SHIELD:
-                user.setTemporaryStat(CharacterTemporaryStat.Holyshield, TemporaryStatOption.of(1, skillId, getBuffedDuration(user, si.getDuration(slv))));
-                return;
-            case Magician.RESURRECTION:
-                if (user.getHp() <= 0) {
-                    user.setHp(user.getMaxHp());
-                    user.setMp(user.getMaxMp());
-                }
-                return;
-            case Bowman.SHARP_EYES_BM:
-            case Bowman.SHARP_EYES_MM:
-            case WildHunter.SHARP_EYES_WH:
-                final int sharpEyes = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
-                user.setTemporaryStat(CharacterTemporaryStat.SharpEyes, TemporaryStatOption.of(sharpEyes, skillId, getBuffedDuration(user, si.getDuration(slv))));
-                return;
-
             // COMMON SKILLS -------------------------------------------------------------------------------------------
             case Warrior.WEAPON_BOOSTER_HERO:
             case Warrior.WEAPON_BOOSTER_PALADIN:
@@ -203,7 +130,7 @@ public abstract class SkillDispatcher {
             case BattleMage.STAFF_BOOST:
             case WildHunter.CROSSBOW_BOOSTER:
             case Mechanic.MECHANIC_RAGE:
-                user.setTemporaryStat(CharacterTemporaryStat.Booster, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                user.setTemporaryStat(CharacterTemporaryStat.Booster, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case Warrior.MAPLE_WARRIOR_HERO:
             case Warrior.MAPLE_WARRIOR_PALADIN:
@@ -223,7 +150,7 @@ public abstract class SkillDispatcher {
             case BattleMage.MAPLE_WARRIOR_BAM:
             case WildHunter.MAPLE_WARRIOR_WH:
             case Mechanic.MAPLE_WARRIOR_MECH:
-                user.setTemporaryStat(CharacterTemporaryStat.BasicStatUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                user.setTemporaryStat(CharacterTemporaryStat.BasicStatUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case Warrior.HEROS_WILL_HERO:
             case Warrior.HEROS_WILL_PALADIN:
@@ -317,15 +244,5 @@ public abstract class SkillDispatcher {
                 log.error("Unhandled skill {}", skill.skillId);
             }
         }
-    }
-
-    protected static int getBuffedDuration(User user, int duration) {
-        final int skillId = SkillConstants.getBuffMasterySkill(user.getJob());
-        final int slv = user.getSkillManager().getSkillLevel(skillId);
-        if (slv == 0) {
-            return duration;
-        }
-        final int percentage = SkillProvider.getSkillInfoById(skillId).map((si) -> si.getValue(SkillStat.x, slv)).orElse(0);
-        return duration * (100 + percentage) / 100;
     }
 }

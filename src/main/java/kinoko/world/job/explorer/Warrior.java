@@ -238,6 +238,9 @@ public final class Warrior extends SkillDispatcher {
                 user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
                 user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
                 return;
+            case COMBAT_ORDERS:
+                user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
             case FIRE_CHARGE:
             case ICE_CHARGE:
             case DIVINE_CHARGE:
@@ -252,6 +255,12 @@ public final class Warrior extends SkillDispatcher {
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case HYPER_BODY:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.MaxHP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.MaxMP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
                 ));
                 return;
             case DRAGON_BLOOD:
