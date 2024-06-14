@@ -17,6 +17,7 @@ import kinoko.util.Util;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.cygnus.ThunderBreaker;
+import kinoko.world.job.explorer.Thief;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -74,6 +75,16 @@ public final class AttackHandler {
         if (attack.skillId == NightWalker.POISON_BOMB) {
             attack.grenadeX = inPacket.decodeShort(); // pGrenade->GetPos()->x
             attack.grenadeY = inPacket.decodeShort(); // pGrenade->GetPos()->y
+        }
+        if (attack.skillId == Thief.MESO_EXPLOSION) {
+            // CUserLocal::DoActiveSkill_MesoExplosion
+            final int size = inPacket.decodeByte();
+            attack.drops = new int[size];
+            for (int i = 0; i < size; i++) {
+                attack.drops[i] = inPacket.decodeInt(); // aDrop
+                inPacket.decodeByte();
+            }
+            attack.dropExplodeDelay = inPacket.decodeShort();
         }
 
         try (var locked = user.acquire()) {
@@ -307,7 +318,11 @@ public final class AttackHandler {
             ai.hitY = inPacket.decodeShort(); // ptHit.y
             inPacket.decodeShort();
             inPacket.decodeShort();
-            inPacket.decodeShort(); // tDelay
+            if (attack.skillId == Thief.MESO_EXPLOSION) {
+                inPacket.decodeByte();
+            } else {
+                inPacket.decodeShort(); // tDelay
+            }
             for (int j = 0; j < attack.getDamagePerMob(); j++) {
                 ai.damage[j] = inPacket.decodeInt();
             }

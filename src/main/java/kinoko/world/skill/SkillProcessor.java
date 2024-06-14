@@ -14,6 +14,9 @@ import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.*;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
@@ -185,6 +188,7 @@ public final class SkillProcessor {
                 if (mob.getHp() > 0) {
                     handleVenom(user, mob);
                 }
+                handlePickpocket(user, mob);
             }
         }
         user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
@@ -307,6 +311,26 @@ public final class SkillProcessor {
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
             mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+        }
+    }
+
+    private static void handlePickpocket(User user, Mob mob) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.PickPocket)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.PickPocket);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for pick pocket skill ID : {}", option.rOption);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int money = si.getValue(SkillStat.x, option.nOption); // nOption = slv
+        final int prop = si.getValue(SkillStat.prop, option.nOption) +
+                user.getSkillManager().getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
+        if (money > 0 && Util.succeedProp(prop)) {
+            final Drop drop = Drop.money(DropOwnType.USEROWN, mob, money, user.getCharacterId());
+            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT);
         }
     }
 

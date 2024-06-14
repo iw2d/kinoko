@@ -91,7 +91,7 @@ public final class FieldHandler {
             }
 
             // Try removing drop from field
-            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getCharacterId(), 0)) {
+            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_USER, user.getCharacterId(), 0, 0)) {
                 user.dispose();
                 return;
             }

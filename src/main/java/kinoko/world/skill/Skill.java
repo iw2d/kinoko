@@ -64,4 +64,26 @@ public final class Skill {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "skillId=" + skillId +
+                ", slv=" + slv +
+                ", positionX=" + positionX +
+                ", positionY=" + positionY +
+                ", affectedMemberBitMap=" + affectedMemberBitMap +
+                ", mobCount=" + mobCount +
+                ", mobIds=" + mobIds +
+                ", captureTargetMobId=" + captureTargetMobId +
+                ", randomCapturedMobId=" + randomCapturedMobId +
+                ", spiritJavelinItemId=" + spiritJavelinItemId +
+                ", rockAndShockCount=" + rockAndShockCount +
+                ", rockAndShock1=" + rockAndShock1 +
+                ", rockAndShock2=" + rockAndShock2 +
+                ", left=" + left +
+                ", summonLeft=" + summonLeft +
+                ", summonBuffType=" + summonBuffType +
+                '}';
+    }
 }

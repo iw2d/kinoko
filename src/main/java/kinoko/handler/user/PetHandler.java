@@ -288,7 +288,7 @@ public final class PetHandler {
             }
 
             // Try removing drop from field
-            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_PET, user.getCharacterId(), petIndexResult.get())) {
+            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_PET, user.getCharacterId(), petIndexResult.get(), 0)) {
                 return;
             }
 

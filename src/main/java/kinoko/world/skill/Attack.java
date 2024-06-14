@@ -5,6 +5,7 @@ import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -38,6 +39,8 @@ public final class Attack {
     public int passiveSlv;
     public int passiveSkillId;
     public int swallowMobTemplateId;
+    public int[] drops;
+    public int dropExplodeDelay;
 
     public Attack(OutHeader headerType) {
         this.headerType = headerType;
@@ -95,7 +98,6 @@ public final class Attack {
         return (actionAndDir & 0x8000) != 0;
     }
 
-
     public void forEachMob(Field field, Consumer<Mob> consumer) {
         for (AttackInfo ai : getAttackInfo()) {
             final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
@@ -109,5 +111,37 @@ public final class Attack {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Attack{" +
+                "attackInfo=" + attackInfo +
+                ", headerType=" + headerType +
+                ", mask=" + mask +
+                ", flag=" + flag +
+                ", skillId=" + skillId +
+                ", slv=" + slv +
+                ", combatOrders=" + combatOrders +
+                ", keyDown=" + keyDown +
+                ", exJablin=" + exJablin +
+                ", actionAndDir=" + actionAndDir +
+                ", attackSpeed=" + attackSpeed +
+                ", mastery=" + mastery +
+                ", bulletPosition=" + bulletPosition +
+                ", bulletItemId=" + bulletItemId +
+                ", userX=" + userX +
+                ", userY=" + userY +
+                ", ballStartX=" + ballStartX +
+                ", ballStartY=" + ballStartY +
+                ", grenadeX=" + grenadeX +
+                ", grenadeY=" + grenadeY +
+                ", dragonX=" + dragonX +
+                ", dragonY=" + dragonY +
+                ", passiveSlv=" + passiveSlv +
+                ", passiveSkillId=" + passiveSkillId +
+                ", swallowMobTemplateId=" + swallowMobTemplateId +
+                ", drops=" + Arrays.toString(drops) +
+                '}';
     }
 }

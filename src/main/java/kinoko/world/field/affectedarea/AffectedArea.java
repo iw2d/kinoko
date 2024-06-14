@@ -103,9 +103,13 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         outPacket.encodeInt(0); // nPhase
     }
 
-    public static AffectedArea userSkill(User owner, SkillInfo si, int slv, int delay, int userX, int userY) {
-        final Rect rect = si.getRect().translate(userX, userY);
+    public static AffectedArea userSkill(User owner, SkillInfo si, int slv, int delay, int x, int y) {
+        return AffectedArea.from(AffectedAreaType.UserSkill, owner, si, slv, delay, x, y);
+    }
+
+    public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int x, int y) {
+        final Rect rect = si.getRect().translate(x, y);
         final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
-        return new AffectedArea(AffectedAreaType.UserSkill, owner, si.getSkillId(), slv, delay, rect, expireTime);
+        return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, rect, expireTime);
     }
 }

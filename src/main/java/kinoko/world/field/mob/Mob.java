@@ -14,10 +14,12 @@ import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.ElementAttribute;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
+import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.ControlledObject;
@@ -26,9 +28,11 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
+import kinoko.world.job.explorer.Thief;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
+import org.graalvm.collections.Pair;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -37,7 +41,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class Mob extends Life implements ControlledObject, Encodable, Lockable<Mob> {
     private final Lock lock = new ReentrantLock();
@@ -45,6 +48,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
+    private final Set<Reward> rewards = new HashSet<>();
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
     private final Instant removeAfter;
@@ -55,6 +59,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private int hp;
     private int mp;
     private boolean slowUsed;
+    private boolean stealUsed;
     private Instant nextRecovery;
 
     public Mob(MobTemplate template, MobSpawnPoint spawnPoint, int x, int y, int fh) {
@@ -71,6 +76,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setHp(template.getMaxHp());
         setMp(template.getMaxMp());
         nextRecovery = Instant.now();
+        // Reward initialization
+        rewards.addAll(RewardProvider.getMobRewards(this));
+        rewards.add(RewardProvider.getMobMoneyReward(this));
     }
 
     public MobTemplate getTemplate() {
@@ -278,6 +286,26 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
     }
 
+    public void steal(User attacker) {
+        if (stealUsed) {
+            return;
+        }
+        final Set<Pair<Drop, Reward>> stealItems = new HashSet<>();
+        for (Reward reward : rewards) {
+            final Optional<Drop> dropResult = createDrop(attacker, reward);
+            dropResult.ifPresent((drop) -> new Tuple<>(drop, reward));
+        }
+        final Optional<Pair<Drop, Reward>> stealResult = Util.getRandomFromCollection(stealItems);
+        if (stealResult.isPresent()) {
+            getField().getDropPool().addDrop(stealResult.get().getLeft(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
+            rewards.remove(stealResult.get().getRight());
+            stealUsed = true;
+        }
+    }
+
+
+    // PRIVATE METHODS -------------------------------------------------------------------------------------------------
+
     /**
      * Distribute exp by damage dealt, share exp with party if:
      * <pre>
@@ -407,61 +435,70 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
         // Create drops from possible rewards
         final Set<Drop> drops = new HashSet<>();
-        final Set<Reward> possibleRewards = Stream.concat(RewardProvider.getMobRewards(this).stream(), Stream.of(RewardProvider.getMobMoneyReward(this)))
-                .collect(Collectors.toUnmodifiableSet());
-        for (Reward reward : possibleRewards) {
-            // Quest drops
-            if (reward.isQuest()) {
-                if (!owner.getQuestManager().hasQuestStarted(reward.getQuestId())) {
-                    continue;
-                }
-            }
-            // Drop probability
-            double probability = reward.getProb();
-            if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.ItemUpByItem)) {
-                final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.ItemUpByItem).nOption + 100) / 100.0;
-                probability = probability * multiplier;
-            }
-            if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
-                final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
-                probability = probability * multiplier;
-            }
-            if (Util.getRandom().nextDouble() > probability) {
-                continue;
-            }
-            // Create drop
-            if (reward.isMoney()) {
-                int money = Util.getRandom(reward.getMin(), reward.getMax());
-                if (money <= 0) {
-                    continue;
-                }
-                if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUp)) {
-                    final double multiplier = owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUp).nOption / 100.0;
-                    money = (int) (money * multiplier);
-                }
-                if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUpByItem)) {
-                    final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUpByItem).nOption + 100) / 100.0;
-                    money = (int) (money * multiplier);
-                }
-                drops.add(owner.getPartyId() == 0 ?
-                        Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId()) :
-                        Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId())
-                );
-            } else {
-                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
-                if (itemInfoResult.isEmpty()) {
-                    continue;
-                }
-                final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
-                final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-                drops.add(owner.getPartyId() == 0 ?
-                        Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId()) :
-                        Drop.item(DropOwnType.PARTYOWN, this, item, owner.getPartyId(), reward.getQuestId())
-                );
+        for (Reward reward : rewards) {
+            final Optional<Drop> dropResult = createDrop(owner, reward);
+            dropResult.ifPresent(drops::add);
+        }
+        // Add drops to field if any
+        if (!drops.isEmpty()) {
+            getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
+        }
+    }
+
+    private Optional<Drop> createDrop(User owner, Reward reward) {
+        // Quest drops
+        if (reward.isQuest()) {
+            if (!owner.getQuestManager().hasQuestStarted(reward.getQuestId())) {
+                return Optional.empty();
             }
         }
-        // Add drops to field
-        getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
+        // Drop probability
+        double probability = reward.getProb();
+        if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.ItemUpByItem)) {
+            final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.ItemUpByItem).nOption + 100) / 100.0;
+            probability = probability * multiplier;
+        }
+        if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
+            final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
+            probability = probability * multiplier;
+        }
+        if (Util.getRandom().nextDouble() > probability) {
+            return Optional.empty();
+        }
+        // Create drop
+        if (reward.isMoney()) {
+            int money = Util.getRandom(reward.getMin(), reward.getMax());
+            if (money <= 0) {
+                return Optional.empty();
+            }
+            if (owner.getSkillManager().getSkillLevel(Thief.MESO_MASTERY) > 0) {
+                final double multiplier = (owner.getSkillManager().getSkillStatValue(Thief.MESO_MASTERY, SkillStat.mesoR) + 100) / 100.0;
+                money = (int) (money * multiplier);
+            }
+            if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUp)) {
+                final double multiplier = owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUp).nOption / 100.0;
+                money = (int) (money * multiplier);
+            }
+            if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUpByItem)) {
+                final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUpByItem).nOption + 100) / 100.0;
+                money = (int) (money * multiplier);
+            }
+            return Optional.of(owner.getPartyId() == 0 ?
+                    Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId()) :
+                    Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId())
+            );
+        } else {
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                return Optional.empty();
+            }
+            final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
+            final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
+            return Optional.of(owner.getPartyId() == 0 ?
+                    Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId()) :
+                    Drop.item(DropOwnType.PARTYOWN, this, item, owner.getPartyId(), reward.getQuestId())
+            );
+        }
     }
 
 

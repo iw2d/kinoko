@@ -6,6 +6,10 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.field.affectedarea.AffectedArea;
+import kinoko.world.field.affectedarea.AffectedAreaType;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
@@ -22,6 +26,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public final class Thief extends SkillDispatcher {
@@ -154,6 +159,28 @@ public final class Thief extends SkillDispatcher {
                     }
                 });
                 break;
+            case STEAL:
+            case ASSAULTER:
+            case BOOMERANG_STEP:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        if (skillId == STEAL) {
+                            mob.steal(user);
+                        }
+                    }
+                });
+                break;
+            case MESO_EXPLOSION:
+                for (int dropId : attack.drops) {
+                    final Optional<Drop> dropResult = field.getDropPool().getById(dropId);
+                    if (dropResult.isEmpty() || !dropResult.get().isMoney()) {
+                        log.error("Received invalid drop ID {} for meso explosion skill", dropId);
+                        continue;
+                    }
+                    field.getDropPool().removeDrop(dropResult.get(), DropLeaveType.EXPLODE, 0, 0, attack.dropExplodeDelay);
+                }
+                break;
         }
     }
 
@@ -206,8 +233,21 @@ public final class Thief extends SkillDispatcher {
             case SHADOW_STARS:
                 user.setTemporaryStat(CharacterTemporaryStat.SpiritJavelin, TemporaryStatOption.of(skill.spiritJavelinItemId - 2069999, skillId, si.getDuration(slv)));
                 return;
+
+            // SHAD
+            case CHAKRA:
+                final double mod = Util.getRandom(3.3, 6.6); // [(luk * 3.3 + dex) * 0.2] ~ [(luk * 6.6 + dex) * 0.2]
+                user.addHp((int) ((user.getBasicStat().getLuk() * mod + user.getBasicStat().getDex()) * 0.2 * si.getValue(SkillStat.y, slv) / 100.0));
+                return;
+            case PICKPOCKET:
+                user.setTemporaryStat(CharacterTemporaryStat.PickPocket, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
             case MESO_GUARD:
                 user.setTemporaryStat(CharacterTemporaryStat.MesoGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case SMOKESCREEN:
+                final AffectedArea smoke = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, skill.positionX, skill.positionY);
+                user.getField().getAffectedAreaPool().addAffectedArea(smoke);
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

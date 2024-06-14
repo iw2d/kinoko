@@ -257,10 +257,6 @@ public final class Magician extends SkillDispatcher {
                 return;
 
             // BISHOP
-            case HEAL:
-                final int healPercentage = si.getValue(SkillStat.hp, slv) / skill.getAffectedMemberCount();
-                user.addHp(user.getMaxHp() * healPercentage / 100);
-                return;
             case INVINCIBLE:
                 user.setTemporaryStat(CharacterTemporaryStat.Invincible, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;

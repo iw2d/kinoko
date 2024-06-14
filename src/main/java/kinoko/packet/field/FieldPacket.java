@@ -87,7 +87,7 @@ public final class FieldPacket {
         return outPacket;
     }
 
-    public static OutPacket dropLeaveField(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
+    public static OutPacket dropLeaveField(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.DropLeaveField);
         outPacket.encodeByte(leaveType.getValue());
         outPacket.encodeInt(drop.getId());
@@ -99,7 +99,7 @@ public final class FieldPacket {
                 }
             }
             case EXPLODE -> {
-                outPacket.encodeShort(0); // delay
+                outPacket.encodeShort(delay);
             }
         }
         return outPacket;

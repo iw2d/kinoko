@@ -41,11 +41,11 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
     }
 
-    public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex) {
+    public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex, int delay) {
         if (!removeObject(drop)) {
             return false;
         }
-        field.broadcastPacket(FieldPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex));
+        field.broadcastPacket(FieldPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex, delay));
         return true;
     }
 
@@ -58,7 +58,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
                 continue;
             }
             iter.remove();
-            field.broadcastPacket(FieldPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0));
+            field.broadcastPacket(FieldPacket.dropLeaveField(drop, DropLeaveType.TIMEOUT, 0, 0, 0));
         }
     }
 }

@@ -135,6 +135,10 @@ public abstract class SkillDispatcher {
             case BlazeWizard.MEDITATION:
                 user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
+            case Magician.HEAL:
+                final int healPercentage = si.getValue(SkillStat.hp, slv) / skill.getAffectedMemberCount();
+                user.addHp(user.getMaxHp() * healPercentage / 100);
+                return;
             case Magician.BLESS:
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
