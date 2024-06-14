@@ -159,15 +159,20 @@ public final class Thief extends SkillDispatcher {
                     }
                 });
                 break;
-            case STEAL:
             case ASSAULTER:
             case BOOMERANG_STEP:
+            case FLYING_ASSAULTER:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                        if (skillId == STEAL) {
-                            mob.steal(user);
-                        }
+                    }
+                });
+                break;
+            case STEAL:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.steal(user);
                     }
                 });
                 break;
@@ -180,6 +185,18 @@ public final class Thief extends SkillDispatcher {
                     }
                     field.getDropPool().removeDrop(dropResult.get(), DropLeaveType.EXPLODE, 0, 0, attack.dropExplodeDelay);
                 }
+                break;
+            case FLASHBANG:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case SUDDEN_RAID:
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                });
                 break;
         }
     }
@@ -259,6 +276,12 @@ public final class Thief extends SkillDispatcher {
             case SMOKESCREEN:
                 final AffectedArea smoke = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, skill.positionX, skill.positionY);
                 user.getField().getAffectedAreaPool().addAffectedArea(smoke);
+                return;
+
+            // DB
+            case THORNS:
+                final int thorns = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
+                user.setTemporaryStat(CharacterTemporaryStat.ThornsEffect, TemporaryStatOption.of(thorns, skillId, si.getDuration(slv)));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

@@ -145,7 +145,7 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
             }
         }
         // Add drops to field
-        getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
+        getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
     }
 
     public void reset(int x, int y, int state) {

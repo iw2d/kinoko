@@ -54,8 +54,8 @@ public final class UserRemote {
                 }
                 outPacket.encodeByte(ai.actionAndDir);
                 if (a.skillId == Thief.MESO_EXPLOSION) {
-                    outPacket.encodeByte(a.getDamagePerMob());
-                    for (int i = 0; i < a.getDamagePerMob(); i++) {
+                    outPacket.encodeByte(ai.attackCount);
+                    for (int i = 0; i < ai.attackCount; i++) {
                         outPacket.encodeInt(ai.damage[i]);
                     }
                 } else if (a.getDamagePerMob() > 0) {

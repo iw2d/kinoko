@@ -406,7 +406,7 @@ public final class UserHandler {
                     partialItem.setQuantity(count);
                     // Create drop
                     final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, 0);
-                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
                 } else {
                     // Full drop
                     if (!inventory.removeItem(oldPos, item)) {
@@ -417,7 +417,7 @@ public final class UserHandler {
                     user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
                     // Create drop
                     final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, 0);
-                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
                 }
             } else {
                 final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
@@ -637,7 +637,7 @@ public final class UserHandler {
                 return;
             }
             final Drop drop = Drop.money(DropOwnType.NOOWN, user, money, user.getCharacterId());
-            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT);
+            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
             user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
         }
     }

@@ -447,6 +447,41 @@ public final class SkillConstants {
         }
     }
 
+    public static int getMaxGaugeTime(int skillId) {
+        if (!isKeydownSkill(skillId)) {
+            return 0;
+        }
+        switch (skillId) {
+            case 2121001:
+            case 2221001:
+            case 2321001:
+            case 5101004:
+            case 5201002:
+            case 14111006:
+            case 15101003:
+                return 1000;
+            case 3121004:
+            case 5221004:
+            case 13111002:
+            case 33121009:
+            case 35001001:
+            case 35101009:
+                return 2000;
+            case 3221001:
+            case 33101005:
+                return 900;
+            case 4341002:
+                return 600;
+            case 4341003:
+                return 1200;
+            case 22121000:
+            case 22151001:
+                return 500;
+            default:
+                return 0;
+        }
+    }
+
     public static boolean isDualAddDamageExceptSkill(int skillId) {
         return skillId >= 4341002 && skillId <= 4341004;
     }

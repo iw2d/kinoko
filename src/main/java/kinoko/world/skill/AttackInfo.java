@@ -4,6 +4,7 @@ public final class AttackInfo {
     public int mobId;
     public byte hitAction;
     public byte actionAndDir;
+    public byte attackCount; // only used for meso explosion
 
     public short hitX;
     public short hitY;

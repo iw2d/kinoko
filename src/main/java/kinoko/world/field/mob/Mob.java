@@ -297,7 +297,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
         final Optional<Pair<Drop, Reward>> stealResult = Util.getRandomFromCollection(stealItems);
         if (stealResult.isPresent()) {
-            getField().getDropPool().addDrop(stealResult.get().getLeft(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
+            getField().getDropPool().addDrop(stealResult.get().getLeft(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
             rewards.remove(stealResult.get().getRight());
             stealUsed = true;
         }
@@ -441,7 +441,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
         // Add drops to field if any
         if (!drops.isEmpty()) {
-            getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT);
+            getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
         }
     }
 

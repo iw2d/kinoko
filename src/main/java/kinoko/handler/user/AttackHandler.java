@@ -319,12 +319,15 @@ public final class AttackHandler {
             inPacket.decodeShort();
             inPacket.decodeShort();
             if (attack.skillId == Thief.MESO_EXPLOSION) {
-                inPacket.decodeByte();
+                ai.attackCount = inPacket.decodeByte();
+                for (int j = 0; j < ai.attackCount; j++) {
+                    ai.damage[j] = inPacket.decodeInt();
+                }
             } else {
                 inPacket.decodeShort(); // tDelay
-            }
-            for (int j = 0; j < attack.getDamagePerMob(); j++) {
-                ai.damage[j] = inPacket.decodeInt();
+                for (int j = 0; j < attack.getDamagePerMob(); j++) {
+                    ai.damage[j] = inPacket.decodeInt();
+                }
             }
             inPacket.decodeInt(); // CMob::GetCrc
             attack.getAttackInfo().add(ai);

@@ -34,10 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class SkillProcessor {
     private static final Logger log = LogManager.getLogger(SkillProcessor.class);
@@ -89,7 +86,7 @@ public final class SkillProcessor {
                 log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
                 return;
             }
-            final int hpCon = getHpCon(user, attack.skillId, si.getValue(SkillStat.hpCon, attack.slv));
+            final int hpCon = getHpCon(user, attack.skillId, si.getValue(SkillStat.hpCon, attack.slv), attack.keyDown);
             if (user.getHp() <= hpCon) {
                 log.error("Tried to use skill {} without enough hp, current : {}, required : {}", attack.skillId, user.getHp(), hpCon);
                 return;
@@ -173,6 +170,8 @@ public final class SkillProcessor {
                 int totalDamage = Arrays.stream(ai.damage).sum();
                 int mpDamage = 0;
                 // Handle skills
+                handlePickpocket(user, attack, mob);
+                handleOwlSpirit(user, attack, mob.getMaxHp() == totalDamage);
                 if (attack.skillId == Warrior.HEAVENS_HAMMER) {
                     totalDamage = calculateHeavensHammer(user, mob);
                 } else if (attack.skillId == Thief.DRAIN) {
@@ -188,7 +187,6 @@ public final class SkillProcessor {
                 if (mob.getHp() > 0) {
                     handleVenom(user, mob);
                 }
-                handlePickpocket(user, mob);
             }
         }
         user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
@@ -245,6 +243,59 @@ public final class SkillProcessor {
             );
             user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
         }
+    }
+
+    private static void handlePickpocket(User user, Attack attack, Mob mob) {
+        if (attack.skillId == Thief.MESO_EXPLOSION || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.PickPocket)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.PickPocket);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for pick pocket skill ID : {}", option.rOption);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int money = option.nOption;
+        final int prop = si.getValue(SkillStat.prop, option.nOption) +
+                user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
+        // Trigger per hit, spread and delay drops
+        final Set<Drop> drops = new HashSet<>();
+        for (int i = 0; i < attack.getDamagePerMob(); i++) {
+            if (money > 0 && Util.succeedProp(prop)) {
+                drops.add(Drop.money(DropOwnType.USEROWN, mob, money, user.getCharacterId()));
+            }
+        }
+        if (!drops.isEmpty()) {
+            user.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT, 120);
+        }
+    }
+
+    private static void handleOwlSpirit(User user, Attack attack, boolean instantKill) {
+        // Decrement attack counter
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SuddenDeath)) {
+            final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.SuddenDeath_Count);
+            final int newCount = option.nOption - 1;
+            if (newCount > 0) {
+                user.setTemporaryStat(CharacterTemporaryStat.SuddenDeath_Count, option.update(newCount));
+            } else {
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SuddenDeath, CharacterTemporaryStat.SuddenDeath_Count));
+            }
+        }
+        // Give buff on instant kill with owl spirit
+        if (!instantKill || attack.skillId != Thief.OWL_SPIRIT) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for owl spirit skill ID : {}", attack.skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        user.setTemporaryStat(Map.of(
+                CharacterTemporaryStat.SuddenDeath, TemporaryStatOption.of(si.getValue(SkillStat.y, attack.slv), attack.skillId, 0),
+                CharacterTemporaryStat.SuddenDeath_Count, TemporaryStatOption.of(si.getValue(SkillStat.x, attack.slv), attack.skillId, 0)
+        ));
     }
 
     private static int calculateHeavensHammer(User user, Mob mob) {
@@ -313,26 +364,6 @@ public final class SkillProcessor {
         }
     }
 
-    private static void handlePickpocket(User user, Mob mob) {
-        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.PickPocket)) {
-            return;
-        }
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.PickPocket);
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
-        if (skillInfoResult.isEmpty()) {
-            log.error("Could not resolve skill info for pick pocket skill ID : {}", option.rOption);
-            return;
-        }
-        final SkillInfo si = skillInfoResult.get();
-        final int money = si.getValue(SkillStat.x, option.nOption); // nOption = slv
-        final int prop = si.getValue(SkillStat.prop, option.nOption) +
-                user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
-        if (money > 0 && Util.succeedProp(prop)) {
-            final Drop drop = Drop.money(DropOwnType.USEROWN, mob, money, user.getCharacterId());
-            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT);
-        }
-    }
-
 
     // PROCESS SKILL ---------------------------------------------------------------------------------------------------
 
@@ -352,7 +383,7 @@ public final class SkillProcessor {
             log.error("Tried to use skill {} that is still on cooltime", skill.skillId);
             return;
         }
-        final int hpCon = getHpCon(user, skill.skillId, si.getValue(SkillStat.hpCon, skill.slv));
+        final int hpCon = getHpCon(user, skill.skillId, si.getValue(SkillStat.hpCon, skill.slv), 0);
         if (user.getHp() <= hpCon) {
             log.error("Tried to use skill {} without enough hp, current : {}, required : {}", skill.skillId, user.getHp(), hpCon);
             return;
@@ -831,9 +862,12 @@ public final class SkillProcessor {
 
     // COMMON ----------------------------------------------------------------------------------------------------------
 
-    public static int getHpCon(User user, int skillId, int hpCon) {
+    public static int getHpCon(User user, int skillId, int hpCon, int keyDown) {
         if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR) {
             return user.getMaxHp() * user.getSkillStatValue(skillId, SkillStat.x) / 100;
+        } else if (skillId == Thief.FINAL_CUT) {
+            final int percentage = keyDown * user.getSkillStatValue(skillId, SkillStat.x) / SkillConstants.getMaxGaugeTime(skillId);
+            return user.getMaxHp() * percentage / 100;
         }
         return hpCon;
     }

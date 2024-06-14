@@ -63,7 +63,7 @@ public final class FieldPacket {
 
     // CDropPool::OnPacket ---------------------------------------------------------------------------------------------
 
-    public static OutPacket dropEnterField(Drop drop, DropEnterType enterType) {
+    public static OutPacket dropEnterField(Drop drop, DropEnterType enterType, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.DropEnterField);
         outPacket.encodeByte(enterType.getValue()); // nEnterType
         outPacket.encodeInt(drop.getId()); // DROP->dwId
@@ -77,7 +77,7 @@ public final class FieldPacket {
         if (enterType != DropEnterType.ON_THE_FOOTHOLD) {
             outPacket.encodeShort(drop.getSource().getX()); // source x
             outPacket.encodeShort(drop.getSource().getY()); // source y
-            outPacket.encodeShort(0); // tDelay
+            outPacket.encodeShort(delay); // tDelay
         }
         if (!drop.isMoney()) {
             outPacket.encodeFT(drop.getItem().getDateExpire()); // m_dateExpire

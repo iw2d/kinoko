@@ -16,7 +16,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
         super(field);
     }
 
-    public void addDrop(Drop drop, DropEnterType enterType, int x, int y) {
+    public void addDrop(Drop drop, DropEnterType enterType, int x, int y, int delay) {
         final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);
         drop.setId(field.getNewObjectId());
         if (footholdResult.isPresent()) {
@@ -29,15 +29,16 @@ public final class DropPool extends FieldObjectPool<Drop> {
         if (enterType != DropEnterType.FADING_OUT) {
             addObject(drop);
         }
-        field.broadcastPacket(FieldPacket.dropEnterField(drop, enterType));
+        field.broadcastPacket(FieldPacket.dropEnterField(drop, enterType, delay));
     }
 
-    public void addDrops(Set<Drop> drops, DropEnterType enterType, int centerX, int centerY) {
-        final int width = drops.size() * GameConstants.DROP_SPREAD;
-        int dropX = centerX - (width / 2);
+    public void addDrops(Set<Drop> drops, DropEnterType enterType, int centerX, int centerY, int addDelay) {
+        int dropX = centerX - (drops.size() * GameConstants.DROP_SPREAD / 2);
+        int delay = 0;
         for (Drop drop : drops) {
-            addDrop(drop, enterType, dropX, centerY);
+            addDrop(drop, enterType, dropX, centerY, delay);
             dropX += GameConstants.DROP_SPREAD;
+            delay += addDelay;
         }
     }
 

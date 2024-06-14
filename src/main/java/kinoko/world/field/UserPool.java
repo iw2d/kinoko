@@ -87,7 +87,7 @@ public final class UserPool extends FieldObjectPool<User> {
             user.write(FieldPacket.reactorEnterField(reactor));
         });
         field.getDropPool().forEach((drop) -> {
-            user.write(FieldPacket.dropEnterField(drop, DropEnterType.ON_THE_FOOTHOLD));
+            user.write(FieldPacket.dropEnterField(drop, DropEnterType.ON_THE_FOOTHOLD, 0));
         });
         field.getTownPortalPool().forEach((townPortal) -> {
             final User owner = townPortal.getOwner();
