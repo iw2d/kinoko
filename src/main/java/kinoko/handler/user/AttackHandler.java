@@ -13,12 +13,14 @@ import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
+import kinoko.util.Util;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.cygnus.ThunderBreaker;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.DefenseStateStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -340,15 +342,24 @@ public final class AttackHandler {
         }
 
         // Apply mob skill
-        if (!locked.get().getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
-            if (skillInfoResult.isEmpty()) {
-                log.error("Could not resolve skill info for mob skill ID : {}", skillId);
+        final User user = locked.get();
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+            return;
+        }
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {
+            final DefenseStateStat defenseStateStat = DefenseStateStat.getByValue(user.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState_Stat).nOption);
+            if (defenseStateStat != null && defenseStateStat.getStat() == cts &&
+                    Util.succeedProp(user.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState).nOption)) {
                 return;
             }
-            final SkillInfo si = skillInfoResult.get();
-            final int slv = mobAttack.getSkillLevel();
-            locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
         }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mob skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int slv = mobAttack.getSkillLevel();
+        user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
     }
 }

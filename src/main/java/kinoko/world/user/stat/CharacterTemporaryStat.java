@@ -138,8 +138,10 @@ public enum CharacterTemporaryStat implements BitIndex {
     Undead(128),
     SummonBomb(129),
 
-    // only used server-side
-    BlessingArmorIncPAD(1000);
+    // additional info for CTS
+    DefenseAtt_Elem(1000),
+    DefenseState_Stat(1001),
+    BlessingArmorIncPAD(1002);
 
     public static final int FLAG_SIZE = 128;
     public static final List<CharacterTemporaryStat> LOCAL_ENCODE_ORDER = List.of(

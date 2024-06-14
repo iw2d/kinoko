@@ -367,6 +367,11 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         finalExp = (int) (finalExp * multiplier);
                         finalPartyBonus = (int) (finalPartyBonus * multiplier);
                     }
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ExpBuffRate)) {
+                        final double multiplier = user.getSecondaryStat().getOption(CharacterTemporaryStat.ExpBuffRate).nOption / 100.0;
+                        finalExp = (int) (finalExp * multiplier);
+                        finalPartyBonus = (int) (finalPartyBonus * multiplier);
+                    }
                     user.addExp(finalExp + finalPartyBonus);
                     user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
                     // Process mob kill for quest
@@ -388,7 +393,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     private void dropRewards(User lastAttacker) {
-        // Sort damageDone by highest damage, assign owner to most damage attacker present in the field
+        // Sort damageDone by highest damage, assign owner to the highest damage attacker present in the field
         User owner = lastAttacker;
         final var iter = damageDone.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -413,6 +418,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             }
             // Drop probability
             double probability = reward.getProb();
+            if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.ItemUpByItem)) {
+                final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.ItemUpByItem).nOption + 100) / 100.0;
+                probability = probability * multiplier;
+            }
             if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
                 final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
                 probability = probability * multiplier;
@@ -422,11 +431,22 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             }
             // Create drop
             if (reward.isMoney()) {
-                final int money = Util.getRandom(reward.getMin(), reward.getMax());
+                int money = Util.getRandom(reward.getMin(), reward.getMax());
                 if (money <= 0) {
                     continue;
                 }
-                drops.add(Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId()));
+                if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUp)) {
+                    final double multiplier = owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUp).nOption / 100.0;
+                    money = (int) (money * multiplier);
+                }
+                if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.MesoUpByItem)) {
+                    final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUpByItem).nOption + 100) / 100.0;
+                    money = (int) (money * multiplier);
+                }
+                drops.add(owner.getPartyId() == 0 ?
+                        Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId()) :
+                        Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId())
+                );
             } else {
                 final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
                 if (itemInfoResult.isEmpty()) {
@@ -434,7 +454,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 }
                 final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
                 final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-                drops.add(Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId()));
+                drops.add(owner.getPartyId() == 0 ?
+                        Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId()) :
+                        Drop.item(DropOwnType.PARTYOWN, this, item, owner.getPartyId(), reward.getQuestId())
+                );
             }
         }
         // Add drops to field

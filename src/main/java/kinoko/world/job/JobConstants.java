@@ -127,6 +127,10 @@ public final class JobConstants {
         return jobId / 100 == 13;
     }
 
+    public static boolean isNightWalkerJob(int jobId) {
+        return jobId / 100 == 14;
+    }
+
     public static boolean isResistanceJob(int jobId) {
         return jobId / 1000 == 3;
     }

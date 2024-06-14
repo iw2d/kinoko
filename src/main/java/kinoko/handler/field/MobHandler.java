@@ -20,6 +20,7 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.*;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.DefenseStateStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -195,9 +196,17 @@ public final class MobHandler {
             for (User targetUser : targetUsers) {
                 EventScheduler.submit(() -> {
                     try (var lockedTarget = targetUser.acquire()) {
-                        if (!lockedTarget.get().getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
-                            lockedTarget.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                        if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+                            return;
                         }
+                        if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {
+                            final DefenseStateStat defenseStateStat = DefenseStateStat.getByValue(targetUser.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState_Stat).nOption);
+                            if (defenseStateStat != null && defenseStateStat.getStat() == cts &&
+                                    Util.succeedProp(targetUser.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState).nOption)) {
+                                return;
+                            }
+                        }
+                        targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
                     }
                 });
             }

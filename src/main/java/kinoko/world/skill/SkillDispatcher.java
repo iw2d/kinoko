@@ -127,6 +127,9 @@ public abstract class SkillDispatcher {
                         CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, getBuffedDuration(user, si.getDuration(slv)))
                 ));
                 return;
+            case Thief.MESO_UP:
+                user.setTemporaryStat(CharacterTemporaryStat.MesoUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
             case Magician.MEDITATION_FP:
             case Magician.MEDITATION_IL:
             case BlazeWizard.MEDITATION:

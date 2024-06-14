@@ -9,11 +9,13 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
+import kinoko.provider.WzProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
@@ -21,16 +23,16 @@ import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public final class ItemHandler {
     private static final Logger log = LogManager.getLogger(ItemHandler.class);
@@ -60,6 +62,14 @@ public final class ItemHandler {
 
             // Apply stat change
             changeStat(locked, itemInfoResult.get());
+        }
+    }
+
+    @Handler(InHeader.UserStatChangeItemCancelRequest)
+    public static void handleUserStatChangeItemCancelRequest(User user, InPacket inPacket) {
+        final int itemId = inPacket.decodeInt(); // sign inverted
+        try (var locked = user.acquire()) {
+            locked.get().resetTemporaryStat(itemId);
         }
     }
 
@@ -499,7 +509,7 @@ public final class ItemHandler {
         }
     }
 
-    private static Optional<InventoryOperation> consumeItem(Locked<User> locked, int position, int itemId) {
+    public static Optional<InventoryOperation> consumeItem(Locked<User> locked, int position, int itemId) {
         final User user = locked.get();
         final InventoryType inventoryType = InventoryType.getByItemId(itemId);
         if (inventoryType != InventoryType.CONSUME) {
@@ -519,27 +529,88 @@ public final class ItemHandler {
         return removeResult;
     }
 
-    private static void changeStat(Locked<User> locked, ItemInfo ii) {
-        // TODO: NL/NW alchemist and Citizen potion mastery
+    public static void changeStat(Locked<User> locked, ItemInfo ii) {
+        // Apply recovery and resolve stat ups
         final User user = locked.get();
+        int statUpDuration = 0;
+        final Map<CharacterTemporaryStat, Integer> statUps = new HashMap<>(); // cts -> value
+        final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
         for (var entry : ii.getItemSpecs().entrySet()) {
-            switch (entry.getKey()) {
+            final ItemSpecType specType = entry.getKey();
+            switch (specType) {
+                // Recovery
                 case hp -> {
-                    user.addHp(ii.getSpec(ItemSpecType.hp));
+                    user.addHp(getItemBonusRecovery(user, ii.getSpec(specType)));
                 }
                 case mp -> {
-                    user.addMp(ii.getSpec(ItemSpecType.mp));
+                    user.addMp(getItemBonusRecovery(user, ii.getSpec(specType)));
                 }
                 case hpR -> {
-                    user.addHp(user.getMaxHp() * ii.getSpec(ItemSpecType.hpR) / 100);
+                    user.addHp(user.getMaxHp() * ii.getSpec(specType) / 100);
                 }
                 case mpR -> {
-                    user.addMp(user.getMaxMp() * ii.getSpec(ItemSpecType.mpR) / 100);
+                    user.addMp(user.getMaxMp() * ii.getSpec(specType) / 100);
+                }
+                // Reset stats
+                case curse, darkness, poison, seal, weakness -> {
+                    resetStats.add(specType.getStat());
+                }
+                // Stat ups
+                case time -> {
+                    statUpDuration = getItemBonusDuration(user, ii.getSpec(specType));
+                }
+                case defenseAtt -> {
+                    statUps.put(CharacterTemporaryStat.DefenseAtt, ii.getSpec(ItemSpecType.prob));
+                    statUps.put(CharacterTemporaryStat.DefenseAtt_Elem, (int) WzProvider.getString(entry.getValue()).charAt(0));
+                }
+                case defenseState -> {
+                    statUps.put(CharacterTemporaryStat.DefenseState, ii.getSpec(ItemSpecType.prob));
+                    statUps.put(CharacterTemporaryStat.DefenseState_Stat, (int) WzProvider.getString(entry.getValue()).charAt(0)); // C | D | F | S | W
+                }
+                case respectPimmune, respectMimmune, itemupbyitem, mesoupbyitem -> {
+                    statUps.put(specType.getStat(), ii.getSpec(ItemSpecType.prob));
                 }
                 default -> {
-                    log.error("Unhandled item spec type : {}", entry.getKey().name());
+                    final CharacterTemporaryStat cts = specType.getStat();
+                    if (cts != null) {
+                        statUps.put(cts, ii.getSpec(specType));
+                    } else if (!specType.name().endsWith("Rate") && !specType.name().endsWith("Pickup") && specType != ItemSpecType.respectFS) {
+                        log.error("Unhandled item spec type : {} for item ID : {}", specType, ii.getItemId());
+                    }
                 }
             }
         }
+        // Apply stat ups
+        if (!statUps.isEmpty()) {
+            if (statUpDuration <= 0) {
+                log.error("Tried to apply stat up with duration {} for item ID : {}", statUpDuration, ii.getItemId());
+                return;
+            }
+            final Map<CharacterTemporaryStat, TemporaryStatOption> setStats = new HashMap<>();
+            for (var entry : statUps.entrySet()) {
+                setStats.put(entry.getKey(), TemporaryStatOption.of(entry.getValue(), -ii.getItemId(), statUpDuration));
+            }
+            user.setTemporaryStat(setStats);
+        }
+        // Reset stats
+        if (!resetStats.isEmpty()) {
+            user.resetTemporaryStat(resetStats);
+        }
+    }
+
+    private static int getItemBonusRecovery(User user, int recovery) {
+        final int bonusRecoveryRate = user.getSkillManager().getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
+        if (bonusRecoveryRate != 0) {
+            return recovery * bonusRecoveryRate / 100;
+        }
+        return recovery;
+    }
+
+    private static int getItemBonusDuration(User user, int duration) {
+        final int bonusDurationRate = user.getSkillManager().getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
+        if (bonusDurationRate != 0) {
+            return duration * bonusDurationRate / 100;
+        }
+        return duration;
     }
 }

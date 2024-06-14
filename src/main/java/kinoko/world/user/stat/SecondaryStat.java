@@ -502,8 +502,8 @@ public final class SecondaryStat {
             }
         }
 
-        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt, TemporaryStatOption.EMPTY).nOption);
-        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState, TemporaryStatOption.EMPTY).nOption);
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt_Elem, TemporaryStatOption.EMPTY).nOption);
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState_Stat, TemporaryStatOption.EMPTY).nOption);
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.SWALLOW_BUFF_STAT) {
             if (statFlag.hasFlag(cts)) {
@@ -557,8 +557,8 @@ public final class SecondaryStat {
             }
         }
 
-        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt, TemporaryStatOption.EMPTY).nOption);
-        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState, TemporaryStatOption.EMPTY).nOption);
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseAtt_Elem, TemporaryStatOption.EMPTY).nOption);
+        outPacket.encodeByte(stats.getOrDefault(CharacterTemporaryStat.DefenseState_Stat, TemporaryStatOption.EMPTY).nOption);
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
             if (statFlag.hasFlag(cts)) {

@@ -163,7 +163,7 @@ public final class UserRemote {
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(-1); // flag : AVATAR_LOOK = 0x1, AVATAR_SPEED = 0x2, AVATAR_CHOCO = 0x4
         user.getCharacterData().getAvatarLook().encode(outPacket);
-        outPacket.encodeByte(user.getSpeed());
+        outPacket.encodeByte(user.getSecondaryStat().getSpeed());
         outPacket.encodeByte(0); // nCount
 
         outPacket.encodeByte(false); // couple record

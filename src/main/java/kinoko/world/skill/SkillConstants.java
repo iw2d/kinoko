@@ -44,6 +44,17 @@ public final class SkillConstants {
         }
     }
 
+    public static int getItemBonusRateSkill(int jobId) {
+        if (JobConstants.isNightLordJob(jobId)) {
+            return Thief.ALCHEMIST;
+        } else if (JobConstants.isNightWalkerJob(jobId)) {
+            return NightWalker.ALCHEMIST;
+        } else if (JobConstants.isResistanceJob(jobId)) {
+            return Citizen.POTION_MASTERY;
+        }
+        return 0;
+    }
+
     public static int getEnhancedBasicsSkill(int jobId) {
         if (JobConstants.isHeroJob(jobId)) {
             return Warrior.ENHANCED_BASICS_HERO;

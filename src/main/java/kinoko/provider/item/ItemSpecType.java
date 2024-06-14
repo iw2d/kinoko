@@ -1,5 +1,7 @@
 package kinoko.provider.item;
 
+import kinoko.world.user.stat.CharacterTemporaryStat;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,9 +37,12 @@ public enum ItemSpecType {
     speed,
     jump,
     booster,
+    thaw,
     exp,
     expinc,
     expBuff,
+    defenseAtt,
+    defenseState,
     itemupbyitem,
     mesoupbyitem,
 
@@ -79,10 +84,7 @@ public enum ItemSpecType {
     respectFS,
     respectPimmune,
     respectMimmune,
-    defenseAtt,
-    defenseState,
     con,
-    thaw,
     prob,
     itemCode,
     itemRange,
@@ -107,6 +109,39 @@ public enum ItemSpecType {
                 mob.name(),
                 morphRandom.name()
         );
+    }
+
+    public final CharacterTemporaryStat getStat() {
+        return switch (this) {
+            case pad -> CharacterTemporaryStat.PAD;
+            case mad -> CharacterTemporaryStat.MAD;
+            case pdd -> CharacterTemporaryStat.PDD;
+            case mdd -> CharacterTemporaryStat.MDD;
+            case acc -> CharacterTemporaryStat.ACC;
+            case eva -> CharacterTemporaryStat.EVA;
+            case speed -> CharacterTemporaryStat.Speed;
+            case jump -> CharacterTemporaryStat.Jump;
+            case booster -> CharacterTemporaryStat.Booster;
+            case mhpR -> CharacterTemporaryStat.MaxHP;
+            case mmpR -> CharacterTemporaryStat.MaxMP;
+            case thaw -> CharacterTemporaryStat.Thaw;
+            case morph -> CharacterTemporaryStat.Morph;
+            case expBuff -> CharacterTemporaryStat.ExpBuffRate;
+            // The following require special handling
+            case defenseAtt -> CharacterTemporaryStat.DefenseAtt; // n = prob, send element type char
+            case defenseState -> CharacterTemporaryStat.DefenseState; // n = prob, send stat type
+            case respectPimmune -> CharacterTemporaryStat.RespectPImmune; // n = prob
+            case respectMimmune -> CharacterTemporaryStat.RespectMImmune; // n = prob
+            case itemupbyitem -> CharacterTemporaryStat.ItemUpByItem; // n = prob, 1 : all,  2 : itemCode, 3 : itemRange
+            case mesoupbyitem -> CharacterTemporaryStat.MesoUpByItem; // n = prob
+            // Reset stats
+            case curse -> CharacterTemporaryStat.Curse;
+            case darkness -> CharacterTemporaryStat.Darkness;
+            case poison -> CharacterTemporaryStat.Poison;
+            case seal -> CharacterTemporaryStat.Seal;
+            case weakness -> CharacterTemporaryStat.Weakness;
+            default -> null;
+        };
     }
 
     public static boolean isIgnored(String name) {
