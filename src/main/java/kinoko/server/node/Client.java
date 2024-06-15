@@ -57,24 +57,22 @@ public final class Client extends NettyClient {
     public synchronized void close() {
         super.close();
         if (user == null) {
-            saveAccount();
+            if (account != null) {
+                try (var lockedAccount = account.acquire()) {
+                    DatabaseManager.accountAccessor().saveAccount(account);
+                }
+            }
         } else {
             try (var locked = user.acquire()) {
-                user.logout();
-                saveAccount();
-                DatabaseManager.characterAccessor().saveCharacter(locked.get().getCharacterData());
+                try (var lockedAccount = account.acquire()) {
+                    user.logout(true);
+                    DatabaseManager.accountAccessor().saveAccount(account);
+                    DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
+                }
             }
         }
         getServerNode().removeClient(this);
         account = null;
         user = null;
-    }
-
-    private void saveAccount() {
-        if (account != null) {
-            try (var lockedAccount = account.acquire()) {
-                DatabaseManager.accountAccessor().saveAccount(lockedAccount.get());
-            }
-        }
     }
 }

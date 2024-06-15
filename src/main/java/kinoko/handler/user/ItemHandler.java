@@ -285,7 +285,7 @@ public final class ItemHandler {
                 return;
             }
             final Field destinationField = destinationFieldResult.get();
-            final Optional<PortalInfo> destinationPortalResult = destinationField.getPortalByName(GameConstants.DEFAULT_PORTAL_NAME);
+            final Optional<PortalInfo> destinationPortalResult = destinationField.getRandomStartPoint();
             if (destinationPortalResult.isEmpty()) {
                 user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();

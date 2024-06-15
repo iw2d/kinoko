@@ -318,35 +318,39 @@ public final class MigrationHandler {
         }
     }
 
+    /**
+     * Acquires user and account locks.
+     */
     private static void handleTransfer(User user, int targetChannelId) {
-        // Set in transfer
-        user.setInTransfer(true);
+        try (var locked = user.acquire()) {
+            try (var lockedAccount = user.getAccount().acquire()) {
+                // Submit transfer request
+                final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
+                final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
+                try {
+                    final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                    if (transferFutureResult.isEmpty()) {
+                        log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
+                        user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+                        return;
+                    }
+                    final TransferInfo transferResult = transferFutureResult.get();
 
-        // Force character save
-        DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
-        DatabaseManager.accountAccessor().saveAccount(user.getAccount());
+                    // Logout user and save
+                    user.logout(false);
+                    user.setInTransfer(true);
+                    DatabaseManager.accountAccessor().saveAccount(user.getAccount());
+                    DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
 
-        // Submit transfer request
-        final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
-        final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
-        final TransferInfo transferResult;
-        try {
-            final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-            if (transferFutureResult.isEmpty()) {
-                log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
-                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-                return;
+                    // Send migrate command
+                    user.write(ClientPacket.migrateCommand(transferResult.getChannelHost(), transferResult.getChannelPort()));
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    log.error("Exception caught while waiting for transfer result", e);
+                    user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+                    e.printStackTrace();
+                }
             }
-            transferResult = transferFutureResult.get();
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            log.error("Exception caught while waiting for transfer result", e);
-            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-            e.printStackTrace();
-            return;
         }
-
-        // Send migrate command
-        user.write(ClientPacket.migrateCommand(transferResult.getChannelHost(), transferResult.getChannelPort()));
     }
 
     private static void initializePet(User user, int petIndex, long petSn) {

@@ -10,6 +10,7 @@ import kinoko.server.event.EventScheduler;
 import kinoko.server.node.FieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
+import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.miniroom.MiniGameRoom;
 import kinoko.world.dialog.miniroom.TradingRoom;
@@ -19,6 +20,7 @@ import kinoko.world.user.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
@@ -92,6 +94,31 @@ public final class Field {
         return mapInfo.getPortalByName(portalName);
     }
 
+    public Optional<PortalInfo> getRandomStartPoint() {
+        final List<PortalInfo> startPoints = mapInfo.getPortalInfos().stream().filter((pi) -> pi.getPortalType() == PortalType.STARTPOINT).toList();
+        final Optional<PortalInfo> randomStartPoint = Util.getRandomFromCollection(startPoints);
+        return randomStartPoint.or(() -> getPortalById(0));
+    }
+
+    public Optional<PortalInfo> getNearestStartPoint(int x, int y) {
+        double nearestDistance = Double.MAX_VALUE;
+        PortalInfo nearestPortal = null;
+        for (PortalInfo portalInfo : mapInfo.getPortalInfos()) {
+            if (portalInfo.getPortalType() != PortalType.STARTPOINT) {
+                continue;
+            }
+            final double distance = Util.distance(x, y, portalInfo.getX(), portalInfo.getY());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestPortal = portalInfo;
+            }
+        }
+        if (nearestPortal != null) {
+            return Optional.of(nearestPortal);
+        }
+        return getPortalById(0);
+    }
+
     public Optional<Foothold> getFootholdById(int footholdId) {
         return mapInfo.getFootholdById(footholdId);
     }
@@ -102,6 +129,14 @@ public final class Field {
 
     public int getReturnMap() {
         return mapInfo.getReturnMap();
+    }
+
+    public int getForcedReturn() {
+        return mapInfo.getForcedReturn();
+    }
+
+    public boolean hasForcedReturn() {
+        return getForcedReturn() != GameConstants.UNDEFINED_FIELD_ID;
     }
 
     public UserPool getUserPool() {

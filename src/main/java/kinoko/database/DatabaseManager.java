@@ -2,6 +2,8 @@ package kinoko.database;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
+import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.data.UdtValue;
 import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
@@ -82,10 +84,16 @@ public final class DatabaseManager {
     }
 
     public static void initialize() {
+        // Create Config
+        final DriverConfigLoader configLoader = DriverConfigLoader.programmaticBuilder()
+                .withString(DefaultDriverOption.REQUEST_CONSISTENCY, "ALL")
+                .withString(DefaultDriverOption.REQUEST_SERIAL_CONSISTENCY, "SERIAL")
+                .build();
         // Create Session
         cqlSession = new CqlSessionBuilder()
                 .addContactPoint(DATABASE_ADDRESS)
                 .withLocalDatacenter(DATABASE_DATACENTER)
+                .withConfigLoader(configLoader)
                 .build();
 
         // Create Keyspace

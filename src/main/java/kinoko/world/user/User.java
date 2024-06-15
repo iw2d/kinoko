@@ -510,16 +510,30 @@ public final class User extends Life implements Lockable<User> {
         write(WvsContext.statChanged(Map.of(), true));
     }
 
-    public void logout() {
-        getConnectedServer().notifyUserDisconnect(this);
-        if (getField() != null) {
-            getField().removeUser(this);
+    public void logout(boolean disconnect) {
+        if (disconnect && isInTransfer()) {
+            return;
+        }
+        // Remove user from field, set spawn portal
+        final Field field = getField();
+        if (field != null) {
+            field.removeUser(this);
+            if (field.hasForcedReturn()) {
+                getCharacterStat().setPosMap(field.getForcedReturn());
+                getCharacterStat().setPortal((byte) 0);
+            } else {
+                field.getNearestStartPoint(getX(), getY()).ifPresent((pi) -> {
+                    getCharacterStat().setPortal((byte) pi.getPortalId());
+                });
+            }
         }
         if (getTownPortal() != null) {
             getTownPortal().destroy();
             setTownPortal(null);
         }
-        if (!isInTransfer()) {
+        // Notify central server
+        getConnectedServer().notifyUserDisconnect(this);
+        if (disconnect) {
             getConnectedServer().submitUserPacketBroadcast(
                     getFriendManager().getBroadcastTargets(),
                     FriendPacket.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE)
