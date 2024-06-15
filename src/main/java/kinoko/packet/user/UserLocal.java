@@ -100,6 +100,16 @@ public final class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket timeBombAttack(int skillId, int x, int y, int impactDegree, int damage) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserTimeBombAttack);
+        outPacket.encodeInt(skillId); // nSkillID
+        outPacket.encodeInt(x); // nTimeBombX
+        outPacket.encodeInt(y); // nTimeBombY
+        outPacket.encodeInt(impactDegree); // nUserImpactDeg
+        outPacket.encodeInt(damage); // nDamage
+        return outPacket;
+    }
+
     public static OutPacket requestVengeance() {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserRequestVengeance);
         outPacket.encodeInt(Bowman.VENGEANCE);

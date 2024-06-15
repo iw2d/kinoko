@@ -203,4 +203,15 @@ public final class UserRemote {
         outPacket.encodeInt(user.getMaxHp());
         return outPacket;
     }
+
+    public static OutPacket throwGrenade(User user, Skill skill) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserThrowGrenade);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(skill.positionX);
+        outPacket.encodeInt(skill.positionY);
+        outPacket.encodeInt(skill.keyDown); // tKeyDown
+        outPacket.encodeInt(skill.skillId); // nSkillID
+        outPacket.encodeInt(skill.slv); // nSLV
+        return outPacket;
+    }
 }

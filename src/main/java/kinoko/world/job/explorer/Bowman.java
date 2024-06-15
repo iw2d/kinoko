@@ -103,17 +103,6 @@ public final class Bowman extends SkillDispatcher {
                     }
                 });
                 break;
-            case MORTAL_BLOW_BM:
-            case MORTAL_BLOW_MM:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.y, slv))) {
-                        final double percentage = (double) mob.getHp() / mob.getMaxHp();
-                        if (percentage * 100 < si.getValue(SkillStat.x, slv)) {
-                            mob.damage(user, mob.getHp());
-                        }
-                    }
-                });
-                break;
             case INFERNO:
                 attack.forEachMob(field, (mob) -> {
                     mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));

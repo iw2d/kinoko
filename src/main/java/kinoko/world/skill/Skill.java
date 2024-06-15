@@ -4,7 +4,7 @@ import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.user.User;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -17,8 +17,7 @@ public final class Skill {
 
     public int affectedMemberBitMap = Byte.MIN_VALUE; // default when nPartyID = 0 (CUserLocal::FindParty)
 
-    public int mobCount;
-    public List<Integer> mobIds;
+    public int[] mobIds;
 
     public int captureTargetMobId;
     public int randomCapturedMobId;
@@ -30,6 +29,9 @@ public final class Skill {
     public boolean left;
     public boolean summonLeft;
     public byte summonBuffType;
+
+    // UserThrowGrenade
+    public int keyDown;
 
     public int getAffectedMemberCount() {
         if (affectedMemberBitMap == Byte.MIN_VALUE) {
@@ -51,6 +53,9 @@ public final class Skill {
     }
 
     public void forEachAffectedMob(Field field, Consumer<Mob> consumer) {
+        if (mobIds == null) {
+            return;
+        }
         for (int mobId : mobIds) {
             final Optional<Mob> mobResult = field.getMobPool().getById(mobId);
             if (mobResult.isEmpty()) {
@@ -73,8 +78,7 @@ public final class Skill {
                 ", positionX=" + positionX +
                 ", positionY=" + positionY +
                 ", affectedMemberBitMap=" + affectedMemberBitMap +
-                ", mobCount=" + mobCount +
-                ", mobIds=" + mobIds +
+                ", mobIds=" + Arrays.toString(mobIds) +
                 ", captureTargetMobId=" + captureTargetMobId +
                 ", randomCapturedMobId=" + randomCapturedMobId +
                 ", spiritJavelinItemId=" + spiritJavelinItemId +
@@ -84,6 +88,7 @@ public final class Skill {
                 ", left=" + left +
                 ", summonLeft=" + summonLeft +
                 ", summonBuffType=" + summonBuffType +
+                ", keyDown=" + keyDown +
                 '}';
     }
 }

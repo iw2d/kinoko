@@ -108,6 +108,14 @@ public final class MobPacket {
         return outPacket;
     }
 
+    public static OutPacket mobAffected(Mob mob, int skillId, int delay) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobAffected);
+        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(skillId); // nSkillID
+        outPacket.encodeShort(delay); // tStart = delay + update_time
+        return outPacket;
+    }
+
     public static OutPacket mobDamaged(Mob mob, int damage) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobDamaged);
         outPacket.encodeInt(mob.getId()); // dwMobId

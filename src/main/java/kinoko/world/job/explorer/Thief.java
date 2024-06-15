@@ -1,8 +1,10 @@
 package kinoko.world.job.explorer;
 
+import kinoko.packet.field.MobPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.ServerConfig;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -24,7 +26,10 @@ import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
+import kinoko.world.user.stat.TwoStateTemporaryStat;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -193,10 +198,21 @@ public final class Thief extends SkillDispatcher {
                     }
                 });
                 break;
+            case UPPER_STAB:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
+                        mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000));
+                    }
+                });
+                break;
             case SUDDEN_RAID:
                 attack.forEachMob(field, (mob) -> {
                     mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
                 });
+                break;
+            case FINAL_CUT:
+                final int finalCut = si.getValue(SkillStat.y, slv) * attack.keyDown / SkillConstants.getMaxGaugeTime(skillId);
+                user.setTemporaryStat(CharacterTemporaryStat.FinalCut, TemporaryStatOption.of(finalCut, skillId, si.getDuration(slv)));
                 break;
         }
     }
@@ -279,9 +295,25 @@ public final class Thief extends SkillDispatcher {
                 return;
 
             // DB
+            case TORNADO_SPIN:
+                user.setTemporaryStat(CharacterTemporaryStat.Dash_Speed, TwoStateTemporaryStat.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case MIRRORED_TARGET:
+                final Summoned summoned = new Summoned(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+                summoned.setPosition(field, skill.positionX, skill.positionY);
+                summoned.setHp(si.getValue(SkillStat.x, slv));
+                user.addSummoned(summoned);
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ShadowPartner));
+                return;
             case THORNS:
                 final int thorns = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
                 user.setTemporaryStat(CharacterTemporaryStat.ThornsEffect, TemporaryStatOption.of(thorns, skillId, si.getDuration(slv)));
+                return;
+            case MONSTER_BOMB:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    field.broadcastPacket(MobPacket.mobAffected(mob, skillId, 0));
+                    mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL)); // for MobTimeBombEnd check
+                });
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

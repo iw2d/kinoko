@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -67,7 +68,7 @@ public final class SkillProcessor {
         }
 
         // Process skill
-        if (attack.skillId != 0) {
+        if (attack.skillId != 0 && !SkillConstants.isThrowBombSkill(attack.skillId)) {
             // Set skill level
             attack.slv = user.getSkillLevel(attack.skillId);
             if (attack.slv == 0) {
@@ -151,6 +152,7 @@ public final class SkillProcessor {
         if (attack.getMobCount() > 0) {
             handleComboAttack(user);
             handleEnergyCharge(user);
+            handleDarkSight(user);
         }
 
         // Skill specific handling
@@ -186,6 +188,7 @@ public final class SkillProcessor {
                 // Process on-hit effects
                 if (mob.getHp() > 0) {
                     handleVenom(user, mob);
+                    handleMortalBlow(user, mob);
                 }
             }
         }
@@ -242,6 +245,15 @@ public final class SkillProcessor {
                     si.getDuration(slv)
             );
             user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
+        }
+    }
+
+    private static void handleDarkSight(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.DarkSight)) {
+            return;
+        }
+        if (!Util.succeedProp(user.getSkillStatValue(Thief.ADVANCED_DARK_SIGHT, SkillStat.prop))) {
+            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.DarkSight));
         }
     }
 
@@ -364,6 +376,31 @@ public final class SkillProcessor {
         }
     }
 
+    private static void handleMortalBlow(User user, Mob mob) {
+        if (mob.isBoss()) {
+            return;
+        }
+        final int skillId = SkillConstants.getMortalBlowSkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mortal blow skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (!Util.succeedProp(si.getValue(SkillStat.y, slv))) {
+            return;
+        }
+        final double percentage = (double) mob.getHp() / mob.getMaxHp();
+        if (percentage * 100 < si.getValue(SkillStat.x, slv)) {
+            user.getField().broadcastPacket(MobPacket.mobSpecialEffectBySkill(mob, skillId, user.getCharacterId(), 0));
+            mob.damage(user, mob.getHp());
+        }
+    }
+
 
     // PROCESS SKILL ---------------------------------------------------------------------------------------------------
 
@@ -379,6 +416,7 @@ public final class SkillProcessor {
         final SkillInfo si = skillInfoResult.get();
 
         // Check skill cooltime and cost
+
         if (user.getSkillManager().hasSkillCooltime(skill.skillId)) {
             log.error("Tried to use skill {} that is still on cooltime", skill.skillId);
             return;
@@ -866,7 +904,7 @@ public final class SkillProcessor {
         if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR) {
             return user.getMaxHp() * user.getSkillStatValue(skillId, SkillStat.x) / 100;
         } else if (skillId == Thief.FINAL_CUT) {
-            final int percentage = keyDown * user.getSkillStatValue(skillId, SkillStat.x) / SkillConstants.getMaxGaugeTime(skillId);
+            final int percentage = user.getSkillStatValue(skillId, SkillStat.x) * keyDown / SkillConstants.getMaxGaugeTime(skillId);
             return user.getMaxHp() * percentage / 100;
         }
         return hpCon;

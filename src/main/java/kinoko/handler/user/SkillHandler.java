@@ -21,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Set;
 
 public final class SkillHandler {
@@ -71,10 +70,10 @@ public final class SkillHandler {
         }
         if (inPacket.getRemaining() > 2) {
             // CUserLocal::SendSkillUseRequest
-            skill.mobCount = inPacket.decodeByte(); // nMobCount
-            skill.mobIds = new ArrayList<>();
-            for (int i = 0; i < skill.mobCount; i++) {
-                skill.mobIds.add(inPacket.decodeInt());
+            final int mobCount = inPacket.decodeByte(); // nMobCount
+            skill.mobIds = new int[mobCount];
+            for (int i = 0; i < mobCount; i++) {
+                skill.mobIds[i] = inPacket.decodeInt();
                 if (skill.skillId == Thief.CHAINS_OF_HELL) {
                     // CUserLocal::TryDoingMonsterMagnet
                     inPacket.decodeByte(); // anMobMove[k] == 3 || anMobMove[k] == 4
@@ -144,12 +143,37 @@ public final class SkillHandler {
         }
     }
 
-    @Handler(InHeader.PassiveskillInfoUpdate)
-    public static void handlePassiveSkillInfoUpdate(User user, InPacket inPacket) {
-        inPacket.decodeInt(); // update_time
+    @Handler(InHeader.UserThrowGrenade)
+    public static void handleUserThrowGrenade(User user, InPacket inPacket) {
+        final Skill skill = new Skill();
+        skill.positionX = inPacket.decodeInt();
+        skill.positionY = inPacket.decodeInt();
+        inPacket.decodeInt();
+        skill.keyDown = inPacket.decodeInt();
+        skill.skillId = inPacket.decodeInt();
+        skill.slv = inPacket.decodeInt();
+
         try (var locked = user.acquire()) {
-            user.updatePassiveSkillData();
-            user.validateStat();
+            // Monster bomb is processed by UserSkillUseRequest
+            if (skill.skillId != Thief.MONSTER_BOMB) {
+                SkillProcessor.processSkill(locked, skill);
+            }
+            user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill));
+        }
+    }
+
+    @Handler(InHeader.UserClientTimerEndRequest)
+    public static void handleUserClientTimerEndRequest(User user, InPacket inPacket) {
+        final int size = inPacket.decodeInt();
+        final int[] skillIds = new int[size];
+        for (int i = 0; i < size; i++) {
+            skillIds[i] = inPacket.decodeInt();
+            inPacket.decodeInt();
+        }
+        try (var locked = user.acquire()) {
+            for (int skillId : skillIds) {
+                user.resetTemporaryStat(skillId);
+            }
         }
     }
 }

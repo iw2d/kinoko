@@ -2,6 +2,7 @@ package kinoko.handler.field;
 
 import kinoko.handler.Handler;
 import kinoko.packet.field.MobPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
@@ -18,6 +19,9 @@ import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.*;
+import kinoko.world.job.explorer.Thief;
+import kinoko.world.skill.SkillConstants;
+import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.DefenseStateStat;
@@ -40,7 +44,7 @@ public final class MobHandler {
         final Field field = user.getField();
         final Optional<Mob> mobResult = field.getMobPool().getById(objectId);
         if (mobResult.isEmpty()) {
-            log.error("Received MobMove for invalid object with ID : {}", objectId);
+            // log.error("Received MobMove for invalid object with ID : {}", objectId);
             return;
         }
         final Mob mob = mobResult.get();
@@ -101,7 +105,45 @@ public final class MobHandler {
         // CMob::ApplyControl
         inPacket.decodeInt(); // dwMobID
         inPacket.decodeInt(); // unk
-        // do nothing, since the controller logic is handled elsewhere
+        // do nothing, controller logic is handled in UserPool
+    }
+
+    @Handler(InHeader.MobTimeBombEnd)
+    public static void handleMobTimeBombEnd(User user, InPacket inPacket) {
+        // CMob::UpdateTimeBomb
+        final int objectId = inPacket.decodeInt(); // dwMobID
+
+        final Field field = user.getField();
+        final Optional<Mob> mobResult = field.getMobPool().getById(objectId);
+        if (mobResult.isEmpty()) {
+            log.error("Received MobTimeBombEnd for invalid object with ID : {}", objectId);
+            return;
+        }
+        final Mob mob = mobResult.get();
+        if (mob.isBoss()) {
+            inPacket.decodeInt(); // (rcBody.right + rcBody.left) / 2)
+            inPacket.decodeInt(); // (rcBody.bottom + rcBody.top) / 2)
+        }
+        final int x = inPacket.decodeInt(); // user x
+        final int y = inPacket.decodeInt(); // user y
+
+        try (var lockedMob = mob.acquire()) {
+            if (!mob.getMobStat().hasOption(MobTemporaryStat.TimeBomb)) {
+                log.error("Received MobTimeBombEnd for mob ID : {} without TimeBomb stat", mob.getId());
+                return;
+            }
+            mob.resetTemporaryStat(Set.of(MobTemporaryStat.TimeBomb));
+            // Damage user if within range
+            if (SkillConstants.MONSTER_BOMB_RANGE.translate(mob.getX(), mob.getY()).isInsideRect(x, y)) {
+                try (var locked = user.acquire()) {
+                    final int damage = (int) Math.min(CalcDamage.calcDamageMax(user), user.getHp() - 100);
+                    user.addHp(-damage);
+                    user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 120, damage));
+                }
+            } else {
+                user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 0, 0));
+            }
+        }
     }
 
     private static void handleMobAttack(Locked<Mob> lockedMob, MobAttackInfo mai) {

@@ -46,10 +46,6 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
         setId(skillId); // id as skill id to prevent multiple summons
     }
 
-    public Summoned(int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
-        this(skillId, skillLevel, moveAbility, assistType, null, expireTime);
-    }
-
     public int getSkillId() {
         return skillId;
     }
@@ -168,6 +164,7 @@ public final class Summoned extends Life implements Encodable, Lockable<Summoned
                 slv,
                 moveAbility,
                 assistType,
+                null,
                 Instant.now().plus(duration, ChronoUnit.MILLIS)
         );
     }

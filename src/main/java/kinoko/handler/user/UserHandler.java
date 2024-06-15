@@ -1605,6 +1605,15 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.PassiveskillInfoUpdate)
+    public static void handlePassiveSkillInfoUpdate(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        try (var locked = user.acquire()) {
+            user.updatePassiveSkillData();
+            user.validateStat();
+        }
+    }
+
     @Handler(InHeader.UpdateScreenSetting)
     public static void handleUpdateScreenSetting(User user, InPacket inPacket) {
         inPacket.decodeByte(); // bSysOpt_LargeScreen

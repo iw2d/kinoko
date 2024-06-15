@@ -6,18 +6,18 @@ import java.time.Instant;
 
 public class TwoStateTemporaryStat extends TemporaryStatOption {
     private final TwoStateType twoStateType;
-    private final Instant lastUpdated;
+    private final Instant currentTime;
 
     public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption) {
         super(nOption, rOption, tOption);
         this.twoStateType = twoStateType;
-        this.lastUpdated = Instant.now();
+        this.currentTime = Instant.now();
     }
 
     public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption, Instant expireTime) {
         super(nOption, rOption, tOption, expireTime);
         this.twoStateType = twoStateType;
-        this.lastUpdated = Instant.now();
+        this.currentTime = Instant.now();
     }
 
     public final TwoStateType getType() {
@@ -29,16 +29,14 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         // TemporaryStatBase<long>::DecodeForClient
         outPacket.encodeInt(nOption); // m_value
         outPacket.encodeInt(rOption); // m_reason
-        encodeTime(outPacket, lastUpdated); // tLastUpdated
+        encodeTime(outPacket, expireTime); // tLastUpdated
 
         if (twoStateType == TwoStateType.EXPIRE_BASED_ON_CURRENT_TIME) {
-            // tCurrentTime
-            outPacket.encodeByte(false);
-            outPacket.encodeInt(0);
+            encodeTime(outPacket, currentTime); // tCurrentTime
         }
 
         if (twoStateType != TwoStateType.NO_EXPIRE) {
-            outPacket.encodeShort((int) (getRemainingMillis() / 1000)); // usExpireTerm
+            outPacket.encodeShort(tOption / 1000); // usExpireTerm
         }
     }
 
@@ -46,10 +44,10 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         // tLastUpdated = `anonymous namespace'::DecodeTime
         final Instant now = Instant.now();
         if (time.isAfter(now)) {
-            outPacket.encodeByte(false);
+            outPacket.encodeByte(true);
             outPacket.encodeInt(time.toEpochMilli() - now.toEpochMilli());
         } else {
-            outPacket.encodeByte(true);
+            outPacket.encodeByte(false);
             outPacket.encodeInt(now.toEpochMilli() - time.toEpochMilli());
         }
     }

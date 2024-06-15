@@ -33,6 +33,7 @@ public final class SkillConstants {
     public static final int MECHANIC_VEHICLE = 1932016;
     public static final int ENERGY_CHARGE_MAX = 10000;
     public static final Rect DARK_FLARE_RANGE = new Rect(-400, -200, 400, 200);
+    public static final Rect MONSTER_BOMB_RANGE = new Rect(-220, -150, 220, 0);
 
     public static int getSkillRoot(int skillId) {
         return skillId / 10000;
@@ -119,6 +120,16 @@ public final class SkillConstants {
         }
     }
 
+    public static int getMortalBlowSkill(int jobId) {
+        if (JobConstants.isBowmasterJob(jobId)) {
+            return Bowman.MORTAL_BLOW_BM;
+        } else if (JobConstants.isMarksmanJob(jobId)) {
+            return Bowman.MORTAL_BLOW_MM;
+        } else {
+            return 0;
+        }
+    }
+
     public static int getVenomSkill(int jobId) {
         if (JobConstants.isNightLordJob(jobId)) {
             return Thief.VENOMOUS_STAR;
@@ -170,6 +181,17 @@ public final class SkillConstants {
             case BlazeWizard.TELEPORT:
             case Evan.TELEPORT:
             case BattleMage.TELEPORT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isThrowBombSkill(int skillId) {
+        switch (skillId) {
+            case Thief.MONSTER_BOMB:
+            case Pirate.GRENADE:
+            case NightWalker.POISON_BOMB:
                 return true;
             default:
                 return false;
