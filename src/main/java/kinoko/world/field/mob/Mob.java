@@ -400,6 +400,14 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         finalExp = (int) (finalExp * multiplier);
                         finalPartyBonus = (int) (finalPartyBonus * multiplier);
                     }
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Dice)) {
+                        final int expR = user.getSecondaryStat().getOption(CharacterTemporaryStat.Dice).getDiceInfo().getInfoArray()[17];
+                        if (expR > 0) {
+                            final double multiplier = (expR + 100) / 100.0;
+                            finalExp = (int) (finalExp * multiplier);
+                            finalPartyBonus = (int) (finalPartyBonus * multiplier);
+                        }
+                    }
                     user.addExp(finalExp + finalPartyBonus);
                     user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
                     // Process mob kill for quest

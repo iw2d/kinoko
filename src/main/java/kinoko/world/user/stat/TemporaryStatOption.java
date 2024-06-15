@@ -76,4 +76,21 @@ public class TemporaryStatOption implements Encodable {
     public static TemporaryStatOption ofDice(int nOption, int rOption, int tOption, DiceInfo diceInfo) {
         return new TemporaryStatOption(nOption, rOption, tOption, diceInfo);
     }
+
+    public static TwoStateTemporaryStat ofTwoState(CharacterTemporaryStat cts, int nOption, int rOption, int tOption) {
+        switch (cts) {
+            case RideVehicle -> {
+                return new TwoStateTemporaryStat(TwoStateType.NO_EXPIRE, nOption, rOption, tOption);
+            }
+            case PartyBooster -> {
+                return new TwoStateTemporaryStat(TwoStateType.EXPIRE_BASED_ON_CURRENT_TIME, nOption, rOption, tOption);
+            }
+            case GuidedBullet -> {
+                return new GuidedBullet(nOption, rOption, 0, tOption);
+            }
+            default -> {
+                return new TwoStateTemporaryStat(TwoStateType.EXPIRE_BASED_ON_LAST_UPDATED_TIME, nOption, rOption, tOption);
+            }
+        }
+    }
 }

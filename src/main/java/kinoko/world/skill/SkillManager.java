@@ -84,13 +84,13 @@ public final class SkillManager {
     // STATIC METHODS --------------------------------------------------------------------------------------------------
 
     public static int getSkillLevel(SecondaryStat ss, SkillManager sm, int skillId) {
-        final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
-        if (skillRecordResult.isEmpty()) {
+        final SkillRecord skillRecord = sm.skillRecords.get(skillId);
+        if (skillRecord == null || skillRecord.getSkillLevel() == 0) {
             return 0;
         }
         if (SkillProvider.getSkillInfoById(skillId).map(SkillInfo::isCombatOrders).orElse(false)) {
-            return skillRecordResult.get().getSkillLevel() + ss.getOption(CharacterTemporaryStat.CombatOrders).nOption;
+            return skillRecord.getSkillLevel() + ss.getOption(CharacterTemporaryStat.CombatOrders).nOption;
         }
-        return skillRecordResult.get().getSkillLevel();
+        return skillRecord.getSkillLevel();
     }
 }

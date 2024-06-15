@@ -26,7 +26,6 @@ import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
-import kinoko.world.user.stat.TwoStateTemporaryStat;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -296,7 +295,7 @@ public final class Thief extends SkillDispatcher {
 
             // DB
             case TORNADO_SPIN:
-                user.setTemporaryStat(CharacterTemporaryStat.Dash_Speed, TwoStateTemporaryStat.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case MIRRORED_TARGET:
                 final Summoned summoned = new Summoned(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));

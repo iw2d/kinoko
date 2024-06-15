@@ -100,6 +100,14 @@ public final class JobConstants {
         return jobId / 10 == 43;
     }
 
+    public static boolean isBuccaneerJob(int jobId) {
+        return jobId / 10 == 51;
+    }
+
+    public static boolean isCorsairJob(int jobId) {
+        return jobId / 10 == 52;
+    }
+
     public static boolean isAranJob(int jobId) {
         return jobId / 100 == 21 || jobId == 2000;
     }

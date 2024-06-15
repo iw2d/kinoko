@@ -513,7 +513,7 @@ public final class SecondaryStat {
         }
 
         if (statFlag.hasFlag(CharacterTemporaryStat.Dice)) {
-            stats.get(CharacterTemporaryStat.Dice).encode(outPacket); // aDiceInfo
+            stats.get(CharacterTemporaryStat.Dice).getDiceInfo().encode(outPacket); // aDiceInfo
         }
 
         if (statFlag.hasFlag(CharacterTemporaryStat.BlessingArmor)) {

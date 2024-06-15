@@ -146,6 +146,16 @@ public final class SkillConstants {
         return JobConstants.isCygnusJob(jobId) ? ThunderBreaker.ENERGY_CHARGE : Pirate.ENERGY_CHARGE;
     }
 
+    public static int getPiratesRevengeSkill(int jobId) {
+        if (JobConstants.isBuccaneerJob(jobId)) {
+            return Pirate.PIRATES_REVENGE_BUCC;
+        } else if (JobConstants.isCorsairJob(jobId)) {
+            return Pirate.PIRATES_REVENGE_SAIR;
+        } else {
+            return 0;
+        }
+    }
+
     public static ElementAttribute getElementByChargedSkillId(int skillId) {
         switch (skillId) {
             case Warrior.FIRE_CHARGE:

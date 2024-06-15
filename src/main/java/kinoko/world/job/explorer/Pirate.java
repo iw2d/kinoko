@@ -1,9 +1,24 @@
 package kinoko.world.job.explorer;
 
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.DiceInfo;
+import kinoko.world.user.stat.TemporaryStatOption;
+
+import java.util.Map;
 
 public final class Pirate extends SkillDispatcher {
     // PIRATE
@@ -75,13 +90,89 @@ public final class Pirate extends SkillDispatcher {
     public static final int HEROS_WILL_SAIR = 5221010;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case BACKSPIN_BLOW:
+            case DOUBLE_UPPERCUT:
+            case SNATCH:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case ENERGY_BLAST:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 
     public static void handleSkill(User user, Skill skill) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        final Field field = user.getField();
+        switch (skillId) {
+            // COMMON
+            case DASH:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Dash_Jump, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Jump, si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case ROLL_OF_THE_DICE_BUCC:
+            case ROLL_OF_THE_DICE_SAIR:
+                final int roll = Util.getRandom(1, 6);
+                user.write(UserLocal.effect(Effect.skillAffectedSelect(roll, skillId, slv)));
+                field.broadcastPacket(UserRemote.effect(user, Effect.skillAffectedSelect(roll, skillId, slv)), user);
+                if (roll != 1) {
+                    final DiceInfo diceInfo = DiceInfo.from(roll, si, slv);
+                    user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId, si.getDuration(slv), diceInfo));
+                }
+                return;
+
+            // BUCC
+            case MP_RECOVERY:
+                final int hp = user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100;
+                user.addMp(hp * si.getValue(SkillStat.y, slv) / 100);
+                return;
+            case OAK_BARREL:
+                user.setTemporaryStat(CharacterTemporaryStat.Morph, TemporaryStatOption.of(si.getValue(SkillStat.morph, slv), skillId, si.getDuration(slv)));
+                return;
+            case TRANSFORMATION:
+            case SUPER_TRANSFORMATION:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Morph, TemporaryStatOption.of(si.getValue(SkillStat.morph, slv) + user.getGender() * 100, skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case SPEED_INFUSION:
+                user.setTemporaryStat(CharacterTemporaryStat.PartyBooster, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.PartyBooster, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case TIME_LEAP:
+                final var iter = user.getSkillManager().getSkillCooltimes().keySet().iterator();
+                while (iter.hasNext()) {
+                    final int toReset = iter.next();
+                    if (toReset != TIME_LEAP) {
+                        user.write(UserLocal.skillCooltimeSet(toReset, 0));
+                        iter.remove();
+                    }
+                }
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

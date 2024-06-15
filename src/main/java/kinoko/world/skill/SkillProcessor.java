@@ -23,6 +23,7 @@ import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
 import kinoko.world.job.explorer.Bowman;
+import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
@@ -177,7 +178,9 @@ public final class SkillProcessor {
                 if (attack.skillId == Warrior.HEAVENS_HAMMER) {
                     totalDamage = calculateHeavensHammer(user, mob);
                 } else if (attack.skillId == Thief.DRAIN) {
-                    hpGain = Math.min(Math.min(totalDamage, user.getMaxHp() / 2), mob.getMaxHp());
+                    hpGain += Math.min(Math.min(totalDamage, user.getMaxHp() / 2), mob.getMaxHp());
+                } else if (attack.skillId == Pirate.ENERGY_DRAIN) {
+                    hpGain += totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 100;
                 } else if (attack.skillId != 0) {
                     mpDamage = calculateMpEater(user, mob);
                 }
@@ -238,7 +241,7 @@ public final class SkillProcessor {
         final SecondaryStat ss = user.getSecondaryStat();
         final int energyCharge = ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption;
         if (energyCharge < SkillConstants.ENERGY_CHARGE_MAX) {
-            final TwoStateTemporaryStat option = TwoStateTemporaryStat.ofTwoState(
+            final TwoStateTemporaryStat option = TemporaryStatOption.ofTwoState(
                     CharacterTemporaryStat.EnergyCharged,
                     Math.min(energyCharge + si.getValue(SkillStat.x, slv), SkillConstants.ENERGY_CHARGE_MAX),
                     skillId,
@@ -523,6 +526,7 @@ public final class SkillProcessor {
         handleBeholderCounter(user, hitInfo);
         handleVengeance(user, hitInfo);
         handleDarkFlare(user, hitInfo);
+        handlePiratesRevenge(user, hitInfo);
     }
 
     private static int handleReflect(User user, HitInfo hitInfo) {
@@ -825,6 +829,27 @@ public final class SkillProcessor {
         });
     }
 
+    private static void handlePiratesRevenge(User user, HitInfo hitInfo) {
+        if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
+            return;
+        }
+        final int skillId = SkillConstants.getPiratesRevengeSkill(user.getJob());
+        if (user.getSkillManager().hasSkillCooltime(skillId)) {
+            return;
+        }
+        final int slv = user.getSkillLevel(skillId);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for pirate's revenge skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            user.setTemporaryStat(CharacterTemporaryStat.DamR, TemporaryStatOption.of(si.getValue(SkillStat.damR, slv), skillId, si.getDuration(slv)));
+            user.getSkillManager().setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.x, slv), ChronoUnit.SECONDS)); // 50 seconds
+        }
+    }
+
 
     // PROCESS UPDATE --------------------------------------------------------------------------------------------------
 
@@ -901,7 +926,7 @@ public final class SkillProcessor {
     // COMMON ----------------------------------------------------------------------------------------------------------
 
     public static int getHpCon(User user, int skillId, int hpCon, int keyDown) {
-        if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR) {
+        if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR || skillId == Pirate.MP_RECOVERY) {
             return user.getMaxHp() * user.getSkillStatValue(skillId, SkillStat.x) / 100;
         } else if (skillId == Thief.FINAL_CUT) {
             final int percentage = user.getSkillStatValue(skillId, SkillStat.x) * keyDown / SkillConstants.getMaxGaugeTime(skillId);

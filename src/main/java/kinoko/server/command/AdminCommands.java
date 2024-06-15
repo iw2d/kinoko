@@ -635,6 +635,18 @@ public final class AdminCommands {
         }
     }
 
+    @Command("cd")
+    public static void cd(User user, String[] args) {
+        try (var locked = user.acquire()) {
+            final var iter = locked.get().getSkillManager().getSkillCooltimes().keySet().iterator();
+            while (iter.hasNext()) {
+                final int skillId = iter.next();
+                user.write(UserLocal.skillCooltimeSet(skillId, 0));
+                iter.remove();
+            }
+        }
+    }
+
     @Command("max")
     public static void max(User user, String[] args) {
         try (var locked = user.acquire()) {
