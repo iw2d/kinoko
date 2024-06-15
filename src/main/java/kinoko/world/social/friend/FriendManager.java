@@ -4,7 +4,6 @@ import kinoko.database.DatabaseManager;
 import kinoko.packet.world.FriendPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.node.RemoteUser;
-import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -72,14 +71,12 @@ public final class FriendManager {
         }
     }
 
-    public static void updateFriendsFromDatabase(Locked<User> locked) {
-        final User user = locked.get();
+    public static void updateFriendsFromDatabase(User user) {
         final FriendManager fm = user.getFriendManager();
         fm.updateFriends(DatabaseManager.friendAccessor().getFriendsByCharacterId(user.getCharacterId()));
     }
 
-    public static void updateFriendsFromCentralServer(Locked<User> locked, FriendResultType resultType) {
-        final User user = locked.get();
+    public static void updateFriendsFromCentralServer(User user, FriendResultType resultType) {
         final FriendManager fm = user.getFriendManager();
         // Load mutual friends
         final Set<Friend> mutualFriends = new HashSet<>();

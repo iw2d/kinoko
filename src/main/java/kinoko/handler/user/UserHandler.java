@@ -1246,119 +1246,108 @@ public final class UserHandler {
         final FriendRequestType requestType = FriendRequestType.getByValue(type);
         switch (requestType) {
             case LoadFriend -> {
-                try (var locked = user.acquire()) {
-                    FriendManager.updateFriendsFromDatabase(locked);
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LoadFriend_Done);
-                }
+                FriendManager.updateFriendsFromDatabase(user);
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done);
             }
             case SetFriend -> {
                 final String targetName = inPacket.decodeString(); // sTarget
                 final String friendGroup = inPacket.decodeString(); // sFriendGroup
-                try (var locked = user.acquire()) {
-                    // Check if friend already exists
-                    final FriendManager fm = locked.get().getFriendManager();
-                    final Optional<Friend> friendResult = fm.getFriendByName(targetName);
-                    if (friendResult.isPresent() && friendResult.get().getStatus() == FriendStatus.NORMAL) {
-                        // Update friend group
-                        final Friend friend = friendResult.get();
-                        friend.setFriendGroup(friendGroup);
-                        if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                            user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
-                            return;
-                        }
-                    } else {
-                        // Create new friend - resolve target character id
-                        final Optional<Tuple<Integer, Integer>> targetIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(targetName);
-                        if (targetIdResult.isEmpty()) {
-                            user.write(FriendPacket.setFriendUnknownUser()); // That character is not registered.
-                            return;
-                        }
-                        final int targetCharacterId = targetIdResult.get().getRight();
-                        // Check if target can be added as a friend
-                        final List<Friend> friends = fm.getRegisteredFriends();
-                        if (friends.size() >= fm.getFriendMax()) {
-                            user.write(FriendPacket.setFriendFullMe()); // Your buddy list is full.
-                            return;
-                        }
-                        if (friends.stream().anyMatch((friend) -> friend.getFriendId() == targetCharacterId)) {
-                            user.write(FriendPacket.setFriendAlreadySet()); // That character is already registered as your buddy.
-                            return;
-                        }
-                        // Add target as friend, force creation
-                        final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetName, friendGroup, FriendStatus.NORMAL);
-                        if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
-                            user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
-                            return;
-                        }
-                        // Add user as a friend for target, not forced - existing friends, requests, and refused records
-                        final Friend friendForTarget = new Friend(targetCharacterId, user.getCharacterId(), user.getCharacterName(), GameConstants.DEFAULT_FRIEND_GROUP, FriendStatus.REQUEST);
-                        if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
-                            // Send invite to target if request was created
-                            // This operation is a noop if target offline, the request will be processed on target login
-                            user.getConnectedServer().submitUserPacketRequest(targetName, FriendPacket.invite(friendForTarget));
-                        }
+                // Check if friend already exists
+                final Optional<Friend> friendResult = user.getFriendManager().getFriendByName(targetName);
+                if (friendResult.isPresent() && friendResult.get().getStatus() == FriendStatus.NORMAL) {
+                    // Update friend group
+                    final Friend friend = friendResult.get();
+                    friend.setFriendGroup(friendGroup);
+                    if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                        user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
+                        return;
                     }
-                    // Reload friends and update client
-                    FriendManager.updateFriendsFromDatabase(locked);
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SetFriend_Done);
+                } else {
+                    // Create new friend - resolve target character id
+                    final Optional<Tuple<Integer, Integer>> targetIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(targetName);
+                    if (targetIdResult.isEmpty()) {
+                        user.write(FriendPacket.setFriendUnknownUser()); // That character is not registered.
+                        return;
+                    }
+                    final int targetCharacterId = targetIdResult.get().getRight();
+                    // Check if target can be added as a friend
+                    final List<Friend> friends = user.getFriendManager().getRegisteredFriends();
+                    if (friends.size() >= user.getFriendManager().getFriendMax()) {
+                        user.write(FriendPacket.setFriendFullMe()); // Your buddy list is full.
+                        return;
+                    }
+                    if (friends.stream().anyMatch((friend) -> friend.getFriendId() == targetCharacterId)) {
+                        user.write(FriendPacket.setFriendAlreadySet()); // That character is already registered as your buddy.
+                        return;
+                    }
+                    // Add target as friend, force creation
+                    final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetName, friendGroup, FriendStatus.NORMAL);
+                    if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
+                        user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
+                        return;
+                    }
+                    // Add user as a friend for target, not forced - existing friends, requests, and refused records
+                    final Friend friendForTarget = new Friend(targetCharacterId, user.getCharacterId(), user.getCharacterName(), GameConstants.DEFAULT_FRIEND_GROUP, FriendStatus.REQUEST);
+                    if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
+                        // Send invite to target if request was created
+                        // This operation is a noop if target offline, the request will be processed on target login
+                        user.getConnectedServer().submitUserPacketRequest(targetName, FriendPacket.invite(friendForTarget));
+                    }
                 }
+                // Reload friends and update client
+                FriendManager.updateFriendsFromDatabase(user);
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.SetFriend_Done);
             }
             case AcceptFriend -> {
                 final int friendId = inPacket.decodeInt();
-                try (var locked = user.acquire()) {
-                    // Load friends from database
-                    FriendManager.updateFriendsFromDatabase(locked);
-                    // Resolve friend from id
-                    final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
-                    if (friendResult.isEmpty()) {
-                        user.write(FriendPacket.acceptFriendUnknown()); // The request was denied due to an unknown error.
-                        return;
-                    }
-                    // Update friend status
-                    final Friend friend = friendResult.get();
-                    friend.setStatus(FriendStatus.NORMAL);
-                    if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                        user.write(FriendPacket.acceptFriendUnknown()); // The request was denied due to an unknown error.
-                        return;
-                    }
-                    // Notify newly added friend (noop if offline)
-                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), user.getChannelId()));
-                    // Reload friends and update client
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.SetFriend_Done);
+                FriendManager.updateFriendsFromDatabase(user);
+                // Resolve friend from id
+                final Optional<Friend> friendResult = user.getFriendManager().getFriend(friendId);
+                if (friendResult.isEmpty()) {
+                    user.write(FriendPacket.acceptFriendUnknown()); // The request was denied due to an unknown error.
+                    return;
                 }
+                // Update friend status
+                final Friend friend = friendResult.get();
+                friend.setStatus(FriendStatus.NORMAL);
+                if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                    user.write(FriendPacket.acceptFriendUnknown()); // The request was denied due to an unknown error.
+                    return;
+                }
+                // Notify newly added friend (noop if offline)
+                user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), user.getChannelId()));
+                // Reload friends and update client
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.SetFriend_Done);
             }
             case DeleteFriend -> {
                 final int friendId = inPacket.decodeInt();
-                try (var locked = user.acquire()) {
-                    // Load friends from database
-                    FriendManager.updateFriendsFromDatabase(locked);
-                    // Resolve friend from id
-                    final Optional<Friend> friendResult = locked.get().getFriendManager().getFriend(friendId);
-                    if (friendResult.isEmpty()) {
+                FriendManager.updateFriendsFromDatabase(user);
+                // Resolve friend from id
+                final Optional<Friend> friendResult = user.getFriendManager().getFriend(friendId);
+                if (friendResult.isEmpty()) {
+                    user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
+                    return;
+                }
+                final Friend friend = friendResult.get();
+                // Update friend request status to refused (this is set for deletion too, in order to update the client)
+                friend.setStatus(FriendStatus.REFUSED);
+                if (friend.getStatus() == FriendStatus.REQUEST) {
+                    // Save friend request result
+                    if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
                         user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
                         return;
                     }
-                    final Friend friend = friendResult.get();
-                    // Update friend request status to refused (this is set for deletion too, in order to update the client)
-                    friend.setStatus(FriendStatus.REFUSED);
-                    if (friend.getStatus() == FriendStatus.REQUEST) {
-                        // Save friend request result
-                        if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                            user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
-                            return;
-                        }
-                    } else {
-                        // Delete friend
-                        if (!DatabaseManager.friendAccessor().deleteFriend(user.getCharacterId(), friend.getFriendId())) {
-                            user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
-                            return;
-                        }
-                        // Notify deleted friend (noop if offline)
-                        user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE));
+                } else {
+                    // Delete friend
+                    if (!DatabaseManager.friendAccessor().deleteFriend(user.getCharacterId(), friend.getFriendId())) {
+                        user.write(FriendPacket.deleteFriendUnknown()); // The request was denied due to an unknown error.
+                        return;
                     }
-                    // Reload friends and update client
-                    FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.DeleteFriend_Done);
+                    // Notify deleted friend (noop if offline)
+                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE));
                 }
+                // Reload friends and update client
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.DeleteFriend_Done);
             }
             case null -> {
                 log.error("Unknown friend request type : {}", type);

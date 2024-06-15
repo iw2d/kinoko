@@ -91,6 +91,22 @@ public final class RemoteUser implements Encodable {
     }
 
     @Override
+    public String toString() {
+        return "RemoteUser{" +
+                "accountId=" + accountId +
+                ", characterId=" + characterId +
+                ", characterName='" + characterName + '\'' +
+                ", level=" + level +
+                ", job=" + job +
+                ", channelId=" + channelId +
+                ", fieldId=" + fieldId +
+                ", partyId=" + partyId +
+                ", messengerId=" + messengerId +
+                ", townPortal=" + townPortal +
+                '}';
+    }
+
+    @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(accountId);
         outPacket.encodeInt(characterId);

@@ -178,8 +178,8 @@ public final class MigrationHandler {
             user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
             // Loads friends from database and central server
-            FriendManager.updateFriendsFromDatabase(locked);
-            FriendManager.updateFriendsFromCentralServer(locked, FriendResultType.LoadFriend_Done);
+            FriendManager.updateFriendsFromDatabase(user);
+            FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done);
 
             // Notify friends
             channelServerNode.submitUserPacketBroadcast(

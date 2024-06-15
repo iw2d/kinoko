@@ -116,6 +116,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 if (!centralServerNode.isMigrating(remoteUser.getAccountId())) {
                     // Update party
                     remoteUser.setChannelId(GameConstants.CHANNEL_OFFLINE);
+                    remoteUser.setFieldId(GameConstants.UNDEFINED_FIELD_ID);
                     updatePartyMember(remoteUser);
                     // Leave messenger
                     leaveMessenger(remoteUser);
@@ -205,6 +206,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
                             final Party party = lockedParty.get();
+                            System.out.println(party);
                             remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
                             remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.loadPartyDone(party)));
                         }

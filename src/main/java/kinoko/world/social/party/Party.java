@@ -117,6 +117,15 @@ public final class Party implements Encodable, Lockable<Party> {
     }
 
     @Override
+    public String toString() {
+        return "Party{" +
+                "partyId=" + partyId +
+                ", partyMembers=" + partyMembers +
+                ", partyBossId=" + partyBossId +
+                '}';
+    }
+
+    @Override
     public void encode(OutPacket outPacket) {
         // PARTYDATA::Decode (378)
         forEachMemberForPartyData((member) -> outPacket.encodeInt(member.getCharacterId())); // adwCharacterID

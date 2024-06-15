@@ -63,9 +63,6 @@ public final class Client extends NettyClient {
                 user.logout();
                 saveAccount();
                 DatabaseManager.characterAccessor().saveCharacter(locked.get().getCharacterData());
-                if (getServerNode() instanceof ChannelServerNode channelServerNode) {
-                    channelServerNode.notifyUserDisconnect(user);
-                }
             }
         }
         getServerNode().removeClient(this);
