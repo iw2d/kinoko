@@ -53,6 +53,7 @@ public final class SummonedHandler {
         }
         final Summoned summoned = summonedResult.get();
         final Attack attack = new Attack(OutHeader.SummonedAttack);
+        attack.skillId = summoned.getSkillId();
 
         inPacket.decodeInt(); // ~drInfo.dr0
         inPacket.decodeInt(); // ~drInfo.dr1

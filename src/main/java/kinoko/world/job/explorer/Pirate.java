@@ -7,10 +7,15 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
@@ -19,6 +24,7 @@ import kinoko.world.user.stat.DiceInfo;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
+import java.util.Set;
 
 public final class Pirate extends SkillDispatcher {
     // PIRATE
@@ -99,6 +105,7 @@ public final class Pirate extends SkillDispatcher {
             case BACKSPIN_BLOW:
             case DOUBLE_UPPERCUT:
             case SNATCH:
+            case BLANK_SHOT:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
@@ -109,6 +116,42 @@ public final class Pirate extends SkillDispatcher {
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case GRENADE:
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                });
+                break;
+            case GAVIOTA:
+                user.removeSummoned(skillId);
+                break;
+            case FLAMETHROWER:
+                final int dot = si.getValue(SkillStat.dot, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.x);
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, dot, mob));
+                });
+                break;
+            case ICE_SPLITTER:
+                final int time = si.getValue(SkillStat.time, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.y);
+                attack.forEachMob(field, (mob) -> {
+                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, time * 1000));
+                });
+                break;
+            case HOMING_BEACON:
+            case BULLSEYE:
+                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
+                    user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
+                }
+                attack.forEachMob(field, (mob) -> {
+                    user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, skillId == BULLSEYE ? si.getValue(SkillStat.x, slv) : 1, skillId, mob.getId()));
+                });
+                break;
+            case HYPNOTIZE:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
                 });
                 break;
@@ -171,6 +214,37 @@ public final class Pirate extends SkillDispatcher {
                         iter.remove();
                     }
                 }
+                return;
+
+            // SAIR
+            case OCTOPUS:
+            case WRATH_OF_THE_OCTOPI:
+                final Summoned octopus = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
+                octopus.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(octopus);
+                return;
+            case GAVIOTA:
+                final Summoned gaviota = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
+                gaviota.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(gaviota);
+                return;
+            case BATTLESHIP:
+                final int durability;
+                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Battleship_Durability)) {
+                    durability = user.getSecondaryStat().getOption(CharacterTemporaryStat.Battleship_Durability).nOption;
+                } else {
+                    durability = 300 * user.getLevel() + 500 * (slv - 72); // get_max_durability_of_vehicle
+                }
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.BATTLESHIP_VEHICLE, skillId, 0),
+                        CharacterTemporaryStat.Battleship_Durability, TemporaryStatOption.of(durability, SkillConstants.BATTLESHIP_DURABILITY, 0),
+                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, 0),
+                        CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
+                        CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
+                        CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
+                        CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
+                ));
+                user.write(UserLocal.skillCooltimeSet(SkillConstants.BATTLESHIP_DURABILITY, durability));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

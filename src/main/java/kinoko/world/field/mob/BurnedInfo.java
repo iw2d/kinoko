@@ -87,10 +87,13 @@ public final class BurnedInfo implements Encodable {
     }
 
     public static BurnedInfo from(User user, SkillInfo si, int slv, Mob mob) {
+        return BurnedInfo.from(user, si, slv, si.getValue(SkillStat.dot, slv), mob);
+    }
+
+    public static BurnedInfo from(User user, SkillInfo si, int slv, int skillDamage, Mob mob) {
         // Calculate damage - only affected by damage range and element attribute
         double damage = CalcDamage.calcDamageMax(user);
         damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
-        final int skillDamage = si.getValue(SkillStat.dot, slv);
         if (skillDamage > 0) {
             damage = skillDamage / 100.0 * damage;
         }

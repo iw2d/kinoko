@@ -25,11 +25,20 @@ public final class BitFlag<T extends BitIndex> implements Encodable {
         if (bitIndex.getArrayIndex() >= flags.length) {
             return;
         }
-        this.flags[bitIndex.getArrayIndex()] |= bitIndex.getBitPosition();
+        flags[bitIndex.getArrayIndex()] |= bitIndex.getBitPosition();
+    }
+
+    public boolean isEmpty() {
+        for (int i : flags) {
+            if (i != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void clear() {
-        Arrays.fill(this.flags, 0);
+        Arrays.fill(flags, 0);
     }
 
     @Override

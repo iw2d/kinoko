@@ -78,10 +78,11 @@ public final class SkillProvider implements WzProvider {
                 }
                 for (var summonEntry : summonProp.getItems().entrySet()) {
                     if (!summonEntry.getKey().startsWith("attack") ||
-                            !(summonEntry.getValue() instanceof WzListProperty attackProp)) {
+                            !(summonEntry.getValue() instanceof WzListProperty attackProp) ||
+                            !(attackProp.get("info") instanceof WzListProperty infoProp)) {
                         continue;
                     }
-                    summonedAttackInfos.put(skillId, SummonedAttackInfo.from(skillId, attackProp));
+                    summonedAttackInfos.put(skillId, SummonedAttackInfo.from(skillId, infoProp));
                 }
             }
         }

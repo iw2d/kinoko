@@ -29,12 +29,14 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         // TemporaryStatBase<long>::DecodeForClient
         outPacket.encodeInt(nOption); // m_value
         outPacket.encodeInt(rOption); // m_reason
-        encodeTime(outPacket, expireTime); // tLastUpdated
-
+        if (twoStateType == TwoStateType.NO_EXPIRE) {
+            encodeTime(outPacket, currentTime); // tLastUpdated
+        } else {
+            encodeTime(outPacket, expireTime);
+        }
         if (twoStateType == TwoStateType.EXPIRE_BASED_ON_CURRENT_TIME) {
             encodeTime(outPacket, currentTime); // tCurrentTime
         }
-
         if (twoStateType != TwoStateType.NO_EXPIRE) {
             outPacket.encodeShort(tOption / 1000); // usExpireTerm
         }

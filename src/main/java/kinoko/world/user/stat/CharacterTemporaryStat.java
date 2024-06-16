@@ -142,7 +142,8 @@ public enum CharacterTemporaryStat implements BitIndex {
     DefenseAtt_Elem(1000),
     DefenseState_Stat(1001),
     SuddenDeath_Count(1002),
-    BlessingArmorIncPAD(1003);
+    BlessingArmorIncPAD(1003),
+    Battleship_Durability(1004);
 
     public static final int FLAG_SIZE = 128;
     public static final List<CharacterTemporaryStat> LOCAL_ENCODE_ORDER = List.of(

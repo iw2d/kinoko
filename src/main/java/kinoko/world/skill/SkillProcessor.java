@@ -144,8 +144,7 @@ public final class SkillProcessor {
             // Set cooltime
             final int cooltime = si.getValue(SkillStat.cooltime, attack.slv);
             if (cooltime > 0) {
-                user.getSkillManager().setSkillCooltime(attack.skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
-                user.write(UserLocal.skillCooltimeSet(attack.skillId, cooltime));
+                user.setSkillCooltime(attack.skillId, cooltime);
             }
         }
 
@@ -419,7 +418,6 @@ public final class SkillProcessor {
         final SkillInfo si = skillInfoResult.get();
 
         // Check skill cooltime and cost
-
         if (user.getSkillManager().hasSkillCooltime(skill.skillId)) {
             log.error("Tried to use skill {} that is still on cooltime", skill.skillId);
             return;
@@ -471,9 +469,8 @@ public final class SkillProcessor {
         user.addMp(-mpCon);
         // Set cooltime
         final int cooltime = si.getValue(SkillStat.cooltime, skill.slv);
-        if (cooltime > 0) {
-            user.getSkillManager().setSkillCooltime(skill.skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
-            user.write(UserLocal.skillCooltimeSet(skill.skillId, cooltime));
+        if (skill.skillId != Pirate.BATTLESHIP && cooltime > 0) {
+            user.setSkillCooltime(skill.skillId, cooltime);
         }
 
         // Skill-specific handling
@@ -527,6 +524,7 @@ public final class SkillProcessor {
         handleVengeance(user, hitInfo);
         handleDarkFlare(user, hitInfo);
         handlePiratesRevenge(user, hitInfo);
+        handleBattleship(user, hitInfo);
     }
 
     private static int handleReflect(User user, HitInfo hitInfo) {
@@ -700,7 +698,7 @@ public final class SkillProcessor {
                 ));
             } else {
                 user.resetTemporaryStat(skillId);
-                user.getSkillManager().setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.cooltime, slv), ChronoUnit.SECONDS));
+                user.setSkillCooltime(skillId, si.getValue(SkillStat.cooltime, slv));
             }
         } else {
             // Try giving divine shield buff
@@ -846,7 +844,26 @@ public final class SkillProcessor {
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
             user.setTemporaryStat(CharacterTemporaryStat.DamR, TemporaryStatOption.of(si.getValue(SkillStat.damR, slv), skillId, si.getDuration(slv)));
-            user.getSkillManager().setSkillCooltime(skillId, Instant.now().plus(si.getValue(SkillStat.x, slv), ChronoUnit.SECONDS)); // 50 seconds
+            user.setSkillCooltime(skillId, si.getValue(SkillStat.x, slv)); // 50 seconds
+        }
+    }
+
+    private static void handleBattleship(User user, HitInfo hitInfo) {
+        if (hitInfo.finalDamage <= 0 || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.RideVehicle)) {
+            return;
+        }
+        final TwoStateTemporaryStat option = (TwoStateTemporaryStat) user.getSecondaryStat().getOption(CharacterTemporaryStat.RideVehicle);
+        if (option.nOption == SkillConstants.BATTLESHIP_VEHICLE) {
+            final TemporaryStatOption durability = user.getSecondaryStat().getOption(CharacterTemporaryStat.Battleship_Durability);
+            final int newDurability = durability.nOption - hitInfo.finalDamage;
+            if (newDurability > 0) {
+                user.setTemporaryStat(CharacterTemporaryStat.Battleship_Durability, durability.update(newDurability));
+                user.write(UserLocal.skillCooltimeSet(SkillConstants.BATTLESHIP_DURABILITY, newDurability));
+            } else {
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.Battleship_Durability));
+                user.resetTemporaryStat(option.rOption);
+                user.setSkillCooltime(option.rOption, user.getSkillStatValue(option.rOption, SkillStat.cooltime));
+            }
         }
     }
 

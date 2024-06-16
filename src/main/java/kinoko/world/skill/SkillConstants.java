@@ -31,6 +31,8 @@ public final class SkillConstants {
             1932015, 1932030, 1932031, 1932032, 1932033, 1932036
     );
     public static final int MECHANIC_VEHICLE = 1932016;
+    public static final int BATTLESHIP_VEHICLE = 1932000;
+    public static final int BATTLESHIP_DURABILITY = 5221999;
     public static final int ENERGY_CHARGE_MAX = 10000;
     public static final Rect DARK_FLARE_RANGE = new Rect(-400, -200, 400, 200);
     public static final Rect MONSTER_BOMB_RANGE = new Rect(-220, -150, 220, 0);

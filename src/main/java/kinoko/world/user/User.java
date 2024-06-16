@@ -2,6 +2,7 @@ package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.SummonedPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.WvsContext;
@@ -31,6 +32,8 @@ import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -380,6 +383,15 @@ public final class User extends Life implements Lockable<User> {
         validateStat();
         write(WvsContext.temporaryStatReset(resetStats));
         getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
+    }
+
+    public void setSkillCooltime(int skillId, int cooltime) {
+        if (cooltime > 0) {
+            getSkillManager().setSkillCooltime(skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
+        } else {
+            getSkillManager().getSkillCooltimes().remove(skillId);
+        }
+        write(UserLocal.skillCooltimeSet(skillId, cooltime));
     }
 
 

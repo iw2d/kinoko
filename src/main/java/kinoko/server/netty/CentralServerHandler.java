@@ -206,7 +206,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
                             final Party party = lockedParty.get();
-                            System.out.println(party);
                             remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
                             remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.loadPartyDone(party)));
                         }

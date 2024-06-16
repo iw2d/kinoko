@@ -3,7 +3,6 @@ package kinoko.server.node;
 import kinoko.server.ServerConfig;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.BitFlag;
 import kinoko.util.Encodable;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
@@ -218,18 +217,11 @@ public final class MigrationInfo implements Encodable {
     // TEMPORARY STATS -------------------------------------------------------------------------------------------------
 
     private static void encodeTemporaryStats(OutPacket outPacket, Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats) {
-        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.from(temporaryStats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
-        statFlag.encode(outPacket);
-
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.values()) {
-            if (!statFlag.hasFlag(cts)) {
-                continue;
-            }
-            // Option type
-            final TemporaryStatOptionType type = TemporaryStatOptionType.getByCTS(cts);
-            outPacket.encodeByte(type.getValue());
-            // Option values
-            final TemporaryStatOption option = temporaryStats.get(cts);
+        outPacket.encodeInt(temporaryStats.size());
+        for (var entry : temporaryStats.entrySet()) {
+            final CharacterTemporaryStat cts = entry.getKey();
+            final TemporaryStatOption option = entry.getValue();
+            outPacket.encodeInt(cts.getValue());
             outPacket.encodeInt(option.nOption);
             outPacket.encodeInt(option.rOption);
             outPacket.encodeInt(option.tOption);
@@ -237,6 +229,8 @@ public final class MigrationInfo implements Encodable {
                 outPacket.encodeLong(option.getExpireTime().toEpochMilli());
             }
             // Extra information
+            final TemporaryStatOptionType type = TemporaryStatOptionType.getByCTS(cts);
+            outPacket.encodeByte(type.getValue());
             switch (type) {
                 case DICE_INFO -> {
                     option.getDiceInfo().encode(outPacket);
@@ -255,16 +249,14 @@ public final class MigrationInfo implements Encodable {
 
     private static Map<CharacterTemporaryStat, TemporaryStatOption> decodeTemporaryStats(InPacket inPacket) {
         final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new HashMap<>();
-        final BitFlag<CharacterTemporaryStat> statFlag = BitFlag.decode(inPacket, CharacterTemporaryStat.FLAG_SIZE);
-        for (CharacterTemporaryStat cts : CharacterTemporaryStat.values()) {
-            if (!statFlag.hasFlag(cts)) {
-                continue;
-            }
-            final TemporaryStatOptionType type = TemporaryStatOptionType.getByValue(inPacket.decodeByte());
+        final int size = inPacket.decodeInt();
+        for (int i = 0; i < size; i++) {
+            final CharacterTemporaryStat cts = CharacterTemporaryStat.getByValue(inPacket.decodeInt());
             final int nOption = inPacket.decodeInt();
             final int rOption = inPacket.decodeInt();
             final int tOption = inPacket.decodeInt();
             final Instant expireTime = tOption != 0 ? Instant.ofEpochMilli(inPacket.decodeLong()) : Instant.MAX;
+            final TemporaryStatOptionType type = TemporaryStatOptionType.getByValue(inPacket.decodeByte());
             switch (type) {
                 case NORMAL -> {
                     temporaryStats.put(cts, new TemporaryStatOption(nOption, rOption, tOption, expireTime));
