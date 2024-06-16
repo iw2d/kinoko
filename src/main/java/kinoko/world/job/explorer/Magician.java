@@ -219,7 +219,7 @@ public final class Magician extends SkillDispatcher {
                 return;
             case MEDITATION_FP:
             case MEDITATION_IL:
-                user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, duration));
                 return;
             case SLOW_FP:
             case SLOW_IL:
@@ -245,7 +245,7 @@ public final class Magician extends SkillDispatcher {
                 return;
             case ELEMENTAL_DECREASE_FP:
             case ELEMENTAL_DECREASE_IL:
-                user.setTemporaryStat(CharacterTemporaryStat.ElementalReset, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.ElementalReset, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, duration));
                 return;
             case MANA_REFLECTION_FP:
             case MANA_REFLECTION_IL:

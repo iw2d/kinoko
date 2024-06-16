@@ -1,9 +1,22 @@
 package kinoko.world.job.cygnus;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
+import kinoko.world.job.explorer.Warrior;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillDispatcher;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 
 public final class DawnWarrior extends SkillDispatcher {
     // DAWN_WARRIOR_1
@@ -30,13 +43,53 @@ public final class DawnWarrior extends SkillDispatcher {
     public static final int SOUL_CHARGE = 11111007;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case PANIC:
+                Warrior.resetComboCounter(user);
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case COMA:
+                Warrior.resetComboCounter(user);
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 
     public static void handleSkill(User user, Skill skill) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        final Field field = user.getField();
+        switch (skillId) {
+            case IRON_BODY:
+                user.setTemporaryStat(CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)));
+                return;
+            case SOUL:
+                final Summoned summoned = Summoned.from(si, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK);
+                summoned.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(summoned);
+                return;
+            case RAGE:
+                user.setTemporaryStat(CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv)));
+                return;
+            case COMBO_ATTACK:
+                user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

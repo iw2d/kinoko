@@ -226,10 +226,10 @@ public final class Thief extends SkillDispatcher {
             // COMMON
             case DARK_SIGHT:
                 if (slv == si.getMaxLevel()) {
-                    user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 } else {
                     user.setTemporaryStat(Map.of(
-                            CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(1, skillId, si.getDuration(slv)),
                             CharacterTemporaryStat.Slow, TemporaryStatOption.of(100 - si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
                     ));
                 }

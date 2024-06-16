@@ -1,6 +1,7 @@
 package kinoko.world.field.affectedarea;
 
 import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -10,6 +11,8 @@ import kinoko.world.field.FieldObject;
 import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.job.cygnus.BlazeWizard;
+import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.explorer.Magician;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -27,15 +30,17 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     private final int skillLevel;
     private final int delay;
     private final Rect rect;
+    private final ElementAttribute elemAttr;
     private final Instant expireTime;
 
-    public AffectedArea(AffectedAreaType type, FieldObject owner, int skillId, int skillLevel, int delay, Rect rect, Instant expireTime) {
+    public AffectedArea(AffectedAreaType type, FieldObject owner, int skillId, int skillLevel, int delay, Rect rect, ElementAttribute elemAttr, Instant expireTime) {
         this.type = type;
         this.owner = owner;
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.delay = delay;
         this.rect = rect;
+        this.elemAttr = elemAttr;
         this.expireTime = expireTime;
     }
 
@@ -63,6 +68,10 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         return rect;
     }
 
+    public ElementAttribute getElemAttr() {
+        return elemAttr;
+    }
+
     public Instant getExpireTime() {
         return expireTime;
     }
@@ -73,7 +82,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
             return;
         }
         switch (skillId) {
-            case Magician.POISON_MIST -> {
+            case Magician.POISON_MIST, BlazeWizard.FLAME_GEAR, NightWalker.POISON_BOMB -> {
                 if (mob.getHp() == 1 || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId)) {
                     return;
                 }
@@ -99,7 +108,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         outPacket.encodeInt(rect.getTop()); // rcArea->top
         outPacket.encodeInt(rect.getRight()); // rcArea->right
         outPacket.encodeInt(rect.getBottom()); // rcArea->bottom
-        outPacket.encodeInt(0); // nElemAttr
+        outPacket.encodeInt(elemAttr.getValue()); // nElemAttr
         outPacket.encodeInt(0); // nPhase
     }
 
@@ -110,6 +119,6 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int x, int y) {
         final Rect rect = si.getRect().translate(x, y);
         final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
-        return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, rect, expireTime);
+        return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, rect, si.getElemAttr(), expireTime);
     }
 }

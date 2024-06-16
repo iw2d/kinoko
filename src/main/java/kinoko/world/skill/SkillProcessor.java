@@ -22,6 +22,8 @@ import kinoko.world.field.mob.*;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.item.*;
+import kinoko.world.job.cygnus.NightWalker;
+import kinoko.world.job.cygnus.ThunderBreaker;
 import kinoko.world.job.explorer.Bowman;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
@@ -68,14 +70,17 @@ public final class SkillProcessor {
             }
         }
 
-        // Process skill
-        if (attack.skillId != 0 && !SkillConstants.isThrowBombSkill(attack.skillId)) {
-            // Set skill level
+        // Set skill level
+        if (attack.skillId != 0) {
             attack.slv = user.getSkillLevel(attack.skillId);
             if (attack.slv == 0) {
                 log.error("Tried to attack with skill {} not learned by user", attack.skillId);
                 return;
             }
+        }
+
+        // Process skill
+        if (attack.skillId != 0 && !SkillConstants.isThrowBombSkill(attack.skillId)) {
             // Resolve skill info
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
             if (skillInfoResult.isEmpty()) {
@@ -153,6 +158,7 @@ public final class SkillProcessor {
             handleComboAttack(user);
             handleEnergyCharge(user);
             handleDarkSight(user);
+            handleWindWalk(user);
         }
 
         // Skill specific handling
@@ -176,9 +182,10 @@ public final class SkillProcessor {
                 handleOwlSpirit(user, attack, mob.getMaxHp() == totalDamage);
                 if (attack.skillId == Warrior.HEAVENS_HAMMER) {
                     totalDamage = calculateHeavensHammer(user, mob);
-                } else if (attack.skillId == Thief.DRAIN) {
-                    hpGain += Math.min(Math.min(totalDamage, user.getMaxHp() / 2), mob.getMaxHp());
-                } else if (attack.skillId == Pirate.ENERGY_DRAIN) {
+                } else if (attack.skillId == Thief.DRAIN || attack.skillId == NightWalker.VAMPIRE) {
+                    final int absorbAmount = totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 10;
+                    hpGain += Math.min(Math.min(absorbAmount, user.getMaxHp() / 2), mob.getMaxHp());
+                } else if (attack.skillId == Pirate.ENERGY_DRAIN || attack.skillId == ThunderBreaker.ENERGY_DRAIN) {
                     hpGain += totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 100;
                 } else if (attack.skillId != 0) {
                     mpDamage = calculateMpEater(user, mob);
@@ -214,13 +221,15 @@ public final class SkillProcessor {
         if (option.nOption == 0) {
             return;
         }
+        final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
+        final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
         final int maxCombo = 1 + Math.max(
-                user.getSkillStatValue(Warrior.COMBO_ATTACK, SkillStat.x),
-                user.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.x)
+                user.getSkillStatValue(comboAttackId, SkillStat.x),
+                user.getSkillStatValue(advancedComboId, SkillStat.x)
         );
-        final int doubleProp = user.getSkillStatValue(Warrior.ADVANCED_COMBO_ATTACK, SkillStat.prop);
-        final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
-        if (newCombo > option.nOption) {
+        if (option.nOption < maxCombo) {
+            final int doubleProp = user.getSkillStatValue(advancedComboId, SkillStat.prop);
+            final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
             user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(newCombo));
         }
     }
@@ -255,8 +264,15 @@ public final class SkillProcessor {
             return;
         }
         if (!Util.succeedProp(user.getSkillStatValue(Thief.ADVANCED_DARK_SIGHT, SkillStat.prop))) {
-            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.DarkSight));
+            user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.DarkSight).rOption);
         }
+    }
+
+    private static void handleWindWalk(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.WindWalk)) {
+            return;
+        }
+        user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.WindWalk).rOption);
     }
 
     private static void handlePickpocket(User user, Attack attack, Mob mob) {
@@ -836,9 +852,12 @@ public final class SkillProcessor {
             return;
         }
         final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            log.error("Could not resolve skill info for pirate's revenge skill ID : {}", skillId);
+            log.error("Could not resolve skill info for pirates revenge skill ID : {}", skillId);
             return;
         }
         final SkillInfo si = skillInfoResult.get();

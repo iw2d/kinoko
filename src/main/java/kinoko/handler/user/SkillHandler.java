@@ -158,11 +158,7 @@ public final class SkillHandler {
         skill.slv = inPacket.decodeInt();
 
         try (var locked = user.acquire()) {
-            // Monster bomb is processed by UserSkillUseRequest
-            if (skill.skillId != Thief.MONSTER_BOMB) {
-                SkillProcessor.processSkill(locked, skill);
-            }
-            user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill));
+            user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill), user);
         }
     }
 

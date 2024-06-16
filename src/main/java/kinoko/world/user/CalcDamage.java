@@ -217,7 +217,6 @@ public final class CalcDamage {
         if (comboCounter < 1) {
             return 0;
         }
-        final SkillManager sm = user.getSkillManager();
         final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
         final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
         if (user.getSkillLevel(comboAttackId) == 0) {

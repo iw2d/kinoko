@@ -55,6 +55,12 @@ public abstract class SkillDispatcher {
             case WIND_ARCHER_1, WIND_ARCHER_2, WIND_ARCHER_3 -> {
                 WindArcher.handleAttack(user, attack);
             }
+            case NIGHT_WALKER_1, NIGHT_WALKER_2, NIGHT_WALKER_3 -> {
+                NightWalker.handleAttack(user, attack);
+            }
+            case THUNDER_BREAKER_1, THUNDER_BREAKER_2, THUNDER_BREAKER_3 -> {
+                ThunderBreaker.handleAttack(user, attack);
+            }
             case ARAN_1, ARAN_2, ARAN_3, ARAN_4 -> {
                 Aran.handleAttack(user, attack);
             }
@@ -192,6 +198,7 @@ public abstract class SkillDispatcher {
             case Magician.TELEPORT_FP:
             case Magician.TELEPORT_IL:
             case Magician.TELEPORT_BISH:
+            case DawnWarrior.SOUL_RUSH:
             case NightWalker.FLASH_JUMP:
             case BlazeWizard.TELEPORT:
                 // noop
@@ -224,6 +231,12 @@ public abstract class SkillDispatcher {
             }
             case WIND_ARCHER_1, WIND_ARCHER_2, WIND_ARCHER_3 -> {
                 WindArcher.handleSkill(user, skill);
+            }
+            case NIGHT_WALKER_1, NIGHT_WALKER_2, NIGHT_WALKER_3 -> {
+                NightWalker.handleSkill(user, skill);
+            }
+            case THUNDER_BREAKER_1, THUNDER_BREAKER_2, THUNDER_BREAKER_3 -> {
+                ThunderBreaker.handleSkill(user, skill);
             }
             case ARAN_1, ARAN_2, ARAN_3, ARAN_4 -> {
                 Aran.handleSkill(user, skill);
