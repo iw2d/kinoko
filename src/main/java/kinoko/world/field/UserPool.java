@@ -13,7 +13,6 @@ import kinoko.world.field.summoned.Summoned;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -148,12 +147,7 @@ public final class UserPool extends FieldObjectPool<User> {
                 // Handle CTS updates on tick
                 SkillProcessor.processUpdate(locked, now);
                 // Expire temporary stat
-                final Set<CharacterTemporaryStat> resetStats = user.getSecondaryStat().expireTemporaryStat(now);
-                if (!resetStats.isEmpty()) {
-                    user.validateStat();
-                    user.write(WvsContext.temporaryStatReset(resetStats));
-                    broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);
-                }
+                user.resetTemporaryStat((cts, option) -> now.isAfter(option.getExpireTime()));
                 // Expire skill cooltimes
                 final Set<Integer> resetCooltimes = user.getSkillManager().expireSkillCooltime(now);
                 for (int skillId : resetCooltimes) {

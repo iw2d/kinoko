@@ -3,21 +3,25 @@ package kinoko.world.user.stat;
 import kinoko.server.packet.OutPacket;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TwoStateTemporaryStat extends TemporaryStatOption {
+    public static final Map<CharacterTemporaryStat, TwoStateTemporaryStat> DEFAULT = CharacterTemporaryStat.TWO_STATE_ORDER.stream()
+            .collect(Collectors.toMap(Function.identity(), (cts) -> TwoStateTemporaryStat.ofTwoState(cts, 0, 0, 0)));
     private final TwoStateType twoStateType;
-    private final Instant currentTime;
 
     public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption) {
         super(nOption, rOption, tOption);
         this.twoStateType = twoStateType;
-        this.currentTime = Instant.now();
+        assert twoStateType != TwoStateType.NOT_TWO_STATE;
     }
 
     public TwoStateTemporaryStat(TwoStateType twoStateType, int nOption, int rOption, int tOption, Instant expireTime) {
         super(nOption, rOption, tOption, expireTime);
+        assert twoStateType != TwoStateType.NOT_TWO_STATE;
         this.twoStateType = twoStateType;
-        this.currentTime = Instant.now();
     }
 
     public final TwoStateType getType() {
@@ -29,28 +33,14 @@ public class TwoStateTemporaryStat extends TemporaryStatOption {
         // TemporaryStatBase<long>::DecodeForClient
         outPacket.encodeInt(nOption); // m_value
         outPacket.encodeInt(rOption); // m_reason
-        if (twoStateType == TwoStateType.NO_EXPIRE) {
-            encodeTime(outPacket, currentTime); // tLastUpdated
-        } else {
-            encodeTime(outPacket, expireTime);
-        }
+        outPacket.encodeByte(false);
+        outPacket.encodeInt(0);
         if (twoStateType == TwoStateType.EXPIRE_BASED_ON_CURRENT_TIME) {
-            encodeTime(outPacket, currentTime); // tCurrentTime
+            outPacket.encodeByte(false);
+            outPacket.encodeInt(0);
         }
         if (twoStateType != TwoStateType.NO_EXPIRE) {
             outPacket.encodeShort(tOption / 1000); // usExpireTerm
-        }
-    }
-
-    private void encodeTime(OutPacket outPacket, Instant time) {
-        // tLastUpdated = `anonymous namespace'::DecodeTime
-        final Instant now = Instant.now();
-        if (time.isAfter(now)) {
-            outPacket.encodeByte(true);
-            outPacket.encodeInt(time.toEpochMilli() - now.toEpochMilli());
-        } else {
-            outPacket.encodeByte(false);
-            outPacket.encodeInt(now.toEpochMilli() - time.toEpochMilli());
         }
     }
 }

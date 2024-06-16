@@ -2,6 +2,7 @@ package kinoko.packet.user;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.BitFlag;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.job.explorer.Bowman;
 import kinoko.world.job.explorer.Thief;
@@ -11,10 +12,6 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
-import kinoko.world.user.stat.TemporaryStatOption;
-
-import java.util.Map;
-import java.util.Set;
 
 public final class UserRemote {
     // CUserPool::OnUserRemotePacket -----------------------------------------------------------------------------------
@@ -181,18 +178,18 @@ public final class UserRemote {
         return outPacket;
     }
 
-    public static OutPacket temporaryStatSet(User user, Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
+    public static OutPacket temporaryStatSet(User user, SecondaryStat secondaryStat, BitFlag<CharacterTemporaryStat> flag) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTemporaryStatSet);
         outPacket.encodeInt(user.getCharacterId());
-        SecondaryStat.encodeForRemote(outPacket, setStats);
+        secondaryStat.encodeForRemote(flag, outPacket);
         outPacket.encodeShort(0); // tDelay
         return outPacket;
     }
 
-    public static OutPacket temporaryStatReset(User user, Set<CharacterTemporaryStat> resetStats) {
+    public static OutPacket temporaryStatReset(User user, BitFlag<CharacterTemporaryStat> flag) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTemporaryStatReset);
         outPacket.encodeInt(user.getCharacterId());
-        SecondaryStat.encodeReset(outPacket, resetStats);
+        flag.encode(outPacket);
         return outPacket;
     }
 

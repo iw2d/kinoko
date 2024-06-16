@@ -7,7 +7,6 @@ import kinoko.world.dialog.miniroom.MiniGameRoom;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.stat.SecondaryStat;
 
 public final class UserPacket {
     // CUserPool::OnPacket ---------------------------------------------------------------------------------------------
@@ -23,7 +22,7 @@ public final class UserPacket {
         outPacket.encodeShort(0); // nGuildMark
         outPacket.encodeByte(0); // nGuildMarkColor
 
-        SecondaryStat.encodeForRemote(outPacket, user.getSecondaryStat().getTemporaryStats()); // SecondaryStat::DecodeForRemote
+        user.getSecondaryStat().encodeForRemote(outPacket); // SecondaryStat::DecodeForRemote
         outPacket.encodeShort(user.getJob()); // nJobCode
         user.getCharacterData().getAvatarLook().encode(outPacket); // AvatarLook::AvatarLook
 

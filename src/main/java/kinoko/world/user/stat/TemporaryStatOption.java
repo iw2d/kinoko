@@ -39,7 +39,7 @@ public class TemporaryStatOption implements Encodable {
         return new TemporaryStatOption(
                 newNOption,
                 rOption,
-                tOption != 0 ? (int) (getRemainingMillis()) : 0,
+                tOption != 0 ? ((int) getRemainingMillis()) : 0,
                 diceInfo,
                 expireTime
         );

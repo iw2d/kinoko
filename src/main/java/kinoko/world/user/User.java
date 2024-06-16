@@ -13,6 +13,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.BitFlag;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.Dialog;
@@ -36,6 +37,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiPredicate;
 
 public final class User extends Life implements Lockable<User> {
     private final ReentrantLock lock = new ReentrantLock();
@@ -365,24 +367,30 @@ public final class User extends Life implements Lockable<User> {
         }
         updatePassiveSkillData();
         validateStat();
-        write(WvsContext.temporaryStatSet(setStats));
-        getField().broadcastPacket(UserRemote.temporaryStatSet(this, setStats), this);
+        final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(setStats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
+        if (!flag.isEmpty()) {
+            write(WvsContext.temporaryStatSet(getSecondaryStat(), flag));
+            getField().broadcastPacket(UserRemote.temporaryStatSet(this, getSecondaryStat(), flag), this);
+        }
     }
 
     public void resetTemporaryStat(int skillId) {
-        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStat(skillId);
-        updatePassiveSkillData();
-        validateStat();
-        write(WvsContext.temporaryStatReset(resetStats));
-        getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
+        resetTemporaryStat((cts, option) -> option.rOption == skillId);
     }
 
     public void resetTemporaryStat(Set<CharacterTemporaryStat> stats) {
-        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStat((cts, option) -> stats.contains(cts));
+        resetTemporaryStat((cts, option) -> stats.contains(cts));
+    }
+
+    public void resetTemporaryStat(BiPredicate<CharacterTemporaryStat, TemporaryStatOption> predicate) {
+        final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStat(predicate);
         updatePassiveSkillData();
         validateStat();
-        write(WvsContext.temporaryStatReset(resetStats));
-        getField().broadcastPacket(UserRemote.temporaryStatReset(this, resetStats), this);
+        final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
+        if (!flag.isEmpty()) {
+            write(WvsContext.temporaryStatReset(flag));
+            getField().broadcastPacket(UserRemote.temporaryStatReset(this, flag), this);
+        }
     }
 
     public void setSkillCooltime(int skillId, int cooltime) {

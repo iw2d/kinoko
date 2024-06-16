@@ -2,6 +2,7 @@ package kinoko.packet.world;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.BitFlag;
 import kinoko.util.FileTime;
 import kinoko.world.GameConstants;
 import kinoko.world.field.TownPortal;
@@ -13,7 +14,10 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.config.SingleMacro;
-import kinoko.world.user.stat.*;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.ExtendSp;
+import kinoko.world.user.stat.SecondaryStat;
+import kinoko.world.user.stat.Stat;
 
 import java.util.List;
 import java.util.Map;
@@ -60,17 +64,17 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket temporaryStatSet(Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
+    public static OutPacket temporaryStatSet(SecondaryStat secondaryStat, BitFlag<CharacterTemporaryStat> flag) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TemporaryStatSet);
-        SecondaryStat.encodeForLocal(outPacket, setStats);
+        secondaryStat.encodeForLocal(flag, outPacket);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }
 
-    public static OutPacket temporaryStatReset(Set<CharacterTemporaryStat> resetStats) {
+    public static OutPacket temporaryStatReset(BitFlag<CharacterTemporaryStat> flag) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TemporaryStatReset);
-        SecondaryStat.encodeReset(outPacket, resetStats);
+        flag.encode(outPacket);
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }

@@ -6,6 +6,7 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.util.BitFlag;
 import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
@@ -17,6 +18,7 @@ import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.SecondaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -105,7 +107,8 @@ public final class SkillHandler {
             return;
         }
         try (var locked = user.acquire()) {
-            final Set<CharacterTemporaryStat> resetStats = locked.get().getSecondaryStat().resetTemporaryStat(skillId);
+            final SecondaryStat ss = locked.get().getSecondaryStat();
+            final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.rOption == skillId);
             if (resetStats.isEmpty()) {
                 log.error("Tried to cancel skill {}", skillId);
                 return;
@@ -113,10 +116,11 @@ public final class SkillHandler {
             if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
                 user.removeSummoned(Warrior.BEHOLDER);
             }
-            user.updatePassiveSkillData();
-            user.validateStat();
-            user.write(WvsContext.temporaryStatReset(resetStats));
-            user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, resetStats), user);
+            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
+            if (!flag.isEmpty()) {
+                user.write(WvsContext.temporaryStatReset(flag));
+                user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, flag), user);
+            }
         }
     }
 
