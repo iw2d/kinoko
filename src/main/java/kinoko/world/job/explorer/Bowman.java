@@ -13,14 +13,14 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
 
-public final class Bowman extends SkillDispatcher {
+public final class Bowman extends SkillProcessor {
     // ARCHER
     public static final int CRITICAL_SHOT = 3000001;
     public static final int THE_EYE_OF_AMAZON = 3000002;

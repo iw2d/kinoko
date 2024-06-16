@@ -18,7 +18,7 @@ import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public final class Magician extends SkillDispatcher {
+public final class Magician extends SkillProcessor {
     // MAGICIAN
     public static final int MP_BOOST = 2000006;
     public static final int MAGIC_GUARD = 2001002;

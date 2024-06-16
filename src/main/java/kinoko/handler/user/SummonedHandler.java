@@ -109,7 +109,7 @@ public final class SummonedHandler {
 
         // Skill specific handling
         try (var locked = user.acquire()) {
-            SkillDispatcher.handleAttack(locked, attack);
+            SkillProcessor.processAttack(locked, attack);
         }
 
         // Process attack damage
@@ -183,7 +183,7 @@ public final class SummonedHandler {
 
         // Skill specific handling
         try (var locked = user.acquire()) {
-            SkillDispatcher.handleSkill(locked, skill);
+            SkillProcessor.processSkill(locked, skill);
         }
 
         summoned.getField().broadcastPacket(SummonedPacket.summonedSkill(user, summoned, actionAndDir));

@@ -13,12 +13,12 @@ import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
-public final class DawnWarrior extends SkillDispatcher {
+public final class DawnWarrior extends SkillProcessor {
     // DAWN_WARRIOR_1
     public static final int HP_BOOST = 11000005;
     public static final int IRON_BODY = 11001001;

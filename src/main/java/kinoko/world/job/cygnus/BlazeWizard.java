@@ -14,14 +14,14 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
 
-public final class BlazeWizard extends SkillDispatcher {
+public final class BlazeWizard extends SkillProcessor {
     // BLAZE_WIZARD_1
     public static final int MP_BOOST = 12000005;
     public static final int MAGIC_GUARD = 12001001;

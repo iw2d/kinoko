@@ -2,10 +2,10 @@ package kinoko.world.job.legend;
 
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 
-public final class Evan extends SkillDispatcher {
+public final class Evan extends SkillProcessor {
     // EVAN_BEGINNER
     public static final int BLESSING_OF_THE_FAIRY = 20010012;
     public static final int THREE_SNAILS = 20011000;

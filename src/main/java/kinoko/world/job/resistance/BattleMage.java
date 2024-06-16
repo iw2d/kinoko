@@ -4,12 +4,12 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
-public final class BattleMage extends SkillDispatcher {
+public final class BattleMage extends SkillProcessor {
     // BATTLE_MAGE_1
     public static final int TRIPLE_BLOW = 32001000;
     public static final int THE_FINISHER = 32001001;

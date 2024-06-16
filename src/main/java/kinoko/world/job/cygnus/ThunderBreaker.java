@@ -9,14 +9,14 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
 
-public final class ThunderBreaker extends SkillDispatcher {
+public final class ThunderBreaker extends SkillProcessor {
     // THUNDER_BREAKER_1
     public static final int QUICK_MOTION = 15000000;
     public static final int STRAIGHT = 15001001;

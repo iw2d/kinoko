@@ -2,10 +2,10 @@ package kinoko.world.job.resistance;
 
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 
-public final class Mechanic extends SkillDispatcher {
+public final class Mechanic extends SkillProcessor {
     // MECHANIC_1
     public static final int FLAME_LAUNCHER = 35001001;
     public static final int MECH_PROTOTYPE = 35001002;

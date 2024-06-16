@@ -1,13 +1,12 @@
 package kinoko.server.event;
 
-import kinoko.world.skill.SkillProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.*;
 
 public final class EventScheduler {
-    private static final Logger log = LogManager.getLogger(SkillProcessor.class);
+    private static final Logger log = LogManager.getLogger(EventScheduler.class);
     private static final ThreadFactory virtualThreadFactory = Thread.ofVirtual().factory();
     private static ScheduledExecutorService scheduler;
     private static ExecutorService executor;

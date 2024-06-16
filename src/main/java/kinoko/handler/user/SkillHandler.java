@@ -1,13 +1,21 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.BitFlag;
+import kinoko.util.Locked;
+import kinoko.world.field.Field;
+import kinoko.world.item.*;
 import kinoko.world.job.explorer.Magician;
+import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.resistance.Citizen;
@@ -17,12 +25,16 @@ import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public final class SkillHandler {
@@ -96,7 +108,7 @@ public final class SkillHandler {
                     return;
                 }
             }
-            SkillProcessor.processSkill(locked, skill);
+            handleSkill(locked, skill);
         }
     }
 
@@ -136,6 +148,19 @@ public final class SkillHandler {
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
 
+    @Handler(InHeader.UserMovingShootAttackPrepare)
+    public static void handleMovingShootAttackPrepare(User user, InPacket inPacket) {
+        final int skillId = inPacket.decodeInt(); // nSkillID
+        final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
+        final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            log.error("Received UserMovingShootAttackPrepare for skill {}, but skill level is 0", skillId);
+            return;
+        }
+        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
+    }
+
     @Handler(InHeader.UserCalcDamageStatSetRequest)
     public static void handleUserCalcDamageStatSetRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {
@@ -158,6 +183,9 @@ public final class SkillHandler {
         skill.slv = inPacket.decodeInt();
 
         try (var locked = user.acquire()) {
+            if (skill.skillId != Thief.MONSTER_BOMB) {
+                handleSkill(locked, skill);
+            }
             user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill), user);
         }
     }
@@ -175,5 +203,88 @@ public final class SkillHandler {
                 user.resetTemporaryStat(skillId);
             }
         }
+    }
+
+    private static void handleSkill(Locked<User> locked, Skill skill) {
+        final User user = locked.get();
+
+        // Resolve skill info
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skill.skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for skill ID : {}", skill.skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+
+        // Check skill cooltime and cost
+        if (user.getSkillManager().hasSkillCooltime(skill.skillId)) {
+            log.error("Tried to use skill {} that is still on cooltime", skill.skillId);
+            return;
+        }
+        final int hpCon = si.getHpCon(user, skill.slv, 0);
+        if (user.getHp() <= hpCon) {
+            log.error("Tried to use skill {} without enough hp, current : {}, required : {}", skill.skillId, user.getHp(), hpCon);
+            return;
+        }
+        final int mpCon = si.getMpCon(user, skill.slv);
+        if (user.getMp() < mpCon) {
+            log.error("Tried to use skill {} without enough mp, current : {}, required : {}", skill.skillId, user.getMp(), mpCon);
+            return;
+        }
+        // Item / Bullet consume are mutually exclusive
+        final int itemCon = si.getValue(SkillStat.itemCon, skill.slv);
+        if (itemCon > 0) {
+            final int itemConNo = si.getValue(SkillStat.itemConNo, skill.slv); // should always be > 0
+            final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(itemCon, itemConNo);
+            if (removeResult.isEmpty()) {
+                log.error("Tried to use skill {} without required item", itemCon);
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+        }
+        final int bulletCon = si.getBulletCon(skill.slv);
+        if (bulletCon > 0) {
+            // Resolve bullet item
+            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+            if (weaponItem == null) {
+                log.error("Tried to use skill {} without a weapon", skill.skillId);
+                return;
+            }
+            final Optional<Map.Entry<Integer, Item>> bulletEntryResult = user.getInventoryManager().getConsumeInventory().getItems().entrySet().stream()
+                    .filter((entry) -> ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), entry.getValue().getItemId()) && entry.getValue().getQuantity() >= bulletCon)
+                    .findFirst();
+            if (bulletEntryResult.isEmpty()) {
+                log.error("Tried to use skill {} without enough bullets", skill.skillId);
+                return;
+            }
+            final int position = bulletEntryResult.get().getKey();
+            final Item bulletItem = bulletEntryResult.get().getValue();
+            // Consume bullets
+            bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCon));
+            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, position, bulletItem.getQuantity()), true));
+        }
+        // Consume hp/mp
+        user.addHp(-hpCon);
+        user.addMp(-mpCon);
+        // Set cooltime
+        final int cooltime = si.getValue(SkillStat.cooltime, skill.slv);
+        if (skill.skillId != Pirate.BATTLESHIP && cooltime > 0) {
+            user.setSkillCooltime(skill.skillId, cooltime);
+        }
+
+        // Skill-specific handling
+        SkillProcessor.processSkill(locked, skill);
+        user.write(WvsContext.skillUseResult());
+
+        // Skill effects and party handling
+        final Field field = user.getField();
+        field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skill.skillId, skill.slv, user.getLevel())), user);
+        skill.forEachAffectedMember(user, field, (member) -> {
+            try (var lockedMember = member.acquire()) {
+                SkillProcessor.processSkill(lockedMember, skill);
+                member.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
+                field.broadcastPacket(UserRemote.effect(member, Effect.skillAffected(skill.skillId, skill.slv)), member);
+            }
+        });
     }
 }

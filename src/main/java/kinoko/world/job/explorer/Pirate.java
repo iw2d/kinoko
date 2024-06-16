@@ -16,7 +16,7 @@ import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -26,7 +26,7 @@ import kinoko.world.user.stat.TemporaryStatOption;
 import java.util.Map;
 import java.util.Set;
 
-public final class Pirate extends SkillDispatcher {
+public final class Pirate extends SkillProcessor {
     // PIRATE
     public static final int BULLET_TIME = 5000000;
     public static final int FLASH_FIST = 5001001;
@@ -217,6 +217,9 @@ public final class Pirate extends SkillDispatcher {
                 return;
 
             // SAIR
+            case GRENADE:
+                // Handled in attack
+                return;
             case OCTOPUS:
             case WRATH_OF_THE_OCTOPI:
                 final Summoned octopus = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);

@@ -1,12 +1,13 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.packet.field.MobPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
-import kinoko.provider.MobProvider;
+import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
-import kinoko.provider.mob.MobAttack;
-import kinoko.provider.mob.MobSkillType;
-import kinoko.provider.mob.MobTemplate;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
@@ -14,19 +15,34 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.util.Util;
+import kinoko.world.GameConstants;
+import kinoko.world.field.drop.Drop;
+import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropOwnType;
+import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.Mob;
+import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.cygnus.ThunderBreaker;
+import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
-import kinoko.world.skill.*;
+import kinoko.world.job.explorer.Warrior;
+import kinoko.world.skill.Attack;
+import kinoko.world.skill.AttackInfo;
+import kinoko.world.skill.SkillConstants;
+import kinoko.world.skill.SkillProcessor;
+import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.DefenseStateStat;
+import kinoko.world.user.stat.SecondaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
+import kinoko.world.user.stat.TwoStateTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Optional;
+import java.util.*;
 
 public final class AttackHandler {
     private static final Logger log = LogManager.getLogger(AttackHandler.class);
@@ -88,7 +104,7 @@ public final class AttackHandler {
         }
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(locked, attack);
+            handleAttack(locked, attack);
         }
     }
 
@@ -148,7 +164,7 @@ public final class AttackHandler {
         }
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(locked, attack);
+            handleAttack(locked, attack);
         }
     }
 
@@ -200,7 +216,7 @@ public final class AttackHandler {
         }
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(locked, attack);
+            handleAttack(locked, attack);
         }
     }
 
@@ -241,68 +257,7 @@ public final class AttackHandler {
         attack.userY = inPacket.decodeShort(); // GetPos()->y
 
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(locked, attack);
-        }
-    }
-
-    @Handler(InHeader.UserMovingShootAttackPrepare)
-    public static void handleMovingShootAttackPrepare(User user, InPacket inPacket) {
-        final int skillId = inPacket.decodeInt(); // nSkillID
-        final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
-        final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
-        final int slv = user.getSkillLevel(skillId);
-        if (slv == 0) {
-            log.error("Received UserMovingShootAttackPrepare for skill {}, but its level is 0", skillId);
-            return;
-        }
-        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
-    }
-
-    @Handler(InHeader.UserHit)
-    public static void handleUserHit(User user, InPacket inPacket) {
-        // CUserLocal::SetDamaged, CUserLocal::Update
-        final HitInfo hitInfo = new HitInfo();
-        inPacket.decodeInt(); // get_update_time()
-        hitInfo.attackIndex = inPacket.decodeByte(); // nAttackIdx
-        if (hitInfo.attackIndex > -2) {
-            hitInfo.magicElemAttr = inPacket.decodeByte(); // nMagicElemAttr
-            hitInfo.damage = inPacket.decodeInt(); // nDamage
-            hitInfo.templateId = inPacket.decodeInt(); // dwTemplateID
-            hitInfo.mobId = inPacket.decodeInt(); // MobID
-            hitInfo.dir = inPacket.decodeByte(); // nDir
-            hitInfo.reflect = inPacket.decodeByte(); // nX = 0
-            hitInfo.guard = inPacket.decodeByte(); // bGuard
-            hitInfo.knockback = inPacket.decodeByte(); // (bKnockback != 0) + 1
-            if (hitInfo.knockback > 1 || hitInfo.reflect != 0) {
-                hitInfo.powerGuard = inPacket.decodeByte(); // nX != 0 && nPowerGuard != 0
-                hitInfo.reflectMobId = inPacket.decodeInt(); // reflectMobID
-                hitInfo.reflectMobAction = inPacket.decodeByte(); // hitAction
-                hitInfo.reflectMobX = inPacket.decodeShort(); // ptHit.x
-                hitInfo.reflectMobY = inPacket.decodeShort(); // ptHit.y
-                inPacket.decodeShort(); // this->GetPos()->x
-                inPacket.decodeShort(); // this->GetPos()->y
-            }
-            hitInfo.stance = inPacket.decodeByte(); // bStance | (nSkillID_Stance == 33101006 ? 2 : 0)
-        } else if (hitInfo.attackIndex == AttackIndex.Counter.getValue() || hitInfo.attackIndex == AttackIndex.Obstacle.getValue()) {
-            inPacket.decodeByte(); // 0
-            hitInfo.damage = inPacket.decodeInt(); // nDamage
-            hitInfo.obstacleData = inPacket.decodeShort(); // dwObstacleData
-            inPacket.decodeByte(); // 0
-        } else if (hitInfo.attackIndex == AttackIndex.Stat.getValue()) {
-            hitInfo.magicElemAttr = inPacket.decodeByte(); // nElemAttr
-            hitInfo.damage = inPacket.decodeInt(); // nDamage
-            hitInfo.diseaseData = inPacket.decodeShort(); // dwDiseaseData = (nSkillID << 8) | nSLV
-            hitInfo.diseaseType = inPacket.decodeByte(); // 1 : Poison, 2 : AffectedArea, 3 : Shadow of Darkness
-        } else {
-            log.error("Unknown attack index received : {}", hitInfo.attackIndex);
-            return;
-        }
-
-        try (var locked = user.acquire()) {
-            if (hitInfo.attackIndex > 0) {
-                handleMobAttack(locked, hitInfo);
-            }
-            SkillProcessor.processHit(locked, hitInfo);
+            handleAttack(locked, attack);
         }
     }
 
@@ -334,50 +289,376 @@ public final class AttackHandler {
         }
     }
 
-    private static void handleMobAttack(Locked<User> locked, HitInfo hitInfo) {
-        // Resolve mob attack and attack index
-        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(hitInfo.templateId);
-        if (mobTemplateResult.isEmpty()) {
-            log.error("Could not resolve mob template ID : {}", hitInfo.templateId);
-            return;
-        }
-        final Optional<MobAttack> mobAttackResult = mobTemplateResult.get().getAttack(hitInfo.attackIndex);
-        if (mobAttackResult.isEmpty()) {
-            return;
-        }
-        final MobAttack mobAttack = mobAttackResult.get();
-
-        // Resolve mob skill, check if it applies a CTS
-        final int skillId = mobAttack.getSkillId();
-        final MobSkillType skillType = MobSkillType.getByValue(skillId);
-        if (skillType == null) {
-            log.error("Could not resolve mob skill type for mob skill ID : {}", skillId);
-            return;
-        }
-        final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
-        if (cts == null) {
-            return;
-        }
-
-        // Apply mob skill
+    private static void handleAttack(Locked<User> locked, Attack attack) {
         final User user = locked.get();
-        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
-            return;
-        }
-        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {
-            final DefenseStateStat defenseStateStat = DefenseStateStat.getByValue(user.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState_Stat).nOption);
-            if (defenseStateStat != null && defenseStateStat.getStat() == cts &&
-                    Util.succeedProp(user.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState).nOption)) {
+
+        // Set skill level
+        if (attack.skillId != 0) {
+            attack.slv = user.getSkillLevel(attack.skillId);
+            if (attack.slv == 0) {
+                log.error("Tried to attack with skill {} not learned by user", attack.skillId);
                 return;
             }
         }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
+
+        // Resolve bullet id
+        if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
+            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+            final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
+            if (weaponItem == null || bulletItem == null || !ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
+                log.error("Tried to attack with incorrect bullet {} using weapon {}", bulletItem != null ? bulletItem.getItemId() : 0, weaponItem != null ? weaponItem.getItemId() : 0);
+                return;
+            }
+            attack.bulletItemId = bulletItem.getItemId();
+            // Consume bullet for basic attack
+            if (attack.skillId == 0) {
+                final int bulletCount = attack.isShadowPartner() ? 2 : 1;
+                if (bulletItem.getQuantity() < bulletCount) {
+                    log.error("Tried to attack without enough bullets in position {}", attack.bulletPosition);
+                    return;
+                }
+                bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+            }
+        }
+
+        // Process skill
+        if (attack.skillId != 0 && !SkillConstants.isThrowBombSkill(attack.skillId)) {
+            // Resolve skill info
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            // Check skill cooltime and cost
+            if (user.getSkillManager().hasSkillCooltime(attack.skillId)) {
+                log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
+                return;
+            }
+            final int hpCon = si.getHpCon(user, attack.slv, attack.keyDown);
+            if (user.getHp() <= hpCon) {
+                log.error("Tried to use skill {} without enough hp, current : {}, required : {}", attack.skillId, user.getHp(), hpCon);
+                return;
+            }
+            final int mpCon = si.getMpCon(user, attack.slv);
+            if (user.getMp() < mpCon) {
+                log.error("Tried to use skill {} without enough mp, current : {}, required : {}", attack.skillId, user.getMp(), mpCon);
+                return;
+            }
+            // Item / Bullet consume are mutually exclusive
+            final int itemCon = si.getValue(SkillStat.itemCon, attack.slv);
+            if (itemCon > 0) {
+                final int itemConNo = si.getValue(SkillStat.itemConNo, attack.slv); // should always be > 0
+                final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(itemCon, itemConNo);
+                if (removeResult.isEmpty()) {
+                    log.error("Tried to use skill {} without required item", itemCon);
+                    return;
+                }
+                user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+            }
+            final int bulletCon = si.getBulletCon(attack.slv);
+            if (bulletCon > 0) {
+                final int exJablinProp = user.getSkillStatValue(Thief.EXPERT_THROWING_STAR_HANDLING, SkillStat.prop);
+                final boolean exJablin = exJablinProp != 0 && Util.succeedProp(exJablinProp);
+                if (exJablin) {
+                    user.write(UserLocal.requestExJablin());
+                }
+                if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
+                    final int bulletCount = bulletCon * (attack.isShadowPartner() ? 2 : 1);
+                    final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
+                    if (bulletItem == null || bulletItem.getQuantity() < bulletCount) {
+                        log.error("Tried to use skill {} without enough bullets", attack.skillId);
+                        return;
+                    }
+                    if (exJablin) {
+                        // Recharge 1 throwing star if possible
+                        final int slotMax = ItemProvider.getItemInfo(bulletItem.getItemId()).map(ItemInfo::getSlotMax).orElse(0);
+                        if (bulletItem.getQuantity() < slotMax) {
+                            bulletItem.setQuantity((short) (bulletItem.getQuantity() + 1));
+                            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                        }
+                        user.write(UserLocal.requestExJablin());
+                    } else {
+                        // Consume bullets
+                        bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                    }
+                }
+            }
+            // Consume hp/mp
+            user.addHp(-hpCon);
+            user.addMp(-mpCon);
+            // Set cooltime
+            final int cooltime = si.getValue(SkillStat.cooltime, attack.slv);
+            if (cooltime > 0) {
+                user.setSkillCooltime(attack.skillId, cooltime);
+            }
+        }
+
+        // CTS updates on attack
+        if (attack.getMobCount() > 0) {
+            handleComboAttack(user);
+            handleEnergyCharge(user);
+            handleDarkSight(user);
+            handleWindWalk(user);
+        }
+
+        // Skill specific handling
+        SkillProcessor.processAttack(locked, attack);
+
+        // Process attack
+        int hpGain = 0;
+        int mpGain = 0;
+        for (AttackInfo ai : attack.getAttackInfo()) {
+            final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
+            if (mobResult.isEmpty()) {
+                continue;
+            }
+            // Acquire and damage mob
+            try (var lockedMob = mobResult.get().acquire()) {
+                final Mob mob = lockedMob.get();
+                int totalDamage = Arrays.stream(ai.damage).sum();
+                int mpDamage = 0;
+                // Handle skills
+                handlePickpocket(user, attack, mob);
+                handleOwlSpirit(user, attack, mob.getMaxHp() == totalDamage);
+                if (attack.skillId == Warrior.HEAVENS_HAMMER) {
+                    totalDamage = calculateHeavensHammer(user, mob);
+                } else if (attack.skillId == Thief.DRAIN || attack.skillId == NightWalker.VAMPIRE) {
+                    final int absorbAmount = totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 10;
+                    hpGain += Math.min(Math.min(absorbAmount, user.getMaxHp() / 2), mob.getMaxHp());
+                } else if (attack.skillId == Pirate.ENERGY_DRAIN || attack.skillId == ThunderBreaker.ENERGY_DRAIN) {
+                    hpGain += totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 100;
+                } else if (attack.skillId != 0) {
+                    mpDamage = calculateMpEater(user, mob);
+                }
+                // Process damage
+                mob.damage(user, totalDamage);
+                mob.setMp(mob.getMp() - mpDamage);
+                mpGain += mpDamage;
+                // Process on-hit effects
+                if (mob.getHp() > 0) {
+                    handleVenom(user, mob);
+                    handleMortalBlow(user, mob);
+                }
+            }
+        }
+        user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
+
+        if (hpGain > 0) {
+            user.addHp(hpGain);
+        }
+        if (mpGain > 0) {
+            user.addMp(mpGain);
+            // Show MP eater effect
+            final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
+            final int slv = user.getSkillLevel(skillId);
+            user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
+            user.getField().broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
+        }
+    }
+
+    private static void handleComboAttack(User user) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
+        if (option.nOption == 0) {
+            return;
+        }
+        final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
+        final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
+        final int maxCombo = 1 + Math.max(
+                user.getSkillStatValue(comboAttackId, SkillStat.x),
+                user.getSkillStatValue(advancedComboId, SkillStat.x)
+        );
+        if (option.nOption < maxCombo) {
+            final int doubleProp = user.getSkillStatValue(advancedComboId, SkillStat.prop);
+            final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
+            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(newCombo));
+        }
+    }
+
+    private static void handleEnergyCharge(User user) {
+        final int skillId = SkillConstants.getEnergyChargeSkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            log.error("Could not resolve skill info for mob skill ID : {}", skillId);
+            log.error("Could not resolve skill info for energy charge skill ID : {}", skillId);
             return;
         }
         final SkillInfo si = skillInfoResult.get();
-        final int slv = mobAttack.getSkillLevel();
-        user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+        final SecondaryStat ss = user.getSecondaryStat();
+        final int energyCharge = ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption;
+        if (energyCharge < SkillConstants.ENERGY_CHARGE_MAX) {
+            final TwoStateTemporaryStat option = TemporaryStatOption.ofTwoState(
+                    CharacterTemporaryStat.EnergyCharged,
+                    Math.min(energyCharge + si.getValue(SkillStat.x, slv), SkillConstants.ENERGY_CHARGE_MAX),
+                    skillId,
+                    si.getDuration(slv)
+            );
+            user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
+        }
+    }
+
+    private static void handleDarkSight(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.DarkSight)) {
+            return;
+        }
+        if (!Util.succeedProp(user.getSkillStatValue(Thief.ADVANCED_DARK_SIGHT, SkillStat.prop))) {
+            user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.DarkSight).rOption);
+        }
+    }
+
+    private static void handleWindWalk(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.WindWalk)) {
+            return;
+        }
+        user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.WindWalk).rOption);
+    }
+
+    private static void handlePickpocket(User user, Attack attack, Mob mob) {
+        if (attack.skillId == Thief.MESO_EXPLOSION || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.PickPocket)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.PickPocket);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for pick pocket skill ID : {}", option.rOption);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int money = option.nOption;
+        final int prop = si.getValue(SkillStat.prop, option.nOption) +
+                user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
+        // Trigger per hit, spread and delay drops
+        final Set<Drop> drops = new HashSet<>();
+        for (int i = 0; i < attack.getDamagePerMob(); i++) {
+            if (money > 0 && Util.succeedProp(prop)) {
+                drops.add(Drop.money(DropOwnType.USEROWN, mob, money, user.getCharacterId()));
+            }
+        }
+        if (!drops.isEmpty()) {
+            user.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT, 120);
+        }
+    }
+
+    private static void handleOwlSpirit(User user, Attack attack, boolean instantKill) {
+        // Decrement attack counter
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SuddenDeath)) {
+            final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.SuddenDeath_Count);
+            final int newCount = option.nOption - 1;
+            if (newCount > 0) {
+                user.setTemporaryStat(CharacterTemporaryStat.SuddenDeath_Count, option.update(newCount));
+            } else {
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SuddenDeath, CharacterTemporaryStat.SuddenDeath_Count));
+            }
+        }
+        // Give buff on instant kill with owl spirit
+        if (!instantKill || attack.skillId != Thief.OWL_SPIRIT) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for owl spirit skill ID : {}", attack.skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        user.setTemporaryStat(Map.of(
+                CharacterTemporaryStat.SuddenDeath, TemporaryStatOption.of(si.getValue(SkillStat.y, attack.slv), attack.skillId, 0),
+                CharacterTemporaryStat.SuddenDeath_Count, TemporaryStatOption.of(si.getValue(SkillStat.x, attack.slv), attack.skillId, 0)
+        ));
+    }
+
+    private static int calculateHeavensHammer(User user, Mob mob) {
+        // Resolve skill info
+        final int skillId = Warrior.HEAVENS_HAMMER;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mp eater skill ID : {}", skillId);
+            return 0;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int slv = user.getSkillLevel(skillId);
+        // Calculate damage
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+        final int mastery = CalcDamage.getWeaponMastery(user, weaponType);
+        final double k = CalcDamage.getMasteryConstByWT(weaponType);
+        final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
+        double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
+        damage = damage + user.getPassiveSkillData().getAllPdamR() * damage / 100.0;
+        damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+        damage = CalcDamage.getDamageAdjustedByChargedElemAttr(user, damage, mob.getDamagedElemAttr());
+        damage += CalcDamage.getDamageAdjustedByAssistChargedElemAttr(user, damage, mob.getDamagedElemAttr());
+        final int skillDamage = si.getValue(SkillStat.damage, slv);
+        if (skillDamage > 0) {
+            damage = skillDamage / 100.0 * damage;
+        }
+        final int damR = user.getPassiveSkillData().getAllDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+        damage = damage + damR * damage / 100.0;
+        return Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getHp() - 1);
+    }
+
+    private static int calculateMpEater(User user, Mob mob) {
+        final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return 0;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mp eater skill ID : {}", skillId);
+            return 0;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (!Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            return 0;
+        }
+        final int delta = mob.getMaxMp() * si.getValue(SkillStat.x, slv) / 100;
+        return Math.clamp(delta, 0, mob.getMp());
+    }
+
+    private static void handleVenom(User user, Mob mob) {
+        final int skillId = SkillConstants.getVenomSkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for venom skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+        }
+    }
+
+    private static void handleMortalBlow(User user, Mob mob) {
+        if (mob.isBoss()) {
+            return;
+        }
+        final int skillId = SkillConstants.getMortalBlowSkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mortal blow skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (!Util.succeedProp(si.getValue(SkillStat.y, slv))) {
+            return;
+        }
+        final double percentage = (double) mob.getHp() / mob.getMaxHp();
+        if (percentage * 100 < si.getValue(SkillStat.x, slv)) {
+            user.getField().broadcastPacket(MobPacket.mobSpecialEffectBySkill(mob, skillId, user.getCharacterId(), 0));
+            mob.damage(user, mob.getHp());
+        }
     }
 }

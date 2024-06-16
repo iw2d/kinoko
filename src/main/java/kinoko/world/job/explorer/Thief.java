@@ -21,7 +21,7 @@ import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public final class Thief extends SkillDispatcher {
+public final class Thief extends SkillProcessor {
     // ROGUE
     public static final int NIMBLE_BODY = 4000000;
     public static final int KEEN_EYES = 4000001;

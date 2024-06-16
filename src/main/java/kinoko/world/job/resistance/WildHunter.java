@@ -2,10 +2,10 @@ package kinoko.world.job.resistance;
 
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 
-public final class WildHunter extends SkillDispatcher {
+public final class WildHunter extends SkillProcessor {
     // WILD_HUNTER_1
     public static final int TRIPLE_SHOT = 33001000;
     public static final int JAGUAR_RIDER = 33001001;

@@ -9,14 +9,14 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillDispatcher;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.util.Map;
 
-public final class WindArcher extends SkillDispatcher {
+public final class WindArcher extends SkillProcessor {
     // WIND_ARCHER_1
     public static final int CRITICAL_SHOT = 13000000;
     public static final int THE_EYE_OF_AMAZON = 13000001;
