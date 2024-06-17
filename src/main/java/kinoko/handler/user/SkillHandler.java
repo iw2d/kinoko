@@ -122,7 +122,7 @@ public final class SkillHandler {
             final SecondaryStat ss = locked.get().getSecondaryStat();
             final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.rOption == skillId);
             if (resetStats.isEmpty()) {
-                log.error("Tried to cancel skill {}", skillId);
+                // log.error("Tried to cancel skill {}", skillId);
                 return;
             }
             if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
@@ -230,6 +230,13 @@ public final class SkillHandler {
         if (user.getMp() < mpCon) {
             log.error("Tried to use skill {} without enough mp, current : {}, required : {}", skill.skillId, user.getMp(), mpCon);
             return;
+        }
+        final int comboCon = SkillConstants.getRequiredComboCount(skill.skillId);
+        if (comboCon > 0) {
+            if (user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption < comboCon) {
+                log.error("Tried to use skill {} without required combo count : {}", skill.skillId, comboCon);
+            }
+            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ComboAbilityBuff));
         }
         // Item / Bullet consume are mutually exclusive
         final int itemCon = si.getValue(SkillStat.itemCon, skill.slv);

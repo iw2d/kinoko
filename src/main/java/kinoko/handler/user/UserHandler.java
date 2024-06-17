@@ -1577,6 +1577,11 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.RequestIncCombo)
+    public static void handleRequestIncCombo(User user, InPacket inPacket) {
+        // combo handled in AttackHandler
+    }
+
     @Handler(InHeader.UpdateGMBoard)
     public static void handleUpdateGmBoard(User user, InPacket inPacket) {
         inPacket.decodeInt(); // nGameOpt_OpBoardIndex

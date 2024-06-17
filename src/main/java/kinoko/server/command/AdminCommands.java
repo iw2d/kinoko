@@ -30,6 +30,7 @@ import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
@@ -632,6 +633,19 @@ public final class AdminCommands {
         final SkillInfo si = skillInfoResult.get();
         try (var locked = user.acquire()) {
             locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+        }
+    }
+
+    @Command("combo")
+    public static void combo(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(MessagePacket.system("Syntax : %scombo <combo count>", ServerConfig.COMMAND_PREFIX));
+            return;
+        }
+        final int combo = Integer.parseInt(args[1]);
+        try (var locked = user.acquire()) {
+            user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(combo, Aran.COMBO_ABILITY, 0));
+            user.write(UserLocal.incCombo(combo));
         }
     }
 

@@ -1,9 +1,18 @@
 package kinoko.world.job.legend;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 
 public final class Aran extends SkillProcessor {
     // ARAN_BEGINNER
@@ -52,13 +61,55 @@ public final class Aran extends SkillProcessor {
     public static final int HEROS_WILL_ARAN = 21121008;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case BODY_PRESSURE:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.BodyPressure, MobStatOption.of(1, skillId, 5000)); // x = 5 seconds
+                    }
+                });
+                break;
+            case FINAL_TOSS:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
+                        mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000));
+                    }
+                });
+                break;
         }
     }
 
     public static void handleSkill(User user, Skill skill) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        final Field field = user.getField();
+        switch (skillId) {
+            case COMBO_DRAIN:
+                user.setTemporaryStat(CharacterTemporaryStat.ComboDrain, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case BODY_PRESSURE:
+                user.setTemporaryStat(CharacterTemporaryStat.BodyPressure, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case SMART_KNOCKBACK:
+                user.setTemporaryStat(CharacterTemporaryStat.SmartKnockback, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case SNOW_CHARGE:
+                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case COMBO_BARRIER:
+                user.setTemporaryStat(CharacterTemporaryStat.ComboBarrier, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case FREEZE_STANDING:
+                user.setTemporaryStat(CharacterTemporaryStat.Stance, TemporaryStatOption.of(si.getValue(SkillStat.prop, slv), skillId, si.getDuration(slv)));
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

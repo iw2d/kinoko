@@ -516,6 +516,25 @@ public final class SkillConstants {
         }
     }
 
+    public static int getComboAbilitySkill(int jobId) {
+        return jobId != 2000 ? Aran.COMBO_ABILITY : 20000017; // tutorial skill
+    }
+
+    public static int getRequiredComboCount(int skillId) {
+        switch (skillId) {
+            case Aran.COMBO_SMASH:
+            case Aran.COMBO_DRAIN:
+                return 100;
+            case Aran.COMBO_FENRIR:
+                return 100;
+            case Aran.COMBO_TEMPEST:
+            case Aran.COMBO_BARRIER:
+                return 200;
+            default:
+                return 0;
+        }
+    }
+
     public static boolean isDualAddDamageExceptSkill(int skillId) {
         return skillId >= 4341002 && skillId <= 4341004;
     }

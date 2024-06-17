@@ -352,6 +352,7 @@ public abstract class SkillProcessor {
             case DawnWarrior.SOUL_RUSH:
             case BlazeWizard.TELEPORT:
             case NightWalker.FLASH_JUMP:
+            case Aran.COMBAT_STEP:
                 // noop
                 return;
             case Warrior.WEAPON_BOOSTER_HERO:

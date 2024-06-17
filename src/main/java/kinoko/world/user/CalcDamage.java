@@ -392,7 +392,7 @@ public final class CalcDamage {
         // nComboAbilityBuff
         final int comboAbilityBuff = ss.getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption;
         if (comboAbilityBuff != 0) {
-            final int comboSkillId = user.getJob() != 200 ? Aran.COMBO_ABILITY : 20000017; // tutorial skill?
+            final int comboSkillId = SkillConstants.getComboAbilitySkill(user.getJob()); // tutorial skill?
             final int maxStacks = user.getSkillStatValue(comboSkillId, SkillStat.x);
             final int stacks = Math.max(comboAbilityBuff / 10, maxStacks);
             pad += stacks * user.getSkillStatValue(comboSkillId, SkillStat.y);

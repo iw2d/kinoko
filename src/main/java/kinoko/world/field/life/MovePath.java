@@ -221,11 +221,8 @@ public final class MovePath implements Encodable {
                 case 17 -> {
                     return FLYING_BLOCK;
                 }
-                case 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 -> {
-                    return ACTION;
-                }
                 default -> {
-                    throw new IllegalStateException("Unknown attr " + attr);
+                    return ACTION;
                 }
             }
         }

@@ -331,6 +331,7 @@ public enum InHeader {
             UserMove,
             UserEmotion,
             UserChangeStatRequest,
+            RequestIncCombo,
             PetMove,
             PetAction,
             SummonedMove,

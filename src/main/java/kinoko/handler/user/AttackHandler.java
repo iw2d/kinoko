@@ -21,6 +21,8 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.NightWalker;
@@ -28,6 +30,7 @@ import kinoko.world.job.cygnus.ThunderBreaker;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
+import kinoko.world.job.legend.Aran;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.SkillConstants;
@@ -346,6 +349,13 @@ public final class AttackHandler {
                 log.error("Tried to use skill {} without enough mp, current : {}, required : {}", attack.skillId, user.getMp(), mpCon);
                 return;
             }
+            final int comboCon = SkillConstants.getRequiredComboCount(attack.skillId);
+            if (comboCon > 0) {
+                if (user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption < comboCon) {
+                    log.error("Tried to use skill {} without required combo count : {}", attack.skillId, comboCon);
+                }
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ComboAbilityBuff));
+            }
             // Item / Bullet consume are mutually exclusive
             final int itemCon = si.getValue(SkillStat.itemCon, attack.slv);
             if (itemCon > 0) {
@@ -402,10 +412,13 @@ public final class AttackHandler {
             handleEnergyCharge(user);
             handleDarkSight(user);
             handleWindWalk(user);
+            handleComboAbility(user, attack);
         }
 
         // Skill specific handling
-        SkillProcessor.processAttack(locked, attack);
+        if (attack.skillId != 0) {
+            SkillProcessor.processAttack(locked, attack);
+        }
 
         // Process attack
         int hpGain = 0;
@@ -423,7 +436,11 @@ public final class AttackHandler {
                 // Handle skills
                 handlePickpocket(user, attack, mob);
                 handleOwlSpirit(user, attack, mob.getMaxHp() == totalDamage);
-                if (attack.skillId == Warrior.HEAVENS_HAMMER) {
+                if (attack.skillId == Aran.COMBO_TEMPEST) {
+                    if (!mob.isBoss()) {
+                        totalDamage = mob.getHp() - 1;
+                    }
+                } else if (attack.skillId == Warrior.HEAVENS_HAMMER) {
                     totalDamage = calculateHeavensHammer(user, mob);
                 } else if (attack.skillId == Thief.DRAIN || attack.skillId == NightWalker.VAMPIRE) {
                     final int absorbAmount = totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 10;
@@ -433,6 +450,10 @@ public final class AttackHandler {
                 } else if (attack.skillId != 0) {
                     mpDamage = calculateMpEater(user, mob);
                 }
+                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ComboDrain)) {
+                    final int absorbAmount = totalDamage * user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboDrain).nOption / 100;
+                    hpGain += Math.min(absorbAmount, user.getMaxHp() / 10);
+                }
                 // Process damage
                 mob.damage(user, totalDamage);
                 mob.setMp(mob.getMp() - mpDamage);
@@ -440,6 +461,7 @@ public final class AttackHandler {
                 // Process on-hit effects
                 if (mob.getHp() > 0) {
                     handleVenom(user, mob);
+                    handleWeaponCharge(user, mob);
                     handleMortalBlow(user, mob);
                 }
             }
@@ -516,6 +538,18 @@ public final class AttackHandler {
             return;
         }
         user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.WindWalk).rOption);
+    }
+
+    private static void handleComboAbility(User user, Attack attack) {
+        final int skillId = SkillConstants.getComboAbilitySkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff);
+        final int newCombo = option.nOption + attack.getMobCount();
+        user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(newCombo, skillId, 0));
+        user.write(UserLocal.incCombo(newCombo));
     }
 
     private static void handlePickpocket(User user, Attack attack, Mob mob) {
@@ -634,6 +668,25 @@ public final class AttackHandler {
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
             mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+        }
+    }
+
+    private static void handleWeaponCharge(User user, Mob mob) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge);
+        if (option.nOption == 0 || mob.isBoss()) {
+            return;
+        }
+        final int skillId = option.rOption;
+        if (skillId == Warrior.ICE_CHARGE) {
+            final int duration = user.getSkillStatValue(skillId, SkillStat.y);
+            if (duration > 0) {
+                mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, duration * 1000));
+            }
+        } else if (skillId == Aran.SNOW_CHARGE) {
+            final int duration = user.getSkillStatValue(skillId, SkillStat.y);
+            if (duration > 0) {
+                mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(user.getSkillStatValue(skillId, SkillStat.x), skillId, duration * 1000));
+            }
         }
     }
 
