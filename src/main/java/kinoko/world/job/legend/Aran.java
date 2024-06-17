@@ -14,6 +14,8 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
+import java.util.Map;
+
 public final class Aran extends SkillProcessor {
     // ARAN_BEGINNER
     public static final int BLESSING_OF_THE_FAIRY = 20000012;
@@ -70,7 +72,10 @@ public final class Aran extends SkillProcessor {
             case BODY_PRESSURE:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.BodyPressure, MobStatOption.of(1, skillId, 5000)); // x = 5 seconds
+                        mob.setTemporaryStat(Map.of(
+                                MobTemporaryStat.Stun, MobStatOption.of(1, skillId, 5000),
+                                MobTemporaryStat.BodyPressure, MobStatOption.of(1, skillId, 5000)
+                        )); // x = 5 seconds
                     }
                 });
                 break;

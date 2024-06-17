@@ -1,5 +1,6 @@
 package kinoko.world.job.explorer;
 
+import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
@@ -152,6 +153,11 @@ public final class Pirate extends SkillProcessor {
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        if (mob.getController() != user) {
+                            mob.setController(user);
+                            user.write(MobPacket.mobChangeController(mob, true));
+                            field.broadcastPacket(MobPacket.mobChangeController(mob, false), user);
+                        }
                     }
                 });
                 break;

@@ -108,6 +108,31 @@ public final class MobHandler {
         // do nothing, controller logic is handled in UserPool
     }
 
+    @Handler(InHeader.MobAttackMob)
+    public static void handleMobAttackMob(User user, InPacket inPacket) {
+        // CMob::SetDamagedByMob
+        final int attackerMobId = inPacket.decodeInt();
+        inPacket.decodeInt(); // CWvsContext->dwCharacterId
+        final int attackedMobId = inPacket.decodeInt();
+        inPacket.decodeByte(); // vx
+        final int damage = inPacket.decodeInt();
+        inPacket.decodeByte(); // vy < 0
+        inPacket.decodeShort(); // (rcBody.right + rcBody.left) / 2
+        inPacket.decodeShort(); // (rcBody.top + rcBody.bottom) / 2
+
+        final Field field = user.getField();
+        final Optional<Mob> mobResult = field.getMobPool().getById(attackedMobId);
+        if (mobResult.isEmpty()) {
+            log.error("Received MobAttackMob for invalid attacked mob ID : {}", attackedMobId);
+            return;
+        }
+        try (var lockedMob = mobResult.get().acquire()) {
+            final Mob mob = lockedMob.get();
+            mob.damage(user, damage);
+            mob.getField().broadcastPacket(MobPacket.mobDamaged(mob, damage), user);
+        }
+    }
+
     @Handler(InHeader.MobTimeBombEnd)
     public static void handleMobTimeBombEnd(User user, InPacket inPacket) {
         // CMob::UpdateTimeBomb
