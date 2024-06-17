@@ -125,7 +125,6 @@ public final class Warrior extends SkillProcessor {
 
         final Field field = user.getField();
         switch (skillId) {
-            // COMMON
             case MONSTER_MAGNET_HERO:
             case MONSTER_MAGNET_DRK:
                 attack.forEachMob(field, (mob) -> {
@@ -134,28 +133,7 @@ public final class Warrior extends SkillProcessor {
                     }
                 });
                 return;
-
-            // HERO
-            case PANIC:
-                resetComboCounter(user);
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
-            case COMA:
-                resetComboCounter(user);
-                // Fallthrough intended
             case SHOUT:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
-
-            // PALADIN
             case CHARGED_BLOW:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
@@ -183,9 +161,6 @@ public final class Warrior extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
-            case IRON_BODY:
-                user.setTemporaryStat(CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)));
-                return;
             case POWER_GUARD_HERO:
             case POWER_GUARD_PALADIN:
                 user.setTemporaryStat(CharacterTemporaryStat.PowerGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
@@ -206,12 +181,6 @@ public final class Warrior extends SkillProcessor {
                 return;
 
             // HERO
-            case RAGE:
-                user.setTemporaryStat(CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv)));
-                return;
-            case COMBO_ATTACK:
-                user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
-                return;
             case ENRAGE:
                 final int nEnrage = si.getValue(SkillStat.x, slv) * 100 + si.getValue(SkillStat.mobCount, slv); // damR = n / 100, nCount = n % 100
                 user.setTemporaryStat(CharacterTemporaryStat.Enrage, TemporaryStatOption.of(nEnrage, skillId, si.getDuration(slv)));
@@ -310,13 +279,6 @@ public final class Warrior extends SkillProcessor {
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
-    }
-
-    public static void resetComboCounter(User user) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
-        if (option.nOption > 1) {
-            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(1));
-        }
     }
 
     public static void handleBerserkEffect(User user) {

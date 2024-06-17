@@ -6,6 +6,15 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Locked;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.affectedarea.AffectedArea;
+import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.job.Job;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -36,6 +45,58 @@ public abstract class SkillProcessor {
 
     public static void processAttack(Locked<User> locked, Attack attack) {
         final User user = locked.get();
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
+        final int skillId = attack.skillId;
+        final int slv = attack.slv;
+
+        final Field field = user.getField();
+        switch (skillId) {
+            case Warrior.PANIC:
+            case DawnWarrior.PANIC:
+                resetComboCounter(user);
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                    }
+                });
+                return;
+            case Warrior.COMA:
+            case DawnWarrior.COMA:
+                resetComboCounter(user);
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                return;
+            case Magician.POISON_BREATH:
+            case Magician.FIRE_DEMON:
+            case Magician.ICE_DEMON:
+            case Magician.METEOR_SHOWER:
+            case Magician.BLIZZARD:
+            case BlazeWizard.METEOR_SHOWER:
+                attack.forEachMob(field, (mob) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                });
+                return;
+            case Magician.POISON_MIST:
+            case BlazeWizard.FLAME_GEAR:
+                final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
+                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
+                return;
+            case Thief.DISORDER:
+            case NightWalker.DISORDER:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(Map.of(
+                                MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                        ));
+                    }
+                });
+                return;
+        }
+
         final int skillRoot = SkillConstants.getSkillRoot(attack.skillId);
         switch (Job.getById(skillRoot)) {
             case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
@@ -86,6 +147,13 @@ public abstract class SkillProcessor {
         }
     }
 
+    protected static void resetComboCounter(User user) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
+        if (option.nOption > 1) {
+            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(1));
+        }
+    }
+
 
     // PROCESS SKILL ---------------------------------------------------------------------------------------------------
 
@@ -94,6 +162,8 @@ public abstract class SkillProcessor {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
         final int skillId = skill.skillId;
         final int slv = skill.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
             // BEGINNER SKILLS -----------------------------------------------------------------------------------------
             case Beginner.RECOVERY:
@@ -123,7 +193,167 @@ public abstract class SkillProcessor {
                 user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
 
+            // COPY SKILLS ---------------------------------------------------------------------------------------------
+            case Warrior.IRON_BODY:
+            case DawnWarrior.IRON_BODY:
+                user.setTemporaryStat(CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)));
+                return;
+            case Warrior.RAGE:
+            case DawnWarrior.RAGE:
+                user.setTemporaryStat(CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv)));
+                return;
+            case Warrior.COMBO_ATTACK:
+            case DawnWarrior.COMBO_ATTACK:
+                user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case Magician.MAGIC_GUARD:
+            case BlazeWizard.MAGIC_GUARD:
+                user.setTemporaryStat(CharacterTemporaryStat.MagicGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case Magician.MAGIC_ARMOR:
+            case BlazeWizard.MAGIC_ARMOR:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv))),
+                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, getBuffedDuration(user, si.getDuration(slv)))
+                ));
+                return;
+            case Magician.MEDITATION_FP:
+            case Magician.MEDITATION_IL:
+            case BlazeWizard.MEDITATION:
+                user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case Magician.SLOW_FP:
+            case Magician.SLOW_IL:
+            case BlazeWizard.SLOW:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isSlowUsed()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                        mob.setSlowUsed(true); // cannot be used on the same monsters more than twice in a row
+                    }
+                });
+                return;
+            case Magician.SEAL_FP:
+            case Magician.SEAL_IL:
+            case BlazeWizard.SEAL:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Seal, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                return;
+            case Magician.ELEMENTAL_DECREASE_FP:
+            case Magician.ELEMENTAL_DECREASE_IL:
+            case BlazeWizard.ELEMENTAL_RESET:
+                user.setTemporaryStat(CharacterTemporaryStat.ElementalReset, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
+                return;
+            case Magician.IFRIT:
+            case Magician.ELQUINES:
+            case Magician.BAHAMUT:
+            case BlazeWizard.IFRIT:
+            case DawnWarrior.SOUL:
+            case BlazeWizard.FLAME:
+            case WindArcher.STORM:
+            case NightWalker.DARKNESS:
+            case ThunderBreaker.LIGHTNING:
+                final Summoned walkSummoned = Summoned.from(si, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK);
+                walkSummoned.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(walkSummoned);
+                return;
+            case Bowman.FOCUS:
+            case WindArcher.FOCUS:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case Bowman.SOUL_ARROW_BM:
+            case Bowman.SOUL_ARROW_MM:
+            case WindArcher.SOUL_ARROW:
+                user.setTemporaryStat(CharacterTemporaryStat.SoulArrow, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case Bowman.PUPPET_BM:
+            case Bowman.PUPPET_MM:
+            case WindArcher.PUPPET:
+                final Summoned puppet = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE);
+                puppet.setHp(si.getValue(SkillStat.x, slv));
+                puppet.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(puppet);
+                return;
+            case Thief.DARK_SIGHT:
+            case NightWalker.DARK_SIGHT:
+            case WindArcher.WIND_WALK:
+                final CharacterTemporaryStat darkSightStat = skillId == WindArcher.WIND_WALK ?
+                        CharacterTemporaryStat.WindWalk :
+                        CharacterTemporaryStat.DarkSight;
+                if (slv == si.getMaxLevel()) {
+                    user.setTemporaryStat(darkSightStat, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                } else {
+                    user.setTemporaryStat(Map.of(
+                            darkSightStat, TemporaryStatOption.of(1, skillId, si.getDuration(slv)),
+                            CharacterTemporaryStat.Slow, TemporaryStatOption.of(100 - si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                    ));
+                }
+                return;
+            case Thief.HASTE_NL:
+            case Thief.HASTE_SHAD:
+            case Thief.SELF_HASTE:
+            case NightWalker.HASTE:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case Thief.SHADOW_PARTNER_NL:
+            case Thief.SHADOW_PARTNER_SHAD:
+            case Thief.MIRROR_IMAGE:
+            case NightWalker.SHADOW_PARTNER:
+                user.setTemporaryStat(CharacterTemporaryStat.ShadowPartner, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case Thief.SHADOW_WEB:
+            case NightWalker.SHADOW_WEB:
+                skill.forEachAffectedMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Web, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                return;
+            case Pirate.DASH:
+            case ThunderBreaker.DASH:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Dash_Jump, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Jump, si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case Pirate.TRANSFORMATION:
+            case Pirate.SUPER_TRANSFORMATION:
+            case ThunderBreaker.TRANSFORMATION:
+            case WindArcher.EAGLE_EYE:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Morph, TemporaryStatOption.of(si.getValue(SkillStat.morph, slv) + user.getGender() * 100, skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
+                ));
+                return;
+            case Pirate.SPEED_INFUSION:
+            case ThunderBreaker.SPEED_INFUSION:
+                user.setTemporaryStat(CharacterTemporaryStat.PartyBooster, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.PartyBooster, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+
             // COMMON SKILLS -------------------------------------------------------------------------------------------
+            case Magician.TELEPORT_FP:
+            case Magician.TELEPORT_IL:
+            case Magician.TELEPORT_BISH:
+            case Thief.FLASH_JUMP_NL:
+            case Thief.FLASH_JUMP_SHAD:
+            case Thief.FLASH_JUMP_DB:
+            case DawnWarrior.SOUL_RUSH:
+            case BlazeWizard.TELEPORT:
+            case NightWalker.FLASH_JUMP:
+                // noop
+                return;
             case Warrior.WEAPON_BOOSTER_HERO:
             case Warrior.WEAPON_BOOSTER_PALADIN:
             case Warrior.WEAPON_BOOSTER_DRK:
@@ -200,19 +430,6 @@ public abstract class SkillProcessor {
                         CharacterTemporaryStat.Undead
                 ));
                 return;
-
-            // NOOP SKILLS ---------------------------------------------------------------------------------------------
-            case Thief.FLASH_JUMP_NL:
-            case Thief.FLASH_JUMP_SHAD:
-            case Thief.FLASH_JUMP_DB:
-            case Magician.TELEPORT_FP:
-            case Magician.TELEPORT_IL:
-            case Magician.TELEPORT_BISH:
-            case DawnWarrior.SOUL_RUSH:
-            case NightWalker.FLASH_JUMP:
-            case BlazeWizard.TELEPORT:
-                // noop
-                return;
         }
 
         // CLASS SPECIFIC SKILLS ---------------------------------------------------------------------------------------
@@ -267,6 +484,16 @@ public abstract class SkillProcessor {
                 log.error("Unhandled skill {}", skill.skillId);
             }
         }
+    }
+
+    protected static int getBuffedDuration(User user, int duration) {
+        final int skillId = SkillConstants.getBuffMasterySkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return duration;
+        }
+        final int percentage = SkillProvider.getSkillInfoById(skillId).map((si) -> si.getValue(SkillStat.x, slv)).orElse(0);
+        return duration * (100 + percentage) / 100;
     }
 
 

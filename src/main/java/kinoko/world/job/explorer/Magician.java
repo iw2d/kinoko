@@ -8,7 +8,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
-import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
@@ -17,7 +16,6 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
-import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -132,16 +130,6 @@ public final class Magician extends SkillProcessor {
 
         final Field field = user.getField();
         switch (skillId) {
-            // COMMON
-            case POISON_BREATH:
-            case FIRE_DEMON:
-            case ICE_DEMON:
-            case METEOR_SHOWER:
-            case BLIZZARD:
-                attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
-                });
-                break;
             case THUNDER_SPEAR:
             case SHINING_RAY:
                 attack.forEachMob(field, (mob) -> {
@@ -158,12 +146,6 @@ public final class Magician extends SkillProcessor {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
                 });
-                break;
-
-            // FP
-            case POISON_MIST:
-                final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
-                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
                 break;
             case ELEMENT_COMPOSITION_FP:
                 attack.forEachMob(field, (mob) -> {
@@ -184,8 +166,6 @@ public final class Magician extends SkillProcessor {
                     }
                 });
                 break;
-
-            // IL
             case COLD_BEAM:
             case ICE_STRIKE:
             case ELEMENT_COMPOSITION_IL:
@@ -204,66 +184,25 @@ public final class Magician extends SkillProcessor {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
-        final int duration = getBuffedDuration(user, si.getDuration(slv));
+        final int buffedDuration = getBuffedDuration(user, si.getDuration(slv));
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
-            case MAGIC_GUARD:
-                user.setTemporaryStat(CharacterTemporaryStat.MagicGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, duration));
-                return;
-            case MAGIC_ARMOR:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, duration),
-                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, duration)
-                ));
-                return;
-            case MEDITATION_FP:
-            case MEDITATION_IL:
-                user.setTemporaryStat(CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, duration));
-                return;
-            case SLOW_FP:
-            case SLOW_IL:
-                skill.forEachAffectedMob(field, (mob) -> {
-                    if (!mob.isSlowUsed()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                        mob.setSlowUsed(true); // cannot be used on the same monsters more than twice in a row
-                    }
-                });
-                return;
-            case SEAL_FP:
-            case SEAL_IL:
-                skill.forEachAffectedMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Seal, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                });
-                return;
             case TELEPORT_MASTERY_FP:
             case TELEPORT_MASTERY_IL:
             case TELEPORT_MASTERY_BISH:
                 user.setTemporaryStat(CharacterTemporaryStat.TeleportMasteryOn, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0));
                 return;
-            case ELEMENTAL_DECREASE_FP:
-            case ELEMENTAL_DECREASE_IL:
-                user.setTemporaryStat(CharacterTemporaryStat.ElementalReset, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, duration));
-                return;
             case MANA_REFLECTION_FP:
             case MANA_REFLECTION_IL:
             case MANA_REFLECTION_BISH:
-                user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, duration));
+                user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, buffedDuration));
                 return;
             case INFINITY_FP:
             case INFINITY_IL:
             case INFINITY_BISH:
-                user.setTemporaryStat(CharacterTemporaryStat.Infinity, TemporaryStatOption.of(1, skillId, duration));
+                user.setTemporaryStat(CharacterTemporaryStat.Infinity, TemporaryStatOption.of(1, skillId, buffedDuration));
                 user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(4, ChronoUnit.SECONDS)); // every 4 secs
-                return;
-            case IFRIT:
-            case ELQUINES:
-            case BAHAMUT:
-                final Summoned summoned = Summoned.from(si, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK);
-                summoned.setPosition(user.getField(), skill.positionX, skill.positionY);
-                user.addSummoned(summoned);
                 return;
 
             // BISHOP
@@ -272,16 +211,16 @@ public final class Magician extends SkillProcessor {
                 user.addHp(user.getMaxHp() * healPercentage / 100);
                 return;
             case INVINCIBLE:
-                user.setTemporaryStat(CharacterTemporaryStat.Invincible, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, duration));
+                user.setTemporaryStat(CharacterTemporaryStat.Invincible, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, buffedDuration));
                 return;
             case BLESS:
                 user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, duration),
-                        CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, duration),
-                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, duration),
-                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, duration),
-                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, duration),
-                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, duration)
+                        CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, buffedDuration),
+                        CharacterTemporaryStat.MAD, TemporaryStatOption.of(si.getValue(SkillStat.mad, slv), skillId, buffedDuration),
+                        CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, buffedDuration),
+                        CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, buffedDuration),
+                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, buffedDuration),
+                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, buffedDuration)
                 ));
                 return;
             case DISPEL:
@@ -297,7 +236,7 @@ public final class Magician extends SkillProcessor {
                 }
                 return;
             case HOLY_SYMBOL:
-                user.setTemporaryStat(CharacterTemporaryStat.HolySymbol, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, duration));
+                user.setTemporaryStat(CharacterTemporaryStat.HolySymbol, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, buffedDuration));
                 return;
             case DOOM:
                 skill.forEachAffectedMob(field, (mob) -> {
@@ -307,7 +246,7 @@ public final class Magician extends SkillProcessor {
                 });
                 return;
             case HOLY_SHIELD:
-                user.setTemporaryStat(CharacterTemporaryStat.Holyshield, TemporaryStatOption.of(1, skillId, duration));
+                user.setTemporaryStat(CharacterTemporaryStat.Holyshield, TemporaryStatOption.of(1, skillId, buffedDuration));
                 return;
             case RESURRECTION:
                 if (user.getHp() <= 0) {
@@ -339,15 +278,5 @@ public final class Magician extends SkillProcessor {
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
-    }
-
-    private static int getBuffedDuration(User user, int duration) {
-        final int skillId = SkillConstants.getBuffMasterySkill(user.getJob());
-        final int slv = user.getSkillLevel(skillId);
-        if (slv == 0) {
-            return duration;
-        }
-        final int percentage = SkillProvider.getSkillInfoById(skillId).map((si) -> si.getValue(SkillStat.x, slv)).orElse(0);
-        return duration * (100 + percentage) / 100;
     }
 }

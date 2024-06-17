@@ -166,12 +166,6 @@ public final class Pirate extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
-            case DASH:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.Dash_Jump, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Jump, si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
-                ));
-                return;
             case ROLL_OF_THE_DICE_BUCC:
             case ROLL_OF_THE_DICE_SAIR:
                 final int roll = Util.getRandom(1, 6);
@@ -190,20 +184,6 @@ public final class Pirate extends SkillProcessor {
                 return;
             case OAK_BARREL:
                 user.setTemporaryStat(CharacterTemporaryStat.Morph, TemporaryStatOption.of(si.getValue(SkillStat.morph, slv), skillId, si.getDuration(slv)));
-                return;
-            case TRANSFORMATION:
-            case SUPER_TRANSFORMATION:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Morph, TemporaryStatOption.of(si.getValue(SkillStat.morph, slv) + user.getGender() * 100, skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
-                ));
-                return;
-            case SPEED_INFUSION:
-                user.setTemporaryStat(CharacterTemporaryStat.PartyBooster, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.PartyBooster, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case TIME_LEAP:
                 final var iter = user.getSkillManager().getSkillCooltimes().keySet().iterator();

@@ -146,23 +146,6 @@ public final class Bowman extends SkillProcessor {
 
         final Field field = user.getField();
         switch (skillId) {
-            case FOCUS:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.ACC, TemporaryStatOption.of(si.getValue(SkillStat.acc, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.EVA, TemporaryStatOption.of(si.getValue(SkillStat.eva, slv), skillId, si.getDuration(slv))
-                ));
-                return;
-            case SOUL_ARROW_BM:
-            case SOUL_ARROW_MM:
-                user.setTemporaryStat(CharacterTemporaryStat.SoulArrow, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
-                return;
-            case PUPPET_BM:
-            case PUPPET_MM:
-                final Summoned puppet = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE);
-                puppet.setHp(si.getValue(SkillStat.x, slv));
-                puppet.setPosition(field, skill.positionX, skill.positionY);
-                user.addSummoned(puppet);
-                return;
             case SILVER_HAWK:
             case GOLDEN_EAGLE:
             case PHOENIX:

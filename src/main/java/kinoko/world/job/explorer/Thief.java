@@ -136,16 +136,6 @@ public final class Thief extends SkillProcessor {
 
         final Field field = user.getField();
         switch (skillId) {
-            case DISORDER:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(Map.of(
-                                MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
-                        ));
-                    }
-                });
-                break;
             case SHADOW_MESO:
                 attack.forEachMob(field, (mob) -> {
                     mob.resetTemporaryStat(Set.of(MobTemporaryStat.PGuardUp, MobTemporaryStat.MGuardUp));
@@ -223,30 +213,6 @@ public final class Thief extends SkillProcessor {
 
         final Field field = user.getField();
         switch (skillId) {
-            // COMMON
-            case DARK_SIGHT:
-                if (slv == si.getMaxLevel()) {
-                    user.setTemporaryStat(CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
-                } else {
-                    user.setTemporaryStat(Map.of(
-                            CharacterTemporaryStat.DarkSight, TemporaryStatOption.of(1, skillId, si.getDuration(slv)),
-                            CharacterTemporaryStat.Slow, TemporaryStatOption.of(100 - si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
-                    ));
-                }
-                return;
-            case HASTE_NL:
-            case HASTE_SHAD:
-            case SELF_HASTE:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
-                ));
-                return;
-            case SHADOW_PARTNER_NL:
-            case SHADOW_PARTNER_SHAD:
-            case MIRROR_IMAGE:
-                user.setTemporaryStat(CharacterTemporaryStat.ShadowPartner, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                return;
             case DARK_FLARE_NL:
             case DARK_FLARE_SHAD:
                 final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK_COUNTER);
@@ -257,8 +223,9 @@ public final class Thief extends SkillProcessor {
             case NINJA_AMBUSH_NL:
             case NINJA_AMBUSH_SHAD:
                 final int damage = (int) Math.clamp(CalcDamage.calcDamageMax(user) * si.getValue(SkillStat.damage, slv) / 100, 1.0, GameConstants.DAMAGE_MAX);
+                final int dotCount = si.getValue(SkillStat.time, slv); // duration / interval
                 skill.forEachAffectedMob(field, (mob) -> {
-                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId, damage, 1000, si.getValue(SkillStat.time, slv)));
+                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId, damage, 1000, dotCount));
                 });
                 return;
 
@@ -266,13 +233,6 @@ public final class Thief extends SkillProcessor {
             case MESO_UP:
                 user.setTemporaryStat(CharacterTemporaryStat.MesoUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
-            case SHADOW_WEB:
-                skill.forEachAffectedMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Web, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
             case SHADOW_STARS:
                 user.setTemporaryStat(CharacterTemporaryStat.SpiritJavelin, TemporaryStatOption.of(skill.spiritJavelinItemId - 2069999, skillId, si.getDuration(slv)));
                 return;
