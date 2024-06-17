@@ -462,6 +462,7 @@ public final class AttackHandler {
                 if (mob.getHp() > 0) {
                     handleVenom(user, mob);
                     handleWeaponCharge(user, mob);
+                    handleEvanSlow(user, mob);
                     handleMortalBlow(user, mob);
                 }
             }
@@ -687,6 +688,24 @@ public final class AttackHandler {
             if (duration > 0) {
                 mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(user.getSkillStatValue(skillId, SkillStat.x), skillId, duration * 1000));
             }
+        }
+    }
+
+    private static void handleEvanSlow(User user, Mob mob) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.EvanSlow);
+        if (option.nOption == 0 || mob.isBoss()) {
+            return;
+        }
+        final int skillId = option.rOption;
+        final int slv = option.nOption;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for evan slow skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000));
         }
     }
 

@@ -1587,6 +1587,11 @@ public final class UserHandler {
         inPacket.decodeInt(); // nGameOpt_OpBoardIndex
     }
 
+    @Handler(InHeader.DragonMove)
+    public static void handleDragonMove(User user, InPacket inPacket) {
+        final MovePath movePath = MovePath.decode(inPacket);
+    }
+
     @Handler(InHeader.QuickslotKeyMappedModified)
     public static void handleQuickslotKeyMappedModified(User user, InPacket inPacket) {
         final int[] quickslotKeyMap = new int[GameConstants.QUICKSLOT_KEY_MAP_SIZE];

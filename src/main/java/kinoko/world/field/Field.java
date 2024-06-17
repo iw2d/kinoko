@@ -203,7 +203,7 @@ public final class Field {
         }
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
-        affectedAreaPool.expireAffectedAreas(now);
+        affectedAreaPool.updateAffectedAreas(now);
     }
 
 

@@ -536,6 +536,7 @@ public enum OutHeader {
             UserMove,
             PetMove,
             PetAction,
+            DragonMove,
             SummonedMove,
             MobEnterField,
             MobLeaveField,

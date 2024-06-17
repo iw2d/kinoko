@@ -1,5 +1,6 @@
 package kinoko.server.command;
 
+import kinoko.packet.user.DragonPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
@@ -36,6 +37,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
 import kinoko.world.user.CalcDamage;
+import kinoko.world.user.Dragon;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
@@ -533,6 +535,13 @@ public final class AdminCommands {
             return;
         }
         try (var locked = user.acquire()) {
+            if (JobConstants.isDragonJob(jobId)) {
+                final Dragon dragon = new Dragon(user);
+                user.setDragon(dragon);
+                user.getField().broadcastPacket(DragonPacket.dragonEnterField(user, dragon));
+            } else {
+                user.setDragon(null);
+            }
             user.setJob(jobId);
         }
     }
@@ -647,6 +656,14 @@ public final class AdminCommands {
             user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(combo, Aran.COMBO_ABILITY, 0));
             user.write(UserLocal.incCombo(combo));
         }
+    }
+
+    @Command("dragon")
+    public static void dragon(User user, String[] args) {
+        if (args.length != 2 || !Util.isInteger(args[1])) {
+            user.write(MessagePacket.system("Syntax : %scombo <combo count>", ServerConfig.COMMAND_PREFIX));
+        }
+
     }
 
     @Command("cd")

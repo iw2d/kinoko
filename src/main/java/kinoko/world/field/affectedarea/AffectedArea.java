@@ -3,6 +3,8 @@ package kinoko.world.field.affectedarea;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.server.ServerConfig;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Locked;
@@ -14,6 +16,7 @@ import kinoko.world.field.mob.Mob;
 import kinoko.world.job.cygnus.BlazeWizard;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.explorer.Magician;
+import kinoko.world.job.legend.Evan;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,16 +32,18 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     private final int skillId;
     private final int skillLevel;
     private final int delay;
+    private final int interval;
     private final Rect rect;
     private final ElementAttribute elemAttr;
     private final Instant expireTime;
 
-    public AffectedArea(AffectedAreaType type, FieldObject owner, int skillId, int skillLevel, int delay, Rect rect, ElementAttribute elemAttr, Instant expireTime) {
+    public AffectedArea(AffectedAreaType type, FieldObject owner, int skillId, int skillLevel, int delay, int interval, Rect rect, ElementAttribute elemAttr, Instant expireTime) {
         this.type = type;
         this.owner = owner;
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.delay = delay;
+        this.interval = interval;
         this.rect = rect;
         this.elemAttr = elemAttr;
         this.expireTime = expireTime;
@@ -64,6 +69,10 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         return delay;
     }
 
+    public int getInterval() {
+        return interval;
+    }
+
     public Rect getRect() {
         return rect;
     }
@@ -76,11 +85,28 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         return expireTime;
     }
 
+    public void handleUserInside(Locked<User> locked) {
+        final User user = locked.get();
+        switch (skillId) {
+            case Evan.RECOVERY_AURA -> {
+                final int partyId = ((User) owner).getPartyId();
+                if (user.getCharacterId() == owner.getId() || (partyId != 0 && user.getPartyId() == partyId)) {
+                    final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+                    if (skillInfoResult.isEmpty()) {
+                        log.error("Failed to resolve skill info for affected area : {}", skillId);
+                        return;
+                    }
+                    final SkillInfo si = skillInfoResult.get();
+                    double recoveryRate = si.getValue(SkillStat.x, skillLevel) / 100.0;
+                    recoveryRate = recoveryRate * (interval * ServerConfig.FIELD_TICK_INTERVAL) / si.getDuration(skillLevel);
+                    user.addMp((int) (recoveryRate * user.getMaxMp()));
+                }
+            }
+        }
+    }
+
     public void handleMobInside(Locked<Mob> lockedMob) {
         final Mob mob = lockedMob.get();
-        if (mob.getHp() <= 0 || !rect.isInsideRect(mob.getX(), mob.getY())) {
-            return;
-        }
         switch (skillId) {
             case Magician.POISON_MIST, BlazeWizard.FLAME_GEAR, NightWalker.POISON_BOMB -> {
                 if (mob.getHp() == 1 || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId)) {
@@ -113,12 +139,12 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     }
 
     public static AffectedArea userSkill(User owner, SkillInfo si, int slv, int delay, int x, int y) {
-        return AffectedArea.from(AffectedAreaType.UserSkill, owner, si, slv, delay, x, y);
+        return AffectedArea.from(AffectedAreaType.UserSkill, owner, si, slv, delay, 1, x, y);
     }
 
-    public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int x, int y) {
+    public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int interval, int x, int y) {
         final Rect rect = si.getRect().translate(x, y);
         final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
-        return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, rect, si.getElemAttr(), expireTime);
+        return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, interval, rect, si.getElemAttr(), expireTime);
     }
 }

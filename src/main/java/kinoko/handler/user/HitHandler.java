@@ -274,11 +274,13 @@ public final class HitHandler {
             return 0;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.MagicGuard);
-        final int mpDamage = damage * option.nOption / 100;
+        int mpDamage = damage * option.nOption / 100;
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Infinity)) {
             return mpDamage;
         } else {
-            return Math.min(mpDamage, user.getMp());
+            mpDamage = Math.min(mpDamage, user.getMp());
+            user.addMp(-mpDamage);
+            return mpDamage;
         }
     }
 

@@ -208,6 +208,7 @@ public abstract class SkillProcessor {
                 return;
             case Magician.MAGIC_GUARD:
             case BlazeWizard.MAGIC_GUARD:
+            case Evan.MAGIC_GUARD:
                 user.setTemporaryStat(CharacterTemporaryStat.MagicGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
             case Magician.MAGIC_ARMOR:
@@ -244,6 +245,7 @@ public abstract class SkillProcessor {
             case Magician.ELEMENTAL_DECREASE_FP:
             case Magician.ELEMENTAL_DECREASE_IL:
             case BlazeWizard.ELEMENTAL_RESET:
+            case Evan.ELEMENTAL_RESET:
                 user.setTemporaryStat(CharacterTemporaryStat.ElementalReset, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, getBuffedDuration(user, si.getDuration(slv))));
                 return;
             case Magician.IFRIT:
@@ -353,6 +355,7 @@ public abstract class SkillProcessor {
             case BlazeWizard.TELEPORT:
             case NightWalker.FLASH_JUMP:
             case Aran.COMBAT_STEP:
+            case Evan.TELEPORT:
                 // noop
                 return;
             case Warrior.WEAPON_BOOSTER_HERO:

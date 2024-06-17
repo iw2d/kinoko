@@ -5,6 +5,7 @@ public final class ItemConstants {
     public static final int OMOK_SET_BASE = 4080000;
     public static final int OMOK_SET_END = 4080011;
     public static final int MATCH_CARDS = 4080100;
+    public static final int WHEEL_OF_DESTINY = 5510000;
 
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {

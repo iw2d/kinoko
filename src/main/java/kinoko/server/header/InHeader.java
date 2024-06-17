@@ -334,6 +334,7 @@ public enum InHeader {
             RequestIncCombo,
             PetMove,
             PetAction,
+            DragonMove,
             SummonedMove,
             MobMove,
             MobApplyCtrl,

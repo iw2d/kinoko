@@ -5,6 +5,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.dialog.miniroom.MiniGameRoom;
 import kinoko.world.job.explorer.Warrior;
+import kinoko.world.job.legend.Evan;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 
@@ -76,6 +77,9 @@ public final class UserPacket {
         byte effectFlag = 0;
         if (Warrior.isBerserkEffect(user)) {
             effectFlag |= 0x1;
+        }
+        if (Evan.isDragonFury(user)) {
+            effectFlag |= 0x2;
         }
         outPacket.encodeByte(effectFlag);
 

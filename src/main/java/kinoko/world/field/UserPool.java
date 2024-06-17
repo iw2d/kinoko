@@ -36,6 +36,9 @@ public final class UserPool extends FieldObjectPool<User> {
                 for (Summoned summoned : existingUser.getSummoned().values()) {
                     user.write(SummonedPacket.summonedEnterField(existingUser, summoned));
                 }
+                if (existingUser.getDragon() != null) {
+                    user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
+                }
             }
         });
 
@@ -53,6 +56,12 @@ public final class UserPool extends FieldObjectPool<User> {
         for (Summoned summoned : user.getSummoned().values()) {
             summoned.setPosition(field, user.getX(), user.getY());
             broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
+        }
+
+        // Add user dragon
+        if (user.getDragon() != null) {
+            user.getDragon().setPosition(field, user.getX(), user.getY());
+            broadcastPacket(DragonPacket.dragonEnterField(user, user.getDragon()));
         }
 
         // Update party

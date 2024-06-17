@@ -416,7 +416,7 @@ public final class CalcDamage {
         // nMAD + incMAD + nPsdMADX
         int mad = ss.getMad() + ss.getOption(CharacterTemporaryStat.MAD).nOption + psd.getMadX();
         // Apply madR
-        final int dragonFury = 0; // TODO dragonFury
+        final int dragonFury = Evan.isDragonFury(user) ? user.getSkillStatValue(Evan.DRAGON_FURY, SkillStat.damage) : 0;
         final int statMadR = ss.getOption(CharacterTemporaryStat.MaxLevelBuff).nOption +
                 ss.getOption(CharacterTemporaryStat.DarkAura).nOption +
                 ss.getOption(CharacterTemporaryStat.SwallowAttackDamage).nOption +

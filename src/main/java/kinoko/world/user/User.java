@@ -53,6 +53,7 @@ public final class User extends Life implements Lockable<User> {
     private final Map<Integer, Summoned> summoned = new HashMap<>();
 
     private Dialog dialog;
+    private Dragon dragon;
     private TownPortal townPortal;
     private int partyId;
     private int partyMemberIndex;
@@ -165,6 +166,14 @@ public final class User extends Life implements Lockable<User> {
 
     public void closeDialog() {
         setDialog(null);
+    }
+
+    public Dragon getDragon() {
+        return dragon;
+    }
+
+    public void setDragon(Dragon dragon) {
+        this.dragon = dragon;
     }
 
     public TownPortal getTownPortal() {

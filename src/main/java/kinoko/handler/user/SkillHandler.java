@@ -18,6 +18,7 @@ import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
+import kinoko.world.job.legend.Evan;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
@@ -169,6 +170,7 @@ public final class SkillHandler {
 
             // Handle effects
             Warrior.handleBerserkEffect(user);
+            Evan.handleDragonFuryEffect(user);
         }
     }
 

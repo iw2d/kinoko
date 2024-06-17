@@ -67,10 +67,6 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 if (!resetStats.isEmpty()) {
                     field.broadcastPacket(MobPacket.mobStatReset(mob, resetStats, resetBurnedInfos));
                 }
-                // Handle affected areas
-                field.getAffectedAreaPool().forEach((affectedArea) -> {
-                    affectedArea.handleMobInside(lockedMob);
-                });
                 // Try recovering hp/mp
                 mob.recovery(now);
                 // Try removing mob (removeAfter)

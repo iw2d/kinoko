@@ -303,9 +303,9 @@ public final class Warrior extends SkillProcessor {
             log.error("Could not resolve skill info for berserk skill ID : {}", skillId);
             return false;
         }
-        final int threshold = skillInfoResult.get().getValue(SkillStat.x, user.getSkillLevel(skillId));
-        final double percentage = (double) user.getHp() / user.getMaxHp();
-        return (percentage * 100) > threshold;
+        final int threshold = skillInfoResult.get().getValue(SkillStat.x, slv);
+        final int percentage = (int) ((double) user.getHp() / user.getMaxHp() * 100);
+        return percentage > threshold;
     }
 
     public static void handleBeholderEffect(User user) {

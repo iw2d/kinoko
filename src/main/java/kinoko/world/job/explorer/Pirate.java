@@ -141,10 +141,10 @@ public final class Pirate extends SkillProcessor {
                 break;
             case HOMING_BEACON:
             case BULLSEYE:
-                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
-                    user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
-                }
                 attack.forEachMob(field, (mob) -> {
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
+                        user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
+                    }
                     user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, skillId == BULLSEYE ? si.getValue(SkillStat.x, slv) : 1, skillId, mob.getId()));
                 });
                 break;

@@ -116,6 +116,10 @@ public final class JobConstants {
         return jobId / 100 == 22 || jobId == 2001;
     }
 
+    public static boolean isDragonJob(int jobId) {
+        return jobId / 100 == 22;
+    }
+
     public static boolean isDualJobBorn(int jobId, int subJob) {
         if (jobId / 1000 != 0) {
             return false;

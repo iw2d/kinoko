@@ -19,19 +19,15 @@ import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.cashshop.Gift;
 import kinoko.world.field.Field;
-import kinoko.world.item.Inventory;
-import kinoko.world.item.Item;
-import kinoko.world.item.ItemType;
+import kinoko.world.item.*;
+import kinoko.world.job.JobConstants;
 import kinoko.world.social.friend.Friend;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.social.friend.FriendResultType;
-import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.Pet;
-import kinoko.world.user.User;
+import kinoko.world.user.*;
 import kinoko.world.user.config.ConfigManager;
-import kinoko.world.user.stat.CharacterStat;
-import kinoko.world.user.stat.Stat;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +35,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -130,12 +127,16 @@ public final class MigrationHandler {
 
         try (var locked = user.acquire()) {
             // Initialize pets
-            final CharacterStat cs = locked.get().getCharacterStat();
-            initializePet(user, 0, cs.getPetSn1());
-            initializePet(user, 1, cs.getPetSn2());
-            initializePet(user, 2, cs.getPetSn3());
+            initializePet(user, 0, user.getCharacterStat().getPetSn1());
+            initializePet(user, 1, user.getCharacterStat().getPetSn2());
+            initializePet(user, 2, user.getCharacterStat().getPetSn3());
 
-            // Initialize user data
+            // Initialize dragon
+            if (JobConstants.isDragonJob(user.getJob())) {
+                user.setDragon(new Dragon(user));
+            }
+
+            // Initialize user data from MigrationInfo
             user.getSecondaryStat().getTemporaryStats().putAll(migrationResult.getTemporaryStats());
             user.getSkillManager().getSkillSchedules().putAll(migrationResult.getSchedules());
             user.getSummoned().putAll(migrationResult.getSummoned());
@@ -226,30 +227,58 @@ public final class MigrationHandler {
             inPacket.decodeShort();
         }
         inPacket.decodeByte(); // 0
-        inPacket.decodeByte(); // bPremium
-        inPacket.decodeByte(); // bChase -> int, int
+        final boolean premium = inPacket.decodeBoolean(); // bPremium
+        final boolean chase = inPacket.decodeBoolean(); // bChase
+        if (chase) {
+            inPacket.decodeInt();
+            inPacket.decodeInt();
+        }
 
         try (var locked = user.acquire()) {
-            final boolean isRevive = portalName.isEmpty() && user.getHp() == 0;
+            final boolean isRevive = portalName.isEmpty() && locked.get().getHp() == 0;
             final int nextFieldId;
             final String nextPortalName;
             if (portalName.isEmpty()) {
-                if (!isRevive && targetField != user.getField().getReturnMap()) {
-                    log.error("Tried to return to field : {} from field : {}", targetField, user.getField().getFieldId());
-                    user.dispose();
-                    return;
-                }
                 if (isRevive) {
-                    // Handle revive
+                    if (premium) {
+                        // Premium revive
+                        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SoulStone)) {
+                            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone));
+                        } else if (user.getInventoryManager().hasItem(ItemConstants.WHEEL_OF_DESTINY, 1)) {
+                            final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(ItemConstants.WHEEL_OF_DESTINY, 1);
+                            if (removeResult.isEmpty()) {
+                                throw new IllegalStateException("Failed to remove wheel of destiny from inventory");
+                            }
+                            user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                        } else {
+                            log.error("Tried to premium revive without meeting the requirements");
+                            user.dispose();
+                            return;
+                        }
+                        nextFieldId = user.getField().getFieldId();
+                        nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
+                        user.setHp(user.getMaxHp());
+                        user.setMp(user.getMaxMp());
+                    } else {
+                        // Normal revive
+                        nextFieldId = user.getField().getReturnMap();
+                        nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
+                        user.setHp(50);
+                    }
                     user.getSecondaryStat().clear();
                     user.getSummoned().clear();
                     user.updatePassiveSkillData();
                     user.validateStat();
-                    user.setHp(50);
-                    user.write(WvsContext.statChanged(Stat.HP, user.getHp(), true));
+                } else {
+                    // Return to field via client request (usually SquibEffect)
+                    if (targetField != user.getField().getReturnMap()) {
+                        log.error("Tried to return to field : {} from field : {}", targetField, user.getField().getFieldId());
+                        user.dispose();
+                        return;
+                    }
+                    nextFieldId = user.getField().getReturnMap();
+                    nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
                 }
-                nextFieldId = user.getField().getReturnMap();
-                nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
             } else {
                 // Handle portal name
                 final Field currentField = user.getField();
