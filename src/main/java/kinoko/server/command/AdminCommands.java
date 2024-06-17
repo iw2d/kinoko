@@ -45,6 +45,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public final class AdminCommands {
@@ -97,11 +98,8 @@ public final class AdminCommands {
     }
 
     @Command({ "find", "lookup" })
+    @Arguments({ "item/map/mob/npc/skill/commodity", "id or query" })
     public static void find(User user, String[] args) {
-        if (args.length < 3) {
-            user.write(MessagePacket.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final String type = args[1];
         final String query = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
         final boolean isNumber = Util.isInteger(query);
@@ -281,17 +279,12 @@ public final class AdminCommands {
             user.write(MessagePacket.system("  price : %d", commodity.getPrice()));
             user.write(MessagePacket.system("  period : %d", commodity.getPeriod()));
             user.write(MessagePacket.system("  gender : %d", commodity.getGender()));
-        } else {
-            user.write(MessagePacket.system("Syntax : %sfind <item/map/mob/npc/skill/commodity> <id or query>", ServerConfig.COMMAND_PREFIX));
         }
     }
 
     @Command("npc")
+    @Arguments("npc template ID")
     public static void npc(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %snpc <npc template ID>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int templateId = Integer.parseInt(args[1]);
         final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
         if (npcTemplateResult.isEmpty()) {
@@ -308,11 +301,8 @@ public final class AdminCommands {
     }
 
     @Command("map")
+    @Arguments("field ID to warp to")
     public static void map(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %smap <field ID to warp to>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int fieldId = Integer.parseInt(args[1]);
         final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
         if (fieldResult.isEmpty()) {
@@ -331,11 +321,8 @@ public final class AdminCommands {
     }
 
     @Command({ "mob", "spawn" })
+    @Arguments("mob template ID to spawn")
     public static void mob(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %smob <mob template ID to spawn>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int mobId = Integer.parseInt(args[1]);
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
         if (mobTemplateResult.isEmpty()) {
@@ -356,21 +343,10 @@ public final class AdminCommands {
     }
 
     @Command("item")
+    @Arguments({ "item ID", "item quantity" })
     public static void item(User user, String[] args) {
-        if (args.length < 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int itemId = Integer.parseInt(args[1]);
-        final int quantity;
-        if (args.length == 2) {
-            quantity = 1;
-        } else if (args.length == 3 && Util.isInteger(args[2])) {
-            quantity = Integer.parseInt(args[2]);
-        } else {
-            user.write(MessagePacket.system("Syntax : %sitem <item ID> [item quantity]", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
+        final int quantity = Integer.parseInt(args[2]);
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
             user.write(MessagePacket.system("Could not resolve item ID : %d", itemId));
@@ -393,11 +369,8 @@ public final class AdminCommands {
     }
 
     @Command({ "meso", "money" })
+    @Arguments("amount")
     public static void meso(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %smeso <new mesos>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int money = Integer.parseInt(args[1]);
         try (var locked = user.acquire()) {
             final InventoryManager im = locked.get().getInventoryManager();
@@ -407,11 +380,8 @@ public final class AdminCommands {
     }
 
     @Command("nx")
+    @Arguments("amount")
     public static void nx(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %snx <value>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int nx = Integer.parseInt(args[1]);
         try (var lockedAccount = user.getAccount().acquire()) {
             final Account account = lockedAccount.get();
@@ -421,11 +391,8 @@ public final class AdminCommands {
     }
 
     @Command("hp")
+    @Arguments("new hp")
     public static void hp(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %shp <new hp>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int newHp = Integer.parseInt(args[1]);
         try (var locked = user.acquire()) {
             user.setHp(newHp);
@@ -433,11 +400,8 @@ public final class AdminCommands {
     }
 
     @Command("mp")
+    @Arguments("new mp")
     public static void mp(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %smp <new mp>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int newMp = Integer.parseInt(args[1]);
         try (var locked = user.acquire()) {
             user.setMp(newMp);
@@ -445,11 +409,8 @@ public final class AdminCommands {
     }
 
     @Command("stat")
+    @Arguments({ "hp/mp/str/dex/int/luk/ap/sp", "new value" })
     public static void stat(User user, String[] args) {
-        if (args.length != 3 || !Util.isInteger(args[2])) {
-            user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final String stat = args[1].toLowerCase();
         final int value = Integer.parseInt(args[2]);
         try (var locked = user.acquire()) {
@@ -505,11 +466,8 @@ public final class AdminCommands {
     }
 
     @Command("level")
+    @Arguments("new level")
     public static void level(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %slevel <new level>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int level = Integer.parseInt(args[1]);
         if (level < 1 || level > GameConstants.LEVEL_MAX) {
             user.write(MessagePacket.system("Could not change level to : {}", level));
@@ -524,11 +482,8 @@ public final class AdminCommands {
     }
 
     @Command("job")
+    @Arguments("job ID")
     public static void job(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %sjob <job id>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int jobId = Integer.parseInt(args[1]);
         if (Job.getById(jobId) == null) {
             user.write(MessagePacket.system("Could not change to unknown job : {}", jobId));
@@ -547,11 +502,8 @@ public final class AdminCommands {
     }
 
     @Command("skill")
+    @Arguments({ "skill ID", "skill level" })
     public static void skill(User user, String[] args) {
-        if (args.length != 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2])) {
-            user.write(MessagePacket.system("Syntax : %sskill <skill id> <skill level>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int skillId = Integer.parseInt(args[1]);
         final int slv = Integer.parseInt(args[2]);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
@@ -573,11 +525,8 @@ public final class AdminCommands {
     }
 
     @Command("startquest")
+    @Arguments("quest ID")
     public static void startQuest(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %sstartquest <quest id>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int questId = Integer.parseInt(args[1]);
         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
@@ -592,11 +541,8 @@ public final class AdminCommands {
     }
 
     @Command("questex")
+    @Arguments({ "quest ID", "QR value" })
     public static void questex(User user, String[] args) {
-        if (args.length != 3 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %squestex <quest id> <qr value>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int questId = Integer.parseInt(args[1]);
         final String infoValue = args[2];
         try (var locked = user.acquire()) {
@@ -616,11 +562,8 @@ public final class AdminCommands {
     }
 
     @Command("mobskill")
+    @Arguments({ "skill ID", "skill level" })
     public static void mobskill(User user, String[] args) {
-        if (args.length != 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2])) {
-            user.write(MessagePacket.system("Syntax : %smobskill <skill id> <level>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int skillId = Integer.parseInt(args[1]);
         final int slv = Integer.parseInt(args[2]);
         final MobSkillType skillType = MobSkillType.getByValue(skillId);
@@ -646,24 +589,13 @@ public final class AdminCommands {
     }
 
     @Command("combo")
+    @Arguments("value")
     public static void combo(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %scombo <combo count>", ServerConfig.COMMAND_PREFIX));
-            return;
-        }
         final int combo = Integer.parseInt(args[1]);
         try (var locked = user.acquire()) {
             user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(combo, Aran.COMBO_ABILITY, 0));
             user.write(UserLocal.incCombo(combo));
         }
-    }
-
-    @Command("dragon")
-    public static void dragon(User user, String[] args) {
-        if (args.length != 2 || !Util.isInteger(args[1])) {
-            user.write(MessagePacket.system("Syntax : %scombo <combo count>", ServerConfig.COMMAND_PREFIX));
-        }
-
     }
 
     @Command("cd")
@@ -733,6 +665,30 @@ public final class AdminCommands {
             // Heal
             user.setHp(user.getMaxHp());
             user.setMp(user.getMaxMp());
+        }
+    }
+
+    @Command("help")
+    public static void help(User user, String[] args) {
+        if (args.length == 1) {
+            for (Class<?> clazz : new Class[]{ AdminCommands.class }) {
+                user.write(MessagePacket.system("Admin Commands :"));
+                for (Method method : clazz.getDeclaredMethods()) {
+                    if (!method.isAnnotationPresent(Command.class)) {
+                        continue;
+                    }
+                    user.write(MessagePacket.system("%s", CommandProcessor.getHelpString(method)));
+                }
+            }
+        } else {
+            final String commandName = args[1].toLowerCase();
+            final Optional<Method> commandResult = CommandProcessor.getCommand(commandName);
+            if (commandResult.isEmpty()) {
+                user.write(MessagePacket.system("Unknown command : %s", commandName));
+                return;
+            }
+            final Method method = commandResult.get();
+            user.write(MessagePacket.system("Syntax : %s", CommandProcessor.getHelpString(method)));
         }
     }
 }

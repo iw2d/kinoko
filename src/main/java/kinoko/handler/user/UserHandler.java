@@ -115,7 +115,8 @@ public final class UserHandler {
         inPacket.decodeInt(); // update_time
         final String text = inPacket.decodeString(); // sText
         final boolean onlyBalloon = inPacket.decodeBoolean(); // bOnlyBalloon
-        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && CommandProcessor.tryProcessCommand(user, text)) {
+        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && text.length() > 1) {
+            CommandProcessor.tryProcessCommand(user, text);
             return;
         }
         user.getField().broadcastPacket(UserPacket.userChat(user, ChatType.NORMAL, text, onlyBalloon));
@@ -814,7 +815,8 @@ public final class UserHandler {
             targetIds.add(inPacket.decodeInt());
         }
         final String text = inPacket.decodeString(); // sText
-        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && CommandProcessor.tryProcessCommand(user, text)) {
+        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && text.length() > 1) {
+            CommandProcessor.tryProcessCommand(user, text);
             return;
         }
         user.getConnectedServer().submitUserPacketBroadcast(targetIds, FieldPacket.groupMessage(messageType, user.getCharacterName(), text));
