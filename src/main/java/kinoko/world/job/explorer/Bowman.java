@@ -115,24 +115,10 @@ public final class Bowman extends SkillProcessor {
                     }
                 });
                 break;
-            case HAMSTRING:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
             case BLIZZARD:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
-            case BLIND:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                     }
                 });
                 break;
@@ -164,6 +150,12 @@ public final class Bowman extends SkillProcessor {
             case SHARP_EYES_MM:
                 final int sharpEyes = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
                 user.setTemporaryStat(CharacterTemporaryStat.SharpEyes, TemporaryStatOption.of(sharpEyes, skillId, si.getDuration(slv)));
+                return;
+            case HAMSTRING:
+                user.setTemporaryStat(CharacterTemporaryStat.HamString, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
+            case BLIND:
+                user.setTemporaryStat(CharacterTemporaryStat.Blind, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

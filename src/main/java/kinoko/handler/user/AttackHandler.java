@@ -460,6 +460,8 @@ public final class AttackHandler {
                 mpGain += mpDamage;
                 // Process on-hit effects
                 if (mob.getHp() > 0) {
+                    handleHamString(user, mob);
+                    handleBlind(user, mob);
                     handleVenom(user, mob);
                     handleWeaponCharge(user, mob);
                     handleEvanSlow(user, mob);
@@ -653,6 +655,42 @@ public final class AttackHandler {
         }
         final int delta = mob.getMaxMp() * si.getValue(SkillStat.x, slv) / 100;
         return Math.clamp(delta, 0, mob.getMp());
+    }
+
+    private static void handleHamString(User user, Mob mob) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.HamString)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.HamString);
+        final int skillId = option.rOption;
+        final int slv = option.nOption;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for hamstring skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000));
+        }
+    }
+
+    private static void handleBlind(User user, Mob mob) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Blind)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Blind);
+        final int skillId = option.rOption;
+        final int slv = option.nOption;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for blind skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000));
+        }
     }
 
     private static void handleVenom(User user, Mob mob) {
