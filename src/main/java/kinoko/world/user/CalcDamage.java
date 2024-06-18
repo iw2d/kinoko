@@ -641,7 +641,7 @@ public final class CalcDamage {
             return damage;
         }
         final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge).rOption;
-        final ElementAttribute elemAttr = SkillConstants.getElementByChargedSkillId(skillId);
+        final ElementAttribute elemAttr = SkillConstants.getElementByWeaponChargeSkill(skillId);
         if (elemAttr == ElementAttribute.PHYSICAL) {
             return damage;
         }
@@ -656,7 +656,7 @@ public final class CalcDamage {
             return damage;
         }
         final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.AssistCharge).rOption;
-        final ElementAttribute elemAttr = SkillConstants.getElementByChargedSkillId(skillId);
+        final ElementAttribute elemAttr = SkillConstants.getElementByWeaponChargeSkill(skillId);
         if (elemAttr == ElementAttribute.PHYSICAL) {
             return damage;
         }

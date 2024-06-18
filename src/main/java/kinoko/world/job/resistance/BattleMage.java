@@ -9,12 +9,15 @@ import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
+import java.time.Instant;
 import java.util.Map;
+import java.util.Set;
 
 public final class BattleMage extends SkillProcessor {
     // BATTLE_MAGE_1
@@ -90,24 +93,13 @@ public final class BattleMage extends SkillProcessor {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
+        final Field field = user.getField();
         switch (skillId) {
             case DARK_AURA:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0),
-                        CharacterTemporaryStat.DarkAura, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, 0)
-                ));
-                return;
             case YELLOW_AURA:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0),
-                        CharacterTemporaryStat.YellowAura, TemporaryStatOption.of(slv, skillId, 0)
-                ));
-                return;
             case BLUE_AURA:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0),
-                        CharacterTemporaryStat.BlueAura, TemporaryStatOption.of(slv, skillId, 0)
-                ));
+                user.setTemporaryStat(CharacterTemporaryStat.Aura, TemporaryStatOption.of(1, skillId, 0));
+                user.getSkillManager().setSkillSchedule(skillId, Instant.now());
                 return;
             case BLOOD_DRAIN:
                 user.setTemporaryStat(CharacterTemporaryStat.ComboDrain, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
@@ -130,5 +122,32 @@ public final class BattleMage extends SkillProcessor {
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
+    }
+
+    public static int getAdvancedAuraSkill(User user, int skillId) {
+        final int advancedAuraSkill = switch (skillId) {
+            case DARK_AURA -> ADVANCED_DARK_AURA;
+            case BLUE_AURA -> ADVANCED_BLUE_AURA;
+            case YELLOW_AURA -> ADVANCED_YELLOW_AURA;
+            default -> skillId;
+        };
+        if (user.getSkillLevel(advancedAuraSkill) > 0) {
+            return advancedAuraSkill;
+        }
+        return skillId;
+    }
+
+    public static void cancelPartyAura(User user, int skillId) {
+        final CharacterTemporaryStat cts = SkillConstants.getStatByAuraSkill(skillId);
+        if (cts == null) {
+            log.error("Could not resolve CTS while trying to cancel aura skill ID : {}", skillId);
+            return;
+        }
+        // Remove user's aura from party members
+        user.getField().getUserPool().forEachPartyMember(user, (member) -> {
+            if (member.getSecondaryStat().hasOption(cts)) {
+                member.resetTemporaryStat(Set.of(cts));
+            }
+        });
     }
 }

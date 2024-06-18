@@ -14,7 +14,9 @@ import kinoko.server.node.TransferInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
+import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,6 +112,12 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 }
                 try (var locked = targetUserResult.get().acquire()) {
                     final User user = locked.get();
+                    // Cancel party aura
+                    user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
+                        BattleMage.cancelPartyAura(user, user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
+                    }
+                    // Set party info and update members
                     user.setPartyId(partyId);
                     user.setPartyMemberIndex(partyMemberIndex);
                     user.getField().getUserPool().forEachPartyMember(user, (member) -> {

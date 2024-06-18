@@ -11,6 +11,7 @@ import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.util.List;
 
@@ -158,7 +159,7 @@ public final class SkillConstants {
         }
     }
 
-    public static ElementAttribute getElementByChargedSkillId(int skillId) {
+    public static ElementAttribute getElementByWeaponChargeSkill(int skillId) {
         switch (skillId) {
             case Warrior.FIRE_CHARGE:
                 return ElementAttribute.FIRE;
@@ -173,6 +174,22 @@ public final class SkillConstants {
                 return ElementAttribute.HOLY;
             default:
                 return ElementAttribute.PHYSICAL;
+        }
+    }
+
+    public static CharacterTemporaryStat getStatByAuraSkill(int skillId) {
+        switch (skillId) {
+            case BattleMage.DARK_AURA:
+            case BattleMage.ADVANCED_DARK_AURA:
+                return CharacterTemporaryStat.DarkAura;
+            case BattleMage.BLUE_AURA:
+            case BattleMage.ADVANCED_BLUE_AURA:
+                return CharacterTemporaryStat.BlueAura;
+            case BattleMage.YELLOW_AURA:
+            case BattleMage.ADVANCED_YELLOW_AURA:
+                return CharacterTemporaryStat.YellowAura;
+            default:
+                return null;
         }
     }
 

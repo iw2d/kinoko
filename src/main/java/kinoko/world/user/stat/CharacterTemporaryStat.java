@@ -3,6 +3,7 @@ package kinoko.world.user.stat;
 import kinoko.util.BitIndex;
 
 import java.util.List;
+import java.util.Set;
 
 public enum CharacterTemporaryStat implements BitIndex {
     PAD(0),
@@ -170,10 +171,13 @@ public enum CharacterTemporaryStat implements BitIndex {
     public static final List<CharacterTemporaryStat> TWO_STATE_ORDER = List.of(
             EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet, Undead
     );
-    public static final List<CharacterTemporaryStat> SWALLOW_BUFF_STAT = List.of(
+    public static final Set<CharacterTemporaryStat> AURA_STAT = Set.of(
+            DarkAura, BlueAura, YellowAura
+    );
+    public static final Set<CharacterTemporaryStat> SWALLOW_BUFF_STAT = Set.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion
     );
-    public static final List<CharacterTemporaryStat> MOVEMENT_AFFECTING_STAT = List.of(
+    public static final Set<CharacterTemporaryStat> MOVEMENT_AFFECTING_STAT = Set.of(
             Speed, Jump, Stun, Weakness, Slow, Morph, Ghost, BasicStatUp, Attract, RideVehicle, Dash_Speed, Dash_Jump,
             Flying, Frozen, YellowAura
     );

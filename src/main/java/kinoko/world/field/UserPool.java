@@ -10,9 +10,11 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -147,6 +149,12 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Remove affected areas
         field.getAffectedAreaPool().removeByOwnerId(user.getCharacterId());
+
+        // Remove party aura
+        user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
+            BattleMage.cancelPartyAura(user, user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
+        }
         return true;
     }
 

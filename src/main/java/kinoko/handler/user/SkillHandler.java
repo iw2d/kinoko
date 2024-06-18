@@ -19,6 +19,7 @@ import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Evan;
+import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
@@ -120,19 +121,21 @@ public final class SkillHandler {
             return;
         }
         try (var locked = user.acquire()) {
+            // Remove stat matching skill ID
             final SecondaryStat ss = locked.get().getSecondaryStat();
             final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.rOption == skillId);
-            if (resetStats.isEmpty()) {
-                // log.error("Tried to cancel skill {}", skillId);
-                return;
-            }
-            if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
-                user.removeSummoned(Warrior.BEHOLDER);
-            }
             final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
             if (!flag.isEmpty()) {
                 user.write(WvsContext.temporaryStatReset(flag));
                 user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, flag), user);
+            }
+            // Additional handling for CTS
+            if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
+                user.removeSummoned(Warrior.BEHOLDER);
+            }
+            if (resetStats.contains(CharacterTemporaryStat.Aura)) {
+                user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+                BattleMage.cancelPartyAura(user, skillId);
             }
         }
     }
