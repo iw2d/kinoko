@@ -599,7 +599,7 @@ public final class AdminCommands {
         }
     }
 
-    @Command({"battleship", "bship"})
+    @Command({ "battleship", "bship" })
     public static void battleship(User user, String[] args) {
         try (var locked = user.acquire()) {
             user.write(MessagePacket.system("Battleship HP : %d", Pirate.getBattleshipDurability(user)));

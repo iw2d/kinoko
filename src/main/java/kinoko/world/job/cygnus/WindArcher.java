@@ -1,9 +1,14 @@
 package kinoko.world.job.cygnus;
 
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.world.field.Field;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 
 public final class WindArcher extends SkillProcessor {
     // WIND_ARCHER_1
@@ -34,6 +39,16 @@ public final class WindArcher extends SkillProcessor {
     }
 
     public static void handleSkill(User user, Skill skill) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        final Field field = user.getField();
+        switch (skillId) {
+            case FINAL_ATTACK:
+                user.setTemporaryStat(CharacterTemporaryStat.WindBreakerFinal, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }
