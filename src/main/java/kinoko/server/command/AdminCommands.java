@@ -31,6 +31,7 @@ import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
@@ -595,6 +596,13 @@ public final class AdminCommands {
         try (var locked = user.acquire()) {
             user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(combo, Aran.COMBO_ABILITY, 0));
             user.write(UserLocal.incCombo(combo));
+        }
+    }
+
+    @Command({"battleship", "bship"})
+    public static void battleship(User user, String[] args) {
+        try (var locked = user.acquire()) {
+            user.write(MessagePacket.system("Battleship HP : %d", Pirate.getBattleshipDurability(user)));
         }
     }
 

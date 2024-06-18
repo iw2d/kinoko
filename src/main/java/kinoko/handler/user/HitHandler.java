@@ -29,6 +29,7 @@ import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.item.WeaponType;
 import kinoko.world.job.explorer.Bowman;
+import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
@@ -41,7 +42,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public final class HitHandler {
     private static final Logger log = LogManager.getLogger(HitHandler.class);
@@ -507,17 +507,16 @@ public final class HitHandler {
             return;
         }
         final TwoStateTemporaryStat option = (TwoStateTemporaryStat) user.getSecondaryStat().getOption(CharacterTemporaryStat.RideVehicle);
-        if (option.nOption == SkillConstants.BATTLESHIP_VEHICLE) {
-            final TemporaryStatOption durability = user.getSecondaryStat().getOption(CharacterTemporaryStat.Battleship_Durability);
-            final int newDurability = durability.nOption - hitInfo.finalDamage;
-            if (newDurability > 0) {
-                user.setTemporaryStat(CharacterTemporaryStat.Battleship_Durability, durability.update(newDurability));
-                user.write(UserLocal.skillCooltimeSet(SkillConstants.BATTLESHIP_DURABILITY, newDurability));
-            } else {
-                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.Battleship_Durability));
-                user.resetTemporaryStat(option.rOption);
-                user.setSkillCooltime(option.rOption, user.getSkillStatValue(option.rOption, SkillStat.cooltime));
-            }
+        if (option.nOption != SkillConstants.BATTLESHIP_VEHICLE) {
+            return;
+        }
+        final int newDurability = Pirate.getBattleshipDurability(user) - hitInfo.finalDamage;
+        if (newDurability > 0) {
+            Pirate.setBattleshipDurability(user, newDurability);
+        } else {
+            user.getSkillManager().getSkillCooltimes().remove(SkillConstants.BATTLESHIP_DURABILITY);
+            user.resetTemporaryStat(option.rOption);
+            user.setSkillCooltime(option.rOption, user.getSkillStatValue(option.rOption, SkillStat.cooltime));
         }
     }
 }

@@ -248,11 +248,17 @@ public final class CharacterData implements Encodable {
                 final Map.Entry<Integer, Instant> entry = iter.next();
                 final int skillId = entry.getKey();
                 final Instant end = entry.getValue();
-                if (now.isAfter(end)) {
-                    iter.remove();
-                    continue;
+                // Battleship durability is stored as cooltime
+                if (skillId == SkillConstants.BATTLESHIP_DURABILITY) {
+                    cooltimes.put(skillId, end.getEpochSecond());
+                } else {
+                    if (now.isAfter(end)) {
+                        iter.remove();
+                        continue;
+                    }
+                    cooltimes.put(skillId, Duration.between(now, end).getSeconds());
                 }
-                cooltimes.put(skillId, Duration.between(now, end).getSeconds());
+
             }
             outPacket.encodeShort(cooltimes.size());
             for (var entry : cooltimes.entrySet()) {

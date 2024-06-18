@@ -50,8 +50,12 @@ public final class SkillManager {
         while (iter.hasNext()) {
             final Map.Entry<Integer, Instant> entry = iter.next();
             final int skillId = entry.getKey();
-            final Instant nextAvailable = entry.getValue();
+            // Battleship durability is stored as cooltime
+            if (skillId == SkillConstants.BATTLESHIP_DURABILITY) {
+                continue;
+            }
             // Check skill cooltime and remove
+            final Instant nextAvailable = entry.getValue();
             if (now.isBefore(nextAvailable)) {
                 continue;
             }

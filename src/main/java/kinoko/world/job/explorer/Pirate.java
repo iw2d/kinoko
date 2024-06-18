@@ -24,6 +24,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.DiceInfo;
 import kinoko.world.user.stat.TemporaryStatOption;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 
@@ -218,24 +219,33 @@ public final class Pirate extends SkillProcessor {
                 user.addSummoned(gaviota);
                 return;
             case BATTLESHIP:
-                final int durability;
-                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Battleship_Durability)) {
-                    durability = user.getSecondaryStat().getOption(CharacterTemporaryStat.Battleship_Durability).nOption;
-                } else {
-                    durability = 300 * user.getLevel() + 500 * (slv - 72); // get_max_durability_of_vehicle
-                }
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.BATTLESHIP_VEHICLE, skillId, 0),
-                        CharacterTemporaryStat.Battleship_Durability, TemporaryStatOption.of(durability, SkillConstants.BATTLESHIP_DURABILITY, 0),
                         CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, 0),
                         CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
                         CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
                         CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
                         CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
                 ));
-                user.write(UserLocal.skillCooltimeSet(SkillConstants.BATTLESHIP_DURABILITY, durability));
+                setBattleshipDurability(user, getBattleshipDurability(user));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
+    }
+
+    public static int getBattleshipDurability(User user) {
+        final Instant cooltime = user.getSkillManager().getSkillCooltimes().get(SkillConstants.BATTLESHIP_DURABILITY);
+        if (cooltime != null) {
+            return (int) cooltime.getEpochSecond();
+        } else {
+            // get_max_durability_of_vehicle
+            return 300 * user.getLevel() + 500 * (user.getSkillLevel(BATTLESHIP) - 72);
+        }
+    }
+
+    public static void setBattleshipDurability(User user, int durability) {
+        final Instant cooltime = Instant.ofEpochSecond(durability);
+        user.getSkillManager().getSkillCooltimes().put(SkillConstants.BATTLESHIP_DURABILITY, cooltime);
+        user.write(UserLocal.skillCooltimeSet(SkillConstants.BATTLESHIP_DURABILITY, durability));
     }
 }
