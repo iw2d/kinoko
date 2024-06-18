@@ -84,6 +84,16 @@ public abstract class SkillProcessor {
                 final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
                 user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
                 return;
+            case Magician.TELEPORT_MASTERY_FP:
+            case Magician.TELEPORT_MASTERY_IL:
+            case Magician.TELEPORT_MASTERY_BISH:
+            case BattleMage.TELEPORT_MASTERY:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
             case Thief.DISORDER:
             case NightWalker.DISORDER:
                 attack.forEachMob(field, (mob) -> {
@@ -242,6 +252,12 @@ public abstract class SkillProcessor {
                     }
                 });
                 return;
+            case Magician.TELEPORT_MASTERY_FP:
+            case Magician.TELEPORT_MASTERY_IL:
+            case Magician.TELEPORT_MASTERY_BISH:
+            case BattleMage.TELEPORT_MASTERY:
+                user.setTemporaryStat(CharacterTemporaryStat.TeleportMasteryOn, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0));
+                return;
             case Magician.ELEMENTAL_DECREASE_FP:
             case Magician.ELEMENTAL_DECREASE_IL:
             case BlazeWizard.ELEMENTAL_RESET:
@@ -356,6 +372,7 @@ public abstract class SkillProcessor {
             case NightWalker.FLASH_JUMP:
             case Aran.COMBAT_STEP:
             case Evan.TELEPORT:
+            case BattleMage.TELEPORT:
                 // noop
                 return;
             case Warrior.WEAPON_BOOSTER_HERO:

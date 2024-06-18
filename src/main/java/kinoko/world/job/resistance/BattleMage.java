@@ -2,12 +2,19 @@ package kinoko.world.job.resistance;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
+
+import java.util.Map;
 
 public final class BattleMage extends SkillProcessor {
     // BATTLE_MAGE_1
@@ -54,9 +61,27 @@ public final class BattleMage extends SkillProcessor {
     public static final int HEROS_WILL_BAM = 32121008;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case DARK_CHAIN:
+            case ADVANCED_DARK_CHAIN:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case DARK_GENESIS:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 
@@ -66,9 +91,42 @@ public final class BattleMage extends SkillProcessor {
         final int slv = skill.slv;
 
         switch (skillId) {
+            case DARK_AURA:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0),
+                        CharacterTemporaryStat.DarkAura, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, 0)
+                ));
+                return;
+            case YELLOW_AURA:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0),
+                        CharacterTemporaryStat.YellowAura, TemporaryStatOption.of(slv, skillId, 0)
+                ));
+                return;
             case BLUE_AURA:
-            case ADVANCED_BLUE_AURA:
-                user.setTemporaryStat(CharacterTemporaryStat.BlueAura, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0),
+                        CharacterTemporaryStat.BlueAura, TemporaryStatOption.of(slv, skillId, 0)
+                ));
+                return;
+            case BLOOD_DRAIN:
+                user.setTemporaryStat(CharacterTemporaryStat.ComboDrain, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case CONVERSION:
+                user.setTemporaryStat(CharacterTemporaryStat.Conversion, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                return;
+            case BODY_BOOST:
+                user.setTemporaryStat(CharacterTemporaryStat.SuperBody, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
+            case SUMMON_REAPER_BUFF:
+                // Revive is the Korean name for the skill, also the summon effect is on killing the mob, contrary to the English skill description
+                user.setTemporaryStat(CharacterTemporaryStat.Revive, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
+            case TWISTER_SPIN:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.Cyclone, TemporaryStatOption.of(1, skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.NotDamaged, TemporaryStatOption.of(1, skillId, si.getDuration(slv))
+                ));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

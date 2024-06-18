@@ -154,7 +154,7 @@ public final class HitHandler {
 
         final int magicGuardReduce = getMagicGuardReduce(user, damage);
         final int magicShieldReduce = getMagicShieldReduce(user, damage);
-        final int blueAuraReduce = getBlueAuraReduce(user, damage); // TODO distribute damage
+        final int blueAuraReduce = getBlueAuraReduce(user, damage);
 
         // Final damage
         hitInfo.finalDamage = damage - powerGuardReduce - mesoGuardReduce - achillesReduce - comboBarrierReduce - magicGuardReduce - magicShieldReduce - blueAuraReduce;
@@ -297,12 +297,15 @@ public final class HitHandler {
             return 0;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.BlueAura);
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
+        final int skillId = option.rOption;
+        final int slv = option.nOption;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            log.error("Could not resolve skill info for blue aura cts reason : {}", option.rOption);
+            log.error("Could not resolve skill info for blue aura cts reason : {}", skillId);
             return 0;
         }
-        final int x = skillInfoResult.get().getValue(SkillStat.x, option.nOption);
+        final SkillInfo si = skillInfoResult.get();
+        final int x = si.getValue(SkillStat.x, slv); // TODO distribute damage
         return damage * x / 100;
     }
 

@@ -138,15 +138,6 @@ public final class Magician extends SkillProcessor {
                     }
                 });
                 break;
-            case TELEPORT_MASTERY_FP:
-            case TELEPORT_MASTERY_IL:
-            case TELEPORT_MASTERY_BISH:
-                attack.forEachMob(field, (mob) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
-                    }
-                });
-                break;
             case ELEMENT_COMPOSITION_FP:
                 attack.forEachMob(field, (mob) -> {
                     if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
@@ -188,11 +179,6 @@ public final class Magician extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
-            case TELEPORT_MASTERY_FP:
-            case TELEPORT_MASTERY_IL:
-            case TELEPORT_MASTERY_BISH:
-                user.setTemporaryStat(CharacterTemporaryStat.TeleportMasteryOn, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0));
-                return;
             case MANA_REFLECTION_FP:
             case MANA_REFLECTION_IL:
             case MANA_REFLECTION_BISH:

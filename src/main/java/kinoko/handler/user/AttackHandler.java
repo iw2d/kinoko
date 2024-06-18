@@ -23,6 +23,9 @@ import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.NightWalker;
@@ -31,6 +34,7 @@ import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
+import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.SkillConstants;
@@ -326,7 +330,7 @@ public final class AttackHandler {
         }
 
         // Process skill
-        if (attack.skillId != 0 && !SkillConstants.isThrowBombSkill(attack.skillId)) {
+        if (attack.skillId != 0 && attack.skillId != BattleMage.TWISTER_SPIN && !SkillConstants.isThrowBombSkill(attack.skillId)) {
             // Resolve skill info
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
             if (skillInfoResult.isEmpty()) {
@@ -466,6 +470,10 @@ public final class AttackHandler {
                     handleWeaponCharge(user, mob);
                     handleEvanSlow(user, mob);
                     handleMortalBlow(user, mob);
+                }
+                // Process on-kill effects
+                if (mob.getHp() <= 0) {
+                    handleRevive(user, mob);
                 }
             }
         }
@@ -658,7 +666,7 @@ public final class AttackHandler {
     }
 
     private static void handleHamString(User user, Mob mob) {
-        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.HamString)) {
+        if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.HamString)) {
             return;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.HamString);
@@ -676,7 +684,7 @@ public final class AttackHandler {
     }
 
     private static void handleBlind(User user, Mob mob) {
-        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Blind)) {
+        if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.Blind)) {
             return;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Blind);
@@ -711,10 +719,10 @@ public final class AttackHandler {
     }
 
     private static void handleWeaponCharge(User user, Mob mob) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge);
-        if (option.nOption == 0 || mob.isBoss()) {
+        if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.WeaponCharge)) {
             return;
         }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge);
         final int skillId = option.rOption;
         if (skillId == Warrior.ICE_CHARGE) {
             final int duration = user.getSkillStatValue(skillId, SkillStat.y);
@@ -730,10 +738,10 @@ public final class AttackHandler {
     }
 
     private static void handleEvanSlow(User user, Mob mob) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.EvanSlow);
-        if (option.nOption == 0 || mob.isBoss()) {
+        if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.EvanSlow)) {
             return;
         }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.EvanSlow);
         final int skillId = option.rOption;
         final int slv = option.nOption;
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
@@ -769,6 +777,26 @@ public final class AttackHandler {
         if (percentage * 100 < si.getValue(SkillStat.x, slv)) {
             user.getField().broadcastPacket(MobPacket.mobSpecialEffectBySkill(mob, skillId, user.getCharacterId(), 0));
             mob.damage(user, mob.getHp());
+        }
+    }
+
+    private static void handleRevive(User user, Mob mob) {
+        if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.Revive)) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Revive);
+        final int skillId = option.rOption; // 32111006 - Summon Reaper Buff
+        final int slv = option.nOption;
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for revive skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+            final Summoned summoned = Summoned.from(skillId, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, si.getValue(SkillStat.x, slv) * 1000);
+            summoned.setPosition(user.getField(), mob.getX(), mob.getY());
+            user.addSummoned(summoned);
         }
     }
 }
