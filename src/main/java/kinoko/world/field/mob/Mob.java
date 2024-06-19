@@ -51,7 +51,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final Set<Reward> rewards = new HashSet<>();
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
-    private final Instant removeAfter;
     private final int startFoothold;
 
     private MobAppearType appearType = MobAppearType.REGEN;
@@ -61,11 +60,11 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private boolean slowUsed;
     private boolean stealUsed;
     private Instant nextRecovery;
+    private Instant removeAfter;
 
     public Mob(MobTemplate template, MobSpawnPoint spawnPoint, int x, int y, int fh) {
         this.template = template;
         this.spawnPoint = spawnPoint;
-        this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
         this.startFoothold = fh;
         // Life initialization
         setX(x);
@@ -73,12 +72,13 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setFoothold(fh);
         setMoveAction(5); // idk
         // Mob initialization
-        setHp(template.getMaxHp());
-        setMp(template.getMaxMp());
-        nextRecovery = Instant.now();
+        this.hp = template.getMaxHp();
+        this.mp = template.getMaxMp();
+        this.nextRecovery = Instant.now();
+        this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
         // Reward initialization
-        rewards.addAll(RewardProvider.getMobRewards(this));
-        rewards.add(RewardProvider.getMobMoneyReward(this));
+        this.rewards.addAll(RewardProvider.getMobRewards(this));
+        this.rewards.add(RewardProvider.getMobMoneyReward(this));
     }
 
     public MobTemplate getTemplate() {
@@ -187,6 +187,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setSlowUsed(boolean slowUsed) {
         this.slowUsed = slowUsed;
+    }
+
+    public void setRemoveAfter(Instant removeAfter) {
+        this.removeAfter = removeAfter;
     }
 
 

@@ -36,7 +36,10 @@ import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.*;
+import kinoko.world.user.Account;
+import kinoko.world.user.CalcDamage;
+import kinoko.world.user.Dragon;
+import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -495,6 +498,9 @@ public final class AdminCommands {
             } else {
                 user.setDragon(null);
             }
+            if (JobConstants.isWildHunterJob(jobId)) {
+                user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
+            }
             user.setJob(jobId);
         }
     }
@@ -608,9 +614,8 @@ public final class AdminCommands {
     public static void jaguar(User user, String[] args) {
         final int index = Integer.parseInt(args[1]);
         try (var locked = user.acquire()) {
-            final WildHunterInfo wildHunterInfo = locked.get().getCharacterData().getWildHunterInfo();
-            wildHunterInfo.setRidingType(index);
-            user.write(WvsContext.wildHunterInfo(wildHunterInfo));
+            user.getWildHunterInfo().setRidingType(index);
+            user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
         }
     }
 

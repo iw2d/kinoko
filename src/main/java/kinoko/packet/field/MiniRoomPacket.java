@@ -250,7 +250,7 @@ public final class MiniRoomPacket {
         }
 
         private static void encodeMiniGameRecord(OutPacket outPacket, MiniRoomType miniRoomType, User user) {
-            final MiniGameRecord miniGameRecord = user != null ? user.getCharacterData().getMiniGameRecord() : new MiniGameRecord();
+            final MiniGameRecord miniGameRecord = user != null ? user.getMiniGameRecord() : new MiniGameRecord();
             miniGameRecord.encode(miniRoomType, outPacket);
         }
     }

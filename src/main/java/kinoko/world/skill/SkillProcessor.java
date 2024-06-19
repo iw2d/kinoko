@@ -190,12 +190,6 @@ public abstract class SkillProcessor {
             case Evan.NIMBLE_FEET:
                 user.setTemporaryStat(CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)));
                 return;
-            case Citizen.INFILTRATE:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.Sneak, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
-                ));
-                return;
             case Beginner.ECHO_OF_HERO:
             case Noblesse.ECHO_OF_HERO:
             case Aran.ECHO_OF_HERO:
@@ -459,6 +453,9 @@ public abstract class SkillProcessor {
         // CLASS SPECIFIC SKILLS ---------------------------------------------------------------------------------------
         final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
         switch (Job.getById(skillRoot)) {
+            case CITIZEN -> {
+                Citizen.handleSkill(user, skill);
+            }
             case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
                 Warrior.handleSkill(user, skill);
             }

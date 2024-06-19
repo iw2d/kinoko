@@ -128,6 +128,14 @@ public final class User extends Life implements Lockable<User> {
         return characterData.getConfigManager();
     }
 
+    public MiniGameRecord getMiniGameRecord() {
+        return characterData.getMiniGameRecord();
+    }
+
+    public WildHunterInfo getWildHunterInfo() {
+        return characterData.getWildHunterInfo();
+    }
+
     public BasicStat getBasicStat() {
         return basicStat;
     }

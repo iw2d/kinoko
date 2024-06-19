@@ -42,7 +42,7 @@ public final class SkillEffect extends Effect {
                         outPacket.encodeShort(positionY); // ptOffset.y
                     }
                     case Citizen.CAPTURE -> {
-                        outPacket.encodeByte(info); // 0 : monster successfully captured, 1 : capture failed mosnter hp too high, 2 : monster cannot be captured
+                        outPacket.encodeByte(info); // 0 : monster successfully captured, 1 : capture failed monster hp too high, 2 : monster cannot be captured
                     }
                 }
                 if (skillId / 10000000 == 9) { // is_unregistered_skill

@@ -14,7 +14,6 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
-import kinoko.world.user.WildHunterInfo;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
@@ -87,12 +86,10 @@ public final class WildHunter extends SkillProcessor {
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        final WildHunterInfo wildHunterInfo = user.getCharacterData().getWildHunterInfo();
         switch (skillId) {
             case JAGUAR_RIDER:
-                user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, wildHunterInfo.getRidingItem(), skillId, 0));
+                user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, user.getWildHunterInfo().getRidingItem(), skillId, 0));
                 return;
-
             case SILVER_HAWK:
                 final Summoned birb = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
                 birb.setPosition(field, skill.positionX, skill.positionY);

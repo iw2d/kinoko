@@ -119,6 +119,10 @@ public final class GameConstants {
         }
     }
 
+    public static boolean isJaguarMob(int templateId) {
+        return templateId >= 9304000 && templateId <= 9304005;
+    }
+
     public static int getTradeTax(int money) {
         if (money >= 100_000_000) {
             return Math.round(money * 0.94f); // 6.00%

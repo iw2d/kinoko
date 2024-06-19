@@ -236,7 +236,7 @@ public abstract class MiniGameRoom extends MiniRoom {
         // Process score
         final boolean isDraw = resultType == GameResultType.DRAW;
         final boolean scorePenalty = resultType == GameResultType.GIVEUP && isScorePenalty();
-        winner.getCharacterData().getMiniGameRecord().processResult(getType(), loser.getCharacterData().getMiniGameRecord(), isDraw, scorePenalty);
+        winner.getMiniGameRecord().processResult(getType(), loser.getMiniGameRecord(), isDraw, scorePenalty);
         // Update clients
         broadcastPacket(MiniRoomPacket.MiniGame.gameResult(resultType, this, getPosition(winner)));
         setReady(false);

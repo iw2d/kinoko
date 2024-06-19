@@ -1,6 +1,8 @@
 package kinoko.world.job.explorer;
 
-public final class Beginner {
+import kinoko.world.skill.SkillProcessor;
+
+public final class Beginner extends SkillProcessor {
     public static final int FOLLOW_THE_LEAD = 8;
     public static final int BLESSING_OF_THE_FAIRY = 12;
     public static final int THREE_SNAILS = 1000;
