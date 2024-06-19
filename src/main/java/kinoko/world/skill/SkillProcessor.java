@@ -288,6 +288,7 @@ public abstract class SkillProcessor {
             case Bowman.SOUL_ARROW_BM:
             case Bowman.SOUL_ARROW_MM:
             case WindArcher.SOUL_ARROW:
+            case WildHunter.SOUL_ARROW_WH:
                 user.setTemporaryStat(CharacterTemporaryStat.SoulArrow, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
             case Bowman.PUPPET_BM:
@@ -374,6 +375,7 @@ public abstract class SkillProcessor {
             case Aran.COMBAT_STEP:
             case Evan.TELEPORT:
             case BattleMage.TELEPORT:
+            case WildHunter.JAG_JUMP:
                 // noop
                 return;
             case Warrior.WEAPON_BOOSTER_HERO:

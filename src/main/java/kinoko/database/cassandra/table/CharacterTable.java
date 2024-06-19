@@ -25,6 +25,7 @@ public final class CharacterTable {
     public static final String FRIEND_MAX = "friend_max";
     public static final String CONFIG = "config";
     public static final String MINIGAME_RECORD = "minigame_record";
+    public static final String WILD_HUNTER_INFO = "wild_hunter_info";
     public static final String ITEM_SN_COUNTER = "item_sn_counter";
 
 
@@ -56,6 +57,7 @@ public final class CharacterTable {
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
                         .withColumn(FRIEND_MAX, DataTypes.INT)
                         .withColumn(MINIGAME_RECORD, SchemaBuilder.udt(MiniGameRecordUDT.getTypeName(), true))
+                        .withColumn(WILD_HUNTER_INFO, SchemaBuilder.udt(WildHunterInfoUDT.getTypeName(), true))
                         .withColumn(CONFIG, SchemaBuilder.udt(ConfigUDT.getTypeName(), true))
                         .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
                         .build()

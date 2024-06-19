@@ -2,12 +2,18 @@ package kinoko.world.user;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.world.skill.SkillConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class WildHunterInfo implements Encodable {
+    private final List<Integer> capturedMobs = new ArrayList<>();
     private int ridingType;
-    private List<Integer> capturedMobs;
+
+    public List<Integer> getCapturedMobs() {
+        return capturedMobs;
+    }
 
     public int getRidingType() {
         return ridingType;
@@ -17,12 +23,8 @@ public final class WildHunterInfo implements Encodable {
         this.ridingType = ridingType;
     }
 
-    public List<Integer> getCapturedMobs() {
-        return capturedMobs;
-    }
-
-    public void setCapturedMobs(List<Integer> capturedMobs) {
-        this.capturedMobs = capturedMobs;
+    public int getRidingItem() {
+        return SkillConstants.WILD_HUNTER_JAGUARS.get(Math.clamp(ridingType - 1, 0, SkillConstants.WILD_HUNTER_JAGUARS.size()));
     }
 
     @Override

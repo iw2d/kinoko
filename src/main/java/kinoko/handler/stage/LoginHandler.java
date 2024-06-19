@@ -26,6 +26,7 @@ import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.MiniGameRecord;
+import kinoko.world.user.WildHunterInfo;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
@@ -293,9 +294,13 @@ public final class LoginHandler {
         final ConfigManager cm = ConfigManager.defaults();
         characterData.setConfigManager(cm);
 
-        // Initialize Mini Game Records
+        // Initialize MiniGame Records
         final MiniGameRecord mgr = new MiniGameRecord();
         characterData.setMiniGameRecord(mgr);
+
+        // Initialize Wild Hunter Info
+        final WildHunterInfo whi = new WildHunterInfo();
+        characterData.setWildHunterInfo(whi);
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {

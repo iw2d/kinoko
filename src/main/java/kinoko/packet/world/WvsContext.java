@@ -13,6 +13,7 @@ import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.WildHunterInfo;
 import kinoko.world.user.config.SingleMacro;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.ExtendSp;
@@ -205,6 +206,12 @@ public final class WvsContext {
         outPacket.encodeInt(0);
         outPacket.encodeShort(0);
         outPacket.encodeShort(0);
+        return outPacket;
+    }
+
+    public static OutPacket wildHunterInfo(WildHunterInfo wildHunterInfo) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.WildHunterInfo);
+        wildHunterInfo.encode(outPacket); // GW_WildHunterInfo::Decode
         return outPacket;
     }
 

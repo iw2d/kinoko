@@ -86,6 +86,13 @@ public final class Aran extends SkillProcessor {
                     }
                 });
                 break;
+            case COMBO_TEMPEST:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 

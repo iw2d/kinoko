@@ -35,6 +35,7 @@ import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.SkillConstants;
@@ -441,16 +442,23 @@ public final class AttackHandler {
                 handlePickpocket(user, attack, mob);
                 handleOwlSpirit(user, attack, mob.getMaxHp() == totalDamage);
                 if (attack.skillId == Aran.COMBO_TEMPEST) {
+                    // client sends normal damage for bosses, normal mobs are set to 1 hp
                     if (!mob.isBoss()) {
                         totalDamage = mob.getHp() - 1;
                     }
                 } else if (attack.skillId == Warrior.HEAVENS_HAMMER) {
+                    // client sends 1 damage, calculate damage = Math.min(damage, mob.getHp() - 1)
                     totalDamage = calculateHeavensHammer(user, mob);
                 } else if (attack.skillId == Thief.DRAIN || attack.skillId == NightWalker.VAMPIRE) {
-                    final int absorbAmount = totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 10;
+                    // cannot absorb more than half of your max hp or more than the enemy's max hp
+                    final int absorbAmount = totalDamage * user.getSkillStatValue(attack.skillId, SkillStat.x) / 100;
                     hpGain += Math.min(Math.min(absorbAmount, user.getMaxHp() / 2), mob.getMaxHp());
+                } else if (attack.skillId == WildHunter.SWIPE) {
+                    // cannot absorb more than 15% of your max hp or more than the enemy's max hp
+                    final int absorbAmount = totalDamage * user.getSkillStatValue(attack.skillId, SkillStat.x) / 100;
+                    hpGain += Math.min(Math.min(absorbAmount, user.getMaxHp() * 15 / 100), mob.getMaxHp());
                 } else if (attack.skillId == Pirate.ENERGY_DRAIN || attack.skillId == ThunderBreaker.ENERGY_DRAIN) {
-                    hpGain += totalDamage * user.getSkillStatValue(Pirate.ENERGY_DRAIN, SkillStat.x) / 100;
+                    hpGain += totalDamage * user.getSkillStatValue(attack.skillId, SkillStat.x) / 100;
                 } else if (attack.skillId != 0) {
                     mpDamage = calculateMpEater(user, mob);
                 }

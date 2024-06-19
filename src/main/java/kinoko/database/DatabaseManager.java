@@ -24,6 +24,7 @@ import kinoko.world.item.PetData;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.MiniGameRecord;
+import kinoko.world.user.WildHunterInfo;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.stat.CharacterStat;
 
@@ -109,6 +110,7 @@ public final class DatabaseManager {
         QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ConfigUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         MiniGameRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        WildHunterInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
         // Create Tables
@@ -129,6 +131,7 @@ public final class DatabaseManager {
         registerCodec(cqlSession, QuestRecordUDT.getTypeName(), (ic) -> new QuestRecordCodec(ic, GenericType.of(QuestRecord.class)));
         registerCodec(cqlSession, ConfigUDT.getTypeName(), (ic) -> new ConfigCodec(ic, GenericType.of(ConfigManager.class)));
         registerCodec(cqlSession, MiniGameRecordUDT.getTypeName(), (ic) -> new MiniGameRecordCodec(ic, GenericType.of(MiniGameRecord.class)));
+        registerCodec(cqlSession, WildHunterInfoUDT.getTypeName(), (ic) -> new WildHunterInfoCodec(ic, GenericType.of(WildHunterInfo.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
         // Create Accessors

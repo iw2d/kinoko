@@ -36,10 +36,7 @@ import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.Account;
-import kinoko.world.user.CalcDamage;
-import kinoko.world.user.Dragon;
-import kinoko.world.user.User;
+import kinoko.world.user.*;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -603,6 +600,17 @@ public final class AdminCommands {
     public static void battleship(User user, String[] args) {
         try (var locked = user.acquire()) {
             user.write(MessagePacket.system("Battleship HP : %d", Pirate.getBattleshipDurability(user)));
+        }
+    }
+
+    @Command("jaguar")
+    @Arguments("index")
+    public static void jaguar(User user, String[] args) {
+        final int index = Integer.parseInt(args[1]);
+        try (var locked = user.acquire()) {
+            final WildHunterInfo wildHunterInfo = locked.get().getCharacterData().getWildHunterInfo();
+            wildHunterInfo.setRidingType(index);
+            user.write(WvsContext.wildHunterInfo(wildHunterInfo));
         }
     }
 
