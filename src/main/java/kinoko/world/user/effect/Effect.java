@@ -171,6 +171,15 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static SkillEffect skillSpecial(int skillId, int skillLevel, int positionX, int positionY) {
+        final SkillEffect effect = new SkillEffect(EffectType.SkillAffected_Select);
+        effect.skillId = skillId;
+        effect.skillLevel = skillLevel;
+        effect.positionX = positionX;
+        effect.positionY = positionY;
+        return effect;
+    }
+
     public static Effect petLevelUp(int petIndex) {
         final Effect effect = new Effect(EffectType.Pet);
         effect.int1 = PetEffectType.LevelUp.getValue(); // nType

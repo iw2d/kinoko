@@ -137,6 +137,9 @@ public final class SkillHandler {
                 user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
                 BattleMage.cancelPartyAura(user, skillId);
             }
+            if (resetStats.contains(CharacterTemporaryStat.SuperBody)) {
+                user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+            }
         }
     }
 

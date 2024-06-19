@@ -5,6 +5,8 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.affectedarea.AffectedArea;
+import kinoko.world.field.affectedarea.AffectedAreaType;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
@@ -98,7 +100,7 @@ public final class BattleMage extends SkillProcessor {
             case DARK_AURA:
             case YELLOW_AURA:
             case BLUE_AURA:
-                user.setTemporaryStat(CharacterTemporaryStat.Aura, TemporaryStatOption.of(1, skillId, 0));
+                user.setTemporaryStat(CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0)); // slv used for BODY_BOOST
                 user.getSkillManager().setSkillSchedule(skillId, Instant.now());
                 return;
             case BLOOD_DRAIN:
@@ -108,7 +110,24 @@ public final class BattleMage extends SkillProcessor {
                 user.setTemporaryStat(CharacterTemporaryStat.Conversion, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case BODY_BOOST:
-                user.setTemporaryStat(CharacterTemporaryStat.SuperBody, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                switch (user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption) {
+                    case DARK_AURA -> {
+                        // Attack +v% for 60 sec
+                        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura);
+                        user.setTemporaryStat(Map.of(
+                                CharacterTemporaryStat.SuperBody, TemporaryStatOption.of(slv, skillId, 60_000),
+                                CharacterTemporaryStat.DarkAura, TemporaryStatOption.of(option.nOption + si.getValue(SkillStat.v, slv), option.rOption, 60_000)
+                        ));
+                    }
+                    case YELLOW_AURA -> {
+                        // Speed, attack speed, evade chance for 60 sec
+                        user.setTemporaryStat(CharacterTemporaryStat.SuperBody, TemporaryStatOption.of(slv, skillId, 60_000));
+                    }
+                    case BLUE_AURA -> {
+                        // Invincible for z sec
+                        user.setTemporaryStat(CharacterTemporaryStat.SuperBody, TemporaryStatOption.of(slv, skillId, si.getValue(SkillStat.z, slv) * 1000));
+                    }
+                }
                 return;
             case SUMMON_REAPER_BUFF:
                 // Revive is the Korean name for the skill, also the summon effect is on killing the mob, contrary to the English skill description
@@ -119,6 +138,13 @@ public final class BattleMage extends SkillProcessor {
                         CharacterTemporaryStat.Cyclone, TemporaryStatOption.of(1, skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.NotDamaged, TemporaryStatOption.of(1, skillId, si.getDuration(slv))
                 ));
+                return;
+            case STANCE:
+                user.setTemporaryStat(CharacterTemporaryStat.Stance, TemporaryStatOption.of(si.getValue(SkillStat.prop, slv), skillId, si.getDuration(slv)));
+                return;
+            case PARTY_SHIELD:
+                final AffectedArea affectedArea = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, 0, skill.positionX, skill.positionY);
+                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

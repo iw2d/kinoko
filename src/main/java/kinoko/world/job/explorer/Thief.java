@@ -249,8 +249,8 @@ public final class Thief extends SkillProcessor {
                 user.setTemporaryStat(CharacterTemporaryStat.MesoGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case SMOKESCREEN:
-                final AffectedArea smoke = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, 0, skill.positionX, skill.positionY);
-                user.getField().getAffectedAreaPool().addAffectedArea(smoke);
+                final AffectedArea affectedArea = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, 0, skill.positionX, skill.positionY);
+                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
                 return;
 
             // DB

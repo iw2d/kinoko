@@ -13,8 +13,8 @@ public final class SkillEffect extends Effect {
     public boolean enable;
     public boolean left;
     public int info;
-    public short positionX;
-    public short positionY;
+    public int positionX;
+    public int positionY;
 
     SkillEffect(EffectType type) {
         super(type);
@@ -60,7 +60,7 @@ public final class SkillEffect extends Effect {
             }
             case SkillSpecial -> {
                 outPacket.encodeInt(skillId); // nSkillID
-                if (skillId == 4341003) {
+                if (skillId == Thief.MONSTER_BOMB) {
                     outPacket.encodeInt(positionX); // nTimeBombX
                     outPacket.encodeInt(positionY); // nTimeBombY
                     outPacket.encodeInt(skillLevel); // nSLV

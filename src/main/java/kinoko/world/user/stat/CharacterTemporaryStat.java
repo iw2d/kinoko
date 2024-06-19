@@ -172,7 +172,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             EnergyCharged, Dash_Speed, Dash_Jump, RideVehicle, PartyBooster, GuidedBullet, Undead
     );
     public static final Set<CharacterTemporaryStat> AURA_STAT = Set.of(
-            DarkAura, BlueAura, YellowAura
+            DarkAura, BlueAura, YellowAura, SuperBody
     );
     public static final Set<CharacterTemporaryStat> SWALLOW_BUFF_STAT = Set.of(
             SwallowAttackDamage, SwallowDefence, SwallowCritical, SwallowMaxMP, SwallowEvasion
