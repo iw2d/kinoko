@@ -13,6 +13,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Locked;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.item.*;
 import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Pirate;
@@ -30,6 +31,7 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -149,8 +151,29 @@ public final class SkillHandler {
         final int slv = inPacket.decodeByte(); // nSLV
         final short actionAndDir = inPacket.decodeShort(); // nOneTimeAction & 0x7FFF | (nMoveAction << 15)
         final byte attackSpeed = inPacket.decodeByte(); // attack_speed_degree
+
         if (skillId == WildHunter.JAGUAR_OSHI) {
-            inPacket.decodeInt(); // dwSwallowMobID
+            final int mobId = inPacket.decodeInt(); // dwSwallowMobID
+            final Optional<Mob> mobResult = user.getField().getMobPool().getById(mobId);
+            if (mobResult.isEmpty()) {
+                log.error("Could not resolve swallow mob ID : {}", mobId);
+                return;
+            }
+            try (var lockedMob = mobResult.get().acquire()) {
+                final Mob mob = lockedMob.get();
+                // Should implement all client-side checks in CUserLocal::FindSwallowMob
+                if (mob.isBoss() || mob.getLevel() > user.getLevel() + 5 || SkillConstants.isNotSwallowableMob(mob.getTemplateId())) {
+                    log.error("Tried to swallow non-swallowable mob ID : {}, template ID : {}", mobId, mob.getTemplateId());
+                    return;
+                }
+                mob.setSwallowCharacterId(user.getCharacterId());
+                try (var locked = user.acquire()) {
+                    locked.get().setTemporaryStat(Map.of(
+                            CharacterTemporaryStat.Swallow_Mob, TemporaryStatOption.of(mobId, skillId, 0),
+                            CharacterTemporaryStat.Swallow_Template, TemporaryStatOption.of(mob.getTemplateId(), skillId, 0)
+                    ));
+                }
+            }
         }
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }

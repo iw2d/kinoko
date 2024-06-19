@@ -3,12 +3,16 @@ package kinoko.world.job.resistance;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.ServerConfig;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobLeaveType;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
@@ -16,6 +20,10 @@ import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public final class WildHunter extends SkillProcessor {
     // WILD_HUNTER_1
@@ -64,6 +72,7 @@ public final class WildHunter extends SkillProcessor {
             case RICOCHET:
             case DASH_N_SLASH:
             case SILVER_HAWK:
+            case SONIC_ROAR:
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
@@ -74,6 +83,17 @@ public final class WildHunter extends SkillProcessor {
                 attack.forEachMob(field, (mob) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+            case STINK_BOMB_SHOT:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(Map.of(
+                                MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
+                        ));
                     }
                 });
                 break;
@@ -90,17 +110,68 @@ public final class WildHunter extends SkillProcessor {
             case JAGUAR_RIDER:
                 user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, user.getWildHunterInfo().getRidingItem(), skillId, 0));
                 return;
+            case ITS_RAINING_MINES:
+                user.setTemporaryStat(CharacterTemporaryStat.Mine, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
+            case ITS_RAINING_MINES_HIDDEN:
+                final Summoned mine = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL);
+                mine.setPosition(field, skill.positionX, skill.positionY);
+                mine.setLeaveType(SummonedLeaveType.SELF_DESTRUCT);
+                mine.setId(field.getNewObjectId());
+                user.addSummoned(mine);
+                return;
+            case JAGUAR_OSHI:
+                if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Swallow_Mob)) {
+                    log.error("Could not resolve target for jaguar-oshi skill");
+                    return;
+                }
+                final int targetMobId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Swallow_Mob).nOption;
+                final Optional<Mob> targetResult = field.getMobPool().getById(targetMobId);
+                if (targetResult.isEmpty()) {
+                    log.error("Could not resolve target mob ID : {} for jaguar-oshi skill", targetMobId);
+                    return;
+                }
+                try (var lockedMob = targetResult.get().acquire()) {
+                    final Mob mob = lockedMob.get();
+                    mob.setLeaveType(MobLeaveType.SWALLOW);
+                    mob.damage(user, mob.getHp());
+                }
+                return;
+            case JAGUAR_OSHI_DIGESTED:
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.Swallow_Mob, CharacterTemporaryStat.Swallow_Template));
+                user.resetTemporaryStat(CharacterTemporaryStat.SWALLOW_BUFF_STAT);
+                final Optional<CharacterTemporaryStat> swallowBuffResult = Util.getRandomFromCollection(CharacterTemporaryStat.SWALLOW_BUFF_STAT);
+                if (swallowBuffResult.isEmpty()) {
+                    log.error("Could not resolve swallow buff type for jaguar-oshi skill");
+                    return;
+                }
+                // TODO : figure out which skill stat to use?
+                user.setTemporaryStat(swallowBuffResult.get(), TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv)));
+                return;
+            case WILD_TRAP:
+                final Summoned summoned = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
+                summoned.setPosition(field, skill.positionX, skill.positionY);
+                summoned.setHp(si.getValue(SkillStat.x, slv));
+                user.addSummoned(summoned);
+                return;
+            case BLIND:
+                user.setTemporaryStat(CharacterTemporaryStat.Blind, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
+                return;
             case SILVER_HAWK:
                 final Summoned birb = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
                 birb.setPosition(field, skill.positionX, skill.positionY);
                 user.addSummoned(birb);
                 return;
-            case BLIND:
-                user.setTemporaryStat(CharacterTemporaryStat.Blind, TemporaryStatOption.of(slv, skillId, si.getDuration(slv)));
-                return;
             case SHARP_EYES_WH:
                 final int sharpEyes = (si.getValue(SkillStat.x, slv) << 8) + si.getValue(SkillStat.criticaldamageMax, slv); // (cr << 8) + cd
                 user.setTemporaryStat(CharacterTemporaryStat.SharpEyes, TemporaryStatOption.of(sharpEyes, skillId, si.getDuration(slv)));
+                return;
+            case FELINE_BERSERK:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.MorewildMaxHP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.MorewildDamageUp, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv)),
+                        CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.z, slv), skillId, si.getDuration(slv))
+                ));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

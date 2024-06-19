@@ -29,6 +29,7 @@ import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
 import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -54,11 +55,13 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final int startFoothold;
 
     private MobAppearType appearType = MobAppearType.REGEN;
+    private MobLeaveType leaveType = MobLeaveType.ETC;
     private User controller;
     private int hp;
     private int mp;
     private boolean slowUsed;
     private boolean stealUsed;
+    private int swallowCharacterId;
     private Instant nextRecovery;
     private Instant removeAfter;
 
@@ -157,6 +160,14 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.appearType = appearType;
     }
 
+    public MobLeaveType getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(MobLeaveType leaveType) {
+        this.leaveType = leaveType;
+    }
+
     public int getHp() {
         return hp;
     }
@@ -187,6 +198,26 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setSlowUsed(boolean slowUsed) {
         this.slowUsed = slowUsed;
+    }
+
+    public boolean isStealUsed() {
+        return stealUsed;
+    }
+
+    public void setStealUsed(boolean stealUsed) {
+        this.stealUsed = stealUsed;
+    }
+
+    public int getSwallowCharacterId() {
+        return swallowCharacterId;
+    }
+
+    public void setSwallowCharacterId(int swallowCharacterId) {
+        this.swallowCharacterId = swallowCharacterId;
+    }
+
+    public Instant getRemoveAfter() {
+        return removeAfter;
     }
 
     public void setRemoveAfter(Instant removeAfter) {
@@ -291,7 +322,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void steal(User attacker) {
-        if (stealUsed) {
+        if (isStealUsed()) {
             return;
         }
         final Set<Pair<Drop, Reward>> stealItems = new HashSet<>();
@@ -303,7 +334,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (stealResult.isPresent()) {
             getField().getDropPool().addDrop(stealResult.get().getLeft(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
             rewards.remove(stealResult.get().getRight());
-            stealUsed = true;
+            setStealUsed(true);
         }
     }
 
@@ -470,7 +501,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.ItemUpByItem).nOption + 100) / 100.0;
             probability = probability * multiplier;
         }
-        if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
+        if (getMobStat().hasOption(MobTemporaryStat.Showdown) && getMobStat().getOption(MobTemporaryStat.Showdown).rOption != WildHunter.STINK_BOMB_SHOT) {
             final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
             probability = probability * multiplier;
         }

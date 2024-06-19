@@ -135,15 +135,17 @@ public enum CharacterTemporaryStat implements BitIndex {
     PartyBooster(126),
     GuidedBullet(127),
 
-    // cannot send these CTS in v95 due to flag size
+    // Cannot send these CTS in v95 due to flag size
     Undead(128),
     SummonBomb(129),
 
-    // additional info for CTS
-    DefenseAtt_Elem(1000),
-    DefenseState_Stat(1001),
-    SuddenDeath_Count(1002),
-    BlessingArmorIncPAD(1003);
+    // Additional info for CTS
+    DefenseAtt_Elem(1000),      // Element Attribute to be resisted by DefenseAtt
+    DefenseState_Stat(1001),    // Status to be resisted by DefenseState
+    SuddenDeath_Count(1002),    // Number of attacks remaining for SuddenDeath buff (4331003 - Owl Spirit)
+    BlessingArmorIncPAD(1003),  // Additional PAD for BlessingArmor buff (1220013 - Divine Shield)
+    Swallow_Mob(1004),          // Target mob ID for Jaguar-oshi skill (33101005)
+    Swallow_Template(1005);     // Target mob template ID for Jaguar-oshi skill (33101005)
 
     public static final int FLAG_SIZE = 128;
     public static final List<CharacterTemporaryStat> LOCAL_ENCODE_ORDER = List.of(

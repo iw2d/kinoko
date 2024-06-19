@@ -167,7 +167,7 @@ public final class SecondaryStat {
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.SWALLOW_BUFF_STAT) {
             if (flag.hasFlag(cts)) {
-                outPacket.encodeByte(getOption(cts).tOption); // tSwallowBuffTime
+                outPacket.encodeByte(getOption(cts).tOption / 1000); // tSwallowBuffTime
                 break;
             }
         }

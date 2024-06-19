@@ -178,7 +178,6 @@ public final class UserPool extends FieldObjectPool<User> {
                         continue;
                     }
                     summonedIter.remove();
-                    user.write(MessagePacket.skillExpire(summoned.getSkillId()));
                     broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
                 }
                 // Expire town portal

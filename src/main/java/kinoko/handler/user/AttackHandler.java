@@ -309,7 +309,7 @@ public final class AttackHandler {
             }
         }
 
-        // Resolve bullet id
+        // Resolve bullet ID
         if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
             final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
             final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
@@ -328,6 +328,16 @@ public final class AttackHandler {
                 bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
                 user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
             }
+        }
+
+        // Resolve swallow template ID
+        if (attack.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
+            if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Swallow_Template)) {
+                log.error("Tried to attack with Jaguar-oshi without Swallow_Template CTS set");
+                return;
+            }
+            attack.swallowMobTemplateId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Swallow_Template).nOption;
+            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.Swallow_Mob, CharacterTemporaryStat.Swallow_Template));
         }
 
         // Process skill
@@ -804,6 +814,7 @@ public final class AttackHandler {
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
             final Summoned summoned = Summoned.from(skillId, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, si.getValue(SkillStat.x, slv) * 1000);
             summoned.setPosition(user.getField(), mob.getX(), mob.getY());
+            summoned.setId(user.getField().getNewObjectId());
             user.addSummoned(summoned);
         }
     }

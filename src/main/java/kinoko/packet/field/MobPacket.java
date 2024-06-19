@@ -24,8 +24,10 @@ public final class MobPacket {
     public static OutPacket mobLeaveField(Mob mob) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobLeaveField);
         outPacket.encodeInt(mob.getId()); // dwMobID
-        outPacket.encodeByte(1); // nDeadType
-        // if nDeadType == 4, encodeInt(dwSwallowCharacterID);
+        outPacket.encodeByte(mob.getLeaveType().getValue()); // nDeadType
+        if (mob.getLeaveType() == MobLeaveType.SWALLOW) {
+            outPacket.encodeInt(mob.getSwallowCharacterId()); // dwSwallowCharacterID
+        }
         return outPacket;
     }
 

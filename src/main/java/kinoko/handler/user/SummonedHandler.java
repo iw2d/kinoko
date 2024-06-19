@@ -13,6 +13,7 @@ import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.job.explorer.Warrior;
+import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -102,7 +103,8 @@ public final class SummonedHandler {
             return;
         }
         final SummonedAttackInfo sai = summonedAttackInfoResult.get();
-        if (sai.getMobCount() < attack.getMobCount()) {
+        final int expectedMobCount = attack.skillId == WildHunter.ITS_RAINING_MINES_HIDDEN ? 3 : sai.getMobCount(); // uses mobCount from die
+        if (expectedMobCount < attack.getMobCount()) {
             log.error("Received SummonedAttack with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.getMobCount());
             return;
         }

@@ -569,6 +569,11 @@ public final class SkillConstants {
         }
     }
 
+    public static boolean isNotSwallowableMob(int mobTemplateId) {
+        final int mobType = mobTemplateId / 100000;
+        return mobType >= 90 && (mobType <= 95 || mobType == 97) || mobTemplateId / 10000 == 999;
+    }
+
     public static boolean isIgnoreMasterLevelForCommon(int skillId) {
         switch (skillId) {
             case 1120012:
