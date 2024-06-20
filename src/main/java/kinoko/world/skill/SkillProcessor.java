@@ -531,6 +531,7 @@ public abstract class SkillProcessor {
         handleDragonBlood(user, now);
         handleInfinity(user, now);
         handleAura(user, now);
+        handleMissileTank(user, now);
     }
 
     private static void handleRecovery(User user, Instant now) {
@@ -632,6 +633,21 @@ public abstract class SkillProcessor {
             });
             // Set next schedule
             user.getSkillManager().setSkillSchedule(option.rOption, now.plus(1, ChronoUnit.SECONDS));
+        }
+    }
+
+    private static void handleMissileTank(User user, Instant now) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Mechanic)) {
+            return;
+        }
+        final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Mechanic).rOption;
+        if (skillId != Mechanic.MECH_MISSILE_TANK) {
+            return;
+        }
+        if (now.isAfter(user.getSkillManager().getSkillSchedule(skillId))) {
+            user.addMp(-user.getSkillStatValue(skillId, SkillStat.u));
+            // Set next schedule
+            user.getSkillManager().setSkillSchedule(skillId, now.plus(5, ChronoUnit.SECONDS));
         }
     }
 }

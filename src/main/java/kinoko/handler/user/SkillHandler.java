@@ -191,6 +191,28 @@ public final class SkillHandler {
         user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
 
+    @Handler(InHeader.UserEffectLocal)
+    public static void handleUserEffectLocal(User user, InPacket inPacket) {
+        final int skillId = inPacket.decodeInt();
+        final int slv = inPacket.decodeByte();
+        final boolean sendLocal = inPacket.decodeBoolean();
+
+        final Effect effect = Effect.skillUse(skillId, slv, user.getLevel());
+        if (sendLocal) {
+            user.write(UserLocal.effect(effect));
+
+            // Not a real skill ID, but client sends this when trying to cancel Mech: Siege Mode (35111004), Mech: Missile Tank (35121005), and Mech: Siege Mode 2 (35121013)
+            if (skillId == 35110004 || skillId == 35120005 || skillId == 35120013) {
+                try (var locked = user.acquire()) {
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Mechanic)) {
+                        Mechanic.handleMech(user, skillId == 35120013 ? Mechanic.MECH_MISSILE_TANK : Mechanic.MECH_PROTOTYPE);
+                    }
+                }
+            }
+        }
+        user.getField().broadcastPacket(UserRemote.effect(user, effect), user);
+    }
+
     @Handler(InHeader.UserCalcDamageStatSetRequest)
     public static void handleUserCalcDamageStatSetRequest(User user, InPacket inPacket) {
         try (var locked = user.acquire()) {

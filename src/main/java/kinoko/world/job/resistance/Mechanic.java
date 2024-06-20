@@ -1,6 +1,8 @@
 package kinoko.world.job.resistance;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -14,12 +16,15 @@ import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.DiceInfo;
 import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.Optional;
 
 public final class Mechanic extends SkillProcessor {
     // MECHANIC_1
@@ -76,7 +81,13 @@ public final class Mechanic extends SkillProcessor {
                     }
                 });
                 break;
-
+            case PUNCH_LAUNCHER:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
         }
     }
 
@@ -86,17 +97,22 @@ public final class Mechanic extends SkillProcessor {
         final int slv = skill.slv;
 
         final Field field = user.getField();
+        System.out.println(skillId);
         switch (skillId) {
+            // MECH
             case MECH_PROTOTYPE:
-                user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.MECHANIC_VEHICLE, skillId, 0),
-                        CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
-                        CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
-                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, 0),
-                        CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
-                        CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
-                ));
+                handleMech(user, skillId);
                 return;
+            case MECH_SIEGE_MODE:
+                final int mechanicMode = user.getSecondaryStat().getOption(CharacterTemporaryStat.Mechanic).rOption;
+                handleMech(user, mechanicMode == MECH_MISSILE_TANK ? MECH_SIEGE_MODE_2 : MECH_SIEGE_MODE);
+                return;
+            case MECH_MISSILE_TANK:
+                handleMech(user, skillId);
+                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(5, ChronoUnit.SECONDS)); // - #u MP every 5 sec
+                return;
+
+            // BUFFS
             case PERFECT_ARMOR:
                 if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
                     user.resetTemporaryStat(skillId);
@@ -104,6 +120,17 @@ public final class Mechanic extends SkillProcessor {
                     user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, 0));
                 }
                 return;
+            case ROLL_OF_THE_DICE:
+                final int roll = Util.getRandom(1, 6);
+                user.write(UserLocal.effect(Effect.skillAffectedSelect(roll, skillId, slv)));
+                field.broadcastPacket(UserRemote.effect(user, Effect.skillAffectedSelect(roll, skillId, slv)), user);
+                if (roll != 1) {
+                    final DiceInfo diceInfo = DiceInfo.from(roll, si, slv);
+                    user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId, si.getDuration(slv), diceInfo));
+                }
+                return;
+
+            // SUMMONS
             case OPEN_PORTAL_GX_9:
                 // Destroy existing gates
                 if (user.getOpenGate() != null && user.getOpenGate().getSecondGate() != null) {
@@ -125,5 +152,25 @@ public final class Mechanic extends SkillProcessor {
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
+    }
+
+    public static void handleMech(User user, int skillId) {
+        final int statSkillId = user.getSkillLevel(EXTREME_MECH) > 0 ? EXTREME_MECH : MECH_PROTOTYPE;
+        final int slv = user.getSkillLevel(statSkillId);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(statSkillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mech stat skill ID : {}", statSkillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        user.setTemporaryStat(Map.of(
+                CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.MECHANIC_VEHICLE, skillId, 0),
+                CharacterTemporaryStat.Mechanic, TemporaryStatOption.of(slv, skillId, 0),
+                CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
+                CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
+                CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, 0),
+                CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
+                CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
+        ));
     }
 }

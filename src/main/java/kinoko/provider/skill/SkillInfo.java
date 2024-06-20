@@ -38,6 +38,9 @@ public interface SkillInfo {
     }
 
     default int getBulletCon(int slv) {
+        if (SkillConstants.isShootSkillNotConsumingBullet(getSkillId())) {
+            return 0;
+        }
         return Math.max(getValue(SkillStat.bulletConsume, slv), getValue(SkillStat.bulletCount, slv));
     }
 

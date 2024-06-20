@@ -34,7 +34,6 @@ import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
-import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
@@ -341,7 +340,7 @@ public final class AttackHandler {
         }
 
         // Process skill
-        if (attack.skillId != 0 && attack.skillId != BattleMage.TWISTER_SPIN && !SkillConstants.isThrowBombSkill(attack.skillId)) {
+        if (attack.skillId != 0 && !SkillConstants.isNoConsumeAttack(attack.skillId)) {
             // Resolve skill info
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
             if (skillInfoResult.isEmpty()) {

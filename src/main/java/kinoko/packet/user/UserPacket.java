@@ -8,6 +8,7 @@ import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Evan;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
 
 public final class UserPacket {
     // CUserPool::OnPacket ---------------------------------------------------------------------------------------------
@@ -80,6 +81,9 @@ public final class UserPacket {
         }
         if (Evan.isDragonFury(user)) {
             effectFlag |= 0x2;
+        }
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Swallow_Mob)) {
+            effectFlag |= 0x4;
         }
         outPacket.encodeByte(effectFlag);
 

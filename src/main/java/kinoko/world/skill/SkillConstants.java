@@ -227,6 +227,20 @@ public final class SkillConstants {
         }
     }
 
+    public static boolean isNoConsumeAttack(int skillId) {
+        if (SkillConstants.isThrowBombSkill(skillId)) {
+            return true;
+        }
+        switch (skillId) {
+            case BattleMage.TWISTER_SPIN:
+            case Mechanic.MECH_SIEGE_MODE:
+            case Mechanic.MECH_MISSILE_TANK:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isPartySkill(int skillId) {
         if (skillId == Magician.HEAL) {
             // CUserLocal::DoActiveSkill_Heal
@@ -416,16 +430,16 @@ public final class SkillConstants {
 
     public static boolean isShootSkillNotUsingShootingWeapon(int skillId) {
         switch (skillId) {
-            case 4121003:
-            case 4221003:
-            case 5121002:
-            case 11101004:
-            case 15111006:
-            case 15111007:
-            case 21100004:
-            case 21110004:
-            case 21120006:
-            case 33101007:
+            case Thief.TAUNT_NL:
+            case Thief.TAUNT_SHAD:
+            case Pirate.ENERGY_ORB:
+            case DawnWarrior.SOUL_BLADE:
+            case ThunderBreaker.SPARK:
+            case ThunderBreaker.SHARK_WAVE:
+            case Aran.COMBO_SMASH:
+            case Aran.COMBO_FENRIR:
+            case Aran.COMBO_TEMPEST:
+            case WildHunter.JAGUAR_OSHI_ATTACK:
                 return true;
             default:
                 return false;
@@ -437,21 +451,21 @@ public final class SkillConstants {
             return true;
         }
         switch (skillId) {
-            case 3101003:
-            case 3201003:
-            case 4111004:
-            case 13101005:
-            case 14101006:
-            case 33101002:
-            case 35001001:
-            case 35001004:
-            case 35101009:
-            case 35101010:
-            case 35111004:
-            case 35111015:
-            case 35121005:
-            case 35121012:
-            case 35121013:
+            case Bowman.POWER_KNOCKBACK_BM:
+            case Bowman.POWER_KNOCKBACK_MM:
+            case Thief.SHADOW_MESO:
+            case WindArcher.STORM_BREAK:
+            case NightWalker.VAMPIRE:
+            case WildHunter.JAGUAR_RAWR:
+            case Mechanic.FLAME_LAUNCHER:
+            case Mechanic.GATLING_GUN:
+            case Mechanic.ENHANCED_FLAME_LAUNCHER:
+            case Mechanic.ENHANCED_GATLING_GUN:
+            case Mechanic.MECH_SIEGE_MODE:
+            case Mechanic.PUNCH_LAUNCHER:
+            case Mechanic.MECH_MISSILE_TANK:
+            case Mechanic.LASER_BLAST:
+            case Mechanic.MECH_SIEGE_MODE_2:
                 return true;
             default:
                 return false;
