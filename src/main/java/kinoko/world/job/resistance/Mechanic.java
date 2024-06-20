@@ -1,9 +1,25 @@
 package kinoko.world.job.resistance;
 
+import kinoko.packet.field.FieldPacket;
+import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
+import kinoko.util.Util;
+import kinoko.world.field.Field;
+import kinoko.world.field.OpenGate;
+import kinoko.world.field.mob.MobStatOption;
+import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterTemporaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 public final class Mechanic extends SkillProcessor {
     // MECHANIC_1
@@ -47,13 +63,67 @@ public final class Mechanic extends SkillProcessor {
     public static final int MECH_SIEGE_MODE_2 = 35121013;
 
     public static void handleAttack(User user, Attack attack) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
+
+        final Field field = user.getField();
         switch (skillId) {
+            case ATOMIC_HAMMER:
+                attack.forEachMob(field, (mob) -> {
+                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                    }
+                });
+                break;
+
         }
     }
 
     public static void handleSkill(User user, Skill skill) {
+        final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
+        final int skillId = skill.skillId;
+        final int slv = skill.slv;
+
+        final Field field = user.getField();
+        switch (skillId) {
+            case MECH_PROTOTYPE:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.MECHANIC_VEHICLE, skillId, 0),
+                        CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
+                        CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
+                        CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, 0),
+                        CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
+                        CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
+                ));
+                return;
+            case PERFECT_ARMOR:
+                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
+                    user.resetTemporaryStat(skillId);
+                } else {
+                    user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, 0));
+                }
+                return;
+            case OPEN_PORTAL_GX_9:
+                // Destroy existing gates
+                if (user.getOpenGate() != null && user.getOpenGate().getSecondGate() != null) {
+                    user.getOpenGate().destroy();
+                    user.setOpenGate(null);
+                }
+                // Create gate
+                if (user.getOpenGate() == null) {
+                    final OpenGate firstGate = new OpenGate(user, true, Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+                    firstGate.setPosition(field, skill.positionX, skill.positionY);
+                    user.setOpenGate(firstGate);
+                    field.broadcastPacket(FieldPacket.openGateCreated(user, firstGate, true));
+                } else {
+                    final OpenGate secondGate = new OpenGate(user, false, Instant.MIN); // expire time depends on first gate
+                    secondGate.setPosition(field, skill.positionX, skill.positionY);
+                    user.getOpenGate().setSecondGate(secondGate);
+                    field.broadcastPacket(FieldPacket.openGateCreated(user, secondGate, true));
+                }
+                return;
+        }
         log.error("Unhandled skill {}", skill.skillId);
     }
 }

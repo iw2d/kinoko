@@ -41,6 +41,7 @@ public final class Citizen extends SkillProcessor {
 
     public static final int CAPTURE = 30001061;
     public static final int CALL_OF_THE_HUNTER = 30001062;
+    public static final int MECHANIC_DASH = 30001068;
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();

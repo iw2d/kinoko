@@ -7,11 +7,13 @@ import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.shop.ShopResultType;
+import kinoko.world.field.OpenGate;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.reactor.Reactor;
+import kinoko.world.user.User;
 import kinoko.world.user.config.FuncKeyMapped;
 
 public final class FieldPacket {
@@ -123,19 +125,41 @@ public final class FieldPacket {
 
     // CTownPortalPool::OnPacket ---------------------------------------------------------------------------------------
 
-    public static OutPacket townPortalCreated(int characterId, int x, int y, boolean animate) {
+    public static OutPacket townPortalCreated(User user, int x, int y, boolean animate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TownPortalCreated);
         outPacket.encodeByte(!animate); // nState : create animation if false
-        outPacket.encodeInt(characterId); // dwCharacterID
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
         outPacket.encodeShort(x);
         outPacket.encodeShort(y);
         return outPacket;
     }
 
-    public static OutPacket townPortalRemoved(int characterId, boolean animate) {
+    public static OutPacket townPortalRemoved(User user, boolean animate) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TownPortalRemoved);
         outPacket.encodeByte(!animate); // nState : remove animation if false
-        outPacket.encodeInt(characterId); // dwCharacterID
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
+        return outPacket;
+    }
+
+
+    // COpenGatePool::OnPacket ---------------------------------------------------------------------------------------
+
+    public static OutPacket openGateCreated(User user, OpenGate openGate, boolean animate) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.OpenGateCreated);
+        outPacket.encodeByte(!animate); // nState : create animation if false
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
+        outPacket.encodeShort(openGate.getX());
+        outPacket.encodeShort(openGate.getY());
+        outPacket.encodeByte(openGate.isFirst());
+        outPacket.encodeInt(user.getPartyId());
+        return outPacket;
+    }
+
+    public static OutPacket openGateRemoved(User user, boolean notify, boolean first) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.OpenGateRemoved);
+        outPacket.encodeByte(notify); // The Portal that was installed earlier has disappeared.
+        outPacket.encodeInt(user.getCharacterId()); // dwCharacterID
+        outPacket.encodeByte(first);
         return outPacket;
     }
 

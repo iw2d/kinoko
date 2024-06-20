@@ -370,6 +370,8 @@ public abstract class SkillProcessor {
             case Evan.TELEPORT:
             case BattleMage.TELEPORT:
             case WildHunter.JAG_JUMP:
+            case Mechanic.ROCKET_BOOSTER:
+            case Citizen.MECHANIC_DASH:
                 // noop
                 return;
             case Warrior.WEAPON_BOOSTER_HERO:

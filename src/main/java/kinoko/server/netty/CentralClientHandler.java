@@ -127,7 +127,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                         }
                     });
                     if (user.getTownPortal() != null && user.getTownPortal().getTownField() == user.getField()) {
-                        user.write(FieldPacket.townPortalRemoved(user.getCharacterId(), false));
+                        user.write(FieldPacket.townPortalRemoved(user, false));
                     }
                 }
             }

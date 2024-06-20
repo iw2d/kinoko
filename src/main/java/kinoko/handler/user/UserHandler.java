@@ -1534,6 +1534,16 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.EnterOpenGateRequest)
+    public static void handleEnterOpenGateRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // dwCharacterID
+        inPacket.decodeShort(); // p->x
+        inPacket.decodeShort(); // p->y
+        inPacket.decodeByte(); // isFirst?
+
+        user.dispose(); // CWvsContext::OnOpenGate does nothing, just dispose
+    }
+
     @Handler(InHeader.FuncKeyMappedModified)
     public static void handleFuncKeyMappedModified(User user, InPacket inPacket) {
         final int type = inPacket.decodeInt();

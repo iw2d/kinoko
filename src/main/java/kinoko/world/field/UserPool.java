@@ -41,6 +41,12 @@ public final class UserPool extends FieldObjectPool<User> {
                 if (existingUser.getDragon() != null) {
                     user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
                 }
+                if (existingUser.getOpenGate() != null) {
+                    user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate(), false));
+                    if (existingUser.getOpenGate().getSecondGate() != null) {
+                        user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate().getSecondGate(), false));
+                    }
+                }
             }
         });
 
@@ -107,10 +113,10 @@ public final class UserPool extends FieldObjectPool<User> {
                     final Optional<PortalInfo> portalPointResult = townPortal.getTownPortalPoint();
                     if (portalPointResult.isPresent()) {
                         final PortalInfo portalPoint = portalPointResult.get();
-                        user.write(FieldPacket.townPortalCreated(owner.getCharacterId(), portalPoint.getX(), portalPoint.getY(), false));
+                        user.write(FieldPacket.townPortalCreated(owner, portalPoint.getX(), portalPoint.getY(), false));
                     }
                 } else {
-                    user.write(FieldPacket.townPortalCreated(owner.getCharacterId(), townPortal.getX(), townPortal.getY(), false));
+                    user.write(FieldPacket.townPortalCreated(owner, townPortal.getX(), townPortal.getY(), false));
                 }
             }
         });
@@ -149,6 +155,12 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Remove affected areas
         field.getAffectedAreaPool().removeByOwnerId(user.getCharacterId());
+
+        // Remove gates
+        if (user.getOpenGate() != null) {
+            user.getOpenGate().destroy();
+            user.setOpenGate(null);
+        }
 
         // Remove party aura
         user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
@@ -189,6 +201,14 @@ public final class UserPool extends FieldObjectPool<User> {
                         user.write(WvsContext.resetTownPortal());
                         user.write(MessagePacket.skillExpire(townPortal.getSkillId()));
                         user.getConnectedServer().notifyUserUpdate(user);
+                    }
+                }
+                // Expire open gate
+                final OpenGate openGate = user.getOpenGate();
+                if (openGate != null) {
+                    if (openGate.getExpireTime().isBefore(now)) {
+                        openGate.destroy();
+                        user.setOpenGate(null);
                     }
                 }
             }

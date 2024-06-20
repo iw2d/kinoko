@@ -18,6 +18,7 @@ import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.Dialog;
 import kinoko.world.field.Field;
+import kinoko.world.field.OpenGate;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.summoned.Summoned;
@@ -55,6 +56,7 @@ public final class User extends Life implements Lockable<User> {
     private Dialog dialog;
     private Dragon dragon;
     private TownPortal townPortal;
+    private OpenGate openGate;
     private int partyId;
     private int partyMemberIndex;
     private int messengerId;
@@ -194,6 +196,14 @@ public final class User extends Life implements Lockable<User> {
 
     public int getTownPortalIndex() {
         return getPartyId() != 0 ? getPartyMemberIndex() - 1 : 0;
+    }
+
+    public OpenGate getOpenGate() {
+        return openGate;
+    }
+
+    public void setOpenGate(OpenGate openGate) {
+        this.openGate = openGate;
     }
 
     public int getPartyId() {
@@ -366,11 +376,17 @@ public final class User extends Life implements Lockable<User> {
         // CWvsContext::ValidateAdditionalItemEffect - ignore
 
         // Adjust hp and mp
-        if (getHp() > getMaxHp()) {
-            setHp(getMaxHp());
-        }
-        if (getMp() > getMaxMp()) {
-            setMp(getMaxMp());
+        if (getField() != null) {
+            if (getHp() > getMaxHp()) {
+                setHp(getMaxHp());
+            }
+            if (getMp() > getMaxMp()) {
+                setMp(getMaxMp());
+            }
+        } else {
+            // validateStat called before SetField
+            getCharacterStat().setHp(Math.clamp(getHp(), 0, getMaxHp()));
+            getCharacterStat().setMp(Math.clamp(getMp(), 0, getMaxMp()));
         }
     }
 
