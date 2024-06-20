@@ -127,7 +127,7 @@ public final class Pirate extends SkillProcessor {
                 });
                 break;
             case GAVIOTA:
-                user.removeSummoned(skillId);
+                user.removeSummoned((summoned) -> summoned.getSkillId() == skillId);
                 break;
             case FLAMETHROWER:
                 final int dot = si.getValue(SkillStat.dot, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.x);

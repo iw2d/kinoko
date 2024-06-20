@@ -4,10 +4,13 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.HitInfo;
 import kinoko.world.user.User;
+
+import java.util.List;
 
 public final class SummonedPacket {
     // CSummonedPool::OnPacket -----------------------------------------------------------------------------------------
@@ -20,7 +23,28 @@ public final class SummonedPacket {
         outPacket.encodeInt(summoned.getSkillId()); // nSkillID
         outPacket.encodeByte(user.getLevel()); // nCharLevel
         outPacket.encodeByte(summoned.getSkillLevel()); // nSLV
-        summoned.encode(outPacket);
+        // CSummoned::Init
+        outPacket.encodeShort(summoned.getX()); // nX
+        outPacket.encodeShort(summoned.getY()); // nY
+        outPacket.encodeByte(summoned.getMoveAction()); // nMoveAction
+        outPacket.encodeShort(summoned.getFoothold()); // nCurFoothold
+        outPacket.encodeByte(summoned.getMoveAbility().getValue()); // nMoveAbility
+        outPacket.encodeByte(summoned.getAssistType().getValue()); // nAssistType
+        outPacket.encodeByte(summoned.getEnterType().getValue()); // nEnterType
+        outPacket.encodeByte(summoned.getAvatarLook() != null); // bAvatarLook
+        if (summoned.getAvatarLook() != null) {
+            summoned.getAvatarLook().encode(outPacket); // AvatarLook::Decode
+        }
+        if (summoned.getSkillId() == Mechanic.ROCK_N_SHOCK) {
+            final List<Summoned> rockAndShockList = user.getSummoned().getOrDefault(Mechanic.ROCK_N_SHOCK, List.of());
+            outPacket.encodeByte(rockAndShockList.size() == 3 ? 1 : 0); // nTeslaCoilState == 1
+            if (rockAndShockList.size() == 3) {
+                for (Summoned rockAndShock : rockAndShockList) {
+                    outPacket.encodeShort(rockAndShock.getX());
+                    outPacket.encodeShort(rockAndShock.getY());
+                }
+            }
+        }
         return outPacket;
     }
 

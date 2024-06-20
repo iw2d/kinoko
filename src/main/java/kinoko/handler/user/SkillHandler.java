@@ -47,6 +47,7 @@ public final class SkillHandler {
     @Handler(InHeader.UserSkillUseRequest)
     public static void handleUserSkillUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
+
         final Skill skill = new Skill();
         skill.skillId = inPacket.decodeInt(); // nSkillID
         skill.slv = inPacket.decodeByte(); // nSLV
@@ -133,7 +134,7 @@ public final class SkillHandler {
             }
             // Additional handling for CTS
             if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
-                user.removeSummoned(Warrior.BEHOLDER);
+                user.removeSummoned((summoned) -> summoned.getSkillId() == Warrior.BEHOLDER);
             }
             if (resetStats.contains(CharacterTemporaryStat.Aura)) {
                 user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);

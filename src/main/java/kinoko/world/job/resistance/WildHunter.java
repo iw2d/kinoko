@@ -21,6 +21,8 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -114,7 +116,7 @@ public final class WildHunter extends SkillProcessor {
                 user.setTemporaryStat(CharacterTemporaryStat.Mine, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
             case ITS_RAINING_MINES_HIDDEN:
-                final Summoned mine = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL);
+                final Summoned mine = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK, Instant.now().plus(si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL, ChronoUnit.MILLIS));
                 mine.setPosition(field, skill.positionX, skill.positionY);
                 mine.setLeaveType(SummonedLeaveType.SELF_DESTRUCT);
                 mine.setId(field.getNewObjectId());

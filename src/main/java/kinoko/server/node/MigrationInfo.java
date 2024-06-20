@@ -8,15 +8,14 @@ import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedEnterType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.AvatarLook;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class MigrationInfo implements Encodable {
     private final int channelId;
@@ -27,7 +26,7 @@ public final class MigrationInfo implements Encodable {
 
     private final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats;
     private final Map<Integer, Instant> schedules;
-    private final Map<Integer, Summoned> summoned;
+    private final Map<Integer, List<Summoned>> summoned;
     private final int messengerId;
     private final int effectItemId;
     private final String adBoard;
@@ -42,7 +41,7 @@ public final class MigrationInfo implements Encodable {
             byte[] clientKey,
             Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats,
             Map<Integer, Instant> schedules,
-            Map<Integer, Summoned> summoned,
+            Map<Integer, List<Summoned>> summoned,
             int messengerId,
             int effectItemId,
             String adBoard,
@@ -90,7 +89,7 @@ public final class MigrationInfo implements Encodable {
         return schedules;
     }
 
-    public Map<Integer, Summoned> getSummoned() {
+    public Map<Integer, List<Summoned>> getSummoned() {
         return summoned;
     }
 
@@ -163,7 +162,7 @@ public final class MigrationInfo implements Encodable {
 
         final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = decodeTemporaryStats(inPacket);
         final Map<Integer, Instant> schedules = decodeSchedules(inPacket);
-        final Map<Integer, Summoned> summoned = decodeSummonedMap(inPacket);
+        final Map<Integer, List<Summoned>> summoned = decodeSummonedMap(inPacket);
         final int messengerId = inPacket.decodeInt();
         final int effectItemId = inPacket.decodeInt();
         final String adBoard = inPacket.decodeBoolean() ? inPacket.decodeString() : null;
@@ -174,9 +173,9 @@ public final class MigrationInfo implements Encodable {
 
     public static MigrationInfo from(User user, int targetChannelId) {
         // Filter summoned
-        final Map<Integer, Summoned> summoned = new HashMap<>();
+        final Map<Integer, List<Summoned>> summoned = new HashMap<>();
         for (var entry : user.getSummoned().entrySet()) {
-            if (entry.getValue().canMigrate()) {
+            if (SkillConstants.isSummonMigrateSkill(entry.getKey())) {
                 summoned.put(entry.getKey(), entry.getValue());
             }
         }
@@ -306,11 +305,14 @@ public final class MigrationInfo implements Encodable {
 
     // SUMMONED --------------------------------------------------------------------------------------------------------
 
-    private static void encodeSummonedMap(OutPacket outPacket, Map<Integer, Summoned> summoned) {
+    private static void encodeSummonedMap(OutPacket outPacket, Map<Integer, List<Summoned>> summoned) {
         outPacket.encodeInt(summoned.size());
         for (var entry : summoned.entrySet()) {
             outPacket.encodeInt(entry.getKey());
-            encodeSummoned(outPacket, entry.getValue());
+            outPacket.encodeInt(entry.getValue().size());
+            for (Summoned s : entry.getValue()) {
+                encodeSummoned(outPacket, s);
+            }
         }
     }
 
@@ -327,12 +329,17 @@ public final class MigrationInfo implements Encodable {
         outPacket.encodeLong(summoned.getExpireTime().getEpochSecond());
     }
 
-    private static Map<Integer, Summoned> decodeSummonedMap(InPacket inPacket) {
-        final Map<Integer, Summoned> summoned = new HashMap<>();
+    private static Map<Integer, List<Summoned>> decodeSummonedMap(InPacket inPacket) {
+        final Map<Integer, List<Summoned>> summoned = new HashMap<>();
         final int size = inPacket.decodeInt();
         for (int i = 0; i < size; i++) {
-            final int summonedId = inPacket.decodeInt();
-            summoned.put(summonedId, decodeSummoned(inPacket));
+            final int skillId = inPacket.decodeInt();
+            final int summonedCount = inPacket.decodeInt();
+            final List<Summoned> summonedList = new ArrayList<>(summonedCount);
+            for (int j = 0; j < summonedCount; j++) {
+                summonedList.add(decodeSummoned(inPacket));
+            }
+            summoned.put(skillId, summonedList);
         }
         return summoned;
     }

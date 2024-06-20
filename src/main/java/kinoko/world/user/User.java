@@ -28,6 +28,7 @@ import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.config.ConfigManager;
@@ -39,6 +40,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public final class User extends Life implements Lockable<User> {
     private final ReentrantLock lock = new ReentrantLock();
@@ -51,7 +53,7 @@ public final class User extends Life implements Lockable<User> {
     private final PassiveSkillData passiveSkillData = new PassiveSkillData();
 
     private final List<Pet> pets = new ArrayList<>();
-    private final Map<Integer, Summoned> summoned = new HashMap<>();
+    private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
 
     private Dialog dialog;
     private Dragon dragon;
@@ -158,7 +160,7 @@ public final class User extends Life implements Lockable<User> {
         return pets;
     }
 
-    public Map<Integer, Summoned> getSummoned() {
+    public Map<Integer, List<Summoned>> getSummoned() {
         return summoned;
     }
 
@@ -505,25 +507,51 @@ public final class User extends Life implements Lockable<User> {
     // SUMMONED METHODS ------------------------------------------------------------------------------------------------
 
     public void addSummoned(Summoned summoned) {
-        final Summoned existing = getSummoned().remove(summoned.getId());
-        if (existing != null) {
-            existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
-            getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
+        final int skillId = summoned.getSkillId();
+        final List<Summoned> summonedList = getSummoned().computeIfAbsent(skillId, (key) -> new ArrayList<>());
+        if (SkillConstants.isSummonMultipleSkill(skillId) && !summonedList.isEmpty()) {
+            for (Summoned existing : summonedList) {
+                existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
+                getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
+            }
+            summonedList.clear();
         }
-        getSummoned().put(summoned.getId(), summoned);
+        summonedList.add(summoned);
+        summoned.setId(getField().getNewObjectId());
         getField().broadcastPacket(SummonedPacket.summonedEnterField(this, summoned));
         summoned.setEnterType(SummonedEnterType.DEFAULT);
     }
 
-    public void removeSummoned(int summonedId) {
-        final Summoned existing = getSummoned().remove(summonedId);
-        if (existing != null) {
-            getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
+    public void removeSummoned(Summoned summoned) {
+        removeSummoned((existing) -> existing.getId() == summoned.getId());
+    }
+
+    public void removeSummoned(Predicate<Summoned> predicate) {
+        final var iter = getSummoned().values().iterator();
+        while (iter.hasNext()) {
+            final List<Summoned> summonedList = iter.next();
+            summonedList.removeIf((summoned) -> {
+                if (predicate.test(summoned)) {
+                    getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, summoned));
+                    return true;
+                }
+                return false;
+            });
+            if (summonedList.isEmpty()) {
+                iter.remove();
+            }
         }
     }
 
     public Optional<Summoned> getSummonedById(int summonedId) {
-        return Optional.ofNullable(getSummoned().get(summonedId));
+        for (List<Summoned> summonedList : getSummoned().values()) {
+            for (Summoned summoned : summonedList) {
+                if (summoned.getId() == summonedId) {
+                    return Optional.of(summoned);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
 

@@ -417,11 +417,54 @@ public final class SkillConstants {
             case Mechanic.SATELLITE:
             case Mechanic.SATELLITE_2:
             case Mechanic.SATELLITE_3:
+            case Mechanic.ROCK_N_SHOCK:
             case Mechanic.HEALING_ROBOT_H_LX:
             case Mechanic.BOTS_N_TOTS:
             case Mechanic.AMPLIFIER_ROBOT_AF_11:
             case WildHunter.ITS_RAINING_MINES_HIDDEN: // CUserLocal::TryDoingMine
             case Mechanic.GIANT_ROBOT_SG_88: // CUserLocal::DoActiveSkill_RepeatSkill
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isSummonMigrateSkill(int skillId) {
+        switch (skillId) {
+            case Warrior.BEHOLDER:
+            case Magician.IFRIT:
+            case Magician.ELQUINES:
+            case Magician.SUMMON_DRAGON:
+            case Magician.BAHAMUT:
+            case Bowman.SILVER_HAWK:
+            case Bowman.GOLDEN_EAGLE:
+            case Bowman.PHOENIX:
+            case Bowman.FROSTPREY:
+            case Pirate.GAVIOTA:
+            case DawnWarrior.SOUL:
+            case BlazeWizard.FLAME:
+            case BlazeWizard.IFRIT:
+            case WindArcher.STORM:
+            case WindArcher.PUPPET:
+            case NightWalker.DARKNESS:
+            case ThunderBreaker.LIGHTNING:
+            case WildHunter.SILVER_HAWK:
+            case Mechanic.SATELLITE:
+            case Mechanic.SATELLITE_2:
+            case Mechanic.SATELLITE_3:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isSummonMultipleSkill(int skillId) {
+        switch (skillId) {
+            case BattleMage.SUMMON_REAPER_BUFF:
+            case WildHunter.ITS_RAINING_MINES_HIDDEN:
+            case Mechanic.ROCK_N_SHOCK:
+            case Mechanic.HEALING_ROBOT_H_LX:
+            case Mechanic.BOTS_N_TOTS_SUMMON:
                 return true;
             default:
                 return false;

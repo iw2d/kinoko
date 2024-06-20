@@ -156,7 +156,7 @@ public final class SummonedHandler {
             summoned.setHp(summoned.getHp() - hitInfo.damage);
             if (summoned.getHp() <= 0) {
                 summoned.setLeaveType(SummonedLeaveType.SUMMONED_DEAD);
-                user.removeSummoned(summonedId);
+                user.removeSummoned(summoned);
             }
         }
     }
@@ -189,5 +189,13 @@ public final class SummonedHandler {
         }
 
         summoned.getField().broadcastPacket(SummonedPacket.summonedSkill(user, summoned, actionAndDir));
+    }
+
+    @Handler(InHeader.SummonedRemove)
+    public static void handleSummonedRemove(User user, InPacket inPacket) {
+        final int summonedId = inPacket.decodeInt();
+        try (var locked = user.acquire()) {
+            locked.get().removeSummoned((summoned) -> summoned.getId() == summonedId);
+        }
     }
 }

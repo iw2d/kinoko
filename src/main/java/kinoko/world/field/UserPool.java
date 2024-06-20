@@ -11,12 +11,14 @@ import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -35,8 +37,10 @@ public final class UserPool extends FieldObjectPool<User> {
                 for (Pet pet : existingUser.getPets()) {
                     user.write(PetPacket.petActivated(existingUser, pet));
                 }
-                for (Summoned summoned : existingUser.getSummoned().values()) {
-                    user.write(SummonedPacket.summonedEnterField(existingUser, summoned));
+                for (List<Summoned> summonedList : existingUser.getSummoned().values()) {
+                    for (Summoned summoned : summonedList) {
+                        user.write(SummonedPacket.summonedEnterField(existingUser, summoned));
+                    }
                 }
                 if (existingUser.getDragon() != null) {
                     user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
@@ -60,16 +64,19 @@ public final class UserPool extends FieldObjectPool<User> {
             broadcastPacket(PetPacket.petActivated(user, pet));
         }
 
-        // Add user summoned
-        for (Summoned summoned : user.getSummoned().values()) {
-            summoned.setPosition(field, user.getX(), user.getY());
-            broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
-        }
-
         // Add user dragon
         if (user.getDragon() != null) {
             user.getDragon().setPosition(field, user.getX(), user.getY());
             broadcastPacket(DragonPacket.dragonEnterField(user, user.getDragon()));
+        }
+
+        // Add user summoned
+        for (List<Summoned> summonedList : user.getSummoned().values()) {
+            for (Summoned summoned : summonedList) {
+                summoned.setId(field.getNewObjectId());
+                summoned.setPosition(field, user.getX(), user.getY());
+                broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
+            }
         }
 
         // Update party
@@ -80,7 +87,7 @@ public final class UserPool extends FieldObjectPool<User> {
             }
         });
 
-        // Handle field objects
+        // Create field objects for user
         field.getMobPool().forEach((mob) -> {
             user.write(MobPacket.mobEnterField(mob));
             if (mob.getController() == null) {
@@ -144,13 +151,16 @@ public final class UserPool extends FieldObjectPool<User> {
         });
 
         // Remove summoned
-        final var iter = user.getSummoned().values().iterator();
+        final var iter = user.getSummoned().entrySet().iterator();
         while (iter.hasNext()) {
-            final Summoned summoned = iter.next();
-            if (!summoned.canMigrate()) {
-                broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
-                iter.remove();
+            final var entry = iter.next(); // Skill ID, List<Summoned>
+            if (SkillConstants.isSummonMigrateSkill(entry.getKey())) {
+                continue;
             }
+            for (Summoned summoned : entry.getValue()) {
+                broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
+            }
+            iter.remove();
         }
 
         // Remove affected areas
@@ -183,15 +193,7 @@ public final class UserPool extends FieldObjectPool<User> {
                     user.write(UserLocal.skillCooltimeSet(skillId, 0));
                 }
                 // Expire summoned
-                final var summonedIter = user.getSummoned().values().iterator();
-                while (summonedIter.hasNext()) {
-                    final Summoned summoned = summonedIter.next();
-                    if (now.isBefore(summoned.getExpireTime())) {
-                        continue;
-                    }
-                    summonedIter.remove();
-                    broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
-                }
+                user.removeSummoned((summoned) -> now.isAfter(summoned.getExpireTime()));
                 // Expire town portal
                 final TownPortal townPortal = user.getTownPortal();
                 if (townPortal != null) {
@@ -271,11 +273,19 @@ public final class UserPool extends FieldObjectPool<User> {
         if (partyId != 0) {
             forEach((member) -> {
                 if (member.getPartyId() == partyId) {
-                    member.getSummoned().forEach((id, summoned) -> consumer.accept(member, summoned));
+                    member.getSummoned().forEach((id, summonedList) -> {
+                        for (Summoned summoned : summonedList) {
+                            consumer.accept(member, summoned);
+                        }
+                    });
                 }
             });
         } else {
-            user.getSummoned().forEach((id, summoned) -> consumer.accept(user, summoned));
+            user.getSummoned().forEach((id, summonedList) -> {
+                for (Summoned summoned : summonedList) {
+                    consumer.accept(user, summoned);
+                }
+            });
         }
     }
 }

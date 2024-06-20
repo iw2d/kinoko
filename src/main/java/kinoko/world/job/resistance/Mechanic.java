@@ -11,6 +11,9 @@ import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
+import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedAssistType;
+import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
@@ -63,7 +66,7 @@ public final class Mechanic extends SkillProcessor {
     public static final int HEROS_WILL_MECH = 35121008;
     public static final int BOTS_N_TOTS = 35121009;
     public static final int AMPLIFIER_ROBOT_AF_11 = 35121010;
-    public static final int BOTS_N_TOTS_DUMMY = 35121011;
+    public static final int BOTS_N_TOTS_SUMMON = 35121011;
     public static final int LASER_BLAST = 35121012;
     public static final int MECH_SIEGE_MODE_2 = 35121013;
 
@@ -97,7 +100,6 @@ public final class Mechanic extends SkillProcessor {
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        System.out.println(skillId);
         switch (skillId) {
             // MECH
             case MECH_PROTOTYPE:
@@ -149,6 +151,18 @@ public final class Mechanic extends SkillProcessor {
                     user.getOpenGate().setSecondGate(secondGate);
                     field.broadcastPacket(FieldPacket.openGateCreated(user, secondGate, true));
                 }
+                return;
+            case SATELLITE:
+            case SATELLITE_2:
+            case SATELLITE_3:
+                // Client sends different skill IDs depending on satellite count
+                final Summoned satellite = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK_EX, Instant.MAX);
+                satellite.setPosition(field, skill.positionX, skill.positionY);
+                satellite.setId(SATELLITE);
+                user.addSummoned(satellite);
+                return;
+            case ROCK_N_SHOCK:
+                // TODO
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
