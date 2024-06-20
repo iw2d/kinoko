@@ -32,4 +32,22 @@ public enum SummonedActionType {
     public final int getValue() {
         return value;
     }
+
+    public static SummonedActionType getByValue(int value) {
+        for (SummonedActionType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    public static SummonedActionType getByName(String name) {
+        for (SummonedActionType type : values()) {
+            if (type.name().replace("_", "").equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

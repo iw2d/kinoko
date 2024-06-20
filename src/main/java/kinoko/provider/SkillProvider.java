@@ -9,6 +9,7 @@ import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.job.Job;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public final class SkillProvider implements WzProvider {
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
     private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
-    private static final Map<Integer, SummonedAttackInfo> summonedAttackInfos = new HashMap<>();
+    private static final Map<Integer, Map<SummonedActionType, SummonedAttackInfo>> summonedAttackInfos = new HashMap<>();
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
@@ -44,8 +45,8 @@ public final class SkillProvider implements WzProvider {
         return Optional.ofNullable(skillInfos.get(skillId));
     }
 
-    public static Optional<SummonedAttackInfo> getSummonedAttackInfo(int skillId) {
-        return Optional.ofNullable(summonedAttackInfos.get(skillId));
+    public static Optional<SummonedAttackInfo> getSummonedAttackInfo(int skillId, SummonedActionType actionType) {
+        return Optional.ofNullable(summonedAttackInfos.getOrDefault(skillId, Map.of()).get(actionType));
     }
 
     private static void loadSkillInfos(WzPackage source) throws ProviderError {
@@ -76,13 +77,20 @@ public final class SkillProvider implements WzProvider {
                 if (!(skillProp.get("summon") instanceof WzListProperty summonProp)) {
                     continue;
                 }
+                final Map<SummonedActionType, SummonedAttackInfo> attackInfos = new HashMap<>();
                 for (var summonEntry : summonProp.getItems().entrySet()) {
-                    if (!summonEntry.getKey().startsWith("attack") ||
-                            !(summonEntry.getValue() instanceof WzListProperty attackProp) ||
+                    if (!(summonEntry.getValue() instanceof WzListProperty attackProp) ||
                             !(attackProp.get("info") instanceof WzListProperty infoProp)) {
                         continue;
                     }
-                    summonedAttackInfos.put(skillId, SummonedAttackInfo.from(skillId, infoProp));
+                    final SummonedActionType actionType = SummonedActionType.getByName(summonEntry.getKey());
+                    if (actionType == null) {
+                        throw new ProviderError("Failed to resolve summoned action type %s", summonEntry.getKey());
+                    }
+                    attackInfos.put(actionType, SummonedAttackInfo.from(skillId, infoProp));
+                }
+                if (!attackInfos.isEmpty()) {
+                    summonedAttackInfos.put(skillId, attackInfos);
                 }
             }
         }

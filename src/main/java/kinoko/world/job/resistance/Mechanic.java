@@ -2,10 +2,12 @@ package kinoko.world.job.resistance;
 
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.ServerConfig;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
@@ -26,6 +28,7 @@ import kinoko.world.user.stat.TemporaryStatOption;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -141,7 +144,7 @@ public final class Mechanic extends SkillProcessor {
                 }
                 // Create gate
                 if (user.getOpenGate() == null) {
-                    final OpenGate firstGate = new OpenGate(user, true, Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+                    final OpenGate firstGate = new OpenGate(user, true, Instant.now().plus(getSummonDuration(user, si.getDuration(slv)), ChronoUnit.MILLIS));
                     firstGate.setPosition(field, skill.positionX, skill.positionY);
                     user.setOpenGate(firstGate);
                     field.broadcastPacket(FieldPacket.openGateCreated(user, firstGate, true));
@@ -158,11 +161,22 @@ public final class Mechanic extends SkillProcessor {
                 // Client sends different skill IDs depending on satellite count
                 final Summoned satellite = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK_EX, Instant.MAX);
                 satellite.setPosition(field, skill.positionX, skill.positionY);
-                satellite.setId(SATELLITE);
                 user.addSummoned(satellite);
                 return;
             case ROCK_N_SHOCK:
-                // TODO
+                // Create summoned
+                final Summoned rockAndShock = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(getSummonDuration(user, si.getDuration(slv)), ChronoUnit.MILLIS));
+                rockAndShock.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(rockAndShock);
+                final List<Summoned> rockAndShockList = user.getSummoned().getOrDefault(ROCK_N_SHOCK, List.of());
+                if (rockAndShockList.size() == 3) {
+                    // nTeslaCoilState = 2 - (bLeader != 0)
+                    for (int i = 0; i < 3; i++) {
+                        rockAndShockList.get(i).setTeslaCoilState(2 - (i == 0 ? 1 : 0));
+                    }
+                    field.broadcastPacket(UserPacket.userTeslaTriangle(user, rockAndShockList));
+                    user.setSkillCooltime(skillId, si.getValue(SkillStat.cooltime, slv));
+                }
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
@@ -186,5 +200,13 @@ public final class Mechanic extends SkillProcessor {
                 CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
                 CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
         ));
+    }
+
+    private static int getSummonDuration(User user, int duration) {
+        // Increased duration from Robot Mastery + tick interval for self-destruct
+        if (user.getSkillLevel(ROBOT_MASTERY) > 0) {
+            return duration + (user.getSkillStatValue(ROBOT_MASTERY, SkillStat.y) * 1000) + ServerConfig.FIELD_TICK_INTERVAL;
+        }
+        return duration + ServerConfig.FIELD_TICK_INTERVAL;
     }
 }

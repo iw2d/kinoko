@@ -36,10 +36,9 @@ public final class SummonedPacket {
             summoned.getAvatarLook().encode(outPacket); // AvatarLook::Decode
         }
         if (summoned.getSkillId() == Mechanic.ROCK_N_SHOCK) {
-            final List<Summoned> rockAndShockList = user.getSummoned().getOrDefault(Mechanic.ROCK_N_SHOCK, List.of());
-            outPacket.encodeByte(rockAndShockList.size() == 3 ? 1 : 0); // nTeslaCoilState == 1
-            if (rockAndShockList.size() == 3) {
-                for (Summoned rockAndShock : rockAndShockList) {
+            outPacket.encodeByte(summoned.getTeslaCoilState()); // nTeslaCoilState
+            if (summoned.getTeslaCoilState() == 1) {
+                for (Summoned rockAndShock : user.getSummoned().getOrDefault(Mechanic.ROCK_N_SHOCK, List.of())) {
                     outPacket.encodeShort(rockAndShock.getX());
                     outPacket.encodeShort(rockAndShock.getY());
                 }

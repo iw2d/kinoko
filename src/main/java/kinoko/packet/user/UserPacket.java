@@ -4,11 +4,14 @@ import kinoko.provider.map.FieldType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.dialog.miniroom.MiniGameRoom;
+import kinoko.world.field.summoned.Summoned;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Evan;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
+
+import java.util.List;
 
 public final class UserPacket {
     // CUserPool::OnPacket ---------------------------------------------------------------------------------------------
@@ -171,6 +174,15 @@ public final class UserPacket {
         outPacket.encodeInt(0); // nEnchantCategory
         outPacket.encodeByte(whiteScroll); // bWhiteScroll
         outPacket.encodeByte(false); // bRecoverable
+        return outPacket;
+    }
+
+    public static OutPacket userTeslaTriangle(User user, List<Summoned> rockAndShockList) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserTeslaTriangle);
+        outPacket.encodeInt(user.getCharacterId());
+        for (Summoned summoned : rockAndShockList) {
+            outPacket.encodeInt(summoned.getId());
+        }
         return outPacket;
     }
 }

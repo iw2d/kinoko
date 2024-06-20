@@ -329,7 +329,7 @@ public final class SkillHandler {
         user.addMp(-mpCon);
         // Set cooltime
         final int cooltime = si.getValue(SkillStat.cooltime, skill.slv);
-        if (skill.skillId != Pirate.BATTLESHIP && cooltime > 0) {
+        if (skill.skillId != Pirate.BATTLESHIP && skill.skillId != Mechanic.ROCK_N_SHOCK && cooltime > 0) {
             user.setSkillCooltime(skill.skillId, cooltime);
         }
 

@@ -509,7 +509,7 @@ public final class User extends Life implements Lockable<User> {
     public void addSummoned(Summoned summoned) {
         final int skillId = summoned.getSkillId();
         final List<Summoned> summonedList = getSummoned().computeIfAbsent(skillId, (key) -> new ArrayList<>());
-        if (SkillConstants.isSummonMultipleSkill(skillId) && !summonedList.isEmpty()) {
+        if (!SkillConstants.isSummonMultipleSkill(skillId) && !summonedList.isEmpty()) {
             for (Summoned existing : summonedList) {
                 existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
                 getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));

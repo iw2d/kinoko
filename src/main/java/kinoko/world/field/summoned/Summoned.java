@@ -26,6 +26,7 @@ public final class Summoned extends Life implements Lockable<Summoned> {
     private SummonedLeaveType leaveType = SummonedLeaveType.LEAVE_FIELD;
     private Rect rect;
     private int hp = 1;
+    private int teslaCoilState = 0;
 
     public Summoned(int skillId, int skillLevel, SummonedMoveAbility moveAbility, SummonedAssistType assistType, AvatarLook avatarLook, Instant expireTime) {
         this.skillId = skillId;
@@ -90,6 +91,14 @@ public final class Summoned extends Life implements Lockable<Summoned> {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public int getTeslaCoilState() {
+        return teslaCoilState;
+    }
+
+    public void setTeslaCoilState(int teslaCoilState) {
+        this.teslaCoilState = teslaCoilState;
     }
 
     public void setPosition(Field field, int x, int y) {

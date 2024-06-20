@@ -11,9 +11,9 @@ import kinoko.world.field.Field;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.job.explorer.Warrior;
-import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.*;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -64,11 +64,23 @@ public final class SummonedHandler {
 
         attack.actionAndDir = inPacket.decodeByte(); // nAction & 0x7F | (bLeft << 7)
 
+        final SummonedActionType actionType = SummonedActionType.getByValue(attack.actionAndDir & 0x7F);
+        if (actionType == null) {
+            log.error("Unknown summoned action type : {}", attack.actionAndDir & 0x7F);
+            return;
+        }
+
         inPacket.decodeInt(); // dwKey
         inPacket.decodeInt(); // Crc32
 
         final int mobCount = inPacket.decodeByte();
         attack.mask = (byte) (1 | (mobCount << 4)); // because we're reusing the Attack object
+
+        if (actionType == SummonedActionType.ATTACK_TRIANGLE) {
+            for (int j = 0; j < 3; j++) {
+                inPacket.decodeInt(); // padwTeslaFamily.p->a[j]
+            }
+        }
 
         attack.userX = inPacket.decodeShort();
         attack.userY = inPacket.decodeShort();
@@ -97,14 +109,14 @@ public final class SummonedHandler {
         inPacket.decodeInt(); // Crc
 
         // Check summoned attack info
-        final Optional<SummonedAttackInfo> summonedAttackInfoResult = SkillProvider.getSummonedAttackInfo(summoned.getSkillId());
+        final Optional<SummonedAttackInfo> summonedAttackInfoResult = SkillProvider.getSummonedAttackInfo(summoned.getSkillId(), actionType);
         if (summonedAttackInfoResult.isEmpty()) {
-            log.error("Failed to resolve summoned attack info for summoned with skill id : {}", summoned.getSkillId());
+            log.error("Failed to resolve summoned attack info for summoned with skill id : {}, action type : {}", summoned.getSkillId(), actionType);
             return;
         }
         final SummonedAttackInfo sai = summonedAttackInfoResult.get();
-        final int expectedMobCount = attack.skillId == WildHunter.ITS_RAINING_MINES_HIDDEN ? 3 : sai.getMobCount(); // uses mobCount from die
-        if (expectedMobCount < attack.getMobCount()) {
+        final int expectedMobCount = sai.getMobCount();
+        if (actionType != SummonedActionType.ATTACK_TRIANGLE && expectedMobCount < attack.getMobCount()) {
             log.error("Received SummonedAttack with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.getMobCount());
             return;
         }
@@ -112,6 +124,10 @@ public final class SummonedHandler {
         // Skill specific handling
         try (var locked = user.acquire()) {
             SkillProcessor.processAttack(locked, attack);
+
+            if (actionType == SummonedActionType.DIE) {
+                user.removeSummoned(summoned);
+            }
         }
 
         // Process attack damage
