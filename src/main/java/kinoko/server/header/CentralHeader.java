@@ -31,12 +31,12 @@ import java.util.Map;
  * Migration (from login server):
  *   CentralServerNode
  *      1 : create MigrationInfo, store in MigrationStorage
- *      2 : send SELECT_CHARACTER_RESULT to client (client connects to target channel server)
+ *      2 : send SelectCharacterResult to client (client connects to target channel server)
  *      5 : receive MigrateRequest from ChannelServerNode
  *      6 : remove MigrationInfo from MigrationStorage
  *      7 : reply to ChannelServerNode with MigrateResult
  *   ChannelServerNode (target)
- *      3 : receive MIGRATE_IN (channel server), send MigrateRequest to CentralServerNode
+ *      3 : receive MigrateIn (channel server), send MigrateRequest to CentralServerNode
  *      4 : block until MigrateResult received from CentralServerNode
  *      8 : perform migration, send UserConnect to central server
  *
@@ -44,7 +44,7 @@ import java.util.Map;
  *   ChannelServerNode (source)
  *      1 : send TransferRequest to CentralServerNode
  *      2 : block until TransferResult received
- *      6 : send MIGRATE_COMMAND to client (client connects to target channel server)
+ *      6 : send MigrateCommand to client (client connects to target channel server)
  *   CentralServerNode
  *      3 : receive TransferRequest from source ChannelServerNode
  *      4 : store received MigrationInfo in MigrationStorage
@@ -53,13 +53,13 @@ import java.util.Map;
  *     10 : remove MigrationInfo from MigrationStorage
  *     11 : reply to ChannelServerNode with MigrateResult and the removed MigrationInfo
  *   ChannelServerNode (target)
- *      7 : receive MIGRATE_IN (channel server), send MigrateRequest to CentralServerNode [same as migration step 3 onwards]
+ *      7 : receive MigrateIn (channel server), send MigrateRequest to CentralServerNode [same as migration step 3 onwards]
  *      8 : block until MigrateResult received from CentralServerNode
  *     12 : perform migration, send UserConnect to central server
  *
  * User tracking
  *   ChannelServerNode
- *      1 : receive MIGRATE_IN (channel server)
+ *      1 : receive MigrateIn (channel server)
  *      2 : send UserConnect to CentralServerNode
  *      4 : user in channel server requires updating (level, job, location)
  *      5 : send UserUpdate to CentralServerNode

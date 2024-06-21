@@ -136,7 +136,7 @@ public final class LoginHandler {
     @Handler(InHeader.CheckDuplicatedID)
     public static void handleCheckDuplicatedId(Client c, InPacket inPacket) {
         final String name = inPacket.decodeString();
-        // Validation done on client side, server side validation in NEW_CHAR handler
+        // Validation done on client side, server side validation in handleCreateNewCharacter
         if (DatabaseManager.characterAccessor().checkCharacterNameAvailable(name)) {
             c.write(LoginPacket.checkDuplicatedIdResult(name, 0)); // Success
         } else {

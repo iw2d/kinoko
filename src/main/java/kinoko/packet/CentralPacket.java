@@ -6,6 +6,9 @@ import kinoko.server.packet.OutPacket;
 
 import java.util.Set;
 
+/**
+ * See {@link CentralHeader} for more info.
+ */
 public final class CentralPacket {
     public static OutPacket initializeRequest() {
         return OutPacket.of(CentralHeader.InitializeRequest);
