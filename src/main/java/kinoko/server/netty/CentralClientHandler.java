@@ -72,7 +72,9 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     return;
                 }
                 // Write to target client
-                targetUserResult.get().write(OutPacket.of(packetData));
+                try (var locked = targetUserResult.get().acquire()) {
+                    locked.get().write(OutPacket.of(packetData));
+                }
             }
             case UserPacketBroadcast -> {
                 final int size = inPacket.decodeInt();
@@ -88,7 +90,9 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                     if (targetUserResult.isEmpty()) {
                         continue;
                     }
-                    targetUserResult.get().write(outPacket);
+                    try (var locked = targetUserResult.get().acquire()) {
+                        locked.get().write(outPacket);
+                    }
                 }
             }
             case UserQueryResult -> {

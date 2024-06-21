@@ -3,6 +3,7 @@ package kinoko.world.social.friend;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.world.FriendPacket;
 import kinoko.server.ServerConfig;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.node.RemoteUser;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
@@ -87,27 +88,29 @@ public final class FriendManager {
             final Optional<Friend> mutualFriendResult = fm.getFriend(self.getCharacterId());
             mutualFriendResult.ifPresent(mutualFriends::add);
         }
-        // Query mutual friends' status
-        final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(
-                mutualFriends.stream().map(Friend::getFriendName).collect(Collectors.toUnmodifiableSet())
-        );
-        try {
-            final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-            // Update friend data and update client
-            for (Friend friend : mutualFriends) {
-                final Optional<RemoteUser> userResult = queryResult.stream()
-                        .filter((remoteUser) -> remoteUser.getCharacterId() == friend.getFriendId())
-                        .findFirst();
-                if (userResult.isPresent()) {
-                    friend.setChannelId(userResult.get().getChannelId());
-                } else {
-                    friend.setChannelId(GameConstants.CHANNEL_OFFLINE);
+        EventScheduler.submit(() -> {
+            // Query mutual friends' status
+            final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(
+                    mutualFriends.stream().map(Friend::getFriendName).collect(Collectors.toUnmodifiableSet())
+            );
+            try {
+                final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                // Update friend data and update client
+                for (Friend friend : mutualFriends) {
+                    final Optional<RemoteUser> userResult = queryResult.stream()
+                            .filter((remoteUser) -> remoteUser.getCharacterId() == friend.getFriendId())
+                            .findFirst();
+                    if (userResult.isPresent()) {
+                        friend.setChannelId(userResult.get().getChannelId());
+                    } else {
+                        friend.setChannelId(GameConstants.CHANNEL_OFFLINE);
+                    }
                 }
+                user.write(FriendPacket.reset(resultType, fm.getRegisteredFriends()));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                log.error("Exception caught while waiting for user query result", e);
+                e.printStackTrace();
             }
-            user.write(FriendPacket.reset(resultType, fm.getRegisteredFriends()));
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            log.error("Exception caught while waiting for user query result", e);
-            e.printStackTrace();
-        }
+        });
     }
 }
