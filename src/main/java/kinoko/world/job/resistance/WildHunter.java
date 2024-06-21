@@ -117,7 +117,7 @@ public final class WildHunter extends SkillProcessor {
                 return;
             case ITS_RAINING_MINES_HIDDEN:
                 final Summoned mine = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK, Instant.now().plus(si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL, ChronoUnit.MILLIS));
-                mine.setPosition(field, skill.positionX, skill.positionY);
+                mine.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 mine.setLeaveType(SummonedLeaveType.SELF_DESTRUCT);
                 mine.setId(field.getNewObjectId());
                 user.addSummoned(mine);
@@ -152,7 +152,7 @@ public final class WildHunter extends SkillProcessor {
                 return;
             case WILD_TRAP:
                 final Summoned summoned = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
-                summoned.setPosition(field, skill.positionX, skill.positionY);
+                summoned.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 summoned.setHp(si.getValue(SkillStat.x, slv));
                 user.addSummoned(summoned);
                 return;
@@ -161,7 +161,7 @@ public final class WildHunter extends SkillProcessor {
                 return;
             case SILVER_HAWK:
                 final Summoned birb = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
-                birb.setPosition(field, skill.positionX, skill.positionY);
+                birb.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(birb);
                 return;
             case SHARP_EYES_WH:

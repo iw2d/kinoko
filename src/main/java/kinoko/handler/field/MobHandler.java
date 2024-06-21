@@ -159,7 +159,7 @@ public final class MobHandler {
             }
             mob.resetTemporaryStat(Set.of(MobTemporaryStat.TimeBomb));
             // Damage user if within range
-            if (SkillConstants.MONSTER_BOMB_RANGE.translate(mob.getX(), mob.getY()).isInsideRect(x, y)) {
+            if (mob.getRelativeRect(SkillConstants.MONSTER_BOMB_RANGE).isInsideRect(x, y)) {
                 try (var locked = user.acquire()) {
                     final int damage = (int) Math.min(CalcDamage.calcDamageMax(user), user.getHp() - 100);
                     user.addHp(-damage);

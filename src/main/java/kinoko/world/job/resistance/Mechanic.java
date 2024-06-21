@@ -11,6 +11,8 @@ import kinoko.server.ServerConfig;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
+import kinoko.world.field.affectedarea.AffectedArea;
+import kinoko.world.field.affectedarea.AffectedAreaType;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -135,6 +137,12 @@ public final class Mechanic extends SkillProcessor {
                     user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId, si.getDuration(slv), diceInfo));
                 }
                 return;
+            case SATELLITE_SAFETY:
+                user.setTemporaryStat(Map.of(
+                        CharacterTemporaryStat.SafetyDamage, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, 0),
+                        CharacterTemporaryStat.SafetyAbsorb, TemporaryStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0)
+                ));
+                return;
 
             // SUMMONS
             case OPEN_PORTAL_GX_9:
@@ -161,13 +169,13 @@ public final class Mechanic extends SkillProcessor {
             case SATELLITE_3:
                 // Client sends different skill IDs depending on satellite count
                 final Summoned satellite = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK_EX, Instant.MAX);
-                satellite.setPosition(field, skill.positionX, skill.positionY);
+                satellite.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(satellite);
                 return;
             case ROCK_N_SHOCK:
                 // Create summoned
                 final Summoned rockAndShock = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
-                rockAndShock.setPosition(field, skill.positionX, skill.positionY);
+                rockAndShock.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(rockAndShock);
                 // Check if triangle is complete
                 final List<Summoned> rockAndShockList = user.getSummoned().getOrDefault(ROCK_N_SHOCK, List.of());
@@ -183,7 +191,7 @@ public final class Mechanic extends SkillProcessor {
             case ACCELERATION_BOT_EX_7:
                 // Create summoned
                 final Summoned accelerationBot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
-                accelerationBot.setPosition(field, skill.positionX, skill.positionY);
+                accelerationBot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(accelerationBot);
                 // Initial effect
                 field.getMobPool().forEach((mob) -> {
@@ -209,7 +217,7 @@ public final class Mechanic extends SkillProcessor {
                 });
                 return;
             case HEALING_ROBOT_H_LX:
-                if (skill.fromSummon) {
+                if (skill.isSummonedSkill()) {
                     // Heal user when prone near summoned
                     final int healAmount = user.getMaxHp() * si.getValue(SkillStat.hp, slv) / 100;
                     user.addHp(healAmount);
@@ -218,10 +226,37 @@ public final class Mechanic extends SkillProcessor {
                 } else {
                     // Create summoned
                     final Summoned healingRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.HEAL, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
-                    healingRobot.setPosition(field, skill.positionX, skill.positionY);
+                    healingRobot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                     user.addSummoned(healingRobot);
                 }
-
+                return;
+            case GIANT_ROBOT_SG_88:
+                final Summoned giantRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK_MANUAL, Instant.MAX);
+                giantRobot.setPosition(field, skill.positionX, skill.positionY, false); // always facing right
+                user.addSummoned(giantRobot);
+                return;
+            case BOTS_N_TOTS:
+                if (skill.isSummonedSkill()) {
+                    // Create sub-summon
+                    final Summoned botsAndTotsSummon = Summoned.from(BOTS_N_TOTS_SUMMON, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, Instant.now().plus(getSummonDuration(user, 5000), ChronoUnit.MILLIS)); // 5 second base duration
+                    botsAndTotsSummon.setPosition(field, skill.summoned.getX(), skill.summoned.getY(), skill.summoned.isLeft());
+                    user.addSummoned(botsAndTotsSummon);
+                } else {
+                    // Create summoned
+                    final Summoned botsAndTots = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.SUMMON, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                    botsAndTots.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
+                    user.addSummoned(botsAndTots);
+                }
+                return;
+            case AMPLIFIER_ROBOT_AF_11:
+                // Create summoned
+                final Summoned amplifierRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                amplifierRobot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
+                amplifierRobot.setRect(si.getRect().translate(skill.positionX, skill.positionY));
+                user.addSummoned(amplifierRobot);
+                // Create affected area (Ar01AreaPAD/MAD)
+                final AffectedArea affectedArea = new AffectedArea(AffectedAreaType.UserSkill, user, skillId, slv, 0, 0, amplifierRobot.getRect(), si.getElemAttr(), amplifierRobot.getExpireTime());
+                field.getAffectedAreaPool().addAffectedArea(affectedArea);
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

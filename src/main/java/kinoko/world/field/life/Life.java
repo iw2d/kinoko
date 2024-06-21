@@ -27,6 +27,14 @@ public abstract class Life extends FieldObjectImpl {
         return (getMoveAction() & 1) != 0;
     }
 
+    public void setLeft(boolean left) {
+        if (left) {
+            setMoveAction(getMoveAction() | 1);
+        } else {
+            setMoveAction(getMoveAction() & ~1);
+        }
+    }
+
     public Rect getRelativeRect(Rect rect) {
         if (!isLeft()) {
             // Flip horizontally along x = 0

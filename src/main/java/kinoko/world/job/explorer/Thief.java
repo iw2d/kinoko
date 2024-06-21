@@ -216,7 +216,7 @@ public final class Thief extends SkillProcessor {
             case DARK_FLARE_NL:
             case DARK_FLARE_SHAD:
                 final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK_COUNTER);
-                darkFlare.setPosition(field, skill.positionX, skill.positionY);
+                darkFlare.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 darkFlare.setRect(SkillConstants.DARK_FLARE_RANGE.translate(skill.positionX, skill.positionY));
                 user.addSummoned(darkFlare);
                 return;
@@ -259,7 +259,7 @@ public final class Thief extends SkillProcessor {
                 return;
             case MIRRORED_TARGET:
                 final Summoned summoned = new Summoned(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
-                summoned.setPosition(field, skill.positionX, skill.positionY);
+                summoned.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 summoned.setHp(si.getValue(SkillStat.x, slv));
                 user.addSummoned(summoned);
                 user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ShadowPartner));

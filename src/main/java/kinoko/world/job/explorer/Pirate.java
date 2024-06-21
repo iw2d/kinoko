@@ -210,12 +210,12 @@ public final class Pirate extends SkillProcessor {
             case OCTOPUS:
             case WRATH_OF_THE_OCTOPI:
                 final Summoned octopus = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
-                octopus.setPosition(field, skill.positionX, skill.positionY);
+                octopus.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(octopus);
                 return;
             case GAVIOTA:
                 final Summoned gaviota = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
-                gaviota.setPosition(field, skill.positionX, skill.positionY);
+                gaviota.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(gaviota);
                 return;
             case BATTLESHIP:

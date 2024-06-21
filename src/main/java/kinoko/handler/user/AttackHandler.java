@@ -814,7 +814,7 @@ public final class AttackHandler {
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
             final Summoned summoned = Summoned.from(skillId, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, Instant.now().plus(si.getValue(SkillStat.x, slv), ChronoUnit.SECONDS));
-            summoned.setPosition(user.getField(), mob.getX(), mob.getY());
+            summoned.setPosition(user.getField(), mob.getX(), mob.getY(), mob.isLeft());
             user.addSummoned(summoned);
         }
     }

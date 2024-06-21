@@ -273,7 +273,7 @@ public final class Warrior extends SkillProcessor {
             case BEHOLDER:
                 final int beholderDuration = si.getValue(SkillStat.x, slv) * 60 * 1000; // x min
                 final Summoned beholder = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.HEAL, Instant.now().plus(beholderDuration, ChronoUnit.MILLIS));
-                beholder.setPosition(user.getField(), skill.positionX, skill.positionY);
+                beholder.setPosition(user.getField(), skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(beholder);
                 user.setTemporaryStat(CharacterTemporaryStat.Beholder, TemporaryStatOption.of(si.getValue(SkillStat.mastery, slv), skillId, beholderDuration));
                 return;

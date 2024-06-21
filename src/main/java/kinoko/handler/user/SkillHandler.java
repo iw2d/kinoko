@@ -16,7 +16,6 @@ import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.item.*;
 import kinoko.world.job.explorer.Magician;
-import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Evan;
@@ -292,6 +291,7 @@ public final class SkillHandler {
             }
             user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ComboAbilityBuff));
         }
+
         // Item / Bullet consume are mutually exclusive
         final int itemCon = si.getValue(SkillStat.itemCon, skill.slv);
         if (itemCon > 0) {
@@ -324,12 +324,14 @@ public final class SkillHandler {
             bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCon));
             user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, position, bulletItem.getQuantity()), true));
         }
+
         // Consume hp/mp
         user.addHp(-hpCon);
         user.addMp(-mpCon);
+
         // Set cooltime
         final int cooltime = si.getValue(SkillStat.cooltime, skill.slv);
-        if (skill.skillId != Pirate.BATTLESHIP && skill.skillId != Mechanic.ROCK_N_SHOCK && cooltime > 0) {
+        if (!SkillConstants.isNoCooltimeSkill(skill.skillId) && cooltime > 0) {
             user.setSkillCooltime(skill.skillId, cooltime);
         }
 

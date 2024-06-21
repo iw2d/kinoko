@@ -101,10 +101,11 @@ public final class Summoned extends Life implements Lockable<Summoned> {
         this.teslaCoilState = teslaCoilState;
     }
 
-    public void setPosition(Field field, int x, int y) {
+    public void setPosition(Field field, int x, int y, boolean left) {
         setField(field);
         setX(x);
         setY(y);
+        setLeft(left);
         setFoothold(field.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
     }
 

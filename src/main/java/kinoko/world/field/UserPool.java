@@ -73,7 +73,7 @@ public final class UserPool extends FieldObjectPool<User> {
         // Add user summoned
         for (List<Summoned> summonedList : user.getSummoned().values()) {
             for (Summoned summoned : summonedList) {
-                summoned.setPosition(field, user.getX(), user.getY());
+                summoned.setPosition(field, user.getX(), user.getY(), user.isLeft());
                 field.getSummonedPool().addSummoned(user, summoned);
             }
         }

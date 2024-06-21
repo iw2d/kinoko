@@ -242,7 +242,7 @@ public final class Magician extends SkillProcessor {
                 return;
             case SUMMON_DRAGON:
                 final Summoned dragon = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
-                dragon.setPosition(user.getField(), skill.positionX, skill.positionY);
+                dragon.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(dragon);
                 return;
             case MYSTIC_DOOR:

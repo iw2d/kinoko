@@ -2,6 +2,7 @@ package kinoko.world.skill;
 
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.field.summoned.Summoned;
 import kinoko.world.user.User;
 
 import java.util.Arrays;
@@ -34,7 +35,11 @@ public final class Skill {
     public int keyDown;
 
     // SummonedSkill
-    public boolean fromSummon;
+    public Summoned summoned;
+
+    public boolean isSummonedSkill() {
+        return summoned != null;
+    }
 
     public int getAffectedMemberCount() {
         if (affectedMemberBitMap == Byte.MIN_VALUE) {

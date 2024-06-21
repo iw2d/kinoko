@@ -137,7 +137,7 @@ public final class Bowman extends SkillProcessor {
             case PHOENIX:
             case FROSTPREY:
                 final Summoned birb = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
-                birb.setPosition(field, skill.positionX, skill.positionY);
+                birb.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(birb);
                 return;
             case CONCENTRATE:

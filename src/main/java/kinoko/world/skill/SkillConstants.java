@@ -235,6 +235,19 @@ public final class SkillConstants {
             case BattleMage.TWISTER_SPIN:
             case Mechanic.MECH_SIEGE_MODE:
             case Mechanic.MECH_MISSILE_TANK:
+            case Mechanic.GIANT_ROBOT_SG_88:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isNoCooltimeSkill(int skillId) {
+        // Cooltime for these skills require special handling
+        switch (skillId) {
+            case Pirate.BATTLESHIP:
+            case Mechanic.ROCK_N_SHOCK:
+            case Mechanic.SATELLITE_SAFETY:
                 return true;
             default:
                 return false;

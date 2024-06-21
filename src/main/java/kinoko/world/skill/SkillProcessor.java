@@ -94,7 +94,7 @@ public abstract class SkillProcessor {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
                     }
                 });
-                break;
+                return;
             case Thief.DISORDER:
             case NightWalker.DISORDER:
                 attack.forEachMob(field, (mob) -> {
@@ -268,9 +268,9 @@ public abstract class SkillProcessor {
             case WindArcher.STORM:
             case NightWalker.DARKNESS:
             case ThunderBreaker.LIGHTNING:
-                final Summoned walkSummoned = Summoned.from(si, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK);
-                walkSummoned.setPosition(field, skill.positionX, skill.positionY);
-                user.addSummoned(walkSummoned);
+                final Summoned summoned = Summoned.from(si, slv, SummonedMoveAbility.WALK, SummonedAssistType.ATTACK);
+                summoned.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
+                user.addSummoned(summoned);
                 return;
             case Bowman.FOCUS:
             case WindArcher.FOCUS:
@@ -290,7 +290,7 @@ public abstract class SkillProcessor {
             case WindArcher.PUPPET:
                 final Summoned puppet = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE);
                 puppet.setHp(si.getValue(SkillStat.x, slv));
-                puppet.setPosition(field, skill.positionX, skill.positionY);
+                puppet.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(puppet);
                 return;
             case Thief.DARK_SIGHT:
@@ -611,7 +611,7 @@ public abstract class SkillProcessor {
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            final Rect rect = si.getRect().translate(user.getX(), user.getY());
+            final Rect rect = user.getRelativeRect(si.getRect());
             final int x = (cts == CharacterTemporaryStat.DarkAura ? si.getValue(SkillStat.x, slv) : slv);
             // Apply aura buff to self
             if (!user.getSecondaryStat().hasOption(cts)) {
