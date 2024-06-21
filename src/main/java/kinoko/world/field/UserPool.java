@@ -11,7 +11,6 @@ import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.job.resistance.BattleMage;
-import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
@@ -74,9 +73,8 @@ public final class UserPool extends FieldObjectPool<User> {
         // Add user summoned
         for (List<Summoned> summonedList : user.getSummoned().values()) {
             for (Summoned summoned : summonedList) {
-                summoned.setId(field.getNewObjectId());
                 summoned.setPosition(field, user.getX(), user.getY());
-                broadcastPacket(SummonedPacket.summonedEnterField(user, summoned));
+                field.getSummonedPool().addSummoned(user, summoned);
             }
         }
 
@@ -155,16 +153,14 @@ public final class UserPool extends FieldObjectPool<User> {
         final var iter = user.getSummoned().entrySet().iterator();
         while (iter.hasNext()) {
             final var entry = iter.next(); // Skill ID, List<Summoned>
-            if (SkillConstants.isSummonMigrateSkill(entry.getKey())) {
-                continue;
-            }
+            // Remove from pool
             for (Summoned summoned : entry.getValue()) {
-                if (summoned.getSkillId() == Mechanic.ACCELERATION_BOT_EX_7) {
-                    Mechanic.handleRemoveAccelerationBot(summoned);
-                }
-                broadcastPacket(SummonedPacket.summonedLeaveField(user, summoned));
+                field.getSummonedPool().removeSummoned(user, summoned);
             }
-            iter.remove();
+            // Remove from user
+            if (!SkillConstants.isSummonMigrateSkill(entry.getKey())) {
+                iter.remove();
+            }
         }
 
         // Remove affected areas

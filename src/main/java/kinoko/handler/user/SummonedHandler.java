@@ -30,7 +30,7 @@ public final class SummonedHandler {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
         // Resolve summoned
-        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
+        final Optional<Summoned> summonedResult = user.getField().getSummonedPool().getById(summonedId);
         if (summonedResult.isEmpty()) {
             log.error("Received SummonedMove for invalid object with ID : {}", summonedId);
             return;
@@ -47,7 +47,7 @@ public final class SummonedHandler {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
         // Resolve summoned
-        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
+        final Optional<Summoned> summonedResult = user.getField().getSummonedPool().getById(summonedId);
         if (summonedResult.isEmpty()) {
             log.error("Received SummonedAttack for invalid object with ID : {}", summonedId);
             return;
@@ -152,7 +152,7 @@ public final class SummonedHandler {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
         // Resolve summoned
-        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
+        final Optional<Summoned> summonedResult = user.getField().getSummonedPool().getById(summonedId);
         if (summonedResult.isEmpty()) {
             log.error("Received SummonedHit for invalid object with ID : {}", summonedId);
             return;
@@ -182,7 +182,7 @@ public final class SummonedHandler {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
 
         // Resolve summoned
-        final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
+        final Optional<Summoned> summonedResult = user.getField().getSummonedPool().getById(summonedId);
         if (summonedResult.isEmpty()) {
             log.error("Received SummonedSkill for invalid object with ID : {}", summonedId);
             return;

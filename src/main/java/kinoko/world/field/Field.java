@@ -47,6 +47,7 @@ public final class Field {
     private final NpcPool npcPool;
     private final DropPool dropPool;
     private final ReactorPool reactorPool;
+    private final SummonedPool summonedPool;
     private final MiniRoomPool miniRoomPool;
     private final TownPortalPool townPortalPool;
     private final AffectedAreaPool affectedAreaPool;
@@ -67,6 +68,7 @@ public final class Field {
         this.npcPool = new NpcPool(this);
         this.dropPool = new DropPool(this);
         this.reactorPool = new ReactorPool(this);
+        this.summonedPool = new SummonedPool(this);
         this.miniRoomPool = new MiniRoomPool(this);
         this.townPortalPool = new TownPortalPool(this);
         this.affectedAreaPool = new AffectedAreaPool(this);
@@ -163,6 +165,10 @@ public final class Field {
 
     public ReactorPool getReactorPool() {
         return reactorPool;
+    }
+
+    public SummonedPool getSummonedPool() {
+        return summonedPool;
     }
 
     public MiniRoomPool getMiniRoomPool() {

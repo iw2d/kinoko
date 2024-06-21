@@ -371,7 +371,7 @@ public final class HitHandler {
             return;
         }
         // Resolve summoned
-        final Optional<Summoned> summonedResult = user.getSummonedById(Warrior.BEHOLDER);
+        final Optional<Summoned> summonedResult = user.getSummonedBySkillId(Warrior.BEHOLDER);
         if (summonedResult.isEmpty()) {
             return;
         }

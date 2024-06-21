@@ -1,7 +1,6 @@
 package kinoko.world.user;
 
 import kinoko.packet.stage.StagePacket;
-import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.FriendPacket;
@@ -22,11 +21,9 @@ import kinoko.world.field.OpenGate;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.summoned.Summoned;
-import kinoko.world.field.summoned.SummonedEnterType;
 import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
-import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
@@ -513,17 +510,12 @@ public final class User extends Life implements Lockable<User> {
         if (!SkillConstants.isSummonMultipleSkill(skillId) && !summonedList.isEmpty()) {
             for (Summoned existing : summonedList) {
                 existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
-                if (summoned.getSkillId() == Mechanic.ACCELERATION_BOT_EX_7) {
-                    Mechanic.handleRemoveAccelerationBot(summoned);
-                }
-                getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
+                getField().getSummonedPool().removeSummoned(this, existing);
             }
             summonedList.clear();
         }
         summonedList.add(summoned);
-        summoned.setId(getField().getNewObjectId());
-        getField().broadcastPacket(SummonedPacket.summonedEnterField(this, summoned));
-        summoned.setEnterType(SummonedEnterType.DEFAULT);
+        getField().getSummonedPool().addSummoned(this, summoned);
     }
 
     public void removeSummoned(Summoned summoned) {
@@ -536,10 +528,7 @@ public final class User extends Life implements Lockable<User> {
             final List<Summoned> summonedList = iter.next();
             summonedList.removeIf((summoned) -> {
                 if (predicate.test(summoned)) {
-                    if (summoned.getSkillId() == Mechanic.ACCELERATION_BOT_EX_7) {
-                        Mechanic.handleRemoveAccelerationBot(summoned);
-                    }
-                    getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, summoned));
+                    getField().getSummonedPool().removeSummoned(this, summoned);
                     return true;
                 }
                 return false;
@@ -550,15 +539,12 @@ public final class User extends Life implements Lockable<User> {
         }
     }
 
-    public Optional<Summoned> getSummonedById(int summonedId) {
-        for (List<Summoned> summonedList : getSummoned().values()) {
-            for (Summoned summoned : summonedList) {
-                if (summoned.getId() == summonedId) {
-                    return Optional.of(summoned);
-                }
-            }
+    public Optional<Summoned> getSummonedBySkillId(int skillId) {
+        final List<Summoned> summonedList = getSummoned().getOrDefault(skillId, List.of());
+        if (summonedList.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return Optional.of(summonedList.getFirst());
     }
 
 
