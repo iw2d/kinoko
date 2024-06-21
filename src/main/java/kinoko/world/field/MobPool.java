@@ -3,12 +3,14 @@ package kinoko.world.field;
 import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
+import kinoko.util.BitFlag;
 import kinoko.util.Rect;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.*;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Consumer;
 
 public final class MobPool extends FieldObjectPool<Mob> {
     private final Set<MobSpawnPoint> mobSpawnPoints;
@@ -64,8 +66,9 @@ public final class MobPool extends FieldObjectPool<Mob> {
                     mob.getMobStat().getTemporaryStats().remove(MobTemporaryStat.Burned);
                     resetStats.add(MobTemporaryStat.Burned);
                 }
-                if (!resetStats.isEmpty()) {
-                    field.broadcastPacket(MobPacket.mobStatReset(mob, resetStats, resetBurnedInfos));
+                final BitFlag<MobTemporaryStat> flag = BitFlag.from(resetStats, MobTemporaryStat.FLAG_SIZE);
+                if (!flag.isEmpty()) {
+                    field.broadcastPacket(MobPacket.mobStatReset(mob, flag, resetBurnedInfos));
                 }
                 // Try recovering hp/mp
                 mob.recovery(now);
@@ -92,6 +95,11 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 continue;
             }
             final Mob mob = spawnMobResult.get();
+            // Apply modifiers
+            for (Consumer<Mob> consumer : field.getMobSpawnModifiers().values()) {
+                consumer.accept(mob);
+            }
+            // Add mob to pool
             addMob(mob);
             mob.setAppearType(MobAppearType.NORMAL);
         }

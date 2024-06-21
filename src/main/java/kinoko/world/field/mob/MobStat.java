@@ -7,7 +7,6 @@ import kinoko.util.Tuple;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 public final class MobStat {
     private final Map<MobTemporaryStat, MobStatOption> temporaryStats = new EnumMap<>(MobTemporaryStat.class);
@@ -61,54 +60,38 @@ public final class MobStat {
         return resetStats;
     }
 
-    public static void encode(OutPacket outPacket, MobStat ms) {
-        final Map<MobTemporaryStat, MobStatOption> stats = ms.getTemporaryStats();
-        final Set<BurnedInfo> burnedInfos = ms.getBurnedInfos().values().stream().collect(Collectors.toUnmodifiableSet());
-        encode(outPacket, stats, burnedInfos);
+    public void encodeTemporary(OutPacket outPacket) {
+        final BitFlag<MobTemporaryStat> flag = BitFlag.from(temporaryStats.keySet(), MobTemporaryStat.FLAG_SIZE);
+        encodeTemporary(flag, outPacket);
     }
 
-    public static void encode(OutPacket outPacket, Map<MobTemporaryStat, MobStatOption> setStats, Set<BurnedInfo> setBurnedInfos) {
+    public void encodeTemporary(BitFlag<MobTemporaryStat> flag, OutPacket outPacket) {
         // CMob::SetTemporaryStat
-        final BitFlag<MobTemporaryStat> statFlag = BitFlag.from(setStats.keySet(), MobTemporaryStat.FLAG_SIZE);
-        statFlag.encode(outPacket); // uFlag
+        flag.encode(outPacket); // uFlag
 
         // MobStat::DecodeTemporary
         for (MobTemporaryStat mts : MobTemporaryStat.ENCODE_ORDER) {
-            if (statFlag.hasFlag(mts)) {
-                setStats.get(mts).encode(outPacket);
+            if (flag.hasFlag(mts)) {
+                getOption(mts).encode(outPacket);
             }
         }
-        if (statFlag.hasFlag(MobTemporaryStat.Burned)) {
-            outPacket.encodeInt(setBurnedInfos.size()); // uCount;
-            for (BurnedInfo burnedInfo : setBurnedInfos) {
+        if (flag.hasFlag(MobTemporaryStat.Burned)) {
+            outPacket.encodeInt(burnedInfos.size()); // uCount;
+            for (BurnedInfo burnedInfo : burnedInfos.values()) {
                 burnedInfo.encode(outPacket);
             }
         }
-        if (statFlag.hasFlag(MobTemporaryStat.PCounter)) {
+        if (flag.hasFlag(MobTemporaryStat.PCounter)) {
             outPacket.encodeInt(0); // wPCounter
             outPacket.encodeInt(100); // nCounterProb
         }
-        if (statFlag.hasFlag(MobTemporaryStat.PCounter)) {
+        if (flag.hasFlag(MobTemporaryStat.PCounter)) {
             outPacket.encodeInt(0); // wMCounter
             outPacket.encodeInt(100); // nCounterProb
         }
-        if (statFlag.hasFlag(MobTemporaryStat.Disable)) {
+        if (flag.hasFlag(MobTemporaryStat.Disable)) {
             outPacket.encodeByte(true); // bInvincible
             outPacket.encodeByte(false); // bDisable
-        }
-    }
-
-    public static void encodeReset(OutPacket outPacket, Set<MobTemporaryStat> resetStats, Set<BurnedInfo> resetBurnedInfos) {
-        final BitFlag<MobTemporaryStat> statFlag = BitFlag.from(resetStats, MobTemporaryStat.FLAG_SIZE);
-        statFlag.encode(outPacket); // uFlagReset
-
-        // MobStat::Reset
-        if (statFlag.hasFlag(MobTemporaryStat.Burned)) {
-            outPacket.encodeInt(resetBurnedInfos.size());
-            for (BurnedInfo burnedInfo : resetBurnedInfos) {
-                outPacket.encodeInt(burnedInfo.getCharacterId()); // dwCharacterID
-                outPacket.encodeInt(burnedInfo.getSkillId()); // nSkillID
-            }
         }
     }
 }

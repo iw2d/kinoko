@@ -102,6 +102,7 @@ public final class Mechanic extends SkillProcessor {
         final int skillId = skill.skillId;
         final int slv = skill.slv;
 
+        final int summonDuration = getSummonDuration(user, si.getDuration(slv));
         final Field field = user.getField();
         switch (skillId) {
             // MECH
@@ -144,7 +145,7 @@ public final class Mechanic extends SkillProcessor {
                 }
                 // Create gate
                 if (user.getOpenGate() == null) {
-                    final OpenGate firstGate = new OpenGate(user, true, Instant.now().plus(getSummonDuration(user, si.getDuration(slv)), ChronoUnit.MILLIS));
+                    final OpenGate firstGate = new OpenGate(user, true, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
                     firstGate.setPosition(field, skill.positionX, skill.positionY);
                     user.setOpenGate(firstGate);
                     field.broadcastPacket(FieldPacket.openGateCreated(user, firstGate, true));
@@ -165,9 +166,10 @@ public final class Mechanic extends SkillProcessor {
                 return;
             case ROCK_N_SHOCK:
                 // Create summoned
-                final Summoned rockAndShock = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(getSummonDuration(user, si.getDuration(slv)), ChronoUnit.MILLIS));
+                final Summoned rockAndShock = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
                 rockAndShock.setPosition(field, skill.positionX, skill.positionY);
                 user.addSummoned(rockAndShock);
+                // Check if triangle is complete
                 final List<Summoned> rockAndShockList = user.getSummoned().getOrDefault(ROCK_N_SHOCK, List.of());
                 if (rockAndShockList.size() == 3) {
                     // nTeslaCoilState = 2 - (bLeader != 0)
@@ -177,6 +179,49 @@ public final class Mechanic extends SkillProcessor {
                     field.broadcastPacket(UserPacket.userTeslaTriangle(user, rockAndShockList));
                     user.setSkillCooltime(skillId, si.getValue(SkillStat.cooltime, slv));
                 }
+                return;
+            case ACCELERATION_BOT_EX_7:
+                // Create summoned
+                final Summoned accelerationBot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                accelerationBot.setPosition(field, skill.positionX, skill.positionY);
+                user.addSummoned(accelerationBot);
+                // Initial effect
+                field.getMobPool().forEach((mob) -> {
+                    try (var lockedMob = mob.acquire()) {
+                        if (!mob.isBoss()) {
+                            mob.setTemporaryStat(Map.of(
+                                    MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 0),
+                                    MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0),
+                                    MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0)
+                            ));
+                        }
+                    }
+                });
+                // Set spawn modifier
+                field.getMobSpawnModifiers().put(accelerationBot.getId(), (mob) -> {
+                    if (!mob.isBoss()) {
+                        mob.getMobStat().getTemporaryStats().putAll(Map.of(
+                                MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 0),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0),
+                                MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0)
+                        ));
+                    }
+                });
+                return;
+            case HEALING_ROBOT_H_LX:
+                if (skill.fromSummon) {
+                    // Heal user when prone near summoned
+                    final int healAmount = user.getMaxHp() * si.getValue(SkillStat.hp, slv) / 100;
+                    user.addHp(healAmount);
+                    user.write(UserLocal.effect(Effect.incDecHpEffect(healAmount)));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(healAmount)), user);
+                } else {
+                    // Create summoned
+                    final Summoned healingRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.HEAL, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                    healingRobot.setPosition(field, skill.positionX, skill.positionY);
+                    user.addSummoned(healingRobot);
+                }
+
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
@@ -200,6 +245,17 @@ public final class Mechanic extends SkillProcessor {
                 CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, 0),
                 CharacterTemporaryStat.EMDD, TemporaryStatOption.of(si.getValue(SkillStat.emdd, slv), skillId, 0)
         ));
+    }
+
+    public static void handleRemoveAccelerationBot(Summoned summoned) {
+        summoned.getField().getMobSpawnModifiers().remove(summoned.getId());
+        summoned.getField().getMobPool().forEach((mob) -> {
+            try (var lockedMob = mob.acquire()) {
+                if (!mob.isBoss()) {
+                    mob.resetTemporaryStat(summoned.getSkillId());
+                }
+            }
+        });
     }
 
     private static int getSummonDuration(User user, int duration) {

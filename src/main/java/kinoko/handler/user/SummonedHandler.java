@@ -184,20 +184,25 @@ public final class SummonedHandler {
         // Resolve summoned
         final Optional<Summoned> summonedResult = user.getSummonedById(summonedId);
         if (summonedResult.isEmpty()) {
-            log.error("Received SummonedAttack for invalid object with ID : {}", summonedId);
+            log.error("Received SummonedSkill for invalid object with ID : {}", summonedId);
             return;
         }
         final Summoned summoned = summonedResult.get();
 
         final Skill skill = new Skill();
         skill.skillId = inPacket.decodeInt(); // nSkillID
-        skill.slv = user.getSkillLevel(skill.skillId);
-
         final byte actionAndDir = inPacket.decodeByte(); // (nMoveAction << 7) | (nAttackAction & 0x7F)
-
         if (skill.skillId == Warrior.HEX_OF_THE_BEHOLDER) {
             skill.summonBuffType = inPacket.decodeByte();
         }
+
+        // Resolve skill level
+        if (skill.skillId == summoned.getSkillId()) {
+            skill.slv = summoned.getSkillLevel();
+        } else {
+            skill.slv = user.getSkillLevel(skill.skillId);
+        }
+        skill.fromSummon = true;
 
         // Skill specific handling
         try (var locked = user.acquire()) {

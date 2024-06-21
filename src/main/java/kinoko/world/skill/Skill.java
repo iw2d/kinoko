@@ -33,6 +33,9 @@ public final class Skill {
     // UserThrowGrenade
     public int keyDown;
 
+    // SummonedSkill
+    public boolean fromSummon;
+
     public int getAffectedMemberCount() {
         if (affectedMemberBitMap == Byte.MIN_VALUE) {
             return 1;

@@ -17,10 +17,7 @@ import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Encodable;
-import kinoko.util.Lockable;
-import kinoko.util.Tuple;
-import kinoko.util.Util;
+import kinoko.util.*;
 import kinoko.world.GameConstants;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.field.drop.Drop;
@@ -41,7 +38,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
+import java.util.function.BiPredicate;
 
 public final class Mob extends Life implements ControlledObject, Encodable, Lockable<Mob> {
     private final Lock lock = new ReentrantLock();
@@ -271,7 +268,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         for (var entry : setStats.entrySet()) {
             getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
-        getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, Set.of()));
+        final BitFlag<MobTemporaryStat> flag = BitFlag.from(setStats.keySet(), MobTemporaryStat.FLAG_SIZE);
+        if (!flag.isEmpty()) {
+            getField().broadcastPacket(MobPacket.mobStatSet(this, getMobStat(), flag));
+        }
     }
 
     public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats, BurnedInfo burnedInfo) {
@@ -281,13 +281,26 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
         getMobStat().addBurnedInfo(burnedInfo);
-        final Set<BurnedInfo> burnedInfos = getMobStat().getBurnedInfos().values().stream().collect(Collectors.toUnmodifiableSet());
-        getField().broadcastPacket(MobPacket.mobStatSet(this, setStats, burnedInfos));
+        final BitFlag<MobTemporaryStat> flag = BitFlag.from(setStats.keySet(), MobTemporaryStat.FLAG_SIZE);
+        if (!flag.isEmpty()) {
+            getField().broadcastPacket(MobPacket.mobStatSet(this, getMobStat(), flag));
+        }
+    }
+
+    public void resetTemporaryStat(int skillId) {
+        resetTemporaryStat((mts, option) -> option.rOption == skillId);
     }
 
     public void resetTemporaryStat(Set<MobTemporaryStat> stats) {
-        final Set<MobTemporaryStat> resetStats = getMobStat().resetTemporaryStat((mts, option) -> stats.contains(mts));
-        getField().broadcastPacket(MobPacket.mobStatReset(this, resetStats, Set.of()));
+        resetTemporaryStat((mts, option) -> stats.contains(mts));
+    }
+
+    public void resetTemporaryStat(BiPredicate<MobTemporaryStat, MobStatOption> predicate) {
+        final Set<MobTemporaryStat> resetStats = getMobStat().resetTemporaryStat(predicate);
+        final BitFlag<MobTemporaryStat> flag = BitFlag.from(resetStats, MobTemporaryStat.FLAG_SIZE);
+        if (!flag.isEmpty()) {
+            getField().broadcastPacket(MobPacket.mobStatReset(this, flag, Set.of()));
+        }
     }
 
     public void burn(int attackerId, int burnDamage) {

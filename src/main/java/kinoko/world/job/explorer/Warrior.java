@@ -205,7 +205,7 @@ public final class Warrior extends SkillProcessor {
                 final int hpRecovery = user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100;
                 user.addHp(hpRecovery);
                 user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
-                user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
+                field.broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
                 return;
             case COMBAT_ORDERS:
                 user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
@@ -243,7 +243,7 @@ public final class Warrior extends SkillProcessor {
                 final int healAmount = si.getValue(SkillStat.hp, slv);
                 user.addHp(healAmount);
                 user.write(UserLocal.effect(Effect.incDecHpEffect(healAmount)));
-                user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(healAmount)), user);
+                field.broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(healAmount)), user);
                 handleBeholderEffect(user);
                 return;
             case HEX_OF_THE_BEHOLDER:

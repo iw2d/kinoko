@@ -26,6 +26,7 @@ import kinoko.world.field.summoned.SummonedEnterType;
 import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
+import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
@@ -512,6 +513,9 @@ public final class User extends Life implements Lockable<User> {
         if (!SkillConstants.isSummonMultipleSkill(skillId) && !summonedList.isEmpty()) {
             for (Summoned existing : summonedList) {
                 existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
+                if (summoned.getSkillId() == Mechanic.ACCELERATION_BOT_EX_7) {
+                    Mechanic.handleRemoveAccelerationBot(summoned);
+                }
                 getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, existing));
             }
             summonedList.clear();
@@ -532,6 +536,9 @@ public final class User extends Life implements Lockable<User> {
             final List<Summoned> summonedList = iter.next();
             summonedList.removeIf((summoned) -> {
                 if (predicate.test(summoned)) {
+                    if (summoned.getSkillId() == Mechanic.ACCELERATION_BOT_EX_7) {
+                        Mechanic.handleRemoveAccelerationBot(summoned);
+                    }
                     getField().broadcastPacket(SummonedPacket.summonedLeaveField(this, summoned));
                     return true;
                 }

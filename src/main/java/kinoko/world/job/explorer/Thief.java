@@ -250,7 +250,7 @@ public final class Thief extends SkillProcessor {
                 return;
             case SMOKESCREEN:
                 final AffectedArea affectedArea = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, 0, skill.positionX, skill.positionY);
-                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
+                field.getAffectedAreaPool().addAffectedArea(affectedArea);
                 return;
 
             // DB

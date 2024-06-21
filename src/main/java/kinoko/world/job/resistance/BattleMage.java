@@ -144,7 +144,7 @@ public final class BattleMage extends SkillProcessor {
                 return;
             case PARTY_SHIELD:
                 final AffectedArea affectedArea = AffectedArea.from(AffectedAreaType.Smoke, user, si, slv, 0, 0, skill.positionX, skill.positionY);
-                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
+                field.getAffectedAreaPool().addAffectedArea(affectedArea);
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

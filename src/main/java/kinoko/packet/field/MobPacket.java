@@ -2,10 +2,10 @@ package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.BitFlag;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.*;
 
-import java.util.Map;
 import java.util.Set;
 
 public final class MobPacket {
@@ -16,7 +16,7 @@ public final class MobPacket {
         outPacket.encodeInt(mob.getId()); // dwMobId
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
-        MobStat.encode(outPacket, mob.getMobStat());
+        mob.getMobStat().encodeTemporary(outPacket);
         mob.encode(outPacket);
         return outPacket;
     }
@@ -39,7 +39,7 @@ public final class MobPacket {
             outPacket.encodeByte(1); // nCalcDamageIndex
             // CMobPool::SetLocalMob
             outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
-            MobStat.encode(outPacket, mob.getMobStat());
+            mob.getMobStat().encodeTemporary(outPacket);
             mob.encode(outPacket);
         }
         return outPacket;
@@ -90,21 +90,28 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobStatSet(Mob mob, Map<MobTemporaryStat, MobStatOption> setStats, Set<BurnedInfo> setBurnedInfos) {
+    public static OutPacket mobStatSet(Mob mob, MobStat mobStat, BitFlag<MobTemporaryStat> flag) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobStatSet);
         outPacket.encodeInt(mob.getId()); // dwMobId
         // CMob::ProcessStatSet
-        MobStat.encode(outPacket, setStats, setBurnedInfos);
+        mobStat.encodeTemporary(flag, outPacket);
         outPacket.encodeShort(0); // tDelay
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat || bDoomReservedSN
         return outPacket;
     }
 
-    public static OutPacket mobStatReset(Mob mob, Set<MobTemporaryStat> resetStats, Set<BurnedInfo> resetBurnedInfos) {
+    public static OutPacket mobStatReset(Mob mob, BitFlag<MobTemporaryStat> flag, Set<BurnedInfo> resetBurnedInfos) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobStatReset);
         outPacket.encodeInt(mob.getId()); // dwMobId
-        MobStat.encodeReset(outPacket, resetStats, resetBurnedInfos);
+        flag.encode(outPacket); // uFlagReset
+        if (flag.hasFlag(MobTemporaryStat.Burned)) {
+            outPacket.encodeInt(resetBurnedInfos.size());
+            for (BurnedInfo burnedInfo : resetBurnedInfos) {
+                outPacket.encodeInt(burnedInfo.getCharacterId()); // dwCharacterID
+                outPacket.encodeInt(burnedInfo.getSkillId()); // nSkillID
+            }
+        }
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat
         return outPacket;

@@ -14,6 +14,7 @@ import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.miniroom.MiniGameRoom;
 import kinoko.world.dialog.miniroom.TradingRoom;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
@@ -21,11 +22,14 @@ import kinoko.world.user.User;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public final class Field {
     private static final AtomicInteger fieldKeyCounter = new AtomicInteger(1);
@@ -36,6 +40,7 @@ public final class Field {
     private final MapInfo mapInfo;
     private final byte fieldKey;
     private final ScheduledFuture<?> fieldEventFuture;
+    private final Map<Integer, Consumer<Mob>> mobSpawnModifiers;
 
     private final UserPool userPool;
     private final MobPool mobPool;
@@ -55,6 +60,7 @@ public final class Field {
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
+        this.mobSpawnModifiers = new ConcurrentHashMap<>();
         // Initialize field object pools
         this.userPool = new UserPool(this);
         this.mobPool = new MobPool(this);
@@ -181,6 +187,10 @@ public final class Field {
 
     public ScheduledFuture<?> getFieldEventFuture() {
         return fieldEventFuture;
+    }
+
+    public Map<Integer, Consumer<Mob>> getMobSpawnModifiers() {
+        return mobSpawnModifiers;
     }
 
     public int getNewObjectId() {
