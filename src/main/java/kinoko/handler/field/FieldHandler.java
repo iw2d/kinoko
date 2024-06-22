@@ -138,16 +138,15 @@ public final class FieldHandler {
                 log.error("{} : tried to hit reactor that is not hitable", reactor);
                 return;
             }
-            if (!reactor.hit(skillId)) {
+            if (!reactor.tryHit(skillId)) {
                 log.error("{} : could not hit reactor with skill ID {}", reactor, skillId);
                 return;
             }
             field.getReactorPool().hitReactor(reactor, delay);
-            // Check if last state and dispatch action script
-            if (!reactor.isLastState() || !reactor.hasAction()) {
-                return;
+            // Dispatch reactor script
+            if (reactor.isLastState() && reactor.hasAction()) {
+                ScriptDispatcher.startReactorScript(user, reactor);
             }
-            ScriptDispatcher.startReactorScript(user, reactor);
         }
     }
 

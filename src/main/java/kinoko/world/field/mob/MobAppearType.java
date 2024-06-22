@@ -18,4 +18,13 @@ public enum MobAppearType {
     public final byte getValue() {
         return value;
     }
+
+    public static MobAppearType getByValue(int value) {
+        for (MobAppearType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

@@ -93,6 +93,8 @@ public final class GameConstants {
 
     public static final int REACTOR_EXPIRE_INTERVAL = 5; // interval to check whether reactors can be reset
     public static final int REACTOR_END_DELAY = 5; // tStateEnd = update_time + 100 * x
+    public static final int REACTOR_DROP_DELAY = 3;
+    public static final int REACTOR_SPAWN_HEIGHT = 20;
 
 
     public static boolean isValidCharacterName(String name) {

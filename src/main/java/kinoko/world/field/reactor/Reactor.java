@@ -5,15 +5,17 @@ import kinoko.provider.RewardProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.ReactorInfo;
 import kinoko.provider.reactor.ReactorEvent;
-import kinoko.provider.reactor.ReactorState;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.provider.reward.Reward;
+import kinoko.server.event.EventScheduler;
+import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Lockable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
@@ -21,6 +23,7 @@ import kinoko.world.user.User;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -83,33 +86,60 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
         return getState() == template.getLastState();
     }
 
-    public boolean hit(int skillId) {
-        final ReactorState state = template.getStates().get(getState());
-        if (state == null) {
+    public boolean tryHit(int skillId) {
+        // Resolve reactor event
+        final int state = getState();
+        final Optional<ReactorEvent> hitEventResult = template.getHitEvent(state, skillId);
+        if (hitEventResult.isEmpty()) {
             return false;
         }
-        for (ReactorEvent event : state.getEvents()) {
-            // Find event that can be triggered
-            switch (event.getType()) {
-                case HIT -> {
-                    if (skillId != 0) {
-                        continue;
-                    }
+        // Advance state
+        final ReactorEvent hitEvent = hitEventResult.get();
+        setState(hitEvent.getNextState());
+        return true;
+    }
+
+    public void handleDrop(Drop drop) {
+        // Ignore non-item drops
+        if (drop.getItem() == null) {
+            return;
+        }
+        // Resolve reactor event
+        final int state = getState();
+        final Optional<ReactorEvent> dropEventResult = template.getDropEvent(state, drop.getItem().getItemId(), drop.getX(), drop.getY());
+        if (dropEventResult.isEmpty()) {
+            return;
+        }
+        final ReactorEvent dropEvent = dropEventResult.get();
+        // Check drop is within bounds
+        if (!dropEvent.getRect().translate(getX(), getY()).isInsideRect(drop.getX(), drop.getY())) {
+            return;
+        }
+        // Schedule event to consume drop and trigger event
+        EventScheduler.addEvent(() -> {
+            // Acquire and check state after delay
+            try (var lockedReactor = this.acquire()) {
+                final Reactor reactor = lockedReactor.get();
+                if (reactor.getState() != state) {
+                    return;
                 }
-                case SKILL -> {
-                    if (skillId == 0) {
-                        continue;
-                    }
+                // Resolve user for script
+                final Optional<User> userResult = reactor.getField().getUserPool().getNearestUser(reactor); // closest user to reactor
+                if (userResult.isEmpty()) {
+                    return;
                 }
-                default -> {
-                    continue;
+                // Try removing drop from field
+                if (!reactor.getField().getDropPool().removeDrop(drop, DropLeaveType.TIMEOUT, 0, 0, 0)) {
+                    return;
+                }
+                // Advance state and dispatch reactor script
+                reactor.setState(dropEvent.getNextState());
+                reactor.getField().getReactorPool().hitReactor(reactor, 0);
+                if (reactor.isLastState() && reactor.hasAction()) {
+                    ScriptDispatcher.startReactorScript(userResult.get(), reactor);
                 }
             }
-            // Event triggered -> update state
-            setState(event.getNextState());
-            return true;
-        }
-        return false;
+        }, GameConstants.REACTOR_DROP_DELAY, TimeUnit.SECONDS);
     }
 
     public void dropRewards(User owner) {

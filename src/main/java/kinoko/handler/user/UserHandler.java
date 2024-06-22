@@ -406,7 +406,7 @@ public final class UserHandler {
                     partialItem.setItemSn(user.getNextItemSn());
                     partialItem.setQuantity(count);
                     // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, 0);
+                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, user.getCharacterId());
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
                 } else {
                     // Full drop
@@ -417,7 +417,7 @@ public final class UserHandler {
                     // Remove item from client inventory
                     user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
                     // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, 0);
+                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, user.getCharacterId());
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
                 }
             } else {

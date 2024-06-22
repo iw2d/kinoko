@@ -18,7 +18,6 @@ public final class DropPool extends FieldObjectPool<Drop> {
 
     public void addDrop(Drop drop, DropEnterType enterType, int x, int y, int delay) {
         final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);
-        drop.setId(field.getNewObjectId());
         if (footholdResult.isPresent()) {
             drop.setX(x);
             drop.setY(footholdResult.get().getYFromX(x));
@@ -26,8 +25,12 @@ public final class DropPool extends FieldObjectPool<Drop> {
             drop.setX(x);
             drop.setY(y);
         }
+        drop.setField(field);
+        drop.setId(field.getNewObjectId());
         if (enterType != DropEnterType.FADING_OUT) {
             addObject(drop);
+            // Handle drop reactors
+            field.getReactorPool().forEach((reactor) -> reactor.handleDrop(drop));
         }
         field.broadcastPacket(FieldPacket.dropEnterField(drop, enterType, delay));
     }

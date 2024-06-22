@@ -39,7 +39,7 @@ public final class Server {
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Initialize Database
+        // Initialize database
         start = Instant.now();
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
@@ -74,7 +74,7 @@ public final class Server {
             });
         }
 
-        // Setup shutdown hook shutdown gracefully
+        // Setup shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 Server.shutdown();

@@ -70,7 +70,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setX(x);
         setY(y);
         setFoothold(fh);
-        setMoveAction(5); // idk
+        setMoveAction(MobActionType.REGEN.getValue());
         // Mob initialization
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();

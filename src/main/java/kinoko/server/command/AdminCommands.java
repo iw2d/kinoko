@@ -9,10 +9,12 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.map.ReactorInfo;
 import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.provider.skill.SkillStringInfo;
@@ -26,6 +28,7 @@ import kinoko.world.cashshop.Commodity;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
@@ -92,9 +95,15 @@ public final class AdminCommands {
         // Compute nearest mob
         final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(new Rect(-100, -100, 100, 100))));
         if (nearestMobResult.isPresent()) {
-            final Mob nearestMob = nearestMobResult.get();
-            user.write(MessagePacket.system("%s", nearestMob.toString()));
-            user.write(MessagePacket.system("  Controller : %s", nearestMob.getController().getCharacterName()));
+            final Mob mob = nearestMobResult.get();
+            user.write(MessagePacket.system(mob.toString()));
+            user.write(MessagePacket.system("  Controller : %s", mob.getController().getCharacterName()));
+        }
+        // Compute nearest reactor
+        final Optional<Reactor> nearestReactorResult = user.getNearestObject(field.getReactorPool().getInsideRect(user.getRelativeRect(new Rect(-100, -100, 100, 100))));
+        if (nearestReactorResult.isPresent()) {
+            final Reactor reactor = nearestReactorResult.get();
+            user.write(MessagePacket.system(reactor.toString()));
         }
     }
 
@@ -321,13 +330,27 @@ public final class AdminCommands {
         }
     }
 
+    @Command("reactor")
+    @Arguments("reactor template ID")
+    public static void reactor(User user, String[] args) {
+        final int templateId = Integer.parseInt(args[1]);
+        final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
+        if (reactorTemplateResult.isEmpty()) {
+            user.write(MessagePacket.system("Could not resolve reactor template ID : %d", templateId));
+            return;
+        }
+        final Field field = user.getField();
+        final ReactorInfo reactorInfo = new ReactorInfo(templateId, "", user.getX(), user.getY(), false, -1);
+        field.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
+    }
+
     @Command({ "mob", "spawn" })
-    @Arguments("mob template ID to spawn")
+    @Arguments("mob template ID")
     public static void mob(User user, String[] args) {
-        final int mobId = Integer.parseInt(args[1]);
-        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
+        final int templateId = Integer.parseInt(args[1]);
+        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
         if (mobTemplateResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not resolve mob ID : %d", mobId));
+            user.write(MessagePacket.system("Could not resolve mob template ID : %d", templateId));
             return;
         }
         final Field field = user.getField();

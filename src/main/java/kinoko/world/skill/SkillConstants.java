@@ -236,6 +236,7 @@ public final class SkillConstants {
             case Mechanic.MECH_SIEGE_MODE:
             case Mechanic.MECH_MISSILE_TANK:
             case Mechanic.GIANT_ROBOT_SG_88:
+            case Mechanic.MECH_SIEGE_MODE_2:
                 return true;
             default:
                 return false;

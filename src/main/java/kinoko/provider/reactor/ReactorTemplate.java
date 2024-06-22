@@ -47,6 +47,34 @@ public final class ReactorTemplate {
         return maxResult.orElse(0);
     }
 
+    public Optional<ReactorEvent> getHitEvent(int state, int skillId) {
+        final ReactorState reactorState = states.get(state);
+        if (reactorState == null) {
+            return Optional.empty();
+        }
+        for (ReactorEvent event : reactorState.getEvents()) {
+            if ((event.getType() == ReactorEventType.HIT && skillId == 0) ||
+                    (event.getType() == ReactorEventType.SKILL && event.getSkills().contains(skillId))) {
+                return Optional.of(event);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<ReactorEvent> getDropEvent(int state, int itemId, int x, int y) {
+        final ReactorState reactorState = states.get(state);
+        if (reactorState == null) {
+            return Optional.empty();
+        }
+        for (ReactorEvent event : reactorState.getEvents()) {
+            if (event.getType() == ReactorEventType.DROP &&
+                    event.getItemId() == itemId) {
+                return Optional.of(event);
+            }
+        }
+        return Optional.empty();
+    }
+
     public static ReactorTemplate from(int reactorId, boolean notHitable, boolean activateByTouch, String action, WzListProperty reactorProp) throws ProviderError {
         // Process states
         final Map<Integer, ReactorState> states = new HashMap<>();
