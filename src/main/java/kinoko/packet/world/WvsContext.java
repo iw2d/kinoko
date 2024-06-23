@@ -5,12 +5,14 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.FileTime;
 import kinoko.world.GameConstants;
+import kinoko.world.cashshop.CashItemResultType;
 import kinoko.world.field.TownPortal;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.AvatarLook;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.WildHunterInfo;
@@ -207,6 +209,33 @@ public final class WvsContext {
         outPacket.encodeShort(0);
         outPacket.encodeShort(0);
         return outPacket;
+    }
+
+    public static OutPacket avatarMegaphoneRes(CashItemResultType resultType, String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.AvatarMegaphoneRes);
+        outPacket.encodeByte(resultType.getValue());
+        if (resultType != CashItemResultType.AvatarMegaphone_Queue_Full && resultType != CashItemResultType.AvatarMegaphone_Level_Limit) {
+            outPacket.encodeString(message);
+        }
+        return outPacket;
+    }
+
+    public static OutPacket avatarMegaphoneUpdateMessage(User user, int itemId, String s1, String s2, String s3, String s4, boolean whisperIcon) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.AvatarMegaphoneUpdateMessage);
+        outPacket.encodeInt(itemId); // nItemID
+        outPacket.encodeString(user.getCharacterName()); // sName
+        outPacket.encodeString(s1);
+        outPacket.encodeString(s2);
+        outPacket.encodeString(s3);
+        outPacket.encodeString(s4);
+        outPacket.encodeInt(user.getChannelId());
+        outPacket.encodeByte(whisperIcon);
+        user.getCharacterData().getAvatarLook().encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket avatarMegaphoneClearMessage() {
+        return OutPacket.of(OutHeader.AvatarMegaphoneClearMessage);
     }
 
     public static OutPacket wildHunterInfo(WildHunterInfo wildHunterInfo) {

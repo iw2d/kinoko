@@ -3,10 +3,7 @@ package kinoko.server.node;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -78,7 +75,20 @@ public final class ClientStorage {
     public Set<Client> getConnectedClients() {
         lock.lock();
         try {
-            return mapByAccountId.values().stream().collect(Collectors.toUnmodifiableSet());
+            return mapByAccountId.values().stream()
+                    .collect(Collectors.toUnmodifiableSet());
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Set<User> getConnectedUsers() {
+        lock.lock();
+        try {
+            return mapByCharacterId.values().stream()
+                    .map(Client::getUser)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toUnmodifiableSet());
         } finally {
             lock.unlock();
         }

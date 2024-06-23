@@ -139,6 +139,14 @@ public final class CentralPacket {
         return outPacket;
     }
 
+    public static OutPacket serverPacketBroadcast(OutPacket remotePacket) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.ServerPacketBroadcast);
+        final byte[] packetData = remotePacket.getData();
+        outPacket.encodeInt(packetData.length);
+        outPacket.encodeArray(packetData);
+        return outPacket;
+    }
+
     public static OutPacket partyRequest(int characterId, PartyRequest partyRequest) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.PartyRequest);
         outPacket.encodeInt(characterId);

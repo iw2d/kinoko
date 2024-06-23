@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public final class NioBufferOutPacket implements OutPacket {
@@ -79,9 +80,9 @@ public final class NioBufferOutPacket implements OutPacket {
         ensureSize(length);
         if (value.length() > length) {
             log.error("Encoding a string that is too long, string will be truncated");
-            getBuffer().put(value.substring(0, length).getBytes());
+            getBuffer().put(value.substring(0, length).getBytes(StandardCharsets.US_ASCII));
         } else {
-            getBuffer().put(value.getBytes());
+            getBuffer().put(value.getBytes(StandardCharsets.US_ASCII));
             getBuffer().put(new byte[length - value.length()]);
         }
     }
@@ -97,7 +98,7 @@ public final class NioBufferOutPacket implements OutPacket {
         final int length = Math.min(value.length(), Short.MAX_VALUE);
         ensureSize(2 + length);
         getBuffer().putShort((short) value.length());
-        getBuffer().put(value.getBytes());
+        getBuffer().put(value.getBytes(StandardCharsets.US_ASCII));
     }
 
     @Override

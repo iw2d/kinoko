@@ -129,6 +129,7 @@ public enum CentralHeader {
     UserPacketBroadcast,
     UserQueryRequest,
     UserQueryResult,
+    ServerPacketBroadcast,
     PartyRequest,
     PartyResult,
     MessengerRequest,

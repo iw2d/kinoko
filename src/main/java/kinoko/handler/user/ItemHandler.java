@@ -5,6 +5,7 @@ import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
@@ -16,6 +17,7 @@ import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
@@ -33,6 +35,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public final class ItemHandler {
     private static final Logger log = LogManager.getLogger(ItemHandler.class);
@@ -207,15 +210,92 @@ public final class ItemHandler {
 
             final CashItemType cashItemType = CashItemType.getByItemId(item.getItemId());
             switch (cashItemType) {
-                case SPEAKERCHANNEL, SPEAKERWORLD, SPEAKERBRIDGE, SKULLSPEAKER -> {
-                    final String message = inPacket.decodeString();
-                    if (cashItemType == CashItemType.SPEAKERWORLD || cashItemType == CashItemType.SKULLSPEAKER) {
-                        final boolean whisperIcon = inPacket.decodeBoolean();
+                case SPEAKERCHANNEL -> {
+                    final String message = formatMessage(user, inPacket.decodeString());
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove speaker channel item from inventory");
+                        return;
                     }
-                    // TODO
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    user.getConnectedServer().submitChannelPacketBroadcast(BroadcastPacket.speakerChannel(message));
+                }
+                case SPEAKERWORLD, SKULLSPEAKER -> {
+                    final String message = formatMessage(user, inPacket.decodeString());
+                    final boolean whisperIcon = inPacket.decodeBoolean();
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove speaker world item from inventory");
+                        return;
+                    }
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    if (cashItemType == CashItemType.SPEAKERWORLD) {
+                        user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.speakerWorld(message, user.getChannelId(), whisperIcon));
+                    } else {
+                        user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.skullSpeaker(message, user.getChannelId(), whisperIcon));
+                    }
                 }
                 case ITEMSPEAKER -> {
-                    // TODO
+                    final String message = formatMessage(user, inPacket.decodeString());
+                    final boolean whisperIcon = inPacket.decodeBoolean();
+                    final Item targetItem;
+                    if (inPacket.decodeBoolean()) {
+                        final int targetType = inPacket.decodeInt(); // nTargetTI
+                        final int targetPosition = inPacket.decodeInt(); // nTargetPOS
+                        final InventoryType inventoryType = InventoryType.getByPosition(InventoryType.getByValue(targetType), targetPosition);
+                        if (inventoryType == null) {
+                            log.error("Received unknown target inventory type {} for item speaker", targetType);
+                            return;
+                        }
+                        targetItem = im.getInventoryByType(inventoryType).getItem(targetPosition);
+                    } else {
+                        targetItem = null;
+                    }
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove item speaker item from inventory");
+                        return;
+                    }
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.itemSpeaker(message, targetItem, user.getChannelId(), whisperIcon));
+                }
+                case ARTSPEAKERWORLD -> {
+                    final List<String> messages = new ArrayList<>();
+                    final int size = inPacket.decodeByte();
+                    for (int i = 0; i < size; i++) {
+                        messages.add(formatMessage(user, inPacket.decodeString()));
+                    }
+                    final boolean whisperIcon = inPacket.decodeBoolean();
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove art speaker world item from inventory");
+                        return;
+                    }
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.artSpeakerWorld(messages, user.getChannelId(), whisperIcon));
+
+                }
+                case AVATARMEGAPHONE -> {
+                    final String s1 = inPacket.decodeString();
+                    final String s2 = inPacket.decodeString();
+                    final String s3 = inPacket.decodeString();
+                    final String s4 = inPacket.decodeString();
+                    final boolean whisperIcon = inPacket.decodeBoolean();
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove avatar megaphone item from inventory");
+                        return;
+                    }
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
+                    EventScheduler.addEvent(() -> {
+                        user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneClearMessage());
+                    }, 5, TimeUnit.SECONDS); // TODO : scheduling system?
                 }
                 case ADBOARD -> {
                     final String message = inPacket.decodeString();
@@ -612,5 +692,9 @@ public final class ItemHandler {
             return duration * bonusDurationRate / 100;
         }
         return duration;
+    }
+
+    private static String formatMessage(User user, String message) {
+        return String.format("%s : %s", user.getCharacterName(), message); // TODO : title
     }
 }

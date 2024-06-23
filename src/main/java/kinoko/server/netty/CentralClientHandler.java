@@ -104,6 +104,12 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 }
                 channelServerNode.completeUserQueryRequest(requestId, remoteUsers);
             }
+            case ServerPacketBroadcast -> {
+                final int packetLength = inPacket.decodeInt();
+                final byte[] packetData = inPacket.decodeArray(packetLength);
+                final OutPacket outPacket = OutPacket.of(packetData);
+                channelServerNode.submitChannelPacketBroadcast(outPacket);
+            }
             case PartyResult -> {
                 final int characterId = inPacket.decodeInt();
                 final int partyId = inPacket.decodeInt();

@@ -168,8 +168,9 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 final int packetLength = inPacket.decodeInt();
                 final byte[] packetData = inPacket.decodeArray(packetLength);
+                final OutPacket outPacket = OutPacket.of(packetData);
                 for (RemoteChildNode childNode : centralServerNode.getConnectedNodes()) {
-                    childNode.write(CentralPacket.userPacketBroadcast(characterIds, OutPacket.of(packetData)));
+                    childNode.write(CentralPacket.userPacketBroadcast(characterIds, outPacket));
                 }
             }
             case UserQueryRequest -> {
@@ -184,6 +185,14 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 // Reply with queried remote users
                 remoteChildNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));
+            }
+            case ServerPacketBroadcast -> {
+                final int packetLength = inPacket.decodeInt();
+                final byte[] packetData = inPacket.decodeArray(packetLength);
+                final OutPacket outPacket = OutPacket.of(packetData);
+                for (RemoteChildNode childNode : centralServerNode.getConnectedNodes()) {
+                    childNode.write(CentralPacket.serverPacketBroadcast(outPacket));
+                }
             }
             case PartyRequest -> {
                 final int characterId = inPacket.decodeInt();

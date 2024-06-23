@@ -93,6 +93,10 @@ public final class ChannelServerNode extends ServerNode {
         return clientStorage.isConnected(user);
     }
 
+    public Set<User> getConnectedUsers() {
+        return clientStorage.getConnectedUsers();
+    }
+
     public Optional<User> getUserByCharacterId(int characterId) {
         return clientStorage.getUserByCharacterId(characterId);
     }
@@ -135,6 +139,16 @@ public final class ChannelServerNode extends ServerNode {
         if (userRequestFuture != null) {
             userRequestFuture.complete(remoteUsers);
         }
+    }
+
+    public void submitChannelPacketBroadcast(OutPacket remotePacket) {
+        for (User user : getConnectedUsers()) {
+            user.write(remotePacket);
+        }
+    }
+
+    public void submitServerPacketBroadcast(OutPacket remotePacket) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.serverPacketBroadcast(remotePacket));
     }
 
 

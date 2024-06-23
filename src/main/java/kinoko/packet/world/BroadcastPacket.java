@@ -23,6 +23,10 @@ public final class BroadcastPacket {
         return outPacket;
     }
 
+    public static OutPacket speakerChannel(String message) {
+        return BroadcastPacket.of(BroadcastType.SPEAKERCHANNEL, message);
+    }
+
     public static OutPacket speakerWorld(String message, int channelId, boolean whisperIcon) {
         final OutPacket outPacket = BroadcastPacket.of(BroadcastType.SPEAKERWORLD, message);
         outPacket.encodeByte(channelId); // nChannelID
@@ -67,6 +71,13 @@ public final class BroadcastPacket {
         outPacket.encodeByte(channelId); // nChannelID
         outPacket.encodeString(fieldName); // strFieldName
         item.encode(outPacket); // GW_ItemSlotBase::Decode
+        return outPacket;
+    }
+
+    public static OutPacket skullSpeaker(String message, int channelId, boolean whisperIcon) {
+        final OutPacket outPacket = BroadcastPacket.of(BroadcastType.SKULLSPEAKER, message);
+        outPacket.encodeByte(channelId); // nChannelID
+        outPacket.encodeByte(whisperIcon); // bWhisperIcon
         return outPacket;
     }
 
