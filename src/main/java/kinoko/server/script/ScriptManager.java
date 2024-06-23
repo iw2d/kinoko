@@ -88,6 +88,14 @@ public abstract class ScriptManager {
         user.write(MessagePacket.system(message));
     }
 
+    public void broadcastMessage(String message) {
+        user.getField().broadcastPacket(MessagePacket.system(message));
+    }
+
+    public final void playPortalSE() {
+        user.write(UserLocal.effect(Effect.playPortalSE()));
+    }
+
     public final void avatarOriented(String effectPath) {
         user.write(UserLocal.effect(Effect.avatarOriented(effectPath)));
         user.dispose();
@@ -221,5 +229,16 @@ public abstract class ScriptManager {
         // Quest complete effect
         user.write(UserLocal.effect(Effect.questComplete()));
         user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
+    }
+
+    public String getQRValue(int questId) {
+        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+        return questRecordResult.map(QuestRecord::getValue).orElse("");
+    }
+
+    public void setQRValue(int questId, String value) {
+        final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, value);
+        user.write(MessagePacket.questRecord(qr));
+        user.validateStat();
     }
 }

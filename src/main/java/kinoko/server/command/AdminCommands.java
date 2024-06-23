@@ -567,7 +567,7 @@ public final class AdminCommands {
         }
     }
 
-    @Command("questex")
+    @Command({ "questex", "qr" })
     @Arguments({ "quest ID", "QR value" })
     public static void questex(User user, String[] args) {
         final int questId = Integer.parseInt(args[1]);

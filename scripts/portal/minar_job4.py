@@ -2,4 +2,5 @@
 
 FOREST_OF_THE_PRIEST = 240010501
 
+sm.playPortalSE()
 sm.warp(FOREST_OF_THE_PRIEST, "out00")

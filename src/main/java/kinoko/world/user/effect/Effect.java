@@ -101,6 +101,10 @@ public class Effect implements Encodable {
         return new Effect(EffectType.LevelUp);
     }
 
+    public static Effect playPortalSE() {
+        return new Effect(EffectType.PlayPortalSE);
+    }
+
     public static Effect jobChanged() {
         return new Effect(EffectType.JobChanged);
     }

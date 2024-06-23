@@ -1,7 +1,6 @@
 package kinoko.server.script;
 
 import kinoko.packet.field.FieldEffectPacket;
-import kinoko.packet.world.MessagePacket;
 import kinoko.provider.MobProvider;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.mob.MobTemplate;
@@ -41,10 +40,6 @@ public final class ReactorScriptManager extends ScriptManager {
 
     public void changeBgm(String uol) {
         getField().broadcastPacket(FieldEffectPacket.changeBgm(uol));
-    }
-
-    public void messageAll(String message) {
-        getField().broadcastPacket(MessagePacket.system(message));
     }
 
     public void spawnMob(int templateId, int appearType, int x, int y) {

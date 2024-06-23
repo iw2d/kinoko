@@ -1,0 +1,6 @@
+# Henesys : Henesys Market (100000100)
+
+BOWMAN_INSTRUCTIONAL_SCHOOL = 100000201
+
+sm.playPortalSE()
+sm.warp(BOWMAN_INSTRUCTIONAL_SCHOOL, "out02")
