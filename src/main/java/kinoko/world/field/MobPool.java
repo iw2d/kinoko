@@ -32,7 +32,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
         field.getUserPool().assignController(mob);
     }
 
-    public boolean removeMob(Mob mob) {
+    public synchronized boolean removeMob(Mob mob) {
         if (!removeObject(mob)) {
             return false;
         }

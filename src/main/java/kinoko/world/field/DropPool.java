@@ -45,7 +45,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
     }
 
-    public boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex, int delay) {
+    public synchronized boolean removeDrop(Drop drop, DropLeaveType leaveType, int pickUpId, int petIndex, int delay) {
         if (!removeObject(drop)) {
             return false;
         }

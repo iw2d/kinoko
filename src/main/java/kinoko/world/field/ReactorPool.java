@@ -23,7 +23,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         field.broadcastPacket(FieldPacket.reactorEnterField(reactor));
     }
 
-    public void hitReactor(Reactor reactor, int delay) {
+    public synchronized void hitReactor(Reactor reactor, int delay) {
         if (reactor.getReactorTime() > 0) {
             hitReactors.put(reactor, Instant.now().plus(reactor.getReactorTime(), ChronoUnit.SECONDS));
         }
