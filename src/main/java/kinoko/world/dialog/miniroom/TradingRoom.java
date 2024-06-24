@@ -299,6 +299,13 @@ public final class TradingRoom extends MiniRoom {
                 user.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
                 return false;
             }
+            // Process items
+            for (Item item : itemsForUser) {
+                item.setPossibleTrading(false);
+            }
+            for (Item item : itemsForOther) {
+                item.setPossibleTrading(false);
+            }
             // Add all items + money
             addItemsAndMoney(user, itemsForUser, moneyForUser);
             addItemsAndMoney(other, itemsForOther, moneyForOther);

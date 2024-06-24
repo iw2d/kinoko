@@ -12,7 +12,6 @@ import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.AvatarLook;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.WildHunterInfo;

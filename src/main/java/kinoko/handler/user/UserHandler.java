@@ -405,6 +405,7 @@ public final class UserHandler {
                     final Item partialItem = new Item(item);
                     partialItem.setItemSn(user.getNextItemSn());
                     partialItem.setQuantity(count);
+                    partialItem.setPossibleTrading(false);
                     // Create drop
                     final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, user.getCharacterId());
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
@@ -416,6 +417,7 @@ public final class UserHandler {
                     }
                     // Remove item from client inventory
                     user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
+                    item.setPossibleTrading(false);
                     // Create drop
                     final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, user.getCharacterId());
                     user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);

@@ -102,6 +102,7 @@ public final class TrunkDialog implements Dialog {
                     if (removeItemResult.isEmpty()) {
                         throw new IllegalStateException("Could not remove item from inventory");
                     }
+                    item.setPossibleTrading(false);
                     trunk.getItems().add(item);
                     // Update client
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));

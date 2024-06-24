@@ -303,10 +303,32 @@ public final class ItemHandler {
                     user.getField().broadcastPacket(UserPacket.userAdBoard(user, message));
                 }
                 case KARMASCISSORS -> {
-                    // CUIKarmaDlg::_SendConsumeCashItemUseRequest
-                    final int inventoryType = inPacket.decodeInt(); // nTargetTI
-                    final int targetItemPos = inPacket.decodeInt(); // nTargetPOS
-                    // TODO
+                    // Resolve target item
+                    final int targetType = inPacket.decodeInt(); // nTargetTI
+                    final int targetPosition = inPacket.decodeInt(); // nTargetPOS
+                    final InventoryType inventoryType = InventoryType.getByPosition(InventoryType.getByValue(targetType), targetPosition);
+                    if (inventoryType == null) {
+                        log.error("Received unknown target inventory type {} for karma scissors", targetType);
+                        return;
+                    }
+                    final Item targetItem = im.getInventoryByType(inventoryType).getItem(targetPosition);
+                    if (targetItem == null) {
+                        log.error("Could not resolve item in inventory type {} position {} for karma scissors", inventoryType, targetPosition);
+                        return;
+                    }
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove karma scissors item from inventory");
+                        return;
+                    }
+                    // Update target item
+                    targetItem.setPossibleTrading(true);
+                    final Optional<InventoryOperation> updateResult = im.updateItem(targetPosition, targetItem);
+                    if (updateResult.isEmpty()) {
+                        throw new IllegalStateException("Could not update item");
+                    }
+                    user.write(WvsContext.inventoryOperation(updateResult.get(), true));
                 }
                 case ITEMUPGRADE -> {
                     // TODO

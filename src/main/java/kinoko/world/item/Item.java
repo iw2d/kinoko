@@ -162,10 +162,14 @@ public final class Item implements Encodable {
     }
 
     public boolean isPossibleTrading() {
-        return switch (itemType) {
-            case EQUIP -> hasAttribute(ItemAttribute.EQUIP_POSSIBLE_TRADING);
-            case BUNDLE -> hasAttribute(ItemAttribute.BUNDLE_POSSIBLE_TRADING);
-            case PET -> hasAttribute(ItemAttribute.PET_POSSIBLE_TRADING);
-        };
+        return hasAttribute(ItemAttribute.getPossibleTradingAttribute(getItemType()));
+    }
+
+    public void setPossibleTrading(boolean set) {
+        if (set) {
+            addAttribute(ItemAttribute.getPossibleTradingAttribute(getItemType()));
+        } else {
+            removeAttribute(ItemAttribute.getPossibleTradingAttribute(getItemType()));
+        }
     }
 }

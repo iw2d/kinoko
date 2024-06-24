@@ -24,4 +24,12 @@ public enum ItemAttribute {
     public final short getValue() {
         return value;
     }
+
+    public static ItemAttribute getPossibleTradingAttribute(ItemType itemType) {
+        return switch (itemType) {
+            case EQUIP -> EQUIP_POSSIBLE_TRADING;
+            case BUNDLE -> BUNDLE_POSSIBLE_TRADING;
+            case PET -> PET_POSSIBLE_TRADING;
+        };
+    }
 }
