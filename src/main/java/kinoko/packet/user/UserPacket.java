@@ -177,6 +177,16 @@ public final class UserPacket {
         return outPacket;
     }
 
+    public static OutPacket userItemHyperUpgradeEffect(User user, boolean success, boolean cursed, boolean enchantSkill) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserItemHyperUpgradeEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(success); // bSuccess
+        outPacket.encodeByte(cursed); // bCursed
+        outPacket.encodeByte(enchantSkill); // bEnchantSkill
+        outPacket.encodeInt(0); // nEnchantCategory
+        return outPacket;
+    }
+
     public static OutPacket userTeslaTriangle(User user, List<Summoned> rockAndShockList) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTeslaTriangle);
         outPacket.encodeInt(user.getCharacterId());

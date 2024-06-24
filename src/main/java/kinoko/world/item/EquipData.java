@@ -5,6 +5,7 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.FileTime;
+import kinoko.util.Util;
 
 import java.util.Map;
 
@@ -408,6 +409,42 @@ public final class EquipData {
                     setIncJump((short) Math.clamp(getIncJump() + value, 0, Short.MAX_VALUE));
                 }
             }
+        }
+    }
+
+    public void applyHyperUpgradeStats(ItemInfo itemInfo) {
+        // Inaccurate formula, official version randomly added non-existing stats - might have also used req level
+        if (getIncStr() > 0) {
+            final int inc = 1 + (getIncStr() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_STAT_BASE);
+            setIncStr((short) Math.clamp(getIncStr() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncDex() > 0) {
+            final int inc = 1 + (getIncDex() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_STAT_BASE);
+            setIncDex((short) Math.clamp(getIncDex() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncInt() > 0) {
+            final int inc = 1 + (getIncInt() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_STAT_BASE);
+            setIncInt((short) Math.clamp(getIncInt() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncLuk() > 0) {
+            final int inc = 1 + (getIncLuk() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_STAT_BASE);
+            setIncLuk((short) Math.clamp(getIncLuk() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncPad() > 0) {
+            final int inc = 1 + (getIncPad() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_ATT_BASE);
+            setIncPad((short) Math.clamp(getIncPad() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncMad() > 0) {
+            final int inc = 1 + (getIncMad() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_ATT_BASE);
+            setIncMad((short) Math.clamp(getIncMad() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncPdd() > 0) {
+            final int inc = 1 + (getIncPdd() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_DEF_BASE);
+            setIncPdd((short) Math.clamp(getIncPdd() + inc, 0, Short.MAX_VALUE));
+        }
+        if (getIncMdd() > 0) {
+            final int inc = 1 + (getIncMdd() / 50) + Util.getRandom(0, ItemConstants.EQUIP_ENHANCEMENT_DEF_BASE);
+            setIncMdd((short) Math.clamp(getIncMdd() + inc, 0, Short.MAX_VALUE));
         }
     }
 

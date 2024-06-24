@@ -367,10 +367,15 @@ public final class AdminCommands {
     }
 
     @Command("item")
-    @Arguments({ "item ID", "item quantity" })
+    @Arguments("item ID")
     public static void item(User user, String[] args) {
         final int itemId = Integer.parseInt(args[1]);
-        final int quantity = Integer.parseInt(args[2]);
+        final int quantity;
+        if (args.length > 2) {
+            quantity = Integer.parseInt(args[2]);
+        } else {
+            quantity = 1;
+        }
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
             user.write(MessagePacket.system("Could not resolve item ID : %d", itemId));

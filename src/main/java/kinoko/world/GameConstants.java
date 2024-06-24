@@ -143,7 +143,7 @@ public final class GameConstants {
     }
 
     public static Tuple<Integer, Integer> getMoneyForMobLevel(int level) {
-        // modern maple values, may not be accurate
+        // Modern maple values, probably not accurate
         final double min;
         final double max;
         if (level == 1) {

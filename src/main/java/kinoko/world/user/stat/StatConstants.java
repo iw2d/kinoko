@@ -80,7 +80,7 @@ public final class StatConstants {
     }
 
     public static int getIncHp(int jobId) {
-        // may be inaccurate as we are just using minHp multiplier
+        // Probably inaccurate as we are just using minHp multiplier
         if (JobConstants.isBeginnerJob(jobId)) {
             return 12;
         }
@@ -110,7 +110,7 @@ public final class StatConstants {
     }
 
     public static int getIncMp(int jobId) {
-        // may be inaccurate as we are just using minMp multiplier
+        // Probably inaccurate as we are just using minMp multiplier
         if (JobConstants.isBeginnerJob(jobId)) {
             return 10;
         }

@@ -1,11 +1,23 @@
 package kinoko.world.item;
 
 public final class ItemConstants {
+    // ITEM IDS --------------------------------------------------------------------------------------------------------
+
+    public static final int ADVANCED_EQUIP_ENHANCEMENT_SCROLL = 2049300;
+    public static final int EQUIP_ENHANCEMENT_SCROLL = 2049301;
     public static final int WHITE_SCROLL = 2340000;
     public static final int OMOK_SET_BASE = 4080000;
     public static final int OMOK_SET_END = 4080011;
     public static final int MATCH_CARDS = 4080100;
     public static final int WHEEL_OF_DESTINY = 5510000;
+
+
+    // ITEM UPGRADE CONSTANTS ------------------------------------------------------------------------------------------
+
+    public static final int EQUIP_ENHANCEMENT_STAT_BASE = 2;
+    public static final int EQUIP_ENHANCEMENT_ATT_BASE = 2;
+    public static final int EQUIP_ENHANCEMENT_DEF_BASE = 2;
+
 
     public static int getGenderFromId(int itemId) {
         if (itemId / 1000000 != 1) {
@@ -169,6 +181,35 @@ public final class ItemConstants {
     public static boolean isUpgradeScrollNoConsumeWhiteScroll(int itemId) {
         // scroll for spikes on shoes, scroll for cape for cold protection, clean slate scrolls
         return itemId == 2040727 || itemId == 2041058 || isRecoverSlotItem(itemId);
+    }
+
+    public static int getHyperUpgradeSuccessProp(int itemId, int chuc) {
+        if (itemId == ADVANCED_EQUIP_ENHANCEMENT_SCROLL) {
+            return switch (chuc) {
+                case 0 -> 100;
+                case 1 -> 90;
+                case 2 -> 80;
+                case 3 -> 70;
+                case 4 -> 60;
+                case 5 -> 50;
+                case 6 -> 40;
+                case 7 -> 30;
+                case 8 -> 20;
+                default -> 10;
+            };
+        } else if (itemId == EQUIP_ENHANCEMENT_SCROLL) {
+            return switch (chuc) {
+                case 0 -> 80;
+                case 1 -> 70;
+                case 2 -> 60;
+                case 3 -> 50;
+                case 4 -> 40;
+                case 5 -> 30;
+                case 6 -> 20;
+                default -> 10;
+            };
+        }
+        return 0;
     }
 
     public static boolean isPortableChairItem(int itemId) {
