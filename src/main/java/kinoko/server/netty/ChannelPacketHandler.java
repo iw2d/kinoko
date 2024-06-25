@@ -27,6 +27,7 @@ public final class ChannelPacketHandler extends PacketHandler {
             SkillHandler.class,
             HitHandler.class,
             ItemHandler.class,
+            CashItemHandler.class,
             PetHandler.class,
             SummonedHandler.class
     );
