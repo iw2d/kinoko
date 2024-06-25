@@ -77,7 +77,7 @@ public final class FriendManager {
         fm.updateFriends(DatabaseManager.friendAccessor().getFriendsByCharacterId(user.getCharacterId()));
     }
 
-    public static void updateFriendsFromCentralServer(User user, FriendResultType resultType) {
+    public static void updateFriendsFromCentralServer(User user, FriendResultType resultType, boolean notify) {
         final FriendManager fm = user.getFriendManager();
         // Load mutual friends
         final Set<Friend> mutualFriends = new HashSet<>();
@@ -107,6 +107,13 @@ public final class FriendManager {
                     }
                 }
                 user.write(FriendPacket.reset(resultType, fm.getRegisteredFriends()));
+                // Notify friends
+                if (notify) {
+                    user.getConnectedServer().submitUserPacketBroadcast(
+                            fm.getBroadcastTargets(),
+                            FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false)
+                    );
+                }
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 log.error("Exception caught while waiting for user query result", e);
                 e.printStackTrace();

@@ -6,6 +6,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.util.Tuple;
+import kinoko.world.GameConstants;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,7 +33,7 @@ public final class MapProvider implements WzProvider {
 
     public static boolean isConnected(int fromFieldId, int toFieldId) {
         // CWvsContext::IsConnected
-        if (fromFieldId / 1000000 % 100 == 9 || toFieldId / 1000000 % 100 == 9) {
+        if (GameConstants.isEventMap(fromFieldId) || GameConstants.isEventMap(toFieldId)) {
             return false;
         }
         if (fromFieldId / 10000 == 20009 || toFieldId / 10000 == 20009) {

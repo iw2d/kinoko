@@ -3,6 +3,7 @@ package kinoko.world.user;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.FileTime;
+import kinoko.world.dialog.miniroom.MiniRoomType;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
@@ -14,6 +15,9 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.config.ConfigManager;
+import kinoko.world.user.info.MapTransferInfo;
+import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.info.WildHunterInfo;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Duration;
@@ -32,6 +36,7 @@ public final class CharacterData implements Encodable {
     private FriendManager friendManager;
     private ConfigManager configManager;
     private MiniGameRecord miniGameRecord;
+    private MapTransferInfo mapTransferInfo;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
 
@@ -97,6 +102,14 @@ public final class CharacterData implements Encodable {
 
     public void setMiniGameRecord(MiniGameRecord miniGameRecord) {
         this.miniGameRecord = miniGameRecord;
+    }
+
+    public MapTransferInfo getMapTransferInfo() {
+        return mapTransferInfo;
+    }
+
+    public void setMapTransferInfo(MapTransferInfo mapTransferInfo) {
+        this.mapTransferInfo = mapTransferInfo;
     }
 
     public WildHunterInfo getWildHunterInfo() {
@@ -282,24 +295,19 @@ public final class CharacterData implements Encodable {
                 outPacket.encodeFT(qr.getCompletedTime());
             }
         }
-        if (flag.hasFlag(DBChar.MINIGAMERECORD)) { // TODO
-            outPacket.encodeShort(0); // short * (int, int, int, int, int)
-            // GW_MiniGameRecord { nGameID, nWin, nDraw, nLose, nScore }
+        if (flag.hasFlag(DBChar.MINIGAMERECORD)) {
+            outPacket.encodeShort(2); // 2 * GW_MiniGameRecord { nGameID, nWin, nDraw, nLose, nScore }
+            miniGameRecord.encode(MiniRoomType.OmokRoom, outPacket);
+            miniGameRecord.encode(MiniRoomType.MemoryGameRoom, outPacket);
         }
         if (flag.hasFlag(DBChar.COUPLERECORD)) { // TODO
             outPacket.encodeShort(0); // short * GW_CoupleRecord::Decode
             outPacket.encodeShort(0); // short * GW_FriendRecord::Decode
             outPacket.encodeShort(0); // short * GW_MarriageRecord::Decode
         }
-        if (flag.hasFlag(DBChar.MAPTRANSFER)) { // TODO
-            // adwMapTransfer
-            for (int mapId : new int[5]) {
-                outPacket.encodeInt(mapId);
-            }
-            // adwMapTransferEx
-            for (int mapId : new int[10]) {
-                outPacket.encodeInt(mapId);
-            }
+        if (flag.hasFlag(DBChar.MAPTRANSFER)) {
+            mapTransferInfo.encodeMapTransfer(outPacket); // adwMapTransfer
+            mapTransferInfo.encodeMapTransferEx(outPacket); // adwMapTransferEx
         }
         if (flag.hasFlag(DBChar.NEWYEARCARD)) {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord

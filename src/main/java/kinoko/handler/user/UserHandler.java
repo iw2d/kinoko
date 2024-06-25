@@ -28,6 +28,7 @@ import kinoko.world.cashshop.*;
 import kinoko.world.dialog.miniroom.*;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.trunk.TrunkDialog;
+import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
@@ -52,6 +53,8 @@ import kinoko.world.social.whisper.WhisperFlag;
 import kinoko.world.user.User;
 import kinoko.world.user.config.*;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.info.MapTransferInfo;
+import kinoko.world.user.info.MapTransferRequestType;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.StatConstants;
@@ -691,6 +694,39 @@ public final class UserHandler {
         // let USER_MOVE packets update user position
     }
 
+    @Handler(InHeader.UserMapTransferRequest)
+    public static void handleUserMapTransferRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte(); // nType
+        final MapTransferRequestType requestType = MapTransferRequestType.getByValue(type);
+        if (requestType == null) {
+            log.error("Received unknown map transfer request type : {}", type);
+            return;
+        }
+        final boolean canTransferContinent = inPacket.decodeBoolean(); // bCanTransferContinent
+        try (var locked = user.acquire()) {
+            final MapTransferInfo mapTransferInfo = locked.get().getMapTransferInfo();
+            if (requestType == MapTransferRequestType.DeleteList) {
+                final int targetField = inPacket.decodeInt(); // dwTargetField
+                if (!mapTransferInfo.delete(targetField, canTransferContinent)) {
+                    log.error("Could not delete field {} from map transfer info", targetField);
+                    return;
+                }
+                user.write(MapTransferPacket.deleteList(mapTransferInfo, canTransferContinent));
+            } else {
+                final Field field = user.getField();
+                if (field.isMapTransferLimit()) {
+                    user.write(MapTransferPacket.registerFail()); // This map is not available to enter for the list.
+                    return;
+                }
+                if (!mapTransferInfo.register(field.getFieldId(), canTransferContinent)) {
+                    log.error("Could not register field {} to map transfer info", field.getFieldId());
+                    return;
+                }
+                user.write(MapTransferPacket.registerList(mapTransferInfo, canTransferContinent));
+            }
+        }
+    }
+
     @Handler(InHeader.UserQuestRequest)
     public static void handleUserQuestRequest(User user, InPacket inPacket) {
         final byte action = inPacket.decodeByte();
@@ -1251,7 +1287,7 @@ public final class UserHandler {
         switch (requestType) {
             case LoadFriend -> {
                 FriendManager.updateFriendsFromDatabase(user);
-                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done);
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done, false);
             }
             case SetFriend -> {
                 final String targetName = inPacket.decodeString(); // sTarget
@@ -1300,7 +1336,7 @@ public final class UserHandler {
                 }
                 // Reload friends and update client
                 FriendManager.updateFriendsFromDatabase(user);
-                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.SetFriend_Done);
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.SetFriend_Done, false);
             }
             case AcceptFriend -> {
                 final int friendId = inPacket.decodeInt();
@@ -1319,9 +1355,9 @@ public final class UserHandler {
                     return;
                 }
                 // Notify newly added friend (noop if offline)
-                user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), user.getChannelId()));
+                user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false));
                 // Reload friends and update client
-                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.SetFriend_Done);
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.SetFriend_Done, false);
             }
             case DeleteFriend -> {
                 final int friendId = inPacket.decodeInt();
@@ -1348,10 +1384,10 @@ public final class UserHandler {
                         return;
                     }
                     // Notify deleted friend (noop if offline)
-                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE));
+                    user.getConnectedServer().submitUserPacketRequest(friend.getFriendName(), FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_OFFLINE, false));
                 }
                 // Reload friends and update client
-                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.DeleteFriend_Done);
+                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.DeleteFriend_Done, false);
             }
             case null -> {
                 log.error("Unknown friend request type : {}", type);

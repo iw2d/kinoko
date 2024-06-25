@@ -70,10 +70,10 @@ public final class FriendPacket {
         return FriendPacket.unknown(FriendResultType.DeleteFriend_Unknown, null);
     }
 
-    public static OutPacket notify(int friendId, int channelId) {
-        final OutPacket outPacket = FriendPacket.of(FriendResultType.Invite);
+    public static OutPacket notify(int friendId, int channelId, boolean inShop) {
+        final OutPacket outPacket = FriendPacket.of(FriendResultType.Notify);
         outPacket.encodeInt(friendId); // dwFriendID
-        outPacket.encodeByte(false); // aInShop
+        outPacket.encodeByte(inShop); // aInShop
         outPacket.encodeInt(channelId); // nChannelID
         return outPacket;
     }

@@ -178,15 +178,9 @@ public final class MigrationHandler {
             user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
             user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
-            // Loads friends from database and central server
+            // Load friends from database and central server
             FriendManager.updateFriendsFromDatabase(user);
-            FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done);
-
-            // Notify friends
-            channelServerNode.submitUserPacketBroadcast(
-                    user.getFriendManager().getBroadcastTargets(),
-                    FriendPacket.notify(user.getCharacterId(), user.getChannelId())
-            );
+            FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done, true); // notify
 
             // Process friend requests
             for (Friend friend : user.getFriendManager().getFriendRequests()) {
@@ -296,6 +290,7 @@ public final class MigrationHandler {
             // Move User to Field
             final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(nextFieldId);
             if (nextFieldResult.isEmpty()) {
+                log.error("Could not resolve field ID : {}", nextFieldId);
                 user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place
                 return;
             }
@@ -329,7 +324,7 @@ public final class MigrationHandler {
         // Update friends
         user.getConnectedServer().submitUserPacketBroadcast(
                 user.getFriendManager().getBroadcastTargets(),
-                FriendPacket.notify(user.getCharacterId(), GameConstants.CHANNEL_SHOP)
+                FriendPacket.notify(user.getCharacterId(), user.getChannelId(), true)
         );
 
         // Load gifts

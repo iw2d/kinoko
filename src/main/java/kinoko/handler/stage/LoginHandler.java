@@ -25,9 +25,10 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.Account;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.MiniGameRecord;
-import kinoko.world.user.WildHunterInfo;
 import kinoko.world.user.config.ConfigManager;
+import kinoko.world.user.info.MapTransferInfo;
+import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.info.WildHunterInfo;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.StatConstants;
@@ -297,6 +298,10 @@ public final class LoginHandler {
         // Initialize MiniGame Records
         final MiniGameRecord mgr = new MiniGameRecord();
         characterData.setMiniGameRecord(mgr);
+
+        // Initialize Map Transfer Info
+        final MapTransferInfo mti = new MapTransferInfo();
+        characterData.setMapTransferInfo(mti);
 
         // Initialize Wild Hunter Info
         final WildHunterInfo whi = new WildHunterInfo();

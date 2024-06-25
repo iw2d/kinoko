@@ -64,7 +64,7 @@ public final class WhisperPacket {
         outPacket.encodeString(targetName); // sFind
         outPacket.encodeByte(resultType.getValue());
         outPacket.encodeInt(locationId); // fieldId | channelId
-        if (isFriend && resultType == LocationResultType.GameSvr) {
+        if (resultType == LocationResultType.GameSvr) {
             // s_bChase -> CField::SendTransferFieldRequest
             outPacket.encodeInt(0); // nTargetPosition_X
             outPacket.encodeInt(0); // nTargetPosition_Y

@@ -121,6 +121,10 @@ public final class GameConstants {
         }
     }
 
+    public static boolean isEventMap(int fieldId) {
+        return fieldId / 1000000 % 100 == 9;
+    }
+
     public static boolean isJaguarMob(int templateId) {
         return templateId >= 9304000 && templateId <= 9304005;
     }

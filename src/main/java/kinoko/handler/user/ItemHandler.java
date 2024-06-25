@@ -8,6 +8,7 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.BroadcastPacket;
+import kinoko.packet.world.MapTransferPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
@@ -22,8 +23,10 @@ import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Locked;
@@ -43,7 +46,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public final class ItemHandler {
     private static final Logger log = LogManager.getLogger(ItemHandler.class);
@@ -427,9 +433,7 @@ public final class ItemHandler {
                     // Remove item
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
-                        log.error("Could not remove vicious' hammer item from inventory");
-                        user.write(FieldPacket.itemUpgradeResultErr(0)); // Unknown error
-                        return;
+                        throw new IllegalStateException(String.format("Could not remove vicious' hammer item %d in position %d", item.getItemId(), position));
                     }
                     // Update target item
                     equipData.setRuc((byte) (equipData.getRuc() + 1));
@@ -580,7 +584,7 @@ public final class ItemHandler {
                     // Consume item
                     final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
                     if (removeItemResult.isEmpty()) {
-                        throw new IllegalStateException(String.format("Could not select npc item %d in position %d", item.getItemId(), position));
+                        throw new IllegalStateException(String.format("Could not remove select npc item %d in position %d", item.getItemId(), position));
                     }
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
                     if (npcTemplate.isTrunk()) {
@@ -594,6 +598,55 @@ public final class ItemHandler {
                         final ShopDialog shopDialog = ShopDialog.from(npcTemplate);
                         user.setDialog(shopDialog);
                         user.write(FieldPacket.openShopDlg(shopDialog));
+                    }
+                }
+                case MORPH -> {
+                    // Consume item and change stat
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not remove morph item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    changeStat(locked, itemInfo);
+                }
+                case MAPTRANSFER -> {
+                    final boolean targetUser = inPacket.decodeBoolean();
+                    if (targetUser) {
+                        // Resolve target location
+                        final String targetName = inPacket.decodeString();
+                        final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
+                        try {
+                            final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                            final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
+                            if (targetResult.isEmpty()) {
+                                user.write(MapTransferPacket.targetNotExist()); // %s is currently difficult to locate, so the teleport will not take place.
+                                user.dispose();
+                                return;
+                            }
+                            final RemoteUser target = targetResult.get();
+                            if (target.getChannelId() != user.getChannelId()) {
+                                user.write(MapTransferPacket.targetNotExist()); // %s is currently difficult to locate, so the teleport will not take place.
+                                user.dispose();
+                                return;
+                            }
+                            handleMapTransfer(user, target.getFieldId(), item, position);
+                        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                            log.error("Exception caught while waiting for user query result", e);
+                            e.printStackTrace();
+                            user.write(MapTransferPacket.targetNotExist()); // %s is currently difficult to locate, so the teleport will not take place.
+                            user.dispose();
+                        }
+                    } else {
+                        final int targetField = inPacket.decodeInt(); // dwTargetField
+                        final List<Integer> availableFields = itemId / 1000 != 5040 ? // canTransferContinent
+                                user.getMapTransferInfo().getMapTransferEx() :
+                                user.getMapTransferInfo().getMapTransfer();
+                        if (!availableFields.contains(targetField)) {
+                            user.write(MapTransferPacket.unknown()); // You cannot go to that place.
+                            user.dispose();
+                            return;
+                        }
+                        handleMapTransfer(user, targetField, item, position);
                     }
                 }
                 case null -> {
@@ -641,6 +694,7 @@ public final class ItemHandler {
             final int destinationFieldId = moveTo == GameConstants.UNDEFINED_FIELD_ID ? field.getReturnMap() : moveTo;
             final Optional<Field> destinationFieldResult = user.getConnectedServer().getFieldById(destinationFieldId);
             if (destinationFieldResult.isEmpty()) {
+                log.error("Could not resolve field ID : {}", destinationFieldId);
                 user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();
                 return;
@@ -648,6 +702,7 @@ public final class ItemHandler {
             final Field destinationField = destinationFieldResult.get();
             final Optional<PortalInfo> destinationPortalResult = destinationField.getRandomStartPoint();
             if (destinationPortalResult.isEmpty()) {
+                log.error("Could not resolve start point portal for field ID : {}", destinationFieldId);
                 user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();
                 return;
@@ -1199,5 +1254,43 @@ public final class ItemHandler {
 
     private static String formatMessage(User user, String message) {
         return String.format("%s : %s", user.getCharacterName(), message); // TODO : title
+    }
+
+    private static void handleMapTransfer(User user, int targetFieldId, Item item, int position) {
+        final Field currentField = user.getField();
+        final boolean canTransferContinent = item.getItemId() / 1000 != 5040;
+        if (currentField.isMapTransferLimit() || (!canTransferContinent && !currentField.isSameContinent(targetFieldId))) {
+            user.write(MapTransferPacket.notAllowed()); // You cannot go to that place.
+            user.dispose();
+            return;
+        }
+        // Resolve target field
+        final Optional<Field> targetFieldResult = user.getConnectedServer().getFieldById(targetFieldId);
+        if (targetFieldResult.isEmpty()) {
+            log.error("Could not resolve field ID : {}", targetFieldId);
+            user.write(MapTransferPacket.notAllowed()); // You cannot go to that place.
+            user.dispose();
+            return;
+        }
+        final Field targetField = targetFieldResult.get();
+        final Optional<PortalInfo> targetPortalResult = targetField.getRandomStartPoint();
+        if (targetPortalResult.isEmpty()) {
+            log.error("Could not resolve start point portal for field ID : {}", targetFieldId);
+            user.write(MapTransferPacket.notAllowed()); // You cannot go to that place.
+            user.dispose();
+            return;
+        }
+        if (targetField.isMapTransferLimit()) {
+            user.write(MapTransferPacket.notAllowed()); // You cannot go to that place.
+            user.dispose();
+            return;
+        }
+        // Consume item and warp
+        final Optional<InventoryOperation> removeUpgradeItemResult = user.getInventoryManager().removeItem(position, item, 1);
+        if (removeUpgradeItemResult.isEmpty()) {
+            throw new IllegalStateException(String.format("Could not remove map transfer item %d in position %d", item.getItemId(), position));
+        }
+        user.write(WvsContext.inventoryOperation(removeUpgradeItemResult.get(), false));
+        user.warp(targetField, targetPortalResult.get(), false, false);
     }
 }

@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.user.info;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;

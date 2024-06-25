@@ -17,9 +17,10 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.MiniGameRecord;
-import kinoko.world.user.WildHunterInfo;
 import kinoko.world.user.config.ConfigManager;
+import kinoko.world.user.info.MapTransferInfo;
+import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.info.WildHunterInfo;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Instant;
@@ -85,6 +86,9 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
         final MiniGameRecord mgr = row.get(CharacterTable.MINIGAME_RECORD, MiniGameRecord.class);
         cd.setMiniGameRecord(mgr);
+
+        final MapTransferInfo mti = row.get(CharacterTable.MAP_TRANSFER_INFO, MapTransferInfo.class);
+        cd.setMapTransferInfo(mti);
 
         final WildHunterInfo whi = row.get(CharacterTable.WILD_HUNTER_INFO, WildHunterInfo.class);
         cd.setWildHunterInfo(whi);
@@ -235,6 +239,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendManager().getFriendMax()))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
                         .setColumn(CharacterTable.MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
+                        .setColumn(CharacterTable.MAP_TRANSFER_INFO, literal(characterData.getMapTransferInfo(), registry))
                         .setColumn(CharacterTable.WILD_HUNTER_INFO, literal(characterData.getWildHunterInfo(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))

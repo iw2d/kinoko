@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
 import kinoko.provider.map.*;
@@ -224,6 +225,20 @@ public final class Field {
 
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public boolean isConnected(int targetFieldId) {
+        return MapProvider.isConnected(getFieldId(), targetFieldId);
+    }
+
+    public boolean isSameContinent(int targetFieldId) {
+        return getFieldId() / 100000000 == targetFieldId / 100000000;
+    }
+
+    public boolean isMapTransferLimit() {
+        return GameConstants.isEventMap(getFieldId()) ||
+                getMapInfo().hasFieldOption(FieldOption.SKILLLIMIT) ||
+                getMapInfo().hasFieldOption(FieldOption.TELEPORTITEMLIMIT);
+    }
 
     public void broadcastPacket(OutPacket outPacket) {
         userPool.broadcastPacket(outPacket);

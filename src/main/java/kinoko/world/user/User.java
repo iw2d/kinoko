@@ -31,6 +31,9 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.social.friend.FriendManager;
 import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.info.MapTransferInfo;
+import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.info.WildHunterInfo;
 import kinoko.world.user.stat.*;
 
 import java.time.Instant;
@@ -132,6 +135,10 @@ public final class User extends Life implements Lockable<User> {
 
     public MiniGameRecord getMiniGameRecord() {
         return characterData.getMiniGameRecord();
+    }
+
+    public MapTransferInfo getMapTransferInfo() {
+        return characterData.getMapTransferInfo();
     }
 
     public WildHunterInfo getWildHunterInfo() {
@@ -612,7 +619,7 @@ public final class User extends Life implements Lockable<User> {
         if (disconnect) {
             getConnectedServer().submitUserPacketBroadcast(
                     getFriendManager().getBroadcastTargets(),
-                    FriendPacket.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE)
+                    FriendPacket.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE, false)
             );
         }
     }
