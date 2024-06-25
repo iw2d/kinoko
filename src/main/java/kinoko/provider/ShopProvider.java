@@ -2,7 +2,6 @@ package kinoko.provider;
 
 import kinoko.server.ServerConfig;
 import kinoko.world.dialog.shop.ShopItem;
-import kinoko.world.field.npc.Npc;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,11 +29,11 @@ public final class ShopProvider implements DataProvider {
         }
     }
 
-    public static List<ShopItem> getNpcShopItems(Npc npc) {
-        if (!npcShopItems.containsKey(npc.getTemplateId())) {
+    public static List<ShopItem> getNpcShopItems(int templateId) {
+        if (!npcShopItems.containsKey(templateId)) {
             return List.of();
         }
-        return npcShopItems.get(npc.getTemplateId());
+        return npcShopItems.get(templateId);
     }
 
     private static ShopItem getShopItem(List<String> props) {

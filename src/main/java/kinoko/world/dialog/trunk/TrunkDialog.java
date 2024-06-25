@@ -2,10 +2,10 @@ package kinoko.world.dialog.trunk;
 
 import kinoko.packet.field.TrunkPacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.dialog.Dialog;
-import kinoko.world.field.npc.Npc;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
@@ -21,10 +21,18 @@ import java.util.Optional;
 
 public final class TrunkDialog implements Dialog {
     private static final Logger log = LogManager.getLogger(TrunkDialog.class);
-    private final Npc npc;
+    private final NpcTemplate npcTemplate;
 
-    public TrunkDialog(Npc npc) {
-        this.npc = npc;
+    public TrunkDialog(NpcTemplate npcTemplate) {
+        this.npcTemplate = npcTemplate;
+    }
+
+    public int getTrunkPut() {
+        return npcTemplate.getTrunkPut();
+    }
+
+    public int getTrunkGet() {
+        return npcTemplate.getTrunkGet();
     }
 
     public void handlePacket(Locked<User> locked, InPacket inPacket) {
@@ -44,7 +52,7 @@ public final class TrunkDialog implements Dialog {
                     final int position = inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
                     // Check if user has enough money
                     final InventoryManager im = user.getInventoryManager();
-                    if (im.getMoney() < npc.getTrunkGet()) {
+                    if (im.getMoney() < getTrunkGet()) {
                         user.write(TrunkPacket.of(TrunkResultType.GetNoMoney));
                         return;
                     }
@@ -59,7 +67,7 @@ public final class TrunkDialog implements Dialog {
                         return;
                     }
                     // Deduct money and move item
-                    if (!im.addMoney(-npc.getTrunkGet())) {
+                    if (!im.addMoney(-getTrunkGet())) {
                         throw new IllegalStateException("Could not deduct trunk get fee");
                     }
                     if (!trunk.getItems().remove(item)) {
@@ -80,7 +88,7 @@ public final class TrunkDialog implements Dialog {
                     final int quantity = inPacket.decodeShort(); // nCount
                     // Check if user has money and item
                     final InventoryManager im = user.getInventoryManager();
-                    if (im.getMoney() < npc.getTrunkPut()) {
+                    if (im.getMoney() < getTrunkPut()) {
                         user.write(TrunkPacket.of(TrunkResultType.PutNoMoney));
                         return;
                     }
@@ -95,7 +103,7 @@ public final class TrunkDialog implements Dialog {
                         return;
                     }
                     // Deduct money and move item
-                    if (!im.addMoney(-npc.getTrunkPut())) {
+                    if (!im.addMoney(-getTrunkPut())) {
                         throw new IllegalStateException("Could not deduct trunk put fee");
                     }
                     final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item);
@@ -166,7 +174,7 @@ public final class TrunkDialog implements Dialog {
         }
     }
 
-    public static TrunkDialog from(Npc npc) {
-        return new TrunkDialog(npc);
+    public static TrunkDialog from(NpcTemplate npcTemplate) {
+        return new TrunkDialog(npcTemplate);
     }
 }

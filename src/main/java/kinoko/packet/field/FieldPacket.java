@@ -53,6 +53,14 @@ public final class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket blowWeather(int itemId, String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.BlowWeather);
+        outPacket.encodeByte(0); // nBlowType
+        outPacket.encodeInt(itemId); // nItemID, 0 to stop
+        outPacket.encodeString(message);
+        return outPacket;
+    }
+
     public static OutPacket quickslotMappedInit(int[] quickslotKeyMap) {
         final OutPacket outPacket = OutPacket.of(OutHeader.QuickslotMappedInit);
         outPacket.encodeByte(true); // defaults if false

@@ -2,6 +2,7 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.field.TrunkPacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
@@ -11,6 +12,7 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MapProvider;
+import kinoko.provider.NpcProvider;
 import kinoko.provider.WzProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
@@ -18,6 +20,7 @@ import kinoko.provider.item.ItemOptionInfo;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
@@ -26,6 +29,8 @@ import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
+import kinoko.world.dialog.shop.ShopDialog;
+import kinoko.world.dialog.trunk.TrunkDialog;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
 import kinoko.world.skill.SkillConstants;
@@ -237,6 +242,7 @@ public final class ItemHandler {
             user.dispose();
             return;
         }
+        final ItemInfo itemInfo = itemInfoResult.get();
 
         try (var locked = user.acquire()) {
             // Check item
@@ -322,7 +328,6 @@ public final class ItemHandler {
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
                     user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.artSpeakerWorld(messages, user.getChannelId(), whisperIcon));
-
                 }
                 case AVATARMEGAPHONE -> {
                     final String s1 = inPacket.decodeString();
@@ -347,6 +352,7 @@ public final class ItemHandler {
                     final String message = inPacket.decodeString();
                     user.setAdBoard(message);
                     user.getField().broadcastPacket(UserPacket.userAdBoard(user, message));
+                    user.dispose();
                 }
                 case KARMASCISSORS -> {
                     // Resolve target item
@@ -432,8 +438,8 @@ public final class ItemHandler {
                     if (updateItemResult.isEmpty()) {
                         throw new IllegalStateException(String.format("Could not update equip item %d in position %d", targetItem.getItemId(), targetPosition));
                     }
-                    user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
-                    user.write(FieldPacket.itemUpgradeResultSuccess(equipData.getIuc()));
+                    user.write(WvsContext.inventoryOperation(updateItemResult.get(), false));
+                    user.write(FieldPacket.itemUpgradeResultSuccess(equipData.getIuc())); // exclRequest by ItemUpgradeResult
                 }
                 case ITEM_UNRELEASE -> {
                     final int equipItemPosition = inPacket.decodeInt();
@@ -519,14 +525,86 @@ public final class ItemHandler {
                     user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
                     user.write(UserPacket.userItemUnreleaseEffect(user, true)); // Potential successfully reset. Miracle Cube Fragment obtained!
                 }
+                case WEATHER -> {
+                    final String message = inPacket.decodeString();
+                    // Consume item
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not remove weather item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
+                    // Blow weather
+                    final Field field = user.getField();
+                    field.broadcastPacket(FieldPacket.blowWeather(itemId, String.format("%s : %s", user.getCharacterName(), message)));
+                    EventScheduler.addEvent(() -> {
+                        field.broadcastPacket(FieldPacket.blowWeather(0, ""));
+                    }, 30, TimeUnit.SECONDS); // TODO : register to field
+                    // Apply state change item
+                    final int stateChangeItem = itemInfo.getInfo(ItemInfoType.stateChangeItem);
+                    if (stateChangeItem == 0) {
+                        user.dispose();
+                        return;
+                    }
+                    final Optional<ItemInfo> stateChangeItemInfoResult = ItemProvider.getItemInfo(stateChangeItem);
+                    if (stateChangeItemInfoResult.isEmpty()) {
+                        log.error("Could not resolve item info for item ID : {}", stateChangeItem);
+                        user.dispose();
+                        return;
+                    }
+                    final ItemInfo stateChangeItemInfo = stateChangeItemInfoResult.get();
+                    changeStat(locked, stateChangeItemInfo);
+                    field.getUserPool().forEach((other) -> {
+                        if (other.getCharacterId() != user.getCharacterId()) {
+                            try (var lockedOther = other.acquire()) {
+                                changeStat(lockedOther, stateChangeItemInfo);
+                            }
+                        }
+                    });
+                }
+                case SELECTNPC -> {
+                    final int npcId = itemInfo.getInfo(ItemInfoType.npc);
+                    // Resolve npc
+                    final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(npcId);
+                    if (npcTemplateResult.isEmpty()) {
+                        log.error("Could not resolve npc ID {} for item ID : {}", npcId, itemId);
+                        user.dispose();
+                        return;
+                    }
+                    final NpcTemplate npcTemplate = npcTemplateResult.get();
+                    // Check if dialog present
+                    if (user.hasDialog()) {
+                        log.error("Tried to use select npc item ID {}, while already in a dialog", itemId);
+                        user.dispose();
+                        return;
+                    }
+                    // Consume item
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not select npc item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    if (npcTemplate.isTrunk()) {
+                        final TrunkDialog trunkDialog = TrunkDialog.from(npcTemplate);
+                        user.setDialog(trunkDialog);
+                        // Lock account to access trunk
+                        try (var lockedAccount = user.getAccount().acquire()) {
+                            user.write(TrunkPacket.openTrunkDlg(npcId, lockedAccount.get().getTrunk()));
+                        }
+                    } else {
+                        final ShopDialog shopDialog = ShopDialog.from(npcTemplate);
+                        user.setDialog(shopDialog);
+                        user.write(FieldPacket.openShopDlg(shopDialog));
+                    }
+                }
                 case null -> {
                     log.error("Unknown cash item type for item ID : {}", item.getItemId());
+                    user.dispose();
                 }
                 default -> {
-                    log.error("Unhandled cash item type for item ID : {}", item.getItemId());
+                    log.error("Unhandled cash item type {} for item ID : {}", cashItemType, item.getItemId());
+                    user.dispose();
                 }
             }
-            user.dispose();
         }
     }
 

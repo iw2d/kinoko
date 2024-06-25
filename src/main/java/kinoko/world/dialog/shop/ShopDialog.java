@@ -5,6 +5,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
@@ -12,7 +13,6 @@ import kinoko.util.Encodable;
 import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.Dialog;
-import kinoko.world.field.npc.Npc;
 import kinoko.world.item.*;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.explorer.Pirate;
@@ -27,11 +27,11 @@ import java.util.Optional;
 
 public final class ShopDialog implements Dialog, Encodable {
     private static final Logger log = LogManager.getLogger(ShopDialog.class);
-    private final Npc npc;
+    private final NpcTemplate npcTemplate;
     private final List<ShopItem> items;
 
-    public ShopDialog(Npc npc, List<ShopItem> items) {
-        this.npc = npc;
+    public ShopDialog(NpcTemplate npcTemplate, List<ShopItem> items) {
+        this.npcTemplate = npcTemplate;
         this.items = items;
     }
 
@@ -191,16 +191,16 @@ public final class ShopDialog implements Dialog, Encodable {
     @Override
     public void encode(OutPacket outPacket) {
         // CShopDlg::SetShopDlg
-        outPacket.encodeInt(npc.getTemplateId()); // dwNpcTemplateID
+        outPacket.encodeInt(npcTemplate.getId()); // dwNpcTemplateID
         outPacket.encodeShort(items.size()); // nCount
         for (ShopItem item : items) {
             item.encode(outPacket);
         }
     }
 
-    public static ShopDialog from(Npc npc) {
-        final List<ShopItem> items = ShopProvider.getNpcShopItems(npc);
-        return new ShopDialog(npc, items);
+    public static ShopDialog from(NpcTemplate npcTemplate) {
+        final List<ShopItem> items = ShopProvider.getNpcShopItems(npcTemplate.getId());
+        return new ShopDialog(npcTemplate, items);
     }
 
     private static int getIncSlotMax(User user, int itemId) {

@@ -172,14 +172,14 @@ public final class UserHandler {
                 return;
             }
             if (npc.isTrunk()) {
-                final TrunkDialog trunkDialog = TrunkDialog.from(npc);
+                final TrunkDialog trunkDialog = TrunkDialog.from(npc.getTemplate());
                 user.setDialog(trunkDialog);
                 // Lock account to access trunk
                 try (var lockedAccount = user.getAccount().acquire()) {
                     user.write(TrunkPacket.openTrunkDlg(npc.getTemplateId(), lockedAccount.get().getTrunk()));
                 }
             } else {
-                final ShopDialog shopDialog = ShopDialog.from(npc);
+                final ShopDialog shopDialog = ShopDialog.from(npc.getTemplate());
                 user.setDialog(shopDialog);
                 user.write(FieldPacket.openShopDlg(shopDialog));
             }

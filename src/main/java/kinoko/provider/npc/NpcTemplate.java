@@ -3,8 +3,6 @@ package kinoko.provider.npc;
 import kinoko.provider.ProviderError;
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.Objects;
-
 public final class NpcTemplate {
     private final int id;
     private final boolean move;
@@ -40,9 +38,12 @@ public final class NpcTemplate {
         return trunkGet;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public boolean hasScript() {
+        return getScript() != null && !getScript().isEmpty();
+    }
+
+    public boolean isTrunk() {
+        return getTrunkGet() > 0 || getTrunkPut() > 0;
     }
 
     @Override

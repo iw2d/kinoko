@@ -103,6 +103,8 @@ public enum ItemInfoType {
     IUCMax,
     setKey,
     addition,
+    npc,
+    stateChangeItem, // weather effect
 
     recoveryHP,
     recoveryMP;

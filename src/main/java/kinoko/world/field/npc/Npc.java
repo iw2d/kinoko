@@ -27,16 +27,16 @@ public final class Npc extends Life implements ControlledObject, Encodable {
         setMoveAction(isFlip ? 0 : 1);
     }
 
+    public NpcTemplate getTemplate() {
+        return template;
+    }
+
     public int getTemplateId() {
         return template.getId();
     }
 
     public boolean isMove() {
         return template.isMove();
-    }
-
-    public boolean isTrunk() {
-        return template.getTrunkGet() > 0 || template.getTrunkPut() > 0;
     }
 
     public int getTrunkGet() {
@@ -47,12 +47,16 @@ public final class Npc extends Life implements ControlledObject, Encodable {
         return template.getTrunkPut();
     }
 
-    public boolean hasScript() {
-        return template != null && template.getScript() != null && !template.getScript().isEmpty();
-    }
-
     public String getScript() {
         return template.getScript();
+    }
+
+    public boolean hasScript() {
+        return template.hasScript();
+    }
+
+    public boolean isTrunk() {
+        return template.isTrunk();
     }
 
     @Override
