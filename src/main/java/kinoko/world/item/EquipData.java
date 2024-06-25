@@ -359,6 +359,22 @@ public final class EquipData {
         this.durability = durability;
     }
 
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public ItemGrade getItemGrade() {
+        return switch (getGrade() & 0x3) {
+            case 1 -> ItemGrade.RARE;
+            case 2 -> ItemGrade.EPIC;
+            case 3 -> ItemGrade.UNIQUE;
+            default -> ItemGrade.NORMAL;
+        };
+    }
+
+    public boolean isReleased() {
+        return (getGrade() & ItemGrade.RELEASED.getValue()) != 0;
+    }
+
     public void applyScrollStats(Map<ItemInfoType, Object> scrollStats) {
         for (var entry : scrollStats.entrySet()) {
             final int value = WzProvider.getInteger(entry.getValue(), 0);

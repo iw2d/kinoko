@@ -13,6 +13,7 @@ import kinoko.provider.MapProvider;
 import kinoko.provider.WzProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
+import kinoko.provider.item.ItemOptionInfo;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
@@ -586,7 +587,7 @@ public final class ItemHandler {
             final InventoryManager im = locked.get().getInventoryManager();
             final Item upgradeItem = im.getInventoryByType(InventoryType.CONSUME).getItem(upgradeItemPosition);
             if (upgradeItem == null) {
-                log.error("Received UserHyperUpgradeItemUseRequest with hyper upgrade item position {}", upgradeItemPosition);
+                log.error("Received UserHyperUpgradeItemUseRequest with upgrade item position {}", upgradeItemPosition);
                 user.dispose();
                 return;
             }
@@ -609,7 +610,7 @@ public final class ItemHandler {
             final EquipData equipData = equipItem.getEquipData();
             if (equipItemInfo.isCash() || equipItemInfo.getInfo(ItemInfoType.tuc) == 0 || equipData == null || equipData.getRuc() > 0 || equipData.getChuc() >= 15 ||
                     !ItemConstants.isHyperUpgradeItem(upgradeItem.getItemId()) || !ItemConstants.isCorrectUpgradeEquip(upgradeItem.getItemId(), equipItem.getItemId())) {
-                log.error("Tried to hyper upgrade equip item {} with item {}", equipItem.getItemId(), upgradeItem.getItemId());
+                log.error("Tried to upgrade equip item {} with item {}", equipItem.getItemId(), upgradeItem.getItemId());
                 user.dispose();
                 return;
             }
@@ -617,7 +618,7 @@ public final class ItemHandler {
             // Consume hyper upgrade scroll
             final Optional<InventoryOperation> removeUpgradeItemResult = im.removeItem(upgradeItemPosition, upgradeItem, 1);
             if (removeUpgradeItemResult.isEmpty()) {
-                throw new IllegalStateException(String.format("Could not remove hyper upgrade item %d in position %d", upgradeItem.getItemId(), upgradeItemPosition));
+                throw new IllegalStateException(String.format("Could not remove upgrade item %d in position %d", upgradeItem.getItemId(), upgradeItemPosition));
             }
             user.write(WvsContext.inventoryOperation(removeUpgradeItemResult.get(), false));
 
@@ -647,7 +648,152 @@ public final class ItemHandler {
 
     @Handler(InHeader.UserItemOptionUpgradeItemUseRequest)
     public static void handleUserItemOptionUpgradeItemUseRequest(User user, InPacket inPacket) {
-        // TODO
+        inPacket.decodeInt(); // update_time
+        final int upgradeItemPosition = inPacket.decodeShort(); // nUPOS
+        final int equipItemPosition = inPacket.decodeShort(); // nEPOS
+        final boolean enchantSkill = inPacket.decodeBoolean(); // bEnchantSkill
+
+        try (var locked = user.acquire()) {
+            // Resolve upgrade item
+            final InventoryManager im = locked.get().getInventoryManager();
+            final Item upgradeItem = im.getInventoryByType(InventoryType.CONSUME).getItem(upgradeItemPosition);
+            if (upgradeItem == null) {
+                log.error("Received UserItemOptionUpgradeItemUseRequest with upgrade item position {}", upgradeItemPosition);
+                user.dispose();
+                return;
+            }
+
+            // Resolve equip item
+            final InventoryType equipInventoryType = InventoryType.getByPosition(InventoryType.EQUIP, equipItemPosition);
+            final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPosition);
+            if (equipItem == null) {
+                log.error("Received UserItemOptionUpgradeItemUseRequest with equip item position {}", equipItemPosition);
+                user.dispose();
+                return;
+            }
+            final Optional<ItemInfo> equipItemInfoResult = ItemProvider.getItemInfo(equipItem.getItemId());
+            if (equipItemInfoResult.isEmpty()) {
+                log.error("Could not resolve item info for equip item ID : {}", equipItem.getItemId());
+                user.dispose();
+                return;
+            }
+            final ItemInfo equipItemInfo = equipItemInfoResult.get();
+            final EquipData equipData = equipItem.getEquipData();
+            final Set<BodyPart> bodyParts = BodyPart.getByItemId(equipItem.getItemId());
+            if (equipItemInfo.isCash() || equipItemInfo.getInfo(ItemInfoType.tuc) == 0 || equipData == null || equipData.getGrade() != 0 ||
+                    bodyParts.stream().anyMatch(BodyPart::isDragon) || bodyParts.stream().anyMatch(BodyPart::isMechanic) ||
+                    !ItemConstants.isItemOptionUpgradeItem(upgradeItem.getItemId()) || !ItemConstants.isCorrectUpgradeEquip(upgradeItem.getItemId(), equipItem.getItemId())) {
+                log.error("Tried to upgrade equip item {} with item {}", equipItem.getItemId(), upgradeItem.getItemId());
+                user.dispose();
+                return;
+            }
+
+            // Resolve item options
+            final ItemGrade itemGrade = ItemGrade.RARE;
+            final List<ItemOptionInfo> primeItemOptions = ItemProvider.getPossibleItemOptions(equipItemInfo, itemGrade);
+            final List<ItemOptionInfo> lowerItemOptions = ItemProvider.getPossibleItemOptions(equipItemInfo, itemGrade.getLowerGrade());
+            if (primeItemOptions.isEmpty() || lowerItemOptions.isEmpty()) {
+                log.error("Could not resolve item options for grade : {}", equipData.getItemGrade());
+                user.dispose();
+                return;
+            }
+
+            // Consume item option upgrade scroll
+            final Optional<InventoryOperation> removeUpgradeItemResult = im.removeItem(upgradeItemPosition, upgradeItem, 1);
+            if (removeUpgradeItemResult.isEmpty()) {
+                throw new IllegalStateException(String.format("Could not remove upgrade item %d in position %d", upgradeItem.getItemId(), upgradeItemPosition));
+            }
+            user.write(WvsContext.inventoryOperation(removeUpgradeItemResult.get(), false));
+
+            // Upgrade item
+            final boolean success = Util.succeedProp(ItemConstants.getItemOptionUpgradeSuccessProp(upgradeItem.getItemId()));
+            if (success) {
+                final boolean thirdLine = Util.succeedProp(ItemConstants.POTENTIAL_THIRD_LINE_PROP);
+                final boolean primeLine2 = Util.succeedProp(ItemConstants.POTENTIAL_PRIME_LINE2_PROP);
+                final boolean primeLine3 = Util.succeedProp(ItemConstants.POTENTIAL_PRIME_LINE3_PROP);
+
+                final int option1 = Util.getRandomFromCollection(primeItemOptions).map(ItemOptionInfo::getItemOptionId).orElse(0);
+                final int option2 = Util.getRandomFromCollection(primeLine2 ? primeItemOptions : lowerItemOptions).map(ItemOptionInfo::getItemOptionId).orElse(0);
+                final int option3 = thirdLine ? Util.getRandomFromCollection(primeLine3 ? primeItemOptions : lowerItemOptions).map(ItemOptionInfo::getItemOptionId).orElse(0) : 0;
+                equipData.setOption1((short) option1);
+                equipData.setOption2((short) option2);
+                equipData.setOption3((short) option3);
+                equipData.setGrade((byte) itemGrade.getValue());
+                // Update client
+                final Optional<InventoryOperation> updateItemResult = im.updateItem(equipItemPosition, equipItem);
+                if (updateItemResult.isEmpty()) {
+                    throw new IllegalStateException(String.format("Could not update equip item %d in position %d", equipItem.getItemId(), equipItemPosition));
+                }
+                user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
+                user.getField().broadcastPacket(UserPacket.userItemOptionUpgradeEffect(user, true, false, enchantSkill));
+            } else {
+                // Destroy item
+                final Optional<InventoryOperation> destroyItemResult = im.removeItem(equipItemPosition, equipItem);
+                if (destroyItemResult.isEmpty()) {
+                    throw new IllegalStateException(String.format("Could not destroy equip item %d in position %d", equipItem.getItemId(), equipItemPosition));
+                }
+                user.write(WvsContext.inventoryOperation(destroyItemResult.get(), true));
+                user.getField().broadcastPacket(UserPacket.userItemOptionUpgradeEffect(user, false, true, enchantSkill));
+            }
+        }
+    }
+
+    @Handler(InHeader.UserItemReleaseRequest)
+    public static void handleUserItemReleaseRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int upgradeItemPosition = inPacket.decodeShort(); // nUPOS
+        final int equipItemPosition = inPacket.decodeShort(); // nEPOS
+
+        try (var locked = user.acquire()) {
+            // Resolve upgrade item
+            final InventoryManager im = locked.get().getInventoryManager();
+            final Item upgradeItem = im.getInventoryByType(InventoryType.CONSUME).getItem(upgradeItemPosition);
+            if (upgradeItem == null) {
+                log.error("Received UserItemReleaseRequest with upgrade item position {}", upgradeItemPosition);
+                user.dispose();
+                return;
+            }
+
+            // Resolve equip item
+            final InventoryType equipInventoryType = InventoryType.getByPosition(InventoryType.EQUIP, equipItemPosition);
+            final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPosition);
+            if (equipItem == null) {
+                log.error("Received UserItemReleaseRequest with equip item position {}", equipItemPosition);
+                user.dispose();
+                return;
+            }
+            final Optional<ItemInfo> equipItemInfoResult = ItemProvider.getItemInfo(equipItem.getItemId());
+            if (equipItemInfoResult.isEmpty()) {
+                log.error("Could not resolve item info for equip item ID : {}", equipItem.getItemId());
+                user.dispose();
+                return;
+            }
+            final ItemInfo equipItemInfo = equipItemInfoResult.get();
+            final EquipData equipData = equipItem.getEquipData();
+            if (equipData == null || equipData.getGrade() == 0 || equipData.isReleased() ||
+                    !ItemConstants.isReleaseItem(upgradeItem.getItemId()) ||
+                    ItemConstants.getReleaseItemLevelLimit(upgradeItem.getItemId()) < equipItemInfo.getReqLevel()) {
+                log.error("Tried to release equip item {} with item {}", equipItem.getItemId(), upgradeItem.getItemId());
+                user.dispose();
+                return;
+            }
+
+            // Consume release item
+            final Optional<InventoryOperation> removeUpgradeItemResult = im.removeItem(upgradeItemPosition, upgradeItem, 1);
+            if (removeUpgradeItemResult.isEmpty()) {
+                throw new IllegalStateException(String.format("Could not remove upgrade item %d in position %d", upgradeItem.getItemId(), upgradeItemPosition));
+            }
+            user.write(WvsContext.inventoryOperation(removeUpgradeItemResult.get(), false));
+
+            // Release item and update client
+            equipData.setGrade((byte) (equipData.getGrade() | ItemGrade.RELEASED.getValue()));
+            final Optional<InventoryOperation> updateItemResult = im.updateItem(equipItemPosition, equipItem);
+            if (updateItemResult.isEmpty()) {
+                throw new IllegalStateException(String.format("Could not update equip item %d in position %d", equipItem.getItemId(), equipItemPosition));
+            }
+            user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
+            user.getField().broadcastPacket(UserPacket.userItemReleaseEffect(user, equipItemPosition));
+        }
     }
 
     @Handler(InHeader.PetStatChangeItemUseRequest)

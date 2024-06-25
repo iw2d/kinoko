@@ -70,6 +70,14 @@ public final class ItemInfo {
         return ItemType.getByItemId(itemId) == ItemType.BUNDLE ? GameConstants.DEFAULT_ITEM_SLOT_MAX : 1;
     }
 
+    public int getReqLevel() {
+        return Math.max(getInfo(ItemInfoType.reqLevel), getInfo(ItemInfoType.reqLEVEL));
+    }
+
+    public int getOptionLevel() {
+        return ((getReqLevel() - 1) / 10) + 1;
+    }
+
     public boolean isTradeBlock() {
         return getInfo(ItemInfoType.tradeBlock) != 0;
     }
@@ -100,7 +108,7 @@ public final class ItemInfo {
         return JobConstants.isAdminJob(job) ||
                 JobConstants.isManagerJob(job) ||
                 ItemConstants.isMatchedItemIdGender(getItemId(), gender) &&
-                        level >= getInfo(ItemInfoType.reqLEVEL) &&
+                        level >= getReqLevel() &&
                         totalStr >= getInfo(ItemInfoType.reqSTR) &&
                         totalDex >= getInfo(ItemInfoType.reqDEX) &&
                         totalInt >= getInfo(ItemInfoType.reqINT) &&

@@ -113,13 +113,15 @@ public final class BasicStat {
             incMaxHpR += ii.getInfo(ItemInfoType.incMHPr);
             incMaxMpR += ii.getInfo(ItemInfoType.incMMPr);
 
-            final int optionLevel = (ii.getInfo(ItemInfoType.reqLevel) - 1) / 10; // no sockets in v95
-            this.applyItemOption(ed.getOption1(), optionLevel);
-            this.applyItemOption(ed.getOption2(), optionLevel);
-            this.applyItemOption(ed.getOption3(), optionLevel);
-            option.applyItemOptionR(ed.getOption1(), optionLevel);
-            option.applyItemOptionR(ed.getOption2(), optionLevel);
-            option.applyItemOptionR(ed.getOption3(), optionLevel);
+            final int optionLevel = ii.getOptionLevel(); // no sockets in v95
+            if (ed.isReleased()) {
+                this.applyItemOption(ed.getOption1(), optionLevel);
+                this.applyItemOption(ed.getOption2(), optionLevel);
+                this.applyItemOption(ed.getOption3(), optionLevel);
+                option.applyItemOptionR(ed.getOption1(), optionLevel);
+                option.applyItemOptionR(ed.getOption2(), optionLevel);
+                option.applyItemOptionR(ed.getOption3(), optionLevel);
+            }
         }
 
         // Set items

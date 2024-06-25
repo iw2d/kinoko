@@ -1,5 +1,7 @@
 package kinoko.world.item;
 
+import java.util.Set;
+
 public enum BodyPart {
     // BP
     EQUIPPED_BASE(0),
@@ -86,6 +88,9 @@ public enum BodyPart {
     MECHANIC_TRANSISTOR(1104),
     MECHANIC_END(1200);
 
+    private static final Set<BodyPart> armorBodyParts = Set.of(CAP, CLOTHES, PANTS, SHOES, GLOVES, CAPE);
+    private static final Set<BodyPart> accessoryBodyParts = Set.of(FACEACC, EYEACC, EARACC, RING1, RING2, RING3, RING4, PENDANT, EXT_PENDANT1);
+
     private final int value;
 
     BodyPart(int value) {
@@ -96,6 +101,22 @@ public enum BodyPart {
         return value;
     }
 
+    public final boolean isArmor() {
+        return armorBodyParts.contains(this);
+    }
+
+    public final boolean isAccessory() {
+        return accessoryBodyParts.contains(this);
+    }
+
+    public final boolean isDragon() {
+        return getValue() >= DRAGON_BASE.getValue() && getValue() < DRAGON_END.getValue();
+    }
+
+    public final boolean isMechanic() {
+        return getValue() >= MECHANIC_BASE.getValue() && getValue() < MECHANIC_END.getValue();
+    }
+
     public static BodyPart getByValue(int value) {
         for (BodyPart bodyPart : values()) {
             if (bodyPart.getValue() == value) {
@@ -103,5 +124,139 @@ public enum BodyPart {
             }
         }
         return null;
+    }
+
+    public static Set<BodyPart> getByItemId(int itemId) {
+        // get_bodypart_from_item
+        switch (itemId / 10000) {
+            case 100 -> {
+                return Set.of(CAP);
+            }
+            case 101 -> {
+                return Set.of(FACEACC);
+            }
+            case 102 -> {
+                return Set.of(EYEACC);
+            }
+            case 103 -> {
+                return Set.of(EARACC);
+            }
+            case 104, 105 -> {
+                return Set.of(CLOTHES);
+            }
+            case 106 -> {
+                return Set.of(PANTS);
+            }
+            case 107 -> {
+                return Set.of(SHOES);
+            }
+            case 108 -> {
+                return Set.of(GLOVES);
+            }
+            case 109, 119, 134 -> {
+                return Set.of(SHIELD);
+            }
+            case 110 -> {
+                return Set.of(CAPE);
+            }
+            case 111 -> {
+                return Set.of(RING1, RING2, RING3, RING4);
+            }
+            case 112 -> {
+                return Set.of(PENDANT, EXT_PENDANT1);
+            }
+            case 113 -> {
+                return Set.of(BELT);
+            }
+            case 114 -> {
+                return Set.of(MEDAL);
+            }
+            case 115 -> {
+                return Set.of(SHOULDER);
+            }
+            case 161 -> {
+                return Set.of(MECHANIC_ENGINE);
+            }
+            case 162 -> {
+                return Set.of(MECHANIC_ARM);
+            }
+            case 163 -> {
+                return Set.of(MECHANIC_LEG);
+            }
+            case 164 -> {
+                return Set.of(MECHANIC_FRAME);
+            }
+            case 165 -> {
+                return Set.of(MECHANIC_TRANSISTOR);
+            }
+            case 180 -> {
+                if (itemId == 1802100) {
+                    return Set.of(PETRING_LABEL, PETRING_LABEL2, PETRING_LABEL3);
+                } else {
+                    return Set.of(PETWEAR, PETWEAR2, PETWEAR3);
+                }
+            }
+            case 181 -> {
+                switch (itemId) {
+                    case 1812000 -> {
+                        return Set.of(PETABIL_MESO, PETABIL_MESO2, PETABIL_MESO3);
+                    }
+                    case 1812001 -> {
+                        return Set.of(PETABIL_ITEM, PETABIL_ITEM2, PETABIL_ITEM3);
+                    }
+                    case 1812002 -> {
+                        return Set.of(PETABIL_HPCONSUME);
+                    }
+                    case 1812003 -> {
+                        return Set.of(PETABIL_MPCONSUME);
+                    }
+                    case 1812004 -> {
+                        return Set.of(PETABIL_SWEEPFORDROP, PETABIL_SWEEPFORDROP2, PETABIL_SWEEPFORDROP3);
+                    }
+                    case 1812005 -> {
+                        return Set.of(PETABIL_LONGRANGE, PETABIL_LONGRANGE2, PETABIL_LONGRANGE3);
+                    }
+                    case 1812006 -> {
+                        return Set.of(PETABIL_PICKUPOTHERS, PETABIL_PICKUPOTHERS2, PETABIL_PICKUPOTHERS3);
+                    }
+                    default -> {
+                        return Set.of(PETRING_LABEL, PETRING_LABEL2, PETRING_LABEL3);
+                    }
+                }
+            }
+            case 182 -> {
+                return Set.of(PETRING_LABEL, PETRING_LABEL2, PETRING_LABEL3);
+            }
+            case 183 -> {
+                return Set.of(PETRING_QUOTE, PETRING_QUOTE2, PETRING_QUOTE3);
+            }
+            case 190 -> {
+                return Set.of(TAMINGMOB);
+            }
+            case 191 -> {
+                return Set.of(SADDLE);
+            }
+            case 192 -> {
+                return Set.of(MOBEQUIP);
+            }
+            case 194 -> {
+                return Set.of(DRAGON_MASK);
+            }
+            case 195 -> {
+                return Set.of(DRAGON_PENDANT);
+            }
+            case 196 -> {
+                return Set.of(DRAGON_WING);
+            }
+            case 197 -> {
+                return Set.of(DRAGON_TAIL);
+            }
+            default -> {
+                if (!ItemConstants.isWeapon(itemId)) {
+                    return Set.of();
+                }
+                return Set.of(WEAPON);
+            }
+        }
     }
 }

@@ -518,7 +518,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
             probability = probability * multiplier;
         }
-        if (Util.getRandom().nextDouble() > probability) {
+        if (!Util.succeedDouble(probability)) {
             return Optional.empty();
         }
         // Create drop

@@ -1,11 +1,19 @@
 package kinoko.world.item;
 
+import kinoko.world.GameConstants;
+
 public final class ItemConstants {
     // ITEM IDS --------------------------------------------------------------------------------------------------------
 
     public static final int ADVANCED_EQUIP_ENHANCEMENT_SCROLL = 2049300;
     public static final int EQUIP_ENHANCEMENT_SCROLL = 2049301;
+    public static final int ADVANCED_POTENTIAL_SCROLL = 2049400;
+    public static final int POTENTIAL_SCROLL = 2049401;
     public static final int WHITE_SCROLL = 2340000;
+    public static final int MAGNIFYING_GLASS_BASIC = 2460000;
+    public static final int MAGNIFYING_GLASS_AVERAGE = 2460001;
+    public static final int MAGNIFYING_GLASS_ADVANCED = 2460002;
+    public static final int MAGNIFYING_GLASS_PREMIUM = 2460003;
     public static final int OMOK_SET_BASE = 4080000;
     public static final int OMOK_SET_END = 4080011;
     public static final int MATCH_CARDS = 4080100;
@@ -17,6 +25,12 @@ public final class ItemConstants {
     public static final int EQUIP_ENHANCEMENT_STAT_BASE = 2;
     public static final int EQUIP_ENHANCEMENT_ATT_BASE = 2;
     public static final int EQUIP_ENHANCEMENT_DEF_BASE = 2;
+
+    public static final int POTENTIAL_THIRD_LINE_PROP = 50;
+    public static final int POTENTIAL_PRIME_LINE2_PROP = 10;
+    public static final int POTENTIAL_PRIME_LINE3_PROP = 1;
+    public static final double POTENTIAL_TIER_UP_EPIC = 0.06;
+    public static final double POTENTIAL_TIER_UP_UNIQUE = 0.018;
 
 
     public static int getGenderFromId(int itemId) {
@@ -124,6 +138,10 @@ public final class ItemConstants {
         return itemId / 100 == 20494; // potential scrolls
     }
 
+    public static boolean isReleaseItem(int itemId) {
+        return itemId / 10000 == 246; // magnifying glass
+    }
+
     public static boolean isNewUpgradeItem(int itemId) {
         return itemId / 1000 == 2046;
     }
@@ -212,6 +230,28 @@ public final class ItemConstants {
         return 0;
     }
 
+    public static int getItemOptionUpgradeSuccessProp(int itemId) {
+        if (itemId == ADVANCED_POTENTIAL_SCROLL) {
+            return 90;
+        } else if (itemId == POTENTIAL_SCROLL) {
+            return 70;
+        }
+        return 0;
+    }
+
+    public static int getReleaseItemLevelLimit(int itemId) {
+        if (itemId == MAGNIFYING_GLASS_BASIC) {
+            return 30;
+        } else if (itemId == MAGNIFYING_GLASS_AVERAGE) {
+            return 70;
+        } else if (itemId == MAGNIFYING_GLASS_ADVANCED) {
+            return 120;
+        } else if (itemId == MAGNIFYING_GLASS_PREMIUM) {
+            return GameConstants.LEVEL_MAX;
+        }
+        return -1;
+    }
+
     public static boolean isPortableChairItem(int itemId) {
         return itemId / 10000 == 301;
     }
@@ -233,162 +273,7 @@ public final class ItemConstants {
         if (!isMatchedItemIdGender(itemId, gender)) {
             return false;
         }
-        switch (itemId / 10000) {
-            case 100 -> {
-                return bodyPart == BodyPart.CAP;
-            }
-            case 101 -> {
-                return bodyPart == BodyPart.FACEACC;
-            }
-            case 102 -> {
-                return bodyPart == BodyPart.EYEACC;
-            }
-            case 103 -> {
-                return bodyPart == BodyPart.EARACC;
-            }
-            case 104, 105 -> {
-                return bodyPart == BodyPart.CLOTHES;
-            }
-            case 106 -> {
-                return bodyPart == BodyPart.PANTS;
-            }
-            case 107 -> {
-                return bodyPart == BodyPart.SHOES;
-            }
-            case 108 -> {
-                return bodyPart == BodyPart.GLOVES;
-            }
-            case 109, 119, 134 -> {
-                return bodyPart == BodyPart.SHIELD;
-            }
-            case 110 -> {
-                return bodyPart == BodyPart.CAPE;
-            }
-            case 111 -> {
-                return bodyPart == BodyPart.RING1 ||
-                        bodyPart == BodyPart.RING2 ||
-                        bodyPart == BodyPart.RING3 ||
-                        bodyPart == BodyPart.RING4;
-            }
-            case 112 -> {
-                return bodyPart == BodyPart.PENDANT ||
-                        bodyPart == BodyPart.EXT_PENDANT1;
-            }
-            case 113 -> {
-                return bodyPart == BodyPart.BELT;
-            }
-            case 114 -> {
-                return bodyPart == BodyPart.MEDAL;
-            }
-            case 115 -> {
-                return bodyPart == BodyPart.SHOULDER;
-            }
-            case 161 -> {
-                return bodyPart == BodyPart.MECHANIC_ENGINE;
-            }
-            case 162 -> {
-                return bodyPart == BodyPart.MECHANIC_ARM;
-            }
-            case 163 -> {
-                return bodyPart == BodyPart.MECHANIC_LEG;
-            }
-            case 164 -> {
-                return bodyPart == BodyPart.MECHANIC_FRAME;
-            }
-            case 165 -> {
-                return bodyPart == BodyPart.MECHANIC_TRANSISTOR;
-            }
-            case 180 -> {
-                if (itemId == 1802100) {
-                    return bodyPart == BodyPart.PETRING_LABEL ||
-                            bodyPart == BodyPart.PETRING_LABEL2 ||
-                            bodyPart == BodyPart.PETRING_LABEL3;
-                }
-                return bodyPart == BodyPart.PETWEAR ||
-                        bodyPart == BodyPart.PETWEAR2 ||
-                        bodyPart == BodyPart.PETWEAR3;
-            }
-            case 181 -> {
-                switch (itemId) {
-                    case 1812000 -> {
-                        return bodyPart == BodyPart.PETABIL_MESO ||
-                                bodyPart == BodyPart.PETABIL_MESO2 ||
-                                bodyPart == BodyPart.PETABIL_MESO3;
-                    }
-                    case 1812001 -> {
-                        return bodyPart == BodyPart.PETABIL_ITEM ||
-                                bodyPart == BodyPart.PETABIL_ITEM2 ||
-                                bodyPart == BodyPart.PETABIL_ITEM3;
-                    }
-                    case 1812002 -> {
-                        return bodyPart == BodyPart.PETABIL_HPCONSUME;
-                    }
-                    case 1812003 -> {
-                        return bodyPart == BodyPart.PETABIL_MPCONSUME;
-                    }
-                    case 1812004 -> {
-                        return bodyPart == BodyPart.PETABIL_SWEEPFORDROP ||
-                                bodyPart == BodyPart.PETABIL_SWEEPFORDROP2 ||
-                                bodyPart == BodyPart.PETABIL_SWEEPFORDROP3;
-                    }
-                    case 1812005 -> {
-                        return bodyPart == BodyPart.PETABIL_LONGRANGE ||
-                                bodyPart == BodyPart.PETABIL_LONGRANGE2 ||
-                                bodyPart == BodyPart.PETABIL_LONGRANGE3;
-                    }
-                    case 1812006 -> {
-                        return bodyPart == BodyPart.PETABIL_PICKUPOTHERS ||
-                                bodyPart == BodyPart.PETABIL_PICKUPOTHERS2 ||
-                                bodyPart == BodyPart.PETABIL_PICKUPOTHERS3;
-                    }
-                    case 1812007 -> {
-                        return bodyPart == BodyPart.PETABIL_IGNOREITEMS1 ||
-                                bodyPart == BodyPart.PETABIL_IGNOREITEMS2 ||
-                                bodyPart == BodyPart.PETABIL_IGNOREITEMS3;
-                    }
-                    default -> {
-                        return false;
-                    }
-                }
-            }
-            case 182 -> {
-                return bodyPart == BodyPart.PETRING_LABEL ||
-                        bodyPart == BodyPart.PETRING_LABEL2 ||
-                        bodyPart == BodyPart.PETRING_LABEL3;
-            }
-            case 183 -> {
-                return bodyPart == BodyPart.PETRING_QUOTE ||
-                        bodyPart == BodyPart.PETRING_QUOTE2 ||
-                        bodyPart == BodyPart.PETRING_QUOTE3;
-            }
-            case 190 -> {
-                return bodyPart == BodyPart.TAMINGMOB;
-            }
-            case 191 -> {
-                return bodyPart == BodyPart.SADDLE;
-            }
-            case 192 -> {
-                return bodyPart == BodyPart.MOBEQUIP;
-            }
-            case 194 -> {
-                return bodyPart == BodyPart.DRAGON_MASK;
-            }
-            case 195 -> {
-                return bodyPart == BodyPart.DRAGON_PENDANT;
-            }
-            case 196 -> {
-                return bodyPart == BodyPart.DRAGON_WING;
-            }
-            case 197 -> {
-                return bodyPart == BodyPart.DRAGON_TAIL;
-            }
-            default -> {
-                if (!isWeapon(itemId)) {
-                    return false;
-                }
-                return bodyPart == BodyPart.WEAPON;
-            }
-        }
+        return BodyPart.getByItemId(itemId).contains(bodyPart);
     }
 
     public static BodyPart getExclusiveEquipItemBodyPart(Inventory equipped, int itemId) {

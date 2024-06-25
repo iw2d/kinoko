@@ -9,7 +9,9 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.util.Util;
+import kinoko.world.item.BodyPart;
 import kinoko.world.item.ItemConstants;
+import kinoko.world.item.ItemGrade;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,6 +54,22 @@ public final class ItemProvider implements WzProvider {
             return Optional.empty();
         }
         return itemOptionInfos.get(itemOptionId).getLevelData(optionLevel);
+    }
+
+    public static List<ItemOptionInfo> getPossibleItemOptions(ItemInfo itemInfo, ItemGrade itemGrade) {
+        final Optional<BodyPart> bodyPartResult = BodyPart.getByItemId(itemInfo.getItemId()).stream().findFirst();
+        if (bodyPartResult.isEmpty()) {
+            return List.of();
+        }
+        final BodyPart bodyPart = bodyPartResult.get();
+        final int reqLevel = itemInfo.getReqLevel();
+        final List<ItemOptionInfo> possibleItemOptions = new ArrayList<>();
+        for (ItemOptionInfo itemOptionInfo : itemOptionInfos.values()) {
+            if (itemOptionInfo.isMatchingGrade(itemGrade) && itemOptionInfo.isMatchingLevel(reqLevel) && itemOptionInfo.isMatchingType(bodyPart)) {
+                possibleItemOptions.add(itemOptionInfo);
+            }
+        }
+        return possibleItemOptions;
     }
 
     public static boolean isPetEquipSuitable(int itemId, int templateId) {

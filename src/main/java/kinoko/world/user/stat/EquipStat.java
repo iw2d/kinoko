@@ -156,13 +156,15 @@ public final class EquipStat {
                 continue;
             }
             final ItemInfo ii = itemInfoResult.get();
-            final int optionLevel = (ii.getInfo(ItemInfoType.reqLevel) - 1) / 10;
-            stat.applyItemOption(ed.getOption1(), optionLevel);
-            stat.applyItemOption(ed.getOption2(), optionLevel);
-            stat.applyItemOption(ed.getOption3(), optionLevel);
-            stat.applyItemOptionR(ed.getOption1(), optionLevel);
-            stat.applyItemOptionR(ed.getOption2(), optionLevel);
-            stat.applyItemOptionR(ed.getOption3(), optionLevel);
+            final int optionLevel = ii.getOptionLevel();
+            if (ed.isReleased()) {
+                stat.applyItemOption(ed.getOption1(), optionLevel);
+                stat.applyItemOption(ed.getOption2(), optionLevel);
+                stat.applyItemOption(ed.getOption3(), optionLevel);
+                stat.applyItemOptionR(ed.getOption1(), optionLevel);
+                stat.applyItemOptionR(ed.getOption2(), optionLevel);
+                stat.applyItemOptionR(ed.getOption3(), optionLevel);
+            }
         }
 
         // Set items
@@ -208,7 +210,7 @@ public final class EquipStat {
             statWithout.incDex -= ed.getIncDex();
             statWithout.incInt -= ed.getIncInt();
             statWithout.incLuk -= ed.getIncLuk();
-            final int optionLevel = (ii.getInfo(ItemInfoType.reqLevel) - 1) / 10;
+            final int optionLevel = ii.getOptionLevel();
             statWithout.clearItemOption(ed.getOption1(), optionLevel);
             statWithout.clearItemOption(ed.getOption2(), optionLevel);
             statWithout.clearItemOption(ed.getOption3(), optionLevel);

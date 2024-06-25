@@ -187,6 +187,23 @@ public final class UserPacket {
         return outPacket;
     }
 
+    public static OutPacket userItemOptionUpgradeEffect(User user, boolean success, boolean cursed, boolean enchantSkill) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserItemOptionUpgradeEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(success); // bSuccess
+        outPacket.encodeByte(cursed); // bCursed
+        outPacket.encodeByte(enchantSkill); // bEnchantSkill
+        outPacket.encodeInt(0); // nEnchantCategory
+        return outPacket;
+    }
+
+    public static OutPacket userItemReleaseEffect(User user, int position) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserItemReleaseEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeShort(position);
+        return outPacket;
+    }
+
     public static OutPacket userTeslaTriangle(User user, List<Summoned> rockAndShockList) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTeslaTriangle);
         outPacket.encodeInt(user.getCharacterId());

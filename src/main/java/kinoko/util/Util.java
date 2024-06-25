@@ -39,6 +39,10 @@ public final class Util {
         return random.nextInt(0, 100) < chance;
     }
 
+    public static boolean succeedDouble(double chance) {
+        return random.nextDouble() < chance;
+    }
+
     public static <T> Optional<T> getRandomFromCollection(Collection<T> collection) {
         return getRandomFromCollection(collection, (ignored) -> 1.0);
     }

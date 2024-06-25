@@ -417,12 +417,14 @@ public final class User extends Life implements Lockable<User> {
 
     public void resetTemporaryStat(BiPredicate<CharacterTemporaryStat, TemporaryStatOption> predicate) {
         final Set<CharacterTemporaryStat> resetStats = getSecondaryStat().resetTemporaryStat(predicate);
-        updatePassiveSkillData();
-        validateStat();
-        final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
-        if (!flag.isEmpty()) {
-            write(WvsContext.temporaryStatReset(flag));
-            getField().broadcastPacket(UserRemote.temporaryStatReset(this, flag), this);
+        if (!resetStats.isEmpty()) {
+            updatePassiveSkillData();
+            validateStat();
+            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
+            if (!flag.isEmpty()) {
+                write(WvsContext.temporaryStatReset(flag));
+                getField().broadcastPacket(UserRemote.temporaryStatReset(this, flag), this);
+            }
         }
     }
 

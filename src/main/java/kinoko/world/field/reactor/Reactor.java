@@ -154,7 +154,7 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
                 }
             }
             // Drop probability
-            if (Util.getRandom().nextDouble() > reward.getProb()) {
+            if (!Util.succeedDouble(reward.getProb())) {
                 continue;
             }
             // Create drop
