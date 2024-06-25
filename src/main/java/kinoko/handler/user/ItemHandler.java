@@ -335,9 +335,88 @@ public final class ItemHandler {
                     // TODO
                 }
                 case ITEM_UNRELEASE -> {
-                    // CUIUnreleaseDlg::UnreleaseEquipItem
                     final int equipItemPosition = inPacket.decodeInt();
-                    // TODO
+                    // Resolve equip item
+                    final InventoryType equipInventoryType = InventoryType.getByPosition(InventoryType.EQUIP, equipItemPosition);
+                    final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPosition);
+                    if (equipItem == null) {
+                        log.error("Could not resolve equip item to unrelease in position {}", equipItemPosition);
+                        user.dispose();
+                        return;
+                    }
+                    final Optional<ItemInfo> equipItemInfoResult = ItemProvider.getItemInfo(equipItem.getItemId());
+                    if (equipItemInfoResult.isEmpty()) {
+                        log.error("Could not resolve item info for equip item ID : {}", equipItem.getItemId());
+                        user.dispose();
+                        return;
+                    }
+                    final ItemInfo equipItemInfo = equipItemInfoResult.get();
+                    final EquipData equipData = equipItem.getEquipData();
+                    if (equipData == null || equipData.getGrade() == 0 || !equipData.isReleased()) {
+                        log.error("Tried to unrelease equip item {} in position {}", equipItem.getItemId(), equipItemPosition);
+                        user.dispose();
+                        return;
+                    }
+                    // Resolve item options
+                    ItemGrade itemGrade = equipData.getItemGrade();
+                    if (itemGrade == ItemGrade.RARE && Util.succeedDouble(ItemConstants.POTENTIAL_TIER_UP_EPIC)) {
+                        itemGrade = ItemGrade.EPIC;
+                    }
+                    if (itemGrade == ItemGrade.EPIC && Util.succeedDouble(ItemConstants.POTENTIAL_TIER_UP_UNIQUE)) {
+                        itemGrade = ItemGrade.UNIQUE;
+                    }
+                    final List<ItemOptionInfo> primeItemOptions = ItemProvider.getPossibleItemOptions(equipItemInfo, itemGrade);
+                    final List<ItemOptionInfo> lowerItemOptions = ItemProvider.getPossibleItemOptions(equipItemInfo, itemGrade.getLowerGrade());
+                    if (primeItemOptions.isEmpty() || lowerItemOptions.isEmpty()) {
+                        log.error("Could not resolve item options for grade : {}", equipData.getItemGrade());
+                        user.dispose();
+                        return;
+                    }
+                    // Check user can hold cube fragment
+                    final Optional<ItemInfo> fragmentItemInfoResult = ItemProvider.getItemInfo(ItemConstants.MIRACLE_CUBE_FRAGMENT);
+                    if (fragmentItemInfoResult.isEmpty()) {
+                        log.error("Could not resolve cube fragment item : {}", ItemConstants.MIRACLE_CUBE_FRAGMENT);
+                        user.dispose();
+                        return;
+                    }
+                    final ItemInfo fragmentItemInfo = fragmentItemInfoResult.get();
+                    if (!im.canAddItem(fragmentItemInfo.getItemId(), 1)) {
+                        user.write(UserPacket.userItemUnreleaseEffect(user, false)); // Resetting Potential has failed due to insufficient space in the Use item.
+                        user.dispose();
+                        return;
+                    }
+                    // Consume item
+                    final Optional<InventoryOperation> removeUpgradeItemResult = im.removeItem(position, item, 1);
+                    if (removeUpgradeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not remove item unrelease item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeUpgradeItemResult.get(), false));
+                    // Give cube fragment
+                    final Item fragmentItem = fragmentItemInfo.createItem(user.getNextItemSn(), 1);
+                    final Optional<List<InventoryOperation>> addItemResult = im.addItem(fragmentItem);
+                    if (addItemResult.isEmpty()) {
+                        throw new IllegalStateException("Could not add cube fragment item");
+                    }
+                    user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
+                    // Update item
+                    final boolean secondLine = equipData.getOption2() != 0;
+                    final boolean thirdLine = equipData.getOption3() != 0;
+                    final boolean primeLine2 = Util.succeedProp(ItemConstants.POTENTIAL_PRIME_LINE2_PROP);
+                    final boolean primeLine3 = Util.succeedProp(ItemConstants.POTENTIAL_PRIME_LINE3_PROP);
+                    final int option1 = Util.getRandomFromCollection(primeItemOptions).map(ItemOptionInfo::getItemOptionId).orElse(0);
+                    final int option2 = secondLine ? Util.getRandomFromCollection(primeLine2 ? primeItemOptions : lowerItemOptions).map(ItemOptionInfo::getItemOptionId).orElse(0) : 0;
+                    final int option3 = thirdLine ? Util.getRandomFromCollection(primeLine3 ? primeItemOptions : lowerItemOptions).map(ItemOptionInfo::getItemOptionId).orElse(0) : 0;
+                    equipData.setOption1((short) option1);
+                    equipData.setOption2((short) option2);
+                    equipData.setOption3((short) option3);
+                    equipData.setGrade((byte) itemGrade.getValue());
+                    // Update client
+                    final Optional<InventoryOperation> updateItemResult = im.updateItem(equipItemPosition, equipItem);
+                    if (updateItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not update equip item %d in position %d", equipItem.getItemId(), equipItemPosition));
+                    }
+                    user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
+                    user.write(UserPacket.userItemUnreleaseEffect(user, true)); // Potential successfully reset. Miracle Cube Fragment obtained!
                 }
                 case null -> {
                     log.error("Unknown cash item type for item ID : {}", item.getItemId());
@@ -437,7 +516,7 @@ public final class ItemHandler {
             final InventoryType equipInventoryType = InventoryType.getByPosition(InventoryType.EQUIP, equipItemPosition);
             final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPosition);
             if (equipItem == null) {
-                log.error("Received UserUpgradeItemUseRequest with equip item position {}", upgradeItemPosition);
+                log.error("Received UserUpgradeItemUseRequest with equip item position {}", equipItemPosition);
                 user.dispose();
                 return;
             }
@@ -792,7 +871,7 @@ public final class ItemHandler {
                 throw new IllegalStateException(String.format("Could not update equip item %d in position %d", equipItem.getItemId(), equipItemPosition));
             }
             user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
-            user.getField().broadcastPacket(UserPacket.userItemReleaseEffect(user, equipItemPosition));
+            user.write(UserPacket.userItemReleaseEffect(user, equipItemPosition));
         }
     }
 

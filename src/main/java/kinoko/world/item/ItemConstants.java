@@ -10,13 +10,17 @@ public final class ItemConstants {
     public static final int ADVANCED_POTENTIAL_SCROLL = 2049400;
     public static final int POTENTIAL_SCROLL = 2049401;
     public static final int WHITE_SCROLL = 2340000;
+    public static final int MIRACLE_CUBE_FRAGMENT = 2430112;
     public static final int MAGNIFYING_GLASS_BASIC = 2460000;
     public static final int MAGNIFYING_GLASS_AVERAGE = 2460001;
     public static final int MAGNIFYING_GLASS_ADVANCED = 2460002;
     public static final int MAGNIFYING_GLASS_PREMIUM = 2460003;
+
     public static final int OMOK_SET_BASE = 4080000;
     public static final int OMOK_SET_END = 4080011;
     public static final int MATCH_CARDS = 4080100;
+
+    public static final int MIRACLE_CUBE = 5062000;
     public static final int WHEEL_OF_DESTINY = 5510000;
 
 

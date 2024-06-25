@@ -204,6 +204,13 @@ public final class UserPacket {
         return outPacket;
     }
 
+    public static OutPacket userItemUnreleaseEffect(User user, boolean success) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserItemUnreleaseEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(success);
+        return outPacket;
+    }
+
     public static OutPacket userTeslaTriangle(User user, List<Summoned> rockAndShockList) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTeslaTriangle);
         outPacket.encodeInt(user.getCharacterId());

@@ -254,6 +254,10 @@ public final class InventoryManager {
         return canAddItems(Set.of(item));
     }
 
+    public boolean canAddItem(int itemId, int quantity) {
+        return canAddItems(List.of(new Tuple<>(itemId, quantity)));
+    }
+
     public boolean canAddItems(Set<Item> items) {
         final List<Tuple<Integer, Integer>> itemCountSet = items.stream()
                 .map((item) -> new Tuple<>(item.getItemId(), (int) item.getQuantity()))
