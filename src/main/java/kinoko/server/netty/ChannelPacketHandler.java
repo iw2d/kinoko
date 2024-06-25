@@ -23,13 +23,14 @@ public final class ChannelPacketHandler extends PacketHandler {
             NpcHandler.class,
             // User
             UserHandler.class,
+            PetHandler.class,
+            SummonedHandler.class,
             AttackHandler.class,
             SkillHandler.class,
             HitHandler.class,
             ItemHandler.class,
             CashItemHandler.class,
-            PetHandler.class,
-            SummonedHandler.class
+            UpgradeItemHandler.class
     );
 
     public ChannelPacketHandler() {
