@@ -136,7 +136,7 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
                 reactor.setState(dropEvent.getNextState());
                 reactor.getField().getReactorPool().hitReactor(reactor, 0);
                 if (reactor.isLastState() && reactor.hasAction()) {
-                    ScriptDispatcher.startReactorScript(userResult.get(), reactor);
+                    ScriptDispatcher.startReactorScript(userResult.get(), reactor, reactor.getAction());
                 }
             }
         }, GameConstants.REACTOR_DROP_DELAY, TimeUnit.SECONDS);

@@ -8,6 +8,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.util.Tuple;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
@@ -19,6 +20,7 @@ import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,6 +145,10 @@ public abstract class ScriptManager {
         return user.getJob();
     }
 
+    public final int getMaxHp() {
+        return user.getMaxHp();
+    }
+
     public final int getHp() {
         return user.getHp();
     }
@@ -169,25 +175,62 @@ public abstract class ScriptManager {
         return true;
     }
 
-    public final boolean addItem(int itemId) {
-        return addItem(itemId, 1);
+    public final boolean addItem(int itemId, int quantity) {
+        return addItems(List.of(List.of(itemId, quantity)));
     }
 
-    public final boolean addItem(int itemId, int quantity) {
-        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
-        if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item ID : {}", itemId);
+    public final boolean addItems(List<List<Integer>> itemList) {
+        // Check inventory
+        final List<Tuple<Integer, Integer>> itemCheck = new ArrayList<>();
+        for (List<Integer> itemTuple : itemList) {
+            if (itemTuple.size() != 2) {
+                log.error("Invalid tuple length for ScriptManager.addItems {}", itemTuple);
+                return false;
+            }
+            itemCheck.add(new Tuple<>(itemTuple.get(0), itemTuple.get(1)));
+        }
+        if (!user.getInventoryManager().canAddItems(itemCheck)) {
             return false;
         }
-        final ItemInfo ii = itemInfoResult.get();
-        final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()));
-        final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
-        if (addItemResult.isEmpty()) {
-            return false;
+        // Create items
+        final List<Item> items = new ArrayList<>();
+        for (var tuple : itemCheck) {
+            final int itemId = tuple.getLeft();
+            final int quantity = tuple.getRight();
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+            if (itemInfoResult.isEmpty()) {
+                log.error("Could not resolve item info for item ID : {}", itemId);
+                return false;
+            }
+            final ItemInfo itemInfo = itemInfoResult.get();
+            items.add(itemInfo.createItem(user.getNextItemSn(), Math.min(quantity, itemInfo.getSlotMax())));
         }
-        user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-        user.write(UserLocal.effect(Effect.gainItem(item)));
+        // Add items to inventory
+        for (Item item : items) {
+            final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+            if (addItemResult.isEmpty()) {
+                throw new IllegalStateException("Failed to add item to inventory");
+            }
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+            user.write(UserLocal.effect(Effect.gainItem(item)));
+        }
         return true;
+    }
+
+    public final boolean canAddItem(int itemId, int quantity) {
+        return canAddItems(List.of(List.of(itemId, quantity)));
+    }
+
+    public final boolean canAddItems(List<List<Integer>> itemList) {
+        final List<Tuple<Integer, Integer>> itemCheck = new ArrayList<>();
+        for (List<Integer> itemTuple : itemList) {
+            if (itemTuple.size() != 2) {
+                log.error("Invalid tuple length for ScriptManager.addItems {}", itemTuple);
+                return false;
+            }
+            itemCheck.add(new Tuple<>(itemTuple.get(0), itemTuple.get(1)));
+        }
+        return user.getInventoryManager().canAddItems(itemCheck);
     }
 
     public final boolean removeItem(int itemId, int quantity) {

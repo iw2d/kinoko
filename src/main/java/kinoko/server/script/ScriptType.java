@@ -4,7 +4,7 @@ package kinoko.server.script;
  * Enum for classifying scripts that can run in parallel.
  */
 public enum ScriptType {
-    NPC,                // npc and quest scripts
+    NPC,                // npc, item, and quest scripts
     PORTAL,             // portal scripts
     REACTOR,            // reactor scripts
     FIRST_USER_ENTER,   // field onFirstUserEnter scripts

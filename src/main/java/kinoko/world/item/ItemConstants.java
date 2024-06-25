@@ -122,6 +122,10 @@ public final class ItemConstants {
         return false;
     }
 
+    public static boolean isScriptRunItem(int itemId) {
+        return itemId / 10000 == 243 || itemId == 3994225;
+    }
+
     public static boolean isRecoverSlotItem(int itemId) {
         return itemId / 100 == 20490; // clean slate scrolls
     }

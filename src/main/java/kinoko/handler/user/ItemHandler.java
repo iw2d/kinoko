@@ -21,6 +21,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -185,11 +186,48 @@ public final class ItemHandler {
         }
     }
 
+    @Handler(InHeader.UserScriptItemUseRequest)
+    public static void handleUserScriptItemUseRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int position = inPacket.decodeShort(); // nPOS
+        final int itemId = inPacket.decodeInt(); // nItemID
+
+        // Resolve item
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item : {}", itemId);
+            user.dispose();
+            return;
+        }
+        final ItemInfo itemInfo = itemInfoResult.get();
+
+        // Check item
+        try (var locked = user.acquire()) {
+            final InventoryManager im = locked.get().getInventoryManager();
+            final Item item = im.getInventoryByItemId(itemId).getItem(position);
+            if (item == null || item.getItemId() != itemId) {
+                log.error("Tried to use an item in position {} as item ID : {}", position, itemId);
+                user.dispose();
+                return;
+            }
+        }
+
+        // Dispatch item script
+        final int speakerId = itemInfo.getSpec(ItemSpecType.npc, 9010000); // Maple Administrator
+        final String scriptName = itemInfo.getScript();
+        if (scriptName == null || scriptName.isEmpty()) {
+            log.error("Could not resolve script for item : {}", itemId);
+            user.dispose();
+            return;
+        }
+        ScriptDispatcher.startItemScript(user, itemId, position, speakerId, scriptName);
+    }
+
     @Handler(InHeader.UserConsumeCashItemUseRequest)
     public static void handleUserConsumeCashItemUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
-        final int itemId = inPacket.decodeInt(); // nIdemID
+        final int itemId = inPacket.decodeInt(); // nItemID
 
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
@@ -881,7 +919,7 @@ public final class ItemHandler {
         inPacket.decodeBoolean(); // bBuffSkill
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
-        final int itemId = inPacket.decodeInt(); // nIdemID
+        final int itemId = inPacket.decodeInt(); // nItemID
 
         // Resolve pet
         if (user.getPetIndex(petSn).isEmpty()) {

@@ -145,7 +145,7 @@ public final class FieldHandler {
             field.getReactorPool().hitReactor(reactor, delay);
             // Dispatch reactor script
             if (reactor.isLastState() && reactor.hasAction()) {
-                ScriptDispatcher.startReactorScript(user, reactor);
+                ScriptDispatcher.startReactorScript(user, reactor, reactor.getAction());
             }
         }
     }

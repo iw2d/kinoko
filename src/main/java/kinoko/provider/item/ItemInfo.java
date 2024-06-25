@@ -51,6 +51,10 @@ public final class ItemInfo {
         return WzProvider.getInteger(itemSpecs.get(specType), defaultValue);
     }
 
+    public String getScript() {
+        return WzProvider.getString(itemSpecs.get(ItemSpecType.script), "");
+    }
+
     public boolean isCash() {
         return getInfo(ItemInfoType.cash) != 0;
     }

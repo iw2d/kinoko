@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 public final class ScriptDispatcher {
     public static final Path NPC_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "npc");
+    public static final Path ITEM_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "item");
     public static final Path QUEST_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "quest");
     public static final Path PORTAL_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "portal");
     public static final Path REACTOR_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "reactor");
@@ -88,6 +89,18 @@ public final class ScriptDispatcher {
         });
     }
 
+    public static void startItemScript(User user, int itemId, int itemPosition, int speakerId, String scriptName) {
+        if (scriptManagers.get(ScriptType.NPC).containsKey(user.getCharacterId())) {
+            log.error("Cannot start item script {}, another npc script already being evaluated.", scriptName);
+            return;
+        }
+        final NpcScriptManager scriptManager = new NpcScriptManager(user, speakerId);
+        startScript(ScriptType.NPC, scriptManager, Path.of(ITEM_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
+            context.getBindings(SCRIPT_LANGUAGE).putMember("npcId", speakerId);
+            context.getBindings(SCRIPT_LANGUAGE).putMember("itemId", itemId);
+        });
+    }
+
     public static void startQuestScript(User user, int speakerId, int questId, boolean isStart) {
         final String scriptName = String.format("q%d%s", questId, isStart ? "s" : "e");
         if (scriptManagers.get(ScriptType.NPC).containsKey(user.getCharacterId())) {
@@ -114,8 +127,7 @@ public final class ScriptDispatcher {
         });
     }
 
-    public static void startReactorScript(User user, Reactor reactor) {
-        final String scriptName = reactor.getAction();
+    public static void startReactorScript(User user, Reactor reactor, String scriptName) {
         if (scriptManagers.get(ScriptType.REACTOR).containsKey(user.getCharacterId())) {
             log.error("Cannot start reactor script {}, another script already being evaluated.", scriptName);
             return;
