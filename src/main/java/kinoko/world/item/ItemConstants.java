@@ -5,6 +5,9 @@ import kinoko.world.GameConstants;
 public final class ItemConstants {
     // ITEM IDS --------------------------------------------------------------------------------------------------------
 
+    public static final int HORNTAIL_NECKLACE = 1122000;
+    public static final int CHAOS_HORNTAIL_NECKLACE = 1122076;
+
     public static final int ADVANCED_EQUIP_ENHANCEMENT_SCROLL = 2049300;
     public static final int EQUIP_ENHANCEMENT_SCROLL = 2049301;
     public static final int ADVANCED_POTENTIAL_SCROLL = 2049400;

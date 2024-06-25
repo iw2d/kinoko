@@ -1,6 +1,7 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
@@ -255,6 +256,7 @@ public final class ItemHandler {
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
                         log.error("Could not remove speaker channel item from inventory");
+                        user.dispose();
                         return;
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
@@ -267,6 +269,7 @@ public final class ItemHandler {
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
                         log.error("Could not remove speaker world item from inventory");
+                        user.dispose();
                         return;
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
@@ -286,6 +289,7 @@ public final class ItemHandler {
                         final InventoryType inventoryType = InventoryType.getByPosition(InventoryType.getByValue(targetType), targetPosition);
                         if (inventoryType == null) {
                             log.error("Received unknown target inventory type {} for item speaker", targetType);
+                            user.dispose();
                             return;
                         }
                         targetItem = im.getInventoryByType(inventoryType).getItem(targetPosition);
@@ -296,6 +300,7 @@ public final class ItemHandler {
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
                         log.error("Could not remove item speaker item from inventory");
+                        user.dispose();
                         return;
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
@@ -312,6 +317,7 @@ public final class ItemHandler {
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
                         log.error("Could not remove art speaker world item from inventory");
+                        user.dispose();
                         return;
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
@@ -328,6 +334,7 @@ public final class ItemHandler {
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
                         log.error("Could not remove avatar megaphone item from inventory");
+                        user.dispose();
                         return;
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
@@ -348,17 +355,20 @@ public final class ItemHandler {
                     final InventoryType inventoryType = InventoryType.getByPosition(InventoryType.getByValue(targetType), targetPosition);
                     if (inventoryType == null) {
                         log.error("Received unknown target inventory type {} for karma scissors", targetType);
+                        user.dispose();
                         return;
                     }
                     final Item targetItem = im.getInventoryByType(inventoryType).getItem(targetPosition);
                     if (targetItem == null) {
                         log.error("Could not resolve item in inventory type {} position {} for karma scissors", inventoryType, targetPosition);
+                        user.dispose();
                         return;
                     }
                     // Remove item
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
                         log.error("Could not remove karma scissors item from inventory");
+                        user.dispose();
                         return;
                     }
                     // Update target item
@@ -370,7 +380,60 @@ public final class ItemHandler {
                     user.write(WvsContext.inventoryOperation(updateResult.get(), true));
                 }
                 case ITEMUPGRADE -> {
-                    // TODO
+                    final int targetType = inPacket.decodeInt(); // nItemTI
+                    final int targetPosition = inPacket.decodeInt(); // nSlotPosition
+                    inPacket.decodeInt(); // update_time (again)
+                    // Resolve equip item
+                    final InventoryType inventoryType = InventoryType.getByPosition(InventoryType.getByValue(targetType), targetPosition);
+                    if (inventoryType == null) {
+                        log.error("Received unknown target inventory type {} for vicious' hammer", targetType);
+                        user.write(FieldPacket.itemUpgradeResultErr(0)); // Unknown error
+                        return;
+                    }
+                    final Item targetItem = im.getInventoryByType(inventoryType).getItem(targetPosition);
+                    if (targetItem == null) {
+                        log.error("Could not resolve item in inventory type {} position {} for vicious' hammer", inventoryType, targetPosition);
+                        user.write(FieldPacket.itemUpgradeResultErr(0)); // Unknown error
+                        return;
+                    }
+                    final Optional<ItemInfo> targetItemInfoResult = ItemProvider.getItemInfo(targetItem.getItemId());
+                    if (targetItemInfoResult.isEmpty()) {
+                        log.error("Could not resolve item info for target item ID : {}", targetItem.getItemId());
+                        user.write(FieldPacket.itemUpgradeResultErr(0)); // Unknown error
+                        return;
+                    }
+                    final ItemInfo equipItemInfo = targetItemInfoResult.get();
+                    final EquipData equipData = targetItem.getEquipData();
+                    // Check target item
+                    if (equipData == null || equipItemInfo.getInfo(ItemInfoType.tuc) == 0) {
+                        log.error("Tried to vicious' hammer item {} in position {}", targetItem.getItemId(), targetPosition);
+                        user.write(FieldPacket.itemUpgradeResultErr(1)); // The item is not upgradable.
+                        return;
+                    }
+                    if (equipData.getIuc() >= equipItemInfo.getInfo(ItemInfoType.IUCMax, 2)) {
+                        user.write(FieldPacket.itemUpgradeResultErr(2)); // 2 upgrade increases have been used already.
+                        return;
+                    }
+                    if (targetItem.getItemId() == ItemConstants.HORNTAIL_NECKLACE || targetItem.getItemId() == ItemConstants.CHAOS_HORNTAIL_NECKLACE) {
+                        user.write(FieldPacket.itemUpgradeResultErr(3)); // You can't use Vicious' Hammer on Horntail Necklace.
+                        return;
+                    }
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove vicious' hammer item from inventory");
+                        user.write(FieldPacket.itemUpgradeResultErr(0)); // Unknown error
+                        return;
+                    }
+                    // Update target item
+                    equipData.setRuc((byte) (equipData.getRuc() + 1));
+                    equipData.setIuc(equipData.getIuc() + 1);
+                    final Optional<InventoryOperation> updateItemResult = im.updateItem(targetPosition, targetItem);
+                    if (updateItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not update equip item %d in position %d", targetItem.getItemId(), targetPosition));
+                    }
+                    user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
+                    user.write(FieldPacket.itemUpgradeResultSuccess(equipData.getIuc()));
                 }
                 case ITEM_UNRELEASE -> {
                     final int equipItemPosition = inPacket.decodeInt();
@@ -515,6 +578,7 @@ public final class ItemHandler {
             // Consume item
             final Optional<InventoryOperation> consumeItemResult = consumeItem(locked, position, itemId);
             if (consumeItemResult.isEmpty()) {
+                log.error("Failed to consume portal scroll item {} in position {}", itemId, position);
                 user.dispose();
                 return;
             }

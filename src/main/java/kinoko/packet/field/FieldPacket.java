@@ -5,6 +5,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
+import kinoko.world.cashshop.CashItemResultType;
 import kinoko.world.dialog.shop.ShopDialog;
 import kinoko.world.dialog.shop.ShopResultType;
 import kinoko.world.field.OpenGate;
@@ -259,6 +260,32 @@ public final class FieldPacket {
     public static OutPacket petConsumeMpItemInit(int itemId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PetConsumeMPItemInit);
         outPacket.encodeInt(itemId); // nPetConsumeMPItemID
+        return outPacket;
+    }
+
+
+    // CUIItemUpgrade::OnPacket ----------------------------------------------------------------------------------------
+
+    public static OutPacket itemUpgradeResultSuccess(int iuc) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ItemUpgradeResult);
+        outPacket.encodeByte(CashItemResultType.ItemUpgradeSuccess.getValue());
+        outPacket.encodeInt(0); // nResult
+        outPacket.encodeInt(iuc); // nIUC
+        return outPacket;
+    }
+
+    public static OutPacket itemUpgradeResultDone(int result) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ItemUpgradeResult);
+        outPacket.encodeByte(CashItemResultType.ItemUpgradeDone.getValue());
+        outPacket.encodeInt(result); // nResult
+        outPacket.encodeInt(0); // nIUC?
+        return outPacket;
+    }
+
+    public static OutPacket itemUpgradeResultErr(int reason) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ItemUpgradeResult);
+        outPacket.encodeByte(CashItemResultType.ItemUpgradeErr.getValue());
+        outPacket.encodeInt(reason); // 1 : The item is not upgradable. | 2 : 2 upgrade increases have been used already. | 3 : You can't use Vicious' Hammer on Horntail Necklace. | Unknown Error (%d).
         return outPacket;
     }
 }

@@ -1,6 +1,7 @@
 package kinoko.handler.field;
 
 import kinoko.handler.Handler;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
@@ -175,5 +176,15 @@ public final class FieldHandler {
 
     @Handler(InHeader.RequireFieldObstacleStatus)
     public static void handleRequireFieldObstacleStatus(User user, InPacket inPacket) {
+    }
+
+
+    // BEGIN_ITEMUPGRADE -----------------------------------------------------------------------------------------------
+
+    @Handler(InHeader.ItemUpgradeComplete)
+    public static void handleItemUpgradeComplete(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // nReturnResult
+        final int result = inPacket.decodeInt(); // nResult
+        user.write(FieldPacket.itemUpgradeResultDone(result));
     }
 }
