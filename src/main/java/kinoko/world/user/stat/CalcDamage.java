@@ -1,4 +1,4 @@
-package kinoko.world.user;
+package kinoko.world.user.stat;
 
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfoType;
@@ -26,9 +26,7 @@ import kinoko.world.skill.ActionType;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
-import kinoko.world.user.stat.BasicStat;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.SecondaryStat;
+import kinoko.world.user.User;
 
 import java.util.Map;
 import java.util.Optional;

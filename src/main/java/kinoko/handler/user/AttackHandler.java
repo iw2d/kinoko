@@ -39,13 +39,9 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
-import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.SecondaryStat;
-import kinoko.world.user.stat.TemporaryStatOption;
-import kinoko.world.user.stat.TwoStateTemporaryStat;
+import kinoko.world.user.stat.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

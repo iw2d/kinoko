@@ -22,8 +22,8 @@ import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
-import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CalcDamage;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.TemporaryStatOption;
 

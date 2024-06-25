@@ -5,8 +5,8 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.GameConstants;
-import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CalcDamage;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

@@ -34,7 +34,6 @@ import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.skill.*;
-import kinoko.world.user.CalcDamage;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.*;
 import org.apache.logging.log4j.LogManager;
