@@ -7,6 +7,9 @@ import kinoko.handler.field.NpcHandler;
 import kinoko.handler.stage.CashShopHandler;
 import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.*;
+import kinoko.handler.user.item.CashItemHandler;
+import kinoko.handler.user.item.ItemHandler;
+import kinoko.handler.user.item.UpgradeItemHandler;
 import kinoko.server.header.InHeader;
 
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package kinoko.handler.user;
+package kinoko.handler.user.item;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserPacket;
