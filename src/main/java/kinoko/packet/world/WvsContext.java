@@ -7,10 +7,8 @@ import kinoko.util.FileTime;
 import kinoko.world.GameConstants;
 import kinoko.world.cashshop.CashItemResultType;
 import kinoko.world.field.TownPortal;
-import kinoko.world.item.InventoryOperation;
-import kinoko.world.item.InventoryType;
-import kinoko.world.item.Item;
-import kinoko.world.item.ItemConstants;
+import kinoko.world.item.*;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
@@ -152,18 +150,22 @@ public final class WvsContext {
         outPacket.encodeString(""); // sAlliance
         outPacket.encodeByte(false); // bMedalInfo
 
-        // bPetActivated -> CUIUserInfo::SetMultiPetInfo
-        for (Pet pet : user.getPets()) {
-            outPacket.encodeByte(true);
+        // CUIUserInfo::SetMultiPetInfo
+        final Inventory equipped = user.getInventoryManager().getEquipped();
+        final List<Pet> pets = user.getPets();
+        for (int i = 0; i < pets.size(); i++) {
+            final Pet pet = pets.get(i);
+            outPacket.encodeByte(true); // bPetActivated
             outPacket.encodeInt(pet.getTemplateId()); // dwTemplateId
             outPacket.encodeString(pet.getName()); // sName
             outPacket.encodeByte(pet.getLevel()); // nLevel
             outPacket.encodeShort(pet.getTameness()); // nTameness
             outPacket.encodeByte(pet.getFullness()); // nRepleteness
             outPacket.encodeShort(pet.getPetSkill()); // usPetSkill
-            outPacket.encodeInt(0); // nItemID
+            final Item petWearItem = equipped.getItem(BodyPart.getByPetIndex(BodyPart.PETWEAR, i).getValue() + BodyPart.CASH_BASE.getValue());
+            outPacket.encodeInt(petWearItem != null ? petWearItem.getItemId() : 0); // nItemID
         }
-        outPacket.encodeByte(0);
+        outPacket.encodeByte(false);
         // ~CUIUserInfo::SetMultiPetInfo
 
         // CUIUserInfo::SetTamingMobInfo (bool -> int, int, int)
@@ -177,12 +179,16 @@ public final class WvsContext {
         wishlist.forEach(outPacket::encodeInt);
 
         // MedalAchievementInfo::Decode
-        outPacket.encodeInt(0); // nEquipedMedalID
-        outPacket.encodeShort(0); // p_ausMedalQuestID (short * short)
+        final Item medalItem = equipped.getItem(BodyPart.MEDAL.getValue());
+        outPacket.encodeInt(medalItem != null ? medalItem.getItemId() : 0); // nEquipedMedalID
+        final Set<QuestRecord> titleQuestRecords = user.getQuestManager().getTitleQuests();
+        outPacket.encodeShort(titleQuestRecords.size());
+        titleQuestRecords.forEach((qr) -> outPacket.encodeShort(qr.getQuestId())); // p_ausMedalQuestID
         // ~MedalAchievementInfo::Decode
 
         // aChairItem
-        final List<Item> chairs = user.getInventoryManager().getInstallInventory().getItems().values().stream()
+        final Inventory installInventory = user.getInventoryManager().getInstallInventory();
+        final List<Item> chairs = installInventory.getItems().values().stream()
                 .filter((item) -> ItemConstants.isPortableChairItem(item.getItemId()))
                 .toList();
         outPacket.encodeInt(chairs.size());

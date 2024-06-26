@@ -1,5 +1,7 @@
 package kinoko.world.item;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public enum BodyPart {
@@ -90,6 +92,17 @@ public enum BodyPart {
 
     private static final Set<BodyPart> armorBodyParts = Set.of(CAP, CLOTHES, PANTS, SHOES, GLOVES, CAPE);
     private static final Set<BodyPart> accessoryBodyParts = Set.of(FACEACC, EYEACC, EARACC, RING1, RING2, RING3, RING4, PENDANT, EXT_PENDANT1);
+    private static final Map<BodyPart, List<BodyPart>> petBodyParts = Map.of(
+            PETWEAR, List.of(PETWEAR, PETWEAR2, PETWEAR3),
+            PETRING_LABEL, List.of(PETRING_LABEL, PETRING_LABEL2, PETRING_LABEL3),
+            PETRING_QUOTE, List.of(PETRING_QUOTE, PETRING_QUOTE2, PETRING_QUOTE3),
+            PETABIL_ITEM, List.of(PETABIL_ITEM, PETABIL_ITEM2, PETABIL_ITEM3),
+            PETABIL_MESO, List.of(PETABIL_MESO, PETABIL_MESO2, PETABIL_MESO3),
+            PETABIL_SWEEPFORDROP, List.of(PETABIL_SWEEPFORDROP, PETABIL_SWEEPFORDROP2, PETABIL_SWEEPFORDROP3),
+            PETABIL_LONGRANGE, List.of(PETABIL_LONGRANGE, PETABIL_LONGRANGE2, PETABIL_LONGRANGE3),
+            PETABIL_PICKUPOTHERS, List.of(PETABIL_PICKUPOTHERS, PETABIL_PICKUPOTHERS2, PETABIL_PICKUPOTHERS3),
+            PETABIL_IGNOREITEMS1, List.of(PETABIL_IGNOREITEMS1, PETABIL_IGNOREITEMS2, PETABIL_IGNOREITEMS3)
+    );
 
     private final int value;
 
@@ -124,6 +137,13 @@ public enum BodyPart {
             }
         }
         return null;
+    }
+
+    public static BodyPart getByPetIndex(BodyPart bodyPart, int petIndex) {
+        if (!petBodyParts.containsKey(bodyPart) || petIndex < 0 || petIndex >= 3) {
+            return bodyPart;
+        }
+        return petBodyParts.get(bodyPart).get(petIndex);
     }
 
     public static Set<BodyPart> getByItemId(int itemId) {

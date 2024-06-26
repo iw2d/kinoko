@@ -1,6 +1,7 @@
 package kinoko.provider;
 
 import kinoko.provider.item.SetItemInfo;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -19,6 +20,7 @@ public final class EtcProvider implements WzProvider {
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
     private static final Map<Integer, Set<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
     // Other info
+    private static final Set<Integer> titleQuestIds = new HashSet<>();
     private static final Set<String> forbiddenNames = new HashSet<>();
     private static final Map<Integer, Set<Integer>> makeCharInfo = new HashMap<>();
 
@@ -27,6 +29,7 @@ public final class EtcProvider implements WzProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadSetItemInfo(wzPackage);
             loadCashShop(wzPackage);
+            loadTitleQuestIds(wzPackage);
             loadForbiddenNames(wzPackage);
             loadMakeCharInfo(wzPackage);
         } catch (IOException | ProviderError e) {
@@ -44,6 +47,10 @@ public final class EtcProvider implements WzProvider {
 
     public static Map<Integer, Set<Integer>> getCashPackages() {
         return cashPackages;
+    }
+
+    public static boolean isTitleQuest(int questId) {
+        return titleQuestIds.contains(questId);
     }
 
     public static boolean isForbiddenName(String name) {
@@ -101,6 +108,25 @@ public final class EtcProvider implements WzProvider {
                 commodityIds.add(WzProvider.getInteger(snEntry.getValue()));
             }
             cashPackages.put(packageId, Collections.unmodifiableSet(commodityIds));
+        }
+    }
+
+    private static void loadTitleQuestIds(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getImages().get("QuestCategory.img") instanceof WzImage categoryImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/QuestCategory.img");
+        }
+        final Set<Integer> titleQuestCategories = new HashSet<>();
+        for (var entry : categoryImage.getProperty().getItems().entrySet()) {
+            final int categoryId = WzProvider.getInteger(entry.getKey());
+            final String categoryName = WzProvider.getString(entry.getValue());
+            if (categoryName.equalsIgnoreCase("Title")) {
+                titleQuestCategories.add(categoryId);
+            }
+        }
+        for (QuestInfo questInfo : QuestProvider.getQuestInfos()) {
+            if (titleQuestCategories.contains(questInfo.getQuestArea())) {
+                titleQuestIds.add(questInfo.getQuestId());
+            }
         }
     }
 

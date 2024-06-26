@@ -9,6 +9,7 @@ import kinoko.packet.world.MapTransferPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.NpcProvider;
+import kinoko.provider.StringProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemOptionInfo;
@@ -503,7 +504,13 @@ public final class CashItemHandler extends ItemHandler {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     private static String formatSpeakerMessage(User user, String message) {
-        return String.format("%s : %s", user.getCharacterName(), message); // TODO : title
+        final Item medalItem = user.getInventoryManager().getEquipped().getItem(BodyPart.MEDAL.getValue());
+        if (medalItem != null) {
+            final String medalName = StringProvider.getItemName(medalItem.getItemId());
+            return String.format("<%s> %s : %s", medalName, user.getCharacterName(), message);
+        } else {
+            return String.format("%s : %s", user.getCharacterName(), message);
+        }
     }
 
     private static void handleMapTransfer(User user, int targetFieldId, Item item, int position) {

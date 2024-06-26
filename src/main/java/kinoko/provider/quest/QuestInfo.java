@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public final class QuestInfo {
     private final int questId;
+    private final int questArea; // category
     private final int nextQuest;
     private final boolean autoStart;
     private final boolean autoComplete;
@@ -27,9 +28,9 @@ public final class QuestInfo {
     private final Set<QuestCheck> startChecks;
     private final Set<QuestCheck> completeChecks;
 
-    public QuestInfo(int questId, int nextQuest, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs,
-                     Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
+    public QuestInfo(int questId, int questArea, int nextQuest, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs, Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
         this.questId = questId;
+        this.questArea = questArea;
         this.nextQuest = nextQuest;
         this.autoStart = autoStart;
         this.autoComplete = autoComplete;
@@ -41,6 +42,10 @@ public final class QuestInfo {
 
     public int getQuestId() {
         return questId;
+    }
+
+    public int getQuestArea() {
+        return questArea;
     }
 
     public int getNextQuest() {
@@ -257,6 +262,7 @@ public final class QuestInfo {
         final int nextQuest = WzProvider.getInteger(((WzListProperty) questAct.get("1")).getItems().get("nextQuest"), 0);
         return new QuestInfo(
                 questId,
+                WzProvider.getInteger(questInfo.get("area")),
                 nextQuest,
                 autoStart,
                 autoComplete,

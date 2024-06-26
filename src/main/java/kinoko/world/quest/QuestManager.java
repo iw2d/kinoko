@@ -1,5 +1,7 @@
 package kinoko.world.quest;
 
+import kinoko.provider.EtcProvider;
+
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +25,12 @@ public final class QuestManager {
     public Set<QuestRecord> getCompletedQuests() {
         return questRecords.values().stream()
                 .filter(qr -> qr.getState() == QuestState.COMPLETE)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    public Set<QuestRecord> getTitleQuests() {
+        return questRecords.values().stream()
+                .filter(qr -> qr.getState() == QuestState.COMPLETE && EtcProvider.isTitleQuest(qr.getQuestId()))
                 .collect(Collectors.toUnmodifiableSet());
     }
 

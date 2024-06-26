@@ -574,6 +574,22 @@ public final class AdminCommands {
         }
     }
 
+    @Command("completequest")
+    @Arguments("quest ID")
+    public static void completeQuest(User user, String[] args) {
+        final int questId = Integer.parseInt(args[1]);
+        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
+        if (questInfoResult.isEmpty()) {
+            user.write(MessagePacket.system("Could not find quest : %d", questId));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
+            user.write(MessagePacket.questRecord(qr));
+            user.validateStat();
+        }
+    }
+
     @Command({ "questex", "qr" })
     @Arguments({ "quest ID", "QR value" })
     public static void questex(User user, String[] args) {
