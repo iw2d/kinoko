@@ -51,6 +51,8 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
+        System.out.println(StatConstants.getMinHp(user.getLevel(), user.getJob()));
+        System.out.println(StatConstants.getMinMp(user.getLevel(), user.getJob()));
         user.dispose();
     }
 

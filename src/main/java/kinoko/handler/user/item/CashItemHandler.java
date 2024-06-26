@@ -25,11 +25,11 @@ import kinoko.world.dialog.trunk.TrunkDialog;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.Stat;
+import kinoko.world.user.stat.StatConstants;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -450,6 +450,42 @@ public final class CashItemHandler extends ItemHandler {
                         }
                         handleMapTransfer(user, targetField, item, position);
                     }
+                }
+                case STATCHANGE -> {
+                    final int inc = inPacket.decodeInt(); // dwInc
+                    final int dec = inPacket.decodeInt(); // dwDec
+                    // Validate stats
+                    final Stat incStat = Stat.getByValue(inc);
+                    final Stat decStat = Stat.getByValue(dec);
+                    final CharacterStat cs = user.getCharacterStat();
+                    if (incStat == null || !StatConstants.isAbilityUpStat(incStat) || decStat == null || !StatConstants.isAbilityUpStat(decStat) ||
+                            incStat == decStat || !cs.isValidAp(incStat, 1) || !cs.isValidAp(decStat, -1)) {
+                        log.error("Received invalid stats {}, {} for stat change item ID : {}", inc, dec, itemId);
+                        user.dispose();
+                        return;
+                    }
+                    if (decStat == Stat.MHP || decStat == Stat.MMP) {
+                        final int currentAp = cs.getBaseStr() + cs.getBaseDex() + cs.getBaseInt() + cs.getBaseLuk() + cs.getAp();
+                        final int expectedAp = StatConstants.getSumAp(cs.getLevel(), cs.getJob(), cs.getSubJob());
+                        if (currentAp >= expectedAp) {
+                            log.error("Tried to remove hp/mp without enough ap - current : {}, expected : {}", currentAp, expectedAp);
+                            user.dispose();
+                            return;
+                        }
+                    }
+                    // Consume item
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not remove stat change item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    // Add stats
+                    final Map<Stat, Object> statMap = new HashMap<>();
+                    statMap.putAll(cs.removeAp(decStat));
+                    statMap.putAll(cs.addAp(incStat, user.getBasicStat().getInt()));
+                    // Update client
+                    user.validateStat();
+                    user.write(WvsContext.statChanged(statMap, true));
                 }
                 case null -> {
                     log.error("Unknown cash item type for item ID : {}", item.getItemId());

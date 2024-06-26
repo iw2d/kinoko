@@ -248,9 +248,55 @@ public final class CharacterStat implements Encodable {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
+    public boolean isValidAp(Stat stat, int delta) {
+        switch (stat) {
+            case STR -> {
+                final int value = getBaseStr() + delta;
+                return value >= GameConstants.STAT_MIN && value <= GameConstants.STAT_MAX;
+            }
+            case DEX -> {
+                final int value = getBaseDex() + delta;
+                return value >= GameConstants.STAT_MIN && value <= GameConstants.STAT_MAX;
+            }
+            case INT -> {
+                final int value = getBaseInt() + delta;
+                return value >= GameConstants.STAT_MIN && value <= GameConstants.STAT_MAX;
+            }
+            case LUK -> {
+                final int value = getBaseLuk() + delta;
+                return value >= GameConstants.STAT_MIN && value <= GameConstants.STAT_MAX;
+            }
+            case MHP -> {
+                final int value = getMaxHp() + (delta * StatConstants.getIncHpByAp(getJob()));
+                return value >= StatConstants.getMinHp(getLevel(), getJob()) && value <= GameConstants.HP_MAX;
+            }
+            case MMP -> {
+                final int value = getMaxMp() + (delta * StatConstants.getIncMpByAp(getJob()));
+                return value >= StatConstants.getMinMp(getLevel(), getJob()) && value <= GameConstants.MP_MAX;
+            }
+        }
+        return false;
+    }
+
     public Map<Stat, Object> addAp(Stat stat, int totalInt) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
         switch (stat) {
+            case STR -> {
+                setBaseStr((short) Math.min(getBaseStr() + 1, GameConstants.STAT_MAX));
+                statMap.put(Stat.STR, getBaseStr());
+            }
+            case DEX -> {
+                setBaseDex((short) Math.min(getBaseDex() + 1, GameConstants.STAT_MAX));
+                statMap.put(Stat.DEX, getBaseDex());
+            }
+            case INT -> {
+                setBaseInt((short) Math.min(getBaseInt() + 1, GameConstants.STAT_MAX));
+                statMap.put(Stat.INT, getBaseInt());
+            }
+            case LUK -> {
+                setBaseLuk((short) Math.min(getBaseLuk() + 1, GameConstants.STAT_MAX));
+                statMap.put(Stat.LUK, getBaseLuk());
+            }
             case MHP -> {
                 final int incHp = StatConstants.getIncHpByAp(getJob()) + Util.getRandom(StatConstants.INC_HP_VARIANCE);
                 setMaxHp(Math.min(getMaxHp() + incHp, GameConstants.HP_MAX));
@@ -261,21 +307,36 @@ public final class CharacterStat implements Encodable {
                 setMaxMp(Math.min(getMaxMp() + incMp, GameConstants.MP_MAX));
                 statMap.put(Stat.MMP, getMaxMp());
             }
+        }
+        return statMap;
+    }
+
+    public Map<Stat, Object> removeAp(Stat stat) {
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        switch (stat) {
             case STR -> {
-                setBaseStr((short) Math.min(getBaseStr() + 1, Short.MAX_VALUE));
+                setBaseStr((short) Math.max(getBaseStr() - 1, GameConstants.STAT_MIN));
                 statMap.put(Stat.STR, getBaseStr());
             }
             case DEX -> {
-                setBaseDex((short) Math.min(getBaseDex() + 1, Short.MAX_VALUE));
+                setBaseDex((short) Math.max(getBaseDex() - 1, GameConstants.STAT_MIN));
                 statMap.put(Stat.DEX, getBaseDex());
             }
             case INT -> {
-                setBaseInt((short) Math.min(getBaseInt() + 1, Short.MAX_VALUE));
+                setBaseInt((short) Math.max(getBaseInt() - 1, GameConstants.STAT_MIN));
                 statMap.put(Stat.INT, getBaseInt());
             }
             case LUK -> {
-                setBaseLuk((short) Math.min(getBaseLuk() + 1, Short.MAX_VALUE));
+                setBaseLuk((short) Math.max(getBaseLuk() - 1, GameConstants.STAT_MIN));
                 statMap.put(Stat.LUK, getBaseLuk());
+            }
+            case MHP -> {
+                setMaxHp(Math.max(getMaxHp() - StatConstants.getIncHpByAp(getJob()), StatConstants.getMinHp(getLevel(), getJob())));
+                statMap.put(Stat.MHP, getMaxHp());
+            }
+            case MMP -> {
+                setMaxMp(Math.max(getMaxMp() - StatConstants.getIncMpByAp(getJob()), StatConstants.getMinMp(getLevel(), getJob())));
+                statMap.put(Stat.MMP, getMaxMp());
             }
         }
         return statMap;

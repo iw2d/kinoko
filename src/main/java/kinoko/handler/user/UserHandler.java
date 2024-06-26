@@ -479,18 +479,24 @@ public final class UserHandler {
         final int flag = inPacket.decodeInt(); // dwFlag
         final Stat stat = Stat.getByValue(flag);
         if (stat == null || !StatConstants.isAbilityUpStat(stat)) {
-            log.error("Unknown stat flag {} received for USER_ABILITY_UP_REQUEST", flag);
+            log.error("Unknown stat flag {} received for UserAbilityUpRequest", flag);
             user.dispose();
             return;
         }
         try (var locked = user.acquire()) {
-            // Add stat
+            // Validate stat
             final CharacterStat cs = locked.get().getCharacterStat();
             if (cs.getAp() < 1) {
                 log.error("Tried to add ap with {} remaining ap", cs.getAp());
                 user.dispose();
                 return;
             }
+            if (!cs.isValidAp(stat, 1)) {
+                log.error("Tried to add ap to stat {}", stat);
+                user.dispose();
+                return;
+            }
+            // Add stat
             final Map<Stat, Object> addApResult = cs.addAp(stat, user.getBasicStat().getInt());
             cs.setAp((short) (cs.getAp() - 1));
             addApResult.put(Stat.AP, cs.getAp());
@@ -510,14 +516,14 @@ public final class UserHandler {
             final int value = inPacket.decodeInt(); // nValue
             final Stat stat = Stat.getByValue(flag);
             if (stat == null || !StatConstants.isAbilityUpStat(stat)) {
-                log.error("Unknown stat flag {} received for USER_ABILITY_MASS_UP_REQUEST", flag);
+                log.error("Unknown stat flag {} received for UserAbilityMassUpRequest", flag);
                 user.dispose();
                 return;
             }
             stats.put(stat, value);
         }
         try (var locked = user.acquire()) {
-            // Add stats
+            // Validate stats
             final CharacterStat cs = locked.get().getCharacterStat();
             final int requiredAp = stats.values().stream().mapToInt(Integer::intValue).sum();
             if (cs.getAp() < requiredAp) {
@@ -525,6 +531,16 @@ public final class UserHandler {
                 user.dispose();
                 return;
             }
+            for (var entry : stats.entrySet()) {
+                final Stat stat = entry.getKey();
+                final int value = entry.getValue();
+                if (!cs.isValidAp(stat, value)) {
+                    log.error("Tried to add {} ap to stat {}", stat, value);
+                    user.dispose();
+                    return;
+                }
+            }
+            // Add stats
             final Map<Stat, Object> addApResult = new EnumMap<>(Stat.class);
             for (var entry : stats.entrySet()) {
                 final Stat stat = entry.getKey();
@@ -546,7 +562,7 @@ public final class UserHandler {
         inPacket.decodeInt(); // update_time
         final int mask = inPacket.decodeInt(); // 0x1400
         if (mask != 0x1400) {
-            log.error("Unhandled mask received for USER_STAT_CHANGE_REQUEST : {}", mask);
+            log.error("Unhandled mask received for UserChangeStatRequest : {}", mask);
             return;
         }
         final int hp = Short.toUnsignedInt(inPacket.decodeShort()); // nHP

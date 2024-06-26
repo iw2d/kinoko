@@ -324,4 +324,32 @@ public final class StatConstants {
             }
         }
     }
+
+    public static int getSumAp(int level, int jobId, int subJob) {
+        // CUIStatChange::SetButtons
+        int sumAp = 5 * (level + 4);
+        if (JobConstants.isCygnusJob(jobId)) {
+            sumAp = sumAp + Math.max(level, 70) - 1;
+        }
+        final int jobLevel = JobConstants.getJobLevel(jobId);
+        if (JobConstants.isEvanJob(jobId)) {
+            if (jobId >= 2214 && jobId <= 2218) {
+                sumAp += (jobId % 10) - 3 + 4 * ((jobId % 10) - 3);
+            }
+        } else {
+            if (jobLevel == 3) {
+                sumAp += 5;
+            } else if (jobLevel == 4) {
+                sumAp += 10;
+            }
+        }
+        if (!JobConstants.isCygnusJob(jobId) && subJob == 1) {
+            int addAp = 1;
+            if (jobLevel != 2) {
+                addAp = jobLevel != 3 ? 0 : 2;
+            }
+            sumAp += addAp;
+        }
+        return sumAp;
+    }
 }
