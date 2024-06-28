@@ -1,9 +1,6 @@
 package kinoko.provider;
 
-import kinoko.provider.item.ItemInfo;
-import kinoko.provider.item.ItemOptionInfo;
-import kinoko.provider.item.ItemOptionLevelData;
-import kinoko.provider.item.PetInteraction;
+import kinoko.provider.item.*;
 import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -65,8 +62,8 @@ public final class ItemProvider implements WzProvider {
         final int reqLevel = itemInfo.getReqLevel();
         final List<ItemOptionInfo> possibleItemOptions = new ArrayList<>();
         for (ItemOptionInfo itemOptionInfo : itemOptionInfos.values()) {
-            // Skip decent skill options
-            if (itemOptionInfo.getItemOptionId() >= 31001 && itemOptionInfo.getItemOptionId() <= 31004) {
+            // Skip special options
+            if (ItemOption.isSpecialOption(itemOptionInfo.getItemOptionId())) {
                 continue;
             }
             // Check if option matches target item
