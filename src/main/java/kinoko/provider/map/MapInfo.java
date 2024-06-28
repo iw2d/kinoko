@@ -11,6 +11,7 @@ public final class MapInfo {
     private final boolean town;
     private final boolean swim;
     private final boolean fly;
+    private final int timeLimit;
     private final int returnMap;
     private final int forcedReturn;
     private final Set<FieldOption> fieldOptions;
@@ -28,7 +29,7 @@ public final class MapInfo {
     private final List<ReactorInfo> reactorInfos;
     private final FootholdNode footholdRoot = new FootholdNode();
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions,
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, int timeLimit, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions,
                    FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom,
                    int vrRight, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos,
                    List<ReactorInfo> reactorInfos) {
@@ -36,6 +37,7 @@ public final class MapInfo {
         this.town = town;
         this.swim = swim;
         this.fly = fly;
+        this.timeLimit = timeLimit;
         this.returnMap = returnMap;
         this.forcedReturn = forcedReturn;
         this.fieldOptions = fieldOptions;
@@ -72,6 +74,10 @@ public final class MapInfo {
 
     public boolean isFly() {
         return fly;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
     }
 
     public int getReturnMap() {
@@ -195,26 +201,29 @@ public final class MapInfo {
 
     @Override
     public String toString() {
-        return "MapInfo[" +
-                "id=" + mapId + ", " +
-                "town=" + town + ", " +
-                "swim=" + swim + ", " +
-                "fly=" + fly + ", " +
-                "returnMap=" + returnMap + ", " +
-                "forcedReturn=" + forcedReturn + ", " +
-                "fieldOptions=" + fieldOptions + ", " +
-                "fieldType=" + fieldType + ", " +
-                "mobRate=" + mobRate + ", " +
-                "onFirstUserEnter=" + onFirstUserEnter + ", " +
-                "onUserEnter=" + onUserEnter + ", " +
-                "VRTop=" + vrTop + ", " +
-                "VRLeft=" + vrLeft + ", " +
-                "VRBottom=" + vrBottom + ", " +
-                "VRRight=" + vrRight + ", " +
-                "foothold=" + footholds + ", " +
-                "life=" + lifeInfos + ", " +
-                "portal=" + portalInfos + ", " +
-                "reactor=" + reactorInfos + ']';
+        return "MapInfo{" +
+                "mapId=" + mapId +
+                ", town=" + town +
+                ", swim=" + swim +
+                ", fly=" + fly +
+                ", timeLimit=" + timeLimit +
+                ", returnMap=" + returnMap +
+                ", forcedReturn=" + forcedReturn +
+                ", fieldOptions=" + fieldOptions +
+                ", fieldType=" + fieldType +
+                ", mobRate=" + mobRate +
+                ", onFirstUserEnter='" + onFirstUserEnter + '\'' +
+                ", onUserEnter='" + onUserEnter + '\'' +
+                ", vrTop=" + vrTop +
+                ", vrLeft=" + vrLeft +
+                ", vrBottom=" + vrBottom +
+                ", vrRight=" + vrRight +
+                ", footholds=" + footholds +
+                ", lifeInfos=" + lifeInfos +
+                ", portalInfos=" + portalInfos +
+                ", reactorInfos=" + reactorInfos +
+                ", footholdRoot=" + footholdRoot +
+                '}';
     }
 
     public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor) {
@@ -223,6 +232,7 @@ public final class MapInfo {
                 infoProp.getOrDefault("town", 0) != 0,
                 infoProp.getOrDefault("swim", 0) != 0,
                 infoProp.getOrDefault("fly", 0) != 0,
+                infoProp.getOrDefault("timeLimit", 0),
                 infoProp.get("returnMap"),
                 infoProp.get("forcedReturn"),
                 FieldOption.getByLimit(infoProp.getOrDefault("fieldLimit", 0)),

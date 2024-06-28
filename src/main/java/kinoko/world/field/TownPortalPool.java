@@ -43,7 +43,7 @@ public final class TownPortalPool extends FieldObjectPool<TownPortal> {
 
     public Optional<TownPortal> createFieldPortal(User user, int skillId, int x, int y, Instant expireTime) {
         // Resolve town field
-        final Optional<Field> returnMapResult = user.getConnectedServer().getFieldById(field.getReturnMap());
+        final Optional<Field> returnMapResult = field.getFieldStorage().getFieldById(field.getReturnMap());
         if (returnMapResult.isEmpty() || returnMapResult.get() == field) {
             return Optional.empty();
         }

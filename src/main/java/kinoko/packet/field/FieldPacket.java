@@ -61,6 +61,17 @@ public final class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket clock(int remain) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.Clock);
+        outPacket.encodeByte(2); // nTimerType
+        outPacket.encodeInt(remain); // nRemain
+        return outPacket;
+    }
+
+    public static OutPacket destroyClock() {
+        return OutPacket.of(OutHeader.DestroyClock);
+    }
+
     public static OutPacket quickslotMappedInit(int[] quickslotKeyMap) {
         final OutPacket outPacket = OutPacket.of(OutHeader.QuickslotMappedInit);
         outPacket.encodeByte(true); // defaults if false

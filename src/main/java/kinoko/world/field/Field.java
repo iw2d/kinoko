@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.packet.field.FieldPacket;
 import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
@@ -8,6 +9,7 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
+import kinoko.server.node.FieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
@@ -36,8 +38,10 @@ public final class Field {
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
 
+    private final FieldStorage fieldStorage;
     private final MapInfo mapInfo;
     private final byte fieldKey;
+    private final Instant fieldTimeLimit;
     private final ScheduledFuture<?> fieldEventFuture;
     private final Map<Integer, Consumer<Mob>> mobSpawnModifiers;
 
@@ -55,9 +59,11 @@ public final class Field {
     private Instant nextDropExpire = Instant.now();
     private Instant nextReactorExpire = Instant.now();
 
-    public Field(MapInfo mapInfo) {
+    public Field(FieldStorage fieldStorage, MapInfo mapInfo) {
+        this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
+        this.fieldTimeLimit = hasTimeLimit() ? Instant.now().plus(getTimeLimit(), ChronoUnit.SECONDS) : Instant.MAX;
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
         this.mobSpawnModifiers = new ConcurrentHashMap<>();
         // Initialize field object pools
@@ -70,6 +76,10 @@ public final class Field {
         this.miniRoomPool = new MiniRoomPool(this);
         this.townPortalPool = new TownPortalPool(this);
         this.affectedAreaPool = new AffectedAreaPool(this);
+    }
+
+    public FieldStorage getFieldStorage() {
+        return fieldStorage;
     }
 
     public int getFieldId() {
@@ -127,6 +137,17 @@ public final class Field {
 
     public Optional<Foothold> getFootholdBelow(int x, int y) {
         return mapInfo.getFootholdBelow(x, y);
+    }
+
+    public int getTimeLimit() {
+        return mapInfo.getTimeLimit();
+    }
+
+    public boolean hasTimeLimit() {
+        if (mapInfo.getForcedReturn() == GameConstants.UNDEFINED_FIELD_ID || mapInfo.getForcedReturn() == getFieldId()) {
+            return false;
+        }
+        return mapInfo.getTimeLimit() > 0;
     }
 
     public int getReturnMap() {
@@ -214,6 +235,15 @@ public final class Field {
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
         affectedAreaPool.updateAffectedAreas(now);
+        if (fieldTimeLimit.isBefore(now)) {
+            final Field returnField = fieldStorage.getFieldById(getForcedReturn()).orElseThrow();
+            final PortalInfo portalInfo = returnField.getPortalById(0).orElseThrow();
+            userPool.forEach((user) -> {
+                try (var locked = user.acquire()) {
+                    locked.get().warp(returnField, portalInfo, false, false);
+                }
+            });
+        }
     }
 
 
@@ -272,6 +302,12 @@ public final class Field {
         if (mapInfo.hasOnUserEnter()) {
             ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
         }
+        // Show clock
+        final Instant now = Instant.now();
+        if (hasTimeLimit() && fieldTimeLimit.isAfter(now)) {
+            final int remain = (int) (fieldTimeLimit.getEpochSecond() - now.getEpochSecond());
+            user.write(FieldPacket.clock(remain));
+        }
     }
 
     public void removeUser(User user) {
@@ -283,8 +319,8 @@ public final class Field {
         }
     }
 
-    public static Field from(MapInfo mapInfo) {
-        final Field field = new Field(mapInfo);
+    public static Field from(FieldStorage fieldStorage, MapInfo mapInfo) {
+        final Field field = new Field(fieldStorage, mapInfo);
         // Populate npc pool
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
             if (lifeInfo.getLifeType() != LifeType.NPC) {

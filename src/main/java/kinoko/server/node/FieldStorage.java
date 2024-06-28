@@ -39,6 +39,6 @@ public final class FieldStorage {
 
     private Optional<Field> createField(int mapId) {
         final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
-        return mapInfoResult.map(Field::from);
+        return mapInfoResult.map(mapInfo -> Field.from(this, mapInfo));
     }
 }
