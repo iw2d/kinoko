@@ -16,6 +16,8 @@ import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
+import kinoko.world.item.BodyPart;
+import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -190,12 +192,32 @@ public abstract class SkillProcessor {
             case Evan.NIMBLE_FEET:
                 user.setTemporaryStat(CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)));
                 return;
+            case Beginner.MONSTER_RIDER:
+            case Noblesse.MONSTER_RIDER:
+            case Aran.MONSTER_RIDER:
+            case Evan.MONSTER_RIDER:
+                final Item tamingMobItem = user.getInventoryManager().getEquipped().getItem(BodyPart.TAMINGMOB.getValue());
+                if (tamingMobItem == null) {
+                    log.error("Tried to use Monster Rider skill without a taming mob");
+                    return;
+                }
+                user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, tamingMobItem.getItemId(), skillId, 0));
+                return;
             case Beginner.ECHO_OF_HERO:
             case Noblesse.ECHO_OF_HERO:
             case Aran.ECHO_OF_HERO:
             case Evan.HEROS_ECHO:
             case Citizen.HEROS_ECHO:
                 user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                field.getUserPool().forEach((other) -> {
+                    if (user.getCharacterId() != other.getCharacterId()) {
+                        try (var lockedOther = other.acquire()) {
+                            other.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                            other.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
+                            field.broadcastPacket(UserRemote.effect(other, Effect.skillAffected(skill.skillId, skill.slv)), other);
+                        }
+                    }
+                });
                 return;
 
             // COPY SKILLS ---------------------------------------------------------------------------------------------

@@ -711,7 +711,6 @@ public final class AdminCommands {
             }
             user.write(WvsContext.changeSkillRecordResult(removedRecords, true));
 
-
             // Add skills
             final Set<SkillRecord> skillRecords = new HashSet<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {

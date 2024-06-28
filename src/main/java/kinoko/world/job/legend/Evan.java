@@ -33,6 +33,7 @@ public final class Evan extends SkillProcessor {
     public static final int MONSTER_RIDER = 20011004;
     public static final int HEROS_ECHO = 20011005;
     public static final int MAKER = 20011007;
+    public static final int FOLLOW_THE_LEAD = 20011024;
     // EVAN_1
     public static final int DRAGON_SOUL = 22000000;
     public static final int MAGIC_MISSILE = 22001001;

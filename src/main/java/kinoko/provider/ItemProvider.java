@@ -65,6 +65,11 @@ public final class ItemProvider implements WzProvider {
         final int reqLevel = itemInfo.getReqLevel();
         final List<ItemOptionInfo> possibleItemOptions = new ArrayList<>();
         for (ItemOptionInfo itemOptionInfo : itemOptionInfos.values()) {
+            // Skip decent skill options
+            if (itemOptionInfo.getItemOptionId() >= 31001 && itemOptionInfo.getItemOptionId() <= 31004) {
+                continue;
+            }
+            // Check if option matches target item
             if (itemOptionInfo.isMatchingGrade(itemGrade) && itemOptionInfo.isMatchingLevel(reqLevel) && itemOptionInfo.isMatchingType(bodyPart)) {
                 possibleItemOptions.add(itemOptionInfo);
             }
