@@ -35,7 +35,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -204,24 +203,29 @@ public final class MigrationHandler {
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         // Returning from CashShop
         if (inPacket.getRemaining() == 0) {
-            handleTransfer(user, user.getAccount().getChannelId());
-            return;
+            try (var locked = user.acquire()) {
+                try (var lockedAccount = user.getAccount().acquire()) {
+                    handleTransferChannel(user, user.getAccount(), user.getAccount().getChannelId());
+                    return;
+                }
+            }
         }
 
         // Normal transfer field request
+        final Field currentField = user.getField();
         final byte fieldKey = inPacket.decodeByte();
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (currentField.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
-        final int targetField = inPacket.decodeInt(); // dwTargetField
+        final int targetFieldId = inPacket.decodeInt(); // dwTargetField
         final String portalName = inPacket.decodeString(); // sPortal
         if (!portalName.isEmpty()) {
             inPacket.decodeShort();
             inPacket.decodeShort();
         }
         inPacket.decodeByte(); // 0
-        final boolean premium = inPacket.decodeBoolean(); // bPremium
+        final boolean premium = inPacket.decodeBoolean(); // bPremium - also set as true on normal revives, probably a client bug in CUIRevive::OnCreate
         final boolean chase = inPacket.decodeBoolean(); // bChase
         if (chase) {
             inPacket.decodeInt();
@@ -229,53 +233,41 @@ public final class MigrationHandler {
         }
 
         try (var locked = user.acquire()) {
-            final boolean isRevive = portalName.isEmpty() && locked.get().getHp() == 0;
-            final int nextFieldId;
-            final String nextPortalName;
             if (portalName.isEmpty()) {
-                if (isRevive) {
+                if (user.getHp() <= 0) {
+                    // Premium revive
                     if (premium) {
-                        // Premium revive
                         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SoulStone)) {
-                            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone));
+                            // user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone)); - SecondaryStat cleared on revive
+                            handleRevive(user, true);
+                            return;
                         } else if (user.getInventoryManager().hasItem(ItemConstants.WHEEL_OF_DESTINY, 1)) {
+                            if (!currentField.isUpgradeTombUsable()) {
+                                log.error("Tried to use wheel of destiny in a restricted field");
+                                return;
+                            }
                             final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(ItemConstants.WHEEL_OF_DESTINY, 1);
                             if (removeResult.isEmpty()) {
                                 throw new IllegalStateException("Failed to remove wheel of destiny from inventory");
                             }
-                            user.write(WvsContext.inventoryOperation(removeResult.get(), true));
-                        } else {
-                            log.error("Tried to premium revive without meeting the requirements");
-                            user.dispose();
+                            user.write(WvsContext.inventoryOperation(removeResult.get(), false));
+                            handleRevive(user, true);
                             return;
                         }
-                        nextFieldId = user.getField().getFieldId();
-                        nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
-                        user.setHp(user.getMaxHp());
-                        user.setMp(user.getMaxMp());
-                    } else {
-                        // Normal revive
-                        nextFieldId = user.getField().getReturnMap();
-                        nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
-                        user.setHp(50);
                     }
-                    user.getSecondaryStat().clear();
-                    user.getSummoned().clear();
-                    user.updatePassiveSkillData();
-                    user.validateStat();
+                    // Normal revive
+                    handleRevive(user, false);
                 } else {
                     // Return to field via client request (usually SquibEffect)
-                    if (targetField != user.getField().getReturnMap()) {
-                        log.error("Tried to return to field : {} from field : {}", targetField, user.getField().getFieldId());
+                    if (targetFieldId != currentField.getReturnMap()) {
+                        log.error("Tried to return to field : {} from field : {}", targetFieldId, currentField.getFieldId());
                         user.dispose();
                         return;
                     }
-                    nextFieldId = user.getField().getReturnMap();
-                    nextPortalName = GameConstants.DEFAULT_PORTAL_NAME;
+                    handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false);
                 }
             } else {
-                // Handle portal name
-                final Field currentField = user.getField();
+                // Enter portal to next field
                 final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
                 if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
                     log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
@@ -283,25 +275,8 @@ public final class MigrationHandler {
                     return;
                 }
                 final PortalInfo portal = portalResult.get();
-                nextFieldId = portal.getDestinationFieldId();
-                nextPortalName = portal.getDestinationPortalName();
+                handleTransferField(user, portal.getDestinationFieldId(), portal.getDestinationPortalName(), false);
             }
-
-            // Move User to Field
-            final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(nextFieldId);
-            if (nextFieldResult.isEmpty()) {
-                log.error("Could not resolve field ID : {}", nextFieldId);
-                user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place
-                return;
-            }
-            final Field nextField = nextFieldResult.get();
-            final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(nextPortalName);
-            if (nextPortalResult.isEmpty()) {
-                log.error("Tried to warp to portal : {} on field ID : {}", nextPortalName, nextField.getFieldId());
-                user.dispose();
-                return;
-            }
-            user.warp(nextField, nextPortalResult.get(), false, isRevive);
         }
     }
 
@@ -309,71 +284,102 @@ public final class MigrationHandler {
     public static void handleUserTransferChannelRequest(User user, InPacket inPacket) {
         final byte channelId = inPacket.decodeByte();
         inPacket.decodeInt(); // update_time
-        handleTransfer(user, channelId);
+
+        try (var locked = user.acquire()) {
+            try (var lockedAccount = user.getAccount().acquire()) {
+                handleTransferChannel(user, user.getAccount(), channelId);
+            }
+        }
     }
 
     @Handler(InHeader.UserMigrateToCashShopRequest)
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 
-        // Remove user from field
         try (var locked = user.acquire()) {
+            // Remove user from field
             user.getField().removeUser(user);
-        }
 
-        // Update friends
-        user.getConnectedServer().submitUserPacketBroadcast(
-                user.getFriendManager().getBroadcastTargets(),
-                FriendPacket.notify(user.getCharacterId(), user.getChannelId(), true)
-        );
+            // Update friends
+            user.getConnectedServer().submitUserPacketBroadcast(
+                    user.getFriendManager().getBroadcastTargets(),
+                    FriendPacket.notify(user.getCharacterId(), user.getChannelId(), true)
+            );
 
-        // Load gifts
-        final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
+            // Load gifts
+            final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 
-        try (var lockedAccount = user.getAccount().acquire()) {
-            final Account account = lockedAccount.get();
+            try (var lockedAccount = user.getAccount().acquire()) {
+                final Account account = lockedAccount.get();
 
-            // Load cash shop
-            user.write(StagePacket.setCashShop(user));
-            user.write(CashShopPacket.loadGiftDone(gifts));
-            user.write(CashShopPacket.loadLockerDone(account));
-            user.write(CashShopPacket.loadWishDone(account.getWishlist()));
-            user.write(CashShopPacket.queryCashResult(account));
+                // Load cash shop
+                user.write(StagePacket.setCashShop(user));
+                user.write(CashShopPacket.loadGiftDone(gifts));
+                user.write(CashShopPacket.loadLockerDone(account));
+                user.write(CashShopPacket.loadWishDone(account.getWishlist()));
+                user.write(CashShopPacket.queryCashResult(account));
+            }
         }
     }
 
-    /**
-     * Acquires user and account locks.
-     */
-    private static void handleTransfer(User user, int targetChannelId) {
-        try (var locked = user.acquire()) {
-            try (var lockedAccount = user.getAccount().acquire()) {
-                // Submit transfer request
-                final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
-                final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
-                try {
-                    final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-                    if (transferFutureResult.isEmpty()) {
-                        log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
-                        user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-                        return;
-                    }
-                    final TransferInfo transferResult = transferFutureResult.get();
-
-                    // Logout user and save
-                    user.logout(false);
-                    user.setInTransfer(true);
-                    DatabaseManager.accountAccessor().saveAccount(user.getAccount());
-                    DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
-
-                    // Send migrate command
-                    user.write(ClientPacket.migrateCommand(transferResult.getChannelHost(), transferResult.getChannelPort()));
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    log.error("Exception caught while waiting for transfer result", e);
-                    user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-                    e.printStackTrace();
-                }
+    private static void handleTransferChannel(User user, Account account, int targetChannelId) {
+        // Submit transfer request
+        final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
+        final CompletableFuture<Optional<TransferInfo>> transferFuture = user.getConnectedServer().submitTransferRequest(migrationInfo);
+        try {
+            final Optional<TransferInfo> transferFutureResult = transferFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+            if (transferFutureResult.isEmpty()) {
+                log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
+                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+                return;
             }
+            final TransferInfo transferResult = transferFutureResult.get();
+
+            // Logout user and save
+            user.logout(false);
+            user.setInTransfer(true);
+            DatabaseManager.accountAccessor().saveAccount(account);
+            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
+
+            // Send migrate command
+            user.write(ClientPacket.migrateCommand(transferResult.getChannelHost(), transferResult.getChannelPort()));
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            log.error("Exception caught while waiting for transfer result", e);
+            user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+            e.printStackTrace();
+        }
+    }
+
+    private static void handleTransferField(User user, int fieldId, String portalName, boolean isRevive) {
+        final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(fieldId);
+        if (nextFieldResult.isEmpty()) {
+            log.error("Could not resolve field ID : {}", fieldId);
+            user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place
+            return;
+        }
+        final Field nextField = nextFieldResult.get();
+        final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(portalName);
+        if (nextPortalResult.isEmpty()) {
+            log.error("Tried to warp to portal : {} on field ID : {}", portalName, nextField.getFieldId());
+            user.dispose();
+            return;
+        }
+        user.warp(nextField, nextPortalResult.get(), false, isRevive);
+    }
+
+    private static void handleRevive(User user, boolean premium) {
+        user.getSecondaryStat().clear();
+        user.getSummoned().clear();
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.setHp(50);
+        if (premium) {
+            user.setHp(user.getMaxHp());
+            user.setMp(user.getMaxMp());
+            handleTransferField(user, user.getField().getFieldId(), GameConstants.DEFAULT_PORTAL_NAME, true);
+        } else {
+            user.setHp(50);
+            handleTransferField(user, user.getField().getReturnMap(), GameConstants.DEFAULT_PORTAL_NAME, true);
         }
     }
 

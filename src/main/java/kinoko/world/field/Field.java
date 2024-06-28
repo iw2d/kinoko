@@ -8,7 +8,6 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
-import kinoko.server.node.FieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
@@ -37,7 +36,6 @@ public final class Field {
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
 
-    private final FieldStorage fieldStorage;
     private final MapInfo mapInfo;
     private final byte fieldKey;
     private final ScheduledFuture<?> fieldEventFuture;
@@ -57,8 +55,7 @@ public final class Field {
     private Instant nextDropExpire = Instant.now();
     private Instant nextReactorExpire = Instant.now();
 
-    public Field(FieldStorage fieldStorage, MapInfo mapInfo) {
-        this.fieldStorage = fieldStorage;
+    public Field(MapInfo mapInfo) {
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
@@ -73,10 +70,6 @@ public final class Field {
         this.miniRoomPool = new MiniRoomPool(this);
         this.townPortalPool = new TownPortalPool(this);
         this.affectedAreaPool = new AffectedAreaPool(this);
-    }
-
-    public FieldStorage getFieldStorage() {
-        return fieldStorage;
     }
 
     public int getFieldId() {
@@ -234,6 +227,22 @@ public final class Field {
         return getFieldId() / 100000000 == targetFieldId / 100000000;
     }
 
+    public boolean isUpgradeTombUsable() {
+        switch (getMapInfo().getFieldType()) {
+            case SNOWBALL:
+            case TOURNAMENT:
+            case COCONUT:
+            case OXQUIZ:
+            case WAITINGROOM:
+            case MONSTERCARNIVAL:
+            case MONSTERCARNIVALREVIVE:
+            case MONSTERCARNIVAL_S2:
+                return false;
+            default:
+                return getFieldId() / 100000000 != 9 && getFieldId() / 1000 != 200090 && getFieldId() / 1000000 != 390;
+        }
+    }
+
     public boolean isMapTransferLimit() {
         return GameConstants.isEventMap(getFieldId()) ||
                 getMapInfo().hasFieldOption(FieldOption.SKILLLIMIT) ||
@@ -246,7 +255,10 @@ public final class Field {
 
     public void broadcastPacket(OutPacket outPacket, User except) {
         userPool.broadcastPacket(outPacket, except);
+    }
 
+    public boolean hasUser() {
+        return !userPool.isEmpty();
     }
 
     public void addUser(User user) {
@@ -271,8 +283,8 @@ public final class Field {
         }
     }
 
-    public static Field from(FieldStorage fieldStorage, MapInfo mapInfo) {
-        final Field field = new Field(fieldStorage, mapInfo);
+    public static Field from(MapInfo mapInfo) {
+        final Field field = new Field(mapInfo);
         // Populate npc pool
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
             if (lifeInfo.getLifeType() != LifeType.NPC) {

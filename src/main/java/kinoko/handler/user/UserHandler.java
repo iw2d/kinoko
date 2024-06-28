@@ -149,6 +149,14 @@ public final class UserHandler {
         user.getField().broadcastPacket(UserRemote.setActiveEffectItem(user, itemId), user); // self-cast not required
     }
 
+    @Handler(InHeader.UserUpgradeTombEffect)
+    public static void handleUserUpgradeTombEffect(User user, InPacket inPacket) {
+        final int itemId = inPacket.decodeInt(); // 5510000 (Wheel of Destiny)
+        final int x = inPacket.decodeInt(); // ptRevive.x
+        final int y = inPacket.decodeInt(); // ptRevive.y
+        user.getField().broadcastPacket(UserRemote.showUpgradeTombEffect(user, itemId, x, y), user);
+    }
+
 
     // NPC HANDLERS ----------------------------------------------------------------------------------------------------
 

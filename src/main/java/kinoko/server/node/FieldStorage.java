@@ -9,15 +9,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class FieldStorage {
     private final ConcurrentHashMap<Integer, Field> fieldMap = new ConcurrentHashMap<>(); // field id -> field
+    private final ConcurrentHashMap<Integer, Field> instanceMap = new ConcurrentHashMap<>(); // field id -> field
 
     public synchronized Optional<Field> getFieldById(int mapId) {
-        if (!fieldMap.containsKey(mapId)) {
-            final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
-            if (mapInfoResult.isEmpty()) {
+        final Field field = fieldMap.get(mapId);
+        if (field != null) {
+            return Optional.of(field);
+        }
+        final Optional<Field> fieldResult = createField(mapId);
+        fieldResult.ifPresent(value -> fieldMap.put(mapId, value));
+        return fieldResult;
+    }
+
+    public synchronized Optional<Field> getFieldInstanceById(int mapId) {
+        final Field existingField = instanceMap.get(mapId);
+        if (existingField != null) {
+            // User inside, cannot create instance
+            if (existingField.hasUser()) {
                 return Optional.empty();
             }
-            fieldMap.put(mapId, Field.from(this, mapInfoResult.get()));
+            // Dispose existing field
+            existingField.getFieldEventFuture().cancel(true);
         }
-        return Optional.of(fieldMap.get(mapId));
+        // Create new instance
+        final Optional<Field> fieldResult = createField(mapId);
+        fieldResult.ifPresent(field -> instanceMap.put(mapId, field));
+        return fieldResult;
+    }
+
+    private Optional<Field> createField(int mapId) {
+        final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
+        return mapInfoResult.map(Field::from);
     }
 }

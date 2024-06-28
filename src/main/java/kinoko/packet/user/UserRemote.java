@@ -148,6 +148,15 @@ public final class UserRemote {
         return outPacket;
     }
 
+    public static OutPacket showUpgradeTombEffect(User user, int itemId, int x, int y) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserShowUpgradeTombEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(itemId); // nItemID
+        outPacket.encodeInt(x); // nPosX
+        outPacket.encodeInt(y); // nPosY
+        return outPacket;
+    }
+
     public static OutPacket setActivePortableChair(User user, int itemId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserSetActivePortableChair);
         outPacket.encodeInt(user.getCharacterId());
