@@ -16,6 +16,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.user.User;
+import kinoko.world.user.info.PartyInfo;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -112,8 +113,8 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
             }
             case PartyResult -> {
                 final int characterId = inPacket.decodeInt();
-                final int partyId = inPacket.decodeInt();
-                final int partyMemberIndex = inPacket.decodeInt();
+                final boolean hasParty = inPacket.decodeBoolean();
+                final PartyInfo partyInfo = hasParty ? PartyInfo.decode(inPacket) : null;
                 // Resolve target user
                 final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
                 if (targetUserResult.isEmpty()) {
@@ -128,8 +129,7 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                         BattleMage.cancelPartyAura(user, user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
                     }
                     // Set party info and update members
-                    user.setPartyId(partyId);
-                    user.setPartyMemberIndex(partyMemberIndex);
+                    user.setPartyInfo(partyInfo);
                     user.getField().getUserPool().forEachPartyMember(user, (member) -> {
                         try (var lockedMember = member.acquire()) {
                             user.write(UserRemote.receiveHp(lockedMember.get()));

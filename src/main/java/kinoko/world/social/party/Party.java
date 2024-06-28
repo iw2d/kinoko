@@ -6,6 +6,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
+import kinoko.world.user.info.PartyInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +99,10 @@ public final class Party implements Encodable, Lockable<Party> {
                 partyMembers.set(i, remoteUser);
             }
         }
+    }
+
+    public PartyInfo createInfo(RemoteUser remoteUser) {
+        return new PartyInfo(partyId, getMemberIndex(remoteUser), partyBossId == remoteUser.getCharacterId());
     }
 
     public void forEachMember(Consumer<RemoteUser> consumer) {

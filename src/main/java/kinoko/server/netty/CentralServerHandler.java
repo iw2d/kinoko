@@ -210,12 +210,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         // Remote user party ID is set on UserConnect
                         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                         if (partyResult.isEmpty()) {
-                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0, 0));
+                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), null));
                             return;
                         }
                         try (var lockedParty = partyResult.get().acquire()) {
                             final Party party = lockedParty.get();
-                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
+                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.createInfo(remoteUser)));
                             remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.loadPartyDone(party)));
                         }
                     }
@@ -228,7 +228,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         // Create party
                         final Party party = centralServerNode.createNewParty(remoteUser);
                         remoteUser.setPartyId(party.getPartyId());
-                        remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
+                        remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.createInfo(remoteUser)));
                         remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.createNewPartyDone(party, remoteUser.getTownPortal()))); // You have created a new party.
                     }
                     case WithdrawParty -> {
@@ -250,7 +250,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, remoteUser, true, false); // You have quit as the leader of the party. The party has been disbanded. | You have left the party since the party leader quit.
                                 forEachPartyMember(party, (member, node) -> {
                                     member.setPartyId(0);
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), 0, 0));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), null));
                                     node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                                 });
                             } else {
@@ -263,12 +263,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 // Broadcast withdraw packet to party
                                 final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, remoteUser, false, false); // You have left the party. | '%s' have left the party.
                                 forEachPartyMember(party, (member, node) -> {
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.getPartyId(), party.getMemberIndex(member))); // update member index
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(remoteUser))); // update member index
                                     node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                                 });
                                 // Update user
                                 remoteUser.setPartyId(0);
-                                remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), 0, 0));
+                                remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), null));
                                 remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), outPacket));
                             }
                         }
@@ -297,7 +297,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == remoteUser.getCharacterId()) {
                                     member.setPartyId(party.getPartyId());
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.getPartyId(), party.getMemberIndex(member)));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(remoteUser)));
                                 }
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
@@ -310,7 +310,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             // Create party
                             final Party party = centralServerNode.createNewParty(remoteUser);
                             remoteUser.setPartyId(party.getPartyId());
-                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.getPartyId(), party.getMemberIndex(remoteUser)));
+                            remoteChildNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.createInfo(remoteUser)));
                             remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.createNewPartyDone(party, remoteUser.getTownPortal()))); // You have created a new party.
                         }
                         // Resolve target
@@ -354,7 +354,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == targetId) {
                                     member.setPartyId(0);
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), 0, 0));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), null));
                                 }
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
@@ -377,6 +377,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             // Broadcast packet to party
                             final OutPacket outPacket = PartyPacket.changePartyBossDone(targetId, false); // %s has become the leader of the party.
                             forEachPartyMember(party, (member, node) -> {
+                                node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(remoteUser)));
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
                         }

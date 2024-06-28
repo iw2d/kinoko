@@ -354,7 +354,7 @@ public final class MigrationHandler {
         final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(fieldId);
         if (nextFieldResult.isEmpty()) {
             log.error("Could not resolve field ID : {}", fieldId);
-            user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place
+            user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
             return;
         }
         final Field nextField = nextFieldResult.get();

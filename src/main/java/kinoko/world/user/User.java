@@ -33,6 +33,7 @@ import kinoko.world.user.config.ConfigManager;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.info.MapTransferInfo;
 import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.info.PartyInfo;
 import kinoko.world.user.info.WildHunterInfo;
 import kinoko.world.user.stat.*;
 
@@ -56,12 +57,12 @@ public final class User extends Life implements Lockable<User> {
     private final List<Pet> pets = new ArrayList<>();
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
 
+    private PartyInfo partyInfo;
+
     private Dialog dialog;
     private Dragon dragon;
     private TownPortal townPortal;
     private OpenGate openGate;
-    private int partyId;
-    private int partyMemberIndex;
     private int messengerId;
     private int effectItemId;
     private int portableChairId;
@@ -169,6 +170,26 @@ public final class User extends Life implements Lockable<User> {
         return summoned;
     }
 
+    public PartyInfo getPartyInfo() {
+        return partyInfo != null ? partyInfo : PartyInfo.EMPTY;
+    }
+
+    public void setPartyInfo(PartyInfo partyInfo) {
+        this.partyInfo = partyInfo;
+    }
+
+    public int getPartyId() {
+        return getPartyInfo().getPartyId();
+    }
+
+    public int getPartyMemberIndex() {
+        return getPartyInfo().getMemberIndex();
+    }
+
+    public boolean isPartyBoss() {
+        return getPartyInfo().isBoss();
+    }
+
     public Dialog getDialog() {
         return dialog;
     }
@@ -211,22 +232,6 @@ public final class User extends Life implements Lockable<User> {
 
     public void setOpenGate(OpenGate openGate) {
         this.openGate = openGate;
-    }
-
-    public int getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(int partyId) {
-        this.partyId = partyId;
-    }
-
-    public int getPartyMemberIndex() {
-        return partyMemberIndex;
-    }
-
-    public void setPartyMemberIndex(int partyMemberIndex) {
-        this.partyMemberIndex = partyMemberIndex;
     }
 
     public int getMessengerId() {

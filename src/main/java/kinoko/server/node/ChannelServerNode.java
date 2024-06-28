@@ -169,6 +169,10 @@ public final class ChannelServerNode extends ServerNode {
         return fieldStorage.getFieldById(mapId);
     }
 
+    public Optional<Field> getFieldInstanceById(int mapId) {
+        return fieldStorage.getFieldInstanceById(mapId);
+    }
+
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 

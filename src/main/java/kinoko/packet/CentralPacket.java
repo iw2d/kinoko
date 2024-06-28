@@ -3,6 +3,7 @@ package kinoko.packet;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.node.*;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.user.info.PartyInfo;
 
 import java.util.Set;
 
@@ -154,11 +155,13 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket partyResult(int characterId, int partyId, int partyMemberIndex) {
+    public static OutPacket partyResult(int characterId, PartyInfo partyInfo) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.PartyResult);
         outPacket.encodeInt(characterId);
-        outPacket.encodeInt(partyId);
-        outPacket.encodeInt(partyMemberIndex);
+        outPacket.encodeByte(partyInfo != null);
+        if (partyInfo != null) {
+            partyInfo.encode(outPacket);
+        }
         return outPacket;
     }
 
