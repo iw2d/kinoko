@@ -1,0 +1,7 @@
+# Vending Machine (1052014) - Premium Road : Kerning City Internet Cafe (193000000)
+
+items:
+  - [ 2020007, 620, 1, 100 ] # Dried Squid
+  - [ 2020008, 1260, 1, 100 ] # Fat Sausage
+  - [ 2020009, 920, 1, 100 ] # Orange Juice
+  - [ 2020010, 1860, 1, 100 ] # Grape Juice

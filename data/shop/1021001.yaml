@@ -1,0 +1,68 @@
+# Harry (1021001) - Perion : Perion Weapon Store (102000001)
+
+recharge: true
+items:
+  - [ 1002005, 19000 ] # Iron Burgernet Helm
+  - [ 1002027, 11500 ] # Steel Sharp Helm
+  - [ 1002039, 2700 ] # Bronze Helmet
+  - [ 1002043, 2400 ] # Bronze Koif
+  - [ 1002051, 3500 ] # Bronze Full Helm
+  - [ 1002055, 8700 ] # Bronze Football Helmet
+  - [ 1002059, 8500 ] # Bronze Viking Helm
+  - [ 1040009, 5500 ] # Steel Corporal
+  - [ 1040012, 9000 ] # Blue Sergeant
+  - [ 1040015, 3200 ] # Brown Lolico Armor
+  - [ 1040016, 16000 ] # Orihalcon Master Sergeant
+  - [ 1040021, 40000 ] # Red Hwarang Shirt
+  - [ 1040026, 40000 ] # Green Hwarang Shirt
+  - [ 1040037, 5500 ] # Brown Corporal
+  - [ 1040038, 3200 ] # Blue Lolico Armor
+  - [ 1040039, 9000 ] # Red Sergeant
+  - [ 1040040, 16000 ] # Silver Master Sergeant
+  - [ 1040041, 16000 ] # Dark Master Sergeant
+  - [ 1041014, 3200 ] # Orange Lolica Armor
+  - [ 1041019, 9000 ] # Red Lamelle
+  - [ 1041020, 9000 ] # Green Lamelle
+  - [ 1041021, 9000 ] # Brown Lamelle
+  - [ 1041022, 16000 ] # Blue Shark
+  - [ 1041023, 16000 ] # Sky Shark
+  - [ 1041024, 16000 ] # Red Shark
+  - [ 1041064, 3200 ] # Blueberry Lolica Armor
+  - [ 1050005, 15000 ] # Blue Kendo Robe
+  - [ 1050006, 15000 ] # Red Kendo Robe
+  - [ 1050007, 15000 ] # White Kendo Robe
+  - [ 1050011, 70000 ] # Black Dragon Robe
+  - [ 1051000, 8000 ] # Steel Fitted Mail
+  - [ 1051010, 60000 ] # Dark Engrit
+  - [ 1051011, 60000 ] # Red Engrit
+  - [ 1051012, 60000 ] # Blue Engrit
+  - [ 1051013, 60000 ] # Yellow Engrit
+  - [ 1060008, 3000 ] # Brown Lolico Pants
+  - [ 1060009, 5000 ] # Steel Corporal Pants
+  - [ 1060010, 9000 ] # Steel Sergeant Kilt
+  - [ 1060011, 14000 ] # Orihalcon Master Sergeant Kilt
+  - [ 1060016, 38000 ] # Black Martial Arts Pants
+  - [ 1060017, 38000 ] # White Martial Arts Pants
+  - [ 1060018, 38000 ] # Red Martial Arts Pants
+  - [ 1060019, 38000 ] # Brown Martial Arts Pants
+  - [ 1060027, 5000 ] # Brown Corporal Pants
+  - [ 1060028, 3000 ] # Blue Lolico Pants
+  - [ 1060029, 9000 ] # Red Sergeant Kilt
+  - [ 1060030, 14000 ] # Dark Master Sergeant Kilt
+  - [ 1060060, 14000 ] # Silver Master Sergeant Kilt
+  - [ 1061014, 3000 ] # Rookie Pants
+  - [ 1061015, 14000 ] # Blue Shark Skirt
+  - [ 1061016, 9000 ] # Red Ramel Skirt
+  - [ 1061017, 9000 ] # Green Ramel Skirt
+  - [ 1061018, 9000 ] # Brown Ramel Skirt
+  - [ 1061019, 14000 ] # Sky Shark Skirt
+  - [ 1061020, 14000 ] # Red Shark Skirt
+  - [ 1061023, 3000 ] # Sophia Pants
+  - [ 1072007, 10000 ] # Brown High Boots
+  - [ 1072009, 5000 ] # Steel Grieves
+  - [ 1072011, 15000 ] # Mithril War Boots
+  - [ 1072046, 10000 ] # Orange High Boots
+  - [ 1072047, 10000 ] # Blue High Boots
+  - [ 1072050, 5000 ] # Bronze Grieves
+  - [ 1092000, 6000 ] # Steel Shield
+  - [ 1092005, 4000 ] # Wooden Buckler

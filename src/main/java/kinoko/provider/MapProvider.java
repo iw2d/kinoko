@@ -27,6 +27,10 @@ public final class MapProvider implements WzProvider {
         }
     }
 
+    public static List<MapInfo> getMapInfos() {
+        return mapInfos.values().stream().toList();
+    }
+
     public static Optional<MapInfo> getMapInfo(int mapId) {
         return Optional.ofNullable(mapInfos.get(mapId));
     }

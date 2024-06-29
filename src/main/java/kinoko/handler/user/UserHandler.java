@@ -192,7 +192,7 @@ public final class UserHandler {
             } else {
                 final ShopDialog shopDialog = ShopDialog.from(npc.getTemplate());
                 user.setDialog(shopDialog);
-                user.write(FieldPacket.openShopDlg(shopDialog));
+                user.write(FieldPacket.openShopDlg(user, shopDialog));
             }
         }
     }

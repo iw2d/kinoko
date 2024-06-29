@@ -1,0 +1,34 @@
+# Dr. Pepper (2051000) - Omega Sector : Silo (221000200)
+
+recharge: true
+items:
+  - [ 2000000, 47, 1, 100 ] # Red Potion
+  - [ 2000001, 152, 1, 100 ] # Orange Potion
+  - [ 2000002, 304, 1, 100 ] # White Potion
+  - [ 2000003, 190, 1, 100 ] # Blue Potion
+  - [ 2000006, 589, 1, 100 ] # Mana Elixir
+  - [ 2001000, 3040, 1, 100 ] # Watermelon
+  - [ 2001001, 2185, 1, 100 ] # Ice Cream Pop
+  - [ 2001002, 3800, 1, 100 ] # Red Bean Sundae
+  - [ 2002000, 475, 1, 100 ] # Dexterity Potion
+  - [ 2002001, 380, 1, 100 ] # Speed Potion
+  - [ 2002002, 475, 1, 100 ] # Magic Potion
+  - [ 2002004, 475, 1, 100 ] # Warrior Potion
+  - [ 2002005, 475, 1, 100 ] # Sniper Potion
+  - [ 2002011, 1200, 1, 100 ] # Pain Reliever
+  - [ 2010000, 28, 1, 100 ] # Apple
+  - [ 2010001, 106, 1, 100 ] # Meat
+  - [ 2010002, 47, 1, 100 ] # Egg
+  - [ 2010003, 95, 1, 100 ] # Orange
+  - [ 2010004, 294, 1, 100 ] # Lemon
+  - [ 2020012, 4680, 1, 100 ] # Melting Cheese
+  - [ 2020013, 5600, 1, 100 ] # Reindeer Milk
+  - [ 2020014, 7695, 1, 100 ] # Sunrise Dew
+  - [ 2020015, 9690, 1, 100 ] # Sunset Dew
+  - [ 2022000, 1567, 1, 100 ] # Pure Water
+  - [ 2022003, 1045, 1, 100 ] # Unagi
+  - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2060001, 10, 1, 1800 ] # Bronze Arrow for Bow
+  - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2061001, 10, 1, 1800 ] # Bronze Arrow for Crossbow

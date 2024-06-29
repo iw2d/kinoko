@@ -1,0 +1,8 @@
+# Lucy (11100) - Rainbow Street : Amherst General Store (1000003)
+
+items:
+  - [ 2000000, 50, 1, 100 ] # Red Potion
+  - [ 2000001, 160, 1, 100 ] # Orange Potion
+  - [ 2000002, 320, 1, 100 ] # White Potion
+  - [ 2010000, 30, 1, 100 ] # Apple
+  - [ 2010002, 50, 1, 100 ] # Egg

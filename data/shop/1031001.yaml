@@ -1,0 +1,62 @@
+# Serabi the Fairy (1031001) - Ellinia : Ellinia Weapon Store (101000001)
+
+recharge: true
+items:
+  - [ 1002016, 8000 ] # Green Wizardry Hat
+  - [ 1002017, 1200 ] # Brown Apprentice Hat
+  - [ 1002102, 3800 ] # Blue Moon Conehat
+  - [ 1002103, 3800 ] # Pink Moon Conehat
+  - [ 1002104, 3800 ] # Green Moon Conehat
+  - [ 1002105, 3800 ] # Dark Moon Conehat
+  - [ 1002106, 3800 ] # Brown Moon Conehat
+  - [ 1040004, 2000 ] # Blue Training Shirt
+  - [ 1040017, 2000 ] # Grey / Brown Training Shirt
+  - [ 1040018, 8500 ] # Black Split Piece
+  - [ 1040019, 8500 ] # Orange Split Piece
+  - [ 1040020, 8500 ] # Blue Split Piece
+  - [ 1041015, 2000 ] # Black Armine
+  - [ 1041016, 2000 ] # Green Armine
+  - [ 1041017, 4000 ] # Purple Arianne
+  - [ 1041018, 4000 ] # Green Arianne
+  - [ 1041025, 4000 ] # Pink Arianne
+  - [ 1041026, 4000 ] # Yellow Arianne
+  - [ 1041029, 8500 ] # Black Split
+  - [ 1041030, 8500 ] # Red Split
+  - [ 1041031, 8500 ] # Purple Split
+  - [ 1041041, 42000 ] # Purple Fairy Top
+  - [ 1041042, 42000 ] # Green Fairy Top
+  - [ 1041043, 42000 ] # Blue Fairy Top
+  - [ 1050001, 16000 ] # Brown Doros Robe
+  - [ 1050003, 40000 ] # Blue Wizard Robe
+  - [ 1050008, 7000 ] # Beige Plain Robe
+  - [ 1050009, 7000 ] # Blue Plain Robe
+  - [ 1050010, 7000 ] # Green Plain Robe
+  - [ 1050023, 16000 ] # Blue Doros Robe
+  - [ 1050024, 16000 ] # Yellow Doros Robe
+  - [ 1050025, 16000 ] # White Doros Robe
+  - [ 1050026, 40000 ] # White Wizard Robe
+  - [ 1050027, 40000 ] # Black Mage Robe
+  - [ 1050028, 40000 ] # Green Wizard Robe
+  - [ 1051003, 16000 ] # Brown Doroness Robe
+  - [ 1051004, 16000 ] # Purple Doroness Robe
+  - [ 1051005, 16000 ] # Red Doroness Robe
+  - [ 1060012, 2000 ] # Blue Training Pants
+  - [ 1060013, 2000 ] # Grey / Brown Training Pants
+  - [ 1060014, 8000 ] # Black Split Pants
+  - [ 1060015, 8000 ] # White Split Pants
+  - [ 1061010, 2000 ] # Black Armine Skirt
+  - [ 1061011, 2000 ] # Green Armine Skirt
+  - [ 1061012, 4000 ] # Purple Arianne Skirt
+  - [ 1061013, 4000 ] # Green Arianne Skirt
+  - [ 1061021, 4000 ] # Pink Arianne Skirt
+  - [ 1061022, 4000 ] # Yellow Arianne Skirt
+  - [ 1061027, 8000 ] # Black Split Skirt
+  - [ 1061028, 8000 ] # White Split Skirt
+  - [ 1061034, 40000 ] # Purple Fairy Skirt
+  - [ 1061035, 40000 ] # Green Fairy Skirt
+  - [ 1061036, 40000 ] # Blue Fairy Skirt
+  - [ 1072006, 1500 ] # Brown Basic Boots
+  - [ 1072023, 4000 ] # Beige Nitty
+  - [ 1072024, 4000 ] # Black Nitty
+  - [ 1072044, 1500 ] # Yellow Basic Boots
+  - [ 1072045, 1500 ] # Blue Basic Boots

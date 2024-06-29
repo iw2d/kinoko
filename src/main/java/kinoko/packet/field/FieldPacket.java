@@ -231,9 +231,9 @@ public final class FieldPacket {
 
     // CShopDlg::OnPacket ----------------------------------------------------------------------------------------------
 
-    public static OutPacket openShopDlg(ShopDialog dialog) {
+    public static OutPacket openShopDlg(User user, ShopDialog dialog) {
         final OutPacket outPacket = OutPacket.of(OutHeader.OpenShopDlg);
-        dialog.encode(outPacket);
+        dialog.encode(outPacket, user);
         return outPacket;
     }
 

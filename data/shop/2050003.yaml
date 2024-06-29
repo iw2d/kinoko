@@ -1,0 +1,87 @@
+# Spacen (2050003) - Omega Sector : Silo (221000200)
+
+recharge: true
+items:
+  - [ 1002004, 160000 ] # Great Brown Helmet
+  - [ 1002135, 100000 ] # Brown Pole-Feather Hat
+  - [ 1002137, 100000 ] # Green Pole-Feather Hat
+  - [ 1002138, 100000 ] # Blue Pole-Feather Hat
+  - [ 1002139, 100000 ] # Red Pole-Feather Hat
+  - [ 1002141, 96000 ] # Red Matty
+  - [ 1002142, 96000 ] # Blue Matty
+  - [ 1002143, 96000 ] # Green Matty
+  - [ 1002144, 96000 ] # Brown Matty
+  - [ 1002176, 100000 ] # Red Burgler
+  - [ 1002177, 100000 ] # Blue Burgler
+  - [ 1002178, 100000 ] # Green Burgler
+  - [ 1002179, 100000 ] # Brown Burgler
+  - [ 1002180, 100000 ] # Dark Burgler
+  - [ 1040000, 200000 ] # Yellow Jangoon Armor
+  - [ 1040061, 114000 ] # Green Knucklevest
+  - [ 1040062, 114000 ] # Red Knucklevest
+  - [ 1040063, 114000 ] # Black Knucklevest
+  - [ 1040072, 114000 ] # Red Legolier
+  - [ 1040073, 114000 ] # Blue Legolier
+  - [ 1040074, 114000 ] # Green Legolier
+  - [ 1040076, 114000 ] # Brown Legolier
+  - [ 1040079, 180000 ] # Brown Piette
+  - [ 1040081, 180000 ] # White Piette
+  - [ 1040082, 180000 ] # Khaki Shadow
+  - [ 1040083, 180000 ] # Marine Shadow
+  - [ 1040085, 200000 ] # Maroon Jangoon Armor
+  - [ 1041051, 120000 ] # Red Amoria Top
+  - [ 1041052, 120000 ] # Blue Amoria Top
+  - [ 1041065, 114000 ] # Red Legolia
+  - [ 1041066, 114000 ] # Blue Legolia
+  - [ 1041067, 114000 ] # Green Legolia
+  - [ 1041069, 114000 ] # Brown Legolia
+  - [ 1041074, 180000 ] # Purple Shadow
+  - [ 1041075, 180000 ] # Red Shadow
+  - [ 1041081, 180000 ] # White Piettra
+  - [ 1041082, 180000 ] # Brown Piettra
+  - [ 1041084, 200000 ] # Red Jangoon Armor
+  - [ 1041085, 200000 ] # Brown Jangoon Armor
+  - [ 1050000, 112500 ] # White Crusader Chainmail
+  - [ 1050002, 300000 ] # Blood Chaos Robe
+  - [ 1050021, 112500 ] # Blue Crusader Chainmail
+  - [ 1050031, 300000 ] # White Chaos Robe
+  - [ 1050035, 450000 ] # Brown Starlight
+  - [ 1050036, 450000 ] # Red Starlight
+  - [ 1050037, 450000 ] # Green Starlight
+  - [ 1050038, 450000 ] # Blue Starlight
+  - [ 1051001, 112500 ] # Emerald Fitted Mail
+  - [ 1051007, 111000 ] # Red Avenger
+  - [ 1051008, 111000 ] # Blue Avenger
+  - [ 1051009, 111000 ] # Purple Avenger
+  - [ 1051014, 112500 ] # Sapphire Fitted Mail
+  - [ 1051023, 450000 ] # Purple Moonlight
+  - [ 1051024, 450000 ] # Red Moonlight
+  - [ 1051025, 450000 ] # Blue Moonlight
+  - [ 1051027, 450000 ] # Brown Moonlight
+  - [ 1060050, 108000 ] # Blue Knucklevest Pants
+  - [ 1060051, 108000 ] # Red Knucklevest Pants
+  - [ 1060052, 108000 ] # Black Knucklevest Pants
+  - [ 1060061, 108000 ] # Red Legolier Pants
+  - [ 1060062, 108000 ] # Blue Legolier Pants
+  - [ 1060063, 108000 ] # Green Legolier Pants
+  - [ 1060065, 108000 ] # Brown Legolier Pants
+  - [ 1060069, 160000 ] # Brown Piette Pants
+  - [ 1060070, 160000 ] # Blue Piette Pants
+  - [ 1060071, 160000 ] # Khaki Shadow Pants
+  - [ 1060072, 160000 ] # Marine Shadow Pants
+  - [ 1060074, 180000 ] # White Jangoon Pants
+  - [ 1060075, 180000 ] # Brown Jangoon Pants
+  - [ 1061047, 120000 ] # Red Amoria Skirt
+  - [ 1061048, 120000 ] # Blue Amoria Skirt
+  - [ 1061060, 108000 ] # Red Legolia Pants
+  - [ 1061061, 108000 ] # Blue Legolia Pants
+  - [ 1061062, 108000 ] # Green Legolia Pants
+  - [ 1061064, 108000 ] # Brown Legolia Pants
+  - [ 1061069, 160000 ] # Purple Shadow Pants
+  - [ 1061070, 160000 ] # Red Shadow Pants
+  - [ 1061080, 160000 ] # White Piettra Skirt
+  - [ 1061081, 160000 ] # Brown Piettra Skirt
+  - [ 1061083, 180000 ] # Red Jangoon Skirt
+  - [ 1061084, 180000 ] # Brown Jangoon Skirt
+  - [ 1092001, 100000 ] # Red Triangular Shield
+  - [ 1092002, 200000 ] # Red Cross Shield

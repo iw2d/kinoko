@@ -1,0 +1,67 @@
+# So Won (2093001) - Herb Town : Herb Town (251000000)
+
+recharge: true
+items:
+  - [ 1002023, 120000 ] # Jousting Helmet
+  - [ 1002064, 40000 ] # Bronze Pride
+  - [ 1002161, 30000 ] # Red Hawkeye
+  - [ 1002162, 30000 ] # Blue Hawkeye
+  - [ 1002163, 30000 ] # Green Hawkeye
+  - [ 1002164, 30000 ] # Brown Hawkeye
+  - [ 1002165, 30000 ] # Dark Hawkeye
+  - [ 1002171, 30000 ] # Red Guise
+  - [ 1002172, 30000 ] # Blue Guise
+  - [ 1002173, 30000 ] # Green Guise
+  - [ 1002174, 30000 ] # Brown Guise
+  - [ 1002175, 30000 ] # Dark Guise
+  - [ 1040021, 40000 ] # Red Hwarang Shirt
+  - [ 1040026, 40000 ] # Green Hwarang Shirt
+  - [ 1040057, 45000 ] # Dark Brown Stealer
+  - [ 1040058, 45000 ] # Dark Silver Stealer
+  - [ 1040059, 45000 ] # Red Gold Stealer
+  - [ 1040060, 45000 ] # Silver Black Stealer
+  - [ 1040067, 50000 ] # Green Hunter's Armor
+  - [ 1040068, 50000 ] # Dark Hunter's Armor
+  - [ 1040069, 50000 ] # Red Hunter's Armor
+  - [ 1040070, 50000 ] # Blue Hunter's Armor
+  - [ 1041041, 42000 ] # Purple Fairy Top
+  - [ 1041042, 42000 ] # Green Fairy Top
+  - [ 1041043, 42000 ] # Blue Fairy Top
+  - [ 1041047, 45000 ] # Red Steal
+  - [ 1041048, 45000 ] # Black Steal
+  - [ 1041049, 45000 ] # Blue Steal
+  - [ 1041050, 45000 ] # Purple Steal
+  - [ 1041054, 50000 ] # Green Huntress Armor
+  - [ 1041055, 50000 ] # Black Huntress Armor
+  - [ 1041056, 50000 ] # Red Huntress Armor
+  - [ 1050003, 40000 ] # Blue Wizard Robe
+  - [ 1050026, 40000 ] # White Wizard Robe
+  - [ 1050027, 40000 ] # Black Mage Robe
+  - [ 1050028, 40000 ] # Green Wizard Robe
+  - [ 1051010, 60000 ] # Dark Engrit
+  - [ 1051011, 60000 ] # Red Engrit
+  - [ 1051012, 60000 ] # Blue Engrit
+  - [ 1051013, 60000 ] # Yellow Engrit
+  - [ 1060016, 38000 ] # Black Martial Arts Pants
+  - [ 1060017, 38000 ] # White Martial Arts Pants
+  - [ 1060018, 38000 ] # Red Martial Arts Pants
+  - [ 1060019, 38000 ] # Brown Martial Arts Pants
+  - [ 1060043, 40000 ] # Dark Brown Stealer Pants
+  - [ 1060044, 40000 ] # Dark Silver Stealer Pants
+  - [ 1060045, 40000 ] # Red / Gold Stealer Pants
+  - [ 1060046, 40000 ] # Silver / Black Stealer Pants
+  - [ 1060056, 44000 ] # Green Hunter's Pants
+  - [ 1060057, 44000 ] # Dark Hunter's Pants
+  - [ 1060058, 44000 ] # Red Hunter's Pants
+  - [ 1060059, 44000 ] # Blue Hunter's Pants
+  - [ 1061034, 40000 ] # Purple Fairy Skirt
+  - [ 1061035, 40000 ] # Green Fairy Skirt
+  - [ 1061036, 40000 ] # Blue Fairy Skirt
+  - [ 1061043, 40000 ] # Red Steal Pants
+  - [ 1061044, 40000 ] # Black Steal Pants
+  - [ 1061045, 40000 ] # Blue Steal Pants
+  - [ 1061046, 40000 ] # Purple Steal Pants
+  - [ 1061050, 44000 ] # Green Huntress Pants
+  - [ 1061051, 44000 ] # Black Huntress Pants
+  - [ 1061052, 44000 ] # Red Huntress Pants
+  - [ 1092006, 60000 ] # Mithril Buckler

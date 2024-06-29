@@ -1,0 +1,31 @@
+# Glibber (2030009) - El Nath : Ice Valley II (211040200)
+
+recharge: true
+items:
+  - [ 2000001, 166, 1, 100 ] # Orange Potion
+  - [ 2000002, 332, 1, 100 ] # White Potion
+  - [ 2000003, 208, 1, 100 ] # Blue Potion
+  - [ 2000006, 644, 1, 100 ] # Mana Elixir
+  - [ 2001000, 3328, 1, 100 ] # Watermelon
+  - [ 2001001, 2392, 1, 100 ] # Ice Cream Pop
+  - [ 2001002, 4160, 1, 100 ] # Red Bean Sundae
+  - [ 2002000, 520, 1, 100 ] # Dexterity Potion
+  - [ 2002001, 416, 1, 100 ] # Speed Potion
+  - [ 2002002, 520, 1, 100 ] # Magic Potion
+  - [ 2002004, 520, 1, 100 ] # Warrior Potion
+  - [ 2002005, 520, 1, 100 ] # Sniper Potion
+  - [ 2010004, 322, 1, 100 ] # Lemon
+  - [ 2020001, 228, 1, 100 ] # Fried Chicken
+  - [ 2020003, 468, 1, 100 ] # Pizza
+  - [ 2020004, 468, 1, 100 ] # Hamburger
+  - [ 2020005, 332, 1, 100 ] # Hot Dog
+  - [ 2020006, 551, 1, 100 ] # Hot Dog Supreme
+  - [ 2020012, 4680, 1, 100 ] # Melting Cheese
+  - [ 2020013, 5824, 1, 100 ] # Reindeer Milk
+  - [ 2020014, 8424, 1, 100 ] # Sunrise Dew
+  - [ 2020015, 10608, 1, 100 ] # Sunset Dew
+  - [ 2022000, 1716, 1, 100 ] # Pure Water
+  - [ 2022003, 1144, 1, 100 ] # Unagi
+  - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow

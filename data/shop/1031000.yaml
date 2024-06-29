@@ -1,0 +1,15 @@
+# Flora the Fairy (1031000) - Ellinia : Ellinia Weapon Store (101000001)
+
+recharge: true
+items:
+  - [ 1322002, 10000 ] # Iron Mace
+  - [ 1372002, 9000 ] # Metal Wand
+  - [ 1372003, 38000 ] # Mithril Wand
+  - [ 1372004, 18000 ] # Ice Wand
+  - [ 1372005, 2000 ] # Wooden Wand
+  - [ 1372006, 5000 ] # Hardwood Wand
+  - [ 1382000, 3000 ] # Wooden Staff
+  - [ 1382002, 20000 ] # Wizard Staff
+  - [ 1382003, 6000 ] # Sapphire Staff
+  - [ 1382004, 10000 ] # Old Wooden Staff
+  - [ 1382005, 6000 ] # Emerald Staff

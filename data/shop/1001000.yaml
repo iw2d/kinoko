@@ -1,0 +1,10 @@
+# Silver (1001000) - Lith Harbor : Lith Harbor Weapon Store (104000003)
+
+recharge: true
+items:
+  - [ 1302000, 50 ] # Sword
+  - [ 1302007, 3000 ] # Long Sword
+  - [ 1312000, 3000 ] # Double Axe
+  - [ 1312004, 50 ] # Hand Axe
+  - [ 1322005, 50 ] # Wooden Club
+  - [ 1332007, 1000 ] # Fruit Knife

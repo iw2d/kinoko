@@ -1,0 +1,97 @@
+# Sam (1011001) - Henesys : Henesys Weapon Store (100000101)
+
+recharge: true
+items:
+  - [ 1002008, 500 ] # Brown Skullcap
+  - [ 1002010, 800 ] # Brown Winter Hat
+  - [ 1002012, 3000 ] # Red Baseball Cap
+  - [ 1002033, 3000 ] # Old Wisconsin
+  - [ 1002057, 800 ] # Green Winter Hat
+  - [ 1002060, 3000 ] # Black Baseball Cap
+  - [ 1002061, 3000 ] # Yellow Baseball Cap
+  - [ 1002062, 3000 ] # Brown Baseball Cap
+  - [ 1002063, 3000 ] # Blue Baseball Cap
+  - [ 1002112, 4000 ] # Red Feather Hat
+  - [ 1002113, 4000 ] # Blue Feather Hat
+  - [ 1002114, 4000 ] # Green Feather Hat
+  - [ 1002115, 4000 ] # Black Feather Hat
+  - [ 1002116, 4000 ] # Brown Feather Hat
+  - [ 1002117, 12000 ] # Red Robin Hat
+  - [ 1002118, 12000 ] # Blue Robin Hat
+  - [ 1002119, 12000 ] # Green Robin Hat
+  - [ 1002120, 12000 ] # Black Robin Hat
+  - [ 1002121, 12000 ] # Brown Robin Hat
+  - [ 1002156, 20000 ] # Red Hunter
+  - [ 1002157, 20000 ] # Blue Hunter
+  - [ 1002158, 20000 ] # Green Hunter
+  - [ 1002159, 20000 ] # Black Hunter
+  - [ 1002160, 20000 ] # Brown Hunter
+  - [ 1002161, 30000 ] # Red Hawkeye
+  - [ 1002162, 30000 ] # Blue Hawkeye
+  - [ 1002163, 30000 ] # Green Hawkeye
+  - [ 1002164, 30000 ] # Brown Hawkeye
+  - [ 1002165, 30000 ] # Dark Hawkeye
+  - [ 1032001, 7000 ] # Single Earring
+  - [ 1032003, 7000 ] # Amethyst Earrings
+  - [ 1040003, 9000 ] # Brown Hard Leather Top
+  - [ 1040007, 5500 ] # Green Leather Hoodwear
+  - [ 1040008, 3200 ] # Brown Archer Top
+  - [ 1040011, 5500 ] # Silver Leather Hoodwear
+  - [ 1040022, 15000 ] # Green Bennis Chainmail
+  - [ 1040023, 15000 ] # Black Bennis Chainmail
+  - [ 1040024, 15000 ] # Blue Bennis Chainmail
+  - [ 1040025, 15000 ] # Red Bennis Chainmail
+  - [ 1040067, 50000 ] # Green Hunter's Armor
+  - [ 1040068, 50000 ] # Dark Hunter's Armor
+  - [ 1040069, 50000 ] # Red Hunter's Armor
+  - [ 1040070, 50000 ] # Blue Hunter's Armor
+  - [ 1040071, 3200 ] # Green Archer Top
+  - [ 1041007, 3200 ] # Green Avelin
+  - [ 1041008, 5500 ] # Green Able Armor
+  - [ 1041013, 9000 ] # Green Shivermail
+  - [ 1041027, 9000 ] # Red Shivermail
+  - [ 1041028, 9000 ] # Purple Shivermail
+  - [ 1041032, 15000 ] # Green Bennis Chainmail
+  - [ 1041033, 15000 ] # Red Bennis Chainmail
+  - [ 1041034, 15000 ] # Blue Bennis Chainmail
+  - [ 1041035, 15000 ] # Yellow Bennis Chainmail
+  - [ 1041054, 50000 ] # Green Huntress Armor
+  - [ 1041055, 50000 ] # Black Huntress Armor
+  - [ 1041056, 50000 ] # Red Huntress Armor
+  - [ 1041061, 3200 ] # Yellow Avelin
+  - [ 1041062, 5500 ] # Yellow Able Armor
+  - [ 1041063, 5500 ] # Grey Able Armor
+  - [ 1060005, 14000 ] # Warfare Pants
+  - [ 1060056, 44000 ] # Green Hunter's Pants
+  - [ 1060057, 44000 ] # Dark Hunter's Pants
+  - [ 1060058, 44000 ] # Red Hunter's Pants
+  - [ 1060059, 44000 ] # Blue Hunter's Pants
+  - [ 1061006, 5000 ] # Green Able Armor Skirt
+  - [ 1061009, 3000 ] # Green Avelin Skirt
+  - [ 1061024, 9000 ] # Green Shivermail Skirt
+  - [ 1061025, 9000 ] # Red Shivermail Skirt
+  - [ 1061026, 9000 ] # Purple Shivermail Skirt
+  - [ 1061050, 44000 ] # Green Huntress Pants
+  - [ 1061051, 44000 ] # Black Huntress Pants
+  - [ 1061052, 44000 ] # Red Huntress Pants
+  - [ 1061057, 3000 ] # Yellow Avelin Skirt
+  - [ 1061058, 5000 ] # Brown Able Skirt
+  - [ 1061059, 5000 ] # Grey Able Skirt
+  - [ 1062002, 9000 ] # Brown Hard Leather Pants
+  - [ 1062004, 3000 ] # Archer Pants
+  - [ 1062006, 13000 ] # Bennis Chainpants
+  - [ 1072012, 15000 ] # Red Whitebottom Boots
+  - [ 1072015, 1800 ] # Brown Hard Leather Boots
+  - [ 1072016, 4500 ] # Green Woodsman Boots
+  - [ 1072018, 30000 ] # Blue Sneakers
+  - [ 1072025, 9000 ] # Deer Huntertop
+  - [ 1072026, 9000 ] # Rabbit Huntertop
+  - [ 1072054, 15000 ] # Orange Whitebottom Boots
+  - [ 1072055, 15000 ] # Pink Whitebottom Boots
+  - [ 1072056, 15000 ] # Blue Whitebottom Boots
+  - [ 1072059, 1800 ] # Green Hard Leather Boots
+  - [ 1072060, 4500 ] # Brown Woodsman Boots
+  - [ 1072061, 4500 ] # Blue Woodsman Boots
+  - [ 1072064, 30000 ] # Red Sneakers
+  - [ 1072067, 9000 ] # Bear Huntertop
+  - [ 1072068, 9000 ] # Lion Huntertop

@@ -1,0 +1,16 @@
+# 24 Hr Mobile Store (1061001) - Cursed Temple : Another Door (105030000)
+
+recharge: true
+items:
+  - [ 2020000, 420, 1, 100 ] # Salad
+  - [ 2020001, 220, 1, 100 ] # Fried Chicken
+  - [ 2020002, 320, 1, 100 ] # Cake
+  - [ 2020003, 450, 1, 100 ] # Pizza
+  - [ 2020004, 450, 1, 100 ] # Hamburger
+  - [ 2020005, 320, 1, 100 ] # Hot Dog
+  - [ 2020006, 530, 1, 100 ] # Hot Dog Supreme
+  - [ 2022000, 1650, 1, 100 ] # Pure Water
+  - [ 2022003, 1100, 1, 100 ] # Unagi
+  - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
+  - [ 2060000, 2, 1, 2000 ] # Arrow for Bow
+  - [ 2061000, 2, 1, 2000 ] # Arrow for Crossbow

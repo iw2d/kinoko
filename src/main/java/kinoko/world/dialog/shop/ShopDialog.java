@@ -9,7 +9,6 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Encodable;
 import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.Dialog;
@@ -25,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public final class ShopDialog implements Dialog, Encodable {
+public final class ShopDialog implements Dialog {
     private static final Logger log = LogManager.getLogger(ShopDialog.class);
     private final NpcTemplate npcTemplate;
     private final List<ShopItem> items;
@@ -188,13 +187,25 @@ public final class ShopDialog implements Dialog, Encodable {
         }
     }
 
-    @Override
-    public void encode(OutPacket outPacket) {
+    public void encode(OutPacket outPacket, User user) {
         // CShopDlg::SetShopDlg
         outPacket.encodeInt(npcTemplate.getId()); // dwNpcTemplateID
         outPacket.encodeShort(items.size()); // nCount
         for (ShopItem item : items) {
-            item.encode(outPacket);
+            outPacket.encodeInt(item.getItemId()); // nItemID
+            outPacket.encodeInt(item.getPrice()); // nPrice
+            outPacket.encodeByte(0); // nDiscountRate
+            outPacket.encodeInt(item.getTokenItemId()); // nTokenItemID
+            outPacket.encodeInt(item.getTokenPrice()); // nTokenPrice
+            outPacket.encodeInt(0); // nItemPeriod
+            outPacket.encodeInt(0); // nLevelLimited
+            if (ItemConstants.isRechargeableItem(item.getItemId())) {
+                outPacket.encodeDouble(item.getUnitPrice()); // dUnitPrice
+                outPacket.encodeShort(item.getMaxPerSlot() + getIncSlotMax(user, item.getItemId())); // nMaxPerSlot
+            } else {
+                outPacket.encodeShort(item.getQuantity()); // nQuantity
+                outPacket.encodeShort(item.getMaxPerSlot()); // nMaxPerSlot
+            }
         }
     }
 

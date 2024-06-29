@@ -136,11 +136,12 @@ public final class StringProvider implements WzProvider {
             }
             for (var mapEntry : mapList.getItems().entrySet()) {
                 final int mapId = Integer.parseInt(mapEntry.getKey());
-                if (!(mapEntry.getValue() instanceof WzListProperty prop) ||
-                        !(prop.getItems().get("mapName") instanceof String name)) {
+                if (!(mapEntry.getValue() instanceof WzListProperty prop)) {
                     continue;
                 }
-                mapNames.put(mapId, name);
+                final String streetName = WzProvider.getString(prop.getItems().get("streetName"), "");
+                final String mapName = WzProvider.getString(prop.getItems().get("mapName"), "");
+                mapNames.put(mapId, String.format("%s : %s", streetName, mapName));
             }
         }
     }

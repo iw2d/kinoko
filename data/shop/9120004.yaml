@@ -1,0 +1,8 @@
+# Momoyo (9120004) - Zipangu : Locker Room (M) (801000100)
+
+recharge: true
+items:
+  - [ 1050100, 30000 ] # Bathrobe for Men
+  - [ 2030008, 400, 1, 100 ] # Coffee Milk
+  - [ 2030009, 500, 1, 100 ] # Strawberry Milk
+  - [ 2030010, 500, 1, 100 ] # Fruit Milk

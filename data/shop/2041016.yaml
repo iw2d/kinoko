@@ -1,0 +1,30 @@
+# Vega (2041016) - Ludibrium : Eos Tower 66th Floor (221021700)
+
+items:
+  - [ 2040000, 34000, 1, 100 ] # Scroll for Helmet for DEF 100%
+  - [ 2040300, 34000, 1, 100 ] # Scroll for Earring for INT 100%
+  - [ 2040400, 34000, 1, 100 ] # Scroll for Topwear for DEF
+  - [ 2040503, 34000, 1, 100 ] # Scroll for Overall Armor for DEF 100%
+  - [ 2040600, 34000, 1, 100 ] # Scroll for Bottomwear for DEF 100%
+  - [ 2040700, 34000, 1, 100 ] # Scroll for Shoes for DEX 100%
+  - [ 2040703, 34000, 1, 100 ] # Scroll for Shoes for Jump 100%
+  - [ 2040706, 34000, 1, 100 ] # Scroll for Shoes for Speed 100%
+  - [ 2040800, 34000, 1, 100 ] # Scroll for Gloves for DEX 100%
+  - [ 2040900, 34000, 1, 100 ] # Scroll for Shield for DEF 100%
+  - [ 2041000, 34000, 1, 100 ] # Scroll for Cape for Magic DEF 100%
+  - [ 2041003, 34000, 1, 100 ] # Scroll for Cape for Weapon DEF 100%
+  - [ 2043000, 69000, 1, 100 ] # Scroll for One-Handed Sword for ATT 100%
+  - [ 2043100, 69000, 1, 100 ] # Scroll for One-Handed Axe for ATT 100%
+  - [ 2043200, 69000, 1, 100 ] # Scroll for One-Handed BW for ATT 100%
+  - [ 2043300, 69000, 1, 100 ] # Scroll for Dagger for ATT 100%
+  - [ 2043700, 69000, 1, 100 ] # Scroll for Wand for Magic Attack 100%
+  - [ 2043800, 69000, 1, 100 ] # Scroll for Staff for Magic Attack 100%
+  - [ 2044000, 69000, 1, 100 ] # Scroll for Two-handed Sword for ATT 100%
+  - [ 2044100, 69000, 1, 100 ] # Scroll for Two-handed Axe for ATT 100%
+  - [ 2044200, 69000, 1, 100 ] # Scroll for Two-handed BW for ATT 100%
+  - [ 2044300, 69000, 1, 100 ] # Scroll for Spear for ATT 100%
+  - [ 2044400, 69000, 1, 100 ] # Scroll for Pole Arm for ATT 100%
+  - [ 2044500, 69000, 1, 100 ] # Scroll for Bow for ATT 100%
+  - [ 2044600, 69000, 1, 100 ] # Scroll for Crossbow for ATT 100%
+  - [ 2044700, 69000, 1, 100 ] # Scroll for Claw for ATT 100%
+  - [ 4031348, 10000000, 1, 100 ] # Secret Spell Scroll

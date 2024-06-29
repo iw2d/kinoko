@@ -9,10 +9,9 @@ import kinoko.server.ServerConstants;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class QuestProvider implements WzProvider {
     public static final Path QUEST_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Quest.wz");
@@ -27,8 +26,8 @@ public final class QuestProvider implements WzProvider {
         }
     }
 
-    public static Set<QuestInfo> getQuestInfos() {
-        return questInfos.values().stream().collect(Collectors.toUnmodifiableSet());
+    public static List<QuestInfo> getQuestInfos() {
+        return questInfos.values().stream().toList();
     }
 
     public static Optional<QuestInfo> getQuestInfo(int questId) {

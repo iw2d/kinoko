@@ -1,0 +1,8 @@
+# Patricia (2041014) - Ludibrium : Ludibrium (220000000)
+
+items:
+  - [ 2120000, 30, 1, 200 ] # Pet Food
+  - [ 2260000, 1000, 1, 200 ] # Revitalizer
+  - [ 4160000, 1000 ] # Pet Command Guide : Puppy
+  - [ 4160001, 1000 ] # Pet Command Guide : Kitty
+  - [ 4160002, 1000 ] # Pet Command Guide : Bunny

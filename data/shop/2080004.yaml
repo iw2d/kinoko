@@ -1,0 +1,26 @@
+# Moodie (2080004) - Leafre : Leafre (240000000)
+
+items:
+  - [ 2120000, 30, 1, 200 ] # Pet Food
+  - [ 2260000, 1000, 1, 200 ] # Revitalizer
+  - [ 4160000, 1000 ] # Pet Command Guide : Puppy
+  - [ 4160001, 1000 ] # Pet Command Guide : Kitty
+  - [ 4160002, 1000 ] # Pet Command Guide : Bunny
+  - [ 4160003, 1000 ] # Pet Command Guide : Mini Kargo
+  - [ 4160004, 1000 ] # Pet Command Guide : Husky
+  - [ 4160005, 1000 ] # Pet Command Guide : Pig
+  - [ 4160006, 1000 ] # Pet Command Guide : Panda
+  - [ 4160007, 1000 ] # Pet Command Guide : Dino
+  - [ 4160008, 1000 ] # Pet Command Guide : White Tiger
+  - [ 4160009, 1000 ] # Pet Command Guide : Rudolph
+  - [ 4160010, 1000 ] # Pet Command Guide : Monkey
+  - [ 4160012, 1000 ] # Pet Command Guide : Mini Yeti
+  - [ 4160013, 1000 ] # Pet Command Guide : Robot
+  - [ 4160014, 1000 ] # Pet Command Guide : Penguin
+  - [ 4160015, 1000 ] # Pet Command Guide : Jr. Balrog
+  - [ 4160017, 1000 ] # Pet Command Guide : Golden Pig
+  - [ 4160020, 1000 ] # Pet Command Guide : Turkey
+  - [ 4160022, 1000 ] # Pet Command Guide : Baby Dragon
+  - [ 4160023, 1000 ] # Pet Command Guide : Green/Red/Blue Dragon
+  - [ 4160024, 1000 ] # Pet Command Guide : Black Dragon
+  - [ 4160026, 1000 ] # Pet Command Guide : Jr. Reaper

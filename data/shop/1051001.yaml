@@ -1,0 +1,110 @@
+# Don Hwang (1051001) - Kerning City : Kerning City Self-Defence Item Store (103000001)
+
+recharge: true
+items:
+  - [ 1002001, 3000 ] # Metal Gear
+  - [ 1002020, 7400 ] # Red Starry Bandana
+  - [ 1002096, 7400 ] # Sky Blue Starry Bandana
+  - [ 1002097, 7400 ] # Yellow Starry Bandana
+  - [ 1002107, 4000 ] # Red Thief Hood
+  - [ 1002108, 4000 ] # Blue Thief Hood
+  - [ 1002109, 4000 ] # Green Thief Hood
+  - [ 1002110, 4000 ] # Black Thief Hood
+  - [ 1002111, 4000 ] # Yellow Thief Hood
+  - [ 1002122, 900 ] # Red Ghetto Beanie
+  - [ 1002123, 900 ] # Blue Ghetto Beanie
+  - [ 1002124, 900 ] # Brown Ghetto Beanie
+  - [ 1002125, 900 ] # Black Ghetto Beanie
+  - [ 1002126, 900 ] # Green Ghetto Beanie
+  - [ 1002127, 12000 ] # Red Loosecap
+  - [ 1002128, 12000 ] # Blue Loosecap
+  - [ 1002129, 12000 ] # Brown Loosecap
+  - [ 1002130, 12000 ] # Black Loosecap
+  - [ 1002131, 12000 ] # Green Loosecap
+  - [ 1002146, 20000 ] # Red Tiberian
+  - [ 1002147, 20000 ] # Blue Tiberian
+  - [ 1002148, 20000 ] # Green Tiberian
+  - [ 1002149, 20000 ] # Brown Tiberian
+  - [ 1002150, 20000 ] # Dark Tiberian
+  - [ 1002171, 30000 ] # Red Guise
+  - [ 1002172, 30000 ] # Blue Guise
+  - [ 1002173, 30000 ] # Green Guise
+  - [ 1002174, 30000 ] # Brown Guise
+  - [ 1002175, 30000 ] # Dark Guise
+  - [ 1040031, 3000 ] # Blue Cloth Vest
+  - [ 1040032, 3000 ] # Red Cloth Vest
+  - [ 1040033, 3000 ] # Black Cloth Vest
+  - [ 1040034, 5000 ] # Dark Nightshift
+  - [ 1040035, 5000 ] # Blue Nightshift
+  - [ 1040042, 9000 ] # Blue Pao
+  - [ 1040043, 9000 ] # Red Pao
+  - [ 1040044, 9000 ] # Black Pao
+  - [ 1040048, 16000 ] # Brown Sneak
+  - [ 1040049, 16000 ] # Blue Sneak
+  - [ 1040050, 16000 ] # Black Sneak
+  - [ 1040057, 45000 ] # Dark Brown Stealer
+  - [ 1040058, 45000 ] # Dark Silver Stealer
+  - [ 1040059, 45000 ] # Red Gold Stealer
+  - [ 1040060, 45000 ] # Silver Black Stealer
+  - [ 1041003, 9000 ] # Red Qi Pao
+  - [ 1041036, 3000 ] # Red Cloth Vest
+  - [ 1041037, 3000 ] # Blue Cloth Vest
+  - [ 1041038, 3000 ] # Black Cloth Vest
+  - [ 1041039, 9000 ] # Pink Qi Pao
+  - [ 1041040, 9000 ] # Blue Qi Pao
+  - [ 1041044, 5000 ] # Red Nightshift
+  - [ 1041045, 5000 ] # Brown Nightshift
+  - [ 1041047, 45000 ] # Red Steal
+  - [ 1041048, 45000 ] # Black Steal
+  - [ 1041049, 45000 ] # Blue Steal
+  - [ 1041050, 45000 ] # Purple Steal
+  - [ 1041057, 18000 ] # Dark Sneak
+  - [ 1041058, 18000 ] # Blood Sneak
+  - [ 1041059, 18000 ] # Sky Sneak
+  - [ 1041060, 18000 ] # Gold Sneak
+  - [ 1060021, 2800 ] # Blue Cloth Pants
+  - [ 1060022, 2800 ] # Red Cloth Pants
+  - [ 1060023, 2800 ] # Black Cloth Pants
+  - [ 1060024, 4800 ] # Dark Nightshift Pants
+  - [ 1060025, 4800 ] # Blue Nightshift Pants
+  - [ 1060031, 8000 ] # Blue Pao Bottom
+  - [ 1060032, 8000 ] # Red Pao Bottom
+  - [ 1060033, 8000 ] # Black Pao Bottom
+  - [ 1060037, 19000 ] # Dark Brown Sneak Pants
+  - [ 1060038, 19000 ] # Brown Sneak Pants
+  - [ 1060039, 19000 ] # Black Sneak Pants
+  - [ 1060043, 40000 ] # Dark Brown Stealer Pants
+  - [ 1060044, 40000 ] # Dark Silver Stealer Pants
+  - [ 1060045, 40000 ] # Red / Gold Stealer Pants
+  - [ 1060046, 40000 ] # Silver / Black Stealer Pants
+  - [ 1061003, 8000 ] # Red Qi Pao Pants
+  - [ 1061029, 2800 ] # Red Cloth Pants
+  - [ 1061030, 2800 ] # Blue Cloth Pants
+  - [ 1061031, 2800 ] # Black Cloth Pants
+  - [ 1061032, 8000 ] # Purple Qi Pao Pants
+  - [ 1061033, 8000 ] # Blue Qi Pao Pants
+  - [ 1061037, 4800 ] # Red Nightshift Pants
+  - [ 1061038, 4800 ] # Brown Nightshift Pants
+  - [ 1061040, 12000 ] # Red Qi Pao Skirt
+  - [ 1061041, 12000 ] # Purple Qi Pao Skirt
+  - [ 1061042, 12000 ] # Blue Qi Pao Skirt
+  - [ 1061043, 40000 ] # Red Steal Pants
+  - [ 1061044, 40000 ] # Black Steal Pants
+  - [ 1061045, 40000 ] # Blue Steal Pants
+  - [ 1061046, 40000 ] # Purple Steal Pants
+  - [ 1061053, 18000 ] # Dark Sneak Pants
+  - [ 1061054, 18000 ] # Blood Sneak Pants
+  - [ 1061055, 18000 ] # Sky Sneak Pants
+  - [ 1061056, 18000 ] # Gold Sneak Pants
+  - [ 1072004, 2000 ] # White Gomushin
+  - [ 1072022, 9000 ] # Black Enamel Boots
+  - [ 1072028, 4500 ] # White Ninja Sandals
+  - [ 1072029, 4500 ] # Yellow Ninja Sandals
+  - [ 1072030, 4500 ] # Blue Ninja Sandals
+  - [ 1072031, 4500 ] # Red Ninja Sandals
+  - [ 1072042, 2000 ] # Black Gomushin
+  - [ 1072043, 2000 ] # Smelly Gomushin
+  - [ 1072065, 9000 ] # Red Enamel Boots
+  - [ 1072066, 9000 ] # Blue Enamel Boots
+  - [ 1072070, 1800 ] # Blue Gidder Shoes
+  - [ 1072071, 1800 ] # Brown Gidder Shoes

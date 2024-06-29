@@ -1,0 +1,40 @@
+# Gumball Machine (2040049) - Ludibrium : Eos Tower 36th - 65th Floor (221021600)
+
+recharge: true
+items:
+  - [ 2000000, 47, 1, 100 ] # Red Potion
+  - [ 2000001, 152, 1, 100 ] # Orange Potion
+  - [ 2000002, 304, 1, 100 ] # White Potion
+  - [ 2000003, 190, 1, 100 ] # Blue Potion
+  - [ 2000006, 589, 1, 100 ] # Mana Elixir
+  - [ 2000007, 50, 1, 150 ] # Red Pill
+  - [ 2000008, 160, 1, 150 ] # Orange Pill
+  - [ 2000009, 320, 1, 150 ] # White Pill
+  - [ 2000010, 200, 1, 150 ] # Blue Pill
+  - [ 2000011, 620, 1, 150 ] # Mana Elixir Pill
+  - [ 2001001, 2185, 1, 100 ] # Ice Cream Pop
+  - [ 2001002, 3800, 1, 100 ] # Red Bean Sundae
+  - [ 2002006, 570, 1, 100 ] # Warrior Pill
+  - [ 2002007, 570, 1, 100 ] # Magic Pill
+  - [ 2002008, 570, 1, 100 ] # Sniper Pill
+  - [ 2002009, 570, 1, 100 ] # Dexterity Pill
+  - [ 2002010, 475, 1, 100 ] # Speed Pill
+  - [ 2010001, 106, 1, 100 ] # Meat
+  - [ 2010002, 47, 1, 100 ] # Egg
+  - [ 2020001, 209, 1, 100 ] # Fried Chicken
+  - [ 2020002, 304, 1, 100 ] # Cake
+  - [ 2020003, 427, 1, 100 ] # Pizza
+  - [ 2020004, 427, 1, 100 ] # Hamburger
+  - [ 2020005, 304, 1, 100 ] # Hot Dog
+  - [ 2020006, 503, 1, 100 ] # Hot Dog Supreme
+  - [ 2020012, 4680, 1, 100 ] # Melting Cheese
+  - [ 2020013, 5824, 1, 100 ] # Reindeer Milk
+  - [ 2020014, 8424, 1, 100 ] # Sunrise Dew
+  - [ 2020015, 10608, 1, 100 ] # Sunset Dew
+  - [ 2022000, 1716, 1, 100 ] # Pure Water
+  - [ 2022003, 1144, 1, 100 ] # Unagi
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2060001, 10, 1, 1800 ] # Bronze Arrow for Bow
+  - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2061001, 10, 1, 1800 ] # Bronze Arrow for Crossbow
+  - [ 2120000, 25, 1, 200 ] # Pet Food

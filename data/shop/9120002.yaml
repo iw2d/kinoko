@@ -1,0 +1,14 @@
+# Doran (9120002) - Zipangu : Showa Street Market (801000300)
+
+recharge: true
+items:
+  - [ 2000001, 160, 1, 100 ] # Orange Potion
+  - [ 2000002, 320, 1, 100 ] # White Potion
+  - [ 2000003, 200, 1, 100 ] # Blue Potion
+  - [ 2000006, 620, 1, 100 ] # Mana Elixir
+  - [ 2001001, 2300, 1, 100 ] # Ice Cream Pop
+  - [ 2001002, 4000, 1, 100 ] # Red Bean Sundae
+  - [ 2020012, 4500, 1, 100 ] # Melting Cheese
+  - [ 2020014, 8100, 1, 100 ] # Sunrise Dew
+  - [ 2022002, 1000 ] # Cider
+  - [ 2060003, 40, 1, 1000 ] # Red Arrow for Bow

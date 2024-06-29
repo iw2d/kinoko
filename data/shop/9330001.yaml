@@ -1,0 +1,52 @@
+# Uncle Wang (9330001) - 
+
+recharge: true
+items:
+  - [ 1302004, 100000 ] # Cutlus
+  - [ 1302008, 40000 ] # Gladius
+  - [ 1302009, 225000 ] # Traus
+  - [ 1312003, 20000 ] # Misthil Axe
+  - [ 1312005, 40000 ] # Fireman's Axe
+  - [ 1312006, 100000 ] # Dankke
+  - [ 1312007, 175000 ] # Blue Counter
+  - [ 1322004, 22000 ] # Fusion Mace
+  - [ 1322014, 40000 ] # War Hammer
+  - [ 1322015, 100000 ] # Heavy Hammer
+  - [ 1322016, 175000 ] # Jacker
+  - [ 1332004, 38000 ] # Forked Dagger
+  - [ 1332011, 425000 ] # Bazlud
+  - [ 1332012, 40000 ] # Reef Claw
+  - [ 1332014, 375000 ] # Gephart
+  - [ 1372000, 400000 ] # Fairy Wand
+  - [ 1372001, 175000 ] # Wizard Wand
+  - [ 1372003, 38000 ] # Mithril Wand
+  - [ 1372004, 18000 ] # Ice Wand
+  - [ 1382002, 20000 ] # Wizard Staff
+  - [ 1402002, 150000 ] # Scimitar
+  - [ 1402006, 350000 ] # Lionheart
+  - [ 1402007, 450000 ] # Zard
+  - [ 1402008, 22000 ] # Broadsword
+  - [ 1412000, 22000 ] # Two-Handed Axe
+  - [ 1412004, 200000 ] # Niam
+  - [ 1412005, 250000 ] # Sabretooth
+  - [ 1412006, 45000 ] # Blue Axe
+  - [ 1422001, 45000 ] # Mithril Maul
+  - [ 1422004, 20000 ] # Monkey Wrench
+  - [ 1422007, 250000 ] # Titan
+  - [ 1422008, 200000 ] # Sledgehammer
+  - [ 1432002, 60000 ] # Forked Spear
+  - [ 1432003, 175000 ] # Nakamaki
+  - [ 1432005, 225000 ] # Zeco
+  - [ 1442001, 60000 ] # Mithril Pole Arm
+  - [ 1442003, 175000 ] # Axe Pole Arm
+  - [ 1442004, 24000 ] # Janitor's Mop
+  - [ 1442009, 300000 ] # Crescent Polearm
+  - [ 1452000, 20000 ] # Battle Bow
+  - [ 1452005, 150000 ] # Ryden
+  - [ 1452006, 250000 ] # Red Viper
+  - [ 1452007, 375000 ] # Vaulter 2000
+  - [ 1462000, 30000 ] # Mountain Crossbow
+  - [ 1462003, 12000 ] # Balanche
+  - [ 1462004, 200000 ] # Eagle Crow
+  - [ 1462005, 250000 ] # Heckler
+  - [ 1472007, 60000 ] # Meba

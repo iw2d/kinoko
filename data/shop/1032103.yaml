@@ -1,0 +1,12 @@
+# El Moth (1032103) - Victoria Road : The Tree That Grew III (101010102), Chimney Tree : Close to the Sky (101020200)
+
+items:
+  - [ 2040000, 35000, 1, 100 ] # Scroll for Helmet for DEF 100%
+  - [ 2040300, 35000, 1, 100 ] # Scroll for Earring for INT 100%
+  - [ 2040400, 35000, 1, 100 ] # Scroll for Topwear for DEF
+  - [ 2040600, 35000, 1, 100 ] # Scroll for Bottomwear for DEF 100%
+  - [ 2040700, 35000, 1, 100 ] # Scroll for Shoes for DEX 100%
+  - [ 2043700, 70000, 1, 100 ] # Scroll for Wand for Magic Attack 100%
+  - [ 2043800, 70000, 1, 100 ] # Scroll for Staff for Magic Attack 100%
+  - [ 2044500, 70000, 1, 100 ] # Scroll for Bow for ATT 100%
+  - [ 2044600, 70000, 1, 100 ] # Scroll for Crossbow for ATT 100%

@@ -1,0 +1,8 @@
+# Coco (9000017) - Sunset Road : Magatia (261000000), The Burning Road : Ariant (260000000), Aquarium : Aquarium (230000000), Nautilus : Nautilus Harbor (120000000), Orbis : Orbis (200000000), Leafre : Leafre (240000000), El Nath : El Nath (211000000), Singapore : CBD (540000000), Singapore : Boat Quay Town (541000000), Kerning City : Kerning City (103000000), Ludibrium : Ludibrium (220000000), Perion : Perion (102000000), Henesys : Henesys Park (100000200), Ellinia : Ellinia (101000000), New Leaf City : NLC Town Center (600000000), Zipangu : Showa Town (801000000), Zipangu : Mushroom Shrine (800000000), Sleepywood : Sleepywood (105000000), Black Wing Territory : Edelstein (310000000), Lith Harbor : Lith Harbor (104000000), Snow Island : Rien (140000000), Malaysia : Trend Zone Metropolis (550000000), Malaysia : Kampung Village (551000000), Herb Town : Herb Town (251000000), Mu Lung : Mu Lung (250000000), Omega Sector : Omega Sector (221000000), Korean Folk Town : Korean Folk Town (222000000)
+
+items:
+  - [ 4031111, 500 ] # Heart Box
+  - [ 4031112, 1500 ] # Gold Ribbon
+  - [ 4031113, 3000 ] # Basket
+  - [ 4031114, 1200 ] # Cover Material
+  - [ 4031125, 300, 1, 100 ] # Wooden Skewer

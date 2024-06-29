@@ -1,0 +1,19 @@
+# Tulcus (1052104) - Swamp Region : Wild Crocodile Swamp (103030100)
+
+items:
+  - [ 2040000, 35000, 1, 100 ] # Scroll for Helmet for DEF 100%
+  - [ 2040003, 35000, 1, 100 ] # Scroll for Helmet for HP 100%
+  - [ 2040500, 35000, 1, 100 ] # Scroll for Overall Armor for DEX 100%
+  - [ 2040600, 35000, 1, 100 ] # Scroll for Bottomwear for DEF 100%
+  - [ 2040700, 35000, 1, 100 ] # Scroll for Shoes for DEX 100%
+  - [ 2040703, 35000, 1, 100 ] # Scroll for Shoes for Jump 100%
+  - [ 2043000, 70000, 1, 100 ] # Scroll for One-Handed Sword for ATT 100%
+  - [ 2043100, 70000, 1, 100 ] # Scroll for One-Handed Axe for ATT 100%
+  - [ 2043200, 70000, 1, 100 ] # Scroll for One-Handed BW for ATT 100%
+  - [ 2043300, 70000, 1, 100 ] # Scroll for Dagger for ATT 100%
+  - [ 2044000, 70000, 1, 100 ] # Scroll for Two-handed Sword for ATT 100%
+  - [ 2044100, 70000, 1, 100 ] # Scroll for Two-handed Axe for ATT 100%
+  - [ 2044200, 70000, 1, 100 ] # Scroll for Two-handed BW for ATT 100%
+  - [ 2044300, 70000, 1, 100 ] # Scroll for Spear for ATT 100%
+  - [ 2044400, 70000, 1, 100 ] # Scroll for Pole Arm for ATT 100%
+  - [ 2044700, 70000, 1, 100 ] # Scroll for Claw for ATT 100%

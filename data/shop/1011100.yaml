@@ -1,0 +1,28 @@
+# Luna (1011100) - Henesys : Henesys General Store (100000102)
+
+recharge: true
+items:
+  - [ 2000000, 50, 1, 100 ] # Red Potion
+  - [ 2000001, 160, 1, 100 ] # Orange Potion
+  - [ 2000002, 320, 1, 100 ] # White Potion
+  - [ 2000003, 200, 1, 100 ] # Blue Potion
+  - [ 2000006, 620, 1, 100 ] # Mana Elixir
+  - [ 2002000, 500, 1, 100 ] # Dexterity Potion
+  - [ 2002001, 400, 1, 100 ] # Speed Potion
+  - [ 2002002, 500, 1, 100 ] # Magic Potion
+  - [ 2002004, 500, 1, 100 ] # Warrior Potion
+  - [ 2002005, 500, 1, 100 ] # Sniper Potion
+  - [ 2010000, 30, 1, 100 ] # Apple
+  - [ 2010001, 106, 1, 100 ] # Meat
+  - [ 2010002, 50, 1, 100 ] # Egg
+  - [ 2010003, 100, 1, 100 ] # Orange
+  - [ 2010004, 310, 1, 100 ] # Lemon
+  - [ 2020028, 3000, 1, 100 ] # Chocolate
+  - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
+  - [ 2030004, 500, 1, 100 ] # Return Scroll to Henesys
+  - [ 2050000, 200, 1, 100 ] # Antidote
+  - [ 2050001, 200, 1, 100 ] # Eyedrop
+  - [ 2050002, 300, 1, 100 ] # Tonic
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2120008, 200, 1, 200 ] # Dry Treat

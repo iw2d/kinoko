@@ -1,0 +1,108 @@
+# Owner Jang (9310002) - 
+
+recharge: true
+items:
+  - [ 1002023, 120000 ] # Jousting Helmet
+  - [ 1002034, 60000 ] # Blue Jester
+  - [ 1002048, 160000 ] # Great Blue Helmet
+  - [ 1002138, 100000 ] # Blue Pole-Feather Hat
+  - [ 1002142, 96000 ] # Blue Matty
+  - [ 1002162, 60000 ] # Blue Hawkeye
+  - [ 1002172, 60000 ] # Blue Guise
+  - [ 1002177, 100000 ] # Blue Burgler
+  - [ 1040021, 40000 ] # Red Hwarang Shirt
+  - [ 1040026, 40000 ] # Green Hwarang Shirt
+  - [ 1040057, 45000 ] # Dark Brown Stealer
+  - [ 1040059, 45000 ] # Red Gold Stealer
+  - [ 1040061, 114000 ] # Green Knucklevest
+  - [ 1040062, 114000 ] # Red Knucklevest
+  - [ 1040067, 50000 ] # Green Hunter's Armor
+  - [ 1040069, 50000 ] # Red Hunter's Armor
+  - [ 1040072, 114000 ] # Red Legolier
+  - [ 1040073, 114000 ] # Blue Legolier
+  - [ 1040074, 114000 ] # Green Legolier
+  - [ 1040079, 180000 ] # Brown Piette
+  - [ 1040081, 180000 ] # White Piette
+  - [ 1040082, 180000 ] # Khaki Shadow
+  - [ 1040083, 180000 ] # Marine Shadow
+  - [ 1040085, 200000 ] # Maroon Jangoon Armor
+  - [ 1040086, 200000 ] # Blue Jangoon Armor
+  - [ 1041041, 42000 ] # Purple Fairy Top
+  - [ 1041042, 42000 ] # Green Fairy Top
+  - [ 1041043, 42000 ] # Blue Fairy Top
+  - [ 1041047, 45000 ] # Red Steal
+  - [ 1041049, 45000 ] # Blue Steal
+  - [ 1041050, 45000 ] # Purple Steal
+  - [ 1041051, 120000 ] # Red Amoria Top
+  - [ 1041052, 120000 ] # Blue Amoria Top
+  - [ 1041054, 50000 ] # Green Huntress Armor
+  - [ 1041056, 50000 ] # Red Huntress Armor
+  - [ 1041065, 114000 ] # Red Legolia
+  - [ 1041066, 114000 ] # Blue Legolia
+  - [ 1041067, 114000 ] # Green Legolia
+  - [ 1041074, 180000 ] # Purple Shadow
+  - [ 1041075, 180000 ] # Red Shadow
+  - [ 1041081, 180000 ] # White Piettra
+  - [ 1041082, 180000 ] # Brown Piettra
+  - [ 1041084, 200000 ] # Red Jangoon Armor
+  - [ 1041085, 200000 ] # Brown Jangoon Armor
+  - [ 1050000, 112500 ] # White Crusader Chainmail
+  - [ 1050002, 300000 ] # Blood Chaos Robe
+  - [ 1050003, 40000 ] # Blue Wizard Robe
+  - [ 1050011, 70000 ] # Black Dragon Robe
+  - [ 1050021, 112500 ] # Blue Crusader Chainmail
+  - [ 1050026, 40000 ] # White Wizard Robe
+  - [ 1050028, 40000 ] # Green Wizard Robe
+  - [ 1050030, 300000 ] # Blue Chaos Robe
+  - [ 1050031, 300000 ] # White Chaos Robe
+  - [ 1050036, 450000 ] # Red Starlight
+  - [ 1050037, 450000 ] # Green Starlight
+  - [ 1050038, 450000 ] # Blue Starlight
+  - [ 1051001, 112500 ] # Emerald Fitted Mail
+  - [ 1051007, 111000 ] # Red Avenger
+  - [ 1051008, 111000 ] # Blue Avenger
+  - [ 1051009, 111000 ] # Purple Avenger
+  - [ 1051011, 60000 ] # Red Engrit
+  - [ 1051012, 60000 ] # Blue Engrit
+  - [ 1051013, 60000 ] # Yellow Engrit
+  - [ 1051014, 112500 ] # Sapphire Fitted Mail
+  - [ 1051015, 112500 ] # Blood Fitted Mail
+  - [ 1051023, 450000 ] # Purple Moonlight
+  - [ 1051024, 450000 ] # Red Moonlight
+  - [ 1051025, 450000 ] # Blue Moonlight
+  - [ 1060016, 38000 ] # Black Martial Arts Pants
+  - [ 1060017, 38000 ] # White Martial Arts Pants
+  - [ 1060043, 40000 ] # Dark Brown Stealer Pants
+  - [ 1060045, 40000 ] # Red / Gold Stealer Pants
+  - [ 1060050, 108000 ] # Blue Knucklevest Pants
+  - [ 1060051, 108000 ] # Red Knucklevest Pants
+  - [ 1060056, 44000 ] # Green Hunter's Pants
+  - [ 1060058, 44000 ] # Red Hunter's Pants
+  - [ 1060061, 108000 ] # Red Legolier Pants
+  - [ 1060062, 108000 ] # Blue Legolier Pants
+  - [ 1060063, 108000 ] # Green Legolier Pants
+  - [ 1060069, 160000 ] # Brown Piette Pants
+  - [ 1060070, 160000 ] # Blue Piette Pants
+  - [ 1060071, 160000 ] # Khaki Shadow Pants
+  - [ 1060072, 160000 ] # Marine Shadow Pants
+  - [ 1060074, 180000 ] # White Jangoon Pants
+  - [ 1060075, 180000 ] # Brown Jangoon Pants
+  - [ 1061034, 40000 ] # Purple Fairy Skirt
+  - [ 1061035, 40000 ] # Green Fairy Skirt
+  - [ 1061036, 40000 ] # Blue Fairy Skirt
+  - [ 1061043, 40000 ] # Red Steal Pants
+  - [ 1061045, 40000 ] # Blue Steal Pants
+  - [ 1061046, 40000 ] # Purple Steal Pants
+  - [ 1061047, 120000 ] # Red Amoria Skirt
+  - [ 1061048, 120000 ] # Blue Amoria Skirt
+  - [ 1061050, 44000 ] # Green Huntress Pants
+  - [ 1061052, 44000 ] # Red Huntress Pants
+  - [ 1061060, 108000 ] # Red Legolia Pants
+  - [ 1061061, 108000 ] # Blue Legolia Pants
+  - [ 1061062, 108000 ] # Green Legolia Pants
+  - [ 1061069, 160000 ] # Purple Shadow Pants
+  - [ 1061070, 160000 ] # Red Shadow Pants
+  - [ 1061080, 160000 ] # White Piettra Skirt
+  - [ 1061081, 160000 ] # Brown Piettra Skirt
+  - [ 1061083, 180000 ] # Red Jangoon Skirt
+  - [ 1061084, 180000 ] # Brown Jangoon Skirt

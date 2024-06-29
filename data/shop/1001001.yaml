@@ -1,0 +1,35 @@
+# Natasha (1001001) - Lith Harbor : Lith Harbor Armor Store (104000001)
+
+recharge: true
+items:
+  - [ 1002001, 3000 ] # Metal Gear
+  - [ 1002008, 500 ] # Brown Skullcap
+  - [ 1002014, 1000 ] # Red Headband
+  - [ 1002019, 2000 ] # White Bandana
+  - [ 1002066, 450 ] # Black Headband
+  - [ 1002067, 450 ] # Green Headband
+  - [ 1002068, 450 ] # Yellow Headband
+  - [ 1002069, 450 ] # Blue Headband
+  - [ 1002132, 800 ] # Black Swimming Cap
+  - [ 1002133, 800 ] # Blue Swimming Cap
+  - [ 1002134, 800 ] # Red Swimming Cap
+  - [ 1040013, 3000 ] # Blue One-lined T-Shirt
+  - [ 1040014, 3000 ] # Orange Sporty T-Shirt
+  - [ 1041004, 3000 ] # Pink Starry Shirt
+  - [ 1041012, 3000 ] # Red-Striped T-Shirt
+  - [ 1060004, 2800 ] # Grey Thick Sweat Pants
+  - [ 1060007, 1000 ] # Jean Capris
+  - [ 1062000, 4800 ] # Ice Jeans
+  - [ 1062001, 4800 ] # Sandblasted Jeans
+  - [ 1072001, 50 ] # Red Rubber Boots
+  - [ 1072005, 50 ] # Leather Sandals
+  - [ 1072008, 5000 ] # Bronze Aroa Boots
+  - [ 1072017, 10000 ] # Blue Ankle-strap Sandals
+  - [ 1072037, 50 ] # Yellow Rubber Boots
+  - [ 1072038, 50 ] # Blue Rubber Boots
+  - [ 1072048, 5000 ] # Brown Aroa Boots
+  - [ 1072049, 5000 ] # Green Aroa Boots
+  - [ 1072062, 10000 ] # Red Ankle-strap Sandals
+  - [ 1072063, 10000 ] # Brown Ankle-strap Sandals
+  - [ 1092003, 2000 ] # Stolen Fence
+  - [ 3010001, 1000 ] # Sky-blue Wooden Chair

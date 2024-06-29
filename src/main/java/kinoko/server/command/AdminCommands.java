@@ -242,8 +242,14 @@ public final class AdminCommands {
                 return;
             }
             final NpcTemplate npcTemplate = npcTemplateResult.get();
+            final List<MapInfo> npcFields = MapProvider.getMapInfos().stream()
+                    .filter((mapInfo) -> mapInfo.getLifeInfos().stream().anyMatch((lifeInfo) -> lifeInfo.getTemplateId() == npcTemplate.getId()))
+                    .toList();
             user.write(MessagePacket.system("Npc : %s (%d)", StringProvider.getNpcName(npcId), npcId));
             user.write(MessagePacket.system("  script : %s", npcTemplate.getScript()));
+            for (MapInfo mapInfo : npcFields) {
+                user.write(MessagePacket.system("  field : %s (%d)", StringProvider.getMapName(mapInfo.getMapId()), mapInfo.getMapId()));
+            }
         } else if (type.equalsIgnoreCase("skill")) {
             int skillId = -1;
             if (isNumber) {

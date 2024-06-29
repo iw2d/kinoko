@@ -1,10 +1,6 @@
 package kinoko.world.dialog.shop;
 
-import kinoko.server.packet.OutPacket;
-import kinoko.util.Encodable;
-import kinoko.world.item.ItemConstants;
-
-public final class ShopItem implements Encodable {
+public final class ShopItem {
     private final int itemId;
     private final int price;
     private final int quantity;
@@ -53,20 +49,16 @@ public final class ShopItem implements Encodable {
     }
 
     @Override
-    public void encode(OutPacket outPacket) {
-        outPacket.encodeInt(itemId); // nItemID
-        outPacket.encodeInt(price); // nPrice
-        outPacket.encodeByte(0); // nDiscountRate
-        outPacket.encodeInt(tokenItemId); // nTokenItemID
-        outPacket.encodeInt(tokenPrice); // nTokenPrice
-        outPacket.encodeInt(0); // nItemPeriod
-        outPacket.encodeInt(0); // nLevelLimited
-        if (ItemConstants.isRechargeableItem(itemId)) {
-            outPacket.encodeDouble(unitPrice); // dUnitPrice
-        } else {
-            outPacket.encodeShort(quantity); // nQuantity
-        }
-        outPacket.encodeShort(maxPerSlot); // nMaxPerSlot
+    public String toString() {
+        return "ShopItem{" +
+                "itemId=" + itemId +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", maxPerSlot=" + maxPerSlot +
+                ", tokenItemId=" + tokenItemId +
+                ", tokenPrice=" + tokenPrice +
+                ", unitPrice=" + unitPrice +
+                '}';
     }
 
     public static ShopItem from(int itemId, int price, int quantity, int maxPerSlot) {

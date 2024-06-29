@@ -7,6 +7,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.world.dialog.shop.ShopItem;
+import kinoko.world.item.ItemConstants;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,6 +21,7 @@ final class NpcShopExtractor {
 
     public static void main(String[] args) throws IOException {
         ItemProvider.initialize();
+        MapProvider.initialize();
         StringProvider.initialize();
 
         // Extract npc shop image
@@ -79,29 +81,82 @@ final class NpcShopExtractor {
             npcShopItems.put(npcId, items);
         }
 
-        // Write to CSV
-        try (BufferedWriter bw = Files.newBufferedWriter(ShopProvider.NPC_SHOP, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-            for (var entry : npcShopItems.entrySet().stream()
-                    .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
-                final int npcId = entry.getKey();
-                bw.write(String.format("# %s%n", StringProvider.getNpcName(npcId)));
+//        // Write to CSV
+//        try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "npc_shop.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+//            for (var entry : npcShopItems.entrySet().stream()
+//                    .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
+//                final int npcId = entry.getKey();
+//                bw.write(String.format("# %s%n", StringProvider.getNpcName(npcId)));
+//                for (ShopItem si : entry.getValue().stream()
+//                        .sorted(Comparator.comparingInt(ShopItem::getItemId)).toList()) {
+//                    final String itemName = StringProvider.getItemName(si.getItemId());
+//                    final String line = String.format("%d, %d, %d, %d, %d, %d, %d, %f",
+//                            npcId,
+//                            si.getItemId(),
+//                            si.getPrice(),
+//                            si.getQuantity(),
+//                            si.getMaxPerSlot(),
+//                            si.getTokenItemId(),
+//                            si.getTokenPrice(),
+//                            si.getUnitPrice()
+//                    );
+//                    bw.write(String.format("%-120s# %s%n", line, itemName));
+//                }
+//                bw.write("\n");
+//            }
+//        }
+
+        // Create YAML
+        for (var entry : npcShopItems.entrySet()) {
+            final int npcId = entry.getKey();
+            final List<String> npcFields = MapProvider.getMapInfos().stream()
+                    .filter((mapInfo) -> mapInfo.getLifeInfos().stream().anyMatch((lifeInfo) -> lifeInfo.getTemplateId() == npcId))
+                    .map((mapInfo) -> String.format("%s (%d)", StringProvider.getMapName(mapInfo.getMapId()), mapInfo.getMapId()))
+                    .toList();
+
+            final Path filePath = Path.of(ShopProvider.SHOP_DATA.toString(), String.format("%d.yaml", npcId));
+            try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                bw.write(String.format("# %s (%d) - %s\n\n", StringProvider.getNpcName(npcId), npcId, String.join(", ", npcFields)));
+                if (entry.getValue().stream().anyMatch((si) -> si.getUnitPrice() > 0)) {
+                    bw.write("recharge: true\n");
+                }
+                bw.write("items:\n");
                 for (ShopItem si : entry.getValue().stream()
                         .sorted(Comparator.comparingInt(ShopItem::getItemId)).toList()) {
+                    if (si.getUnitPrice() > 0) {
+                        continue;
+                    }
                     final String itemName = StringProvider.getItemName(si.getItemId());
-                    final String line = String.format("%d, %d, %d, %d, %d, %d, %d, %f",
-                            npcId,
-                            si.getItemId(),
-                            si.getPrice(),
-                            si.getQuantity(),
-                            si.getMaxPerSlot(),
-                            si.getTokenItemId(),
-                            si.getTokenPrice(),
-                            si.getUnitPrice()
-                    );
-                    bw.write(String.format("%-120s# %s%n", line, itemName));
+                    final String line;
+                    if (si.getQuantity() > 1 || si.getMaxPerSlot() > 1) {
+                        line = String.format("  - [ %d, %d, %d, %d ]",
+                                si.getItemId(),
+                                si.getPrice(),
+                                si.getQuantity(),
+                                si.getMaxPerSlot()
+                        );
+                    } else {
+                        line = String.format("  - [ %d, %d ]",
+                                si.getItemId(),
+                                si.getPrice()
+                        );
+                    }
+                    bw.write(String.format("%s # %s\n", line, itemName));
                 }
-                bw.write("\n");
             }
+        }
+
+        // Rechargeable Items
+        for (var entry : StringProvider.getItemNames().entrySet().stream()
+                .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                .toList()) {
+            final int itemId = entry.getKey();
+            final String itemName = entry.getValue();
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+            if (itemInfoResult.isEmpty() || !ItemConstants.isRechargeableItem(itemId)) {
+                continue;
+            }
+            System.out.printf("ShopItem.rechargeable(%d, %d, 1.0), // %s\n", itemId, itemInfoResult.get().getSlotMax(), itemName);
         }
     }
 

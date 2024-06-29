@@ -1,0 +1,38 @@
+# River (1021000) - Perion : Perion Weapon Store (102000001)
+
+recharge: true
+items:
+  - [ 1302002, 10000 ] # Viking Sword
+  - [ 1302003, 20000 ] # Eloon
+  - [ 1302005, 6000 ] # Sabre
+  - [ 1302006, 10000 ] # Machete
+  - [ 1302007, 3000 ] # Long Sword
+  - [ 1302008, 40000 ] # Gladius
+  - [ 1312001, 6000 ] # Battle Axe
+  - [ 1312003, 20000 ] # Misthil Axe
+  - [ 1312005, 40000 ] # Fireman's Axe
+  - [ 1322000, 6000 ] # Mace
+  - [ 1322002, 10000 ] # Iron Mace
+  - [ 1322004, 22000 ] # Fusion Mace
+  - [ 1322014, 40000 ] # War Hammer
+  - [ 1332006, 7000 ] # Field Dagger
+  - [ 1332008, 10000 ] # Coconut Knife
+  - [ 1332010, 22000 ] # Iron Dagger
+  - [ 1402000, 12000 ] # Two-Handed Sword
+  - [ 1402001, 3000 ] # Wooden Sword
+  - [ 1402008, 22000 ] # Broadsword
+  - [ 1412000, 22000 ] # Two-Handed Axe
+  - [ 1412001, 3000 ] # Metal Axe
+  - [ 1412002, 10000 ] # Iron Axe
+  - [ 1412006, 45000 ] # Blue Axe
+  - [ 1422000, 3000 ] # Wooden Mallet
+  - [ 1422002, 6000 ] # Heavy Mace
+  - [ 1422003, 10000 ] # Square Hammer
+  - [ 1422004, 20000 ] # Monkey Wrench
+  - [ 1422006, 10000 ] # Pickaxe
+  - [ 1432000, 3000 ] # Spear
+  - [ 1432001, 7000 ] # Fork on a Stick
+  - [ 1442000, 3000 ] # Pole Arm
+  - [ 1442004, 24000 ] # Janitor's Mop
+  - [ 1442006, 8000 ] # Iron Ball
+  - [ 1442007, 12000 ] # Studded Polearm

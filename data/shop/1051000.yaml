@@ -1,0 +1,22 @@
+# Cutthroat Manny (1051000) - Kerning City : Kerning City Self-Defence Item Store (103000001)
+
+recharge: true
+items:
+  - [ 1302007, 3000 ] # Long Sword
+  - [ 1322009, 20000 ] # Plunger
+  - [ 1332000, 4000 ] # Triangular Zamadar
+  - [ 1332002, 8000 ] # Triple-Tipped Zamadar
+  - [ 1332004, 38000 ] # Forked Dagger
+  - [ 1332006, 7000 ] # Field Dagger
+  - [ 1332008, 10000 ] # Coconut Knife
+  - [ 1332009, 42000 ] # Cass
+  - [ 1332010, 22000 ] # Iron Dagger
+  - [ 1332012, 40000 ] # Reef Claw
+  - [ 1332013, 15000 ] # Stinger
+  - [ 1402001, 3000 ] # Wooden Sword
+  - [ 1412001, 3000 ] # Metal Axe
+  - [ 1422000, 3000 ] # Wooden Mallet
+  - [ 1432000, 3000 ] # Spear
+  - [ 1432001, 7000 ] # Fork on a Stick
+  - [ 1442000, 3000 ] # Pole Arm
+  - [ 1472000, 3000 ] # Garnier

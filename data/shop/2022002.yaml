@@ -1,0 +1,27 @@
+# Barun (2022002) - Orbis : Orbis Tower <14th Floor> (200080800)
+
+items:
+  - [ 2040003, 35000, 1, 100 ] # Scroll for Helmet for HP 100%
+  - [ 2040300, 35000, 1, 100 ] # Scroll for Earring for INT 100%
+  - [ 2040400, 35000, 1, 100 ] # Scroll for Topwear for DEF
+  - [ 2040503, 35000, 1, 100 ] # Scroll for Overall Armor for DEF 100%
+  - [ 2040600, 35000, 1, 100 ] # Scroll for Bottomwear for DEF 100%
+  - [ 2040700, 35000, 1, 100 ] # Scroll for Shoes for DEX 100%
+  - [ 2040800, 35000, 1, 100 ] # Scroll for Gloves for DEX 100%
+  - [ 2040900, 35000, 1, 100 ] # Scroll for Shield for DEF 100%
+  - [ 2041000, 35000, 1, 100 ] # Scroll for Cape for Magic DEF 100%
+  - [ 2041003, 35000, 1, 100 ] # Scroll for Cape for Weapon DEF 100%
+  - [ 2043000, 70000, 1, 100 ] # Scroll for One-Handed Sword for ATT 100%
+  - [ 2043100, 70000, 1, 100 ] # Scroll for One-Handed Axe for ATT 100%
+  - [ 2043200, 70000, 1, 100 ] # Scroll for One-Handed BW for ATT 100%
+  - [ 2043300, 70000, 1, 100 ] # Scroll for Dagger for ATT 100%
+  - [ 2043700, 70000, 1, 100 ] # Scroll for Wand for Magic Attack 100%
+  - [ 2043800, 70000, 1, 100 ] # Scroll for Staff for Magic Attack 100%
+  - [ 2044000, 70000, 1, 100 ] # Scroll for Two-handed Sword for ATT 100%
+  - [ 2044100, 70000, 1, 100 ] # Scroll for Two-handed Axe for ATT 100%
+  - [ 2044200, 70000, 1, 100 ] # Scroll for Two-handed BW for ATT 100%
+  - [ 2044300, 70000, 1, 100 ] # Scroll for Spear for ATT 100%
+  - [ 2044400, 70000, 1, 100 ] # Scroll for Pole Arm for ATT 100%
+  - [ 2044500, 70000, 1, 100 ] # Scroll for Bow for ATT 100%
+  - [ 2044600, 70000, 1, 100 ] # Scroll for Crossbow for ATT 100%
+  - [ 2044700, 70000, 1, 100 ] # Scroll for Claw for ATT 100%

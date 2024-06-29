@@ -1,0 +1,17 @@
+# Karl (1011000) - Henesys : Henesys Weapon Store (100000101)
+
+recharge: true
+items:
+  - [ 1302007, 3000 ] # Long Sword
+  - [ 1322007, 6000 ] # Leather Purse
+  - [ 1322008, 12000 ] # Hard Briefcase
+  - [ 1422004, 20000 ] # Monkey Wrench
+  - [ 1442004, 24000 ] # Janitor's Mop
+  - [ 1452000, 20000 ] # Battle Bow
+  - [ 1452001, 10000 ] # Hunter's Bow
+  - [ 1452002, 3000 ] # War Bow
+  - [ 1452003, 6000 ] # Composite Bow
+  - [ 1462000, 30000 ] # Mountain Crossbow
+  - [ 1462001, 4000 ] # Crossbow
+  - [ 1462002, 8000 ] # Battle Crossbow
+  - [ 1462003, 12000 ] # Balanche

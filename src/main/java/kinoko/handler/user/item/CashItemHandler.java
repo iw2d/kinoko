@@ -400,7 +400,7 @@ public final class CashItemHandler extends ItemHandler {
                     } else {
                         final ShopDialog shopDialog = ShopDialog.from(npcTemplate);
                         user.setDialog(shopDialog);
-                        user.write(FieldPacket.openShopDlg(shopDialog));
+                        user.write(FieldPacket.openShopDlg(user, shopDialog));
                     }
                 }
                 case MORPH -> {
