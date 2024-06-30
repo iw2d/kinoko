@@ -762,4 +762,10 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Syntax : %s", CommandProcessor.getHelpString(method)));
         }
     }
+
+    @Command("reloaddrops")
+    public static void reloadDrops(User user, String[] args) {
+        RewardProvider.initialize();
+        user.write(MessagePacket.system("Reloaded all drops!"));
+    }
 }
