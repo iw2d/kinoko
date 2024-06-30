@@ -1,33 +1,33 @@
 # Crying Blue Mushroom (2220110)
 
 rewards:
-  - [ 1002127, 1, 1, 0.100000 ] # Red Loosecap#TODO
-  - [ 1002178, 1, 1, 0.100000 ] # Green Burgler#TODO
-  - [ 1002613, 1, 1, 0.100000 ] # Brown Lagger Cap#TODO
-  - [ 1002616, 1, 1, 0.100000 ] # Brown Double Marine#TODO
-  - [ 1002619, 1, 1, 0.100000 ] # Brown Pitz Bandana#TODO
-  - [ 1040012, 1, 1, 0.100000 ] # Blue Sergeant#TODO
-  - [ 1041027, 1, 1, 0.100000 ] # Red Shivermail#TODO
-  - [ 1051000, 1, 1, 0.100000 ] # Steel Fitted Mail#TODO
-  - [ 1060010, 1, 1, 0.100000 ] # Steel Sergeant Kilt#TODO
-  - [ 1061025, 1, 1, 0.100000 ] # Red Shivermail Skirt#TODO
-  - [ 1072011, 1, 1, 0.100000 ] # Mithril War Boots#TODO
-  - [ 1072020, 1, 1, 0.100000 ] # Purple Jewelry Boots#TODO
-  - [ 1332001, 1, 1, 0.100000 ] # Halfmoon Zamadar#TODO
-  - [ 1332006, 1, 1, 0.100000 ] # Field Dagger#TODO
-  - [ 1382002, 1, 1, 0.100000 ] # Wizard Staff#TODO
-  - [ 1412012, 1, 1, 0.100000 ] # Iron Axe#TODO
-  - [ 1432001, 1, 1, 0.100000 ] # Fork on a Stick#TODO
-  - [ 1442001, 1, 1, 0.100000 ] # Mithril Pole Arm#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion#TODO
-  - [ 2044002, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 10%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000009, 1, 1, 0.100000 ] # Blue Mushroom Cap#TODO
-  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
-  - [ 4030012, 1, 1, 0.100000 ] # Monster Card#TODO
+  - [ 1002127, 1, 1, 0.000100 ] # Red Loosecap
+  - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
+  - [ 1002613, 1, 1, 0.000100 ] # Brown Lagger Cap
+  - [ 1002616, 1, 1, 0.000100 ] # Brown Double Marine
+  - [ 1002619, 1, 1, 0.000100 ] # Brown Pitz Bandana
+  - [ 1040012, 1, 1, 0.000100 ] # Blue Sergeant
+  - [ 1041027, 1, 1, 0.000100 ] # Red Shivermail
+  - [ 1051000, 1, 1, 0.000100 ] # Steel Fitted Mail
+  - [ 1060010, 1, 1, 0.000100 ] # Steel Sergeant Kilt
+  - [ 1061025, 1, 1, 0.000100 ] # Red Shivermail Skirt
+  - [ 1072011, 1, 1, 0.000100 ] # Mithril War Boots
+  - [ 1072020, 1, 1, 0.000100 ] # Purple Jewelry Boots
+  - [ 1332001, 1, 1, 0.000100 ] # Halfmoon Zamadar
+  - [ 1332006, 1, 1, 0.000100 ] # Field Dagger
+  - [ 1382002, 1, 1, 0.000100 ] # Wizard Staff
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432001, 1, 1, 0.000100 ] # Fork on a Stick
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000009, 1, 1, 0.400000 ] # Blue Mushroom Cap
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4030012, 1, 1, 0.050000 ] # Monster Card

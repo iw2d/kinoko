@@ -1,17 +1,17 @@
 # Murukun (100134)
 
 rewards:
-  - [ 1002042, 1, 1, 0.100000 ] # Blue Metal Gear#TODO
-  - [ 1002051, 1, 1, 0.100000 ] # Bronze Full Helm#TODO
-  - [ 1032003, 1, 1, 0.100000 ] # Amethyst Earrings#TODO
-  - [ 1040009, 1, 1, 0.100000 ] # Steel Corporal#TODO
-  - [ 1051000, 1, 1, 0.100000 ] # Steel Fitted Mail#TODO
-  - [ 1060009, 1, 1, 0.100000 ] # Steel Corporal Pants#TODO
-  - [ 1072050, 1, 1, 0.100000 ] # Bronze Grieves#TODO
-  - [ 2000000, 1, 1, 0.100000 ] # Red Potion#TODO
-  - [ 2010009, 1, 1, 0.100000 ] # Green Apple#TODO
-  - [ 2040500, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 100%#TODO
-  - [ 2044400, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 100%#TODO
-  - [ 4000497, 1, 1, 0.100000 ] # Murukun's Furball#TODO
-  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
-  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
+  - [ 1002042, 1, 1, 0.000100 ] # Blue Metal Gear
+  - [ 1002051, 1, 1, 0.000100 ] # Bronze Full Helm
+  - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
+  - [ 1040009, 1, 1, 0.000100 ] # Steel Corporal
+  - [ 1051000, 1, 1, 0.000100 ] # Steel Fitted Mail
+  - [ 1060009, 1, 1, 0.000100 ] # Steel Corporal Pants
+  - [ 1072050, 1, 1, 0.000100 ] # Bronze Grieves
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.010000 ] # Green Apple
+  - [ 2040500, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 100%
+  - [ 2044400, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 100%
+  - [ 4000497, 1, 1, 0.400000 ] # Murukun's Furball
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore

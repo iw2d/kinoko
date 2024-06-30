@@ -1,41 +1,41 @@
 # Grim Phantom Watch (8143000)
 
 rewards:
-  - [ 1002283, 1, 1, 0.000090 ] # Purple Nightfox
-  - [ 1002328, 1, 1, 0.000080 ] # Green Pireta Hat
-  - [ 1002402, 1, 1, 0.000070 ] # Red Arlic Helmet
-  - [ 1040116, 1, 1, 0.000070 ] # Brown Osfa Suit
-  - [ 1041119, 1, 1, 0.000070 ] # Green Valkyrie
-  - [ 1050064, 1, 1, 0.000090 ] # Dark Linnex
-  - [ 1051084, 1, 1, 0.000070 ] # Green Anes
-  - [ 1051094, 1, 1, 0.000070 ] # Green Oriental Fury Coat
-  - [ 1060105, 1, 1, 0.000070 ] # Brown Osfa Pants
-  - [ 1061118, 1, 1, 0.000070 ] # Green Valkyrie Skirt
-  - [ 1072179, 1, 1, 0.000080 ] # Dark Enigma Shoes
-  - [ 1072183, 1, 1, 0.000080 ] # Red Wing Boots
-  - [ 1082117, 1, 1, 0.000080 ] # Dark Emperor
-  - [ 1082120, 1, 1, 0.000080 ] # Blood Larceny
-  - [ 1082122, 1, 1, 0.000080 ] # Blue Clarity
-  - [ 1082130, 1, 1, 0.000070 ] # Dark Imperial
-  - [ 1092016, 1, 1, 0.000090 ] # Silver Ancient Shield
-  - [ 1422012, 1, 1, 0.000080 ] # The Morningstar
-  - [ 1462010, 1, 1, 0.000080 ] # Marine Raven
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
-  - [ 2002002, 1, 1, 0.005000 ] # Magic Potion
+  - [ 1002283, 1, 1, 0.000100 ] # Purple Nightfox
+  - [ 1002328, 1, 1, 0.000100 ] # Green Pireta Hat
+  - [ 1002402, 1, 1, 0.000100 ] # Red Arlic Helmet
+  - [ 1040116, 1, 1, 0.000100 ] # Brown Osfa Suit
+  - [ 1041119, 1, 1, 0.000100 ] # Green Valkyrie
+  - [ 1050064, 1, 1, 0.000100 ] # Dark Linnex
+  - [ 1051084, 1, 1, 0.000100 ] # Green Anes
+  - [ 1051094, 1, 1, 0.000100 ] # Green Oriental Fury Coat
+  - [ 1060105, 1, 1, 0.000100 ] # Brown Osfa Pants
+  - [ 1061118, 1, 1, 0.000100 ] # Green Valkyrie Skirt
+  - [ 1072179, 1, 1, 0.000100 ] # Dark Enigma Shoes
+  - [ 1072183, 1, 1, 0.000100 ] # Red Wing Boots
+  - [ 1082117, 1, 1, 0.000100 ] # Dark Emperor
+  - [ 1082120, 1, 1, 0.000100 ] # Blood Larceny
+  - [ 1082122, 1, 1, 0.000100 ] # Blue Clarity
+  - [ 1082130, 1, 1, 0.000100 ] # Dark Imperial
+  - [ 1092016, 1, 1, 0.000100 ] # Silver Ancient Shield
+  - [ 1422012, 1, 1, 0.000100 ] # The Morningstar
+  - [ 1462010, 1, 1, 0.000100 ] # Marine Raven
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040401, 1, 1, 0.000030 ] # Scroll for Topwear for DEF 60%
-  - [ 2043019, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 10%#TODO
-  - [ 2044702, 1, 1, 0.000030 ] # Scroll for Claw for ATT 10%
-  - [ 4000150, 1, 1, 0.500000 ] # Ice Piece
-  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 2040401, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 60%
+  - [ 2043019, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 10%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 4000150, 1, 1, 0.400000 ] # Ice Piece
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion
   - [ 4031176, 1, 1, 0.050000, 7104 ] # Piece of Cracked Dimension A

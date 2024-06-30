@@ -1,35 +1,35 @@
 # Dodo (8220004)
 
 rewards:
-  - [ 1002405, 1, 1, 0.100000 ] # Dark Arlic Helmet#TODO
-  - [ 1050105, 1, 1, 0.100000 ] # Dark Varuna#TODO
-  - [ 1051093, 1, 1, 0.100000 ] # Dark Katte#TODO
-  - [ 1072318, 1, 1, 0.100000 ] # Black Duke Barkin Shoes#TODO
-  - [ 1082141, 1, 1, 0.100000 ] # Dark Korben#TODO
-  - [ 1322045, 1, 1, 0.100000 ] # Battle Hammer#TODO
-  - [ 1332052, 1, 1, 0.100000 ] # Blood Dagger#TODO
-  - [ 1372010, 1, 1, 0.100000 ] # Dimon Wand#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk#TODO
-  - [ 2040025, 1, 1, 0.100000 ] # Scroll for Helmet for INT 60%#TODO
-  - [ 2040029, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 60%#TODO
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2040532, 1, 1, 0.100000 ] # Scroll for Overall for STR 60%#TODO
-  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2290018, 1, 1, 0.100000 ] # [Mastery Book] Holy Charge#TODO
-  - [ 2290019, 1, 1, 0.100000 ] # [Mastery Book] Divine Charge#TODO
-  - [ 2290025, 1, 1, 0.100000 ] # [Mastery Book] Mana Reflection#TODO
-  - [ 2290059, 1, 1, 0.100000 ] # [Mastery Book] Hamstring Shot#TODO
-  - [ 2290077, 1, 1, 0.100000 ] # [Mastery Book] Shadow Shifter#TODO
-  - [ 2290106, 1, 1, 0.100000 ] # [Mastery Book] Barrage#TODO
-  - [ 2290127, 1, 1, 0.100000 ] # [Mastery Book] Overswing 30#TODO
-  - [ 2290134, 1, 1, 0.100000 ] # [Mastery Book] High Defense 20#TODO
-  - [ 2290141, 1, 1, 0.100000 ] # [Mastery Book] Illusion 30#TODO
-  - [ 2290148, 1, 1, 0.100000 ] # [Mastery Book] Dark Fog 20#TODO
-  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
-  - [ 4000460, 1, 1, 0.100000 ] # Whale's Helmet#TODO
-  - [ 4006000, 1, 1, 0.100000 ] # The Magic Rock#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
+  - [ 1002405, 1, 1, 0.000200 ] # Dark Arlic Helmet
+  - [ 1050105, 1, 1, 0.000200 ] # Dark Varuna
+  - [ 1051093, 1, 1, 0.000200 ] # Dark Katte
+  - [ 1072318, 1, 1, 0.000200 ] # Black Duke Barkin Shoes
+  - [ 1082141, 1, 1, 0.000200 ] # Dark Korben
+  - [ 1322045, 1, 1, 0.000200 ] # Battle Hammer
+  - [ 1332052, 1, 1, 0.000200 ] # Blood Dagger
+  - [ 1372010, 1, 1, 0.000200 ] # Dimon Wand
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
+  - [ 2040025, 1, 1, 0.010000 ] # Scroll for Helmet for INT 60%
+  - [ 2040029, 1, 1, 0.010000 ] # Scroll for Helmet for DEX 60%
+  - [ 2040326, 1, 1, 0.010000 ] # Scroll for Earring for HP 60%
+  - [ 2040532, 1, 1, 0.010000 ] # Scroll for Overall for STR 60%
+  - [ 2040924, 1, 1, 0.010000 ] # Scroll for Shield for LUK 60%
+  - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
+  - [ 2290018, 1, 1, 0.100000 ] # [Mastery Book] Holy Charge
+  - [ 2290019, 1, 1, 0.100000 ] # [Mastery Book] Divine Charge
+  - [ 2290025, 1, 1, 0.100000 ] # [Mastery Book] Mana Reflection
+  - [ 2290059, 1, 1, 0.100000 ] # [Mastery Book] Hamstring Shot
+  - [ 2290077, 1, 1, 0.100000 ] # [Mastery Book] Shadow Shifter
+  - [ 2290106, 1, 1, 0.100000 ] # [Mastery Book] Barrage
+  - [ 2290127, 1, 1, 0.100000 ] # [Mastery Book] Overswing 30
+  - [ 2290134, 1, 1, 0.100000 ] # [Mastery Book] High Defense 20
+  - [ 2290141, 1, 1, 0.100000 ] # [Mastery Book] Illusion 30
+  - [ 2290148, 1, 1, 0.100000 ] # [Mastery Book] Dark Fog 20
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
+  - [ 4000460, 1, 1, 0.400000 ] # Whale's Helmet
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time

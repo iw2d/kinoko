@@ -1,36 +1,36 @@
 # Zombie Lupin (4230101)
 
 rewards:
-  - [ 1002151, 1, 1, 0.000070 ] # Brown Guiltian
-  - [ 1002185, 1, 1, 0.000070 ] # Dark Pilfer
-  - [ 1002628, 1, 1, 0.100000 ] # Red Misty#TODO
-  - [ 1040000, 1, 1, 0.000040 ] # Yellow Jangoon Armor
+  - [ 1002151, 1, 1, 0.000100 ] # Brown Guiltian
+  - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
+  - [ 1002628, 1, 1, 0.000100 ] # Red Misty
+  - [ 1040000, 1, 1, 0.000100 ] # Yellow Jangoon Armor
   - [ 1040074, 1, 1, 0.000100 ] # Green Legolier
   - [ 1041068, 1, 1, 0.000100 ] # Dark Legolia
-  - [ 1041086, 1, 1, 0.000070 ] # Black Jangoon Armor
-  - [ 1050039, 1, 1, 0.000080 ] # Dark Starlight
+  - [ 1041086, 1, 1, 0.000100 ] # Black Jangoon Armor
+  - [ 1050039, 1, 1, 0.000100 ] # Dark Starlight
   - [ 1051001, 1, 1, 0.000100 ] # Emerald Fitted Mail
   - [ 1051009, 1, 1, 0.000100 ] # Purple Avenger
   - [ 1060063, 1, 1, 0.000100 ] # Green Legolier Pants
-  - [ 1061085, 1, 1, 0.000070 ] # Black Jangoon Skirt
-  - [ 1082037, 1, 1, 0.000200 ] # Bronze Wolfskin
-  - [ 1332003, 1, 1, 0.000040 ] # Shinkita
-  - [ 1382001, 1, 1, 0.000060 ] # Arc Staff
-  - [ 1442005, 1, 1, 0.000040 ] # The Nine Dragons
-  - [ 1462006, 1, 1, 0.000030 ] # Silver Crow
-  - [ 1462007, 1, 1, 0.000040 ] # Rower
-  - [ 1472015, 1, 1, 0.000060 ] # Blood Avarice
-  - [ 1942001, 1, 1, 0.100000 ] # Gold Mask#TODO
+  - [ 1061085, 1, 1, 0.000100 ] # Black Jangoon Skirt
+  - [ 1082037, 1, 1, 0.000100 ] # Bronze Wolfskin
+  - [ 1332003, 1, 1, 0.000100 ] # Shinkita
+  - [ 1382001, 1, 1, 0.000100 ] # Arc Staff
+  - [ 1442005, 1, 1, 0.000100 ] # The Nine Dragons
+  - [ 1462006, 1, 1, 0.000100 ] # Silver Crow
+  - [ 1462007, 1, 1, 0.000100 ] # Rower
+  - [ 1472015, 1, 1, 0.000100 ] # Blood Avarice
+  - [ 1942001, 1, 1, 0.000100 ] # Gold Mask
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2044314, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 10%#TODO
+  - [ 2044314, 1, 1, 0.000100 ] # Scroll for Spear for Accuracy 10%
   - [ 4000031, 1, 1, 0.400000 ] # Cursed Doll
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

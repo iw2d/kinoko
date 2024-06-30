@@ -1,46 +1,46 @@
 # Dragonoir (8300006)
 
 rewards:
-  - [ 1051104, 1, 1, 0.100000 ] # Dark Bazura#TODO
-  - [ 1052071, 1, 1, 0.100000 ] # Red Mantle#TODO
-  - [ 1052072, 1, 1, 0.100000 ] # Black Garina#TODO
-  - [ 1052075, 1, 1, 0.100000 ] # Blue Dragon Armor#TODO
-  - [ 1052134, 1, 1, 0.100000 ] # Canopus Suit#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2040002, 1, 1, 0.100000 ] # Scroll for Helmet for DEF 10%#TODO
-  - [ 2040005, 1, 1, 0.100000 ] # Scroll for Helmet for HP 10%#TODO
-  - [ 2040302, 1, 1, 0.100000 ] # Scroll for Earring for INT 10%#TODO
-  - [ 2040402, 1, 1, 0.100000 ] # Scroll for Topwear for DEF 10%#TODO
-  - [ 2040502, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 10%#TODO
-  - [ 2040505, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 10%#TODO
-  - [ 2040602, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEF 10%#TODO
-  - [ 2040702, 1, 1, 0.100000 ] # Scroll for Shoes for DEX 10%#TODO
-  - [ 2040705, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 10%#TODO
-  - [ 2040708, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 10%#TODO
-  - [ 2040802, 1, 1, 0.100000 ] # Scroll for Gloves for DEX 10%#TODO
-  - [ 2040805, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 10%#TODO
-  - [ 2040902, 1, 1, 0.100000 ] # Scroll for Shield for DEF 10%#TODO
-  - [ 2043002, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 10%#TODO
-  - [ 2043102, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 10%#TODO
-  - [ 2043202, 1, 1, 0.100000 ] # Scroll for One-Handed BW for ATT 10%#TODO
-  - [ 2043302, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 10%#TODO
-  - [ 2043702, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 10%#TODO
-  - [ 2043802, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 10%#TODO
-  - [ 2044002, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 10%#TODO
-  - [ 2044102, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 10%#TODO
-  - [ 2044202, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 10%#TODO
-  - [ 2044302, 1, 1, 0.100000 ] # Scroll for Spear for ATT 10%#TODO
-  - [ 2044402, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 10%#TODO
-  - [ 2044502, 1, 1, 0.100000 ] # Scroll for Bow for ATT 10%#TODO
-  - [ 2044602, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 10%#TODO
-  - [ 2044702, 1, 1, 0.100000 ] # Scroll for Claw for ATT 10%#TODO
-  - [ 2047200, 1, 1, 0.100000 ] # Tablet for Armor for STR#TODO
-  - [ 2047201, 1, 1, 0.100000 ] # Tablet for Armor for INT#TODO
-  - [ 2047202, 1, 1, 0.100000 ] # Tablet for Armor for DEX#TODO
-  - [ 2047203, 1, 1, 0.100000 ] # Tablet for Armor for LUK#TODO
-  - [ 2047204, 1, 1, 0.100000 ] # Tablet for Armor for HANDS#TODO
-  - [ 2047205, 1, 1, 0.100000 ] # Tablet for Armor for HP#TODO
-  - [ 2047206, 1, 1, 0.100000 ] # Tablet for Armor for MP#TODO
-  - [ 2047207, 1, 1, 0.100000 ] # Tablet for Armor for DEF#TODO
-  - [ 2047208, 1, 1, 0.100000 ] # Tablet for Armor for Accuracy#TODO
-  - [ 4001401, 1, 1, 0.100000 ] # Dragonoir's Horn #TODO
+  - [ 1051104, 1, 1, 0.000200 ] # Dark Bazura
+  - [ 1052071, 1, 1, 0.000200 ] # Red Mantle
+  - [ 1052072, 1, 1, 0.000200 ] # Black Garina
+  - [ 1052075, 1, 1, 0.000200 ] # Blue Dragon Armor
+  - [ 1052134, 1, 1, 0.000200 ] # Canopus Suit
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2040002, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 10%
+  - [ 2040005, 1, 1, 0.010000 ] # Scroll for Helmet for HP 10%
+  - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%
+  - [ 2040402, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 10%
+  - [ 2040502, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040505, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 10%
+  - [ 2040602, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040702, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 10%
+  - [ 2040705, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 10%
+  - [ 2040708, 1, 1, 0.010000 ] # Scroll for Shoes for Speed 10%
+  - [ 2040802, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 10%
+  - [ 2040805, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 10%
+  - [ 2040902, 1, 1, 0.010000 ] # Scroll for Shield for DEF 10%
+  - [ 2043002, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2043102, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2043202, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 10%
+  - [ 2043302, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 10%
+  - [ 2043702, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 10%
+  - [ 2043802, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044002, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044102, 1, 1, 0.010000 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2044202, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 10%
+  - [ 2044302, 1, 1, 0.010000 ] # Scroll for Spear for ATT 10%
+  - [ 2044402, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 10%
+  - [ 2044502, 1, 1, 0.010000 ] # Scroll for Bow for ATT 10%
+  - [ 2044602, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 10%
+  - [ 2044702, 1, 1, 0.010000 ] # Scroll for Claw for ATT 10%
+  - [ 2047200, 1, 1, 0.010000 ] # Tablet for Armor for STR
+  - [ 2047201, 1, 1, 0.010000 ] # Tablet for Armor for INT
+  - [ 2047202, 1, 1, 0.010000 ] # Tablet for Armor for DEX
+  - [ 2047203, 1, 1, 0.010000 ] # Tablet for Armor for LUK
+  - [ 2047204, 1, 1, 0.010000 ] # Tablet for Armor for HANDS
+  - [ 2047205, 1, 1, 0.010000 ] # Tablet for Armor for HP
+  - [ 2047206, 1, 1, 0.010000 ] # Tablet for Armor for MP
+  - [ 2047207, 1, 1, 0.010000 ] # Tablet for Armor for DEF
+  - [ 2047208, 1, 1, 0.010000 ] # Tablet for Armor for Accuracy
+  - [ 4001401, 1, 1, 0.000000 ] # Dragonoir's Horn 

@@ -1,35 +1,35 @@
 # Barnard Gray (4230116)
 
 rewards:
-  - [ 1002028, 1, 1, 0.000050 ] # Silver Crusader Helm
-  - [ 1002211, 1, 1, 0.000050 ] # Blue Maro
-  - [ 1040084, 1, 1, 0.000070 ] # Dark Shadow
-  - [ 1050047, 1, 1, 0.000050 ] # Orange Calas
-  - [ 1060073, 1, 1, 0.000070 ] # Dark Shadow Pants
-  - [ 1072109, 1, 1, 0.000070 ] # Black Yellow-Lined Shoes
-  - [ 1072120, 1, 1, 0.000070 ] # Brown Pierre Shoes
-  - [ 1082062, 1, 1, 0.000070 ] # Red Arten
-  - [ 1082195, 1, 1, 0.100000 ] # Brown Barbee#TODO
-  - [ 1092007, 1, 1, 0.000080 ] # Battle Shield
-  - [ 1302016, 1, 1, 0.000080 ] # Yellow Umbrella
-  - [ 1322015, 1, 1, 0.000080 ] # Heavy Hammer
-  - [ 1372001, 1, 1, 0.000080 ] # Wizard Wand
-  - [ 1402006, 1, 1, 0.000080 ] # Lionheart
+  - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
+  - [ 1002211, 1, 1, 0.000100 ] # Blue Maro
+  - [ 1040084, 1, 1, 0.000100 ] # Dark Shadow
+  - [ 1050047, 1, 1, 0.000100 ] # Orange Calas
+  - [ 1060073, 1, 1, 0.000100 ] # Dark Shadow Pants
+  - [ 1072109, 1, 1, 0.000100 ] # Black Yellow-Lined Shoes
+  - [ 1072120, 1, 1, 0.000100 ] # Brown Pierre Shoes
+  - [ 1082062, 1, 1, 0.000100 ] # Red Arten
+  - [ 1082195, 1, 1, 0.000100 ] # Brown Barbee
+  - [ 1092007, 1, 1, 0.000100 ] # Battle Shield
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1322015, 1, 1, 0.000100 ] # Heavy Hammer
+  - [ 1372001, 1, 1, 0.000100 ] # Wizard Wand
+  - [ 1402006, 1, 1, 0.000100 ] # Lionheart
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002009, 1, 1, 0.003000 ] # Dexterity Pill
-  - [ 2041005, 1, 1, 0.000020 ] # Scroll for Cape for Weapon DEF 10%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000117, 1, 1, 0.500000 ] # Space Food
-  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 2002009, 1, 1, 0.010000 ] # Dexterity Pill
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000117, 1, 1, 0.400000 ] # Space Food
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
   - [ 4031674, 1, 1, 0.050000, 4916 ] # Elpam Magnet
   - [ 4031103, 1, 1, 0.020000, 3414 ] # Barnard Gray's Cell

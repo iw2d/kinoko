@@ -1,69 +1,69 @@
 # Yeti and Pepe (7130102)
 
 rewards:
-  - [ 1002028, 1, 1, 0.100000 ] # Silver Crusader Helm#TODO
-  - [ 1002030, 1, 1, 0.100000 ] # Silver Planet#TODO
-  - [ 1002084, 1, 1, 0.100000 ] # Blue Oriental Helmet#TODO
-  - [ 1002185, 1, 1, 0.100000 ] # Dark Pilfer#TODO
-  - [ 1002282, 1, 1, 0.100000 ] # Blue Nightfox#TODO
-  - [ 1032011, 1, 1, 0.100000 ] # Blue Moon#TODO
-  - [ 1041081, 1, 1, 0.100000 ] # White Piettra#TODO
-  - [ 1050047, 1, 1, 0.100000 ] # Orange Calas#TODO
-  - [ 1050063, 1, 1, 0.100000 ] # Green Linnex#TODO
-  - [ 1050068, 1, 1, 0.100000 ] # Red Requiem#TODO
-  - [ 1050069, 1, 1, 0.100000 ] # Brown Requiem#TODO
-  - [ 1050074, 1, 1, 0.100000 ] # Dark Enigmatic#TODO
-  - [ 1051054, 1, 1, 0.100000 ] # Brown Requierre#TODO
-  - [ 1051058, 1, 1, 0.100000 ] # Dark Enigma#TODO
-  - [ 1061080, 1, 1, 0.100000 ] # White Piettra Skirt#TODO
-  - [ 1072124, 1, 1, 0.100000 ] # Blue Steel-Tip Boots#TODO
-  - [ 1072128, 1, 1, 0.100000 ] # Blue Goni Shoes#TODO
-  - [ 1072137, 1, 1, 0.100000 ] # Green Goldrunners#TODO
-  - [ 1082010, 1, 1, 0.100000 ] # Mithril Brist#TODO
-  - [ 1082081, 1, 1, 0.100000 ] # Red Pennance#TODO
-  - [ 1082091, 1, 1, 0.100000 ] # Dark Garner#TODO
-  - [ 1092006, 1, 1, 0.100000 ] # Mithril Buckler#TODO
-  - [ 1102023, 1, 1, 0.100000 ] # White Gaia Cape#TODO
-  - [ 1332015, 1, 1, 0.100000 ] # Deadly Fin#TODO
-  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
-  - [ 1422009, 1, 1, 0.100000 ] # The Blessing#TODO
-  - [ 1432006, 1, 1, 0.100000 ] # Holy Spear#TODO
-  - [ 1442010, 1, 1, 0.100000 ] # Skylar#TODO
-  - [ 1452011, 1, 1, 0.100000 ] # Golden Hinkel#TODO
-  - [ 1472022, 1, 1, 0.100000 ] # Bronze Gigantic#TODO
-  - [ 1492008, 1, 1, 0.100000 ] # Burning Hell#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040025, 1, 1, 0.100000 ] # Scroll for Helmet for INT 60%#TODO
-  - [ 2040625, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 60%#TODO
-  - [ 2041005, 1, 1, 0.100000 ] # Scroll for Cape for Weapon DEF 10%#TODO
-  - [ 2041020, 1, 1, 0.100000 ] # Scroll for Cape for DEX 10%#TODO
-  - [ 2041023, 1, 1, 0.100000 ] # Scroll for Cape for LUK 10%#TODO
-  - [ 2043017, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 60%#TODO
-  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
-  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
-  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
-  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
-  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
-  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
-  - [ 2044702, 1, 1, 0.100000 ] # Scroll for Claw for ATT 10%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
-  - [ 2070010, 1, 1, 0.100000 ] # Icicle#TODO
-  - [ 4000021, 1, 1, 0.100000 ] # Leather#TODO
-  - [ 4000049, 1, 1, 0.100000 ] # Yeti Horn#TODO
-  - [ 4000050, 1, 1, 0.100000 ] # Pepe Beak#TODO
-  - [ 4003005, 1, 1, 0.100000 ] # Soft Feather#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
-  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4020008, 1, 1, 0.100000 ] # Black Crystal Ore#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
+  - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
+  - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
+  - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
+  - [ 1002282, 1, 1, 0.000100 ] # Blue Nightfox
+  - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1041081, 1, 1, 0.000100 ] # White Piettra
+  - [ 1050047, 1, 1, 0.000100 ] # Orange Calas
+  - [ 1050063, 1, 1, 0.000100 ] # Green Linnex
+  - [ 1050068, 1, 1, 0.000100 ] # Red Requiem
+  - [ 1050069, 1, 1, 0.000100 ] # Brown Requiem
+  - [ 1050074, 1, 1, 0.000100 ] # Dark Enigmatic
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1051058, 1, 1, 0.000100 ] # Dark Enigma
+  - [ 1061080, 1, 1, 0.000100 ] # White Piettra Skirt
+  - [ 1072124, 1, 1, 0.000100 ] # Blue Steel-Tip Boots
+  - [ 1072128, 1, 1, 0.000100 ] # Blue Goni Shoes
+  - [ 1072137, 1, 1, 0.000100 ] # Green Goldrunners
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1082081, 1, 1, 0.000100 ] # Red Pennance
+  - [ 1082091, 1, 1, 0.000100 ] # Dark Garner
+  - [ 1092006, 1, 1, 0.000100 ] # Mithril Buckler
+  - [ 1102023, 1, 1, 0.000100 ] # White Gaia Cape
+  - [ 1332015, 1, 1, 0.000100 ] # Deadly Fin
+  - [ 1402012, 1, 1, 0.000100 ] # Doombringer
+  - [ 1422009, 1, 1, 0.000100 ] # The Blessing
+  - [ 1432006, 1, 1, 0.000100 ] # Holy Spear
+  - [ 1442010, 1, 1, 0.000100 ] # Skylar
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 1472022, 1, 1, 0.000100 ] # Bronze Gigantic
+  - [ 1492008, 1, 1, 0.000100 ] # Burning Hell
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040025, 1, 1, 0.000100 ] # Scroll for Helmet for INT 60%
+  - [ 2040625, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 60%
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2041020, 1, 1, 0.000100 ] # Scroll for Cape for DEX 10%
+  - [ 2041023, 1, 1, 0.000100 ] # Scroll for Cape for LUK 10%
+  - [ 2043017, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 60%
+  - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 2070010, 1, 1, 0.000400 ] # Icicle
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
+  - [ 4000050, 1, 1, 0.400000 ] # Pepe Beak
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

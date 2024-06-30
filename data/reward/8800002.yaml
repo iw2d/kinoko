@@ -1,76 +1,76 @@
 # Zakum3 (8800002)
 
 rewards:
-  - [ 1002357, 1, 1, 1.000000 ] # Zakum Helmet
-  - [ 1302056, 1, 1, 0.030000 ] # Sparta
-  - [ 1312030, 1, 1, 0.010000 ] # Tomahawk
-  - [ 1322045, 1, 1, 0.010000 ] # Battle Hammer
-  - [ 1332051, 1, 1, 0.030000 ] # Gold Double Knife
-  - [ 1332052, 1, 1, 0.030000 ] # Blood Dagger
-  - [ 1372010, 1, 1, 0.100000 ] # Dimon Wand
-  - [ 1372049, 1, 1, 0.100000 ] # Zakum's Tree Branch#TODO
-  - [ 1382035, 1, 1, 0.050000 ] # Blue Marine
-  - [ 1402035, 1, 1, 0.010000 ] # The Beheader
-  - [ 1412021, 1, 1, 0.010000 ] # Tavar
-  - [ 1422027, 1, 1, 0.010000 ] # Golden Smith Hammer
-  - [ 1432030, 1, 1, 0.070000 ] # Pinaka
-  - [ 1442044, 1, 1, 0.070000 ] # Zedbug
-  - [ 1452019, 1, 1, 0.010000 ] # White Nisrock
-  - [ 1452020, 1, 1, 0.007000 ] # Golden Nisrock
-  - [ 1462015, 1, 1, 0.010000 ] # White Neschere
-  - [ 1462016, 1, 1, 0.007000 ] # Golden Neschere
-  - [ 1472053, 1, 1, 0.050000 ] # Red Craven
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
-  - [ 2000004, 45, 50, 1.000000 ] # Elixir
-  - [ 2000005, 35, 45, 1.000000 ] # Power Elixir
-  - [ 2020013, 60, 70, 1.000000 ] # Reindeer Milk
-  - [ 2020015, 60, 70, 1.000000 ] # Sunset Dew
-  - [ 2040026, 1, 1, 0.100000 ] # Scroll for Helmet for INT 10%#TODO
-  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
-  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
-  - [ 2040328, 1, 1, 0.100000 ] # Scroll for Earring for HP 10%#TODO
-  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
-  - [ 2047000, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for ATT#TODO
-  - [ 2047002, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Magic Attack#TODO
-  - [ 2047100, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for ATT#TODO
-  - [ 2047200, 1, 1, 0.100000 ] # Tablet for Armor for STR#TODO
-  - [ 2047201, 1, 1, 0.100000 ] # Tablet for Armor for INT#TODO
-  - [ 2047202, 1, 1, 0.100000 ] # Tablet for Armor for DEX#TODO
-  - [ 2047203, 1, 1, 0.100000 ] # Tablet for Armor for LUK#TODO
-  - [ 2047205, 1, 1, 0.100000 ] # Tablet for Armor for HP#TODO
-  - [ 2047206, 1, 1, 0.100000 ] # Tablet for Armor for MP#TODO
-  - [ 2047207, 1, 1, 0.100000 ] # Tablet for Armor for DEF#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 1002357, 1, 1, 0.000200 ] # Zakum Helmet
+  - [ 1302056, 1, 1, 0.000200 ] # Sparta
+  - [ 1312030, 1, 1, 0.000200 ] # Tomahawk
+  - [ 1322045, 1, 1, 0.000200 ] # Battle Hammer
+  - [ 1332051, 1, 1, 0.000200 ] # Gold Double Knife
+  - [ 1332052, 1, 1, 0.000200 ] # Blood Dagger
+  - [ 1372010, 1, 1, 0.000200 ] # Dimon Wand
+  - [ 1372049, 1, 1, 0.000200 ] # Zakum's Tree Branch
+  - [ 1382035, 1, 1, 0.000200 ] # Blue Marine
+  - [ 1402035, 1, 1, 0.000200 ] # The Beheader
+  - [ 1412021, 1, 1, 0.000200 ] # Tavar
+  - [ 1422027, 1, 1, 0.000200 ] # Golden Smith Hammer
+  - [ 1432030, 1, 1, 0.000200 ] # Pinaka
+  - [ 1442044, 1, 1, 0.000200 ] # Zedbug
+  - [ 1452019, 1, 1, 0.000200 ] # White Nisrock
+  - [ 1452020, 1, 1, 0.000200 ] # Golden Nisrock
+  - [ 1462015, 1, 1, 0.000200 ] # White Neschere
+  - [ 1462016, 1, 1, 0.000200 ] # Golden Neschere
+  - [ 1472053, 1, 1, 0.000200 ] # Red Craven
+  - [ 1482012, 1, 1, 0.000200 ] # King Cent
+  - [ 1492012, 1, 1, 0.000200 ] # Concerto
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew
+  - [ 2040026, 1, 1, 0.010000 ] # Scroll for Helmet for INT 10%
+  - [ 2040031, 1, 1, 0.010000 ] # Scroll for Helmet for DEX 10%
+  - [ 2040321, 1, 1, 0.010000 ] # Scroll for Earring for LUK 60%
+  - [ 2040328, 1, 1, 0.010000 ] # Scroll for Earring for HP 10%
+  - [ 2040512, 1, 1, 0.010000 ] # Scroll for Overall Armor for INT 100%
+  - [ 2047000, 1, 1, 0.010000 ] # Tablet for One-Handed Weapon for ATT
+  - [ 2047002, 1, 1, 0.010000 ] # Tablet for One-Handed Weapon for Magic Attack
+  - [ 2047100, 1, 1, 0.010000 ] # Tablet for Two-Handed Weapon for ATT
+  - [ 2047200, 1, 1, 0.010000 ] # Tablet for Armor for STR
+  - [ 2047201, 1, 1, 0.010000 ] # Tablet for Armor for INT
+  - [ 2047202, 1, 1, 0.010000 ] # Tablet for Armor for DEX
+  - [ 2047203, 1, 1, 0.010000 ] # Tablet for Armor for LUK
+  - [ 2047205, 1, 1, 0.010000 ] # Tablet for Armor for HP
+  - [ 2047206, 1, 1, 0.010000 ] # Tablet for Armor for MP
+  - [ 2047207, 1, 1, 0.010000 ] # Tablet for Armor for DEF
+  - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
+  - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
   - [ 2280007, 1, 1, 0.200000 ] # [Skill Book] Advanced Combo Attack
-  - [ 2280008, 1, 1, 0.150000 ] # [Skill Book] Advanced Charge
-  - [ 2280009, 1, 1, 0.300000 ] # [Skill Book] Angel Ray
+  - [ 2280008, 1, 1, 0.200000 ] # [Skill Book] Advanced Charge
+  - [ 2280009, 1, 1, 0.200000 ] # [Skill Book] Angel Ray
   - [ 2280010, 1, 1, 0.200000 ] # [Skill Book] Triple Throw
-  - [ 2280013, 1, 1, 0.100000 ] # [Skill Book] Final Blow#TODO
-  - [ 2280014, 1, 1, 0.100000 ] # [Skill Book] High Defense#TODO
-  - [ 2280015, 1, 1, 0.100000 ] # [Skill Book] Combo Tempest#TODO
-  - [ 2280016, 1, 1, 0.100000 ] # [Skill Book] Combo Barrier#TODO
-  - [ 2280026, 1, 1, 0.100000 ] # [Skill Book] Flame Wheel#TODO
-  - [ 2280027, 1, 1, 0.100000 ] # [Skill Book] Magic Mastery#TODO
-  - [ 2280028, 1, 1, 0.100000 ] # [Skill Book] Dark Fog#TODO
-  - [ 2280029, 1, 1, 0.100000 ] # [Skill Book] Soul Stone #TODO
-  - [ 2290007, 1, 1, 0.080000 ] # [Mastery Book] Power Stance
-  - [ 2290016, 1, 1, 0.050000 ] # [Mastery Book] Enrage
-  - [ 2290020, 1, 1, 0.020000 ] # [Mastery Book] Heaven's Hammer
-  - [ 2290022, 1, 1, 0.150000 ] # [Mastery Book] Berserk
+  - [ 2280013, 1, 1, 0.200000 ] # [Skill Book] Final Blow
+  - [ 2280014, 1, 1, 0.200000 ] # [Skill Book] High Defense
+  - [ 2280015, 1, 1, 0.200000 ] # [Skill Book] Combo Tempest
+  - [ 2280016, 1, 1, 0.200000 ] # [Skill Book] Combo Barrier
+  - [ 2280026, 1, 1, 0.200000 ] # [Skill Book] Flame Wheel
+  - [ 2280027, 1, 1, 0.200000 ] # [Skill Book] Magic Mastery
+  - [ 2280028, 1, 1, 0.200000 ] # [Skill Book] Dark Fog
+  - [ 2280029, 1, 1, 0.200000 ] # [Skill Book] Soul Stone 
+  - [ 2290007, 1, 1, 0.100000 ] # [Mastery Book] Power Stance
+  - [ 2290016, 1, 1, 0.100000 ] # [Mastery Book] Enrage
+  - [ 2290020, 1, 1, 0.100000 ] # [Mastery Book] Heaven's Hammer
+  - [ 2290022, 1, 1, 0.100000 ] # [Mastery Book] Berserk
   - [ 2290029, 1, 1, 0.100000 ] # [Mastery Book] Infinity
-  - [ 2290040, 1, 1, 0.015000 ] # [Mastery Book] Meteor Shower
-  - [ 2290046, 1, 1, 0.035000 ] # [Mastery Book] Blizzard
-  - [ 2290048, 1, 1, 0.150000 ] # [Mastery Book] Genesis
-  - [ 2290057, 1, 1, 0.055000 ] # [Mastery Book] Bow Expert
-  - [ 2290064, 1, 1, 0.050000 ] # [Mastery Book] Concentrate
-  - [ 2290067, 1, 1, 0.015000 ] # [Mastery Book] Marksman Boost
-  - [ 2290074, 1, 1, 0.015000 ] # [Mastery Book] Snipe
-  - [ 2290079, 1, 1, 0.080000 ] # [Mastery Book] Venomous Star/Venomous Stab
-  - [ 2290084, 1, 1, 0.110000 ] # [Mastery Book] Triple Throw
-  - [ 2290094, 1, 1, 0.005000 ] # [Mastery Book] Smokescreen
-  - [ 2290110, 1, 1, 0.100000 ] # [Mastery Book] Time Leap#TODO
-  - [ 2290115, 1, 1, 0.100000 ] # [Mastery Book] Air Strike#TODO
-  - [ 2430029, 1, 1, 0.100000 ] # Mystery Box #TODO
-  - [ 4001083, 1, 1, 1.000000 ] # Zakum Certificate
+  - [ 2290040, 1, 1, 0.100000 ] # [Mastery Book] Meteor Shower
+  - [ 2290046, 1, 1, 0.100000 ] # [Mastery Book] Blizzard
+  - [ 2290048, 1, 1, 0.100000 ] # [Mastery Book] Genesis
+  - [ 2290057, 1, 1, 0.100000 ] # [Mastery Book] Bow Expert
+  - [ 2290064, 1, 1, 0.100000 ] # [Mastery Book] Concentrate
+  - [ 2290067, 1, 1, 0.100000 ] # [Mastery Book] Marksman Boost
+  - [ 2290074, 1, 1, 0.100000 ] # [Mastery Book] Snipe
+  - [ 2290079, 1, 1, 0.100000 ] # [Mastery Book] Venomous Star/Venomous Stab
+  - [ 2290084, 1, 1, 0.100000 ] # [Mastery Book] Triple Throw
+  - [ 2290094, 1, 1, 0.100000 ] # [Mastery Book] Smokescreen
+  - [ 2290110, 1, 1, 0.100000 ] # [Mastery Book] Time Leap
+  - [ 2290115, 1, 1, 0.100000 ] # [Mastery Book] Air Strike
+  - [ 2430029, 1, 1, 0.000000 ] # Mystery Box 
+  - [ 4001083, 1, 1, 0.000000 ] # Zakum Certificate

@@ -1,31 +1,31 @@
 # Saitie (6110301)
 
 rewards:
-  - [ 1002289, 1, 1, 0.100000 ] # Dark Patriot#TODO
-  - [ 1032015, 1, 1, 0.100000 ] # Metal Silver Earrings#TODO
-  - [ 1050081, 1, 1, 0.100000 ] # Red Battle Lord#TODO
-  - [ 1050088, 1, 1, 0.100000 ] # Red Ades#TODO
-  - [ 1051078, 1, 1, 0.100000 ] # Red Battle Empress#TODO
-  - [ 1072080, 1, 1, 0.100000 ] # Blue Hunter Boots#TODO
-  - [ 1072085, 1, 1, 0.100000 ] # Red Lappy Boots#TODO
-  - [ 1072309, 1, 1, 0.100000 ] # Black Voyson Shoes#TODO
-  - [ 1092015, 1, 1, 0.100000 ] # Steel Ancient Shield#TODO
-  - [ 1322018, 1, 1, 0.100000 ] # Tamus#TODO
-  - [ 1462008, 1, 1, 0.100000 ] # Golden Crow#TODO
-  - [ 1472027, 1, 1, 0.100000 ] # Green Scarab#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040621, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 60%#TODO
-  - [ 2043302, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 10%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
-  - [ 4000363, 1, 1, 0.100000 ] # Entry Pass#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 1002289, 1, 1, 0.000100 ] # Dark Patriot
+  - [ 1032015, 1, 1, 0.000100 ] # Metal Silver Earrings
+  - [ 1050081, 1, 1, 0.000100 ] # Red Battle Lord
+  - [ 1050088, 1, 1, 0.000100 ] # Red Ades
+  - [ 1051078, 1, 1, 0.000100 ] # Red Battle Empress
+  - [ 1072080, 1, 1, 0.000100 ] # Blue Hunter Boots
+  - [ 1072085, 1, 1, 0.000100 ] # Red Lappy Boots
+  - [ 1072309, 1, 1, 0.000100 ] # Black Voyson Shoes
+  - [ 1092015, 1, 1, 0.000100 ] # Steel Ancient Shield
+  - [ 1322018, 1, 1, 0.000100 ] # Tamus
+  - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
+  - [ 1472027, 1, 1, 0.000100 ] # Green Scarab
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040621, 1, 1, 0.000100 ] # Scroll for Bottomwear for HP 60%
+  - [ 2043302, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 10%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
+  - [ 4000363, 1, 1, 0.400000 ] # Entry Pass
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

@@ -1,27 +1,27 @@
 # Brexton (8140703)
 
 rewards:
-  - [ 1002325, 1, 1, 0.000080 ] # Purple Osfa Hat
-  - [ 1002643, 1, 1, 0.100000 ] # Red Brave Hamal#TODO
-  - [ 1040120, 1, 1, 0.000070 ] # Green Neos
-  - [ 1050090, 1, 1, 0.000080 ] # Green Ades
-  - [ 1051082, 1, 1, 0.000080 ] # Red Anes
-  - [ 1060109, 1, 1, 0.000070 ] # Green Neos Pants
-  - [ 1072212, 1, 1, 0.000090 ] # Dark Rivers Boots
-  - [ 1082151, 1, 1, 0.000070 ] # Green Ciara
-  - [ 1082159, 1, 1, 0.000060 ] # Blue Arcina
-  - [ 1322029, 1, 1, 0.000070 ] # Ruin Hammer
-  - [ 1442020, 1, 1, 0.000070 ] # Hellslayer
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040901, 1, 1, 0.000030 ] # Scroll for Shield for DEF 60%
-  - [ 2043801, 1, 1, 0.000030 ] # Scroll for Staff for Magic Attack 60%
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 1002325, 1, 1, 0.000100 ] # Purple Osfa Hat
+  - [ 1002643, 1, 1, 0.000100 ] # Red Brave Hamal
+  - [ 1040120, 1, 1, 0.000100 ] # Green Neos
+  - [ 1050090, 1, 1, 0.000100 ] # Green Ades
+  - [ 1051082, 1, 1, 0.000100 ] # Red Anes
+  - [ 1060109, 1, 1, 0.000100 ] # Green Neos Pants
+  - [ 1072212, 1, 1, 0.000100 ] # Dark Rivers Boots
+  - [ 1082151, 1, 1, 0.000100 ] # Green Ciara
+  - [ 1082159, 1, 1, 0.000100 ] # Blue Arcina
+  - [ 1322029, 1, 1, 0.000100 ] # Ruin Hammer
+  - [ 1442020, 1, 1, 0.000100 ] # Hellslayer
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044801, 1, 1, 0.000100 ] # Scroll for Knuckle for Attack 60%
   - [ 2290088, 1, 1, 0.000100 ] # [Mastery Book] Shadow Claw
-  - [ 2290099, 1, 1, 0.100000 ] # [Mastery Book] Energy Orb#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000265, 1, 1, 0.600000 ] # Strange Egg
+  - [ 2290099, 1, 1, 0.000100 ] # [Mastery Book] Energy Orb
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000265, 1, 1, 0.400000 ] # Strange Egg
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
-  - [ 4020006, 1, 1, 0.003000 ] # Topaz Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

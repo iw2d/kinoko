@@ -1,16 +1,16 @@
 # Blue Snail (100101)
 
 rewards:
-  - [ 1040013, 1, 1, 0.000800 ] # Blue One-lined T-Shirt
+  - [ 1040013, 1, 1, 0.000100 ] # Blue One-lined T-Shirt
   - [ 1040017, 1, 1, 0.000100 ] # Grey / Brown Training Shirt
   - [ 1041012, 1, 1, 0.000100 ] # Red-Striped T-Shirt
   - [ 1060004, 1, 1, 0.000100 ] # Grey Thick Sweat Pants
   - [ 1060013, 1, 1, 0.000100 ] # Grey / Brown Training Pants
   - [ 2000000, 1, 1, 0.010000 ] # Red Potion
-  - [ 2010009, 1, 1, 0.007000 ] # Green Apple
-  - [ 2041006, 1, 1, 0.000030 ] # Scroll for Cape for HP 100%
+  - [ 2010009, 1, 1, 0.010000 ] # Green Apple
+  - [ 2041006, 1, 1, 0.000100 ] # Scroll for Cape for HP 100%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore

@@ -1,25 +1,25 @@
 # Ashigaru (9400404)
 
 rewards:
-  - [ 1002090, 1, 1, 0.100000 ] # Blue Bamboo Hat#TODO
-  - [ 1032002, 1, 1, 0.100000 ] # Sapphire Earrings#TODO
-  - [ 1050011, 1, 1, 0.100000 ] # Black Dragon Robe#TODO
-  - [ 1050039, 1, 1, 0.100000 ] # Dark Starlight#TODO
-  - [ 1072114, 1, 1, 0.100000 ] # Red Moon Shoes#TODO
-  - [ 1092019, 1, 1, 0.100000 ] # Nimble Wristguard#TODO
-  - [ 1122001, 1, 1, 0.100000 ] # Bow-tie(Green)#TODO
-  - [ 1402018, 1, 1, 0.100000 ] # Wooden Samurai Sword#TODO
-  - [ 1432008, 1, 1, 0.100000 ] # Fish Spear#TODO
-  - [ 1432013, 1, 1, 0.100000 ] # Pumpkin Spear#TODO
-  - [ 2022013, 1, 1, 0.100000 ] # Sushi(salmon)#TODO
-  - [ 2022014, 1, 1, 0.100000 ] # Dango#TODO
-  - [ 2040105, 1, 1, 0.100000 ] # Scroll for Face Accessory for Avoidability 10%#TODO
-  - [ 2040200, 1, 1, 0.100000 ] # Scroll for Eye Accessory for Accuracy 10%#TODO
-  - [ 2040914, 1, 1, 0.100000 ] # Scroll for Shield for Weapon ATT 60%#TODO
-  - [ 2060001, 1, 1, 0.100000 ] # Bronze Arrow for Bow#TODO
-  - [ 2070001, 1, 1, 0.100000 ] # Wolbi Throwing-Stars#TODO
-  - [ 4000341, 1, 1, 0.100000 ] # Straw Sandals#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
-  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 1002090, 1, 1, 0.000100 ] # Blue Bamboo Hat
+  - [ 1032002, 1, 1, 0.000100 ] # Sapphire Earrings
+  - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe
+  - [ 1050039, 1, 1, 0.000100 ] # Dark Starlight
+  - [ 1072114, 1, 1, 0.000100 ] # Red Moon Shoes
+  - [ 1092019, 1, 1, 0.000100 ] # Nimble Wristguard
+  - [ 1122001, 1, 1, 0.000100 ] # Bow-tie(Green)
+  - [ 1402018, 1, 1, 0.000100 ] # Wooden Samurai Sword
+  - [ 1432008, 1, 1, 0.000100 ] # Fish Spear
+  - [ 1432013, 1, 1, 0.000100 ] # Pumpkin Spear
+  - [ 2022013, 1, 1, 0.010000 ] # Sushi(salmon)
+  - [ 2022014, 1, 1, 0.010000 ] # Dango
+  - [ 2040105, 1, 1, 0.000100 ] # Scroll for Face Accessory for Avoidability 10%
+  - [ 2040200, 1, 1, 0.000100 ] # Scroll for Eye Accessory for Accuracy 10%
+  - [ 2040914, 1, 1, 0.000100 ] # Scroll for Shield for Weapon ATT 60%
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2070001, 1, 1, 0.000400 ] # Wolbi Throwing-Stars
+  - [ 4000341, 1, 1, 0.400000 ] # Straw Sandals
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator

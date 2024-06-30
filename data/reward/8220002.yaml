@@ -1,45 +1,45 @@
 # Chimera (8220002)
 
 rewards:
-  - [ 1302023, 1, 1, 0.100000 ] # Fraute#TODO
-  - [ 1312015, 1, 1, 0.100000 ] # Vifennis#TODO
-  - [ 1322029, 1, 1, 0.100000 ] # Ruin Hammer#TODO
-  - [ 1332026, 1, 1, 0.100000 ] # Cursayer#TODO
-  - [ 1332027, 1, 1, 0.100000 ] # Varkit#TODO
-  - [ 1372009, 1, 1, 0.100000 ] # Magicodar#TODO
-  - [ 1382008, 1, 1, 0.100000 ] # Kage#TODO
-  - [ 1402005, 1, 1, 0.100000 ] # Berzerker#TODO
-  - [ 1402016, 1, 1, 0.100000 ] # Devil's Sunrise#TODO
-  - [ 1412010, 1, 1, 0.100000 ] # Colonian Axe#TODO
-  - [ 1422013, 1, 1, 0.100000 ] # Leomite#TODO
-  - [ 1432011, 1, 1, 0.100000 ] # Fairfrozen#TODO
-  - [ 1442020, 1, 1, 0.100000 ] # Hellslayer#TODO
-  - [ 1452017, 1, 1, 0.100000 ] # Metus#TODO
-  - [ 1462018, 1, 1, 0.100000 ] # Casa Crow#TODO
-  - [ 1472033, 1, 1, 0.100000 ] # Casters#TODO
-  - [ 1482011, 1, 1, 0.100000 ] # White Fangz#TODO
-  - [ 1492011, 1, 1, 0.100000 ] # The Peacemaker#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2040422, 1, 1, 0.100000 ] # Scroll for Topwear for HP 10%#TODO
-  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
-  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
-  - [ 2040513, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 60%#TODO
-  - [ 2040516, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 60%#TODO
-  - [ 2040532, 1, 1, 0.100000 ] # Scroll for Overall for STR 60%#TODO
-  - [ 2040931, 1, 1, 0.100000 ] # Scroll for Shield for STR 60%#TODO
-  - [ 2041007, 1, 1, 0.100000 ] # Scroll for Cape for HP 60%#TODO
-  - [ 2041013, 1, 1, 0.100000 ] # Scroll for Cape for STR 60%#TODO
-  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
-  - [ 2041019, 1, 1, 0.100000 ] # Scroll for Cape for DEX 60%#TODO
-  - [ 2041022, 1, 1, 0.100000 ] # Scroll for Cape for LUK 60%#TODO
-  - [ 2070007, 1, 1, 0.100000 ] # Hwabi Throwing-Stars#TODO
-  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
-  - [ 4000356, 1, 1, 0.100000 ] # Flask#TODO
-  - [ 4000364, 1, 1, 0.100000 ] # Wires#TODO
-  - [ 4000365, 1, 1, 0.100000 ] # Plug#TODO
-  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
-  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
-  - [ 4020008, 1, 1, 0.100000 ] # Black Crystal Ore#TODO
+  - [ 1302023, 1, 1, 0.000200 ] # Fraute
+  - [ 1312015, 1, 1, 0.000200 ] # Vifennis
+  - [ 1322029, 1, 1, 0.000200 ] # Ruin Hammer
+  - [ 1332026, 1, 1, 0.000200 ] # Cursayer
+  - [ 1332027, 1, 1, 0.000200 ] # Varkit
+  - [ 1372009, 1, 1, 0.000200 ] # Magicodar
+  - [ 1382008, 1, 1, 0.000200 ] # Kage
+  - [ 1402005, 1, 1, 0.000200 ] # Berzerker
+  - [ 1402016, 1, 1, 0.000200 ] # Devil's Sunrise
+  - [ 1412010, 1, 1, 0.000200 ] # Colonian Axe
+  - [ 1422013, 1, 1, 0.000200 ] # Leomite
+  - [ 1432011, 1, 1, 0.000200 ] # Fairfrozen
+  - [ 1442020, 1, 1, 0.000200 ] # Hellslayer
+  - [ 1452017, 1, 1, 0.000200 ] # Metus
+  - [ 1462018, 1, 1, 0.000200 ] # Casa Crow
+  - [ 1472033, 1, 1, 0.000200 ] # Casters
+  - [ 1482011, 1, 1, 0.000200 ] # White Fangz
+  - [ 1492011, 1, 1, 0.000200 ] # The Peacemaker
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
+  - [ 2040326, 1, 1, 0.010000 ] # Scroll for Earring for HP 60%
+  - [ 2040422, 1, 1, 0.010000 ] # Scroll for Topwear for HP 10%
+  - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040504, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040513, 1, 1, 0.010000 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040516, 1, 1, 0.010000 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040532, 1, 1, 0.010000 ] # Scroll for Overall for STR 60%
+  - [ 2040931, 1, 1, 0.010000 ] # Scroll for Shield for STR 60%
+  - [ 2041007, 1, 1, 0.010000 ] # Scroll for Cape for HP 60%
+  - [ 2041013, 1, 1, 0.010000 ] # Scroll for Cape for STR 60%
+  - [ 2041016, 1, 1, 0.010000 ] # Scroll for Cape for INT 60%
+  - [ 2041019, 1, 1, 0.010000 ] # Scroll for Cape for DEX 60%
+  - [ 2041022, 1, 1, 0.010000 ] # Scroll for Cape for LUK 60%
+  - [ 2070007, 1, 1, 0.000400 ] # Hwabi Throwing-Stars
+  - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
+  - [ 4000356, 1, 1, 0.400000 ] # Flask
+  - [ 4000364, 1, 1, 0.400000 ] # Wires
+  - [ 4000365, 1, 1, 0.400000 ] # Plug
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

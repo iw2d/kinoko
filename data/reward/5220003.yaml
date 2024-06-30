@@ -1,55 +1,55 @@
 # Timer (5220003)
 
 rewards:
-  - [ 1302011, 1, 1, 0.100000 ] # Neocora#TODO
-  - [ 1312009, 1, 1, 0.100000 ] # Hawkhead#TODO
-  - [ 1322018, 1, 1, 0.100000 ] # Tamus#TODO
-  - [ 1332015, 1, 1, 0.100000 ] # Deadly Fin#TODO
-  - [ 1332017, 1, 1, 0.100000 ] # Serpent's Coil#TODO
-  - [ 1372014, 1, 1, 0.100000 ] # Evil Tale#TODO
-  - [ 1372033, 1, 1, 0.100000 ] # Heart Wand#TODO
-  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
-  - [ 1402011, 1, 1, 0.100000 ] # Sparta#TODO
-  - [ 1412007, 1, 1, 0.100000 ] # The Shining#TODO
-  - [ 1422009, 1, 1, 0.100000 ] # The Blessing#TODO
-  - [ 1432006, 1, 1, 0.100000 ] # Holy Spear#TODO
-  - [ 1442010, 1, 1, 0.100000 ] # Skylar#TODO
-  - [ 1452004, 1, 1, 0.100000 ] # Asianic Bow#TODO
-  - [ 1462008, 1, 1, 0.100000 ] # Golden Crow#TODO
-  - [ 1472025, 1, 1, 0.100000 ] # Dark Gigantic#TODO
-  - [ 1482008, 1, 1, 0.100000 ] # Psycho Claw#TODO
-  - [ 1492008, 1, 1, 0.100000 ] # Burning Hell#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion#TODO
-  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion#TODO
-  - [ 2040302, 1, 1, 0.100000 ] # Scroll for Earring for INT 10%#TODO
-  - [ 2040401, 1, 1, 0.100000 ] # Scroll for Topwear for DEF 60%#TODO
-  - [ 2040502, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 10%#TODO
-  - [ 2040516, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 60%#TODO
-  - [ 2040627, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 10%#TODO
-  - [ 2040704, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 60%#TODO
-  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
-  - [ 2040825, 1, 1, 0.100000 ] # Scroll for Gloves for HP 10%#TODO
-  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
-  - [ 2041002, 1, 1, 0.100000 ] # Scroll for Cape for Magic DEF 10%#TODO
-  - [ 2041013, 1, 1, 0.100000 ] # Scroll for Cape for STR 60%#TODO
-  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
-  - [ 2043201, 1, 1, 0.100000 ] # Scroll for One-Handed BW for ATT 60%#TODO
-  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
-  - [ 2043802, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 10%#TODO
-  - [ 2044114, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 10%#TODO
-  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
-  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
-  - [ 2044502, 1, 1, 0.100000 ] # Scroll for Bow for ATT 10%#TODO
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
-  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000113, 1, 1, 0.100000 ] # Clock Spring#TODO
-  - [ 4000114, 1, 1, 0.100000 ] # Table Clock#TODO
-  - [ 4000115, 1, 1, 0.100000 ] # Cog#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
+  - [ 1302011, 1, 1, 0.000200 ] # Neocora
+  - [ 1312009, 1, 1, 0.000200 ] # Hawkhead
+  - [ 1322018, 1, 1, 0.000200 ] # Tamus
+  - [ 1332015, 1, 1, 0.000200 ] # Deadly Fin
+  - [ 1332017, 1, 1, 0.000200 ] # Serpent's Coil
+  - [ 1372014, 1, 1, 0.000200 ] # Evil Tale
+  - [ 1372033, 1, 1, 0.000200 ] # Heart Wand
+  - [ 1382007, 1, 1, 0.000200 ] # Evil Wings
+  - [ 1402011, 1, 1, 0.000200 ] # Sparta
+  - [ 1412007, 1, 1, 0.000200 ] # The Shining
+  - [ 1422009, 1, 1, 0.000200 ] # The Blessing
+  - [ 1432006, 1, 1, 0.000200 ] # Holy Spear
+  - [ 1442010, 1, 1, 0.000200 ] # Skylar
+  - [ 1452004, 1, 1, 0.000200 ] # Asianic Bow
+  - [ 1462008, 1, 1, 0.000200 ] # Golden Crow
+  - [ 1472025, 1, 1, 0.000200 ] # Dark Gigantic
+  - [ 1482008, 1, 1, 0.000200 ] # Psycho Claw
+  - [ 1492008, 1, 1, 0.000200 ] # Burning Hell
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
+  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion
+  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion
+  - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%
+  - [ 2040401, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 60%
+  - [ 2040502, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040516, 1, 1, 0.010000 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040627, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEX 10%
+  - [ 2040704, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 60%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2040825, 1, 1, 0.010000 ] # Scroll for Gloves for HP 10%
+  - [ 2040933, 1, 1, 0.010000 ] # Scroll for Shield for STR 10%
+  - [ 2041002, 1, 1, 0.010000 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2041013, 1, 1, 0.010000 ] # Scroll for Cape for STR 60%
+  - [ 2041016, 1, 1, 0.010000 ] # Scroll for Cape for INT 60%
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043701, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043802, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044114, 1, 1, 0.010000 ] # Scroll for Two-Handed Axe for Accuracy 10%
+  - [ 2044201, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044301, 1, 1, 0.010000 ] # Scroll for Spear for ATT 60%
+  - [ 2044502, 1, 1, 0.010000 ] # Scroll for Bow for ATT 10%
+  - [ 2044801, 1, 1, 0.010000 ] # Scroll for Knuckle for Attack 60%
+  - [ 2044807, 1, 1, 0.010000 ] # Scroll for Knuckle for Accuracy 60%
+  - [ 2044902, 1, 1, 0.010000 ] # Scroll for Gun for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000113, 1, 1, 0.400000 ] # Clock Spring
+  - [ 4000114, 1, 1, 0.400000 ] # Table Clock
+  - [ 4000115, 1, 1, 0.400000 ] # Cog
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

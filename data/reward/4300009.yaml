@@ -1,40 +1,40 @@
 # Latest Hits Compilation (4300009)
 
 rewards:
-  - [ 1302009, 1, 1, 0.100000 ] # Traus#TODO
-  - [ 1312007, 1, 1, 0.100000 ] # Blue Counter#TODO
-  - [ 1322016, 1, 1, 0.100000 ] # Jacker#TODO
-  - [ 1332011, 1, 1, 0.100000 ] # Bazlud#TODO
-  - [ 1332031, 1, 1, 0.100000 ] # Dragon Toenail#TODO
-  - [ 1382019, 1, 1, 0.100000 ] # Hall Staff#TODO
-  - [ 1402007, 1, 1, 0.100000 ] # Zard#TODO
-  - [ 1412005, 1, 1, 0.100000 ] # Sabretooth#TODO
-  - [ 1422007, 1, 1, 0.100000 ] # Titan#TODO
-  - [ 1432005, 1, 1, 0.100000 ] # Zeco#TODO
-  - [ 1442009, 1, 1, 0.100000 ] # Crescent Polearm#TODO
-  - [ 1452007, 1, 1, 0.100000 ] # Vaulter 2000#TODO
-  - [ 1472014, 1, 1, 0.100000 ] # Steel Avarice#TODO
-  - [ 1472015, 1, 1, 0.100000 ] # Blood Avarice#TODO
-  - [ 1472016, 1, 1, 0.100000 ] # Adamantium Avarice#TODO
-  - [ 1472017, 1, 1, 0.100000 ] # Dark Avarice#TODO
-  - [ 1482006, 1, 1, 0.100000 ] # Neozard#TODO
-  - [ 1492006, 1, 1, 0.100000 ] # Lunar Shooter#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
-  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
-  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
-  - [ 2040801, 1, 1, 0.100000 ] # Scroll for Gloves for DEX 60%#TODO
-  - [ 2041004, 1, 1, 0.100000 ] # Scroll for Cape for Weapon DEF 60%#TODO
-  - [ 2041007, 1, 1, 0.100000 ] # Scroll for Cape for HP 60%#TODO
-  - [ 2049200, 1, 1, 0.100000 ] # Dark Scroll for Accessory for STR 70%  #TODO
-  - [ 2049202, 1, 1, 0.100000 ] # Dark Scroll for Accessory for DEX 70%#TODO
-  - [ 2049204, 1, 1, 0.100000 ] # Dark Scroll for Accessory for INT 70%#TODO
-  - [ 2049206, 1, 1, 0.100000 ] # Dark Scroll for Accessory for LUK 70%#TODO
-  - [ 2382109, 1, 1, 0.100000 ] # Latest Hits Compilation Card#TODO
-  - [ 4000528, 1, 1, 0.100000 ] # Latest Hits Compilation#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4020008, 1, 1, 0.100000 ] # Black Crystal Ore#TODO
+  - [ 1302009, 1, 1, 0.000100 ] # Traus
+  - [ 1312007, 1, 1, 0.000100 ] # Blue Counter
+  - [ 1322016, 1, 1, 0.000100 ] # Jacker
+  - [ 1332011, 1, 1, 0.000100 ] # Bazlud
+  - [ 1332031, 1, 1, 0.000100 ] # Dragon Toenail
+  - [ 1382019, 1, 1, 0.000100 ] # Hall Staff
+  - [ 1402007, 1, 1, 0.000100 ] # Zard
+  - [ 1412005, 1, 1, 0.000100 ] # Sabretooth
+  - [ 1422007, 1, 1, 0.000100 ] # Titan
+  - [ 1432005, 1, 1, 0.000100 ] # Zeco
+  - [ 1442009, 1, 1, 0.000100 ] # Crescent Polearm
+  - [ 1452007, 1, 1, 0.000100 ] # Vaulter 2000
+  - [ 1472014, 1, 1, 0.000100 ] # Steel Avarice
+  - [ 1472015, 1, 1, 0.000100 ] # Blood Avarice
+  - [ 1472016, 1, 1, 0.000100 ] # Adamantium Avarice
+  - [ 1472017, 1, 1, 0.000100 ] # Dark Avarice
+  - [ 1482006, 1, 1, 0.000100 ] # Neozard
+  - [ 1492006, 1, 1, 0.000100 ] # Lunar Shooter
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040004, 1, 1, 0.000100 ] # Scroll for Helmet for HP 60%
+  - [ 2040501, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040504, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040801, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 60%
+  - [ 2041004, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2041007, 1, 1, 0.000100 ] # Scroll for Cape for HP 60%
+  - [ 2049200, 1, 1, 0.000100 ] # Dark Scroll for Accessory for STR 70%  
+  - [ 2049202, 1, 1, 0.000100 ] # Dark Scroll for Accessory for DEX 70%
+  - [ 2049204, 1, 1, 0.000100 ] # Dark Scroll for Accessory for INT 70%
+  - [ 2049206, 1, 1, 0.000100 ] # Dark Scroll for Accessory for LUK 70%
+  - [ 2382109, 1, 1, 0.020000 ] # Latest Hits Compilation Card
+  - [ 4000528, 1, 1, 0.400000 ] # Latest Hits Compilation
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

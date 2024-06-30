@@ -16,51 +16,51 @@ rewards:
   - [ 1452019, 1, 1, 0.000200 ] # White Nisrock
   - [ 1462015, 1, 1, 0.000200 ] # White Neschere
   - [ 1472053, 1, 1, 0.000200 ] # Red Craven
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
-  - [ 2000004, 1, 5, 0.650000 ] # Elixir
-  - [ 2000005, 1, 5, 0.600000 ] # Power Elixir
-  - [ 2040002, 1, 1, 0.008000 ] # Scroll for Helmet for DEF 10%
-  - [ 2040005, 1, 1, 0.008000 ] # Scroll for Helmet for HP 10%
-  - [ 2040302, 1, 1, 0.005000 ] # Scroll for Earring for INT 10%
-  - [ 2040402, 1, 1, 0.008000 ] # Scroll for Topwear for DEF 10%
-  - [ 2040502, 1, 1, 0.007000 ] # Scroll for Overall Armor for DEX 10%
-  - [ 2040505, 1, 1, 0.008000 ] # Scroll for Overall Armor for DEF 10%
-  - [ 2040513, 1, 1, 0.005000 ] # Scroll for Overall Armor for INT 60%
-  - [ 2040516, 1, 1, 0.007000 ] # Scroll for Overall Armor for LUK 60%
-  - [ 2040532, 1, 1, 0.100000 ] # Scroll for Overall for STR 60%#TODO
-  - [ 2040602, 1, 1, 0.008000 ] # Scroll for Bottomwear for DEF 10%
-  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
-  - [ 2040702, 1, 1, 0.008000 ] # Scroll for Shoes for DEX 10%
-  - [ 2040705, 1, 1, 0.008000 ] # Scroll for Shoes for Jump 10%
-  - [ 2040708, 1, 1, 0.008000 ] # Scroll for Shoes for Speed 10%
-  - [ 2040802, 1, 1, 0.008000 ] # Scroll for Gloves for DEX 10%
-  - [ 2040902, 1, 1, 0.008000 ] # Scroll for Shield for DEF 10%
-  - [ 2040925, 1, 1, 0.100000 ] # Scroll for Shield for LUK 10%#TODO
-  - [ 2043114, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 10%#TODO
-  - [ 2043214, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 10%#TODO
-  - [ 2044112, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 60%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2290018, 1, 1, 0.002000 ] # [Mastery Book] Holy Charge
-  - [ 2290019, 1, 1, 0.002000 ] # [Mastery Book] Divine Charge
-  - [ 2290032, 1, 1, 0.020000 ] # [Mastery Book] Chain Lightning
-  - [ 2290042, 1, 1, 0.010000 ] # [Mastery Book] Ice Demon
-  - [ 2290059, 1, 1, 0.004000 ] # [Mastery Book] Hamstring Shot
-  - [ 2290069, 1, 1, 0.003000 ] # [Mastery Book] Blind
-  - [ 2290072, 1, 1, 0.000100 ] # [Mastery Book] Frostprey
-  - [ 2290092, 1, 1, 0.002000 ] # [Mastery Book] Assassinate
-  - [ 2290100, 1, 1, 0.100000 ] # [Mastery Book] Energy Orb#TODO
-  - [ 2290102, 1, 1, 0.100000 ] # [Mastery Book] Demolition#TODO
-  - [ 2290119, 1, 1, 0.100000 ] # [Mastery Book] Battleship Cannon#TODO
-  - [ 2290128, 1, 1, 0.100000 ] # [Mastery Book] High Mastery 20#TODO
-  - [ 2290142, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 20#TODO
-  - [ 4000243, 1, 1, 0.600000 ] # Griffey Horn
-  - [ 4000244, 1, 1, 0.002000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.002000 ] # Dragon Scale
-  - [ 4004000, 1, 1, 0.003000 ] # Power Crystal Ore
-  - [ 4004001, 1, 1, 0.003000 ] # Wisdom Crystal Ore
-  - [ 4004002, 1, 1, 0.003000 ] # DEX Crystal Ore
-  - [ 4004003, 1, 1, 0.003000 ] # LUK Crystal Ore
+  - [ 1482012, 1, 1, 0.000200 ] # King Cent
+  - [ 1492012, 1, 1, 0.000200 ] # Concerto
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2040002, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 10%
+  - [ 2040005, 1, 1, 0.010000 ] # Scroll for Helmet for HP 10%
+  - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%
+  - [ 2040402, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 10%
+  - [ 2040502, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040505, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 10%
+  - [ 2040513, 1, 1, 0.010000 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040516, 1, 1, 0.010000 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040532, 1, 1, 0.010000 ] # Scroll for Overall for STR 60%
+  - [ 2040602, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040618, 1, 1, 0.010000 ] # Scroll for Bottomwear for Jump 60%
+  - [ 2040702, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 10%
+  - [ 2040705, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 10%
+  - [ 2040708, 1, 1, 0.010000 ] # Scroll for Shoes for Speed 10%
+  - [ 2040802, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 10%
+  - [ 2040902, 1, 1, 0.010000 ] # Scroll for Shield for DEF 10%
+  - [ 2040925, 1, 1, 0.010000 ] # Scroll for Shield for LUK 10%
+  - [ 2043114, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for Accuracy 10%
+  - [ 2043214, 1, 1, 0.010000 ] # Scroll for One-Handed BW for Accuracy 10%
+  - [ 2044112, 1, 1, 0.010000 ] # Scroll for Two-Handed Axe for Accuracy 60%
+  - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
+  - [ 2290018, 1, 1, 0.100000 ] # [Mastery Book] Holy Charge
+  - [ 2290019, 1, 1, 0.100000 ] # [Mastery Book] Divine Charge
+  - [ 2290032, 1, 1, 0.100000 ] # [Mastery Book] Chain Lightning
+  - [ 2290042, 1, 1, 0.100000 ] # [Mastery Book] Ice Demon
+  - [ 2290059, 1, 1, 0.100000 ] # [Mastery Book] Hamstring Shot
+  - [ 2290069, 1, 1, 0.100000 ] # [Mastery Book] Blind
+  - [ 2290072, 1, 1, 0.100000 ] # [Mastery Book] Frostprey
+  - [ 2290092, 1, 1, 0.100000 ] # [Mastery Book] Assassinate
+  - [ 2290100, 1, 1, 0.100000 ] # [Mastery Book] Energy Orb
+  - [ 2290102, 1, 1, 0.100000 ] # [Mastery Book] Demolition
+  - [ 2290119, 1, 1, 0.100000 ] # [Mastery Book] Battleship Cannon
+  - [ 2290128, 1, 1, 0.100000 ] # [Mastery Book] High Mastery 20
+  - [ 2290142, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 20
+  - [ 4000243, 1, 1, 0.400000 ] # Griffey Horn
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4031515, 1, 1, 0.400000, 6924 ] # Heroic Star
   - [ 4031518, 1, 1, 0.400000, 6934 ] # Heroic Star
   - [ 4031479, 1, 1, 0.700000, 6151 ] # Sayram's Necklace

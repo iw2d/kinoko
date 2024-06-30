@@ -1,31 +1,31 @@
 # Rexton (8140702)
 
 rewards:
-  - [ 1002403, 1, 1, 0.000080 ] # Blue Arlic Helmet
-  - [ 1041117, 1, 1, 0.000080 ] # Purple Osfa Suit
-  - [ 1050092, 1, 1, 0.000080 ] # Green Oriental Fury Coat
-  - [ 1050106, 1, 1, 0.000060 ] # Green Arzuna
-  - [ 1061116, 1, 1, 0.000080 ] # Purple Osfa Pants
-  - [ 1072206, 1, 1, 0.000080 ] # Blue Neli Shoes
-  - [ 1082139, 1, 1, 0.000060 ] # Green Korben
-  - [ 1312015, 1, 1, 0.000070 ] # Vifennis
-  - [ 1452017, 1, 1, 0.000070 ] # Metus
-  - [ 1492011, 1, 1, 0.100000 ] # The Peacemaker#TODO
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040602, 1, 1, 0.000040 ] # Scroll for Bottomwear for DEF 10%
-  - [ 2040621, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 60%#TODO
-  - [ 2043015, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 100%#TODO
-  - [ 2044701, 1, 1, 0.000030 ] # Scroll for Claw for ATT 60%
-  - [ 2290112, 1, 1, 0.100000 ] # [Mastery Book] Elemental Boost#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000264, 1, 1, 0.600000 ] # Rexton Leather
+  - [ 1002403, 1, 1, 0.000100 ] # Blue Arlic Helmet
+  - [ 1041117, 1, 1, 0.000100 ] # Purple Osfa Suit
+  - [ 1050092, 1, 1, 0.000100 ] # Green Oriental Fury Coat
+  - [ 1050106, 1, 1, 0.000100 ] # Green Arzuna
+  - [ 1061116, 1, 1, 0.000100 ] # Purple Osfa Pants
+  - [ 1072206, 1, 1, 0.000100 ] # Blue Neli Shoes
+  - [ 1082139, 1, 1, 0.000100 ] # Green Korben
+  - [ 1312015, 1, 1, 0.000100 ] # Vifennis
+  - [ 1452017, 1, 1, 0.000100 ] # Metus
+  - [ 1492011, 1, 1, 0.000100 ] # The Peacemaker
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040602, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040621, 1, 1, 0.000100 ] # Scroll for Bottomwear for HP 60%
+  - [ 2043015, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 100%
+  - [ 2044701, 1, 1, 0.000100 ] # Scroll for Claw for ATT 60%
+  - [ 2290112, 1, 1, 0.000100 ] # [Mastery Book] Elemental Boost
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000264, 1, 1, 0.400000 ] # Rexton Leather
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4020008, 1, 1, 0.005000 ] # Black Crystal Ore
-  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator

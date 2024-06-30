@@ -1,47 +1,47 @@
 # Overlord B (7120107)
 
 rewards:
-  - [ 1002252, 1, 1, 0.100000 ] # Red Infinium Circlet#TODO
-  - [ 1002277, 1, 1, 0.100000 ] # Green Falcon#TODO
-  - [ 1002288, 1, 1, 0.100000 ] # Green Patriot#TODO
-  - [ 1002289, 1, 1, 0.100000 ] # Dark Patriot#TODO
-  - [ 1002340, 1, 1, 0.100000 ] # Dark Dragon Barbute#TODO
-  - [ 1040090, 1, 1, 0.100000 ] # Green Orientican#TODO
-  - [ 1040107, 1, 1, 0.100000 ] # Dark Studded Top#TODO
-  - [ 1040109, 1, 1, 0.100000 ] # Red Pirate Top#TODO
-  - [ 1041096, 1, 1, 0.100000 ] # Umber Mantis#TODO
-  - [ 1041099, 1, 1, 0.100000 ] # Bloody Platina#TODO
-  - [ 1051043, 1, 1, 0.100000 ] # Brown Choro#TODO
-  - [ 1051055, 1, 1, 0.100000 ] # Dark Requierre#TODO
-  - [ 1051057, 1, 1, 0.100000 ] # Purple Enigma#TODO
-  - [ 1060079, 1, 1, 0.100000 ] # Green Orientican Pants#TODO
-  - [ 1060095, 1, 1, 0.100000 ] # Dark Studded Pants#TODO
-  - [ 1060098, 1, 1, 0.100000 ] # Red Pirate Pants#TODO
-  - [ 1061095, 1, 1, 0.100000 ] # Umber Mantis Pants#TODO
-  - [ 1061098, 1, 1, 0.100000 ] # Bloody Platina Pants#TODO
-  - [ 1072160, 1, 1, 0.100000 ] # Gold Lapiz Sandals#TODO
-  - [ 1322020, 1, 1, 0.100000 ] # Bent Judgement#TODO
-  - [ 1382010, 1, 1, 0.100000 ] # Dark Ritual#TODO
-  - [ 1472027, 1, 1, 0.100000 ] # Green Scarab#TODO
-  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040513, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 60%#TODO
-  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
-  - [ 2040623, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 100%#TODO
-  - [ 2043110, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 100%#TODO
-  - [ 2044602, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 10%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
-  - [ 2330004, 1, 1, 0.100000 ] # Shiny Bullet#TODO
-  - [ 2384062, 1, 1, 0.100000 ] # Overlord B Card#TODO
-  - [ 4000549, 1, 1, 0.100000 ] # Overlord B Radar Device#TODO
-  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
-  - [ 4006000, 1, 1, 0.100000 ] # The Magic Rock#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
+  - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
+  - [ 1002288, 1, 1, 0.000100 ] # Green Patriot
+  - [ 1002289, 1, 1, 0.000100 ] # Dark Patriot
+  - [ 1002340, 1, 1, 0.000100 ] # Dark Dragon Barbute
+  - [ 1040090, 1, 1, 0.000100 ] # Green Orientican
+  - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
+  - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top
+  - [ 1041096, 1, 1, 0.000100 ] # Umber Mantis
+  - [ 1041099, 1, 1, 0.000100 ] # Bloody Platina
+  - [ 1051043, 1, 1, 0.000100 ] # Brown Choro
+  - [ 1051055, 1, 1, 0.000100 ] # Dark Requierre
+  - [ 1051057, 1, 1, 0.000100 ] # Purple Enigma
+  - [ 1060079, 1, 1, 0.000100 ] # Green Orientican Pants
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants
+  - [ 1060098, 1, 1, 0.000100 ] # Red Pirate Pants
+  - [ 1061095, 1, 1, 0.000100 ] # Umber Mantis Pants
+  - [ 1061098, 1, 1, 0.000100 ] # Bloody Platina Pants
+  - [ 1072160, 1, 1, 0.000100 ] # Gold Lapiz Sandals
+  - [ 1322020, 1, 1, 0.000100 ] # Bent Judgement
+  - [ 1382010, 1, 1, 0.000100 ] # Dark Ritual
+  - [ 1472027, 1, 1, 0.000100 ] # Green Scarab
+  - [ 1492009, 1, 1, 0.000100 ] # Abyss Shooter
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040513, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040622, 1, 1, 0.000100 ] # Scroll for Bottomwear for HP 10%
+  - [ 2040623, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 100%
+  - [ 2043110, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for Accuracy 100%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 2384062, 1, 1, 0.020000 ] # Overlord B Card
+  - [ 4000549, 1, 1, 0.400000 ] # Overlord B Radar Device
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator

@@ -1,37 +1,37 @@
 # Drumming Bunny (3230400)
 
 rewards:
-  - [ 1002144, 1, 1, 0.000080 ] # Brown Matty
-  - [ 1040074, 1, 1, 0.000080 ] # Green Legolier
+  - [ 1002144, 1, 1, 0.000100 ] # Brown Matty
+  - [ 1040074, 1, 1, 0.000100 ] # Green Legolier
   - [ 1041033, 1, 1, 0.000100 ] # Red Bennis Chainmail
   - [ 1041049, 1, 1, 0.000100 ] # Blue Steal
-  - [ 1050011, 1, 1, 0.000090 ] # Black Dragon Robe
-  - [ 1060063, 1, 1, 0.000080 ] # Green Legolier Pants
+  - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe
+  - [ 1060063, 1, 1, 0.000100 ] # Green Legolier Pants
   - [ 1061045, 1, 1, 0.000100 ] # Blue Steal Pants
   - [ 1062006, 1, 1, 0.000100 ] # Bennis Chainpants
-  - [ 1082053, 1, 1, 0.000090 ] # Black Lutia
-  - [ 1092008, 1, 1, 0.000070 ] # Pan Lid
-  - [ 1302013, 1, 1, 0.000070 ] # Red Whip
-  - [ 1372000, 1, 1, 0.000060 ] # Fairy Wand
+  - [ 1082053, 1, 1, 0.000100 ] # Black Lutia
+  - [ 1092008, 1, 1, 0.000100 ] # Pan Lid
+  - [ 1302013, 1, 1, 0.000100 ] # Red Whip
+  - [ 1372000, 1, 1, 0.000100 ] # Fairy Wand
   - [ 1402008, 1, 1, 0.000100 ] # Broadsword
-  - [ 1492004, 1, 1, 0.100000 ] # Cold Mind#TODO
+  - [ 1492004, 1, 1, 0.000100 ] # Cold Mind
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2044414, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 10%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2070002, 1, 1, 0.000070 ] # Mokbi Throwing-Stars
-  - [ 4000127, 1, 1, 0.500000 ] # Toy Drum
-  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
-  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 2044414, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 10%
+  - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000127, 1, 1, 0.400000 ] # Toy Drum
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
   - [ 4031135, 1, 1, 0.070000, 3438 ] # Dull Crystal
   - [ 4031140, 1, 1, 0.070000, 3440 ] # Dull Crystal

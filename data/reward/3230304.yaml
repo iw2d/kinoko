@@ -1,37 +1,37 @@
 # Planey (3230304)
 
 rewards:
-  - [ 1002167, 1, 1, 0.000080 ] # Blue Distinction
-  - [ 1002183, 1, 1, 0.000080 ] # Green Pilfer
-  - [ 1032018, 1, 1, 0.000070 ] # Pansy Earrings
-  - [ 1040086, 1, 1, 0.000080 ] # Blue Jangoon Armor
-  - [ 1041076, 1, 1, 0.000080 ] # Dark Shadow
-  - [ 1052110, 1, 1, 0.100000 ] # Blue Brace Look#TODO
-  - [ 1060075, 1, 1, 0.000080 ] # Brown Jangoon Pants
-  - [ 1061071, 1, 1, 0.000080 ] # Dark Shadow Pants
-  - [ 1072000, 1, 1, 0.000080 ] # Brown Jangoon Shoes
-  - [ 1072129, 1, 1, 0.000060 ] # Green Goni Shoes
-  - [ 1082010, 1, 1, 0.000060 ] # Mithril Brist
-  - [ 1082082, 1, 1, 0.000060 ] # Blue Pennance
-  - [ 1082085, 1, 1, 0.000060 ] # Red Willow
-  - [ 1382018, 1, 1, 0.000080 ] # Petal Staff
-  - [ 1432003, 1, 1, 0.000080 ] # Nakamaki
-  - [ 1462005, 1, 1, 0.000080 ] # Heckler
-  - [ 1472012, 1, 1, 0.000080 ] # Silver Guardian
+  - [ 1002167, 1, 1, 0.000100 ] # Blue Distinction
+  - [ 1002183, 1, 1, 0.000100 ] # Green Pilfer
+  - [ 1032018, 1, 1, 0.000100 ] # Pansy Earrings
+  - [ 1040086, 1, 1, 0.000100 ] # Blue Jangoon Armor
+  - [ 1041076, 1, 1, 0.000100 ] # Dark Shadow
+  - [ 1052110, 1, 1, 0.000100 ] # Blue Brace Look
+  - [ 1060075, 1, 1, 0.000100 ] # Brown Jangoon Pants
+  - [ 1061071, 1, 1, 0.000100 ] # Dark Shadow Pants
+  - [ 1072000, 1, 1, 0.000100 ] # Brown Jangoon Shoes
+  - [ 1072129, 1, 1, 0.000100 ] # Green Goni Shoes
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1082082, 1, 1, 0.000100 ] # Blue Pennance
+  - [ 1082085, 1, 1, 0.000100 ] # Red Willow
+  - [ 1382018, 1, 1, 0.000100 ] # Petal Staff
+  - [ 1432003, 1, 1, 0.000100 ] # Nakamaki
+  - [ 1462005, 1, 1, 0.000100 ] # Heckler
+  - [ 1472012, 1, 1, 0.000100 ] # Silver Guardian
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040302, 1, 1, 0.000020 ] # Scroll for Earring for INT 10%
-  - [ 2040316, 1, 1, 0.100000 ] # Scroll for Earring for DEX 100%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000105, 1, 1, 0.500000 ] # Plane Controller
-  - [ 4004003, 1, 1, 0.000800 ] # LUK Crystal Ore
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2040316, 1, 1, 0.000100 ] # Scroll for Earring for DEX 100%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000105, 1, 1, 0.400000 ] # Plane Controller
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
-  - [ 4131005, 1, 1, 0.000080 ] # Two-Handed Mace Forging Manual
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
+  - [ 4131005, 1, 1, 0.000300 ] # Two-Handed Mace Forging Manual

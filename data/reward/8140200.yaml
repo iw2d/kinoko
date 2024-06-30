@@ -1,43 +1,43 @@
 # Klock (8140200)
 
 rewards:
-  - [ 1002270, 1, 1, 0.000090 ] # Black Polyfeather Hat
-  - [ 1032015, 1, 1, 0.000070 ] # Metal Silver Earrings
-  - [ 1032022, 1, 1, 0.000060 ] # Half Earrings
-  - [ 1040093, 1, 1, 0.000080 ] # Dark Orientican
-  - [ 1050054, 1, 1, 0.000090 ] # Red Anakamoon
-  - [ 1050058, 1, 1, 0.000080 ] # Orange Tai
-  - [ 1050073, 1, 1, 0.000060 ] # Blue Enigmatic
-  - [ 1051052, 1, 1, 0.000070 ] # Blue Requierre
-  - [ 1051062, 1, 1, 0.000070 ] # Blue Lineros
-  - [ 1060082, 1, 1, 0.000080 ] # Dark Orientican Pants
-  - [ 1072144, 1, 1, 0.000080 ] # Red Gore Boots
-  - [ 1072159, 1, 1, 0.000070 ] # Brown Lapiz Sandals
-  - [ 1072162, 1, 1, 0.000070 ] # Blue Mystique Shoes
-  - [ 1072182, 1, 1, 0.000060 ] # Blue Wing Boots
-  - [ 1082059, 1, 1, 0.000080 ] # Bronze Clench
-  - [ 1082104, 1, 1, 0.000070 ] # Mithril Husk
-  - [ 1082114, 1, 1, 0.000060 ] # Sapphire Emperor
-  - [ 1322019, 1, 1, 0.000060 ] # The Judgement
-  - [ 1472022, 1, 1, 0.000070 ] # Bronze Gigantic
-  - [ 1482009, 1, 1, 0.100000 ] # Beia Crash#TODO
+  - [ 1002270, 1, 1, 0.000100 ] # Black Polyfeather Hat
+  - [ 1032015, 1, 1, 0.000100 ] # Metal Silver Earrings
+  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
+  - [ 1040093, 1, 1, 0.000100 ] # Dark Orientican
+  - [ 1050054, 1, 1, 0.000100 ] # Red Anakamoon
+  - [ 1050058, 1, 1, 0.000100 ] # Orange Tai
+  - [ 1050073, 1, 1, 0.000100 ] # Blue Enigmatic
+  - [ 1051052, 1, 1, 0.000100 ] # Blue Requierre
+  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
+  - [ 1060082, 1, 1, 0.000100 ] # Dark Orientican Pants
+  - [ 1072144, 1, 1, 0.000100 ] # Red Gore Boots
+  - [ 1072159, 1, 1, 0.000100 ] # Brown Lapiz Sandals
+  - [ 1072162, 1, 1, 0.000100 ] # Blue Mystique Shoes
+  - [ 1072182, 1, 1, 0.000100 ] # Blue Wing Boots
+  - [ 1082059, 1, 1, 0.000100 ] # Bronze Clench
+  - [ 1082104, 1, 1, 0.000100 ] # Mithril Husk
+  - [ 1082114, 1, 1, 0.000100 ] # Sapphire Emperor
+  - [ 1322019, 1, 1, 0.000100 ] # The Judgement
+  - [ 1472022, 1, 1, 0.000100 ] # Bronze Gigantic
+  - [ 1482009, 1, 1, 0.000100 ] # Beia Crash
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.040000 ] # Mana Elixir
-  - [ 2002003, 1, 1, 0.005000 ] # Wizard Potion
-  - [ 2020014, 1, 1, 0.000500 ] # Sunrise Dew
-  - [ 2040302, 1, 1, 0.000030 ] # Scroll for Earring for INT 10%
-  - [ 2040318, 1, 1, 0.100000 ] # Scroll for Earring for DEX 10%#TODO
-  - [ 2040802, 1, 1, 0.000030 ] # Scroll for Gloves for DEX 10%
-  - [ 2040925, 1, 1, 0.100000 ] # Scroll for Shield for LUK 10%#TODO
-  - [ 4000145, 1, 1, 0.500000 ] # Sealed-up Grandpa Clock
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2020014, 1, 1, 0.010000 ] # Sunrise Dew
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2040318, 1, 1, 0.000100 ] # Scroll for Earring for DEX 10%
+  - [ 2040802, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 10%
+  - [ 2040925, 1, 1, 0.000100 ] # Scroll for Shield for LUK 10%
+  - [ 4000145, 1, 1, 0.400000 ] # Sealed-up Grandpa Clock
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
-  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.350000, 7101 ] # Tachion

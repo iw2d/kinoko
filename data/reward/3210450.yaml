@@ -3,30 +3,30 @@
 rewards:
   - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
   - [ 1002163, 1, 1, 0.000100 ] # Green Hawkeye
-  - [ 1002625, 1, 1, 0.100000 ] # Blue Den Marine#TODO
+  - [ 1002625, 1, 1, 0.000100 ] # Blue Den Marine
   - [ 1032010, 1, 1, 0.000100 ] # Star Earrings
-  - [ 1040062, 1, 1, 0.000080 ] # Red Knucklevest
+  - [ 1040062, 1, 1, 0.000100 ] # Red Knucklevest
   - [ 1041042, 1, 1, 0.000100 ] # Green Fairy Top
-  - [ 1051015, 1, 1, 0.000080 ] # Blood Fitted Mail
-  - [ 1060051, 1, 1, 0.000080 ] # Red Knucklevest Pants
+  - [ 1051015, 1, 1, 0.000100 ] # Blood Fitted Mail
+  - [ 1060051, 1, 1, 0.000100 ] # Red Knucklevest Pants
   - [ 1061035, 1, 1, 0.000100 ] # Green Fairy Skirt
-  - [ 1072110, 1, 1, 0.000060 ] # Black Blue-Lines Shoes
-  - [ 1072119, 1, 1, 0.000060 ] # Yellow Pierre Shoes
-  - [ 1082063, 1, 1, 0.000060 ] # Blue Arten
-  - [ 1302004, 1, 1, 0.000080 ] # Cutlus
-  - [ 1332014, 1, 1, 0.000080 ] # Gephart
+  - [ 1072110, 1, 1, 0.000100 ] # Black Blue-Lines Shoes
+  - [ 1072119, 1, 1, 0.000100 ] # Yellow Pierre Shoes
+  - [ 1082063, 1, 1, 0.000100 ] # Blue Arten
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1332014, 1, 1, 0.000100 ] # Gephart
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2022040, 1, 1, 0.050000 ] # Air Bubble
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
-  - [ 4000153, 1, 1, 0.500000 ] # Snorkle
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4020000, 1, 1, 0.001000 ] # Garnet Ore
-  - [ 4020001, 1, 1, 0.003000 ] # Amethyst Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4131008, 1, 1, 0.000080 ] # Wand Production Manual
+  - [ 2022040, 1, 1, 0.010000 ] # Air Bubble
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330001, 1, 1, 0.000400 ] # Split Bullet
+  - [ 4000153, 1, 1, 0.400000 ] # Snorkle
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4131008, 1, 1, 0.000300 ] # Wand Production Manual

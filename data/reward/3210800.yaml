@@ -2,37 +2,37 @@
 
 rewards:
   - [ 1002038, 1, 1, 0.000100 ] # Brown Jester
-  - [ 1002136, 1, 1, 0.000070 ] # Dark Pole-Feather Hat
+  - [ 1002136, 1, 1, 0.000100 ] # Dark Pole-Feather Hat
   - [ 1002172, 1, 1, 0.000100 ] # Blue Guise
-  - [ 1040075, 1, 1, 0.000070 ] # Dark Legolier
+  - [ 1040075, 1, 1, 0.000100 ] # Dark Legolier
   - [ 1041050, 1, 1, 0.000100 ] # Purple Steal
-  - [ 1041094, 1, 1, 0.000040 ] # Light Mantis
-  - [ 1051014, 1, 1, 0.000080 ] # Sapphire Fitted Mail
-  - [ 1060064, 1, 1, 0.000070 ] # Dark Legolier Pants
+  - [ 1041094, 1, 1, 0.000100 ] # Light Mantis
+  - [ 1051014, 1, 1, 0.000100 ] # Sapphire Fitted Mail
+  - [ 1060064, 1, 1, 0.000100 ] # Dark Legolier Pants
   - [ 1061046, 1, 1, 0.000100 ] # Purple Steal Pants
-  - [ 1072109, 1, 1, 0.000060 ] # Black Yellow-Lined Shoes
-  - [ 1072116, 1, 1, 0.000060 ] # Gold Moon Shoes
-  - [ 1072300, 1, 1, 0.100000 ] # Brown Leather Krag#TODO
-  - [ 1082192, 1, 1, 0.100000 ] # Brown Jeweled#TODO
-  - [ 1092013, 1, 1, 0.000060 ] # Mithril Tower Shield
-  - [ 1302003, 1, 1, 0.000200 ] # Eloon
-  - [ 1402010, 1, 1, 0.000080 ] # Aluminum Baseball Bat
-  - [ 1472017, 1, 1, 0.000040 ] # Dark Avarice
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 1072109, 1, 1, 0.000100 ] # Black Yellow-Lined Shoes
+  - [ 1072116, 1, 1, 0.000100 ] # Gold Moon Shoes
+  - [ 1072300, 1, 1, 0.000100 ] # Brown Leather Krag
+  - [ 1082192, 1, 1, 0.000100 ] # Brown Jeweled
+  - [ 1092013, 1, 1, 0.000100 ] # Mithril Tower Shield
+  - [ 1302003, 1, 1, 0.000100 ] # Eloon
+  - [ 1402010, 1, 1, 0.000100 ] # Aluminum Baseball Bat
+  - [ 1472017, 1, 1, 0.000100 ] # Dark Avarice
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2041010, 1, 1, 0.000030 ] # Scroll for Cape for MP 60%
-  - [ 2044414, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 10%#TODO
-  - [ 2070003, 1, 1, 0.000050 ] # Kumbi Throwing-Stars
-  - [ 2070008, 1, 1, 0.000080 ] # Snowball
-  - [ 4000021, 1, 1, 0.030000 ] # Leather
-  - [ 4000026, 1, 1, 0.010000 ] # Lupin Doll
+  - [ 2041010, 1, 1, 0.000100 ] # Scroll for Cape for MP 60%
+  - [ 2044414, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 10%
+  - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
+  - [ 2070008, 1, 1, 0.000400 ] # Snowball
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000026, 1, 1, 0.400000 ] # Lupin Doll
   - [ 4000029, 1, 1, 0.400000 ] # Lupin's Banana
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4020004, 1, 1, 0.004000 ] # Opal Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator

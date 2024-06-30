@@ -1,32 +1,32 @@
 # Roloduck (3210204)
 
 rewards:
-  - [ 1002004, 1, 1, 0.000080 ] # Great Brown Helmet
+  - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
   - [ 1040060, 1, 1, 0.000100 ] # Silver Black Stealer
   - [ 1040070, 1, 1, 0.000100 ] # Blue Hunter's Armor
-  - [ 1050021, 1, 1, 0.000080 ] # Blue Crusader Chainmail
-  - [ 1050031, 1, 1, 0.000080 ] # White Chaos Robe
-  - [ 1052110, 1, 1, 0.100000 ] # Blue Brace Look#TODO
+  - [ 1050021, 1, 1, 0.000100 ] # Blue Crusader Chainmail
+  - [ 1050031, 1, 1, 0.000100 ] # White Chaos Robe
+  - [ 1052110, 1, 1, 0.000100 ] # Blue Brace Look
   - [ 1060046, 1, 1, 0.000100 ] # Silver / Black Stealer Pants
   - [ 1060059, 1, 1, 0.000100 ] # Blue Hunter's Pants
-  - [ 1072002, 1, 1, 0.000080 ] # Steel Trigger
-  - [ 1082053, 1, 1, 0.000090 ] # Black Lutia
-  - [ 1082071, 1, 1, 0.000070 ] # Aqua Brace
-  - [ 1332011, 1, 1, 0.000060 ] # Bazlud
+  - [ 1072002, 1, 1, 0.000100 ] # Steel Trigger
+  - [ 1082053, 1, 1, 0.000100 ] # Black Lutia
+  - [ 1082071, 1, 1, 0.000100 ] # Aqua Brace
+  - [ 1332011, 1, 1, 0.000100 ] # Bazlud
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040617, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 100%#TODO
-  - [ 2043202, 1, 1, 0.000020 ] # Scroll for One-Handed BW for ATT 10%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000109, 1, 1, 0.500000 ] # Toy Duckling
-  - [ 4003004, 1, 1, 0.050000 ] # Stiff Feather
-  - [ 4003005, 1, 1, 0.050000 ] # Soft Feather
-  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 2040617, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 100%
+  - [ 2043202, 1, 1, 0.000100 ] # Scroll for One-Handed BW for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000109, 1, 1, 0.400000 ] # Toy Duckling
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
-  - [ 4130000, 1, 1, 0.000080 ] # Gloves Production Stimulator
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator

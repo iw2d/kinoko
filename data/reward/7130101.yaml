@@ -1,38 +1,38 @@
 # Taurospear (7130101)
 
 rewards:
-  - [ 1002284, 1, 1, 0.000070 ] # White Nightfox
-  - [ 1002327, 1, 1, 0.000060 ] # Brown Pireta Hat
-  - [ 1041091, 1, 1, 0.000090 ] # Green Ice Queen
-  - [ 1041103, 1, 1, 0.000070 ] # Red Mystique
-  - [ 1050077, 1, 1, 0.000060 ] # Green Pris
-  - [ 1051047, 1, 1, 0.000090 ] # Dark Anakarune
-  - [ 1051056, 1, 1, 0.000060 ] # Green Enigma
-  - [ 1051063, 1, 1, 0.000070 ] # Beige Lineros
-  - [ 1061090, 1, 1, 0.000090 ] # Green Ice Queen Skirt
-  - [ 1061102, 1, 1, 0.000070 ] # Red Mystique Pants
-  - [ 1072167, 1, 1, 0.000070 ] # Dark Elf Shoes
-  - [ 1072211, 1, 1, 0.000060 ] # Blue Rivers Boots
-  - [ 1082100, 1, 1, 0.000070 ] # Dark Lorin
-  - [ 1082104, 1, 1, 0.000070 ] # Mithril Husk
-  - [ 1092016, 1, 1, 0.000070 ] # Silver Ancient Shield
-  - [ 1102028, 1, 1, 0.000070 ] # Red Seraph Cape
-  - [ 1382010, 1, 1, 0.000060 ] # Dark Ritual
-  - [ 1412008, 1, 1, 0.000070 ] # Chrono
-  - [ 1422010, 1, 1, 0.000070 ] # Gigantic Sledge
-  - [ 1452011, 1, 1, 0.000070 ] # Golden Hinkel
-  - [ 1482009, 1, 1, 0.100000 ] # Beia Crash#TODO
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2044101, 1, 1, 0.000020 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 2044114, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 10%#TODO
-  - [ 4000046, 1, 1, 0.500000 ] # Taurospear Horn
-  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
-  - [ 4020008, 1, 1, 0.005000 ] # Black Crystal Ore
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 1002284, 1, 1, 0.000100 ] # White Nightfox
+  - [ 1002327, 1, 1, 0.000100 ] # Brown Pireta Hat
+  - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen
+  - [ 1041103, 1, 1, 0.000100 ] # Red Mystique
+  - [ 1050077, 1, 1, 0.000100 ] # Green Pris
+  - [ 1051047, 1, 1, 0.000100 ] # Dark Anakarune
+  - [ 1051056, 1, 1, 0.000100 ] # Green Enigma
+  - [ 1051063, 1, 1, 0.000100 ] # Beige Lineros
+  - [ 1061090, 1, 1, 0.000100 ] # Green Ice Queen Skirt
+  - [ 1061102, 1, 1, 0.000100 ] # Red Mystique Pants
+  - [ 1072167, 1, 1, 0.000100 ] # Dark Elf Shoes
+  - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots
+  - [ 1082100, 1, 1, 0.000100 ] # Dark Lorin
+  - [ 1082104, 1, 1, 0.000100 ] # Mithril Husk
+  - [ 1092016, 1, 1, 0.000100 ] # Silver Ancient Shield
+  - [ 1102028, 1, 1, 0.000100 ] # Red Seraph Cape
+  - [ 1382010, 1, 1, 0.000100 ] # Dark Ritual
+  - [ 1412008, 1, 1, 0.000100 ] # Chrono
+  - [ 1422010, 1, 1, 0.000100 ] # Gigantic Sledge
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 1482009, 1, 1, 0.000100 ] # Beia Crash
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044114, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 10%
+  - [ 4000046, 1, 1, 0.400000 ] # Taurospear Horn
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
   - [ 4031466, 1, 1, 0.080000, 6107 ] # Dark Soul Rock
   - [ 4031215, 1, 1, 0.120000, 2097 ] # Taurospear's Spirit Rock

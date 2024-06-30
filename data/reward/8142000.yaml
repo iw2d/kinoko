@@ -1,41 +1,41 @@
 # Phantom Watch (8142000)
 
 rewards:
-  - [ 1002339, 1, 1, 0.000080 ] # Blue Dragon Barbute
-  - [ 1040110, 1, 1, 0.000080 ] # Dark Pirate Top
-  - [ 1040111, 1, 1, 0.000070 ] # Green Commodore
-  - [ 1050076, 1, 1, 0.000080 ] # Blue Pris
-  - [ 1050091, 1, 1, 0.000070 ] # Dark Ades
-  - [ 1051056, 1, 1, 0.000090 ] # Green Enigma
-  - [ 1051067, 1, 1, 0.000080 ] # Blue Pria
-  - [ 1051078, 1, 1, 0.000080 ] # Red Battle Empress
-  - [ 1051096, 1, 1, 0.000070 ] # Red Oriental Fury Coat
-  - [ 1060099, 1, 1, 0.000080 ] # Dark Pirate Pants
-  - [ 1060100, 1, 1, 0.000070 ] # Green Commodore Pants
-  - [ 1072212, 1, 1, 0.000080 ] # Dark Rivers Boots
-  - [ 1082107, 1, 1, 0.000090 ] # Gold Eyes
-  - [ 1082112, 1, 1, 0.000080 ] # Dark Cordon
-  - [ 1082116, 1, 1, 0.000080 ] # Blood Emperor
-  - [ 1082133, 1, 1, 0.000070 ] # Red Sage
-  - [ 1332023, 1, 1, 0.000080 ] # Dragon's Tail
-  - [ 1432007, 1, 1, 0.000090 ] # Redemption
-  - [ 1452013, 1, 1, 0.000080 ] # Fire Arund
-  - [ 1492011, 1, 1, 0.100000 ] # The Peacemaker#TODO
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
-  - [ 2002001, 1, 1, 0.005000 ] # Speed Potion
-  - [ 2020015, 1, 1, 0.000500 ] # Sunset Dew
-  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
-  - [ 2041022, 1, 1, 0.000040 ] # Scroll for Cape for LUK 60%
-  - [ 2044001, 1, 1, 0.000040 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
+  - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top
+  - [ 1040111, 1, 1, 0.000100 ] # Green Commodore
+  - [ 1050076, 1, 1, 0.000100 ] # Blue Pris
+  - [ 1050091, 1, 1, 0.000100 ] # Dark Ades
+  - [ 1051056, 1, 1, 0.000100 ] # Green Enigma
+  - [ 1051067, 1, 1, 0.000100 ] # Blue Pria
+  - [ 1051078, 1, 1, 0.000100 ] # Red Battle Empress
+  - [ 1051096, 1, 1, 0.000100 ] # Red Oriental Fury Coat
+  - [ 1060099, 1, 1, 0.000100 ] # Dark Pirate Pants
+  - [ 1060100, 1, 1, 0.000100 ] # Green Commodore Pants
+  - [ 1072212, 1, 1, 0.000100 ] # Dark Rivers Boots
+  - [ 1082107, 1, 1, 0.000100 ] # Gold Eyes
+  - [ 1082112, 1, 1, 0.000100 ] # Dark Cordon
+  - [ 1082116, 1, 1, 0.000100 ] # Blood Emperor
+  - [ 1082133, 1, 1, 0.000100 ] # Red Sage
+  - [ 1332023, 1, 1, 0.000100 ] # Dragon's Tail
+  - [ 1432007, 1, 1, 0.000100 ] # Redemption
+  - [ 1452013, 1, 1, 0.000100 ] # Fire Arund
+  - [ 1492011, 1, 1, 0.000100 ] # The Peacemaker
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2002001, 1, 1, 0.010000 ] # Speed Potion
+  - [ 2020015, 1, 1, 0.010000 ] # Sunset Dew
+  - [ 2040427, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 10%
+  - [ 2041022, 1, 1, 0.000100 ] # Scroll for Cape for LUK 60%
+  - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
   - [ 4000149, 1, 1, 0.400000 ] # Sealed Bottle
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion

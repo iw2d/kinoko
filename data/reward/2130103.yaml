@@ -1,21 +1,21 @@
 # Jr. Necki (2130103)
 
 rewards:
-  - [ 1002027, 1, 1, 0.000070 ] # Steel Sharp Helm
-  - [ 1041021, 1, 1, 0.000080 ] # Brown Lamelle
+  - [ 1002027, 1, 1, 0.000100 ] # Steel Sharp Helm
+  - [ 1041021, 1, 1, 0.000100 ] # Brown Lamelle
   - [ 1041031, 1, 1, 0.000100 ] # Purple Split
-  - [ 1050005, 1, 1, 0.000090 ] # Blue Kendo Robe
-  - [ 1061018, 1, 1, 0.000080 ] # Brown Ramel Skirt
+  - [ 1050005, 1, 1, 0.000100 ] # Blue Kendo Robe
+  - [ 1061018, 1, 1, 0.000100 ] # Brown Ramel Skirt
   - [ 1061028, 1, 1, 0.000100 ] # White Split Skirt
-  - [ 1072069, 1, 1, 0.000060 ] # Red Jack Boots
+  - [ 1072069, 1, 1, 0.000100 ] # Red Jack Boots
   - [ 1332008, 1, 1, 0.000100 ] # Coconut Knife
-  - [ 1482002, 1, 1, 0.100000 ] # Double Tail Knuckler#TODO
+  - [ 1482002, 1, 1, 0.000100 ] # Double Tail Knuckler
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
-  - [ 2010003, 1, 1, 0.008000 ] # Orange
-  - [ 2040617, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 100%#TODO
-  - [ 2040902, 1, 1, 0.000030 ] # Scroll for Shield for DEF 10%
+  - [ 2010003, 1, 1, 0.010000 ] # Orange
+  - [ 2040617, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 100%
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
   - [ 2048003, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 100%
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
   - [ 4000034, 1, 1, 0.400000 ] # Jr. Necki Skin
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

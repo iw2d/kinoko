@@ -3,29 +3,29 @@
 rewards:
   - [ 1002152, 1, 1, 0.000100 ] # Blue Guiltian
   - [ 1002183, 1, 1, 0.000100 ] # Green Pilfer
-  - [ 1041079, 1, 1, 0.000070 ] # Brown Moon
+  - [ 1041079, 1, 1, 0.000100 ] # Brown Moon
   - [ 1041081, 1, 1, 0.000100 ] # White Piettra
-  - [ 1041089, 1, 1, 0.000070 ] # Dark Shouldermail
-  - [ 1061078, 1, 1, 0.000070 ] # Brown Moon Pants
+  - [ 1041089, 1, 1, 0.000100 ] # Dark Shouldermail
+  - [ 1061078, 1, 1, 0.000100 ] # Brown Moon Pants
   - [ 1061080, 1, 1, 0.000100 ] # White Piettra Skirt
-  - [ 1061088, 1, 1, 0.000070 ] # Dark Shouldermail Pants
-  - [ 1072124, 1, 1, 0.000070 ] # Blue Steel-Tip Boots
-  - [ 1072142, 1, 1, 0.000070 ] # Purple Goldwind Shoes
-  - [ 1072303, 1, 1, 0.100000 ] # Brown Double Boots#TODO
-  - [ 1092004, 1, 1, 0.000070 ] # Skull Shield
-  - [ 1402003, 1, 1, 0.000070 ] # Lion's Fang
+  - [ 1061088, 1, 1, 0.000100 ] # Dark Shouldermail Pants
+  - [ 1072124, 1, 1, 0.000100 ] # Blue Steel-Tip Boots
+  - [ 1072142, 1, 1, 0.000100 ] # Purple Goldwind Shoes
+  - [ 1072303, 1, 1, 0.000100 ] # Brown Double Boots
+  - [ 1092004, 1, 1, 0.000100 ] # Skull Shield
+  - [ 1402003, 1, 1, 0.000100 ] # Lion's Fang
   - [ 1472016, 1, 1, 0.000100 ] # Adamantium Avarice
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2040805, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 10%
-  - [ 2040923, 1, 1, 0.100000 ] # Scroll for Shield for LUK 100%#TODO
-  - [ 2041013, 1, 1, 0.000030 ] # Scroll for Cape for STR 60%
-  - [ 4000045, 1, 1, 0.500000 ] # Tortie Shell
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 2040805, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 10%
+  - [ 2040923, 1, 1, 0.000100 ] # Scroll for Shield for LUK 100%
+  - [ 2041013, 1, 1, 0.000100 ] # Scroll for Cape for STR 60%
+  - [ 4000045, 1, 1, 0.400000 ] # Tortie Shell
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

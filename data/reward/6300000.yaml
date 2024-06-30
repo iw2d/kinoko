@@ -1,30 +1,30 @@
 # Yeti (6300000)
 
 rewards:
-  - [ 1002022, 1, 1, 0.000090 ] # Old Steel Nordic Helm
-  - [ 1032019, 1, 1, 0.000090 ] # Crystal Flower Earrings
-  - [ 1032020, 1, 1, 0.000080 ] # Gold Drop Earrings
-  - [ 1040099, 1, 1, 0.000080 ] # Ocher Scorpio
-  - [ 1040104, 1, 1, 0.000050 ] # Orihalcon Platine
-  - [ 1041078, 1, 1, 0.000090 ] # Blue Moon
-  - [ 1041089, 1, 1, 0.000090 ] # Dark Shouldermail
-  - [ 1051047, 1, 1, 0.000080 ] # Dark Anakarune
-  - [ 1051062, 1, 1, 0.000050 ] # Blue Lineros
-  - [ 1060088, 1, 1, 0.000080 ] # Ocher Scorpio Pants
-  - [ 1060092, 1, 1, 0.000050 ] # Orihalcon Platine Pants
-  - [ 1072157, 1, 1, 0.000050 ] # Blue Lapiz Sandals
-  - [ 1082107, 1, 1, 0.000050 ] # Gold Eyes
-  - [ 1102022, 1, 1, 0.000070 ] # Red Gaia Cape
-  - [ 1382007, 1, 1, 0.000060 ] # Evil Wings
-  - [ 1432006, 1, 1, 0.000060 ] # Holy Spear
-  - [ 1462008, 1, 1, 0.000060 ] # Golden Crow
-  - [ 1472024, 1, 1, 0.000060 ] # Sapphire Gigantic
-  - [ 1472026, 1, 1, 0.000050 ] # Brown Scarab
-  - [ 1972001, 1, 1, 0.100000 ] # Gold Tail#TODO
-  - [ 2000006, 1, 1, 0.040000 ] # Mana Elixir
+  - [ 1002022, 1, 1, 0.000100 ] # Old Steel Nordic Helm
+  - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings
+  - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
+  - [ 1040099, 1, 1, 0.000100 ] # Ocher Scorpio
+  - [ 1040104, 1, 1, 0.000100 ] # Orihalcon Platine
+  - [ 1041078, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1041089, 1, 1, 0.000100 ] # Dark Shouldermail
+  - [ 1051047, 1, 1, 0.000100 ] # Dark Anakarune
+  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
+  - [ 1060088, 1, 1, 0.000100 ] # Ocher Scorpio Pants
+  - [ 1060092, 1, 1, 0.000100 ] # Orihalcon Platine Pants
+  - [ 1072157, 1, 1, 0.000100 ] # Blue Lapiz Sandals
+  - [ 1082107, 1, 1, 0.000100 ] # Gold Eyes
+  - [ 1102022, 1, 1, 0.000100 ] # Red Gaia Cape
+  - [ 1382007, 1, 1, 0.000100 ] # Evil Wings
+  - [ 1432006, 1, 1, 0.000100 ] # Holy Spear
+  - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
+  - [ 1472024, 1, 1, 0.000100 ] # Sapphire Gigantic
+  - [ 1472026, 1, 1, 0.000100 ] # Brown Scarab
+  - [ 1972001, 1, 1, 0.000100 ] # Gold Tail
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000049, 1, 1, 0.500000 ] # Yeti Horn
+  - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
-  - [ 4010000, 1, 1, 0.008000 ] # Bronze Ore
-  - [ 4020007, 1, 1, 0.006000 ] # Diamond Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

@@ -1,38 +1,38 @@
 # Cerebes (7130001)
 
 rewards:
-  - [ 1002095, 1, 1, 0.000070 ] # Mithril Planet
-  - [ 1002246, 1, 1, 0.000080 ] # Dark Seraphis
-  - [ 1032014, 1, 1, 0.000080 ] # Pink-Flowered Earrings
-  - [ 1032016, 1, 1, 0.000060 ] # Metal Heart Earrings
-  - [ 1041095, 1, 1, 0.000080 ] # Bloody Mantis
-  - [ 1041102, 1, 1, 0.000070 ] # Pink Mystique
-  - [ 1050069, 1, 1, 0.000070 ] # Brown Requiem
-  - [ 1050070, 1, 1, 0.000060 ] # Dark Requiem
-  - [ 1051054, 1, 1, 0.000070 ] # Brown Requierre
-  - [ 1061094, 1, 1, 0.000080 ] # Bloody Mantis Pants
-  - [ 1061101, 1, 1, 0.000070 ] # Pink Mystique Pants
-  - [ 1072146, 1, 1, 0.000080 ] # Green Gore Boots
-  - [ 1072165, 1, 1, 0.000070 ] # Baige Elf Shoes
-  - [ 1082105, 1, 1, 0.000070 ] # Dark Husk
-  - [ 1082108, 1, 1, 0.000070 ] # Dark Eyes
-  - [ 1312009, 1, 1, 0.000080 ] # Hawkhead
-  - [ 1332015, 1, 1, 0.000080 ] # Deadly Fin
-  - [ 1372015, 1, 1, 0.000060 ] # Angel Wings
-  - [ 1372016, 1, 1, 0.000060 ] # Phoenix Wand
-  - [ 1402011, 1, 1, 0.000080 ] # Sparta
-  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
+  - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
+  - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
+  - [ 1032014, 1, 1, 0.000100 ] # Pink-Flowered Earrings
+  - [ 1032016, 1, 1, 0.000100 ] # Metal Heart Earrings
+  - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis
+  - [ 1041102, 1, 1, 0.000100 ] # Pink Mystique
+  - [ 1050069, 1, 1, 0.000100 ] # Brown Requiem
+  - [ 1050070, 1, 1, 0.000100 ] # Dark Requiem
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1061094, 1, 1, 0.000100 ] # Bloody Mantis Pants
+  - [ 1061101, 1, 1, 0.000100 ] # Pink Mystique Pants
+  - [ 1072146, 1, 1, 0.000100 ] # Green Gore Boots
+  - [ 1072165, 1, 1, 0.000100 ] # Baige Elf Shoes
+  - [ 1082105, 1, 1, 0.000100 ] # Dark Husk
+  - [ 1082108, 1, 1, 0.000100 ] # Dark Eyes
+  - [ 1312009, 1, 1, 0.000100 ] # Hawkhead
+  - [ 1332015, 1, 1, 0.000100 ] # Deadly Fin
+  - [ 1372015, 1, 1, 0.000100 ] # Angel Wings
+  - [ 1372016, 1, 1, 0.000100 ] # Phoenix Wand
+  - [ 1402011, 1, 1, 0.000100 ] # Sparta
+  - [ 1492009, 1, 1, 0.000100 ] # Abyss Shooter
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
-  - [ 2041021, 1, 1, 0.000020 ] # Scroll for Cape for LUK 100%
-  - [ 2044301, 1, 1, 0.000020 ] # Scroll for Spear for ATT 60%
-  - [ 2050000, 1, 1, 0.070000 ] # Antidote
-  - [ 4000079, 1, 1, 0.500000 ] # Cerebes Tooth
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040618, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 60%
+  - [ 2041021, 1, 1, 0.000100 ] # Scroll for Cape for LUK 100%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
+  - [ 2050000, 1, 1, 0.010000 ] # Antidote
+  - [ 4000079, 1, 1, 0.400000 ] # Cerebes Tooth
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator

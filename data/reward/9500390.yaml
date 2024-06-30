@@ -1,85 +1,85 @@
 # Ravana (9500390)
 
 rewards:
-  - [ 1003068, 1, 1, 0.100000 ] # Ravana Helmet#TODO
-  - [ 1302012, 1, 1, 0.100000 ] # Red Katana#TODO
-  - [ 1302056, 1, 1, 0.100000 ] # Sparta#TODO
-  - [ 1312010, 1, 1, 0.100000 ] # Mikhail#TODO
-  - [ 1312030, 1, 1, 0.100000 ] # Tomahawk#TODO
-  - [ 1322019, 1, 1, 0.100000 ] # The Judgement#TODO
-  - [ 1322045, 1, 1, 0.100000 ] # Battle Hammer#TODO
-  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
-  - [ 1332051, 1, 1, 0.100000 ] # Gold Double Knife#TODO
-  - [ 1332052, 1, 1, 0.100000 ] # Blood Dagger#TODO
-  - [ 1372010, 1, 1, 0.100000 ] # Dimon Wand#TODO
-  - [ 1372015, 1, 1, 0.100000 ] # Angel Wings#TODO
-  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
-  - [ 1382035, 1, 1, 0.100000 ] # Blue Marine#TODO
-  - [ 1402011, 1, 1, 0.100000 ] # Sparta#TODO
-  - [ 1402035, 1, 1, 0.100000 ] # The Beheader#TODO
-  - [ 1412008, 1, 1, 0.100000 ] # Chrono#TODO
-  - [ 1412021, 1, 1, 0.100000 ] # Tavar#TODO
-  - [ 1422027, 1, 1, 0.100000 ] # Golden Smith Hammer#TODO
-  - [ 1432007, 1, 1, 0.100000 ] # Redemption#TODO
-  - [ 1432030, 1, 1, 0.100000 ] # Pinaka#TODO
-  - [ 1442008, 1, 1, 0.100000 ] # The Gold Dragon#TODO
-  - [ 1442044, 1, 1, 0.100000 ] # Zedbug#TODO
-  - [ 1452009, 1, 1, 0.100000 ] # Red Hinkel#TODO
-  - [ 1452019, 1, 1, 0.100000 ] # White Nisrock#TODO
-  - [ 1452020, 1, 1, 0.100000 ] # Golden Nisrock#TODO
-  - [ 1462009, 1, 1, 0.100000 ] # Gross Jaeger#TODO
-  - [ 1462015, 1, 1, 0.100000 ] # White Neschere#TODO
-  - [ 1462016, 1, 1, 0.100000 ] # Golden Neschere#TODO
-  - [ 1472026, 1, 1, 0.100000 ] # Brown Scarab#TODO
-  - [ 1472053, 1, 1, 0.100000 ] # Red Craven#TODO
-  - [ 1482009, 1, 1, 0.100000 ] # Beia Crash#TODO
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
-  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2001001, 1, 1, 0.100000 ] # Ice Cream Pop#TODO
-  - [ 2001002, 1, 1, 0.100000 ] # Red Bean Sundae#TODO
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk#TODO
-  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew#TODO
-  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
-  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
-  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2041013, 1, 1, 0.100000 ] # Scroll for Cape for STR 60%#TODO
-  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
-  - [ 2041019, 1, 1, 0.100000 ] # Scroll for Cape for DEX 60%#TODO
-  - [ 2041022, 1, 1, 0.100000 ] # Scroll for Cape for LUK 60%#TODO
-  - [ 2043001, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 60%#TODO
-  - [ 2043101, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 60%#TODO
-  - [ 2043201, 1, 1, 0.100000 ] # Scroll for One-Handed BW for ATT 60%#TODO
-  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
-  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
-  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
-  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
-  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
-  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
-  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
-  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
-  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
-  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
-  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2050000, 1, 1, 0.100000 ] # Antidote#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
-  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
-  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO
-  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
-  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
-  - [ 4020004, 1, 1, 0.100000 ] # Opal Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
-  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
-  - [ 4020008, 1, 1, 0.100000 ] # Black Crystal Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
+  - [ 1003068, 1, 1, 0.000200 ] # Ravana Helmet
+  - [ 1302012, 1, 1, 0.000200 ] # Red Katana
+  - [ 1302056, 1, 1, 0.000200 ] # Sparta
+  - [ 1312010, 1, 1, 0.000200 ] # Mikhail
+  - [ 1312030, 1, 1, 0.000200 ] # Tomahawk
+  - [ 1322019, 1, 1, 0.000200 ] # The Judgement
+  - [ 1322045, 1, 1, 0.000200 ] # Battle Hammer
+  - [ 1332018, 1, 1, 0.000200 ] # Kandine
+  - [ 1332051, 1, 1, 0.000200 ] # Gold Double Knife
+  - [ 1332052, 1, 1, 0.000200 ] # Blood Dagger
+  - [ 1372010, 1, 1, 0.000200 ] # Dimon Wand
+  - [ 1372015, 1, 1, 0.000200 ] # Angel Wings
+  - [ 1382007, 1, 1, 0.000200 ] # Evil Wings
+  - [ 1382035, 1, 1, 0.000200 ] # Blue Marine
+  - [ 1402011, 1, 1, 0.000200 ] # Sparta
+  - [ 1402035, 1, 1, 0.000200 ] # The Beheader
+  - [ 1412008, 1, 1, 0.000200 ] # Chrono
+  - [ 1412021, 1, 1, 0.000200 ] # Tavar
+  - [ 1422027, 1, 1, 0.000200 ] # Golden Smith Hammer
+  - [ 1432007, 1, 1, 0.000200 ] # Redemption
+  - [ 1432030, 1, 1, 0.000200 ] # Pinaka
+  - [ 1442008, 1, 1, 0.000200 ] # The Gold Dragon
+  - [ 1442044, 1, 1, 0.000200 ] # Zedbug
+  - [ 1452009, 1, 1, 0.000200 ] # Red Hinkel
+  - [ 1452019, 1, 1, 0.000200 ] # White Nisrock
+  - [ 1452020, 1, 1, 0.000200 ] # Golden Nisrock
+  - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
+  - [ 1462015, 1, 1, 0.000200 ] # White Neschere
+  - [ 1462016, 1, 1, 0.000200 ] # Golden Neschere
+  - [ 1472026, 1, 1, 0.000200 ] # Brown Scarab
+  - [ 1472053, 1, 1, 0.000200 ] # Red Craven
+  - [ 1482009, 1, 1, 0.000200 ] # Beia Crash
+  - [ 1482012, 1, 1, 0.000200 ] # King Cent
+  - [ 1492009, 1, 1, 0.000200 ] # Abyss Shooter
+  - [ 1492012, 1, 1, 0.000200 ] # Concerto
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2001001, 1, 1, 0.100000 ] # Ice Cream Pop
+  - [ 2001002, 1, 1, 0.100000 ] # Red Bean Sundae
+  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew
+  - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
+  - [ 2040317, 1, 1, 0.010000 ] # Scroll for Earring for DEX 60%
+  - [ 2040321, 1, 1, 0.010000 ] # Scroll for Earring for LUK 60%
+  - [ 2040326, 1, 1, 0.010000 ] # Scroll for Earring for HP 60%
+  - [ 2041013, 1, 1, 0.010000 ] # Scroll for Cape for STR 60%
+  - [ 2041016, 1, 1, 0.010000 ] # Scroll for Cape for INT 60%
+  - [ 2041019, 1, 1, 0.010000 ] # Scroll for Cape for DEX 60%
+  - [ 2041022, 1, 1, 0.010000 ] # Scroll for Cape for LUK 60%
+  - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044101, 1, 1, 0.010000 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044201, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044301, 1, 1, 0.010000 ] # Scroll for Spear for ATT 60%
+  - [ 2044401, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044501, 1, 1, 0.010000 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.010000 ] # Scroll for Claw for ATT 60%
+  - [ 2044801, 1, 1, 0.010000 ] # Scroll for Knuckle for Attack 60%
+  - [ 2044901, 1, 1, 0.010000 ] # Scroll for Gun for Attack 60%
+  - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
+  - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
+  - [ 2050000, 1, 1, 0.100000 ] # Antidote
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time

@@ -1,34 +1,34 @@
 # Blue Wyvern (8150301)
 
 rewards:
-  - [ 1002532, 1, 1, 0.000070 ] # Dark Grace Helmet
-  - [ 1050094, 1, 1, 0.000080 ] # Red Oriental Fury Coat
-  - [ 1051105, 1, 1, 0.000060 ] # Green Armis
-  - [ 1072227, 1, 1, 0.000050 ] # Red Arnah Shoes
-  - [ 1082143, 1, 1, 0.000060 ] # Purple Mystra
-  - [ 1082213, 1, 1, 0.100000 ] # Black Skellduke#TODO
-  - [ 1372010, 1, 1, 0.000002 ] # Dimon Wand
-  - [ 1422013, 1, 1, 0.000060 ] # Leomite
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 1002532, 1, 1, 0.000100 ] # Dark Grace Helmet
+  - [ 1050094, 1, 1, 0.000100 ] # Red Oriental Fury Coat
+  - [ 1051105, 1, 1, 0.000100 ] # Green Armis
+  - [ 1072227, 1, 1, 0.000100 ] # Red Arnah Shoes
+  - [ 1082143, 1, 1, 0.000100 ] # Purple Mystra
+  - [ 1082213, 1, 1, 0.000100 ] # Black Skellduke
+  - [ 1372010, 1, 1, 0.000100 ] # Dimon Wand
+  - [ 1422013, 1, 1, 0.000100 ] # Leomite
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040001, 1, 1, 0.000050 ] # Scroll for Helmet for DEF 60%
-  - [ 2040401, 1, 1, 0.000050 ] # Scroll for Topwear for DEF 60%
-  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
-  - [ 2044001, 1, 1, 0.000030 ] # Scroll for Two-handed Sword for ATT 60%
-  - [ 2290101, 1, 1, 0.100000 ] # [Mastery Book] Super Transformation#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000269, 1, 1, 0.600000 ] # Wyvern Gill
+  - [ 2040001, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 60%
+  - [ 2040401, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 60%
+  - [ 2040924, 1, 1, 0.000100 ] # Scroll for Shield for LUK 60%
+  - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2290101, 1, 1, 0.000100 ] # [Mastery Book] Super Transformation
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
-  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
   - [ 4031449, 1, 1, 0.020000, 6120 ] # Dragon Heart
   - [ 4031482, 1, 1, 0.020000, 6121 ] # Dragon Heart
   - [ 4031483, 1, 1, 0.020000, 6122 ] # Dragon Heart

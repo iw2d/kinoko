@@ -1,52 +1,52 @@
 # Giant Centipede (5220004)
 
 rewards:
-  - [ 1032013, 1, 1, 0.100000 ] # Red-Hearted Earrings#TODO
-  - [ 1092017, 1, 1, 0.100000 ] # Gold Ancient Shield#TODO
-  - [ 1102002, 1, 1, 0.100000 ] # Red Napoleon#TODO
-  - [ 1302012, 1, 1, 0.100000 ] # Red Katana#TODO
-  - [ 1312010, 1, 1, 0.100000 ] # Mikhail#TODO
-  - [ 1322019, 1, 1, 0.100000 ] # The Judgement#TODO
-  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
-  - [ 1332019, 1, 1, 0.100000 ] # Golden River#TODO
-  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
-  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
-  - [ 1412008, 1, 1, 0.100000 ] # Chrono#TODO
-  - [ 1422010, 1, 1, 0.100000 ] # Gigantic Sledge#TODO
-  - [ 1432007, 1, 1, 0.100000 ] # Redemption#TODO
-  - [ 1442008, 1, 1, 0.100000 ] # The Gold Dragon#TODO
-  - [ 1452009, 1, 1, 0.100000 ] # Red Hinkel#TODO
-  - [ 1462009, 1, 1, 0.100000 ] # Gross Jaeger#TODO
-  - [ 1472026, 1, 1, 0.100000 ] # Brown Scarab#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2040001, 1, 1, 0.100000 ] # Scroll for Helmet for DEF 60%#TODO
-  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
-  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
-  - [ 2040401, 1, 1, 0.100000 ] # Scroll for Topwear for DEF 60%#TODO
-  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
-  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
-  - [ 2040601, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEF 60%#TODO
-  - [ 2040701, 1, 1, 0.100000 ] # Scroll for Shoes for DEX 60%#TODO
-  - [ 2040704, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 60%#TODO
-  - [ 2040707, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 60%#TODO
-  - [ 2040801, 1, 1, 0.100000 ] # Scroll for Gloves for DEX 60%#TODO
-  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
-  - [ 2040901, 1, 1, 0.100000 ] # Scroll for Shield for DEF 60%#TODO
-  - [ 2041001, 1, 1, 0.100000 ] # Scroll for Cape for Magic Def. 60%#TODO
-  - [ 2041004, 1, 1, 0.100000 ] # Scroll for Cape for Weapon DEF 60%#TODO
-  - [ 2043001, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 60%#TODO
-  - [ 2043101, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 60%#TODO
-  - [ 2043201, 1, 1, 0.100000 ] # Scroll for One-Handed BW for ATT 60%#TODO
-  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
-  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
-  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
-  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
-  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
-  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
-  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
-  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
-  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
-  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
-  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
+  - [ 1032013, 1, 1, 0.000200 ] # Red-Hearted Earrings
+  - [ 1092017, 1, 1, 0.000200 ] # Gold Ancient Shield
+  - [ 1102002, 1, 1, 0.000200 ] # Red Napoleon
+  - [ 1302012, 1, 1, 0.000200 ] # Red Katana
+  - [ 1312010, 1, 1, 0.000200 ] # Mikhail
+  - [ 1322019, 1, 1, 0.000200 ] # The Judgement
+  - [ 1332018, 1, 1, 0.000200 ] # Kandine
+  - [ 1332019, 1, 1, 0.000200 ] # Golden River
+  - [ 1382007, 1, 1, 0.000200 ] # Evil Wings
+  - [ 1402012, 1, 1, 0.000200 ] # Doombringer
+  - [ 1412008, 1, 1, 0.000200 ] # Chrono
+  - [ 1422010, 1, 1, 0.000200 ] # Gigantic Sledge
+  - [ 1432007, 1, 1, 0.000200 ] # Redemption
+  - [ 1442008, 1, 1, 0.000200 ] # The Gold Dragon
+  - [ 1452009, 1, 1, 0.000200 ] # Red Hinkel
+  - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
+  - [ 1472026, 1, 1, 0.000200 ] # Brown Scarab
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2040001, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 60%
+  - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
+  - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
+  - [ 2040401, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 60%
+  - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040504, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040601, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040701, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 60%
+  - [ 2040704, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 60%
+  - [ 2040707, 1, 1, 0.010000 ] # Scroll for Shoes for Speed 60%
+  - [ 2040801, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 60%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2040901, 1, 1, 0.010000 ] # Scroll for Shield for DEF 60%
+  - [ 2041001, 1, 1, 0.010000 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041004, 1, 1, 0.010000 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044101, 1, 1, 0.010000 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044201, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044301, 1, 1, 0.010000 ] # Scroll for Spear for ATT 60%
+  - [ 2044401, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044501, 1, 1, 0.010000 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.010000 ] # Scroll for Claw for ATT 60%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives

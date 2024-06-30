@@ -2,35 +2,35 @@
 
 rewards:
   - [ 1002137, 1, 1, 0.000100 ] # Green Pole-Feather Hat
-  - [ 1041074, 1, 1, 0.000080 ] # Purple Shadow
-  - [ 1041078, 1, 1, 0.000060 ] # Blue Moon
-  - [ 1051031, 1, 1, 0.000060 ] # White Calaf
-  - [ 1051037, 1, 1, 0.000060 ] # Blue Lumati
-  - [ 1061069, 1, 1, 0.000080 ] # Purple Shadow Pants
-  - [ 1061077, 1, 1, 0.000060 ] # Blue Moon Pants
+  - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
+  - [ 1041078, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1051031, 1, 1, 0.000100 ] # White Calaf
+  - [ 1051037, 1, 1, 0.000100 ] # Blue Lumati
+  - [ 1061069, 1, 1, 0.000100 ] # Purple Shadow Pants
+  - [ 1061077, 1, 1, 0.000100 ] # Blue Moon Pants
   - [ 1072102, 1, 1, 0.000100 ] # Green Silky Boots
   - [ 1072106, 1, 1, 0.000100 ] # Blue White-Lined Boots
-  - [ 1072126, 1, 1, 0.000080 ] # Maroon Jangoon Shoes
-  - [ 1072140, 1, 1, 0.000060 ] # Pink Goldwind Shoes
-  - [ 1082011, 1, 1, 0.000060 ] # Gold Brist
-  - [ 1082024, 1, 1, 0.000080 ] # Adamantium Knuckle
+  - [ 1072126, 1, 1, 0.000100 ] # Maroon Jangoon Shoes
+  - [ 1072140, 1, 1, 0.000100 ] # Pink Goldwind Shoes
+  - [ 1082011, 1, 1, 0.000100 ] # Gold Brist
+  - [ 1082024, 1, 1, 0.000100 ] # Adamantium Knuckle
   - [ 1082055, 1, 1, 0.000100 ] # Blue Noel
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002004, 1, 1, 0.003000 ] # Warrior Potion
-  - [ 2022040, 1, 1, 0.040000 ] # Air Bubble
-  - [ 2040417, 1, 1, 0.100000 ] # Scroll for Topwear for STR 100%#TODO
-  - [ 2040801, 1, 1, 0.000020 ] # Scroll for Gloves for DEX 60%
-  - [ 2040901, 1, 1, 0.000020 ] # Scroll for Shield for DEF 60%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000159, 1, 1, 0.500000 ] # Poison Poopa's Poisonous Spikes
-  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
-  - [ 4020003, 1, 1, 0.003000 ] # Emerald Ore
-  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2022040, 1, 1, 0.010000 ] # Air Bubble
+  - [ 2040417, 1, 1, 0.000100 ] # Scroll for Topwear for STR 100%
+  - [ 2040801, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 60%
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000159, 1, 1, 0.400000 ] # Poison Poopa's Poisonous Spikes
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

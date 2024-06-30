@@ -1,29 +1,29 @@
 # Dual Beetle (7130003)
 
 rewards:
-  - [ 1002253, 1, 1, 0.000090 ] # Blue Infinium Circlet
-  - [ 1002640, 1, 1, 0.100000 ] # Blue Sun Boat Hat#TODO
-  - [ 1051063, 1, 1, 0.000090 ] # Beige Lineros
-  - [ 1072156, 1, 1, 0.000090 ] # Dark Carzen Boots
-  - [ 1082096, 1, 1, 0.000090 ] # Silver Rover
-  - [ 1092016, 1, 1, 0.000090 ] # Silver Ancient Shield
-  - [ 1372015, 1, 1, 0.000070 ] # Angel Wings
-  - [ 1412008, 1, 1, 0.000080 ] # Chrono
-  - [ 1432007, 1, 1, 0.000080 ] # Redemption
+  - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
+  - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
+  - [ 1051063, 1, 1, 0.000100 ] # Beige Lineros
+  - [ 1072156, 1, 1, 0.000100 ] # Dark Carzen Boots
+  - [ 1082096, 1, 1, 0.000100 ] # Silver Rover
+  - [ 1092016, 1, 1, 0.000100 ] # Silver Ancient Shield
+  - [ 1372015, 1, 1, 0.000100 ] # Angel Wings
+  - [ 1412008, 1, 1, 0.000100 ] # Chrono
+  - [ 1432007, 1, 1, 0.000100 ] # Redemption
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040423, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 100%#TODO
-  - [ 2041002, 1, 1, 0.000020 ] # Scroll for Cape for Magic DEF 10%
-  - [ 2044101, 1, 1, 0.000020 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 2070005, 1, 1, 0.000040 ] # Steely Throwing-Knives
-  - [ 4000237, 1, 1, 0.600000 ] # Dual Beetle's Horn
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040423, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 100%
+  - [ 2041002, 1, 1, 0.000100 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000237, 1, 1, 0.400000 ] # Dual Beetle's Horn
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010003, 1, 1, 0.004000 ] # Adamantium Ore
-  - [ 4020003, 1, 1, 0.005000 ] # Emerald Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

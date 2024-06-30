@@ -1,20 +1,20 @@
 # Murupia (100132)
 
 rewards:
-  - [ 1002001, 1, 1, 0.100000 ] # Metal Gear#TODO
-  - [ 1002003, 1, 1, 0.100000 ] # Steel Helmet#TODO
-  - [ 1040014, 1, 1, 0.100000 ] # Orange Sporty T-Shirt#TODO
-  - [ 1040015, 1, 1, 0.100000 ] # Brown Lolico Armor#TODO
-  - [ 1041014, 1, 1, 0.100000 ] # Orange Lolica Armor#TODO
-  - [ 1060008, 1, 1, 0.100000 ] # Brown Lolico Pants#TODO
-  - [ 1061014, 1, 1, 0.100000 ] # Rookie Pants#TODO
-  - [ 1072004, 1, 1, 0.100000 ] # White Gomushin#TODO
-  - [ 1082003, 1, 1, 0.100000 ] # Juno#TODO
-  - [ 1442000, 1, 1, 0.100000 ] # Pole Arm#TODO
-  - [ 2000000, 1, 1, 0.100000 ] # Red Potion#TODO
-  - [ 2010009, 1, 1, 0.100000 ] # Green Apple#TODO
-  - [ 2040823, 1, 1, 0.100000 ] # Scroll for Gloves for HP 100%#TODO
-  - [ 2041018, 1, 1, 0.100000 ] # Scroll for Cape for DEX 100%#TODO
-  - [ 4000495, 1, 1, 0.100000 ] # Murupia's Furball#TODO
-  - [ 4010000, 1, 1, 0.100000 ] # Bronze Ore#TODO
-  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 1002001, 1, 1, 0.000100 ] # Metal Gear
+  - [ 1002003, 1, 1, 0.000100 ] # Steel Helmet
+  - [ 1040014, 1, 1, 0.000100 ] # Orange Sporty T-Shirt
+  - [ 1040015, 1, 1, 0.000100 ] # Brown Lolico Armor
+  - [ 1041014, 1, 1, 0.000100 ] # Orange Lolica Armor
+  - [ 1060008, 1, 1, 0.000100 ] # Brown Lolico Pants
+  - [ 1061014, 1, 1, 0.000100 ] # Rookie Pants
+  - [ 1072004, 1, 1, 0.000100 ] # White Gomushin
+  - [ 1082003, 1, 1, 0.000100 ] # Juno
+  - [ 1442000, 1, 1, 0.000100 ] # Pole Arm
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.010000 ] # Green Apple
+  - [ 2040823, 1, 1, 0.000100 ] # Scroll for Gloves for HP 100%
+  - [ 2041018, 1, 1, 0.000100 ] # Scroll for Cape for DEX 100%
+  - [ 4000495, 1, 1, 0.400000 ] # Murupia's Furball
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

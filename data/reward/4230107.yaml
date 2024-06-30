@@ -3,31 +3,31 @@
 rewards:
   - [ 1040030, 1, 1, 0.000100 ] # Gold Dragon
   - [ 1040072, 1, 1, 0.000100 ] # Red Legolier
-  - [ 1040082, 1, 1, 0.000080 ] # Khaki Shadow
-  - [ 1050035, 1, 1, 0.000090 ] # Brown Starlight
-  - [ 1051030, 1, 1, 0.000050 ] # Dark Calaf
+  - [ 1040082, 1, 1, 0.000100 ] # Khaki Shadow
+  - [ 1050035, 1, 1, 0.000100 ] # Brown Starlight
+  - [ 1051030, 1, 1, 0.000100 ] # Dark Calaf
   - [ 1060020, 1, 1, 0.000100 ] # White Martial Arts Shorts
   - [ 1060061, 1, 1, 0.000100 ] # Red Legolier Pants
-  - [ 1060071, 1, 1, 0.000080 ] # Khaki Shadow Pants
-  - [ 1072129, 1, 1, 0.000050 ] # Green Goni Shoes
-  - [ 1072134, 1, 1, 0.000050 ] # Orihalcon Hildon Boots
-  - [ 1082063, 1, 1, 0.000080 ] # Blue Arten
-  - [ 1082072, 1, 1, 0.000080 ] # Gold Brace
+  - [ 1060071, 1, 1, 0.000100 ] # Khaki Shadow Pants
+  - [ 1072129, 1, 1, 0.000100 ] # Green Goni Shoes
+  - [ 1072134, 1, 1, 0.000100 ] # Orihalcon Hildon Boots
+  - [ 1082063, 1, 1, 0.000100 ] # Blue Arten
+  - [ 1082072, 1, 1, 0.000100 ] # Gold Brace
   - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
-  - [ 1452008, 1, 1, 0.000050 ] # Olympus
+  - [ 1452008, 1, 1, 0.000100 ] # Olympus
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2041014, 1, 1, 0.000020 ] # Scroll for Cape for STR 10%
-  - [ 2043202, 1, 1, 0.000020 ] # Scroll for One-Handed BW for ATT 10%
-  - [ 4000076, 1, 1, 0.500000 ] # Fly-Eye Wing
-  - [ 4003004, 1, 1, 0.020000 ] # Stiff Feather
-  - [ 4004002, 1, 1, 0.000900 ] # DEX Crystal Ore
+  - [ 2041014, 1, 1, 0.000100 ] # Scroll for Cape for STR 10%
+  - [ 2043202, 1, 1, 0.000100 ] # Scroll for One-Handed BW for ATT 10%
+  - [ 4000076, 1, 1, 0.400000 ] # Fly-Eye Wing
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
-  - [ 4020004, 1, 1, 0.003000 ] # Opal Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

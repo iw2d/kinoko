@@ -1,26 +1,26 @@
 # Intoxicated Pig (3300002)
 
 rewards:
-  - [ 1002013, 1, 1, 0.100000 ] # Golden Pride#TODO
-  - [ 1040058, 1, 1, 0.100000 ] # Dark Silver Stealer#TODO
-  - [ 1041058, 1, 1, 0.100000 ] # Blood Sneak#TODO
-  - [ 1050030, 1, 1, 0.100000 ] # Blue Chaos Robe#TODO
-  - [ 1052107, 1, 1, 0.100000 ] # Brown Pollard#TODO
-  - [ 1060044, 1, 1, 0.100000 ] # Dark Silver Stealer Pants#TODO
-  - [ 1061054, 1, 1, 0.100000 ] # Blood Sneak Pants#TODO
-  - [ 1072101, 1, 1, 0.100000 ] # Blue Silky Boots#TODO
-  - [ 1322014, 1, 1, 0.100000 ] # War Hammer#TODO
-  - [ 1462000, 1, 1, 0.100000 ] # Mountain Crossbow#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2040701, 1, 1, 0.100000 ] # Scroll for Shoes for DEX 60%#TODO
-  - [ 2044216, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed BW Attacks#TODO
-  - [ 2044316, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Spear Attacks#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 2382094, 1, 1, 0.100000 ] # Intoxicated Pig Card#TODO
-  - [ 4000501, 1, 1, 0.100000 ] # Intoxicated Pig Tail#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4131003, 1, 1, 0.100000 ] # Two-Handed Sword Forging Manual#TODO
+  - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
+  - [ 1040058, 1, 1, 0.000100 ] # Dark Silver Stealer
+  - [ 1041058, 1, 1, 0.000100 ] # Blood Sneak
+  - [ 1050030, 1, 1, 0.000100 ] # Blue Chaos Robe
+  - [ 1052107, 1, 1, 0.000100 ] # Brown Pollard
+  - [ 1060044, 1, 1, 0.000100 ] # Dark Silver Stealer Pants
+  - [ 1061054, 1, 1, 0.000100 ] # Blood Sneak Pants
+  - [ 1072101, 1, 1, 0.000100 ] # Blue Silky Boots
+  - [ 1322014, 1, 1, 0.000100 ] # War Hammer
+  - [ 1462000, 1, 1, 0.000100 ] # Mountain Crossbow
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040701, 1, 1, 0.000100 ] # Scroll for Shoes for DEX 60%
+  - [ 2044216, 1, 1, 0.000100 ] # King Pepe's 60% Scroll for Two-handed BW Attacks
+  - [ 2044316, 1, 1, 0.000100 ] # King Pepe's 60% Scroll for Spear Attacks
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2382094, 1, 1, 0.020000 ] # Intoxicated Pig Card
+  - [ 4000501, 1, 1, 0.400000 ] # Intoxicated Pig Tail
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4131003, 1, 1, 0.000300 ] # Two-Handed Sword Forging Manual

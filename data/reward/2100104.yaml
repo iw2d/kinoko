@@ -1,25 +1,25 @@
 # Royal Cactus (2100104)
 
 rewards:
-  - [ 1002004, 1, 1, 0.100000 ] # Great Brown Helmet#TODO
-  - [ 1040068, 1, 1, 0.100000 ] # Dark Hunter's Armor#TODO
-  - [ 1060057, 1, 1, 0.100000 ] # Dark Hunter's Pants#TODO
-  - [ 1072087, 1, 1, 0.100000 ] # Black Lappy Boots#TODO
-  - [ 1082052, 1, 1, 0.100000 ] # Blue Lutia#TODO
-  - [ 1082186, 1, 1, 0.100000 ] # Hard Leather Glove#TODO
-  - [ 1092019, 1, 1, 0.100000 ] # Nimble Wristguard#TODO
-  - [ 1322003, 1, 1, 0.100000 ] # Lollipop#TODO
-  - [ 1442001, 1, 1, 0.100000 ] # Mithril Pole Arm#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion#TODO
-  - [ 2022155, 1, 1, 0.100000 ] # Desert Mist#TODO
-  - [ 2041002, 1, 1, 0.100000 ] # Scroll for Cape for Magic DEF 10%#TODO
-  - [ 2043214, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 10%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000331, 1, 1, 0.100000 ] # Cactus Flower#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
+  - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
+  - [ 1040068, 1, 1, 0.000100 ] # Dark Hunter's Armor
+  - [ 1060057, 1, 1, 0.000100 ] # Dark Hunter's Pants
+  - [ 1072087, 1, 1, 0.000100 ] # Black Lappy Boots
+  - [ 1082052, 1, 1, 0.000100 ] # Blue Lutia
+  - [ 1082186, 1, 1, 0.000100 ] # Hard Leather Glove
+  - [ 1092019, 1, 1, 0.000100 ] # Nimble Wristguard
+  - [ 1322003, 1, 1, 0.000100 ] # Lollipop
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2022155, 1, 1, 0.010000 ] # Desert Mist
+  - [ 2041002, 1, 1, 0.000100 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2043214, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000331, 1, 1, 0.400000 ] # Cactus Flower
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

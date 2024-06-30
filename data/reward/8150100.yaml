@@ -1,38 +1,38 @@
 # Shark (8150100)
 
 rewards:
-  - [ 1002366, 1, 1, 0.000060 ] # Black Oriental Fury Hat
-  - [ 1002405, 1, 1, 0.000060 ] # Dark Arlic Helmet
-  - [ 1032017, 1, 1, 0.000080 ] # Rose Earrings
-  - [ 1040112, 1, 1, 0.000080 ] # Blue Commodore
-  - [ 1052131, 1, 1, 0.100000 ] # Red Belly Duke#TODO
-  - [ 1060101, 1, 1, 0.000080 ] # Blue Commodore Pants
-  - [ 1072192, 1, 1, 0.000080 ] # Green Osfa Boots
-  - [ 1072204, 1, 1, 0.000080 ] # Green Ades Shoes
-  - [ 1072214, 1, 1, 0.000010 ] # Blue Katina Boots 
-  - [ 1072315, 1, 1, 0.100000 ] # Black Markintz#TODO
-  - [ 1082142, 1, 1, 0.000080 ] # Green Mystra
-  - [ 1322028, 1, 1, 0.000090 ] # Heaven's Justice
-  - [ 1332022, 1, 1, 0.000080 ] # Angelic Betrayal
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.003000 ] # Reindeer Milk
+  - [ 1002366, 1, 1, 0.000100 ] # Black Oriental Fury Hat
+  - [ 1002405, 1, 1, 0.000100 ] # Dark Arlic Helmet
+  - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
+  - [ 1040112, 1, 1, 0.000100 ] # Blue Commodore
+  - [ 1052131, 1, 1, 0.000100 ] # Red Belly Duke
+  - [ 1060101, 1, 1, 0.000100 ] # Blue Commodore Pants
+  - [ 1072192, 1, 1, 0.000100 ] # Green Osfa Boots
+  - [ 1072204, 1, 1, 0.000100 ] # Green Ades Shoes
+  - [ 1072214, 1, 1, 0.000100 ] # Blue Katina Boots 
+  - [ 1072315, 1, 1, 0.000100 ] # Black Markintz
+  - [ 1082142, 1, 1, 0.000100 ] # Green Mystra
+  - [ 1322028, 1, 1, 0.000100 ] # Heaven's Justice
+  - [ 1332022, 1, 1, 0.000100 ] # Angelic Betrayal
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.010000 ] # Reindeer Milk
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040901, 1, 1, 0.000030 ] # Scroll for Shield for DEF 60%
-  - [ 2041001, 1, 1, 0.000030 ] # Scroll for Cape for Magic Def. 60%
-  - [ 2041013, 1, 1, 0.000030 ] # Scroll for Cape for STR 60%
-  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
-  - [ 2290118, 1, 1, 0.100000 ] # [Mastery Book] Rapid Fire#TODO
-  - [ 4000180, 1, 1, 0.500000 ] # Shark Denture
-  - [ 4004002, 1, 1, 0.002000 ] # DEX Crystal Ore
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 2041001, 1, 1, 0.000100 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041013, 1, 1, 0.000100 ] # Scroll for Cape for STR 60%
+  - [ 2044902, 1, 1, 0.000100 ] # Scroll for Gun for ATT 10%
+  - [ 2290118, 1, 1, 0.000100 ] # [Mastery Book] Rapid Fire
+  - [ 4000180, 1, 1, 0.400000 ] # Shark Denture
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
-  - [ 4130006, 1, 1, 0.000200 ] # Two-Handed Axe Forging Stimulator
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
-  - [ 4161018, 1, 1, 0.000050 ] # [Storybook] Ancient Book
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
+  - [ 4161018, 1, 1, 0.000000 ] # [Storybook] Ancient Book
   - [ 4031254, 1, 1, 0.060000, 3078 ] # Broken Flashlight
   - [ 4031252, 1, 1, 0.100000, 3078 ] # Wripped Note

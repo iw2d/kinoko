@@ -1,35 +1,35 @@
 # Master Robo (4230112)
 
 rewards:
-  - [ 1002169, 1, 1, 0.000090 ] # Brown Distinction
-  - [ 1002214, 1, 1, 0.000060 ] # Black Maro
-  - [ 1040097, 1, 1, 0.000060 ] # Green China
-  - [ 1051026, 1, 1, 0.000090 ] # Dark Moonlight
-  - [ 1060086, 1, 1, 0.000060 ] # Green China Pants
-  - [ 1072000, 1, 1, 0.000090 ] # Brown Jangoon Shoes
+  - [ 1002169, 1, 1, 0.000100 ] # Brown Distinction
+  - [ 1002214, 1, 1, 0.000100 ] # Black Maro
+  - [ 1040097, 1, 1, 0.000100 ] # Green China
+  - [ 1051026, 1, 1, 0.000100 ] # Dark Moonlight
+  - [ 1060086, 1, 1, 0.000100 ] # Green China Pants
+  - [ 1072000, 1, 1, 0.000100 ] # Brown Jangoon Shoes
   - [ 1072101, 1, 1, 0.000100 ] # Blue Silky Boots
-  - [ 1072110, 1, 1, 0.000090 ] # Black Blue-Lines Shoes
-  - [ 1082025, 1, 1, 0.000090 ] # Dark Knuckle
-  - [ 1302010, 1, 1, 0.000080 ] # Jeweled Katar
-  - [ 1302016, 1, 1, 0.000080 ] # Yellow Umbrella
-  - [ 1402003, 1, 1, 0.000060 ] # Lion's Fang
-  - [ 1412003, 1, 1, 0.000060 ] # The Rising
-  - [ 1472020, 1, 1, 0.000070 ] # Sapphire Slain
-  - [ 1492007, 1, 1, 0.100000 ] # Mr. Rasfelt#TODO
-  - [ 1962001, 1, 1, 0.100000 ] # Gold Wings#TODO
+  - [ 1072110, 1, 1, 0.000100 ] # Black Blue-Lines Shoes
+  - [ 1082025, 1, 1, 0.000100 ] # Dark Knuckle
+  - [ 1302010, 1, 1, 0.000100 ] # Jeweled Katar
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1402003, 1, 1, 0.000100 ] # Lion's Fang
+  - [ 1412003, 1, 1, 0.000100 ] # The Rising
+  - [ 1472020, 1, 1, 0.000100 ] # Sapphire Slain
+  - [ 1492007, 1, 1, 0.000100 ] # Mr. Rasfelt
+  - [ 1962001, 1, 1, 0.000100 ] # Gold Wings
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
-  - [ 2000004, 1, 1, 0.005000 ] # Elixir
-  - [ 2002008, 1, 1, 0.003000 ] # Sniper Pill
-  - [ 2040004, 1, 1, 0.000020 ] # Scroll for Helmet for HP 60%
-  - [ 2040502, 1, 1, 0.000020 ] # Scroll for Overall Armor for DEX 10%
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000112, 1, 1, 0.500000 ] # Mechanical Heart
-  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002008, 1, 1, 0.010000 ] # Sniper Pill
+  - [ 2040004, 1, 1, 0.000100 ] # Scroll for Helmet for HP 60%
+  - [ 2040502, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000112, 1, 1, 0.400000 ] # Mechanical Heart
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
   - [ 4031115, 1, 1, 0.080000, 3416 ] # Special Battery

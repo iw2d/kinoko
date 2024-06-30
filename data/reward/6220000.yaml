@@ -1,49 +1,49 @@
 # Dyle (6220000)
 
 rewards:
-  - [ 1302012, 1, 1, 0.100000 ] # Red Katana#TODO
-  - [ 1312010, 1, 1, 0.100000 ] # Mikhail#TODO
-  - [ 1322019, 1, 1, 0.100000 ] # The Judgement#TODO
-  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
-  - [ 1372015, 1, 1, 0.100000 ] # Angel Wings#TODO
-  - [ 1382010, 1, 1, 0.100000 ] # Dark Ritual#TODO
-  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
-  - [ 1412008, 1, 1, 0.100000 ] # Chrono#TODO
-  - [ 1422010, 1, 1, 0.100000 ] # Gigantic Sledge#TODO
-  - [ 1432007, 1, 1, 0.100000 ] # Redemption#TODO
-  - [ 1442008, 1, 1, 0.100000 ] # The Gold Dragon#TODO
-  - [ 1452011, 1, 1, 0.100000 ] # Golden Hinkel#TODO
-  - [ 1462009, 1, 1, 0.100000 ] # Gross Jaeger#TODO
-  - [ 1472029, 1, 1, 0.100000 ] # Black Scarab#TODO
-  - [ 1482009, 1, 1, 0.100000 ] # Beia Crash#TODO
-  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion#TODO
-  - [ 2002001, 1, 1, 0.100000 ] # Speed Potion#TODO
-  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
-  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
-  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
-  - [ 2040516, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 60%#TODO
-  - [ 2040627, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 10%#TODO
-  - [ 2040702, 1, 1, 0.100000 ] # Scroll for Shoes for DEX 10%#TODO
-  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
-  - [ 2041001, 1, 1, 0.100000 ] # Scroll for Cape for Magic Def. 60%#TODO
-  - [ 2041008, 1, 1, 0.100000 ] # Scroll for Cape for HP 10%#TODO
-  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
-  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
-  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
-  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
-  - [ 2044502, 1, 1, 0.100000 ] # Scroll for Bow for ATT 10%#TODO
-  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
-  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
-  - [ 2044702, 1, 1, 0.100000 ] # Scroll for Claw for ATT 10%#TODO
-  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
-  - [ 2048002, 1, 1, 0.100000 ] # Scroll for Pet Equip. for Speed 10%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000021, 1, 1, 0.100000 ] # Leather#TODO
-  - [ 4000032, 1, 1, 0.100000 ] # Ligator Skin#TODO
-  - [ 4000033, 1, 1, 0.100000 ] # Croco Skin#TODO
-  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
-  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
+  - [ 1302012, 1, 1, 0.000200 ] # Red Katana
+  - [ 1312010, 1, 1, 0.000200 ] # Mikhail
+  - [ 1322019, 1, 1, 0.000200 ] # The Judgement
+  - [ 1332018, 1, 1, 0.000200 ] # Kandine
+  - [ 1372015, 1, 1, 0.000200 ] # Angel Wings
+  - [ 1382010, 1, 1, 0.000200 ] # Dark Ritual
+  - [ 1402012, 1, 1, 0.000200 ] # Doombringer
+  - [ 1412008, 1, 1, 0.000200 ] # Chrono
+  - [ 1422010, 1, 1, 0.000200 ] # Gigantic Sledge
+  - [ 1432007, 1, 1, 0.000200 ] # Redemption
+  - [ 1442008, 1, 1, 0.000200 ] # The Gold Dragon
+  - [ 1452011, 1, 1, 0.000200 ] # Golden Hinkel
+  - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
+  - [ 1472029, 1, 1, 0.000200 ] # Black Scarab
+  - [ 1482009, 1, 1, 0.000200 ] # Beia Crash
+  - [ 1492009, 1, 1, 0.000200 ] # Abyss Shooter
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
+  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion
+  - [ 2002001, 1, 1, 0.100000 ] # Speed Potion
+  - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
+  - [ 2040031, 1, 1, 0.010000 ] # Scroll for Helmet for DEX 10%
+  - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040516, 1, 1, 0.010000 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040627, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEX 10%
+  - [ 2040702, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 10%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2041001, 1, 1, 0.010000 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041008, 1, 1, 0.010000 ] # Scroll for Cape for HP 10%
+  - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%
+  - [ 2044001, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044312, 1, 1, 0.010000 ] # Scroll for Spear for Accuracy 60%
+  - [ 2044401, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044502, 1, 1, 0.010000 ] # Scroll for Bow for ATT 10%
+  - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.010000 ] # Scroll for Claw for ATT 60%
+  - [ 2044702, 1, 1, 0.010000 ] # Scroll for Claw for ATT 10%
+  - [ 2044807, 1, 1, 0.010000 ] # Scroll for Knuckle for Accuracy 60%
+  - [ 2048002, 1, 1, 0.010000 ] # Scroll for Pet Equip. for Speed 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000032, 1, 1, 0.400000 ] # Ligator Skin
+  - [ 4000033, 1, 1, 0.400000 ] # Croco Skin
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

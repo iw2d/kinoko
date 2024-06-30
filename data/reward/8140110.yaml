@@ -1,26 +1,26 @@
 # Birk (8140110)
 
 rewards:
-  - [ 1002330, 1, 1, 0.000080 ] # Dark Pireta Hat
-  - [ 1050083, 1, 1, 0.000080 ] # Dark Battle Lord
-  - [ 1072185, 1, 1, 0.000080 ] # Dark Wing Boots
-  - [ 1082119, 1, 1, 0.000090 ] # Purple Larceny
-  - [ 1092027, 1, 1, 0.000040 ] # Silver Kalkan
-  - [ 1302056, 1, 1, 0.000004 ] # Sparta
-  - [ 1332052, 1, 1, 0.000004 ] # Blood Dagger
-  - [ 1372010, 1, 1, 0.000001 ] # Dimon Wand
-  - [ 1432010, 1, 1, 0.000070 ] # Omega Spear
-  - [ 1452015, 1, 1, 0.000070 ] # Dark Arund
-  - [ 1462013, 1, 1, 0.000080 ] # Dark Raven
-  - [ 1482010, 1, 1, 0.100000 ] # Steelno#TODO
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2043802, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 10%
-  - [ 2044702, 1, 1, 0.000020 ] # Scroll for Claw for ATT 10%
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 4000241, 1, 1, 0.600000 ] # Birk's Chewed Grass
+  - [ 1002330, 1, 1, 0.000100 ] # Dark Pireta Hat
+  - [ 1050083, 1, 1, 0.000100 ] # Dark Battle Lord
+  - [ 1072185, 1, 1, 0.000100 ] # Dark Wing Boots
+  - [ 1082119, 1, 1, 0.000100 ] # Purple Larceny
+  - [ 1092027, 1, 1, 0.000100 ] # Silver Kalkan
+  - [ 1302056, 1, 1, 0.000100 ] # Sparta
+  - [ 1332052, 1, 1, 0.000100 ] # Blood Dagger
+  - [ 1372010, 1, 1, 0.000100 ] # Dimon Wand
+  - [ 1432010, 1, 1, 0.000100 ] # Omega Spear
+  - [ 1452015, 1, 1, 0.000100 ] # Dark Arund
+  - [ 1462013, 1, 1, 0.000100 ] # Dark Raven
+  - [ 1482010, 1, 1, 0.000100 ] # Steelno
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2043802, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2044801, 1, 1, 0.000100 ] # Scroll for Knuckle for Attack 60%
+  - [ 4000241, 1, 1, 0.400000 ] # Birk's Chewed Grass
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
-  - [ 4020008, 1, 1, 0.001000 ] # Black Crystal Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

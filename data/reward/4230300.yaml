@@ -3,30 +3,30 @@
 rewards:
   - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
   - [ 1072109, 1, 1, 0.000100 ] # Black Yellow-Lined Shoes
-  - [ 1072112, 1, 1, 0.000090 ] # Mithril Trigger
-  - [ 1082072, 1, 1, 0.000090 ] # Gold Brace
-  - [ 1092014, 1, 1, 0.000050 ] # Adamantium Tower Shield
-  - [ 1102001, 1, 1, 0.000060 ] # Blue Napoleon
-  - [ 1302016, 1, 1, 0.000080 ] # Yellow Umbrella
-  - [ 1312007, 1, 1, 0.000080 ] # Blue Counter
-  - [ 1482006, 1, 1, 0.100000 ] # Neozard#TODO
+  - [ 1072112, 1, 1, 0.000100 ] # Mithril Trigger
+  - [ 1082072, 1, 1, 0.000100 ] # Gold Brace
+  - [ 1092014, 1, 1, 0.000100 ] # Adamantium Tower Shield
+  - [ 1102001, 1, 1, 0.000100 ] # Blue Napoleon
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1312007, 1, 1, 0.000100 ] # Blue Counter
+  - [ 1482006, 1, 1, 0.000100 ] # Neozard
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040029, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 60%#TODO
-  - [ 2040417, 1, 1, 0.100000 ] # Scroll for Topwear for STR 100%#TODO
-  - [ 2040705, 1, 1, 0.000030 ] # Scroll for Shoes for Jump 10%
+  - [ 2040029, 1, 1, 0.000100 ] # Scroll for Helmet for DEX 60%
+  - [ 2040417, 1, 1, 0.000100 ] # Scroll for Topwear for STR 100%
+  - [ 2040705, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 10%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000169, 1, 1, 0.500000 ] # Pounder
+  - [ 4000169, 1, 1, 0.400000 ] # Pounder
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
-  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010004, 1, 1, 0.004000 ] # Silver Ore
-  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4031241, 1, 1, 0.200000, 3606 ] # Swallow's Lost Seed

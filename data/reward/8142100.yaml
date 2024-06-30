@@ -1,40 +1,40 @@
 # Risell Squid (8142100)
 
 rewards:
-  - [ 1002325, 1, 1, 0.000070 ] # Purple Osfa Hat
-  - [ 1032017, 1, 1, 0.000060 ] # Rose Earrings
+  - [ 1002325, 1, 1, 0.000100 ] # Purple Osfa Hat
+  - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
   - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top
-  - [ 1041118, 1, 1, 0.000060 ] # Red Osfa Suit
-  - [ 1050090, 1, 1, 0.000060 ] # Green Ades
-  - [ 1050095, 1, 1, 0.000080 ] # Black Oriental Fury Coat
-  - [ 1051084, 1, 1, 0.000060 ] # Green Anes
-  - [ 1051097, 1, 1, 0.000080 ] # Black Oriental Fury Coat
+  - [ 1041118, 1, 1, 0.000100 ] # Red Osfa Suit
+  - [ 1050090, 1, 1, 0.000100 ] # Green Ades
+  - [ 1050095, 1, 1, 0.000100 ] # Black Oriental Fury Coat
+  - [ 1051084, 1, 1, 0.000100 ] # Green Anes
+  - [ 1051097, 1, 1, 0.000100 ] # Black Oriental Fury Coat
   - [ 1060099, 1, 1, 0.000100 ] # Dark Pirate Pants
-  - [ 1061117, 1, 1, 0.000060 ] # Red Osfa Pants
-  - [ 1072197, 1, 1, 0.000060 ] # Orihalcon War Greave
-  - [ 1072220, 1, 1, 0.000010 ] # Green Crescent Boots
-  - [ 1092025, 1, 1, 0.000040 ] # Gold Aquila Shield
-  - [ 1092026, 1, 1, 0.000070 ] # Bronze Kalkan
-  - [ 1092028, 1, 1, 0.000070 ] # Gold Kalkan
-  - [ 1412009, 1, 1, 0.000090 ] # Helios
-  - [ 1422010, 1, 1, 0.000090 ] # Gigantic Sledge
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040318, 1, 1, 0.100000 ] # Scroll for Earring for DEX 10%#TODO
-  - [ 2040801, 1, 1, 0.000030 ] # Scroll for Gloves for DEX 60%
-  - [ 2040804, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 60%
-  - [ 2043019, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 10%#TODO
-  - [ 2290032, 1, 1, 0.100000 ] # [Mastery Book] Chain Lightning#TODO
-  - [ 2290114, 1, 1, 0.100000 ] # [Mastery Book] Wrath of the Octopi#TODO
-  - [ 4000184, 1, 1, 0.550000 ] # Butter-Toasted Squid
+  - [ 1061117, 1, 1, 0.000100 ] # Red Osfa Pants
+  - [ 1072197, 1, 1, 0.000100 ] # Orihalcon War Greave
+  - [ 1072220, 1, 1, 0.000100 ] # Green Crescent Boots
+  - [ 1092025, 1, 1, 0.000100 ] # Gold Aquila Shield
+  - [ 1092026, 1, 1, 0.000100 ] # Bronze Kalkan
+  - [ 1092028, 1, 1, 0.000100 ] # Gold Kalkan
+  - [ 1412009, 1, 1, 0.000100 ] # Helios
+  - [ 1422010, 1, 1, 0.000100 ] # Gigantic Sledge
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040318, 1, 1, 0.000100 ] # Scroll for Earring for DEX 10%
+  - [ 2040801, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 60%
+  - [ 2040804, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 60%
+  - [ 2043019, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 10%
+  - [ 2290032, 1, 1, 0.000100 ] # [Mastery Book] Chain Lightning
+  - [ 2290114, 1, 1, 0.000100 ] # [Mastery Book] Wrath of the Octopi
+  - [ 4000184, 1, 1, 0.400000 ] # Butter-Toasted Squid
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
-  - [ 4130000, 1, 1, 0.000100 ] # Gloves Production Stimulator
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

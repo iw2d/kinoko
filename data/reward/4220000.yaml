@@ -1,41 +1,41 @@
 # Seruf (4220000)
 
 rewards:
-  - [ 1302010, 1, 1, 0.100000 ] # Jeweled Katar#TODO
-  - [ 1312008, 1, 1, 0.100000 ] # Buck#TODO
-  - [ 1322017, 1, 1, 0.100000 ] # Knuckle Mace#TODO
-  - [ 1332003, 1, 1, 0.100000 ] # Shinkita#TODO
-  - [ 1332016, 1, 1, 0.100000 ] # Sai#TODO
-  - [ 1372007, 1, 1, 0.100000 ] # Cromi#TODO
-  - [ 1382006, 1, 1, 0.100000 ] # Thorns#TODO
-  - [ 1402003, 1, 1, 0.100000 ] # Lion's Fang#TODO
-  - [ 1412003, 1, 1, 0.100000 ] # The Rising#TODO
-  - [ 1422005, 1, 1, 0.100000 ] # Golden Mole#TODO
-  - [ 1432004, 1, 1, 0.100000 ] # Serpent's Tongue#TODO
-  - [ 1442005, 1, 1, 0.100000 ] # The Nine Dragons#TODO
-  - [ 1442039, 1, 1, 0.100000 ] # Frozen Tuna#TODO
-  - [ 1452008, 1, 1, 0.100000 ] # Olympus#TODO
-  - [ 1462007, 1, 1, 0.100000 ] # Rower#TODO
-  - [ 1472020, 1, 1, 0.100000 ] # Sapphire Slain#TODO
-  - [ 1482007, 1, 1, 0.100000 ] # Fury Claw#TODO
-  - [ 1492007, 1, 1, 0.100000 ] # Mr. Rasfelt#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2040029, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 60%#TODO
-  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
-  - [ 2040302, 1, 1, 0.100000 ] # Scroll for Earring for INT 10%#TODO
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2040516, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 60%#TODO
-  - [ 2040517, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 10%#TODO
-  - [ 2040704, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 60%#TODO
-  - [ 2040705, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 10%#TODO
-  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
-  - [ 2040805, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 10%#TODO
-  - [ 2041007, 1, 1, 0.100000 ] # Scroll for Cape for HP 60%#TODO
-  - [ 2041008, 1, 1, 0.100000 ] # Scroll for Cape for HP 10%#TODO
-  - [ 2044809, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 10%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 4000166, 1, 1, 0.100000 ] # Shrimp Meat#TODO
-  - [ 4000167, 1, 1, 0.100000 ] # Hard Needle#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020004, 1, 1, 0.100000 ] # Opal Ore#TODO
+  - [ 1302010, 1, 1, 0.000200 ] # Jeweled Katar
+  - [ 1312008, 1, 1, 0.000200 ] # Buck
+  - [ 1322017, 1, 1, 0.000200 ] # Knuckle Mace
+  - [ 1332003, 1, 1, 0.000200 ] # Shinkita
+  - [ 1332016, 1, 1, 0.000200 ] # Sai
+  - [ 1372007, 1, 1, 0.000200 ] # Cromi
+  - [ 1382006, 1, 1, 0.000200 ] # Thorns
+  - [ 1402003, 1, 1, 0.000200 ] # Lion's Fang
+  - [ 1412003, 1, 1, 0.000200 ] # The Rising
+  - [ 1422005, 1, 1, 0.000200 ] # Golden Mole
+  - [ 1432004, 1, 1, 0.000200 ] # Serpent's Tongue
+  - [ 1442005, 1, 1, 0.000200 ] # The Nine Dragons
+  - [ 1442039, 1, 1, 0.000200 ] # Frozen Tuna
+  - [ 1452008, 1, 1, 0.000200 ] # Olympus
+  - [ 1462007, 1, 1, 0.000200 ] # Rower
+  - [ 1472020, 1, 1, 0.000200 ] # Sapphire Slain
+  - [ 1482007, 1, 1, 0.000200 ] # Fury Claw
+  - [ 1492007, 1, 1, 0.000200 ] # Mr. Rasfelt
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
+  - [ 2040029, 1, 1, 0.010000 ] # Scroll for Helmet for DEX 60%
+  - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
+  - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%
+  - [ 2040326, 1, 1, 0.010000 ] # Scroll for Earring for HP 60%
+  - [ 2040516, 1, 1, 0.010000 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040517, 1, 1, 0.010000 ] # Scroll for Overall Armor for LUK 10%
+  - [ 2040704, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 60%
+  - [ 2040705, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 10%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2040805, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 10%
+  - [ 2041007, 1, 1, 0.010000 ] # Scroll for Cape for HP 60%
+  - [ 2041008, 1, 1, 0.010000 ] # Scroll for Cape for HP 10%
+  - [ 2044809, 1, 1, 0.010000 ] # Scroll for Knuckle for Accuracy 10%
+  - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
+  - [ 4000166, 1, 1, 0.400000 ] # Shrimp Meat
+  - [ 4000167, 1, 1, 0.400000 ] # Hard Needle
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

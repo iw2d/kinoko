@@ -1,45 +1,45 @@
 # Jr. Balrog (8130100)
 
 rewards:
-  - [ 1092016, 1, 1, 0.000500 ] # Silver Ancient Shield
-  - [ 1302012, 1, 1, 0.000500 ] # Red Katana
-  - [ 1312010, 1, 1, 0.000500 ] # Mikhail
-  - [ 1322019, 1, 1, 0.000500 ] # The Judgement
-  - [ 1332018, 1, 1, 0.000500 ] # Kandine
-  - [ 1332019, 1, 1, 0.000500 ] # Golden River
-  - [ 1382007, 1, 1, 0.000500 ] # Evil Wings
-  - [ 1402012, 1, 1, 0.000500 ] # Doombringer
-  - [ 1412008, 1, 1, 0.000500 ] # Chrono
-  - [ 1422010, 1, 1, 0.000500 ] # Gigantic Sledge
-  - [ 1432007, 1, 1, 0.000500 ] # Redemption
-  - [ 1442008, 1, 1, 0.000500 ] # The Gold Dragon
-  - [ 1452009, 1, 1, 0.000500 ] # Red Hinkel
-  - [ 1462009, 1, 1, 0.000500 ] # Gross Jaeger
-  - [ 1472026, 1, 1, 0.000500 ] # Brown Scarab
-  - [ 1482009, 1, 1, 0.100000 ] # Beia Crash#TODO
-  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
-  - [ 2000004, 5, 15, 1.000000 ] # Elixir
-  - [ 2000005, 1, 5, 0.650000 ] # Power Elixir
-  - [ 2040419, 1, 1, 0.100000 ] # Scroll for Topwear for STR 10%#TODO
-  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
-  - [ 2043001, 1, 1, 0.006000 ] # Scroll for One-Handed Sword for ATT 60%
-  - [ 2043101, 1, 1, 0.006000 ] # Scroll for One-Handed Axe for ATT 60%
-  - [ 2043201, 1, 1, 0.006000 ] # Scroll for One-Handed BW for ATT 60%
-  - [ 2043301, 1, 1, 0.006000 ] # Scroll for Dagger for ATT 60%
-  - [ 2043701, 1, 1, 0.006000 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2043801, 1, 1, 0.006000 ] # Scroll for Staff for Magic Attack 60%
-  - [ 2044001, 1, 1, 0.006000 ] # Scroll for Two-handed Sword for ATT 60%
-  - [ 2044101, 1, 1, 0.006000 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 2044201, 1, 1, 0.006000 ] # Scroll for Two-handed BW for ATT 60%
-  - [ 2044301, 1, 1, 0.006000 ] # Scroll for Spear for ATT 60%
-  - [ 2044401, 1, 1, 0.006000 ] # Scroll for Pole Arm for ATT 60%
-  - [ 2044501, 1, 1, 0.006000 ] # Scroll for Bow for ATT 60%
-  - [ 2044601, 1, 1, 0.006000 ] # Scroll for Crossbow for ATT 60%
-  - [ 2044701, 1, 1, 0.006000 ] # Scroll for Claw for ATT 60%
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2070007, 1, 1, 0.000300 ] # Hwabi Throwing-Stars
-  - [ 4021008, 1, 1, 0.080000 ] # Black Crystal
+  - [ 1092016, 1, 1, 0.000200 ] # Silver Ancient Shield
+  - [ 1302012, 1, 1, 0.000200 ] # Red Katana
+  - [ 1312010, 1, 1, 0.000200 ] # Mikhail
+  - [ 1322019, 1, 1, 0.000200 ] # The Judgement
+  - [ 1332018, 1, 1, 0.000200 ] # Kandine
+  - [ 1332019, 1, 1, 0.000200 ] # Golden River
+  - [ 1382007, 1, 1, 0.000200 ] # Evil Wings
+  - [ 1402012, 1, 1, 0.000200 ] # Doombringer
+  - [ 1412008, 1, 1, 0.000200 ] # Chrono
+  - [ 1422010, 1, 1, 0.000200 ] # Gigantic Sledge
+  - [ 1432007, 1, 1, 0.000200 ] # Redemption
+  - [ 1442008, 1, 1, 0.000200 ] # The Gold Dragon
+  - [ 1452009, 1, 1, 0.000200 ] # Red Hinkel
+  - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
+  - [ 1472026, 1, 1, 0.000200 ] # Brown Scarab
+  - [ 1482009, 1, 1, 0.000200 ] # Beia Crash
+  - [ 1492009, 1, 1, 0.000200 ] # Abyss Shooter
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2040419, 1, 1, 0.010000 ] # Scroll for Topwear for STR 10%
+  - [ 2040622, 1, 1, 0.010000 ] # Scroll for Bottomwear for HP 10%
+  - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044101, 1, 1, 0.010000 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044201, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044301, 1, 1, 0.010000 ] # Scroll for Spear for ATT 60%
+  - [ 2044401, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044501, 1, 1, 0.010000 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.010000 ] # Scroll for Claw for ATT 60%
+  - [ 2044801, 1, 1, 0.010000 ] # Scroll for Knuckle for Attack 60%
+  - [ 2044901, 1, 1, 0.010000 ] # Scroll for Gun for Attack 60%
+  - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
+  - [ 2070007, 1, 1, 0.000400 ] # Hwabi Throwing-Stars
+  - [ 4021008, 1, 1, 0.002000 ] # Black Crystal
   - [ 4031466, 1, 1, 0.500000, 6107 ] # Dark Soul Rock
   - [ 4031475, 1, 1, 0.700000, 6153 ] # Key to the Forgotten Shrine

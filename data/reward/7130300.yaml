@@ -1,44 +1,44 @@
 # Master Death Teddy (7130300)
 
 rewards:
-  - [ 1002253, 1, 1, 0.000090 ] # Blue Infinium Circlet
-  - [ 1002274, 1, 1, 0.000080 ] # Dark Galaxy
-  - [ 1002276, 1, 1, 0.000080 ] # Red Falcon
-  - [ 1002284, 1, 1, 0.000090 ] # White Nightfox
-  - [ 1041107, 1, 1, 0.000080 ] # Dark Pirate Blouse
-  - [ 1041121, 1, 1, 0.000070 ] # Dark Valkyrie
-  - [ 1050074, 1, 1, 0.000080 ] # Dark Enigmatic
-  - [ 1050080, 1, 1, 0.000080 ] # Green Battle Lord
-  - [ 1051068, 1, 1, 0.000080 ] # Green Pria
-  - [ 1061106, 1, 1, 0.000080 ] # Dark Pirate Skirt
-  - [ 1061120, 1, 1, 0.000070 ] # Blood Valkyrie Skirt
-  - [ 1072155, 1, 1, 0.000090 ] # Purple Carzen Boots
-  - [ 1072167, 1, 1, 0.000090 ] # Dark Elf Shoes
-  - [ 1072203, 1, 1, 0.000070 ] # Red Ades Shoes
-  - [ 1072206, 1, 1, 0.000070 ] # Blue Neli Shoes
-  - [ 1072212, 1, 1, 0.000080 ] # Dark Rivers Boots
-  - [ 1072312, 1, 1, 0.100000 ] # Blue Pageant#TODO
-  - [ 1082110, 1, 1, 0.000080 ] # Blue Cordon
-  - [ 1082143, 1, 1, 0.000070 ] # Purple Mystra
-  - [ 1302018, 1, 1, 0.000080 ] # Khan
+  - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
+  - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
+  - [ 1002276, 1, 1, 0.000100 ] # Red Falcon
+  - [ 1002284, 1, 1, 0.000100 ] # White Nightfox
+  - [ 1041107, 1, 1, 0.000100 ] # Dark Pirate Blouse
+  - [ 1041121, 1, 1, 0.000100 ] # Dark Valkyrie
+  - [ 1050074, 1, 1, 0.000100 ] # Dark Enigmatic
+  - [ 1050080, 1, 1, 0.000100 ] # Green Battle Lord
+  - [ 1051068, 1, 1, 0.000100 ] # Green Pria
+  - [ 1061106, 1, 1, 0.000100 ] # Dark Pirate Skirt
+  - [ 1061120, 1, 1, 0.000100 ] # Blood Valkyrie Skirt
+  - [ 1072155, 1, 1, 0.000100 ] # Purple Carzen Boots
+  - [ 1072167, 1, 1, 0.000100 ] # Dark Elf Shoes
+  - [ 1072203, 1, 1, 0.000100 ] # Red Ades Shoes
+  - [ 1072206, 1, 1, 0.000100 ] # Blue Neli Shoes
+  - [ 1072212, 1, 1, 0.000100 ] # Dark Rivers Boots
+  - [ 1072312, 1, 1, 0.000100 ] # Blue Pageant
+  - [ 1082110, 1, 1, 0.000100 ] # Blue Cordon
+  - [ 1082143, 1, 1, 0.000100 ] # Purple Mystra
+  - [ 1302018, 1, 1, 0.000100 ] # Khan
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000005, 1, 1, 0.000100 ] # Power Elixir
-  - [ 2002004, 1, 1, 0.005000 ] # Warrior Potion
-  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
-  - [ 2040823, 1, 1, 0.100000 ] # Scroll for Gloves for HP 100%#TODO
-  - [ 2041009, 1, 1, 0.000030 ] # Scroll for Cape for MP 100%
-  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
-  - [ 2044301, 1, 1, 0.000020 ] # Scroll for Spear for ATT 60%
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2040031, 1, 1, 0.000100 ] # Scroll for Helmet for DEX 10%
+  - [ 2040823, 1, 1, 0.000100 ] # Scroll for Gloves for HP 100%
+  - [ 2041009, 1, 1, 0.000100 ] # Scroll for Cape for MP 100%
+  - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
   - [ 4000148, 1, 1, 0.400000 ] # Binding Bridle
-  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
-  - [ 4020006, 1, 1, 0.004000 ] # Topaz Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.400000, 7101 ] # Tachion
   - [ 4031171, 1, 1, 0.400000, 7101 ] # Mysterious Powder

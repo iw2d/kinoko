@@ -1,23 +1,23 @@
 # Sand Rat (2110300)
 
 rewards:
-  - [ 1002055, 1, 1, 0.100000 ] # Bronze Football Helmet#TODO
-  - [ 1002619, 1, 1, 0.100000 ] # Brown Pitz Bandana#TODO
-  - [ 1032004, 1, 1, 0.100000 ] # Gold Earrings#TODO
-  - [ 1040049, 1, 1, 0.100000 ] # Blue Sneak#TODO
-  - [ 1050001, 1, 1, 0.100000 ] # Brown Doros Robe#TODO
-  - [ 1060037, 1, 1, 0.100000 ] # Dark Brown Sneak Pants#TODO
-  - [ 1082068, 1, 1, 0.100000 ] # Bronze Scaler#TODO
-  - [ 1402002, 1, 1, 0.100000 ] # Scimitar#TODO
-  - [ 1432001, 1, 1, 0.100000 ] # Fork on a Stick#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002004, 1, 1, 0.100000 ] # Warrior Potion#TODO
-  - [ 2043214, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 10%#TODO
-  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000350, 1, 1, 0.100000 ] # Wooden Hammer#TODO
-  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 1002055, 1, 1, 0.000100 ] # Bronze Football Helmet
+  - [ 1002619, 1, 1, 0.000100 ] # Brown Pitz Bandana
+  - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings
+  - [ 1040049, 1, 1, 0.000100 ] # Blue Sneak
+  - [ 1050001, 1, 1, 0.000100 ] # Brown Doros Robe
+  - [ 1060037, 1, 1, 0.000100 ] # Dark Brown Sneak Pants
+  - [ 1082068, 1, 1, 0.000100 ] # Bronze Scaler
+  - [ 1402002, 1, 1, 0.000100 ] # Scimitar
+  - [ 1432001, 1, 1, 0.000100 ] # Fork on a Stick
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2043214, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 10%
+  - [ 2044501, 1, 1, 0.000100 ] # Scroll for Bow for ATT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000350, 1, 1, 0.400000 ] # Wooden Hammer
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

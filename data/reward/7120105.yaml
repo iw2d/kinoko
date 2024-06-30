@@ -1,27 +1,27 @@
 # Gold Slime   (7120105)
 
 rewards:
-  - [ 1002287, 1, 1, 0.100000 ] # Beige Patriot#TODO
-  - [ 1051062, 1, 1, 0.100000 ] # Blue Lineros#TODO
-  - [ 1072211, 1, 1, 0.100000 ] # Blue Rivers Boots#TODO
-  - [ 1082119, 1, 1, 0.100000 ] # Purple Larceny#TODO
-  - [ 1332019, 1, 1, 0.100000 ] # Golden River#TODO
-  - [ 1452009, 1, 1, 0.100000 ] # Red Hinkel#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
-  - [ 2041008, 1, 1, 0.100000 ] # Scroll for Cape for HP 10%#TODO
-  - [ 2044010, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 100%#TODO
-  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2384060, 1, 1, 0.100000 ] # Gold Slime Card#TODO
-  - [ 4000547, 1, 1, 0.100000 ] # Gold Squishy Liquid#TODO
-  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 1002287, 1, 1, 0.000100 ] # Beige Patriot
+  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
+  - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots
+  - [ 1082119, 1, 1, 0.000100 ] # Purple Larceny
+  - [ 1332019, 1, 1, 0.000100 ] # Golden River
+  - [ 1452009, 1, 1, 0.000100 ] # Red Hinkel
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040512, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 100%
+  - [ 2041008, 1, 1, 0.000100 ] # Scroll for Cape for HP 10%
+  - [ 2044010, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 100%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2384060, 1, 1, 0.020000 ] # Gold Slime Card
+  - [ 4000547, 1, 1, 0.400000 ] # Gold Squishy Liquid
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator

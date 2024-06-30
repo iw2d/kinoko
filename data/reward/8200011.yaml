@@ -1,29 +1,29 @@
 # Oblivion Guardian (8200011)
 
 rewards:
-  - [ 1002379, 1, 1, 0.100000 ] # Dark Valhalla Helmet#TODO
-  - [ 1052131, 1, 1, 0.100000 ] # Red Belly Duke#TODO
-  - [ 1072229, 1, 1, 0.100000 ] # Green Arnah Shoes#TODO
-  - [ 1082138, 1, 1, 0.100000 ] # Dark Anelin#TODO
-  - [ 1322045, 1, 1, 0.100000 ] # Battle Hammer#TODO
-  - [ 1372010, 1, 1, 0.100000 ] # Dimon Wand#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2041008, 1, 1, 0.100000 ] # Scroll for Cape for HP 10%#TODO
-  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
-  - [ 2044602, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 10%#TODO
-  - [ 2290046, 1, 1, 0.100000 ] # [Mastery Book] Blizzard#TODO
-  - [ 2290137, 1, 1, 0.100000 ] # [Mastery Book] Combo Tempest 30#TODO
-  - [ 2290152, 1, 1, 0.100000 ] # [Mastery Book] Blessing of the Onyx 30#TODO
-  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
-  - [ 4000457, 1, 1, 0.100000 ] # Red Helmet#TODO
-  - [ 4000459, 1, 1, 0.100000 ] # Black Armor Fragment#TODO
-  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
+  - [ 1002379, 1, 1, 0.000100 ] # Dark Valhalla Helmet
+  - [ 1052131, 1, 1, 0.000100 ] # Red Belly Duke
+  - [ 1072229, 1, 1, 0.000100 ] # Green Arnah Shoes
+  - [ 1082138, 1, 1, 0.000100 ] # Dark Anelin
+  - [ 1322045, 1, 1, 0.000100 ] # Battle Hammer
+  - [ 1372010, 1, 1, 0.000100 ] # Dimon Wand
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2041008, 1, 1, 0.000100 ] # Scroll for Cape for HP 10%
+  - [ 2044201, 1, 1, 0.000100 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2290046, 1, 1, 0.000100 ] # [Mastery Book] Blizzard
+  - [ 2290137, 1, 1, 0.000100 ] # [Mastery Book] Combo Tempest 30
+  - [ 2290152, 1, 1, 0.000100 ] # [Mastery Book] Blessing of the Onyx 30
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
+  - [ 4000457, 1, 1, 0.400000 ] # Red Helmet
+  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator

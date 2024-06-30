@@ -1,27 +1,27 @@
 # Bellamoa (2100105)
 
 rewards:
-  - [ 1002013, 1, 1, 0.100000 ] # Golden Pride#TODO
-  - [ 1002119, 1, 1, 0.100000 ] # Green Robin Hat#TODO
-  - [ 1052101, 1, 1, 0.100000 ] # Beige Carribean#TODO
-  - [ 1072007, 1, 1, 0.100000 ] # Brown High Boots#TODO
-  - [ 1072086, 1, 1, 0.100000 ] # Green Lappy Boots#TODO
-  - [ 1082020, 1, 1, 0.100000 ] # Blue Morrican#TODO
-  - [ 1302006, 1, 1, 0.100000 ] # Machete#TODO
-  - [ 1372004, 1, 1, 0.100000 ] # Ice Wand#TODO
-  - [ 1452003, 1, 1, 0.100000 ] # Composite Bow#TODO
-  - [ 1482003, 1, 1, 0.100000 ] # Norman Grip#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2040316, 1, 1, 0.100000 ] # Scroll for Earring for DEX 100%#TODO
-  - [ 2040319, 1, 1, 0.100000 ] # Scroll for Earring for LUK 100%#TODO
-  - [ 2040902, 1, 1, 0.100000 ] # Scroll for Shield for DEF 10%#TODO
-  - [ 2044002, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 10%#TODO
-  - [ 2044412, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 60%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 2330000, 1, 1, 0.100000 ] # Bullet#TODO
-  - [ 4000328, 1, 1, 0.100000 ] # Snake Rattle#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
-  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
+  - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
+  - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
+  - [ 1052101, 1, 1, 0.000100 ] # Beige Carribean
+  - [ 1072007, 1, 1, 0.000100 ] # Brown High Boots
+  - [ 1072086, 1, 1, 0.000100 ] # Green Lappy Boots
+  - [ 1082020, 1, 1, 0.000100 ] # Blue Morrican
+  - [ 1302006, 1, 1, 0.000100 ] # Machete
+  - [ 1372004, 1, 1, 0.000100 ] # Ice Wand
+  - [ 1452003, 1, 1, 0.000100 ] # Composite Bow
+  - [ 1482003, 1, 1, 0.000100 ] # Norman Grip
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040316, 1, 1, 0.000100 ] # Scroll for Earring for DEX 100%
+  - [ 2040319, 1, 1, 0.000100 ] # Scroll for Earring for LUK 100%
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044412, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330000, 1, 1, 0.000400 ] # Bullet
+  - [ 4000328, 1, 1, 0.400000 ] # Snake Rattle
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore

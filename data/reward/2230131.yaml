@@ -1,34 +1,34 @@
 # Annoyed Zombie Mushroom (2230131)
 
 rewards:
-  - [ 1002035, 1, 1, 0.100000 ] # Pink Jester#TODO
-  - [ 1002158, 1, 1, 0.100000 ] # Green Hunter#TODO
-  - [ 1032000, 1, 1, 0.100000 ] # Weighted Earrings#TODO
-  - [ 1032004, 1, 1, 0.100000 ] # Gold Earrings#TODO
-  - [ 1040009, 1, 1, 0.100000 ] # Steel Corporal#TODO
-  - [ 1040021, 1, 1, 0.100000 ] # Red Hwarang Shirt#TODO
-  - [ 1040026, 1, 1, 0.100000 ] # Green Hwarang Shirt#TODO
-  - [ 1040048, 1, 1, 0.100000 ] # Brown Sneak#TODO
-  - [ 1050030, 1, 1, 0.100000 ] # Blue Chaos Robe#TODO
-  - [ 1050031, 1, 1, 0.100000 ] # White Chaos Robe#TODO
-  - [ 1060018, 1, 1, 0.100000 ] # Red Martial Arts Pants#TODO
-  - [ 1060038, 1, 1, 0.100000 ] # Brown Sneak Pants#TODO
-  - [ 1082183, 1, 1, 0.100000 ] # Brown Leather Armor Glove#TODO
-  - [ 1312007, 1, 1, 0.100000 ] # Blue Counter#TODO
-  - [ 1372003, 1, 1, 0.100000 ] # Mithril Wand#TODO
-  - [ 1412002, 1, 1, 0.100000 ] # Iron Axe#TODO
-  - [ 1432003, 1, 1, 0.100000 ] # Nakamaki#TODO
-  - [ 1452001, 1, 1, 0.100000 ] # Hunter's Bow#TODO
-  - [ 1492003, 1, 1, 0.100000 ] # Golden Hook#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion#TODO
-  - [ 2044302, 1, 1, 0.100000 ] # Scroll for Spear for ATT 10%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000008, 1, 1, 0.100000 ] # Charm of the Undead#TODO
-  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
+  - [ 1002035, 1, 1, 0.000100 ] # Pink Jester
+  - [ 1002158, 1, 1, 0.000100 ] # Green Hunter
+  - [ 1032000, 1, 1, 0.000100 ] # Weighted Earrings
+  - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings
+  - [ 1040009, 1, 1, 0.000100 ] # Steel Corporal
+  - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt
+  - [ 1040026, 1, 1, 0.000100 ] # Green Hwarang Shirt
+  - [ 1040048, 1, 1, 0.000100 ] # Brown Sneak
+  - [ 1050030, 1, 1, 0.000100 ] # Blue Chaos Robe
+  - [ 1050031, 1, 1, 0.000100 ] # White Chaos Robe
+  - [ 1060018, 1, 1, 0.000100 ] # Red Martial Arts Pants
+  - [ 1060038, 1, 1, 0.000100 ] # Brown Sneak Pants
+  - [ 1082183, 1, 1, 0.000100 ] # Brown Leather Armor Glove
+  - [ 1312007, 1, 1, 0.000100 ] # Blue Counter
+  - [ 1372003, 1, 1, 0.000100 ] # Mithril Wand
+  - [ 1412002, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432003, 1, 1, 0.000100 ] # Nakamaki
+  - [ 1452001, 1, 1, 0.000100 ] # Hunter's Bow
+  - [ 1492003, 1, 1, 0.000100 ] # Golden Hook
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002000, 1, 1, 0.010000 ] # Dexterity Potion
+  - [ 2044302, 1, 1, 0.000100 ] # Scroll for Spear for ATT 10%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000008, 1, 1, 0.400000 ] # Charm of the Undead
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

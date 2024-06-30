@@ -1,20 +1,20 @@
 # Primitive Boar (5250002)
 
 rewards:
-  - [ 1002634, 1, 1, 0.100000 ] # Purple Cast Linen#TODO
-  - [ 1040092, 1, 1, 0.100000 ] # Blue Orientican#TODO
-  - [ 1041093, 1, 1, 0.100000 ] # Blue Ice Queen#TODO
-  - [ 1072145, 1, 1, 0.100000 ] # Blue Gore Boots#TODO
-  - [ 1082087, 1, 1, 0.100000 ] # Gold Manute#TODO
-  - [ 1332015, 1, 1, 0.100000 ] # Deadly Fin#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
-  - [ 4000440, 1, 1, 0.100000 ] # Tough Leather#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
-  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 1002634, 1, 1, 0.000100 ] # Purple Cast Linen
+  - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
+  - [ 1041093, 1, 1, 0.000100 ] # Blue Ice Queen
+  - [ 1072145, 1, 1, 0.000100 ] # Blue Gore Boots
+  - [ 1082087, 1, 1, 0.000100 ] # Gold Manute
+  - [ 1332015, 1, 1, 0.000100 ] # Deadly Fin
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2044802, 1, 1, 0.000100 ] # Scroll for Knuckle for ATT 10%
+  - [ 4000440, 1, 1, 0.400000 ] # Tough Leather
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

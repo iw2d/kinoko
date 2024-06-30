@@ -2,23 +2,23 @@
 
 rewards:
   - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
-  - [ 1040058, 1, 1, 0.000080 ] # Dark Silver Stealer
+  - [ 1040058, 1, 1, 0.000100 ] # Dark Silver Stealer
   - [ 1041058, 1, 1, 0.000100 ] # Blood Sneak
-  - [ 1050030, 1, 1, 0.000070 ] # Blue Chaos Robe
-  - [ 1052107, 1, 1, 0.100000 ] # Brown Pollard#TODO
-  - [ 1060044, 1, 1, 0.000080 ] # Dark Silver Stealer Pants
+  - [ 1050030, 1, 1, 0.000100 ] # Blue Chaos Robe
+  - [ 1052107, 1, 1, 0.000100 ] # Brown Pollard
+  - [ 1060044, 1, 1, 0.000100 ] # Dark Silver Stealer Pants
   - [ 1061054, 1, 1, 0.000100 ] # Blood Sneak Pants
-  - [ 1072101, 1, 1, 0.000080 ] # Blue Silky Boots
+  - [ 1072101, 1, 1, 0.000100 ] # Blue Silky Boots
   - [ 1322014, 1, 1, 0.000100 ] # War Hammer
   - [ 1462000, 1, 1, 0.000100 ] # Mountain Crossbow
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040701, 1, 1, 0.000020 ] # Scroll for Shoes for DEX 60%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000106, 1, 1, 0.500000 ] # Teddy's Cotton
-  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 2040701, 1, 1, 0.000100 ] # Scroll for Shoes for DEX 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000106, 1, 1, 0.400000 ] # Teddy's Cotton
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4131003, 1, 1, 0.000080 ] # Two-Handed Sword Forging Manual
+  - [ 4131003, 1, 1, 0.000300 ] # Two-Handed Sword Forging Manual
   - [ 4031590, 1, 1, 0.010000, 8881 ] # Birthday Candle

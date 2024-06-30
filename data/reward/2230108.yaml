@@ -1,25 +1,25 @@
 # Pinboom (2230108)
 
 rewards:
-  - [ 1002119, 1, 1, 0.000080 ] # Green Robin Hat
-  - [ 1002131, 1, 1, 0.000080 ] # Green Loosecap
-  - [ 1032004, 1, 1, 0.000080 ] # Gold Earrings
-  - [ 1041027, 1, 1, 0.000200 ] # Red Shivermail
-  - [ 1050024, 1, 1, 0.000050 ] # Yellow Doros Robe
-  - [ 1051005, 1, 1, 0.000050 ] # Red Doroness Robe
-  - [ 1052101, 1, 1, 0.100000 ] # Beige Carribean#TODO
-  - [ 1061025, 1, 1, 0.000200 ] # Red Shivermail Skirt
-  - [ 1072054, 1, 1, 0.000050 ] # Orange Whitebottom Boots
-  - [ 1072065, 1, 1, 0.000050 ] # Red Enamel Boots
+  - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
+  - [ 1002131, 1, 1, 0.000100 ] # Green Loosecap
+  - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings
+  - [ 1041027, 1, 1, 0.000100 ] # Red Shivermail
+  - [ 1050024, 1, 1, 0.000100 ] # Yellow Doros Robe
+  - [ 1051005, 1, 1, 0.000100 ] # Red Doroness Robe
+  - [ 1052101, 1, 1, 0.000100 ] # Beige Carribean
+  - [ 1061025, 1, 1, 0.000100 ] # Red Shivermail Skirt
+  - [ 1072054, 1, 1, 0.000100 ] # Orange Whitebottom Boots
+  - [ 1072065, 1, 1, 0.000100 ] # Red Enamel Boots
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002003, 1, 1, 0.002000 ] # Wizard Potion
-  - [ 2040623, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 100%#TODO
-  - [ 2044202, 1, 1, 0.000030 ] # Scroll for Two-handed BW for ATT 10%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2040623, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 100%
+  - [ 2044202, 1, 1, 0.000100 ] # Scroll for Two-handed BW for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000160, 1, 1, 0.400000 ] # Needle
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4010000, 1, 1, 0.004000 ] # Bronze Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
   - [ 4031261, 1, 1, 0.030000, 3080 ] # Pin Boom's DNA Sample

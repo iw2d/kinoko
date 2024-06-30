@@ -1,58 +1,58 @@
 # Eliza (8220000)
 
 rewards:
-  - [ 1002326, 1, 1, 0.000070 ] # Red Osfa Hat
-  - [ 1002366, 1, 1, 0.000070 ] # Black Oriental Fury Hat
-  - [ 1002405, 1, 1, 0.000070 ] # Dark Arlic Helmet
-  - [ 1002532, 1, 1, 0.000070 ] # Dark Grace Helmet
-  - [ 1002643, 1, 1, 0.100000 ] # Red Brave Hamal#TODO
-  - [ 1040113, 1, 1, 0.000035 ] # Dark Commodore
-  - [ 1040117, 1, 1, 0.000035 ] # Purple Osfa Suit
-  - [ 1041117, 1, 1, 0.000035 ] # Purple Osfa Suit
-  - [ 1041121, 1, 1, 0.000035 ] # Dark Valkyrie
-  - [ 1050091, 1, 1, 0.000035 ] # Dark Ades
-  - [ 1050095, 1, 1, 0.000035 ] # Black Oriental Fury Coat
-  - [ 1051085, 1, 1, 0.000035 ] # Dark Anes
-  - [ 1051097, 1, 1, 0.000035 ] # Black Oriental Fury Coat
-  - [ 1052128, 1, 1, 0.100000 ] # White Marquini#TODO
-  - [ 1072194, 1, 1, 0.000070 ] # Purple Osfa Boots
-  - [ 1072198, 1, 1, 0.000070 ] # Dark War Greave
-  - [ 1072205, 1, 1, 0.000070 ] # Dark Ades Shoes
-  - [ 1072209, 1, 1, 0.000070 ] # Dark Neli Shoes
-  - [ 1072315, 1, 1, 0.100000 ] # Black Markintz#TODO
-  - [ 1082127, 1, 1, 0.000070 ] # Dark Focus
-  - [ 1082130, 1, 1, 0.000070 ] # Dark Imperial
-  - [ 1082134, 1, 1, 0.000070 ] # Dark Pachone
-  - [ 1082144, 1, 1, 0.000070 ] # Dark Mystra
-  - [ 1082210, 1, 1, 0.100000 ] # Red Martier#TODO
-  - [ 2000004, 1, 1, 0.400000 ] # Elixir
-  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
-  - [ 2002003, 1, 1, 0.500000 ] # Wizard Potion
-  - [ 2012001, 1, 1, 0.000100 ] # Fairy's Honey
-  - [ 2040001, 1, 1, 0.002300 ] # Scroll for Helmet for DEF 60%
-  - [ 2040002, 1, 1, 0.001100 ] # Scroll for Helmet for DEF 10%
-  - [ 2040301, 1, 1, 0.002300 ] # Scroll for Earring for INT 60%
-  - [ 2040302, 1, 1, 0.001100 ] # Scroll for Earring for INT 10%
-  - [ 2040401, 1, 1, 0.002300 ] # Scroll for Topwear for DEF 60%
-  - [ 2040707, 1, 1, 0.002300 ] # Scroll for Shoes for Speed 60%
-  - [ 2041007, 1, 1, 0.002300 ] # Scroll for Cape for HP 60%
-  - [ 2041019, 1, 1, 0.002300 ] # Scroll for Cape for DEX 60%
-  - [ 2041020, 1, 1, 0.001100 ] # Scroll for Cape for DEX 10%
-  - [ 2043017, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 60%#TODO
-  - [ 2043301, 1, 1, 0.002300 ] # Scroll for Dagger for ATT 60%
-  - [ 2043701, 1, 1, 0.002300 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2044114, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 10%#TODO
-  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
-  - [ 2044301, 1, 1, 0.002300 ] # Scroll for Spear for ATT 60%
-  - [ 2044302, 1, 1, 0.001100 ] # Scroll for Spear for ATT 10%
-  - [ 2044401, 1, 1, 0.002300 ] # Scroll for Pole Arm for ATT 60%
-  - [ 2044402, 1, 1, 0.001100 ] # Scroll for Pole Arm for ATT 10%
-  - [ 2060001, 1, 1, 0.250000 ] # Bronze Arrow for Bow
-  - [ 2061001, 1, 1, 0.250000 ] # Bronze Arrow for Crossbow
-  - [ 4000021, 1, 1, 0.010000 ] # Leather
-  - [ 4000073, 1, 1, 0.600000 ] # Solid Horn
-  - [ 4000074, 1, 1, 0.600000 ] # Lucida Tail
+  - [ 1002326, 1, 1, 0.000100 ] # Red Osfa Hat
+  - [ 1002366, 1, 1, 0.000100 ] # Black Oriental Fury Hat
+  - [ 1002405, 1, 1, 0.000100 ] # Dark Arlic Helmet
+  - [ 1002532, 1, 1, 0.000100 ] # Dark Grace Helmet
+  - [ 1002643, 1, 1, 0.000100 ] # Red Brave Hamal
+  - [ 1040113, 1, 1, 0.000100 ] # Dark Commodore
+  - [ 1040117, 1, 1, 0.000100 ] # Purple Osfa Suit
+  - [ 1041117, 1, 1, 0.000100 ] # Purple Osfa Suit
+  - [ 1041121, 1, 1, 0.000100 ] # Dark Valkyrie
+  - [ 1050091, 1, 1, 0.000100 ] # Dark Ades
+  - [ 1050095, 1, 1, 0.000100 ] # Black Oriental Fury Coat
+  - [ 1051085, 1, 1, 0.000100 ] # Dark Anes
+  - [ 1051097, 1, 1, 0.000100 ] # Black Oriental Fury Coat
+  - [ 1052128, 1, 1, 0.000100 ] # White Marquini
+  - [ 1072194, 1, 1, 0.000100 ] # Purple Osfa Boots
+  - [ 1072198, 1, 1, 0.000100 ] # Dark War Greave
+  - [ 1072205, 1, 1, 0.000100 ] # Dark Ades Shoes
+  - [ 1072209, 1, 1, 0.000100 ] # Dark Neli Shoes
+  - [ 1072315, 1, 1, 0.000100 ] # Black Markintz
+  - [ 1082127, 1, 1, 0.000100 ] # Dark Focus
+  - [ 1082130, 1, 1, 0.000100 ] # Dark Imperial
+  - [ 1082134, 1, 1, 0.000100 ] # Dark Pachone
+  - [ 1082144, 1, 1, 0.000100 ] # Dark Mystra
+  - [ 1082210, 1, 1, 0.000100 ] # Red Martier
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2012001, 1, 1, 0.010000 ] # Fairy's Honey
+  - [ 2040001, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 60%
+  - [ 2040002, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 10%
+  - [ 2040301, 1, 1, 0.000100 ] # Scroll for Earring for INT 60%
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2040401, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 60%
+  - [ 2040707, 1, 1, 0.000100 ] # Scroll for Shoes for Speed 60%
+  - [ 2041007, 1, 1, 0.000100 ] # Scroll for Cape for HP 60%
+  - [ 2041019, 1, 1, 0.000100 ] # Scroll for Cape for DEX 60%
+  - [ 2041020, 1, 1, 0.000100 ] # Scroll for Cape for DEX 10%
+  - [ 2043017, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 60%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2044114, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 10%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
+  - [ 2044302, 1, 1, 0.000100 ] # Scroll for Spear for ATT 10%
+  - [ 2044401, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044402, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 10%
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
-  - [ 4006000, 1, 1, 0.005000 ] # The Magic Rock
-  - [ 4010006, 1, 1, 0.008000 ] # Gold Ore
-  - [ 4020008, 1, 1, 0.008000 ] # Black Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

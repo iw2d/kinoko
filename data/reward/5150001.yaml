@@ -1,33 +1,33 @@
 # Skeleton Soldier (5150001)
 
 rewards:
-  - [ 1002030, 1, 1, 0.000070 ] # Silver Planet
-  - [ 1002252, 1, 1, 0.000070 ] # Red Infinium Circlet
-  - [ 1002281, 1, 1, 0.000070 ] # Brown Nightfox
-  - [ 1002287, 1, 1, 0.000070 ] # Beige Patriot
-  - [ 1040092, 1, 1, 0.000080 ] # Blue Orientican
-  - [ 1040098, 1, 1, 0.000080 ] # Light Scorpio
-  - [ 1050059, 1, 1, 0.000080 ] # Blue Tai
-  - [ 1051045, 1, 1, 0.000080 ] # Red Anakarune
-  - [ 1060081, 1, 1, 0.000080 ] # Blue Orientican Pants
-  - [ 1060087, 1, 1, 0.000080 ] # Light Scorpio Pants
-  - [ 1072122, 1, 1, 0.000090 ] # Brown Steel-Tip Boots
-  - [ 1072128, 1, 1, 0.000090 ] # Blue Goni Shoes
-  - [ 1072132, 1, 1, 0.000090 ] # Emerald Hildon Boots
-  - [ 1072140, 1, 1, 0.000090 ] # Pink Goldwind Shoes
-  - [ 1072306, 1, 1, 0.100000 ] # Black Basile Boots#TODO
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
+  - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
+  - [ 1002281, 1, 1, 0.000100 ] # Brown Nightfox
+  - [ 1002287, 1, 1, 0.000100 ] # Beige Patriot
+  - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
+  - [ 1040098, 1, 1, 0.000100 ] # Light Scorpio
+  - [ 1050059, 1, 1, 0.000100 ] # Blue Tai
+  - [ 1051045, 1, 1, 0.000100 ] # Red Anakarune
+  - [ 1060081, 1, 1, 0.000100 ] # Blue Orientican Pants
+  - [ 1060087, 1, 1, 0.000100 ] # Light Scorpio Pants
+  - [ 1072122, 1, 1, 0.000100 ] # Brown Steel-Tip Boots
+  - [ 1072128, 1, 1, 0.000100 ] # Blue Goni Shoes
+  - [ 1072132, 1, 1, 0.000100 ] # Emerald Hildon Boots
+  - [ 1072140, 1, 1, 0.000100 ] # Pink Goldwind Shoes
+  - [ 1072306, 1, 1, 0.000100 ] # Black Basile Boots
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
-  - [ 2043701, 1, 1, 0.000030 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2043801, 1, 1, 0.000040 ] # Scroll for Staff for Magic Attack 60%
-  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
-  - [ 2044701, 1, 1, 0.000030 ] # Scroll for Claw for ATT 60%
-  - [ 4000206, 1, 1, 0.500000 ] # Rib
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044312, 1, 1, 0.000100 ] # Scroll for Spear for Accuracy 60%
+  - [ 2044701, 1, 1, 0.000100 ] # Scroll for Claw for ATT 60%
+  - [ 4000206, 1, 1, 0.400000 ] # Rib
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
-  - [ 4020004, 1, 1, 0.004000 ] # Opal Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator

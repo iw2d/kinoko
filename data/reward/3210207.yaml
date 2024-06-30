@@ -1,37 +1,37 @@
 # Tick (3210207)
 
 rewards:
-  - [ 1002139, 1, 1, 0.000080 ] # Red Pole-Feather Hat
-  - [ 1002178, 1, 1, 0.000080 ] # Green Burgler
-  - [ 1041069, 1, 1, 0.000080 ] # Brown Legolia
-  - [ 1050038, 1, 1, 0.000080 ] # Blue Starlight
-  - [ 1061064, 1, 1, 0.000080 ] # Brown Legolia Pants
+  - [ 1002139, 1, 1, 0.000100 ] # Red Pole-Feather Hat
+  - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
+  - [ 1041069, 1, 1, 0.000100 ] # Brown Legolia
+  - [ 1050038, 1, 1, 0.000100 ] # Blue Starlight
+  - [ 1061064, 1, 1, 0.000100 ] # Brown Legolia Pants
   - [ 1072076, 1, 1, 0.000100 ] # Blue Magicshoes
-  - [ 1072107, 1, 1, 0.000060 ] # Black Red-Lined Shoes
-  - [ 1072297, 1, 1, 0.100000 ] # Brown Locote Shoes#TODO
-  - [ 1082024, 1, 1, 0.000060 ] # Adamantium Knuckle
+  - [ 1072107, 1, 1, 0.000100 ] # Black Red-Lined Shoes
+  - [ 1072297, 1, 1, 0.000100 ] # Brown Locote Shoes
+  - [ 1082024, 1, 1, 0.000100 ] # Adamantium Knuckle
   - [ 1082048, 1, 1, 0.000100 ] # Brown Marker
-  - [ 1082055, 1, 1, 0.000080 ] # Blue Noel
-  - [ 1372001, 1, 1, 0.000080 ] # Wizard Wand
-  - [ 1412005, 1, 1, 0.000060 ] # Sabretooth
+  - [ 1082055, 1, 1, 0.000100 ] # Blue Noel
+  - [ 1372001, 1, 1, 0.000100 ] # Wizard Wand
+  - [ 1412005, 1, 1, 0.000100 ] # Sabretooth
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2041018, 1, 1, 0.000020 ] # Scroll for Cape for DEX 100%
-  - [ 2043102, 1, 1, 0.000020 ] # Scroll for One-Handed Axe for ATT 10%
-  - [ 2043214, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 10%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2070008, 1, 1, 0.000080 ] # Snowball
-  - [ 4000113, 1, 1, 0.500000 ] # Clock Spring
-  - [ 4004000, 1, 1, 0.000800 ] # Power Crystal Ore
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 2041018, 1, 1, 0.000100 ] # Scroll for Cape for DEX 100%
+  - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2043214, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 10%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070008, 1, 1, 0.000400 ] # Snowball
+  - [ 4000113, 1, 1, 0.400000 ] # Clock Spring
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4020002, 1, 1, 0.003000 ] # AquaMarine Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
-  - [ 4131011, 1, 1, 0.000080 ] # Crossbow Production Manual
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator
+  - [ 4131011, 1, 1, 0.000300 ] # Crossbow Production Manual

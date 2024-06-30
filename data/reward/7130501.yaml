@@ -1,33 +1,33 @@
 # Dark Rash (7130501)
 
 rewards:
-  - [ 1002276, 1, 1, 0.000070 ] # Red Falcon
-  - [ 1041103, 1, 1, 0.000090 ] # Red Mystique
-  - [ 1052122, 1, 1, 0.100000 ] # Red Viska#TODO
-  - [ 1061102, 1, 1, 0.000090 ] # Red Mystique Pants
-  - [ 1072178, 1, 1, 0.000070 ] # Purple Enigma Shoes
-  - [ 1082105, 1, 1, 0.000090 ] # Dark Husk
-  - [ 1092016, 1, 1, 0.000090 ] # Silver Ancient Shield
-  - [ 1102027, 1, 1, 0.000090 ] # Blue Seraph Cape
-  - [ 1302018, 1, 1, 0.000060 ] # Khan
-  - [ 1472027, 1, 1, 0.000080 ] # Green Scarab
+  - [ 1002276, 1, 1, 0.000100 ] # Red Falcon
+  - [ 1041103, 1, 1, 0.000100 ] # Red Mystique
+  - [ 1052122, 1, 1, 0.000100 ] # Red Viska
+  - [ 1061102, 1, 1, 0.000100 ] # Red Mystique Pants
+  - [ 1072178, 1, 1, 0.000100 ] # Purple Enigma Shoes
+  - [ 1082105, 1, 1, 0.000100 ] # Dark Husk
+  - [ 1092016, 1, 1, 0.000100 ] # Silver Ancient Shield
+  - [ 1102027, 1, 1, 0.000100 ] # Blue Seraph Cape
+  - [ 1302018, 1, 1, 0.000100 ] # Khan
+  - [ 1472027, 1, 1, 0.000100 ] # Green Scarab
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
-  - [ 2040505, 1, 1, 0.000020 ] # Scroll for Overall Armor for DEF 10%
-  - [ 2040515, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 100%#TODO
-  - [ 2040625, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 60%#TODO
-  - [ 2043002, 1, 1, 0.000020 ] # Scroll for One-Handed Sword for ATT 10%
-  - [ 2070005, 1, 1, 0.000050 ] # Steely Throwing-Knives
-  - [ 4000229, 1, 1, 0.600000 ] # Dark Rash's Furball
-  - [ 4000230, 1, 1, 0.050000 ] # Curse Powder
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040321, 1, 1, 0.000100 ] # Scroll for Earring for LUK 60%
+  - [ 2040505, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEF 10%
+  - [ 2040515, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 100%
+  - [ 2040625, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 60%
+  - [ 2043002, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000229, 1, 1, 0.400000 ] # Dark Rash's Furball
+  - [ 4000230, 1, 1, 0.400000 ] # Curse Powder
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010002, 1, 1, 0.005000 ] # Mithril Ore
-  - [ 4020002, 1, 1, 0.004000 ] # AquaMarine Ore
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
   - [ 4031412, 1, 1, 0.100000, 3712 ] # Black Soul of Dark Rash

@@ -1,33 +1,33 @@
 # Dejected Green Mushroom (1110130)
 
 rewards:
-  - [ 1002010, 1, 1, 0.100000 ] # Brown Winter Hat#TODO
-  - [ 1002033, 1, 1, 0.100000 ] # Old Wisconsin#TODO
-  - [ 1002143, 1, 1, 0.100000 ] # Green Matty#TODO
-  - [ 1032001, 1, 1, 0.100000 ] # Single Earring#TODO
-  - [ 1041017, 1, 1, 0.100000 ] # Purple Arianne#TODO
-  - [ 1041044, 1, 1, 0.100000 ] # Red Nightshift#TODO
-  - [ 1041063, 1, 1, 0.100000 ] # Grey Able Armor#TODO
-  - [ 1061012, 1, 1, 0.100000 ] # Purple Arianne Skirt#TODO
-  - [ 1061037, 1, 1, 0.100000 ] # Red Nightshift Pants#TODO
-  - [ 1061059, 1, 1, 0.100000 ] # Grey Able Skirt#TODO
-  - [ 1072285, 1, 1, 0.100000 ] # Brown Lagger Slipper#TODO
-  - [ 1092008, 1, 1, 0.100000 ] # Pan Lid#TODO
-  - [ 1302007, 1, 1, 0.100000 ] # Long Sword#TODO
-  - [ 1322000, 1, 1, 0.100000 ] # Mace#TODO
-  - [ 1412012, 1, 1, 0.100000 ] # Iron Axe#TODO
-  - [ 1432005, 1, 1, 0.100000 ] # Zeco#TODO
-  - [ 1452003, 1, 1, 0.100000 ] # Composite Bow#TODO
-  - [ 1462002, 1, 1, 0.100000 ] # Battle Crossbow#TODO
-  - [ 1482001, 1, 1, 0.100000 ] # Leather Arms#TODO
-  - [ 2000000, 1, 1, 0.100000 ] # Red Potion#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2043102, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 10%#TODO
-  - [ 2048000, 1, 1, 0.100000 ] # Scroll for Pet Equip. for Speed 100%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000012, 1, 1, 0.100000 ] # Green Mushroom Cap#TODO
-  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
-  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
-  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
+  - [ 1002010, 1, 1, 0.000100 ] # Brown Winter Hat
+  - [ 1002033, 1, 1, 0.000100 ] # Old Wisconsin
+  - [ 1002143, 1, 1, 0.000100 ] # Green Matty
+  - [ 1032001, 1, 1, 0.000100 ] # Single Earring
+  - [ 1041017, 1, 1, 0.000100 ] # Purple Arianne
+  - [ 1041044, 1, 1, 0.000100 ] # Red Nightshift
+  - [ 1041063, 1, 1, 0.000100 ] # Grey Able Armor
+  - [ 1061012, 1, 1, 0.000100 ] # Purple Arianne Skirt
+  - [ 1061037, 1, 1, 0.000100 ] # Red Nightshift Pants
+  - [ 1061059, 1, 1, 0.000100 ] # Grey Able Skirt
+  - [ 1072285, 1, 1, 0.000100 ] # Brown Lagger Slipper
+  - [ 1092008, 1, 1, 0.000100 ] # Pan Lid
+  - [ 1302007, 1, 1, 0.000100 ] # Long Sword
+  - [ 1322000, 1, 1, 0.000100 ] # Mace
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432005, 1, 1, 0.000100 ] # Zeco
+  - [ 1452003, 1, 1, 0.000100 ] # Composite Bow
+  - [ 1462002, 1, 1, 0.000100 ] # Battle Crossbow
+  - [ 1482001, 1, 1, 0.000100 ] # Leather Arms
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2048000, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000012, 1, 1, 0.400000 ] # Green Mushroom Cap
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

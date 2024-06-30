@@ -1,33 +1,33 @@
 # Iruvata (7120109)
 
 rewards:
-  - [ 1002338, 1, 1, 0.100000 ] # Red Dragon Barbute#TODO
-  - [ 1032022, 1, 1, 0.100000 ] # Half Earrings#TODO
-  - [ 1050074, 1, 1, 0.100000 ] # Dark Enigmatic#TODO
-  - [ 1072161, 1, 1, 0.100000 ] # Purple Mystique Shoes#TODO
-  - [ 1072312, 1, 1, 0.100000 ] # Blue Pageant#TODO
-  - [ 1082107, 1, 1, 0.100000 ] # Gold Eyes#TODO
-  - [ 1102029, 1, 1, 0.100000 ] # White Seraph Cape#TODO
-  - [ 1322028, 1, 1, 0.100000 ] # Heaven's Justice#TODO
-  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
-  - [ 1442030, 1, 1, 0.100000 ] # Maple Snowboard#TODO
-  - [ 1452010, 1, 1, 0.100000 ] # Blue Hinkel#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040619, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 10%#TODO
-  - [ 2041008, 1, 1, 0.100000 ] # Scroll for Cape for HP 10%#TODO
-  - [ 2044314, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 10%#TODO
-  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
-  - [ 2385039, 1, 1, 0.100000 ] # Iruvata Card #TODO
-  - [ 4000551, 1, 1, 0.100000 ] # Iruvata Laser Sword#TODO
-  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
-  - [ 4020004, 1, 1, 0.100000 ] # Opal Ore#TODO
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 1002338, 1, 1, 0.000100 ] # Red Dragon Barbute
+  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
+  - [ 1050074, 1, 1, 0.000100 ] # Dark Enigmatic
+  - [ 1072161, 1, 1, 0.000100 ] # Purple Mystique Shoes
+  - [ 1072312, 1, 1, 0.000100 ] # Blue Pageant
+  - [ 1082107, 1, 1, 0.000100 ] # Gold Eyes
+  - [ 1102029, 1, 1, 0.000100 ] # White Seraph Cape
+  - [ 1322028, 1, 1, 0.000100 ] # Heaven's Justice
+  - [ 1402012, 1, 1, 0.000100 ] # Doombringer
+  - [ 1442030, 1, 1, 0.000100 ] # Maple Snowboard
+  - [ 1452010, 1, 1, 0.000100 ] # Blue Hinkel
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040619, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 10%
+  - [ 2041008, 1, 1, 0.000100 ] # Scroll for Cape for HP 10%
+  - [ 2044314, 1, 1, 0.000100 ] # Scroll for Spear for Accuracy 10%
+  - [ 2044401, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
+  - [ 2385039, 1, 1, 0.020000 ] # Iruvata Card 
+  - [ 4000551, 1, 1, 0.400000 ] # Iruvata Laser Sword
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

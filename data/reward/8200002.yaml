@@ -1,32 +1,32 @@
 # Memory Monk Trainee (8200002)
 
 rewards:
-  - [ 1002366, 1, 1, 0.100000 ] # Black Oriental Fury Hat#TODO
-  - [ 1040113, 1, 1, 0.100000 ] # Dark Commodore#TODO
-  - [ 1051085, 1, 1, 0.100000 ] # Dark Anes#TODO
-  - [ 1060102, 1, 1, 0.100000 ] # Dark Commodore Pants#TODO
-  - [ 1072195, 1, 1, 0.100000 ] # Red Osfa Boots#TODO
-  - [ 1082210, 1, 1, 0.100000 ] # Red Martier#TODO
-  - [ 1092027, 1, 1, 0.100000 ] # Silver Kalkan#TODO
-  - [ 1402016, 1, 1, 0.100000 ] # Devil's Sunrise#TODO
-  - [ 1442044, 1, 1, 0.100000 ] # Zedbug#TODO
-  - [ 1452017, 1, 1, 0.100000 ] # Metus#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2040707, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 60%#TODO
-  - [ 2044212, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 60%#TODO
-  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
-  - [ 2290066, 1, 1, 0.100000 ] # [Mastery Book] Marksman Boost#TODO
-  - [ 2290131, 1, 1, 0.100000 ] # [Mastery Book] Freeze Standing 30#TODO
-  - [ 2290145, 1, 1, 0.100000 ] # [Mastery Book] Magic Mastery 30#TODO
-  - [ 2330004, 1, 1, 0.100000 ] # Shiny Bullet#TODO
-  - [ 4000445, 1, 1, 0.100000 ] # Green Cone Hat#TODO
-  - [ 4000446, 1, 1, 0.100000 ] # Smiley Mask#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
-  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 1002366, 1, 1, 0.000100 ] # Black Oriental Fury Hat
+  - [ 1040113, 1, 1, 0.000100 ] # Dark Commodore
+  - [ 1051085, 1, 1, 0.000100 ] # Dark Anes
+  - [ 1060102, 1, 1, 0.000100 ] # Dark Commodore Pants
+  - [ 1072195, 1, 1, 0.000100 ] # Red Osfa Boots
+  - [ 1082210, 1, 1, 0.000100 ] # Red Martier
+  - [ 1092027, 1, 1, 0.000100 ] # Silver Kalkan
+  - [ 1402016, 1, 1, 0.000100 ] # Devil's Sunrise
+  - [ 1442044, 1, 1, 0.000100 ] # Zedbug
+  - [ 1452017, 1, 1, 0.000100 ] # Metus
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040707, 1, 1, 0.000100 ] # Scroll for Shoes for Speed 60%
+  - [ 2044212, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 60%
+  - [ 2044401, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2290066, 1, 1, 0.000100 ] # [Mastery Book] Marksman Boost
+  - [ 2290131, 1, 1, 0.000100 ] # [Mastery Book] Freeze Standing 30
+  - [ 2290145, 1, 1, 0.000100 ] # [Mastery Book] Magic Mastery 30
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 4000445, 1, 1, 0.400000 ] # Green Cone Hat
+  - [ 4000446, 1, 1, 0.400000 ] # Smiley Mask
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator

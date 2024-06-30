@@ -1,32 +1,32 @@
 # Helmet Pepe (3300003)
 
 rewards:
-  - [ 1002023, 1, 1, 0.100000 ] # Jousting Helmet#TODO
-  - [ 1002163, 1, 1, 0.100000 ] # Green Hawkeye#TODO
-  - [ 1002625, 1, 1, 0.100000 ] # Blue Den Marine#TODO
-  - [ 1032010, 1, 1, 0.100000 ] # Star Earrings#TODO
-  - [ 1040062, 1, 1, 0.100000 ] # Red Knucklevest#TODO
-  - [ 1041042, 1, 1, 0.100000 ] # Green Fairy Top#TODO
-  - [ 1051015, 1, 1, 0.100000 ] # Blood Fitted Mail#TODO
-  - [ 1060051, 1, 1, 0.100000 ] # Red Knucklevest Pants#TODO
-  - [ 1061035, 1, 1, 0.100000 ] # Green Fairy Skirt#TODO
-  - [ 1072110, 1, 1, 0.100000 ] # Black Blue-Lines Shoes#TODO
-  - [ 1072119, 1, 1, 0.100000 ] # Yellow Pierre Shoes#TODO
-  - [ 1082063, 1, 1, 0.100000 ] # Blue Arten#TODO
-  - [ 1302004, 1, 1, 0.100000 ] # Cutlus#TODO
-  - [ 1332014, 1, 1, 0.100000 ] # Gephart#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2043711, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Wand Magic Attacks#TODO
-  - [ 2044416, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Polearm Attacks#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
-  - [ 2382095, 1, 1, 0.100000 ] # Helmet Pepe Card#TODO
-  - [ 4000502, 1, 1, 0.100000 ] # Destroyed Helmet#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4131008, 1, 1, 0.100000 ] # Wand Production Manual#TODO
+  - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
+  - [ 1002163, 1, 1, 0.000100 ] # Green Hawkeye
+  - [ 1002625, 1, 1, 0.000100 ] # Blue Den Marine
+  - [ 1032010, 1, 1, 0.000100 ] # Star Earrings
+  - [ 1040062, 1, 1, 0.000100 ] # Red Knucklevest
+  - [ 1041042, 1, 1, 0.000100 ] # Green Fairy Top
+  - [ 1051015, 1, 1, 0.000100 ] # Blood Fitted Mail
+  - [ 1060051, 1, 1, 0.000100 ] # Red Knucklevest Pants
+  - [ 1061035, 1, 1, 0.000100 ] # Green Fairy Skirt
+  - [ 1072110, 1, 1, 0.000100 ] # Black Blue-Lines Shoes
+  - [ 1072119, 1, 1, 0.000100 ] # Yellow Pierre Shoes
+  - [ 1082063, 1, 1, 0.000100 ] # Blue Arten
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1332014, 1, 1, 0.000100 ] # Gephart
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043711, 1, 1, 0.000100 ] # King Pepe's 60% Scroll for Wand Magic Attacks
+  - [ 2044416, 1, 1, 0.000100 ] # King Pepe's 60% Scroll for Polearm Attacks
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330001, 1, 1, 0.000400 ] # Split Bullet
+  - [ 2382095, 1, 1, 0.020000 ] # Helmet Pepe Card
+  - [ 4000502, 1, 1, 0.400000 ] # Destroyed Helmet
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4131008, 1, 1, 0.000300 ] # Wand Production Manual

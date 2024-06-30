@@ -1,32 +1,32 @@
 # Croco (5130103)
 
 rewards:
-  - [ 1002210, 1, 1, 0.000070 ] # Brown Sonata
-  - [ 1002218, 1, 1, 0.000070 ] # Dark Golden Circlet
-  - [ 1040098, 1, 1, 0.000060 ] # Light Scorpio
-  - [ 1041079, 1, 1, 0.000080 ] # Brown Moon
-  - [ 1050046, 1, 1, 0.000080 ] # Red Calas
-  - [ 1051038, 1, 1, 0.000080 ] # Green Lumati
-  - [ 1052119, 1, 1, 0.100000 ] # Black Royal Barone#TODO
-  - [ 1060087, 1, 1, 0.000060 ] # Light Scorpio Pants
-  - [ 1061078, 1, 1, 0.000080 ] # Brown Moon Pants
-  - [ 1082092, 1, 1, 0.000060 ] # Bronze Pow
-  - [ 1092009, 1, 1, 0.000050 ] # Wooden Legend Shield
-  - [ 1332031, 1, 1, 0.000090 ] # Dragon Toenail
-  - [ 1382019, 1, 1, 0.000090 ] # Hall Staff
-  - [ 1952001, 1, 1, 0.100000 ] # Gold Pendant#TODO
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 1002210, 1, 1, 0.000100 ] # Brown Sonata
+  - [ 1002218, 1, 1, 0.000100 ] # Dark Golden Circlet
+  - [ 1040098, 1, 1, 0.000100 ] # Light Scorpio
+  - [ 1041079, 1, 1, 0.000100 ] # Brown Moon
+  - [ 1050046, 1, 1, 0.000100 ] # Red Calas
+  - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
+  - [ 1052119, 1, 1, 0.000100 ] # Black Royal Barone
+  - [ 1060087, 1, 1, 0.000100 ] # Light Scorpio Pants
+  - [ 1061078, 1, 1, 0.000100 ] # Brown Moon Pants
+  - [ 1082092, 1, 1, 0.000100 ] # Bronze Pow
+  - [ 1092009, 1, 1, 0.000100 ] # Wooden Legend Shield
+  - [ 1332031, 1, 1, 0.000100 ] # Dragon Toenail
+  - [ 1382019, 1, 1, 0.000100 ] # Hall Staff
+  - [ 1952001, 1, 1, 0.000100 ] # Gold Pendant
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2040027, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 100%#TODO
-  - [ 2043212, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 60%#TODO
-  - [ 2044212, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 60%#TODO
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 4000033, 1, 1, 0.500000 ] # Croco Skin
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010000, 1, 1, 0.004000 ] # Bronze Ore
-  - [ 4020004, 1, 1, 0.003000 ] # Opal Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
+  - [ 2040027, 1, 1, 0.000100 ] # Scroll for Helmet for DEX 100%
+  - [ 2043212, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 60%
+  - [ 2044212, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 60%
+  - [ 2044801, 1, 1, 0.000100 ] # Scroll for Knuckle for Attack 60%
+  - [ 4000033, 1, 1, 0.400000 ] # Croco Skin
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator

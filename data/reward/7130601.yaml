@@ -1,28 +1,28 @@
 # Green Hobi (7130601)
 
 rewards:
-  - [ 1002252, 1, 1, 0.000090 ] # Red Infinium Circlet
-  - [ 1040106, 1, 1, 0.000090 ] # Blue Studded Top
-  - [ 1052125, 1, 1, 0.100000 ] # White Pioneer#TODO
-  - [ 1060094, 1, 1, 0.000090 ] # Blue Studded Pants
-  - [ 1072212, 1, 1, 0.000070 ] # Dark Rivers Boots
-  - [ 1082125, 1, 1, 0.000090 ] # Red Focus
-  - [ 1322019, 1, 1, 0.000080 ] # The Judgement
-  - [ 1462009, 1, 1, 0.000080 ] # Gross Jaeger
+  - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
+  - [ 1040106, 1, 1, 0.000100 ] # Blue Studded Top
+  - [ 1052125, 1, 1, 0.000100 ] # White Pioneer
+  - [ 1060094, 1, 1, 0.000100 ] # Blue Studded Pants
+  - [ 1072212, 1, 1, 0.000100 ] # Dark Rivers Boots
+  - [ 1082125, 1, 1, 0.000100 ] # Red Focus
+  - [ 1322019, 1, 1, 0.000100 ] # The Judgement
+  - [ 1462009, 1, 1, 0.000100 ] # Gross Jaeger
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040927, 1, 1, 0.100000 ] # Scroll for Shield for HP 60%#TODO
-  - [ 2043701, 1, 1, 0.000020 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2044602, 1, 1, 0.000020 ] # Scroll for Crossbow for ATT 10%
-  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
-  - [ 4000261, 1, 1, 0.600000 ] # Pin Hov's Charm
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040927, 1, 1, 0.000100 ] # Scroll for Shield for HP 60%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2044802, 1, 1, 0.000100 ] # Scroll for Knuckle for ATT 10%
+  - [ 4000261, 1, 1, 0.400000 ] # Pin Hov's Charm
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4020001, 1, 1, 0.005000 ] # Amethyst Ore
-  - [ 4020007, 1, 1, 0.003000 ] # Diamond Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

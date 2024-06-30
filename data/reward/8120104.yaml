@@ -1,47 +1,47 @@
 # Maverick Type A (8120104)
 
 rewards:
-  - [ 1002272, 1, 1, 0.100000 ] # Blue Galaxy#TODO
-  - [ 1002330, 1, 1, 0.100000 ] # Dark Pireta Hat#TODO
-  - [ 1032016, 1, 1, 0.100000 ] # Metal Heart Earrings#TODO
-  - [ 1040107, 1, 1, 0.100000 ] # Dark Studded Top#TODO
-  - [ 1041105, 1, 1, 0.100000 ] # Green Pirate Blouse#TODO
-  - [ 1041115, 1, 1, 0.100000 ] # Green Osfa Suit#TODO
-  - [ 1050070, 1, 1, 0.100000 ] # Dark Requiem#TODO
-  - [ 1050075, 1, 1, 0.100000 ] # Red Pris#TODO
-  - [ 1051057, 1, 1, 0.100000 ] # Purple Enigma#TODO
-  - [ 1051066, 1, 1, 0.100000 ] # Red Pria#TODO
-  - [ 1051077, 1, 1, 0.100000 ] # Yellow Battle Empress#TODO
-  - [ 1060095, 1, 1, 0.100000 ] # Dark Studded Pants#TODO
-  - [ 1061104, 1, 1, 0.100000 ] # Green Pirate Skirt#TODO
-  - [ 1061114, 1, 1, 0.100000 ] # Green Osfa Pants#TODO
-  - [ 1072173, 1, 1, 0.100000 ] # Red Pirate Boots#TODO
-  - [ 1072197, 1, 1, 0.100000 ] # Orihalcon War Greave#TODO
-  - [ 1082103, 1, 1, 0.100000 ] # Bronze Husk#TODO
-  - [ 1082109, 1, 1, 0.100000 ] # Red Cordon#TODO
-  - [ 1082116, 1, 1, 0.100000 ] # Blood Emperor#TODO
-  - [ 1082121, 1, 1, 0.100000 ] # Green Clarity#TODO
-  - [ 1082125, 1, 1, 0.100000 ] # Red Focus#TODO
-  - [ 1082131, 1, 1, 0.100000 ] # Blue Sage#TODO
-  - [ 1452011, 1, 1, 0.100000 ] # Golden Hinkel#TODO
-  - [ 1492010, 1, 1, 0.100000 ] # Infinity's Wrath#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040619, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 10%#TODO
-  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
-  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
-  - [ 2385040, 1, 1, 0.100000 ] # Maverick Type A Card #TODO
-  - [ 4000554, 1, 1, 0.100000 ] # Maverick Type A Component#TODO
-  - [ 4001110, 1, 1, 0.100000 ] # [Storybook] Unknown Letter#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020008, 1, 1, 0.100000 ] # Black Crystal Ore#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4131007, 1, 1, 0.100000 ] # Pole Arm Forging Manual#TODO
+  - [ 1002272, 1, 1, 0.000100 ] # Blue Galaxy
+  - [ 1002330, 1, 1, 0.000100 ] # Dark Pireta Hat
+  - [ 1032016, 1, 1, 0.000100 ] # Metal Heart Earrings
+  - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
+  - [ 1041105, 1, 1, 0.000100 ] # Green Pirate Blouse
+  - [ 1041115, 1, 1, 0.000100 ] # Green Osfa Suit
+  - [ 1050070, 1, 1, 0.000100 ] # Dark Requiem
+  - [ 1050075, 1, 1, 0.000100 ] # Red Pris
+  - [ 1051057, 1, 1, 0.000100 ] # Purple Enigma
+  - [ 1051066, 1, 1, 0.000100 ] # Red Pria
+  - [ 1051077, 1, 1, 0.000100 ] # Yellow Battle Empress
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants
+  - [ 1061104, 1, 1, 0.000100 ] # Green Pirate Skirt
+  - [ 1061114, 1, 1, 0.000100 ] # Green Osfa Pants
+  - [ 1072173, 1, 1, 0.000100 ] # Red Pirate Boots
+  - [ 1072197, 1, 1, 0.000100 ] # Orihalcon War Greave
+  - [ 1082103, 1, 1, 0.000100 ] # Bronze Husk
+  - [ 1082109, 1, 1, 0.000100 ] # Red Cordon
+  - [ 1082116, 1, 1, 0.000100 ] # Blood Emperor
+  - [ 1082121, 1, 1, 0.000100 ] # Green Clarity
+  - [ 1082125, 1, 1, 0.000100 ] # Red Focus
+  - [ 1082131, 1, 1, 0.000100 ] # Blue Sage
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 1492010, 1, 1, 0.000100 ] # Infinity's Wrath
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040619, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 10%
+  - [ 2044401, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
+  - [ 2385040, 1, 1, 0.020000 ] # Maverick Type A Card 
+  - [ 4000554, 1, 1, 0.400000 ] # Maverick Type A Component
+  - [ 4001110, 1, 1, 0.000000 ] # [Storybook] Unknown Letter
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4131007, 1, 1, 0.000300 ] # Pole Arm Forging Manual

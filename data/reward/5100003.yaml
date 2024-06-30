@@ -1,30 +1,30 @@
 # Hodori (5100003)
 
 rewards:
-  - [ 1041088, 1, 1, 0.000040 ] # Ivory Shouldermail
-  - [ 1051038, 1, 1, 0.000050 ] # Green Lumati
-  - [ 1060077, 1, 1, 0.000040 ] # Ocher Shouldermail Pants
-  - [ 1072118, 1, 1, 0.000200 ] # Red Pierre Shoes
-  - [ 1082198, 1, 1, 0.100000 ] # Brown Royce#TODO
-  - [ 1312008, 1, 1, 0.000050 ] # Buck
-  - [ 1322017, 1, 1, 0.000050 ] # Knuckle Mace
+  - [ 1041088, 1, 1, 0.000100 ] # Ivory Shouldermail
+  - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
+  - [ 1060077, 1, 1, 0.000100 ] # Ocher Shouldermail Pants
+  - [ 1072118, 1, 1, 0.000100 ] # Red Pierre Shoes
+  - [ 1082198, 1, 1, 0.000100 ] # Brown Royce
+  - [ 1312008, 1, 1, 0.000100 ] # Buck
+  - [ 1322017, 1, 1, 0.000100 ] # Knuckle Mace
   - [ 1332011, 1, 1, 0.000100 ] # Bazlud
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
-  - [ 2000004, 1, 1, 0.000800 ] # Elixir
-  - [ 2002003, 1, 1, 0.004000 ] # Wizard Potion
-  - [ 2040804, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 60%
-  - [ 2040901, 1, 1, 0.000050 ] # Scroll for Shield for DEF 60%
-  - [ 2044602, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 10%
-  - [ 2044805, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 100%#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2040804, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 60%
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2044805, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 100%
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000170, 1, 1, 0.500000 ] # Tiger Stamp
+  - [ 4000170, 1, 1, 0.400000 ] # Tiger Stamp
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
   - [ 4031268, 1, 1, 0.100000, 3629 ] # Tough Rope

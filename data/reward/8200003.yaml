@@ -1,30 +1,30 @@
 # Memory Guardian (8200003)
 
 rewards:
-  - [ 1002405, 1, 1, 0.100000 ] # Dark Arlic Helmet#TODO
-  - [ 1041118, 1, 1, 0.100000 ] # Red Osfa Suit#TODO
-  - [ 1050095, 1, 1, 0.100000 ] # Black Oriental Fury Coat#TODO
-  - [ 1061117, 1, 1, 0.100000 ] # Red Osfa Pants#TODO
-  - [ 1072315, 1, 1, 0.100000 ] # Black Markintz#TODO
-  - [ 1082130, 1, 1, 0.100000 ] # Dark Imperial#TODO
-  - [ 1332027, 1, 1, 0.100000 ] # Varkit#TODO
-  - [ 1412010, 1, 1, 0.100000 ] # Colonian Axe#TODO
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2040927, 1, 1, 0.100000 ] # Scroll for Shield for HP 60%#TODO
-  - [ 2044412, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 60%#TODO
-  - [ 2044702, 1, 1, 0.100000 ] # Scroll for Claw for ATT 10%#TODO
-  - [ 2290056, 1, 1, 0.100000 ] # [Mastery Book] Bow Expert#TODO
-  - [ 2290136, 1, 1, 0.100000 ] # [Mastery Book] Combo Tempest 20#TODO
-  - [ 2330004, 1, 1, 0.100000 ] # Shiny Bullet#TODO
-  - [ 4000447, 1, 1, 0.100000 ] # Green Helmet#TODO
-  - [ 4000459, 1, 1, 0.100000 ] # Black Armor Fragment#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 1002405, 1, 1, 0.000100 ] # Dark Arlic Helmet
+  - [ 1041118, 1, 1, 0.000100 ] # Red Osfa Suit
+  - [ 1050095, 1, 1, 0.000100 ] # Black Oriental Fury Coat
+  - [ 1061117, 1, 1, 0.000100 ] # Red Osfa Pants
+  - [ 1072315, 1, 1, 0.000100 ] # Black Markintz
+  - [ 1082130, 1, 1, 0.000100 ] # Dark Imperial
+  - [ 1332027, 1, 1, 0.000100 ] # Varkit
+  - [ 1412010, 1, 1, 0.000100 ] # Colonian Axe
+  - [ 1482012, 1, 1, 0.000100 ] # King Cent
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040927, 1, 1, 0.000100 ] # Scroll for Shield for HP 60%
+  - [ 2044412, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 60%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2290056, 1, 1, 0.000100 ] # [Mastery Book] Bow Expert
+  - [ 2290136, 1, 1, 0.000100 ] # [Mastery Book] Combo Tempest 20
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 4000447, 1, 1, 0.400000 ] # Green Helmet
+  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator

@@ -1,34 +1,34 @@
 # Green Mushroom (1110100)
 
 rewards:
-  - [ 1002010, 1, 1, 0.000600 ] # Brown Winter Hat
-  - [ 1002033, 1, 1, 0.000600 ] # Old Wisconsin
-  - [ 1002143, 1, 1, 0.000050 ] # Green Matty
-  - [ 1032001, 1, 1, 0.000200 ] # Single Earring
+  - [ 1002010, 1, 1, 0.000100 ] # Brown Winter Hat
+  - [ 1002033, 1, 1, 0.000100 ] # Old Wisconsin
+  - [ 1002143, 1, 1, 0.000100 ] # Green Matty
+  - [ 1032001, 1, 1, 0.000100 ] # Single Earring
   - [ 1041017, 1, 1, 0.000100 ] # Purple Arianne
-  - [ 1041044, 1, 1, 0.000090 ] # Red Nightshift
-  - [ 1041063, 1, 1, 0.000080 ] # Grey Able Armor
+  - [ 1041044, 1, 1, 0.000100 ] # Red Nightshift
+  - [ 1041063, 1, 1, 0.000100 ] # Grey Able Armor
   - [ 1061012, 1, 1, 0.000100 ] # Purple Arianne Skirt
-  - [ 1061037, 1, 1, 0.000090 ] # Red Nightshift Pants
-  - [ 1061059, 1, 1, 0.000080 ] # Grey Able Skirt
-  - [ 1072285, 1, 1, 0.100000 ] # Brown Lagger Slipper#TODO
-  - [ 1092008, 1, 1, 0.000050 ] # Pan Lid
-  - [ 1302007, 1, 1, 0.000800 ] # Long Sword
-  - [ 1322000, 1, 1, 0.000500 ] # Mace
-  - [ 1412012, 1, 1, 0.000090 ] # Iron Axe
-  - [ 1432005, 1, 1, 0.000030 ] # Zeco
-  - [ 1452003, 1, 1, 0.000080 ] # Composite Bow
-  - [ 1462002, 1, 1, 0.000060 ] # Battle Crossbow
-  - [ 1482001, 1, 1, 0.100000 ] # Leather Arms#TODO
-  - [ 2000000, 1, 1, 0.020000 ] # Red Potion
-  - [ 2000001, 1, 1, 0.020000 ] # Orange Potion
+  - [ 1061037, 1, 1, 0.000100 ] # Red Nightshift Pants
+  - [ 1061059, 1, 1, 0.000100 ] # Grey Able Skirt
+  - [ 1072285, 1, 1, 0.000100 ] # Brown Lagger Slipper
+  - [ 1092008, 1, 1, 0.000100 ] # Pan Lid
+  - [ 1302007, 1, 1, 0.000100 ] # Long Sword
+  - [ 1322000, 1, 1, 0.000100 ] # Mace
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432005, 1, 1, 0.000100 ] # Zeco
+  - [ 1452003, 1, 1, 0.000100 ] # Composite Bow
+  - [ 1462002, 1, 1, 0.000100 ] # Battle Crossbow
+  - [ 1482001, 1, 1, 0.000100 ] # Leather Arms
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2043102, 1, 1, 0.000030 ] # Scroll for One-Handed Axe for ATT 10%
-  - [ 2048000, 1, 1, 0.000080 ] # Scroll for Pet Equip. for Speed 100%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2048000, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000012, 1, 1, 0.400000 ] # Green Mushroom Cap
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
-  - [ 4020002, 1, 1, 0.004000 ] # AquaMarine Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
   - [ 4031146, 1, 1, 0.500000, 2065 ] # Animal Fossil

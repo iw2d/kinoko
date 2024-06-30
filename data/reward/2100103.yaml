@@ -1,25 +1,25 @@
 # Cactus (2100103)
 
 rewards:
-  - [ 1002096, 1, 1, 0.100000 ] # Sky Blue Starry Bandana#TODO
-  - [ 1041058, 1, 1, 0.100000 ] # Blood Sneak#TODO
-  - [ 1050011, 1, 1, 0.100000 ] # Black Dragon Robe#TODO
-  - [ 1061054, 1, 1, 0.100000 ] # Blood Sneak Pants#TODO
-  - [ 1072054, 1, 1, 0.100000 ] # Orange Whitebottom Boots#TODO
-  - [ 1072078, 1, 1, 0.100000 ] # Black Magicshoes#TODO
-  - [ 1072291, 1, 1, 0.100000 ] # Brown Wooden Krag#TODO
-  - [ 1082016, 1, 1, 0.100000 ] # Blue Savata#TODO
-  - [ 1092002, 1, 1, 0.100000 ] # Red Cross Shield#TODO
-  - [ 1322009, 1, 1, 0.100000 ] # Plunger#TODO
-  - [ 1432002, 1, 1, 0.100000 ] # Forked Spear#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2022155, 1, 1, 0.100000 ] # Desert Mist#TODO
-  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
-  - [ 2044314, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 10%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000330, 1, 1, 0.100000 ] # Cactus Thorn#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
-  - [ 4020004, 1, 1, 0.100000 ] # Opal Ore#TODO
+  - [ 1002096, 1, 1, 0.000100 ] # Sky Blue Starry Bandana
+  - [ 1041058, 1, 1, 0.000100 ] # Blood Sneak
+  - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe
+  - [ 1061054, 1, 1, 0.000100 ] # Blood Sneak Pants
+  - [ 1072054, 1, 1, 0.000100 ] # Orange Whitebottom Boots
+  - [ 1072078, 1, 1, 0.000100 ] # Black Magicshoes
+  - [ 1072291, 1, 1, 0.000100 ] # Brown Wooden Krag
+  - [ 1082016, 1, 1, 0.000100 ] # Blue Savata
+  - [ 1092002, 1, 1, 0.000100 ] # Red Cross Shield
+  - [ 1322009, 1, 1, 0.000100 ] # Plunger
+  - [ 1432002, 1, 1, 0.000100 ] # Forked Spear
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2022155, 1, 1, 0.010000 ] # Desert Mist
+  - [ 2040501, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2044314, 1, 1, 0.000100 ] # Scroll for Spear for Accuracy 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000330, 1, 1, 0.400000 ] # Cactus Thorn
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

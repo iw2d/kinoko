@@ -1,37 +1,37 @@
 # Hector (5130104)
 
 rewards:
-  - [ 1002213, 1, 1, 0.000070 ] # Green Maro
-  - [ 1002215, 1, 1, 0.000070 ] # Flame Golden Circlet
-  - [ 1040097, 1, 1, 0.000070 ] # Green China
-  - [ 1050052, 1, 1, 0.000070 ] # Blue-Lined Kismet
-  - [ 1060086, 1, 1, 0.000070 ] # Green China Pants
+  - [ 1002213, 1, 1, 0.000100 ] # Green Maro
+  - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
+  - [ 1040097, 1, 1, 0.000100 ] # Green China
+  - [ 1050052, 1, 1, 0.000100 ] # Blue-Lined Kismet
+  - [ 1060086, 1, 1, 0.000100 ] # Green China Pants
   - [ 1072119, 1, 1, 0.000100 ] # Yellow Pierre Shoes
   - [ 1072127, 1, 1, 0.000100 ] # Blue Jangoon Shoes
   - [ 1082064, 1, 1, 0.000100 ] # Dark Arten
   - [ 1082075, 1, 1, 0.000100 ] # Red Cleave
-  - [ 1102000, 1, 1, 0.000600 ] # Green Napoleon
-  - [ 1332017, 1, 1, 0.000050 ] # Serpent's Coil
-  - [ 1422009, 1, 1, 0.000050 ] # The Blessing
-  - [ 1462008, 1, 1, 0.000050 ] # Golden Crow
-  - [ 1482007, 1, 1, 0.100000 ] # Fury Claw#TODO
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 1102000, 1, 1, 0.000100 ] # Green Napoleon
+  - [ 1332017, 1, 1, 0.000100 ] # Serpent's Coil
+  - [ 1422009, 1, 1, 0.000100 ] # The Blessing
+  - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
+  - [ 1482007, 1, 1, 0.000100 ] # Fury Claw
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2041019, 1, 1, 0.000030 ] # Scroll for Cape for DEX 60%
-  - [ 2044110, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 100%#TODO
-  - [ 2044809, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 10%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2070003, 1, 1, 0.000200 ] # Kumbi Throwing-Stars
+  - [ 2040326, 1, 1, 0.000100 ] # Scroll for Earring for HP 60%
+  - [ 2041019, 1, 1, 0.000100 ] # Scroll for Cape for DEX 60%
+  - [ 2044110, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 100%
+  - [ 2044809, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000051, 1, 1, 0.700000 ] # Hector Tail
+  - [ 4000051, 1, 1, 0.400000 ] # Hector Tail
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator

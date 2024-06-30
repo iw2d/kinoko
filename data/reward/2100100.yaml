@@ -1,24 +1,24 @@
 # Desert Rabbit (F) (2100100)
 
 rewards:
-  - [ 1002119, 1, 1, 0.100000 ] # Green Robin Hat#TODO
-  - [ 1032009, 1, 1, 0.100000 ] # Yellow Square#TODO
-  - [ 1050005, 1, 1, 0.100000 ] # Blue Kendo Robe#TODO
-  - [ 1050025, 1, 1, 0.100000 ] # White Doros Robe#TODO
-  - [ 1072007, 1, 1, 0.100000 ] # Brown High Boots#TODO
-  - [ 1072288, 1, 1, 0.100000 ] # Brown Skeedy Sandals#TODO
-  - [ 1082002, 1, 1, 0.100000 ] # Work Gloves#TODO
-  - [ 1332010, 1, 1, 0.100000 ] # Iron Dagger#TODO
-  - [ 1382002, 1, 1, 0.100000 ] # Wizard Staff#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2040420, 1, 1, 0.100000 ] # Scroll for Topwear for HP 100%#TODO
-  - [ 2040601, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEF 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
-  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
-  - [ 4000324, 1, 1, 0.100000 ] # Clover#TODO
-  - [ 4003004, 1, 1, 0.100000 ] # Stiff Feather#TODO
-  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
-  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
+  - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
+  - [ 1032009, 1, 1, 0.000100 ] # Yellow Square
+  - [ 1050005, 1, 1, 0.000100 ] # Blue Kendo Robe
+  - [ 1050025, 1, 1, 0.000100 ] # White Doros Robe
+  - [ 1072007, 1, 1, 0.000100 ] # Brown High Boots
+  - [ 1072288, 1, 1, 0.000100 ] # Brown Skeedy Sandals
+  - [ 1082002, 1, 1, 0.000100 ] # Work Gloves
+  - [ 1332010, 1, 1, 0.000100 ] # Iron Dagger
+  - [ 1382002, 1, 1, 0.000100 ] # Wizard Staff
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040420, 1, 1, 0.000100 ] # Scroll for Topwear for HP 100%
+  - [ 2040601, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000324, 1, 1, 0.400000 ] # Clover
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

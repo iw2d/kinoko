@@ -3,29 +3,29 @@
 rewards:
   - [ 1002098, 1, 1, 0.000100 ] # Gold Nordic Helm
   - [ 1002182, 1, 1, 0.000100 ] # Blue Pilfer
-  - [ 1040083, 1, 1, 0.000090 ] # Marine Shadow
-  - [ 1041083, 1, 1, 0.000090 ] # Dark Piettra
-  - [ 1050048, 1, 1, 0.000070 ] # White Calas
-  - [ 1051038, 1, 1, 0.000050 ] # Green Lumati
-  - [ 1060072, 1, 1, 0.000090 ] # Marine Shadow Pants
-  - [ 1061082, 1, 1, 0.000090 ] # Dark Piettra Skirt
+  - [ 1040083, 1, 1, 0.000100 ] # Marine Shadow
+  - [ 1041083, 1, 1, 0.000100 ] # Dark Piettra
+  - [ 1050048, 1, 1, 0.000100 ] # White Calas
+  - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
+  - [ 1060072, 1, 1, 0.000100 ] # Marine Shadow Pants
+  - [ 1061082, 1, 1, 0.000100 ] # Dark Piettra Skirt
   - [ 1072103, 1, 1, 0.000100 ] # Red Silky Boots
-  - [ 1072130, 1, 1, 0.000050 ] # Red Goni Shoes
-  - [ 1082011, 1, 1, 0.000050 ] # Gold Brist
+  - [ 1072130, 1, 1, 0.000100 ] # Red Goni Shoes
+  - [ 1082011, 1, 1, 0.000100 ] # Gold Brist
   - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
-  - [ 1382019, 1, 1, 0.000070 ] # Hall Staff
-  - [ 1472015, 1, 1, 0.000070 ] # Blood Avarice
+  - [ 1382019, 1, 1, 0.000100 ] # Hall Staff
+  - [ 1472015, 1, 1, 0.000100 ] # Blood Avarice
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2022039, 1, 1, 0.000150 ] # Nependeath's Honey
-  - [ 2041001, 1, 1, 0.000030 ] # Scroll for Cape for Magic Def. 60%
-  - [ 2041011, 1, 1, 0.000030 ] # Scroll for Cape for MP 10%
-  - [ 4000058, 1, 1, 0.500000 ] # Nependeath Seed
+  - [ 2022039, 1, 1, 0.010000 ] # Nependeath's Honey
+  - [ 2041001, 1, 1, 0.000100 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041011, 1, 1, 0.000100 ] # Scroll for Cape for MP 10%
+  - [ 4000058, 1, 1, 0.400000 ] # Nependeath Seed
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010000, 1, 1, 0.003000 ] # Bronze Ore
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

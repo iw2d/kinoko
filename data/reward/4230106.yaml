@@ -1,40 +1,40 @@
 # Lunar Pixie (4230106)
 
 rewards:
-  - [ 1002210, 1, 1, 0.000070 ] # Brown Sonata
-  - [ 1002216, 1, 1, 0.000070 ] # Aqua Golden Circlet
-  - [ 1002628, 1, 1, 0.100000 ] # Red Misty#TODO
-  - [ 1040081, 1, 1, 0.000090 ] # White Piette
-  - [ 1040086, 1, 1, 0.000090 ] # Blue Jangoon Armor
-  - [ 1041080, 1, 1, 0.000070 ] # Red Moon
-  - [ 1050052, 1, 1, 0.000070 ] # Blue-Lined Kismet
-  - [ 1051032, 1, 1, 0.000070 ] # Blue Calaf
-  - [ 1060070, 1, 1, 0.000090 ] # Blue Piette Pants
-  - [ 1060075, 1, 1, 0.000090 ] # Brown Jangoon Pants
-  - [ 1061079, 1, 1, 0.000070 ] # Red Moon Pants
-  - [ 1072118, 1, 1, 0.000090 ] # Red Pierre Shoes
-  - [ 1082036, 1, 1, 0.000090 ] # Dark Briggon
+  - [ 1002210, 1, 1, 0.000100 ] # Brown Sonata
+  - [ 1002216, 1, 1, 0.000100 ] # Aqua Golden Circlet
+  - [ 1002628, 1, 1, 0.000100 ] # Red Misty
+  - [ 1040081, 1, 1, 0.000100 ] # White Piette
+  - [ 1040086, 1, 1, 0.000100 ] # Blue Jangoon Armor
+  - [ 1041080, 1, 1, 0.000100 ] # Red Moon
+  - [ 1050052, 1, 1, 0.000100 ] # Blue-Lined Kismet
+  - [ 1051032, 1, 1, 0.000100 ] # Blue Calaf
+  - [ 1060070, 1, 1, 0.000100 ] # Blue Piette Pants
+  - [ 1060075, 1, 1, 0.000100 ] # Brown Jangoon Pants
+  - [ 1061079, 1, 1, 0.000100 ] # Red Moon Pants
+  - [ 1072118, 1, 1, 0.000100 ] # Red Pierre Shoes
+  - [ 1082036, 1, 1, 0.000100 ] # Dark Briggon
   - [ 1082045, 1, 1, 0.000100 ] # Gold Arbion
-  - [ 1302016, 1, 1, 0.000080 ] # Yellow Umbrella
-  - [ 1962001, 1, 1, 0.100000 ] # Gold Wings#TODO
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1962001, 1, 1, 0.000100 ] # Gold Wings
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040319, 1, 1, 0.100000 ] # Scroll for Earring for LUK 100%#TODO
-  - [ 2040705, 1, 1, 0.000030 ] # Scroll for Shoes for Jump 10%
-  - [ 2044114, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 10%#TODO
-  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
+  - [ 2040319, 1, 1, 0.000100 ] # Scroll for Earring for LUK 100%
+  - [ 2040705, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 10%
+  - [ 2044114, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 10%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
-  - [ 4000060, 1, 1, 0.500000 ] # Lunar Pixie's Moonpiece
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000060, 1, 1, 0.400000 ] # Lunar Pixie's Moonpiece
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
-  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010004, 1, 1, 0.004000 ] # Silver Ore
-  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
   - [ 4031309, 1, 1, 0.090000, 3088 ] # Cloud Piece

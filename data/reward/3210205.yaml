@@ -1,34 +1,34 @@
 # Black Ratz (3210205)
 
 rewards:
-  - [ 1002048, 1, 1, 0.000080 ] # Great Blue Helmet
-  - [ 1002136, 1, 1, 0.000070 ] # Dark Pole-Feather Hat
-  - [ 1040057, 1, 1, 0.000090 ] # Dark Brown Stealer
-  - [ 1040076, 1, 1, 0.000080 ] # Brown Legolier
+  - [ 1002048, 1, 1, 0.000100 ] # Great Blue Helmet
+  - [ 1002136, 1, 1, 0.000100 ] # Dark Pole-Feather Hat
+  - [ 1040057, 1, 1, 0.000100 ] # Dark Brown Stealer
+  - [ 1040076, 1, 1, 0.000100 ] # Brown Legolier
   - [ 1041043, 1, 1, 0.000100 ] # Blue Fairy Top
-  - [ 1050037, 1, 1, 0.000070 ] # Green Starlight
-  - [ 1051015, 1, 1, 0.000080 ] # Blood Fitted Mail
-  - [ 1052113, 1, 1, 0.100000 ] # Red Barbay#TODO
-  - [ 1060043, 1, 1, 0.000090 ] # Dark Brown Stealer Pants
-  - [ 1060065, 1, 1, 0.000080 ] # Brown Legolier Pants
+  - [ 1050037, 1, 1, 0.000100 ] # Green Starlight
+  - [ 1051015, 1, 1, 0.000100 ] # Blood Fitted Mail
+  - [ 1052113, 1, 1, 0.000100 ] # Red Barbay
+  - [ 1060043, 1, 1, 0.000100 ] # Dark Brown Stealer Pants
+  - [ 1060065, 1, 1, 0.000100 ] # Brown Legolier Pants
   - [ 1061036, 1, 1, 0.000100 ] # Blue Fairy Skirt
-  - [ 1082075, 1, 1, 0.000060 ] # Red Cleave
-  - [ 1082192, 1, 1, 0.100000 ] # Brown Jeweled#TODO
-  - [ 1382019, 1, 1, 0.000050 ] # Hall Staff
+  - [ 1082075, 1, 1, 0.000100 ] # Red Cleave
+  - [ 1082192, 1, 1, 0.000100 ] # Brown Jeweled
+  - [ 1382019, 1, 1, 0.000100 ] # Hall Staff
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002010, 1, 1, 0.003000 ] # Speed Pill
-  - [ 2040703, 1, 1, 0.000020 ] # Scroll for Shoes for Jump 100%
-  - [ 2050001, 1, 1, 0.003000 ] # Eyedrop
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000021, 1, 1, 0.025000 ] # Leather
-  - [ 4000096, 1, 1, 0.500000 ] # Hard Walnut
-  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 2002010, 1, 1, 0.010000 ] # Speed Pill
+  - [ 2040703, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 100%
+  - [ 2050001, 1, 1, 0.010000 ] # Eyedrop
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000096, 1, 1, 0.400000 ] # Hard Walnut
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
   - [ 4031093, 1, 1, 0.150000, 3229 ] # Tasty Walnut

@@ -1,27 +1,27 @@
 # Seacle (2230105)
 
 rewards:
-  - [ 1032005, 1, 1, 0.000050 ] # Red Cross Earrings
-  - [ 1041042, 1, 1, 0.000080 ] # Green Fairy Top
+  - [ 1032005, 1, 1, 0.000100 ] # Red Cross Earrings
+  - [ 1041042, 1, 1, 0.000100 ] # Green Fairy Top
   - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe
-  - [ 1061035, 1, 1, 0.000080 ] # Green Fairy Skirt
+  - [ 1061035, 1, 1, 0.000100 ] # Green Fairy Skirt
   - [ 1072007, 1, 1, 0.000100 ] # Brown High Boots
   - [ 1072046, 1, 1, 0.000100 ] # Orange High Boots
-  - [ 1082016, 1, 1, 0.000050 ] # Blue Savata
-  - [ 1312003, 1, 1, 0.000080 ] # Misthil Axe
-  - [ 1322004, 1, 1, 0.000080 ] # Fusion Mace
-  - [ 1492002, 1, 1, 0.100000 ] # The Negotiator#TODO
+  - [ 1082016, 1, 1, 0.000100 ] # Blue Savata
+  - [ 1312003, 1, 1, 0.000100 ] # Misthil Axe
+  - [ 1322004, 1, 1, 0.000100 ] # Fusion Mace
+  - [ 1492002, 1, 1, 0.000100 ] # The Negotiator
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002004, 1, 1, 0.003000 ] # Warrior Potion
-  - [ 2040617, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 100%#TODO
-  - [ 2040900, 1, 1, 0.000020 ] # Scroll for Shield for DEF 100%
-  - [ 2043015, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 100%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2070000, 1, 1, 0.000100 ] # Subi Throwing-Stars
-  - [ 4000161, 1, 1, 0.500000 ] # Sea Horse Tail
-  - [ 4004003, 1, 1, 0.000800 ] # LUK Crystal Ore
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4131000, 1, 1, 0.000080 ] # One-Handed Sword Forging Manual
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2040617, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 100%
+  - [ 2040900, 1, 1, 0.000100 ] # Scroll for Shield for DEF 100%
+  - [ 2043015, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070000, 1, 1, 0.000400 ] # Subi Throwing-Stars
+  - [ 4000161, 1, 1, 0.400000 ] # Sea Horse Tail
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4131000, 1, 1, 0.000300 ] # One-Handed Sword Forging Manual
   - [ 4031259, 1, 1, 0.030000, 3080 ] # Seacle's DNA Sample

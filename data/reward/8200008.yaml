@@ -1,30 +1,30 @@
 # Chief Qualm Guardian (8200008)
 
 rewards:
-  - [ 1002407, 1, 1, 0.100000 ] # Blue Arnah Cap#TODO
-  - [ 1050104, 1, 1, 0.100000 ] # Red Varuna#TODO
-  - [ 1060111, 1, 1, 0.100000 ] # Black Neos Pants#TODO
-  - [ 1061123, 1, 1, 0.100000 ] # Dark Lucida Skirt#TODO
-  - [ 1072318, 1, 1, 0.100000 ] # Black Duke Barkin Shoes#TODO
-  - [ 1082140, 1, 1, 0.100000 ] # Blue Korben#TODO
-  - [ 1442020, 1, 1, 0.100000 ] # Hellslayer#TODO
-  - [ 1472033, 1, 1, 0.100000 ] # Casters#TODO
-  - [ 1472053, 1, 1, 0.100000 ] # Red Craven#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
-  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
-  - [ 2290006, 1, 1, 0.100000 ] # [Mastery Book] Power Stance#TODO
-  - [ 2290133, 1, 1, 0.100000 ] # [Mastery Book] Final Blow 30#TODO
-  - [ 2290147, 1, 1, 0.100000 ] # [Mastery Book] Blaze 30#TODO
-  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
-  - [ 4000453, 1, 1, 0.100000 ] # Blue Heart#TODO
-  - [ 4000459, 1, 1, 0.100000 ] # Black Armor Fragment#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 1002407, 1, 1, 0.000100 ] # Blue Arnah Cap
+  - [ 1050104, 1, 1, 0.000100 ] # Red Varuna
+  - [ 1060111, 1, 1, 0.000100 ] # Black Neos Pants
+  - [ 1061123, 1, 1, 0.000100 ] # Dark Lucida Skirt
+  - [ 1072318, 1, 1, 0.000100 ] # Black Duke Barkin Shoes
+  - [ 1082140, 1, 1, 0.000100 ] # Blue Korben
+  - [ 1442020, 1, 1, 0.000100 ] # Hellslayer
+  - [ 1472033, 1, 1, 0.000100 ] # Casters
+  - [ 1472053, 1, 1, 0.000100 ] # Red Craven
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044501, 1, 1, 0.000100 ] # Scroll for Bow for ATT 60%
+  - [ 2290006, 1, 1, 0.000100 ] # [Mastery Book] Power Stance
+  - [ 2290133, 1, 1, 0.000100 ] # [Mastery Book] Final Blow 30
+  - [ 2290147, 1, 1, 0.000100 ] # [Mastery Book] Blaze 30
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
+  - [ 4000453, 1, 1, 0.400000 ] # Blue Heart
+  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator

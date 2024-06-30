@@ -2,18 +2,18 @@
 
 rewards:
   - [ 1032001, 1, 1, 0.000100 ] # Single Earring
-  - [ 1040037, 1, 1, 0.000060 ] # Brown Corporal
-  - [ 1041026, 1, 1, 0.000090 ] # Yellow Arianne
-  - [ 1060027, 1, 1, 0.000060 ] # Brown Corporal Pants
-  - [ 1061022, 1, 1, 0.000090 ] # Yellow Arianne Skirt
-  - [ 1092000, 1, 1, 0.000200 ] # Steel Shield
-  - [ 1422000, 1, 1, 0.000200 ] # Wooden Mallet
-  - [ 1482001, 1, 1, 0.100000 ] # Leather Arms#TODO
-  - [ 2000000, 1, 1, 0.020000 ] # Red Potion
+  - [ 1040037, 1, 1, 0.000100 ] # Brown Corporal
+  - [ 1041026, 1, 1, 0.000100 ] # Yellow Arianne
+  - [ 1060027, 1, 1, 0.000100 ] # Brown Corporal Pants
+  - [ 1061022, 1, 1, 0.000100 ] # Yellow Arianne Skirt
+  - [ 1092000, 1, 1, 0.000100 ] # Steel Shield
+  - [ 1422000, 1, 1, 0.000100 ] # Wooden Mallet
+  - [ 1482001, 1, 1, 0.000100 ] # Leather Arms
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2043002, 1, 1, 0.000030 ] # Scroll for One-Handed Sword for ATT 10%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2043002, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000006, 1, 1, 0.400000 ] # Octopus Leg
-  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore

@@ -1,26 +1,26 @@
 # Melon Bubble Tea (3400002)
 
 rewards:
-  - [ 1002098, 1, 1, 0.100000 ] # Gold Nordic Helm#TODO
-  - [ 1002154, 1, 1, 0.100000 ] # Dark Guiltian#TODO
-  - [ 1002170, 1, 1, 0.100000 ] # Dark Distinction#TODO
-  - [ 1002185, 1, 1, 0.100000 ] # Dark Pilfer#TODO
-  - [ 1002628, 1, 1, 0.100000 ] # Red Misty#TODO
-  - [ 1072107, 1, 1, 0.100000 ] # Black Red-Lined Shoes#TODO
-  - [ 1072117, 1, 1, 0.100000 ] # Dark Moon Shoes#TODO
-  - [ 1072118, 1, 1, 0.100000 ] # Red Pierre Shoes#TODO
-  - [ 1072126, 1, 1, 0.100000 ] # Maroon Jangoon Shoes#TODO
-  - [ 1072300, 1, 1, 0.100000 ] # Brown Leather Krag#TODO
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
-  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
-  - [ 2049208, 1, 1, 0.100000 ] # Dark Scroll for Accessory for HP 70%#TODO
-  - [ 2049210, 1, 1, 0.100000 ] # Dark Scroll for Accessory for MP 70%#TODO
-  - [ 2382098, 1, 1, 0.100000 ] # Melon Bubble Tea Card#TODO
-  - [ 4000540, 1, 1, 0.100000 ] # Melon Bubble#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 1002098, 1, 1, 0.000100 ] # Gold Nordic Helm
+  - [ 1002154, 1, 1, 0.000100 ] # Dark Guiltian
+  - [ 1002170, 1, 1, 0.000100 ] # Dark Distinction
+  - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
+  - [ 1002628, 1, 1, 0.000100 ] # Red Misty
+  - [ 1072107, 1, 1, 0.000100 ] # Black Red-Lined Shoes
+  - [ 1072117, 1, 1, 0.000100 ] # Dark Moon Shoes
+  - [ 1072118, 1, 1, 0.000100 ] # Red Pierre Shoes
+  - [ 1072126, 1, 1, 0.000100 ] # Maroon Jangoon Shoes
+  - [ 1072300, 1, 1, 0.000100 ] # Brown Leather Krag
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040004, 1, 1, 0.000100 ] # Scroll for Helmet for HP 60%
+  - [ 2040504, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2049208, 1, 1, 0.000100 ] # Dark Scroll for Accessory for HP 70%
+  - [ 2049210, 1, 1, 0.000100 ] # Dark Scroll for Accessory for MP 70%
+  - [ 2382098, 1, 1, 0.020000 ] # Melon Bubble Tea Card
+  - [ 4000540, 1, 1, 0.400000 ] # Melon Bubble
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

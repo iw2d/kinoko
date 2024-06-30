@@ -1,61 +1,61 @@
 # Nine-Tailed Fox (7220001)
 
 rewards:
-  - [ 1002095, 1, 1, 0.100000 ] # Mithril Planet#TODO
-  - [ 1002254, 1, 1, 0.100000 ] # Dark Infinium Circlet#TODO
-  - [ 1002285, 1, 1, 0.100000 ] # Blood Nightfox#TODO
-  - [ 1002289, 1, 1, 0.100000 ] # Dark Patriot#TODO
-  - [ 1002637, 1, 1, 0.100000 ] # Black Pirate's Bandana#TODO
-  - [ 1040103, 1, 1, 0.100000 ] # Mithril Platine#TODO
-  - [ 1040107, 1, 1, 0.100000 ] # Dark Studded Top#TODO
-  - [ 1041099, 1, 1, 0.100000 ] # Bloody Platina#TODO
-  - [ 1041100, 1, 1, 0.100000 ] # Purple Mystique#TODO
-  - [ 1050064, 1, 1, 0.100000 ] # Dark Linnex#TODO
-  - [ 1050070, 1, 1, 0.100000 ] # Dark Requiem#TODO
-  - [ 1051055, 1, 1, 0.100000 ] # Dark Requierre#TODO
-  - [ 1051065, 1, 1, 0.100000 ] # Dark Lineros#TODO
-  - [ 1052122, 1, 1, 0.100000 ] # Red Viska#TODO
-  - [ 1072156, 1, 1, 0.100000 ] # Dark Carzen Boots#TODO
-  - [ 1072160, 1, 1, 0.100000 ] # Gold Lapiz Sandals#TODO
-  - [ 1072161, 1, 1, 0.100000 ] # Purple Mystique Shoes#TODO
-  - [ 1072167, 1, 1, 0.100000 ] # Dark Elf Shoes#TODO
-  - [ 1072309, 1, 1, 0.100000 ] # Black Voyson Shoes#TODO
-  - [ 1082097, 1, 1, 0.100000 ] # Gold Rover#TODO
-  - [ 1082100, 1, 1, 0.100000 ] # Dark Lorin#TODO
-  - [ 1082105, 1, 1, 0.100000 ] # Dark Husk#TODO
-  - [ 1082108, 1, 1, 0.100000 ] # Dark Eyes#TODO
-  - [ 1082204, 1, 1, 0.100000 ] # Black Bisk#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
-  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion#TODO
-  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion#TODO
-  - [ 2040025, 1, 1, 0.100000 ] # Scroll for Helmet for INT 60%#TODO
-  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
-  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
-  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
-  - [ 2040513, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 60%#TODO
-  - [ 2040602, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEF 10%#TODO
-  - [ 2040625, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 60%#TODO
-  - [ 2040701, 1, 1, 0.100000 ] # Scroll for Shoes for DEX 60%#TODO
-  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
-  - [ 2040902, 1, 1, 0.100000 ] # Scroll for Shield for DEF 10%#TODO
-  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
-  - [ 2041010, 1, 1, 0.100000 ] # Scroll for Cape for MP 60%#TODO
-  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
-  - [ 2041017, 1, 1, 0.100000 ] # Scroll for Cape for INT 10%#TODO
-  - [ 2043017, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 60%#TODO
-  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
-  - [ 2043702, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 10%#TODO
-  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
-  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
-  - [ 2044702, 1, 1, 0.100000 ] # Scroll for Claw for ATT 10%#TODO
-  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2060001, 1, 1, 0.100000 ] # Bronze Arrow for Bow#TODO
-  - [ 2061001, 1, 1, 0.100000 ] # Bronze Arrow for Crossbow#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
-  - [ 4000021, 1, 1, 0.100000 ] # Leather#TODO
-  - [ 4000172, 1, 1, 0.100000 ] # Three-Tailed Foxtail#TODO
-  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
-  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
-  - [ 4020004, 1, 1, 0.100000 ] # Opal Ore#TODO
+  - [ 1002095, 1, 1, 0.000200 ] # Mithril Planet
+  - [ 1002254, 1, 1, 0.000200 ] # Dark Infinium Circlet
+  - [ 1002285, 1, 1, 0.000200 ] # Blood Nightfox
+  - [ 1002289, 1, 1, 0.000200 ] # Dark Patriot
+  - [ 1002637, 1, 1, 0.000200 ] # Black Pirate's Bandana
+  - [ 1040103, 1, 1, 0.000200 ] # Mithril Platine
+  - [ 1040107, 1, 1, 0.000200 ] # Dark Studded Top
+  - [ 1041099, 1, 1, 0.000200 ] # Bloody Platina
+  - [ 1041100, 1, 1, 0.000200 ] # Purple Mystique
+  - [ 1050064, 1, 1, 0.000200 ] # Dark Linnex
+  - [ 1050070, 1, 1, 0.000200 ] # Dark Requiem
+  - [ 1051055, 1, 1, 0.000200 ] # Dark Requierre
+  - [ 1051065, 1, 1, 0.000200 ] # Dark Lineros
+  - [ 1052122, 1, 1, 0.000200 ] # Red Viska
+  - [ 1072156, 1, 1, 0.000200 ] # Dark Carzen Boots
+  - [ 1072160, 1, 1, 0.000200 ] # Gold Lapiz Sandals
+  - [ 1072161, 1, 1, 0.000200 ] # Purple Mystique Shoes
+  - [ 1072167, 1, 1, 0.000200 ] # Dark Elf Shoes
+  - [ 1072309, 1, 1, 0.000200 ] # Black Voyson Shoes
+  - [ 1082097, 1, 1, 0.000200 ] # Gold Rover
+  - [ 1082100, 1, 1, 0.000200 ] # Dark Lorin
+  - [ 1082105, 1, 1, 0.000200 ] # Dark Husk
+  - [ 1082108, 1, 1, 0.000200 ] # Dark Eyes
+  - [ 1082204, 1, 1, 0.000200 ] # Black Bisk
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
+  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion
+  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion
+  - [ 2040025, 1, 1, 0.010000 ] # Scroll for Helmet for INT 60%
+  - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
+  - [ 2040427, 1, 1, 0.010000 ] # Scroll for Topwear for LUK 10%
+  - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040513, 1, 1, 0.010000 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040602, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040625, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEX 60%
+  - [ 2040701, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 60%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2040902, 1, 1, 0.010000 ] # Scroll for Shield for DEF 10%
+  - [ 2040933, 1, 1, 0.010000 ] # Scroll for Shield for STR 10%
+  - [ 2041010, 1, 1, 0.010000 ] # Scroll for Cape for MP 60%
+  - [ 2041016, 1, 1, 0.010000 ] # Scroll for Cape for INT 60%
+  - [ 2041017, 1, 1, 0.010000 ] # Scroll for Cape for INT 10%
+  - [ 2043017, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for Accuracy 60%
+  - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%
+  - [ 2043702, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 10%
+  - [ 2043801, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044501, 1, 1, 0.010000 ] # Scroll for Bow for ATT 60%
+  - [ 2044702, 1, 1, 0.010000 ] # Scroll for Claw for ATT 10%
+  - [ 2044802, 1, 1, 0.010000 ] # Scroll for Knuckle for ATT 10%
+  - [ 2044901, 1, 1, 0.010000 ] # Scroll for Gun for Attack 60%
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000172, 1, 1, 0.400000 ] # Three-Tailed Foxtail
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

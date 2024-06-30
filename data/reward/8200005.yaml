@@ -1,27 +1,27 @@
 # Qualm Monk (8200005)
 
 rewards:
-  - [ 1002643, 1, 1, 0.100000 ] # Red Brave Hamal#TODO
-  - [ 1040118, 1, 1, 0.100000 ] # Red Osfa Suit#TODO
-  - [ 1051103, 1, 1, 0.100000 ] # Red Bazura#TODO
-  - [ 1060107, 1, 1, 0.100000 ] # Red Osfa Pants#TODO
-  - [ 1072207, 1, 1, 0.100000 ] # Green Neli Shoes#TODO
-  - [ 1082127, 1, 1, 0.100000 ] # Dark Focus#TODO
-  - [ 1302023, 1, 1, 0.100000 ] # Fraute#TODO
-  - [ 1322029, 1, 1, 0.100000 ] # Ruin Hammer#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2040931, 1, 1, 0.100000 ] # Scroll for Shield for STR 60%#TODO
-  - [ 2044012, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 60%#TODO
-  - [ 2290079, 1, 1, 0.100000 ] # [Mastery Book] Venomous Star/Venomous Stab#TODO
-  - [ 4000449, 1, 1, 0.100000 ] # Blue Cloth#TODO
-  - [ 4000451, 1, 1, 0.100000 ] # Neutral Mask#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
-  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 1002643, 1, 1, 0.000100 ] # Red Brave Hamal
+  - [ 1040118, 1, 1, 0.000100 ] # Red Osfa Suit
+  - [ 1051103, 1, 1, 0.000100 ] # Red Bazura
+  - [ 1060107, 1, 1, 0.000100 ] # Red Osfa Pants
+  - [ 1072207, 1, 1, 0.000100 ] # Green Neli Shoes
+  - [ 1082127, 1, 1, 0.000100 ] # Dark Focus
+  - [ 1302023, 1, 1, 0.000100 ] # Fraute
+  - [ 1322029, 1, 1, 0.000100 ] # Ruin Hammer
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.010000 ] # Reindeer Milk
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040931, 1, 1, 0.000100 ] # Scroll for Shield for STR 60%
+  - [ 2044012, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 60%
+  - [ 2290079, 1, 1, 0.000100 ] # [Mastery Book] Venomous Star/Venomous Stab
+  - [ 4000449, 1, 1, 0.400000 ] # Blue Cloth
+  - [ 4000451, 1, 1, 0.400000 ] # Neutral Mask
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

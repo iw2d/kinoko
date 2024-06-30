@@ -1,57 +1,57 @@
 # Stumpy (3220000)
 
 rewards:
-  - [ 1002098, 1, 1, 0.000070 ] # Gold Nordic Helm
-  - [ 1002154, 1, 1, 0.000070 ] # Dark Guiltian
-  - [ 1002170, 1, 1, 0.000070 ] # Dark Distinction
-  - [ 1002185, 1, 1, 0.000070 ] # Dark Pilfer
-  - [ 1002628, 1, 1, 0.100000 ] # Red Misty#TODO
-  - [ 1040080, 1, 1, 0.000035 ] # Dark Piette
-  - [ 1040084, 1, 1, 0.000035 ] # Dark Shadow
-  - [ 1040085, 1, 1, 0.000035 ] # Maroon Jangoon Armor
-  - [ 1041076, 1, 1, 0.000035 ] # Dark Shadow
-  - [ 1041083, 1, 1, 0.000035 ] # Dark Piettra
-  - [ 1041086, 1, 1, 0.000035 ] # Black Jangoon Armor
-  - [ 1050039, 1, 1, 0.000035 ] # Dark Starlight
-  - [ 1051026, 1, 1, 0.000035 ] # Dark Moonlight
-  - [ 1052113, 1, 1, 0.100000 ] # Red Barbay#TODO
-  - [ 1072107, 1, 1, 0.000070 ] # Black Red-Lined Shoes
-  - [ 1072117, 1, 1, 0.000070 ] # Dark Moon Shoes
-  - [ 1072118, 1, 1, 0.000070 ] # Red Pierre Shoes
-  - [ 1072126, 1, 1, 0.000070 ] # Maroon Jangoon Shoes
-  - [ 1072300, 1, 1, 0.100000 ] # Brown Leather Krag#TODO
-  - [ 1082025, 1, 1, 0.000070 ] # Dark Knuckle
-  - [ 1082064, 1, 1, 0.000070 ] # Dark Arten
-  - [ 1082073, 1, 1, 0.000070 ] # Dark Brace
-  - [ 1082074, 1, 1, 0.000070 ] # Dark Cleave
-  - [ 1082195, 1, 1, 0.100000 ] # Brown Barbee#TODO
-  - [ 1322027, 1, 1, 0.100000 ] # Frying Pan#TODO
-  - [ 2000001, 1, 1, 0.500000 ] # Orange Potion
-  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 1002098, 1, 1, 0.000200 ] # Gold Nordic Helm
+  - [ 1002154, 1, 1, 0.000200 ] # Dark Guiltian
+  - [ 1002170, 1, 1, 0.000200 ] # Dark Distinction
+  - [ 1002185, 1, 1, 0.000200 ] # Dark Pilfer
+  - [ 1002628, 1, 1, 0.000200 ] # Red Misty
+  - [ 1040080, 1, 1, 0.000200 ] # Dark Piette
+  - [ 1040084, 1, 1, 0.000200 ] # Dark Shadow
+  - [ 1040085, 1, 1, 0.000200 ] # Maroon Jangoon Armor
+  - [ 1041076, 1, 1, 0.000200 ] # Dark Shadow
+  - [ 1041083, 1, 1, 0.000200 ] # Dark Piettra
+  - [ 1041086, 1, 1, 0.000200 ] # Black Jangoon Armor
+  - [ 1050039, 1, 1, 0.000200 ] # Dark Starlight
+  - [ 1051026, 1, 1, 0.000200 ] # Dark Moonlight
+  - [ 1052113, 1, 1, 0.000200 ] # Red Barbay
+  - [ 1072107, 1, 1, 0.000200 ] # Black Red-Lined Shoes
+  - [ 1072117, 1, 1, 0.000200 ] # Dark Moon Shoes
+  - [ 1072118, 1, 1, 0.000200 ] # Red Pierre Shoes
+  - [ 1072126, 1, 1, 0.000200 ] # Maroon Jangoon Shoes
+  - [ 1072300, 1, 1, 0.000200 ] # Brown Leather Krag
+  - [ 1082025, 1, 1, 0.000200 ] # Dark Knuckle
+  - [ 1082064, 1, 1, 0.000200 ] # Dark Arten
+  - [ 1082073, 1, 1, 0.000200 ] # Dark Brace
+  - [ 1082074, 1, 1, 0.000200 ] # Dark Cleave
+  - [ 1082195, 1, 1, 0.000200 ] # Brown Barbee
+  - [ 1322027, 1, 1, 0.000200 ] # Frying Pan
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
   - [ 2012002, 1, 1, 0.100000 ] # Sap of Ancient Tree
-  - [ 2040402, 1, 1, 0.000600 ] # Scroll for Topwear for DEF 10%
-  - [ 2040502, 1, 1, 0.000600 ] # Scroll for Overall Armor for DEX 10%
-  - [ 2040602, 1, 1, 0.000600 ] # Scroll for Bottomwear for DEF 10%
-  - [ 2040701, 1, 1, 0.001300 ] # Scroll for Shoes for DEX 60%
-  - [ 2040801, 1, 1, 0.001300 ] # Scroll for Gloves for DEX 60%
-  - [ 2040901, 1, 1, 0.001300 ] # Scroll for Shield for DEF 60%
-  - [ 2041001, 1, 1, 0.001300 ] # Scroll for Cape for Magic Def. 60%
-  - [ 2041004, 1, 1, 0.001300 ] # Scroll for Cape for Weapon DEF 60%
-  - [ 2041010, 1, 1, 0.001300 ] # Scroll for Cape for MP 60%
-  - [ 2041016, 1, 1, 0.001300 ] # Scroll for Cape for INT 60%
-  - [ 2041017, 1, 1, 0.000600 ] # Scroll for Cape for INT 10%
-  - [ 2043001, 1, 1, 0.001300 ] # Scroll for One-Handed Sword for ATT 60%
-  - [ 2043101, 1, 1, 0.001300 ] # Scroll for One-Handed Axe for ATT 60%
-  - [ 2043201, 1, 1, 0.001300 ] # Scroll for One-Handed BW for ATT 60%
-  - [ 2044002, 1, 1, 0.000600 ] # Scroll for Two-handed Sword for ATT 10%
-  - [ 2044112, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 60%#TODO
-  - [ 2044412, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 60%#TODO
-  - [ 2060000, 1, 1, 0.500000 ] # Arrow for Bow
-  - [ 2061000, 1, 1, 0.500000 ] # Arrow for Crossbow
-  - [ 2070009, 1, 1, 0.000070 ] # Wooden Top
-  - [ 4000003, 1, 1, 0.600000 ] # Tree Branch
-  - [ 4000005, 1, 1, 0.600000 ] # Leaf
-  - [ 4000018, 1, 1, 0.600000 ] # Firewood
-  - [ 4000195, 1, 1, 0.600000 ] # Seedling
-  - [ 4010000, 1, 1, 0.008000 ] # Bronze Ore
-  - [ 4020001, 1, 1, 0.008000 ] # Amethyst Ore
+  - [ 2040402, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 10%
+  - [ 2040502, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040602, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040701, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 60%
+  - [ 2040801, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 60%
+  - [ 2040901, 1, 1, 0.010000 ] # Scroll for Shield for DEF 60%
+  - [ 2041001, 1, 1, 0.010000 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041004, 1, 1, 0.010000 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2041010, 1, 1, 0.010000 ] # Scroll for Cape for MP 60%
+  - [ 2041016, 1, 1, 0.010000 ] # Scroll for Cape for INT 60%
+  - [ 2041017, 1, 1, 0.010000 ] # Scroll for Cape for INT 10%
+  - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2044002, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044112, 1, 1, 0.010000 ] # Scroll for Two-Handed Axe for Accuracy 60%
+  - [ 2044412, 1, 1, 0.010000 ] # Scroll for Pole-Arm for Accuracy 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070009, 1, 1, 0.000400 ] # Wooden Top
+  - [ 4000003, 1, 1, 0.400000 ] # Tree Branch
+  - [ 4000005, 1, 1, 0.400000 ] # Leaf
+  - [ 4000018, 1, 1, 0.400000 ] # Firewood
+  - [ 4000195, 1, 1, 0.400000 ] # Seedling
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore

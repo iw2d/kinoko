@@ -1,35 +1,35 @@
 # Cellion (5120001)
 
 rewards:
-  - [ 1002028, 1, 1, 0.000080 ] # Silver Crusader Helm
-  - [ 1032013, 1, 1, 0.000080 ] # Red-Hearted Earrings
-  - [ 1040094, 1, 1, 0.000080 ] # Red China
-  - [ 1041089, 1, 1, 0.000060 ] # Dark Shouldermail
-  - [ 1050054, 1, 1, 0.000060 ] # Red Anakamoon
-  - [ 1050058, 1, 1, 0.000060 ] # Orange Tai
-  - [ 1060083, 1, 1, 0.000080 ] # Red China Pants
-  - [ 1061088, 1, 1, 0.000060 ] # Dark Shouldermail Pants
+  - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
+  - [ 1032013, 1, 1, 0.000100 ] # Red-Hearted Earrings
+  - [ 1040094, 1, 1, 0.000100 ] # Red China
+  - [ 1041089, 1, 1, 0.000100 ] # Dark Shouldermail
+  - [ 1050054, 1, 1, 0.000100 ] # Red Anakamoon
+  - [ 1050058, 1, 1, 0.000100 ] # Orange Tai
+  - [ 1060083, 1, 1, 0.000100 ] # Red China Pants
+  - [ 1061088, 1, 1, 0.000100 ] # Dark Shouldermail Pants
   - [ 1072115, 1, 1, 0.000100 ] # Blue Moon Shoes
   - [ 1072126, 1, 1, 0.000100 ] # Maroon Jangoon Shoes
-  - [ 1072306, 1, 1, 0.100000 ] # Black Basile Boots#TODO
-  - [ 1082074, 1, 1, 0.000090 ] # Dark Cleave
-  - [ 1402007, 1, 1, 0.000090 ] # Zard
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 1072306, 1, 1, 0.000100 ] # Black Basile Boots
+  - [ 1082074, 1, 1, 0.000100 ] # Dark Cleave
+  - [ 1402007, 1, 1, 0.000100 ] # Zard
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
-  - [ 2041012, 1, 1, 0.000030 ] # Scroll for Cape for STR 100%
-  - [ 2043002, 1, 1, 0.000030 ] # Scroll for One-Handed Sword for ATT 10%
-  - [ 2044212, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 60%#TODO
-  - [ 2331000, 1, 1, 0.100000 ] # Blaze Capsule#TODO
-  - [ 4000070, 1, 1, 0.500000 ] # Cellion Tail
+  - [ 2040933, 1, 1, 0.000100 ] # Scroll for Shield for STR 10%
+  - [ 2041012, 1, 1, 0.000100 ] # Scroll for Cape for STR 100%
+  - [ 2043002, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2044212, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 60%
+  - [ 2331000, 1, 1, 0.000400 ] # Blaze Capsule
+  - [ 4000070, 1, 1, 0.400000 ] # Cellion Tail
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

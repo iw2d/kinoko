@@ -1,43 +1,43 @@
 # Dark Wyvern (8150302)
 
 rewards:
-  - [ 1002531, 1, 1, 0.000050 ] # Silver Grace Helmet
-  - [ 1040115, 1, 1, 0.000080 ] # Green Osfa Suit
-  - [ 1051095, 1, 1, 0.000060 ] # Blue Oriental Fury Coat
-  - [ 1060107, 1, 1, 0.000080 ] # Red Osfa Pants
-  - [ 1072214, 1, 1, 0.000060 ] # Blue Katina Boots 
-  - [ 1082127, 1, 1, 0.000070 ] # Dark Focus
-  - [ 1332027, 1, 1, 0.000070 ] # Varkit
-  - [ 1442020, 1, 1, 0.000060 ] # Hellslayer
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.003000 ] # Reindeer Milk
+  - [ 1002531, 1, 1, 0.000100 ] # Silver Grace Helmet
+  - [ 1040115, 1, 1, 0.000100 ] # Green Osfa Suit
+  - [ 1051095, 1, 1, 0.000100 ] # Blue Oriental Fury Coat
+  - [ 1060107, 1, 1, 0.000100 ] # Red Osfa Pants
+  - [ 1072214, 1, 1, 0.000100 ] # Blue Katina Boots 
+  - [ 1082127, 1, 1, 0.000100 ] # Dark Focus
+  - [ 1332027, 1, 1, 0.000100 ] # Varkit
+  - [ 1442020, 1, 1, 0.000100 ] # Hellslayer
+  - [ 1482012, 1, 1, 0.000100 ] # King Cent
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.010000 ] # Reindeer Milk
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040302, 1, 1, 0.000010 ] # Scroll for Earring for INT 10%
-  - [ 2044301, 1, 1, 0.000020 ] # Scroll for Spear for ATT 60%
-  - [ 2044402, 1, 1, 0.000040 ] # Scroll for Pole Arm for ATT 10%
-  - [ 2290010, 1, 1, 0.000050 ] # [Mastery Book] Brandish
-  - [ 2290019, 1, 1, 0.000004 ] # [Mastery Book] Divine Charge
-  - [ 2290026, 1, 1, 0.000050 ] # [Mastery Book] Big Bang
-  - [ 2290076, 1, 1, 0.000020 ] # [Mastery Book] Shadow Shifter
-  - [ 2290119, 1, 1, 0.100000 ] # [Mastery Book] Battleship Cannon#TODO
-  - [ 2290128, 1, 1, 0.100000 ] # [Mastery Book] High Mastery 20#TODO
-  - [ 2290142, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 20#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000270, 1, 1, 0.600000 ] # Wyvern Toenail
-  - [ 4004000, 1, 1, 0.002000 ] # Power Crystal Ore
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
+  - [ 2044402, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 10%
+  - [ 2290010, 1, 1, 0.000100 ] # [Mastery Book] Brandish
+  - [ 2290019, 1, 1, 0.000100 ] # [Mastery Book] Divine Charge
+  - [ 2290026, 1, 1, 0.000100 ] # [Mastery Book] Big Bang
+  - [ 2290076, 1, 1, 0.000100 ] # [Mastery Book] Shadow Shifter
+  - [ 2290119, 1, 1, 0.000100 ] # [Mastery Book] Battleship Cannon
+  - [ 2290128, 1, 1, 0.000100 ] # [Mastery Book] High Mastery 20
+  - [ 2290142, 1, 1, 0.000100 ] # [Mastery Book] Flame Wheel 20
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4131004, 1, 1, 0.000100 ] # Two-Handed Axe Forging Manual
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4131004, 1, 1, 0.000300 ] # Two-Handed Axe Forging Manual
   - [ 4031415, 1, 1, 0.100000, 3712 ] # Black Soul of Dark Wyvern
   - [ 4031485, 1, 1, 0.020000, 6124 ] # Dragon Heart
   - [ 4001077, 1, 1, 0.060000, 7301 ] # Tough Dragon Skin

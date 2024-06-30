@@ -1,46 +1,46 @@
 # Dark Klock (8140300)
 
 rewards:
-  - [ 1002252, 1, 1, 0.000070 ] # Red Infinium Circlet
-  - [ 1002277, 1, 1, 0.000060 ] # Green Falcon
-  - [ 1002288, 1, 1, 0.000070 ] # Green Patriot
-  - [ 1002289, 1, 1, 0.000070 ] # Dark Patriot
-  - [ 1002340, 1, 1, 0.000060 ] # Dark Dragon Barbute
-  - [ 1040090, 1, 1, 0.000090 ] # Green Orientican
-  - [ 1040107, 1, 1, 0.000070 ] # Dark Studded Top
-  - [ 1040109, 1, 1, 0.000060 ] # Red Pirate Top
-  - [ 1041096, 1, 1, 0.000090 ] # Umber Mantis
-  - [ 1041099, 1, 1, 0.000070 ] # Bloody Platina
-  - [ 1051043, 1, 1, 0.000090 ] # Brown Choro
-  - [ 1051055, 1, 1, 0.000070 ] # Dark Requierre
-  - [ 1051057, 1, 1, 0.000060 ] # Purple Enigma
-  - [ 1060079, 1, 1, 0.000090 ] # Green Orientican Pants
-  - [ 1060095, 1, 1, 0.000070 ] # Dark Studded Pants
-  - [ 1060098, 1, 1, 0.000060 ] # Red Pirate Pants
-  - [ 1061095, 1, 1, 0.000090 ] # Umber Mantis Pants
-  - [ 1061098, 1, 1, 0.000070 ] # Bloody Platina Pants
-  - [ 1072160, 1, 1, 0.000070 ] # Gold Lapiz Sandals
-  - [ 1322020, 1, 1, 0.000060 ] # Bent Judgement
-  - [ 1382010, 1, 1, 0.000060 ] # Dark Ritual
-  - [ 1472027, 1, 1, 0.000060 ] # Green Scarab
-  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
+  - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
+  - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
+  - [ 1002288, 1, 1, 0.000100 ] # Green Patriot
+  - [ 1002289, 1, 1, 0.000100 ] # Dark Patriot
+  - [ 1002340, 1, 1, 0.000100 ] # Dark Dragon Barbute
+  - [ 1040090, 1, 1, 0.000100 ] # Green Orientican
+  - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
+  - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top
+  - [ 1041096, 1, 1, 0.000100 ] # Umber Mantis
+  - [ 1041099, 1, 1, 0.000100 ] # Bloody Platina
+  - [ 1051043, 1, 1, 0.000100 ] # Brown Choro
+  - [ 1051055, 1, 1, 0.000100 ] # Dark Requierre
+  - [ 1051057, 1, 1, 0.000100 ] # Purple Enigma
+  - [ 1060079, 1, 1, 0.000100 ] # Green Orientican Pants
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants
+  - [ 1060098, 1, 1, 0.000100 ] # Red Pirate Pants
+  - [ 1061095, 1, 1, 0.000100 ] # Umber Mantis Pants
+  - [ 1061098, 1, 1, 0.000100 ] # Bloody Platina Pants
+  - [ 1072160, 1, 1, 0.000100 ] # Gold Lapiz Sandals
+  - [ 1322020, 1, 1, 0.000100 ] # Bent Judgement
+  - [ 1382010, 1, 1, 0.000100 ] # Dark Ritual
+  - [ 1472027, 1, 1, 0.000100 ] # Green Scarab
+  - [ 1492009, 1, 1, 0.000100 ] # Abyss Shooter
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
   - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
-  - [ 2040513, 1, 1, 0.000030 ] # Scroll for Overall Armor for INT 60%
-  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
-  - [ 2040623, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 100%#TODO
-  - [ 2043110, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 100%#TODO
-  - [ 2044602, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 10%
-  - [ 2070005, 1, 1, 0.000040 ] # Steely Throwing-Knives
+  - [ 2040513, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040622, 1, 1, 0.000100 ] # Scroll for Bottomwear for HP 10%
+  - [ 2040623, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 100%
+  - [ 2043110, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for Accuracy 100%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000146, 1, 1, 0.400000 ] # Evil Spirit
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
-  - [ 4006000, 1, 1, 0.000900 ] # The Magic Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4010005, 1, 1, 0.007000 ] # Orihalcon Ore
-  - [ 4020007, 1, 1, 0.005000 ] # Diamond Ore
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.350000, 7101 ] # Tachion

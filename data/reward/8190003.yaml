@@ -1,44 +1,44 @@
 # Skelegon (8190003)
 
 rewards:
-  - [ 1002377, 1, 1, 0.000070 ] # Green Valhalla Helmet
-  - [ 1032017, 1, 1, 0.000070 ] # Rose Earrings
-  - [ 1050103, 1, 1, 0.000070 ] # Blue Varuna
-  - [ 1050107, 1, 1, 0.000070 ] # Blue Arzuna
-  - [ 1072221, 1, 1, 0.000060 ] # Blue Crescent Boots
-  - [ 1072318, 1, 1, 0.100000 ] # Black Duke Barkin Shoes#TODO
-  - [ 1082135, 1, 1, 0.000050 ] # Blue Anelin
-  - [ 1082140, 1, 1, 0.000050 ] # Blue Korben
-  - [ 1332051, 1, 1, 0.000003 ] # Gold Double Knife
-  - [ 1422027, 1, 1, 0.000006 ] # Golden Smith Hammer
-  - [ 1482011, 1, 1, 0.100000 ] # White Fangz#TODO
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 1002377, 1, 1, 0.000100 ] # Green Valhalla Helmet
+  - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
+  - [ 1050103, 1, 1, 0.000100 ] # Blue Varuna
+  - [ 1050107, 1, 1, 0.000100 ] # Blue Arzuna
+  - [ 1072221, 1, 1, 0.000100 ] # Blue Crescent Boots
+  - [ 1072318, 1, 1, 0.000100 ] # Black Duke Barkin Shoes
+  - [ 1082135, 1, 1, 0.000100 ] # Blue Anelin
+  - [ 1082140, 1, 1, 0.000100 ] # Blue Korben
+  - [ 1332051, 1, 1, 0.000100 ] # Gold Double Knife
+  - [ 1422027, 1, 1, 0.000100 ] # Golden Smith Hammer
+  - [ 1482011, 1, 1, 0.000100 ] # White Fangz
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040534, 1, 1, 0.100000 ] # Scroll for Overall for STR 10%#TODO
-  - [ 2040627, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 10%#TODO
-  - [ 2040805, 1, 1, 0.000020 ] # Scroll for Gloves for ATT 10%
-  - [ 2043301, 1, 1, 0.000040 ] # Scroll for Dagger for ATT 60%
-  - [ 2044602, 1, 1, 0.000050 ] # Scroll for Crossbow for ATT 10%
-  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2290012, 1, 1, 0.000002 ] # [Mastery Book] Blast
-  - [ 2290014, 1, 1, 0.000004 ] # [Mastery Book] Guardian
-  - [ 2290050, 1, 1, 0.000010 ] # [Mastery Book] Angel Ray
-  - [ 2290062, 1, 1, 0.000003 ] # [Mastery Book] Phoenix
-  - [ 2290070, 1, 1, 0.000001 ] # [Mastery Book] Piercing Arrow
-  - [ 2290086, 1, 1, 0.000003 ] # [Mastery Book] Ninja Storm
-  - [ 2290108, 1, 1, 0.100000 ] # [Mastery Book] Speed Infusion#TODO
-  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
-  - [ 4000244, 1, 1, 0.000004 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000004 ] # Dragon Scale
-  - [ 4000274, 1, 1, 0.500000 ] # Broken Horn
-  - [ 4004001, 1, 1, 0.002000 ] # Wisdom Crystal Ore
+  - [ 2040534, 1, 1, 0.000100 ] # Scroll for Overall for STR 10%
+  - [ 2040627, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 10%
+  - [ 2040805, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 10%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2044902, 1, 1, 0.000100 ] # Scroll for Gun for ATT 10%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2290012, 1, 1, 0.000100 ] # [Mastery Book] Blast
+  - [ 2290014, 1, 1, 0.000100 ] # [Mastery Book] Guardian
+  - [ 2290050, 1, 1, 0.000100 ] # [Mastery Book] Angel Ray
+  - [ 2290062, 1, 1, 0.000100 ] # [Mastery Book] Phoenix
+  - [ 2290070, 1, 1, 0.000100 ] # [Mastery Book] Piercing Arrow
+  - [ 2290086, 1, 1, 0.000100 ] # [Mastery Book] Ninja Storm
+  - [ 2290108, 1, 1, 0.000100 ] # [Mastery Book] Speed Infusion
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000274, 1, 1, 0.400000 ] # Broken Horn
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
-  - [ 4020001, 1, 1, 0.001000 ] # Amethyst Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator

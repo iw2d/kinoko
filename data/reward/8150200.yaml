@@ -1,38 +1,38 @@
 # Green Cornian (8150200)
 
 rewards:
-  - [ 1002529, 1, 1, 0.000070 ] # Blue Grace Helmet
-  - [ 1002646, 1, 1, 0.100000 ] # Black Polax Hat#TODO
-  - [ 1050102, 1, 1, 0.000070 ] # Green Varuna
-  - [ 1051092, 1, 1, 0.000070 ] # Red Katte
-  - [ 1051105, 1, 1, 0.000070 ] # Green Armis
-  - [ 1072194, 1, 1, 0.000080 ] # Purple Osfa Boots
-  - [ 1082135, 1, 1, 0.000070 ] # Blue Anelin
-  - [ 1082210, 1, 1, 0.100000 ] # Red Martier#TODO
-  - [ 1092026, 1, 1, 0.000070 ] # Bronze Kalkan
-  - [ 1402005, 1, 1, 0.000080 ] # Berzerker
-  - [ 1462018, 1, 1, 0.000080 ] # Casa Crow
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
-  - [ 2020015, 1, 1, 0.003000 ] # Sunset Dew
+  - [ 1002529, 1, 1, 0.000100 ] # Blue Grace Helmet
+  - [ 1002646, 1, 1, 0.000100 ] # Black Polax Hat
+  - [ 1050102, 1, 1, 0.000100 ] # Green Varuna
+  - [ 1051092, 1, 1, 0.000100 ] # Red Katte
+  - [ 1051105, 1, 1, 0.000100 ] # Green Armis
+  - [ 1072194, 1, 1, 0.000100 ] # Purple Osfa Boots
+  - [ 1082135, 1, 1, 0.000100 ] # Blue Anelin
+  - [ 1082210, 1, 1, 0.000100 ] # Red Martier
+  - [ 1092026, 1, 1, 0.000100 ] # Bronze Kalkan
+  - [ 1402005, 1, 1, 0.000100 ] # Berzerker
+  - [ 1462018, 1, 1, 0.000100 ] # Casa Crow
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2020015, 1, 1, 0.010000 ] # Sunset Dew
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040001, 1, 1, 0.000030 ] # Scroll for Helmet for DEF 60%
-  - [ 2040425, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 60%#TODO
-  - [ 2043301, 1, 1, 0.000030 ] # Scroll for Dagger for ATT 60%
-  - [ 2290100, 1, 1, 0.100000 ] # [Mastery Book] Energy Orb#TODO
-  - [ 2290135, 1, 1, 0.100000 ] # [Mastery Book] High Defense 30#TODO
-  - [ 2290149, 1, 1, 0.100000 ] # [Mastery Book] Dark Fog 30#TODO
-  - [ 2330004, 1, 1, 0.100000 ] # Shiny Bullet#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000266, 1, 1, 0.600000 ] # Wooden Shoulder Pad
+  - [ 2040001, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 60%
+  - [ 2040425, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 60%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2290100, 1, 1, 0.000100 ] # [Mastery Book] Energy Orb
+  - [ 2290135, 1, 1, 0.000100 ] # [Mastery Book] High Defense 30
+  - [ 2290149, 1, 1, 0.000100 ] # [Mastery Book] Dark Fog 30
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000266, 1, 1, 0.400000 ] # Wooden Shoulder Pad
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator
   - [ 4001075, 1, 1, 0.050000, 7301 ] # Cornian's Marrow
   - [ 4001103, 1, 1, 0.050000, 7303 ] # Cornian's Marrow

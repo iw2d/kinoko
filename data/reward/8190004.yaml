@@ -1,47 +1,47 @@
 # Skelosaurus (8190004)
 
 rewards:
-  - [ 1002380, 1, 1, 0.000050 ] # Green Canal Hood
-  - [ 1040121, 1, 1, 0.000070 ] # Blue Neos
-  - [ 1051102, 1, 1, 0.000050 ] # Blue Bazura
-  - [ 1060109, 1, 1, 0.000070 ] # Green Neos Pants
-  - [ 1072215, 1, 1, 0.000050 ] # Red Katina Boots
-  - [ 1082151, 1, 1, 0.000070 ] # Green Ciara
-  - [ 1302056, 1, 1, 0.000003 ] # Sparta
-  - [ 1322045, 1, 1, 0.000005 ] # Battle Hammer
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 1002380, 1, 1, 0.000100 ] # Green Canal Hood
+  - [ 1040121, 1, 1, 0.000100 ] # Blue Neos
+  - [ 1051102, 1, 1, 0.000100 ] # Blue Bazura
+  - [ 1060109, 1, 1, 0.000100 ] # Green Neos Pants
+  - [ 1072215, 1, 1, 0.000100 ] # Red Katina Boots
+  - [ 1082151, 1, 1, 0.000100 ] # Green Ciara
+  - [ 1302056, 1, 1, 0.000100 ] # Sparta
+  - [ 1322045, 1, 1, 0.000100 ] # Battle Hammer
+  - [ 1482012, 1, 1, 0.000100 ] # King Cent
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2040530, 1, 1, 0.100000 ] # Scroll for Overall for STR 100%#TODO
-  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
-  - [ 2041004, 1, 1, 0.000020 ] # Scroll for Cape for Weapon DEF 60%
-  - [ 2041013, 1, 1, 0.000010 ] # Scroll for Cape for STR 60%
-  - [ 2044201, 1, 1, 0.000040 ] # Scroll for Two-handed BW for ATT 60%
-  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 2290002, 1, 1, 0.000010 ] # [Mastery Book] Achilles
-  - [ 2290009, 1, 1, 0.000002 ] # [Mastery Book] Advanced Combo Attack
-  - [ 2290034, 1, 1, 0.000010 ] # [Mastery Book]  Holy Shield
-  - [ 2290053, 1, 1, 0.000002 ] # [Mastery Book] Sharp Eyes
-  - [ 2290058, 1, 1, 0.000002 ] # [Mastery Book] Hamstring Shot
-  - [ 2290068, 1, 1, 0.000001 ] # [Mastery Book] Blind
-  - [ 2290090, 1, 1, 0.000002 ] # [Mastery Book] Boomerang Step
-  - [ 2290121, 1, 1, 0.100000 ] # [Mastery Book] Battleship Torpedo#TODO
-  - [ 2290130, 1, 1, 0.100000 ] # [Mastery Book] Freeze Standing 20#TODO
-  - [ 2290144, 1, 1, 0.100000 ] # [Mastery Book] Magic Mastery 20#TODO
-  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
-  - [ 4000244, 1, 1, 0.000004 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000004 ] # Dragon Scale
-  - [ 4000273, 1, 1, 0.500000 ] # Old Neck Bone
+  - [ 2040326, 1, 1, 0.000100 ] # Scroll for Earring for HP 60%
+  - [ 2040530, 1, 1, 0.000100 ] # Scroll for Overall for STR 100%
+  - [ 2040924, 1, 1, 0.000100 ] # Scroll for Shield for LUK 60%
+  - [ 2041004, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2041013, 1, 1, 0.000100 ] # Scroll for Cape for STR 60%
+  - [ 2044201, 1, 1, 0.000100 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
+  - [ 2044801, 1, 1, 0.000100 ] # Scroll for Knuckle for Attack 60%
+  - [ 2290002, 1, 1, 0.000100 ] # [Mastery Book] Achilles
+  - [ 2290009, 1, 1, 0.000100 ] # [Mastery Book] Advanced Combo Attack
+  - [ 2290034, 1, 1, 0.000100 ] # [Mastery Book]  Holy Shield
+  - [ 2290053, 1, 1, 0.000100 ] # [Mastery Book] Sharp Eyes
+  - [ 2290058, 1, 1, 0.000100 ] # [Mastery Book] Hamstring Shot
+  - [ 2290068, 1, 1, 0.000100 ] # [Mastery Book] Blind
+  - [ 2290090, 1, 1, 0.000100 ] # [Mastery Book] Boomerang Step
+  - [ 2290121, 1, 1, 0.000100 ] # [Mastery Book] Battleship Torpedo
+  - [ 2290130, 1, 1, 0.000100 ] # [Mastery Book] Freeze Standing 20
+  - [ 2290144, 1, 1, 0.000100 ] # [Mastery Book] Magic Mastery 20
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000273, 1, 1, 0.400000 ] # Old Neck Bone
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4020002, 1, 1, 0.004000 ] # AquaMarine Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

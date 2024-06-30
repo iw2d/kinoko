@@ -2,33 +2,33 @@
 
 rewards:
   - [ 1002038, 1, 1, 0.000100 ] # Brown Jester
-  - [ 1002145, 1, 1, 0.000070 ] # Dark Matty
+  - [ 1002145, 1, 1, 0.000100 ] # Dark Matty
   - [ 1002174, 1, 1, 0.000100 ] # Brown Guise
   - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
-  - [ 1040073, 1, 1, 0.000080 ] # Blue Legolier
-  - [ 1050035, 1, 1, 0.000060 ] # Brown Starlight
-  - [ 1052107, 1, 1, 0.100000 ] # Brown Pollard#TODO
-  - [ 1060062, 1, 1, 0.000080 ] # Blue Legolier Pants
-  - [ 1072002, 1, 1, 0.000080 ] # Steel Trigger
+  - [ 1040073, 1, 1, 0.000100 ] # Blue Legolier
+  - [ 1050035, 1, 1, 0.000100 ] # Brown Starlight
+  - [ 1052107, 1, 1, 0.000100 ] # Brown Pollard
+  - [ 1060062, 1, 1, 0.000100 ] # Blue Legolier Pants
+  - [ 1072002, 1, 1, 0.000100 ] # Steel Trigger
   - [ 1072041, 1, 1, 0.000100 ] # Blood Battle Grieves
   - [ 1082042, 1, 1, 0.000100 ] # Steel Sylvia
   - [ 1322009, 1, 1, 0.000100 ] # Plunger
-  - [ 1332014, 1, 1, 0.000080 ] # Gephart
-  - [ 1412006, 1, 1, 0.000090 ] # Blue Axe
-  - [ 1462005, 1, 1, 0.000060 ] # Heckler
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
-  - [ 2044701, 1, 1, 0.000030 ] # Scroll for Claw for ATT 60%
-  - [ 2050003, 1, 1, 0.001000 ] # Holy Water
-  - [ 2070001, 1, 1, 0.000060 ] # Wolbi Throwing-Stars
-  - [ 4000021, 1, 1, 0.025000 ] # Leather
-  - [ 4000073, 1, 1, 0.500000 ] # Solid Horn
+  - [ 1332014, 1, 1, 0.000100 ] # Gephart
+  - [ 1412006, 1, 1, 0.000100 ] # Blue Axe
+  - [ 1462005, 1, 1, 0.000100 ] # Heckler
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2044701, 1, 1, 0.000100 ] # Scroll for Claw for ATT 60%
+  - [ 2050003, 1, 1, 0.010000 ] # Holy Water
+  - [ 2070001, 1, 1, 0.000400 ] # Wolbi Throwing-Stars
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
-  - [ 4004000, 1, 1, 0.000700 ] # Power Crystal Ore
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4020000, 1, 1, 0.003000 ] # Garnet Ore
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator

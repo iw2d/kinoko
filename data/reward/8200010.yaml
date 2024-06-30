@@ -1,26 +1,26 @@
 # Oblivion Monk Trainee (8200010)
 
 rewards:
-  - [ 1002646, 1, 1, 0.100000 ] # Black Polax Hat#TODO
-  - [ 1050099, 1, 1, 0.100000 ] # Dark Katinas#TODO
-  - [ 1072225, 1, 1, 0.100000 ] # Red Varr Shoes#TODO
-  - [ 1082158, 1, 1, 0.100000 ] # Red Arcina#TODO
-  - [ 1312030, 1, 1, 0.100000 ] # Tomahawk#TODO
-  - [ 1432030, 1, 1, 0.100000 ] # Pinaka#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2041022, 1, 1, 0.100000 ] # Scroll for Cape for LUK 60%#TODO
-  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
-  - [ 2290089, 1, 1, 0.100000 ] # [Mastery Book] Shadow Claw#TODO
-  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
-  - [ 4000455, 1, 1, 0.100000 ] # Red Cone Hat#TODO
-  - [ 4000456, 1, 1, 0.100000 ] # Frowny Mask#TODO
-  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 1002646, 1, 1, 0.000100 ] # Black Polax Hat
+  - [ 1050099, 1, 1, 0.000100 ] # Dark Katinas
+  - [ 1072225, 1, 1, 0.000100 ] # Red Varr Shoes
+  - [ 1082158, 1, 1, 0.000100 ] # Red Arcina
+  - [ 1312030, 1, 1, 0.000100 ] # Tomahawk
+  - [ 1432030, 1, 1, 0.000100 ] # Pinaka
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2041022, 1, 1, 0.000100 ] # Scroll for Cape for LUK 60%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2290089, 1, 1, 0.000100 ] # [Mastery Book] Shadow Claw
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
+  - [ 4000455, 1, 1, 0.400000 ] # Red Cone Hat
+  - [ 4000456, 1, 1, 0.400000 ] # Frowny Mask
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator

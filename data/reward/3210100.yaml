@@ -2,34 +2,34 @@
 
 rewards:
   - [ 1002141, 1, 1, 0.000100 ] # Red Matty
-  - [ 1002178, 1, 1, 0.000070 ] # Green Burgler
+  - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1040026, 1, 1, 0.000100 ] # Green Hwarang Shirt
-  - [ 1052107, 1, 1, 0.100000 ] # Brown Pollard#TODO
+  - [ 1052107, 1, 1, 0.000100 ] # Brown Pollard
   - [ 1060019, 1, 1, 0.000100 ] # Brown Martial Arts Pants
-  - [ 1072079, 1, 1, 0.000090 ] # Red Hunter Boots
-  - [ 1072091, 1, 1, 0.000070 ] # Black Salt Shoes
-  - [ 1072103, 1, 1, 0.000070 ] # Red Silky Boots
+  - [ 1072079, 1, 1, 0.000100 ] # Red Hunter Boots
+  - [ 1072091, 1, 1, 0.000100 ] # Black Salt Shoes
+  - [ 1072103, 1, 1, 0.000100 ] # Red Silky Boots
   - [ 1082044, 1, 1, 0.000100 ] # Gold Sylvia
-  - [ 1082052, 1, 1, 0.000090 ] # Blue Lutia
+  - [ 1082052, 1, 1, 0.000100 ] # Blue Lutia
   - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
   - [ 1372003, 1, 1, 0.000100 ] # Mithril Wand
-  - [ 1372012, 1, 1, 0.000050 ] # Crystal Wand
-  - [ 1452005, 1, 1, 0.000090 ] # Ryden
-  - [ 1462005, 1, 1, 0.000050 ] # Heckler
-  - [ 1472012, 1, 1, 0.000080 ] # Silver Guardian
-  - [ 2000001, 1, 1, 0.020000 ] # Orange Potion
+  - [ 1372012, 1, 1, 0.000100 ] # Crystal Wand
+  - [ 1452005, 1, 1, 0.000100 ] # Ryden
+  - [ 1462005, 1, 1, 0.000100 ] # Heckler
+  - [ 1472012, 1, 1, 0.000100 ] # Silver Guardian
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2070001, 1, 1, 0.000080 ] # Wolbi Throwing-Stars
-  - [ 4000021, 1, 1, 0.025000 ] # Leather
+  - [ 2070001, 1, 1, 0.000400 ] # Wolbi Throwing-Stars
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
   - [ 4000024, 1, 1, 0.400000 ] # Fire Boar's Tooth
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4010002, 1, 1, 0.006000 ] # Mithril Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

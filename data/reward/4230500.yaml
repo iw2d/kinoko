@@ -1,29 +1,29 @@
 # Chipmunk (4230500)
 
 rewards:
-  - [ 1002023, 1, 1, 0.000080 ] # Jousting Helmet
-  - [ 1002092, 1, 1, 0.000040 ] # Yellow Duke
-  - [ 1002103, 1, 1, 0.000080 ] # Pink Moon Conehat
-  - [ 1002155, 1, 1, 0.000800 ] # White Guiltian
-  - [ 1041066, 1, 1, 0.000050 ] # Blue Legolia
-  - [ 1041095, 1, 1, 0.000040 ] # Bloody Mantis
-  - [ 1050038, 1, 1, 0.000040 ] # Blue Starlight
-  - [ 1051016, 1, 1, 0.000050 ] # Silver Fitted Mail
-  - [ 1061061, 1, 1, 0.000050 ] # Blue Legolia Pants
-  - [ 1061094, 1, 1, 0.000040 ] # Bloody Mantis Pants
-  - [ 1482006, 1, 1, 0.100000 ] # Neozard#TODO
+  - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
+  - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
+  - [ 1002103, 1, 1, 0.000100 ] # Pink Moon Conehat
+  - [ 1002155, 1, 1, 0.000100 ] # White Guiltian
+  - [ 1041066, 1, 1, 0.000100 ] # Blue Legolia
+  - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis
+  - [ 1050038, 1, 1, 0.000100 ] # Blue Starlight
+  - [ 1051016, 1, 1, 0.000100 ] # Silver Fitted Mail
+  - [ 1061061, 1, 1, 0.000100 ] # Blue Legolia Pants
+  - [ 1061094, 1, 1, 0.000100 ] # Bloody Mantis Pants
+  - [ 1482006, 1, 1, 0.000100 ] # Neozard
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040001, 1, 1, 0.000030 ] # Scroll for Helmet for DEF 60%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
-  - [ 4000021, 1, 1, 0.030000 ] # Leather
-  - [ 4000276, 1, 1, 0.500000 ] # Acorn
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 2040001, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330001, 1, 1, 0.000400 ] # Split Bullet
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000276, 1, 1, 0.400000 ] # Acorn
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
-  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator

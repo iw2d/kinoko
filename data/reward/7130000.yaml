@@ -1,42 +1,42 @@
 # Lucida (7130000)
 
 rewards:
-  - [ 1002029, 1, 1, 0.000090 ] # Red Oriental Helmet
-  - [ 1002094, 1, 1, 0.000080 ] # Bronze Planet
-  - [ 1002248, 1, 1, 0.000090 ] # Silver Identity
-  - [ 1002253, 1, 1, 0.000080 ] # Blue Infinium Circlet
-  - [ 1002275, 1, 1, 0.000060 ] # Blue Falcon
-  - [ 1040105, 1, 1, 0.000080 ] # Brown Studded Top
-  - [ 1040108, 1, 1, 0.000060 ] # Green Pirate Top
-  - [ 1050063, 1, 1, 0.000080 ] # Green Linnex
-  - [ 1051041, 1, 1, 0.000090 ] # Red Choro
-  - [ 1051044, 1, 1, 0.000090 ] # Blue Anakarune
-  - [ 1051053, 1, 1, 0.000080 ] # Red Requierre
-  - [ 1051062, 1, 1, 0.000080 ] # Blue Lineros
-  - [ 1060093, 1, 1, 0.000080 ] # Brown Studded Pants
-  - [ 1060097, 1, 1, 0.000060 ] # Green Pirate Pants
-  - [ 1072145, 1, 1, 0.000090 ] # Blue Gore Boots
-  - [ 1072147, 1, 1, 0.000090 ] # Sapphire Camel Boots
-  - [ 1072150, 1, 1, 0.000090 ] # Blood Moss Boots
-  - [ 1072177, 1, 1, 0.000060 ] # Green Enigma Shoes
-  - [ 1072210, 1, 1, 0.000060 ] # Red Rivers Boots
-  - [ 1072312, 1, 1, 0.100000 ] # Blue Pageant#TODO
-  - [ 1402012, 1, 1, 0.000060 ] # Doombringer
+  - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
+  - [ 1002094, 1, 1, 0.000100 ] # Bronze Planet
+  - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
+  - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
+  - [ 1002275, 1, 1, 0.000100 ] # Blue Falcon
+  - [ 1040105, 1, 1, 0.000100 ] # Brown Studded Top
+  - [ 1040108, 1, 1, 0.000100 ] # Green Pirate Top
+  - [ 1050063, 1, 1, 0.000100 ] # Green Linnex
+  - [ 1051041, 1, 1, 0.000100 ] # Red Choro
+  - [ 1051044, 1, 1, 0.000100 ] # Blue Anakarune
+  - [ 1051053, 1, 1, 0.000100 ] # Red Requierre
+  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
+  - [ 1060093, 1, 1, 0.000100 ] # Brown Studded Pants
+  - [ 1060097, 1, 1, 0.000100 ] # Green Pirate Pants
+  - [ 1072145, 1, 1, 0.000100 ] # Blue Gore Boots
+  - [ 1072147, 1, 1, 0.000100 ] # Sapphire Camel Boots
+  - [ 1072150, 1, 1, 0.000100 ] # Blood Moss Boots
+  - [ 1072177, 1, 1, 0.000100 ] # Green Enigma Shoes
+  - [ 1072210, 1, 1, 0.000100 ] # Red Rivers Boots
+  - [ 1072312, 1, 1, 0.000100 ] # Blue Pageant
+  - [ 1402012, 1, 1, 0.000100 ] # Doombringer
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040419, 1, 1, 0.100000 ] # Scroll for Topwear for STR 10%#TODO
-  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
-  - [ 2044601, 1, 1, 0.000020 ] # Scroll for Crossbow for ATT 60%
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040419, 1, 1, 0.000100 ] # Scroll for Topwear for STR 10%
+  - [ 2040427, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 10%
+  - [ 2044601, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%
   - [ 2050004, 1, 1, 0.010000 ] # All Cure Potion
-  - [ 4000074, 1, 1, 0.500000 ] # Lucida Tail
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
-  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
-  - [ 4020006, 1, 1, 0.004000 ] # Topaz Ore
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4161021, 1, 1, 0.000090 ] # [Storybook] Formula for Black Cloud
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4161021, 1, 1, 0.000000 ] # [Storybook] Formula for Black Cloud

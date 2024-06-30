@@ -1,36 +1,36 @@
 # Red Wyvern (8150300)
 
 rewards:
-  - [ 1002365, 1, 1, 0.000050 ] # Red Oriental Fury Hat
-  - [ 1041118, 1, 1, 0.000070 ] # Red Osfa Suit
-  - [ 1050089, 1, 1, 0.000070 ] # Blue Ades
-  - [ 1052128, 1, 1, 0.100000 ] # White Marquini#TODO
-  - [ 1061116, 1, 1, 0.000070 ] # Purple Osfa Pants
-  - [ 1072223, 1, 1, 0.000040 ] # Green Varr Shoes
-  - [ 1082129, 1, 1, 0.000050 ] # Purple Imperial
-  - [ 1452017, 1, 1, 0.000050 ] # Metus
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040516, 1, 1, 0.000010 ] # Scroll for Overall Armor for LUK 60%
-  - [ 2040701, 1, 1, 0.000020 ] # Scroll for Shoes for DEX 60%
-  - [ 2043002, 1, 1, 0.000040 ] # Scroll for One-Handed Sword for ATT 10%
-  - [ 2043114, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 10%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2290120, 1, 1, 0.100000 ] # [Mastery Book] Battleship Cannon#TODO
-  - [ 2290127, 1, 1, 0.100000 ] # [Mastery Book] Overswing 30#TODO
-  - [ 2290141, 1, 1, 0.100000 ] # [Mastery Book] Illusion 30#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000268, 1, 1, 0.600000 ] # Wyvern Wing
-  - [ 4004002, 1, 1, 0.002000 ] # DEX Crystal Ore
-  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4020000, 1, 1, 0.004000 ] # Garnet Ore
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 1002365, 1, 1, 0.000100 ] # Red Oriental Fury Hat
+  - [ 1041118, 1, 1, 0.000100 ] # Red Osfa Suit
+  - [ 1050089, 1, 1, 0.000100 ] # Blue Ades
+  - [ 1052128, 1, 1, 0.000100 ] # White Marquini
+  - [ 1061116, 1, 1, 0.000100 ] # Purple Osfa Pants
+  - [ 1072223, 1, 1, 0.000100 ] # Green Varr Shoes
+  - [ 1082129, 1, 1, 0.000100 ] # Purple Imperial
+  - [ 1452017, 1, 1, 0.000100 ] # Metus
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040516, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040701, 1, 1, 0.000100 ] # Scroll for Shoes for DEX 60%
+  - [ 2043002, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2043114, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for Accuracy 10%
+  - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%
+  - [ 2290120, 1, 1, 0.000100 ] # [Mastery Book] Battleship Cannon
+  - [ 2290127, 1, 1, 0.000100 ] # [Mastery Book] Overswing 30
+  - [ 2290141, 1, 1, 0.000100 ] # [Mastery Book] Illusion 30
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
   - [ 4031485, 1, 1, 0.020000, 6124 ] # Dragon Heart
   - [ 4001077, 1, 1, 0.060000, 7301 ] # Tough Dragon Skin
   - [ 4001105, 1, 1, 0.060000, 7303 ] # Tough Dragon Skin

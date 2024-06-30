@@ -1,32 +1,32 @@
 # Captain (7130104)
 
 rewards:
-  - [ 1002095, 1, 1, 0.000090 ] # Mithril Planet
-  - [ 1032020, 1, 1, 0.000090 ] # Gold Drop Earrings
-  - [ 1051054, 1, 1, 0.000090 ] # Brown Requierre
-  - [ 1072163, 1, 1, 0.000090 ] # Red Mystique Shoes
-  - [ 1082110, 1, 1, 0.000070 ] # Blue Cordon
-  - [ 1082204, 1, 1, 0.100000 ] # Black Bisk#TODO
-  - [ 1102023, 1, 1, 0.000090 ] # White Gaia Cape
-  - [ 1332018, 1, 1, 0.000080 ] # Kandine
-  - [ 1422010, 1, 1, 0.000080 ] # Gigantic Sledge
-  - [ 1472028, 1, 1, 0.000080 ] # Blue Scarab
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
+  - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1072163, 1, 1, 0.000100 ] # Red Mystique Shoes
+  - [ 1082110, 1, 1, 0.000100 ] # Blue Cordon
+  - [ 1082204, 1, 1, 0.000100 ] # Black Bisk
+  - [ 1102023, 1, 1, 0.000100 ] # White Gaia Cape
+  - [ 1332018, 1, 1, 0.000100 ] # Kandine
+  - [ 1422010, 1, 1, 0.000100 ] # Gigantic Sledge
+  - [ 1472028, 1, 1, 0.000100 ] # Blue Scarab
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.020000 ] # Mana Elixir
-  - [ 2040002, 1, 1, 0.000020 ] # Scroll for Helmet for DEF 10%
-  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
-  - [ 2040705, 1, 1, 0.000020 ] # Scroll for Shoes for Jump 10%
-  - [ 2040824, 1, 1, 0.100000 ] # Scroll for Gloves for HP 60%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 4000297, 1, 1, 0.600000 ] # Captain's Hat
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040002, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 10%
+  - [ 2040427, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 10%
+  - [ 2040705, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 10%
+  - [ 2040824, 1, 1, 0.000100 ] # Scroll for Gloves for HP 60%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 4000297, 1, 1, 0.400000 ] # Captain's Hat
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010001, 1, 1, 0.004000 ] # Steel Ore
-  - [ 4020000, 1, 1, 0.004000 ] # Garnet Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
   - [ 4031436, 1, 1, 0.070000, 3828 ] # Hook

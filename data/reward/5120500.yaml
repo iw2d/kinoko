@@ -1,33 +1,33 @@
 # Grizzly (5120500)
 
 rewards:
-  - [ 1032021, 1, 1, 0.000700 ] # Holy Cross Earrings
-  - [ 1040099, 1, 1, 0.000050 ] # Ocher Scorpio
-  - [ 1050058, 1, 1, 0.000050 ] # Orange Tai
-  - [ 1060088, 1, 1, 0.000050 ] # Ocher Scorpio Pants
+  - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings
+  - [ 1040099, 1, 1, 0.000100 ] # Ocher Scorpio
+  - [ 1050058, 1, 1, 0.000100 ] # Orange Tai
+  - [ 1060088, 1, 1, 0.000100 ] # Ocher Scorpio Pants
   - [ 1072134, 1, 1, 0.000100 ] # Orihalcon Hildon Boots
   - [ 1082066, 1, 1, 0.000100 ] # Brown Moon Gloves
   - [ 1082081, 1, 1, 0.000100 ] # Red Pennance
-  - [ 1082201, 1, 1, 0.100000 ] # Black Schult#TODO
-  - [ 1432006, 1, 1, 0.000040 ] # Holy Spear
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
-  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
-  - [ 2040515, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 100%#TODO
-  - [ 2043701, 1, 1, 0.000030 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2043801, 1, 1, 0.000040 ] # Scroll for Staff for Magic Attack 60%
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
-  - [ 4000021, 1, 1, 0.030000 ] # Leather
-  - [ 4000283, 1, 1, 0.040000 ] # Bear Foot
-  - [ 4000284, 1, 1, 0.500000 ] # Yellow Belt
-  - [ 4003005, 1, 1, 0.020000 ] # Soft Feather
+  - [ 1082201, 1, 1, 0.000100 ] # Black Schult
+  - [ 1432006, 1, 1, 0.000100 ] # Holy Spear
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040031, 1, 1, 0.000100 ] # Scroll for Helmet for DEX 10%
+  - [ 2040515, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 100%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2330002, 1, 1, 0.000400 ] # Mighty Bullet
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000283, 1, 1, 0.400000 ] # Bear Foot
+  - [ 4000284, 1, 1, 0.400000 ] # Yellow Belt
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
-  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
-  - [ 4020004, 1, 1, 0.004000 ] # Opal Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator

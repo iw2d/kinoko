@@ -2,33 +2,33 @@
 
 rewards:
   - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
-  - [ 1002135, 1, 1, 0.000070 ] # Brown Pole-Feather Hat
-  - [ 1002184, 1, 1, 0.000060 ] # Brown Pilfer
+  - [ 1002135, 1, 1, 0.000100 ] # Brown Pole-Feather Hat
+  - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer
   - [ 1041050, 1, 1, 0.000100 ] # Purple Steal
-  - [ 1041052, 1, 1, 0.000090 ] # Blue Amoria Top
+  - [ 1041052, 1, 1, 0.000100 ] # Blue Amoria Top
   - [ 1041056, 1, 1, 0.000100 ] # Red Huntress Armor
-  - [ 1051014, 1, 1, 0.000070 ] # Sapphire Fitted Mail
+  - [ 1051014, 1, 1, 0.000100 ] # Sapphire Fitted Mail
   - [ 1061046, 1, 1, 0.000100 ] # Purple Steal Pants
-  - [ 1061048, 1, 1, 0.000090 ] # Blue Amoria Skirt
+  - [ 1061048, 1, 1, 0.000100 ] # Blue Amoria Skirt
   - [ 1061052, 1, 1, 0.000100 ] # Red Huntress Pants
-  - [ 1072114, 1, 1, 0.000060 ] # Red Moon Shoes
-  - [ 1082023, 1, 1, 0.000060 ] # Iron Knuckle
-  - [ 1082073, 1, 1, 0.000050 ] # Dark Brace
+  - [ 1072114, 1, 1, 0.000100 ] # Red Moon Shoes
+  - [ 1082023, 1, 1, 0.000100 ] # Iron Knuckle
+  - [ 1082073, 1, 1, 0.000100 ] # Dark Brace
   - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
-  - [ 1382018, 1, 1, 0.000070 ] # Petal Staff
-  - [ 1402006, 1, 1, 0.000070 ] # Lionheart
-  - [ 1482004, 1, 1, 0.100000 ] # Prime Hands#TODO
+  - [ 1382018, 1, 1, 0.000100 ] # Petal Staff
+  - [ 1402006, 1, 1, 0.000100 ] # Lionheart
+  - [ 1482004, 1, 1, 0.000100 ] # Prime Hands
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
-  - [ 2040701, 1, 1, 0.000030 ] # Scroll for Shoes for DEX 60%
-  - [ 2040801, 1, 1, 0.000030 ] # Scroll for Gloves for DEX 60%
-  - [ 2044212, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 60%#TODO
-  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
-  - [ 4000167, 1, 1, 0.500000 ] # Hard Needle
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 2040701, 1, 1, 0.000100 ] # Scroll for Shoes for DEX 60%
+  - [ 2040801, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 60%
+  - [ 2044212, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 60%
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000167, 1, 1, 0.400000 ] # Hard Needle
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
-  - [ 4020000, 1, 1, 0.003000 ] # Garnet Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
   - [ 4031263, 1, 1, 0.040000, 3081 ] # Masked Fish's DNA Sample

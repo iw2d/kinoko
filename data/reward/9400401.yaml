@@ -1,25 +1,25 @@
 # Chunin (9400401)
 
 rewards:
-  - [ 1002209, 1, 1, 0.100000 ] # Green Sonata#TODO
-  - [ 1050049, 1, 1, 0.100000 ] # Dark Calas#TODO
-  - [ 1050052, 1, 1, 0.100000 ] # Blue-Lined Kismet#TODO
-  - [ 1072123, 1, 1, 0.100000 ] # Green Steel-Tip Boots#TODO
-  - [ 1082010, 1, 1, 0.100000 ] # Mithril Brist#TODO
-  - [ 1092021, 1, 1, 0.100000 ] # Mystic Shield#TODO
-  - [ 1372014, 1, 1, 0.100000 ] # Evil Tale#TODO
-  - [ 1402014, 1, 1, 0.100000 ] # Thermometer#TODO
-  - [ 1442009, 1, 1, 0.100000 ] # Crescent Polearm#TODO
-  - [ 1442016, 1, 1, 0.100000 ] # Dark Snowboard#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2040101, 1, 1, 0.100000 ] # Scroll for Face Accessory for HP 60%#TODO
-  - [ 2040200, 1, 1, 0.100000 ] # Scroll for Eye Accessory for Accuracy 10%#TODO
-  - [ 2040917, 1, 1, 0.100000 ] # Dark Scroll for Shield for Weapon ATT 30%#TODO
-  - [ 2060002, 1, 1, 0.100000 ] # Steel Arrow for Bow#TODO
-  - [ 2070001, 1, 1, 0.100000 ] # Wolbi Throwing-Stars#TODO
-  - [ 4000338, 1, 1, 0.100000 ] # Chunin Poison Dart#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 1002209, 1, 1, 0.000100 ] # Green Sonata
+  - [ 1050049, 1, 1, 0.000100 ] # Dark Calas
+  - [ 1050052, 1, 1, 0.000100 ] # Blue-Lined Kismet
+  - [ 1072123, 1, 1, 0.000100 ] # Green Steel-Tip Boots
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1092021, 1, 1, 0.000100 ] # Mystic Shield
+  - [ 1372014, 1, 1, 0.000100 ] # Evil Tale
+  - [ 1402014, 1, 1, 0.000100 ] # Thermometer
+  - [ 1442009, 1, 1, 0.000100 ] # Crescent Polearm
+  - [ 1442016, 1, 1, 0.000100 ] # Dark Snowboard
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040101, 1, 1, 0.000100 ] # Scroll for Face Accessory for HP 60%
+  - [ 2040200, 1, 1, 0.000100 ] # Scroll for Eye Accessory for Accuracy 10%
+  - [ 2040917, 1, 1, 0.000100 ] # Dark Scroll for Shield for Weapon ATT 30%
+  - [ 2060002, 10, 20, 0.008000 ] # Steel Arrow for Bow
+  - [ 2070001, 1, 1, 0.000400 ] # Wolbi Throwing-Stars
+  - [ 4000338, 1, 1, 0.400000 ] # Chunin Poison Dart
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator

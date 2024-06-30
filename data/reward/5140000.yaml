@@ -1,43 +1,43 @@
 # White Fang (5140000)
 
 rewards:
-  - [ 1002029, 1, 1, 0.000070 ] # Red Oriental Helmet
-  - [ 1002634, 1, 1, 0.100000 ] # Purple Cast Linen#TODO
-  - [ 1032014, 1, 1, 0.000090 ] # Pink-Flowered Earrings
-  - [ 1041077, 1, 1, 0.000090 ] # Maroon Moon
-  - [ 1041097, 1, 1, 0.000050 ] # Aqua Platina
-  - [ 1050051, 1, 1, 0.000090 ] # Red-Lined Kismet
-  - [ 1050053, 1, 1, 0.000070 ] # Blue Anakamoon
-  - [ 1050059, 1, 1, 0.000070 ] # Blue Tai
-  - [ 1061076, 1, 1, 0.000090 ] # Maroon Moon Pants
-  - [ 1061096, 1, 1, 0.000050 ] # Aqua Platina Pants
+  - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
+  - [ 1002634, 1, 1, 0.000100 ] # Purple Cast Linen
+  - [ 1032014, 1, 1, 0.000100 ] # Pink-Flowered Earrings
+  - [ 1041077, 1, 1, 0.000100 ] # Maroon Moon
+  - [ 1041097, 1, 1, 0.000100 ] # Aqua Platina
+  - [ 1050051, 1, 1, 0.000100 ] # Red-Lined Kismet
+  - [ 1050053, 1, 1, 0.000100 ] # Blue Anakamoon
+  - [ 1050059, 1, 1, 0.000100 ] # Blue Tai
+  - [ 1061076, 1, 1, 0.000100 ] # Maroon Moon Pants
+  - [ 1061096, 1, 1, 0.000100 ] # Aqua Platina Pants
   - [ 1072114, 1, 1, 0.000100 ] # Red Moon Shoes
   - [ 1072127, 1, 1, 0.000100 ] # Blue Jangoon Shoes
-  - [ 1072134, 1, 1, 0.000090 ] # Orihalcon Hildon Boots
-  - [ 1072151, 1, 1, 0.000070 ] # Gold Moss Boots
-  - [ 1082066, 1, 1, 0.000090 ] # Brown Moon Gloves
+  - [ 1072134, 1, 1, 0.000100 ] # Orihalcon Hildon Boots
+  - [ 1072151, 1, 1, 0.000100 ] # Gold Moss Boots
+  - [ 1082066, 1, 1, 0.000100 ] # Brown Moon Gloves
   - [ 1082072, 1, 1, 0.000100 ] # Gold Brace
-  - [ 1102021, 1, 1, 0.000070 ] # Blue Gaia Cape
-  - [ 1412007, 1, 1, 0.000070 ] # The Shining
+  - [ 1102021, 1, 1, 0.000100 ] # Blue Gaia Cape
+  - [ 1412007, 1, 1, 0.000100 ] # The Shining
   - [ 1422008, 1, 1, 0.000100 ] # Sledgehammer
   - [ 1472014, 1, 1, 0.000100 ] # Steel Avarice
-  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2040024, 1, 1, 0.100000 ] # Scroll for Helmet for INT 100%#TODO
-  - [ 2040901, 1, 1, 0.000030 ] # Scroll for Shield for DEF 60%
-  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2070004, 1, 1, 0.000100 ] # Tobi Throwing-Stars
+  - [ 2040024, 1, 1, 0.000100 ] # Scroll for Helmet for INT 100%
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000052, 1, 1, 0.500000 ] # White Fang Tail
+  - [ 4000052, 1, 1, 0.400000 ] # White Fang Tail
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
-  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4020000, 1, 1, 0.004000 ] # Garnet Ore
-  - [ 4020007, 1, 1, 0.005000 ] # Diamond Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator

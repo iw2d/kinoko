@@ -1,24 +1,24 @@
 # Eye of Time (8200000)
 
 rewards:
-  - [ 1002640, 1, 1, 0.100000 ] # Blue Sun Boat Hat#TODO
-  - [ 1040110, 1, 1, 0.100000 ] # Dark Pirate Top#TODO
-  - [ 1041107, 1, 1, 0.100000 ] # Dark Pirate Blouse#TODO
-  - [ 1072179, 1, 1, 0.100000 ] # Dark Enigma Shoes#TODO
-  - [ 1082112, 1, 1, 0.100000 ] # Dark Cordon#TODO
-  - [ 1102028, 1, 1, 0.100000 ] # Red Seraph Cape#TODO
-  - [ 1402015, 1, 1, 0.100000 ] # Heaven's Gate#TODO
-  - [ 1452011, 1, 1, 0.100000 ] # Golden Hinkel#TODO
-  - [ 2040532, 1, 1, 0.100000 ] # Scroll for Overall for STR 60%#TODO
-  - [ 2044112, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 60%#TODO
-  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
-  - [ 2330004, 1, 1, 0.100000 ] # Shiny Bullet#TODO
-  - [ 4000443, 1, 1, 0.100000 ] # Cracked Hourglass#TODO
-  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010000, 1, 1, 0.100000 ] # Bronze Ore#TODO
-  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
+  - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top
+  - [ 1041107, 1, 1, 0.000100 ] # Dark Pirate Blouse
+  - [ 1072179, 1, 1, 0.000100 ] # Dark Enigma Shoes
+  - [ 1082112, 1, 1, 0.000100 ] # Dark Cordon
+  - [ 1102028, 1, 1, 0.000100 ] # Red Seraph Cape
+  - [ 1402015, 1, 1, 0.000100 ] # Heaven's Gate
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 2040532, 1, 1, 0.000100 ] # Scroll for Overall for STR 60%
+  - [ 2044112, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 60%
+  - [ 2044807, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 60%
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 4000443, 1, 1, 0.400000 ] # Cracked Hourglass
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator

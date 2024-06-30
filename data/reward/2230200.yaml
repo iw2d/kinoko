@@ -2,24 +2,24 @@
 
 rewards:
   - [ 1002160, 1, 1, 0.000100 ] # Brown Hunter
-  - [ 1040062, 1, 1, 0.000050 ] # Red Knucklevest
-  - [ 1040072, 1, 1, 0.000060 ] # Red Legolier
-  - [ 1060051, 1, 1, 0.000050 ] # Red Knucklevest Pants
-  - [ 1060061, 1, 1, 0.000060 ] # Red Legolier Pants
+  - [ 1040062, 1, 1, 0.000100 ] # Red Knucklevest
+  - [ 1040072, 1, 1, 0.000100 ] # Red Legolier
+  - [ 1060051, 1, 1, 0.000100 ] # Red Knucklevest Pants
+  - [ 1060061, 1, 1, 0.000100 ] # Red Legolier Pants
   - [ 1072086, 1, 1, 0.000100 ] # Green Lappy Boots
-  - [ 1072291, 1, 1, 0.100000 ] # Brown Wooden Krag#TODO
+  - [ 1072291, 1, 1, 0.000100 ] # Brown Wooden Krag
   - [ 1412000, 1, 1, 0.000100 ] # Two-Handed Axe
-  - [ 1412006, 1, 1, 0.000070 ] # Blue Axe
-  - [ 1422001, 1, 1, 0.000050 ] # Mithril Maul
+  - [ 1412006, 1, 1, 0.000100 ] # Blue Axe
+  - [ 1422001, 1, 1, 0.000100 ] # Mithril Maul
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040501, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEX 60%
-  - [ 2044601, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 60%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000165, 1, 1, 0.500000 ] # Flamboyant Petal
+  - [ 2040501, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2044601, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000165, 1, 1, 0.400000 ] # Flamboyant Petal
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
-  - [ 4020002, 1, 1, 0.003000 ] # AquaMarine Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
   - [ 4031262, 1, 1, 0.040000, 3081 ] # Flower Fish's DNA Sample

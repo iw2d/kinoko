@@ -1,34 +1,34 @@
 # Curse Eye (3230100)
 
 rewards:
-  - [ 1002025, 1, 1, 0.000060 ] # Red Duke
-  - [ 1002143, 1, 1, 0.000080 ] # Green Matty
-  - [ 1002180, 1, 1, 0.000080 ] # Dark Burgler
+  - [ 1002025, 1, 1, 0.000100 ] # Red Duke
+  - [ 1002143, 1, 1, 0.000100 ] # Green Matty
+  - [ 1002180, 1, 1, 0.000100 ] # Dark Burgler
   - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt
-  - [ 1040063, 1, 1, 0.000080 ] # Black Knucklevest
-  - [ 1040079, 1, 1, 0.000060 ] # Brown Piette
-  - [ 1051025, 1, 1, 0.000070 ] # Blue Moonlight
+  - [ 1040063, 1, 1, 0.000100 ] # Black Knucklevest
+  - [ 1040079, 1, 1, 0.000100 ] # Brown Piette
+  - [ 1051025, 1, 1, 0.000100 ] # Blue Moonlight
   - [ 1060016, 1, 1, 0.000100 ] # Black Martial Arts Pants
-  - [ 1060052, 1, 1, 0.000080 ] # Black Knucklevest Pants
-  - [ 1060069, 1, 1, 0.000060 ] # Brown Piette Pants
-  - [ 1322003, 1, 1, 0.000080 ] # Lollipop
-  - [ 1432003, 1, 1, 0.000070 ] # Nakamaki
-  - [ 1482005, 1, 1, 0.100000 ] # Silver Maiden#TODO
-  - [ 1492006, 1, 1, 0.100000 ] # Lunar Shooter#TODO
+  - [ 1060052, 1, 1, 0.000100 ] # Black Knucklevest Pants
+  - [ 1060069, 1, 1, 0.000100 ] # Brown Piette Pants
+  - [ 1322003, 1, 1, 0.000100 ] # Lollipop
+  - [ 1432003, 1, 1, 0.000100 ] # Nakamaki
+  - [ 1482005, 1, 1, 0.000100 ] # Silver Maiden
+  - [ 1492006, 1, 1, 0.000100 ] # Lunar Shooter
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002005, 1, 1, 0.005000 ] # Sniper Potion
-  - [ 2044502, 1, 1, 0.000030 ] # Scroll for Bow for ATT 10%
-  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
+  - [ 2002005, 1, 1, 0.010000 ] # Sniper Potion
+  - [ 2044502, 1, 1, 0.000100 ] # Scroll for Bow for ATT 10%
+  - [ 2044902, 1, 1, 0.000100 ] # Scroll for Gun for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330001, 1, 1, 0.000400 ] # Split Bullet
   - [ 4000013, 1, 1, 0.400000 ] # Curse Eye Tail
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
-  - [ 4020006, 1, 1, 0.003000 ] # Topaz Ore
-  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4031239, 1, 1, 0.350000, 2099 ] # The Letter to Camila

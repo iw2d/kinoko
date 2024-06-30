@@ -1,43 +1,43 @@
 # Maverick Type D (8120106)
 
 rewards:
-  - [ 1002253, 1, 1, 0.100000 ] # Blue Infinium Circlet#TODO
-  - [ 1002274, 1, 1, 0.100000 ] # Dark Galaxy#TODO
-  - [ 1002276, 1, 1, 0.100000 ] # Red Falcon#TODO
-  - [ 1002284, 1, 1, 0.100000 ] # White Nightfox#TODO
-  - [ 1041107, 1, 1, 0.100000 ] # Dark Pirate Blouse#TODO
-  - [ 1041121, 1, 1, 0.100000 ] # Dark Valkyrie#TODO
-  - [ 1050074, 1, 1, 0.100000 ] # Dark Enigmatic#TODO
-  - [ 1050080, 1, 1, 0.100000 ] # Green Battle Lord#TODO
-  - [ 1051068, 1, 1, 0.100000 ] # Green Pria#TODO
-  - [ 1061106, 1, 1, 0.100000 ] # Dark Pirate Skirt#TODO
-  - [ 1061120, 1, 1, 0.100000 ] # Blood Valkyrie Skirt#TODO
-  - [ 1072155, 1, 1, 0.100000 ] # Purple Carzen Boots#TODO
-  - [ 1072167, 1, 1, 0.100000 ] # Dark Elf Shoes#TODO
-  - [ 1072203, 1, 1, 0.100000 ] # Red Ades Shoes#TODO
-  - [ 1072206, 1, 1, 0.100000 ] # Blue Neli Shoes#TODO
-  - [ 1072212, 1, 1, 0.100000 ] # Dark Rivers Boots#TODO
-  - [ 1072312, 1, 1, 0.100000 ] # Blue Pageant#TODO
-  - [ 1082110, 1, 1, 0.100000 ] # Blue Cordon#TODO
-  - [ 1082143, 1, 1, 0.100000 ] # Purple Mystra#TODO
-  - [ 1302018, 1, 1, 0.100000 ] # Khan#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2002004, 1, 1, 0.100000 ] # Warrior Potion#TODO
-  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
-  - [ 2040823, 1, 1, 0.100000 ] # Scroll for Gloves for HP 100%#TODO
-  - [ 2041009, 1, 1, 0.100000 ] # Scroll for Cape for MP 100%#TODO
-  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
-  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2385042, 1, 1, 0.100000 ] # Maverick Type D Card#TODO
-  - [ 4000556, 1, 1, 0.100000 ] # Maverick Type D Booster#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
-  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
-  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
+  - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
+  - [ 1002276, 1, 1, 0.000100 ] # Red Falcon
+  - [ 1002284, 1, 1, 0.000100 ] # White Nightfox
+  - [ 1041107, 1, 1, 0.000100 ] # Dark Pirate Blouse
+  - [ 1041121, 1, 1, 0.000100 ] # Dark Valkyrie
+  - [ 1050074, 1, 1, 0.000100 ] # Dark Enigmatic
+  - [ 1050080, 1, 1, 0.000100 ] # Green Battle Lord
+  - [ 1051068, 1, 1, 0.000100 ] # Green Pria
+  - [ 1061106, 1, 1, 0.000100 ] # Dark Pirate Skirt
+  - [ 1061120, 1, 1, 0.000100 ] # Blood Valkyrie Skirt
+  - [ 1072155, 1, 1, 0.000100 ] # Purple Carzen Boots
+  - [ 1072167, 1, 1, 0.000100 ] # Dark Elf Shoes
+  - [ 1072203, 1, 1, 0.000100 ] # Red Ades Shoes
+  - [ 1072206, 1, 1, 0.000100 ] # Blue Neli Shoes
+  - [ 1072212, 1, 1, 0.000100 ] # Dark Rivers Boots
+  - [ 1072312, 1, 1, 0.000100 ] # Blue Pageant
+  - [ 1082110, 1, 1, 0.000100 ] # Blue Cordon
+  - [ 1082143, 1, 1, 0.000100 ] # Purple Mystra
+  - [ 1302018, 1, 1, 0.000100 ] # Khan
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2040031, 1, 1, 0.000100 ] # Scroll for Helmet for DEX 10%
+  - [ 2040823, 1, 1, 0.000100 ] # Scroll for Gloves for HP 100%
+  - [ 2041009, 1, 1, 0.000100 ] # Scroll for Cape for MP 100%
+  - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2385042, 1, 1, 0.020000 ] # Maverick Type D Card
+  - [ 4000556, 1, 1, 0.400000 ] # Maverick Type D Booster
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
+  - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator

@@ -1,38 +1,38 @@
 # Red Kentaurus (8140102)
 
 rewards:
-  - [ 1002274, 1, 1, 0.000080 ] # Dark Galaxy
-  - [ 1002643, 1, 1, 0.100000 ] # Red Brave Hamal#TODO
-  - [ 1032022, 1, 1, 0.000090 ] # Half Earrings
-  - [ 1051068, 1, 1, 0.000090 ] # Green Pria
-  - [ 1072211, 1, 1, 0.000090 ] # Blue Rivers Boots
-  - [ 1082118, 1, 1, 0.000090 ] # Green Larceny
-  - [ 1092023, 1, 1, 0.000090 ] # Steel Aquila Shield
-  - [ 1332023, 1, 1, 0.000080 ] # Dragon's Tail
-  - [ 1382035, 1, 1, 0.000003 ] # Blue Marine
-  - [ 1402004, 1, 1, 0.000080 ] # Blue Screamer
-  - [ 1422027, 1, 1, 0.000003 ] # Golden Smith Hammer
-  - [ 1432004, 1, 1, 0.000090 ] # Serpent's Tongue
-  - [ 1452019, 1, 1, 0.000003 ] # White Nisrock
-  - [ 2000002, 1, 1, 0.020000 ] # White Potion
-  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
-  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
-  - [ 2040703, 1, 1, 0.000020 ] # Scroll for Shoes for Jump 100%
-  - [ 2040805, 1, 1, 0.000020 ] # Scroll for Gloves for ATT 10%
-  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
-  - [ 2331000, 1, 1, 0.100000 ] # Blaze Capsule#TODO
-  - [ 4000232, 1, 1, 0.600000 ] # Kentaurus's Flame
+  - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
+  - [ 1002643, 1, 1, 0.000100 ] # Red Brave Hamal
+  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
+  - [ 1051068, 1, 1, 0.000100 ] # Green Pria
+  - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots
+  - [ 1082118, 1, 1, 0.000100 ] # Green Larceny
+  - [ 1092023, 1, 1, 0.000100 ] # Steel Aquila Shield
+  - [ 1332023, 1, 1, 0.000100 ] # Dragon's Tail
+  - [ 1382035, 1, 1, 0.000100 ] # Blue Marine
+  - [ 1402004, 1, 1, 0.000100 ] # Blue Screamer
+  - [ 1422027, 1, 1, 0.000100 ] # Golden Smith Hammer
+  - [ 1432004, 1, 1, 0.000100 ] # Serpent's Tongue
+  - [ 1452019, 1, 1, 0.000100 ] # White Nisrock
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040321, 1, 1, 0.000100 ] # Scroll for Earring for LUK 60%
+  - [ 2040622, 1, 1, 0.000100 ] # Scroll for Bottomwear for HP 10%
+  - [ 2040703, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 100%
+  - [ 2040805, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 10%
+  - [ 2044807, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 60%
+  - [ 2331000, 1, 1, 0.000400 ] # Blaze Capsule
+  - [ 4000232, 1, 1, 0.400000 ] # Kentaurus's Flame
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010001, 1, 1, 0.004000 ] # Steel Ore
-  - [ 4020000, 1, 1, 0.004000 ] # Garnet Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
-  - [ 4161015, 1, 1, 0.000120 ] # [Storybook] Burning Book of Fire
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4161015, 1, 1, 0.000000 ] # [Storybook] Burning Book of Fire
   - [ 4031465, 1, 1, 0.005000, 6250 ] # Athena Pierce's Old Gloves
   - [ 4031487, 1, 1, 0.005000, 6251 ] # Athena Pierce's Old Gloves

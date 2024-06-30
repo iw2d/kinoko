@@ -1,41 +1,41 @@
 # Bone Fish (8140600)
 
 rewards:
-  - [ 1002324, 1, 1, 0.000070 ] # Brown Osfa Hat
-  - [ 1032017, 1, 1, 0.000070 ] # Rose Earrings
-  - [ 1040109, 1, 1, 0.000090 ] # Red Pirate Top
-  - [ 1040111, 1, 1, 0.000080 ] # Green Commodore
-  - [ 1052128, 1, 1, 0.100000 ] # White Marquini#TODO
-  - [ 1060098, 1, 1, 0.000090 ] # Red Pirate Pants
-  - [ 1060100, 1, 1, 0.000080 ] # Green Commodore Pants
-  - [ 1072160, 1, 1, 0.000070 ] # Gold Lapiz Sandals
-  - [ 1072194, 1, 1, 0.000080 ] # Purple Osfa Boots
-  - [ 1072205, 1, 1, 0.000010 ] # Dark Ades Shoes
-  - [ 1082108, 1, 1, 0.000090 ] # Dark Eyes
-  - [ 1082117, 1, 1, 0.000070 ] # Dark Emperor
-  - [ 1102030, 1, 1, 0.000060 ] # Black Seraph Cape
-  - [ 1452013, 1, 1, 0.000030 ] # Fire Arund
+  - [ 1002324, 1, 1, 0.000100 ] # Brown Osfa Hat
+  - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
+  - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top
+  - [ 1040111, 1, 1, 0.000100 ] # Green Commodore
+  - [ 1052128, 1, 1, 0.000100 ] # White Marquini
+  - [ 1060098, 1, 1, 0.000100 ] # Red Pirate Pants
+  - [ 1060100, 1, 1, 0.000100 ] # Green Commodore Pants
+  - [ 1072160, 1, 1, 0.000100 ] # Gold Lapiz Sandals
+  - [ 1072194, 1, 1, 0.000100 ] # Purple Osfa Boots
+  - [ 1072205, 1, 1, 0.000100 ] # Dark Ades Shoes
+  - [ 1082108, 1, 1, 0.000100 ] # Dark Eyes
+  - [ 1082117, 1, 1, 0.000100 ] # Dark Emperor
+  - [ 1102030, 1, 1, 0.000100 ] # Black Seraph Cape
+  - [ 1452013, 1, 1, 0.000100 ] # Fire Arund
   - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
   - [ 1472023, 1, 1, 0.000100 ] # Blood Gigantic
-  - [ 1472028, 1, 1, 0.000060 ] # Blue Scarab
-  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.000400 ] # Reindeer Milk
-  - [ 2020015, 1, 1, 0.000500 ] # Sunset Dew
-  - [ 2040401, 1, 1, 0.000040 ] # Scroll for Topwear for DEF 60%
-  - [ 2040501, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEX 60%
-  - [ 2040513, 1, 1, 0.000040 ] # Scroll for Overall Armor for INT 60%
-  - [ 2040929, 1, 1, 0.100000 ] # Scroll for Shield for STR 100%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2290132, 1, 1, 0.100000 ] # [Mastery Book] Final Blow 20#TODO
-  - [ 2290146, 1, 1, 0.100000 ] # [Mastery Book] Blaze 20#TODO
-  - [ 4000182, 1, 1, 0.600000 ] # Lime Powder Bottle
+  - [ 1472028, 1, 1, 0.000100 ] # Blue Scarab
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.010000 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.010000 ] # Sunset Dew
+  - [ 2040401, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 60%
+  - [ 2040501, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040513, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040929, 1, 1, 0.000100 ] # Scroll for Shield for STR 100%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2290132, 1, 1, 0.000100 ] # [Mastery Book] Final Blow 20
+  - [ 2290146, 1, 1, 0.000100 ] # [Mastery Book] Blaze 20
+  - [ 4000182, 1, 1, 0.400000 ] # Lime Powder Bottle
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4020001, 1, 1, 0.004000 ] # Amethyst Ore
-  - [ 4020007, 1, 1, 0.003000 ] # Diamond Ore
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
   - [ 4031256, 1, 1, 0.070000, 3076 ] # Cold Tear

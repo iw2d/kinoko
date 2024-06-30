@@ -1,31 +1,31 @@
 # Red Dragon Turtle (8140701)
 
 rewards:
-  - [ 1002365, 1, 1, 0.000080 ] # Red Oriental Fury Hat
-  - [ 1040111, 1, 1, 0.000080 ] # Green Commodore
-  - [ 1051096, 1, 1, 0.000080 ] # Red Oriental Fury Coat
-  - [ 1060100, 1, 1, 0.000080 ] # Green Commodore Pants
-  - [ 1072197, 1, 1, 0.000080 ] # Orihalcon War Greave
-  - [ 1082144, 1, 1, 0.000070 ] # Dark Mystra
-  - [ 1082210, 1, 1, 0.100000 ] # Red Martier#TODO
-  - [ 1302023, 1, 1, 0.000070 ] # Fraute
-  - [ 1332027, 1, 1, 0.000070 ] # Varkit
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040925, 1, 1, 0.100000 ] # Scroll for Shield for LUK 10%#TODO
-  - [ 2044101, 1, 1, 0.000030 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 2044601, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 60%
-  - [ 2290122, 1, 1, 0.100000 ] # [Mastery Book] Battleship Torpedo#TODO
-  - [ 2290140, 1, 1, 0.100000 ] # [Mastery Book] Illusion 20#TODO
-  - [ 2330004, 1, 1, 0.100000 ] # Shiny Bullet#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000263, 1, 1, 0.600000 ] # Red Shell
+  - [ 1002365, 1, 1, 0.000100 ] # Red Oriental Fury Hat
+  - [ 1040111, 1, 1, 0.000100 ] # Green Commodore
+  - [ 1051096, 1, 1, 0.000100 ] # Red Oriental Fury Coat
+  - [ 1060100, 1, 1, 0.000100 ] # Green Commodore Pants
+  - [ 1072197, 1, 1, 0.000100 ] # Orihalcon War Greave
+  - [ 1082144, 1, 1, 0.000100 ] # Dark Mystra
+  - [ 1082210, 1, 1, 0.000100 ] # Red Martier
+  - [ 1302023, 1, 1, 0.000100 ] # Fraute
+  - [ 1332027, 1, 1, 0.000100 ] # Varkit
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040925, 1, 1, 0.000100 ] # Scroll for Shield for LUK 10%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044601, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 60%
+  - [ 2290122, 1, 1, 0.000100 ] # [Mastery Book] Battleship Torpedo
+  - [ 2290140, 1, 1, 0.000100 ] # [Mastery Book] Illusion 20
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000263, 1, 1, 0.400000 ] # Red Shell
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
-  - [ 4020005, 1, 1, 0.004000 ] # Sapphire Ore
-  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
-  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

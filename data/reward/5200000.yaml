@@ -2,21 +2,21 @@
 
 rewards:
   - [ 1002129, 1, 1, 0.000100 ] # Brown Loosecap
-  - [ 1040016, 1, 1, 0.000080 ] # Orihalcon Master Sergeant
+  - [ 1040016, 1, 1, 0.000100 ] # Orihalcon Master Sergeant
   - [ 1041048, 1, 1, 0.000100 ] # Black Steal
-  - [ 1060011, 1, 1, 0.000080 ] # Orihalcon Master Sergeant Kilt
+  - [ 1060011, 1, 1, 0.000100 ] # Orihalcon Master Sergeant Kilt
   - [ 1061044, 1, 1, 0.000100 ] # Black Steal Pants
   - [ 1322002, 1, 1, 0.000100 ] # Iron Mace
-  - [ 1322004, 1, 1, 0.000080 ] # Fusion Mace
-  - [ 1482002, 1, 1, 0.100000 ] # Double Tail Knuckler#TODO
+  - [ 1322004, 1, 1, 0.000100 ] # Fusion Mace
+  - [ 1482002, 1, 1, 0.000100 ] # Double Tail Knuckler
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2044102, 1, 1, 0.000020 ] # Scroll for Two-handed Axe for ATT 10%
-  - [ 2044212, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 60%#TODO
-  - [ 2060001, 20, 30, 0.008000 ] # Bronze Arrow for Bow
-  - [ 2061001, 20, 30, 0.008000 ] # Bronze Arrow for Crossbow
-  - [ 2070000, 1, 1, 0.000100 ] # Subi Throwing-Stars
+  - [ 2044102, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2044212, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 60%
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 2070000, 1, 1, 0.000400 ] # Subi Throwing-Stars
   - [ 4000083, 1, 1, 0.400000 ] # Jr. Sentinel Shellpiece
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
-  - [ 4020006, 1, 1, 0.003000 ] # Topaz Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

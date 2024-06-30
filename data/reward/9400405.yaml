@@ -1,23 +1,23 @@
 # Kacchuu Musha (9400405)
 
 rewards:
-  - [ 1002405, 1, 1, 0.100000 ] # Dark Arlic Helmet#TODO
-  - [ 1102034, 1, 1, 0.100000 ] # Blue Giles Cape#TODO
-  - [ 1122005, 1, 1, 0.100000 ] # Bow-tie (Black)#TODO
-  - [ 1402029, 1, 1, 0.100000 ] # Aluminum Bat#TODO
-  - [ 1422031, 1, 1, 0.100000 ] # Blue Seal Cushion#TODO
-  - [ 1442020, 1, 1, 0.100000 ] # Hellslayer#TODO
-  - [ 1452017, 1, 1, 0.100000 ] # Metus#TODO
-  - [ 1462018, 1, 1, 0.100000 ] # Casa Crow#TODO
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2040103, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for HP 30%#TODO
-  - [ 2040108, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for Avoidability 30%#TODO
-  - [ 2040203, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for Accuracy 30%#TODO
-  - [ 2040208, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for INT 30%#TODO
-  - [ 2040919, 1, 1, 0.100000 ] # Scroll for Shield for Magic Attack 60%#TODO
-  - [ 2060003, 1, 1, 0.100000 ] # Red Arrow for Bow#TODO
-  - [ 2070006, 1, 1, 0.100000 ] # Ilbi Throwing-Stars#TODO
-  - [ 4000342, 1, 1, 0.100000 ] # Kacchuu Musha Fragment#TODO
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 1002405, 1, 1, 0.000200 ] # Dark Arlic Helmet
+  - [ 1102034, 1, 1, 0.000200 ] # Blue Giles Cape
+  - [ 1122005, 1, 1, 0.000200 ] # Bow-tie (Black)
+  - [ 1402029, 1, 1, 0.000200 ] # Aluminum Bat
+  - [ 1422031, 1, 1, 0.000200 ] # Blue Seal Cushion
+  - [ 1442020, 1, 1, 0.000200 ] # Hellslayer
+  - [ 1452017, 1, 1, 0.000200 ] # Metus
+  - [ 1462018, 1, 1, 0.000200 ] # Casa Crow
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2040103, 1, 1, 0.010000 ] # Dark Scroll for Face Accessory for HP 30%
+  - [ 2040108, 1, 1, 0.010000 ] # Dark Scroll for Face Accessory for Avoidability 30%
+  - [ 2040203, 1, 1, 0.010000 ] # Dark Scroll for Eye Accessory for Accuracy 30%
+  - [ 2040208, 1, 1, 0.010000 ] # Dark Scroll for Eye Accessory for INT 30%
+  - [ 2040919, 1, 1, 0.010000 ] # Scroll for Shield for Magic Attack 60%
+  - [ 2060003, 10, 20, 0.008000 ] # Red Arrow for Bow
+  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 4000342, 1, 1, 0.400000 ] # Kacchuu Musha Fragment
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator

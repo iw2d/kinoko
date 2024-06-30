@@ -16,51 +16,51 @@ rewards:
   - [ 1452019, 1, 1, 0.000200 ] # White Nisrock
   - [ 1462015, 1, 1, 0.000200 ] # White Neschere
   - [ 1472053, 1, 1, 0.000200 ] # Red Craven
-  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
-  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
-  - [ 2000004, 1, 5, 0.650000 ] # Elixir
-  - [ 2000005, 1, 5, 0.600000 ] # Power Elixir
-  - [ 2040328, 1, 1, 0.100000 ] # Scroll for Earring for HP 10%#TODO
-  - [ 2040805, 1, 1, 0.007000 ] # Scroll for Gloves for ATT 10%
-  - [ 2040824, 1, 1, 0.100000 ] # Scroll for Gloves for HP 60%#TODO
-  - [ 2043001, 1, 1, 0.008000 ] # Scroll for One-Handed Sword for ATT 60%
-  - [ 2043101, 1, 1, 0.008000 ] # Scroll for One-Handed Axe for ATT 60%
-  - [ 2043112, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 60%#TODO
-  - [ 2043201, 1, 1, 0.008000 ] # Scroll for One-Handed BW for ATT 60%
-  - [ 2043301, 1, 1, 0.008000 ] # Scroll for Dagger for ATT 60%
-  - [ 2043701, 1, 1, 0.008000 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2043801, 1, 1, 0.008000 ] # Scroll for Staff for Magic Attack 60%
-  - [ 2044001, 1, 1, 0.008000 ] # Scroll for Two-handed Sword for ATT 60%
-  - [ 2044014, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 10%#TODO
-  - [ 2044101, 1, 1, 0.008000 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 2044201, 1, 1, 0.008000 ] # Scroll for Two-handed BW for ATT 60%
-  - [ 2044301, 1, 1, 0.008000 ] # Scroll for Spear for ATT 60%
-  - [ 2044401, 1, 1, 0.008000 ] # Scroll for Pole Arm for ATT 60%
-  - [ 2044501, 1, 1, 0.008000 ] # Scroll for Bow for ATT 60%
-  - [ 2044601, 1, 1, 0.008000 ] # Scroll for Crossbow for ATT 60%
-  - [ 2044701, 1, 1, 0.008000 ] # Scroll for Claw for ATT 60%
-  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
-  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2290003, 1, 1, 0.010000 ] # [Mastery Book] Achilles
-  - [ 2290015, 1, 1, 0.008000 ] # [Mastery Book] Guardian
-  - [ 2290030, 1, 1, 0.003000 ] # [Mastery Book] Paralyze
-  - [ 2290035, 1, 1, 0.015000 ] # [Mastery Book] Holy Shield
-  - [ 2290036, 1, 1, 0.000500 ] # [Mastery Book] Fire Demon
-  - [ 2290063, 1, 1, 0.004000 ] # [Mastery Book] Phoenix
-  - [ 2290080, 1, 1, 0.008000 ] # [Mastery Book] Taunt
-  - [ 2290098, 1, 1, 0.100000 ] # [Mastery Book] Dragon Strike#TODO
-  - [ 2290101, 1, 1, 0.100000 ] # [Mastery Book] Super Transformation#TODO
-  - [ 2290117, 1, 1, 0.100000 ] # [Mastery Book] Rapid Fire#TODO
-  - [ 2290130, 1, 1, 0.100000 ] # [Mastery Book] Freeze Standing 20#TODO
-  - [ 2290144, 1, 1, 0.100000 ] # [Mastery Book] Magic Mastery 20#TODO
-  - [ 4000235, 1, 1, 0.600000 ] # Manon's Tail
-  - [ 4000244, 1, 1, 0.002000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.002000 ] # Dragon Scale
-  - [ 4004000, 1, 1, 0.003000 ] # Power Crystal Ore
-  - [ 4004001, 1, 1, 0.003000 ] # Wisdom Crystal Ore
-  - [ 4004002, 1, 1, 0.003000 ] # DEX Crystal Ore
-  - [ 4004003, 1, 1, 0.003000 ] # LUK Crystal Ore
+  - [ 1482012, 1, 1, 0.000200 ] # King Cent
+  - [ 1492012, 1, 1, 0.000200 ] # Concerto
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2040328, 1, 1, 0.010000 ] # Scroll for Earring for HP 10%
+  - [ 2040805, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 10%
+  - [ 2040824, 1, 1, 0.010000 ] # Scroll for Gloves for HP 60%
+  - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043112, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for Accuracy 60%
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044014, 1, 1, 0.010000 ] # Scroll for Two-Handed Sword for Accuracy 10%
+  - [ 2044101, 1, 1, 0.010000 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044201, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044301, 1, 1, 0.010000 ] # Scroll for Spear for ATT 60%
+  - [ 2044401, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044501, 1, 1, 0.010000 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.010000 ] # Scroll for Claw for ATT 60%
+  - [ 2044801, 1, 1, 0.010000 ] # Scroll for Knuckle for Attack 60%
+  - [ 2044901, 1, 1, 0.010000 ] # Scroll for Gun for Attack 60%
+  - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
+  - [ 2290003, 1, 1, 0.100000 ] # [Mastery Book] Achilles
+  - [ 2290015, 1, 1, 0.100000 ] # [Mastery Book] Guardian
+  - [ 2290030, 1, 1, 0.100000 ] # [Mastery Book] Paralyze
+  - [ 2290035, 1, 1, 0.100000 ] # [Mastery Book] Holy Shield
+  - [ 2290036, 1, 1, 0.100000 ] # [Mastery Book] Fire Demon
+  - [ 2290063, 1, 1, 0.100000 ] # [Mastery Book] Phoenix
+  - [ 2290080, 1, 1, 0.100000 ] # [Mastery Book] Taunt
+  - [ 2290098, 1, 1, 0.100000 ] # [Mastery Book] Dragon Strike
+  - [ 2290101, 1, 1, 0.100000 ] # [Mastery Book] Super Transformation
+  - [ 2290117, 1, 1, 0.100000 ] # [Mastery Book] Rapid Fire
+  - [ 2290130, 1, 1, 0.100000 ] # [Mastery Book] Freeze Standing 20
+  - [ 2290144, 1, 1, 0.100000 ] # [Mastery Book] Magic Mastery 20
+  - [ 4000235, 1, 1, 0.400000 ] # Manon's Tail
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4031343, 1, 1, 0.400000, 6904 ] # The Heroic Pentagon
   - [ 4031511, 1, 1, 0.400000, 6914 ] # Heroic Pentagon
   - [ 4031514, 1, 1, 0.400000, 6924 ] # Heroic Pentagon

@@ -1,28 +1,28 @@
 # Yellow King Goblin (7130400)
 
 rewards:
-  - [ 1040102, 1, 1, 0.000080 ] # Bronze Platine
-  - [ 1041094, 1, 1, 0.000090 ] # Light Mantis
-  - [ 1050058, 1, 1, 0.000100 ] # Orange Tai
-  - [ 1060090, 1, 1, 0.000080 ] # Bronze Platine Pants
-  - [ 1061093, 1, 1, 0.000090 ] # Light Mantis Pants
-  - [ 1072309, 1, 1, 0.100000 ] # Black Voyson Shoes#TODO
-  - [ 1092016, 1, 1, 0.000030 ] # Silver Ancient Shield
-  - [ 1102021, 1, 1, 0.000040 ] # Blue Gaia Cape
-  - [ 1462009, 1, 1, 0.000030 ] # Gross Jaeger
-  - [ 1472024, 1, 1, 0.000060 ] # Sapphire Gigantic
-  - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.040000 ] # Mana Elixir
-  - [ 2002003, 1, 1, 0.005000 ] # Wizard Potion
-  - [ 2040302, 1, 1, 0.000030 ] # Scroll for Earring for INT 10%
-  - [ 2040504, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEF 60%
+  - [ 1040102, 1, 1, 0.000200 ] # Bronze Platine
+  - [ 1041094, 1, 1, 0.000200 ] # Light Mantis
+  - [ 1050058, 1, 1, 0.000200 ] # Orange Tai
+  - [ 1060090, 1, 1, 0.000200 ] # Bronze Platine Pants
+  - [ 1061093, 1, 1, 0.000200 ] # Light Mantis Pants
+  - [ 1072309, 1, 1, 0.000200 ] # Black Voyson Shoes
+  - [ 1092016, 1, 1, 0.000200 ] # Silver Ancient Shield
+  - [ 1102021, 1, 1, 0.000200 ] # Blue Gaia Cape
+  - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
+  - [ 1472024, 1, 1, 0.000200 ] # Sapphire Gigantic
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion
+  - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%
+  - [ 2040504, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 60%
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
-  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
   - [ 4031232, 1, 1, 1.000000, 3611 ] # Goblin Cap

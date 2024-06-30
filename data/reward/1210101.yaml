@@ -1,22 +1,22 @@
 # Ribbon Pig (1210101)
 
 rewards:
-  - [ 1032003, 1, 1, 0.000070 ] # Amethyst Earrings
+  - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
   - [ 1040011, 1, 1, 0.000100 ] # Silver Leather Hoodwear
   - [ 1040014, 1, 1, 0.000100 ] # Orange Sporty T-Shirt
-  - [ 1040034, 1, 1, 0.000090 ] # Dark Nightshift
+  - [ 1040034, 1, 1, 0.000100 ] # Dark Nightshift
   - [ 1041012, 1, 1, 0.000100 ] # Red-Striped T-Shirt
-  - [ 1052098, 1, 1, 0.100000 ] # Brown Cotton Lagger#TODO
-  - [ 1060024, 1, 1, 0.000090 ] # Dark Nightshift Pants
-  - [ 1072285, 1, 1, 0.100000 ] # Brown Lagger Slipper#TODO
-  - [ 1402018, 1, 1, 0.000050 ] # Wooden Samurai Sword
-  - [ 1492000, 1, 1, 0.100000 ] # Pistol#TODO
-  - [ 2000000, 1, 1, 0.020000 ] # Red Potion
-  - [ 2040902, 1, 1, 0.000030 ] # Scroll for Shield for DEF 10%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 1052098, 1, 1, 0.000100 ] # Brown Cotton Lagger
+  - [ 1060024, 1, 1, 0.000100 ] # Dark Nightshift Pants
+  - [ 1072285, 1, 1, 0.000100 ] # Brown Lagger Slipper
+  - [ 1402018, 1, 1, 0.000100 ] # Wooden Samurai Sword
+  - [ 1492000, 1, 1, 0.000100 ] # Pistol
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000002, 1, 1, 0.400000 ] # Pig's Ribbon
-  - [ 4000021, 1, 1, 0.015000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore

@@ -1,35 +1,35 @@
 # Prototype Lord (8120103)
 
 rewards:
-  - [ 1002339, 1, 1, 0.100000 ] # Blue Dragon Barbute#TODO
-  - [ 1032022, 1, 1, 0.100000 ] # Half Earrings#TODO
-  - [ 1051057, 1, 1, 0.100000 ] # Purple Enigma#TODO
-  - [ 1052125, 1, 1, 0.100000 ] # White Pioneer#TODO
-  - [ 1072173, 1, 1, 0.100000 ] # Red Pirate Boots#TODO
-  - [ 1082112, 1, 1, 0.100000 ] # Dark Cordon#TODO
-  - [ 1102030, 1, 1, 0.100000 ] # Black Seraph Cape#TODO
-  - [ 1382010, 1, 1, 0.100000 ] # Dark Ritual#TODO
-  - [ 1462012, 1, 1, 0.100000 ] # Golden Raven#TODO
-  - [ 1472029, 1, 1, 0.100000 ] # Black Scarab#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2040026, 1, 1, 0.100000 ] # Scroll for Helmet for INT 10%#TODO
-  - [ 2040316, 1, 1, 0.100000 ] # Scroll for Earring for DEX 100%#TODO
-  - [ 2040707, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 60%#TODO
-  - [ 2043015, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 100%#TODO
-  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
-  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
-  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
-  - [ 2385044, 1, 1, 0.100000 ] # Prototype Lord Card #TODO
-  - [ 4000553, 1, 1, 0.100000 ] # Prototype Lord Propulsion System#TODO
-  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
-  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
-  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
+  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
+  - [ 1051057, 1, 1, 0.000100 ] # Purple Enigma
+  - [ 1052125, 1, 1, 0.000100 ] # White Pioneer
+  - [ 1072173, 1, 1, 0.000100 ] # Red Pirate Boots
+  - [ 1082112, 1, 1, 0.000100 ] # Dark Cordon
+  - [ 1102030, 1, 1, 0.000100 ] # Black Seraph Cape
+  - [ 1382010, 1, 1, 0.000100 ] # Dark Ritual
+  - [ 1462012, 1, 1, 0.000100 ] # Golden Raven
+  - [ 1472029, 1, 1, 0.000100 ] # Black Scarab
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040026, 1, 1, 0.000100 ] # Scroll for Helmet for INT 10%
+  - [ 2040316, 1, 1, 0.000100 ] # Scroll for Earring for DEX 100%
+  - [ 2040707, 1, 1, 0.000100 ] # Scroll for Shoes for Speed 60%
+  - [ 2043015, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 100%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
+  - [ 2385044, 1, 1, 0.020000 ] # Prototype Lord Card 
+  - [ 4000553, 1, 1, 0.400000 ] # Prototype Lord Propulsion System
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator

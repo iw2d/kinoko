@@ -1,25 +1,25 @@
 # Hobi (7130600)
 
 rewards:
-  - [ 1002287, 1, 1, 0.000090 ] # Beige Patriot
-  - [ 1051062, 1, 1, 0.000090 ] # Blue Lineros
-  - [ 1072211, 1, 1, 0.000070 ] # Blue Rivers Boots
-  - [ 1082119, 1, 1, 0.000070 ] # Purple Larceny
-  - [ 1332019, 1, 1, 0.000080 ] # Golden River
-  - [ 1452009, 1, 1, 0.000090 ] # Red Hinkel
+  - [ 1002287, 1, 1, 0.000100 ] # Beige Patriot
+  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
+  - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots
+  - [ 1082119, 1, 1, 0.000100 ] # Purple Larceny
+  - [ 1332019, 1, 1, 0.000100 ] # Golden River
+  - [ 1452009, 1, 1, 0.000100 ] # Red Hinkel
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
-  - [ 2041008, 1, 1, 0.000020 ] # Scroll for Cape for HP 10%
-  - [ 2044010, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 100%#TODO
-  - [ 2044101, 1, 1, 0.000020 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 4000260, 1, 1, 0.600000 ] # Hov's Shorts
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040512, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 100%
+  - [ 2041008, 1, 1, 0.000100 ] # Scroll for Cape for HP 10%
+  - [ 2044010, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 100%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 4000260, 1, 1, 0.400000 ] # Hov's Shorts
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
-  - [ 4010000, 1, 1, 0.006000 ] # Bronze Ore
-  - [ 4010001, 1, 1, 0.004000 ] # Steel Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator

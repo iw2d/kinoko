@@ -1,37 +1,37 @@
 # Lorang (3230102)
 
 rewards:
-  - [ 1040080, 1, 1, 0.000060 ] # Dark Piette
-  - [ 1041074, 1, 1, 0.000060 ] # Purple Shadow
+  - [ 1040080, 1, 1, 0.000100 ] # Dark Piette
+  - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
   - [ 1050000, 1, 1, 0.000100 ] # White Crusader Chainmail
-  - [ 1050038, 1, 1, 0.000080 ] # Blue Starlight
-  - [ 1060068, 1, 1, 0.000060 ] # Dark Piette Pants 
-  - [ 1061069, 1, 1, 0.000060 ] # Purple Shadow Pants
-  - [ 1072113, 1, 1, 0.000090 ] # Dark Trigger
-  - [ 1072121, 1, 1, 0.000060 ] # Blue Pierre Shoes
-  - [ 1072297, 1, 1, 0.100000 ] # Brown Locote Shoes#TODO
-  - [ 1082056, 1, 1, 0.000090 ] # Dark Noel
-  - [ 1082074, 1, 1, 0.000060 ] # Dark Cleave
-  - [ 1092014, 1, 1, 0.000060 ] # Adamantium Tower Shield
-  - [ 1302017, 1, 1, 0.000080 ] # Sky Blue Umbrella
+  - [ 1050038, 1, 1, 0.000100 ] # Blue Starlight
+  - [ 1060068, 1, 1, 0.000100 ] # Dark Piette Pants 
+  - [ 1061069, 1, 1, 0.000100 ] # Purple Shadow Pants
+  - [ 1072113, 1, 1, 0.000100 ] # Dark Trigger
+  - [ 1072121, 1, 1, 0.000100 ] # Blue Pierre Shoes
+  - [ 1072297, 1, 1, 0.000100 ] # Brown Locote Shoes
+  - [ 1082056, 1, 1, 0.000100 ] # Dark Noel
+  - [ 1082074, 1, 1, 0.000100 ] # Dark Cleave
+  - [ 1092014, 1, 1, 0.000100 ] # Adamantium Tower Shield
+  - [ 1302017, 1, 1, 0.000100 ] # Sky Blue Umbrella
   - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
-  - [ 1382017, 1, 1, 0.000070 ] # Circle-Winded Staff
-  - [ 1442001, 1, 1, 0.000070 ] # Mithril Pole Arm
-  - [ 1452005, 1, 1, 0.000070 ] # Ryden
-  - [ 1482006, 1, 1, 0.100000 ] # Neozard#TODO
-  - [ 2000002, 1, 1, 0.008000 ] # White Potion
+  - [ 1382017, 1, 1, 0.000100 ] # Circle-Winded Staff
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 1452005, 1, 1, 0.000100 ] # Ryden
+  - [ 1482006, 1, 1, 0.000100 ] # Neozard
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040024, 1, 1, 0.100000 ] # Scroll for Helmet for INT 100%#TODO
-  - [ 2040423, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 100%#TODO
-  - [ 2043301, 1, 1, 0.000030 ] # Scroll for Dagger for ATT 60%
-  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
-  - [ 2048005, 1, 1, 0.000080 ] # Scroll for Pet Equip. for Jump 10%
+  - [ 2040024, 1, 1, 0.000100 ] # Scroll for Helmet for INT 100%
+  - [ 2040423, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 100%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2044802, 1, 1, 0.000100 ] # Scroll for Knuckle for ATT 10%
+  - [ 2048005, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 10%
   - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator

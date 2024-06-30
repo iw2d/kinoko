@@ -3,44 +3,44 @@
 rewards:
   - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
   - [ 1002166, 1, 1, 0.000100 ] # Red Distinction
-  - [ 1002218, 1, 1, 0.000040 ] # Dark Golden Circlet
-  - [ 1040095, 1, 1, 0.000090 ] # Blue China
-  - [ 1041087, 1, 1, 0.000090 ] # Red Shouldermail
-  - [ 1041103, 1, 1, 0.000060 ] # Red Mystique
-  - [ 1050047, 1, 1, 0.000090 ] # Orange Calas
-  - [ 1050060, 1, 1, 0.000080 ] # Red Tai
-  - [ 1051045, 1, 1, 0.000080 ] # Red Anakarune
-  - [ 1051054, 1, 1, 0.000070 ] # Brown Requierre
-  - [ 1060084, 1, 1, 0.000090 ] # Blue China Pants
-  - [ 1061086, 1, 1, 0.000090 ] # Red Shouldermail Pants
-  - [ 1061102, 1, 1, 0.000060 ] # Red Mystique Pants
-  - [ 1072148, 1, 1, 0.000080 ] # Orihalcon Camel Boots
-  - [ 1072154, 1, 1, 0.000060 ] # Blue Carzen Boots
-  - [ 1082061, 1, 1, 0.000070 ] # Dark Clench
-  - [ 1082090, 1, 1, 0.000080 ] # Sephia Garner
-  - [ 1082106, 1, 1, 0.000060 ] # Blue Eyes
-  - [ 1082204, 1, 1, 0.100000 ] # Black Bisk#TODO
-  - [ 1102016, 1, 1, 0.000080 ] # Red Magic Cape
-  - [ 1422005, 1, 1, 0.000080 ] # Golden Mole
-  - [ 1442010, 1, 1, 0.000060 ] # Skylar
-  - [ 1472023, 1, 1, 0.000060 ] # Blood Gigantic
-  - [ 1962001, 1, 1, 0.100000 ] # Gold Wings#TODO
-  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
-  - [ 2040323, 1, 1, 0.100000 ] # Scroll for Earring for LUK 10%#TODO
-  - [ 2040823, 1, 1, 0.100000 ] # Scroll for Gloves for HP 100%#TODO
-  - [ 2043212, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 60%#TODO
-  - [ 2043701, 1, 1, 0.000020 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2044809, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 10%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2070004, 1, 1, 0.000200 ] # Tobi Throwing-Stars
-  - [ 4000027, 1, 1, 0.300000 ] # Wild Kargo Eye
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 1002218, 1, 1, 0.000100 ] # Dark Golden Circlet
+  - [ 1040095, 1, 1, 0.000100 ] # Blue China
+  - [ 1041087, 1, 1, 0.000100 ] # Red Shouldermail
+  - [ 1041103, 1, 1, 0.000100 ] # Red Mystique
+  - [ 1050047, 1, 1, 0.000100 ] # Orange Calas
+  - [ 1050060, 1, 1, 0.000100 ] # Red Tai
+  - [ 1051045, 1, 1, 0.000100 ] # Red Anakarune
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1060084, 1, 1, 0.000100 ] # Blue China Pants
+  - [ 1061086, 1, 1, 0.000100 ] # Red Shouldermail Pants
+  - [ 1061102, 1, 1, 0.000100 ] # Red Mystique Pants
+  - [ 1072148, 1, 1, 0.000100 ] # Orihalcon Camel Boots
+  - [ 1072154, 1, 1, 0.000100 ] # Blue Carzen Boots
+  - [ 1082061, 1, 1, 0.000100 ] # Dark Clench
+  - [ 1082090, 1, 1, 0.000100 ] # Sephia Garner
+  - [ 1082106, 1, 1, 0.000100 ] # Blue Eyes
+  - [ 1082204, 1, 1, 0.000100 ] # Black Bisk
+  - [ 1102016, 1, 1, 0.000100 ] # Red Magic Cape
+  - [ 1422005, 1, 1, 0.000100 ] # Golden Mole
+  - [ 1442010, 1, 1, 0.000100 ] # Skylar
+  - [ 1472023, 1, 1, 0.000100 ] # Blood Gigantic
+  - [ 1962001, 1, 1, 0.000100 ] # Gold Wings
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040323, 1, 1, 0.000100 ] # Scroll for Earring for LUK 10%
+  - [ 2040823, 1, 1, 0.000100 ] # Scroll for Gloves for HP 100%
+  - [ 2043212, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 60%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2044809, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 10%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
+  - [ 4000027, 1, 1, 0.400000 ] # Wild Kargo Eye
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
-  - [ 4020008, 1, 1, 0.003000 ] # Black Crystal Ore
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
   - [ 4031466, 1, 1, 0.030000, 6107 ] # Dark Soul Rock
   - [ 4031213, 1, 1, 0.150000, 2097 ] # Wild Kargo's Spirit Rock

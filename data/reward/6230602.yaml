@@ -1,38 +1,38 @@
 # Officer Skeleton (6230602)
 
 rewards:
-  - [ 1002084, 1, 1, 0.000080 ] # Blue Oriental Helmet
-  - [ 1002246, 1, 1, 0.000080 ] # Dark Seraphis
-  - [ 1002248, 1, 1, 0.000080 ] # Silver Identity
-  - [ 1002269, 1, 1, 0.000080 ] # White Polyfeather Hat
-  - [ 1082010, 1, 1, 0.000090 ] # Mithril Brist
-  - [ 1082065, 1, 1, 0.000090 ] # Blue Moon Gloves
-  - [ 1082082, 1, 1, 0.000090 ] # Blue Pennance
-  - [ 1082085, 1, 1, 0.000090 ] # Red Willow
-  - [ 1082096, 1, 1, 0.000070 ] # Silver Rover
-  - [ 1082098, 1, 1, 0.000070 ] # Brown Lorin
-  - [ 1082103, 1, 1, 0.000070 ] # Bronze Husk
-  - [ 1082106, 1, 1, 0.000070 ] # Blue Eyes
-  - [ 1092011, 1, 1, 0.000060 ] # Adamantium Legend Shield
-  - [ 1302011, 1, 1, 0.000060 ] # Neocora
-  - [ 1332017, 1, 1, 0.000060 ] # Serpent's Coil
-  - [ 1472023, 1, 1, 0.000060 ] # Blood Gigantic
-  - [ 1482009, 1, 1, 0.100000 ] # Beia Crash#TODO
-  - [ 2000002, 1, 1, 0.015000 ] # White Potion
+  - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
+  - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
+  - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
+  - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1082065, 1, 1, 0.000100 ] # Blue Moon Gloves
+  - [ 1082082, 1, 1, 0.000100 ] # Blue Pennance
+  - [ 1082085, 1, 1, 0.000100 ] # Red Willow
+  - [ 1082096, 1, 1, 0.000100 ] # Silver Rover
+  - [ 1082098, 1, 1, 0.000100 ] # Brown Lorin
+  - [ 1082103, 1, 1, 0.000100 ] # Bronze Husk
+  - [ 1082106, 1, 1, 0.000100 ] # Blue Eyes
+  - [ 1092011, 1, 1, 0.000100 ] # Adamantium Legend Shield
+  - [ 1302011, 1, 1, 0.000100 ] # Neocora
+  - [ 1332017, 1, 1, 0.000100 ] # Serpent's Coil
+  - [ 1472023, 1, 1, 0.000100 ] # Blood Gigantic
+  - [ 1482009, 1, 1, 0.000100 ] # Beia Crash
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
   - [ 2002000, 1, 1, 0.010000 ] # Dexterity Potion
-  - [ 2040328, 1, 1, 0.100000 ] # Scroll for Earring for HP 10%#TODO
-  - [ 2040417, 1, 1, 0.100000 ] # Scroll for Topwear for STR 100%#TODO
-  - [ 2040423, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 100%#TODO
-  - [ 2040804, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 60%
-  - [ 2040928, 1, 1, 0.100000 ] # Scroll for Shield for HP 10%#TODO
-  - [ 2043802, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 10%
-  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 2040328, 1, 1, 0.000100 ] # Scroll for Earring for HP 10%
+  - [ 2040417, 1, 1, 0.000100 ] # Scroll for Topwear for STR 100%
+  - [ 2040423, 1, 1, 0.000100 ] # Scroll for Topwear for LUK 100%
+  - [ 2040804, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 60%
+  - [ 2040928, 1, 1, 0.000100 ] # Scroll for Shield for HP 10%
+  - [ 2043802, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2330002, 1, 1, 0.000400 ] # Mighty Bullet
   - [ 4000207, 1, 1, 0.400000 ] # Pelvic Bone
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010000, 1, 1, 0.003000 ] # Bronze Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator

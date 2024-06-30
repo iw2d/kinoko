@@ -4,25 +4,25 @@ rewards:
   - [ 1050022, 1, 1, 0.000100 ] # Dark Crusader Chainmail
   - [ 1051008, 1, 1, 0.000100 ] # Blue Avenger
   - [ 1051010, 1, 1, 0.000100 ] # Dark Engrit
-  - [ 1072114, 1, 1, 0.000060 ] # Red Moon Shoes
-  - [ 1072118, 1, 1, 0.000060 ] # Red Pierre Shoes
-  - [ 1082047, 1, 1, 0.000080 ] # Orihalcon Arbion
-  - [ 1082056, 1, 1, 0.000080 ] # Dark Noel
+  - [ 1072114, 1, 1, 0.000100 ] # Red Moon Shoes
+  - [ 1072118, 1, 1, 0.000100 ] # Red Pierre Shoes
+  - [ 1082047, 1, 1, 0.000100 ] # Orihalcon Arbion
+  - [ 1082056, 1, 1, 0.000100 ] # Dark Noel
   - [ 1082069, 1, 1, 0.000100 ] # Mithril Scaler
-  - [ 1412004, 1, 1, 0.000080 ] # Niam
+  - [ 1412004, 1, 1, 0.000100 ] # Niam
   - [ 1452000, 1, 1, 0.000100 ] # Battle Bow
-  - [ 1472016, 1, 1, 0.000060 ] # Adamantium Avarice
-  - [ 1492005, 1, 1, 0.100000 ] # Shooting Star#TODO
+  - [ 1472016, 1, 1, 0.000100 ] # Adamantium Avarice
+  - [ 1492005, 1, 1, 0.000100 ] # Shooting Star
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
-  - [ 2040005, 1, 1, 0.000030 ] # Scroll for Helmet for HP 10%
-  - [ 2040027, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 100%#TODO
-  - [ 2048002, 1, 1, 0.000080 ] # Scroll for Pet Equip. for Speed 10%
-  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
-  - [ 4000035, 1, 1, 0.500000 ] # Tablecloth
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 2040005, 1, 1, 0.000100 ] # Scroll for Helmet for HP 10%
+  - [ 2040027, 1, 1, 0.000100 ] # Scroll for Helmet for DEX 100%
+  - [ 2048002, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 10%
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000035, 1, 1, 0.400000 ] # Tablecloth
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

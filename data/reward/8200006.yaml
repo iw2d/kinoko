@@ -1,30 +1,30 @@
 # Qualm Monk Trainee (8200006)
 
 rewards:
-  - [ 1002378, 1, 1, 0.100000 ] # Blue Valhalla Helmet#TODO
-  - [ 1032023, 1, 1, 0.100000 ] # Strawberry Earrings#TODO
-  - [ 1051107, 1, 1, 0.100000 ] # Red Armis#TODO
-  - [ 1052131, 1, 1, 0.100000 ] # Red Belly Duke#TODO
-  - [ 1072227, 1, 1, 0.100000 ] # Red Arnah Shoes#TODO
-  - [ 1082135, 1, 1, 0.100000 ] # Blue Anelin#TODO
-  - [ 1382035, 1, 1, 0.100000 ] # Blue Marine#TODO
-  - [ 1412021, 1, 1, 0.100000 ] # Tavar#TODO
-  - [ 1462017, 1, 1, 0.100000 ] # Dark Neschere#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
-  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
-  - [ 2040824, 1, 1, 0.100000 ] # Scroll for Gloves for HP 60%#TODO
-  - [ 2290077, 1, 1, 0.100000 ] # [Mastery Book] Shadow Shifter#TODO
-  - [ 2290138, 1, 1, 0.100000 ] # [Mastery Book] Combo Barrier 20#TODO
-  - [ 2290151, 1, 1, 0.100000 ] # [Mastery Book] Blessing of the Onyx 20#TODO
-  - [ 4000450, 1, 1, 0.100000 ] # Blue Cone Hat#TODO
-  - [ 4000451, 1, 1, 0.100000 ] # Neutral Mask#TODO
-  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
-  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
-  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
-  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
-  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 1002378, 1, 1, 0.000100 ] # Blue Valhalla Helmet
+  - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
+  - [ 1051107, 1, 1, 0.000100 ] # Red Armis
+  - [ 1052131, 1, 1, 0.000100 ] # Red Belly Duke
+  - [ 1072227, 1, 1, 0.000100 ] # Red Arnah Shoes
+  - [ 1082135, 1, 1, 0.000100 ] # Blue Anelin
+  - [ 1382035, 1, 1, 0.000100 ] # Blue Marine
+  - [ 1412021, 1, 1, 0.000100 ] # Tavar
+  - [ 1462017, 1, 1, 0.000100 ] # Dark Neschere
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040317, 1, 1, 0.000100 ] # Scroll for Earring for DEX 60%
+  - [ 2040824, 1, 1, 0.000100 ] # Scroll for Gloves for HP 60%
+  - [ 2290077, 1, 1, 0.000100 ] # [Mastery Book] Shadow Shifter
+  - [ 2290138, 1, 1, 0.000100 ] # [Mastery Book] Combo Barrier 20
+  - [ 2290151, 1, 1, 0.000100 ] # [Mastery Book] Blessing of the Onyx 20
+  - [ 4000450, 1, 1, 0.400000 ] # Blue Cone Hat
+  - [ 4000451, 1, 1, 0.400000 ] # Neutral Mask
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

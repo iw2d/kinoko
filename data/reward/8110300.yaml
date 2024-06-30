@@ -1,30 +1,30 @@
 # Homunscullo (8110300)
 
 rewards:
-  - [ 1002288, 1, 1, 0.100000 ] # Green Patriot#TODO
-  - [ 1040107, 1, 1, 0.100000 ] # Dark Studded Top#TODO
-  - [ 1060095, 1, 1, 0.100000 ] # Dark Studded Pants#TODO
-  - [ 1072158, 1, 1, 0.100000 ] # Red Lapiz Sandals#TODO
-  - [ 1082114, 1, 1, 0.100000 ] # Sapphire Emperor#TODO
-  - [ 1102031, 1, 1, 0.100000 ] # Green Giles Cape#TODO
-  - [ 1312010, 1, 1, 0.100000 ] # Mikhail#TODO
-  - [ 1442008, 1, 1, 0.100000 ] # The Gold Dragon#TODO
-  - [ 1452011, 1, 1, 0.100000 ] # Golden Hinkel#TODO
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
-  - [ 2041005, 1, 1, 0.100000 ] # Scroll for Cape for Weapon DEF 10%#TODO
-  - [ 2044602, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 10%#TODO
-  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
-  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
-  - [ 2070005, 1, 1, 0.100000 ] # Steely Throwing-Knives#TODO
-  - [ 4000355, 1, 1, 0.100000 ] # Homunculus's Sand#TODO
-  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
-  - [ 4006000, 1, 1, 0.100000 ] # The Magic Rock#TODO
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
-  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
-  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 1002288, 1, 1, 0.000100 ] # Green Patriot
+  - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants
+  - [ 1072158, 1, 1, 0.000100 ] # Red Lapiz Sandals
+  - [ 1082114, 1, 1, 0.000100 ] # Sapphire Emperor
+  - [ 1102031, 1, 1, 0.000100 ] # Green Giles Cape
+  - [ 1312010, 1, 1, 0.000100 ] # Mikhail
+  - [ 1442008, 1, 1, 0.000100 ] # The Gold Dragon
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2044807, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 60%
+  - [ 2044902, 1, 1, 0.000100 ] # Scroll for Gun for ATT 10%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000355, 1, 1, 0.400000 ] # Homunculus's Sand
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

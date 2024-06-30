@@ -1,27 +1,27 @@
 # Sentinel (3000000)
 
 rewards:
-  - [ 1002137, 1, 1, 0.000060 ] # Green Pole-Feather Hat
-  - [ 1002622, 1, 1, 0.100000 ] # White Oceania Cap#TODO
-  - [ 1032006, 1, 1, 0.000090 ] # Lightning Earrings
-  - [ 1040021, 1, 1, 0.000090 ] # Red Hwarang Shirt
-  - [ 1040061, 1, 1, 0.000070 ] # Green Knucklevest
-  - [ 1060017, 1, 1, 0.000090 ] # White Martial Arts Pants
-  - [ 1060050, 1, 1, 0.000080 ] # Blue Knucklevest Pants
+  - [ 1002137, 1, 1, 0.000100 ] # Green Pole-Feather Hat
+  - [ 1002622, 1, 1, 0.000100 ] # White Oceania Cap
+  - [ 1032006, 1, 1, 0.000100 ] # Lightning Earrings
+  - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt
+  - [ 1040061, 1, 1, 0.000100 ] # Green Knucklevest
+  - [ 1060017, 1, 1, 0.000100 ] # White Martial Arts Pants
+  - [ 1060050, 1, 1, 0.000100 ] # Blue Knucklevest Pants
   - [ 1082037, 1, 1, 0.000100 ] # Bronze Wolfskin
   - [ 1312005, 1, 1, 0.000100 ] # Fireman's Axe
   - [ 1312016, 1, 1, 0.000100 ] # Contra Axe
-  - [ 1382018, 1, 1, 0.000060 ] # Petal Staff
+  - [ 1382018, 1, 1, 0.000100 ] # Petal Staff
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2040316, 1, 1, 0.100000 ] # Scroll for Earring for DEX 100%#TODO
-  - [ 2040620, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 100%#TODO
-  - [ 2041005, 1, 1, 0.000030 ] # Scroll for Cape for Weapon DEF 10%
-  - [ 2041016, 1, 1, 0.000030 ] # Scroll for Cape for INT 60%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000063, 1, 1, 0.500000 ] # Sentinel Shellpiece
+  - [ 2040316, 1, 1, 0.000100 ] # Scroll for Earring for DEX 100%
+  - [ 2040620, 1, 1, 0.000100 ] # Scroll for Bottomwear for HP 100%
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2041016, 1, 1, 0.000100 ] # Scroll for Cape for INT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000063, 1, 1, 0.400000 ] # Sentinel Shellpiece
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

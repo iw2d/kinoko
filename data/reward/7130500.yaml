@@ -1,32 +1,32 @@
 # Rash (7130500)
 
 rewards:
-  - [ 1002095, 1, 1, 0.000090 ] # Mithril Planet
-  - [ 1032020, 1, 1, 0.000090 ] # Gold Drop Earrings
-  - [ 1051054, 1, 1, 0.000090 ] # Brown Requierre
-  - [ 1052122, 1, 1, 0.100000 ] # Red Viska#TODO
-  - [ 1072163, 1, 1, 0.000090 ] # Red Mystique Shoes
-  - [ 1082110, 1, 1, 0.000070 ] # Blue Cordon
-  - [ 1102023, 1, 1, 0.000090 ] # White Gaia Cape
-  - [ 1332018, 1, 1, 0.000080 ] # Kandine
-  - [ 1422010, 1, 1, 0.000080 ] # Gigantic Sledge
-  - [ 1472028, 1, 1, 0.000080 ] # Blue Scarab
+  - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
+  - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1052122, 1, 1, 0.000100 ] # Red Viska
+  - [ 1072163, 1, 1, 0.000100 ] # Red Mystique Shoes
+  - [ 1082110, 1, 1, 0.000100 ] # Blue Cordon
+  - [ 1102023, 1, 1, 0.000100 ] # White Gaia Cape
+  - [ 1332018, 1, 1, 0.000100 ] # Kandine
+  - [ 1422010, 1, 1, 0.000100 ] # Gigantic Sledge
+  - [ 1472028, 1, 1, 0.000100 ] # Blue Scarab
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040002, 1, 1, 0.000020 ] # Scroll for Helmet for DEF 10%
-  - [ 2040326, 1, 1, 0.100000 ] # Scroll for Earring for HP 60%#TODO
-  - [ 2040623, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 100%#TODO
-  - [ 2040705, 1, 1, 0.000020 ] # Scroll for Shoes for Jump 10%
-  - [ 2040824, 1, 1, 0.100000 ] # Scroll for Gloves for HP 60%#TODO
-  - [ 4000226, 1, 1, 0.600000 ] # Rash's Furball
-  - [ 4000227, 1, 1, 0.050000 ] # Tree Fruit
-  - [ 4000228, 1, 1, 0.050000 ] # Anesthetic Powder
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040002, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 10%
+  - [ 2040326, 1, 1, 0.000100 ] # Scroll for Earring for HP 60%
+  - [ 2040623, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 100%
+  - [ 2040705, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 10%
+  - [ 2040824, 1, 1, 0.000100 ] # Scroll for Gloves for HP 60%
+  - [ 4000226, 1, 1, 0.400000 ] # Rash's Furball
+  - [ 4000227, 1, 1, 0.400000 ] # Tree Fruit
+  - [ 4000228, 1, 1, 0.400000 ] # Anesthetic Powder
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010001, 1, 1, 0.004000 ] # Steel Ore
-  - [ 4020000, 1, 1, 0.004000 ] # Garnet Ore
-  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
-  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator

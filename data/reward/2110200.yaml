@@ -1,30 +1,30 @@
 # Horny Mushroom (2110200)
 
 rewards:
-  - [ 1002005, 1, 1, 0.000060 ] # Iron Burgernet Helm
-  - [ 1002038, 1, 1, 0.000080 ] # Brown Jester
-  - [ 1040044, 1, 1, 0.000090 ] # Black Pao
+  - [ 1002005, 1, 1, 0.000100 ] # Iron Burgernet Helm
+  - [ 1002038, 1, 1, 0.000100 ] # Brown Jester
+  - [ 1040044, 1, 1, 0.000100 ] # Black Pao
   - [ 1041008, 1, 1, 0.000100 ] # Green Able Armor
   - [ 1050006, 1, 1, 0.000100 ] # Red Kendo Robe
-  - [ 1052104, 1, 1, 0.100000 ] # Brown Turk Gally#TODO
-  - [ 1060002, 1, 1, 0.001000 ] # Blue Jean Shorts
-  - [ 1060033, 1, 1, 0.000090 ] # Black Pao Bottom
+  - [ 1052104, 1, 1, 0.000100 ] # Brown Turk Gally
+  - [ 1060002, 1, 1, 0.000100 ] # Blue Jean Shorts
+  - [ 1060033, 1, 1, 0.000100 ] # Black Pao Bottom
   - [ 1061006, 1, 1, 0.000100 ] # Green Able Armor Skirt
-  - [ 1072073, 1, 1, 0.000050 ] # Yellow Windshoes
-  - [ 1082000, 1, 1, 0.000200 ] # Steel Fingerless Gloves
+  - [ 1072073, 1, 1, 0.000100 ] # Yellow Windshoes
+  - [ 1082000, 1, 1, 0.000100 ] # Steel Fingerless Gloves
   - [ 1092000, 1, 1, 0.000100 ] # Steel Shield
-  - [ 1302004, 1, 1, 0.000020 ] # Cutlus
-  - [ 1442001, 1, 1, 0.000080 ] # Mithril Pole Arm
-  - [ 1462004, 1, 1, 0.000040 ] # Eagle Crow
-  - [ 1492002, 1, 1, 0.100000 ] # The Negotiator#TODO
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 1462004, 1, 1, 0.000100 ] # Eagle Crow
+  - [ 1492002, 1, 1, 0.000100 ] # The Negotiator
   - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002003, 1, 1, 0.005000 ] # Wizard Potion
-  - [ 2043214, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 10%#TODO
-  - [ 2044102, 1, 1, 0.000030 ] # Scroll for Two-handed Axe for ATT 10%
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 2330000, 1, 1, 0.100000 ] # Bullet#TODO
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2043214, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 10%
+  - [ 2044102, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330000, 1, 1, 0.000400 ] # Bullet
   - [ 4000015, 1, 1, 0.400000 ] # Horny Mushroom Cap
-  - [ 4010000, 1, 1, 0.003000 ] # Bronze Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

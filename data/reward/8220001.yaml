@@ -1,56 +1,56 @@
 # Snowman (8220001)
 
 rewards:
-  - [ 1032017, 1, 1, 0.000070 ] # Rose Earrings
-  - [ 1092028, 1, 1, 0.000070 ] # Gold Kalkan
-  - [ 1302023, 1, 1, 0.000070 ] # Fraute
-  - [ 1312015, 1, 1, 0.000070 ] # Vifennis
-  - [ 1322029, 1, 1, 0.000070 ] # Ruin Hammer
-  - [ 1332027, 1, 1, 0.000070 ] # Varkit
-  - [ 1382035, 1, 1, 0.000070 ] # Blue Marine
-  - [ 1402016, 1, 1, 0.000070 ] # Devil's Sunrise
-  - [ 1412010, 1, 1, 0.000070 ] # Colonian Axe
-  - [ 1422013, 1, 1, 0.000070 ] # Leomite
-  - [ 1432011, 1, 1, 0.000070 ] # Fairfrozen
-  - [ 1442020, 1, 1, 0.000070 ] # Hellslayer
-  - [ 1452017, 1, 1, 0.000070 ] # Metus
-  - [ 1462018, 1, 1, 0.000070 ] # Casa Crow
-  - [ 1472033, 1, 1, 0.000070 ] # Casters
-  - [ 1482011, 1, 1, 0.100000 ] # White Fangz#TODO
-  - [ 1492011, 1, 1, 0.100000 ] # The Peacemaker#TODO
-  - [ 2000004, 1, 1, 0.400000 ] # Elixir
-  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
-  - [ 2022001, 1, 1, 0.500000 ] # Red Bean Porridge
-  - [ 2022186, 1, 1, 0.100000 ] # Soft White Bun#TODO
-  - [ 2040026, 1, 1, 0.100000 ] # Scroll for Helmet for INT 10%#TODO
-  - [ 2040323, 1, 1, 0.100000 ] # Scroll for Earring for LUK 10%#TODO
-  - [ 2040501, 1, 1, 0.002400 ] # Scroll for Overall Armor for DEX 60%
-  - [ 2040601, 1, 1, 0.002400 ] # Scroll for Bottomwear for DEF 60%
-  - [ 2040701, 1, 1, 0.002400 ] # Scroll for Shoes for DEX 60%
-  - [ 2040801, 1, 1, 0.002400 ] # Scroll for Gloves for DEX 60%
-  - [ 2040804, 1, 1, 0.002400 ] # Scroll for Gloves for ATT 60%
-  - [ 2040901, 1, 1, 0.002400 ] # Scroll for Shield for DEF 60%
-  - [ 2040927, 1, 1, 0.100000 ] # Scroll for Shield for HP 60%#TODO
-  - [ 2041001, 1, 1, 0.002400 ] # Scroll for Cape for Magic Def. 60%
-  - [ 2041008, 1, 1, 0.001220 ] # Scroll for Cape for HP 10%
-  - [ 2041016, 1, 1, 0.002400 ] # Scroll for Cape for INT 60%
-  - [ 2041017, 1, 1, 0.001220 ] # Scroll for Cape for INT 10%
-  - [ 2043302, 1, 1, 0.001220 ] # Scroll for Dagger for ATT 10%
-  - [ 2043701, 1, 1, 0.002400 ] # Scroll for Wand for Magic Attack 60%
-  - [ 2043702, 1, 1, 0.001220 ] # Scroll for Wand for Magic Attack 10%
-  - [ 2043801, 1, 1, 0.002400 ] # Scroll for Staff for Magic Attack 60%
-  - [ 2043802, 1, 1, 0.012200 ] # Scroll for Staff for Magic Attack 10%
-  - [ 2044314, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 10%#TODO
-  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2060001, 1, 1, 0.250000 ] # Bronze Arrow for Bow
-  - [ 2061001, 1, 1, 0.250000 ] # Bronze Arrow for Crossbow
-  - [ 2070008, 1, 1, 0.000070 ] # Snowball
-  - [ 4000021, 1, 1, 0.010000 ] # Leather
-  - [ 4000048, 1, 1, 0.600000 ] # Jr. Yeti Skin
-  - [ 4000049, 1, 1, 0.600000 ] # Yeti Horn
-  - [ 4000051, 1, 1, 0.600000 ] # Hector Tail
-  - [ 4000257, 1, 1, 0.100000 ] # Yeti Key Chain
+  - [ 1032017, 1, 1, 0.000200 ] # Rose Earrings
+  - [ 1092028, 1, 1, 0.000200 ] # Gold Kalkan
+  - [ 1302023, 1, 1, 0.000200 ] # Fraute
+  - [ 1312015, 1, 1, 0.000200 ] # Vifennis
+  - [ 1322029, 1, 1, 0.000200 ] # Ruin Hammer
+  - [ 1332027, 1, 1, 0.000200 ] # Varkit
+  - [ 1382035, 1, 1, 0.000200 ] # Blue Marine
+  - [ 1402016, 1, 1, 0.000200 ] # Devil's Sunrise
+  - [ 1412010, 1, 1, 0.000200 ] # Colonian Axe
+  - [ 1422013, 1, 1, 0.000200 ] # Leomite
+  - [ 1432011, 1, 1, 0.000200 ] # Fairfrozen
+  - [ 1442020, 1, 1, 0.000200 ] # Hellslayer
+  - [ 1452017, 1, 1, 0.000200 ] # Metus
+  - [ 1462018, 1, 1, 0.000200 ] # Casa Crow
+  - [ 1472033, 1, 1, 0.000200 ] # Casters
+  - [ 1482011, 1, 1, 0.000200 ] # White Fangz
+  - [ 1492011, 1, 1, 0.000200 ] # The Peacemaker
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2022001, 1, 1, 0.100000 ] # Red Bean Porridge
+  - [ 2022186, 1, 1, 0.100000 ] # Soft White Bun
+  - [ 2040026, 1, 1, 0.010000 ] # Scroll for Helmet for INT 10%
+  - [ 2040323, 1, 1, 0.010000 ] # Scroll for Earring for LUK 10%
+  - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040601, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040701, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 60%
+  - [ 2040801, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 60%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2040901, 1, 1, 0.010000 ] # Scroll for Shield for DEF 60%
+  - [ 2040927, 1, 1, 0.010000 ] # Scroll for Shield for HP 60%
+  - [ 2041001, 1, 1, 0.010000 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041008, 1, 1, 0.010000 ] # Scroll for Cape for HP 10%
+  - [ 2041016, 1, 1, 0.010000 ] # Scroll for Cape for INT 60%
+  - [ 2041017, 1, 1, 0.010000 ] # Scroll for Cape for INT 10%
+  - [ 2043302, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 10%
+  - [ 2043701, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043702, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 10%
+  - [ 2043801, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2043802, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044314, 1, 1, 0.010000 ] # Scroll for Spear for Accuracy 10%
+  - [ 2044802, 1, 1, 0.010000 ] # Scroll for Knuckle for ATT 10%
+  - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 2070008, 1, 1, 0.000400 ] # Snowball
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000048, 1, 1, 0.400000 ] # Jr. Yeti Skin
+  - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
+  - [ 4000051, 1, 1, 0.400000 ] # Hector Tail
+  - [ 4000257, 1, 1, 0.400000 ] # Yeti Key Chain
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
-  - [ 4010004, 1, 1, 0.008000 ] # Silver Ore
-  - [ 4020004, 1, 1, 0.008000 ] # Opal Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

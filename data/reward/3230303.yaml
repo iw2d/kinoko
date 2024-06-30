@@ -1,39 +1,39 @@
 # Propelly (3230303)
 
 rewards:
-  - [ 1002092, 1, 1, 0.000070 ] # Yellow Duke
-  - [ 1002145, 1, 1, 0.000080 ] # Dark Matty
-  - [ 1002181, 1, 1, 0.000070 ] # Red Pilfer
-  - [ 1041081, 1, 1, 0.000070 ] # White Piettra
-  - [ 1041084, 1, 1, 0.000070 ] # Red Jangoon Armor
-  - [ 1061080, 1, 1, 0.000070 ] # White Piettra Skirt
-  - [ 1061083, 1, 1, 0.000070 ] # Red Jangoon Skirt
-  - [ 1072091, 1, 1, 0.000090 ] # Black Salt Shoes
+  - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
+  - [ 1002145, 1, 1, 0.000100 ] # Dark Matty
+  - [ 1002181, 1, 1, 0.000100 ] # Red Pilfer
+  - [ 1041081, 1, 1, 0.000100 ] # White Piettra
+  - [ 1041084, 1, 1, 0.000100 ] # Red Jangoon Armor
+  - [ 1061080, 1, 1, 0.000100 ] # White Piettra Skirt
+  - [ 1061083, 1, 1, 0.000100 ] # Red Jangoon Skirt
+  - [ 1072091, 1, 1, 0.000100 ] # Black Salt Shoes
   - [ 1072104, 1, 1, 0.000100 ] # Red White-Lined Boots
-  - [ 1082046, 1, 1, 0.000090 ] # Steel Arbion
-  - [ 1082080, 1, 1, 0.000050 ] # Dark Penance
-  - [ 1092021, 1, 1, 0.000050 ] # Mystic Shield
-  - [ 1312005, 1, 1, 0.000080 ] # Fireman's Axe
+  - [ 1082046, 1, 1, 0.000100 ] # Steel Arbion
+  - [ 1082080, 1, 1, 0.000100 ] # Dark Penance
+  - [ 1092021, 1, 1, 0.000100 ] # Mystic Shield
+  - [ 1312005, 1, 1, 0.000100 ] # Fireman's Axe
   - [ 1322003, 1, 1, 0.000100 ] # Lollipop
-  - [ 1372003, 1, 1, 0.000080 ] # Mithril Wand
-  - [ 1402003, 1, 1, 0.000050 ] # Lion's Fang
+  - [ 1372003, 1, 1, 0.000100 ] # Mithril Wand
+  - [ 1402003, 1, 1, 0.000100 ] # Lion's Fang
   - [ 1402010, 1, 1, 0.000100 ] # Aluminum Baseball Bat
-  - [ 1462007, 1, 1, 0.000050 ] # Rower
-  - [ 1472018, 1, 1, 0.000050 ] # Steel Slain
-  - [ 1482005, 1, 1, 0.100000 ] # Silver Maiden#TODO
+  - [ 1462007, 1, 1, 0.000100 ] # Rower
+  - [ 1472018, 1, 1, 0.000100 ] # Steel Slain
+  - [ 1482005, 1, 1, 0.000100 ] # Silver Maiden
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2043301, 1, 1, 0.000020 ] # Scroll for Dagger for ATT 60%
-  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000104, 1, 1, 0.500000 ] # Motor
-  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
-  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2044312, 1, 1, 0.000100 ] # Scroll for Spear for Accuracy 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000104, 1, 1, 0.400000 ] # Motor
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
-  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
-  - [ 4131007, 1, 1, 0.000080 ] # Pole Arm Forging Manual
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
+  - [ 4131007, 1, 1, 0.000300 ] # Pole Arm Forging Manual

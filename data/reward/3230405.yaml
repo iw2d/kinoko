@@ -3,32 +3,32 @@
 rewards:
   - [ 1002177, 1, 1, 0.000100 ] # Blue Burgler
   - [ 1040073, 1, 1, 0.000100 ] # Blue Legolier
-  - [ 1051023, 1, 1, 0.000080 ] # Purple Moonlight
+  - [ 1051023, 1, 1, 0.000100 ] # Purple Moonlight
   - [ 1060062, 1, 1, 0.000100 ] # Blue Legolier Pants
-  - [ 1072122, 1, 1, 0.000060 ] # Brown Steel-Tip Boots
-  - [ 1072128, 1, 1, 0.000060 ] # Blue Goni Shoes
-  - [ 1082009, 1, 1, 0.000060 ] # Steel Brist
+  - [ 1072122, 1, 1, 0.000100 ] # Brown Steel-Tip Boots
+  - [ 1072128, 1, 1, 0.000100 ] # Blue Goni Shoes
+  - [ 1082009, 1, 1, 0.000100 ] # Steel Brist
   - [ 1082054, 1, 1, 0.000100 ] # Red Noel
-  - [ 1082192, 1, 1, 0.100000 ] # Brown Jeweled#TODO
-  - [ 1302009, 1, 1, 0.000070 ] # Traus
-  - [ 1312007, 1, 1, 0.000070 ] # Blue Counter
-  - [ 1332011, 1, 1, 0.000070 ] # Bazlud
-  - [ 1332031, 1, 1, 0.000060 ] # Dragon Toenail
-  - [ 1372012, 1, 1, 0.000080 ] # Crystal Wand
+  - [ 1082192, 1, 1, 0.000100 ] # Brown Jeweled
+  - [ 1302009, 1, 1, 0.000100 ] # Traus
+  - [ 1312007, 1, 1, 0.000100 ] # Blue Counter
+  - [ 1332011, 1, 1, 0.000100 ] # Bazlud
+  - [ 1332031, 1, 1, 0.000100 ] # Dragon Toenail
+  - [ 1372012, 1, 1, 0.000100 ] # Crystal Wand
   - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
-  - [ 2002005, 1, 1, 0.003000 ] # Sniper Potion
-  - [ 2040302, 1, 1, 0.000020 ] # Scroll for Earring for INT 10%
-  - [ 2044410, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 100%#TODO
-  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
-  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
-  - [ 4000154, 1, 1, 0.500000 ] # Toy Baby Seal
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
-  - [ 4010000, 1, 1, 0.004000 ] # Bronze Ore
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 2002005, 1, 1, 0.010000 ] # Sniper Potion
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2044410, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000154, 1, 1, 0.400000 ] # Toy Baby Seal
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
-  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
-  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
-  - [ 4131005, 1, 1, 0.000080 ] # Two-Handed Mace Forging Manual
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
+  - [ 4131005, 1, 1, 0.000300 ] # Two-Handed Mace Forging Manual

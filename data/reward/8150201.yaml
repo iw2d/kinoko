@@ -1,48 +1,48 @@
 # Dark Cornian (8150201)
 
 rewards:
-  - [ 1002530, 1, 1, 0.000070 ] # Red Grace Helmet
-  - [ 1041122, 1, 1, 0.000070 ] # Green Lucida
-  - [ 1050098, 1, 1, 0.000070 ] # Red Katinas
-  - [ 1051101, 1, 1, 0.000070 ] # Green Bazura
-  - [ 1061121, 1, 1, 0.000070 ] # Green Lucida Skirt
-  - [ 1072208, 1, 1, 0.000080 ] # Red Neli Shoes
-  - [ 1082136, 1, 1, 0.000060 ] # Green Anelin
-  - [ 1082158, 1, 1, 0.000070 ] # Red Arcina
-  - [ 1092027, 1, 1, 0.000070 ] # Silver Kalkan
-  - [ 1382035, 1, 1, 0.000002 ] # Blue Marine
-  - [ 1402016, 1, 1, 0.000080 ] # Devil's Sunrise
-  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
-  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.003000 ] # Reindeer Milk
+  - [ 1002530, 1, 1, 0.000100 ] # Red Grace Helmet
+  - [ 1041122, 1, 1, 0.000100 ] # Green Lucida
+  - [ 1050098, 1, 1, 0.000100 ] # Red Katinas
+  - [ 1051101, 1, 1, 0.000100 ] # Green Bazura
+  - [ 1061121, 1, 1, 0.000100 ] # Green Lucida Skirt
+  - [ 1072208, 1, 1, 0.000100 ] # Red Neli Shoes
+  - [ 1082136, 1, 1, 0.000100 ] # Green Anelin
+  - [ 1082158, 1, 1, 0.000100 ] # Red Arcina
+  - [ 1092027, 1, 1, 0.000100 ] # Silver Kalkan
+  - [ 1382035, 1, 1, 0.000100 ] # Blue Marine
+  - [ 1402016, 1, 1, 0.000100 ] # Devil's Sunrise
+  - [ 1492012, 1, 1, 0.000100 ] # Concerto
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.010000 ] # Reindeer Milk
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
-  - [ 2040302, 1, 1, 0.000010 ] # Scroll for Earring for INT 10%
-  - [ 2040501, 1, 1, 0.000020 ] # Scroll for Overall Armor for DEX 60%
-  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
-  - [ 2044012, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 60%#TODO
-  - [ 2044210, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 100%#TODO
-  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
-  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
-  - [ 2290004, 1, 1, 0.000020 ] # [Mastery Book] Rush
-  - [ 2290006, 1, 1, 0.000004 ] # [Mastery Book] Power Stance
-  - [ 2290024, 1, 1, 0.000040 ] # [Mastery Book] Mana Reflection
-  - [ 2290036, 1, 1, 0.000005 ] # [Mastery Book] Fire Demon
-  - [ 2290056, 1, 1, 0.000002 ] # [Mastery Book] Bow Expert
-  - [ 2290072, 1, 1, 0.000002 ] # [Mastery Book] Frostprey
-  - [ 2290078, 1, 1, 0.000003 ] # [Mastery Book] Venomous Star/Venomous Stab
-  - [ 2290117, 1, 1, 0.100000 ] # [Mastery Book] Rapid Fire#TODO
-  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
-  - [ 4000267, 1, 1, 0.600000 ] # Skull Shoulder Pad
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2040501, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040618, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 60%
+  - [ 2044012, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 60%
+  - [ 2044210, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 100%
+  - [ 2044802, 1, 1, 0.000100 ] # Scroll for Knuckle for ATT 10%
+  - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
+  - [ 2290004, 1, 1, 0.000100 ] # [Mastery Book] Rush
+  - [ 2290006, 1, 1, 0.000100 ] # [Mastery Book] Power Stance
+  - [ 2290024, 1, 1, 0.000100 ] # [Mastery Book] Mana Reflection
+  - [ 2290036, 1, 1, 0.000100 ] # [Mastery Book] Fire Demon
+  - [ 2290056, 1, 1, 0.000100 ] # [Mastery Book] Bow Expert
+  - [ 2290072, 1, 1, 0.000100 ] # [Mastery Book] Frostprey
+  - [ 2290078, 1, 1, 0.000100 ] # [Mastery Book] Venomous Star/Venomous Stab
+  - [ 2290117, 1, 1, 0.000100 ] # [Mastery Book] Rapid Fire
+  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000267, 1, 1, 0.400000 ] # Skull Shoulder Pad
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
-  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
-  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
-  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
+  - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
-  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
-  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4001103, 1, 1, 0.050000, 7303 ] # Cornian's Marrow
   - [ 4031414, 1, 1, 0.100000, 3712 ] # Black Soul of Dark Cornian
   - [ 4001075, 1, 1, 0.050000, 7301 ] # Cornian's Marrow

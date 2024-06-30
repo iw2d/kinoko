@@ -1,39 +1,39 @@
 # Ghost Pirate (7140000)
 
 rewards:
-  - [ 1002094, 1, 1, 0.000090 ] # Bronze Planet
-  - [ 1002273, 1, 1, 0.000080 ] # Purple Galaxy
-  - [ 1002277, 1, 1, 0.000080 ] # Green Falcon
-  - [ 1002287, 1, 1, 0.000090 ] # Beige Patriot
-  - [ 1002338, 1, 1, 0.000080 ] # Red Dragon Barbute
-  - [ 1002640, 1, 1, 0.100000 ] # Blue Sun Boat Hat#TODO
-  - [ 1040107, 1, 1, 0.000090 ] # Dark Studded Top
-  - [ 1040108, 1, 1, 0.000080 ] # Green Pirate Top
-  - [ 1050082, 1, 1, 0.000080 ] # Blue Battle Lord
-  - [ 1050089, 1, 1, 0.000070 ] # Blue Ades
-  - [ 1060095, 1, 1, 0.000090 ] # Dark Studded Pants
-  - [ 1060097, 1, 1, 0.000080 ] # Green Pirate Pants
-  - [ 1072182, 1, 1, 0.000080 ] # Blue Wing Boots
-  - [ 1072192, 1, 1, 0.000070 ] # Green Osfa Boots
-  - [ 1072207, 1, 1, 0.000070 ] # Green Neli Shoes
-  - [ 1082114, 1, 1, 0.000080 ] # Sapphire Emperor
-  - [ 1082128, 1, 1, 0.000070 ] # Green Imperial
-  - [ 1092025, 1, 1, 0.000080 ] # Gold Aquila Shield
-  - [ 1432010, 1, 1, 0.000070 ] # Omega Spear
-  - [ 1462011, 1, 1, 0.000070 ] # Fire Raven
-  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
-  - [ 2040502, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEX 10%
-  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
-  - [ 2041001, 1, 1, 0.000030 ] # Scroll for Cape for Magic Def. 60%
-  - [ 2043015, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 100%#TODO
-  - [ 4000132, 1, 1, 0.600000 ] # Ghost Pirate Key
+  - [ 1002094, 1, 1, 0.000100 ] # Bronze Planet
+  - [ 1002273, 1, 1, 0.000100 ] # Purple Galaxy
+  - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
+  - [ 1002287, 1, 1, 0.000100 ] # Beige Patriot
+  - [ 1002338, 1, 1, 0.000100 ] # Red Dragon Barbute
+  - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
+  - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
+  - [ 1040108, 1, 1, 0.000100 ] # Green Pirate Top
+  - [ 1050082, 1, 1, 0.000100 ] # Blue Battle Lord
+  - [ 1050089, 1, 1, 0.000100 ] # Blue Ades
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants
+  - [ 1060097, 1, 1, 0.000100 ] # Green Pirate Pants
+  - [ 1072182, 1, 1, 0.000100 ] # Blue Wing Boots
+  - [ 1072192, 1, 1, 0.000100 ] # Green Osfa Boots
+  - [ 1072207, 1, 1, 0.000100 ] # Green Neli Shoes
+  - [ 1082114, 1, 1, 0.000100 ] # Sapphire Emperor
+  - [ 1082128, 1, 1, 0.000100 ] # Green Imperial
+  - [ 1092025, 1, 1, 0.000100 ] # Gold Aquila Shield
+  - [ 1432010, 1, 1, 0.000100 ] # Omega Spear
+  - [ 1462011, 1, 1, 0.000100 ] # Fire Raven
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040502, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040924, 1, 1, 0.000100 ] # Scroll for Shield for LUK 60%
+  - [ 2041001, 1, 1, 0.000100 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2043015, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 100%
+  - [ 4000132, 1, 1, 0.400000 ] # Ghost Pirate Key
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
-  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
-  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
-  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
+  - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
-  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
-  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.400000, 7101 ] # Tachion
