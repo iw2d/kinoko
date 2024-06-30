@@ -1,0 +1,65 @@
+# Dark Yeti and Pepe (8140100)
+
+rewards:
+  - [ 1002217, 1, 1, 0.100000 ] # Orange Golden Circlet#TODO
+  - [ 1002267, 1, 1, 0.100000 ] # Red Polyfeather Hat#TODO
+  - [ 1002283, 1, 1, 0.100000 ] # Purple Nightfox#TODO
+  - [ 1032013, 1, 1, 0.100000 ] # Red-Hearted Earrings#TODO
+  - [ 1032020, 1, 1, 0.100000 ] # Gold Drop Earrings#TODO
+  - [ 1040100, 1, 1, 0.100000 ] # Dark Scorpio#TODO
+  - [ 1041092, 1, 1, 0.100000 ] # Red Ice Queen#TODO
+  - [ 1050055, 1, 1, 0.100000 ] # White Anakamoon#TODO
+  - [ 1051030, 1, 1, 0.100000 ] # Dark Calaf#TODO
+  - [ 1051031, 1, 1, 0.100000 ] # White Calaf#TODO
+  - [ 1051034, 1, 1, 0.100000 ] # Orange Calaf#TODO
+  - [ 1060089, 1, 1, 0.100000 ] # Dark Scorpio Pants#TODO
+  - [ 1061091, 1, 1, 0.100000 ] # Red Ice Queen Skirt#TODO
+  - [ 1072127, 1, 1, 0.100000 ] # Blue Jangoon Shoes#TODO
+  - [ 1072131, 1, 1, 0.100000 ] # Purple Goni Shoes#TODO
+  - [ 1072152, 1, 1, 0.100000 ] # Dark Moss Boots#TODO
+  - [ 1082095, 1, 1, 0.100000 ] # Bronze Rover#TODO
+  - [ 1082099, 1, 1, 0.100000 ] # Blue Lorin#TODO
+  - [ 1092009, 1, 1, 0.100000 ] # Wooden Legend Shield#TODO
+  - [ 1102021, 1, 1, 0.100000 ] # Blue Gaia Cape#TODO
+  - [ 1302011, 1, 1, 0.100000 ] # Neocora#TODO
+  - [ 1302012, 1, 1, 0.100000 ] # Red Katana#TODO
+  - [ 1302018, 1, 1, 0.100000 ] # Khan#TODO
+  - [ 1332019, 1, 1, 0.100000 ] # Golden River#TODO
+  - [ 1412003, 1, 1, 0.100000 ] # The Rising#TODO
+  - [ 1412007, 1, 1, 0.100000 ] # The Shining#TODO
+  - [ 1422009, 1, 1, 0.100000 ] # The Blessing#TODO
+  - [ 1462009, 1, 1, 0.100000 ] # Gross Jaeger#TODO
+  - [ 1472022, 1, 1, 0.100000 ] # Bronze Gigantic#TODO
+  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040318, 1, 1, 0.100000 ] # Scroll for Earring for DEX 10%#TODO
+  - [ 2040328, 1, 1, 0.100000 ] # Scroll for Earring for HP 10%#TODO
+  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
+  - [ 2040619, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 10%#TODO
+  - [ 2040927, 1, 1, 0.100000 ] # Scroll for Shield for HP 60%#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044012, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 60%#TODO
+  - [ 2044012, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 60%#TODO
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2070004, 1, 1, 0.100000 ] # Tobi Throwing-Stars#TODO
+  - [ 4000056, 1, 1, 0.100000 ] # Dark Yeti Horn#TODO
+  - [ 4000057, 1, 1, 0.100000 ] # Dark Pepe Beak#TODO
+  - [ 4003004, 1, 1, 0.100000 ] # Stiff Feather#TODO
+  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
+  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
+  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
+  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
+  - [ 4006000, 1, 1, 0.100000 ] # The Magic Rock#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
+  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
+  - [ 4020002, 1, 1, 0.100000 ] # AquaMarine Ore#TODO
+  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO

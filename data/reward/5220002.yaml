@@ -1,0 +1,51 @@
+# Faust (5220002)
+
+rewards:
+  - [ 1302010, 1, 1, 0.100000 ] # Jeweled Katar#TODO
+  - [ 1312008, 1, 1, 0.100000 ] # Buck#TODO
+  - [ 1322017, 1, 1, 0.100000 ] # Knuckle Mace#TODO
+  - [ 1332003, 1, 1, 0.100000 ] # Shinkita#TODO
+  - [ 1372007, 1, 1, 0.100000 ] # Cromi#TODO
+  - [ 1382006, 1, 1, 0.100000 ] # Thorns#TODO
+  - [ 1402003, 1, 1, 0.100000 ] # Lion's Fang#TODO
+  - [ 1412003, 1, 1, 0.100000 ] # The Rising#TODO
+  - [ 1422005, 1, 1, 0.100000 ] # Golden Mole#TODO
+  - [ 1432004, 1, 1, 0.100000 ] # Serpent's Tongue#TODO
+  - [ 1432039, 1, 1, 0.100000 ] # Fishing Pole#TODO
+  - [ 1442005, 1, 1, 0.100000 ] # The Nine Dragons#TODO
+  - [ 1452008, 1, 1, 0.100000 ] # Olympus#TODO
+  - [ 1462007, 1, 1, 0.100000 ] # Rower#TODO
+  - [ 1472021, 1, 1, 0.100000 ] # Dark Slain#TODO
+  - [ 1482007, 1, 1, 0.100000 ] # Fury Claw#TODO
+  - [ 1492007, 1, 1, 0.100000 ] # Mr. Rasfelt#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion#TODO
+  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion#TODO
+  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
+  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
+  - [ 2040514, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 10%#TODO
+  - [ 2040707, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 60%#TODO
+  - [ 2040801, 1, 1, 0.100000 ] # Scroll for Gloves for DEX 60%#TODO
+  - [ 2040901, 1, 1, 0.100000 ] # Scroll for Shield for DEF 60%#TODO
+  - [ 2040928, 1, 1, 0.100000 ] # Scroll for Shield for HP 10%#TODO
+  - [ 2040931, 1, 1, 0.100000 ] # Scroll for Shield for STR 60%#TODO
+  - [ 2041002, 1, 1, 0.100000 ] # Scroll for Cape for Magic DEF 10%#TODO
+  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
+  - [ 2041017, 1, 1, 0.100000 ] # Scroll for Cape for INT 10%#TODO
+  - [ 2043702, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 10%#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
+  - [ 2044302, 1, 1, 0.100000 ] # Scroll for Spear for ATT 10%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000021, 1, 1, 0.100000 ] # Leather#TODO
+  - [ 4000026, 1, 1, 0.100000 ] # Lupin Doll#TODO
+  - [ 4000029, 1, 1, 0.100000 ] # Lupin's Banana#TODO
+  - [ 4000031, 1, 1, 0.100000 ] # Cursed Doll#TODO
+  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
+  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO

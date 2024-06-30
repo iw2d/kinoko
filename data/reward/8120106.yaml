@@ -1,0 +1,43 @@
+# Maverick Type D (8120106)
+
+rewards:
+  - [ 1002253, 1, 1, 0.100000 ] # Blue Infinium Circlet#TODO
+  - [ 1002274, 1, 1, 0.100000 ] # Dark Galaxy#TODO
+  - [ 1002276, 1, 1, 0.100000 ] # Red Falcon#TODO
+  - [ 1002284, 1, 1, 0.100000 ] # White Nightfox#TODO
+  - [ 1041107, 1, 1, 0.100000 ] # Dark Pirate Blouse#TODO
+  - [ 1041121, 1, 1, 0.100000 ] # Dark Valkyrie#TODO
+  - [ 1050074, 1, 1, 0.100000 ] # Dark Enigmatic#TODO
+  - [ 1050080, 1, 1, 0.100000 ] # Green Battle Lord#TODO
+  - [ 1051068, 1, 1, 0.100000 ] # Green Pria#TODO
+  - [ 1061106, 1, 1, 0.100000 ] # Dark Pirate Skirt#TODO
+  - [ 1061120, 1, 1, 0.100000 ] # Blood Valkyrie Skirt#TODO
+  - [ 1072155, 1, 1, 0.100000 ] # Purple Carzen Boots#TODO
+  - [ 1072167, 1, 1, 0.100000 ] # Dark Elf Shoes#TODO
+  - [ 1072203, 1, 1, 0.100000 ] # Red Ades Shoes#TODO
+  - [ 1072206, 1, 1, 0.100000 ] # Blue Neli Shoes#TODO
+  - [ 1072212, 1, 1, 0.100000 ] # Dark Rivers Boots#TODO
+  - [ 1072312, 1, 1, 0.100000 ] # Blue Pageant#TODO
+  - [ 1082110, 1, 1, 0.100000 ] # Blue Cordon#TODO
+  - [ 1082143, 1, 1, 0.100000 ] # Purple Mystra#TODO
+  - [ 1302018, 1, 1, 0.100000 ] # Khan#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
+  - [ 2002004, 1, 1, 0.100000 ] # Warrior Potion#TODO
+  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
+  - [ 2040823, 1, 1, 0.100000 ] # Scroll for Gloves for HP 100%#TODO
+  - [ 2041009, 1, 1, 0.100000 ] # Scroll for Cape for MP 100%#TODO
+  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
+  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2385042, 1, 1, 0.100000 ] # Maverick Type D Card#TODO
+  - [ 4000556, 1, 1, 0.100000 ] # Maverick Type D Booster#TODO
+  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
+  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO

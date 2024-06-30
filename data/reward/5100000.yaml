@@ -1,0 +1,34 @@
+# Jr. Yeti (5100000)
+
+rewards:
+  - [ 1041096, 1, 1, 0.000040 ] # Umber Mantis
+  - [ 1051037, 1, 1, 0.000050 ] # Blue Lumati
+  - [ 1051044, 1, 1, 0.000050 ] # Blue Anakarune
+  - [ 1051045, 1, 1, 0.000050 ] # Red Anakarune
+  - [ 1052116, 1, 1, 0.100000 ] # Green Plasteer#TODO
+  - [ 1061095, 1, 1, 0.000040 ] # Umber Mantis Pants
+  - [ 1072089, 1, 1, 0.000100 ] # Purple Salt Shoes
+  - [ 1082038, 1, 1, 0.000200 ] # Mithril Wolfskin
+  - [ 1442009, 1, 1, 0.000050 ] # Crescent Polearm
+  - [ 1452006, 1, 1, 0.000050 ] # Red Viper
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.000800 ] # Elixir
+  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
+  - [ 2040804, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 60%
+  - [ 2040925, 1, 1, 0.100000 ] # Scroll for Shield for LUK 10%#TODO
+  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
+  - [ 2043019, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 10%#TODO
+  - [ 2043110, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 100%#TODO
+  - [ 2044602, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 10%
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000048, 1, 1, 0.500000 ] # Jr. Yeti Skin
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO

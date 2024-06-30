@@ -1,0 +1,34 @@
+# Iron Mutae (4110300)
+
+rewards:
+  - [ 1002045, 1, 1, 0.100000 ] # Blue Bone Helm#TODO
+  - [ 1002085, 1, 1, 0.100000 ] # Mithril Crusader Helm#TODO
+  - [ 1002213, 1, 1, 0.100000 ] # Green Maro#TODO
+  - [ 1032012, 1, 1, 0.100000 ] # Skull Earrings#TODO
+  - [ 1040096, 1, 1, 0.100000 ] # Brown China#TODO
+  - [ 1041067, 1, 1, 0.100000 ] # Green Legolia#TODO
+  - [ 1041076, 1, 1, 0.100000 ] # Dark Shadow#TODO
+  - [ 1050037, 1, 1, 0.100000 ] # Green Starlight#TODO
+  - [ 1052116, 1, 1, 0.100000 ] # Green Plasteer#TODO
+  - [ 1060073, 1, 1, 0.100000 ] # Dark Shadow Pants#TODO
+  - [ 1060085, 1, 1, 0.100000 ] # Brown China Pants#TODO
+  - [ 1061062, 1, 1, 0.100000 ] # Green Legolia Pants#TODO
+  - [ 1412005, 1, 1, 0.100000 ] # Sabretooth#TODO
+  - [ 1452007, 1, 1, 0.100000 ] # Vaulter 2000#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2041019, 1, 1, 0.100000 ] # Scroll for Cape for DEX 60%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000357, 1, 1, 0.100000 ] # Piece of Steel#TODO
+  - [ 4004004, 1, 1, 0.100000 ] # Dark Crystal Ore#TODO
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
+  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO

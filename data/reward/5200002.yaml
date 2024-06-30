@@ -1,0 +1,24 @@
+# Fire Sentinel (5200002)
+
+rewards:
+  - [ 1032009, 1, 1, 0.000200 ] # Yellow Square
+  - [ 1041054, 1, 1, 0.000080 ] # Green Huntress Armor
+  - [ 1041059, 1, 1, 0.000100 ] # Sky Sneak
+  - [ 1041064, 1, 1, 0.000200 ] # Blueberry Lolica Armor
+  - [ 1050000, 1, 1, 0.000050 ] # White Crusader Chainmail
+  - [ 1061050, 1, 1, 0.000080 ] # Green Huntress Pants
+  - [ 1061055, 1, 1, 0.000100 ] # Sky Sneak Pants
+  - [ 1072089, 1, 1, 0.000050 ] # Purple Salt Shoes
+  - [ 1082052, 1, 1, 0.000080 ] # Blue Lutia
+  - [ 1452006, 1, 1, 0.000050 ] # Red Viper
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040805, 1, 1, 0.000020 ] # Scroll for Gloves for ATT 10%
+  - [ 2040926, 1, 1, 0.100000 ] # Scroll for Shield for HP 100%#TODO
+  - [ 2060001, 20, 30, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 20, 30, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 4000085, 1, 1, 0.400000 ] # Fire Sentinel Shellpiece
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
+  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

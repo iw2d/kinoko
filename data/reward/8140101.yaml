@@ -1,0 +1,35 @@
+# Black Kentaurus (8140101)
+
+rewards:
+  - [ 1002328, 1, 1, 0.000090 ] # Green Pireta Hat
+  - [ 1002640, 1, 1, 0.100000 ] # Blue Sun Boat Hat#TODO
+  - [ 1032023, 1, 1, 0.000090 ] # Strawberry Earrings
+  - [ 1040109, 1, 1, 0.000090 ] # Red Pirate Top
+  - [ 1060098, 1, 1, 0.000090 ] # Red Pirate Pants
+  - [ 1072179, 1, 1, 0.000080 ] # Dark Enigma Shoes
+  - [ 1082117, 1, 1, 0.000080 ] # Dark Emperor
+  - [ 1092026, 1, 1, 0.000080 ] # Bronze Kalkan
+  - [ 1312030, 1, 1, 0.000003 ] # Tomahawk
+  - [ 1382008, 1, 1, 0.000070 ] # Kage
+  - [ 1402035, 1, 1, 0.000003 ] # The Beheader
+  - [ 1452014, 1, 1, 0.000080 ] # Golden Arund
+  - [ 1472053, 1, 1, 0.000003 ] # Red Craven
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2040825, 1, 1, 0.100000 ] # Scroll for Gloves for HP 10%#TODO
+  - [ 2040901, 1, 1, 0.000020 ] # Scroll for Shield for DEF 60%
+  - [ 2048004, 1, 1, 0.000020 ] # Scroll for Pet Equip. for Jump 60%
+  - [ 4000234, 1, 1, 0.600000 ] # Kentaurus's Skull
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010003, 1, 1, 0.004000 ] # Adamantium Ore
+  - [ 4020001, 1, 1, 0.005000 ] # Amethyst Ore
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4031465, 1, 1, 0.005000, 6250 ] # Athena Pierce's Old Gloves
+  - [ 4031487, 1, 1, 0.005000, 6251 ] # Athena Pierce's Old Gloves

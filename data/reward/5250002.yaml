@@ -1,0 +1,20 @@
+# Primitive Boar (5250002)
+
+rewards:
+  - [ 1002634, 1, 1, 0.100000 ] # Purple Cast Linen#TODO
+  - [ 1040092, 1, 1, 0.100000 ] # Blue Orientican#TODO
+  - [ 1041093, 1, 1, 0.100000 ] # Blue Ice Queen#TODO
+  - [ 1072145, 1, 1, 0.100000 ] # Blue Gore Boots#TODO
+  - [ 1082087, 1, 1, 0.100000 ] # Gold Manute#TODO
+  - [ 1332015, 1, 1, 0.100000 ] # Deadly Fin#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 4000440, 1, 1, 0.100000 ] # Tough Leather#TODO
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
+  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

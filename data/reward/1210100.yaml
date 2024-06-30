@@ -1,0 +1,21 @@
+# Pig (1210100)
+
+rewards:
+  - [ 1002008, 1, 1, 0.000200 ] # Brown Skullcap
+  - [ 1002610, 1, 1, 0.100000 ] # Brown Rocky Bandana#TODO
+  - [ 1040034, 1, 1, 0.000100 ] # Dark Nightshift
+  - [ 1041014, 1, 1, 0.000100 ] # Orange Lolica Armor
+  - [ 1061028, 1, 1, 0.000100 ] # White Split Skirt
+  - [ 1062002, 1, 1, 0.000100 ] # Brown Hard Leather Pants
+  - [ 1422000, 1, 1, 0.000800 ] # Wooden Mallet
+  - [ 1472000, 1, 1, 0.000500 ] # Garnier
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.007000 ] # Green Apple
+  - [ 2040702, 1, 1, 0.000030 ] # Scroll for Shoes for DEX 10%
+  - [ 2041021, 1, 1, 0.000030 ] # Scroll for Cape for LUK 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000017, 1, 1, 0.010000 ] # Pig's Head
+  - [ 4000021, 1, 1, 0.015000 ] # Leather
+  - [ 4010006, 1, 1, 0.001000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.003000 ] # Topaz Ore

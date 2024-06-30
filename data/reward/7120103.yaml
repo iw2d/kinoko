@@ -1,0 +1,60 @@
+# Red Slime (7120103)
+
+rewards:
+  - [ 1002095, 1, 1, 0.100000 ] # Mithril Planet#TODO
+  - [ 1002246, 1, 1, 0.100000 ] # Dark Seraphis#TODO
+  - [ 1032014, 1, 1, 0.100000 ] # Pink-Flowered Earrings#TODO
+  - [ 1032016, 1, 1, 0.100000 ] # Metal Heart Earrings#TODO
+  - [ 1032020, 1, 1, 0.100000 ] # Gold Drop Earrings#TODO
+  - [ 1041095, 1, 1, 0.100000 ] # Bloody Mantis#TODO
+  - [ 1041102, 1, 1, 0.100000 ] # Pink Mystique#TODO
+  - [ 1050069, 1, 1, 0.100000 ] # Brown Requiem#TODO
+  - [ 1050070, 1, 1, 0.100000 ] # Dark Requiem#TODO
+  - [ 1051054, 1, 1, 0.100000 ] # Brown Requierre#TODO
+  - [ 1061094, 1, 1, 0.100000 ] # Bloody Mantis Pants#TODO
+  - [ 1061101, 1, 1, 0.100000 ] # Pink Mystique Pants#TODO
+  - [ 1072146, 1, 1, 0.100000 ] # Green Gore Boots#TODO
+  - [ 1072163, 1, 1, 0.100000 ] # Red Mystique Shoes#TODO
+  - [ 1072165, 1, 1, 0.100000 ] # Baige Elf Shoes#TODO
+  - [ 1082105, 1, 1, 0.100000 ] # Dark Husk#TODO
+  - [ 1082108, 1, 1, 0.100000 ] # Dark Eyes#TODO
+  - [ 1082110, 1, 1, 0.100000 ] # Blue Cordon#TODO
+  - [ 1102023, 1, 1, 0.100000 ] # White Gaia Cape#TODO
+  - [ 1312009, 1, 1, 0.100000 ] # Hawkhead#TODO
+  - [ 1332015, 1, 1, 0.100000 ] # Deadly Fin#TODO
+  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
+  - [ 1372015, 1, 1, 0.100000 ] # Angel Wings#TODO
+  - [ 1372016, 1, 1, 0.100000 ] # Phoenix Wand#TODO
+  - [ 1402011, 1, 1, 0.100000 ] # Sparta#TODO
+  - [ 1422010, 1, 1, 0.100000 ] # Gigantic Sledge#TODO
+  - [ 1472028, 1, 1, 0.100000 ] # Blue Scarab#TODO
+  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040002, 1, 1, 0.100000 ] # Scroll for Helmet for DEF 10%#TODO
+  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
+  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
+  - [ 2040705, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 10%#TODO
+  - [ 2040824, 1, 1, 0.100000 ] # Scroll for Gloves for HP 60%#TODO
+  - [ 2041021, 1, 1, 0.100000 ] # Scroll for Cape for LUK 100%#TODO
+  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2384058, 1, 1, 0.100000 ] # Red Slime Card#TODO
+  - [ 4000545, 1, 1, 0.100000 ] # Red Squishy Liquid#TODO
+  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
+  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
+  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
+  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
+  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO

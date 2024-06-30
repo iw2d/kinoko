@@ -1,0 +1,45 @@
+# Nibelung (8220013)
+
+rewards:
+  - [ 1092017, 1, 1, 0.100000 ] # Gold Ancient Shield#TODO
+  - [ 1302012, 1, 1, 0.100000 ] # Red Katana#TODO
+  - [ 1312010, 1, 1, 0.100000 ] # Mikhail#TODO
+  - [ 1322019, 1, 1, 0.100000 ] # The Judgement#TODO
+  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
+  - [ 1332019, 1, 1, 0.100000 ] # Golden River#TODO
+  - [ 1372059, 1, 1, 0.100000 ] # Neo Phoenix Wand#TODO
+  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
+  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
+  - [ 1402074, 1, 1, 0.100000 ] # Neo Heaven's Gate#TODO
+  - [ 1412008, 1, 1, 0.100000 ] # Chrono#TODO
+  - [ 1422010, 1, 1, 0.100000 ] # Gigantic Sledge#TODO
+  - [ 1432007, 1, 1, 0.100000 ] # Redemption#TODO
+  - [ 1442008, 1, 1, 0.100000 ] # The Gold Dragon#TODO
+  - [ 1442091, 1, 1, 0.100000 ] # Neo Eclipse#TODO
+  - [ 1452009, 1, 1, 0.100000 ] # Red Hinkel#TODO
+  - [ 1452090, 1, 1, 0.100000 ] # Neo Dark Arund#TODO
+  - [ 1462009, 1, 1, 0.100000 ] # Gross Jaeger#TODO
+  - [ 1472026, 1, 1, 0.100000 ] # Brown Scarab#TODO
+  - [ 1472101, 1, 1, 0.100000 ] # Neo Black Mamba#TODO
+  - [ 1482052, 1, 1, 0.100000 ] # Neo Steel Renault#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
+  - [ 2043001, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 60%#TODO
+  - [ 2043101, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 60%#TODO
+  - [ 2043201, 1, 1, 0.100000 ] # Scroll for One-Handed BW for ATT 60%#TODO
+  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
+  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044101, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 60%#TODO
+  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
+  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
+  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
+  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2047000, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for ATT#TODO
+  - [ 2047001, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Accuracy#TODO
+  - [ 2047002, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Magic Attack#TODO
+  - [ 2047100, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for ATT#TODO
+  - [ 2047101, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for Accuracy #TODO
+  - [ 2047102, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for Magic Attack#TODO

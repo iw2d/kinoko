@@ -1,0 +1,32 @@
+# Zeno (6220001)
+
+rewards:
+  - [ 1002024, 1, 1, 0.100000 ] # Emerald Dome#TODO
+  - [ 1002095, 1, 1, 0.100000 ] # Mithril Planet#TODO
+  - [ 1002254, 1, 1, 0.100000 ] # Dark Infinium Circlet#TODO
+  - [ 1002285, 1, 1, 0.100000 ] # Blood Nightfox#TODO
+  - [ 1002289, 1, 1, 0.100000 ] # Dark Patriot#TODO
+  - [ 1002637, 1, 1, 0.100000 ] # Black Pirate's Bandana#TODO
+  - [ 1302049, 1, 1, 0.100000 ] # Glowing Whip#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2040425, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 60%#TODO
+  - [ 2040516, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 60%#TODO
+  - [ 2040707, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 60%#TODO
+  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
+  - [ 2040925, 1, 1, 0.100000 ] # Scroll for Shield for LUK 10%#TODO
+  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
+  - [ 2043101, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 60%#TODO
+  - [ 2043214, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 10%#TODO
+  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
+  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
+  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2070004, 1, 1, 0.100000 ] # Tobi Throwing-Stars#TODO
+  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
+  - [ 4000117, 1, 1, 0.100000 ] # Space Food#TODO
+  - [ 4000118, 1, 1, 0.100000 ] # Small Spaceship#TODO
+  - [ 4000119, 1, 1, 0.100000 ] # Receiving Apparatus#TODO
+  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
+  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO

@@ -1,0 +1,18 @@
+# Stump (130100)
+
+rewards:
+  - [ 1061014, 1, 1, 0.100000 ] # Rookie Pants#TODO
+  - [ 1072007, 1, 1, 0.000100 ] # Brown High Boots
+  - [ 1082003, 1, 1, 0.000100 ] # Juno
+  - [ 1332000, 1, 1, 0.000100 ] # Triangular Zamadar
+  - [ 1452003, 1, 1, 0.000100 ] # Composite Bow
+  - [ 1492000, 1, 1, 0.100000 ] # Pistol#TODO
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.007000 ] # Green Apple
+  - [ 2040402, 1, 1, 0.000030 ] # Scroll for Topwear for DEF 10%
+  - [ 2041008, 1, 1, 0.000030 ] # Scroll for Cape for HP 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000003, 1, 1, 0.400000 ] # Tree Branch
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

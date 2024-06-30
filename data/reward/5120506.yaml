@@ -1,0 +1,33 @@
+# The Book Ghost (5120506)
+
+rewards:
+  - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
+  - [ 1002168, 1, 1, 0.000100 ] # Green Distinction
+  - [ 1040086, 1, 1, 0.000100 ] # Blue Jangoon Armor
+  - [ 1040095, 1, 1, 0.000050 ] # Blue China
+  - [ 1050059, 1, 1, 0.000050 ] # Blue Tai
+  - [ 1060084, 1, 1, 0.000050 ] # Blue China Pants
+  - [ 1072127, 1, 1, 0.000100 ] # Blue Jangoon Shoes
+  - [ 1402006, 1, 1, 0.000100 ] # Lionheart
+  - [ 1412007, 1, 1, 0.000050 ] # The Shining
+  - [ 1442010, 1, 1, 0.000040 ] # Skylar
+  - [ 1452004, 1, 1, 0.000060 ] # Asianic Bow
+  - [ 1492007, 1, 1, 0.100000 ] # Mr. Rasfelt#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
+  - [ 2040617, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 100%#TODO
+  - [ 2040825, 1, 1, 0.100000 ] # Scroll for Gloves for HP 10%#TODO
+  - [ 2040927, 1, 1, 0.100000 ] # Scroll for Shield for HP 60%#TODO
+  - [ 2044201, 1, 1, 0.000050 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000298, 1, 1, 0.500000 ] # Old Paper
+  - [ 4000299, 1, 1, 0.040000 ] # The Book Ghost's Sheet of Paper
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4031432, 1, 1, 0.005000, 3810 ] # The Legendary Being's Scroll <Advanced>

@@ -1,0 +1,33 @@
+# Malady (5300100)
+
+rewards:
+  - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
+  - [ 1002168, 1, 1, 0.000100 ] # Green Distinction
+  - [ 1032019, 1, 1, 0.000070 ] # Crystal Flower Earrings
+  - [ 1040086, 1, 1, 0.000100 ] # Blue Jangoon Armor
+  - [ 1040090, 1, 1, 0.000060 ] # Green Orientican
+  - [ 1051031, 1, 1, 0.000080 ] # White Calaf
+  - [ 1051039, 1, 1, 0.000080 ] # Red Lumati
+  - [ 1060000, 1, 1, 0.000100 ] # Black Jangoon Pants
+  - [ 1060079, 1, 1, 0.000060 ] # Green Orientican Pants
+  - [ 1072137, 1, 1, 0.000060 ] # Green Goldrunners
+  - [ 1072143, 1, 1, 0.000080 ] # Green Goldwind Shoes
+  - [ 1082011, 1, 1, 0.000080 ] # Gold Brist
+  - [ 1082093, 1, 1, 0.000060 ] # Steal Pow
+  - [ 1082198, 1, 1, 0.100000 ] # Brown Royce#TODO
+  - [ 1452004, 1, 1, 0.000060 ] # Asianic Bow
+  - [ 1452008, 1, 1, 0.000080 ] # Olympus
+  - [ 1472020, 1, 1, 0.000080 ] # Sapphire Slain
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 4000041, 1, 1, 0.400000 ] # Malady's Experimental Frog
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO

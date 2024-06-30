@@ -1,0 +1,30 @@
+# Dark Leatty (5300001)
+
+rewards:
+  - [ 1002138, 1, 1, 0.000080 ] # Blue Pole-Feather Hat
+  - [ 1002175, 1, 1, 0.000090 ] # Dark Guise
+  - [ 1002625, 1, 1, 0.100000 ] # Blue Den Marine#TODO
+  - [ 1041068, 1, 1, 0.000070 ] # Dark Legolia
+  - [ 1050029, 1, 1, 0.000090 ] # Dark Chaos Robe
+  - [ 1051023, 1, 1, 0.000060 ] # Purple Moonlight
+  - [ 1061063, 1, 1, 0.000070 ] # Dark Legolia Pants
+  - [ 1072105, 1, 1, 0.000080 ] # Green White-Lined Boots
+  - [ 1082036, 1, 1, 0.000070 ] # Dark Briggon
+  - [ 1332014, 1, 1, 0.000080 ] # Gephart
+  - [ 1402002, 1, 1, 0.000090 ] # Scimitar
+  - [ 2000002, 1, 1, 0.015000 ] # White Potion
+  - [ 2000003, 1, 1, 0.015000 ] # Blue Potion
+  - [ 2040402, 1, 1, 0.000020 ] # Scroll for Topwear for DEF 10%
+  - [ 2040623, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 100%#TODO
+  - [ 2050000, 1, 1, 0.008000 ] # Antidote
+  - [ 4000087, 1, 1, 0.400000 ] # Dark Leatty Furball
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010000, 1, 1, 0.003000 ] # Bronze Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4031311, 1, 1, 0.200000, 3093 ] # Snow Crystal

@@ -1,0 +1,31 @@
+# Jr. Lioner (3210201)
+
+rewards:
+  - [ 1002172, 1, 1, 0.000100 ] # Blue Guise
+  - [ 1050036, 1, 1, 0.000060 ] # Red Starlight
+  - [ 1051016, 1, 1, 0.000080 ] # Silver Fitted Mail
+  - [ 1051024, 1, 1, 0.000060 ] # Red Moonlight
+  - [ 1072083, 1, 1, 0.000100 ] # Brown Hunter Boots
+  - [ 1072089, 1, 1, 0.000080 ] # Purple Salt Shoes
+  - [ 1082070, 1, 1, 0.000080 ] # Gold Scaler
+  - [ 1332012, 1, 1, 0.000100 ] # Reef Claw
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 1472013, 1, 1, 0.000070 ] # Dark Guardian
+  - [ 1492004, 1, 1, 0.100000 ] # Cold Mind#TODO
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2043114, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 10%#TODO
+  - [ 2044501, 1, 1, 0.000030 ] # Scroll for Bow for ATT 60%
+  - [ 4000021, 1, 1, 0.025000 ] # Leather
+  - [ 4000073, 1, 1, 0.500000 ] # Solid Horn
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4004001, 1, 1, 0.000700 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000500 ] # The Summoning Rock
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO

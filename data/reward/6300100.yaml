@@ -1,0 +1,42 @@
+# Buffoon (6300100)
+
+rewards:
+  - [ 1040098, 1, 1, 0.000090 ] # Light Scorpio
+  - [ 1040106, 1, 1, 0.000070 ] # Blue Studded Top
+  - [ 1041093, 1, 1, 0.000090 ] # Blue Ice Queen
+  - [ 1041098, 1, 1, 0.000070 ] # Violet Platina
+  - [ 1050082, 1, 1, 0.000060 ] # Blue Battle Lord
+  - [ 1051065, 1, 1, 0.000070 ] # Dark Lineros
+  - [ 1060087, 1, 1, 0.000090 ] # Light Scorpio Pants
+  - [ 1060094, 1, 1, 0.000070 ] # Blue Studded Pants
+  - [ 1061092, 1, 1, 0.000090 ] # Blue Ice Queen Skirt
+  - [ 1061097, 1, 1, 0.000070 ] # Violet Platina Pants
+  - [ 1072139, 1, 1, 0.000090 ] # Blue Goldrunners
+  - [ 1072158, 1, 1, 0.000070 ] # Red Lapiz Sandals
+  - [ 1072172, 1, 1, 0.000060 ] # Green Pirate Boots
+  - [ 1082097, 1, 1, 0.000070 ] # Gold Rover
+  - [ 1082108, 1, 1, 0.000070 ] # Dark Eyes
+  - [ 1082109, 1, 1, 0.000060 ] # Red Cordon
+  - [ 1082122, 1, 1, 0.000060 ] # Blue Clarity
+  - [ 1442008, 1, 1, 0.000060 ] # The Gold Dragon
+  - [ 1452010, 1, 1, 0.000060 ] # Blue Hinkel
+  - [ 1472027, 1, 1, 0.000060 ] # Green Scarab
+  - [ 1492010, 1, 1, 0.100000 ] # Infinity's Wrath#TODO
+  - [ 2000001, 1, 1, 0.020000 ] # Orange Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040421, 1, 1, 0.100000 ] # Scroll for Topwear for HP 60%#TODO
+  - [ 2040825, 1, 1, 0.100000 ] # Scroll for Gloves for HP 10%#TODO
+  - [ 2041022, 1, 1, 0.000020 ] # Scroll for Cape for LUK 60%
+  - [ 4000130, 1, 1, 0.600000 ] # Buffoon's Grandpa Clock
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.350000, 7101 ] # Tachion

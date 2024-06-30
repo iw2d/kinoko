@@ -1,0 +1,35 @@
+# Mummydog (4230126)
+
+rewards:
+  - [ 1002631, 1, 1, 0.100000 ] # Brown Leather Ocean Hat#TODO
+  - [ 1041082, 1, 1, 0.000090 ] # Brown Piettra
+  - [ 1041084, 1, 1, 0.000100 ] # Red Jangoon Armor
+  - [ 1050048, 1, 1, 0.000080 ] # White Calas
+  - [ 1051032, 1, 1, 0.000080 ] # Blue Calaf
+  - [ 1060069, 1, 1, 0.000090 ] # Brown Piette Pants
+  - [ 1060075, 1, 1, 0.000100 ] # Brown Jangoon Pants
+  - [ 1082010, 1, 1, 0.000080 ] # Mithril Brist
+  - [ 1082059, 1, 1, 0.000070 ] # Bronze Clench
+  - [ 1082066, 1, 1, 0.000080 ] # Brown Moon Gloves
+  - [ 1082089, 1, 1, 0.000070 ] # Ocher Garner
+  - [ 1082092, 1, 1, 0.000070 ] # Bronze Pow
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040419, 1, 1, 0.100000 ] # Scroll for Topwear for STR 10%#TODO
+  - [ 2040425, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 60%#TODO
+  - [ 2041014, 1, 1, 0.000030 ] # Scroll for Cape for STR 10%
+  - [ 2044201, 1, 1, 0.000030 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000205, 1, 1, 0.500000 ] # Dirty Bandage
+  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020003, 1, 1, 0.003000 ] # Emerald Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO

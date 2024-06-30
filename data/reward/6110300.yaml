@@ -1,0 +1,36 @@
+# Homun (6110300)
+
+rewards:
+  - [ 1002022, 1, 1, 0.100000 ] # Old Steel Nordic Helm#TODO
+  - [ 1032019, 1, 1, 0.100000 ] # Crystal Flower Earrings#TODO
+  - [ 1032020, 1, 1, 0.100000 ] # Gold Drop Earrings#TODO
+  - [ 1040099, 1, 1, 0.100000 ] # Ocher Scorpio#TODO
+  - [ 1040104, 1, 1, 0.100000 ] # Orihalcon Platine#TODO
+  - [ 1041078, 1, 1, 0.100000 ] # Blue Moon#TODO
+  - [ 1041089, 1, 1, 0.100000 ] # Dark Shouldermail#TODO
+  - [ 1051047, 1, 1, 0.100000 ] # Dark Anakarune#TODO
+  - [ 1051062, 1, 1, 0.100000 ] # Blue Lineros#TODO
+  - [ 1060088, 1, 1, 0.100000 ] # Ocher Scorpio Pants#TODO
+  - [ 1060092, 1, 1, 0.100000 ] # Orihalcon Platine Pants#TODO
+  - [ 1072157, 1, 1, 0.100000 ] # Blue Lapiz Sandals#TODO
+  - [ 1072306, 1, 1, 0.100000 ] # Black Basile Boots#TODO
+  - [ 1082107, 1, 1, 0.100000 ] # Gold Eyes#TODO
+  - [ 1102022, 1, 1, 0.100000 ] # Red Gaia Cape#TODO
+  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
+  - [ 1432006, 1, 1, 0.100000 ] # Holy Spear#TODO
+  - [ 1462008, 1, 1, 0.100000 ] # Golden Crow#TODO
+  - [ 1472024, 1, 1, 0.100000 ] # Sapphire Gigantic#TODO
+  - [ 1472026, 1, 1, 0.100000 ] # Brown Scarab#TODO
+  - [ 1952001, 1, 1, 0.100000 ] # Gold Pendant#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 4000354, 1, 1, 0.100000 ] # Beaker#TODO
+  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010000, 1, 1, 0.100000 ] # Bronze Ore#TODO
+  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO

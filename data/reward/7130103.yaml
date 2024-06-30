@@ -1,0 +1,35 @@
+# Commander Skeleton (7130103)
+
+rewards:
+  - [ 1040092, 1, 1, 0.000090 ] # Blue Orientican
+  - [ 1041092, 1, 1, 0.000090 ] # Red Ice Queen
+  - [ 1041095, 1, 1, 0.000090 ] # Bloody Mantis
+  - [ 1050061, 1, 1, 0.000080 ] # Blue Linnex
+  - [ 1051054, 1, 1, 0.000080 ] # Brown Requierre
+  - [ 1051063, 1, 1, 0.000080 ] # Beige Lineros
+  - [ 1060081, 1, 1, 0.000090 ] # Blue Orientican Pants
+  - [ 1061091, 1, 1, 0.000090 ] # Red Ice Queen Skirt
+  - [ 1061094, 1, 1, 0.000090 ] # Bloody Mantis Pants
+  - [ 1072172, 1, 1, 0.000070 ] # Green Pirate Boots
+  - [ 1072177, 1, 1, 0.000070 ] # Green Enigma Shoes
+  - [ 1072182, 1, 1, 0.000070 ] # Blue Wing Boots
+  - [ 1072210, 1, 1, 0.000070 ] # Red Rivers Boots
+  - [ 1082207, 1, 1, 0.100000 ] # Blue Halfglove#TODO
+  - [ 1092023, 1, 1, 0.000050 ] # Steel Aquila Shield
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2002003, 1, 1, 0.008000 ] # Wizard Potion
+  - [ 2002004, 1, 1, 0.008000 ] # Warrior Potion
+  - [ 2040301, 1, 1, 0.000020 ] # Scroll for Earring for INT 60%
+  - [ 2040418, 1, 1, 0.100000 ] # Scroll for Topwear for STR 60%#TODO
+  - [ 2040516, 1, 1, 0.000020 ] # Scroll for Overall Armor for LUK 60%
+  - [ 4000208, 1, 1, 0.500000 ] # Horse Skull
+  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4020001, 1, 1, 0.004000 ] # Amethyst Ore
+  - [ 4020002, 1, 1, 0.003000 ] # AquaMarine Ore
+  - [ 4020007, 1, 1, 0.003000 ] # Diamond Ore
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO

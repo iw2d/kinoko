@@ -1,0 +1,16 @@
+# Shroom (120100)
+
+rewards:
+  - [ 1002610, 1, 1, 0.100000 ] # Brown Rocky Bandana#TODO
+  - [ 1060007, 1, 1, 0.000100 ] # Jean Capris
+  - [ 1061009, 1, 1, 0.000100 ] # Green Avelin Skirt
+  - [ 1062000, 1, 1, 0.000100 ] # Ice Jeans
+  - [ 1332006, 1, 1, 0.000100 ] # Field Dagger
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.007000 ] # Green Apple
+  - [ 2041007, 1, 1, 0.000030 ] # Scroll for Cape for HP 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000011, 1, 1, 0.400000 ] # Mushroom Spore
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore

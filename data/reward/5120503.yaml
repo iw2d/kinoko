@@ -1,0 +1,27 @@
+# Straw Target Dummy (5120503)
+
+rewards:
+  - [ 1041088, 1, 1, 0.000040 ] # Ivory Shouldermail
+  - [ 1051038, 1, 1, 0.000050 ] # Green Lumati
+  - [ 1060077, 1, 1, 0.000040 ] # Ocher Shouldermail Pants
+  - [ 1072118, 1, 1, 0.000200 ] # Red Pierre Shoes
+  - [ 1072303, 1, 1, 0.100000 ] # Brown Double Boots#TODO
+  - [ 1312008, 1, 1, 0.000050 ] # Buck
+  - [ 1332011, 1, 1, 0.000100 ] # Bazlud
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2002003, 1, 1, 0.004000 ] # Wizard Potion
+  - [ 2040026, 1, 1, 0.100000 ] # Scroll for Helmet for INT 10%#TODO
+  - [ 2040422, 1, 1, 0.100000 ] # Scroll for Topwear for HP 10%#TODO
+  - [ 2040901, 1, 1, 0.000050 ] # Scroll for Shield for DEF 60%
+  - [ 2040925, 1, 1, 0.100000 ] # Scroll for Shield for LUK 10%#TODO
+  - [ 2040927, 1, 1, 0.100000 ] # Scroll for Shield for HP 60%#TODO
+  - [ 2044602, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 10%
+  - [ 4000286, 1, 1, 0.500000 ] # Straw Doll
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO

@@ -1,0 +1,28 @@
+# Iron Boar (4230400)
+
+rewards:
+  - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer
+  - [ 1032018, 1, 1, 0.000080 ] # Pansy Earrings
+  - [ 1041082, 1, 1, 0.000090 ] # Brown Piettra
+  - [ 1050047, 1, 1, 0.000060 ] # Orange Calas
+  - [ 1061081, 1, 1, 0.000080 ] # Brown Piettra Skirt
+  - [ 1072116, 1, 1, 0.000090 ] # Gold Moon Shoes
+  - [ 1072126, 1, 1, 0.000080 ] # Maroon Jangoon Shoes
+  - [ 1082071, 1, 1, 0.000100 ] # Aqua Brace
+  - [ 1972001, 1, 1, 0.100000 ] # Gold Tail#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.005000 ] # Elixir
+  - [ 2040923, 1, 1, 0.100000 ] # Scroll for Shield for LUK 100%#TODO
+  - [ 2044001, 1, 1, 0.000050 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000178, 1, 1, 0.500000 ] # Iron Boar Armor
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
+  - [ 4020008, 1, 1, 0.001000 ] # Black Crystal Ore
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO

@@ -1,0 +1,23 @@
+# Desert Rabbit (M) (2100101)
+
+rewards:
+  - [ 1002129, 1, 1, 0.100000 ] # Brown Loosecap#TODO
+  - [ 1041027, 1, 1, 0.100000 ] # Red Shivermail#TODO
+  - [ 1060017, 1, 1, 0.100000 ] # White Martial Arts Pants#TODO
+  - [ 1061025, 1, 1, 0.100000 ] # Red Shivermail Skirt#TODO
+  - [ 1061028, 1, 1, 0.100000 ] # White Split Skirt#TODO
+  - [ 1082183, 1, 1, 0.100000 ] # Brown Leather Armor Glove#TODO
+  - [ 1092021, 1, 1, 0.100000 ] # Mystic Shield#TODO
+  - [ 1472006, 1, 1, 0.100000 ] # Adamantium Igor#TODO
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion#TODO
+  - [ 2044210, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 100%#TODO
+  - [ 2044602, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 10%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000325, 1, 1, 0.100000 ] # Carrot#TODO
+  - [ 4003004, 1, 1, 0.100000 ] # Stiff Feather#TODO
+  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
+  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO

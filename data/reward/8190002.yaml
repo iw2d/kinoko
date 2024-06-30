@@ -1,0 +1,38 @@
+# Nest Golem (8190002)
+
+rewards:
+  - [ 1002406, 1, 1, 0.000070 ] # Red Arnah Cap
+  - [ 1032023, 1, 1, 0.000060 ] # Strawberry Earrings
+  - [ 1050097, 1, 1, 0.000060 ] # Blue Katinas
+  - [ 1051101, 1, 1, 0.000060 ] # Green Bazura
+  - [ 1072225, 1, 1, 0.000050 ] # Red Varr Shoes
+  - [ 1082139, 1, 1, 0.000040 ] # Green Korben
+  - [ 1082152, 1, 1, 0.000040 ] # Blue Ciara
+  - [ 1082213, 1, 1, 0.100000 ] # Black Skellduke#TODO
+  - [ 1412021, 1, 1, 0.000007 ] # Tavar
+  - [ 1452019, 1, 1, 0.000004 ] # White Nisrock
+  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
+  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040707, 1, 1, 0.000040 ] # Scroll for Shoes for Speed 60%
+  - [ 2041023, 1, 1, 0.000030 ] # Scroll for Cape for LUK 10%
+  - [ 2043801, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2290000, 1, 1, 0.000070 ] # [Mastery Book] Monster Magnet
+  - [ 2290008, 1, 1, 0.000100 ] # [Mastery Book] Advanced Combo Attack
+  - [ 2290018, 1, 1, 0.000004 ] # [Mastery Book] Holy Charge
+  - [ 2290038, 1, 1, 0.000080 ] # [Mastery Book] Elquines
+  - [ 2290060, 1, 1, 0.000008 ] # [Mastery Book] Hurricane
+  - [ 2290080, 1, 1, 0.000008 ] # [Mastery Book] Taunt
+  - [ 2290124, 1, 1, 0.100000 ] # [Mastery Book] Bullseye#TODO
+  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
+  - [ 4000244, 1, 1, 0.000004 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.000004 ] # Dragon Scale
+  - [ 4000271, 1, 1, 0.500000 ] # Destroyed Nest
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
+  - [ 4010005, 1, 1, 0.004000 ] # Orihalcon Ore
+  - [ 4020007, 1, 1, 0.003000 ] # Diamond Ore
+  - [ 4130013, 1, 1, 0.000100 ] # Crossbow Production Stimulator

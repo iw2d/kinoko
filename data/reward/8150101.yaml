@@ -1,0 +1,40 @@
+# Cold Shark (8150101)
+
+rewards:
+  - [ 1002326, 1, 1, 0.000060 ] # Red Osfa Hat
+  - [ 1002403, 1, 1, 0.000080 ] # Blue Arlic Helmet
+  - [ 1032023, 1, 1, 0.000200 ] # Strawberry Earrings
+  - [ 1040117, 1, 1, 0.000080 ] # Purple Osfa Suit
+  - [ 1060106, 1, 1, 0.000080 ] # Purple Osfa Pants
+  - [ 1072193, 1, 1, 0.000080 ] # Brown Osfa Boots
+  - [ 1072203, 1, 1, 0.000080 ] # Red Ades Shoes
+  - [ 1072223, 1, 1, 0.000010 ] # Green Varr Shoes
+  - [ 1072318, 1, 1, 0.100000 ] # Black Duke Barkin Shoes#TODO
+  - [ 1082143, 1, 1, 0.000080 ] # Purple Mystra
+  - [ 1302018, 1, 1, 0.000090 ] # Khan
+  - [ 1312011, 1, 1, 0.000090 ] # Gaea
+  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.003000 ] # Reindeer Milk
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040301, 1, 1, 0.000020 ] # Scroll for Earring for INT 60%
+  - [ 2040420, 1, 1, 0.100000 ] # Scroll for Topwear for HP 100%#TODO
+  - [ 2040931, 1, 1, 0.100000 ] # Scroll for Shield for STR 60%#TODO
+  - [ 2041022, 1, 1, 0.000030 ] # Scroll for Cape for LUK 60%
+  - [ 2043001, 1, 1, 0.000030 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2290042, 1, 1, 0.000010 ] # [Mastery Book] Ice Demon
+  - [ 2290052, 1, 1, 0.000010 ] # [Mastery Book] Sharp Eyes
+  - [ 2290102, 1, 1, 0.100000 ] # [Mastery Book] Demolition#TODO
+  - [ 4000181, 1, 1, 0.500000 ] # Frozen Shark's Fin
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020007, 1, 1, 0.003000 ] # Diamond Ore
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4161018, 1, 1, 0.000050 ] # [Storybook] Ancient Book
+  - [ 4031255, 1, 1, 0.070000, 3078 ] # Broken Camera

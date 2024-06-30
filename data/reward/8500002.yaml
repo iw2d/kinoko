@@ -1,0 +1,68 @@
+# Papulatus (8500002)
+
+rewards:
+  - [ 1002377, 1, 1, 0.020000 ] # Green Valhalla Helmet
+  - [ 1002646, 1, 1, 0.100000 ] # Black Polax Hat#TODO
+  - [ 1040120, 1, 1, 0.040000 ] # Green Neos
+  - [ 1041122, 1, 1, 0.040000 ] # Green Lucida
+  - [ 1050098, 1, 1, 0.040000 ] # Red Katinas
+  - [ 1050102, 1, 1, 0.040000 ] # Green Varuna
+  - [ 1050106, 1, 1, 0.040000 ] # Green Arzuna
+  - [ 1051092, 1, 1, 0.040000 ] # Red Katte
+  - [ 1051101, 1, 1, 0.040000 ] # Green Bazura
+  - [ 1051105, 1, 1, 0.040000 ] # Green Armis
+  - [ 1052131, 1, 1, 0.100000 ] # Red Belly Duke#TODO
+  - [ 1060109, 1, 1, 0.040000 ] # Green Neos Pants
+  - [ 1061121, 1, 1, 0.040000 ] # Green Lucida Skirt
+  - [ 1072213, 1, 1, 0.040000 ] # Green Katina Boots
+  - [ 1072220, 1, 1, 0.040000 ] # Green Crescent Boots
+  - [ 1072221, 1, 1, 0.020000 ] # Blue Crescent Boots
+  - [ 1072224, 1, 1, 0.040000 ] # Blue Varr Shoes
+  - [ 1072227, 1, 1, 0.040000 ] # Red Arnah Shoes
+  - [ 1072318, 1, 1, 0.100000 ] # Black Duke Barkin Shoes#TODO
+  - [ 1082158, 1, 1, 0.020000 ] # Red Arcina
+  - [ 1082213, 1, 1, 0.100000 ] # Black Skellduke#TODO
+  - [ 1312015, 1, 1, 0.009000 ] # Vifennis
+  - [ 1332026, 1, 1, 0.009000 ] # Cursayer
+  - [ 1332027, 1, 1, 0.009000 ] # Varkit
+  - [ 1372009, 1, 1, 0.009000 ] # Magicodar
+  - [ 1462018, 1, 1, 0.009000 ] # Casa Crow
+  - [ 1482011, 1, 1, 0.100000 ] # White Fangz#TODO
+  - [ 2000004, 35, 45, 1.000000 ] # Elixir
+  - [ 2000005, 25, 35, 1.000000 ] # Power Elixir
+  - [ 2020013, 45, 55, 1.000000 ] # Reindeer Milk
+  - [ 2020015, 45, 55, 1.000000 ] # Sunset Dew
+  - [ 2040318, 1, 1, 0.100000 ] # Scroll for Earring for DEX 10%#TODO
+  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
+  - [ 2040419, 1, 1, 0.100000 ] # Scroll for Topwear for STR 10%#TODO
+  - [ 2040421, 1, 1, 0.100000 ] # Scroll for Topwear for HP 60%#TODO
+  - [ 2041013, 1, 1, 0.003000 ] # Scroll for Cape for STR 60%
+  - [ 2041016, 1, 1, 0.003000 ] # Scroll for Cape for INT 60%
+  - [ 2041019, 1, 1, 0.003000 ] # Scroll for Cape for DEX 60%
+  - [ 2041022, 1, 1, 0.003000 ] # Scroll for Cape for LUK 60%
+  - [ 2044809, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 10%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2290006, 1, 1, 0.003000 ] # [Mastery Book] Power Stance
+  - [ 2290011, 1, 1, 0.005000 ] # [Mastery Book] Brandish
+  - [ 2290013, 1, 1, 0.002500 ] # [Mastery Book] Blast
+  - [ 2290028, 1, 1, 0.040000 ] # [Mastery Book] Infinity
+  - [ 2290037, 1, 1, 0.003000 ] # [Mastery Book] Fire Demon
+  - [ 2290043, 1, 1, 0.015000 ] # [Mastery Book] Ice Demon
+  - [ 2290051, 1, 1, 0.015000 ] # [Mastery Book] Angel Ray
+  - [ 2290056, 1, 1, 0.005000 ] # [Mastery Book] Bow Expert
+  - [ 2290061, 1, 1, 0.003500 ] # [Mastery Book] Hurricane
+  - [ 2290066, 1, 1, 0.001500 ] # [Mastery Book] Marksman Boost
+  - [ 2290071, 1, 1, 0.002000 ] # [Mastery Book] Piercing Arrow
+  - [ 2290078, 1, 1, 0.008000 ] # [Mastery Book] Venomous Star/Venomous Stab
+  - [ 2290089, 1, 1, 0.005000 ] # [Mastery Book] Shadow Claw
+  - [ 2290091, 1, 1, 0.002000 ] # [Mastery Book] Boomerang Step
+  - [ 2290104, 1, 1, 0.100000 ] # [Mastery Book] Snatch#TODO
+  - [ 2290107, 1, 1, 0.100000 ] # [Mastery Book] Barrage#TODO
+  - [ 2290121, 1, 1, 0.100000 ] # [Mastery Book] Battleship Torpedo#TODO
+  - [ 2290123, 1, 1, 0.100000 ] # [Mastery Book] Hypnotize#TODO
+  - [ 2290126, 1, 1, 0.100000 ] # [Mastery Book] Overswing 20#TODO
+  - [ 2290129, 1, 1, 0.100000 ] # [Mastery Book]High Mastery 30#TODO
+  - [ 2290140, 1, 1, 0.100000 ] # [Mastery Book] Illusion 20#TODO
+  - [ 2290143, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 30#TODO
+  - [ 4001084, 1, 1, 1.000000 ] # Papulatus Certificate
+  - [ 4031196, 1, 1, 1.000000 ] # Dark Tachion

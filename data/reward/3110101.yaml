@@ -1,0 +1,33 @@
+# Pink Teddy (3110101)
+
+rewards:
+  - [ 1040062, 1, 1, 0.000070 ] # Red Knucklevest
+  - [ 1041055, 1, 1, 0.000090 ] # Black Huntress Armor
+  - [ 1050002, 1, 1, 0.000080 ] # Blood Chaos Robe
+  - [ 1060051, 1, 1, 0.000070 ] # Red Knucklevest Pants
+  - [ 1061051, 1, 1, 0.000090 ] # Black Huntress Pants
+  - [ 1072077, 1, 1, 0.000100 ] # White Magicshoes
+  - [ 1072090, 1, 1, 0.000070 ] # Red Salt Shoes
+  - [ 1082007, 1, 1, 0.000100 ] # Bronze Missel
+  - [ 1082035, 1, 1, 0.000070 ] # Yellow Briggon
+  - [ 1082189, 1, 1, 0.100000 ] # Yellow Tartis#TODO
+  - [ 1092007, 1, 1, 0.000080 ] # Battle Shield
+  - [ 1462004, 1, 1, 0.000080 ] # Eagle Crow
+  - [ 1472014, 1, 1, 0.000050 ] # Steel Avarice
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002009, 1, 1, 0.003000 ] # Dexterity Pill
+  - [ 2041017, 1, 1, 0.000020 ] # Scroll for Cape for INT 10%
+  - [ 2044012, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 60%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
+  - [ 4000107, 1, 1, 0.500000 ] # Teddy's Yellow Ribbon
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4020001, 1, 1, 0.003000 ] # Amethyst Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4131001, 1, 1, 0.000080 ] # One-Handed Axe Forging Manual

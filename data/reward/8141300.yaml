@@ -1,0 +1,40 @@
+# Squid (8141300)
+
+rewards:
+  - [ 1002271, 1, 1, 0.000100 ] # Green Galaxy
+  - [ 1002365, 1, 1, 0.000070 ] # Red Oriental Fury Hat
+  - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
+  - [ 1041119, 1, 1, 0.000050 ] # Green Valkyrie
+  - [ 1050089, 1, 1, 0.000040 ] # Blue Ades
+  - [ 1051083, 1, 1, 0.000040 ] # Blue Anes
+  - [ 1061118, 1, 1, 0.000050 ] # Green Valkyrie Skirt
+  - [ 1072183, 1, 1, 0.000080 ] # Red Wing Boots
+  - [ 1072207, 1, 1, 0.000060 ] # Green Neli Shoes
+  - [ 1072224, 1, 1, 0.000010 ] # Blue Varr Shoes
+  - [ 1092027, 1, 1, 0.000070 ] # Silver Kalkan
+  - [ 1102026, 1, 1, 0.000080 ] # Green Seraph Cape
+  - [ 1432007, 1, 1, 0.000050 ] # Redemption
+  - [ 1442008, 1, 1, 0.000070 ] # The Gold Dragon
+  - [ 1452011, 1, 1, 0.000060 ] # Golden Hinkel
+  - [ 1482011, 1, 1, 0.100000 ] # White Fangz#TODO
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
+  - [ 2002001, 1, 1, 0.005000 ] # Speed Potion
+  - [ 2020013, 1, 1, 0.000500 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.000500 ] # Sunset Dew
+  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
+  - [ 2040601, 1, 1, 0.000030 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
+  - [ 2040627, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 10%#TODO
+  - [ 2040701, 1, 1, 0.000040 ] # Scroll for Shoes for DEX 60%
+  - [ 2290098, 1, 1, 0.100000 ] # [Mastery Book] Dragon Strike#TODO
+  - [ 4000183, 1, 1, 0.500000 ] # Ink Bottle
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO

@@ -1,0 +1,21 @@
+# Frankenroid (9300139)
+
+rewards:
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk#TODO
+  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew#TODO
+  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew#TODO
+  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
+  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
+  - [ 2040707, 1, 1, 0.100000 ] # Scroll for Shoes for Speed 60%#TODO
+  - [ 2043001, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 60%#TODO
+  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
+  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
+  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO

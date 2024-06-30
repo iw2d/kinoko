@@ -1,0 +1,30 @@
+# Cube Slime (3110300)
+
+rewards:
+  - [ 1002156, 1, 1, 0.100000 ] # Red Hunter#TODO
+  - [ 1032007, 1, 1, 0.100000 ] # Emerald Earrings#TODO
+  - [ 1040000, 1, 1, 0.100000 ] # Yellow Jangoon Armor#TODO
+  - [ 1060075, 1, 1, 0.100000 ] # Brown Jangoon Pants#TODO
+  - [ 1072078, 1, 1, 0.100000 ] # Black Magicshoes#TODO
+  - [ 1072294, 1, 1, 0.100000 ] # Brown Paulie Boots#TODO
+  - [ 1082046, 1, 1, 0.100000 ] # Steel Arbion#TODO
+  - [ 1332020, 1, 1, 0.100000 ] # Korean Fan#TODO
+  - [ 1402010, 1, 1, 0.100000 ] # Aluminum Baseball Bat#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2040530, 1, 1, 0.100000 ] # Scroll for Overall for STR 100%#TODO
+  - [ 2044410, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 100%#TODO
+  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000353, 1, 1, 0.100000 ] # Gelatin#TODO
+  - [ 4006000, 1, 1, 0.100000 ] # The Magic Rock#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010005, 1, 1, 0.100000 ] # Orihalcon Ore#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
+  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO

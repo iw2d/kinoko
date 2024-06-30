@@ -1,0 +1,35 @@
+# Mr. Alli (6130204)
+
+rewards:
+  - [ 1040093, 1, 1, 0.000080 ] # Dark Orientican
+  - [ 1040104, 1, 1, 0.000040 ] # Orihalcon Platine
+  - [ 1040107, 1, 1, 0.000070 ] # Dark Studded Top
+  - [ 1051064, 1, 1, 0.000040 ] # Green Lineros
+  - [ 1051065, 1, 1, 0.000040 ] # Dark Lineros
+  - [ 1052119, 1, 1, 0.100000 ] # Black Royal Barone#TODO
+  - [ 1060082, 1, 1, 0.000080 ] # Dark Orientican Pants
+  - [ 1060092, 1, 1, 0.000040 ] # Orihalcon Platine Pants
+  - [ 1060095, 1, 1, 0.000070 ] # Dark Studded Pants
+  - [ 1082062, 1, 1, 0.000200 ] # Red Arten
+  - [ 1402003, 1, 1, 0.000040 ] # Lion's Fang
+  - [ 1402011, 1, 1, 0.000050 ] # Sparta
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040301, 1, 1, 0.000020 ] # Scroll for Earring for INT 60%
+  - [ 2040421, 1, 1, 0.100000 ] # Scroll for Topwear for HP 60%#TODO
+  - [ 2043001, 1, 1, 0.000020 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000295, 1, 1, 0.500000 ] # Mr. Alli's Leather
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010006, 1, 1, 0.008000 ] # Gold Ore
+  - [ 4020004, 1, 1, 0.006000 ] # Opal Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO

@@ -1,0 +1,43 @@
+# Deep Buffoon (6400100)
+
+rewards:
+  - [ 1002252, 1, 1, 0.000080 ] # Red Infinium Circlet
+  - [ 1002268, 1, 1, 0.000100 ] # Brown Polyfeather Hat
+  - [ 1002282, 1, 1, 0.000090 ] # Blue Nightfox
+  - [ 1002289, 1, 1, 0.000080 ] # Dark Patriot
+  - [ 1032022, 1, 1, 0.000070 ] # Half Earrings
+  - [ 1040106, 1, 1, 0.000080 ] # Blue Studded Top
+  - [ 1041099, 1, 1, 0.000090 ] # Bloody Platina
+  - [ 1050061, 1, 1, 0.000090 ] # Blue Linnex
+  - [ 1050077, 1, 1, 0.000070 ] # Green Pris
+  - [ 1051046, 1, 1, 0.000100 ] # White Anakarune
+  - [ 1051058, 1, 1, 0.000070 ] # Dark Enigma
+  - [ 1060094, 1, 1, 0.000080 ] # Blue Studded Pants
+  - [ 1061098, 1, 1, 0.000090 ] # Bloody Platina Pants
+  - [ 1072149, 1, 1, 0.000090 ] # Blood Camel Boots
+  - [ 1072173, 1, 1, 0.000070 ] # Red Pirate Boots
+  - [ 1082098, 1, 1, 0.000090 ] # Brown Lorin
+  - [ 1082116, 1, 1, 0.000070 ] # Blood Emperor
+  - [ 1082207, 1, 1, 0.100000 ] # Blue Halfglove#TODO
+  - [ 1092017, 1, 1, 0.000090 ] # Gold Ancient Shield
+  - [ 1412008, 1, 1, 0.000070 ] # Chrono
+  - [ 1472029, 1, 1, 0.000070 ] # Black Scarab
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002008, 1, 1, 0.003000 ] # Sniper Pill
+  - [ 2040321, 1, 1, 0.100000 ] # Scroll for Earring for LUK 60%#TODO
+  - [ 2040534, 1, 1, 0.100000 ] # Scroll for Overall for STR 10%#TODO
+  - [ 2041013, 1, 1, 0.000020 ] # Scroll for Cape for STR 60%
+  - [ 2043114, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 10%#TODO
+  - [ 2044001, 1, 1, 0.000020 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 4000131, 1, 1, 0.600000 ] # Deep Buffoon's Rock Piece
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.350000, 7101 ] # Tachion

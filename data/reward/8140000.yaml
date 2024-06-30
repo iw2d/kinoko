@@ -1,0 +1,43 @@
+# Lycanthrope (8140000)
+
+rewards:
+  - [ 1002271, 1, 1, 0.000070 ] # Green Galaxy
+  - [ 1002275, 1, 1, 0.000070 ] # Blue Falcon
+  - [ 1002285, 1, 1, 0.000090 ] # Blood Nightfox
+  - [ 1032023, 1, 1, 0.000080 ] # Strawberry Earrings
+  - [ 1040104, 1, 1, 0.000090 ] # Orihalcon Platine
+  - [ 1050064, 1, 1, 0.000090 ] # Dark Linnex
+  - [ 1050092, 1, 1, 0.000060 ] # Green Oriental Fury Coat
+  - [ 1051053, 1, 1, 0.000090 ] # Red Requierre
+  - [ 1051082, 1, 1, 0.000060 ] # Red Anes
+  - [ 1060092, 1, 1, 0.000090 ] # Orihalcon Platine Pants
+  - [ 1072172, 1, 1, 0.000070 ] # Green Pirate Boots
+  - [ 1072178, 1, 1, 0.000070 ] # Purple Enigma Shoes
+  - [ 1072193, 1, 1, 0.000060 ] # Brown Osfa Boots
+  - [ 1072210, 1, 1, 0.000070 ] # Red Rivers Boots
+  - [ 1082129, 1, 1, 0.000060 ] # Purple Imperial
+  - [ 1102029, 1, 1, 0.000080 ] # White Seraph Cape
+  - [ 1402004, 1, 1, 0.000070 ] # Blue Screamer
+  - [ 1442008, 1, 1, 0.000080 ] # The Gold Dragon
+  - [ 1472028, 1, 1, 0.000080 ] # Blue Scarab
+  - [ 1482010, 1, 1, 0.100000 ] # Steelno#TODO
+  - [ 2040825, 1, 1, 0.100000 ] # Scroll for Gloves for HP 10%#TODO
+  - [ 2040902, 1, 1, 0.000020 ] # Scroll for Shield for DEF 10%
+  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
+  - [ 2044010, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 100%#TODO
+  - [ 2070006, 1, 1, 0.000080 ] # Ilbi Throwing-Stars
+  - [ 4000054, 1, 1, 0.600000 ] # Lycanthrope Toenail
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004001, 1, 1, 0.002000 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000900 ] # The Summoning Rock
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020006, 1, 1, 0.003000 ] # Topaz Ore
+  - [ 4020008, 1, 1, 0.005000 ] # Black Crystal Ore
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4031477, 1, 1, 0.150000, 6191 ] # Lycanthrope's Plans
+  - [ 4031460, 1, 1, 0.005000, 6168 ] # Cold Heart of a Wolf

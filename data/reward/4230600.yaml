@@ -1,0 +1,33 @@
+# Desert Giant  (4230600)
+
+rewards:
+  - [ 1002210, 1, 1, 0.100000 ] # Brown Sonata#TODO
+  - [ 1041082, 1, 1, 0.100000 ] # Brown Piettra#TODO
+  - [ 1061081, 1, 1, 0.100000 ] # Brown Piettra Skirt#TODO
+  - [ 1072002, 1, 1, 0.100000 ] # Steel Trigger#TODO
+  - [ 1082055, 1, 1, 0.100000 ] # Blue Noel#TODO
+  - [ 1102000, 1, 1, 0.100000 ] # Green Napoleon#TODO
+  - [ 1372012, 1, 1, 0.100000 ] # Crystal Wand#TODO
+  - [ 1432003, 1, 1, 0.100000 ] # Nakamaki#TODO
+  - [ 1452007, 1, 1, 0.100000 ] # Vaulter 2000#TODO
+  - [ 1492006, 1, 1, 0.100000 ] # Lunar Shooter#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2040823, 1, 1, 0.100000 ] # Scroll for Gloves for HP 100%#TODO
+  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
+  - [ 2044412, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 60%#TODO
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 2070003, 1, 1, 0.100000 ] # Kumbi Throwing-Stars#TODO
+  - [ 4000332, 1, 1, 0.100000 ] # Sand#TODO
+  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
+  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
+  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO

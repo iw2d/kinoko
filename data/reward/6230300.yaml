@@ -1,0 +1,43 @@
+# Lazy Buffy (6230300)
+
+rewards:
+  - [ 1002101, 1, 1, 0.000090 ] # Old Mithril Nordic Helm
+  - [ 1002242, 1, 1, 0.000080 ] # Red Seraphis
+  - [ 1032015, 1, 1, 0.000080 ] # Metal Silver Earrings
+  - [ 1040089, 1, 1, 0.000090 ] # Umber Shouldermail
+  - [ 1040099, 1, 1, 0.000080 ] # Ocher Scorpio
+  - [ 1050061, 1, 1, 0.000070 ] # Blue Linnex
+  - [ 1051031, 1, 1, 0.000090 ] # White Calaf
+  - [ 1051042, 1, 1, 0.000080 ] # Blue Choro
+  - [ 1060078, 1, 1, 0.000090 ] # Umber Shouldermail Pants
+  - [ 1060088, 1, 1, 0.000080 ] # Ocher Scorpio Pants
+  - [ 1072125, 1, 1, 0.000090 ] # Purple Steel-Tip Boots
+  - [ 1072158, 1, 1, 0.000070 ] # Red Lapiz Sandals
+  - [ 1082060, 1, 1, 0.000080 ] # Sapphire Clench
+  - [ 1082065, 1, 1, 0.000090 ] # Blue Moon Gloves
+  - [ 1082096, 1, 1, 0.000070 ] # Silver Rover
+  - [ 1102024, 1, 1, 0.000080 ] # Black Gaia Cape
+  - [ 1432007, 1, 1, 0.000070 ] # Redemption
+  - [ 1482008, 1, 1, 0.100000 ] # Psycho Claw#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040301, 1, 1, 0.000020 ] # Scroll for Earring for INT 60%
+  - [ 2040318, 1, 1, 0.100000 ] # Scroll for Earring for DEX 10%#TODO
+  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 4000129, 1, 1, 0.600000 ] # Lazy Buffy Marble
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4004004, 1, 1, 0.000100 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.003000 ] # Black Crystal Ore
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.300000, 7101 ] # Tachion
+  - [ 4031189, 1, 1, 0.400000, 3448 ] # Aurora Marble
+  - [ 4031195, 1, 1, 0.300000, 3449 ] # Aurora Marble

@@ -1,0 +1,26 @@
+# Jonin (9400402)
+
+rewards:
+  - [ 1002274, 1, 1, 0.100000 ] # Dark Galaxy#TODO
+  - [ 1051069, 1, 1, 0.100000 ] # Dark Pria#TODO
+  - [ 1051078, 1, 1, 0.100000 ] # Red Battle Empress#TODO
+  - [ 1072192, 1, 1, 0.100000 ] # Green Osfa Boots#TODO
+  - [ 1082142, 1, 1, 0.100000 ] # Green Mystra#TODO
+  - [ 1092016, 1, 1, 0.100000 ] # Silver Ancient Shield#TODO
+  - [ 1322021, 1, 1, 0.100000 ] # Black Tube#TODO
+  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
+  - [ 1432010, 1, 1, 0.100000 ] # Omega Spear#TODO
+  - [ 1462013, 1, 1, 0.100000 ] # Dark Raven#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040203, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for Accuracy 30%#TODO
+  - [ 2040206, 1, 1, 0.100000 ] # Scroll for Eye Accessory for INT 60%#TODO
+  - [ 2040805, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 10%#TODO
+  - [ 2040919, 1, 1, 0.100000 ] # Scroll for Shield for Magic Attack 60%#TODO
+  - [ 2061003, 1, 1, 0.100000 ] # Blue Arrow for Crossbow#TODO
+  - [ 2070002, 1, 1, 0.100000 ] # Mokbi Throwing-Stars#TODO
+  - [ 4000339, 1, 1, 0.100000 ] # Jonin Throwing Star#TODO
+  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
+  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO

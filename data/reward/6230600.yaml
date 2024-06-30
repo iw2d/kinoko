@@ -1,0 +1,42 @@
+# Ice Drake (6230600)
+
+rewards:
+  - [ 1002634, 1, 1, 0.100000 ] # Purple Cast Linen#TODO
+  - [ 1040091, 1, 1, 0.000080 ] # Red Orientican
+  - [ 1040094, 1, 1, 0.000100 ] # Red China
+  - [ 1041085, 1, 1, 0.000200 ] # Brown Jangoon Armor
+  - [ 1041091, 1, 1, 0.000080 ] # Green Ice Queen
+  - [ 1051043, 1, 1, 0.000070 ] # Brown Choro
+  - [ 1051046, 1, 1, 0.000070 ] # White Anakarune
+  - [ 1060080, 1, 1, 0.000080 ] # Red Orientican Pants
+  - [ 1060083, 1, 1, 0.000100 ] # Red China Pants
+  - [ 1061083, 1, 1, 0.000200 ] # Red Jangoon Skirt
+  - [ 1061090, 1, 1, 0.000080 ] # Green Ice Queen Skirt
+  - [ 1072158, 1, 1, 0.000050 ] # Red Lapiz Sandals
+  - [ 1082095, 1, 1, 0.000050 ] # Bronze Rover
+  - [ 1082098, 1, 1, 0.000040 ] # Brown Lorin
+  - [ 1462008, 1, 1, 0.000050 ] # Golden Crow
+  - [ 1472024, 1, 1, 0.000040 ] # Sapphire Gigantic
+  - [ 1942001, 1, 1, 0.100000 ] # Gold Mask#TODO
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.040000 ] # Mana Elixir
+  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
+  - [ 2040328, 1, 1, 0.100000 ] # Scroll for Earring for HP 10%#TODO
+  - [ 2040928, 1, 1, 0.100000 ] # Scroll for Shield for HP 10%#TODO
+  - [ 2044112, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 60%#TODO
+  - [ 2044414, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 10%#TODO
+  - [ 2332000, 1, 1, 0.100000 ] # Glaze Capsule#TODO
+  - [ 4000030, 1, 1, 0.050000 ] # Dragon Skin
+  - [ 4000185, 1, 1, 0.500000 ] # Ice Backbone
+  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
+  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4001077, 1, 1, 0.100000, 7301 ] # Tough Dragon Skin
+  - [ 4001105, 1, 1, 0.100000, 7303 ] # Tough Dragon Skin

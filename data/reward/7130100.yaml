@@ -1,0 +1,39 @@
+# Tauromacis (7130100)
+
+rewards:
+  - [ 1002095, 1, 1, 0.000070 ] # Mithril Planet
+  - [ 1002272, 1, 1, 0.000060 ] # Blue Galaxy
+  - [ 1002283, 1, 1, 0.000070 ] # Purple Nightfox
+  - [ 1002287, 1, 1, 0.000070 ] # Beige Patriot
+  - [ 1002637, 1, 1, 0.100000 ] # Black Pirate's Bandana#TODO
+  - [ 1040100, 1, 1, 0.000080 ] # Dark Scorpio
+  - [ 1041093, 1, 1, 0.000090 ] # Blue Ice Queen
+  - [ 1050067, 1, 1, 0.000070 ] # Blue Requiem
+  - [ 1051055, 1, 1, 0.000070 ] # Dark Requierre
+  - [ 1051064, 1, 1, 0.000070 ] # Green Lineros
+  - [ 1060089, 1, 1, 0.000080 ] # Dark Scorpio Pants
+  - [ 1061092, 1, 1, 0.000090 ] # Blue Ice Queen Skirt
+  - [ 1072163, 1, 1, 0.000070 ] # Red Mystique Shoes
+  - [ 1072184, 1, 1, 0.000060 ] # Green Wing Boots
+  - [ 1082115, 1, 1, 0.000060 ] # Emerald Emperor
+  - [ 1082118, 1, 1, 0.000060 ] # Green Larceny
+  - [ 1102027, 1, 1, 0.000060 ] # Blue Seraph Cape
+  - [ 1322019, 1, 1, 0.000060 ] # The Judgement
+  - [ 1452009, 1, 1, 0.000060 ] # Red Hinkel
+  - [ 1472026, 1, 1, 0.000060 ] # Brown Scarab
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2040421, 1, 1, 0.100000 ] # Scroll for Topwear for HP 60%#TODO
+  - [ 2043101, 1, 1, 0.000020 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2070005, 1, 1, 0.000050 ] # Steely Throwing-Knives
+  - [ 4000028, 1, 1, 0.300000 ] # Tauromacis Horn
+  - [ 4006000, 1, 1, 0.000900 ] # The Magic Rock
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4031466, 1, 1, 0.080000, 6107 ] # Dark Soul Rock
+  - [ 4031214, 1, 1, 0.120000, 2097 ] # Tauromacis's Spirit Rock

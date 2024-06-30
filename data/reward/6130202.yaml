@@ -1,0 +1,32 @@
+# Morphed Blin (6130202)
+
+rewards:
+  - [ 1040089, 1, 1, 0.000080 ] # Umber Shouldermail
+  - [ 1040099, 1, 1, 0.000060 ] # Ocher Scorpio
+  - [ 1041091, 1, 1, 0.000040 ] # Green Ice Queen
+  - [ 1060078, 1, 1, 0.000080 ] # Umber Shouldermail Pants
+  - [ 1060088, 1, 1, 0.000060 ] # Ocher Scorpio Pants
+  - [ 1061090, 1, 1, 0.000040 ] # Green Ice Queen Skirt
+  - [ 1072144, 1, 1, 0.000040 ] # Red Gore Boots
+  - [ 1082086, 1, 1, 0.000060 ] # Steel Manute
+  - [ 1082093, 1, 1, 0.000050 ] # Steal Pow
+  - [ 1102018, 1, 1, 0.000060 ] # Black Magic Cape
+  - [ 1432004, 1, 1, 0.000100 ] # Serpent's Tongue
+  - [ 1442009, 1, 1, 0.000100 ] # Crescent Polearm
+  - [ 1452008, 1, 1, 0.000080 ] # Olympus
+  - [ 1462006, 1, 1, 0.000100 ] # Silver Crow
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040004, 1, 1, 0.000030 ] # Scroll for Helmet for HP 60%
+  - [ 2040401, 1, 1, 0.000020 ] # Scroll for Topwear for DEF 60%
+  - [ 2040501, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEX 60%
+  - [ 4000173, 1, 1, 0.500000 ] # Broom
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020008, 1, 1, 0.003000 ] # Black Crystal Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4031222, 1, 1, 0.200000, 3621 ] # Steel Hoe

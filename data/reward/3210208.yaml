@@ -1,0 +1,34 @@
+# Retz (3210208)
+
+rewards:
+  - [ 1002048, 1, 1, 0.000080 ] # Great Blue Helmet
+  - [ 1002173, 1, 1, 0.000100 ] # Green Guise
+  - [ 1032008, 1, 1, 0.000080 ] # Cat's Eye
+  - [ 1041052, 1, 1, 0.000100 ] # Blue Amoria Top
+  - [ 1041065, 1, 1, 0.000080 ] # Red Legolia
+  - [ 1051008, 1, 1, 0.000080 ] # Blue Avenger
+  - [ 1052110, 1, 1, 0.100000 ] # Blue Brace Look#TODO
+  - [ 1061048, 1, 1, 0.000100 ] # Blue Amoria Skirt
+  - [ 1061060, 1, 1, 0.000080 ] # Red Legolia Pants
+  - [ 1072117, 1, 1, 0.000060 ] # Dark Moon Shoes
+  - [ 1072127, 1, 1, 0.000060 ] # Blue Jangoon Shoes
+  - [ 1082072, 1, 1, 0.000060 ] # Gold Brace
+  - [ 1082076, 1, 1, 0.000060 ] # Gold Cleave
+  - [ 1082195, 1, 1, 0.100000 ] # Brown Barbee#TODO
+  - [ 1382018, 1, 1, 0.000070 ] # Petal Staff
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002005, 1, 1, 0.003000 ] # Sniper Potion
+  - [ 2044501, 1, 1, 0.000020 ] # Scroll for Bow for ATT 60%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000168, 1, 1, 0.500000 ] # Sunflower Seed
+  - [ 4004003, 1, 1, 0.000800 ] # LUK Crystal Ore
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4131009, 1, 1, 0.000080 ] # Staff Production Manual
+  - [ 4031279, 1, 1, 0.100000, 3632 ] # State-held Rice

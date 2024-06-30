@@ -1,0 +1,28 @@
+# Stirge (2300100)
+
+rewards:
+  - [ 1002119, 1, 1, 0.000070 ] # Green Robin Hat
+  - [ 1040009, 1, 1, 0.000100 ] # Steel Corporal
+  - [ 1040043, 1, 1, 0.000080 ] # Red Pao
+  - [ 1041039, 1, 1, 0.000080 ] # Pink Qi Pao
+  - [ 1052098, 1, 1, 0.100000 ] # Brown Cotton Lagger#TODO
+  - [ 1052101, 1, 1, 0.100000 ] # Beige Carribean#TODO
+  - [ 1060009, 1, 1, 0.000100 ] # Steel Corporal Pants
+  - [ 1060032, 1, 1, 0.000080 ] # Red Pao Bottom
+  - [ 1061041, 1, 1, 0.000080 ] # Purple Qi Pao Skirt
+  - [ 1082002, 1, 1, 0.000100 ] # Work Gloves
+  - [ 1452005, 1, 1, 0.000040 ] # Ryden
+  - [ 2000001, 1, 1, 0.050000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.050000 ] # Blue Potion
+  - [ 2010004, 1, 1, 0.010000 ] # Lemon
+  - [ 2040024, 1, 1, 0.100000 ] # Scroll for Helmet for INT 100%#TODO
+  - [ 2041002, 1, 1, 0.000030 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2043112, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 60%#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2048004, 1, 1, 0.000080 ] # Scroll for Pet Equip. for Jump 60%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000042, 1, 1, 0.400000 ] # Stirge Wing
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

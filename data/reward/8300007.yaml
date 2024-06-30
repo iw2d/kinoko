@@ -1,0 +1,20 @@
+# Dragon Rider (8300007)
+
+rewards:
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
+  - [ 2040502, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 10%#TODO
+  - [ 2040505, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 10%#TODO
+  - [ 2040514, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 10%#TODO
+  - [ 2040517, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 10%#TODO
+  - [ 2040534, 1, 1, 0.100000 ] # Scroll for Overall for STR 10%#TODO
+  - [ 2047000, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for ATT#TODO
+  - [ 2047001, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Accuracy#TODO
+  - [ 2047002, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Magic Attack#TODO
+  - [ 2047100, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for ATT#TODO
+  - [ 2047101, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for Accuracy #TODO
+  - [ 2047102, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for Magic Attack#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2049201, 1, 1, 0.100000 ] # Dark Scroll for Accessory for STR 30%#TODO
+  - [ 2049203, 1, 1, 0.100000 ] # Dark Scroll for Accessory for DEX 30%#TODO
+  - [ 2049205, 1, 1, 0.100000 ] # Dark Scroll for Accessory for INT 30%#TODO
+  - [ 2049207, 1, 1, 0.100000 ] # Dark Scroll for Accessory for LUK 30%#TODO

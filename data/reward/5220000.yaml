@@ -1,0 +1,53 @@
+# King Clang (5220000)
+
+rewards:
+  - [ 1002029, 1, 1, 0.000070 ] # Red Oriental Helmet
+  - [ 1002246, 1, 1, 0.000070 ] # Dark Seraphis
+  - [ 1002249, 1, 1, 0.000070 ] # Dark Identity
+  - [ 1002270, 1, 1, 0.000070 ] # Black Polyfeather Hat
+  - [ 1002634, 1, 1, 0.100000 ] # Purple Cast Linen#TODO
+  - [ 1040093, 1, 1, 0.000035 ] # Dark Orientican
+  - [ 1040100, 1, 1, 0.000035 ] # Dark Scorpio
+  - [ 1041092, 1, 1, 0.000035 ] # Red Ice Queen
+  - [ 1041095, 1, 1, 0.000035 ] # Bloody Mantis
+  - [ 1050056, 1, 1, 0.000035 ] # Dark Anakamoon
+  - [ 1050060, 1, 1, 0.000035 ] # Red Tai
+  - [ 1051041, 1, 1, 0.000035 ] # Red Choro
+  - [ 1051047, 1, 1, 0.000035 ] # Dark Anakarune
+  - [ 1052119, 1, 1, 0.100000 ] # Black Royal Barone#TODO
+  - [ 1072136, 1, 1, 0.000070 ] # Pink Goldrunners
+  - [ 1072144, 1, 1, 0.000070 ] # Red Gore Boots
+  - [ 1072149, 1, 1, 0.000070 ] # Blood Camel Boots
+  - [ 1072152, 1, 1, 0.000070 ] # Dark Moss Boots
+  - [ 1072306, 1, 1, 0.100000 ] # Black Basile Boots#TODO
+  - [ 1082061, 1, 1, 0.000070 ] # Dark Clench
+  - [ 1082088, 1, 1, 0.000070 ] # Dark Manute
+  - [ 1082091, 1, 1, 0.000070 ] # Dark Garner
+  - [ 1082094, 1, 1, 0.000070 ] # Gold Pow
+  - [ 1082201, 1, 1, 0.100000 ] # Black Schult#TODO
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2001001, 1, 1, 0.070000 ] # Ice Cream Pop
+  - [ 2002000, 1, 1, 0.500000 ] # Dexterity Potion
+  - [ 2040004, 1, 1, 0.001700 ] # Scroll for Helmet for HP 60%
+  - [ 2040513, 1, 1, 0.001700 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040702, 1, 1, 0.000800 ] # Scroll for Shoes for DEX 10%
+  - [ 2040704, 1, 1, 0.001700 ] # Scroll for Shoes for Jump 60%
+  - [ 2040707, 1, 1, 0.001700 ] # Scroll for Shoes for Speed 60%
+  - [ 2040802, 1, 1, 0.000800 ] # Scroll for Gloves for DEX 10%
+  - [ 2040804, 1, 1, 0.001700 ] # Scroll for Gloves for ATT 60%
+  - [ 2040902, 1, 1, 0.000800 ] # Scroll for Shield for DEF 10%
+  - [ 2041002, 1, 1, 0.000800 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2041013, 1, 1, 0.001700 ] # Scroll for Cape for STR 60%
+  - [ 2041022, 1, 1, 0.001700 ] # Scroll for Cape for LUK 60%
+  - [ 2043002, 1, 1, 0.000800 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2044601, 1, 1, 0.001700 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.001700 ] # Scroll for Claw for ATT 60%
+  - [ 2048001, 1, 1, 0.001700 ] # Scroll for Pet Equip. for Speed 60%
+  - [ 2060000, 1, 1, 0.500000 ] # Arrow for Bow
+  - [ 2061000, 1, 1, 0.500000 ] # Arrow for Crossbow
+  - [ 3010008, 1, 1, 0.100000 ] # Blue Seal Cushion#TODO
+  - [ 4000043, 1, 1, 0.600000 ] # Lorang Claw
+  - [ 4000044, 1, 1, 0.600000 ] # Clang Claw
+  - [ 4010003, 1, 1, 0.008000 ] # Adamantium Ore
+  - [ 4020005, 1, 1, 0.008000 ] # Sapphire Ore

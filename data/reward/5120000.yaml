@@ -1,0 +1,40 @@
+# Luster Pixie (5120000)
+
+rewards:
+  - [ 1002086, 1, 1, 0.000070 ] # Bronze Crusader Helm
+  - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
+  - [ 1040081, 1, 1, 0.000100 ] # White Piette
+  - [ 1040088, 1, 1, 0.000070 ] # Ocher Shouldermail
+  - [ 1051033, 1, 1, 0.000080 ] # Red Calaf
+  - [ 1060070, 1, 1, 0.000100 ] # Blue Piette Pants
+  - [ 1060077, 1, 1, 0.000070 ] # Ocher Shouldermail Pants
+  - [ 1072128, 1, 1, 0.000070 ] # Blue Goni Shoes
+  - [ 1072134, 1, 1, 0.000070 ] # Orihalcon Hildon Boots
+  - [ 1072144, 1, 1, 0.000060 ] # Red Gore Boots
+  - [ 1082086, 1, 1, 0.000060 ] # Steel Manute
+  - [ 1082201, 1, 1, 0.100000 ] # Black Schult#TODO
+  - [ 1092007, 1, 1, 0.000100 ] # Battle Shield
+  - [ 1422007, 1, 1, 0.000090 ] # Titan
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040324, 1, 1, 0.100000 ] # Scroll for Earring for HP 100%#TODO
+  - [ 2040423, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 100%#TODO
+  - [ 2040504, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2041017, 1, 1, 0.000030 ] # Scroll for Cape for INT 10%
+  - [ 2043017, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 60%#TODO
+  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000061, 1, 1, 0.500000 ] # Luster Pixie's Sunpiece
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4031309, 1, 1, 0.120000, 3088 ] # Cloud Piece

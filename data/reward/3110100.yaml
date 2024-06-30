@@ -1,0 +1,29 @@
+# Ligator (3110100)
+
+rewards:
+  - [ 1002622, 1, 1, 0.100000 ] # White Oceania Cap#TODO
+  - [ 1041051, 1, 1, 0.000090 ] # Red Amoria Top
+  - [ 1051013, 1, 1, 0.000100 ] # Yellow Engrit
+  - [ 1061047, 1, 1, 0.000090 ] # Red Amoria Skirt
+  - [ 1072112, 1, 1, 0.000080 ] # Mithril Trigger
+  - [ 1082046, 1, 1, 0.000080 ] # Steel Arbion
+  - [ 1082049, 1, 1, 0.000100 ] # Green Marker
+  - [ 1092012, 1, 1, 0.000060 ] # Steel Tower Shield
+  - [ 1322009, 1, 1, 0.000100 ] # Plunger
+  - [ 1332014, 1, 1, 0.000050 ] # Gephart
+  - [ 1422001, 1, 1, 0.000090 ] # Mithril Maul
+  - [ 1432005, 1, 1, 0.000060 ] # Zeco
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2041002, 1, 1, 0.000030 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 4000032, 1, 1, 0.500000 ] # Ligator Skin
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4031164, 1, 1, 0.200000, 2084 ] # Alligator Skin Pouch

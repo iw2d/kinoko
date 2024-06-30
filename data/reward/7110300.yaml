@@ -1,0 +1,42 @@
+# D. Roy (7110300)
+
+rewards:
+  - [ 1002254, 1, 1, 0.100000 ] # Dark Infinium Circlet#TODO
+  - [ 1002273, 1, 1, 0.100000 ] # Purple Galaxy#TODO
+  - [ 1002288, 1, 1, 0.100000 ] # Green Patriot#TODO
+  - [ 1002339, 1, 1, 0.100000 ] # Blue Dragon Barbute#TODO
+  - [ 1040102, 1, 1, 0.100000 ] # Bronze Platine#TODO
+  - [ 1041094, 1, 1, 0.100000 ] # Light Mantis#TODO
+  - [ 1041102, 1, 1, 0.100000 ] # Pink Mystique#TODO
+  - [ 1041105, 1, 1, 0.100000 ] # Green Pirate Blouse#TODO
+  - [ 1050055, 1, 1, 0.100000 ] # White Anakamoon#TODO
+  - [ 1050069, 1, 1, 0.100000 ] # Brown Requiem#TODO
+  - [ 1051066, 1, 1, 0.100000 ] # Red Pria#TODO
+  - [ 1060090, 1, 1, 0.100000 ] # Bronze Platine Pants#TODO
+  - [ 1061093, 1, 1, 0.100000 ] # Light Mantis Pants#TODO
+  - [ 1061101, 1, 1, 0.100000 ] # Pink Mystique Pants#TODO
+  - [ 1061104, 1, 1, 0.100000 ] # Green Pirate Skirt#TODO
+  - [ 1082100, 1, 1, 0.100000 ] # Dark Lorin#TODO
+  - [ 1082204, 1, 1, 0.100000 ] # Black Bisk#TODO
+  - [ 1092015, 1, 1, 0.100000 ] # Steel Ancient Shield#TODO
+  - [ 1322020, 1, 1, 0.100000 ] # Bent Judgement#TODO
+  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
+  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
+  - [ 1472029, 1, 1, 0.100000 ] # Black Scarab#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040026, 1, 1, 0.100000 ] # Scroll for Helmet for INT 10%#TODO
+  - [ 2040302, 1, 1, 0.100000 ] # Scroll for Earring for INT 10%#TODO
+  - [ 2040319, 1, 1, 0.100000 ] # Scroll for Earring for LUK 100%#TODO
+  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
+  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
+  - [ 2330003, 1, 1, 0.100000 ] # Vital Bullet#TODO
+  - [ 4000362, 1, 1, 0.100000 ] # Broken Mechanical Heart#TODO
+  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
+  - [ 4006000, 1, 1, 0.100000 ] # The Magic Rock#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010003, 1, 1, 0.100000 ] # Adamantium Ore#TODO
+  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

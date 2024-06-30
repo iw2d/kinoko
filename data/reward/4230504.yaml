@@ -1,0 +1,27 @@
+# Red Flower Serpent (4230504)
+
+rewards:
+  - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
+  - [ 1002631, 1, 1, 0.100000 ] # Brown Leather Ocean Hat#TODO
+  - [ 1041077, 1, 1, 0.000100 ] # Maroon Moon
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1382001, 1, 1, 0.000070 ] # Arc Staff
+  - [ 1942001, 1, 1, 0.100000 ] # Gold Mask#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040504, 1, 1, 0.000020 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2044002, 1, 1, 0.000020 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044310, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 100%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000279, 1, 1, 0.500000 ] # Necki Flower
+  - [ 4000281, 1, 1, 0.040000 ] # Snake Leather
+  - [ 4004000, 1, 1, 0.000800 ] # Power Crystal Ore
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4010004, 1, 1, 0.004000 ] # Silver Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO

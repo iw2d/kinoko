@@ -1,0 +1,30 @@
+# Reindeer (5120505)
+
+rewards:
+  - [ 1002029, 1, 1, 0.000050 ] # Red Oriental Helmet
+  - [ 1002248, 1, 1, 0.000050 ] # Silver Identity
+  - [ 1002269, 1, 1, 0.000050 ] # White Polyfeather Hat
+  - [ 1041077, 1, 1, 0.000090 ] # Maroon Moon
+  - [ 1051037, 1, 1, 0.000100 ] # Blue Lumati
+  - [ 1052119, 1, 1, 0.100000 ] # Black Royal Barone#TODO
+  - [ 1061076, 1, 1, 0.000090 ] # Maroon Moon Pants
+  - [ 1072146, 1, 1, 0.000040 ] # Green Gore Boots
+  - [ 1082066, 1, 1, 0.000090 ] # Brown Moon Gloves
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040421, 1, 1, 0.100000 ] # Scroll for Topwear for HP 60%#TODO
+  - [ 2040534, 1, 1, 0.100000 ] # Scroll for Overall for STR 10%#TODO
+  - [ 2040804, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 60%
+  - [ 2040901, 1, 1, 0.000030 ] # Scroll for Shield for DEF 60%
+  - [ 2040928, 1, 1, 0.100000 ] # Scroll for Shield for HP 10%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 4000021, 1, 1, 0.030000 ] # Leather
+  - [ 4000288, 1, 1, 0.500000 ] # Broken Deer Horn
+  - [ 4003005, 1, 1, 0.020000 ] # Soft Feather
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO

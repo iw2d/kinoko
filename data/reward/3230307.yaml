@@ -1,0 +1,34 @@
+# Chirppy (3230307)
+
+rewards:
+  - [ 1002036, 1, 1, 0.000100 ] # Green Jester
+  - [ 1002152, 1, 1, 0.000070 ] # Blue Guiltian
+  - [ 1002183, 1, 1, 0.000070 ] # Green Pilfer
+  - [ 1040069, 1, 1, 0.000100 ] # Red Hunter's Armor
+  - [ 1051004, 1, 1, 0.000100 ] # Purple Doroness Robe
+  - [ 1060058, 1, 1, 0.000100 ] # Red Hunter's Pants
+  - [ 1072104, 1, 1, 0.000080 ] # Red White-Lined Boots
+  - [ 1072120, 1, 1, 0.000070 ] # Brown Pierre Shoes
+  - [ 1082008, 1, 1, 0.000080 ] # Steel Briggon
+  - [ 1082023, 1, 1, 0.000070 ] # Iron Knuckle
+  - [ 1302004, 1, 1, 0.000070 ] # Cutlus
+  - [ 1312005, 1, 1, 0.000090 ] # Fireman's Axe
+  - [ 1332004, 1, 1, 0.000100 ] # Forked Dagger
+  - [ 1482004, 1, 1, 0.100000 ] # Prime Hands#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040929, 1, 1, 0.100000 ] # Scroll for Shield for STR 100%#TODO
+  - [ 2044110, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 100%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000003, 1, 1, 0.000100 ] # Tree Branch
+  - [ 4000123, 1, 1, 0.500000 ] # Worn-Out Goggle
+  - [ 4003004, 1, 1, 0.000100 ] # Stiff Feather
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020008, 1, 1, 0.001000 ] # Black Crystal Ore
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

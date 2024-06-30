@@ -1,0 +1,36 @@
+# Dark Jr. Yeti (5130105)
+
+rewards:
+  - [ 1002208, 1, 1, 0.000090 ] # Blue Sonata
+  - [ 1002216, 1, 1, 0.000090 ] # Aqua Golden Circlet
+  - [ 1032021, 1, 1, 0.000090 ] # Holy Cross Earrings
+  - [ 1040102, 1, 1, 0.000050 ] # Bronze Platine
+  - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra
+  - [ 1041086, 1, 1, 0.000100 ] # Black Jangoon Armor
+  - [ 1060090, 1, 1, 0.000050 ] # Bronze Platine Pants
+  - [ 1061081, 1, 1, 0.000100 ] # Brown Piettra Skirt
+  - [ 1061085, 1, 1, 0.000100 ] # Black Jangoon Skirt
+  - [ 1072138, 1, 1, 0.000070 ] # Orange Goldrunners
+  - [ 1072151, 1, 1, 0.000070 ] # Gold Moss Boots
+  - [ 1082059, 1, 1, 0.000070 ] # Bronze Clench
+  - [ 1082090, 1, 1, 0.000070 ] # Sephia Garner
+  - [ 1092010, 1, 1, 0.000070 ] # Silver Legend Shield
+  - [ 1102015, 1, 1, 0.000070 ] # Blue Magic Cape
+  - [ 1382006, 1, 1, 0.000070 ] # Thorns
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040027, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 100%#TODO
+  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
+  - [ 2043701, 1, 1, 0.000030 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2044112, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 60%#TODO
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000055, 1, 1, 0.500000 ] # Dark Jr. Yeti Skin
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020004, 1, 1, 0.004000 ] # Opal Ore
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO

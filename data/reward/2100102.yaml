@@ -1,0 +1,26 @@
+# Jr. Cactus (2100102)
+
+rewards:
+  - [ 1002048, 1, 1, 0.100000 ] # Great Blue Helmet#TODO
+  - [ 1032006, 1, 1, 0.100000 ] # Lightning Earrings#TODO
+  - [ 1040044, 1, 1, 0.100000 ] # Black Pao#TODO
+  - [ 1050024, 1, 1, 0.100000 ] # Yellow Doros Robe#TODO
+  - [ 1051004, 1, 1, 0.100000 ] # Purple Doroness Robe#TODO
+  - [ 1060033, 1, 1, 0.100000 ] # Black Pao Bottom#TODO
+  - [ 1072027, 1, 1, 0.100000 ] # Brown Jack Boots#TODO
+  - [ 1082183, 1, 1, 0.100000 ] # Brown Leather Armor Glove#TODO
+  - [ 1082186, 1, 1, 0.100000 ] # Hard Leather Glove#TODO
+  - [ 1462003, 1, 1, 0.100000 ] # Balanche#TODO
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2022155, 1, 1, 0.100000 ] # Desert Mist#TODO
+  - [ 2040705, 1, 1, 0.100000 ] # Scroll for Shoes for Jump 10%#TODO
+  - [ 2043212, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 60%#TODO
+  - [ 2044102, 1, 1, 0.100000 ] # Scroll for Two-handed Axe for ATT 10%#TODO
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000329, 1, 1, 0.100000 ] # Cactus Stem#TODO
+  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
+  - [ 4020004, 1, 1, 0.100000 ] # Opal Ore#TODO

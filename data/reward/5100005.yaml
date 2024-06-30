@@ -1,0 +1,30 @@
+# Hogul (5100005)
+
+rewards:
+  - [ 1040095, 1, 1, 0.000040 ] # Blue China
+  - [ 1041079, 1, 1, 0.000050 ] # Brown Moon
+  - [ 1051045, 1, 1, 0.000030 ] # Red Anakarune
+  - [ 1060084, 1, 1, 0.000040 ] # Blue China Pants
+  - [ 1061078, 1, 1, 0.000050 ] # Brown Moon Pants
+  - [ 1402006, 1, 1, 0.000100 ] # Lionheart
+  - [ 1422007, 1, 1, 0.000100 ] # Titan
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040316, 1, 1, 0.100000 ] # Scroll for Earring for DEX 100%#TODO
+  - [ 2040621, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 60%#TODO
+  - [ 2041023, 1, 1, 0.000030 ] # Scroll for Cape for LUK 10%
+  - [ 2044201, 1, 1, 0.000050 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2070004, 1, 1, 0.000100 ] # Tobi Throwing-Stars
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000171, 1, 1, 0.500000 ] # Tiger Skin
+  - [ 4004003, 1, 1, 0.000800 ] # LUK Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO

@@ -1,0 +1,36 @@
+# Jr. Grupin (3210202)
+
+rewards:
+  - [ 1002037, 1, 1, 0.000080 ] # Black Jester
+  - [ 1002163, 1, 1, 0.000100 ] # Green Hawkeye
+  - [ 1002628, 1, 1, 0.100000 ] # Red Misty#TODO
+  - [ 1032011, 1, 1, 0.000070 ] # Blue Moon
+  - [ 1040028, 1, 1, 0.000100 ] # Blue Sky
+  - [ 1041053, 1, 1, 0.000090 ] # Black Amoria Top
+  - [ 1041066, 1, 1, 0.000070 ] # Blue Legolia
+  - [ 1060020, 1, 1, 0.000070 ] # White Martial Arts Shorts
+  - [ 1061049, 1, 1, 0.000090 ] # Black Amoria Skirt
+  - [ 1061061, 1, 1, 0.000070 ] # Blue Legolia Pants
+  - [ 1082045, 1, 1, 0.000070 ] # Gold Arbion
+  - [ 1302017, 1, 1, 0.000060 ] # Sky Blue Umbrella
+  - [ 1322015, 1, 1, 0.000070 ] # Heavy Hammer
+  - [ 1332001, 1, 1, 0.000090 ] # Halfmoon Zamadar
+  - [ 1492004, 1, 1, 0.100000 ] # Cold Mind#TODO
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2043110, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 100%#TODO
+  - [ 2043701, 1, 1, 0.000030 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
+  - [ 2070003, 1, 1, 0.000050 ] # Kumbi Throwing-Stars
+  - [ 4000021, 1, 1, 0.025000 ] # Leather
+  - [ 4000073, 1, 1, 0.500000 ] # Solid Horn
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4004003, 1, 1, 0.000700 ] # LUK Crystal Ore
+  - [ 4006000, 1, 1, 0.000500 ] # The Magic Rock
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO

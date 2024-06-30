@@ -1,0 +1,42 @@
+# Gigantic Spirit Viking (8141100)
+
+rewards:
+  - [ 1002329, 1, 1, 0.000080 ] # Red Pireta Hat
+  - [ 1041116, 1, 1, 0.000070 ] # Brown Osfa Suit
+  - [ 1050077, 1, 1, 0.000080 ] # Green Pris
+  - [ 1050081, 1, 1, 0.000080 ] # Red Battle Lord
+  - [ 1050093, 1, 1, 0.000070 ] # Blue Oriental Fury Coat
+  - [ 1051058, 1, 1, 0.000090 ] # Dark Enigma
+  - [ 1051080, 1, 1, 0.000080 ] # Dark Battle Empress
+  - [ 1051083, 1, 1, 0.000070 ] # Blue Anes
+  - [ 1061115, 1, 1, 0.000070 ] # Brown Osfa Pants
+  - [ 1072165, 1, 1, 0.000090 ] # Baige Elf Shoes
+  - [ 1072185, 1, 1, 0.000080 ] # Dark Wing Boots
+  - [ 1082105, 1, 1, 0.000090 ] # Dark Husk
+  - [ 1082119, 1, 1, 0.000080 ] # Purple Larceny
+  - [ 1082134, 1, 1, 0.000070 ] # Dark Pachone
+  - [ 1402015, 1, 1, 0.000080 ] # Heaven's Gate
+  - [ 1462012, 1, 1, 0.000080 ] # Golden Raven
+  - [ 2000005, 1, 1, 0.003000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2040025, 1, 1, 0.100000 ] # Scroll for Helmet for INT 60%#TODO
+  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
+  - [ 2040418, 1, 1, 0.100000 ] # Scroll for Topwear for STR 60%#TODO
+  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
+  - [ 2040902, 1, 1, 0.000020 ] # Scroll for Shield for DEF 10%
+  - [ 2043002, 1, 1, 0.000020 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 4000135, 1, 1, 0.650000 ] # Gigantic Viking Hat
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4020008, 1, 1, 0.005000 ] # Black Crystal Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4131003, 1, 1, 0.000100 ] # Two-Handed Sword Forging Manual
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion
+  - [ 4031176, 1, 1, 0.050000, 7104 ] # Piece of Cracked Dimension A
+  - [ 4031177, 1, 1, 0.100000, 7104 ] # Piece of Cracked Dimension B
+  - [ 4031178, 1, 1, 0.010000, 7104 ] # Piece of Cracked Dimension C

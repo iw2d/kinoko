@@ -1,0 +1,52 @@
+# Pianus (8510000)
+
+rewards:
+  - [ 1040121, 1, 1, 0.033000 ] # Blue Neos
+  - [ 1041123, 1, 1, 0.033000 ] # Purple Lucida
+  - [ 1050097, 1, 1, 0.033000 ] # Blue Katinas
+  - [ 1050103, 1, 1, 0.033000 ] # Blue Varuna
+  - [ 1050107, 1, 1, 0.033000 ] # Blue Arzuna
+  - [ 1051091, 1, 1, 0.033000 ] # Blue Katte
+  - [ 1051102, 1, 1, 0.033000 ] # Blue Bazura
+  - [ 1051106, 1, 1, 0.033000 ] # Blue Armis
+  - [ 1052131, 1, 1, 0.100000 ] # Red Belly Duke#TODO
+  - [ 1060110, 1, 1, 0.033000 ] # Blue Neos Pants
+  - [ 1061122, 1, 1, 0.033000 ] # Purple Lucida Skirt
+  - [ 1302023, 1, 1, 0.009000 ] # Fraute
+  - [ 1322029, 1, 1, 0.009000 ] # Ruin Hammer
+  - [ 1402005, 1, 1, 0.009000 ] # Berzerker
+  - [ 1412010, 1, 1, 0.009000 ] # Colonian Axe
+  - [ 1492011, 1, 1, 0.100000 ] # The Peacemaker#TODO
+  - [ 2000004, 30, 40, 0.700000 ] # Elixir
+  - [ 2000005, 20, 30, 1.000000 ] # Power Elixir
+  - [ 2020013, 45, 55, 1.000000 ] # Reindeer Milk
+  - [ 2020015, 45, 55, 1.000000 ] # Sunset Dew
+  - [ 2040318, 1, 1, 0.100000 ] # Scroll for Earring for DEX 10%#TODO
+  - [ 2040401, 1, 1, 0.005000 ] # Scroll for Topwear for DEF 60%
+  - [ 2040501, 1, 1, 0.005000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040504, 1, 1, 0.005000 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040513, 1, 1, 0.005000 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040516, 1, 1, 0.005000 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040532, 1, 1, 0.100000 ] # Scroll for Overall for STR 60%#TODO
+  - [ 2040534, 1, 1, 0.100000 ] # Scroll for Overall for STR 10%#TODO
+  - [ 2040621, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 60%#TODO
+  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
+  - [ 2043112, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 60%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2290001, 1, 1, 0.150000 ] # [Mastery Book] Monster Magnet
+  - [ 2290005, 1, 1, 0.100000 ] # [Mastery Book] Rush
+  - [ 2290025, 1, 1, 0.100000 ] # [Mastery Book] Mana Reflection
+  - [ 2290027, 1, 1, 0.001000 ] # [Mastery Book] Big Bang
+  - [ 2290053, 1, 1, 0.020000 ] # [Mastery Book] Sharp Eyes
+  - [ 2290055, 1, 1, 0.050000 ] # [Mastery Book] Dragon's Breath
+  - [ 2290077, 1, 1, 0.050000 ] # [Mastery Book] Shadow Shifter
+  - [ 2290083, 1, 1, 0.050000 ] # [Mastery Book] Ninja Ambush
+  - [ 2290097, 1, 1, 0.100000 ] # [Mastery Book] Dragon Strike#TODO
+  - [ 2290106, 1, 1, 0.100000 ] # [Mastery Book] Barrage#TODO
+  - [ 2290112, 1, 1, 0.100000 ] # [Mastery Book] Elemental Boost#TODO
+  - [ 2290124, 1, 1, 0.100000 ] # [Mastery Book] Bullseye#TODO
+  - [ 2290132, 1, 1, 0.100000 ] # [Mastery Book] Final Blow 20#TODO
+  - [ 2290146, 1, 1, 0.100000 ] # [Mastery Book] Blaze 20#TODO
+  - [ 4000175, 1, 1, 0.800000 ] # Minature Pianus
+  - [ 4001085, 1, 1, 1.000000 ] # Pianus Certificate
+  - [ 4031253, 1, 1, 1.000000, 3076 ] # Pianus's Scream

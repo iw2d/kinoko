@@ -1,0 +1,40 @@
+# King Block Golem (4230110)
+
+rewards:
+  - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
+  - [ 1002144, 1, 1, 0.000100 ] # Brown Matty
+  - [ 1002170, 1, 1, 0.000080 ] # Dark Distinction
+  - [ 1002181, 1, 1, 0.000080 ] # Red Pilfer
+  - [ 1040082, 1, 1, 0.000080 ] # Khaki Shadow
+  - [ 1040088, 1, 1, 0.000060 ] # Ocher Shouldermail
+  - [ 1041067, 1, 1, 0.000100 ] # Green Legolia
+  - [ 1041084, 1, 1, 0.000080 ] # Red Jangoon Armor
+  - [ 1060071, 1, 1, 0.000080 ] # Khaki Shadow Pants
+  - [ 1060077, 1, 1, 0.000060 ] # Ocher Shouldermail Pants
+  - [ 1061062, 1, 1, 0.000100 ] # Green Legolia Pants
+  - [ 1061083, 1, 1, 0.000080 ] # Red Jangoon Skirt
+  - [ 1072135, 1, 1, 0.000060 ] # Gold Hildon Boots
+  - [ 1082081, 1, 1, 0.000060 ] # Red Pennance
+  - [ 1082083, 1, 1, 0.000060 ] # Dark Willow
+  - [ 1082195, 1, 1, 0.100000 ] # Brown Barbee#TODO
+  - [ 1302013, 1, 1, 0.000070 ] # Red Whip
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.005000 ] # Elixir
+  - [ 2040504, 1, 1, 0.000020 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
+  - [ 2040627, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 10%#TODO
+  - [ 2040931, 1, 1, 0.100000 ] # Scroll for Shield for STR 60%#TODO
+  - [ 2044002, 1, 1, 0.000020 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044014, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 10%#TODO
+  - [ 2044301, 1, 1, 0.000020 ] # Scroll for Spear for ATT 60%
+  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000102, 1, 1, 0.500000 ] # Blue Toy Block
+  - [ 4004000, 1, 1, 0.000800 ] # Power Crystal Ore
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4020008, 1, 1, 0.001000 ] # Black Crystal Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO

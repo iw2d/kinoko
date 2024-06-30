@@ -1,0 +1,22 @@
+# Kiyo (3100102)
+
+rewards:
+  - [ 1002181, 1, 1, 0.000060 ] # Red Pilfer
+  - [ 1041052, 1, 1, 0.000050 ] # Blue Amoria Top
+  - [ 1050022, 1, 1, 0.000040 ] # Dark Crusader Chainmail
+  - [ 1061048, 1, 1, 0.000050 ] # Blue Amoria Skirt
+  - [ 1072294, 1, 1, 0.100000 ] # Brown Paulie Boots#TODO
+  - [ 1082069, 1, 1, 0.000040 ] # Mithril Scaler
+  - [ 1462004, 1, 1, 0.000050 ] # Eagle Crow
+  - [ 1472011, 1, 1, 0.000030 ] # Bronze Guardian
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040401, 1, 1, 0.000020 ] # Scroll for Topwear for DEF 60%
+  - [ 2041018, 1, 1, 0.000030 ] # Scroll for Cape for DEX 100%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000335, 1, 1, 0.400000 ] # Kiyo's Beek
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010007, 1, 1, 0.005000 ] # Lidium Ore
+  - [ 4020002, 1, 1, 0.003000 ] # AquaMarine Ore

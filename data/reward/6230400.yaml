@@ -1,0 +1,46 @@
+# Soul Teddy (6230400)
+
+rewards:
+  - [ 1002085, 1, 1, 0.000090 ] # Mithril Crusader Helm
+  - [ 1002210, 1, 1, 0.000090 ] # Brown Sonata
+  - [ 1002281, 1, 1, 0.000060 ] # Brown Nightfox
+  - [ 1002286, 1, 1, 0.000060 ] # Blue Patriot
+  - [ 1032014, 1, 1, 0.000090 ] # Pink-Flowered Earrings
+  - [ 1032020, 1, 1, 0.000090 ] # Gold Drop Earrings
+  - [ 1040096, 1, 1, 0.000090 ] # Brown China
+  - [ 1041098, 1, 1, 0.000060 ] # Violet Platina
+  - [ 1051034, 1, 1, 0.000090 ] # Orange Calaf
+  - [ 1051037, 1, 1, 0.000090 ] # Blue Lumati
+  - [ 1060085, 1, 1, 0.000090 ] # Brown China Pants
+  - [ 1061097, 1, 1, 0.000060 ] # Violet Platina Pants
+  - [ 1072149, 1, 1, 0.000080 ] # Blood Camel Boots
+  - [ 1082086, 1, 1, 0.000080 ] # Steel Manute
+  - [ 1082091, 1, 1, 0.000070 ] # Dark Garner
+  - [ 1082093, 1, 1, 0.000080 ] # Steal Pow
+  - [ 1082099, 1, 1, 0.000060 ] # Blue Lorin
+  - [ 1102017, 1, 1, 0.000080 ] # White Magic Cape
+  - [ 1322018, 1, 1, 0.000060 ] # Tamus
+  - [ 1372014, 1, 1, 0.000060 ] # Evil Tale
+  - [ 1472024, 1, 1, 0.000060 ] # Sapphire Gigantic
+  - [ 1492009, 1, 1, 0.100000 ] # Abyss Shooter#TODO
+  - [ 2000002, 1, 1, 0.015000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002000, 1, 1, 0.010000 ] # Dexterity Potion
+  - [ 2040422, 1, 1, 0.100000 ] # Scroll for Topwear for HP 10%#TODO
+  - [ 2040530, 1, 1, 0.100000 ] # Scroll for Overall for STR 100%#TODO
+  - [ 2040804, 1, 1, 0.000030 ] # Scroll for Gloves for ATT 60%
+  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
+  - [ 2043802, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044414, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 10%#TODO
+  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
+  - [ 4000143, 1, 1, 0.400000 ] # Zombie Teddy Bear
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010000, 1, 1, 0.003000 ] # Bronze Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.300000, 7101 ] # Tachion

@@ -1,0 +1,25 @@
+# Genin (9400400)
+
+rewards:
+  - [ 1002096, 1, 1, 0.100000 ] # Sky Blue Starry Bandana#TODO
+  - [ 1050006, 1, 1, 0.100000 ] # Red Kendo Robe#TODO
+  - [ 1050007, 1, 1, 0.100000 ] # White Kendo Robe#TODO
+  - [ 1072073, 1, 1, 0.100000 ] # Yellow Windshoes#TODO
+  - [ 1082032, 1, 1, 0.100000 ] # Bronze Mischief#TODO
+  - [ 1092008, 1, 1, 0.100000 ] # Pan Lid#TODO
+  - [ 1312003, 1, 1, 0.100000 ] # Misthil Axe#TODO
+  - [ 1322004, 1, 1, 0.100000 ] # Fusion Mace#TODO
+  - [ 1322022, 1, 1, 0.100000 ] # Red Flowery Tube#TODO
+  - [ 1442004, 1, 1, 0.100000 ] # Janitor's Mop#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2022021, 1, 1, 0.100000 ] # Fish Cake(skewer)#TODO
+  - [ 2040103, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for HP 30%#TODO
+  - [ 2040201, 1, 1, 0.100000 ] # Scroll for Eye Accessory for Accuracy 60%#TODO
+  - [ 2040915, 1, 1, 0.100000 ] # Scroll for Shield for Weapon ATT 10%#TODO
+  - [ 2061001, 1, 1, 0.100000 ] # Bronze Arrow for Crossbow#TODO
+  - [ 2070002, 1, 1, 0.100000 ] # Mokbi Throwing-Stars#TODO
+  - [ 4000337, 1, 1, 0.100000 ] # Genin Doll#TODO
+  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
+  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO

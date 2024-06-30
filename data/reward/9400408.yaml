@@ -1,0 +1,30 @@
+# Castellan (9400408)
+
+rewards:
+  - [ 1382045, 1, 1, 0.100000 ] # Elemental Staff 1#TODO
+  - [ 1382046, 1, 1, 0.100000 ] # Elemental Staff 2#TODO
+  - [ 1382047, 1, 1, 0.100000 ] # Elemental Staff 3#TODO
+  - [ 1382048, 1, 1, 0.100000 ] # Elemental Staff 4#TODO
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
+  - [ 2040100, 1, 1, 0.100000 ] # Scroll for Face Accessory for HP 10%#TODO
+  - [ 2040101, 1, 1, 0.100000 ] # Scroll for Face Accessory for HP 60%#TODO
+  - [ 2040102, 1, 1, 0.100000 ] # Scroll for Face Accessory for HP 100%#TODO
+  - [ 2040103, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for HP 30%#TODO
+  - [ 2040104, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for HP 70%#TODO
+  - [ 2040105, 1, 1, 0.100000 ] # Scroll for Face Accessory for Avoidability 10%#TODO
+  - [ 2040106, 1, 1, 0.100000 ] # Scroll for Face Accessory for Avoidability 60%#TODO
+  - [ 2040107, 1, 1, 0.100000 ] # Scroll for Face Accessory for Avoidability 100%#TODO
+  - [ 2040108, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for Avoidability 30%#TODO
+  - [ 2040109, 1, 1, 0.100000 ] # Dark Scroll for Face Accessory for Avoidability 70%#TODO
+  - [ 2040200, 1, 1, 0.100000 ] # Scroll for Eye Accessory for Accuracy 10%#TODO
+  - [ 2040201, 1, 1, 0.100000 ] # Scroll for Eye Accessory for Accuracy 60%#TODO
+  - [ 2040202, 1, 1, 0.100000 ] # Scroll for Eye Accessory for Accuracy 100%#TODO
+  - [ 2040203, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for Accuracy 30%#TODO
+  - [ 2040204, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for Accuracy 70%#TODO
+  - [ 2040205, 1, 1, 0.100000 ] # Scroll for Eye Accessory for INT 10%#TODO
+  - [ 2040206, 1, 1, 0.100000 ] # Scroll for Eye Accessory for INT 60%#TODO
+  - [ 2040207, 1, 1, 0.100000 ] # Scroll for Eye Accessory for INT 100%#TODO
+  - [ 2040208, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for INT 30%#TODO
+  - [ 2040209, 1, 1, 0.100000 ] # Dark Scroll for Eye Accessory for INT 70%#TODO
+  - [ 4000345, 1, 1, 0.100000 ] # Castellan's Stolen Armrest#TODO
+  - [ 4000346, 1, 1, 0.100000 ] # Emperor Toad Wallet#TODO

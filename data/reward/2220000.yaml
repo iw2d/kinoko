@@ -1,0 +1,61 @@
+# Mano  (2220000)
+
+rewards:
+  - [ 1002049, 1, 1, 0.000070 ] # Gold Burgernet Helm
+  - [ 1002073, 1, 1, 0.000070 ] # Red Wizardry Hat
+  - [ 1002150, 1, 1, 0.000070 ] # Dark Tiberian
+  - [ 1002159, 1, 1, 0.000070 ] # Black Hunter
+  - [ 1002619, 1, 1, 0.100000 ] # Brown Pitz Bandana#TODO
+  - [ 1040023, 1, 1, 0.000035 ] # Black Bennis Chainmail
+  - [ 1040041, 1, 1, 0.000035 ] # Dark Master Sergeant
+  - [ 1040050, 1, 1, 0.000035 ] # Black Sneak
+  - [ 1041024, 1, 1, 0.000035 ] # Red Shark
+  - [ 1041033, 1, 1, 0.000035 ] # Red Bennis Chainmail
+  - [ 1041060, 1, 1, 0.000035 ] # Gold Sneak
+  - [ 1050025, 1, 1, 0.000035 ] # White Doros Robe
+  - [ 1051005, 1, 1, 0.000035 ] # Red Doroness Robe
+  - [ 1052104, 1, 1, 0.100000 ] # Brown Turk Gally#TODO
+  - [ 1072052, 1, 1, 0.000070 ] # Dark War Boots
+  - [ 1072069, 1, 1, 0.000070 ] # Red Jack Boots
+  - [ 1072074, 1, 1, 0.000070 ] # Black Windshoes
+  - [ 1072087, 1, 1, 0.000070 ] # Black Lappy Boots
+  - [ 1072291, 1, 1, 0.100000 ] # Brown Wooden Krag#TODO
+  - [ 1082001, 1, 1, 0.000070 ] # White Fingerless Gloves
+  - [ 1082018, 1, 1, 0.000070 ] # Dark Savata
+  - [ 1082028, 1, 1, 0.000070 ] # Dark Mesana
+  - [ 1082039, 1, 1, 0.000070 ] # Dark Wolfskin
+  - [ 1082186, 1, 1, 0.100000 ] # Hard Leather Glove#TODO
+  - [ 2000000, 1, 1, 0.500000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.500000 ] # Green Apple
+  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew
+  - [ 2040001, 1, 1, 0.001000 ] # Scroll for Helmet for DEF 60%
+  - [ 2040002, 1, 1, 0.001000 ] # Scroll for Helmet for DEF 10%
+  - [ 2040301, 1, 1, 0.001000 ] # Scroll for Earring for INT 60%
+  - [ 2040302, 1, 1, 0.001000 ] # Scroll for Earring for INT 10%
+  - [ 2040401, 1, 1, 0.001000 ] # Scroll for Topwear for DEF 60%
+  - [ 2040402, 1, 1, 0.001000 ] # Scroll for Topwear for DEF 10%
+  - [ 2040418, 1, 1, 0.100000 ] # Scroll for Topwear for STR 60%#TODO
+  - [ 2040501, 1, 1, 0.001000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040601, 1, 1, 0.001000 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040928, 1, 1, 0.100000 ] # Scroll for Shield for HP 10%#TODO
+  - [ 2041016, 1, 1, 0.001000 ] # Scroll for Cape for INT 60%
+  - [ 2043114, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 10%#TODO
+  - [ 2043201, 1, 1, 0.001000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043302, 1, 1, 0.001000 ] # Scroll for Dagger for ATT 10%
+  - [ 2043701, 1, 1, 0.001000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043702, 1, 1, 0.001000 ] # Scroll for Wand for Magic Attack 10%
+  - [ 2043801, 1, 1, 0.001000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.001000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044414, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 10%#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
+  - [ 2060000, 1, 1, 0.500000 ] # Arrow for Bow
+  - [ 2061000, 1, 1, 0.500000 ] # Arrow for Crossbow
+  - [ 2070000, 1, 1, 0.030000 ] # Subi Throwing-Stars
+  - [ 2210006, 1, 1, 0.100000 ] # Rainbow-colored Snail Shell#TODO
+  - [ 2330000, 1, 1, 0.100000 ] # Bullet#TODO
+  - [ 4000000, 1, 1, 0.600000 ] # Blue Snail Shell
+  - [ 4000016, 1, 1, 0.600000 ] # Red Snail Shell
+  - [ 4000019, 1, 1, 0.600000 ] # Snail Shell
+  - [ 4010000, 1, 1, 0.008000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.008000 ] # Garnet Ore

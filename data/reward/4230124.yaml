@@ -1,0 +1,34 @@
+# Freezer (4230124)
+
+rewards:
+  - [ 1002045, 1, 1, 0.000070 ] # Blue Bone Helm
+  - [ 1002085, 1, 1, 0.000060 ] # Mithril Crusader Helm
+  - [ 1002213, 1, 1, 0.000060 ] # Green Maro
+  - [ 1002631, 1, 1, 0.100000 ] # Brown Leather Ocean Hat#TODO
+  - [ 1032012, 1, 1, 0.000060 ] # Skull Earrings
+  - [ 1040096, 1, 1, 0.000060 ] # Brown China
+  - [ 1041067, 1, 1, 0.000100 ] # Green Legolia
+  - [ 1041076, 1, 1, 0.000080 ] # Dark Shadow
+  - [ 1050037, 1, 1, 0.000100 ] # Green Starlight
+  - [ 1060073, 1, 1, 0.000080 ] # Dark Shadow Pants
+  - [ 1060085, 1, 1, 0.000060 ] # Brown China Pants
+  - [ 1061062, 1, 1, 0.000100 ] # Green Legolia Pants
+  - [ 1412005, 1, 1, 0.000080 ] # Sabretooth
+  - [ 1452007, 1, 1, 0.000080 ] # Vaulter 2000
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2041019, 1, 1, 0.000020 ] # Scroll for Cape for DEX 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000155, 1, 1, 0.500000 ] # Seal Skin
+  - [ 4000157, 1, 1, 0.100000 ] # Seal Meat
+  - [ 4004004, 1, 1, 0.000100 ] # Dark Crystal Ore
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010006, 1, 1, 0.003000 ] # Gold Ore
+  - [ 4020007, 1, 1, 0.004000 ] # Diamond Ore
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4031267, 1, 1, 0.060000, 3082 ] # Freezer's DNA Sample

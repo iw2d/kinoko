@@ -1,0 +1,77 @@
+# White Yeti and King Pepe (3300007)
+
+rewards:
+  - [ 1002049, 1, 1, 0.100000 ] # Gold Burgernet Helm#TODO
+  - [ 1002073, 1, 1, 0.100000 ] # Red Wizardry Hat#TODO
+  - [ 1002150, 1, 1, 0.100000 ] # Dark Tiberian#TODO
+  - [ 1002159, 1, 1, 0.100000 ] # Black Hunter#TODO
+  - [ 1002619, 1, 1, 0.100000 ] # Brown Pitz Bandana#TODO
+  - [ 1040023, 1, 1, 0.100000 ] # Black Bennis Chainmail#TODO
+  - [ 1040041, 1, 1, 0.100000 ] # Dark Master Sergeant#TODO
+  - [ 1040050, 1, 1, 0.100000 ] # Black Sneak#TODO
+  - [ 1041024, 1, 1, 0.100000 ] # Red Shark#TODO
+  - [ 1041033, 1, 1, 0.100000 ] # Red Bennis Chainmail#TODO
+  - [ 1041060, 1, 1, 0.100000 ] # Gold Sneak#TODO
+  - [ 1050025, 1, 1, 0.100000 ] # White Doros Robe#TODO
+  - [ 1051005, 1, 1, 0.100000 ] # Red Doroness Robe#TODO
+  - [ 1052104, 1, 1, 0.100000 ] # Brown Turk Gally#TODO
+  - [ 1072052, 1, 1, 0.100000 ] # Dark War Boots#TODO
+  - [ 1072069, 1, 1, 0.100000 ] # Red Jack Boots#TODO
+  - [ 1072074, 1, 1, 0.100000 ] # Black Windshoes#TODO
+  - [ 1072087, 1, 1, 0.100000 ] # Black Lappy Boots#TODO
+  - [ 1072291, 1, 1, 0.100000 ] # Brown Wooden Krag#TODO
+  - [ 1082001, 1, 1, 0.100000 ] # White Fingerless Gloves#TODO
+  - [ 1082018, 1, 1, 0.100000 ] # Dark Savata#TODO
+  - [ 1082028, 1, 1, 0.100000 ] # Dark Mesana#TODO
+  - [ 1082039, 1, 1, 0.100000 ] # Dark Wolfskin#TODO
+  - [ 1082186, 1, 1, 0.100000 ] # Hard Leather Glove#TODO
+  - [ 2000000, 1, 1, 0.100000 ] # Red Potion#TODO
+  - [ 2010009, 1, 1, 0.100000 ] # Green Apple#TODO
+  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew#TODO
+  - [ 2022580, 1, 1, 0.100000 ] # King Pepe Warrior Box#TODO
+  - [ 2022581, 1, 1, 0.100000 ] # King Pepe Magician Box#TODO
+  - [ 2022582, 1, 1, 0.100000 ] # King Pepe Bowman Box#TODO
+  - [ 2022583, 1, 1, 0.100000 ] # King Pepe Thief Box#TODO
+  - [ 2022584, 1, 1, 0.100000 ] # King Pepe Pirate Box#TODO
+  - [ 2040001, 1, 1, 0.100000 ] # Scroll for Helmet for DEF 60%#TODO
+  - [ 2040002, 1, 1, 0.100000 ] # Scroll for Helmet for DEF 10%#TODO
+  - [ 2040301, 1, 1, 0.100000 ] # Scroll for Earring for INT 60%#TODO
+  - [ 2040302, 1, 1, 0.100000 ] # Scroll for Earring for INT 10%#TODO
+  - [ 2040401, 1, 1, 0.100000 ] # Scroll for Topwear for DEF 60%#TODO
+  - [ 2040402, 1, 1, 0.100000 ] # Scroll for Topwear for DEF 10%#TODO
+  - [ 2040418, 1, 1, 0.100000 ] # Scroll for Topwear for STR 60%#TODO
+  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
+  - [ 2040601, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEF 60%#TODO
+  - [ 2040928, 1, 1, 0.100000 ] # Scroll for Shield for HP 10%#TODO
+  - [ 2041016, 1, 1, 0.100000 ] # Scroll for Cape for INT 60%#TODO
+  - [ 2043114, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 10%#TODO
+  - [ 2043201, 1, 1, 0.100000 ] # Scroll for One-Handed BW for ATT 60%#TODO
+  - [ 2043216, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for One-handed BW Attacks#TODO
+  - [ 2043302, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 10%#TODO
+  - [ 2043311, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Dagger Attacks#TODO
+  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
+  - [ 2043702, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 10%#TODO
+  - [ 2043711, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Wand Magic Attacks#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2043811, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Staff Magic Attacks#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044024, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed Sword Attacks#TODO
+  - [ 2044116, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed Axe Attacks#TODO
+  - [ 2044216, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed BW Attacks#TODO
+  - [ 2044316, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Spear Attacks#TODO
+  - [ 2044414, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 10%#TODO
+  - [ 2044416, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Polearm Attacks#TODO
+  - [ 2044511, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Bow Attacks#TODO
+  - [ 2044611, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Crossbow Attacks#TODO
+  - [ 2044711, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Claw Attacks#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2044816, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Knuckle Attacks#TODO
+  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 2070000, 1, 1, 0.100000 ] # Subi Throwing-Stars#TODO
+  - [ 2330000, 1, 1, 0.100000 ] # Bullet#TODO
+  - [ 2388069, 1, 1, 0.100000 ] # White Yeti and King Pepe Card#TODO
+  - [ 4000505, 1, 1, 0.100000 ] # Chief White Yeti Horn#TODO
+  - [ 4010000, 1, 1, 0.100000 ] # Bronze Ore#TODO
+  - [ 4020000, 1, 1, 0.100000 ] # Garnet Ore#TODO

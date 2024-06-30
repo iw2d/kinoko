@@ -1,0 +1,29 @@
+# Kru (6130208)
+
+rewards:
+  - [ 1002289, 1, 1, 0.000060 ] # Dark Patriot
+  - [ 1032015, 1, 1, 0.000080 ] # Metal Silver Earrings
+  - [ 1050081, 1, 1, 0.000080 ] # Red Battle Lord
+  - [ 1050088, 1, 1, 0.000080 ] # Red Ades
+  - [ 1051078, 1, 1, 0.000080 ] # Red Battle Empress
+  - [ 1072080, 1, 1, 0.000200 ] # Blue Hunter Boots
+  - [ 1072085, 1, 1, 0.000200 ] # Red Lappy Boots
+  - [ 1082204, 1, 1, 0.100000 ] # Black Bisk#TODO
+  - [ 1092015, 1, 1, 0.000060 ] # Steel Ancient Shield
+  - [ 1322018, 1, 1, 0.000060 ] # Tamus
+  - [ 1462008, 1, 1, 0.000060 ] # Golden Crow
+  - [ 1472027, 1, 1, 0.000060 ] # Green Scarab
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2043302, 1, 1, 0.000020 ] # Scroll for Dagger for ATT 10%
+  - [ 2044902, 1, 1, 0.100000 ] # Scroll for Gun for ATT 10%#TODO
+  - [ 4000296, 1, 1, 0.500000 ] # Mark of the Pirate
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO

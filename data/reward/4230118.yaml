@@ -1,0 +1,38 @@
+# Ultra Gray (4230118)
+
+rewards:
+  - [ 1002024, 1, 1, 0.000070 ] # Emerald Dome
+  - [ 1002155, 1, 1, 0.000090 ] # White Guiltian
+  - [ 1032012, 1, 1, 0.000070 ] # Skull Earrings
+  - [ 1040000, 1, 1, 0.000080 ] # Yellow Jangoon Armor
+  - [ 1041068, 1, 1, 0.000100 ] # Dark Legolia
+  - [ 1041075, 1, 1, 0.000090 ] # Red Shadow
+  - [ 1050038, 1, 1, 0.000100 ] # Blue Starlight
+  - [ 1060075, 1, 1, 0.000080 ] # Brown Jangoon Pants
+  - [ 1061063, 1, 1, 0.000100 ] # Dark Legolia Pants
+  - [ 1061070, 1, 1, 0.000090 ] # Red Shadow Pants
+  - [ 1072143, 1, 1, 0.000060 ] # Green Goldwind Shoes
+  - [ 1072300, 1, 1, 0.100000 ] # Brown Leather Krag#TODO
+  - [ 1082024, 1, 1, 0.000090 ] # Adamantium Knuckle
+  - [ 1422005, 1, 1, 0.000060 ] # Golden Mole
+  - [ 1472021, 1, 1, 0.000050 ] # Dark Slain
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.005000 ] # Elixir
+  - [ 2002009, 1, 1, 0.003000 ] # Dexterity Pill
+  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
+  - [ 2040802, 1, 1, 0.000020 ] # Scroll for Gloves for DEX 10%
+  - [ 2040931, 1, 1, 0.100000 ] # Scroll for Shield for STR 60%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2070004, 1, 1, 0.000100 ] # Tobi Throwing-Stars
+  - [ 4000119, 1, 1, 0.500000 ] # Receiving Apparatus
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4031105, 1, 1, 0.040000, 3414 ] # Ultra Gray's Cell

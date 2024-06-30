@@ -1,0 +1,37 @@
+# Tweeter (3230308)
+
+rewards:
+  - [ 1041085, 1, 1, 0.000080 ] # Brown Jangoon Armor
+  - [ 1051033, 1, 1, 0.000060 ] # Red Calaf
+  - [ 1061084, 1, 1, 0.000080 ] # Brown Jangoon Skirt
+  - [ 1072107, 1, 1, 0.000080 ] # Black Red-Lined Shoes
+  - [ 1072115, 1, 1, 0.000080 ] # Blue Moon Shoes
+  - [ 1072120, 1, 1, 0.000080 ] # Brown Pierre Shoes
+  - [ 1082010, 1, 1, 0.000060 ] # Mithril Brist
+  - [ 1082065, 1, 1, 0.000060 ] # Blue Moon Gloves
+  - [ 1082073, 1, 1, 0.000080 ] # Dark Brace
+  - [ 1082083, 1, 1, 0.000060 ] # Dark Willow
+  - [ 1092012, 1, 1, 0.000080 ] # Steel Tower Shield
+  - [ 1322003, 1, 1, 0.000100 ] # Lollipop
+  - [ 1372000, 1, 1, 0.000090 ] # Fairy Wand
+  - [ 1402006, 1, 1, 0.000090 ] # Lionheart
+  - [ 1422008, 1, 1, 0.000090 ] # Sledgehammer
+  - [ 1482005, 1, 1, 0.100000 ] # Silver Maiden#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002008, 1, 1, 0.003000 ] # Sniper Pill
+  - [ 2040902, 1, 1, 0.000020 ] # Scroll for Shield for DEF 10%
+  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000003, 1, 1, 0.000100 ] # Tree Branch
+  - [ 4000116, 1, 1, 0.500000 ] # Small Egg
+  - [ 4003005, 1, 1, 0.050000 ] # Soft Feather
+  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020008, 1, 1, 0.001000 ] # Black Crystal Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO

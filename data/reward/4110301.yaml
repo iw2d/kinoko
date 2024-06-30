@@ -1,0 +1,22 @@
+# Reinforced Iron Mutae (4110301)
+
+rewards:
+  - [ 1002085, 1, 1, 0.100000 ] # Mithril Crusader Helm#TODO
+  - [ 1041077, 1, 1, 0.100000 ] # Maroon Moon#TODO
+  - [ 1082010, 1, 1, 0.100000 ] # Mithril Brist#TODO
+  - [ 1382001, 1, 1, 0.100000 ] # Arc Staff#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
+  - [ 2044002, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 10%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000358, 1, 1, 0.100000 ] # Hardened Piece of Steel#TODO
+  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
+  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130020, 1, 1, 0.100000 ] # Bottomwear Production Stimulator#TODO

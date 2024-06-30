@@ -1,0 +1,28 @@
+# Ghost Stump (1140100)
+
+rewards:
+  - [ 1002107, 1, 1, 0.000100 ] # Red Thief Hood
+  - [ 1002113, 1, 1, 0.000100 ] # Blue Feather Hat
+  - [ 1041029, 1, 1, 0.000090 ] # Black Split
+  - [ 1041062, 1, 1, 0.000100 ] # Yellow Able Armor
+  - [ 1050003, 1, 1, 0.000070 ] # Blue Wizard Robe
+  - [ 1050010, 1, 1, 0.000100 ] # Green Plain Robe
+  - [ 1061027, 1, 1, 0.000090 ] # Black Split Skirt
+  - [ 1061058, 1, 1, 0.000100 ] # Brown Able Skirt
+  - [ 1072046, 1, 1, 0.000080 ] # Orange High Boots
+  - [ 1072066, 1, 1, 0.000080 ] # Blue Enamel Boots
+  - [ 1082018, 1, 1, 0.000070 ] # Dark Savata
+  - [ 1082180, 1, 1, 0.100000 ] # Green Lagger Halfglove#TODO
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 2000000, 1, 1, 0.020000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040501, 1, 1, 0.000030 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040801, 1, 1, 0.000030 ] # Scroll for Gloves for DEX 60%
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2048001, 1, 1, 0.000030 ] # Scroll for Pet Equip. for Speed 60%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000195, 1, 1, 0.400000 ] # Seedling
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore

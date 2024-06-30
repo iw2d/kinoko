@@ -1,0 +1,25 @@
+# Dark Stump (1110101)
+
+rewards:
+  - [ 1002039, 1, 1, 0.000300 ] # Bronze Helmet
+  - [ 1002613, 1, 1, 0.100000 ] # Brown Lagger Cap#TODO
+  - [ 1032001, 1, 1, 0.000060 ] # Single Earring
+  - [ 1041018, 1, 1, 0.000080 ] # Green Arianne
+  - [ 1041061, 1, 1, 0.000100 ] # Yellow Avelin
+  - [ 1061013, 1, 1, 0.000080 ] # Green Arianne Skirt
+  - [ 1061057, 1, 1, 0.000100 ] # Yellow Avelin Skirt
+  - [ 1092003, 1, 1, 0.001000 ] # Stolen Fence
+  - [ 1302006, 1, 1, 0.000200 ] # Machete
+  - [ 1382000, 1, 1, 0.000100 ] # Wooden Staff
+  - [ 1442000, 1, 1, 0.001000 ] # Pole Arm
+  - [ 1482000, 1, 1, 0.100000 ] # Steel Knuckler#TODO
+  - [ 2000000, 1, 1, 0.020000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.020000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2040802, 1, 1, 0.000030 ] # Scroll for Gloves for DEX 10%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000005, 1, 1, 0.400000 ] # Leaf
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4031590, 1, 1, 0.010000, 8881 ] # Birthday Candle

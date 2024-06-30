@@ -5,39 +5,40 @@ import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
+import org.snakeyaml.engine.v2.api.Load;
+import org.snakeyaml.engine.v2.api.LoadSettings;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Stream;
 
 public final class RewardProvider implements DataProvider {
-    public static final Path MOB_REWARD = Path.of(ServerConfig.DATA_DIRECTORY, "mob_reward.csv");
-    private static final Map<Integer, Set<Reward>> mobRewards = new HashMap<>(); // mobId -> mob rewards
+    public static final Path REWARD_DATA = Path.of(ServerConfig.DATA_DIRECTORY, "reward");
+    private static final Map<Integer, List<Reward>> mobRewards = new HashMap<>(); // mobId -> rewards
 
     public static void initialize() {
-        try {
-            // Mob rewards
-            DataProvider.readData(MOB_REWARD).forEach((props) -> {
-                final int mobId = Integer.parseInt(props.get(0));
-                final Reward reward = getReward(props);
-                if (!mobRewards.containsKey(mobId)) {
-                    mobRewards.put(mobId, new HashSet<>());
+        final Load yamlLoader = new Load(LoadSettings.builder().build());
+        try (final Stream<Path> paths = Files.list(REWARD_DATA)) {
+            for (Path path : paths.toList()) {
+                final String fileName = path.getFileName().toString();
+                if (!fileName.endsWith(".yaml")) {
+                    continue;
                 }
-                mobRewards.get(mobId).add(reward);
-            });
-            for (var entry : mobRewards.entrySet()) {
-                mobRewards.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+                final int mobId = Integer.parseInt(fileName.replace(".yaml", ""));
+                try (final InputStream is = Files.newInputStream(path)) {
+                    loadMobRewards(mobId, yamlLoader.loadFromInputStream(is));
+                }
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Exception caught while loading Reward Data", e);
         }
     }
 
-    public static Set<Reward> getMobRewards(Mob mob) {
-        if (!mobRewards.containsKey(mob.getTemplateId())) {
-            return Set.of();
-        }
-        return mobRewards.get(mob.getTemplateId());
+    public static List<Reward> getMobRewards(Mob mob) {
+        return mobRewards.getOrDefault(mob.getTemplateId(), List.of());
     }
 
     public static Reward getMobMoneyReward(Mob mob) {
@@ -45,22 +46,26 @@ public final class RewardProvider implements DataProvider {
         return Reward.money(money.getLeft(), money.getRight(), GameConstants.DROP_MONEY_PROB);
     }
 
-    private static Reward getReward(List<String> props) {
-        final int itemId = Integer.parseInt(props.get(1));
-        if (itemId == 0) {
-            return Reward.money(
-                    Integer.parseInt(props.get(2)),
-                    Integer.parseInt(props.get(3)),
-                    Double.parseDouble(props.get(4))
-            );
-        } else {
-            return Reward.item(
-                    Integer.parseInt(props.get(1)),
-                    Integer.parseInt(props.get(2)),
-                    Integer.parseInt(props.get(3)),
-                    Double.parseDouble(props.get(4)),
-                    Integer.parseInt(props.get(5))
-            );
+    private static void loadMobRewards(int mobId, Object yamlObject) throws ProviderError {
+        if (!(yamlObject instanceof Map<?, ?> rewardData)) {
+            throw new ProviderError("Could not resolve reward data for mob ID : %d", mobId);
         }
+        if (!(rewardData.get("rewards") instanceof List<?> rewardList)) {
+            // No Rewards
+            return;
+        }
+        final List<Reward> rewards = new ArrayList<>();
+        for (Object rewardObject : rewardList) {
+            if (!(rewardObject instanceof List<?> rewardInfo)) {
+                throw new ProviderError("Could not resolve reward info for npc ID : %d", mobId);
+            }
+            final int itemId = ((Number) rewardInfo.get(0)).intValue();
+            final int min = ((Number) rewardInfo.get(1)).intValue();
+            final int max = ((Number) rewardInfo.get(2)).intValue();
+            final double prob = ((Number) rewardInfo.get(3)).doubleValue();
+            final int questId = rewardInfo.size() > 4 ? ((Number) rewardInfo.get(4)).intValue() : 0;
+            rewards.add(Reward.item(itemId, min, max, prob, questId));
+        }
+        mobRewards.put(mobId, Collections.unmodifiableList(rewards));
     }
 }

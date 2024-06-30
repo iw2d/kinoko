@@ -1,0 +1,40 @@
+# Homunculus (7110301)
+
+rewards:
+  - [ 1002029, 1, 1, 0.100000 ] # Red Oriental Helmet#TODO
+  - [ 1002094, 1, 1, 0.100000 ] # Bronze Planet#TODO
+  - [ 1002248, 1, 1, 0.100000 ] # Silver Identity#TODO
+  - [ 1002253, 1, 1, 0.100000 ] # Blue Infinium Circlet#TODO
+  - [ 1002275, 1, 1, 0.100000 ] # Blue Falcon#TODO
+  - [ 1040105, 1, 1, 0.100000 ] # Brown Studded Top#TODO
+  - [ 1040108, 1, 1, 0.100000 ] # Green Pirate Top#TODO
+  - [ 1050063, 1, 1, 0.100000 ] # Green Linnex#TODO
+  - [ 1051041, 1, 1, 0.100000 ] # Red Choro#TODO
+  - [ 1051044, 1, 1, 0.100000 ] # Blue Anakarune#TODO
+  - [ 1051053, 1, 1, 0.100000 ] # Red Requierre#TODO
+  - [ 1051062, 1, 1, 0.100000 ] # Blue Lineros#TODO
+  - [ 1060093, 1, 1, 0.100000 ] # Brown Studded Pants#TODO
+  - [ 1060097, 1, 1, 0.100000 ] # Green Pirate Pants#TODO
+  - [ 1072145, 1, 1, 0.100000 ] # Blue Gore Boots#TODO
+  - [ 1072147, 1, 1, 0.100000 ] # Sapphire Camel Boots#TODO
+  - [ 1072150, 1, 1, 0.100000 ] # Blood Moss Boots#TODO
+  - [ 1072177, 1, 1, 0.100000 ] # Green Enigma Shoes#TODO
+  - [ 1072210, 1, 1, 0.100000 ] # Red Rivers Boots#TODO
+  - [ 1402012, 1, 1, 0.100000 ] # Doombringer#TODO
+  - [ 1482010, 1, 1, 0.100000 ] # Steelno#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040025, 1, 1, 0.100000 ] # Scroll for Helmet for INT 60%#TODO
+  - [ 2040621, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 60%#TODO
+  - [ 2040933, 1, 1, 0.100000 ] # Scroll for Shield for STR 10%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 4000361, 1, 1, 0.100000 ] # May Mist#TODO
+  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
+  - [ 4020006, 1, 1, 0.100000 ] # Topaz Ore#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO

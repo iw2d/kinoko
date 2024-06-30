@@ -1,0 +1,39 @@
+# Drake (5130100)
+
+rewards:
+  - [ 1002631, 1, 1, 0.100000 ] # Brown Leather Ocean Hat#TODO
+  - [ 1040089, 1, 1, 0.000070 ] # Umber Shouldermail
+  - [ 1041077, 1, 1, 0.000070 ] # Maroon Moon
+  - [ 1051030, 1, 1, 0.000070 ] # Dark Calaf
+  - [ 1051037, 1, 1, 0.000070 ] # Blue Lumati
+  - [ 1060078, 1, 1, 0.000070 ] # Umber Shouldermail Pants
+  - [ 1061076, 1, 1, 0.000070 ] # Maroon Moon Pants
+  - [ 1072108, 1, 1, 0.000100 ] # Black Green-Lined Shoes
+  - [ 1072116, 1, 1, 0.000100 ] # Gold Moon Shoes
+  - [ 1082083, 1, 1, 0.000070 ] # Dark Willow
+  - [ 1092008, 1, 1, 0.000040 ] # Pan Lid
+  - [ 1382006, 1, 1, 0.000070 ] # Thorns
+  - [ 1412005, 1, 1, 0.000100 ] # Sabretooth
+  - [ 1432005, 1, 1, 0.000100 ] # Zeco
+  - [ 1452007, 1, 1, 0.000100 ] # Vaulter 2000
+  - [ 1462004, 1, 1, 0.000020 ] # Eagle Crow
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002001, 1, 1, 0.005000 ] # Speed Potion
+  - [ 2002004, 1, 1, 0.007000 ] # Warrior Potion
+  - [ 2012000, 1, 1, 0.007000 ] # Drake's Blood
+  - [ 2012003, 1, 1, 0.007000 ] # Drake's Meat
+  - [ 2040422, 1, 1, 0.100000 ] # Scroll for Topwear for HP 10%#TODO
+  - [ 2070003, 1, 1, 0.000300 ] # Kumbi Throwing-Stars
+  - [ 4000014, 1, 1, 0.600000 ] # Drake Skull
+  - [ 4000030, 1, 1, 0.050000 ] # Dragon Skin
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4010004, 1, 1, 0.005000 ] # Silver Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4001077, 1, 1, 0.050000, 7301 ] # Tough Dragon Skin
+  - [ 4001105, 1, 1, 0.050000, 7303 ] # Tough Dragon Skin

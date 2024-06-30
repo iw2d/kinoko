@@ -1,0 +1,30 @@
+# Ginseng Jar (4230506)
+
+rewards:
+  - [ 1002083, 1, 1, 0.000100 ] # Black Bandana
+  - [ 1002212, 1, 1, 0.000050 ] # Red Maro
+  - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings
+  - [ 1041080, 1, 1, 0.000050 ] # Red Moon
+  - [ 1041086, 1, 1, 0.000050 ] # Black Jangoon Armor
+  - [ 1041092, 1, 1, 0.000040 ] # Red Ice Queen
+  - [ 1061079, 1, 1, 0.000050 ] # Red Moon Pants
+  - [ 1061085, 1, 1, 0.000050 ] # Black Jangoon Skirt
+  - [ 1061091, 1, 1, 0.000040 ] # Red Ice Queen Skirt
+  - [ 1102003, 1, 1, 0.000060 ] # White Napoleon
+  - [ 1302013, 1, 1, 0.000050 ] # Red Whip
+  - [ 1492007, 1, 1, 0.100000 ] # Mr. Rasfelt#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
+  - [ 2044110, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 100%#TODO
+  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 4000292, 1, 1, 0.500000 ] # Ginseng-Boiled Water
+  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO

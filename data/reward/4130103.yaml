@@ -1,0 +1,35 @@
+# Rombot (4130103)
+
+rewards:
+  - [ 1040063, 1, 1, 0.000200 ] # Black Knucklevest
+  - [ 1051032, 1, 1, 0.000100 ] # Blue Calaf
+  - [ 1060052, 1, 1, 0.000200 ] # Black Knucklevest Pants
+  - [ 1072129, 1, 1, 0.000100 ] # Green Goni Shoes
+  - [ 1072140, 1, 1, 0.000100 ] # Pink Goldwind Shoes
+  - [ 1082071, 1, 1, 0.000200 ] # Aqua Brace
+  - [ 1082085, 1, 1, 0.000100 ] # Red Willow
+  - [ 1312008, 1, 1, 0.000100 ] # Buck
+  - [ 1372007, 1, 1, 0.000100 ] # Cromi
+  - [ 1432004, 1, 1, 0.000100 ] # Serpent's Tongue
+  - [ 1442009, 1, 1, 0.000200 ] # Crescent Polearm
+  - [ 1462006, 1, 1, 0.000200 ] # Silver Crow
+  - [ 1472019, 1, 1, 0.000100 ] # Blood Slain
+  - [ 1492007, 1, 1, 0.100000 ] # Mr. Rasfelt#TODO
+  - [ 2000002, 1, 1, 0.030000 ] # White Potion
+  - [ 2000004, 1, 1, 0.030000 ] # Elixir
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2043210, 1, 1, 0.100000 ] # Scroll for One-Handed BW for Accuracy 100%#TODO
+  - [ 2060000, 20, 30, 0.016000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.016000 ] # Arrow for Crossbow
+  - [ 4000124, 1, 1, 0.500000 ] # Rombot's Memory Card
+  - [ 4005002, 1, 1, 0.001000 ] # DEX Crystal
+  - [ 4006000, 1, 1, 0.001000 ] # The Magic Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4010000, 1, 1, 0.005000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.005000 ] # Garnet Ore
+  - [ 4020007, 1, 1, 0.005000 ] # Diamond Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4131009, 1, 1, 0.000500 ] # Staff Production Manual

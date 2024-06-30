@@ -1,0 +1,31 @@
+# Samiho (5100004)
+
+rewards:
+  - [ 1032021, 1, 1, 0.000700 ] # Holy Cross Earrings
+  - [ 1040087, 1, 1, 0.000080 ] # Blue Shouldermail
+  - [ 1040099, 1, 1, 0.000050 ] # Ocher Scorpio
+  - [ 1050058, 1, 1, 0.000050 ] # Orange Tai
+  - [ 1051046, 1, 1, 0.000050 ] # White Anakarune
+  - [ 1052119, 1, 1, 0.100000 ] # Black Royal Barone#TODO
+  - [ 1060076, 1, 1, 0.000080 ] # Blue Shouldermail Pants
+  - [ 1060088, 1, 1, 0.000050 ] # Ocher Scorpio Pants
+  - [ 1072134, 1, 1, 0.000100 ] # Orihalcon Hildon Boots
+  - [ 1082066, 1, 1, 0.000100 ] # Brown Moon Gloves
+  - [ 1082081, 1, 1, 0.000100 ] # Red Pennance
+  - [ 1432006, 1, 1, 0.000040 ] # Holy Spear
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040420, 1, 1, 0.100000 ] # Scroll for Topwear for HP 100%#TODO
+  - [ 2043701, 1, 1, 0.000030 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.000040 ] # Scroll for Staff for Magic Attack 60%
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000172, 1, 1, 0.500000 ] # Three-Tailed Foxtail
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020004, 1, 1, 0.004000 ] # Opal Ore
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
+  - [ 4130011, 1, 1, 0.100000 ] # Staff Production Stimulator#TODO

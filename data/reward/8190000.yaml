@@ -1,0 +1,40 @@
+# Jr. Newtie (8190000)
+
+rewards:
+  - [ 1002398, 1, 1, 0.000050 ] # Green Varr Hat
+  - [ 1002646, 1, 1, 0.100000 ] # Black Polax Hat#TODO
+  - [ 1040111, 1, 1, 0.000070 ] # Green Commodore
+  - [ 1051092, 1, 1, 0.000050 ] # Red Katte
+  - [ 1060102, 1, 1, 0.000070 ] # Dark Commodore Pants
+  - [ 1072228, 1, 1, 0.000060 ] # Blue Arnah Shoes
+  - [ 1082158, 1, 1, 0.000050 ] # Red Arcina
+  - [ 1332052, 1, 1, 0.000003 ] # Blood Dagger
+  - [ 1402016, 1, 1, 0.000070 ] # Devil's Sunrise
+  - [ 2000005, 1, 1, 0.002000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.003000 ] # Reindeer Milk
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040004, 1, 1, 0.000040 ] # Scroll for Helmet for HP 60%
+  - [ 2040419, 1, 1, 0.100000 ] # Scroll for Topwear for STR 10%#TODO
+  - [ 2044110, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 100%#TODO
+  - [ 2044702, 1, 1, 0.000020 ] # Scroll for Claw for ATT 10%
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2290030, 1, 1, 0.000002 ] # [Mastery Book] Paralyze
+  - [ 2290044, 1, 1, 0.000020 ] # [Mastery Book] Ifrit
+  - [ 2290054, 1, 1, 0.000020 ] # [Mastery Book] Dragon's Breath
+  - [ 2290066, 1, 1, 0.000010 ] # [Mastery Book] Marksman Boost
+  - [ 2290092, 1, 1, 0.000002 ] # [Mastery Book] Assassinate
+  - [ 2290103, 1, 1, 0.100000 ] # [Mastery Book] Demolition#TODO
+  - [ 4000244, 1, 1, 0.000003 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.000003 ] # Dragon Scale
+  - [ 4000272, 1, 1, 0.500000 ] # Egg Shell
+  - [ 4004001, 1, 1, 0.002000 ] # Wisdom Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4006001, 1, 1, 0.002000 ] # The Summoning Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010000, 1, 1, 0.004000 ] # Bronze Ore
+  - [ 4020004, 1, 1, 0.005000 ] # Opal Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO

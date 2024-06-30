@@ -1,0 +1,27 @@
+# Meerkat (2100108)
+
+rewards:
+  - [ 1002164, 1, 1, 0.100000 ] # Brown Hawkeye#TODO
+  - [ 1040062, 1, 1, 0.100000 ] # Red Knucklevest#TODO
+  - [ 1050029, 1, 1, 0.100000 ] # Dark Chaos Robe#TODO
+  - [ 1060051, 1, 1, 0.100000 ] # Red Knucklevest Pants#TODO
+  - [ 1082005, 1, 1, 0.100000 ] # Steel Missel#TODO
+  - [ 1332009, 1, 1, 0.100000 ] # Cass#TODO
+  - [ 1412004, 1, 1, 0.100000 ] # Niam#TODO
+  - [ 1482003, 1, 1, 0.100000 ] # Norman Grip#TODO
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2002005, 1, 1, 0.100000 ] # Sniper Potion#TODO
+  - [ 2043002, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 10%#TODO
+  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
+  - [ 2044014, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 10%#TODO
+  - [ 2044214, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 10%#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000333, 1, 1, 0.100000 ] # Telescope#TODO
+  - [ 4003004, 1, 1, 0.100000 ] # Stiff Feather#TODO
+  - [ 4004002, 1, 1, 0.100000 ] # DEX Crystal Ore#TODO
+  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
+  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO

@@ -1,0 +1,46 @@
+# Royal Guard (8140512)
+
+rewards:
+  - [ 1002254, 1, 1, 0.100000 ] # Dark Infinium Circlet#TODO
+  - [ 1002278, 1, 1, 0.100000 ] # Dark Falcon#TODO
+  - [ 1002285, 1, 1, 0.100000 ] # Blood Nightfox#TODO
+  - [ 1002327, 1, 1, 0.100000 ] # Brown Pireta Hat#TODO
+  - [ 1040112, 1, 1, 0.100000 ] # Blue Commodore#TODO
+  - [ 1041106, 1, 1, 0.100000 ] # Red Pirate Blouse#TODO
+  - [ 1041117, 1, 1, 0.100000 ] # Purple Osfa Suit#TODO
+  - [ 1050072, 1, 1, 0.100000 ] # Green Enigmatic#TODO
+  - [ 1050074, 1, 1, 0.100000 ] # Dark Enigmatic#TODO
+  - [ 1050076, 1, 1, 0.100000 ] # Blue Pris#TODO
+  - [ 1050083, 1, 1, 0.100000 ] # Dark Battle Lord#TODO
+  - [ 1051063, 1, 1, 0.100000 ] # Beige Lineros#TODO
+  - [ 1051068, 1, 1, 0.100000 ] # Green Pria#TODO
+  - [ 1051079, 1, 1, 0.100000 ] # Blue Battle Empress#TODO
+  - [ 1060101, 1, 1, 0.100000 ] # Blue Commodore Pants#TODO
+  - [ 1061105, 1, 1, 0.100000 ] # Red Pirate Skirt#TODO
+  - [ 1061116, 1, 1, 0.100000 ] # Purple Osfa Pants#TODO
+  - [ 1072315, 1, 1, 0.100000 ] # Black Markintz#TODO
+  - [ 1082115, 1, 1, 0.100000 ] # Emerald Emperor#TODO
+  - [ 1082132, 1, 1, 0.100000 ] # Green Sage#TODO
+  - [ 1322028, 1, 1, 0.100000 ] # Heaven's Justice#TODO
+  - [ 1422010, 1, 1, 0.100000 ] # Gigantic Sledge#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
+  - [ 2040929, 1, 1, 0.100000 ] # Scroll for Shield for STR 100%#TODO
+  - [ 2044602, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 10%#TODO
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2044809, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 10%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2049001, 1, 1, 0.100000 ] # Clean Slate Scroll 3%#TODO
+  - [ 2070006, 1, 1, 0.100000 ] # Ilbi Throwing-Stars#TODO
+  - [ 2290082, 1, 1, 0.100000 ] # [Mastery Book] Ninja Ambush#TODO
+  - [ 2290097, 1, 1, 0.100000 ] # [Mastery Book] Dragon Strike#TODO
+  - [ 2386034, 1, 1, 0.100000 ] # Royal Guard Card#TODO
+  - [ 4000558, 1, 1, 0.100000 ] # Royal Guard Armor#TODO
+  - [ 4004000, 1, 1, 0.100000 ] # Power Crystal Ore#TODO
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
+  - [ 4020008, 1, 1, 0.100000 ] # Black Crystal Ore#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO

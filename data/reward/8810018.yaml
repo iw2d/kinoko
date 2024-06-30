@@ -1,0 +1,82 @@
+# Horntail (8810018)
+
+rewards:
+  - [ 1122000, 1, 1, 1.000000 ] # Horntail Necklace
+  - [ 1302056, 1, 1, 0.100000 ] # Sparta
+  - [ 1302059, 1, 1, 0.100000 ] # Dragon Carabella
+  - [ 1312030, 1, 1, 0.100000 ] # Tomahawk
+  - [ 1312031, 1, 1, 0.100000 ] # Dragon Axe
+  - [ 1322045, 1, 1, 0.100000 ] # Battle Hammer
+  - [ 1322052, 1, 1, 0.100000 ] # Dragon Mace
+  - [ 1332049, 1, 1, 0.100000 ] # Dragon Kanzir
+  - [ 1332050, 1, 1, 0.100000 ] # Dragon Kreda
+  - [ 1332051, 1, 1, 0.100000 ] # Gold Double Knife
+  - [ 1332052, 1, 1, 0.100000 ] # Blood Dagger
+  - [ 1372010, 1, 1, 0.100000 ] # Dimon Wand
+  - [ 1372032, 1, 1, 0.100000 ] # Dragon Wand
+  - [ 1382035, 1, 1, 0.100000 ] # Blue Marine
+  - [ 1382036, 1, 1, 0.100000 ] # Dragon Staff
+  - [ 1402035, 1, 1, 0.100000 ] # The Beheader
+  - [ 1402036, 1, 1, 0.100000 ] # Dragon Claymore
+  - [ 1412021, 1, 1, 0.100000 ] # Tavar
+  - [ 1412026, 1, 1, 0.100000 ] # Dragon Battle Axe
+  - [ 1422027, 1, 1, 0.100000 ] # Golden Smith Hammer
+  - [ 1422028, 1, 1, 0.100000 ] # Dragon Flame
+  - [ 1432030, 1, 1, 0.100000 ] # Pinaka
+  - [ 1432038, 1, 1, 0.100000 ] # Dragon Faltizan
+  - [ 1442044, 1, 1, 0.100000 ] # Zedbug
+  - [ 1442045, 1, 1, 0.100000 ] # Dragon Chelbird
+  - [ 1452019, 1, 1, 0.100000 ] # White Nisrock
+  - [ 1452020, 1, 1, 0.100000 ] # Golden Nisrock
+  - [ 1452021, 1, 1, 0.100000 ] # Dark Nisrock
+  - [ 1452044, 1, 1, 0.100000 ] # Dragon Shiner Bow
+  - [ 1462015, 1, 1, 0.100000 ] # White Neschere
+  - [ 1462016, 1, 1, 0.100000 ] # Golden Neschere
+  - [ 1462017, 1, 1, 0.100000 ] # Dark Neschere
+  - [ 1462039, 1, 1, 0.100000 ] # Dragon Shiner Cross
+  - [ 1472051, 1, 1, 0.100000 ] # Dragon Green Sleve
+  - [ 1472052, 1, 1, 0.100000 ] # Dragon Purple Sleve
+  - [ 1472053, 1, 1, 0.100000 ] # Red Craven
+  - [ 1482012, 1, 1, 0.100000 ] # King Cent#TODO
+  - [ 1482013, 1, 1, 0.100000 ] # Dragon Slash Claw#TODO
+  - [ 1492012, 1, 1, 0.100000 ] # Concerto#TODO
+  - [ 1492013, 1, 1, 0.100000 ] # Dragonfire Revolver#TODO
+  - [ 2000004, 20, 30, 1.000000 ] # Elixir
+  - [ 2000005, 15, 20, 1.000000 ] # Power Elixir
+  - [ 2000006, 45, 50, 1.000000 ] # Mana Elixir
+  - [ 2020013, 30, 35, 1.000000 ] # Reindeer Milk
+  - [ 2020015, 30, 35, 1.000000 ] # Sunset Dew
+  - [ 2040317, 1, 1, 0.100000 ] # Scroll for Earring for DEX 60%#TODO
+  - [ 2040418, 1, 1, 0.100000 ] # Scroll for Topwear for STR 60%#TODO
+  - [ 2040421, 1, 1, 0.100000 ] # Scroll for Topwear for HP 60%#TODO
+  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
+  - [ 2040515, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 100%#TODO
+  - [ 2040625, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 60%#TODO
+  - [ 2047000, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for ATT#TODO
+  - [ 2047001, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Accuracy#TODO
+  - [ 2047002, 1, 1, 0.100000 ] # Tablet for One-Handed Weapon for Magic Attack#TODO
+  - [ 2047100, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for ATT#TODO
+  - [ 2047101, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for Accuracy #TODO
+  - [ 2047102, 1, 1, 0.100000 ] # Tablet for Two-Handed Weapon for Magic Attack#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2290017, 1, 1, 0.200000 ] # [Mastery Book] Enrage
+  - [ 2290021, 1, 1, 0.200000 ] # [Mastery Book] Heaven's Hammer
+  - [ 2290023, 1, 1, 0.200000 ] # [Mastery Book] Berserk
+  - [ 2290041, 1, 1, 0.200000 ] # [Mastery Book] Meteor Shower
+  - [ 2290047, 1, 1, 0.200000 ] # [Mastery Book] Blizzard
+  - [ 2290049, 1, 1, 0.200000 ] # [Mastery Book] Genesis
+  - [ 2290065, 1, 1, 0.100000 ] # [Mastery Book] Concentrate
+  - [ 2290075, 1, 1, 0.100000 ] # [Mastery Book] Snipe
+  - [ 2290085, 1, 1, 0.200000 ] # [Mastery Book] Triple Throw
+  - [ 2290095, 1, 1, 0.200000 ] # [Mastery Book] Smokescreen
+  - [ 2290096, 1, 1, 0.900000 ] # [Mastery Book] Maple Warrior 20
+  - [ 2290111, 1, 1, 0.100000 ] # [Mastery Book] Time Leap#TODO
+  - [ 2290116, 1, 1, 0.100000 ] # [Mastery Book] Air Strike#TODO
+  - [ 2290125, 1, 1, 0.100000 ] # [Mastery Book] Maple Warrior 30#TODO
+  - [ 2290133, 1, 1, 0.100000 ] # [Mastery Book] Final Blow 30#TODO
+  - [ 2290137, 1, 1, 0.100000 ] # [Mastery Book] Combo Tempest 30#TODO
+  - [ 2290139, 1, 1, 0.100000 ] # [Mastery Book] Combo Barrier 30#TODO
+  - [ 2290147, 1, 1, 0.100000 ] # [Mastery Book] Blaze 30#TODO
+  - [ 2290152, 1, 1, 0.100000 ] # [Mastery Book] Blessing of the Onyx 30#TODO
+  - [ 2430029, 1, 1, 0.100000 ] # Mystery Box #TODO

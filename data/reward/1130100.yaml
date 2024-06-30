@@ -1,0 +1,26 @@
+# Axe Stump (1130100)
+
+rewards:
+  - [ 1002118, 1, 1, 0.000050 ] # Blue Robin Hat
+  - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
+  - [ 1040019, 1, 1, 0.000080 ] # Orange Split Piece
+  - [ 1041045, 1, 1, 0.000100 ] # Brown Nightshift
+  - [ 1060015, 1, 1, 0.000080 ] # White Split Pants
+  - [ 1061038, 1, 1, 0.000100 ] # Brown Nightshift Pants
+  - [ 1072008, 1, 1, 0.001000 ] # Bronze Aroa Boots
+  - [ 1092007, 1, 1, 0.000080 ] # Battle Shield
+  - [ 1312016, 1, 1, 0.000080 ] # Contra Axe
+  - [ 1372001, 1, 1, 0.000050 ] # Wizard Wand
+  - [ 1382004, 1, 1, 0.000040 ] # Old Wooden Staff
+  - [ 1402001, 1, 1, 0.000200 ] # Wooden Sword
+  - [ 1402009, 1, 1, 0.000080 ] # Wooden Baseball Bat
+  - [ 1492001, 1, 1, 0.100000 ] # Dellinger Special#TODO
+  - [ 2000000, 1, 1, 0.020000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043202, 1, 1, 0.000030 ] # Scroll for One-Handed BW for ATT 10%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000018, 1, 1, 0.400000 ] # Firewood
+  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4031147, 1, 1, 0.500000, 2065 ] # Plant Fossil

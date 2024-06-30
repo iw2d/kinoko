@@ -1,0 +1,33 @@
+# Wraith (4230102)
+
+rewards:
+  - [ 1002099, 1, 1, 0.000080 ] # Mithril Nordic Helm
+  - [ 1002207, 1, 1, 0.000070 ] # Red Sonata
+  - [ 1002211, 1, 1, 0.000070 ] # Blue Maro
+  - [ 1002212, 1, 1, 0.000070 ] # Red Maro
+  - [ 1002215, 1, 1, 0.000070 ] # Flame Golden Circlet
+  - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
+  - [ 1040061, 1, 1, 0.000100 ] # Green Knucklevest
+  - [ 1040085, 1, 1, 0.000080 ] # Maroon Jangoon Armor
+  - [ 1060050, 1, 1, 0.000100 ] # Blue Knucklevest Pants
+  - [ 1060074, 1, 1, 0.000080 ] # White Jangoon Pants
+  - [ 1072141, 1, 1, 0.000060 ] # Blue Goldwind Shoes
+  - [ 1072303, 1, 1, 0.100000 ] # Brown Double Boots#TODO
+  - [ 1082066, 1, 1, 0.000060 ] # Brown Moon Gloves
+  - [ 1302013, 1, 1, 0.000050 ] # Red Whip
+  - [ 1952001, 1, 1, 0.100000 ] # Gold Pendant#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040026, 1, 1, 0.100000 ] # Scroll for Helmet for INT 10%#TODO
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000036, 1, 1, 0.400000 ] # Medicine With Weird Vibes
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000800 ] # The Summoning Rock
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

@@ -1,0 +1,40 @@
+# Werewolf (7130200)
+
+rewards:
+  - [ 1002254, 1, 1, 0.000080 ] # Dark Infinium Circlet
+  - [ 1002273, 1, 1, 0.000060 ] # Purple Galaxy
+  - [ 1002288, 1, 1, 0.000080 ] # Green Patriot
+  - [ 1002339, 1, 1, 0.000060 ] # Blue Dragon Barbute
+  - [ 1040102, 1, 1, 0.000080 ] # Bronze Platine
+  - [ 1041094, 1, 1, 0.000090 ] # Light Mantis
+  - [ 1041102, 1, 1, 0.000080 ] # Pink Mystique
+  - [ 1041105, 1, 1, 0.000060 ] # Green Pirate Blouse
+  - [ 1050055, 1, 1, 0.000090 ] # White Anakamoon
+  - [ 1050069, 1, 1, 0.000090 ] # Brown Requiem
+  - [ 1051066, 1, 1, 0.000060 ] # Red Pria
+  - [ 1060090, 1, 1, 0.000080 ] # Bronze Platine Pants
+  - [ 1061093, 1, 1, 0.000090 ] # Light Mantis Pants
+  - [ 1061101, 1, 1, 0.000080 ] # Pink Mystique Pants
+  - [ 1061104, 1, 1, 0.000060 ] # Green Pirate Skirt
+  - [ 1072309, 1, 1, 0.100000 ] # Black Voyson Shoes#TODO
+  - [ 1082100, 1, 1, 0.000080 ] # Dark Lorin
+  - [ 1092015, 1, 1, 0.000070 ] # Steel Ancient Shield
+  - [ 1322020, 1, 1, 0.000060 ] # Bent Judgement
+  - [ 1332018, 1, 1, 0.000060 ] # Kandine
+  - [ 1402012, 1, 1, 0.000060 ] # Doombringer
+  - [ 1472029, 1, 1, 0.000060 ] # Black Scarab
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
+  - [ 2040302, 1, 1, 0.000020 ] # Scroll for Earring for INT 10%
+  - [ 2043701, 1, 1, 0.000030 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2044701, 1, 1, 0.000030 ] # Scroll for Claw for ATT 60%
+  - [ 4000053, 1, 1, 0.600000 ] # Werewolf Toenail
+  - [ 4004000, 1, 1, 0.002000 ] # Power Crystal Ore
+  - [ 4006000, 1, 1, 0.000900 ] # The Magic Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020001, 1, 1, 0.004000 ] # Amethyst Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO

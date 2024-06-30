@@ -1,0 +1,23 @@
+# Strange Pig (1210111)
+
+rewards:
+  - [ 1032003, 1, 1, 0.100000 ] # Amethyst Earrings#TODO
+  - [ 1040011, 1, 1, 0.100000 ] # Silver Leather Hoodwear#TODO
+  - [ 1040014, 1, 1, 0.100000 ] # Orange Sporty T-Shirt#TODO
+  - [ 1040034, 1, 1, 0.100000 ] # Dark Nightshift#TODO
+  - [ 1041012, 1, 1, 0.100000 ] # Red-Striped T-Shirt#TODO
+  - [ 1052098, 1, 1, 0.100000 ] # Brown Cotton Lagger#TODO
+  - [ 1060024, 1, 1, 0.100000 ] # Dark Nightshift Pants#TODO
+  - [ 1072285, 1, 1, 0.100000 ] # Brown Lagger Slipper#TODO
+  - [ 1402018, 1, 1, 0.100000 ] # Wooden Samurai Sword#TODO
+  - [ 1492000, 1, 1, 0.100000 ] # Pistol#TODO
+  - [ 2000000, 1, 1, 0.100000 ] # Red Potion#TODO
+  - [ 2040902, 1, 1, 0.100000 ] # Scroll for Shield for DEF 10%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 4000002, 1, 1, 0.100000 ] # Pig's Ribbon#TODO
+  - [ 4000021, 1, 1, 0.100000 ] # Leather#TODO
+  - [ 4003004, 1, 1, 0.100000 ] # Stiff Feather#TODO
+  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
+  - [ 4020001, 1, 1, 0.100000 ] # Amethyst Ore#TODO
+  - [ 4030012, 1, 1, 0.100000 ] # Monster Card#TODO

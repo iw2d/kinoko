@@ -1,0 +1,34 @@
+# Mecateon (4230121)
+
+rewards:
+  - [ 1002155, 1, 1, 0.000090 ] # White Guiltian
+  - [ 1002184, 1, 1, 0.000090 ] # Brown Pilfer
+  - [ 1040089, 1, 1, 0.000070 ] # Umber Shouldermail
+  - [ 1041053, 1, 1, 0.000100 ] # Black Amoria Top
+  - [ 1041077, 1, 1, 0.000070 ] # Maroon Moon
+  - [ 1051015, 1, 1, 0.000100 ] # Blood Fitted Mail
+  - [ 1051024, 1, 1, 0.000090 ] # Red Moonlight
+  - [ 1060078, 1, 1, 0.000070 ] # Umber Shouldermail Pants
+  - [ 1061049, 1, 1, 0.000100 ] # Black Amoria Skirt
+  - [ 1061076, 1, 1, 0.000070 ] # Maroon Moon Pants
+  - [ 1082047, 1, 1, 0.000100 ] # Orihalcon Arbion
+  - [ 1082072, 1, 1, 0.000090 ] # Gold Brace
+  - [ 1082198, 1, 1, 0.100000 ] # Brown Royce#TODO
+  - [ 1372007, 1, 1, 0.000070 ] # Cromi
+  - [ 1412003, 1, 1, 0.000070 ] # The Rising
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.005000 ] # Elixir
+  - [ 2043802, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000122, 1, 1, 0.500000 ] # Mecateon's Laser Gun
+  - [ 4004000, 1, 1, 0.000800 ] # Power Crystal Ore
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4131012, 1, 1, 0.000800 ] # Dagger Forging Manual

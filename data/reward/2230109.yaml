@@ -1,0 +1,27 @@
+# Bubble Fish (2230109)
+
+rewards:
+  - [ 1002034, 1, 1, 0.000050 ] # Blue Jester
+  - [ 1002065, 1, 1, 0.000090 ] # Steel Pride
+  - [ 1002619, 1, 1, 0.100000 ] # Brown Pitz Bandana#TODO
+  - [ 1032007, 1, 1, 0.000090 ] # Emerald Earrings
+  - [ 1040041, 1, 1, 0.000080 ] # Dark Master Sergeant
+  - [ 1050021, 1, 1, 0.000030 ] # Blue Crusader Chainmail
+  - [ 1051007, 1, 1, 0.000060 ] # Red Avenger
+  - [ 1060030, 1, 1, 0.000080 ] # Dark Master Sergeant Kilt
+  - [ 1072027, 1, 1, 0.000100 ] # Brown Jack Boots
+  - [ 1072054, 1, 1, 0.000100 ] # Orange Whitebottom Boots
+  - [ 1372003, 1, 1, 0.000060 ] # Mithril Wand
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002002, 1, 1, 0.003000 ] # Magic Potion
+  - [ 2040701, 1, 1, 0.000020 ] # Scroll for Shoes for DEX 60%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
+  - [ 4000164, 1, 1, 0.400000 ] # Bubble Fish's Thoughts
+  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
+  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 4020003, 1, 1, 0.003000 ] # Emerald Ore
+  - [ 4131010, 1, 1, 0.000080 ] # Bow Production Manual
+  - [ 4031264, 1, 1, 0.040000, 3081 ] # Bubble Fish's DNA Sample

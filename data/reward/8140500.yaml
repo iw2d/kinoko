@@ -1,0 +1,40 @@
+# Bain (8140500)
+
+rewards:
+  - [ 1002340, 1, 1, 0.000080 ] # Dark Dragon Barbute
+  - [ 1032017, 1, 1, 0.000080 ] # Rose Earrings
+  - [ 1040109, 1, 1, 0.000080 ] # Red Pirate Top
+  - [ 1040115, 1, 1, 0.000070 ] # Green Osfa Suit
+  - [ 1050070, 1, 1, 0.000090 ] # Dark Requiem
+  - [ 1050078, 1, 1, 0.000080 ] # Dark Pris
+  - [ 1052125, 1, 1, 0.100000 ] # White Pioneer#TODO
+  - [ 1060098, 1, 1, 0.000080 ] # Red Pirate Pants
+  - [ 1060104, 1, 1, 0.000070 ] # Green Osfa Pants
+  - [ 1072156, 1, 1, 0.000090 ] # Dark Carzen Boots
+  - [ 1072164, 1, 1, 0.000090 ] # Blue Elf Shoes
+  - [ 1072174, 1, 1, 0.000080 ] # Dark Pirate Boots
+  - [ 1072195, 1, 1, 0.000010 ] # Red Osfa Boots
+  - [ 1072208, 1, 1, 0.000070 ] # Red Neli Shoes
+  - [ 1082096, 1, 1, 0.000090 ] # Silver Rover
+  - [ 1082111, 1, 1, 0.000080 ] # Green Cordon
+  - [ 1082117, 1, 1, 0.000080 ] # Dark Emperor
+  - [ 1082121, 1, 1, 0.000080 ] # Green Clarity
+  - [ 1082126, 1, 1, 0.000070 ] # Green Focus
+  - [ 1092024, 1, 1, 0.000080 ] # Silver Aquila Shield
+  - [ 1312011, 1, 1, 0.000080 ] # Gaea
+  - [ 1452014, 1, 1, 0.000080 ] # Golden Arund
+  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.070000 ] # Mana Elixir
+  - [ 2041022, 1, 1, 0.000040 ] # Scroll for Cape for LUK 60%
+  - [ 2044001, 1, 1, 0.000040 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 4000080, 1, 1, 0.600000 ] # Bain's Spiky Collar
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4020001, 1, 1, 0.004000 ] # Amethyst Ore
+  - [ 4020007, 1, 1, 0.003000 ] # Diamond Ore
+  - [ 4130006, 1, 1, 0.100000 ] # Two-Handed Axe Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO

@@ -46,7 +46,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
-    private final Set<Reward> rewards = new HashSet<>();
+    private final List<Reward> rewards = new ArrayList<>();
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
     private final int startFoothold;

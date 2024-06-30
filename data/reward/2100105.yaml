@@ -1,0 +1,27 @@
+# Bellamoa (2100105)
+
+rewards:
+  - [ 1002013, 1, 1, 0.100000 ] # Golden Pride#TODO
+  - [ 1002119, 1, 1, 0.100000 ] # Green Robin Hat#TODO
+  - [ 1052101, 1, 1, 0.100000 ] # Beige Carribean#TODO
+  - [ 1072007, 1, 1, 0.100000 ] # Brown High Boots#TODO
+  - [ 1072086, 1, 1, 0.100000 ] # Green Lappy Boots#TODO
+  - [ 1082020, 1, 1, 0.100000 ] # Blue Morrican#TODO
+  - [ 1302006, 1, 1, 0.100000 ] # Machete#TODO
+  - [ 1372004, 1, 1, 0.100000 ] # Ice Wand#TODO
+  - [ 1452003, 1, 1, 0.100000 ] # Composite Bow#TODO
+  - [ 1482003, 1, 1, 0.100000 ] # Norman Grip#TODO
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2040316, 1, 1, 0.100000 ] # Scroll for Earring for DEX 100%#TODO
+  - [ 2040319, 1, 1, 0.100000 ] # Scroll for Earring for LUK 100%#TODO
+  - [ 2040902, 1, 1, 0.100000 ] # Scroll for Shield for DEF 10%#TODO
+  - [ 2044002, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 10%#TODO
+  - [ 2044412, 1, 1, 0.100000 ] # Scroll for Pole-Arm for Accuracy 60%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 2330000, 1, 1, 0.100000 ] # Bullet#TODO
+  - [ 4000328, 1, 1, 0.100000 ] # Snake Rattle#TODO
+  - [ 4006001, 1, 1, 0.100000 ] # The Summoning Rock#TODO
+  - [ 4010004, 1, 1, 0.100000 ] # Silver Ore#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO

@@ -1,0 +1,38 @@
+# Dark Stone Golem (5130102)
+
+rewards:
+  - [ 1002022, 1, 1, 0.000080 ] # Old Steel Nordic Helm
+  - [ 1002209, 1, 1, 0.000080 ] # Green Sonata
+  - [ 1002214, 1, 1, 0.000080 ] # Black Maro
+  - [ 1002249, 1, 1, 0.000070 ] # Dark Identity
+  - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings
+  - [ 1040085, 1, 1, 0.000100 ] # Maroon Jangoon Armor
+  - [ 1040091, 1, 1, 0.000070 ] # Red Orientican
+  - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
+  - [ 1050039, 1, 1, 0.000100 ] # Dark Starlight
+  - [ 1050059, 1, 1, 0.000070 ] # Blue Tai
+  - [ 1060074, 1, 1, 0.000100 ] # White Jangoon Pants
+  - [ 1060080, 1, 1, 0.000070 ] # Red Orientican Pants
+  - [ 1061069, 1, 1, 0.000100 ] # Purple Shadow Pants
+  - [ 1072120, 1, 1, 0.000100 ] # Brown Pierre Shoes
+  - [ 1072139, 1, 1, 0.000070 ] # Blue Goldrunners
+  - [ 1082009, 1, 1, 0.000080 ] # Steel Brist
+  - [ 1082088, 1, 1, 0.000070 ] # Dark Manute
+  - [ 1102018, 1, 1, 0.000070 ] # Black Magic Cape
+  - [ 1382007, 1, 1, 0.000060 ] # Evil Wings
+  - [ 1492008, 1, 1, 0.100000 ] # Burning Hell#TODO
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040425, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 60%#TODO
+  - [ 2040618, 1, 1, 0.100000 ] # Scroll for Bottomwear for Jump 60%#TODO
+  - [ 2044201, 1, 1, 0.000030 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2070004, 1, 1, 0.000100 ] # Tobi Throwing-Stars
+  - [ 4000025, 1, 1, 0.300000 ] # Dark Stone Golem Rubble
+  - [ 4004004, 1, 1, 0.000700 ] # Dark Crystal Ore
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007002, 1, 1, 0.100000 ] # Magic Powder (Blue)#TODO
+  - [ 4020008, 1, 1, 0.003000 ] # Black Crystal Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO
+  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO

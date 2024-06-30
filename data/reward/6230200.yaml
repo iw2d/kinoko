@@ -1,0 +1,36 @@
+# Dark Pepe (6230200)
+
+rewards:
+  - [ 1002100, 1, 1, 0.000090 ] # Old Bronze Nordic Helm
+  - [ 1002218, 1, 1, 0.000090 ] # Dark Golden Circlet
+  - [ 1002268, 1, 1, 0.000080 ] # Brown Polyfeather Hat
+  - [ 1041094, 1, 1, 0.000080 ] # Light Mantis
+  - [ 1050055, 1, 1, 0.000090 ] # White Anakamoon
+  - [ 1051052, 1, 1, 0.000050 ] # Blue Requierre
+  - [ 1061093, 1, 1, 0.000080 ] # Light Mantis Pants
+  - [ 1072155, 1, 1, 0.000050 ] # Purple Carzen Boots
+  - [ 1072161, 1, 1, 0.000050 ] # Purple Mystique Shoes
+  - [ 1072164, 1, 1, 0.000050 ] # Blue Elf Shoes
+  - [ 1082087, 1, 1, 0.000080 ] # Gold Manute
+  - [ 1082088, 1, 1, 0.000070 ] # Dark Manute
+  - [ 1092011, 1, 1, 0.000080 ] # Adamantium Legend Shield
+  - [ 1102018, 1, 1, 0.000080 ] # Black Magic Cape
+  - [ 1332017, 1, 1, 0.000060 ] # Serpent's Coil
+  - [ 1472020, 1, 1, 0.000080 ] # Sapphire Slain
+  - [ 1472023, 1, 1, 0.000060 ] # Blood Gigantic
+  - [ 1472025, 1, 1, 0.000060 ] # Dark Gigantic
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.040000 ] # Mana Elixir
+  - [ 2040419, 1, 1, 0.100000 ] # Scroll for Topwear for STR 10%#TODO
+  - [ 2040620, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 100%#TODO
+  - [ 4000057, 1, 1, 0.500000 ] # Dark Pepe Beak
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4004004, 1, 1, 0.000800 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010004, 1, 1, 0.003000 ] # Silver Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

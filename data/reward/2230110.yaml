@@ -1,0 +1,29 @@
+# Wooden Mask (2230110)
+
+rewards:
+  - [ 1002058, 1, 1, 0.000100 ] # Mithril Viking Helm
+  - [ 1002121, 1, 1, 0.000100 ] # Brown Robin Hat
+  - [ 1002131, 1, 1, 0.000100 ] # Green Loosecap
+  - [ 1002616, 1, 1, 0.100000 ] # Brown Double Marine#TODO
+  - [ 1040020, 1, 1, 0.000100 ] # Blue Split Piece
+  - [ 1060014, 1, 1, 0.000100 ] # Black Split Pants
+  - [ 1072053, 1, 1, 0.000080 ] # Gold War Boots
+  - [ 1072087, 1, 1, 0.000080 ] # Black Lappy Boots
+  - [ 1082006, 1, 1, 0.000070 ] # Orihalcon Missel
+  - [ 1082026, 1, 1, 0.000090 ] # Ocean Mesana
+  - [ 1082043, 1, 1, 0.000070 ] # Silver Sylvia
+  - [ 1332010, 1, 1, 0.000080 ] # Iron Dagger
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002003, 1, 1, 0.003000 ] # Wizard Potion
+  - [ 2040901, 1, 1, 0.000020 ] # Scroll for Shield for DEF 60%
+  - [ 2041016, 1, 1, 0.000020 ] # Scroll for Cape for INT 60%
+  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
+  - [ 2044805, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 100%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2330000, 1, 1, 0.100000 ] # Bullet#TODO
+  - [ 4000196, 1, 1, 0.400000 ] # Wooden Board
+  - [ 4010000, 1, 1, 0.003000 ] # Bronze Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020002, 1, 1, 0.001000 ] # AquaMarine Ore

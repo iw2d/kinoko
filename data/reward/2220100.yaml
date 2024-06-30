@@ -1,0 +1,32 @@
+# Blue Mushroom (2220100)
+
+rewards:
+  - [ 1002127, 1, 1, 0.000080 ] # Red Loosecap
+  - [ 1002178, 1, 1, 0.000030 ] # Green Burgler
+  - [ 1002613, 1, 1, 0.100000 ] # Brown Lagger Cap#TODO
+  - [ 1002616, 1, 1, 0.100000 ] # Brown Double Marine#TODO
+  - [ 1002619, 1, 1, 0.100000 ] # Brown Pitz Bandana#TODO
+  - [ 1040012, 1, 1, 0.000080 ] # Blue Sergeant
+  - [ 1041027, 1, 1, 0.000080 ] # Red Shivermail
+  - [ 1051000, 1, 1, 0.000100 ] # Steel Fitted Mail
+  - [ 1060010, 1, 1, 0.000080 ] # Steel Sergeant Kilt
+  - [ 1061025, 1, 1, 0.000080 ] # Red Shivermail Skirt
+  - [ 1072011, 1, 1, 0.000100 ] # Mithril War Boots
+  - [ 1072020, 1, 1, 0.000100 ] # Purple Jewelry Boots
+  - [ 1332001, 1, 1, 0.000020 ] # Halfmoon Zamadar
+  - [ 1332006, 1, 1, 0.000100 ] # Field Dagger
+  - [ 1382002, 1, 1, 0.000100 ] # Wizard Staff
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432001, 1, 1, 0.000200 ] # Fork on a Stick
+  - [ 1442001, 1, 1, 0.000050 ] # Mithril Pole Arm
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002002, 1, 1, 0.005000 ] # Magic Potion
+  - [ 2044002, 1, 1, 0.000030 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000009, 1, 1, 0.400000 ] # Blue Mushroom Cap
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
+  - [ 4020006, 1, 1, 0.004000 ] # Topaz Ore

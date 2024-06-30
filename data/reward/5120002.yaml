@@ -1,0 +1,36 @@
+# Lioner (5120002)
+
+rewards:
+  - [ 1002024, 1, 1, 0.000070 ] # Emerald Dome
+  - [ 1002045, 1, 1, 0.000070 ] # Blue Bone Helm
+  - [ 1002267, 1, 1, 0.000060 ] # Red Polyfeather Hat
+  - [ 1002631, 1, 1, 0.100000 ] # Brown Leather Ocean Hat#TODO
+  - [ 1040084, 1, 1, 0.000090 ] # Dark Shadow
+  - [ 1051041, 1, 1, 0.000060 ] # Red Choro
+  - [ 1060073, 1, 1, 0.000090 ] # Dark Shadow Pants
+  - [ 1072123, 1, 1, 0.000080 ] # Green Steel-Tip Boots
+  - [ 1072131, 1, 1, 0.000080 ] # Purple Goni Shoes
+  - [ 1082009, 1, 1, 0.000080 ] # Steel Brist
+  - [ 1082081, 1, 1, 0.000080 ] # Red Pennance
+  - [ 1302010, 1, 1, 0.000080 ] # Jeweled Katar
+  - [ 1312007, 1, 1, 0.000100 ] # Blue Counter
+  - [ 1972001, 1, 1, 0.100000 ] # Gold Tail#TODO
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2041017, 1, 1, 0.000030 ] # Scroll for Cape for INT 10%
+  - [ 2044001, 1, 1, 0.000030 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044212, 1, 1, 0.100000 ] # Scroll for Two-Handed BW for Accuracy 60%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000071, 1, 1, 0.500000 ] # Lioner Tail
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO

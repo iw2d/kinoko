@@ -1,0 +1,22 @@
+# Ice Sentinel (5200001)
+
+rewards:
+  - [ 1002142, 1, 1, 0.000060 ] # Blue Matty
+  - [ 1040024, 1, 1, 0.000100 ] # Blue Bennis Chainmail
+  - [ 1041047, 1, 1, 0.000080 ] # Red Steal
+  - [ 1050026, 1, 1, 0.000090 ] # White Wizard Robe
+  - [ 1061043, 1, 1, 0.000070 ] # Red Steal Pants
+  - [ 1062006, 1, 1, 0.000100 ] # Bennis Chainpants
+  - [ 1322009, 1, 1, 0.000100 ] # Plunger
+  - [ 1442003, 1, 1, 0.000060 ] # Axe Pole Arm
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2041016, 1, 1, 0.000020 ] # Scroll for Cape for INT 60%
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2060001, 20, 30, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 20, 30, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 4000084, 1, 1, 0.400000 ] # Ice Sentinel Shellpiece
+  - [ 4004001, 1, 1, 0.000800 ] # Wisdom Crystal Ore
+  - [ 4006000, 1, 1, 0.000800 ] # The Magic Rock
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore

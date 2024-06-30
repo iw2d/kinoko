@@ -1,0 +1,77 @@
+# Balrog (8830000)
+
+rewards:
+  - [ 1072376, 1, 1, 0.100000 ] # Balrog's Fur Shoes #TODO
+  - [ 1302112, 1, 1, 0.100000 ] # Balrog's Khan #TODO
+  - [ 1302113, 1, 1, 0.100000 ] # Balrog's Fraute #TODO
+  - [ 1312042, 1, 1, 0.100000 ] # Balrog's Gaea #TODO
+  - [ 1312043, 1, 1, 0.100000 ] # Balrog's Vifennis #TODO
+  - [ 1322068, 1, 1, 0.100000 ] # Balrog's Golden Hammer#TODO
+  - [ 1322069, 1, 1, 0.100000 ] # Balrog's Runi Hammer#TODO
+  - [ 1332084, 1, 1, 0.100000 ] # Balrog's Angelic Betrayal#TODO
+  - [ 1332085, 1, 1, 0.100000 ] # Dragon's Tail of Balrog #TODO
+  - [ 1332086, 1, 1, 0.100000 ] # Balrog's Cursayer #TODO
+  - [ 1332087, 1, 1, 0.100000 ] # Balrog's Varkit #TODO
+  - [ 1372050, 1, 1, 0.100000 ] # Balrog's Magicodar #TODO
+  - [ 1382066, 1, 1, 0.100000 ] # Balrog's Kage#TODO
+  - [ 1382067, 1, 1, 0.100000 ] # Balrog's Blue Marine #TODO
+  - [ 1382068, 1, 1, 0.100000 ] # Bain Wings  #TODO
+  - [ 1402056, 1, 1, 0.100000 ] # Balrog's Blue Screamer #TODO
+  - [ 1402057, 1, 1, 0.100000 ] # Heaven's Gate of Balrog #TODO
+  - [ 1402058, 1, 1, 0.100000 ] # Balrog's Berzerker #TODO
+  - [ 1402059, 1, 1, 0.100000 ] # Devil's Sunrise of Balrog #TODO
+  - [ 1402062, 1, 1, 0.100000 ] # Bain Sword #TODO
+  - [ 1412038, 1, 1, 0.100000 ] # Balrog's Helios #TODO
+  - [ 1412039, 1, 1, 0.100000 ] # Balrog's Colonian Axe #TODO
+  - [ 1422042, 1, 1, 0.100000 ] # Balrog's Morningstar#TODO
+  - [ 1422043, 1, 1, 0.100000 ] # Balrog's Leomite #TODO
+  - [ 1432054, 1, 1, 0.100000 ] # Balrog's Omega Spear #TODO
+  - [ 1432055, 1, 1, 0.100000 ] # Balrog's Fairfrozen #TODO
+  - [ 1442074, 1, 1, 0.100000 ] # Balrog's Eclipse #TODO
+  - [ 1442075, 1, 1, 0.100000 ] # Balrog's Hellslayer #TODO
+  - [ 1442078, 1, 1, 0.100000 ] # Bain Pole Arm #TODO
+  - [ 1452066, 1, 1, 0.100000 ] # Balrog's Marine Arund#TODO
+  - [ 1452067, 1, 1, 0.100000 ] # Balrog's Fire Arund #TODO
+  - [ 1452068, 1, 1, 0.100000 ] # Balrog's Golden Arund#TODO
+  - [ 1452069, 1, 1, 0.100000 ] # Balrog's Dark Arund #TODO
+  - [ 1452070, 1, 1, 0.100000 ] # Balrog's Metus #TODO
+  - [ 1452071, 1, 1, 0.100000 ] # Bain Long Bow  #TODO
+  - [ 1462059, 1, 1, 0.100000 ] # Balrog's Marine Raven #TODO
+  - [ 1462060, 1, 1, 0.100000 ] # Balrog's Fire Raven #TODO
+  - [ 1462061, 1, 1, 0.100000 ] # Balrog's Golden Raven #TODO
+  - [ 1462062, 1, 1, 0.100000 ] # Balrog's Dark Raven#TODO
+  - [ 1462063, 1, 1, 0.100000 ] # Balrog's Casa Crow #TODO
+  - [ 1472083, 1, 1, 0.100000 ] # Balrog's Black Mamba #TODO
+  - [ 1472084, 1, 1, 0.100000 ] # Balrog's Caster #TODO
+  - [ 1472086, 1, 1, 0.100000 ] # Bain Biter#TODO
+  - [ 1482031, 1, 1, 0.100000 ] # Balrog's Steel Renault#TODO
+  - [ 1482032, 1, 1, 0.100000 ] # Balrog's White Evil #TODO
+  - [ 1492035, 1, 1, 0.100000 ] # Balrog's Infinity  #TODO
+  - [ 1492036, 1, 1, 0.100000 ] # Balrog's Peacemaker #TODO
+  - [ 1492037, 1, 1, 0.100000 ] # Bain Shooter  #TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2000016, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2001000, 1, 1, 0.100000 ] # Watermelon#TODO
+  - [ 2001002, 1, 1, 0.100000 ] # Red Bean Sundae#TODO
+  - [ 2020000, 1, 1, 0.100000 ] # Salad#TODO
+  - [ 2020001, 1, 1, 0.100000 ] # Fried Chicken#TODO
+  - [ 2020003, 1, 1, 0.100000 ] # Pizza#TODO
+  - [ 2020005, 1, 1, 0.100000 ] # Hot Dog#TODO
+  - [ 2020006, 1, 1, 0.100000 ] # Hot Dog Supreme#TODO
+  - [ 2020007, 1, 1, 0.100000 ] # Dried Squid#TODO
+  - [ 2020009, 1, 1, 0.100000 ] # Orange Juice#TODO
+  - [ 2020010, 1, 1, 0.100000 ] # Grape Juice#TODO
+  - [ 2020012, 1, 1, 0.100000 ] # Melting Cheese#TODO
+  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk#TODO
+  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew#TODO
+  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew#TODO
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water#TODO
+  - [ 2030000, 1, 1, 0.100000 ] # Return Scroll - Nearest Town#TODO
+  - [ 2040739, 1, 1, 0.100000 ] # Balrog's Twilight Scroll 5%#TODO
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2049100, 1, 1, 0.100000 ] # Chaos Scroll 60%#TODO
+  - [ 2050004, 1, 1, 0.100000 ] # All Cure Potion#TODO
+  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
+  - [ 4001261, 1, 1, 0.100000 ] # Piece of Balrog Leather #TODO

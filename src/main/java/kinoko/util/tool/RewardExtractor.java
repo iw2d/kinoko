@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-final class RewardExtractor {
+abstract class RewardExtractor {
     public static final Path REACTOR_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Reactor.wz");
     public static final Path REWARD_IMG = Path.of(ServerConfig.WZ_DIRECTORY, "bms", "Reward.img");
 
@@ -31,8 +31,8 @@ final class RewardExtractor {
         final WzImage rewardImage = readImage(REWARD_IMG);
 
         // Extract mob rewards
-        final Map<Integer, Set<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
-        try (BufferedWriter bw = Files.newBufferedWriter(RewardProvider.MOB_REWARD, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+        final Map<Integer, List<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
+        try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "mob_reward.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             for (var entry : mobRewards.entrySet().stream()
                     .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
                 final int mobId = entry.getKey();
@@ -78,8 +78,8 @@ final class RewardExtractor {
         }
 
         // Extract reactor rewards
-        final Map<Integer, Set<Reward>> reactorRewards = loadRewards(rewardImage, "r", true);
-        try (BufferedWriter bw = Files.newBufferedWriter(RewardProvider.REACTOR_REWARD, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+        final Map<Integer, List<Reward>> reactorRewards = loadRewards(rewardImage, "r", true);
+        try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "reactor_reward.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
             for (var entry : reactorRewards.entrySet().stream()
                     .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
                 final int reactorId = entry.getKey();
@@ -108,8 +108,8 @@ final class RewardExtractor {
         }
     }
 
-    public static Map<Integer, Set<Reward>> loadRewards(WzImage image, String prefix, boolean includeMoney) {
-        final Map<Integer, Set<Reward>> rewardMap = new HashMap<>();
+    public static Map<Integer, List<Reward>> loadRewards(WzImage image, String prefix, boolean includeMoney) {
+        final Map<Integer, List<Reward>> rewardMap = new HashMap<>();
         for (var entry : image.getProperty().getItems().entrySet()) {
             if (!(entry.getValue() instanceof WzListProperty rewardList)) {
                 throw new ProviderError("Failed to read reward list");
@@ -118,7 +118,7 @@ final class RewardExtractor {
                 continue;
             }
             final int templateId = Integer.parseInt(entry.getKey().replaceFirst(prefix, ""));
-            final Set<Reward> rewards = new HashSet<>();
+            final List<Reward> rewards = new ArrayList<>();
             for (var rewardEntry : rewardList.getItems().entrySet()) {
                 if (!(rewardEntry.getValue() instanceof WzListProperty rewardProp)) {
                     throw new ProviderError("Failed to read reward prop");
@@ -188,7 +188,7 @@ final class RewardExtractor {
         return rewardMap;
     }
 
-    private static WzImage readImage(Path path) {
+    public static WzImage readImage(Path path) {
         try (final WzReader reader = WzReader.build(path, new WzReaderConfig(WzConstants.WZ_EMPTY_IV, ServerConstants.GAME_VERSION))) {
             final WzImage image = new WzImage(0);
             if (!(reader.readProperty(image, reader.getBuffer(0)) instanceof WzListProperty listProperty)) {

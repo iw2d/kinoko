@@ -1,0 +1,29 @@
+# Panda (6130203)
+
+rewards:
+  - [ 1002215, 1, 1, 0.000080 ] # Flame Golden Circlet
+  - [ 1002637, 1, 1, 0.100000 ] # Black Pirate's Bandana#TODO
+  - [ 1041079, 1, 1, 0.000080 ] # Brown Moon
+  - [ 1041083, 1, 1, 0.000080 ] # Dark Piettra
+  - [ 1050056, 1, 1, 0.000070 ] # Dark Anakamoon
+  - [ 1061078, 1, 1, 0.000080 ] # Brown Moon Pants
+  - [ 1061082, 1, 1, 0.000080 ] # Dark Piettra Skirt
+  - [ 1072090, 1, 1, 0.000200 ] # Red Salt Shoes
+  - [ 1102015, 1, 1, 0.000070 ] # Blue Magic Cape
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040622, 1, 1, 0.100000 ] # Scroll for Bottomwear for HP 10%#TODO
+  - [ 2043112, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 60%#TODO
+  - [ 2044014, 1, 1, 0.100000 ] # Scroll for Two-Handed Sword for Accuracy 10%#TODO
+  - [ 2070005, 1, 1, 0.000020 ] # Steely Throwing-Knives
+  - [ 4000021, 1, 1, 0.030000 ] # Leather
+  - [ 4000283, 1, 1, 0.040000 ] # Bear Foot
+  - [ 4000285, 1, 1, 0.500000 ] # Red Belt
+  - [ 4003005, 1, 1, 0.020000 ] # Soft Feather
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010005, 1, 1, 0.007000 ] # Orihalcon Ore
+  - [ 4020007, 1, 1, 0.005000 ] # Diamond Ore
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO

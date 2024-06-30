@@ -1,0 +1,28 @@
+# Cico (2230106)
+
+rewards:
+  - [ 1002146, 1, 1, 0.000090 ] # Red Tiberian
+  - [ 1002158, 1, 1, 0.000060 ] # Green Hunter
+  - [ 1040040, 1, 1, 0.000050 ] # Silver Master Sergeant
+  - [ 1041040, 1, 1, 0.000100 ] # Blue Qi Pao
+  - [ 1041050, 1, 1, 0.000040 ] # Purple Steal
+  - [ 1052104, 1, 1, 0.100000 ] # Brown Turk Gally#TODO
+  - [ 1060060, 1, 1, 0.000050 ] # Silver Master Sergeant Kilt
+  - [ 1061033, 1, 1, 0.000100 ] # Blue Qi Pao Pants
+  - [ 1061046, 1, 1, 0.000040 ] # Purple Steal Pants
+  - [ 1332009, 1, 1, 0.000030 ] # Cass
+  - [ 1332013, 1, 1, 0.000100 ] # Stinger
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002001, 1, 1, 0.010000 ] # Speed Potion
+  - [ 2002005, 1, 1, 0.020000 ] # Sniper Potion
+  - [ 2040001, 1, 1, 0.000020 ] # Scroll for Helmet for DEF 60%
+  - [ 2040401, 1, 1, 0.000020 ] # Scroll for Topwear for DEF 60%
+  - [ 2040417, 1, 1, 0.100000 ] # Scroll for Topwear for STR 100%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000163, 1, 1, 0.400000 ] # Sea Horse Horn
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4031260, 1, 1, 0.030000, 3080 ] # Cico's DNA Sample
+  - [ 4031269, 1, 1, 0.030000, 3629 ] # Slippery Oil

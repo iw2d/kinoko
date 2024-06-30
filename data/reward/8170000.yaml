@@ -1,0 +1,48 @@
+# Thanatos (8170000)
+
+rewards:
+  - [ 1002281, 1, 1, 0.000090 ] # Brown Nightfox
+  - [ 1002404, 1, 1, 0.000070 ] # Green Arlic Helmet
+  - [ 1032017, 1, 1, 0.000070 ] # Rose Earrings
+  - [ 1040113, 1, 1, 0.000070 ] # Dark Commodore
+  - [ 1041107, 1, 1, 0.000080 ] # Dark Pirate Blouse
+  - [ 1050072, 1, 1, 0.000080 ] # Green Enigmatic
+  - [ 1050083, 1, 1, 0.000080 ] # Dark Battle Lord
+  - [ 1050095, 1, 1, 0.000070 ] # Black Oriental Fury Coat
+  - [ 1051069, 1, 1, 0.000080 ] # Dark Pria
+  - [ 1060102, 1, 1, 0.000070 ] # Dark Commodore Pants
+  - [ 1061106, 1, 1, 0.000080 ] # Dark Pirate Skirt
+  - [ 1072177, 1, 1, 0.000080 ] # Green Enigma Shoes
+  - [ 1072178, 1, 1, 0.000080 ] # Purple Enigma Shoes
+  - [ 1072211, 1, 1, 0.000080 ] # Blue Rivers Boots
+  - [ 1072227, 1, 1, 0.000010 ] # Red Arnah Shoes
+  - [ 1092017, 1, 1, 0.000090 ] # Gold Ancient Shield
+  - [ 1092027, 1, 1, 0.000070 ] # Silver Kalkan
+  - [ 1102031, 1, 1, 0.000070 ] # Green Giles Cape
+  - [ 1332018, 1, 1, 0.000090 ] # Kandine
+  - [ 1332019, 1, 1, 0.000090 ] # Golden River
+  - [ 1452012, 1, 1, 0.000080 ] # Marine Arund
+  - [ 1462013, 1, 1, 0.000080 ] # Dark Raven
+  - [ 2000005, 1, 1, 0.005000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
+  - [ 2002001, 1, 1, 0.005000 ] # Speed Potion
+  - [ 2040512, 1, 1, 0.100000 ] # Scroll for Overall Armor for INT 100%#TODO
+  - [ 2040702, 1, 1, 0.000030 ] # Scroll for Shoes for DEX 10%
+  - [ 2040802, 1, 1, 0.000030 ] # Scroll for Gloves for DEX 10%
+  - [ 4000152, 1, 1, 0.500000 ] # Tanathos Strap
+  - [ 4004004, 1, 1, 0.002000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4010005, 1, 1, 0.003000 ] # Orihalcon Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4031458, 1, 1, 0.010000, 6231 ] # Thanatos's Black Tornado
+  - [ 4031453, 1, 1, 0.050000, 6291 ] # Magical Array of the Spirit
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.600000, 7101 ] # Tachion
+  - [ 4031172, 1, 1, 0.050000, 7103 ] # Ludibrium Medal

@@ -1,0 +1,34 @@
+# Zeta Gray (4230117)
+
+rewards:
+  - [ 1002208, 1, 1, 0.000060 ] # Blue Sonata
+  - [ 1002212, 1, 1, 0.000060 ] # Red Maro
+  - [ 1002217, 1, 1, 0.000060 ] # Orange Golden Circlet
+  - [ 1040080, 1, 1, 0.000080 ] # Dark Piette
+  - [ 1041085, 1, 1, 0.000090 ] # Brown Jangoon Armor
+  - [ 1050049, 1, 1, 0.000060 ] # Dark Calas
+  - [ 1060068, 1, 1, 0.000080 ] # Dark Piette Pants 
+  - [ 1061084, 1, 1, 0.000090 ] # Brown Jangoon Skirt
+  - [ 1082008, 1, 1, 0.000100 ] # Steel Briggon
+  - [ 1082047, 1, 1, 0.000100 ] # Orihalcon Arbion
+  - [ 1092020, 1, 1, 0.000050 ] # Jurgen Wristguard
+  - [ 1312008, 1, 1, 0.000060 ] # Buck
+  - [ 1332003, 1, 1, 0.000060 ] # Shinkita
+  - [ 1492006, 1, 1, 0.100000 ] # Lunar Shooter#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002007, 1, 1, 0.003000 ] # Magic Pill
+  - [ 2040707, 1, 1, 0.000020 ] # Scroll for Shoes for Speed 60%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
+  - [ 4000118, 1, 1, 0.500000 ] # Small Spaceship
+  - [ 4004000, 1, 1, 0.000800 ] # Power Crystal Ore
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020007, 1, 1, 0.001000 ] # Diamond Ore
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130021, 1, 1, 0.100000 ] # Overall Production Stimulator#TODO
+  - [ 4031104, 1, 1, 0.030000, 3414 ] # Zeta Gray's Cell

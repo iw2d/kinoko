@@ -1,0 +1,27 @@
+# Oblivion Monk (8200009)
+
+rewards:
+  - [ 1002381, 1, 1, 0.100000 ] # Blue Canal Hood#TODO
+  - [ 1050108, 1, 1, 0.100000 ] # Red Arzuna#TODO
+  - [ 1072221, 1, 1, 0.100000 ] # Blue Crescent Boots#TODO
+  - [ 1082153, 1, 1, 0.100000 ] # Red Ciara#TODO
+  - [ 1402035, 1, 1, 0.100000 ] # The Beheader#TODO
+  - [ 1432011, 1, 1, 0.100000 ] # Fairfrozen#TODO
+  - [ 1492011, 1, 1, 0.100000 ] # The Peacemaker#TODO
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir#TODO
+  - [ 2022003, 1, 1, 0.100000 ] # Unagi#TODO
+  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2290039, 1, 1, 0.100000 ] # [Mastery Book] Elquines#TODO
+  - [ 2330005, 1, 1, 0.100000 ] # Eternal Bullet#TODO
+  - [ 4000454, 1, 1, 0.100000 ] # Red Cloth#TODO
+  - [ 4000456, 1, 1, 0.100000 ] # Frowny Mask#TODO
+  - [ 4004001, 1, 1, 0.100000 ] # Wisdom Crystal Ore#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010000, 1, 1, 0.100000 ] # Bronze Ore#TODO
+  - [ 4020007, 1, 1, 0.100000 ] # Diamond Ore#TODO
+  - [ 4020009, 1, 1, 0.100000 ] # Piece of Time#TODO
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO

@@ -1,0 +1,34 @@
+# Stone Golem (5130101)
+
+rewards:
+  - [ 1002086, 1, 1, 0.000080 ] # Bronze Crusader Helm
+  - [ 1002247, 1, 1, 0.000060 ] # Bronze Identity
+  - [ 1032002, 1, 1, 0.000040 ] # Sapphire Earrings
+  - [ 1040084, 1, 1, 0.000050 ] # Dark Shadow
+  - [ 1041080, 1, 1, 0.000080 ] # Red Moon
+  - [ 1041091, 1, 1, 0.000060 ] # Green Ice Queen
+  - [ 1050048, 1, 1, 0.000080 ] # White Calas
+  - [ 1061079, 1, 1, 0.000080 ] # Red Moon Pants
+  - [ 1061090, 1, 1, 0.000060 ] # Green Ice Queen Skirt
+  - [ 1072121, 1, 1, 0.000100 ] # Blue Pierre Shoes
+  - [ 1072143, 1, 1, 0.000080 ] # Green Goldwind Shoes
+  - [ 1072303, 1, 1, 0.100000 ] # Brown Double Boots#TODO
+  - [ 1082025, 1, 1, 0.000100 ] # Dark Knuckle
+  - [ 1082076, 1, 1, 0.000100 ] # Gold Cleave
+  - [ 1092002, 1, 1, 0.000100 ] # Red Cross Shield
+  - [ 1312009, 1, 1, 0.000050 ] # Hawkhead
+  - [ 1372012, 1, 1, 0.000090 ] # Crystal Wand
+  - [ 1452005, 1, 1, 0.000020 ] # Ryden
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.020000 ] # Mana Elixir
+  - [ 2044501, 1, 1, 0.000030 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.000030 ] # Scroll for Crossbow for ATT 60%
+  - [ 2070003, 1, 1, 0.000200 ] # Kumbi Throwing-Stars
+  - [ 4000022, 1, 1, 0.300000 ] # Stone Golem Rubble
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130013, 1, 1, 0.100000 ] # Crossbow Production Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

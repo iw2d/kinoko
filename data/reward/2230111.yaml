@@ -1,0 +1,25 @@
+# Rocky Mask (2230111)
+
+rewards:
+  - [ 1040042, 1, 1, 0.000100 ] # Blue Pao
+  - [ 1041023, 1, 1, 0.000090 ] # Sky Shark
+  - [ 1060031, 1, 1, 0.000100 ] # Blue Pao Bottom
+  - [ 1061019, 1, 1, 0.000090 ] # Sky Shark Skirt
+  - [ 1082049, 1, 1, 0.000070 ] # Green Marker
+  - [ 1082051, 1, 1, 0.000070 ] # Red Lutia
+  - [ 1302002, 1, 1, 0.000100 ] # Viking Sword
+  - [ 1372004, 1, 1, 0.000100 ] # Ice Wand
+  - [ 1452005, 1, 1, 0.000080 ] # Ryden
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002000, 1, 1, 0.003000 ] # Dexterity Potion
+  - [ 2040301, 1, 1, 0.000020 ] # Scroll for Earring for INT 60%
+  - [ 2043801, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044301, 1, 1, 0.000020 ] # Scroll for Spear for ATT 60%
+  - [ 2049000, 1, 1, 0.100000 ] # Clean Slate Scroll 1%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000197, 1, 1, 0.400000 ] # Slate
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010005, 1, 1, 0.001000 ] # Orihalcon Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

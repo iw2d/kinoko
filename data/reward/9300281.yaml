@@ -1,0 +1,31 @@
+# Rex (9300281)
+
+rewards:
+  - [ 1032077, 1, 1, 0.100000 ] # Rex's Green Earrings#TODO
+  - [ 1032078, 1, 1, 0.100000 ] # Rex's Red Earrings#TODO
+  - [ 1032079, 1, 1, 0.100000 ] # Rex's Blue Earrings#TODO
+  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
+  - [ 2040031, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 10%#TODO
+  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
+  - [ 2040516, 1, 1, 0.100000 ] # Scroll for Overall Armor for LUK 60%#TODO
+  - [ 2040627, 1, 1, 0.100000 ] # Scroll for Bottomwear for DEX 10%#TODO
+  - [ 2040702, 1, 1, 0.100000 ] # Scroll for Shoes for DEX 10%#TODO
+  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
+  - [ 2041001, 1, 1, 0.100000 ] # Scroll for Cape for Magic Def. 60%#TODO
+  - [ 2041008, 1, 1, 0.100000 ] # Scroll for Cape for HP 10%#TODO
+  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
+  - [ 2043401, 1, 1, 0.100000 ] # Scroll for Katara for ATT 60%#TODO
+  - [ 2043402, 1, 1, 0.100000 ] # Scroll for Katara for ATT 10%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
+  - [ 2044401, 1, 1, 0.100000 ] # Scroll for Pole Arm for ATT 60%#TODO
+  - [ 2044502, 1, 1, 0.100000 ] # Scroll for Bow for ATT 10%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO
+  - [ 2044702, 1, 1, 0.100000 ] # Scroll for Claw for ATT 10%#TODO
+  - [ 2044807, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 60%#TODO
+  - [ 2048002, 1, 1, 0.100000 ] # Scroll for Pet Equip. for Speed 10%#TODO
+  - [ 2290154, 1, 1, 0.100000 ] # [Mastery Book] Tornado Spin 20#TODO
+  - [ 2290155, 1, 1, 0.100000 ] # [Mastery Book] Mirror Image 30#TODO
+  - [ 2290156, 1, 1, 0.100000 ] # [Mastery Book] Flying Assaulter 20#TODO
+  - [ 4000584, 1, 1, 0.100000 ] # Essence of the Hoblin King#TODO

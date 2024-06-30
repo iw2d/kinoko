@@ -1,0 +1,21 @@
+# Lord Pirate (9300119)
+
+rewards:
+  - [ 2000002, 3, 5, 0.400000 ] # White Potion
+  - [ 2000004, 1, 2, 0.700000 ] # Elixir
+  - [ 2000006, 3, 5, 0.700000 ] # Mana Elixir
+  - [ 2020013, 1, 2, 0.400000 ] # Reindeer Milk
+  - [ 2020014, 1, 2, 0.700000 ] # Sunrise Dew
+  - [ 2020015, 1, 2, 0.700000 ] # Sunset Dew
+  - [ 2040001, 1, 1, 0.001000 ] # Scroll for Helmet for DEF 60%
+  - [ 2040002, 1, 1, 0.001000 ] # Scroll for Helmet for DEF 10%
+  - [ 2040401, 1, 1, 0.001000 ] # Scroll for Topwear for DEF 60%
+  - [ 2040502, 1, 1, 0.001000 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040505, 1, 1, 0.001000 ] # Scroll for Overall Armor for DEF 10%
+  - [ 2040601, 1, 1, 0.001000 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040801, 1, 1, 0.000500 ] # Scroll for Gloves for DEX 60%
+  - [ 2041010, 1, 1, 0.001000 ] # Scroll for Cape for MP 60%
+  - [ 2043101, 1, 1, 0.000500 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043201, 1, 1, 0.001000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2044101, 1, 1, 0.000500 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044201, 1, 1, 0.001000 ] # Scroll for Two-handed BW for ATT 60%

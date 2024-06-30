@@ -1,0 +1,28 @@
+# Iron Hog (4230103)
+
+rewards:
+  - [ 1002151, 1, 1, 0.000080 ] # Brown Guiltian
+  - [ 1002179, 1, 1, 0.000100 ] # Brown Burgler
+  - [ 1050051, 1, 1, 0.000050 ] # Red-Lined Kismet
+  - [ 1051034, 1, 1, 0.000050 ] # Orange Calaf
+  - [ 1072114, 1, 1, 0.000080 ] # Red Moon Shoes
+  - [ 1072121, 1, 1, 0.000080 ] # Blue Pierre Shoes
+  - [ 1082076, 1, 1, 0.000080 ] # Gold Cleave
+  - [ 1092014, 1, 1, 0.000080 ] # Adamantium Tower Shield
+  - [ 1312006, 1, 1, 0.000100 ] # Dankke
+  - [ 1322017, 1, 1, 0.000050 ] # Knuckle Mace
+  - [ 1332001, 1, 1, 0.000100 ] # Halfmoon Zamadar
+  - [ 1472019, 1, 1, 0.000050 ] # Blood Slain
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040027, 1, 1, 0.100000 ] # Scroll for Helmet for DEX 100%#TODO
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000039, 1, 1, 0.400000 ] # Iron Hog's Metal Hoof
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010003, 1, 1, 0.004000 ] # Adamantium Ore
+  - [ 4020005, 1, 1, 0.003000 ] # Sapphire Ore
+  - [ 4130007, 1, 1, 0.100000 ] # Two-Handed Mace Forging Stimulator#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO

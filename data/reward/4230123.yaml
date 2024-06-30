@@ -1,0 +1,31 @@
+# Sparker (4230123)
+
+rewards:
+  - [ 1002024, 1, 1, 0.000030 ] # Emerald Dome
+  - [ 1041083, 1, 1, 0.000040 ] # Dark Piettra
+  - [ 1061082, 1, 1, 0.000040 ] # Dark Piettra Skirt
+  - [ 1082198, 1, 1, 0.100000 ] # Brown Royce#TODO
+  - [ 1442009, 1, 1, 0.000050 ] # Crescent Polearm
+  - [ 1452008, 1, 1, 0.000010 ] # Olympus
+  - [ 1472017, 1, 1, 0.000040 ] # Dark Avarice
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2044501, 1, 1, 0.000020 ] # Scroll for Bow for ATT 60%
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2044805, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 100%#TODO
+  - [ 2048004, 1, 1, 0.000020 ] # Scroll for Pet Equip. for Jump 60%
+  - [ 2060000, 10, 20, 0.009000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.009000 ] # Arrow for Crossbow
+  - [ 2070002, 1, 1, 0.000100 ] # Mokbi Throwing-Stars
+  - [ 4000156, 1, 1, 0.500000 ] # Seal Tooth
+  - [ 4000157, 1, 1, 0.100000 ] # Seal Meat
+  - [ 4003004, 1, 1, 0.020000 ] # Stiff Feather
+  - [ 4004003, 1, 1, 0.000200 ] # LUK Crystal Ore
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4020004, 1, 1, 0.003000 ] # Opal Ore
+  - [ 4020008, 1, 1, 0.001000 ] # Black Crystal Ore
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4031266, 1, 1, 0.060000, 3082 ] # Sparker's DNA Sample

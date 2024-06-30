@@ -1,0 +1,39 @@
+# Triple Rumo (3110303)
+
+rewards:
+  - [ 1002167, 1, 1, 0.100000 ] # Blue Distinction#TODO
+  - [ 1002183, 1, 1, 0.100000 ] # Green Pilfer#TODO
+  - [ 1032018, 1, 1, 0.100000 ] # Pansy Earrings#TODO
+  - [ 1040086, 1, 1, 0.100000 ] # Blue Jangoon Armor#TODO
+  - [ 1041076, 1, 1, 0.100000 ] # Dark Shadow#TODO
+  - [ 1060075, 1, 1, 0.100000 ] # Brown Jangoon Pants#TODO
+  - [ 1061071, 1, 1, 0.100000 ] # Dark Shadow Pants#TODO
+  - [ 1072000, 1, 1, 0.100000 ] # Brown Jangoon Shoes#TODO
+  - [ 1072129, 1, 1, 0.100000 ] # Green Goni Shoes#TODO
+  - [ 1072297, 1, 1, 0.100000 ] # Brown Locote Shoes#TODO
+  - [ 1082010, 1, 1, 0.100000 ] # Mithril Brist#TODO
+  - [ 1082082, 1, 1, 0.100000 ] # Blue Pennance#TODO
+  - [ 1082085, 1, 1, 0.100000 ] # Red Willow#TODO
+  - [ 1382018, 1, 1, 0.100000 ] # Petal Staff#TODO
+  - [ 1432003, 1, 1, 0.100000 ] # Nakamaki#TODO
+  - [ 1462005, 1, 1, 0.100000 ] # Heckler#TODO
+  - [ 1472012, 1, 1, 0.100000 ] # Silver Guardian#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2040302, 1, 1, 0.100000 ] # Scroll for Earring for INT 10%#TODO
+  - [ 2040417, 1, 1, 0.100000 ] # Scroll for Topwear for STR 100%#TODO
+  - [ 2044112, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 60%#TODO
+  - [ 2044310, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 100%#TODO
+  - [ 2044809, 1, 1, 0.100000 ] # Scroll for Knuckle for Accuracy 10%#TODO
+  - [ 2060000, 1, 1, 0.100000 ] # Arrow for Bow#TODO
+  - [ 2061000, 1, 1, 0.100000 ] # Arrow for Crossbow#TODO
+  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
+  - [ 4000356, 1, 1, 0.100000 ] # Flask#TODO
+  - [ 4004003, 1, 1, 0.100000 ] # LUK Crystal Ore#TODO
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4010001, 1, 1, 0.100000 ] # Steel Ore#TODO
+  - [ 4020005, 1, 1, 0.100000 ] # Sapphire Ore#TODO
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130002, 1, 1, 0.100000 ] # One-Handed Sword Forging Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO

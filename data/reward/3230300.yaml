@@ -1,0 +1,12 @@
+# Jr. Boogie 1 (3230300)
+
+rewards:
+  - [ 2000002, 1, 1, 0.020000 ] # White Potion
+  - [ 2000003, 1, 1, 0.020000 ] # Blue Potion
+  - [ 4000067, 1, 1, 0.700000 ] # Jr. Boogie Horn
+  - [ 4004000, 1, 1, 0.002000 ] # Power Crystal Ore
+  - [ 4004001, 1, 1, 0.002000 ] # Wisdom Crystal Ore
+  - [ 4004002, 1, 1, 0.002000 ] # DEX Crystal Ore
+  - [ 4004003, 1, 1, 0.002000 ] # LUK Crystal Ore
+  - [ 4010001, 1, 1, 0.006000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.004000 ] # Garnet Ore

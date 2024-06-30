@@ -1,0 +1,30 @@
+# Clang (4230104)
+
+rewards:
+  - [ 1002025, 1, 1, 0.000100 ] # Red Duke
+  - [ 1002085, 1, 1, 0.000080 ] # Mithril Crusader Helm
+  - [ 1002217, 1, 1, 0.000080 ] # Orange Golden Circlet
+  - [ 1040083, 1, 1, 0.000100 ] # Marine Shadow
+  - [ 1040095, 1, 1, 0.000060 ] # Blue China
+  - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra
+  - [ 1041087, 1, 1, 0.000080 ] # Red Shouldermail
+  - [ 1060072, 1, 1, 0.000100 ] # Marine Shadow Pants
+  - [ 1060084, 1, 1, 0.000060 ] # Blue China Pants
+  - [ 1061081, 1, 1, 0.000100 ] # Brown Piettra Skirt
+  - [ 1061086, 1, 1, 0.000080 ] # Red Shouldermail Pants
+  - [ 1302016, 1, 1, 0.000050 ] # Yellow Umbrella
+  - [ 1382001, 1, 1, 0.000070 ] # Arc Staff
+  - [ 1412003, 1, 1, 0.000060 ] # The Rising
+  - [ 1482007, 1, 1, 0.100000 ] # Fury Claw#TODO
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040427, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 10%#TODO
+  - [ 2043201, 1, 1, 0.000030 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130005, 1, 1, 0.100000 ] # Two-Handed Sword Forging Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4130017, 1, 1, 0.100000 ] # Gun Production Stimulator#TODO

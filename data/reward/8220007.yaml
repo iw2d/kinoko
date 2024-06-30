@@ -1,0 +1,24 @@
+# Blue Mushmom (8220007)
+
+rewards:
+  - [ 1032030, 1, 1, 0.100000 ] # Sword Earrings#TODO
+  - [ 1302012, 1, 1, 0.100000 ] # Red Katana#TODO
+  - [ 1312010, 1, 1, 0.100000 ] # Mikhail#TODO
+  - [ 1322019, 1, 1, 0.100000 ] # The Judgement#TODO
+  - [ 1332018, 1, 1, 0.100000 ] # Kandine#TODO
+  - [ 1332019, 1, 1, 0.100000 ] # Golden River#TODO
+  - [ 1382007, 1, 1, 0.100000 ] # Evil Wings#TODO
+  - [ 1412008, 1, 1, 0.100000 ] # Chrono#TODO
+  - [ 1432007, 1, 1, 0.100000 ] # Redemption#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir#TODO
+  - [ 2043001, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for ATT 60%#TODO
+  - [ 2043101, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for ATT 60%#TODO
+  - [ 2043301, 1, 1, 0.100000 ] # Scroll for Dagger for ATT 60%#TODO
+  - [ 2043701, 1, 1, 0.100000 ] # Scroll for Wand for Magic Attack 60%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
+  - [ 2044301, 1, 1, 0.100000 ] # Scroll for Spear for ATT 60%#TODO
+  - [ 2044501, 1, 1, 0.100000 ] # Scroll for Bow for ATT 60%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044701, 1, 1, 0.100000 ] # Scroll for Claw for ATT 60%#TODO

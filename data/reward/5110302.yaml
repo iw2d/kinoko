@@ -1,0 +1,28 @@
+# Neo Huroid (5110302)
+
+rewards:
+  - [ 1002029, 1, 1, 0.100000 ] # Red Oriental Helmet#TODO
+  - [ 1002248, 1, 1, 0.100000 ] # Silver Identity#TODO
+  - [ 1002269, 1, 1, 0.100000 ] # White Polyfeather Hat#TODO
+  - [ 1041077, 1, 1, 0.100000 ] # Maroon Moon#TODO
+  - [ 1051037, 1, 1, 0.100000 ] # Blue Lumati#TODO
+  - [ 1061076, 1, 1, 0.100000 ] # Maroon Moon Pants#TODO
+  - [ 1072146, 1, 1, 0.100000 ] # Green Gore Boots#TODO
+  - [ 1082066, 1, 1, 0.100000 ] # Brown Moon Gloves#TODO
+  - [ 1082201, 1, 1, 0.100000 ] # Black Schult#TODO
+  - [ 1942001, 1, 1, 0.100000 ] # Gold Mask#TODO
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir#TODO
+  - [ 2040425, 1, 1, 0.100000 ] # Scroll for Topwear for LUK 60%#TODO
+  - [ 2040804, 1, 1, 0.100000 ] # Scroll for Gloves for ATT 60%#TODO
+  - [ 2040901, 1, 1, 0.100000 ] # Scroll for Shield for DEF 60%#TODO
+  - [ 2040923, 1, 1, 0.100000 ] # Scroll for Shield for LUK 100%#TODO
+  - [ 2044114, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 10%#TODO
+  - [ 4000365, 1, 1, 0.100000 ] # Plug#TODO
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007006, 1, 1, 0.100000 ] # Magic Powder (Red)#TODO
+  - [ 4010006, 1, 1, 0.100000 ] # Gold Ore#TODO
+  - [ 4130008, 1, 1, 0.100000 ] # Spear Forging Stimulator#TODO
+  - [ 4130009, 1, 1, 0.100000 ] # Pole Arm Forging Stimulator#TODO
+  - [ 4130018, 1, 1, 0.100000 ] # Armor Production Stimulator#TODO

@@ -54,10 +54,10 @@ public final class ShopProvider implements DataProvider {
             if (!(itemObject instanceof List<?> itemInfo)) {
                 throw new ProviderError("Could not resolve shop item info for npc ID : %d", npcId);
             }
-            final int itemId = (int) itemInfo.get(0);
-            final int price = (int) itemInfo.get(1);
-            final int quantity = itemInfo.size() > 2 ? (int) itemInfo.get(2) : 1;
-            final int maxPerSlot = itemInfo.size() > 3 ? (int) itemInfo.get(3) : 1;
+            final int itemId = ((Number) itemInfo.get(0)).intValue();
+            final int price = ((Number) itemInfo.get(1)).intValue();
+            final int quantity = itemInfo.size() > 2 ? ((Number) itemInfo.get(2)).intValue() : 1;
+            final int maxPerSlot = itemInfo.size() > 3 ? ((Number) itemInfo.get(3)).intValue() : 1;
             shopItems.add(ShopItem.from(itemId, price, quantity, maxPerSlot));
         }
         if (shopData.containsKey("recharge") && shopData.get("recharge").equals(true)) {

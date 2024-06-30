@@ -1,0 +1,25 @@
+# Krappy (2230107)
+
+rewards:
+  - [ 1041034, 1, 1, 0.000100 ] # Blue Bennis Chainmail
+  - [ 1041051, 1, 1, 0.000060 ] # Red Amoria Top
+  - [ 1041058, 1, 1, 0.000090 ] # Blood Sneak
+  - [ 1061047, 1, 1, 0.000060 ] # Red Amoria Skirt
+  - [ 1061054, 1, 1, 0.000090 ] # Blood Sneak Pants
+  - [ 1062006, 1, 1, 0.000100 ] # Bennis Chainpants
+  - [ 1072051, 1, 1, 0.000090 ] # Silver War Boots
+  - [ 1072288, 1, 1, 0.100000 ] # Brown Skeedy Sandals#TODO
+  - [ 1082026, 1, 1, 0.000080 ] # Ocean Mesana
+  - [ 1332004, 1, 1, 0.000020 ] # Forked Dagger
+  - [ 1402000, 1, 1, 0.000100 ] # Two-Handed Sword
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002000, 1, 1, 0.010000 ] # Dexterity Potion
+  - [ 2041004, 1, 1, 0.000020 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2043110, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 100%#TODO
+  - [ 2044302, 1, 1, 0.000030 ] # Scroll for Spear for ATT 10%
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000162, 1, 1, 0.400000 ] # Flamboyant Scale Skin
+  - [ 4010002, 1, 1, 0.003000 ] # Mithril Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

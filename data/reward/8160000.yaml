@@ -1,0 +1,46 @@
+# Gatekeeper (8160000)
+
+rewards:
+  - [ 1002329, 1, 1, 0.000080 ] # Red Pireta Hat
+  - [ 1002403, 1, 1, 0.000070 ] # Blue Arlic Helmet
+  - [ 1032023, 1, 1, 0.000070 ] # Strawberry Earrings
+  - [ 1040118, 1, 1, 0.000070 ] # Red Osfa Suit
+  - [ 1041120, 1, 1, 0.000070 ] # Purple Valkyrie
+  - [ 1050062, 1, 1, 0.000090 ] # Beige Linnex
+  - [ 1050081, 1, 1, 0.000080 ] # Red Battle Lord
+  - [ 1051079, 1, 1, 0.000080 ] # Blue Battle Empress
+  - [ 1051095, 1, 1, 0.000070 ] # Blue Oriental Fury Coat
+  - [ 1052131, 1, 1, 0.100000 ] # Red Belly Duke#TODO
+  - [ 1060107, 1, 1, 0.000070 ] # Red Osfa Pants
+  - [ 1061119, 1, 1, 0.000070 ] # Purple Valkyrie Skirt
+  - [ 1072179, 1, 1, 0.000080 ] # Dark Enigma Shoes
+  - [ 1072213, 1, 1, 0.000010 ] # Green Katina Boots
+  - [ 1082123, 1, 1, 0.000080 ] # Dark Clarity
+  - [ 1092015, 1, 1, 0.000090 ] # Steel Ancient Shield
+  - [ 1092026, 1, 1, 0.000070 ] # Bronze Kalkan
+  - [ 1442019, 1, 1, 0.000080 ] # Eclipse
+  - [ 1452015, 1, 1, 0.000080 ] # Dark Arund
+  - [ 1462009, 1, 1, 0.000090 ] # Gross Jaeger
+  - [ 1472028, 1, 1, 0.000090 ] # Blue Scarab
+  - [ 1472031, 1, 1, 0.000080 ] # Black Mamba
+  - [ 2000006, 1, 1, 0.030000 ] # Mana Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040602, 1, 1, 0.000030 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040705, 1, 1, 0.000030 ] # Scroll for Shoes for Jump 10%
+  - [ 2040924, 1, 1, 0.100000 ] # Scroll for Shield for LUK 60%#TODO
+  - [ 4000151, 1, 1, 0.500000 ] # Gatekeeper Armband
+  - [ 4004003, 1, 1, 0.002000 ] # LUK Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130003, 1, 1, 0.100000 ] # One-Handed Axe Forging Stimulator#TODO
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4031474, 1, 1, 0.050000, 6295 ] # Soul Contract
+  - [ 4031473, 1, 1, 0.020000, 6226 ] # Key to the Other World
+  - [ 4031496, 1, 1, 0.020000, 6316 ] # Key to the Other World
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.600000, 7101 ] # Tachion
+  - [ 4031172, 1, 1, 0.050000, 7103 ] # Ludibrium Medal

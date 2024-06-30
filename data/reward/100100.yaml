@@ -1,0 +1,13 @@
+# Snail (100100)
+
+rewards:
+  - [ 1002067, 1, 1, 0.000800 ] # Green Headband
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.007000 ] # Green Apple
+  - [ 2040002, 1, 1, 0.000030 ] # Scroll for Helmet for DEF 10%
+  - [ 2041001, 1, 1, 0.000030 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000019, 1, 1, 0.400000 ] # Snail Shell
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.001500 ] # Garnet Ore

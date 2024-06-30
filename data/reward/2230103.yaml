@@ -1,0 +1,28 @@
+# Trixter (2230103)
+
+rewards:
+  - [ 1002020, 1, 1, 0.000100 ] # Red Starry Bandana
+  - [ 1050023, 1, 1, 0.000100 ] # Blue Doros Robe
+  - [ 1072288, 1, 1, 0.100000 ] # Brown Skeedy Sandals#TODO
+  - [ 1072291, 1, 1, 0.100000 ] # Brown Wooden Krag#TODO
+  - [ 1082017, 1, 1, 0.000080 ] # Red Savata
+  - [ 1302003, 1, 1, 0.000080 ] # Eloon
+  - [ 1312003, 1, 1, 0.000080 ] # Misthil Axe
+  - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
+  - [ 1402010, 1, 1, 0.000080 ] # Aluminum Baseball Bat
+  - [ 1462003, 1, 1, 0.000100 ] # Balanche
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002006, 1, 1, 0.003000 ] # Warrior Pill
+  - [ 2040319, 1, 1, 0.100000 ] # Scroll for Earring for LUK 100%#TODO
+  - [ 2040900, 1, 1, 0.000020 ] # Scroll for Shield for DEF 100%
+  - [ 2044114, 1, 1, 0.100000 ] # Scroll for Two-Handed Axe for Accuracy 10%#TODO
+  - [ 2044802, 1, 1, 0.100000 ] # Scroll for Knuckle for ATT 10%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2070000, 1, 1, 0.000100 ] # Subi Throwing-Stars
+  - [ 4000097, 1, 1, 0.500000 ] # Spiderweb
+  - [ 4004003, 1, 1, 0.000800 ] # LUK Crystal Ore
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4131000, 1, 1, 0.000080 ] # One-Handed Sword Forging Manual
+  - [ 4031072, 1, 1, 0.100000, 9004 ] # A Key of the Magic Box

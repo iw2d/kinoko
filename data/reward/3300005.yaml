@@ -1,0 +1,42 @@
+# Grey Yeti and King Pepe (3300005)
+
+rewards:
+  - [ 1032013, 1, 1, 0.100000 ] # Red-Hearted Earrings#TODO
+  - [ 1082025, 1, 1, 0.100000 ] # Dark Knuckle#TODO
+  - [ 1082064, 1, 1, 0.100000 ] # Dark Arten#TODO
+  - [ 1082073, 1, 1, 0.100000 ] # Dark Brace#TODO
+  - [ 1082074, 1, 1, 0.100000 ] # Dark Cleave#TODO
+  - [ 1082195, 1, 1, 0.100000 ] # Brown Barbee#TODO
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2022570, 1, 1, 0.100000 ] # King Pepe Warrior Weapon Box#TODO
+  - [ 2022571, 1, 1, 0.100000 ] # King Pepe Magician Weapon Box#TODO
+  - [ 2022572, 1, 1, 0.100000 ] # King Pepe Bowman Weapon Box#TODO
+  - [ 2022573, 1, 1, 0.100000 ] # King Pepe Thief Weapon Box#TODO
+  - [ 2022574, 1, 1, 0.100000 ] # King Pepe Pirate Weapon Box#TODO
+  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
+  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
+  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
+  - [ 2040801, 1, 1, 0.100000 ] # Scroll for Gloves for DEX 60%#TODO
+  - [ 2041004, 1, 1, 0.100000 ] # Scroll for Cape for Weapon DEF 60%#TODO
+  - [ 2041007, 1, 1, 0.100000 ] # Scroll for Cape for HP 60%#TODO
+  - [ 2043216, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for One-handed BW Attacks#TODO
+  - [ 2043311, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Dagger Attacks#TODO
+  - [ 2043711, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Wand Magic Attacks#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2043811, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Staff Magic Attacks#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044024, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed Sword Attacks#TODO
+  - [ 2044116, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed Axe Attacks#TODO
+  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
+  - [ 2044216, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Two-handed BW Attacks#TODO
+  - [ 2044316, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Spear Attacks#TODO
+  - [ 2044416, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Polearm Attacks#TODO
+  - [ 2044511, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Bow Attacks#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044611, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Crossbow Attacks#TODO
+  - [ 2044711, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Claw Attacks#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2044816, 1, 1, 0.100000 ] # King Pepe's 60% Scroll for Knuckle Attacks#TODO
+  - [ 2388067, 1, 1, 0.100000 ] # Gray Yeti and King Pepe Card#TODO
+  - [ 4000504, 1, 1, 0.100000 ] # Chief Grey Yeti Horn#TODO

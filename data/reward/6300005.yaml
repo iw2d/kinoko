@@ -1,0 +1,29 @@
+# Zombie Mushmom (6300005)
+
+rewards:
+  - [ 1032014, 1, 1, 0.000300 ] # Pink-Flowered Earrings
+  - [ 1092010, 1, 1, 0.000300 ] # Silver Legend Shield
+  - [ 1102024, 1, 1, 0.000300 ] # Black Gaia Cape
+  - [ 2040422, 1, 1, 0.100000 ] # Scroll for Topwear for HP 10%#TODO
+  - [ 2043001, 1, 1, 0.005000 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043019, 1, 1, 0.100000 ] # Scroll for One-Handed Sword for Accuracy 10%#TODO
+  - [ 2043101, 1, 1, 0.005000 ] # Scroll for One-Handed Axe for ATT 60%
+  - [ 2043201, 1, 1, 0.005000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 2043301, 1, 1, 0.005000 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.005000 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.005000 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.005000 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044101, 1, 1, 0.005000 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044201, 1, 1, 0.005000 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044301, 1, 1, 0.005000 ] # Scroll for Spear for ATT 60%
+  - [ 2044401, 1, 1, 0.005000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044501, 1, 1, 0.005000 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.005000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.005000 ] # Scroll for Claw for ATT 60%
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2048001, 1, 1, 0.005000 ] # Scroll for Pet Equip. for Speed 60%
+  - [ 2048004, 1, 1, 0.005000 ] # Scroll for Pet Equip. for Jump 60%
+  - [ 2070006, 1, 1, 0.000300 ] # Ilbi Throwing-Stars
+  - [ 2332000, 1, 1, 0.100000 ] # Glaze Capsule#TODO
+  - [ 4000176, 1, 1, 1.000000 ] # Poisonous Mushroom

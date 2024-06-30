@@ -1,0 +1,23 @@
+# Jar (4230505)
+
+rewards:
+  - [ 1002215, 1, 1, 0.000070 ] # Flame Golden Circlet
+  - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
+  - [ 1050045, 1, 1, 0.000100 ] # Blue Calas
+  - [ 1052116, 1, 1, 0.100000 ] # Green Plasteer#TODO
+  - [ 1372007, 1, 1, 0.000070 ] # Cromi
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040001, 1, 1, 0.000020 ] # Scroll for Helmet for DEF 60%
+  - [ 2044102, 1, 1, 0.000020 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2330002, 1, 1, 0.100000 ] # Mighty Bullet#TODO
+  - [ 4000291, 1, 1, 0.500000 ] # Broken Piece of Pot
+  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4007001, 1, 1, 0.100000 ] # Magic Powder (White)#TODO
+  - [ 4007004, 1, 1, 0.100000 ] # Magic Powder (Yellow)#TODO
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4130001, 1, 1, 0.100000 ] # Shoes Production Stimulator#TODO
+  - [ 4130014, 1, 1, 0.100000 ] # Dagger Forging Stimulator#TODO
+  - [ 4130016, 1, 1, 0.100000 ] # Knuckler Production Stimulator#TODO

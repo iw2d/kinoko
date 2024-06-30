@@ -1,0 +1,41 @@
+# Buffy (6130200)
+
+rewards:
+  - [ 1002093, 1, 1, 0.000090 ] # Blue Duke
+  - [ 1002182, 1, 1, 0.000090 ] # Blue Pilfer
+  - [ 1032012, 1, 1, 0.000090 ] # Skull Earrings
+  - [ 1040088, 1, 1, 0.000090 ] # Ocher Shouldermail
+  - [ 1050046, 1, 1, 0.000090 ] # Red Calas
+  - [ 1051042, 1, 1, 0.000070 ] # Blue Choro
+  - [ 1052122, 1, 1, 0.100000 ] # Red Viska#TODO
+  - [ 1060077, 1, 1, 0.000090 ] # Ocher Shouldermail Pants
+  - [ 1072122, 1, 1, 0.000090 ] # Brown Steel-Tip Boots
+  - [ 1072152, 1, 1, 0.000060 ] # Dark Moss Boots
+  - [ 1072163, 1, 1, 0.000050 ] # Red Mystique Shoes
+  - [ 1082061, 1, 1, 0.000070 ] # Dark Clench
+  - [ 1082087, 1, 1, 0.000070 ] # Gold Manute
+  - [ 1082094, 1, 1, 0.000080 ] # Gold Pow
+  - [ 1082098, 1, 1, 0.000050 ] # Brown Lorin
+  - [ 1102015, 1, 1, 0.000070 ] # Blue Magic Cape
+  - [ 1302011, 1, 1, 0.000060 ] # Neocora
+  - [ 1312010, 1, 1, 0.000050 ] # Mikhail
+  - [ 1452009, 1, 1, 0.000050 ] # Red Hinkel
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041001, 1, 1, 0.000030 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2043112, 1, 1, 0.100000 ] # Scroll for One-Handed Axe for Accuracy 60%#TODO
+  - [ 2043701, 1, 1, 0.000020 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.000020 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044312, 1, 1, 0.100000 ] # Scroll for Spear for Accuracy 60%#TODO
+  - [ 4000128, 1, 1, 0.600000 ] # Buffy Hat
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4007003, 1, 1, 0.100000 ] # Magic Powder (Green)#TODO
+  - [ 4007007, 1, 1, 0.100000 ] # Magic Powder (Black)#TODO
+  - [ 4010001, 1, 1, 0.003000 ] # Steel Ore
+  - [ 4010005, 1, 1, 0.007000 ] # Orihalcon Ore
+  - [ 4020008, 1, 1, 0.003000 ] # Black Crystal Ore
+  - [ 4130004, 1, 1, 0.100000 ] # One-Handed Blunt Weapon Forging Stimulator#TODO
+  - [ 4130012, 1, 1, 0.100000 ] # Bow Production Stimulator#TODO
+  - [ 4130015, 1, 1, 0.100000 ] # Claw Production Stimulator#TODO
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.300000, 7101 ] # Tachion

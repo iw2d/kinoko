@@ -1,0 +1,30 @@
+# Deo (3220001)
+
+rewards:
+  - [ 1032013, 1, 1, 0.100000 ] # Red-Hearted Earrings#TODO
+  - [ 1082025, 1, 1, 0.100000 ] # Dark Knuckle#TODO
+  - [ 1082064, 1, 1, 0.100000 ] # Dark Arten#TODO
+  - [ 1082073, 1, 1, 0.100000 ] # Dark Brace#TODO
+  - [ 1082074, 1, 1, 0.100000 ] # Dark Cleave#TODO
+  - [ 1082195, 1, 1, 0.100000 ] # Brown Barbee#TODO
+  - [ 1302063, 1, 1, 0.100000 ] # Flaming Katana#TODO
+  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion#TODO
+  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion#TODO
+  - [ 2022155, 1, 1, 0.100000 ] # Desert Mist#TODO
+  - [ 2040004, 1, 1, 0.100000 ] # Scroll for Helmet for HP 60%#TODO
+  - [ 2040501, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEX 60%#TODO
+  - [ 2040504, 1, 1, 0.100000 ] # Scroll for Overall Armor for DEF 60%#TODO
+  - [ 2040801, 1, 1, 0.100000 ] # Scroll for Gloves for DEX 60%#TODO
+  - [ 2041004, 1, 1, 0.100000 ] # Scroll for Cape for Weapon DEF 60%#TODO
+  - [ 2041007, 1, 1, 0.100000 ] # Scroll for Cape for HP 60%#TODO
+  - [ 2043801, 1, 1, 0.100000 ] # Scroll for Staff for Magic Attack 60%#TODO
+  - [ 2044001, 1, 1, 0.100000 ] # Scroll for Two-handed Sword for ATT 60%#TODO
+  - [ 2044201, 1, 1, 0.100000 ] # Scroll for Two-handed BW for ATT 60%#TODO
+  - [ 2044601, 1, 1, 0.100000 ] # Scroll for Crossbow for ATT 60%#TODO
+  - [ 2044801, 1, 1, 0.100000 ] # Scroll for Knuckle for Attack 60%#TODO
+  - [ 4000329, 1, 1, 0.100000 ] # Cactus Stem#TODO
+  - [ 4000330, 1, 1, 0.100000 ] # Cactus Thorn#TODO
+  - [ 4000331, 1, 1, 0.100000 ] # Cactus Flower#TODO
+  - [ 4010002, 1, 1, 0.100000 ] # Mithril Ore#TODO
+  - [ 4010007, 1, 1, 0.100000 ] # Lidium Ore#TODO
+  - [ 4020003, 1, 1, 0.100000 ] # Emerald Ore#TODO

@@ -1,0 +1,36 @@
+# Chronos (3230306)
+
+rewards:
+  - [ 1002155, 1, 1, 0.000070 ] # White Guiltian
+  - [ 1002182, 1, 1, 0.000070 ] # Blue Pilfer
+  - [ 1040085, 1, 1, 0.000070 ] # Maroon Jangoon Armor
+  - [ 1041069, 1, 1, 0.000090 ] # Brown Legolia
+  - [ 1051006, 1, 1, 0.000090 ] # Dark Avenger
+  - [ 1060074, 1, 1, 0.000070 ] # White Jangoon Pants
+  - [ 1061064, 1, 1, 0.000090 ] # Brown Legolia Pants
+  - [ 1072032, 1, 1, 0.000100 ] # Bronze Chain Boots
+  - [ 1072041, 1, 1, 0.000100 ] # Blood Battle Grieves
+  - [ 1072089, 1, 1, 0.000090 ] # Purple Salt Shoes
+  - [ 1082069, 1, 1, 0.000090 ] # Mithril Scaler
+  - [ 1092021, 1, 1, 0.000080 ] # Mystic Shield
+  - [ 1492005, 1, 1, 0.100000 ] # Shooting Star#TODO
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002006, 1, 1, 0.003000 ] # Warrior Pill
+  - [ 2043702, 1, 1, 0.000020 ] # Scroll for Wand for Magic Attack 10%
+  - [ 2044201, 1, 1, 0.000020 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 2044901, 1, 1, 0.100000 ] # Scroll for Gun for Attack 60%#TODO
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 4000115, 1, 1, 0.500000 ] # Cog
+  - [ 4004002, 1, 1, 0.000800 ] # DEX Crystal Ore
+  - [ 4006000, 1, 1, 0.000600 ] # The Magic Rock
+  - [ 4007000, 1, 1, 0.100000 ] # Magic Powder (Brown)#TODO
+  - [ 4007005, 1, 1, 0.100000 ] # Magic Powder (Purple)#TODO
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010006, 1, 1, 0.001000 ] # Gold Ore
+  - [ 4130000, 1, 1, 0.100000 ] # Gloves Production Stimulator#TODO
+  - [ 4130010, 1, 1, 0.100000 ] # Wand Production Stimulator#TODO
+  - [ 4130019, 1, 1, 0.100000 ] # Topwear Production Stimulator#TODO
+  - [ 4130022, 1, 1, 0.100000 ] # Shield Production Stimulator#TODO
+  - [ 4031159, 1, 1, 0.080000, 2074 ] # Maple History Book III

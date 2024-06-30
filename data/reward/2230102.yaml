@@ -1,0 +1,35 @@
+# Wild Boar (2230102)
+
+rewards:
+  - [ 1002064, 1, 1, 0.000080 ] # Bronze Pride
+  - [ 1002151, 1, 1, 0.000020 ] # Brown Guiltian
+  - [ 1002166, 1, 1, 0.000020 ] # Red Distinction
+  - [ 1032000, 1, 1, 0.001000 ] # Weighted Earrings
+  - [ 1032002, 1, 1, 0.000040 ] # Sapphire Earrings
+  - [ 1040079, 1, 1, 0.000030 ] # Brown Piette
+  - [ 1041013, 1, 1, 0.000100 ] # Green Shivermail
+  - [ 1051005, 1, 1, 0.000100 ] # Red Doroness Robe
+  - [ 1060050, 1, 1, 0.000040 ] # Blue Knucklevest Pants
+  - [ 1060069, 1, 1, 0.000030 ] # Brown Piette Pants
+  - [ 1061024, 1, 1, 0.000100 ] # Green Shivermail Skirt
+  - [ 1072033, 1, 1, 0.000070 ] # Iron Chain Boots
+  - [ 1072039, 1, 1, 0.000070 ] # Mithril Battle Grieves
+  - [ 1082186, 1, 1, 0.100000 ] # Hard Leather Glove#TODO
+  - [ 1382017, 1, 1, 0.000030 ] # Circle-Winded Staff
+  - [ 1402006, 1, 1, 0.000020 ] # Lionheart
+  - [ 1412005, 1, 1, 0.000020 ] # Sabretooth
+  - [ 1432003, 1, 1, 0.000020 ] # Nakamaki
+  - [ 1452005, 1, 1, 0.000020 ] # Ryden
+  - [ 1462004, 1, 1, 0.000020 ] # Eagle Crow
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2060000, 20, 30, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 20, 30, 0.008000 ] # Arrow for Crossbow
+  - [ 2330001, 1, 1, 0.100000 ] # Split Bullet#TODO
+  - [ 4000020, 1, 1, 0.400000 ] # Wild Boar Tooth
+  - [ 4000021, 1, 1, 0.020000 ] # Leather
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4010003, 1, 1, 0.003000 ] # Adamantium Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4031155, 1, 1, 0.150000, 2071 ] # Broken Mirror Glass
