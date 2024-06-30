@@ -400,32 +400,7 @@ public final class MobTemplate {
             if (!(mobProp.get("die1") instanceof WzListProperty dieAnimationProp)) {
                 throw new ProviderError("Failed to resolve revive delay for mob : %d", mobId);
             }
-            // Compute frame delays
-            final Map<String, Integer> frameDelays = new HashMap<>();
-            final List<String> frameUols = new ArrayList<>();
-            for (var dieFrameEntry : dieAnimationProp.getItems().entrySet()) {
-                final String key = dieFrameEntry.getKey();
-                if (!Util.isInteger(key)) {
-                    continue; // speak
-                }
-                if (dieFrameEntry.getValue() instanceof WzUolProperty dieUolProp) {
-                    if (!Util.isInteger(dieUolProp.getUol())) {
-                        throw new ProviderError("Found relative UOL while resolving revive delay for mob : %d", mobId); // pain to implement
-                    }
-                    frameUols.add(dieUolProp.getUol());
-                    continue;
-                }
-                if (!(dieFrameEntry.getValue() instanceof WzCanvasProperty dieCanvasProp)) {
-                    throw new ProviderError("Failed to resolve die animation frame for mob : %d", mobId);
-                }
-                final int delay = WzProvider.getInteger(dieCanvasProp.getProperties().get("delay"), 0);
-                frameDelays.put(key, delay);
-                reviveDelay += delay;
-            }
-            // Add up delays from UOLs
-            for (String uol : frameUols) {
-                reviveDelay += frameDelays.get(uol);
-            }
+            reviveDelay += getAnimationDelay(mobId, dieAnimationProp);
         }
         return new MobTemplate(
                 mobId,
@@ -442,7 +417,8 @@ public final class MobTemplate {
                 hpRecovery,
                 mpRecovery,
                 fixedDamage,
-                removeAfter, boss,
+                removeAfter,
+                boss,
                 noFlip,
                 damagedByMob,
                 onlyNormalAttack,
@@ -451,6 +427,38 @@ public final class MobTemplate {
                 Collections.unmodifiableMap(damagedElemAttr),
                 Collections.unmodifiableSet(damagedBySkill),
                 Collections.unmodifiableList(revives),
-                reviveDelay);
+                reviveDelay
+        );
+    }
+
+    private static int getAnimationDelay(int mobId, WzListProperty animationProp) {
+        // Compute frame delays
+        int animationDelay = 0;
+        final Map<String, Integer> frameDelays = new HashMap<>();
+        final List<String> frameUols = new ArrayList<>();
+        for (var dieFrameEntry : animationProp.getItems().entrySet()) {
+            final String key = dieFrameEntry.getKey();
+            if (!Util.isInteger(key)) {
+                continue; // speak
+            }
+            if (dieFrameEntry.getValue() instanceof WzUolProperty dieUolProp) {
+                if (!Util.isInteger(dieUolProp.getUol())) {
+                    throw new ProviderError("Found relative UOL while resolving revive delay for mob : %d", mobId); // pain to implement
+                }
+                frameUols.add(dieUolProp.getUol());
+                continue;
+            }
+            if (!(dieFrameEntry.getValue() instanceof WzCanvasProperty dieCanvasProp)) {
+                throw new ProviderError("Failed to resolve die animation frame for mob : %d", mobId);
+            }
+            final int delay = WzProvider.getInteger(dieCanvasProp.getProperties().get("delay"), 0);
+            frameDelays.put(key, delay);
+            animationDelay += delay;
+        }
+        // Add up delays from UOLs
+        for (String uol : frameUols) {
+            animationDelay += frameDelays.get(uol);
+        }
+        return animationDelay;
     }
 }

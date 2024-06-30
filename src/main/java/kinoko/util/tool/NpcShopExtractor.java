@@ -156,7 +156,7 @@ final class NpcShopExtractor {
             if (itemInfoResult.isEmpty() || !ItemConstants.isRechargeableItem(itemId)) {
                 continue;
             }
-            System.out.printf("ShopItem.rechargeable(%d, %d, 1.0), // %s\n", itemId, itemInfoResult.get().getSlotMax(), itemName);
+            // System.out.printf("ShopItem.rechargeable(%d, %d, 1.0), // %s\n", itemId, itemInfoResult.get().getSlotMax(), itemName);
         }
     }
 

@@ -323,6 +323,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         attacker.write(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
         // Handle death
         if (getHp() <= 0) {
+            getField().broadcastPacket(changeControllerPacket(false));
             if (getField().getMobPool().removeMob(this)) {
                 distributeExp();
                 dropRewards(attacker);
@@ -576,6 +577,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         getY(),
                         getFoothold()
                 );
+                reviveMob.setLeft(isLeft());
                 reviveMob.setAppearType(MobAppearType.REVIVED);
                 getField().getMobPool().addMob(reviveMob);
                 reviveMob.setAppearType(MobAppearType.NORMAL);

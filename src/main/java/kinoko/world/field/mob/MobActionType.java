@@ -8,7 +8,7 @@ public enum MobActionType {
     FLY(3),
     ROPE(4),
     REGEN(5),
-    BOIMB(6),
+    BOMB(6),
     HIT1(7),
     HIT2(8),
     HITF(9),

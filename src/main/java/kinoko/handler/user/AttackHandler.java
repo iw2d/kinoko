@@ -432,6 +432,9 @@ public final class AttackHandler {
             SkillProcessor.processAttack(locked, attack);
         }
 
+        // Broadcast packet
+        user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
+
         // Process attack
         int hpGain = 0;
         int mpGain = 0;
@@ -492,8 +495,8 @@ public final class AttackHandler {
                 }
             }
         }
-        user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
 
+        // Process hp/mp gains
         if (hpGain > 0) {
             user.addHp(hpGain);
         }
