@@ -5,7 +5,6 @@ import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
-import kinoko.world.field.reactor.Reactor;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,9 +12,7 @@ import java.util.*;
 
 public final class RewardProvider implements DataProvider {
     public static final Path MOB_REWARD = Path.of(ServerConfig.DATA_DIRECTORY, "mob_reward.csv");
-    public static final Path REACTOR_REWARD = Path.of(ServerConfig.DATA_DIRECTORY, "reactor_reward.csv");
     private static final Map<Integer, Set<Reward>> mobRewards = new HashMap<>(); // mobId -> mob rewards
-    private static final Map<String, Set<Reward>> reactorRewards = new HashMap<>(); // reactorAction -> reactor rewards
 
     public static void initialize() {
         try {
@@ -30,19 +27,6 @@ public final class RewardProvider implements DataProvider {
             });
             for (var entry : mobRewards.entrySet()) {
                 mobRewards.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
-            }
-
-            // Reactor rewards
-            DataProvider.readData(REACTOR_REWARD).forEach((props) -> {
-                final String reactorAction = props.get(0);
-                final Reward reward = getReward(props);
-                if (!reactorRewards.containsKey(reactorAction)) {
-                    reactorRewards.put(reactorAction, new HashSet<>());
-                }
-                reactorRewards.get(reactorAction).add(reward);
-            });
-            for (var entry : reactorRewards.entrySet()) {
-                reactorRewards.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Exception caught while loading Reward Data", e);
@@ -59,13 +43,6 @@ public final class RewardProvider implements DataProvider {
     public static Reward getMobMoneyReward(Mob mob) {
         final Tuple<Integer, Integer> money = GameConstants.getMoneyForMobLevel(mob.getLevel());
         return Reward.money(money.getLeft(), money.getRight(), GameConstants.DROP_MONEY_PROB);
-    }
-
-    public static Set<Reward> getReactorRewards(Reactor reactor) {
-        if (!reactorRewards.containsKey(reactor.getAction())) {
-            return Set.of();
-        }
-        return reactorRewards.get(reactor.getAction());
     }
 
     private static Reward getReward(List<String> props) {

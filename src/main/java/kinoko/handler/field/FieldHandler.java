@@ -17,6 +17,7 @@ import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +78,7 @@ public final class FieldHandler {
                 // Quest item handling
                 if (drop.isQuest()) {
                     final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
-                    if (questRecordResult.isEmpty()) {
+                    if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
                         user.write(MessagePacket.unavailableForPickUp());
                         user.dispose();
                         return;
