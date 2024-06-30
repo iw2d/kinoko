@@ -13,13 +13,20 @@ rewards:
   - [ 1412003, 1, 1, 0.000100 ] # The Rising
   - [ 1412007, 1, 1, 0.000100 ] # The Shining
   - [ 1472022, 1, 1, 0.000100 ] # Bronze Gigantic
+  - [ 1492009, 1, 1, 0.000100 ] # Abyss Shooter
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
   - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040512, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 100%
   - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
   - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044012, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 60%
+  - [ 2044802, 1, 1, 0.000100 ] # Scroll for Knuckle for ATT 10%
   - [ 4000056, 1, 1, 0.400000 ] # Dark Yeti Horn
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

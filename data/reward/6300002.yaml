@@ -12,15 +12,23 @@ rewards:
   - [ 1402012, 1, 1, 0.000100 ] # Doombringer
   - [ 1422009, 1, 1, 0.000100 ] # The Blessing
   - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 1492008, 1, 1, 0.000100 ] # Burning Hell
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
   - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040025, 1, 1, 0.000100 ] # Scroll for Helmet for INT 60%
   - [ 2041023, 1, 1, 0.000100 ] # Scroll for Cape for LUK 10%
+  - [ 2043017, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 60%
+  - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
   - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

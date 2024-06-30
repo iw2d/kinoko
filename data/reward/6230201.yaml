@@ -20,10 +20,19 @@ rewards:
   - [ 1462009, 1, 1, 0.000100 ] # Gross Jaeger
   - [ 2000004, 1, 1, 0.001000 ] # Elixir
   - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040318, 1, 1, 0.000100 ] # Scroll for Earring for DEX 10%
+  - [ 2040328, 1, 1, 0.000100 ] # Scroll for Earring for HP 10%
+  - [ 2040619, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 10%
+  - [ 2040927, 1, 1, 0.000100 ] # Scroll for Shield for HP 60%
+  - [ 2044012, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 60%
   - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
   - [ 4000057, 1, 1, 0.400000 ] # Dark Pepe Beak
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

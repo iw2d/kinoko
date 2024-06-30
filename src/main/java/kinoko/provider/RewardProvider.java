@@ -20,6 +20,7 @@ public final class RewardProvider implements DataProvider {
     private static final Map<Integer, List<Reward>> mobRewards = new HashMap<>(); // mobId -> rewards
 
     public static void initialize() {
+        mobRewards.clear();
         final Load yamlLoader = new Load(LoadSettings.builder().build());
         try (final Stream<Path> paths = Files.list(REWARD_DATA)) {
             for (Path path : paths.toList()) {

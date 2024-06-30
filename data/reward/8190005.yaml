@@ -8,14 +8,25 @@ rewards:
   - [ 1072225, 1, 1, 0.000100 ] # Red Varr Shoes
   - [ 1082139, 1, 1, 0.000100 ] # Green Korben
   - [ 1082152, 1, 1, 0.000100 ] # Blue Ciara
+  - [ 1082213, 1, 1, 0.000100 ] # Black Skellduke
   - [ 1412021, 1, 1, 0.000100 ] # Tavar
   - [ 1452019, 1, 1, 0.000100 ] # White Nisrock
+  - [ 1492012, 1, 1, 0.000100 ] # Concerto
   - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
   - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
   - [ 2022003, 1, 1, 0.010000 ] # Unagi
   - [ 2040707, 1, 1, 0.000100 ] # Scroll for Shoes for Speed 60%
   - [ 2041023, 1, 1, 0.000100 ] # Scroll for Cape for LUK 10%
   - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%
+  - [ 2290000, 1, 1, 0.000100 ] # [Mastery Book] Monster Magnet
+  - [ 2290008, 1, 1, 0.000100 ] # [Mastery Book] Advanced Combo Attack
+  - [ 2290018, 1, 1, 0.000100 ] # [Mastery Book] Holy Charge
+  - [ 2290038, 1, 1, 0.000100 ] # [Mastery Book] Elquines
+  - [ 2290060, 1, 1, 0.000100 ] # [Mastery Book] Hurricane
+  - [ 2290080, 1, 1, 0.000100 ] # [Mastery Book] Taunt
+  - [ 2290124, 1, 1, 0.000100 ] # [Mastery Book] Bullseye
+  - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
   - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
   - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000271, 1, 1, 0.400000 ] # Destroyed Nest
