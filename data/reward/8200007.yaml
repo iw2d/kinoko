@@ -18,8 +18,8 @@ rewards:
   - [ 2290007, 1, 1, 0.000100 ] # [Mastery Book] Power Stance
   - [ 2290150, 1, 1, 0.000100 ] # [Mastery Book] Soul Stone 20
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000452, 1, 1, 0.400000 ] # Blue Helmet
-  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4000452, 1, 1, 0.200000 ] # Blue Helmet
+  - [ 4000459, 1, 1, 0.200000 ] # Black Armor Fragment
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

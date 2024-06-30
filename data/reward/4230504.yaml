@@ -16,7 +16,7 @@ rewards:
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2330002, 1, 1, 0.000400 ] # Mighty Bullet
   - [ 4000279, 1, 1, 0.400000 ] # Necki Flower
-  - [ 4000281, 1, 1, 0.400000 ] # Snake Leather
+  - [ 4000281, 1, 1, 0.040000 ] # Snake Leather
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

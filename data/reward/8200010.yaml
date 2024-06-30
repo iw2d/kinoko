@@ -14,8 +14,8 @@ rewards:
   - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
   - [ 2290089, 1, 1, 0.000100 ] # [Mastery Book] Shadow Claw
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000455, 1, 1, 0.400000 ] # Red Cone Hat
-  - [ 4000456, 1, 1, 0.400000 ] # Frowny Mask
+  - [ 4000455, 1, 1, 0.200000 ] # Red Cone Hat
+  - [ 4000456, 1, 1, 0.200000 ] # Frowny Mask
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

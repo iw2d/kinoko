@@ -20,8 +20,8 @@ rewards:
   - [ 2290073, 1, 1, 0.000100 ] # [Mastery Book] Frostprey
   - [ 2290134, 1, 1, 0.000100 ] # [Mastery Book] High Defense 20
   - [ 2290148, 1, 1, 0.000100 ] # [Mastery Book] Dark Fog 20
-  - [ 4000448, 1, 1, 0.400000 ] # Green Heart
-  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4000448, 1, 1, 0.200000 ] # Green Heart
+  - [ 4000459, 1, 1, 0.200000 ] # Black Armor Fragment
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)

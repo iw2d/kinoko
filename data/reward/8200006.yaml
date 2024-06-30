@@ -18,8 +18,8 @@ rewards:
   - [ 2290077, 1, 1, 0.000100 ] # [Mastery Book] Shadow Shifter
   - [ 2290138, 1, 1, 0.000100 ] # [Mastery Book] Combo Barrier 20
   - [ 2290151, 1, 1, 0.000100 ] # [Mastery Book] Blessing of the Onyx 20
-  - [ 4000450, 1, 1, 0.400000 ] # Blue Cone Hat
-  - [ 4000451, 1, 1, 0.400000 ] # Neutral Mask
+  - [ 4000450, 1, 1, 0.200000 ] # Blue Cone Hat
+  - [ 4000451, 1, 1, 0.200000 ] # Neutral Mask
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

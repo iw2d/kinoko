@@ -26,7 +26,7 @@ rewards:
   - [ 2044112, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 60%
   - [ 2044414, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 10%
   - [ 2332000, 1, 1, 0.000400 ] # Glaze Capsule
-  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4000030, 1, 1, 0.001000 ] # Dragon Skin
   - [ 4000185, 1, 1, 0.400000 ] # Ice Backbone
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)

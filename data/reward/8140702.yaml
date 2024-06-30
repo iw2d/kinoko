@@ -18,8 +18,8 @@ rewards:
   - [ 2043015, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 100%
   - [ 2044701, 1, 1, 0.000100 ] # Scroll for Claw for ATT 60%
   - [ 2290112, 1, 1, 0.000100 ] # [Mastery Book] Elemental Boost
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000264, 1, 1, 0.400000 ] # Rexton Leather
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)

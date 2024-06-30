@@ -17,8 +17,8 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
-  - [ 4000156, 1, 1, 0.400000 ] # Seal Tooth
-  - [ 4000157, 1, 1, 0.400000 ] # Seal Meat
+  - [ 4000156, 1, 1, 0.200000 ] # Seal Tooth
+  - [ 4000157, 1, 1, 0.200000 ] # Seal Meat
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)

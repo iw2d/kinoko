@@ -19,8 +19,8 @@ rewards:
   - [ 2040705, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 10%
   - [ 2040824, 1, 1, 0.000100 ] # Scroll for Gloves for HP 60%
   - [ 4000226, 1, 1, 0.400000 ] # Rash's Furball
-  - [ 4000227, 1, 1, 0.400000 ] # Tree Fruit
-  - [ 4000228, 1, 1, 0.400000 ] # Anesthetic Powder
+  - [ 4000227, 1, 1, 0.040000 ] # Tree Fruit
+  - [ 4000228, 1, 1, 0.040000 ] # Anesthetic Powder
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)

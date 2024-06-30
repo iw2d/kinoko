@@ -17,8 +17,8 @@ rewards:
   - [ 2290050, 1, 1, 0.000100 ] # [Mastery Book] Angel Ray
   - [ 2290129, 1, 1, 0.000100 ] # [Mastery Book]High Mastery 30
   - [ 2290143, 1, 1, 0.000100 ] # [Mastery Book] Flame Wheel 30
-  - [ 4000444, 1, 1, 0.400000 ] # Green Cloth
-  - [ 4000446, 1, 1, 0.400000 ] # Smiley Mask
+  - [ 4000444, 1, 1, 0.200000 ] # Green Cloth
+  - [ 4000446, 1, 1, 0.200000 ] # Smiley Mask
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)

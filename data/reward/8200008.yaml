@@ -18,8 +18,8 @@ rewards:
   - [ 2290133, 1, 1, 0.000100 ] # [Mastery Book] Final Blow 30
   - [ 2290147, 1, 1, 0.000100 ] # [Mastery Book] Blaze 30
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000453, 1, 1, 0.400000 ] # Blue Heart
-  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4000453, 1, 1, 0.200000 ] # Blue Heart
+  - [ 4000459, 1, 1, 0.200000 ] # Black Armor Fragment
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)

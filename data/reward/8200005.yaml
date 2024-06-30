@@ -15,8 +15,8 @@ rewards:
   - [ 2040931, 1, 1, 0.000100 ] # Scroll for Shield for STR 60%
   - [ 2044012, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 60%
   - [ 2290079, 1, 1, 0.000100 ] # [Mastery Book] Venomous Star/Venomous Stab
-  - [ 4000449, 1, 1, 0.400000 ] # Blue Cloth
-  - [ 4000451, 1, 1, 0.400000 ] # Neutral Mask
+  - [ 4000449, 1, 1, 0.200000 ] # Blue Cloth
+  - [ 4000451, 1, 1, 0.200000 ] # Neutral Mask
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)

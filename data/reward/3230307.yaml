@@ -21,7 +21,7 @@ rewards:
   - [ 2044110, 1, 1, 0.000100 ] # Scroll for Two-Handed Axe for Accuracy 100%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4000003, 1, 1, 0.400000 ] # Tree Branch
+  - [ 4000003, 1, 1, 0.100000 ] # Tree Branch
   - [ 4000123, 1, 1, 0.400000 ] # Worn-Out Goggle
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore

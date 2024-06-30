@@ -20,8 +20,8 @@ rewards:
   - [ 2290131, 1, 1, 0.000100 ] # [Mastery Book] Freeze Standing 30
   - [ 2290145, 1, 1, 0.000100 ] # [Mastery Book] Magic Mastery 30
   - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
-  - [ 4000445, 1, 1, 0.400000 ] # Green Cone Hat
-  - [ 4000446, 1, 1, 0.400000 ] # Smiley Mask
+  - [ 4000445, 1, 1, 0.200000 ] # Green Cone Hat
+  - [ 4000446, 1, 1, 0.200000 ] # Smiley Mask
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)

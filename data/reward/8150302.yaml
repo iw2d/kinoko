@@ -24,8 +24,8 @@ rewards:
   - [ 2290119, 1, 1, 0.000100 ] # [Mastery Book] Battleship Cannon
   - [ 2290128, 1, 1, 0.000100 ] # [Mastery Book] High Mastery 20
   - [ 2290142, 1, 1, 0.000100 ] # [Mastery Book] Flame Wheel 20
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

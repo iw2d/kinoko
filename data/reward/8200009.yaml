@@ -15,8 +15,8 @@ rewards:
   - [ 2044601, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 60%
   - [ 2290039, 1, 1, 0.000100 ] # [Mastery Book] Elquines
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000454, 1, 1, 0.400000 ] # Red Cloth
-  - [ 4000456, 1, 1, 0.400000 ] # Frowny Mask
+  - [ 4000454, 1, 1, 0.200000 ] # Red Cloth
+  - [ 4000456, 1, 1, 0.200000 ] # Frowny Mask
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)

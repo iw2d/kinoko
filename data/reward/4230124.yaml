@@ -21,8 +21,8 @@ rewards:
   - [ 2041019, 1, 1, 0.000100 ] # Scroll for Cape for DEX 60%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4000155, 1, 1, 0.400000 ] # Seal Skin
-  - [ 4000157, 1, 1, 0.400000 ] # Seal Meat
+  - [ 4000155, 1, 1, 0.200000 ] # Seal Skin
+  - [ 4000157, 1, 1, 0.200000 ] # Seal Meat
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)

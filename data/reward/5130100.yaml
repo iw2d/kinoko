@@ -26,7 +26,7 @@ rewards:
   - [ 2040422, 1, 1, 0.000100 ] # Scroll for Topwear for HP 10%
   - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
   - [ 4000014, 1, 1, 0.400000 ] # Drake Skull
-  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4000030, 1, 1, 0.001000 ] # Dragon Skin
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore

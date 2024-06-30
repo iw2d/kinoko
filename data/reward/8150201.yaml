@@ -32,8 +32,8 @@ rewards:
   - [ 2290072, 1, 1, 0.000100 ] # [Mastery Book] Frostprey
   - [ 2290078, 1, 1, 0.000100 ] # [Mastery Book] Venomous Star/Venomous Stab
   - [ 2290117, 1, 1, 0.000100 ] # [Mastery Book] Rapid Fire
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000267, 1, 1, 0.400000 ] # Skull Shoulder Pad
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)

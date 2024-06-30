@@ -17,8 +17,8 @@ rewards:
   - [ 2040924, 1, 1, 0.000100 ] # Scroll for Shield for LUK 60%
   - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
   - [ 2290101, 1, 1, 0.000100 ] # [Mastery Book] Super Transformation
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

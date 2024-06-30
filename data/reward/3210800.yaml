@@ -25,7 +25,7 @@ rewards:
   - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
   - [ 2070008, 1, 1, 0.000400 ] # Snowball
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000026, 1, 1, 0.400000 ] # Lupin Doll
+  - [ 4000026, 1, 1, 0.010000 ] # Lupin Doll
   - [ 4000029, 1, 1, 0.400000 ] # Lupin's Banana
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)

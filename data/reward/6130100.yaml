@@ -31,7 +31,7 @@ rewards:
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 2331000, 1, 1, 0.000400 ] # Blaze Capsule
   - [ 4000014, 1, 1, 0.400000 ] # Drake Skull
-  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4000030, 1, 1, 0.001000 ] # Dragon Skin
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore

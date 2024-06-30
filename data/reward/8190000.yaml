@@ -25,8 +25,8 @@ rewards:
   - [ 2290066, 1, 1, 0.000100 ] # [Mastery Book] Marksman Boost
   - [ 2290092, 1, 1, 0.000100 ] # [Mastery Book] Assassinate
   - [ 2290103, 1, 1, 0.000100 ] # [Mastery Book] Demolition
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000272, 1, 1, 0.400000 ] # Egg Shell
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

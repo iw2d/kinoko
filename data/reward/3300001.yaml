@@ -19,7 +19,7 @@ rewards:
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2382093, 1, 1, 0.020000 ] # Poison Mushroom Card
   - [ 4000500, 1, 1, 0.400000 ] # Poison Mushroom Cap
-  - [ 4000507, 1, 1, 0.400000 ] # Poison Spore
+  - [ 4000507, 1, 1, 0.040000 ] # Poison Spore
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

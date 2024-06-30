@@ -24,7 +24,7 @@ rewards:
   - [ 2040625, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 60%
   - [ 2041001, 1, 1, 0.000100 ] # Scroll for Cape for Magic Def. 60%
   - [ 2041004, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 60%
-  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4000030, 1, 1, 0.001000 ] # Dragon Skin
   - [ 4000186, 1, 1, 0.400000 ] # Dark Drake's Horn
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)

@@ -32,8 +32,8 @@ rewards:
   - [ 2290130, 1, 1, 0.000100 ] # [Mastery Book] Freeze Standing 20
   - [ 2290144, 1, 1, 0.000100 ] # [Mastery Book] Magic Mastery 20
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000273, 1, 1, 0.400000 ] # Old Neck Bone
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

@@ -16,8 +16,8 @@ rewards:
   - [ 2290093, 1, 1, 0.000100 ] # [Mastery Book] Assassinate
   - [ 2290139, 1, 1, 0.000100 ] # [Mastery Book] Combo Barrier 30
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000458, 1, 1, 0.400000 ] # Red Heart
-  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4000458, 1, 1, 0.200000 ] # Red Heart
+  - [ 4000459, 1, 1, 0.200000 ] # Black Armor Fragment
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)

@@ -30,8 +30,8 @@ rewards:
   - [ 2290086, 1, 1, 0.000100 ] # [Mastery Book] Ninja Storm
   - [ 2290108, 1, 1, 0.000100 ] # [Mastery Book] Speed Infusion
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000274, 1, 1, 0.400000 ] # Broken Horn
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

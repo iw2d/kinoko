@@ -55,8 +55,8 @@ rewards:
   - [ 2290128, 1, 1, 0.100000 ] # [Mastery Book] High Mastery 20
   - [ 2290142, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 20
   - [ 4000243, 1, 1, 0.400000 ] # Griffey Horn
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore

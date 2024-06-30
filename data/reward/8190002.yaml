@@ -27,8 +27,8 @@ rewards:
   - [ 2290080, 1, 1, 0.000100 ] # [Mastery Book] Taunt
   - [ 2290124, 1, 1, 0.000100 ] # [Mastery Book] Bullseye
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000271, 1, 1, 0.400000 ] # Destroyed Nest
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

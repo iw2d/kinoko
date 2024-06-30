@@ -17,8 +17,8 @@ rewards:
   - [ 2290137, 1, 1, 0.000100 ] # [Mastery Book] Combo Tempest 30
   - [ 2290152, 1, 1, 0.000100 ] # [Mastery Book] Blessing of the Onyx 30
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4000457, 1, 1, 0.400000 ] # Red Helmet
-  - [ 4000459, 1, 1, 0.400000 ] # Black Armor Fragment
+  - [ 4000457, 1, 1, 0.200000 ] # Red Helmet
+  - [ 4000459, 1, 1, 0.200000 ] # Black Armor Fragment
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

@@ -43,6 +43,17 @@ public final class Reward {
         return questId != 0;
     }
 
+    @Override
+    public String toString() {
+        return "Reward{" +
+                "itemId=" + itemId +
+                ", min=" + min +
+                ", max=" + max +
+                ", prob=" + prob +
+                ", questId=" + questId +
+                '}';
+    }
+
     public static Reward item(int itemId, int min, int max, double prob, int questId) {
         return new Reward(itemId, min, max, prob, questId);
     }

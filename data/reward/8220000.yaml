@@ -25,10 +25,12 @@ rewards:
   - [ 1082134, 1, 1, 0.000100 ] # Dark Pachone
   - [ 1082144, 1, 1, 0.000100 ] # Dark Mystra
   - [ 1082210, 1, 1, 0.000100 ] # Red Martier
-  - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
-  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
-  - [ 2012001, 1, 1, 0.010000 ] # Fairy's Honey
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion
+  - [ 2012001, 1, 1, 0.100000 ] # Fairy's Honey
   - [ 2040001, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 60%
   - [ 2040002, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 10%
   - [ 2040301, 1, 1, 0.000100 ] # Scroll for Earring for INT 60%
@@ -50,9 +52,25 @@ rewards:
   - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
   - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
   - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
   - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
+  - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
+  - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
+  - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
+  - [ 4000073, 1, 1, 0.400000 ] # Solid Horn
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
   - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

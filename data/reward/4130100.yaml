@@ -24,7 +24,7 @@ rewards:
   - [ 2044014, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 10%
   - [ 2049100, 1, 1, 0.000001 ] # Chaos Scroll 60%
   - [ 4000014, 1, 1, 0.400000 ] # Drake Skull
-  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4000030, 1, 1, 0.001000 ] # Dragon Skin
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

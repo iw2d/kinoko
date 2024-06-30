@@ -23,8 +23,8 @@ rewards:
   - [ 2290135, 1, 1, 0.000100 ] # [Mastery Book] High Defense 30
   - [ 2290149, 1, 1, 0.000100 ] # [Mastery Book] Dark Fog 30
   - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000266, 1, 1, 0.400000 ] # Wooden Shoulder Pad
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)

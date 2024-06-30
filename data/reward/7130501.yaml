@@ -20,7 +20,7 @@ rewards:
   - [ 2043002, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 10%
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000229, 1, 1, 0.400000 ] # Dark Rash's Furball
-  - [ 4000230, 1, 1, 0.400000 ] # Curse Powder
+  - [ 4000230, 1, 1, 0.040000 ] # Curse Powder
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)

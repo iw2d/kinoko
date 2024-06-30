@@ -26,7 +26,7 @@ rewards:
   - [ 2040402, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 10%
   - [ 2040419, 1, 1, 0.000100 ] # Scroll for Topwear for STR 10%
   - [ 4000069, 1, 1, 0.400000 ] # Zombie's Lost Tooth
-  - [ 4000082, 1, 1, 0.400000 ] # Zombie's Lost Gold Tooth
+  - [ 4000082, 1, 1, 0.040000 ] # Zombie's Lost Gold Tooth
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)

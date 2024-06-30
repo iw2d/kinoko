@@ -19,8 +19,8 @@ rewards:
   - [ 2044801, 1, 1, 0.000100 ] # Scroll for Knuckle for Attack 60%
   - [ 2290088, 1, 1, 0.000100 ] # [Mastery Book] Shadow Claw
   - [ 2290099, 1, 1, 0.000100 ] # [Mastery Book] Energy Orb
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000265, 1, 1, 0.400000 ] # Strange Egg
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

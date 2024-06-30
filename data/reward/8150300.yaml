@@ -19,8 +19,8 @@ rewards:
   - [ 2290120, 1, 1, 0.000100 ] # [Mastery Book] Battleship Cannon
   - [ 2290127, 1, 1, 0.000100 ] # [Mastery Book] Overswing 30
   - [ 2290141, 1, 1, 0.000100 ] # [Mastery Book] Illusion 30
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock

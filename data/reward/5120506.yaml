@@ -22,7 +22,7 @@ rewards:
   - [ 2044201, 1, 1, 0.000100 ] # Scroll for Two-handed BW for ATT 60%
   - [ 2330002, 1, 1, 0.000400 ] # Mighty Bullet
   - [ 4000298, 1, 1, 0.400000 ] # Old Paper
-  - [ 4000299, 1, 1, 0.400000 ] # The Book Ghost's Sheet of Paper
+  - [ 4000299, 1, 1, 0.040000 ] # The Book Ghost's Sheet of Paper
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore

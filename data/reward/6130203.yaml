@@ -17,7 +17,7 @@ rewards:
   - [ 2044014, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 10%
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000283, 1, 1, 0.400000 ] # Bear Foot
+  - [ 4000283, 1, 1, 0.040000 ] # Bear Foot
   - [ 4000285, 1, 1, 0.400000 ] # Red Belt
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4007003, 1, 1, 0.000300 ] # Magic Powder (Green)
