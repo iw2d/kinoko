@@ -1,0 +1,26 @@
+# Mixed Golem (9500123)
+
+rewards:
+  - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
+  - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
+  - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
+  - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
+  - [ 1041077, 1, 1, 0.000100 ] # Maroon Moon
+  - [ 1041094, 1, 1, 0.000100 ] # Light Mantis
+  - [ 1051037, 1, 1, 0.000100 ] # Blue Lumati
+  - [ 1060081, 1, 1, 0.000100 ] # Blue Orientican Pants
+  - [ 1061076, 1, 1, 0.000100 ] # Maroon Moon Pants
+  - [ 1061093, 1, 1, 0.000100 ] # Light Mantis Pants
+  - [ 1072146, 1, 1, 0.000100 ] # Green Gore Boots
+  - [ 1082066, 1, 1, 0.000100 ] # Brown Moon Gloves
+  - [ 1082087, 1, 1, 0.000100 ] # Gold Manute
+  - [ 1372014, 1, 1, 0.000100 ] # Evil Tale
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040804, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 60%
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000177, 1, 1, 0.400000 ] # Mixed Block
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore

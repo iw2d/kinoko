@@ -1,0 +1,22 @@
+# Slot Machine (9400114)
+
+rewards:
+  - [ 1002020, 1, 1, 0.000100 ] # Red Starry Bandana
+  - [ 1002090, 1, 1, 0.000100 ] # Blue Bamboo Hat
+  - [ 1092019, 1, 1, 0.000100 ] # Nimble Wristguard
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002001, 1, 1, 0.010000 ] # Speed Potion
+  - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
+  - [ 2022018, 1, 1, 0.010000 ] # Kinoko Ramen(roasted pork)
+  - [ 2030010, 1, 1, 0.000000 ] # Fruit Milk
+  - [ 2040009, 1, 1, 0.000100 ] # Dark Scroll for Helmet for DEF 30%
+  - [ 2040406, 1, 1, 0.000100 ] # Dark scroll for Topwear for STR 70%
+  - [ 2040609, 1, 1, 0.000100 ] # Dark scroll for Bottomwear for HP 30%
+  - [ 2041028, 1, 1, 0.000100 ] # Dark scroll for Cape for Weapon DEF 70%
+  - [ 2043104, 1, 1, 0.000100 ] # Dark scroll for One-Handed Axe for ATT 70%
+  - [ 2044604, 1, 1, 0.000100 ] # Dark scroll for Crossbow for ATT 70%
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4131012, 1, 1, 0.000300 ] # Dagger Forging Manual

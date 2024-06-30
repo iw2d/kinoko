@@ -1,0 +1,33 @@
+# Gigantic Viking (9500136)
+
+rewards:
+  - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
+  - [ 1002338, 1, 1, 0.000100 ] # Red Dragon Barbute
+  - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
+  - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
+  - [ 1040117, 1, 1, 0.000100 ] # Purple Osfa Suit
+  - [ 1041107, 1, 1, 0.000100 ] # Dark Pirate Blouse
+  - [ 1060106, 1, 1, 0.000100 ] # Purple Osfa Pants
+  - [ 1061106, 1, 1, 0.000100 ] # Dark Pirate Skirt
+  - [ 1072207, 1, 1, 0.000100 ] # Green Neli Shoes
+  - [ 1082133, 1, 1, 0.000100 ] # Red Sage
+  - [ 1092024, 1, 1, 0.000100 ] # Silver Aquila Shield
+  - [ 1302018, 1, 1, 0.000100 ] # Khan
+  - [ 1302023, 1, 1, 0.000100 ] # Fraute
+  - [ 1332022, 1, 1, 0.000100 ] # Angelic Betrayal
+  - [ 1402015, 1, 1, 0.000100 ] # Heaven's Gate
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2043002, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 4000135, 1, 1, 0.400000 ] # Gigantic Viking Hat
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion
+  - [ 4031176, 1, 1, 0.050000, 7104 ] # Piece of Cracked Dimension A
+  - [ 4031177, 1, 1, 0.100000, 7104 ] # Piece of Cracked Dimension B
+  - [ 4031178, 1, 1, 0.010000, 7104 ] # Piece of Cracked Dimension C
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4131003, 1, 1, 0.000300 ] # Two-Handed Sword Forging Manual

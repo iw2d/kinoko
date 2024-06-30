@@ -1,0 +1,11 @@
+# Jr. Balrog (9500169)
+
+rewards:
+  - [ 2000002, 1, 1, 0.100000 ] # White Potion
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2020016, 1, 1, 0.100000 ] # Cheesecake
+  - [ 2020017, 1, 1, 0.100000 ] # Strawberry Cream Cake
+  - [ 2020018, 1, 1, 0.100000 ] # Chocolate Cream Cake
+  - [ 2020019, 1, 1, 0.100000 ] # Chocolate Cake
+  - [ 2020020, 1, 1, 0.100000 ] # Wedding Cake

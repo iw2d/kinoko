@@ -1,0 +1,32 @@
+# Chief Gray (9500122)
+
+rewards:
+  - [ 1002101, 1, 1, 0.000100 ] # Old Mithril Nordic Helm
+  - [ 1002216, 1, 1, 0.000100 ] # Aqua Golden Circlet
+  - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
+  - [ 1041083, 1, 1, 0.000100 ] # Dark Piettra
+  - [ 1061069, 1, 1, 0.000100 ] # Purple Shadow Pants
+  - [ 1061082, 1, 1, 0.000100 ] # Dark Piettra Skirt
+  - [ 1072122, 1, 1, 0.000100 ] # Brown Steel-Tip Boots
+  - [ 1072125, 1, 1, 0.000100 ] # Purple Steel-Tip Boots
+  - [ 1072130, 1, 1, 0.000100 ] # Red Goni Shoes
+  - [ 1072133, 1, 1, 0.000100 ] # Mithril Hildon Boots
+  - [ 1082080, 1, 1, 0.000100 ] # Dark Penance
+  - [ 1102016, 1, 1, 0.000100 ] # Red Magic Cape
+  - [ 1322016, 1, 1, 0.000100 ] # Jacker
+  - [ 1332003, 1, 1, 0.000100 ] # Shinkita
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002008, 1, 1, 0.010000 ] # Sniper Pill
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000125, 1, 1, 0.400000 ] # Chief Gray's Sign
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4021009, 1, 1, 0.002000 ] # Star Rock
+  - [ 4031102, 1, 1, 0.300000, 3413 ] # Note
+  - [ 4031106, 1, 1, 0.050000, 3414 ] # Chief Gray's Cell
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator

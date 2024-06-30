@@ -1,0 +1,32 @@
+# Transformed Dark Yeti (6400001)
+
+rewards:
+  - [ 1002243, 1, 1, 0.000100 ] # Blue Seraphis
+  - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
+  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
+  - [ 1040103, 1, 1, 0.000100 ] # Mithril Platine
+  - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis
+  - [ 1041100, 1, 1, 0.000100 ] # Purple Mystique
+  - [ 1050062, 1, 1, 0.000100 ] # Beige Linnex
+  - [ 1050067, 1, 1, 0.000100 ] # Blue Requiem
+  - [ 1050075, 1, 1, 0.000100 ] # Red Pris
+  - [ 1050080, 1, 1, 0.000100 ] # Green Battle Lord
+  - [ 1051064, 1, 1, 0.000100 ] # Green Lineros
+  - [ 1060091, 1, 1, 0.000100 ] # Mithril Platine Pants
+  - [ 1061094, 1, 1, 0.000100 ] # Bloody Mantis Pants
+  - [ 1061099, 1, 1, 0.000100 ] # Purple Mystique Pants
+  - [ 1072136, 1, 1, 0.000100 ] # Pink Goldrunners
+  - [ 1072156, 1, 1, 0.000100 ] # Dark Carzen Boots
+  - [ 1102026, 1, 1, 0.000100 ] # Green Seraph Cape
+  - [ 1302011, 1, 1, 0.000100 ] # Neocora
+  - [ 1452004, 1, 1, 0.000100 ] # Asianic Bow
+  - [ 1472021, 1, 1, 0.000100 ] # Dark Slain
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2043302, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 10%
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000056, 1, 1, 0.400000 ] # Dark Yeti Horn
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

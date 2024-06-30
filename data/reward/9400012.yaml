@@ -1,0 +1,20 @@
+# Water Goblin (9400012)
+
+rewards:
+  - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
+  - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
+  - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen
+  - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis
+  - [ 1332017, 1, 1, 0.000100 ] # Serpent's Coil
+  - [ 1382006, 1, 1, 0.000100 ] # Thorns
+  - [ 1412007, 1, 1, 0.000100 ] # The Shining
+  - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040516, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040602, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040707, 1, 1, 0.000100 ] # Scroll for Shoes for Speed 60%
+  - [ 2044501, 1, 1, 0.000100 ] # Scroll for Bow for ATT 60%
+  - [ 4000223, 1, 1, 0.400000 ] # Cucumber
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator

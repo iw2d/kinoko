@@ -1,0 +1,24 @@
+# Wraith (9500121)
+
+rewards:
+  - [ 1002099, 1, 1, 0.000100 ] # Mithril Nordic Helm
+  - [ 1002207, 1, 1, 0.000100 ] # Red Sonata
+  - [ 1002211, 1, 1, 0.000100 ] # Blue Maro
+  - [ 1002212, 1, 1, 0.000100 ] # Red Maro
+  - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
+  - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
+  - [ 1040061, 1, 1, 0.000100 ] # Green Knucklevest
+  - [ 1040085, 1, 1, 0.000100 ] # Maroon Jangoon Armor
+  - [ 1060050, 1, 1, 0.000100 ] # Blue Knucklevest Pants
+  - [ 1060074, 1, 1, 0.000100 ] # White Jangoon Pants
+  - [ 1072141, 1, 1, 0.000100 ] # Blue Goldwind Shoes
+  - [ 1082066, 1, 1, 0.000100 ] # Brown Moon Gloves
+  - [ 1302013, 1, 1, 0.000100 ] # Red Whip
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 4000036, 1, 1, 0.400000 ] # Medicine With Weird Vibes
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

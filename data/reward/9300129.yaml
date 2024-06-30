@@ -1,0 +1,19 @@
+# Ratz (9300129)
+
+rewards:
+  - [ 2022157, 1, 1, 0.020000 ] # Carnival Point 1
+  - [ 2022158, 1, 1, 0.015000 ] # Carnival Point 2
+  - [ 2022159, 1, 1, 0.010000 ] # Carnival Point 3
+  - [ 2022160, 1, 1, 0.070000 ] # Party Mana Elixir
+  - [ 2022161, 1, 1, 0.050000 ] # Party Elixir
+  - [ 2022162, 1, 1, 0.025000 ] # Party Power Elixir
+  - [ 2022163, 1, 1, 0.090000 ] # Party All Cure Potion
+  - [ 2022164, 1, 1, 0.040000 ] # Mini Cube of Darkness
+  - [ 2022165, 1, 1, 0.023000 ] # Cube of Darkness
+  - [ 2022166, 1, 1, 0.030000 ] # Stunner
+  - [ 2022174, 1, 1, 0.250000 ] # White Potion
+  - [ 2022175, 1, 1, 0.140000 ] # Elixir
+  - [ 2022176, 1, 1, 0.090000 ] # Power Elixir
+  - [ 2022177, 1, 1, 0.370000 ] # Mana Elixir
+  - [ 2022178, 1, 1, 0.090000 ] # All-Cure Potion
+  - [ 4001129, 1, 1, 0.035000 ] # Maple Coin

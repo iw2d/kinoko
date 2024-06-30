@@ -1,0 +1,27 @@
+# Jr. Pepe (9500112)
+
+rewards:
+  - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
+  - [ 1002177, 1, 1, 0.000100 ] # Blue Burgler
+  - [ 1040059, 1, 1, 0.000100 ] # Red Gold Stealer
+  - [ 1041067, 1, 1, 0.000100 ] # Green Legolia
+  - [ 1051001, 1, 1, 0.000100 ] # Emerald Fitted Mail
+  - [ 1060045, 1, 1, 0.000100 ] # Red / Gold Stealer Pants
+  - [ 1061062, 1, 1, 0.000100 ] # Green Legolia Pants
+  - [ 1072108, 1, 1, 0.000100 ] # Black Green-Lined Shoes
+  - [ 1082062, 1, 1, 0.000100 ] # Red Arten
+  - [ 1422007, 1, 1, 0.000100 ] # Titan
+  - [ 1422008, 1, 1, 0.000100 ] # Sledgehammer
+  - [ 1432008, 1, 1, 0.000100 ] # Fish Spear
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2050002, 1, 1, 0.010000 ] # Tonic
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000088, 1, 1, 0.400000 ] # Jr. Pepe's Fish
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

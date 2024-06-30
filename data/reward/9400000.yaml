@@ -1,0 +1,19 @@
+# Crow (9400000)
+
+rewards:
+  - [ 1002172, 1, 1, 0.000100 ] # Blue Guise
+  - [ 1050006, 1, 1, 0.000100 ] # Red Kendo Robe
+  - [ 1051011, 1, 1, 0.000100 ] # Red Engrit
+  - [ 1072056, 1, 1, 0.000100 ] # Blue Whitebottom Boots
+  - [ 1082032, 1, 1, 0.000100 ] # Bronze Mischief
+  - [ 1092008, 1, 1, 0.000100 ] # Pan Lid
+  - [ 1372003, 1, 1, 0.000100 ] # Mithril Wand
+  - [ 1452005, 1, 1, 0.000100 ] # Ryden
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022014, 1, 1, 0.010000 ] # Dango
+  - [ 2040002, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 10%
+  - [ 2040704, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 60%
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000064, 1, 1, 0.400000 ] # Crow Feather
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

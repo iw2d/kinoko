@@ -1,0 +1,22 @@
+# Red Slime (9400204)
+
+rewards:
+  - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
+  - [ 1032013, 1, 1, 0.000100 ] # Red-Hearted Earrings
+  - [ 1032032, 1, 1, 0.000100 ] # Fallen Leaf Earrings
+  - [ 1072130, 1, 1, 0.000100 ] # Red Goni Shoes
+  - [ 1102012, 1, 1, 0.000100 ] # Red Justice Cape
+  - [ 1412003, 1, 1, 0.000100 ] # The Rising
+  - [ 1452023, 1, 1, 0.000100 ] # Cao Cao Bow
+  - [ 2001000, 1, 1, 0.010000 ] # Watermelon
+  - [ 2002001, 1, 1, 0.010000 ] # Speed Potion
+  - [ 2022020, 1, 1, 0.010000 ] # Kinoko Ramen(salt)
+  - [ 2040405, 1, 1, 0.000100 ] # Dark scroll for Topwear for DEF 30%
+  - [ 2044205, 1, 1, 0.000100 ] # Dark scroll for Two-handed BW for ATT 30%
+  - [ 2044604, 1, 1, 0.000100 ] # Dark scroll for Crossbow for ATT 70%
+  - [ 2060003, 10, 20, 0.008000 ] # Red Arrow for Bow
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
+  - [ 4131004, 1, 1, 0.000300 ] # Two-Handed Axe Forging Manual

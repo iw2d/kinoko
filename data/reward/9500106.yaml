@@ -1,0 +1,20 @@
+# Horny Mushroom (9500106)
+
+rewards:
+  - [ 1002005, 1, 1, 0.000100 ] # Iron Burgernet Helm
+  - [ 1040044, 1, 1, 0.000100 ] # Black Pao
+  - [ 1041008, 1, 1, 0.000100 ] # Green Able Armor
+  - [ 1050006, 1, 1, 0.000100 ] # Red Kendo Robe
+  - [ 1060033, 1, 1, 0.000100 ] # Black Pao Bottom
+  - [ 1061006, 1, 1, 0.000100 ] # Green Able Armor Skirt
+  - [ 1072073, 1, 1, 0.000100 ] # Yellow Windshoes
+  - [ 1462004, 1, 1, 0.000100 ] # Eagle Crow
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2044102, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000015, 1, 1, 0.400000 ] # Horny Mushroom Cap
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

@@ -1,0 +1,18 @@
+# Paper Lantern Ghost (9400011)
+
+rewards:
+  - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
+  - [ 1050048, 1, 1, 0.000100 ] # White Calas
+  - [ 1051032, 1, 1, 0.000100 ] # Blue Calaf
+  - [ 1060075, 1, 1, 0.000100 ] # Brown Jangoon Pants
+  - [ 1061071, 1, 1, 0.000100 ] # Dark Shadow Pants
+  - [ 1092019, 1, 1, 0.000100 ] # Nimble Wristguard
+  - [ 1302009, 1, 1, 0.000100 ] # Traus
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002004, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2022027, 1, 1, 0.010000 ] # Yakisoba (x2)
+  - [ 2040402, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 10%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044402, 1, 1, 0.000100 ] # Scroll for Pole Arm for ATT 10%
+  - [ 4000222, 1, 1, 0.400000 ] # Worn Paper Lantern

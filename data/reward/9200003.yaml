@@ -1,0 +1,19 @@
+# Horned Mushroom (PC) (9200003)
+
+rewards:
+  - [ 1002038, 1, 1, 0.000100 ] # Brown Jester
+  - [ 1060002, 1, 1, 0.000100 ] # Blue Jean Shorts
+  - [ 1082000, 1, 1, 0.000100 ] # Steel Fingerless Gloves
+  - [ 1092000, 1, 1, 0.000100 ] # Steel Shield
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2044102, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000015, 1, 1, 0.400000 ] # Horny Mushroom Cap
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

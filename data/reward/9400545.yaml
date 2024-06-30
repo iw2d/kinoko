@@ -1,0 +1,34 @@
+# Wolf Spider (9400545)
+
+rewards:
+  - [ 1002271, 1, 1, 0.000100 ] # Green Galaxy
+  - [ 1002275, 1, 1, 0.000100 ] # Blue Falcon
+  - [ 1002285, 1, 1, 0.000100 ] # Blood Nightfox
+  - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
+  - [ 1040104, 1, 1, 0.000100 ] # Orihalcon Platine
+  - [ 1050064, 1, 1, 0.000100 ] # Dark Linnex
+  - [ 1050092, 1, 1, 0.000100 ] # Green Oriental Fury Coat
+  - [ 1051053, 1, 1, 0.000100 ] # Red Requierre
+  - [ 1051082, 1, 1, 0.000100 ] # Red Anes
+  - [ 1060092, 1, 1, 0.000100 ] # Orihalcon Platine Pants
+  - [ 1072172, 1, 1, 0.000100 ] # Green Pirate Boots
+  - [ 1072178, 1, 1, 0.000100 ] # Purple Enigma Shoes
+  - [ 1072193, 1, 1, 0.000100 ] # Brown Osfa Boots
+  - [ 1072210, 1, 1, 0.000100 ] # Red Rivers Boots
+  - [ 1082129, 1, 1, 0.000100 ] # Purple Imperial
+  - [ 1102029, 1, 1, 0.000100 ] # White Seraph Cape
+  - [ 1402004, 1, 1, 0.000100 ] # Blue Screamer
+  - [ 1442008, 1, 1, 0.000100 ] # The Gold Dragon
+  - [ 1472028, 1, 1, 0.000100 ] # Blue Scarab
+  - [ 2044304, 1, 1, 0.000100 ] # Dark scroll for Spear for ATT 70%
+  - [ 2044305, 1, 1, 0.000100 ] # Dark scroll for Spear for ATT 30%
+  - [ 2044404, 1, 1, 0.000100 ] # Dark scroll for Pole Arm for ATT 70%
+  - [ 2044605, 1, 1, 0.000100 ] # Dark scroll for Crossbow for ATT 30%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

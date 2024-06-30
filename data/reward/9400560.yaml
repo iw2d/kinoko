@@ -1,0 +1,28 @@
+# Sophilia Doll (9400560)
+
+rewards:
+  - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
+  - [ 1002153, 1, 1, 0.000100 ] # Red Guiltian
+  - [ 1002181, 1, 1, 0.000100 ] # Red Pilfer
+  - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1041078, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1041089, 1, 1, 0.000100 ] # Dark Shouldermail
+  - [ 1050052, 1, 1, 0.000100 ] # Blue-Lined Kismet
+  - [ 1051034, 1, 1, 0.000100 ] # Orange Calaf
+  - [ 1061077, 1, 1, 0.000100 ] # Blue Moon Pants
+  - [ 1061088, 1, 1, 0.000100 ] # Dark Shouldermail Pants
+  - [ 1072126, 1, 1, 0.000100 ] # Maroon Jangoon Shoes
+  - [ 1072135, 1, 1, 0.000100 ] # Gold Hildon Boots
+  - [ 1082082, 1, 1, 0.000100 ] # Blue Pennance
+  - [ 1322018, 1, 1, 0.000100 ] # Tamus
+  - [ 1332015, 1, 1, 0.000100 ] # Deadly Fin
+  - [ 1402007, 1, 1, 0.000100 ] # Zard
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040504, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2041017, 1, 1, 0.000100 ] # Scroll for Cape for INT 10%
+  - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
+  - [ 4000400, 1, 1, 0.400000 ] # Lock of Doll's Hair
+  - [ 4031769, 1, 1, 0.200000, 4946 ] # Tarrymore Earring
+  - [ 4031770, 1, 1, 0.100000, 4946 ] # Sepha Earring

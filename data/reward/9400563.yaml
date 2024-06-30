@@ -1,0 +1,23 @@
+# Nightmare (9400563)
+
+rewards:
+  - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
+  - [ 1002143, 1, 1, 0.000100 ] # Green Matty
+  - [ 1002176, 1, 1, 0.000100 ] # Red Burgler
+  - [ 1040076, 1, 1, 0.000100 ] # Brown Legolier
+  - [ 1050021, 1, 1, 0.000100 ] # Blue Crusader Chainmail
+  - [ 1050036, 1, 1, 0.000100 ] # Red Starlight
+  - [ 1060065, 1, 1, 0.000100 ] # Brown Legolier Pants
+  - [ 1072127, 1, 1, 0.000100 ] # Blue Jangoon Shoes
+  - [ 1082074, 1, 1, 0.000100 ] # Dark Cleave
+  - [ 1092029, 1, 1, 0.000100 ] # Esther Shield
+  - [ 1302010, 1, 1, 0.000100 ] # Jeweled Katar
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2022244, 1, 1, 0.010000 ] # Smore
+  - [ 2040602, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2043302, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000018, 1, 1, 0.400000 ] # Firewood
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

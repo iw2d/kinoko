@@ -1,0 +1,16 @@
+# Headless Horseman (9400549)
+
+rewards:
+  - [ 1372009, 1, 1, 0.000200 ] # Magicodar
+  - [ 1402016, 1, 1, 0.000200 ] # Devil's Sunrise
+  - [ 1452015, 1, 1, 0.000200 ] # Dark Arund
+  - [ 1472033, 1, 1, 0.000200 ] # Casters
+  - [ 2002023, 1, 1, 0.100000 ] # Ginger Ale
+  - [ 2002024, 1, 1, 0.100000 ] # Sorcerer Elixir
+  - [ 2002025, 1, 1, 0.100000 ] # Barbarian Elixir
+  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew
+  - [ 2022117, 1, 1, 0.100000 ] # Maple Syrup
+  - [ 2022182, 1, 1, 0.100000 ] # Crystalized Pineapple Chew
+  - [ 2040011, 1, 1, 0.010000 ] # Dark Scroll for Helmet for HP 30%
+  - [ 2040407, 1, 1, 0.010000 ] # Dark scroll for Topwear for STR 30%
+  - [ 4031903, 1, 1, 0.050000 ] # Jack O'Lantern

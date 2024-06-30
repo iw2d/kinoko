@@ -1,0 +1,31 @@
+# G. Phantom Watch (9500137)
+
+rewards:
+  - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
+  - [ 1041117, 1, 1, 0.000100 ] # Purple Osfa Suit
+  - [ 1051067, 1, 1, 0.000100 ] # Blue Pria
+  - [ 1051079, 1, 1, 0.000100 ] # Blue Battle Empress
+  - [ 1051085, 1, 1, 0.000100 ] # Dark Anes
+  - [ 1061116, 1, 1, 0.000100 ] # Purple Osfa Pants
+  - [ 1072208, 1, 1, 0.000100 ] # Red Neli Shoes
+  - [ 1082106, 1, 1, 0.000100 ] # Blue Eyes
+  - [ 1082132, 1, 1, 0.000100 ] # Green Sage
+  - [ 1092016, 1, 1, 0.000100 ] # Silver Ancient Shield
+  - [ 1382008, 1, 1, 0.000100 ] # Kage
+  - [ 1402012, 1, 1, 0.000100 ] # Doombringer
+  - [ 1402016, 1, 1, 0.000100 ] # Devil's Sunrise
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2040401, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 60%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 4000150, 1, 1, 0.400000 ] # Ice Piece
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion
+  - [ 4031176, 1, 1, 0.050000, 7104 ] # Piece of Cracked Dimension A
+  - [ 4031177, 1, 1, 0.100000, 7104 ] # Piece of Cracked Dimension B
+  - [ 4031178, 1, 1, 0.010000, 7104 ] # Piece of Cracked Dimension C

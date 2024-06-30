@@ -1,0 +1,25 @@
+# Black Crow (9400014)
+
+rewards:
+  - [ 1032027, 1, 1, 0.000200 ] # Black Emerald Earrings
+  - [ 1092021, 1, 1, 0.000200 ] # Mystic Shield
+  - [ 1102030, 1, 1, 0.000200 ] # Black Seraph Cape
+  - [ 1312015, 1, 1, 0.000200 ] # Vifennis
+  - [ 1332023, 1, 1, 0.000200 ] # Dragon's Tail
+  - [ 1452017, 1, 1, 0.000200 ] # Metus
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2002008, 1, 1, 0.100000 ] # Sniper Pill
+  - [ 2002008, 1, 1, 0.100000 ] # Sniper Pill
+  - [ 2040715, 1, 1, 0.010000 ] # Dark scroll for Shoes for Jump 30%
+  - [ 2040716, 1, 1, 0.010000 ] # Dark scroll for Shoes for Speed 70%
+  - [ 2041031, 1, 1, 0.010000 ] # Dark scroll for Cape for HP 30%
+  - [ 2041032, 1, 1, 0.010000 ] # Dark scroll for Cape for MP 70%
+  - [ 2041039, 1, 1, 0.010000 ] # Dark scroll for Cape for DEX 30%
+  - [ 2043805, 1, 1, 0.010000 ] # Dark scroll for Staff for Magic Attack 30%
+  - [ 4000224, 1, 1, 0.400000 ] # Sabots
+  - [ 4031902, 1, 1, 0.050000 ] # Tengu Nose

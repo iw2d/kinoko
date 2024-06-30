@@ -1,0 +1,27 @@
+# Ice Drake (9500126)
+
+rewards:
+  - [ 1040091, 1, 1, 0.000100 ] # Red Orientican
+  - [ 1040094, 1, 1, 0.000100 ] # Red China
+  - [ 1041085, 1, 1, 0.000100 ] # Brown Jangoon Armor
+  - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen
+  - [ 1051043, 1, 1, 0.000100 ] # Brown Choro
+  - [ 1051046, 1, 1, 0.000100 ] # White Anakarune
+  - [ 1060080, 1, 1, 0.000100 ] # Red Orientican Pants
+  - [ 1060083, 1, 1, 0.000100 ] # Red China Pants
+  - [ 1061083, 1, 1, 0.000100 ] # Red Jangoon Skirt
+  - [ 1061090, 1, 1, 0.000100 ] # Green Ice Queen Skirt
+  - [ 1072158, 1, 1, 0.000100 ] # Red Lapiz Sandals
+  - [ 1082095, 1, 1, 0.000100 ] # Bronze Rover
+  - [ 1082098, 1, 1, 0.000100 ] # Brown Lorin
+  - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
+  - [ 1472024, 1, 1, 0.000100 ] # Sapphire Gigantic
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4000185, 1, 1, 0.400000 ] # Ice Backbone
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

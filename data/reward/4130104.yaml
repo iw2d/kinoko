@@ -1,0 +1,27 @@
+# Dark Nependeath (4130104)
+
+rewards:
+  - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
+  - [ 1040080, 1, 1, 0.000100 ] # Dark Piette
+  - [ 1040095, 1, 1, 0.000100 ] # Blue China
+  - [ 1041087, 1, 1, 0.000100 ] # Red Shouldermail
+  - [ 1051027, 1, 1, 0.000100 ] # Brown Moonlight
+  - [ 1060068, 1, 1, 0.000100 ] # Dark Piette Pants 
+  - [ 1060084, 1, 1, 0.000100 ] # Blue China Pants
+  - [ 1061086, 1, 1, 0.000100 ] # Red Shouldermail Pants
+  - [ 1072110, 1, 1, 0.000100 ] # Black Blue-Lines Shoes
+  - [ 1072132, 1, 1, 0.000100 ] # Emerald Hildon Boots
+  - [ 1082063, 1, 1, 0.000100 ] # Blue Arten
+  - [ 1082084, 1, 1, 0.000100 ] # Blue Willow
+  - [ 1302013, 1, 1, 0.000100 ] # Red Whip
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2041014, 1, 1, 0.000100 ] # Scroll for Cape for STR 10%
+  - [ 2044201, 1, 1, 0.000100 ] # Scroll for Two-handed BW for ATT 60%
+  - [ 4000062, 1, 1, 0.400000 ] # Dark Nependeath Seed
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

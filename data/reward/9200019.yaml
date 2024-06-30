@@ -1,0 +1,22 @@
+# White Fang (9200019)
+
+rewards:
+  - [ 1002086, 1, 1, 0.000100 ] # Bronze Crusader Helm
+  - [ 1040100, 1, 1, 0.000100 ] # Dark Scorpio
+  - [ 1040102, 1, 1, 0.000100 ] # Bronze Platine
+  - [ 1050055, 1, 1, 0.000100 ] # White Anakamoon
+  - [ 1050056, 1, 1, 0.000100 ] # Dark Anakamoon
+  - [ 1060089, 1, 1, 0.000100 ] # Dark Scorpio Pants
+  - [ 1060090, 1, 1, 0.000100 ] # Bronze Platine Pants
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000052, 1, 1, 0.400000 ] # White Fang Tail
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

@@ -1,0 +1,35 @@
+# Pig (9300058)
+
+rewards:
+  - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
+  - [ 1002026, 1, 1, 0.000100 ] # Brown Bamboo Hat
+  - [ 1002050, 1, 1, 0.000100 ] # Orihalcon Burgernet Helm
+  - [ 1002150, 1, 1, 0.000100 ] # Dark Tiberian
+  - [ 1002160, 1, 1, 0.000100 ] # Brown Hunter
+  - [ 1040025, 1, 1, 0.000100 ] # Red Bennis Chainmail
+  - [ 1040041, 1, 1, 0.000100 ] # Dark Master Sergeant
+  - [ 1040050, 1, 1, 0.000100 ] # Black Sneak
+  - [ 1041024, 1, 1, 0.000100 ] # Red Shark
+  - [ 1041034, 1, 1, 0.000100 ] # Blue Bennis Chainmail
+  - [ 1041060, 1, 1, 0.000100 ] # Gold Sneak
+  - [ 1050025, 1, 1, 0.000100 ] # White Doros Robe
+  - [ 1051005, 1, 1, 0.000100 ] # Red Doroness Robe
+  - [ 1060030, 1, 1, 0.000100 ] # Dark Master Sergeant Kilt
+  - [ 1060039, 1, 1, 0.000100 ] # Black Sneak Pants
+  - [ 1061020, 1, 1, 0.000100 ] # Red Shark Skirt
+  - [ 1061056, 1, 1, 0.000100 ] # Gold Sneak Pants
+  - [ 1062006, 1, 1, 0.000100 ] # Bennis Chainpants
+  - [ 1072052, 1, 1, 0.000100 ] # Dark War Boots
+  - [ 1072056, 1, 1, 0.000100 ] # Blue Whitebottom Boots
+  - [ 1072069, 1, 1, 0.000100 ] # Red Jack Boots
+  - [ 1072073, 1, 1, 0.000100 ] # Yellow Windshoes
+  - [ 1072087, 1, 1, 0.000100 ] # Black Lappy Boots
+  - [ 1082007, 1, 1, 0.000100 ] # Bronze Missel
+  - [ 1082018, 1, 1, 0.000100 ] # Dark Savata
+  - [ 1082028, 1, 1, 0.000100 ] # Dark Mesana
+  - [ 1082039, 1, 1, 0.000100 ] # Dark Wolfskin
+  - [ 1092003, 1, 1, 0.000100 ] # Stolen Fence
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 4000017, 1, 1, 0.010000 ] # Pig's Head
+  - [ 4000021, 1, 1, 0.010000 ] # Leather

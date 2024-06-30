@@ -1,0 +1,24 @@
+# Male Boss (9400122)
+
+rewards:
+  - [ 1002276, 1, 1, 0.000200 ] # Red Falcon
+  - [ 1002328, 1, 1, 0.000200 ] # Green Pireta Hat
+  - [ 1032023, 1, 1, 0.000200 ] # Strawberry Earrings
+  - [ 1041099, 1, 1, 0.000200 ] # Bloody Platina
+  - [ 1050064, 1, 1, 0.000200 ] # Dark Linnex
+  - [ 1051058, 1, 1, 0.000200 ] # Dark Enigma
+  - [ 1061101, 1, 1, 0.000200 ] # Pink Mystique Pants
+  - [ 1092029, 1, 1, 0.000200 ] # Esther Shield
+  - [ 1302026, 1, 1, 0.000200 ] # Black Umbrella
+  - [ 1382010, 1, 1, 0.000200 ] # Dark Ritual
+  - [ 1402013, 1, 1, 0.000200 ] # Japanese Map
+  - [ 1422012, 1, 1, 0.000200 ] # The Morningstar
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2041030, 1, 1, 0.010000 ] # Dark scroll for Cape for HP 70%
+  - [ 2041041, 1, 1, 0.010000 ] # Dark scroll for Cape for LUK 30%
+  - [ 2050004, 1, 1, 0.100000 ] # All Cure Potion
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000094, 1, 1, 0.400000 ] # Boss's Pomade
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

@@ -1,0 +1,27 @@
+# Taurospear (9500129)
+
+rewards:
+  - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
+  - [ 1032012, 1, 1, 0.000100 ] # Skull Earrings
+  - [ 1050073, 1, 1, 0.000100 ] # Blue Enigmatic
+  - [ 1050076, 1, 1, 0.000100 ] # Blue Pris
+  - [ 1050091, 1, 1, 0.000100 ] # Dark Ades
+  - [ 1051057, 1, 1, 0.000100 ] # Purple Enigma
+  - [ 1051067, 1, 1, 0.000100 ] # Blue Pria
+  - [ 1072114, 1, 1, 0.000100 ] # Red Moon Shoes
+  - [ 1082027, 1, 1, 0.000100 ] # Blood Mesana
+  - [ 1302011, 1, 1, 0.000100 ] # Neocora
+  - [ 1322018, 1, 1, 0.000100 ] # Tamus
+  - [ 1322028, 1, 1, 0.000100 ] # Heaven's Justice
+  - [ 1412007, 1, 1, 0.000100 ] # The Shining
+  - [ 1432006, 1, 1, 0.000100 ] # Holy Spear
+  - [ 1452004, 1, 1, 0.000100 ] # Asianic Bow
+  - [ 1462008, 1, 1, 0.000100 ] # Golden Crow
+  - [ 1472022, 1, 1, 0.000100 ] # Bronze Gigantic
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 4000046, 1, 1, 0.400000 ] # Taurospear Horn
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4031215, 1, 1, 0.120000, 2097 ] # Taurospear's Spirit Rock

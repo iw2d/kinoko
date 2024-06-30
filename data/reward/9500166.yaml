@@ -1,0 +1,26 @@
+# Blue Kentaurus (9500166)
+
+rewards:
+  - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
+  - [ 1041106, 1, 1, 0.000100 ] # Red Pirate Blouse
+  - [ 1061105, 1, 1, 0.000100 ] # Red Pirate Skirt
+  - [ 1072177, 1, 1, 0.000100 ] # Green Enigma Shoes
+  - [ 1082116, 1, 1, 0.000100 ] # Blood Emperor
+  - [ 1102032, 1, 1, 0.000100 ] # Purple Giles Cape
+  - [ 1322045, 1, 1, 0.000100 ] # Battle Hammer
+  - [ 1332051, 1, 1, 0.000100 ] # Gold Double Knife
+  - [ 1412009, 1, 1, 0.000100 ] # Helios
+  - [ 1412021, 1, 1, 0.000100 ] # Tavar
+  - [ 1432011, 1, 1, 0.000100 ] # Fairfrozen
+  - [ 1442019, 1, 1, 0.000100 ] # Eclipse
+  - [ 1452013, 1, 1, 0.000100 ] # Fire Arund
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040004, 1, 1, 0.000100 ] # Scroll for Helmet for HP 60%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 4000233, 1, 1, 0.400000 ] # Kentaurus's Marrow
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore

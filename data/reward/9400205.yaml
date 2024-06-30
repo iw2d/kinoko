@@ -1,0 +1,23 @@
+# Blue Mushmom (9400205)
+
+rewards:
+  - [ 1322029, 1, 1, 0.000200 ] # Ruin Hammer
+  - [ 1412010, 1, 1, 0.000200 ] # Colonian Axe
+  - [ 1452025, 1, 1, 0.000200 ] # Blue Metus
+  - [ 1462022, 1, 1, 0.000200 ] # Yellow Crow
+  - [ 1472031, 1, 1, 0.000200 ] # Black Mamba
+  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2002011, 1, 1, 0.100000 ] # Pain Reliever
+  - [ 2022018, 1, 1, 0.100000 ] # Kinoko Ramen(roasted pork)
+  - [ 2022019, 1, 1, 0.100000 ] # Kinoko Ramen(pig head)
+  - [ 2040008, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 70%
+  - [ 2040405, 1, 1, 0.010000 ] # Dark scroll for Topwear for DEF 30%
+  - [ 2041039, 1, 1, 0.010000 ] # Dark scroll for Cape for DEX 30%
+  - [ 2041041, 1, 1, 0.010000 ] # Dark scroll for Cape for LUK 30%
+  - [ 2043004, 1, 1, 0.010000 ] # Dark scroll for One-Handed Sword for ATT 70%
+  - [ 2043304, 1, 1, 0.010000 ] # Dark scroll for Dagger for ATT 70%
+  - [ 2044505, 1, 1, 0.010000 ] # Dark scroll for Bow for ATT 30%
+  - [ 2061003, 10, 20, 0.008000 ] # Blue Arrow for Crossbow
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

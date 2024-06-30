@@ -1,0 +1,21 @@
+# Nightghost (9400003)
+
+rewards:
+  - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
+  - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
+  - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen
+  - [ 1041096, 1, 1, 0.000100 ] # Umber Mantis
+  - [ 1050060, 1, 1, 0.000100 ] # Red Tai
+  - [ 1092020, 1, 1, 0.000100 ] # Jurgen Wristguard
+  - [ 1302012, 1, 1, 0.000100 ] # Red Katana
+  - [ 1332017, 1, 1, 0.000100 ] # Serpent's Coil
+  - [ 2020010, 1, 1, 0.010000 ] # Grape Juice
+  - [ 2022017, 1, 1, 0.010000 ] # Ramen
+  - [ 2022027, 1, 1, 0.010000 ] # Yakisoba (x2)
+  - [ 2041016, 1, 1, 0.000100 ] # Scroll for Cape for INT 60%
+  - [ 2041019, 1, 1, 0.000100 ] # Scroll for Cape for DEX 60%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000075, 1, 1, 0.400000 ] # Triangular Bandana of the Nightghost
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore

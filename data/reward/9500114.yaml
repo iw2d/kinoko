@@ -1,0 +1,28 @@
+# King Blockpus (9500114)
+
+rewards:
+  - [ 1002093, 1, 1, 0.000100 ] # Blue Duke
+  - [ 1002154, 1, 1, 0.000100 ] # Dark Guiltian
+  - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1040083, 1, 1, 0.000100 ] # Marine Shadow
+  - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra
+  - [ 1050045, 1, 1, 0.000100 ] # Blue Calas
+  - [ 1060072, 1, 1, 0.000100 ] # Marine Shadow Pants
+  - [ 1061081, 1, 1, 0.000100 ] # Brown Piettra Skirt
+  - [ 1072105, 1, 1, 0.000100 ] # Green White-Lined Boots
+  - [ 1082035, 1, 1, 0.000100 ] # Yellow Briggon
+  - [ 1442003, 1, 1, 0.000100 ] # Axe Pole Arm
+  - [ 1452006, 1, 1, 0.000100 ] # Red Viper
+  - [ 1472011, 1, 1, 0.000100 ] # Bronze Guardian
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002007, 1, 1, 0.010000 ] # Magic Pill
+  - [ 2040302, 1, 1, 0.000100 ] # Scroll for Earring for INT 10%
+  - [ 2048002, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000100, 1, 1, 0.400000 ] # Plastic Crown
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4131013, 1, 1, 0.000300 ] # Claw Production Manual

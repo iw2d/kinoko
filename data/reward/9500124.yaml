@@ -1,0 +1,23 @@
+# Mushmom (9500124)
+
+rewards:
+  - [ 1032013, 1, 1, 0.000200 ] # Red-Hearted Earrings
+  - [ 1092012, 1, 1, 0.000200 ] # Steel Tower Shield
+  - [ 1372000, 1, 1, 0.000200 ] # Fairy Wand
+  - [ 2040001, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 60%
+  - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
+  - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
+  - [ 2040401, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 60%
+  - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040504, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040601, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040701, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 60%
+  - [ 2040704, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 60%
+  - [ 2040707, 1, 1, 0.010000 ] # Scroll for Shoes for Speed 60%
+  - [ 2040801, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 60%
+  - [ 2040804, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 60%
+  - [ 2040901, 1, 1, 0.010000 ] # Scroll for Shield for DEF 60%
+  - [ 2041001, 1, 1, 0.010000 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2041004, 1, 1, 0.010000 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 4000040, 1, 1, 0.400000 ] # Mushmom Spore

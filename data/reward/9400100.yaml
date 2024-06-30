@@ -1,0 +1,23 @@
+# Extra A (9400100)
+
+rewards:
+  - [ 1002047, 1, 1, 0.000100 ] # Great Red Helmet
+  - [ 1002090, 1, 1, 0.000100 ] # Blue Bamboo Hat
+  - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings
+  - [ 1051026, 1, 1, 0.000100 ] # Dark Moonlight
+  - [ 1060069, 1, 1, 0.000100 ] # Brown Piette Pants
+  - [ 1060079, 1, 1, 0.000100 ] # Green Orientican Pants
+  - [ 1072056, 1, 1, 0.000100 ] # Blue Whitebottom Boots
+  - [ 1072107, 1, 1, 0.000100 ] # Black Red-Lined Shoes
+  - [ 1082045, 1, 1, 0.000100 ] # Gold Arbion
+  - [ 1332021, 1, 1, 0.000100 ] # Plastic Bottle
+  - [ 1332029, 1, 1, 0.000100 ] # Liu Bei Dagger
+  - [ 1402001, 1, 1, 0.000100 ] # Wooden Sword
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040405, 1, 1, 0.000100 ] # Dark scroll for Topwear for DEF 30%
+  - [ 2040511, 1, 1, 0.000100 ] # Dark scroll for Overall Armor for DEF 30%
+  - [ 2060003, 10, 20, 0.008000 ] # Red Arrow for Bow
+  - [ 4000089, 1, 1, 0.400000 ] # Littleman A's Badge
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator

@@ -1,0 +1,30 @@
+# Urban Fungus (9400539)
+
+rewards:
+  - [ 1002127, 1, 1, 0.000100 ] # Red Loosecap
+  - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
+  - [ 1040012, 1, 1, 0.000100 ] # Blue Sergeant
+  - [ 1041027, 1, 1, 0.000100 ] # Red Shivermail
+  - [ 1051000, 1, 1, 0.000100 ] # Steel Fitted Mail
+  - [ 1060010, 1, 1, 0.000100 ] # Steel Sergeant Kilt
+  - [ 1061025, 1, 1, 0.000100 ] # Red Shivermail Skirt
+  - [ 1072011, 1, 1, 0.000100 ] # Mithril War Boots
+  - [ 1072020, 1, 1, 0.000100 ] # Purple Jewelry Boots
+  - [ 1332001, 1, 1, 0.000100 ] # Halfmoon Zamadar
+  - [ 1332006, 1, 1, 0.000100 ] # Field Dagger
+  - [ 1382002, 1, 1, 0.000100 ] # Wizard Staff
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432001, 1, 1, 0.000100 ] # Fork on a Stick
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 1452005, 1, 1, 0.000100 ] # Ryden
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
+  - [ 2010004, 1, 1, 0.010000 ] # Lemon
+  - [ 2040602, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

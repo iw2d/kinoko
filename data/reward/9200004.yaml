@@ -1,0 +1,22 @@
+# Green Mushroom (PC) (9200004)
+
+rewards:
+  - [ 1002010, 1, 1, 0.000100 ] # Brown Winter Hat
+  - [ 1002033, 1, 1, 0.000100 ] # Old Wisconsin
+  - [ 1002143, 1, 1, 0.000100 ] # Green Matty
+  - [ 1032001, 1, 1, 0.000100 ] # Single Earring
+  - [ 1092008, 1, 1, 0.000100 ] # Pan Lid
+  - [ 1302007, 1, 1, 0.000100 ] # Long Sword
+  - [ 1322000, 1, 1, 0.000100 ] # Mace
+  - [ 1432005, 1, 1, 0.000100 ] # Zeco
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2048000, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000012, 1, 1, 0.400000 ] # Green Mushroom Cap
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

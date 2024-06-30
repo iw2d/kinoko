@@ -1,0 +1,15 @@
+# Bob (9400551)
+
+rewards:
+  - [ 1002067, 1, 1, 0.000100 ] # Green Headband
+  - [ 1040002, 1, 1, 0.000100 ] # White Undershirt
+  - [ 1061002, 1, 1, 0.000100 ] # Red Miniskirt
+  - [ 1302000, 1, 1, 0.000100 ] # Sword
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2040002, 1, 1, 0.000100 ] # Scroll for Helmet for DEF 10%
+  - [ 2041001, 1, 1, 0.000100 ] # Scroll for Cape for Magic Def. 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4031447, 1, 1, 0.050000 ] # Bob's Snail Shell

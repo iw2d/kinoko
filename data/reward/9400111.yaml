@@ -1,0 +1,25 @@
+# Leader B (9400111)
+
+rewards:
+  - [ 1002211, 1, 1, 0.000100 ] # Blue Maro
+  - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet
+  - [ 1050055, 1, 1, 0.000100 ] # White Anakamoon
+  - [ 1051041, 1, 1, 0.000100 ] # Red Choro
+  - [ 1061076, 1, 1, 0.000100 ] # Maroon Moon Pants
+  - [ 1061082, 1, 1, 0.000100 ] # Dark Piettra Skirt
+  - [ 1082062, 1, 1, 0.000100 ] # Red Arten
+  - [ 1092004, 1, 1, 0.000100 ] # Skull Shield
+  - [ 1092018, 1, 1, 0.000100 ] # Seclusion Wristguard
+  - [ 1092021, 1, 1, 0.000100 ] # Mystic Shield
+  - [ 1332016, 1, 1, 0.000100 ] # Sai
+  - [ 1422009, 1, 1, 0.000100 ] # The Blessing
+  - [ 1452018, 1, 1, 0.000100 ] # Bow of Magical Destruction
+  - [ 1462009, 1, 1, 0.000100 ] # Gross Jaeger
+  - [ 2022018, 1, 1, 0.010000 ] # Kinoko Ramen(roasted pork)
+  - [ 2040904, 1, 1, 0.000100 ] # Dark scroll for Shield for DEF 70%
+  - [ 2041037, 1, 1, 0.000100 ] # Dark scroll for Cape for INT 30%
+  - [ 2050000, 1, 1, 0.010000 ] # Antidote
+  - [ 4000093, 1, 1, 0.400000 ] # Leader B's Charm
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4031139, 1, 1, 0.001000, 8005 ] # Mariwakawa's Bag

@@ -1,0 +1,12 @@
+# Turkey Commando (9400568)
+
+rewards:
+  - [ 1000025, 1, 1, 0.000100 ] # Pilgrim Hat
+  - [ 1001035, 1, 1, 0.000100 ] # Maplehontas
+  - [ 1312017, 1, 1, 0.000100 ] # Chief Axe
+  - [ 2020029, 1, 1, 0.010000 ] # Corn
+  - [ 2020030, 1, 1, 0.010000 ] # Roasted Turkey
+  - [ 2022261, 1, 1, 0.010000 ] # Stuffing Scoop
+  - [ 2022262, 1, 1, 0.010000 ] # Cranberry Sauce
+  - [ 2022263, 1, 1, 0.010000 ] # Mashed Potato
+  - [ 2022264, 1, 1, 0.010000 ] # Gravy

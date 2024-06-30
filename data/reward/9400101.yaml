@@ -1,0 +1,23 @@
+# Extra B (9400101)
+
+rewards:
+  - [ 1002089, 1, 1, 0.000100 ] # Green Bamboo Hat
+  - [ 1002183, 1, 1, 0.000100 ] # Green Pilfer
+  - [ 1040061, 1, 1, 0.000100 ] # Green Knucklevest
+  - [ 1050037, 1, 1, 0.000100 ] # Green Starlight
+  - [ 1061056, 1, 1, 0.000100 ] # Gold Sneak Pants
+  - [ 1072000, 1, 1, 0.000100 ] # Brown Jangoon Shoes
+  - [ 1072063, 1, 1, 0.000100 ] # Brown Ankle-strap Sandals
+  - [ 1302010, 1, 1, 0.000100 ] # Jeweled Katar
+  - [ 1322012, 1, 1, 0.000100 ] # Red Brick
+  - [ 1322017, 1, 1, 0.000100 ] # Knuckle Mace
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2012001, 1, 1, 0.010000 ] # Fairy's Honey
+  - [ 2040011, 1, 1, 0.000100 ] # Dark Scroll for Helmet for HP 30%
+  - [ 2041033, 1, 1, 0.000100 ] # Dark scroll for Cape for MP 30%
+  - [ 2061003, 10, 20, 0.008000 ] # Blue Arrow for Crossbow
+  - [ 4000090, 1, 1, 0.400000 ] # Littleman B's Name Plate
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
+  - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator

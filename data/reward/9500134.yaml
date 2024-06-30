@@ -1,0 +1,27 @@
+# Lycanthrope (9500134)
+
+rewards:
+  - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
+  - [ 1002340, 1, 1, 0.000100 ] # Dark Dragon Barbute
+  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
+  - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
+  - [ 1050070, 1, 1, 0.000100 ] # Dark Requiem
+  - [ 1050078, 1, 1, 0.000100 ] # Dark Pris
+  - [ 1051055, 1, 1, 0.000100 ] # Dark Requierre
+  - [ 1051069, 1, 1, 0.000100 ] # Dark Pria
+  - [ 1092017, 1, 1, 0.000100 ] # Gold Ancient Shield
+  - [ 1322019, 1, 1, 0.000100 ] # The Judgement
+  - [ 1332018, 1, 1, 0.000100 ] # Kandine
+  - [ 1332022, 1, 1, 0.000100 ] # Angelic Betrayal
+  - [ 1402004, 1, 1, 0.000100 ] # Blue Screamer
+  - [ 1462010, 1, 1, 0.000100 ] # Marine Raven
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 4000054, 1, 1, 0.400000 ] # Lycanthrope Toenail
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

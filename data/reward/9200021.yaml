@@ -1,0 +1,22 @@
+# Separated Yetti (9200021)
+
+rewards:
+  - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1050069, 1, 1, 0.000100 ] # Brown Requiem
+  - [ 1050074, 1, 1, 0.000100 ] # Dark Enigmatic
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1051058, 1, 1, 0.000100 ] # Dark Enigma
+  - [ 1092006, 1, 1, 0.000100 ] # Mithril Buckler
+  - [ 1402012, 1, 1, 0.000100 ] # Doombringer
+  - [ 1422009, 1, 1, 0.000100 ] # The Blessing
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041023, 1, 1, 0.000100 ] # Scroll for Cape for LUK 10%
+  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

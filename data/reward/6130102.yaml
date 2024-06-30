@@ -1,0 +1,34 @@
+# Separated Pepe (6130102)
+
+rewards:
+  - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
+  - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
+  - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
+  - [ 1002282, 1, 1, 0.000100 ] # Blue Nightfox
+  - [ 1041081, 1, 1, 0.000100 ] # White Piettra
+  - [ 1050047, 1, 1, 0.000100 ] # Orange Calas
+  - [ 1050063, 1, 1, 0.000100 ] # Green Linnex
+  - [ 1050068, 1, 1, 0.000100 ] # Red Requiem
+  - [ 1061080, 1, 1, 0.000100 ] # White Piettra Skirt
+  - [ 1072124, 1, 1, 0.000100 ] # Blue Steel-Tip Boots
+  - [ 1072128, 1, 1, 0.000100 ] # Blue Goni Shoes
+  - [ 1072137, 1, 1, 0.000100 ] # Green Goldrunners
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1082081, 1, 1, 0.000100 ] # Red Pennance
+  - [ 1082091, 1, 1, 0.000100 ] # Dark Garner
+  - [ 1102023, 1, 1, 0.000100 ] # White Gaia Cape
+  - [ 1432006, 1, 1, 0.000100 ] # Holy Spear
+  - [ 1442010, 1, 1, 0.000100 ] # Skylar
+  - [ 1472022, 1, 1, 0.000100 ] # Bronze Gigantic
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2041020, 1, 1, 0.000100 ] # Scroll for Cape for DEX 10%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2070010, 1, 1, 0.000400 ] # Icicle
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000050, 1, 1, 0.400000 ] # Pepe Beak
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

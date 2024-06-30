@@ -1,0 +1,19 @@
+# Yellow Eggy Popp (9400511)
+
+rewards:
+  - [ 1002039, 1, 1, 0.000100 ] # Bronze Helmet
+  - [ 1032001, 1, 1, 0.000100 ] # Single Earring
+  - [ 1041018, 1, 1, 0.000100 ] # Green Arianne
+  - [ 1041061, 1, 1, 0.000100 ] # Yellow Avelin
+  - [ 1061013, 1, 1, 0.000100 ] # Green Arianne Skirt
+  - [ 1061057, 1, 1, 0.000100 ] # Yellow Avelin Skirt
+  - [ 1092003, 1, 1, 0.000100 ] # Stolen Fence
+  - [ 1302006, 1, 1, 0.000100 ] # Machete
+  - [ 1382000, 1, 1, 0.000100 ] # Wooden Staff
+  - [ 1442000, 1, 1, 0.000100 ] # Pole Arm
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2040802, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

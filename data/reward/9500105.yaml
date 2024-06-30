@@ -1,0 +1,24 @@
+# Green Mushroom (9500105)
+
+rewards:
+  - [ 1041017, 1, 1, 0.000100 ] # Purple Arianne
+  - [ 1041044, 1, 1, 0.000100 ] # Red Nightshift
+  - [ 1041063, 1, 1, 0.000100 ] # Grey Able Armor
+  - [ 1061012, 1, 1, 0.000100 ] # Purple Arianne Skirt
+  - [ 1061037, 1, 1, 0.000100 ] # Red Nightshift Pants
+  - [ 1061059, 1, 1, 0.000100 ] # Grey Able Skirt
+  - [ 1092008, 1, 1, 0.000100 ] # Pan Lid
+  - [ 1322000, 1, 1, 0.000100 ] # Mace
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1452003, 1, 1, 0.000100 ] # Composite Bow
+  - [ 1462002, 1, 1, 0.000100 ] # Battle Crossbow
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2048000, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000012, 1, 1, 0.400000 ] # Green Mushroom Cap
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4031146, 1, 1, 0.500000, 2065 ] # Animal Fossil

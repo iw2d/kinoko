@@ -1,0 +1,24 @@
+# Extra D (9400103)
+
+rewards:
+  - [ 1002212, 1, 1, 0.000100 ] # Red Maro
+  - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
+  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
+  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
+  - [ 1061098, 1, 1, 0.000100 ] # Bloody Platina Pants
+  - [ 1061099, 1, 1, 0.000100 ] # Purple Mystique Pants
+  - [ 1082084, 1, 1, 0.000100 ] # Blue Willow
+  - [ 1102000, 1, 1, 0.000100 ] # Green Napoleon
+  - [ 1322021, 1, 1, 0.000100 ] # Black Tube
+  - [ 1332019, 1, 1, 0.000100 ] # Golden River
+  - [ 1442005, 1, 1, 0.000100 ] # The Nine Dragons
+  - [ 1442025, 1, 1, 0.000100 ] # Guan Yu Pole Arm
+  - [ 2000011, 1, 1, 0.010000 ] # Mana Elixir Pill
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2002005, 1, 1, 0.010000 ] # Sniper Potion
+  - [ 2041012, 1, 1, 0.000100 ] # Scroll for Cape for STR 100%
+  - [ 2041032, 1, 1, 0.000100 ] # Dark scroll for Cape for MP 70%
+  - [ 2043304, 1, 1, 0.000100 ] # Dark scroll for Dagger for ATT 70%
+  - [ 4000137, 1, 1, 0.400000 ] # Subordinate D Fingernail
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

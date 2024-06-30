@@ -1,0 +1,24 @@
+# Psycho Jack (9400558)
+
+rewards:
+  - [ 1002036, 1, 1, 0.000100 ] # Green Jester
+  - [ 1002152, 1, 1, 0.000100 ] # Blue Guiltian
+  - [ 1002183, 1, 1, 0.000100 ] # Green Pilfer
+  - [ 1040069, 1, 1, 0.000100 ] # Red Hunter's Armor
+  - [ 1051004, 1, 1, 0.000100 ] # Purple Doroness Robe
+  - [ 1060058, 1, 1, 0.000100 ] # Red Hunter's Pants
+  - [ 1072104, 1, 1, 0.000100 ] # Red White-Lined Boots
+  - [ 1072120, 1, 1, 0.000100 ] # Brown Pierre Shoes
+  - [ 1082008, 1, 1, 0.000100 ] # Steel Briggon
+  - [ 1082023, 1, 1, 0.000100 ] # Iron Knuckle
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1312005, 1, 1, 0.000100 ] # Fireman's Axe
+  - [ 1332004, 1, 1, 0.000100 ] # Forked Dagger
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2022244, 1, 1, 0.010000 ] # Smore
+  - [ 2041002, 1, 1, 0.000100 ] # Scroll for Cape for Magic DEF 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000399, 1, 1, 0.400000 ] # Loaded Spring
+  - [ 4003000, 1, 1, 0.040000 ] # Screw

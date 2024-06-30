@@ -1,0 +1,22 @@
+# Mighty Maple Eater (9400548)
+
+rewards:
+  - [ 1002137, 1, 1, 0.000100 ] # Green Pole-Feather Hat
+  - [ 1032006, 1, 1, 0.000100 ] # Lightning Earrings
+  - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt
+  - [ 1040061, 1, 1, 0.000100 ] # Green Knucklevest
+  - [ 1060017, 1, 1, 0.000100 ] # White Martial Arts Pants
+  - [ 1060050, 1, 1, 0.000100 ] # Blue Knucklevest Pants
+  - [ 1082037, 1, 1, 0.000100 ] # Bronze Wolfskin
+  - [ 1312005, 1, 1, 0.000100 ] # Fireman's Axe
+  - [ 1312016, 1, 1, 0.000100 ] # Contra Axe
+  - [ 1382018, 1, 1, 0.000100 ] # Petal Staff
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

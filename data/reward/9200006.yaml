@@ -1,0 +1,23 @@
+# Lupin (PC) (9200006)
+
+rewards:
+  - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
+  - [ 1040076, 1, 1, 0.000100 ] # Brown Legolier
+  - [ 1041069, 1, 1, 0.000100 ] # Brown Legolia
+  - [ 1041094, 1, 1, 0.000100 ] # Light Mantis
+  - [ 1060065, 1, 1, 0.000100 ] # Brown Legolier Pants
+  - [ 1061064, 1, 1, 0.000100 ] # Brown Legolia Pants
+  - [ 1072032, 1, 1, 0.000100 ] # Bronze Chain Boots
+  - [ 1302003, 1, 1, 0.000100 ] # Eloon
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2041010, 1, 1, 0.000100 ] # Scroll for Cape for MP 60%
+  - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000026, 1, 1, 0.400000 ] # Lupin Doll
+  - [ 4000029, 1, 1, 0.400000 ] # Lupin's Banana
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

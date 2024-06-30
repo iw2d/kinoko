@@ -1,0 +1,29 @@
+# King Block Golem (9500120)
+
+rewards:
+  - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
+  - [ 1002144, 1, 1, 0.000100 ] # Brown Matty
+  - [ 1002170, 1, 1, 0.000100 ] # Dark Distinction
+  - [ 1002181, 1, 1, 0.000100 ] # Red Pilfer
+  - [ 1040082, 1, 1, 0.000100 ] # Khaki Shadow
+  - [ 1040088, 1, 1, 0.000100 ] # Ocher Shouldermail
+  - [ 1041067, 1, 1, 0.000100 ] # Green Legolia
+  - [ 1041084, 1, 1, 0.000100 ] # Red Jangoon Armor
+  - [ 1060071, 1, 1, 0.000100 ] # Khaki Shadow Pants
+  - [ 1060077, 1, 1, 0.000100 ] # Ocher Shouldermail Pants
+  - [ 1061062, 1, 1, 0.000100 ] # Green Legolia Pants
+  - [ 1061083, 1, 1, 0.000100 ] # Red Jangoon Skirt
+  - [ 1072135, 1, 1, 0.000100 ] # Gold Hildon Boots
+  - [ 1082081, 1, 1, 0.000100 ] # Red Pennance
+  - [ 1082083, 1, 1, 0.000100 ] # Dark Willow
+  - [ 1302013, 1, 1, 0.000100 ] # Red Whip
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2040504, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000102, 1, 1, 0.400000 ] # Blue Toy Block
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

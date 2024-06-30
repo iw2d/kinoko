@@ -1,0 +1,23 @@
+# Harp (9500162)
+
+rewards:
+  - [ 1002288, 1, 1, 0.000100 ] # Green Patriot
+  - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants
+  - [ 1072158, 1, 1, 0.000100 ] # Red Lapiz Sandals
+  - [ 1082114, 1, 1, 0.000100 ] # Sapphire Emperor
+  - [ 1102031, 1, 1, 0.000100 ] # Green Giles Cape
+  - [ 1312010, 1, 1, 0.000100 ] # Mikhail
+  - [ 1442008, 1, 1, 0.000100 ] # The Gold Dragon
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000238, 1, 1, 0.400000 ] # Harp's Tail Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

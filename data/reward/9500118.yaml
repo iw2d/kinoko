@@ -1,0 +1,31 @@
+# Tweeter (9500118)
+
+rewards:
+  - [ 1041085, 1, 1, 0.000100 ] # Brown Jangoon Armor
+  - [ 1051033, 1, 1, 0.000100 ] # Red Calaf
+  - [ 1061084, 1, 1, 0.000100 ] # Brown Jangoon Skirt
+  - [ 1072107, 1, 1, 0.000100 ] # Black Red-Lined Shoes
+  - [ 1072115, 1, 1, 0.000100 ] # Blue Moon Shoes
+  - [ 1072120, 1, 1, 0.000100 ] # Brown Pierre Shoes
+  - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist
+  - [ 1082065, 1, 1, 0.000100 ] # Blue Moon Gloves
+  - [ 1082073, 1, 1, 0.000100 ] # Dark Brace
+  - [ 1082083, 1, 1, 0.000100 ] # Dark Willow
+  - [ 1092012, 1, 1, 0.000100 ] # Steel Tower Shield
+  - [ 1322003, 1, 1, 0.000100 ] # Lollipop
+  - [ 1372000, 1, 1, 0.000100 ] # Fairy Wand
+  - [ 1402006, 1, 1, 0.000100 ] # Lionheart
+  - [ 1422008, 1, 1, 0.000100 ] # Sledgehammer
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002008, 1, 1, 0.010000 ] # Sniper Pill
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000003, 1, 1, 0.400000 ] # Tree Branch
+  - [ 4000116, 1, 1, 0.400000 ] # Small Egg
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator

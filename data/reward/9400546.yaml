@@ -1,0 +1,27 @@
+# I.AM.ROBOT (9400546)
+
+rewards:
+  - [ 1002169, 1, 1, 0.000100 ] # Brown Distinction
+  - [ 1002214, 1, 1, 0.000100 ] # Black Maro
+  - [ 1040097, 1, 1, 0.000100 ] # Green China
+  - [ 1051026, 1, 1, 0.000100 ] # Dark Moonlight
+  - [ 1060086, 1, 1, 0.000100 ] # Green China Pants
+  - [ 1072000, 1, 1, 0.000100 ] # Brown Jangoon Shoes
+  - [ 1072101, 1, 1, 0.000100 ] # Blue Silky Boots
+  - [ 1072110, 1, 1, 0.000100 ] # Black Blue-Lines Shoes
+  - [ 1082025, 1, 1, 0.000100 ] # Dark Knuckle
+  - [ 1302010, 1, 1, 0.000100 ] # Jeweled Katar
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1402003, 1, 1, 0.000100 ] # Lion's Fang
+  - [ 1412003, 1, 1, 0.000100 ] # The Rising
+  - [ 1472020, 1, 1, 0.000100 ] # Sapphire Slain
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2002008, 1, 1, 0.010000 ] # Sniper Pill
+  - [ 2040504, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4031681, 1, 1, 0.050000, 4915 ] # MesoGear Map Piece

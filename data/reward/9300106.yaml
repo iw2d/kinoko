@@ -1,0 +1,47 @@
+# Enraged Lord Pirate (9300106)
+
+rewards:
+  - [ 2000002, 3, 5, 0.400000 ] # White Potion
+  - [ 2000002, 3, 5, 0.300000 ] # White Potion
+  - [ 2000002, 3, 5, 1.000000 ] # White Potion
+  - [ 2000002, 3, 5, 0.700000 ] # White Potion
+  - [ 2000002, 3, 5, 0.550000 ] # White Potion
+  - [ 2000004, 1, 2, 0.700000 ] # Elixir
+  - [ 2000004, 1, 2, 0.550000 ] # Elixir
+  - [ 2000004, 1, 2, 0.400000 ] # Elixir
+  - [ 2000004, 1, 2, 0.300000 ] # Elixir
+  - [ 2000004, 1, 2, 1.000000 ] # Elixir
+  - [ 2000006, 3, 5, 0.700000 ] # Mana Elixir
+  - [ 2000006, 3, 5, 0.550000 ] # Mana Elixir
+  - [ 2000006, 3, 5, 0.400000 ] # Mana Elixir
+  - [ 2000006, 3, 5, 0.300000 ] # Mana Elixir
+  - [ 2000006, 1, 2, 1.000000 ] # Mana Elixir
+  - [ 2020013, 1, 2, 0.400000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 0.300000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 1.000000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 0.700000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 0.550000 ] # Reindeer Milk
+  - [ 2020014, 1, 2, 0.700000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 0.550000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 0.400000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 0.300000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 1.000000 ] # Sunrise Dew
+  - [ 2020015, 1, 2, 0.700000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 0.550000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 0.400000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 0.300000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 1.000000 ] # Sunset Dew
+  - [ 2040005, 1, 1, 0.009000 ] # Scroll for Helmet for HP 10%
+  - [ 2040501, 1, 1, 0.000600 ] # Scroll for Overall Armor for DEX 60%
+  - [ 2040513, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 60%
+  - [ 2040516, 1, 1, 0.000300 ] # Scroll for Overall Armor for LUK 60%
+  - [ 2040704, 1, 1, 0.000300 ] # Scroll for Shoes for Jump 60%
+  - [ 2040804, 1, 1, 0.000200 ] # Scroll for Gloves for ATT 60%
+  - [ 2041007, 1, 1, 0.009000 ] # Scroll for Cape for HP 60%
+  - [ 2041013, 1, 1, 0.009000 ] # Scroll for Cape for STR 60%
+  - [ 2041016, 1, 1, 0.000300 ] # Scroll for Cape for INT 60%
+  - [ 2041019, 1, 1, 0.000500 ] # Scroll for Cape for DEX 60%
+  - [ 2041022, 1, 1, 0.000500 ] # Scroll for Cape for LUK 60%
+  - [ 2044301, 1, 1, 0.009000 ] # Scroll for Spear for ATT 60%
+  - [ 4001123, 1, 1, 1.000000 ] # Transparent Item
+  - [ 4031437, 1, 1, 0.070000 ] # Lord Pirate's Key to Chest

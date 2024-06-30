@@ -1,0 +1,22 @@
+# Slime (9500100)
+
+rewards:
+  - [ 1002019, 1, 1, 0.000100 ] # White Bandana
+  - [ 1060002, 1, 1, 0.000100 ] # Blue Jean Shorts
+  - [ 1072023, 1, 1, 0.000100 ] # Beige Nitty
+  - [ 1082019, 1, 1, 0.000100 ] # Lemona
+  - [ 1322007, 1, 1, 0.000100 ] # Leather Purse
+  - [ 1412001, 1, 1, 0.000100 ] # Metal Axe
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432001, 1, 1, 0.000100 ] # Fork on a Stick
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2040602, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2041018, 1, 1, 0.000100 ] # Scroll for Cape for DEX 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000004, 1, 1, 0.400000 ] # Squishy Liquid
+  - [ 4000010, 1, 1, 0.400000 ] # Slime Bubble
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4031273, 1, 1, 0.035000, 2104 ] # Red Ball of Yarn

@@ -1,0 +1,21 @@
+# Fire Raccoon (9400001)
+
+rewards:
+  - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings
+  - [ 1041067, 1, 1, 0.000100 ] # Green Legolia
+  - [ 1041068, 1, 1, 0.000100 ] # Dark Legolia
+  - [ 1051008, 1, 1, 0.000100 ] # Blue Avenger
+  - [ 1060063, 1, 1, 0.000100 ] # Green Legolier Pants
+  - [ 1060064, 1, 1, 0.000100 ] # Dark Legolier Pants
+  - [ 1072076, 1, 1, 0.000100 ] # Blue Magicshoes
+  - [ 1072077, 1, 1, 0.000100 ] # White Magicshoes
+  - [ 1322015, 1, 1, 0.000100 ] # Heavy Hammer
+  - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2022024, 1, 1, 0.010000 ] # Takoyaki (Octopus Ball)
+  - [ 2040401, 1, 1, 0.000100 ] # Scroll for Topwear for DEF 60%
+  - [ 2044202, 1, 1, 0.000100 ] # Scroll for Two-handed BW for ATT 10%
+  - [ 4000065, 1, 1, 0.400000 ] # Raccoon Firewood
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

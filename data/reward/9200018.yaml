@@ -1,0 +1,19 @@
+# Jr. Yetti (9200018)
+
+rewards:
+  - [ 1051044, 1, 1, 0.000100 ] # Blue Anakarune
+  - [ 1051045, 1, 1, 0.000100 ] # Red Anakarune
+  - [ 1072089, 1, 1, 0.000100 ] # Purple Salt Shoes
+  - [ 1082038, 1, 1, 0.000100 ] # Mithril Wolfskin
+  - [ 1442009, 1, 1, 0.000100 ] # Crescent Polearm
+  - [ 1452006, 1, 1, 0.000100 ] # Red Viper
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000048, 1, 1, 0.400000 ] # Jr. Yeti Skin
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore

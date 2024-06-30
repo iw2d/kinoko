@@ -1,0 +1,29 @@
+# Electrophant (9400543)
+
+rewards:
+  - [ 1002143, 1, 1, 0.000100 ] # Green Matty
+  - [ 1002176, 1, 1, 0.000100 ] # Red Burgler
+  - [ 1040085, 1, 1, 0.000100 ] # Maroon Jangoon Armor
+  - [ 1041083, 1, 1, 0.000100 ] # Dark Piettra
+  - [ 1050035, 1, 1, 0.000100 ] # Brown Starlight
+  - [ 1050036, 1, 1, 0.000100 ] # Red Starlight
+  - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
+  - [ 1060074, 1, 1, 0.000100 ] # White Jangoon Pants
+  - [ 1061082, 1, 1, 0.000100 ] # Dark Piettra Skirt
+  - [ 1072116, 1, 1, 0.000100 ] # Gold Moon Shoes
+  - [ 1082074, 1, 1, 0.000100 ] # Dark Cleave
+  - [ 1092013, 1, 1, 0.000100 ] # Mithril Tower Shield
+  - [ 1312008, 1, 1, 0.000100 ] # Buck
+  - [ 1402007, 1, 1, 0.000100 ] # Zard
+  - [ 1432004, 1, 1, 0.000100 ] # Serpent's Tongue
+  - [ 1472019, 1, 1, 0.000100 ] # Blood Slain
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002010, 1, 1, 0.010000 ] # Speed Pill
+  - [ 2040804, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 60%
+  - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4031680, 1, 1, 0.050000, 4914 ] # Hyper Glyph
+  - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
+  - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator

@@ -1,0 +1,27 @@
+# Lorang (9500115)
+
+rewards:
+  - [ 1040080, 1, 1, 0.000100 ] # Dark Piette
+  - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
+  - [ 1050000, 1, 1, 0.000100 ] # White Crusader Chainmail
+  - [ 1050038, 1, 1, 0.000100 ] # Blue Starlight
+  - [ 1060068, 1, 1, 0.000100 ] # Dark Piette Pants 
+  - [ 1061069, 1, 1, 0.000100 ] # Purple Shadow Pants
+  - [ 1072113, 1, 1, 0.000100 ] # Dark Trigger
+  - [ 1072121, 1, 1, 0.000100 ] # Blue Pierre Shoes
+  - [ 1082056, 1, 1, 0.000100 ] # Dark Noel
+  - [ 1082074, 1, 1, 0.000100 ] # Dark Cleave
+  - [ 1092014, 1, 1, 0.000100 ] # Adamantium Tower Shield
+  - [ 1302017, 1, 1, 0.000100 ] # Sky Blue Umbrella
+  - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
+  - [ 1382017, 1, 1, 0.000100 ] # Circle-Winded Staff
+  - [ 1442001, 1, 1, 0.000100 ] # Mithril Pole Arm
+  - [ 1452005, 1, 1, 0.000100 ] # Ryden
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2048005, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 10%
+  - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

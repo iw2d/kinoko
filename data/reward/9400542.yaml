@@ -1,0 +1,22 @@
+# Fire Tusk (9400542)
+
+rewards:
+  - [ 1002153, 1, 1, 0.000100 ] # Red Guiltian
+  - [ 1002166, 1, 1, 0.000100 ] # Red Distinction
+  - [ 1032039, 1, 1, 0.000100 ] # Eclipse Earrings
+  - [ 1050039, 1, 1, 0.000100 ] # Dark Starlight
+  - [ 1051006, 1, 1, 0.000100 ] # Dark Avenger
+  - [ 1072080, 1, 1, 0.000100 ] # Blue Hunter Boots
+  - [ 1312007, 1, 1, 0.000100 ] # Blue Counter
+  - [ 1332031, 1, 1, 0.000100 ] # Dragon Toenail
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002008, 1, 1, 0.010000 ] # Sniper Pill
+  - [ 2040805, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 10%
+  - [ 2044705, 1, 1, 0.000100 ] # Dark scroll for Claw for ATT 30%
+  - [ 2060004, 10, 20, 0.008000 ] # Diamond Arrow for Bow
+  - [ 2061004, 10, 20, 0.008000 ] # Diamond Arrow for Crossbow
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
+  - [ 4131009, 1, 1, 0.000300 ] # Staff Production Manual

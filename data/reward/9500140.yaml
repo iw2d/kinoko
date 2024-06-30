@@ -1,0 +1,31 @@
+# Crimson Balrog (9500140)
+
+rewards:
+  - [ 2040002, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 10%
+  - [ 2040005, 1, 1, 0.010000 ] # Scroll for Helmet for HP 10%
+  - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%
+  - [ 2040402, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 10%
+  - [ 2040502, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2040505, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 10%
+  - [ 2040602, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 10%
+  - [ 2040702, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 10%
+  - [ 2040705, 1, 1, 0.010000 ] # Scroll for Shoes for Jump 10%
+  - [ 2040708, 1, 1, 0.010000 ] # Scroll for Shoes for Speed 10%
+  - [ 2040802, 1, 1, 0.010000 ] # Scroll for Gloves for DEX 10%
+  - [ 2040805, 1, 1, 0.010000 ] # Scroll for Gloves for ATT 10%
+  - [ 2040902, 1, 1, 0.010000 ] # Scroll for Shield for DEF 10%
+  - [ 2043002, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 10%
+  - [ 2043102, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 10%
+  - [ 2043202, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 10%
+  - [ 2043302, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 10%
+  - [ 2043702, 1, 1, 0.010000 ] # Scroll for Wand for Magic Attack 10%
+  - [ 2043802, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044002, 1, 1, 0.010000 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044102, 1, 1, 0.010000 ] # Scroll for Two-handed Axe for ATT 10%
+  - [ 2044202, 1, 1, 0.010000 ] # Scroll for Two-handed BW for ATT 10%
+  - [ 2044302, 1, 1, 0.010000 ] # Scroll for Spear for ATT 10%
+  - [ 2044402, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 10%
+  - [ 2044502, 1, 1, 0.010000 ] # Scroll for Bow for ATT 10%
+  - [ 2044602, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 10%
+  - [ 2044702, 1, 1, 0.010000 ] # Scroll for Claw for ATT 10%
+  - [ 4031906, 1, 1, 0.050000 ] # Balrog Claw

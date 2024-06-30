@@ -1,0 +1,15 @@
+# Street Slime (9400538)
+
+rewards:
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2022189, 1, 1, 0.010000 ] # Grilled Cheese
+  - [ 2041004, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2043302, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 10%
+  - [ 2048001, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

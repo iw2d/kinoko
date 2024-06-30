@@ -1,0 +1,30 @@
+# Bain (9500138)
+
+rewards:
+  - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
+  - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
+  - [ 1002330, 1, 1, 0.000100 ] # Dark Pireta Hat
+  - [ 1002364, 1, 1, 0.000100 ] # Blue Oriental Fury Hat
+  - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
+  - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
+  - [ 1041115, 1, 1, 0.000100 ] # Green Osfa Suit
+  - [ 1041121, 1, 1, 0.000100 ] # Dark Valkyrie
+  - [ 1060081, 1, 1, 0.000100 ] # Blue Orientican Pants
+  - [ 1061114, 1, 1, 0.000100 ] # Green Osfa Pants
+  - [ 1061120, 1, 1, 0.000100 ] # Blood Valkyrie Skirt
+  - [ 1082126, 1, 1, 0.000100 ] # Green Focus
+  - [ 1082128, 1, 1, 0.000100 ] # Green Imperial
+  - [ 1082134, 1, 1, 0.000100 ] # Dark Pachone
+  - [ 1102034, 1, 1, 0.000100 ] # Blue Giles Cape
+  - [ 1332023, 1, 1, 0.000100 ] # Dragon's Tail
+  - [ 1402015, 1, 1, 0.000100 ] # Heaven's Gate
+  - [ 1432010, 1, 1, 0.000100 ] # Omega Spear
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041022, 1, 1, 0.000100 ] # Scroll for Cape for LUK 60%
+  - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 4000080, 1, 1, 0.400000 ] # Bain's Spiky Collar
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

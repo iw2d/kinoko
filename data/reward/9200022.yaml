@@ -1,0 +1,23 @@
+# Separated Pepe (9200022)
+
+rewards:
+  - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
+  - [ 1002154, 1, 1, 0.000100 ] # Dark Guiltian
+  - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
+  - [ 1051041, 1, 1, 0.000100 ] # Red Choro
+  - [ 1072119, 1, 1, 0.000100 ] # Yellow Pierre Shoes
+  - [ 1082076, 1, 1, 0.000100 ] # Gold Cleave
+  - [ 1332017, 1, 1, 0.000100 ] # Serpent's Coil
+  - [ 1382006, 1, 1, 0.000100 ] # Thorns
+  - [ 1422005, 1, 1, 0.000100 ] # Golden Mole
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2041020, 1, 1, 0.000100 ] # Scroll for Cape for DEX 10%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2070010, 1, 1, 0.000400 ] # Icicle
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000050, 1, 1, 0.400000 ] # Pepe Beak
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

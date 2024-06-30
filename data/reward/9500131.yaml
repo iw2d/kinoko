@@ -1,0 +1,25 @@
+# Lucida (9500131)
+
+rewards:
+  - [ 1002273, 1, 1, 0.000100 ] # Purple Galaxy
+  - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
+  - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
+  - [ 1002278, 1, 1, 0.000100 ] # Dark Falcon
+  - [ 1002338, 1, 1, 0.000100 ] # Red Dragon Barbute
+  - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
+  - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top
+  - [ 1050090, 1, 1, 0.000100 ] # Green Ades
+  - [ 1060099, 1, 1, 0.000100 ] # Dark Pirate Pants
+  - [ 1082021, 1, 1, 0.000100 ] # Green Morrican
+  - [ 1322020, 1, 1, 0.000100 ] # Bent Judgement
+  - [ 1332018, 1, 1, 0.000100 ] # Kandine
+  - [ 1442019, 1, 1, 0.000100 ] # Eclipse
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2044601, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 60%
+  - [ 2050004, 1, 1, 0.010000 ] # All Cure Potion
+  - [ 4000074, 1, 1, 0.400000 ] # Lucida Tail
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

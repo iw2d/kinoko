@@ -1,0 +1,30 @@
+# Killa Bee (9400541)
+
+rewards:
+  - [ 1002047, 1, 1, 0.000100 ] # Great Red Helmet
+  - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
+  - [ 1032009, 1, 1, 0.000100 ] # Yellow Square
+  - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt
+  - [ 1041007, 1, 1, 0.000100 ] # Green Avelin
+  - [ 1041032, 1, 1, 0.000100 ] # Green Bennis Chainmail
+  - [ 1041060, 1, 1, 0.000100 ] # Gold Sneak
+  - [ 1050026, 1, 1, 0.000100 ] # White Wizard Robe
+  - [ 1051012, 1, 1, 0.000100 ] # Blue Engrit
+  - [ 1060071, 1, 1, 0.000100 ] # Khaki Shadow Pants
+  - [ 1061056, 1, 1, 0.000100 ] # Gold Sneak Pants
+  - [ 1062006, 1, 1, 0.000100 ] # Bennis Chainpants
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1422001, 1, 1, 0.000100 ] # Mithril Maul
+  - [ 1432002, 1, 1, 0.000100 ] # Forked Spear
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2002001, 1, 1, 0.010000 ] # Speed Potion
+  - [ 2010004, 1, 1, 0.010000 ] # Lemon
+  - [ 2040510, 1, 1, 0.000100 ] # Dark scroll for Overall Armor for DEF 70%
+  - [ 2040601, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

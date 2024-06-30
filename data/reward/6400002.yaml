@@ -1,0 +1,25 @@
+# Separated Dark Yeti (6400002)
+
+rewards:
+  - [ 1040100, 1, 1, 0.000100 ] # Dark Scorpio
+  - [ 1051030, 1, 1, 0.000100 ] # Dark Calaf
+  - [ 1051031, 1, 1, 0.000100 ] # White Calaf
+  - [ 1051034, 1, 1, 0.000100 ] # Orange Calaf
+  - [ 1060089, 1, 1, 0.000100 ] # Dark Scorpio Pants
+  - [ 1072127, 1, 1, 0.000100 ] # Blue Jangoon Shoes
+  - [ 1302011, 1, 1, 0.000100 ] # Neocora
+  - [ 1302018, 1, 1, 0.000100 ] # Khan
+  - [ 1332019, 1, 1, 0.000100 ] # Golden River
+  - [ 1412003, 1, 1, 0.000100 ] # The Rising
+  - [ 1412007, 1, 1, 0.000100 ] # The Shining
+  - [ 1472022, 1, 1, 0.000100 ] # Bronze Gigantic
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 4000056, 1, 1, 0.400000 ] # Dark Yeti Horn
+  - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
+  - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore

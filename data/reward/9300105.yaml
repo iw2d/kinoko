@@ -1,0 +1,47 @@
+# Angry Lord Pirate (9300105)
+
+rewards:
+  - [ 2000002, 3, 5, 0.400000 ] # White Potion
+  - [ 2000002, 3, 5, 0.300000 ] # White Potion
+  - [ 2000002, 3, 5, 1.000000 ] # White Potion
+  - [ 2000002, 3, 5, 0.700000 ] # White Potion
+  - [ 2000002, 3, 5, 0.550000 ] # White Potion
+  - [ 2000004, 1, 2, 0.700000 ] # Elixir
+  - [ 2000004, 1, 2, 0.550000 ] # Elixir
+  - [ 2000004, 1, 2, 0.400000 ] # Elixir
+  - [ 2000004, 1, 2, 0.300000 ] # Elixir
+  - [ 2000004, 1, 2, 1.000000 ] # Elixir
+  - [ 2000006, 3, 5, 0.700000 ] # Mana Elixir
+  - [ 2000006, 3, 5, 0.550000 ] # Mana Elixir
+  - [ 2000006, 3, 5, 0.400000 ] # Mana Elixir
+  - [ 2000006, 3, 5, 0.300000 ] # Mana Elixir
+  - [ 2000006, 1, 2, 1.000000 ] # Mana Elixir
+  - [ 2020013, 1, 2, 0.400000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 0.300000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 1.000000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 0.700000 ] # Reindeer Milk
+  - [ 2020013, 1, 2, 0.550000 ] # Reindeer Milk
+  - [ 2020014, 1, 2, 0.700000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 0.550000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 0.400000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 0.300000 ] # Sunrise Dew
+  - [ 2020014, 1, 2, 1.000000 ] # Sunrise Dew
+  - [ 2020015, 1, 2, 0.700000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 0.550000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 0.400000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 0.300000 ] # Sunset Dew
+  - [ 2020015, 1, 2, 1.000000 ] # Sunset Dew
+  - [ 2040004, 1, 1, 0.000300 ] # Scroll for Helmet for HP 60%
+  - [ 2040504, 1, 1, 0.000700 ] # Scroll for Overall Armor for DEF 60%
+  - [ 2040707, 1, 1, 0.008000 ] # Scroll for Shoes for Speed 60%
+  - [ 2043001, 1, 1, 0.000300 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2043701, 1, 1, 0.000400 ] # Scroll for Wand for Magic Attack 60%
+  - [ 2043801, 1, 1, 0.000200 ] # Scroll for Staff for Magic Attack 60%
+  - [ 2044001, 1, 1, 0.000500 ] # Scroll for Two-handed Sword for ATT 60%
+  - [ 2044401, 1, 1, 0.000700 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2044501, 1, 1, 0.000500 ] # Scroll for Bow for ATT 60%
+  - [ 2044601, 1, 1, 0.008000 ] # Scroll for Crossbow for ATT 60%
+  - [ 2044701, 1, 1, 0.000300 ] # Scroll for Claw for ATT 60%
+  - [ 4001123, 1, 1, 1.000000 ] # Transparent Item
+  - [ 4031437, 1, 1, 0.070000 ] # Lord Pirate's Key to Chest

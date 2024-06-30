@@ -1,0 +1,32 @@
+# Transformed Yeti (6300001)
+
+rewards:
+  - [ 1002100, 1, 1, 0.000100 ] # Old Bronze Nordic Helm
+  - [ 1002245, 1, 1, 0.000100 ] # White Seraphis
+  - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings
+  - [ 1041079, 1, 1, 0.000100 ] # Brown Moon
+  - [ 1041092, 1, 1, 0.000100 ] # Red Ice Queen
+  - [ 1041101, 1, 1, 0.000100 ] # Blue Mystique
+  - [ 1050045, 1, 1, 0.000100 ] # Blue Calas
+  - [ 1050068, 1, 1, 0.000100 ] # Red Requiem
+  - [ 1061078, 1, 1, 0.000100 ] # Brown Moon Pants
+  - [ 1061091, 1, 1, 0.000100 ] # Red Ice Queen Skirt
+  - [ 1061100, 1, 1, 0.000100 ] # Blue Mystique Pants
+  - [ 1072135, 1, 1, 0.000100 ] # Gold Hildon Boots
+  - [ 1072165, 1, 1, 0.000100 ] # Baige Elf Shoes
+  - [ 1082089, 1, 1, 0.000100 ] # Ocher Garner
+  - [ 1082092, 1, 1, 0.000100 ] # Bronze Pow
+  - [ 1102023, 1, 1, 0.000100 ] # White Gaia Cape
+  - [ 1312010, 1, 1, 0.000100 ] # Mikhail
+  - [ 1432007, 1, 1, 0.000100 ] # Redemption
+  - [ 1472025, 1, 1, 0.000100 ] # Dark Gigantic
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040301, 1, 1, 0.000100 ] # Scroll for Earring for INT 60%
+  - [ 2043001, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for ATT 60%
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

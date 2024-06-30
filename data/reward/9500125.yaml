@@ -1,0 +1,24 @@
+# Red Drake (9500125)
+
+rewards:
+  - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
+  - [ 1040093, 1, 1, 0.000100 ] # Dark Orientican
+  - [ 1041079, 1, 1, 0.000100 ] # Brown Moon
+  - [ 1041083, 1, 1, 0.000100 ] # Dark Piettra
+  - [ 1041098, 1, 1, 0.000100 ] # Violet Platina
+  - [ 1050055, 1, 1, 0.000100 ] # White Anakamoon
+  - [ 1050056, 1, 1, 0.000100 ] # Dark Anakamoon
+  - [ 1060082, 1, 1, 0.000100 ] # Dark Orientican Pants
+  - [ 1061078, 1, 1, 0.000100 ] # Brown Moon Pants
+  - [ 1061082, 1, 1, 0.000100 ] # Dark Piettra Skirt
+  - [ 1061097, 1, 1, 0.000100 ] # Violet Platina Pants
+  - [ 1072090, 1, 1, 0.000100 ] # Red Salt Shoes
+  - [ 1102015, 1, 1, 0.000100 ] # Blue Magic Cape
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000014, 1, 1, 0.400000 ] # Drake Skull
+  - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
+  - [ 4001006, 1, 1, 0.000000 ] # Flaming Feather
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

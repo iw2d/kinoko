@@ -1,0 +1,24 @@
+# Master Soul Teddy (9500127)
+
+rewards:
+  - [ 1032015, 1, 1, 0.000100 ] # Metal Silver Earrings
+  - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
+  - [ 1040093, 1, 1, 0.000100 ] # Dark Orientican
+  - [ 1050093, 1, 1, 0.000100 ] # Blue Oriental Fury Coat
+  - [ 1060078, 1, 1, 0.000100 ] # Umber Shouldermail Pants
+  - [ 1060082, 1, 1, 0.000100 ] # Dark Orientican Pants
+  - [ 1082082, 1, 1, 0.000100 ] # Blue Pennance
+  - [ 1302011, 1, 1, 0.000100 ] # Neocora
+  - [ 1312009, 1, 1, 0.000100 ] # Hawkhead
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2041022, 1, 1, 0.000100 ] # Scroll for Cape for LUK 60%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000144, 1, 1, 0.400000 ] # Free Spirit
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.300000, 7101 ] # Tachion

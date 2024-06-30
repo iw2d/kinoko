@@ -1,0 +1,25 @@
+# Octopus (9500104)
+
+rewards:
+  - [ 1002075, 1, 1, 0.000100 ] # Red Apprentice Hat
+  - [ 1040035, 1, 1, 0.000100 ] # Blue Nightshift
+  - [ 1041062, 1, 1, 0.000100 ] # Yellow Able Armor
+  - [ 1060025, 1, 1, 0.000100 ] # Blue Nightshift Pants
+  - [ 1061058, 1, 1, 0.000100 ] # Brown Able Skirt
+  - [ 1072019, 1, 1, 0.000100 ] # Blue Jewelry Boots
+  - [ 1402018, 1, 1, 0.000100 ] # Wooden Samurai Sword
+  - [ 1412012, 1, 1, 0.000100 ] # Iron Axe
+  - [ 1432000, 1, 1, 0.000100 ] # Spear
+  - [ 1432008, 1, 1, 0.000100 ] # Fish Spear
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2041004, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 60%
+  - [ 2041015, 1, 1, 0.000100 ] # Scroll for Cape for INT 100%
+  - [ 2043302, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 10%
+  - [ 2048001, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000037, 1, 1, 0.400000 ] # Bubbling's Huge Bubble
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

@@ -1,0 +1,29 @@
+# Separated Dark Pepe (6230201)
+
+rewards:
+  - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet
+  - [ 1002267, 1, 1, 0.000100 ] # Red Polyfeather Hat
+  - [ 1002283, 1, 1, 0.000100 ] # Purple Nightfox
+  - [ 1032013, 1, 1, 0.000100 ] # Red-Hearted Earrings
+  - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
+  - [ 1041092, 1, 1, 0.000100 ] # Red Ice Queen
+  - [ 1050055, 1, 1, 0.000100 ] # White Anakamoon
+  - [ 1061091, 1, 1, 0.000100 ] # Red Ice Queen Skirt
+  - [ 1072131, 1, 1, 0.000100 ] # Purple Goni Shoes
+  - [ 1072152, 1, 1, 0.000100 ] # Dark Moss Boots
+  - [ 1082095, 1, 1, 0.000100 ] # Bronze Rover
+  - [ 1082099, 1, 1, 0.000100 ] # Blue Lorin
+  - [ 1092009, 1, 1, 0.000100 ] # Wooden Legend Shield
+  - [ 1102021, 1, 1, 0.000100 ] # Blue Gaia Cape
+  - [ 1302012, 1, 1, 0.000100 ] # Red Katana
+  - [ 1422009, 1, 1, 0.000100 ] # The Blessing
+  - [ 1462009, 1, 1, 0.000100 ] # Gross Jaeger
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
+  - [ 4000057, 1, 1, 0.400000 ] # Dark Pepe Beak
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

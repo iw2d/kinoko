@@ -1,0 +1,24 @@
+# Glutton Ghoul (9400556)
+
+rewards:
+  - [ 1002027, 1, 1, 0.000100 ] # Steel Sharp Helm
+  - [ 1040044, 1, 1, 0.000100 ] # Black Pao
+  - [ 1041008, 1, 1, 0.000100 ] # Green Able Armor
+  - [ 1041021, 1, 1, 0.000100 ] # Brown Lamelle
+  - [ 1060033, 1, 1, 0.000100 ] # Black Pao Bottom
+  - [ 1061006, 1, 1, 0.000100 ] # Green Able Armor Skirt
+  - [ 1061018, 1, 1, 0.000100 ] # Brown Ramel Skirt
+  - [ 1072073, 1, 1, 0.000100 ] # Yellow Windshoes
+  - [ 1332008, 1, 1, 0.000100 ] # Coconut Knife
+  - [ 1462004, 1, 1, 0.000100 ] # Eagle Crow
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2010003, 1, 1, 0.010000 ] # Orange
+  - [ 2022244, 1, 1, 0.010000 ] # Smore
+  - [ 2040902, 1, 1, 0.000100 ] # Scroll for Shield for DEF 10%
+  - [ 2048003, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4031764, 1, 1, 0.200000, 4949 ] # Paranormal Activity Report Page
+  - [ 4031769, 1, 1, 0.025000, 4946 ] # Tarrymore Earring
+  - [ 4031770, 1, 1, 0.025000, 4946 ] # Sepha Earring
+  - [ 4031812, 1, 1, 0.200000, 4950 ] # Paranormal Activity Report Page

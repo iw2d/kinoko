@@ -1,0 +1,23 @@
+# Blue King Goblin (9500130)
+
+rewards:
+  - [ 1032022, 1, 1, 0.000200 ] # Half Earrings
+  - [ 1040106, 1, 1, 0.000200 ] # Blue Studded Top
+  - [ 1051041, 1, 1, 0.000200 ] # Red Choro
+  - [ 1060094, 1, 1, 0.000200 ] # Blue Studded Pants
+  - [ 1072158, 1, 1, 0.000200 ] # Red Lapiz Sandals
+  - [ 1072163, 1, 1, 0.000200 ] # Red Mystique Shoes
+  - [ 1412008, 1, 1, 0.000200 ] # Chrono
+  - [ 1422009, 1, 1, 0.000200 ] # The Blessing
+  - [ 1442010, 1, 1, 0.000200 ] # Skylar
+  - [ 1452010, 1, 1, 0.000200 ] # Blue Hinkel
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
+  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion
+  - [ 2040601, 1, 1, 0.010000 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2040701, 1, 1, 0.010000 ] # Scroll for Shoes for DEX 60%
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4031233, 1, 1, 1.000000, 3611 ] # Goblin Bat

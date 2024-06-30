@@ -1,0 +1,26 @@
+# Gryphon (9400544)
+
+rewards:
+  - [ 1002025, 1, 1, 0.000100 ] # Red Duke
+  - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
+  - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet
+  - [ 1040083, 1, 1, 0.000100 ] # Marine Shadow
+  - [ 1040095, 1, 1, 0.000100 ] # Blue China
+  - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra
+  - [ 1041087, 1, 1, 0.000100 ] # Red Shouldermail
+  - [ 1060072, 1, 1, 0.000100 ] # Marine Shadow Pants
+  - [ 1060084, 1, 1, 0.000100 ] # Blue China Pants
+  - [ 1061081, 1, 1, 0.000100 ] # Brown Piettra Skirt
+  - [ 1061086, 1, 1, 0.000100 ] # Red Shouldermail Pants
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1382001, 1, 1, 0.000100 ] # Arc Staff
+  - [ 1382006, 1, 1, 0.000100 ] # Thorns
+  - [ 1412003, 1, 1, 0.000100 ] # The Rising
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 2044004, 1, 1, 0.000100 ] # Dark scroll for Two-handed Sword for ATT 70%
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4131009, 1, 1, 0.000300 ] # Staff Production Manual

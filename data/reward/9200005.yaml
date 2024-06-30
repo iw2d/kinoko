@@ -1,0 +1,15 @@
+# Slime (PC) (9200005)
+
+rewards:
+  - [ 1002019, 1, 1, 0.000100 ] # White Bandana
+  - [ 1322007, 1, 1, 0.000100 ] # Leather Purse
+  - [ 1432001, 1, 1, 0.000100 ] # Fork on a Stick
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2041018, 1, 1, 0.000100 ] # Scroll for Cape for DEX 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000004, 1, 1, 0.400000 ] # Squishy Liquid
+  - [ 4000010, 1, 1, 0.400000 ] # Slime Bubble
+  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

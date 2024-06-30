@@ -1,0 +1,29 @@
+# Female Boss (9400121)
+
+rewards:
+  - [ 1032023, 1, 1, 0.000200 ] # Strawberry Earrings
+  - [ 1061105, 1, 1, 0.000200 ] # Red Pirate Skirt
+  - [ 1072239, 1, 1, 0.000200 ] # Yellow Snowshoes
+  - [ 1082085, 1, 1, 0.000200 ] # Red Willow
+  - [ 1092025, 1, 1, 0.000200 ] # Gold Aquila Shield
+  - [ 1312015, 1, 1, 0.000200 ] # Vifennis
+  - [ 1332022, 1, 1, 0.000200 ] # Angelic Betrayal
+  - [ 1332027, 1, 1, 0.000200 ] # Varkit
+  - [ 1372009, 1, 1, 0.000200 ] # Magicodar
+  - [ 1382010, 1, 1, 0.000200 ] # Dark Ritual
+  - [ 1402016, 1, 1, 0.000200 ] # Devil's Sunrise
+  - [ 1422013, 1, 1, 0.000200 ] # Leomite
+  - [ 1432011, 1, 1, 0.000200 ] # Fairfrozen
+  - [ 1442020, 1, 1, 0.000200 ] # Hellslayer
+  - [ 1472033, 1, 1, 0.000200 ] # Casters
+  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000011, 1, 1, 0.100000 ] # Mana Elixir Pill
+  - [ 2020016, 1, 1, 0.100000 ] # Cheesecake
+  - [ 2020016, 1, 1, 0.100000 ] # Cheesecake
+  - [ 2022024, 1, 1, 0.100000 ] # Takoyaki (Octopus Ball)
+  - [ 2022026, 1, 1, 0.100000 ] # Yakisoba
+  - [ 2040510, 1, 1, 0.010000 ] # Dark scroll for Overall Armor for DEF 70%
+  - [ 2040717, 1, 1, 0.010000 ] # Dark scroll for Shoes for Speed 30%
+  - [ 2040908, 1, 1, 0.010000 ] # Dark scroll for Shield for HP 70%
+  - [ 2043705, 1, 1, 0.010000 ] # Dark scroll for Wand for Magic Attack 30%
+  - [ 4000138, 1, 1, 0.400000 ] # Lady Boss's Comb

@@ -1,0 +1,26 @@
+# Death Teddy (9500135)
+
+rewards:
+  - [ 1041105, 1, 1, 0.000100 ] # Green Pirate Blouse
+  - [ 1050094, 1, 1, 0.000100 ] # Red Oriental Fury Coat
+  - [ 1061104, 1, 1, 0.000100 ] # Green Pirate Skirt
+  - [ 1072166, 1, 1, 0.000100 ] # Green Elf Shoes
+  - [ 1072177, 1, 1, 0.000100 ] # Green Enigma Shoes
+  - [ 1082131, 1, 1, 0.000100 ] # Blue Sage
+  - [ 1102033, 1, 1, 0.000100 ] # Red Giles Cape
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1432007, 1, 1, 0.000100 ] # Redemption
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2002005, 1, 1, 0.010000 ] # Sniper Potion
+  - [ 2020015, 1, 1, 0.010000 ] # Sunset Dew
+  - [ 2040601, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEF 60%
+  - [ 2041016, 1, 1, 0.000100 ] # Scroll for Cape for INT 60%
+  - [ 2050004, 1, 1, 0.010000 ] # All Cure Potion
+  - [ 4000147, 1, 1, 0.400000 ] # Sealed Teddy Bear
+  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.400000, 7101 ] # Tachion
