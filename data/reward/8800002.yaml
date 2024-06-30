@@ -72,5 +72,4 @@ rewards:
   - [ 2290094, 1, 1, 0.100000 ] # [Mastery Book] Smokescreen
   - [ 2290110, 1, 1, 0.100000 ] # [Mastery Book] Time Leap
   - [ 2290115, 1, 1, 0.100000 ] # [Mastery Book] Air Strike
-  - [ 2430029, 1, 1, 0.000000 ] # Mystery Box 
-  - [ 4001083, 1, 1, 0.000000 ] # Zakum Certificate
+  - [ 4001083, 1, 1, 1.000000 ] # Zakum Certificate

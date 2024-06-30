@@ -33,6 +33,6 @@ rewards:
   - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
   - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
   - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
-  - [ 4161015, 1, 1, 0.000000 ] # [Storybook] Burning Book of Fire
+  - [ 4161015, 1, 1, 0.000100 ] # [Storybook] Burning Book of Fire
   - [ 4031465, 1, 1, 0.005000, 6250 ] # Athena Pierce's Old Gloves
   - [ 4031487, 1, 1, 0.005000, 6251 ] # Athena Pierce's Old Gloves

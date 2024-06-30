@@ -46,7 +46,7 @@ rewards:
   - [ 2048001, 1, 1, 0.010000 ] # Scroll for Pet Equip. for Speed 60%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 3010008, 1, 1, 0.000000 ] # Blue Seal Cushion
+  - [ 3010008, 1, 1, 0.001000 ] # Blue Seal Cushion
   - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
   - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore

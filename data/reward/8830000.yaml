@@ -68,10 +68,10 @@ rewards:
   - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew
   - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew
   - [ 2022000, 1, 1, 0.100000 ] # Pure Water
-  - [ 2030000, 1, 1, 0.000000 ] # Return Scroll - Nearest Town
+  - [ 2030000, 1, 1, 0.100000 ] # Return Scroll - Nearest Town
   - [ 2040739, 1, 1, 0.010000 ] # Balrog's Twilight Scroll 5%
   - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
   - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
   - [ 2050004, 1, 1, 0.100000 ] # All Cure Potion
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4001261, 1, 1, 0.000000 ] # Piece of Balrog Leather 
+  - [ 4001261, 1, 1, 0.400000 ] # Piece of Balrog Leather

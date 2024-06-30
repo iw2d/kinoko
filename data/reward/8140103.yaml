@@ -32,6 +32,6 @@ rewards:
   - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
   - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
-  - [ 4161016, 1, 1, 0.000000 ] # [Storybook] Frozen Book of Ice
+  - [ 4161016, 1, 1, 0.000100 ] # [Storybook] Frozen Book of Ice
   - [ 4031465, 1, 1, 0.005000, 6250 ] # Athena Pierce's Old Gloves
   - [ 4031487, 1, 1, 0.005000, 6251 ] # Athena Pierce's Old Gloves

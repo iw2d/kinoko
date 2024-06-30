@@ -22,7 +22,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000124, 1, 1, 0.400000 ] # Rombot's Memory Card
-  - [ 4005002, 1, 1, 0.000000 ] # DEX Crystal
+  - [ 4005002, 1, 1, 0.001000 ] # DEX Crystal
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)

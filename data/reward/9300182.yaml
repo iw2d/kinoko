@@ -21,4 +21,4 @@ rewards:
   - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
   - [ 2044701, 1, 1, 0.010000 ] # Scroll for Claw for ATT 60%
   - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
-  - [ 4001164, 1, 1, 0.000000 ] # Golem's Marble
+  - [ 4001164, 1, 1, 1.000000 ] # Golem's Marble

@@ -34,7 +34,7 @@ rewards:
   - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
   - [ 2385040, 1, 1, 0.020000 ] # Maverick Type A Card 
   - [ 4000554, 1, 1, 0.400000 ] # Maverick Type A Component
-  - [ 4001110, 1, 1, 0.000000 ] # [Storybook] Unknown Letter
+  - [ 4001110, 1, 1, 0.000100 ] # [Storybook] Unknown Letter
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)

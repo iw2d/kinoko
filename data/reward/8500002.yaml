@@ -64,5 +64,5 @@ rewards:
   - [ 2290129, 1, 1, 0.100000 ] # [Mastery Book]High Mastery 30
   - [ 2290140, 1, 1, 0.100000 ] # [Mastery Book] Illusion 20
   - [ 2290143, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 30
-  - [ 4001084, 1, 1, 0.000000 ] # Papulatus Certificate
+  - [ 4001084, 1, 1, 1.000000 ] # Papulatus Certificate
   - [ 4031196, 1, 1, 0.050000 ] # Dark Tachion

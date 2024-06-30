@@ -55,6 +55,6 @@ rewards:
   - [ 2044901, 1, 1, 0.010000 ] # Scroll for Gun for Attack 60%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4001318, 1, 1, 0.000000 ] # The Royal Seal of the Mushking Empire
+  - [ 4001318, 1, 1, 1.000000 ] # The Royal Seal of the Mushking Empire
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

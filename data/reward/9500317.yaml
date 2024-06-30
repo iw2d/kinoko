@@ -1,5 +1,5 @@
 # Kid Snowman (9500317)
 
 rewards:
-  - [ 2022279, 1, 1, 0.100000 ] # Snow Cake Piece
-  - [ 4001141, 1, 1, 0.000000 ] # Snowman Branch
+  - [ 2022279, 1, 1, 1.000000 ] # Snow Cake Piece
+  - [ 4001141, 1, 1, 1.000000 ] # Snowman Branch

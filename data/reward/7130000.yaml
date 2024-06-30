@@ -39,4 +39,4 @@ rewards:
   - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
   - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
   - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
-  - [ 4161021, 1, 1, 0.000000 ] # [Storybook] Formula for Black Cloud
+  - [ 4161021, 1, 1, 0.000100 ] # [Storybook] Formula for Black Cloud

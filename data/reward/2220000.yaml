@@ -52,7 +52,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2070000, 1, 1, 0.000400 ] # Subi Throwing-Stars
-  - [ 2210006, 1, 1, 0.000000 ] # Rainbow-colored Snail Shell
+  - [ 2210006, 1, 1, 0.400000 ] # Rainbow-colored Snail Shell
   - [ 2330000, 1, 1, 0.000400 ] # Bullet
   - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
   - [ 4000016, 1, 1, 0.400000 ] # Red Snail Shell

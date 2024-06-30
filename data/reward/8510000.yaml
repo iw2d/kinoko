@@ -48,5 +48,5 @@ rewards:
   - [ 2290132, 1, 1, 0.100000 ] # [Mastery Book] Final Blow 20
   - [ 2290146, 1, 1, 0.100000 ] # [Mastery Book] Blaze 20
   - [ 4000175, 1, 1, 0.400000 ] # Minature Pianus
-  - [ 4001085, 1, 1, 0.000000 ] # Pianus Certificate
+  - [ 4001085, 1, 1, 1.000000 ] # Pianus Certificate
   - [ 4031253, 1, 1, 1.000000, 3076 ] # Pianus's Scream

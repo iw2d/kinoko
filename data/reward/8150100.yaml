@@ -33,6 +33,6 @@ rewards:
   - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
-  - [ 4161018, 1, 1, 0.000000 ] # [Storybook] Ancient Book
+  - [ 4161018, 1, 1, 0.000100 ] # [Storybook] Ancient Book
   - [ 4031254, 1, 1, 0.060000, 3078 ] # Broken Flashlight
   - [ 4031252, 1, 1, 0.100000, 3078 ] # Wripped Note

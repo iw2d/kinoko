@@ -36,5 +36,5 @@ rewards:
   - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
   - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
   - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
-  - [ 4161018, 1, 1, 0.000000 ] # [Storybook] Ancient Book
+  - [ 4161018, 1, 1, 0.000100 ] # [Storybook] Ancient Book
   - [ 4031255, 1, 1, 0.070000, 3078 ] # Broken Camera
