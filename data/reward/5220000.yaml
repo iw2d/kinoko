@@ -25,9 +25,12 @@ rewards:
   - [ 1082091, 1, 1, 0.000200 ] # Dark Garner
   - [ 1082094, 1, 1, 0.000200 ] # Gold Pow
   - [ 1082201, 1, 1, 0.000200 ] # Black Schult
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
-  - [ 2001001, 1, 1, 0.100000 ] # Ice Cream Pop
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2001001, 1, 1, 0.500000 ] # Ice Cream Pop
+  - [ 2001001, 1, 1, 0.500000 ] # Ice Cream Pop
   - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion
   - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
   - [ 2040513, 1, 1, 0.010000 ] # Scroll for Overall Armor for INT 60%
@@ -48,6 +51,18 @@ rewards:
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 3010008, 1, 1, 0.001000 ] # Blue Seal Cushion
   - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
+  - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
+  - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
+  - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
+  - [ 4000043, 1, 1, 0.400000 ] # Lorang Claw
+  - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
+  - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
+  - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
+  - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
   - [ 4000044, 1, 1, 0.400000 ] # Clang Claw
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

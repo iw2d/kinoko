@@ -23,6 +23,6 @@ rewards:
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
   - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator

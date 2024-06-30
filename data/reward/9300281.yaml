@@ -1,9 +1,9 @@
 # Rex (9300281)
 
 rewards:
-  - [ 1032077, 1, 1, 0.000200 ] # Rex's Green Earrings
-  - [ 1032078, 1, 1, 0.000200 ] # Rex's Red Earrings
-  - [ 1032079, 1, 1, 0.000200 ] # Rex's Blue Earrings
+  - [ 1032077, 1, 1, 0.100000 ] # Rex's Green Earrings
+  - [ 1032078, 1, 1, 0.100000 ] # Rex's Red Earrings
+  - [ 1032079, 1, 1, 0.100000 ] # Rex's Blue Earrings
   - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
   - [ 2040031, 1, 1, 0.010000 ] # Scroll for Helmet for DEX 10%
   - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%

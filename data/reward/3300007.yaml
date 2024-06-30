@@ -25,9 +25,12 @@ rewards:
   - [ 1082028, 1, 1, 0.000200 ] # Dark Mesana
   - [ 1082039, 1, 1, 0.000200 ] # Dark Wolfskin
   - [ 1082186, 1, 1, 0.000200 ] # Hard Leather Glove
-  - [ 2000000, 1, 1, 0.100000 ] # Red Potion
-  - [ 2010009, 1, 1, 0.100000 ] # Green Apple
-  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew
+  - [ 2000000, 1, 1, 0.500000 ] # Red Potion
+  - [ 2000000, 1, 1, 0.500000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.500000 ] # Green Apple
+  - [ 2010009, 1, 1, 0.500000 ] # Green Apple
+  - [ 2020014, 1, 1, 0.500000 ] # Sunrise Dew
+  - [ 2020014, 1, 1, 0.500000 ] # Sunrise Dew
   - [ 2022580, 1, 1, 0.100000 ] # King Pepe Warrior Box
   - [ 2022581, 1, 1, 0.100000 ] # King Pepe Magician Box
   - [ 2022582, 1, 1, 0.100000 ] # King Pepe Bowman Box
@@ -74,4 +77,8 @@ rewards:
   - [ 2388069, 1, 1, 0.020000 ] # White Yeti and King Pepe Card
   - [ 4000505, 1, 1, 0.400000 ] # Chief White Yeti Horn
   - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

@@ -21,6 +21,6 @@ rewards:
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
   - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator

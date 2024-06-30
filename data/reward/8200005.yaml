@@ -22,6 +22,6 @@ rewards:
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
   - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

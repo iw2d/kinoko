@@ -24,6 +24,6 @@ rewards:
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
   - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator

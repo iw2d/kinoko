@@ -27,6 +27,6 @@ rewards:
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator

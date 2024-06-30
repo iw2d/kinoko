@@ -9,9 +9,12 @@ rewards:
   - [ 1322045, 1, 1, 0.000200 ] # Battle Hammer
   - [ 1332052, 1, 1, 0.000200 ] # Blood Dagger
   - [ 1372010, 1, 1, 0.000200 ] # Dimon Wand
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
   - [ 2040025, 1, 1, 0.010000 ] # Scroll for Helmet for INT 60%
   - [ 2040029, 1, 1, 0.010000 ] # Scroll for Helmet for DEX 60%
   - [ 2040326, 1, 1, 0.010000 ] # Scroll for Earring for HP 60%
@@ -32,4 +35,4 @@ rewards:
   - [ 4000460, 1, 1, 0.400000 ] # Whale's Helmet
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time

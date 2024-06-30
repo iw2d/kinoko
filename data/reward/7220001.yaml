@@ -25,9 +25,13 @@ rewards:
   - [ 1082105, 1, 1, 0.000200 ] # Dark Husk
   - [ 1082108, 1, 1, 0.000200 ] # Dark Eyes
   - [ 1082204, 1, 1, 0.000200 ] # Black Bisk
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
   - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion
+  - [ 2002000, 1, 1, 0.100000 ] # Dexterity Potion
+  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion
   - [ 2002002, 1, 1, 0.100000 ] # Magic Potion
   - [ 2040025, 1, 1, 0.010000 ] # Scroll for Helmet for INT 60%
   - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
@@ -55,7 +59,19 @@ rewards:
   - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000021, 1, 1, 0.040000 ] # Leather
+  - [ 4000172, 1, 1, 0.400000 ] # Three-Tailed Foxtail
+  - [ 4000172, 1, 1, 0.400000 ] # Three-Tailed Foxtail
+  - [ 4000172, 1, 1, 0.400000 ] # Three-Tailed Foxtail
+  - [ 4000172, 1, 1, 0.400000 ] # Three-Tailed Foxtail
   - [ 4000172, 1, 1, 0.400000 ] # Three-Tailed Foxtail
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

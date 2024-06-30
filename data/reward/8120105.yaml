@@ -21,7 +21,7 @@ rewards:
   - [ 2043214, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 10%
   - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
   - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
-  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 2070006, 1, 1, 0.000100 ] # Ilbi Throwing-Stars
   - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
   - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
   - [ 2385041, 1, 1, 0.020000 ] # Maverick Type S Card

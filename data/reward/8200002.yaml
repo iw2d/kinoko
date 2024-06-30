@@ -27,6 +27,6 @@ rewards:
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
   - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator

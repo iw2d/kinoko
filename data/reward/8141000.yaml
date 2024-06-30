@@ -31,7 +31,7 @@ rewards:
   - [ 2044802, 1, 1, 0.000100 ] # Scroll for Knuckle for ATT 10%
   - [ 2044809, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 10%
   - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
-  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 2070006, 1, 1, 0.000100 ] # Ilbi Throwing-Stars
   - [ 2290082, 1, 1, 0.000100 ] # [Mastery Book] Ninja Ambush
   - [ 2290097, 1, 1, 0.000100 ] # [Mastery Book] Dragon Strike
   - [ 4000134, 1, 1, 0.400000 ] # Viking Sail

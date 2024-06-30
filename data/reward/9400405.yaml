@@ -9,8 +9,10 @@ rewards:
   - [ 1442020, 1, 1, 0.000200 ] # Hellslayer
   - [ 1452017, 1, 1, 0.000200 ] # Metus
   - [ 1462018, 1, 1, 0.000200 ] # Casa Crow
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2040103, 1, 1, 0.010000 ] # Dark Scroll for Face Accessory for HP 30%
   - [ 2040108, 1, 1, 0.010000 ] # Dark Scroll for Face Accessory for Avoidability 30%
   - [ 2040203, 1, 1, 0.010000 ] # Dark Scroll for Eye Accessory for Accuracy 30%

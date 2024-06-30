@@ -17,7 +17,7 @@ rewards:
   - [ 2040208, 1, 1, 0.000100 ] # Dark Scroll for Eye Accessory for INT 30%
   - [ 2040922, 1, 1, 0.000100 ] # Dark Scroll for Shield for Magic Attack 50%
   - [ 2060003, 10, 20, 0.008000 ] # Red Arrow for Bow
-  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 2070006, 1, 1, 0.000100 ] # Ilbi Throwing-Stars
   - [ 4000340, 1, 1, 0.400000 ] # Ninto Scroll
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

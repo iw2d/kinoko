@@ -23,6 +23,6 @@ rewards:
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator

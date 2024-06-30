@@ -25,9 +25,12 @@ rewards:
   - [ 1082028, 1, 1, 0.000200 ] # Dark Mesana
   - [ 1082039, 1, 1, 0.000200 ] # Dark Wolfskin
   - [ 1082186, 1, 1, 0.000200 ] # Hard Leather Glove
-  - [ 2000000, 1, 1, 0.100000 ] # Red Potion
-  - [ 2010009, 1, 1, 0.100000 ] # Green Apple
-  - [ 2020014, 1, 1, 0.100000 ] # Sunrise Dew
+  - [ 2000000, 1, 1, 0.500000 ] # Red Potion
+  - [ 2000000, 1, 1, 0.500000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.500000 ] # Green Apple
+  - [ 2010009, 1, 1, 0.500000 ] # Green Apple
+  - [ 2020014, 1, 1, 0.500000 ] # Sunrise Dew
+  - [ 2020014, 1, 1, 0.500000 ] # Sunrise Dew
   - [ 2040001, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 60%
   - [ 2040002, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 10%
   - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
@@ -55,7 +58,23 @@ rewards:
   - [ 2210006, 1, 1, 0.400000 ] # Rainbow-colored Snail Shell
   - [ 2330000, 1, 1, 0.000400 ] # Bullet
   - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
+  - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
+  - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
+  - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
+  - [ 4000000, 1, 1, 0.400000 ] # Blue Snail Shell
+  - [ 4000016, 1, 1, 0.400000 ] # Red Snail Shell
+  - [ 4000016, 1, 1, 0.400000 ] # Red Snail Shell
+  - [ 4000016, 1, 1, 0.400000 ] # Red Snail Shell
+  - [ 4000016, 1, 1, 0.400000 ] # Red Snail Shell
   - [ 4000016, 1, 1, 0.400000 ] # Red Snail Shell
   - [ 4000019, 1, 1, 0.400000 ] # Snail Shell
+  - [ 4000019, 1, 1, 0.400000 ] # Snail Shell
+  - [ 4000019, 1, 1, 0.400000 ] # Snail Shell
+  - [ 4000019, 1, 1, 0.400000 ] # Snail Shell
+  - [ 4000019, 1, 1, 0.400000 ] # Snail Shell
   - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore

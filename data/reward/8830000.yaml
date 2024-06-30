@@ -1,54 +1,54 @@
 # Balrog (8830000)
 
 rewards:
-  - [ 1072376, 1, 1, 0.000200 ] # Balrog's Fur Shoes 
-  - [ 1302112, 1, 1, 0.000200 ] # Balrog's Khan 
-  - [ 1302113, 1, 1, 0.000200 ] # Balrog's Fraute 
-  - [ 1312042, 1, 1, 0.000200 ] # Balrog's Gaea 
-  - [ 1312043, 1, 1, 0.000200 ] # Balrog's Vifennis 
-  - [ 1322068, 1, 1, 0.000200 ] # Balrog's Golden Hammer
-  - [ 1322069, 1, 1, 0.000200 ] # Balrog's Runi Hammer
-  - [ 1332084, 1, 1, 0.000200 ] # Balrog's Angelic Betrayal
-  - [ 1332085, 1, 1, 0.000200 ] # Dragon's Tail of Balrog 
-  - [ 1332086, 1, 1, 0.000200 ] # Balrog's Cursayer 
-  - [ 1332087, 1, 1, 0.000200 ] # Balrog's Varkit 
-  - [ 1372050, 1, 1, 0.000200 ] # Balrog's Magicodar 
-  - [ 1382066, 1, 1, 0.000200 ] # Balrog's Kage
-  - [ 1382067, 1, 1, 0.000200 ] # Balrog's Blue Marine 
-  - [ 1382068, 1, 1, 0.000200 ] # Bain Wings  
-  - [ 1402056, 1, 1, 0.000200 ] # Balrog's Blue Screamer 
-  - [ 1402057, 1, 1, 0.000200 ] # Heaven's Gate of Balrog 
-  - [ 1402058, 1, 1, 0.000200 ] # Balrog's Berzerker 
-  - [ 1402059, 1, 1, 0.000200 ] # Devil's Sunrise of Balrog 
-  - [ 1402062, 1, 1, 0.000200 ] # Bain Sword 
-  - [ 1412038, 1, 1, 0.000200 ] # Balrog's Helios 
-  - [ 1412039, 1, 1, 0.000200 ] # Balrog's Colonian Axe 
-  - [ 1422042, 1, 1, 0.000200 ] # Balrog's Morningstar
-  - [ 1422043, 1, 1, 0.000200 ] # Balrog's Leomite 
-  - [ 1432054, 1, 1, 0.000200 ] # Balrog's Omega Spear 
-  - [ 1432055, 1, 1, 0.000200 ] # Balrog's Fairfrozen 
-  - [ 1442074, 1, 1, 0.000200 ] # Balrog's Eclipse 
-  - [ 1442075, 1, 1, 0.000200 ] # Balrog's Hellslayer 
-  - [ 1442078, 1, 1, 0.000200 ] # Bain Pole Arm 
-  - [ 1452066, 1, 1, 0.000200 ] # Balrog's Marine Arund
-  - [ 1452067, 1, 1, 0.000200 ] # Balrog's Fire Arund 
-  - [ 1452068, 1, 1, 0.000200 ] # Balrog's Golden Arund
-  - [ 1452069, 1, 1, 0.000200 ] # Balrog's Dark Arund 
-  - [ 1452070, 1, 1, 0.000200 ] # Balrog's Metus 
-  - [ 1452071, 1, 1, 0.000200 ] # Bain Long Bow  
-  - [ 1462059, 1, 1, 0.000200 ] # Balrog's Marine Raven 
-  - [ 1462060, 1, 1, 0.000200 ] # Balrog's Fire Raven 
-  - [ 1462061, 1, 1, 0.000200 ] # Balrog's Golden Raven 
-  - [ 1462062, 1, 1, 0.000200 ] # Balrog's Dark Raven
-  - [ 1462063, 1, 1, 0.000200 ] # Balrog's Casa Crow 
-  - [ 1472083, 1, 1, 0.000200 ] # Balrog's Black Mamba 
-  - [ 1472084, 1, 1, 0.000200 ] # Balrog's Caster 
-  - [ 1472086, 1, 1, 0.000200 ] # Bain Biter
-  - [ 1482031, 1, 1, 0.000200 ] # Balrog's Steel Renault
-  - [ 1482032, 1, 1, 0.000200 ] # Balrog's White Evil 
-  - [ 1492035, 1, 1, 0.000200 ] # Balrog's Infinity  
-  - [ 1492036, 1, 1, 0.000200 ] # Balrog's Peacemaker 
-  - [ 1492037, 1, 1, 0.000200 ] # Bain Shooter  
+  - [ 1072376, 1, 1, 0.020000 ] # Balrog's Fur Shoes 
+  - [ 1302112, 1, 1, 0.020000 ] # Balrog's Khan 
+  - [ 1302113, 1, 1, 0.020000 ] # Balrog's Fraute 
+  - [ 1312042, 1, 1, 0.020000 ] # Balrog's Gaea 
+  - [ 1312043, 1, 1, 0.020000 ] # Balrog's Vifennis 
+  - [ 1322068, 1, 1, 0.020000 ] # Balrog's Golden Hammer
+  - [ 1322069, 1, 1, 0.020000 ] # Balrog's Runi Hammer
+  - [ 1332084, 1, 1, 0.020000 ] # Balrog's Angelic Betrayal
+  - [ 1332085, 1, 1, 0.020000 ] # Dragon's Tail of Balrog 
+  - [ 1332086, 1, 1, 0.020000 ] # Balrog's Cursayer 
+  - [ 1332087, 1, 1, 0.020000 ] # Balrog's Varkit 
+  - [ 1372050, 1, 1, 0.020000 ] # Balrog's Magicodar 
+  - [ 1382066, 1, 1, 0.020000 ] # Balrog's Kage
+  - [ 1382067, 1, 1, 0.020000 ] # Balrog's Blue Marine 
+  - [ 1382068, 1, 1, 0.020000 ] # Bain Wings  
+  - [ 1402056, 1, 1, 0.020000 ] # Balrog's Blue Screamer 
+  - [ 1402057, 1, 1, 0.020000 ] # Heaven's Gate of Balrog 
+  - [ 1402058, 1, 1, 0.020000 ] # Balrog's Berzerker 
+  - [ 1402059, 1, 1, 0.020000 ] # Devil's Sunrise of Balrog 
+  - [ 1402062, 1, 1, 0.020000 ] # Bain Sword 
+  - [ 1412038, 1, 1, 0.020000 ] # Balrog's Helios 
+  - [ 1412039, 1, 1, 0.020000 ] # Balrog's Colonian Axe 
+  - [ 1422042, 1, 1, 0.020000 ] # Balrog's Morningstar
+  - [ 1422043, 1, 1, 0.020000 ] # Balrog's Leomite 
+  - [ 1432054, 1, 1, 0.020000 ] # Balrog's Omega Spear 
+  - [ 1432055, 1, 1, 0.020000 ] # Balrog's Fairfrozen 
+  - [ 1442074, 1, 1, 0.020000 ] # Balrog's Eclipse 
+  - [ 1442075, 1, 1, 0.020000 ] # Balrog's Hellslayer 
+  - [ 1442078, 1, 1, 0.020000 ] # Bain Pole Arm 
+  - [ 1452066, 1, 1, 0.020000 ] # Balrog's Marine Arund
+  - [ 1452067, 1, 1, 0.020000 ] # Balrog's Fire Arund 
+  - [ 1452068, 1, 1, 0.020000 ] # Balrog's Golden Arund
+  - [ 1452069, 1, 1, 0.020000 ] # Balrog's Dark Arund 
+  - [ 1452070, 1, 1, 0.020000 ] # Balrog's Metus 
+  - [ 1452071, 1, 1, 0.020000 ] # Bain Long Bow  
+  - [ 1462059, 1, 1, 0.020000 ] # Balrog's Marine Raven 
+  - [ 1462060, 1, 1, 0.020000 ] # Balrog's Fire Raven 
+  - [ 1462061, 1, 1, 0.020000 ] # Balrog's Golden Raven 
+  - [ 1462062, 1, 1, 0.020000 ] # Balrog's Dark Raven
+  - [ 1462063, 1, 1, 0.020000 ] # Balrog's Casa Crow 
+  - [ 1472083, 1, 1, 0.020000 ] # Balrog's Black Mamba 
+  - [ 1472084, 1, 1, 0.020000 ] # Balrog's Caster 
+  - [ 1472086, 1, 1, 0.020000 ] # Bain Biter
+  - [ 1482031, 1, 1, 0.020000 ] # Balrog's Steel Renault
+  - [ 1482032, 1, 1, 0.020000 ] # Balrog's White Evil 
+  - [ 1492035, 1, 1, 0.020000 ] # Balrog's Infinity  
+  - [ 1492036, 1, 1, 0.020000 ] # Balrog's Peacemaker 
+  - [ 1492037, 1, 1, 0.020000 ] # Bain Shooter  
   - [ 2000004, 1, 1, 0.100000 ] # Elixir
   - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
   - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir

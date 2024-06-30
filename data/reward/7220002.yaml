@@ -17,10 +17,15 @@ rewards:
   - [ 1472031, 1, 1, 0.000200 ] # Black Mamba
   - [ 1482010, 1, 1, 0.000200 ] # Steelno
   - [ 1492010, 1, 1, 0.000200 ] # Infinity's Wrath
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2002002, 1, 1, 0.100000 ] # Magic Potion
   - [ 2002002, 1, 1, 0.100000 ] # Magic Potion
   - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion
+  - [ 2002003, 1, 1, 0.100000 ] # Wizard Potion
+  - [ 2022149, 1, 1, 0.100000 ] # Pill of Intelligence
   - [ 2022149, 1, 1, 0.100000 ] # Pill of Intelligence
   - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
   - [ 2040402, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 10%
@@ -44,8 +49,22 @@ rewards:
   - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
   - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow
   - [ 4000289, 1, 1, 0.400000 ] # Cat Doll
+  - [ 4000289, 1, 1, 0.400000 ] # Cat Doll
+  - [ 4000289, 1, 1, 0.400000 ] # Cat Doll
+  - [ 4000289, 1, 1, 0.400000 ] # Cat Doll
+  - [ 4000289, 1, 1, 0.400000 ] # Cat Doll
+  - [ 4000298, 1, 1, 0.400000 ] # Old Paper
+  - [ 4000298, 1, 1, 0.400000 ] # Old Paper
+  - [ 4000298, 1, 1, 0.400000 ] # Old Paper
+  - [ 4000298, 1, 1, 0.400000 ] # Old Paper
   - [ 4000298, 1, 1, 0.400000 ] # Old Paper
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
+  - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

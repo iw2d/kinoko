@@ -9,9 +9,12 @@ rewards:
   - [ 1402035, 1, 1, 0.000200 ] # The Beheader
   - [ 1452021, 1, 1, 0.000200 ] # Dark Nisrock
   - [ 1482012, 1, 1, 0.000200 ] # King Cent
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
   - [ 2040317, 1, 1, 0.010000 ] # Scroll for Earring for DEX 60%
   - [ 2040321, 1, 1, 0.010000 ] # Scroll for Earring for LUK 60%
   - [ 2040927, 1, 1, 0.010000 ] # Scroll for Shield for HP 60%
@@ -30,4 +33,4 @@ rewards:
   - [ 4000461, 1, 1, 0.400000 ] # Knight's Mask
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time

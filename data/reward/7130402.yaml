@@ -12,9 +12,12 @@ rewards:
   - [ 1082090, 1, 1, 0.000200 ] # Sephia Garner
   - [ 1402012, 1, 1, 0.000200 ] # Doombringer
   - [ 1422005, 1, 1, 0.000200 ] # Golden Mole
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
-  - [ 2002006, 1, 1, 0.100000 ] # Warrior Pill
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2002006, 1, 1, 0.500000 ] # Warrior Pill
+  - [ 2002006, 1, 1, 0.500000 ] # Warrior Pill
   - [ 2040024, 1, 1, 0.010000 ] # Scroll for Helmet for INT 100%
   - [ 2040534, 1, 1, 0.010000 ] # Scroll for Overall for STR 10%
   - [ 2041007, 1, 1, 0.010000 ] # Scroll for Cape for HP 60%
@@ -27,6 +30,10 @@ rewards:
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator

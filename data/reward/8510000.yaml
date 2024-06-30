@@ -17,10 +17,14 @@ rewards:
   - [ 1402005, 1, 1, 0.000200 ] # Berzerker
   - [ 1412010, 1, 1, 0.000200 ] # Colonian Axe
   - [ 1492011, 1, 1, 0.000200 ] # The Peacemaker
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
-  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.500000 ] # Sunset Dew
+  - [ 2020015, 1, 1, 0.500000 ] # Sunset Dew
   - [ 2040318, 1, 1, 0.010000 ] # Scroll for Earring for DEX 10%
   - [ 2040401, 1, 1, 0.010000 ] # Scroll for Topwear for DEF 60%
   - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
@@ -47,6 +51,6 @@ rewards:
   - [ 2290124, 1, 1, 0.100000 ] # [Mastery Book] Bullseye
   - [ 2290132, 1, 1, 0.100000 ] # [Mastery Book] Final Blow 20
   - [ 2290146, 1, 1, 0.100000 ] # [Mastery Book] Blaze 20
-  - [ 4000175, 1, 1, 0.400000 ] # Minature Pianus
+  - [ 4000175, 1, 1, 0.800000 ] # Minature Pianus
   - [ 4001085, 1, 1, 1.000000 ] # Pianus Certificate
   - [ 4031253, 1, 1, 1.000000, 3076 ] # Pianus's Scream

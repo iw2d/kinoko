@@ -22,6 +22,6 @@ rewards:
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
   - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130000, 1, 1, 0.000300 ] # Gloves Production Stimulator
   - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator

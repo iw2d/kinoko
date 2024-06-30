@@ -14,8 +14,10 @@ rewards:
   - [ 1092010, 1, 1, 0.000200 ] # Silver Legend Shield
   - [ 1402011, 1, 1, 0.000200 ] # Sparta
   - [ 1412007, 1, 1, 0.000200 ] # The Shining
-  - [ 2000002, 1, 1, 0.100000 ] # White Potion
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000002, 1, 1, 0.500000 ] # White Potion
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
   - [ 2002010, 1, 1, 0.100000 ] # Speed Pill
   - [ 2043017, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for Accuracy 60%
   - [ 2044602, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 10%
@@ -26,8 +28,14 @@ rewards:
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
   - [ 4011007, 1, 1, 0.002000 ] # Moon Rock
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
   - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
   - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator

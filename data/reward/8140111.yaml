@@ -20,7 +20,7 @@ rewards:
   - [ 2041014, 1, 1, 0.000100 ] # Scroll for Cape for STR 10%
   - [ 2043214, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 10%
   - [ 2044001, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 60%
-  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 2070006, 1, 1, 0.000100 ] # Ilbi Throwing-Stars
   - [ 2330003, 1, 1, 0.000400 ] # Vital Bullet
   - [ 4000242, 1, 1, 0.400000 ] # Dual Birk's Tiny Tail
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore

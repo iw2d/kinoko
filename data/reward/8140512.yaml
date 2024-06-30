@@ -32,7 +32,7 @@ rewards:
   - [ 2044809, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 10%
   - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
   - [ 2049001, 1, 1, 0.000100 ] # Clean Slate Scroll 3%
-  - [ 2070006, 1, 1, 0.000400 ] # Ilbi Throwing-Stars
+  - [ 2070006, 1, 1, 0.000100 ] # Ilbi Throwing-Stars
   - [ 2290082, 1, 1, 0.000100 ] # [Mastery Book] Ninja Ambush
   - [ 2290097, 1, 1, 0.000100 ] # [Mastery Book] Dragon Strike
   - [ 2386034, 1, 1, 0.020000 ] # Royal Guard Card

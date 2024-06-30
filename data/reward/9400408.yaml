@@ -1,11 +1,12 @@
 # Castellan (9400408)
 
 rewards:
-  - [ 1382045, 1, 1, 0.000200 ] # Elemental Staff 1
-  - [ 1382046, 1, 1, 0.000200 ] # Elemental Staff 2
-  - [ 1382047, 1, 1, 0.000200 ] # Elemental Staff 3
-  - [ 1382048, 1, 1, 0.000200 ] # Elemental Staff 4
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 1382045, 1, 1, 0.020000 ] # Elemental Staff 1
+  - [ 1382046, 1, 1, 0.020000 ] # Elemental Staff 2
+  - [ 1382047, 1, 1, 0.020000 ] # Elemental Staff 3
+  - [ 1382048, 1, 1, 0.020000 ] # Elemental Staff 4
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2040100, 1, 1, 0.010000 ] # Scroll for Face Accessory for HP 10%
   - [ 2040101, 1, 1, 0.010000 ] # Scroll for Face Accessory for HP 60%
   - [ 2040102, 1, 1, 0.010000 ] # Scroll for Face Accessory for HP 100%

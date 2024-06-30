@@ -10,8 +10,10 @@ rewards:
   - [ 1382007, 1, 1, 0.000200 ] # Evil Wings
   - [ 1412008, 1, 1, 0.000200 ] # Chrono
   - [ 1432007, 1, 1, 0.000200 ] # Redemption
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
   - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
   - [ 2043301, 1, 1, 0.010000 ] # Scroll for Dagger for ATT 60%

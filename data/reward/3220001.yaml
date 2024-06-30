@@ -8,9 +8,12 @@ rewards:
   - [ 1082074, 1, 1, 0.000200 ] # Dark Cleave
   - [ 1082195, 1, 1, 0.000200 ] # Brown Barbee
   - [ 1302063, 1, 1, 0.000200 ] # Flaming Katana
-  - [ 2000001, 1, 1, 0.100000 ] # Orange Potion
-  - [ 2000003, 1, 1, 0.100000 ] # Blue Potion
-  - [ 2022155, 1, 1, 0.100000 ] # Desert Mist
+  - [ 2000001, 1, 1, 0.500000 ] # Orange Potion
+  - [ 2000001, 1, 1, 0.500000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2000003, 1, 1, 0.500000 ] # Blue Potion
+  - [ 2022155, 1, 1, 0.500000 ] # Desert Mist
+  - [ 2022155, 1, 1, 0.500000 ] # Desert Mist
   - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
   - [ 2040501, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 60%
   - [ 2040504, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 60%
@@ -23,8 +26,26 @@ rewards:
   - [ 2044601, 1, 1, 0.010000 ] # Scroll for Crossbow for ATT 60%
   - [ 2044801, 1, 1, 0.010000 ] # Scroll for Knuckle for Attack 60%
   - [ 4000329, 1, 1, 0.400000 ] # Cactus Stem
+  - [ 4000329, 1, 1, 0.400000 ] # Cactus Stem
+  - [ 4000329, 1, 1, 0.400000 ] # Cactus Stem
+  - [ 4000329, 1, 1, 0.400000 ] # Cactus Stem
+  - [ 4000329, 1, 1, 0.400000 ] # Cactus Stem
+  - [ 4000330, 1, 1, 0.400000 ] # Cactus Thorn
+  - [ 4000330, 1, 1, 0.400000 ] # Cactus Thorn
+  - [ 4000330, 1, 1, 0.400000 ] # Cactus Thorn
+  - [ 4000330, 1, 1, 0.400000 ] # Cactus Thorn
   - [ 4000330, 1, 1, 0.400000 ] # Cactus Thorn
   - [ 4000331, 1, 1, 0.400000 ] # Cactus Flower
+  - [ 4000331, 1, 1, 0.400000 ] # Cactus Flower
+  - [ 4000331, 1, 1, 0.400000 ] # Cactus Flower
+  - [ 4000331, 1, 1, 0.400000 ] # Cactus Flower
+  - [ 4000331, 1, 1, 0.400000 ] # Cactus Flower
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
+  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4010007, 1, 1, 0.002000 ] # Lidium Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

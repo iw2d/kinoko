@@ -1,7 +1,8 @@
 # Dragon Rider (8300007)
 
 rewards:
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2040502, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEX 10%
   - [ 2040505, 1, 1, 0.010000 ] # Scroll for Overall Armor for DEF 10%
   - [ 2040514, 1, 1, 0.010000 ] # Scroll for Overall Armor for INT 10%

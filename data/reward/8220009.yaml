@@ -16,8 +16,10 @@ rewards:
   - [ 1452009, 1, 1, 0.000200 ] # Red Hinkel
   - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
   - [ 1472026, 1, 1, 0.000200 ] # Brown Scarab
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
   - [ 2043101, 1, 1, 0.010000 ] # Scroll for One-Handed Axe for ATT 60%
   - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%

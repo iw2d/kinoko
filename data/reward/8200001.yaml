@@ -24,6 +24,6 @@ rewards:
   - [ 4007006, 1, 1, 0.000300 ] # Magic Powder (Red)
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
   - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator

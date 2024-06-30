@@ -25,6 +25,6 @@ rewards:
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
   - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator

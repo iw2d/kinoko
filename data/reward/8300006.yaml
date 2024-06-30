@@ -6,7 +6,8 @@ rewards:
   - [ 1052072, 1, 1, 0.000200 ] # Black Garina
   - [ 1052075, 1, 1, 0.000200 ] # Blue Dragon Armor
   - [ 1052134, 1, 1, 0.000200 ] # Canopus Suit
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2040002, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 10%
   - [ 2040005, 1, 1, 0.010000 ] # Scroll for Helmet for HP 10%
   - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%

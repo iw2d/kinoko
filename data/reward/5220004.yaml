@@ -18,8 +18,10 @@ rewards:
   - [ 1452009, 1, 1, 0.000200 ] # Red Hinkel
   - [ 1462009, 1, 1, 0.000200 ] # Gross Jaeger
   - [ 1472026, 1, 1, 0.000200 ] # Brown Scarab
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2040001, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 60%
   - [ 2040004, 1, 1, 0.010000 ] # Scroll for Helmet for HP 60%
   - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%

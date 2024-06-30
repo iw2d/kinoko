@@ -25,6 +25,6 @@ rewards:
   - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time
   - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
   - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator

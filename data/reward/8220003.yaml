@@ -18,9 +18,12 @@ rewards:
   - [ 1472053, 1, 1, 0.000200 ] # Red Craven
   - [ 1482012, 1, 1, 0.000200 ] # King Cent
   - [ 1492012, 1, 1, 0.000200 ] # Concerto
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2000006, 1, 1, 0.500000 ] # Mana Elixir
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
   - [ 2040824, 1, 1, 0.010000 ] # Scroll for Gloves for HP 60%
   - [ 2044212, 1, 1, 0.010000 ] # Scroll for Two-Handed BW for Accuracy 60%
   - [ 2290006, 1, 1, 0.100000 ] # [Mastery Book] Power Stance
@@ -32,7 +35,19 @@ rewards:
   - [ 2290118, 1, 1, 0.100000 ] # [Mastery Book] Rapid Fire
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
   - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
+  - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
+  - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
+  - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
+  - [ 4000268, 1, 1, 0.400000 ] # Wyvern Wing
   - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
+  - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
+  - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
+  - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
+  - [ 4000269, 1, 1, 0.400000 ] # Wyvern Gill
+  - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
+  - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
+  - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
+  - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
   - [ 4000270, 1, 1, 0.400000 ] # Wyvern Toenail
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock

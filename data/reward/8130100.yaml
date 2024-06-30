@@ -18,8 +18,10 @@ rewards:
   - [ 1472026, 1, 1, 0.000200 ] # Brown Scarab
   - [ 1482009, 1, 1, 0.000200 ] # Beia Crash
   - [ 1492009, 1, 1, 0.000200 ] # Abyss Shooter
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
   - [ 2040419, 1, 1, 0.010000 ] # Scroll for Topwear for STR 10%
   - [ 2040622, 1, 1, 0.010000 ] # Scroll for Bottomwear for HP 10%
   - [ 2043001, 1, 1, 0.010000 ] # Scroll for One-Handed Sword for ATT 60%
@@ -40,6 +42,8 @@ rewards:
   - [ 2044901, 1, 1, 0.010000 ] # Scroll for Gun for Attack 60%
   - [ 2049000, 1, 1, 0.010000 ] # Clean Slate Scroll 1%
   - [ 2070007, 1, 1, 0.000400 ] # Hwabi Throwing-Stars
+  - [ 4021008, 1, 1, 0.002000 ] # Black Crystal
+  - [ 4021008, 1, 1, 0.002000 ] # Black Crystal
   - [ 4021008, 1, 1, 0.002000 ] # Black Crystal
   - [ 4031466, 1, 1, 0.500000, 6107 ] # Dark Soul Rock
   - [ 4031475, 1, 1, 0.700000, 6153 ] # Key to the Forgotten Shrine

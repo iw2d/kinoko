@@ -1,7 +1,7 @@
 # Ravana (9500390)
 
 rewards:
-  - [ 1003068, 1, 1, 0.000200 ] # Ravana Helmet
+  - [ 1003068, 1, 1, 0.100000 ] # Ravana Helmet
   - [ 1302012, 1, 1, 0.000200 ] # Red Katana
   - [ 1302056, 1, 1, 0.000200 ] # Sparta
   - [ 1312010, 1, 1, 0.000200 ] # Mikhail
@@ -36,11 +36,16 @@ rewards:
   - [ 1482012, 1, 1, 0.000200 ] # King Cent
   - [ 1492009, 1, 1, 0.000200 ] # Abyss Shooter
   - [ 1492012, 1, 1, 0.000200 ] # Concerto
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
-  - [ 2001001, 1, 1, 0.100000 ] # Ice Cream Pop
-  - [ 2001002, 1, 1, 0.100000 ] # Red Bean Sundae
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
-  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2001001, 1, 1, 0.500000 ] # Ice Cream Pop
+  - [ 2001001, 1, 1, 0.500000 ] # Ice Cream Pop
+  - [ 2001002, 1, 1, 0.500000 ] # Red Bean Sundae
+  - [ 2001002, 1, 1, 0.500000 ] # Red Bean Sundae
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.500000 ] # Sunset Dew
+  - [ 2020015, 1, 1, 0.500000 ] # Sunset Dew
   - [ 2040301, 1, 1, 0.010000 ] # Scroll for Earring for INT 60%
   - [ 2040317, 1, 1, 0.010000 ] # Scroll for Earring for DEX 60%
   - [ 2040321, 1, 1, 0.010000 ] # Scroll for Earring for LUK 60%
@@ -82,4 +87,4 @@ rewards:
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
-  - [ 4020009, 1, 1, 0.002000 ] # Piece of Time
+  - [ 4020009, 1, 1, 0.001000 ] # Piece of Time

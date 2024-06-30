@@ -28,10 +28,14 @@ rewards:
   - [ 1372009, 1, 1, 0.000200 ] # Magicodar
   - [ 1462018, 1, 1, 0.000200 ] # Casa Crow
   - [ 1482011, 1, 1, 0.000200 ] # White Fangz
-  - [ 2000004, 1, 1, 0.100000 ] # Elixir
-  - [ 2000005, 1, 1, 0.100000 ] # Power Elixir
-  - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk
-  - [ 2020015, 1, 1, 0.100000 ] # Sunset Dew
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000004, 1, 1, 0.500000 ] # Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2000005, 1, 1, 0.500000 ] # Power Elixir
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020013, 1, 1, 0.500000 ] # Reindeer Milk
+  - [ 2020015, 1, 1, 0.500000 ] # Sunset Dew
+  - [ 2020015, 1, 1, 0.500000 ] # Sunset Dew
   - [ 2040318, 1, 1, 0.010000 ] # Scroll for Earring for DEX 10%
   - [ 2040321, 1, 1, 0.010000 ] # Scroll for Earring for LUK 60%
   - [ 2040419, 1, 1, 0.010000 ] # Scroll for Topwear for STR 10%
@@ -65,4 +69,7 @@ rewards:
   - [ 2290140, 1, 1, 0.100000 ] # [Mastery Book] Illusion 20
   - [ 2290143, 1, 1, 0.100000 ] # [Mastery Book] Flame Wheel 30
   - [ 4001084, 1, 1, 1.000000 ] # Papulatus Certificate
-  - [ 4031196, 1, 1, 0.050000 ] # Dark Tachion
+  - [ 4031196, 1, 1, 1.000000 ] # Dark Tachion
+  - [ 4031196, 1, 1, 0.800000 ] # Dark Tachion
+  - [ 4031196, 1, 1, 0.400000 ] # Dark Tachion
+  - [ 4031196, 1, 1, 0.400000 ] # Dark Tachion
