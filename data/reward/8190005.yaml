@@ -16,8 +16,8 @@ rewards:
   - [ 2040707, 1, 1, 0.000100 ] # Scroll for Shoes for Speed 60%
   - [ 2041023, 1, 1, 0.000100 ] # Scroll for Cape for LUK 10%
   - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
-  - [ 4000244, 1, 1, 0.400000 ] # Dragon Spirit
-  - [ 4000245, 1, 1, 0.400000 ] # Dragon Scale
+  - [ 4000244, 1, 1, 0.001000 ] # Dragon Spirit
+  - [ 4000245, 1, 1, 0.001000 ] # Dragon Scale
   - [ 4000271, 1, 1, 0.400000 ] # Destroyed Nest
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock

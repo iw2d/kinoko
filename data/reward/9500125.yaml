@@ -19,6 +19,6 @@ rewards:
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000014, 1, 1, 0.400000 ] # Drake Skull
   - [ 4000030, 1, 1, 0.400000 ] # Dragon Skin
-  - [ 4001006, 1, 1, 0.000000 ] # Flaming Feather
+  - [ 4001006, 1, 1, 0.010000 ] # Flaming Feather
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

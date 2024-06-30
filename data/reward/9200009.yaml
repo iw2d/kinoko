@@ -19,5 +19,5 @@ rewards:
   - [ 2044601, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 60%
   - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
   - [ 4000022, 1, 1, 0.400000 ] # Stone Golem Rubble
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore

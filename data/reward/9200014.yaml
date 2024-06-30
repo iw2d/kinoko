@@ -16,7 +16,7 @@ rewards:
   - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
   - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
   - [ 4000027, 1, 1, 0.400000 ] # Wild Kargo Eye
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
   - [ 4031213, 1, 1, 0.150000, 2097 ] # Wild Kargo's Spirit Rock

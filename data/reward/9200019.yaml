@@ -14,7 +14,7 @@ rewards:
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4000052, 1, 1, 0.400000 ] # White Fang Tail
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock

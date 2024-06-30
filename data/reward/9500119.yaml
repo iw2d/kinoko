@@ -18,8 +18,8 @@ rewards:
   - [ 2041001, 1, 1, 0.000100 ] # Scroll for Cape for Magic Def. 60%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4000003, 1, 1, 0.400000 ] # Tree Branch
-  - [ 4000018, 1, 1, 0.400000 ] # Firewood
+  - [ 4000003, 1, 1, 0.100000 ] # Tree Branch
+  - [ 4000018, 1, 1, 0.100000 ] # Firewood
   - [ 4000110, 1, 1, 0.400000 ] # Toy Trojan Sword
   - [ 4004001, 1, 1, 0.001000 ] # Wisdom Crystal Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

@@ -16,7 +16,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000012, 1, 1, 0.400000 ] # Green Mushroom Cap
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

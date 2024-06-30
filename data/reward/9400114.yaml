@@ -8,7 +8,7 @@ rewards:
   - [ 2002001, 1, 1, 0.010000 ] # Speed Potion
   - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
   - [ 2022018, 1, 1, 0.010000 ] # Kinoko Ramen(roasted pork)
-  - [ 2030010, 1, 1, 0.000000 ] # Fruit Milk
+  - [ 2030010, 1, 1, 0.010000 ] # Fruit Milk
   - [ 2040009, 1, 1, 0.000100 ] # Dark Scroll for Helmet for DEF 30%
   - [ 2040406, 1, 1, 0.000100 ] # Dark scroll for Topwear for STR 70%
   - [ 2040609, 1, 1, 0.000100 ] # Dark scroll for Bottomwear for HP 30%

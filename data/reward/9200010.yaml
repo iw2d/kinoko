@@ -17,7 +17,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000008, 1, 1, 0.400000 ] # Charm of the Undead
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore

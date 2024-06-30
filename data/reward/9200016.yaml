@@ -8,7 +8,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2070002, 1, 1, 0.000400 ] # Mokbi Throwing-Stars
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4000127, 1, 1, 0.400000 ] # Toy Drum
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore

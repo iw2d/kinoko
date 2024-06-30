@@ -27,7 +27,7 @@ rewards:
   - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
   - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
   - [ 2070010, 1, 1, 0.000400 ] # Icicle
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4000050, 1, 1, 0.400000 ] # Pepe Beak
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore

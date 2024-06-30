@@ -18,7 +18,7 @@ rewards:
   - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000047, 1, 1, 0.400000 ] # Mouse
+  - [ 4000047, 1, 1, 0.100000 ] # Mouse
   - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn
   - [ 4003005, 1, 1, 0.040000 ] # Soft Feather
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
