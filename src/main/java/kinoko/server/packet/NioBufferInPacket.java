@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 
 public final class NioBufferInPacket implements InPacket {
     private static final Logger log = LogManager.getLogger(InPacket.class);
@@ -50,7 +51,7 @@ public final class NioBufferInPacket implements InPacket {
 
     @Override
     public String decodeString(int length) {
-        return new String(decodeArray(length));
+        return new String(decodeArray(length), StandardCharsets.US_ASCII);
     }
 
     @Override

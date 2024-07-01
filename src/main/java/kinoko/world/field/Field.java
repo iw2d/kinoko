@@ -41,7 +41,7 @@ public final class Field {
     private final FieldStorage fieldStorage;
     private final MapInfo mapInfo;
     private final byte fieldKey;
-    private final Instant fieldTimeLimit;
+    private final Instant fieldStart;
     private final ScheduledFuture<?> fieldEventFuture;
     private final Map<Integer, Consumer<Mob>> mobSpawnModifiers;
 
@@ -63,7 +63,7 @@ public final class Field {
         this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
-        this.fieldTimeLimit = hasTimeLimit() ? Instant.now().plus(getTimeLimit(), ChronoUnit.SECONDS) : Instant.MAX;
+        this.fieldStart = Instant.now();
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
         this.mobSpawnModifiers = new ConcurrentHashMap<>();
         // Initialize field object pools
@@ -139,8 +139,15 @@ public final class Field {
         return mapInfo.getFootholdBelow(x, y);
     }
 
-    public int getTimeLimit() {
-        return mapInfo.getTimeLimit();
+    public int getFieldTime() {
+        return (int) (Instant.now().getEpochSecond() - fieldStart.getEpochSecond());
+    }
+
+    public Instant getTimeLimit() {
+        if (hasTimeLimit()) {
+            return fieldStart.plus(mapInfo.getTimeLimit(), ChronoUnit.SECONDS);
+        }
+        return Instant.MAX;
     }
 
     public boolean hasTimeLimit() {
@@ -235,7 +242,7 @@ public final class Field {
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
         affectedAreaPool.updateAffectedAreas(now);
-        if (fieldTimeLimit.isBefore(now)) {
+        if (now.isAfter(getTimeLimit())) {
             final Field returnField = fieldStorage.getFieldById(getForcedReturn()).orElseThrow();
             final PortalInfo portalInfo = returnField.getPortalById(0).orElseThrow();
             userPool.forEach((user) -> {
@@ -304,8 +311,8 @@ public final class Field {
         }
         // Show clock
         final Instant now = Instant.now();
-        if (hasTimeLimit() && fieldTimeLimit.isAfter(now)) {
-            final int remain = (int) (fieldTimeLimit.getEpochSecond() - now.getEpochSecond());
+        if (now.isBefore(getTimeLimit())) {
+            final int remain = (int) (getTimeLimit().getEpochSecond() - now.getEpochSecond());
             user.write(FieldPacket.clock(remain));
         }
     }

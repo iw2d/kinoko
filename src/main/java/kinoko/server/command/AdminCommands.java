@@ -28,6 +28,7 @@ import kinoko.world.cashshop.Commodity;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
@@ -74,6 +75,7 @@ public final class AdminCommands {
         user.write(MessagePacket.system("LUK : %d", user.getBasicStat().getLuk()));
         user.write(MessagePacket.system("Damage : %d ~ %d", (int) CalcDamage.calcDamageMin(user), (int) CalcDamage.calcDamageMax(user)));
         user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
+        user.write(MessagePacket.system("Field Time : %d", field.getFieldTime()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
         final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getFootholdId())).orElse("unk");
@@ -94,14 +96,21 @@ public final class AdminCommands {
                     nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript()));
         }
         // Compute nearest mob
-        final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(new Rect(-100, -100, 100, 100))));
+        final Rect detectRect = new Rect(-100, -100, 100, 100);
+        final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(detectRect)));
         if (nearestMobResult.isPresent()) {
             final Mob mob = nearestMobResult.get();
             user.write(MessagePacket.system(mob.toString()));
             user.write(MessagePacket.system("  Controller : %s", mob.getController().getCharacterName()));
         }
+        // Compute nearest npc
+        final Optional<Npc> nearestNpcResult = user.getNearestObject(field.getNpcPool().getInsideRect(user.getRelativeRect(detectRect)));
+        if (nearestNpcResult.isPresent()) {
+            final Npc npc = nearestNpcResult.get();
+            user.write(MessagePacket.system(npc.toString()));
+        }
         // Compute nearest reactor
-        final Optional<Reactor> nearestReactorResult = user.getNearestObject(field.getReactorPool().getInsideRect(user.getRelativeRect(new Rect(-100, -100, 100, 100))));
+        final Optional<Reactor> nearestReactorResult = user.getNearestObject(field.getReactorPool().getInsideRect(user.getRelativeRect(detectRect)));
         if (nearestReactorResult.isPresent()) {
             final Reactor reactor = nearestReactorResult.get();
             user.write(MessagePacket.system(reactor.toString()));
@@ -184,6 +193,7 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Map : %s (%d)", StringProvider.getMapName(mapId), mapId));
             user.write(MessagePacket.system("  type : %s", mapInfo.getFieldType().name()));
             user.write(MessagePacket.system("  returnMap : %d", mapInfo.getReturnMap()));
+            user.write(MessagePacket.system("  forcedReturn : %d", mapInfo.getForcedReturn()));
             user.write(MessagePacket.system("  onFirstUserEnter : %s", mapInfo.getOnFirstUserEnter()));
             user.write(MessagePacket.system("  onUserEnter : %s", mapInfo.getOnUserEnter()));
         } else if (type.equalsIgnoreCase("mob")) {
@@ -244,6 +254,7 @@ public final class AdminCommands {
             final NpcTemplate npcTemplate = npcTemplateResult.get();
             final List<MapInfo> npcFields = MapProvider.getMapInfos().stream()
                     .filter((mapInfo) -> mapInfo.getLifeInfos().stream().anyMatch((lifeInfo) -> lifeInfo.getTemplateId() == npcTemplate.getId()))
+                    .sorted(Comparator.comparingInt(MapInfo::getMapId))
                     .toList();
             user.write(MessagePacket.system("Npc : %s (%d)", StringProvider.getNpcName(npcId), npcId));
             user.write(MessagePacket.system("  script : %s", npcTemplate.getScript()));

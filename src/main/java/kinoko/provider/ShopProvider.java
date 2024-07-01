@@ -35,6 +35,10 @@ public final class ShopProvider implements DataProvider {
         }
     }
 
+    public static boolean isShop(int templateId) {
+        return npcShopItems.containsKey(templateId);
+    }
+
     public static List<ShopItem> getNpcShopItems(int templateId) {
         if (!npcShopItems.containsKey(templateId)) {
             return List.of();

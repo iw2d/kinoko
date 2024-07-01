@@ -8,6 +8,7 @@ import kinoko.packet.user.*;
 import kinoko.packet.world.*;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
+import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
@@ -189,7 +190,7 @@ public final class UserHandler {
                 try (var lockedAccount = user.getAccount().acquire()) {
                     user.write(TrunkPacket.openTrunkDlg(npc.getTemplateId(), lockedAccount.get().getTrunk()));
                 }
-            } else {
+            } else if (ShopProvider.isShop(npc.getTemplateId())) {
                 final ShopDialog shopDialog = ShopDialog.from(npc.getTemplate());
                 user.setDialog(shopDialog);
                 user.write(FieldPacket.openShopDlg(user, shopDialog));

@@ -1,6 +1,7 @@
 package kinoko.server.script;
 
 import kinoko.packet.field.FieldEffectPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
@@ -92,8 +93,16 @@ public abstract class ScriptManager {
         user.write(FieldEffectPacket.screen(effectPath));
     }
 
+    public final void clock(int remain) {
+        user.write(FieldPacket.clock(remain));
+    }
+
     public final int getFieldId() {
         return user.getField().getFieldId();
+    }
+
+    public final int getFieldTime() {
+        return user.getField().getFieldTime();
     }
 
 
@@ -139,6 +148,10 @@ public abstract class ScriptManager {
         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
         user.write(MessagePacket.incMoney(money));
         return true;
+    }
+
+    public final boolean canAddMoney(int money) {
+        return user.getInventoryManager().canAddMoney(money);
     }
 
     public final boolean addItem(int itemId, int quantity) {
