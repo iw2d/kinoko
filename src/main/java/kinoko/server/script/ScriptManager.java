@@ -265,17 +265,6 @@ public abstract class ScriptManager {
     }
 
 
-    // PARTY METHODS ---------------------------------------------------------------------------------------------------
-
-    public final boolean hasParty() {
-        return getUser().getPartyId() != 0;
-    }
-
-    public final boolean isPartyBoss() {
-        return getUser().isPartyBoss();
-    }
-
-
     // WARP METHODS ----------------------------------------------------------------------------------------------------
 
     public final void warp(int fieldId) {
@@ -316,9 +305,56 @@ public abstract class ScriptManager {
     }
 
     public final boolean warpInstance(int fieldId, int instanceCount, String portalName) {
-        // Try acquiring instance
+        final List<Integer> fieldIds = new ArrayList<>();
         for (int i = 0; i < instanceCount; i++) {
-            final Optional<Field> instanceResult = user.getConnectedServer().getFieldInstanceById(fieldId + i);
+            fieldIds.add(fieldId + i);
+        }
+        return warpInstance(fieldIds, portalName);
+    }
+
+    public final boolean warpInstance(List<Integer> fieldIds, String portalName) {
+        // Try acquiring instance
+        for (int fieldId : fieldIds) {
+            final Optional<Field> instanceResult = user.getConnectedServer().getFieldInstanceById(fieldId);
+            if (instanceResult.isEmpty()) {
+                continue;
+            }
+            final Field targetInstance = instanceResult.get();
+            // Resolve portal
+            final Optional<PortalInfo> portalResult = targetInstance.getPortalByName(portalName);
+            if (portalResult.isEmpty()) {
+                log.error("Tried to warp to portal : {} on field ID : {}", portalName, targetInstance.getFieldId());
+                return false;
+            }
+            final PortalInfo targetPortal = portalResult.get();
+            user.warp(targetInstance, targetPortal, false, false);
+            return true;
+        }
+        return false;
+    }
+
+    // PARTY METHODS ---------------------------------------------------------------------------------------------------
+
+    public final boolean hasParty() {
+        return getUser().getPartyId() != 0;
+    }
+
+    public final boolean isPartyBoss() {
+        return getUser().isPartyBoss();
+    }
+
+    public final boolean partyWarpInstance(int fieldId, int instanceCount, String portalName) {
+        final List<Integer> fieldIds = new ArrayList<>();
+        for (int i = 0; i < instanceCount; i++) {
+            fieldIds.add(fieldId + i);
+        }
+        return warpInstance(fieldIds, portalName);
+    }
+
+    public final boolean partyWarpInstance(List<Integer> fieldIds, String portalName) {
+        // Try acquiring instance
+        for (int fieldId : fieldIds) {
+            final Optional<Field> instanceResult = user.getConnectedServer().getFieldInstanceById(fieldId);
             if (instanceResult.isEmpty()) {
                 continue;
             }

@@ -1,0 +1,6 @@
+# Black Wing Territory : Edelstein (310000000)
+
+EDELSTEIN_TEMPORARY_AIRPORT = 310000010
+
+sm.playPortalSE()
+sm.warp(EDELSTEIN_TEMPORARY_AIRPORT, "out00")

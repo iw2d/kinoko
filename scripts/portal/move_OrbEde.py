@@ -1,0 +1,6 @@
+# On Voyage : Edelstein Bound (200090600)
+
+EDELSTEIN_TEMPORARY_AIRPORT = 310000010
+
+if sm.getFieldTime() >= 174:
+    sm.warp(EDELSTEIN_TEMPORARY_AIRPORT)
