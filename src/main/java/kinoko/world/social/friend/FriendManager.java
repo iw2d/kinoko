@@ -4,7 +4,7 @@ import kinoko.database.DatabaseManager;
 import kinoko.packet.world.FriendPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
-import kinoko.server.node.RemoteUser;
+import kinoko.server.user.RemoteUser;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;

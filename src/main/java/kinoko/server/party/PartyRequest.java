@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.party;
 
 import kinoko.server.header.CentralHeader;
 import kinoko.server.packet.InPacket;

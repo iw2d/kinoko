@@ -1,6 +1,6 @@
 package kinoko.world.social.messenger;
 
-import kinoko.server.node.RemoteUser;
+import kinoko.server.user.RemoteUser;
 import kinoko.util.Lockable;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;

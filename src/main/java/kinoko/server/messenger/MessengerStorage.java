@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.messenger;
 
 import kinoko.world.social.messenger.Messenger;
 

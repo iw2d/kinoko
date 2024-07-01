@@ -1,8 +1,8 @@
 package kinoko.world.social.party;
 
-import kinoko.server.node.RemoteTownPortal;
-import kinoko.server.node.RemoteUser;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.user.RemoteTownPortal;
+import kinoko.server.user.RemoteUser;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;

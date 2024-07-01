@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.field;
 
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;

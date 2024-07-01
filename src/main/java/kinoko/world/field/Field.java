@@ -9,7 +9,7 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
-import kinoko.server.node.FieldStorage;
+import kinoko.server.field.FieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;

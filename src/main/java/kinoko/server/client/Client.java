@@ -1,9 +1,10 @@
-package kinoko.server.node;
+package kinoko.server.client;
 
 import io.netty.channel.socket.SocketChannel;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.ClientPacket;
 import kinoko.server.netty.NettyClient;
+import kinoko.server.node.ServerNode;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 

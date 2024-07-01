@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.migration;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

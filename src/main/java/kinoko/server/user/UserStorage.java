@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.user;
 
 import java.util.HashMap;
 import java.util.Map;

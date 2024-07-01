@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.party;
 
 import kinoko.world.social.party.Party;
 

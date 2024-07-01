@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.client;
 
 import kinoko.world.user.Account;
 import kinoko.world.user.User;

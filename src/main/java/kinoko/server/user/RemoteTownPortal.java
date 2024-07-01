@@ -1,4 +1,4 @@
-package kinoko.server.node;
+package kinoko.server.user;
 
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
