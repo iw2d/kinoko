@@ -81,7 +81,8 @@ public final class MapProvider implements WzProvider {
                     linkedMaps.put(mapId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
                     continue;
                 }
-                final MapInfo mapInfo = resolveMapInfo(mapId, mapEntry.getValue(), infoProp);
+                final boolean clock = mapEntry.getValue().getProperty().getItems().containsKey("clock");
+                final MapInfo mapInfo = resolveMapInfo(mapId, mapEntry.getValue(), infoProp, clock);
                 mapInfos.put(mapId, mapInfo);
             }
         }
@@ -99,17 +100,18 @@ public final class MapProvider implements WzProvider {
                     linkInfo.getFootholds(),
                     linkInfo.getLifeInfos(),
                     linkInfo.getPortalInfos(),
-                    linkInfo.getReactorInfos()
+                    linkInfo.getReactorInfos(),
+                    linkInfo.isClock()
             ));
         }
     }
 
-    private static MapInfo resolveMapInfo(int mapId, WzImage image, WzListProperty infoProp) throws ProviderError {
+    private static MapInfo resolveMapInfo(int mapId, WzImage image, WzListProperty infoProp, boolean clock) throws ProviderError {
         final List<Foothold> foothold = resolveFoothold(image.getProperty());
         final List<LifeInfo> life = resolveLife(image.getProperty());
         final List<PortalInfo> portal = resolvePortal(image.getProperty());
         final List<ReactorInfo> reactor = resolveReactor(image.getProperty());
-        return MapInfo.from(mapId, infoProp, foothold, life, portal, reactor);
+        return MapInfo.from(mapId, infoProp, foothold, life, portal, reactor, clock);
     }
 
     private static List<Foothold> resolveFoothold(WzListProperty imageProp) throws ProviderError {

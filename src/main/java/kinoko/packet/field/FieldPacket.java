@@ -61,9 +61,18 @@ public final class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket clock(int hour, int min, int sec) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.Clock);
+        outPacket.encodeByte(1); // CClock::SetClock
+        outPacket.encodeByte(hour); // nHour
+        outPacket.encodeByte(min); // nMin
+        outPacket.encodeByte(sec); // nSec
+        return outPacket;
+    }
+
     public static OutPacket clock(int remain) {
         final OutPacket outPacket = OutPacket.of(OutHeader.Clock);
-        outPacket.encodeByte(2); // nTimerType
+        outPacket.encodeByte(2); // CClock::SetTimer
         outPacket.encodeInt(remain); // nRemain
         return outPacket;
     }

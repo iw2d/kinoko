@@ -550,6 +550,8 @@ public enum OutHeader {
             NpcMove,
             DropEnterField,
             DropLeaveField,
+            ReactorEnterField,
+            ReactorLeaveField,
             QuickslotMappedInit,
             FuncKeyMappedInit
     );

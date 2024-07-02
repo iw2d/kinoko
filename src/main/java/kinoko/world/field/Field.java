@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.packet.field.FieldPacket;
 import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
@@ -23,6 +24,7 @@ import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -297,6 +299,11 @@ public final class Field {
         }
         if (mapInfo.hasOnUserEnter()) {
             ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
+        }
+        // Handle clock
+        if (mapInfo.isClock()) {
+            final LocalDateTime now = LocalDateTime.now();
+            user.write(FieldPacket.clock(now.getHour(), now.getMinute(), now.getSecond()));
         }
         // Handle instance
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {

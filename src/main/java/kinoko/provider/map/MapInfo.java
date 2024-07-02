@@ -11,6 +11,7 @@ public final class MapInfo {
     private final boolean town;
     private final boolean swim;
     private final boolean fly;
+    private final boolean clock;
     private final int timeLimit;
     private final int returnMap;
     private final int forcedReturn;
@@ -29,14 +30,12 @@ public final class MapInfo {
     private final List<ReactorInfo> reactorInfos;
     private final FootholdNode footholdRoot = new FootholdNode();
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, int timeLimit, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions,
-                   FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom,
-                   int vrRight, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos,
-                   List<ReactorInfo> reactorInfos) {
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean clock, int timeLimit, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom, int vrRight, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
         this.town = town;
         this.swim = swim;
         this.fly = fly;
+        this.clock = clock;
         this.timeLimit = timeLimit;
         this.returnMap = returnMap;
         this.forcedReturn = forcedReturn;
@@ -75,6 +74,11 @@ public final class MapInfo {
     public boolean isFly() {
         return fly;
     }
+
+    public boolean isClock() {
+        return clock;
+    }
+
 
     public int getTimeLimit() {
         return timeLimit;
@@ -226,12 +230,13 @@ public final class MapInfo {
                 '}';
     }
 
-    public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor) {
+    public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
         return new MapInfo(
                 mapId,
                 infoProp.getOrDefault("town", 0) != 0,
                 infoProp.getOrDefault("swim", 0) != 0,
                 infoProp.getOrDefault("fly", 0) != 0,
+                clock,
                 infoProp.getOrDefault("timeLimit", 0),
                 infoProp.get("returnMap"),
                 infoProp.get("forcedReturn"),
