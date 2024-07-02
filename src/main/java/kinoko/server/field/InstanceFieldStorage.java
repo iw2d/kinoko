@@ -24,6 +24,16 @@ public final class InstanceFieldStorage implements FieldStorage {
         return Optional.ofNullable(fieldMap.get(mapId));
     }
 
+    @Override
+    public void clear() {
+        final var iter = fieldMap.values().iterator();
+        while (iter.hasNext()) {
+            final Field field = iter.next();
+            field.getFieldEventFuture().cancel(true);
+            iter.remove();
+        }
+    }
+
     public static InstanceFieldStorage from(Instance instance, List<MapInfo> mapInfos) {
         final InstanceFieldStorage fieldStorage = new InstanceFieldStorage(instance);
         for (MapInfo mapInfo : mapInfos) {

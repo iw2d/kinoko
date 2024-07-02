@@ -9,6 +9,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.server.event.EventState;
 import kinoko.server.field.Instance;
 import kinoko.util.Tuple;
 import kinoko.world.field.Field;
@@ -100,6 +101,11 @@ public abstract class ScriptManager {
 
     public final int getFieldId() {
         return user.getField().getFieldId();
+    }
+
+    public final String getEventState(String eventIdentifier) {
+        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventIdentifier);
+        return eventStateResult.map(Enum::name).orElse("");
     }
 
 

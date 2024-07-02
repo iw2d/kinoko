@@ -21,6 +21,16 @@ public final class ChannelFieldStorage implements FieldStorage {
         return fieldResult;
     }
 
+    @Override
+    public void clear() {
+        final var iter = fieldMap.values().iterator();
+        while (iter.hasNext()) {
+            final Field field = iter.next();
+            field.getFieldEventFuture().cancel(true);
+            iter.remove();
+        }
+    }
+
     private static Optional<Field> createField(FieldStorage fieldStorage, int mapId) {
         final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
         return mapInfoResult.map(mapInfo -> Field.from(fieldStorage, mapInfo));

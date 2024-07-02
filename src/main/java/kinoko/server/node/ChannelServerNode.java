@@ -8,6 +8,8 @@ import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.client.Client;
+import kinoko.server.event.EventManager;
+import kinoko.server.event.EventState;
 import kinoko.server.field.ChannelFieldStorage;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceStorage;
@@ -40,6 +42,7 @@ public final class ChannelServerNode extends ServerNode {
     private final ConcurrentHashMap<Integer, CompletableFuture<?>> requestFutures = new ConcurrentHashMap<>();
     private final ChannelFieldStorage fieldStorage = new ChannelFieldStorage();
     private final InstanceStorage instanceStorage = new InstanceStorage();
+    private final EventManager eventManager = new EventManager();
     private final int channelId;
     private final int channelPort;
     private ChannelFuture centralClientFuture;
@@ -192,6 +195,13 @@ public final class ChannelServerNode extends ServerNode {
     }
 
 
+    // EVENT METHODS ---------------------------------------------------------------------------------------------------
+
+    public Optional<EventState> getEventState(String eventIdentifier) {
+        return eventManager.getEventState(eventIdentifier);
+    }
+
+
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
@@ -201,6 +211,9 @@ public final class ChannelServerNode extends ServerNode {
 
     @Override
     public void initialize() throws InterruptedException, UnknownHostException {
+        // Initialize event manager
+        eventManager.initialize(fieldStorage);
+
         // Start channel server
         final ChannelServerNode self = this;
         channelServerFuture = startServer(new ChannelInitializer<>() {
