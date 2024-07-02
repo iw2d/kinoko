@@ -7,8 +7,9 @@ if fieldId == EOS_TOWER:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()
-    if not sm.partyWarpInstance(DRUMMER_BUNNYS_LAIR, "out00", EOS_TOWER, 7200):
-        sm.message("All of the Mini-Dungeons are in use right now, please try again later.")
-        sm.dispose()
+    else:
+        sm.playPortalSE()
+        sm.partyWarpInstance(DRUMMER_BUNNYS_LAIR, "out00", EOS_TOWER, 7200)
 else:
+    sm.playPortalSE()
     sm.warp(EOS_TOWER, "MD00")

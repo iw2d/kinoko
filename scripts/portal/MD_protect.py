@@ -7,8 +7,9 @@ if fieldId == DESTROYED_DRAGON_NEST:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()
-    if not sm.partyWarpInstance(NEWT_SECURED_ZONE, "out00", DESTROYED_DRAGON_NEST, 7200):
-        sm.message("All of the Mini-Dungeons are in use right now, please try again later.")
-        sm.dispose()
+    else:
+        sm.playPortalSE()
+        sm.partyWarpInstance(NEWT_SECURED_ZONE, "out00", DESTROYED_DRAGON_NEST, 7200)
 else:
+    sm.playPortalSE()
     sm.warp(DESTROYED_DRAGON_NEST, "MD00")

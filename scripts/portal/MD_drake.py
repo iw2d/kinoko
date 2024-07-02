@@ -7,8 +7,9 @@ if fieldId == CAVE_EXIT:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()
-    if not sm.partyWarpInstance(BLUE_DRAKE_CAVE, "out00", CAVE_EXIT, 7200):
-        sm.message("All of the Mini-Dungeons are in use right now, please try again later.")
-        sm.dispose()
+    else:
+        sm.playPortalSE()
+        sm.partyWarpInstance(BLUE_DRAKE_CAVE, "out00", CAVE_EXIT, 7200)
 else:
+    sm.playPortalSE()
     sm.warp(CAVE_EXIT, "MD00")

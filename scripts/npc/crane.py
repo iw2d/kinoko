@@ -13,11 +13,8 @@ if sm.getFieldId() == ORBIS_CABIN_TO_MU_LUNG:
             "#L0##bMu Lung (1500 mesos)#l#k"
     )
     if answer == 0:
-        if sm.canAddMoney(-1500):
-            if sm.warpInstance(DURING_THE_RIDE_TO_MU_LUNG, "sp", MU_LUNG_TEMPLE, 60):
-                sm.addMoney(-1500)
-            else:
-                sm.sayNext("Someone else is heading to Mu Lung at the moment. Please try again later.")
+        if sm.addMoney(-1500):
+            sm.warpInstance(DURING_THE_RIDE_TO_MU_LUNG, "sp", MU_LUNG_TEMPLE, 60)
         else:
             sm.sayNext("Are you sure you have enough mesos?")
     else:
@@ -29,11 +26,8 @@ elif sm.getFieldId() == MU_LUNG_TEMPLE:
     )
     if answer == 0:
         if sm.askYesNo("Do you want to fly to #bOrbis#k right now? As long as you don't act silly while in the air, you should reach your destination in no time. It'll only cost you #b1500 mesos#k."):
-            if sm.canAddMoney(-1500):
-                if sm.warpInstance(DURING_THE_RIDE_TO_ORBIS, "sp", ORBIS_CABIN_TO_MU_LUNG, 60):
-                    sm.addMoney(-1500)
-                else:
-                    sm.sayNext("Someone else is heading to Orbis at the moment. Please try again later.")
+            if sm.addMoney(-1500):
+                sm.warpInstance(DURING_THE_RIDE_TO_ORBIS, "sp", ORBIS_CABIN_TO_MU_LUNG, 60)
             else:
                 sm.sayNext("Are you sure you have enough mesos?")
         else:
