@@ -243,6 +243,12 @@ public final class WvsContext {
         return OutPacket.of(OutHeader.AvatarMegaphoneClearMessage);
     }
 
+    public static OutPacket scriptProgressMessage(String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ScriptProgressMessage);
+        outPacket.encodeString(message); // sMsg
+        return outPacket;
+    }
+
     public static OutPacket wildHunterInfo(WildHunterInfo wildHunterInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.WildHunterInfo);
         wildHunterInfo.encode(outPacket); // GW_WildHunterInfo::Decode

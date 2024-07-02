@@ -7,6 +7,7 @@ import kinoko.world.field.Field;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
@@ -38,11 +39,15 @@ public abstract class Event {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
-    public final void warp(int sourceFieldId, int destinationFieldId, String portalName) {
+    protected final int getNearestMinute() {
+        return LocalDateTime.now().plusSeconds(30).getMinute();
+    }
+
+    protected final void warp(int sourceFieldId, int destinationFieldId, String portalName) {
         warp(List.of(sourceFieldId), destinationFieldId, portalName);
     }
 
-    public final void warp(List<Integer> sourceFieldIds, int destinationFieldId, String portalName) {
+    protected final void warp(List<Integer> sourceFieldIds, int destinationFieldId, String portalName) {
         // Resolve destination field
         final Optional<Field> destinationFieldResult = fieldStorage.getFieldById(destinationFieldId);
         if (destinationFieldResult.isEmpty()) {
@@ -72,7 +77,7 @@ public abstract class Event {
         }
     }
 
-    public final void setReactorState(int fieldId, int reactorTemplateId, int newState) {
+    protected final void setReactorState(int fieldId, int reactorTemplateId, int newState) {
         // Resolve field
         final Optional<Field> fieldResult = fieldStorage.getFieldById(fieldId);
         if (fieldResult.isEmpty()) {

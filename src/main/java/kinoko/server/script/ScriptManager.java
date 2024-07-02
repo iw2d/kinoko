@@ -55,6 +55,10 @@ public abstract class ScriptManager {
         disposeManager();
     }
 
+    public final void scriptProgressMessage(String message) {
+        user.write(WvsContext.scriptProgressMessage(message));
+    }
+
     public final void message(String message) {
         user.write(MessagePacket.system(message));
     }

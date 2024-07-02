@@ -89,7 +89,7 @@ public final class AdminCommands {
                 nearestPortal = pi;
             }
         }
-        if (nearestPortal != null && nearestDistance < 100) {
+        if (nearestPortal != null && nearestDistance < 200) {
             user.write(MessagePacket.system("Portal name : %s (%d)", nearestPortal.getPortalName(), nearestPortal.getPortalId()));
             user.write(MessagePacket.system("  x : %d, y : %d, script : %s",
                     nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript()));

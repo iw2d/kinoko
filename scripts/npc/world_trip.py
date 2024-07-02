@@ -32,17 +32,17 @@ if sm.getFieldId() in AVAILABLE_FIELDS:
             sm.setQRValue(QR_WorldTrip, str(sm.getFieldId()))
             sm.warp(MUSHROOM_SHRINE, "st00")
         else:
-            sm.sayNext("I'm afraid you don't have enough meso.")
+            sm.sayOk("I'm afraid you don't have enough meso.")
     elif answer == 1:
         if sm.askYesNo("You can return to Victoria Island through the Changi Airport in CBD. Would you like to go now? It will cost 300,000 mesos."):
             if sm.addMoney(-300000):
                 sm.warp(TREND_ZONE_METROPOLIS)
             else:
-                sm.sayNext("I'm afraid you don't have enough meso.")
+                sm.sayOk("I'm afraid you don't have enough meso.")
         else:
-            sm.sayNext("OK. If you ever change your mind, please let me know.")
+            sm.sayOk("OK. if you ever change your mind, please let me know.")
     else:
-        sm.sayNext("OK. If you ever change your mind, please let me know.")
+        sm.sayOk("OK. if you ever change your mind, please let me know.")
 elif sm.getFieldId() == MUSHROOM_SHRINE:
     val = sm.getQRValue(QR_WorldTrip)
     if val.isdigit() and int(val) in AVAILABLE_FIELDS:
@@ -57,4 +57,4 @@ elif sm.getFieldId() == MUSHROOM_SHRINE:
         sm.sayNext("Alright. I'll take you back to where you were before the visit to Japan. If you ever feel like traveling again down the road, please let me know!")
         sm.warp(returnMap)
     else:
-        sm.sayNext("OK. If you ever change your mind, please let me know.")
+        sm.sayOk("OK. if you ever change your mind, please let me know.")
