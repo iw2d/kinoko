@@ -64,10 +64,6 @@ public final class Instance implements Lockable<Instance> {
 
     public void removeUser(User user) {
         userMap.remove(user.getId(), user);
-        // Destroy instance
-        if (userMap.isEmpty()) {
-            channelServerNode.removeInstance(this);
-        }
     }
 
     public Set<User> getUsers() {

@@ -52,7 +52,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        System.out.println(user.getPartyId());
+        System.out.println(user.getPartyInfo());
         user.dispose();
     }
 

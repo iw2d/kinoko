@@ -36,7 +36,6 @@ public final class InstanceStorage {
 
     public boolean removeInstance(Instance instance) {
         assert instance.getUsers().isEmpty();
-        System.out.println(instanceMap);
         return instanceMap.remove(instance.getInstanceId(), instance);
     }
 

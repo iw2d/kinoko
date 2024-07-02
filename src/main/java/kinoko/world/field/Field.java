@@ -228,6 +228,7 @@ public final class Field {
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
             final Instance instance = instanceFieldStorage.getInstance();
             if (now.isAfter(instance.getExpireTime())) {
+                // Remove instance
                 final Field returnField = instance.getChannelServerNode().getFieldById(instance.getReturnMap()).orElseThrow();
                 final PortalInfo defaultPortal = returnField.getPortalById(0).orElseThrow();
                 userPool.forEach((user) -> {
@@ -236,6 +237,7 @@ public final class Field {
                         locked.get().warp(returnField, portalInfo, false, false);
                     }
                 });
+                instance.getChannelServerNode().removeInstance(instance);
             }
         }
     }

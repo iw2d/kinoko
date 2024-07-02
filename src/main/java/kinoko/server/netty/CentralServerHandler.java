@@ -269,7 +269,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 // Broadcast withdraw packet to party
                                 final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, remoteUser, false, false); // You have left the party. | '%s' have left the party.
                                 forEachPartyMember(party, (member, node) -> {
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(remoteUser))); // update member index
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(member))); // update member index
                                     node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                                 });
                                 // Update user
@@ -303,7 +303,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             forEachPartyMember(party, (member, node) -> {
                                 if (member.getCharacterId() == remoteUser.getCharacterId()) {
                                     member.setPartyId(party.getPartyId());
-                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(remoteUser)));
+                                    node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(member)));
                                 }
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
@@ -383,7 +383,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             // Broadcast packet to party
                             final OutPacket outPacket = PartyPacket.changePartyBossDone(targetId, false); // %s has become the leader of the party.
                             forEachPartyMember(party, (member, node) -> {
-                                node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(remoteUser)));
+                                node.write(CentralPacket.partyResult(member.getCharacterId(), party.createInfo(member)));
                                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                             });
                         }
