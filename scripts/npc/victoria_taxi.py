@@ -1,11 +1,11 @@
-# Regular Cab in Victoria
+# Regular Cab in Victoria (1012000)
 
 IS_BEGINNER = sm.getJob() % 1000 == 0 or sm.getJob() == 2001
 
 TOWNS = [100000000, 101000000, 102000000, 103000000, 104000000, 105000000, 120000000]
 PRICE = 100 if IS_BEGINNER else 1000
 
-sm.sayNext("Hello! I'm Regular Cab in Victoria, and I am here to take you to your destination, quickly and safely. #bRegular Cab in Victoria#k values your satisfaction, so you can always reach your destination at an affordable price. I am here to serve you.")
+sm.sayNext("Hello! I'm #p1012000#, and I am here to take you to your destination, quickly and safely. #b#p1012000##k values your satisfaction, so you can always reach your destination at an affordable price. I am here to serve you.")
 
 choices = list(filter(lambda x: x != sm.getFieldId(), TOWNS))
 answer = sm.askMenu("Please select your destination." + \
