@@ -1,0 +1,5 @@
+# Leafre : Station (240000110)
+
+MINI_DRACO_TRANSFORMATION = 2210016
+
+sm.resetTemporaryStat(-MINI_DRACO_TRANSFORMATION)

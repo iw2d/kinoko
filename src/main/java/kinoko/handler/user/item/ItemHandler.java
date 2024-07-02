@@ -7,12 +7,10 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
-import kinoko.provider.WzProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.PortalInfo;
-import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.ScriptDispatcher;
@@ -20,16 +18,14 @@ import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
-import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
-import kinoko.world.user.stat.CharacterTemporaryStat;
-import kinoko.world.user.stat.TemporaryStatOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class ItemHandler {
     protected static final Logger log = LogManager.getLogger(ItemHandler.class);
@@ -43,7 +39,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item : {}", itemId);
+            log.error("could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -86,7 +82,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item : {}", itemId);
+            log.error("could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -187,7 +183,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item : {}", itemId);
+            log.error("could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -224,7 +220,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item : {}", itemId);
+            log.error("could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -294,7 +290,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("Could not resolve item info for item : {}", itemId);
+            log.error("could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -336,88 +332,8 @@ public abstract class ItemHandler {
         return removeResult;
     }
 
-    protected static void changeStat(Locked<User> locked, ItemInfo ii) {
-        // Apply recovery and resolve stat ups
+    protected static void changeStat(Locked<User> locked, ItemInfo itemInfo) {
         final User user = locked.get();
-        int statUpDuration = 0;
-        final Map<CharacterTemporaryStat, Integer> statUps = new HashMap<>(); // cts -> value
-        final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
-        for (var entry : ii.getItemSpecs().entrySet()) {
-            final ItemSpecType specType = entry.getKey();
-            switch (specType) {
-                // Recovery
-                case hp -> {
-                    user.addHp(getItemBonusRecovery(user, ii.getSpec(specType)));
-                }
-                case mp -> {
-                    user.addMp(getItemBonusRecovery(user, ii.getSpec(specType)));
-                }
-                case hpR -> {
-                    user.addHp(user.getMaxHp() * ii.getSpec(specType) / 100);
-                }
-                case mpR -> {
-                    user.addMp(user.getMaxMp() * ii.getSpec(specType) / 100);
-                }
-                // Reset stats
-                case curse, darkness, poison, seal, weakness -> {
-                    resetStats.add(specType.getStat());
-                }
-                // Stat ups
-                case time -> {
-                    statUpDuration = getItemBonusDuration(user, ii.getSpec(specType));
-                }
-                case defenseAtt -> {
-                    statUps.put(CharacterTemporaryStat.DefenseAtt, ii.getSpec(ItemSpecType.prob));
-                    statUps.put(CharacterTemporaryStat.DefenseAtt_Elem, (int) WzProvider.getString(entry.getValue()).charAt(0));
-                }
-                case defenseState -> {
-                    statUps.put(CharacterTemporaryStat.DefenseState, ii.getSpec(ItemSpecType.prob));
-                    statUps.put(CharacterTemporaryStat.DefenseState_Stat, (int) WzProvider.getString(entry.getValue()).charAt(0)); // C | D | F | S | W
-                }
-                case respectPimmune, respectMimmune, itemupbyitem, mesoupbyitem -> {
-                    statUps.put(specType.getStat(), ii.getSpec(ItemSpecType.prob));
-                }
-                default -> {
-                    final CharacterTemporaryStat cts = specType.getStat();
-                    if (cts != null) {
-                        statUps.put(cts, ii.getSpec(specType));
-                    } else if (!specType.name().endsWith("Rate") && !specType.name().endsWith("Pickup") && specType != ItemSpecType.respectFS) {
-                        log.error("Unhandled item spec type : {} for item ID : {}", specType, ii.getItemId());
-                    }
-                }
-            }
-        }
-        // Apply stat ups
-        if (!statUps.isEmpty()) {
-            if (statUpDuration <= 0) {
-                log.error("Tried to apply stat up with duration {} for item ID : {}", statUpDuration, ii.getItemId());
-                return;
-            }
-            final Map<CharacterTemporaryStat, TemporaryStatOption> setStats = new HashMap<>();
-            for (var entry : statUps.entrySet()) {
-                setStats.put(entry.getKey(), TemporaryStatOption.of(entry.getValue(), -ii.getItemId(), statUpDuration));
-            }
-            user.setTemporaryStat(setStats);
-        }
-        // Reset stats
-        if (!resetStats.isEmpty()) {
-            user.resetTemporaryStat(resetStats);
-        }
-    }
-
-    private static int getItemBonusRecovery(User user, int recovery) {
-        final int bonusRecoveryRate = user.getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
-        if (bonusRecoveryRate != 0) {
-            return recovery * bonusRecoveryRate / 100;
-        }
-        return recovery;
-    }
-
-    private static int getItemBonusDuration(User user, int duration) {
-        final int bonusDurationRate = user.getSkillStatValue(SkillConstants.getItemBonusRateSkill(user.getJob()), SkillStat.x);
-        if (bonusDurationRate != 0) {
-            return duration * bonusDurationRate / 100;
-        }
-        return duration;
+        user.setConsumeItemEffect(itemInfo);
     }
 }

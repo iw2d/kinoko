@@ -140,6 +140,20 @@ public abstract class ScriptManager {
         user.write(MessagePacket.incExp(exp, 0, true, true));
     }
 
+    public final void setConsumeItemEffect(int itemId) {
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            log.error("could not resolve item info for item ID : {}", itemId);
+            return;
+        }
+        user.setConsumeItemEffect(itemInfoResult.get());
+        user.write(MessagePacket.giveBuff(itemId));
+    }
+
+    public final void resetTemporaryStat(int skillId) {
+        user.resetTemporaryStat(skillId);
+    }
+
 
     // INVENTORY METHODS -----------------------------------------------------------------------------------------------
 

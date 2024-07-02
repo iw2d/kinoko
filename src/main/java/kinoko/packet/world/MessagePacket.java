@@ -81,6 +81,13 @@ public final class MessagePacket {
         return outPacket;
     }
 
+    public static OutPacket giveBuff(int itemId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.Message);
+        outPacket.encodeByte(MessageType.GiveBuff.getValue());
+        outPacket.encodeInt(itemId); // nItemID -> CItemInfo::GetItemDesc
+        return outPacket;
+    }
+
     public static OutPacket system(String format, Object... args) {
         return MessagePacket.system(String.format(format, args));
     }

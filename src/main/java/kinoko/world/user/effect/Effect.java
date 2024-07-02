@@ -131,6 +131,12 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static Effect buffItemEffect(int itemId) {
+        final Effect effect = new Effect(EffectType.BuffItemEffect);
+        effect.int1 = itemId;
+        return effect;
+    }
+
     public static Effect squibEffect(String effectPath) {
         final Effect effect = new Effect(EffectType.SquibEffect);
         effect.string1 = effectPath; // sEffect

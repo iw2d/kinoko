@@ -6,6 +6,9 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.WzProvider;
+import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.skill.SkillStat;
@@ -447,6 +450,86 @@ public final class User extends Life implements Lockable<User> {
             getSkillManager().getSkillCooltimes().remove(skillId);
         }
         write(UserLocal.skillCooltimeSet(skillId, cooltime));
+    }
+
+    public void setConsumeItemEffect(ItemInfo itemInfo) {
+        // Apply recovery and resolve stat ups
+        int statUpDuration = 0;
+        final Map<CharacterTemporaryStat, Integer> statUps = new HashMap<>(); // cts -> value
+        final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
+        for (var entry : itemInfo.getItemSpecs().entrySet()) {
+            final ItemSpecType specType = entry.getKey();
+            switch (specType) {
+                // Recovery
+                case hp -> {
+                    addHp(getItemBonusRecovery(itemInfo.getSpec(specType)));
+                }
+                case mp -> {
+                    addMp(getItemBonusRecovery(itemInfo.getSpec(specType)));
+                }
+                case hpR -> {
+                    addHp(getMaxHp() * itemInfo.getSpec(specType) / 100);
+                }
+                case mpR -> {
+                    addMp(getMaxMp() * itemInfo.getSpec(specType) / 100);
+                }
+                // Reset stats
+                case curse, darkness, poison, seal, weakness -> {
+                    resetStats.add(specType.getStat());
+                }
+                // Stat ups
+                case time -> {
+                    statUpDuration = getItemBonusDuration(itemInfo.getSpec(specType));
+                }
+                case defenseAtt -> {
+                    statUps.put(CharacterTemporaryStat.DefenseAtt, itemInfo.getSpec(ItemSpecType.prob));
+                    statUps.put(CharacterTemporaryStat.DefenseAtt_Elem, (int) WzProvider.getString(entry.getValue()).charAt(0));
+                }
+                case defenseState -> {
+                    statUps.put(CharacterTemporaryStat.DefenseState, itemInfo.getSpec(ItemSpecType.prob));
+                    statUps.put(CharacterTemporaryStat.DefenseState_Stat, (int) WzProvider.getString(entry.getValue()).charAt(0)); // C | D | F | S | W
+                }
+                case respectPimmune, respectMimmune, itemupbyitem, mesoupbyitem -> {
+                    statUps.put(specType.getStat(), itemInfo.getSpec(ItemSpecType.prob));
+                }
+                default -> {
+                    final CharacterTemporaryStat cts = specType.getStat();
+                    if (cts != null) {
+                        statUps.put(cts, itemInfo.getSpec(specType));
+                    }
+                }
+            }
+        }
+        // Apply stat ups
+        if (!statUps.isEmpty()) {
+            if (statUpDuration > 0) {
+                final Map<CharacterTemporaryStat, TemporaryStatOption> setStats = new HashMap<>();
+                for (var entry : statUps.entrySet()) {
+                    setStats.put(entry.getKey(), TemporaryStatOption.of(entry.getValue(), -itemInfo.getItemId(), statUpDuration));
+                }
+                setTemporaryStat(setStats);
+            }
+        }
+        // Reset stats
+        if (!resetStats.isEmpty()) {
+            resetTemporaryStat(resetStats);
+        }
+    }
+
+    private int getItemBonusRecovery(int recovery) {
+        final int bonusRecoveryRate = getSkillStatValue(SkillConstants.getItemBonusRateSkill(getJob()), SkillStat.x);
+        if (bonusRecoveryRate != 0) {
+            return recovery * bonusRecoveryRate / 100;
+        }
+        return recovery;
+    }
+
+    private int getItemBonusDuration(int duration) {
+        final int bonusDurationRate = getSkillStatValue(SkillConstants.getItemBonusRateSkill(getJob()), SkillStat.x);
+        if (bonusDurationRate != 0) {
+            return duration * bonusDurationRate / 100;
+        }
+        return duration;
     }
 
 
