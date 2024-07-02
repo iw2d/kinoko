@@ -8,7 +8,9 @@ import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.client.Client;
-import kinoko.server.field.FieldStorage;
+import kinoko.server.field.ChannelFieldStorage;
+import kinoko.server.field.Instance;
+import kinoko.server.field.InstanceStorage;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
@@ -24,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -35,7 +38,8 @@ public final class ChannelServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(ChannelServerNode.class);
     private final AtomicInteger requestIdCounter = new AtomicInteger(1);
     private final ConcurrentHashMap<Integer, CompletableFuture<?>> requestFutures = new ConcurrentHashMap<>();
-    private final FieldStorage fieldStorage = new FieldStorage();
+    private final ChannelFieldStorage fieldStorage = new ChannelFieldStorage();
+    private final InstanceStorage instanceStorage = new InstanceStorage();
     private final int channelId;
     private final int channelPort;
     private ChannelFuture centralClientFuture;
@@ -176,8 +180,15 @@ public final class ChannelServerNode extends ServerNode {
         return fieldStorage.getFieldById(mapId);
     }
 
-    public Optional<Field> getFieldInstanceById(int mapId) {
-        return fieldStorage.getFieldInstanceById(mapId);
+
+    // INSTANCE METHODS ------------------------------------------------------------------------------------------------
+
+    public Optional<Instance> createInstance(List<Integer> mapIds, int returnMap, int timeLimit) {
+        return instanceStorage.createInstance(this, mapIds, returnMap, timeLimit);
+    }
+
+    public boolean removeInstance(Instance instance) {
+        return instanceStorage.removeInstance(instance);
     }
 
 

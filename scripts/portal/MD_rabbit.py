@@ -2,13 +2,12 @@
 
 EOS_TOWER = 221022200
 DRUMMER_BUNNYS_LAIR = 221023401
-MINI_DUNGEON_COUNT = 50
 
 if fieldId == EOS_TOWER:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()
-    if not sm.partyWarpInstance(DRUMMER_BUNNYS_LAIR, MINI_DUNGEON_COUNT, "out00"):
+    if not sm.partyWarpInstance(DRUMMER_BUNNYS_LAIR, "out00", EOS_TOWER, 7200):
         sm.message("All of the Mini-Dungeons are in use right now, please try again later.")
         sm.dispose()
 else:

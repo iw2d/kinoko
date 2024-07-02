@@ -9,6 +9,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
+import kinoko.server.field.Instance;
 import kinoko.util.Tuple;
 import kinoko.world.field.Field;
 import kinoko.world.item.InventoryManager;
@@ -99,10 +100,6 @@ public abstract class ScriptManager {
 
     public final int getFieldId() {
         return user.getField().getFieldId();
-    }
-
-    public final int getFieldTime() {
-        return user.getField().getFieldTime();
     }
 
 
@@ -304,33 +301,31 @@ public abstract class ScriptManager {
         user.warp(targetField, targetPortal, false, false);
     }
 
-    public final boolean warpInstance(int fieldId, int instanceCount, String portalName) {
-        final List<Integer> fieldIds = new ArrayList<>();
-        for (int i = 0; i < instanceCount; i++) {
-            fieldIds.add(fieldId + i);
-        }
-        return warpInstance(fieldIds, portalName);
+    public final boolean warpInstance(int mapId, String portalName, int returnMap, int timeLimit) {
+        return warpInstance(List.of(mapId), portalName, returnMap, timeLimit);
     }
 
-    public final boolean warpInstance(List<Integer> fieldIds, String portalName) {
-        // Try acquiring instance
-        for (int fieldId : fieldIds) {
-            final Optional<Field> instanceResult = user.getConnectedServer().getFieldInstanceById(fieldId);
-            if (instanceResult.isEmpty()) {
-                continue;
-            }
-            final Field targetInstance = instanceResult.get();
-            // Resolve portal
-            final Optional<PortalInfo> portalResult = targetInstance.getPortalByName(portalName);
-            if (portalResult.isEmpty()) {
-                log.error("Tried to warp to portal : {} on field ID : {}", portalName, targetInstance.getFieldId());
-                return false;
-            }
-            final PortalInfo targetPortal = portalResult.get();
-            user.warp(targetInstance, targetPortal, false, false);
-            return true;
+    public final boolean warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit) {
+        // Create instance
+        final Optional<Instance> instanceResult = user.getConnectedServer().createInstance(mapIds, returnMap, timeLimit);
+        if (instanceResult.isEmpty()) {
+            log.error("Could not create instance for map IDs : {}", mapIds);
+            return false;
         }
-        return false;
+        final Instance instance = instanceResult.get();
+        final Field targetField = instance.getFieldStorage().getFieldById(mapIds.get(0)).orElseThrow();
+        // Resolve portal
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
+        final PortalInfo targetPortal;
+        if (portalResult.isEmpty()) {
+            log.error("Could not resolve portal : {} on field ID : {}, trying default portal", portalName, targetField.getFieldId());
+            targetPortal = targetField.getPortalById(0).orElseThrow();
+        } else {
+            targetPortal = portalResult.get();
+        }
+        // Warp user
+        user.warp(targetField, targetPortal, false, false);
+        return true;
     }
 
     // PARTY METHODS ---------------------------------------------------------------------------------------------------
@@ -343,38 +338,35 @@ public abstract class ScriptManager {
         return getUser().isPartyBoss();
     }
 
-    public final boolean partyWarpInstance(int fieldId, int instanceCount, String portalName) {
-        final List<Integer> fieldIds = new ArrayList<>();
-        for (int i = 0; i < instanceCount; i++) {
-            fieldIds.add(fieldId + i);
-        }
-        return warpInstance(fieldIds, portalName);
+    public final boolean partyWarpInstance(int mapId, String portalName, int returnMap, int timeLimit) {
+        return partyWarpInstance(List.of(mapId), portalName, returnMap, timeLimit);
     }
 
-    public final boolean partyWarpInstance(List<Integer> fieldIds, String portalName) {
-        // Try acquiring instance
-        for (int fieldId : fieldIds) {
-            final Optional<Field> instanceResult = user.getConnectedServer().getFieldInstanceById(fieldId);
-            if (instanceResult.isEmpty()) {
-                continue;
-            }
-            final Field targetInstance = instanceResult.get();
-            // Resolve portal
-            final Optional<PortalInfo> portalResult = targetInstance.getPortalByName(portalName);
-            if (portalResult.isEmpty()) {
-                log.error("Tried to warp to portal : {} on field ID : {}", portalName, targetInstance.getFieldId());
-                return false;
-            }
-            final PortalInfo targetPortal = portalResult.get();
-            // Warp user and party members in field
-            user.getField().getUserPool().forEachPartyMember(user, (member) -> {
-                try (var lockedMember = member.acquire()) {
-                    lockedMember.get().warp(targetInstance, targetPortal, false, false);
-                }
-            });
-            user.warp(targetInstance, targetPortal, false, false);
-            return true;
+    public final boolean partyWarpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit) {
+        // Create instance
+        final Optional<Instance> instanceResult = user.getConnectedServer().createInstance(mapIds, returnMap, timeLimit);
+        if (instanceResult.isEmpty()) {
+            log.error("Could not create instance for map IDs : {}", mapIds);
+            return false;
         }
-        return false;
+        final Instance instance = instanceResult.get();
+        final Field targetField = instance.getFieldStorage().getFieldById(mapIds.get(0)).orElseThrow();
+        // Resolve portal
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
+        final PortalInfo targetPortal;
+        if (portalResult.isEmpty()) {
+            log.error("Could not resolve portal : {} on field ID : {}, trying default portal", portalName, targetField.getFieldId());
+            targetPortal = targetField.getPortalById(0).orElseThrow();
+        } else {
+            targetPortal = portalResult.get();
+        }
+        // Warp user and party members in field
+        user.getField().getUserPool().forEachPartyMember(user, (member) -> {
+            try (var lockedMember = member.acquire()) {
+                lockedMember.get().warp(targetField, targetPortal, false, false);
+            }
+        });
+        user.warp(targetField, targetPortal, false, false);
+        return true;
     }
 }

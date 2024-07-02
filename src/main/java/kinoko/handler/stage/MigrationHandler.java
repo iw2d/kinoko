@@ -262,26 +262,26 @@ public final class MigrationHandler {
                     }
                     // Normal revive
                     handleRevive(user, false);
-                } else {
-                    // Return to field via client request (usually SquibEffect)
-                    if (targetFieldId != currentField.getReturnMap()) {
-                        log.error("Tried to return to field : {} from field : {}", targetFieldId, currentField.getFieldId());
-                        user.dispose();
-                        return;
-                    }
-                    handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false);
+                    return;
                 }
-            } else {
-                // Enter portal to next field
-                final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
-                if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
-                    log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
+                // Return to field via client request (usually SquibEffect)
+                if (targetFieldId != currentField.getReturnMap()) {
+                    log.error("Tried to return to field : {} from field : {}", targetFieldId, currentField.getFieldId());
                     user.dispose();
                     return;
                 }
-                final PortalInfo portal = portalResult.get();
-                handleTransferField(user, portal.getDestinationFieldId(), portal.getDestinationPortalName(), false);
+                handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false, false);
+                return;
             }
+            // Enter portal to next field
+            final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
+            if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
+                log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
+                user.dispose();
+                return;
+            }
+            final PortalInfo portal = portalResult.get();
+            handleTransferField(user, portal.getDestinationFieldId(), portal.getDestinationPortalName(), false, false);
         }
     }
 
@@ -355,21 +355,42 @@ public final class MigrationHandler {
         }
     }
 
-    private static void handleTransferField(User user, int fieldId, String portalName, boolean isRevive) {
-        final Optional<Field> nextFieldResult = user.getConnectedServer().getFieldById(fieldId);
-        if (nextFieldResult.isEmpty()) {
-            log.error("Could not resolve field ID : {}", fieldId);
-            user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
-            return;
+    private static void handleTransferField(User user, int fieldId, String portalName, boolean isRevive, boolean isLeaveInstance) {
+        // Resolve Field from ChannelFieldStorage | InstanceFieldStorage
+        final Field targetField;
+        if (isLeaveInstance) {
+            final Optional<Field> targetFieldResult = user.getConnectedServer().getFieldById(fieldId);
+            if (targetFieldResult.isEmpty()) {
+                log.error("Could not resolve field ID : {}", fieldId);
+                user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
+                return;
+            }
+            targetField = targetFieldResult.get();
+        } else {
+            // Try resolving Field from InstanceFieldStorage
+            final Optional<Field> instanceFieldResult = user.getField().getFieldStorage().getFieldById(fieldId);
+            if (instanceFieldResult.isPresent()) {
+                targetField = instanceFieldResult.get();
+            } else {
+                // Default to ChannelFieldStorage - leaving instance
+                final Optional<Field> targetFieldResult = user.getConnectedServer().getFieldById(fieldId);
+                if (targetFieldResult.isEmpty()) {
+                    log.error("Could not resolve field ID : {}", fieldId);
+                    user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
+                    return;
+                }
+                targetField = targetFieldResult.get();
+            }
         }
-        final Field nextField = nextFieldResult.get();
-        final Optional<PortalInfo> nextPortalResult = nextField.getPortalByName(portalName);
-        if (nextPortalResult.isEmpty()) {
-            log.error("Tried to warp to portal : {} on field ID : {}", portalName, nextField.getFieldId());
+        // Resolve Portal
+        final Optional<PortalInfo> targetPortalResult = targetField.getPortalByName(portalName);
+        if (targetPortalResult.isEmpty()) {
+            log.error("Tried to warp to portal : {} on field ID : {}", portalName, targetField.getFieldId());
+            user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
             user.dispose();
             return;
         }
-        user.warp(nextField, nextPortalResult.get(), false, isRevive);
+        user.warp(targetField, targetPortalResult.get(), false, isRevive);
     }
 
     private static void handleRevive(User user, boolean premium) {
@@ -381,10 +402,10 @@ public final class MigrationHandler {
         if (premium) {
             user.setHp(user.getMaxHp());
             user.setMp(user.getMaxMp());
-            handleTransferField(user, user.getField().getFieldId(), GameConstants.DEFAULT_PORTAL_NAME, true);
+            handleTransferField(user, user.getField().getFieldId(), GameConstants.DEFAULT_PORTAL_NAME, true, false);
         } else {
             user.setHp(50);
-            handleTransferField(user, user.getField().getReturnMap(), GameConstants.DEFAULT_PORTAL_NAME, true);
+            handleTransferField(user, user.getField().getReturnMap(), GameConstants.DEFAULT_PORTAL_NAME, true, true);
         }
     }
 

@@ -1,6 +1,5 @@
 package kinoko.world.field;
 
-import kinoko.packet.field.FieldPacket;
 import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
@@ -10,6 +9,8 @@ import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.ServerConfig;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.field.FieldStorage;
+import kinoko.server.field.Instance;
+import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
@@ -41,7 +42,6 @@ public final class Field {
     private final FieldStorage fieldStorage;
     private final MapInfo mapInfo;
     private final byte fieldKey;
-    private final Instant fieldStart;
     private final ScheduledFuture<?> fieldEventFuture;
     private final Map<Integer, Consumer<Mob>> mobSpawnModifiers;
 
@@ -63,7 +63,6 @@ public final class Field {
         this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
-        this.fieldStart = Instant.now();
         this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
         this.mobSpawnModifiers = new ConcurrentHashMap<>();
         // Initialize field object pools
@@ -139,24 +138,6 @@ public final class Field {
         return mapInfo.getFootholdBelow(x, y);
     }
 
-    public int getFieldTime() {
-        return (int) (Instant.now().getEpochSecond() - fieldStart.getEpochSecond());
-    }
-
-    public Instant getTimeLimit() {
-        if (hasTimeLimit()) {
-            return fieldStart.plus(mapInfo.getTimeLimit(), ChronoUnit.SECONDS);
-        }
-        return Instant.MAX;
-    }
-
-    public boolean hasTimeLimit() {
-        if (mapInfo.getForcedReturn() == GameConstants.UNDEFINED_FIELD_ID || mapInfo.getForcedReturn() == getFieldId()) {
-            return false;
-        }
-        return mapInfo.getTimeLimit() > 0;
-    }
-
     public int getReturnMap() {
         return mapInfo.getReturnMap();
     }
@@ -226,6 +207,7 @@ public final class Field {
     }
 
     public void update() {
+        // Handle field updates
         final Instant now = Instant.now();
         if (nextMobRespawn.isBefore(now)) {
             nextMobRespawn = now.plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
@@ -242,14 +224,19 @@ public final class Field {
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
         affectedAreaPool.updateAffectedAreas(now);
-        if (now.isAfter(getTimeLimit())) {
-            final Field returnField = fieldStorage.getFieldById(getForcedReturn()).orElseThrow();
-            final PortalInfo portalInfo = returnField.getPortalById(0).orElseThrow();
-            userPool.forEach((user) -> {
-                try (var locked = user.acquire()) {
-                    locked.get().warp(returnField, portalInfo, false, false);
-                }
-            });
+        // Handle instance
+        if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
+            final Instance instance = instanceFieldStorage.getInstance();
+            if (now.isAfter(instance.getExpireTime())) {
+                final Field returnField = instance.getChannelServerNode().getFieldById(instance.getReturnMap()).orElseThrow();
+                final PortalInfo defaultPortal = returnField.getPortalById(0).orElseThrow();
+                userPool.forEach((user) -> {
+                    try (var locked = user.acquire()) {
+                        final PortalInfo portalInfo = returnField.getRandomStartPoint().orElse(defaultPortal);
+                        locked.get().warp(returnField, portalInfo, false, false);
+                    }
+                });
+            }
         }
     }
 
@@ -309,20 +296,27 @@ public final class Field {
         if (mapInfo.hasOnUserEnter()) {
             ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
         }
-        // Show clock
-        final Instant now = Instant.now();
-        if (now.isBefore(getTimeLimit())) {
-            final int remain = (int) (getTimeLimit().getEpochSecond() - now.getEpochSecond());
-            user.write(FieldPacket.clock(remain));
+        // Handle instance
+        if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
+            try (var lockedInstance = instanceFieldStorage.getInstance().acquire()) {
+                lockedInstance.get().addUser(user);
+            }
         }
     }
 
     public void removeUser(User user) {
         userPool.removeUser(user);
+        // Handle dialogs
         if (user.getDialog() instanceof TradingRoom tradingRoom) {
             tradingRoom.cancelTradeUnsafe(user);
         } else if (user.getDialog() instanceof MiniGameRoom miniGameRoom) {
             miniGameRoom.leaveUnsafe(user);
+        }
+        // Handle instance
+        if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
+            try (var lockedInstance = instanceFieldStorage.getInstance().acquire()) {
+                lockedInstance.get().removeUser(user);
+            }
         }
     }
 

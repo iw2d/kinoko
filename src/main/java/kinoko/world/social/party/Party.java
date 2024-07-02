@@ -23,11 +23,12 @@ public final class Party implements Encodable, Lockable<Party> {
     private static final RemoteUser EMPTY_MEMBER = new RemoteUser(0, 0, "", 0, 0, GameConstants.CHANNEL_OFFLINE, GameConstants.UNDEFINED_FIELD_ID, 0, 0, RemoteTownPortal.EMPTY);
     private final Lock lock = new ReentrantLock();
     private final int partyId;
-    private final List<RemoteUser> partyMembers = new ArrayList<>();
+    private final List<RemoteUser> partyMembers;
     private int partyBossId;
 
     public Party(int partyId, RemoteUser remoteUser) {
         this.partyId = partyId;
+        this.partyMembers = new ArrayList<>(GameConstants.PARTY_MAX);
         this.partyMembers.add(remoteUser);
         this.partyBossId = remoteUser.getCharacterId();
     }

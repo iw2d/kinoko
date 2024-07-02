@@ -7,7 +7,6 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
-import kinoko.provider.MapProvider;
 import kinoko.provider.WzProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemSpecType;
@@ -239,7 +238,7 @@ public abstract class ItemHandler {
                 return;
             }
             final int moveTo = itemInfoResult.get().getSpec(ItemSpecType.moveTo);
-            if (moveTo != GameConstants.UNDEFINED_FIELD_ID && MapProvider.isConnected(field.getFieldId(), moveTo)) {
+            if (moveTo != GameConstants.UNDEFINED_FIELD_ID && field.isConnected(moveTo)) {
                 user.write(MessagePacket.system("You cannot go to that place."));
                 user.dispose();
                 return;

@@ -591,12 +591,14 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             final Messenger messenger = lockedMessenger.get();
             final int userIndex = messenger.removeUser(remoteUser);
             if (userIndex < 0) {
-                log.error("Could not remove user from messenger ID {}", messenger.getMessengerId());
+                log.error("Could not remove user from messenger ID : {}", messenger.getMessengerId());
                 return;
             }
             // Check if empty
             if (messenger.getMessengerUsers().isEmpty()) {
-                centralServerNode.removeMessenger(messenger);
+                if (!centralServerNode.removeMessenger(messenger)) {
+                    log.error("Could not remove messenger ID : {}", messenger.getMessengerId());
+                }
                 return;
             }
             // Update users

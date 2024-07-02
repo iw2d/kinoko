@@ -75,7 +75,6 @@ public final class AdminCommands {
         user.write(MessagePacket.system("LUK : %d", user.getBasicStat().getLuk()));
         user.write(MessagePacket.system("Damage : %d ~ %d", (int) CalcDamage.calcDamageMin(user), (int) CalcDamage.calcDamageMax(user)));
         user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
-        user.write(MessagePacket.system("Field Time : %d", field.getFieldTime()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
         final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getFootholdId())).orElse("unk");
