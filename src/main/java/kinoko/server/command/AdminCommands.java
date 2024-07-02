@@ -536,6 +536,7 @@ public final class AdminCommands {
             return;
         }
         try (var locked = user.acquire()) {
+            user.setJob(jobId);
             if (JobConstants.isDragonJob(jobId)) {
                 final Dragon dragon = new Dragon(user);
                 user.setDragon(dragon);
@@ -546,7 +547,6 @@ public final class AdminCommands {
             if (JobConstants.isWildHunterJob(jobId)) {
                 user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
             }
-            user.setJob(jobId);
         }
     }
 

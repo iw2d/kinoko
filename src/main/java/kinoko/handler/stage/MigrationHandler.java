@@ -8,6 +8,7 @@ import kinoko.packet.field.TransferChannelType;
 import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
@@ -32,6 +33,7 @@ import kinoko.world.social.friend.FriendResultType;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.*;
 import kinoko.world.user.config.ConfigManager;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -244,6 +246,7 @@ public final class MigrationHandler {
                     if (premium) {
                         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SoulStone)) {
                             // user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone)); - SecondaryStat cleared on revive
+                            user.write(UserLocal.effect(Effect.soulStoneUse())); // You have revived on the current map through the effect of the Spirit Stone.
                             handleRevive(user, true);
                             return;
                         } else if (user.getInventoryManager().hasItem(ItemConstants.WHEEL_OF_DESTINY, 1)) {
@@ -256,6 +259,8 @@ public final class MigrationHandler {
                                 throw new IllegalStateException("Failed to remove wheel of destiny from inventory");
                             }
                             user.write(WvsContext.inventoryOperation(removeResult.get(), false));
+                            final int remain = user.getInventoryManager().getItemCount(ItemConstants.WHEEL_OF_DESTINY);
+                            user.write(UserLocal.effect(Effect.upgradeTombItemUse(remain))); // You have used 1 Wheel of Destiny in order to revive at the current map. (%d left)
                             handleRevive(user, true);
                             return;
                         }

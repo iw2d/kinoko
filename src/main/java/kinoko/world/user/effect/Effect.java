@@ -109,6 +109,16 @@ public class Effect implements Encodable {
         return new Effect(EffectType.JobChanged);
     }
 
+    public static Effect soulStoneUse() {
+        return new Effect(EffectType.SoulStoneUse);
+    }
+
+    public static Effect upgradeTombItemUse(int remain) {
+        final Effect effect = new Effect(EffectType.UpgradeTombItemUse);
+        effect.int1 = remain;
+        return effect;
+    }
+
     public static Effect avatarOriented(String effectPath) {
         final Effect effect = new Effect(EffectType.AvatarOriented);
         effect.string1 = effectPath; // sEffect

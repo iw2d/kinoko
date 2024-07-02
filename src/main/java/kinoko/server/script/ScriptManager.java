@@ -73,22 +73,14 @@ public abstract class ScriptManager {
 
     public final void avatarOriented(String effectPath) {
         user.write(UserLocal.effect(Effect.avatarOriented(effectPath)));
-        user.dispose();
     }
 
     public final void squibEffect(String effectPath) {
         user.write(UserLocal.effect(Effect.squibEffect(effectPath)));
-        user.dispose();
     }
 
     public final void balloonMsg(String text, int width, int duration) {
         user.write(UserLocal.balloonMsg(text, width, duration));
-        user.dispose();
-    }
-
-    public final void tutorMsg(int index, int duration) {
-        user.write(UserLocal.tutorMsg(index, duration));
-        user.dispose();
     }
 
     public final void setDirectionMode(boolean set, int delay) {
@@ -97,6 +89,10 @@ public abstract class ScriptManager {
 
     public final void screenEffect(String effectPath) {
         user.write(FieldEffectPacket.screen(effectPath));
+    }
+
+    public final void soundEffect(String effectPath) {
+        user.write(FieldEffectPacket.sound(effectPath));
     }
 
     public final void clock(int remain) {
