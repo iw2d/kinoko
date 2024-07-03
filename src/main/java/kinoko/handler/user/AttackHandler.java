@@ -8,6 +8,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
@@ -302,6 +303,26 @@ public final class AttackHandler {
             attack.slv = user.getSkillLevel(attack.skillId);
             if (attack.slv == 0) {
                 log.error("Tried to attack with skill {} not learned by user", attack.skillId);
+                return;
+            }
+            // Check seal
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
+                log.error("Tried to attack with skill {} while sealed", attack.skillId);
+                return;
+            }
+        }
+
+        // Check morph
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Morph)) {
+            final int morphId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Morph).nOption;
+            final Optional<MorphInfo> morphInfoResult = SkillProvider.getMorphInfoById(morphId);
+            if (morphInfoResult.isEmpty()) {
+                log.error("Could not resolve morph info for morph ID : {}", morphId);
+                return;
+            }
+            final MorphInfo morphInfo = morphInfoResult.get();
+            if (!morphInfo.isSuperman() && !morphInfo.isAttackable()) {
+                log.error("Tried to attack with skill {} while morphed as morph ID : {}", attack.skillId, morphId);
                 return;
             }
         }

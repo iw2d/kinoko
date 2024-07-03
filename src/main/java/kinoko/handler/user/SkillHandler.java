@@ -6,6 +6,7 @@ import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
@@ -15,6 +16,7 @@ import kinoko.util.Locked;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.item.*;
+import kinoko.world.job.JobConstants;
 import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
@@ -105,6 +107,36 @@ public final class SkillHandler {
         // ignore tDelay
 
         try (var locked = user.acquire()) {
+            // Check skill root
+            final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
+            if (!JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot)) {
+                log.error("Tried to use skill {} as incorrect job : {}", skill.skillId, user.getJob());
+                user.dispose();
+                return;
+            }
+            // Check seal
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
+                log.error("Tried to use skill {} while sealed", skill.skillId);
+                user.dispose();
+                return;
+            }
+            // Check morph
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Morph)) {
+                final int morphId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Morph).nOption;
+                final Optional<MorphInfo> morphInfoResult = SkillProvider.getMorphInfoById(morphId);
+                if (morphInfoResult.isEmpty()) {
+                    log.error("Could not resolve morph info for morph ID : {}", morphId);
+                    user.dispose();
+                    return;
+                }
+                final MorphInfo morphInfo = morphInfoResult.get();
+                if (!morphInfo.isSuperman() && !morphInfo.isAttackable()) {
+                    log.error("Tried to use skill {} while morphed as morph ID : {}", skill.skillId, morphId);
+                    user.dispose();
+                    return;
+                }
+            }
+            // Mystic Door cooltime to avoid crashes
             if (skill.skillId == Magician.MYSTIC_DOOR) {
                 if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
                     user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));

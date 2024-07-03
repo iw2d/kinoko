@@ -26,12 +26,12 @@ public final class Server {
         // Initialize providers
         Instant start = Instant.now();
         ItemProvider.initialize();      // Character.wz + Item.wz
+        SkillProvider.initialize();     // Skill.wz + Morph.wz
         MapProvider.initialize();       // Map.wz
         MobProvider.initialize();       // Mob.wz
         NpcProvider.initialize();       // Npc.wz
         ReactorProvider.initialize();   // Reactor.wz
         QuestProvider.initialize();     // Quest.wz
-        SkillProvider.initialize();     // Skill.wz
         StringProvider.initialize();    // String.wz
         EtcProvider.initialize();       // Etc.wz
         ShopProvider.initialize();      // npc_shop.csv

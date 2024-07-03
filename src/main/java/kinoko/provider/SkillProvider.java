@@ -1,5 +1,6 @@
 package kinoko.provider;
 
+import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.provider.wz.WzConstants;
@@ -18,12 +19,15 @@ import java.util.*;
 
 public final class SkillProvider implements WzProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
+    public static final Path MORPH_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Morph.wz");
     private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
     private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
+    private static final Map<Integer, MorphInfo> morphInfos = new HashMap<>();
     private static final Map<Integer, Map<SummonedActionType, SummonedAttackInfo>> summonedAttackInfos = new HashMap<>();
 
     public static void initialize() {
+        // Skill.wz
         try (final WzReader reader = WzReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadSkillInfos(wzPackage);
@@ -31,18 +35,29 @@ public final class SkillProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Skill.wz", e);
         }
+        // Morph.wz
+        try (final WzReader reader = WzReader.build(MORPH_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+            final WzPackage wzPackage = reader.readPackage();
+            loadMorphInfos(wzPackage);
+        } catch (IOException | ProviderError e) {
+            throw new IllegalArgumentException("Exception caught while loading Morph.wz", e);
+        }
     }
 
     public static Set<SkillInfo> getSkillsForJob(Job job) {
         return jobSkills.getOrDefault(job, Set.of());
     }
 
+    public static Optional<SkillInfo> getSkillInfoById(int skillId) {
+        return Optional.ofNullable(skillInfos.get(skillId));
+    }
+
     public static Optional<SkillInfo> getMobSkillInfoById(int skillId) {
         return Optional.ofNullable(mobSkills.get(skillId));
     }
 
-    public static Optional<SkillInfo> getSkillInfoById(int skillId) {
-        return Optional.ofNullable(skillInfos.get(skillId));
+    public static Optional<MorphInfo> getMorphInfoById(int morphId) {
+        return Optional.ofNullable(morphInfos.get(morphId));
     }
 
     public static Optional<SummonedAttackInfo> getSummonedAttackInfo(int skillId, SummonedActionType actionType) {
@@ -106,6 +121,20 @@ public final class SkillProvider implements WzProvider {
             }
             final int skillId = Integer.parseInt(entry.getKey());
             mobSkills.put(skillId, SkillInfo.from(skillId, skillProp));
+        }
+    }
+
+    private static void loadMorphInfos(WzPackage source) throws ProviderError {
+        for (var imageEntry : source.getDirectory().getImages().entrySet()) {
+            final String imageName = imageEntry.getKey().replace(".img", "");
+            if (!imageName.matches("[0-9]+")) {
+                continue;
+            }
+            final int morphId = Integer.parseInt(imageName);
+            if (!(imageEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+                throw new ProviderError("Failed to resolve morph info property");
+            }
+            morphInfos.put(morphId, MorphInfo.from(morphId, infoProp));
         }
     }
 }

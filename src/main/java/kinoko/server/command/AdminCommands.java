@@ -1,8 +1,8 @@
 package kinoko.server.command;
 
-import kinoko.packet.field.ContiMovePacket;
 import kinoko.packet.user.DragonPacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.*;
@@ -21,6 +21,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.provider.skill.SkillStringInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.script.ScriptDispatcher;
+import kinoko.util.BitFlag;
 import kinoko.util.Rect;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -36,6 +37,7 @@ import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.explorer.Beginner;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
@@ -53,7 +55,6 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        user.write(ContiMovePacket.enterShipMove());
         user.dispose();
     }
 
@@ -571,6 +572,40 @@ public final class AdminCommands {
             user.updatePassiveSkillData();
             user.validateStat();
             user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
+        }
+    }
+
+    @Command("morph")
+    @Arguments("morph ID")
+    public static void morph(User user, String[] args) {
+        final int morphId = Integer.parseInt(args[1]);
+        if (SkillProvider.getMorphInfoById(morphId).isEmpty()) {
+            user.write(MessagePacket.system("Could not resolve morph info for morph ID : %d", morphId));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final SecondaryStat ss = locked.get().getSecondaryStat();
+            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.Morph), CharacterTemporaryStat.FLAG_SIZE);
+            ss.getTemporaryStats().put(CharacterTemporaryStat.Morph, TemporaryStatOption.of(morphId, -5300000, 0));
+            user.write(WvsContext.temporaryStatSet(ss, flag));
+            user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
+        }
+    }
+
+    @Command("ride")
+    @Arguments("vehicle ID")
+    public static void ride(User user, String[] args) {
+        final int vehicleId = Integer.parseInt(args[1]);
+        if (ItemProvider.getItemInfo(vehicleId).isEmpty()) {
+            user.write(MessagePacket.system("Could not resolve item info for vehicle ID : %d", vehicleId));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            final SecondaryStat ss = locked.get().getSecondaryStat();
+            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.RideVehicle), CharacterTemporaryStat.FLAG_SIZE);
+            ss.getTemporaryStats().put(CharacterTemporaryStat.RideVehicle, TwoStateTemporaryStat.ofTwoState(CharacterTemporaryStat.RideVehicle, vehicleId, Beginner.MONSTER_RIDER, 0));
+            user.write(WvsContext.temporaryStatSet(ss, flag));
+            user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
         }
     }
 
