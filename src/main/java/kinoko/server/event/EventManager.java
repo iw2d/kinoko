@@ -18,6 +18,8 @@ public final class EventManager {
     }
 
     public void initialize(ChannelFieldStorage fieldStorage) {
+        // Orbis - Victoria Airship
+        initializeEvent(new ContiMoveVictoria(fieldStorage));
         // Orbis - Ludibrium Airship
         initializeEvent(new ContiMoveLudibrium(fieldStorage));
         // Orbis - Leafre Airship

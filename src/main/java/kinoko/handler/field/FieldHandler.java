@@ -7,9 +7,7 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
-import kinoko.server.event.ContiMoveAriant;
-import kinoko.server.event.EventState;
-import kinoko.server.event.EventType;
+import kinoko.server.event.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.ScriptDispatcher;
@@ -190,14 +188,39 @@ public final class FieldHandler {
     public static void handleContiState(User user, InPacket inPacket) {
         final int fieldId = inPacket.decodeInt();
         inPacket.decodeByte(); // nShipKind
-
+        // Resolve event type
+        final EventType eventType;
         switch (fieldId) {
-            case ContiMoveAriant.ORBIS_STATION_TO_ARIANT, ContiMoveAriant.ARIANT_STATION_PLATFORM -> {
-                final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(EventType.CM_ARIANT);
-                if (eventStateResult.isPresent() && eventStateResult.get() != EventState.CONTIMOVE_INSIDE) {
-                    user.write(ContiMovePacket.enterShipMove());
-                }
+            case ContiMoveVictoria.ORBIS_STATION_VICTORIA_BOUND, ContiMoveVictoria.STATION_TO_ORBIS,
+                    ContiMoveVictoria.DURING_THE_RIDE_VICTORIA_BOUND, ContiMoveVictoria.DURING_THE_RIDE_TO_ORBIS -> {
+                eventType = EventType.CM_VICTORIA;
             }
+            case ContiMoveLudibrium.ORBIS_STATION_LUDIBRIUM, ContiMoveLudibrium.LUDIBRIUM_STATION_ORBIS -> {
+                eventType = EventType.CM_LUDIBRIUM;
+            }
+            case ContiMoveLeafre.ORBIS_STATION_TO_LEAFRE, ContiMoveLeafre.LEAFRE_STATION -> {
+                eventType = EventType.CM_LEAFRE;
+            }
+            case ContiMoveAriant.ORBIS_STATION_TO_ARIANT, ContiMoveAriant.ARIANT_STATION_PLATFORM -> {
+                eventType = EventType.CM_ARIANT;
+            }
+            default -> {
+                log.error("Received CONTISTATE for unhandled field ID : {}", fieldId);
+                return;
+            }
+        }
+        // Resolve event state
+        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventType);
+        if (eventStateResult.isEmpty()) {
+            log.error("Could not resolve event state for event type : {}", eventType);
+            return;
+        }
+        // Update client
+        final EventState eventState = eventStateResult.get();
+        if (eventState == EventState.CONTIMOVE_BOARDING || eventState == EventState.CONTIMOVE_WAITING) {
+            user.write(ContiMovePacket.enterShipMove());
+        } else if (eventState == EventState.CONTIMOVE_MOBGEN) {
+            user.write(ContiMovePacket.mobGen());
         }
     }
 

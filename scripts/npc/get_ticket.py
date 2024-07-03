@@ -1,6 +1,8 @@
 # ContiMove - warp from boarding field to waiting field
 
 GET_TICKET_TYPES = [
+    ("CM_VICTORIA", "ship", 200000111, 200000112),  # Orbis : Station <Victoria Bound>
+    ("CM_VICTORIA", "ship", 104020110, 104020111),  # Port Road : Station to Orbis
     ("CM_LUDIBRIUM", "ship", 200000121, 200000122), # Orbis : Station <Ludibrium>
     ("CM_LUDIBRIUM", "ship", 220000110, 220000111), # Ludibrium : Station <Orbis>
     ("CM_LEAFRE", "ship", 200000131, 200000132),    # Orbis : Cabin <To Leafre>

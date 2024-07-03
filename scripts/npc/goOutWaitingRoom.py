@@ -1,6 +1,8 @@
 # ContiMove - warp from waiting field to boarding field
 
 WAITING_ROOM_TYPES = [
+    (200000111, 200000112), # Orbis : Station <Victoria Bound>
+    (104020110, 104020111), # Port Road : Station to Orbis
     (200000121, 200000122), # Orbis : Station <Ludibrium>
     (220000110, 220000111), # Ludibrium : Station <Orbis>
     (200000131, 200000132), # Orbis : Cabin <To Leafre>

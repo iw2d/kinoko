@@ -60,10 +60,12 @@ public abstract class ContiMoveEvent extends Event {
 
     protected void handleBoarding() {
         currentState = EventState.CONTIMOVE_BOARDING;
-        warp(insideField1, arriveField1, "sp");
-        warp(insideField2, arriveField2, "sp");
         broadcastPacket(boardingField1, ContiMovePacket.enterShipMove());
         broadcastPacket(boardingField2, ContiMovePacket.enterShipMove());
+        warp(insideField1, arriveField1, "sp");
+        warp(insideField2, arriveField2, "sp");
+        reset(insideField1);
+        reset(insideField2);
     }
 
     protected void handleWaiting() {
@@ -72,9 +74,11 @@ public abstract class ContiMoveEvent extends Event {
 
     protected void handleInside() {
         currentState = EventState.CONTIMOVE_INSIDE;
-        warp(waitingField1, insideField1, "sp");
-        warp(waitingField2, insideField2, "sp");
         broadcastPacket(boardingField1, ContiMovePacket.leaveShipMove());
         broadcastPacket(boardingField2, ContiMovePacket.leaveShipMove());
+        warp(waitingField1, insideField1, "sp");
+        warp(waitingField2, insideField2, "sp");
+        reset(waitingField1);
+        reset(waitingField2);
     }
 }

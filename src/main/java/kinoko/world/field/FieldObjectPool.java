@@ -43,6 +43,10 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         return objects.isEmpty();
     }
 
+    public final void clear() {
+        objects.clear();
+    }
+
     protected void addObject(T object) {
         objects.put(object.getId(), object);
     }

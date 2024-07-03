@@ -329,8 +329,27 @@ public final class Field {
         }
     }
 
+    public void reset() {
+        assert !hasUser();
+        userPool.clear();
+        mobPool.clear();
+        npcPool.clear();
+        dropPool.clear();
+        reactorPool.clear();
+        summonedPool.clear();
+        miniRoomPool.clear();
+        townPortalPool.clear();
+        affectedAreaPool.clear();
+        populateField(this, mapInfo);
+    }
+
     public static Field from(FieldStorage fieldStorage, MapInfo mapInfo) {
         final Field field = new Field(fieldStorage, mapInfo);
+        populateField(field, mapInfo);
+        return field;
+    }
+
+    private static void populateField(Field field, MapInfo mapInfo) {
         // Populate npc pool
         for (LifeInfo lifeInfo : mapInfo.getLifeInfos()) {
             if (lifeInfo.getLifeType() != LifeType.NPC) {
@@ -352,6 +371,5 @@ public final class Field {
             final Reactor reactor = Reactor.from(reactorTemplateResult.get(), reactorInfo);
             field.getReactorPool().addReactor(reactor);
         }
-        return field;
     }
 }

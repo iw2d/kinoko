@@ -1,15 +1,17 @@
 package kinoko.server.event;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.provider.MobProvider;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.mob.MobTemplate;
 import kinoko.server.field.FieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.Mob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
@@ -72,6 +74,24 @@ public abstract class Event {
         });
     }
 
+    protected final void spawnMob(int fieldId, int mobTemplateId, int x, int y) {
+        // Resolve field
+        final Optional<Field> fieldResult = fieldStorage.getFieldById(fieldId);
+        if (fieldResult.isEmpty()) {
+            log.error("Could not resolve field ID : {}", fieldId);
+            return;
+        }
+        final Field field = fieldResult.get();
+        // Create mob
+        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobTemplateId);
+        if (mobTemplateResult.isEmpty()) {
+            log.error("Could not resolve mob template ID : {}", mobTemplateId);
+            return;
+        }
+        final Mob mob = new Mob(mobTemplateResult.get(), null, x, y, 0);
+        field.getMobPool().addMob(mob);
+    }
+
     protected final void setReactorState(int fieldId, int reactorTemplateId, int newState) {
         // Resolve field
         final Optional<Field> fieldResult = fieldStorage.getFieldById(fieldId);
@@ -100,5 +120,14 @@ public abstract class Event {
         fieldResult.get().getUserPool().forEach((user) -> {
             user.write(outPacket);
         });
+    }
+
+    protected final void reset(int fieldId) {
+        final Optional<Field> fieldResult = fieldStorage.getFieldById(fieldId);
+        if (fieldResult.isEmpty()) {
+            log.error("Could not resolve field ID : {}", fieldId);
+            return;
+        }
+        fieldResult.get().reset();
     }
 }

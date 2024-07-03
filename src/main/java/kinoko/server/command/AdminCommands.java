@@ -621,8 +621,10 @@ public final class AdminCommands {
     @Command("killmobs")
     public static void killMobs(User user, String[] args) {
         user.getField().getMobPool().forEach((mob) -> {
-            if (mob.getHp() > 0) {
-                mob.damage(user, mob.getMaxHp());
+            try (var lockedMob = mob.acquire()) {
+                if (mob.getHp() > 0) {
+                    mob.damage(user, mob.getMaxHp());
+                }
             }
         });
     }

@@ -57,6 +57,8 @@ public final class Subway extends Event {
         currentState = EventState.SUBWAY_BOARDING;
         warp(INSIDE_SUBWAY_FROM_NLC_TO_KC, SUBWAY_TICKETING_BOOTH, "sp");
         warp(INSIDE_SUBWAY_FROM_KC_TO_NLC, NLC_SUBWAY_STATION, "sp");
+        reset(INSIDE_SUBWAY_FROM_NLC_TO_KC);
+        reset(INSIDE_SUBWAY_FROM_KC_TO_NLC);
     }
 
     private void handleWaiting() {
@@ -67,5 +69,7 @@ public final class Subway extends Event {
         currentState = EventState.SUBWAY_INSIDE;
         warp(WAITING_ROOM_FROM_NLC_TO_KC, INSIDE_SUBWAY_FROM_NLC_TO_KC, "st00");
         warp(WAITING_ROOM_FROM_KC_TO_NLC, INSIDE_SUBWAY_FROM_KC_TO_NLC, "st00");
+        reset(WAITING_ROOM_FROM_NLC_TO_KC);
+        reset(WAITING_ROOM_FROM_KC_TO_NLC);
     }
 }
