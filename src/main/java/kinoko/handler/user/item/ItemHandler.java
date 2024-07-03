@@ -39,7 +39,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("could not resolve item info for item ID : {}", itemId);
+            log.error("Could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -82,7 +82,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("could not resolve item info for item ID : {}", itemId);
+            log.error("Could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -183,7 +183,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("could not resolve item info for item ID : {}", itemId);
+            log.error("Could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -220,7 +220,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("could not resolve item info for item ID : {}", itemId);
+            log.error("Could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }
@@ -290,7 +290,7 @@ public abstract class ItemHandler {
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("could not resolve item info for item ID : {}", itemId);
+            log.error("Could not resolve item info for item ID : {}", itemId);
             user.dispose();
             return;
         }

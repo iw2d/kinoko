@@ -20,8 +20,8 @@ public final class Subway extends Event {
     }
 
     @Override
-    public String getIdentifier() {
-        return "subway";
+    public EventType getType() {
+        return EventType.CM_SUBWAY;
     }
 
     @Override
@@ -45,25 +45,25 @@ public final class Subway extends Event {
     public void nextState() {
         final int minute = getNearestMinute() % 10;
         if (minute == 5) {
-            handleSubwayBoarding();
+            handleBoarding();
         } else if (minute == 9) {
-            handleSubwayWaiting();
+            handleWaiting();
         } else if (minute == 0) {
-            handleSubwayInside();
+            handleInside();
         }
     }
 
-    private void handleSubwayBoarding() {
+    private void handleBoarding() {
         currentState = EventState.SUBWAY_BOARDING;
         warp(INSIDE_SUBWAY_FROM_NLC_TO_KC, SUBWAY_TICKETING_BOOTH, "sp");
         warp(INSIDE_SUBWAY_FROM_KC_TO_NLC, NLC_SUBWAY_STATION, "sp");
     }
 
-    private void handleSubwayWaiting() {
+    private void handleWaiting() {
         currentState = EventState.SUBWAY_WAITING;
     }
 
-    private void handleSubwayInside() {
+    private void handleInside() {
         currentState = EventState.SUBWAY_INSIDE;
         warp(WAITING_ROOM_FROM_NLC_TO_KC, INSIDE_SUBWAY_FROM_NLC_TO_KC, "st00");
         warp(WAITING_ROOM_FROM_KC_TO_NLC, INSIDE_SUBWAY_FROM_KC_TO_NLC, "st00");

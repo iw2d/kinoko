@@ -23,8 +23,8 @@ public final class Elevator extends Event {
     }
 
     @Override
-    public String getIdentifier() {
-        return "elevator";
+    public EventType getType() {
+        return EventType.CM_ELEVATOR;
     }
 
     @Override

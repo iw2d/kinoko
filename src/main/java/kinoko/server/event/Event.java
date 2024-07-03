@@ -22,7 +22,7 @@ public abstract class Event {
         this.fieldStorage = fieldStorage;
     }
 
-    public abstract String getIdentifier();
+    public abstract EventType getType();
 
     public abstract void initialize();
 

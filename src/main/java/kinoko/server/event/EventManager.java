@@ -2,14 +2,15 @@ package kinoko.server.event;
 
 import kinoko.server.field.ChannelFieldStorage;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class EventManager {
-    private final ConcurrentHashMap<String, Event> eventMap = new ConcurrentHashMap<>(); // event identifier -> event
+    private final Map<EventType, Event> eventMap = new EnumMap<>(EventType.class); // event identifier -> event
 
-    public Optional<EventState> getEventState(String eventIdentifier) {
-        final Event event = eventMap.get(eventIdentifier);
+    public Optional<EventState> getEventState(EventType eventType) {
+        final Event event = eventMap.get(eventType);
         if (event == null) {
             return Optional.empty();
         }
@@ -17,14 +18,14 @@ public final class EventManager {
     }
 
     public void initialize(ChannelFieldStorage fieldStorage) {
-        // Ludibrium Elevator
-        final Elevator elevator = new Elevator(fieldStorage);
-        elevator.initialize();
-        eventMap.put(elevator.getIdentifier(), elevator);
         // NLC - Kerning City Subway
         final Subway subway = new Subway(fieldStorage);
         subway.initialize();
-        eventMap.put(subway.getIdentifier(), subway);
+        registerEvent(subway);
+        // Ludibrium Elevator
+        final Elevator elevator = new Elevator(fieldStorage);
+        elevator.initialize();
+        registerEvent(elevator);
     }
 
     public void shutdown() {
@@ -32,5 +33,12 @@ public final class EventManager {
             event.shutdown();
         }
         eventMap.clear();
+    }
+
+    private void registerEvent(Event event) {
+        if (eventMap.containsKey(event.getType())) {
+            throw new IllegalStateException("Tried to register duplicate event type : " + event.getType());
+        }
+        eventMap.put(event.getType(), event);
     }
 }

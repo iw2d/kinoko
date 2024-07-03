@@ -10,6 +10,7 @@ import kinoko.server.ServerConstants;
 import kinoko.server.client.Client;
 import kinoko.server.event.EventManager;
 import kinoko.server.event.EventState;
+import kinoko.server.event.EventType;
 import kinoko.server.field.ChannelFieldStorage;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceStorage;
@@ -197,8 +198,8 @@ public final class ChannelServerNode extends ServerNode {
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
 
-    public Optional<EventState> getEventState(String eventIdentifier) {
-        return eventManager.getEventState(eventIdentifier);
+    public Optional<EventState> getEventState(EventType eventType) {
+        return eventManager.getEventState(eventType);
     }
 
 

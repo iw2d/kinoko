@@ -10,6 +10,7 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.event.EventState;
+import kinoko.server.event.EventType;
 import kinoko.server.field.Instance;
 import kinoko.util.Tuple;
 import kinoko.world.field.Field;
@@ -103,8 +104,15 @@ public abstract class ScriptManager {
         return user.getField().getFieldId();
     }
 
-    public final String getEventState(String eventIdentifier) {
-        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventIdentifier);
+    public final String getEventState(String eventName) {
+        // Resolve Event Type
+        final EventType eventType = EventType.getByName(eventName);
+        if (eventType == null) {
+            log.error("Unknown event type provided for getEventState : {}", eventName);
+            return "";
+        }
+        // Resolve Event State
+        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventType);
         return eventStateResult.map(Enum::name).orElse("");
     }
 
@@ -143,7 +151,7 @@ public abstract class ScriptManager {
     public final void setConsumeItemEffect(int itemId) {
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            log.error("could not resolve item info for item ID : {}", itemId);
+            log.error("Could not resolve item info for item ID : {}", itemId);
             return;
         }
         user.setConsumeItemEffect(itemInfoResult.get());
@@ -180,7 +188,7 @@ public abstract class ScriptManager {
         final List<Tuple<Integer, Integer>> itemCheck = new ArrayList<>();
         for (List<Integer> itemTuple : itemList) {
             if (itemTuple.size() != 2) {
-                log.error("Invalid tuple length for ScriptManager.addItems {}", itemTuple);
+                log.error("Invalid tuple length provided for addItems {}", itemTuple);
                 return false;
             }
             itemCheck.add(new Tuple<>(itemTuple.get(0), itemTuple.get(1)));
@@ -221,7 +229,7 @@ public abstract class ScriptManager {
         final List<Tuple<Integer, Integer>> itemCheck = new ArrayList<>();
         for (List<Integer> itemTuple : itemList) {
             if (itemTuple.size() != 2) {
-                log.error("Invalid tuple length for ScriptManager.addItems {}", itemTuple);
+                log.error("Invalid tuple length provided for addItems {}", itemTuple);
                 return false;
             }
             itemCheck.add(new Tuple<>(itemTuple.get(0), itemTuple.get(1)));
