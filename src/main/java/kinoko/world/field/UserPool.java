@@ -6,11 +6,15 @@ import kinoko.packet.field.NpcPacket;
 import kinoko.packet.user.*;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.QuestProvider;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
@@ -105,11 +109,21 @@ public final class UserPool extends FieldObjectPool<User> {
                 user.write(NpcPacket.npcChangeController(npc, false));
             }
         });
+        field.getDropPool().forEach((drop) -> {
+            if (drop.isQuest()) {
+                final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
+                if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
+                    return;
+                }
+                final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
+                if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
+                    return;
+                }
+            }
+            user.write(FieldPacket.dropEnterField(drop, DropEnterType.ON_THE_FOOTHOLD, 0));
+        });
         field.getReactorPool().forEach((reactor) -> {
             user.write(FieldPacket.reactorEnterField(reactor));
-        });
-        field.getDropPool().forEach((drop) -> {
-            user.write(FieldPacket.dropEnterField(drop, DropEnterType.ON_THE_FOOTHOLD, 0));
         });
         field.getTownPortalPool().forEach((townPortal) -> {
             final User owner = townPortal.getOwner();

@@ -491,7 +491,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             }
         }
         // Create drops from possible rewards
-        final Set<Drop> drops = new HashSet<>();
+        final List<Drop> drops = new ArrayList<>();
         for (Reward reward : rewards) {
             final Optional<Drop> dropResult = createDrop(owner, reward);
             dropResult.ifPresent(drops::add);
@@ -503,12 +503,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     private Optional<Drop> createDrop(User owner, Reward reward) {
-        // Quest drops
-        if (reward.isQuest()) {
-            if (!owner.getQuestManager().hasQuestStarted(reward.getQuestId())) {
-                return Optional.empty();
-            }
-        }
         // Drop probability
         double probability = reward.getProb();
         if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.ItemUpByItem)) {

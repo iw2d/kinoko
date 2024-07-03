@@ -21,6 +21,7 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.item.*;
 import kinoko.world.job.explorer.Beginner;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
@@ -275,7 +276,7 @@ public final class PetHandler {
                 // Quest item handling
                 if (drop.isQuest()) {
                     final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
-                    if (questRecordResult.isEmpty()) {
+                    if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
                         user.write(MessagePacket.unavailableForPickUp());
                         return;
                     }

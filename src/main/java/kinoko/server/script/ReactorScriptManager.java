@@ -19,7 +19,9 @@ import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class ReactorScriptManager extends ScriptManager {
     private final Reactor reactor;
@@ -58,14 +60,8 @@ public final class ReactorScriptManager extends ScriptManager {
             possibleRewards.add(new Reward(itemId, min, max, prob, questId));
         }
         // Create drops from possible rewards
-        final Set<Drop> drops = new HashSet<>();
+        final List<Drop> drops = new ArrayList<>();
         for (Reward reward : possibleRewards) {
-            // Quest drops
-            if (reward.isQuest()) {
-                if (!user.getQuestManager().hasQuestStarted(reward.getQuestId())) {
-                    continue;
-                }
-            }
             // Drop probability
             if (!Util.succeedDouble(reward.getProb())) {
                 continue;

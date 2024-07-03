@@ -1,15 +1,21 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.provider.QuestProvider;
 import kinoko.provider.map.Foothold;
+import kinoko.provider.quest.QuestInfo;
 import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
+import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public final class DropPool extends FieldObjectPool<Drop> {
     public DropPool(Field field) {
@@ -17,6 +23,10 @@ public final class DropPool extends FieldObjectPool<Drop> {
     }
 
     public void addDrop(Drop drop, DropEnterType enterType, int x, int y, int delay) {
+        // Clamp x position to map bounds
+        x = Math.clamp(x, field.getMapInfo().getVrLeft() + 25, field.getMapInfo().getVrRight() - 25);
+
+        // Assign foothold
         final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);
         if (footholdResult.isPresent()) {
             drop.setX(x);
@@ -27,18 +37,56 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
         drop.setField(field);
         drop.setId(field.getNewObjectId());
+
+        // Handle drop reactors
         if (enterType != DropEnterType.FADING_OUT) {
             addObject(drop);
-            // Handle drop reactors
             field.getReactorPool().forEach((reactor) -> reactor.handleDrop(drop));
         }
-        field.broadcastPacket(FieldPacket.dropEnterField(drop, enterType, delay));
+
+        // Handle quest drops
+        if (drop.isQuest()) {
+            field.getUserPool().forEach((user) -> {
+                try (var locked = user.acquire()) {
+                    final Optional<QuestRecord> questRecordResult = locked.get().getQuestManager().getQuestRecord(drop.getQuestId());
+                    if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
+                        return;
+                    }
+                    final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
+                    if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
+                        return;
+                    }
+                }
+                user.write(FieldPacket.dropEnterField(drop, enterType, delay));
+            });
+        } else {
+            field.broadcastPacket(FieldPacket.dropEnterField(drop, enterType, delay));
+        }
     }
 
-    public void addDrops(Set<Drop> drops, DropEnterType enterType, int centerX, int centerY, int addDelay) {
-        int dropX = centerX - (drops.size() * GameConstants.DROP_SPREAD / 2);
-        int delay = 0;
+    public void addDrops(List<Drop> drops, DropEnterType enterType, int centerX, int centerY, int addDelay) {
+        // Split and shuffle drops
+        final List<Drop> normalDrops = new ArrayList<>();
+        final List<Drop> questDrops = new ArrayList<>();
         for (Drop drop : drops) {
+            if (drop.isQuest()) {
+                questDrops.add(drop);
+            } else {
+                normalDrops.add(drop);
+            }
+        }
+        Collections.shuffle(normalDrops);
+        Collections.shuffle(questDrops);
+        // Add normal drops
+        int dropX = centerX - (normalDrops.size() * GameConstants.DROP_SPREAD / 2);
+        int delay = 0;
+        for (Drop drop : normalDrops) {
+            addDrop(drop, enterType, dropX, centerY, delay);
+            dropX += GameConstants.DROP_SPREAD;
+            delay += addDelay;
+        }
+        // Add quest drops
+        for (Drop drop : questDrops) {
             addDrop(drop, enterType, dropX, centerY, delay);
             dropX += GameConstants.DROP_SPREAD;
             delay += addDelay;

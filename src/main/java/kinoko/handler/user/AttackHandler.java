@@ -596,7 +596,7 @@ public final class AttackHandler {
         final int prop = si.getValue(SkillStat.prop, option.nOption) +
                 user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.u);
         // Trigger per hit, spread and delay drops
-        final Set<Drop> drops = new HashSet<>();
+        final List<Drop> drops = new ArrayList<>();
         for (int i = 0; i < attack.getDamagePerMob(); i++) {
             if (money > 0 && Util.succeedProp(prop)) {
                 drops.add(Drop.money(DropOwnType.USEROWN, mob, money, user.getCharacterId()));
