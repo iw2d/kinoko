@@ -24,7 +24,11 @@ public final class DropPool extends FieldObjectPool<Drop> {
 
     public void addDrop(Drop drop, DropEnterType enterType, int x, int y, int delay) {
         // Clamp x position to map bounds
-        x = Math.clamp(x, field.getMapInfo().getVrLeft() + 25, field.getMapInfo().getVrRight() - 25);
+        final int boundLeft = field.getMapInfo().getBoundLeft() + GameConstants.DROP_BOUND_OFFSET;
+        final int boundRight = field.getMapInfo().getBoundRight() + GameConstants.DROP_BOUND_OFFSET;
+        if (boundLeft <= boundRight) {
+            x = Math.clamp(x, boundLeft, boundRight);
+        }
 
         // Assign foothold
         final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);

@@ -20,17 +20,15 @@ public final class MapInfo {
     private final float mobRate;
     private final String onFirstUserEnter;
     private final String onUserEnter;
-    private final int vrTop;
-    private final int vrLeft;
-    private final int vrBottom;
-    private final int vrRight;
+    private final int boundLeft;
+    private final int boundRight;
     private final List<Foothold> footholds;
     private final List<LifeInfo> lifeInfos;
     private final List<PortalInfo> portalInfos;
     private final List<ReactorInfo> reactorInfos;
     private final FootholdNode footholdRoot = new FootholdNode();
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean clock, int timeLimit, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int vrTop, int vrLeft, int vrBottom, int vrRight, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean clock, int timeLimit, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, int boundLeft, int boundRight, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
         this.town = town;
         this.swim = swim;
@@ -44,10 +42,8 @@ public final class MapInfo {
         this.mobRate = mobRate;
         this.onFirstUserEnter = onFirstUserEnter;
         this.onUserEnter = onUserEnter;
-        this.vrTop = vrTop;
-        this.vrLeft = vrLeft;
-        this.vrBottom = vrBottom;
-        this.vrRight = vrRight;
+        this.boundLeft = boundLeft;
+        this.boundRight = boundRight;
         this.footholds = footholds;
         this.lifeInfos = lifeInfos;
         this.portalInfos = portalInfos;
@@ -124,20 +120,12 @@ public final class MapInfo {
         return onUserEnter;
     }
 
-    public int getVrTop() {
-        return vrTop;
+    public int getBoundLeft() {
+        return boundLeft;
     }
 
-    public int getVrLeft() {
-        return vrLeft;
-    }
-
-    public int getVrBottom() {
-        return vrBottom;
-    }
-
-    public int getVrRight() {
-        return vrRight;
+    public int getBoundRight() {
+        return boundRight;
     }
 
     public List<Foothold> getFootholds() {
@@ -210,6 +198,7 @@ public final class MapInfo {
                 ", town=" + town +
                 ", swim=" + swim +
                 ", fly=" + fly +
+                ", clock=" + clock +
                 ", timeLimit=" + timeLimit +
                 ", returnMap=" + returnMap +
                 ", forcedReturn=" + forcedReturn +
@@ -218,10 +207,8 @@ public final class MapInfo {
                 ", mobRate=" + mobRate +
                 ", onFirstUserEnter='" + onFirstUserEnter + '\'' +
                 ", onUserEnter='" + onUserEnter + '\'' +
-                ", vrTop=" + vrTop +
-                ", vrLeft=" + vrLeft +
-                ", vrBottom=" + vrBottom +
-                ", vrRight=" + vrRight +
+                ", boundLeft=" + boundLeft +
+                ", boundRight=" + boundRight +
                 ", footholds=" + footholds +
                 ", lifeInfos=" + lifeInfos +
                 ", portalInfos=" + portalInfos +
@@ -231,6 +218,17 @@ public final class MapInfo {
     }
 
     public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
+        // Compute bounds
+        int boundLeft = Integer.MAX_VALUE;
+        int boundRight = Integer.MIN_VALUE;
+        for (Foothold fh : foothold) {
+            if (fh.getX1() < boundLeft) {
+                boundLeft = fh.getX1();
+            }
+            if (fh.getX2() > boundRight) {
+                boundRight = fh.getX2();
+            }
+        }
         return new MapInfo(
                 mapId,
                 infoProp.getOrDefault("town", 0) != 0,
@@ -245,10 +243,8 @@ public final class MapInfo {
                 infoProp.get("mobRate"),
                 infoProp.get("onFirstUserEnter"),
                 infoProp.get("onUserEnter"),
-                infoProp.getOrDefault("VRTop", 0),
-                infoProp.getOrDefault("VRLeft", 0),
-                infoProp.getOrDefault("VRBottom", 0),
-                infoProp.getOrDefault("VRRight", 0),
+                boundLeft,
+                boundRight,
                 Collections.unmodifiableList(foothold),
                 Collections.unmodifiableList(life),
                 Collections.unmodifiableList(portal),
