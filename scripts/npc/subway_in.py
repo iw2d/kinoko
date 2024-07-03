@@ -25,7 +25,7 @@ elif answer == 2:
 elif answer == 3:
     if sm.hasItem(SUBWAY_TICKET_TO_NLC, 1):
         eventState = sm.getEventState("CM_SUBWAY")
-        if eventState == "CM_SUBWAY_BOARDING":
+        if eventState == "SUBWAY_BOARDING":
             if sm.askYesNo("It looks like there's plenty of room for this ride. Please have your ticket ready so I can let you in. The ride will be long, but you'll get to your destination just fine. What do you think? Do you want to get on this ride?"):
                 if sm.removeItem(SUBWAY_TICKET_TO_NLC, 1):
                     sm.warp(WAITING_ROOM_FROM_KC_TO_NLC, "st00")

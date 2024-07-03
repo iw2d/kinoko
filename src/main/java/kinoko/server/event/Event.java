@@ -3,6 +3,7 @@ package kinoko.server.event;
 import kinoko.packet.field.FieldPacket;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.field.FieldStorage;
+import kinoko.server.packet.OutPacket;
 import kinoko.world.field.Field;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,10 +45,6 @@ public abstract class Event {
     }
 
     protected final void warp(int sourceFieldId, int destinationFieldId, String portalName) {
-        warp(List.of(sourceFieldId), destinationFieldId, portalName);
-    }
-
-    protected final void warp(List<Integer> sourceFieldIds, int destinationFieldId, String portalName) {
         // Resolve destination field
         final Optional<Field> destinationFieldResult = fieldStorage.getFieldById(destinationFieldId);
         if (destinationFieldResult.isEmpty()) {
@@ -62,19 +59,17 @@ public abstract class Event {
             return;
         }
         final PortalInfo destinationPortal = destinationPortalResult.get();
-        // Warp users in source fields
-        for (int sourceFieldId : sourceFieldIds) {
-            final Optional<Field> sourceFieldResult = fieldStorage.getFieldById(sourceFieldId);
-            if (sourceFieldResult.isEmpty()) {
-                log.error("Could not resolve source field ID : {}", sourceFieldId);
-                return;
-            }
-            sourceFieldResult.get().getUserPool().forEach((user) -> {
-                try (var locked = user.acquire()) {
-                    locked.get().warp(destinationField, destinationPortal, false, false);
-                }
-            });
+        // Warp users in source field
+        final Optional<Field> sourceFieldResult = fieldStorage.getFieldById(sourceFieldId);
+        if (sourceFieldResult.isEmpty()) {
+            log.error("Could not resolve source field ID : {}", sourceFieldId);
+            return;
         }
+        sourceFieldResult.get().getUserPool().forEach((user) -> {
+            try (var locked = user.acquire()) {
+                locked.get().warp(destinationField, destinationPortal, false, false);
+            }
+        });
     }
 
     protected final void setReactorState(int fieldId, int reactorTemplateId, int newState) {
@@ -93,6 +88,17 @@ public abstract class Event {
                     field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
                 }
             }
+        });
+    }
+
+    protected final void broadcastPacket(int fieldId, OutPacket outPacket) {
+        final Optional<Field> fieldResult = fieldStorage.getFieldById(fieldId);
+        if (fieldResult.isEmpty()) {
+            log.error("Could not resolve broadcast field ID : {}", fieldId);
+            return;
+        }
+        fieldResult.get().getUserPool().forEach((user) -> {
+            user.write(outPacket);
         });
     }
 }

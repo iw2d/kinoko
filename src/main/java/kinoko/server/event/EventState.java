@@ -1,6 +1,11 @@
 package kinoko.server.event;
 
 public enum EventState {
+    CONTIMOVE_BOARDING,
+    CONTIMOVE_WAITING,
+    CONTIMOVE_INSIDE,
+    CONTIMOVE_MOBGEN,
+
     // Ludibrium Elevator
     ELEVATOR_GOING_DOWN,    // minute % 4 == 0
     ELEVATOR_2ND_FLOOR,     // minute % 4 == 1

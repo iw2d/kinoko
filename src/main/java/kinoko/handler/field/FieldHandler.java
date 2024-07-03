@@ -1,11 +1,15 @@
 package kinoko.handler.field;
 
 import kinoko.handler.Handler;
+import kinoko.packet.field.ContiMovePacket;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.server.event.ContiMoveAriant;
+import kinoko.server.event.EventState;
+import kinoko.server.event.EventType;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.server.script.ScriptDispatcher;
@@ -177,6 +181,24 @@ public final class FieldHandler {
 
     @Handler(InHeader.RequireFieldObstacleStatus)
     public static void handleRequireFieldObstacleStatus(User user, InPacket inPacket) {
+    }
+
+
+    // CONTISTATE ------------------------------------------------------------------------------------------------------
+
+    @Handler(InHeader.CONTISTATE)
+    public static void handleContiState(User user, InPacket inPacket) {
+        final int fieldId = inPacket.decodeInt();
+        inPacket.decodeByte(); // nShipKind
+
+        switch (fieldId) {
+            case ContiMoveAriant.ORBIS_STATION_TO_ARIANT, ContiMoveAriant.ARIANT_STATION_PLATFORM -> {
+                final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(EventType.CM_ARIANT);
+                if (eventStateResult.isPresent() && eventStateResult.get() != EventState.CONTIMOVE_INSIDE) {
+                    user.write(ContiMovePacket.enterShipMove());
+                }
+            }
+        }
     }
 
 

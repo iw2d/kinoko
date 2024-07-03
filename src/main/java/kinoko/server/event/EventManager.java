@@ -18,14 +18,16 @@ public final class EventManager {
     }
 
     public void initialize(ChannelFieldStorage fieldStorage) {
-        // NLC - Kerning City Subway
-        final Subway subway = new Subway(fieldStorage);
-        subway.initialize();
-        registerEvent(subway);
+        // Orbis - Ludibrium Airship
+        initializeEvent(new ContiMoveLudibrium(fieldStorage));
+        // Orbis - Leafre Airship
+        initializeEvent(new ContiMoveLeafre(fieldStorage));
+        // Orbis - Ariant Genie
+        initializeEvent(new ContiMoveAriant(fieldStorage));
         // Ludibrium Elevator
-        final Elevator elevator = new Elevator(fieldStorage);
-        elevator.initialize();
-        registerEvent(elevator);
+        initializeEvent(new Elevator(fieldStorage));
+        // NLC - Kerning City Subway
+        initializeEvent(new Subway(fieldStorage));
     }
 
     public void shutdown() {
@@ -35,10 +37,11 @@ public final class EventManager {
         eventMap.clear();
     }
 
-    private void registerEvent(Event event) {
+    private void initializeEvent(Event event) {
         if (eventMap.containsKey(event.getType())) {
             throw new IllegalStateException("Tried to register duplicate event type : " + event.getType());
         }
+        event.initialize();
         eventMap.put(event.getType(), event);
     }
 }

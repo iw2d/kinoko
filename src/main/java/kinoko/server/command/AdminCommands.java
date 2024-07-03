@@ -1,5 +1,6 @@
 package kinoko.server.command;
 
+import kinoko.packet.field.ContiMovePacket;
 import kinoko.packet.user.DragonPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.MessagePacket;
@@ -52,7 +53,7 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        System.out.println(user.getPartyInfo());
+        user.write(ContiMovePacket.enterShipMove());
         user.dispose();
     }
 

@@ -534,6 +534,7 @@ public enum OutHeader {
     private static final Set<OutHeader> ignoreHeaders = Set.of(
             StatChanged,
             UserMove,
+            PetActivated,
             PetMove,
             PetAction,
             DragonMove,

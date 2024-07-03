@@ -1,7 +1,7 @@
 package kinoko.server.event;
 
 public enum EventType {
-    CM_OSSYRIA,
+    CM_VICTORIA,
     CM_LUDIBRIUM,
     CM_LEAFRE,
     CM_ARIANT,
