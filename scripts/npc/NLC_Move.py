@@ -4,7 +4,7 @@ WAITING_ROOM_FROM_NLC_TO_KC = 600010002
 SUBWAY_TICKET_TO_KERNING_CITY = 4031713
 
 
-if sm.hasItem(SUBWAY_TICKET_TO_KERNING_CITY, 1):
+if sm.hasItem(SUBWAY_TICKET_TO_KERNING_CITY):
     eventState = sm.getEventState("CM_SUBWAY")
     if eventState == "SUBWAY_BOARDING":
         if sm.askYesNo("It looks like there's plenty of room for this ride. Please have your ticket ready so I can let you in. The ride will be long, but you'll get to your destination just fine. What do you think? Do you want to get on this ride?"):

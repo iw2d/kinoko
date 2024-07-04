@@ -20,7 +20,7 @@ if answer == 0:
             sm.sayOk("Please check if your inventory is full or not.")
 elif answer == 1:
     if sm.askYesNo("Would you like to go in now? You will lose your ticket once you go in~ Thank you for choosing Wizet Airline."):
-        if sm.hasItem(TICKET_TO_SINGAPORE, 1):
+        if sm.hasItem(TICKET_TO_SINGAPORE):
             if sm.getEventState("CM_AIRPORT") == "AIRPORT_BOARDING":
                 sm.removeItem(TICKET_TO_SINGAPORE, 1)
                 sm.warp(KERNING_AIRPORT, "sp")

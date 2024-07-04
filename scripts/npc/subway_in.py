@@ -1,10 +1,21 @@
 # The Ticket Gate (1052007)
 
+# Kerning City Subway
 ALONG_THE_SUBWAY = 103020100
 
+# Lerning Square Shopping Center
 KERNING_SQUARE_SUBWAY_1 = 103020010
 KERNING_SQUARE_STATION = 103020020
 
+# Enter Construction Site
+B1_AREA_1 = 910360000
+B2_AREA_1 = 910360100
+B3_AREA_1 = 910360200
+TICKET_TO_CONSTRUCTION_SITE_B1 = 4031036
+TICKET_TO_CONSTRUCTION_SITE_B2 = 4031037
+TICKET_TO_CONSTRUCTION_SITE_B3 = 4031038
+
+# New Leaf City
 WAITING_ROOM_FROM_KC_TO_NLC = 600010004
 SUBWAY_TICKET_TO_NLC = 4031711
 
@@ -20,10 +31,25 @@ if answer == 0:
 elif answer == 1:
     sm.warpInstance(KERNING_SQUARE_SUBWAY_1, "sp", KERNING_SQUARE_STATION, 10)
 elif answer == 2:
-    # TODO
-    sm.sayOk("Here's the ticket reader. You are not allowed in without the ticket.")
+    if sm.hasItem(TICKET_TO_CONSTRUCTION_SITE_B1) or sm.hasItem(TICKET_TO_CONSTRUCTION_SITE_B2) or sm.hasItem(TICKET_TO_CONSTRUCTION_SITE_B3):
+        answer = sm.askMenu("Here's the ticket reader. You will be brought in immediately. Which ticket would you like to use?\r\n" + \
+                ("#L0##bConstruction site B1#k#l\r\n" if sm.hasItem(TICKET_TO_CONSTRUCTION_SITE_B1) else "") + \
+                ("#L1##bConstruction site B2#k#l\r\n" if sm.hasItem(TICKET_TO_CONSTRUCTION_SITE_B2) else "") + \
+                ("#L2##bConstruction site B3#k#l\r\n" if sm.hasItem(TICKET_TO_CONSTRUCTION_SITE_B3) else "")
+        )
+        if answer == 0:
+            if sm.removeItem(TICKET_TO_CONSTRUCTION_SITE_B1, 1):
+                sm.warp(B1_AREA_1, "sp")
+        elif answer == 1:
+            if sm.removeItem(TICKET_TO_CONSTRUCTION_SITE_B2, 1):
+                sm.warp(B2_AREA_1, "sp")
+        elif answer == 2:
+            if sm.removeItem(TICKET_TO_CONSTRUCTION_SITE_B3, 1):
+                sm.warp(B3_AREA_1, "sp")
+    else:
+        sm.sayOk("Here's the ticket reader. You are not allowed in without the ticket.")
 elif answer == 3:
-    if sm.hasItem(SUBWAY_TICKET_TO_NLC, 1):
+    if sm.hasItem(SUBWAY_TICKET_TO_NLC):
         eventState = sm.getEventState("CM_SUBWAY")
         if eventState == "SUBWAY_BOARDING":
             if sm.askYesNo("It looks like there's plenty of room for this ride. Please have your ticket ready so I can let you in. The ride will be long, but you'll get to your destination just fine. What do you think? Do you want to get on this ride?"):
