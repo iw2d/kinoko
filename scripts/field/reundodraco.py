@@ -1,5 +1,0 @@
-# Time Lane : Temple of Time (270000100)
-
-MINI_DRACO_TRANSFORMATION = 2210016
-
-sm.resetTemporaryStat(-MINI_DRACO_TRANSFORMATION)

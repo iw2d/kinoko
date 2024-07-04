@@ -701,7 +701,7 @@ public final class UserHandler {
             user.dispose();
             return;
         }
-        ScriptDispatcher.startPortalScript(user, portalResult.get(), GameConstants.DEFAULT_SPEAKER_ID);
+        ScriptDispatcher.startPortalScript(user, portalResult.get());
     }
 
     @Handler(InHeader.UserPortalTeleportRequest)

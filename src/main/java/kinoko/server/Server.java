@@ -39,18 +39,20 @@ public final class Server {
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
+        // Initialize server classes
+        MapleCrypto.initialize();
+        EventScheduler.initialize();
+        CommandProcessor.initialize();
+
         // Initialize database
         start = Instant.now();
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Initialize server classes
+        // Initialize scripts
         start = Instant.now();
-        MapleCrypto.initialize();
-        EventScheduler.initialize();
         ScriptDispatcher.initialize();
-        CommandProcessor.initialize();
-        log.info("Loaded server classes in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded scripts in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Initialize nodes
         centralServerNode = new CentralServerNode();

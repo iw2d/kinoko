@@ -292,11 +292,11 @@ public final class Field {
         // Execute field enter scripts
         if (mapInfo.hasOnFirstUserEnter()) {
             if (firstEnterScript.compareAndSet(false, true)) {
-                ScriptDispatcher.startFirstUserEnterScript(user, mapInfo.getOnFirstUserEnter(), GameConstants.DEFAULT_SPEAKER_ID);
+                ScriptDispatcher.startFirstUserEnterScript(user, mapInfo.getOnFirstUserEnter());
             }
         }
         if (mapInfo.hasOnUserEnter()) {
-            ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter(), GameConstants.DEFAULT_SPEAKER_ID);
+            ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
         }
         // Handle clock
         if (mapInfo.isClock()) {

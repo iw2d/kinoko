@@ -49,6 +49,7 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.*;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -813,6 +814,17 @@ public final class AdminCommands {
     @Command("reloaddrops")
     public static void reloadDrops(User user, String[] args) {
         RewardProvider.initialize();
-        user.write(MessagePacket.system("Reloaded all drops!"));
+        user.write(MessagePacket.system("Reloaded all drops."));
+    }
+
+    @Command("reloadscripts")
+    public static void reloadScripts(User user, String[] args) {
+        try {
+            ScriptDispatcher.loadSourceMap();
+            user.write(MessagePacket.system("Reloaded all scripts."));
+        } catch (IOException exception) {
+            user.write(MessagePacket.system("Failed to reload scripts."));
+            exception.printStackTrace();
+        }
     }
 }
