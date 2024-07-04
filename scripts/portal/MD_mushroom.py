@@ -3,7 +3,7 @@
 GHOST_MUSHROOM_FOREST = 100020400
 WARM_SHADE = 100020500
 
-if fieldId == GHOST_MUSHROOM_FOREST:
+if sm.getFieldId() == GHOST_MUSHROOM_FOREST:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

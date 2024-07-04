@@ -3,7 +3,7 @@
 DESTROYED_DRAGON_NEST = 240040520
 NEWT_SECURED_ZONE = 240040900
 
-if fieldId == DESTROYED_DRAGON_NEST:
+if sm.getFieldId() == DESTROYED_DRAGON_NEST:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

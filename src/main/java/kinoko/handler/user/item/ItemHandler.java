@@ -201,14 +201,14 @@ public abstract class ItemHandler {
         }
 
         // Dispatch item script
-        final int speakerId = itemInfo.getSpec(ItemSpecType.npc, 9010000); // Maple Administrator
         final String scriptName = itemInfo.getScript();
         if (scriptName == null || scriptName.isEmpty()) {
             log.error("Could not resolve script for item : {}", itemId);
             user.dispose();
             return;
         }
-        ScriptDispatcher.startItemScript(user, itemId, position, speakerId, scriptName);
+        final int speakerId = itemInfo.getSpec(ItemSpecType.npc, 9010000); // Maple Administrator
+        ScriptDispatcher.startItemScript(user, scriptName, speakerId);
     }
 
     @Handler(InHeader.UserPortalScrollUseRequest)

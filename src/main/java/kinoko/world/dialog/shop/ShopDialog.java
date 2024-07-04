@@ -182,7 +182,7 @@ public final class ShopDialog implements Dialog {
                 user.write(FieldPacket.shopResult(ShopResultType.RechargeSuccess));
             }
             case Close -> {
-                user.closeDialog();
+                user.setDialog(null);
             }
         }
     }

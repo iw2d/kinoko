@@ -18,10 +18,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
-import kinoko.server.script.NpcScriptManager;
-import kinoko.server.script.ScriptAnswer;
-import kinoko.server.script.ScriptDispatcher;
-import kinoko.server.script.ScriptMessageType;
+import kinoko.server.script.*;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
@@ -174,7 +171,7 @@ public final class UserHandler {
         final Npc npc = npcResult.get();
         // Handle script
         if (npc.hasScript()) {
-            ScriptDispatcher.startNpcScript(user, npc.getTemplateId(), npc.getScript());
+            ScriptDispatcher.startNpcScript(user, npc, npc.getScript(), npc.getTemplateId());
             return;
         }
         // Handle trunk / npc shop dialog, lock user
@@ -207,42 +204,43 @@ public final class UserHandler {
             log.error("Unknown script message type {}", type);
             return;
         }
-        final Optional<NpcScriptManager> scriptManagerResult = ScriptDispatcher.getNpcScriptManager(user);
-        if (scriptManagerResult.isEmpty()) {
-            log.error("Could not retrieve ScriptManager instance for character ID : {}", user.getCharacterId());
-            return;
-        }
-        final NpcScriptManager scriptManager = scriptManagerResult.get();
-        switch (lastMessageType) {
-            case SAY, SAYIMAGE, ASKYESNO, ASKACCEPT -> {
-                scriptManager.submitAnswer(ScriptAnswer.withAction(action));
+        try (var locked = user.acquire()) {
+            if (!user.hasDialog() || !(user.getDialog() instanceof ScriptDialog scriptDialog)) {
+                log.error("Received UserScriptMessageAnswer without an associated script dialog");
+                return;
             }
-            case ASKTEXT, ASKBOXTEXT -> {
-                if (action == 1) {
-                    final String answer = inPacket.decodeString(); // sInputStr_Result
-                    scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
-                } else {
-                    scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+            final ScriptManager scriptManager = scriptDialog.getScriptManager();
+            switch (lastMessageType) {
+                case SAY, SAYIMAGE, ASKYESNO, ASKACCEPT -> {
+                    scriptManager.submitAnswer(ScriptAnswer.withAction(action));
                 }
-            }
-            case ASKNUMBER, ASKMENU, ASKSLIDEMENU -> {
-                if (action == 1) {
-                    final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
-                    scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
-                } else {
-                    scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                case ASKTEXT, ASKBOXTEXT -> {
+                    if (action == 1) {
+                        final String answer = inPacket.decodeString(); // sInputStr_Result
+                        scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
+                    } else {
+                        scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                    }
                 }
-            }
-            case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
-                if (action == 1) {
-                    final byte answer = inPacket.decodeByte(); // nAvatarIndex
-                    scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
-                } else {
-                    scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                case ASKNUMBER, ASKMENU, ASKSLIDEMENU -> {
+                    if (action == 1) {
+                        final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
+                        scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                    } else {
+                        scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                    }
                 }
-            }
-            default -> {
-                log.error("Unhandled script message type {}", lastMessageType);
+                case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
+                    if (action == 1) {
+                        final byte answer = inPacket.decodeByte(); // nAvatarIndex
+                        scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                    } else {
+                        scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                    }
+                }
+                default -> {
+                    log.error("Unhandled script message type {}", lastMessageType);
+                }
             }
         }
     }
@@ -701,7 +699,7 @@ public final class UserHandler {
             user.dispose();
             return;
         }
-        ScriptDispatcher.startPortalScript(user, portalResult.get());
+        ScriptDispatcher.startPortalScript(user, portalResult.get(), GameConstants.DEFAULT_SPEAKER_ID);
     }
 
     @Handler(InHeader.UserPortalTeleportRequest)
@@ -836,7 +834,8 @@ public final class UserHandler {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
-                ScriptDispatcher.startQuestScript(user, templateId, questId, questRequestType == QuestRequestType.OpeningScript);
+                final boolean isStart = questRequestType == QuestRequestType.OpeningScript;
+                ScriptDispatcher.startQuestScript(user, questId, isStart, templateId);
             }
             case null -> {
                 log.error("Unknown quest action type : {}", action);

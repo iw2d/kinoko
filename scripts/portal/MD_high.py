@@ -3,7 +3,7 @@
 FANTASY_THEME_PARK_3 = 551030000
 LONGEST_RIDE_ON_BYEBYE_STATION = 551030001
 
-if fieldId == FANTASY_THEME_PARK_3:
+if sm.getFieldId() == FANTASY_THEME_PARK_3:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

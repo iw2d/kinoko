@@ -3,7 +3,7 @@
 EOS_TOWER = 221022200
 DRUMMER_BUNNYS_LAIR = 221023401
 
-if fieldId == EOS_TOWER:
+if sm.getFieldId() == EOS_TOWER:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

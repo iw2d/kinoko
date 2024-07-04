@@ -60,7 +60,6 @@ public final class AdminCommands {
 
     @Command("dispose")
     public static void dispose(User user, String[] args) {
-        ScriptDispatcher.removeScriptManager(user);
         user.closeDialog();
         user.dispose();
         user.write(MessagePacket.system("You have been disposed."));
@@ -326,7 +325,7 @@ public final class AdminCommands {
             return;
         }
         user.write(MessagePacket.system("Starting script for npc ID : %d, script : %s", templateId, scriptName));
-        ScriptDispatcher.startNpcScript(user, templateId, scriptName);
+        ScriptDispatcher.startNpcScript(user, user, scriptName, templateId);
     }
 
     @Command("map")

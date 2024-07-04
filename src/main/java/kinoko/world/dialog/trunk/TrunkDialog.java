@@ -168,7 +168,7 @@ public final class TrunkDialog implements Dialog {
                     }
                 }
                 case CloseDialog -> {
-                    user.closeDialog();
+                    user.setDialog(null);
                 }
             }
         }

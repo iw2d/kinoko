@@ -532,6 +532,9 @@ public enum OutHeader {
 
     private static final Map<Short, OutHeader> headerMap = new HashMap<>();
     private static final Set<OutHeader> ignoreHeaders = Set.of(
+            CharacterInfo,
+            PartyResult,
+            SetField,
             StatChanged,
             UserMove,
             PetActivated,

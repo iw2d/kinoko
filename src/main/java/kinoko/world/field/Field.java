@@ -16,8 +16,6 @@ import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
-import kinoko.world.dialog.miniroom.MiniGameRoom;
-import kinoko.world.dialog.miniroom.TradingRoom;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
@@ -294,11 +292,11 @@ public final class Field {
         // Execute field enter scripts
         if (mapInfo.hasOnFirstUserEnter()) {
             if (firstEnterScript.compareAndSet(false, true)) {
-                ScriptDispatcher.startFirstUserEnterScript(user, mapInfo.getOnFirstUserEnter());
+                ScriptDispatcher.startFirstUserEnterScript(user, mapInfo.getOnFirstUserEnter(), GameConstants.DEFAULT_SPEAKER_ID);
             }
         }
         if (mapInfo.hasOnUserEnter()) {
-            ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
+            ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter(), GameConstants.DEFAULT_SPEAKER_ID);
         }
         // Handle clock
         if (mapInfo.isClock()) {
@@ -316,11 +314,7 @@ public final class Field {
     public void removeUser(User user) {
         userPool.removeUser(user);
         // Handle dialogs
-        if (user.getDialog() instanceof TradingRoom tradingRoom) {
-            tradingRoom.cancelTradeUnsafe(user);
-        } else if (user.getDialog() instanceof MiniGameRoom miniGameRoom) {
-            miniGameRoom.leaveUnsafe(user);
-        }
+        user.closeDialog();
         // Handle instance
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
             try (var lockedInstance = instanceFieldStorage.getInstance().acquire()) {

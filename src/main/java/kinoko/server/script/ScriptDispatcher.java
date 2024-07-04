@@ -2,22 +2,17 @@ package kinoko.server.script;
 
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
-import kinoko.util.Tuple;
+import kinoko.world.field.FieldObject;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.graalvm.polyglot.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 public final class ScriptDispatcher {
     public static final Path NPC_SCRIPTS = Path.of(ServerConfig.SCRIPT_DIRECTORY, "npc");
@@ -31,14 +26,6 @@ public final class ScriptDispatcher {
     public static final String SCRIPT_LANGUAGE = "python";
 
     private static final Logger log = LogManager.getLogger(ScriptDispatcher.class);
-    private static final Map<ScriptType, ConcurrentHashMap<Integer, Tuple<ScriptManager, Context>>> scriptManagers = Map.of(
-            ScriptType.NPC, new ConcurrentHashMap<>(),
-            ScriptType.PORTAL, new ConcurrentHashMap<>(),
-            ScriptType.REACTOR, new ConcurrentHashMap<>(),
-            ScriptType.FIRST_USER_ENTER, new ConcurrentHashMap<>(),
-            ScriptType.USER_ENTER, new ConcurrentHashMap<>()
-    );
-
     private static ExecutorService executor;
     private static Engine engine;
 
@@ -61,131 +48,64 @@ public final class ScriptDispatcher {
         engine.close(true);
     }
 
-    public static Optional<NpcScriptManager> getNpcScriptManager(User user) {
-        return Optional.ofNullable((NpcScriptManager) scriptManagers.get(ScriptType.NPC).get(user.getCharacterId()).getLeft());
+    public static void startNpcScript(User user, FieldObject source, String scriptName, int speakerId) {
+        startScript(ScriptType.NPC, Path.of(NPC_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, source, speakerId);
     }
 
-    public static void removeScriptManager(User user) {
-        for (ScriptType scriptType : ScriptType.values()) {
-            removeScriptManager(scriptType, user);
-        }
+    public static void startItemScript(User user, String scriptName, int speakerId) {
+        startScript(ScriptType.ITEM, Path.of(ITEM_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, user, speakerId);
     }
 
-    public static void removeScriptManager(ScriptType scriptType, User user) {
-        final Tuple<ScriptManager, Context> tuple = scriptManagers.get(scriptType).remove(user.getCharacterId());
-        if (tuple != null) {
-            tuple.getRight().close(true);
-        }
-    }
-
-    public static void startNpcScript(User user, int speakerId, String scriptName) {
-        if (scriptManagers.get(ScriptType.NPC).containsKey(user.getCharacterId())) {
-            log.error("Cannot start npc script {}, another npc script already being evaluated.", scriptName);
-            return;
-        }
-        final NpcScriptManager scriptManager = new NpcScriptManager(user, speakerId);
-        startScript(ScriptType.NPC, scriptManager, Path.of(NPC_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("npcId", speakerId);
-        });
-    }
-
-    public static void startItemScript(User user, int itemId, int itemPosition, int speakerId, String scriptName) {
-        if (scriptManagers.get(ScriptType.NPC).containsKey(user.getCharacterId())) {
-            log.error("Cannot start item script {}, another npc script already being evaluated.", scriptName);
-            return;
-        }
-        final NpcScriptManager scriptManager = new NpcScriptManager(user, speakerId);
-        startScript(ScriptType.NPC, scriptManager, Path.of(ITEM_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("npcId", speakerId);
-            context.getBindings(SCRIPT_LANGUAGE).putMember("itemId", itemId);
-        });
-    }
-
-    public static void startQuestScript(User user, int speakerId, int questId, boolean isStart) {
+    public static void startQuestScript(User user, int questId, boolean isStart, int speakerId) {
         final String scriptName = String.format("q%d%s", questId, isStart ? "s" : "e");
-        if (scriptManagers.get(ScriptType.NPC).containsKey(user.getCharacterId())) {
-            log.error("Cannot start quest script {}, another npc script already being evaluated.", scriptName);
-            return;
-        }
-        final NpcScriptManager scriptManager = new NpcScriptManager(user, speakerId);
-        startScript(ScriptType.NPC, scriptManager, Path.of(QUEST_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("npcId", speakerId);
-            context.getBindings(SCRIPT_LANGUAGE).putMember("questId", questId);
-        });
+        startScript(ScriptType.QUEST, Path.of(QUEST_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, user, speakerId);
     }
 
-    public static void startPortalScript(User user, PortalInfo portalInfo) {
+    public static void startPortalScript(User user, PortalInfo portalInfo, int speakerId) {
         final String scriptName = portalInfo.getScript();
-        if (scriptManagers.get(ScriptType.PORTAL).containsKey(user.getCharacterId())) {
-            log.error("Cannot start portal script {}, another script already being evaluated.", scriptName);
-            return;
-        }
-        final PortalScriptManager scriptManager = new PortalScriptManager(user, portalInfo);
-        startScript(ScriptType.PORTAL, scriptManager, Path.of(PORTAL_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
-            context.getBindings(SCRIPT_LANGUAGE).putMember("portal", portalInfo);
-        });
+        startScript(ScriptType.PORTAL, Path.of(PORTAL_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, user, speakerId);
     }
 
-    public static void startReactorScript(User user, Reactor reactor, String scriptName) {
-        if (scriptManagers.get(ScriptType.REACTOR).containsKey(user.getCharacterId())) {
-            log.error("Cannot start reactor script {}, another script already being evaluated.", scriptName);
-            return;
-        }
-        final ReactorScriptManager scriptManager = new ReactorScriptManager(user, reactor);
-        startScript(ScriptType.REACTOR, scriptManager, Path.of(REACTOR_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
-            context.getBindings(SCRIPT_LANGUAGE).putMember("reactor", reactor);
-        });
+    public static void startReactorScript(User user, Reactor reactor, String scriptName, int speakerId) {
+        startScript(ScriptType.PORTAL, Path.of(REACTOR_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, reactor, speakerId);
     }
 
-    public static void startFirstUserEnterScript(User user, String scriptName) {
-        if (scriptManagers.get(ScriptType.FIRST_USER_ENTER).containsKey(user.getCharacterId())) {
-            log.error("Cannot start onFirstUserEnter script {}, another script already being evaluated.", scriptName);
-            return;
-        }
-        final FieldScriptManager scriptManager = new FieldScriptManager(user, user.getField(), true);
-        startScript(ScriptType.FIRST_USER_ENTER, scriptManager, Path.of(FIELD_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
-        });
+    public static void startFirstUserEnterScript(User user, String scriptName, int speakerId) {
+        startScript(ScriptType.FIRST_USER_ENTER, Path.of(FIELD_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, user, speakerId);
     }
 
-    public static void startUserEnterScript(User user, String scriptName) {
-        if (scriptManagers.get(ScriptType.USER_ENTER).containsKey(user.getCharacterId())) {
-            log.error("Cannot start userEnterScript script {}, another script already being evaluated.", scriptName);
-            return;
-        }
-        final FieldScriptManager scriptManager = new FieldScriptManager(user, user.getField(), false);
-        startScript(ScriptType.USER_ENTER, scriptManager, Path.of(FIELD_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION).toFile(), (context) -> {
-            context.getBindings(SCRIPT_LANGUAGE).putMember("fieldId", user.getField().getFieldId());
-        });
+    public static void startUserEnterScript(User user, String scriptName, int speakerId) {
+        startScript(ScriptType.USER_ENTER, Path.of(FIELD_SCRIPTS.toString(), scriptName + SCRIPT_EXTENSION), user, user, speakerId);
     }
 
-    private static void startScript(ScriptType scriptType, ScriptManager scriptManager, File scriptFile, Consumer<Context> consumer) {
+    private static void startScript(ScriptType scriptType, Path scriptPath, User user, FieldObject source, int speakerId) {
+        // Initialize context
         final Context context = createContext();
+        final ScriptManager scriptManager = new ScriptManager(context, user, source, speakerId);
         context.getBindings(SCRIPT_LANGUAGE).putMember("sm", scriptManager);
-        consumer.accept(context); // add bindings
         // Evaluate script with virtual thread executor
-        final User user = scriptManager.getUser();
-        scriptManagers.get(scriptType).put(user.getCharacterId(), new Tuple<>(scriptManager, context));
         executor.submit(() -> {
             try {
-                log.debug("Evaluating {} script file : {}", scriptType.name(), scriptFile.getPath());
+                log.debug("Evaluating {} script file : {}, {}", scriptType.name(), scriptPath, context);
                 user.lock();
                 context.eval(
-                        Source.newBuilder(SCRIPT_LANGUAGE, scriptFile)
+                        Source.newBuilder(SCRIPT_LANGUAGE, scriptPath.toFile())
                                 .cached(true)
                                 .build()
                 );
             } catch (PolyglotException e) {
                 if (!e.isCancelled()) {
-                    log.error("Error while evaluating {} script file : {}", scriptType.name(), scriptFile.getPath(), e);
+                    log.error("Error while evaluating {} script file : {}", scriptType.name(), scriptPath, e);
                     e.printStackTrace();
                 }
             } catch (IOException e) {
-                log.error("Error while loading {} script file : {}", scriptType.name(), scriptFile.getPath(), e);
+                log.error("Error while loading {} script file : {}", scriptType.name(), scriptPath, e);
+                if (scriptType == ScriptType.PORTAL) {
+                    user.dispose();
+                }
             } finally {
-                scriptManager.disposeManager();
+                context.close(true);
+                user.setDialog(null);
                 user.unlock();
             }
         });

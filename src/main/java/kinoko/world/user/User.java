@@ -15,10 +15,13 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.client.Client;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.script.ScriptDialog;
 import kinoko.util.BitFlag;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.dialog.Dialog;
+import kinoko.world.dialog.miniroom.MiniGameRoom;
+import kinoko.world.dialog.miniroom.TradingRoom;
 import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
 import kinoko.world.field.TownPortal;
@@ -206,7 +209,15 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void closeDialog() {
-        setDialog(null);
+        if (getDialog() instanceof ScriptDialog scriptDialog) {
+            scriptDialog.getScriptManager().dispose();
+        } else if (getDialog() instanceof TradingRoom tradingRoom) {
+            tradingRoom.cancelTradeUnsafe(this);
+        } else if (getDialog() instanceof MiniGameRoom miniGameRoom) {
+            miniGameRoom.leaveUnsafe(this);
+        } else {
+            setDialog(null);
+        }
     }
 
     public Dragon getDragon() {

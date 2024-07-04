@@ -3,7 +3,7 @@
 SAHEL_2 = 260020600
 HILL_OF_SANDSTORMS = 260020630
 
-if fieldId == SAHEL_2:
+if sm.getFieldId() == SAHEL_2:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

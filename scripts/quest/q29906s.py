@@ -1,1 +1,0 @@
-sm.forceStartQuest(questId) # TODO

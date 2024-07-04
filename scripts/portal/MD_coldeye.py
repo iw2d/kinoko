@@ -3,7 +3,7 @@
 YOUNG_TREE_FOREST = 101030300
 ONE_EYED_LIZARD = 101030400
 
-if fieldId == YOUNG_TREE_FOREST:
+if sm.getFieldId() == YOUNG_TREE_FOREST:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

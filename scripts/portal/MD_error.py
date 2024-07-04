@@ -3,7 +3,7 @@
 LAB_AREA_C_1 = 261020300
 CRITICAL_ERROR = 261020301
 
-if fieldId == LAB_AREA_C_1:
+if sm.getFieldId() == LAB_AREA_C_1:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

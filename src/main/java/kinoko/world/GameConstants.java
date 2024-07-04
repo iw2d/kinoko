@@ -57,6 +57,8 @@ public final class GameConstants {
     public static final int UNDEFINED_FIELD_ID = 999999999;
     public static final String DEFAULT_PORTAL_NAME = "sp"; // spawn point
 
+    public static final int DEFAULT_SPEAKER_ID = 9010000;
+
 
     // PET CONSTANTS ---------------------------------------------------------------------------------------------------
 

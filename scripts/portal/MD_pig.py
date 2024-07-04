@@ -3,7 +3,7 @@
 WAVE_BEACH = 120020100
 THE_PIG_BEACH = 120020200
 
-if fieldId == WAVE_BEACH:
+if sm.getFieldId() == WAVE_BEACH:
     if sm.hasParty() and not sm.isPartyBoss():
         sm.message("You are not the leader of the party.")
         sm.dispose()

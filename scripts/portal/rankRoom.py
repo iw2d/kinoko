@@ -8,6 +8,7 @@ FIELDS = {
     120000101 : 120000105  # Navigation Room -> Training Room
 }
 
+
 fieldId = sm.getFieldId()
 
 if fieldId in FIELDS:
