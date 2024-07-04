@@ -15,5 +15,10 @@ public enum EventState {
     // NLC Subway
     SUBWAY_BOARDING,        // minute % 10 == 5
     SUBWAY_WAITING,         // minute % 10 == 9
-    SUBWAY_INSIDE           // minute % 10 == 0
+    SUBWAY_INSIDE,          // minute % 10 == 0
+
+    // Singapore Airport
+    AIRPORT_BOARDING,       // minute % 5 == 1
+    AIRPORT_WAITING,        // minute % 5 == 4
+    AIRPORT_INSIDE,         // minute % 5 == 0
 }

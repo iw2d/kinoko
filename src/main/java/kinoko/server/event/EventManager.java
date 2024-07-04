@@ -28,8 +28,10 @@ public final class EventManager {
         initializeEvent(new ContiMoveAriant(fieldStorage));
         // Ludibrium Elevator
         initializeEvent(new Elevator(fieldStorage));
-        // NLC - Kerning City Subway
+        // KC - NLC Subway
         initializeEvent(new Subway(fieldStorage));
+        // KC - CBD Airport
+        initializeEvent(new Airport(fieldStorage));
     }
 
     public void shutdown() {

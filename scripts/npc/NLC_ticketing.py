@@ -16,7 +16,7 @@ if sm.getFieldId() == SUBWAY_TICKETING_BOOTH:
                 if sm.addMoney(-5000):
                     sm.addItem(SUBWAY_TICKET_TO_NLC, 1)
                 else:
-                    sm.sayOk("You don't have enough mesos")
+                    sm.sayOk("You don't have enough mesos.")
             else:
                 sm.sayOk("Please check if your inventory is full or not.")
 elif sm.getFieldId() == NLC_SUBWAY_STATION:

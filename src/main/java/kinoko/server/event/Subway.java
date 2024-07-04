@@ -7,13 +7,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 public final class Subway extends Event {
+    // Kerning City -> NLC
     public static final int SUBWAY_TICKETING_BOOTH = 103020000;
-    public static final int NLC_SUBWAY_STATION = 600010001;
-
-    public static final int WAITING_ROOM_FROM_NLC_TO_KC = 600010002;
-    public static final int INSIDE_SUBWAY_FROM_NLC_TO_KC = 600010003;
     public static final int WAITING_ROOM_FROM_KC_TO_NLC = 600010004;
     public static final int INSIDE_SUBWAY_FROM_KC_TO_NLC = 600010005;
+    // NLC -> Kerning City
+    public static final int NLC_SUBWAY_STATION = 600010001;
+    public static final int WAITING_ROOM_FROM_NLC_TO_KC = 600010002;
+    public static final int INSIDE_SUBWAY_FROM_NLC_TO_KC = 600010003;
+
 
     public Subway(FieldStorage fieldStorage) {
         super(fieldStorage);
@@ -54,11 +56,11 @@ public final class Subway extends Event {
     }
 
     private void handleBoarding() {
-        currentState = EventState.SUBWAY_BOARDING;
-        warp(INSIDE_SUBWAY_FROM_NLC_TO_KC, SUBWAY_TICKETING_BOOTH, "sp");
         warp(INSIDE_SUBWAY_FROM_KC_TO_NLC, NLC_SUBWAY_STATION, "sp");
-        reset(INSIDE_SUBWAY_FROM_NLC_TO_KC);
+        warp(INSIDE_SUBWAY_FROM_NLC_TO_KC, SUBWAY_TICKETING_BOOTH, "sp");
         reset(INSIDE_SUBWAY_FROM_KC_TO_NLC);
+        reset(INSIDE_SUBWAY_FROM_NLC_TO_KC);
+        currentState = EventState.SUBWAY_BOARDING;
     }
 
     private void handleWaiting() {
@@ -66,10 +68,10 @@ public final class Subway extends Event {
     }
 
     private void handleInside() {
-        currentState = EventState.SUBWAY_INSIDE;
-        warp(WAITING_ROOM_FROM_NLC_TO_KC, INSIDE_SUBWAY_FROM_NLC_TO_KC, "st00");
         warp(WAITING_ROOM_FROM_KC_TO_NLC, INSIDE_SUBWAY_FROM_KC_TO_NLC, "st00");
-        reset(WAITING_ROOM_FROM_NLC_TO_KC);
+        warp(WAITING_ROOM_FROM_NLC_TO_KC, INSIDE_SUBWAY_FROM_NLC_TO_KC, "st00");
         reset(WAITING_ROOM_FROM_KC_TO_NLC);
+        reset(WAITING_ROOM_FROM_NLC_TO_KC);
+        currentState = EventState.SUBWAY_INSIDE;
     }
 }

@@ -76,15 +76,14 @@ public final class ContiMoveVictoria extends ContiMoveEvent {
     }
 
     protected void handleBoarding() {
-        super.handleBoarding();
         warp(DURING_THE_RIDE_CABIN_VICTORIA_BOUND, STATION_TO_ORBIS, "sp");
         warp(DURING_THE_RIDE_CABIN_TO_ORBIS, ORBIS_STATION_ENTRANCE, "sp");
         reset(DURING_THE_RIDE_CABIN_VICTORIA_BOUND);
         reset(DURING_THE_RIDE_CABIN_TO_ORBIS);
+        super.handleBoarding();
     }
 
     private void handleMobGen() {
-        currentState = EventState.CONTIMOVE_MOBGEN;
         broadcastPacket(DURING_THE_RIDE_VICTORIA_BOUND, ContiMovePacket.mobGen());
         broadcastPacket(DURING_THE_RIDE_TO_ORBIS, ContiMovePacket.mobGen());
         for (int i = 0; i < 2; i++) {
@@ -92,5 +91,6 @@ public final class ContiMoveVictoria extends ContiMoveEvent {
             spawnMob(DURING_THE_RIDE_TO_ORBIS, CRIMSON_BALROG, 485, -221); // 200090010 -> shipObj -> x, y
         }
         // should send ContiMovePacket.mobDestroy when all mobs are dead
+        currentState = EventState.CONTIMOVE_MOBGEN;
     }
 }
