@@ -38,7 +38,7 @@ public final class ScriptDispatcher {
                 .build();
         // Populate source map
         loadSourceMap();
-        // Evaluate test script (also handle the delay on first script execution)
+        // Evaluate test script
         final Context context = createContext();
         context.eval(sourceMap.get(TEST_SCRIPT));
         context.close();

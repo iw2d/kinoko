@@ -24,6 +24,7 @@ import kinoko.world.job.RaceSelect;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.user.Account;
+import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.info.ConfigManager;
 import kinoko.world.user.info.MapTransferInfo;
@@ -36,6 +37,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -392,8 +395,10 @@ public final class LoginHandler {
     }
 
     private static void loadCharacterList(Client c) {
+        // Resolve character list for account, sorted by highest level
         final Account account = c.getAccount();
-        account.setCharacterList(DatabaseManager.characterAccessor().getAvatarDataByAccountId(account.getId()));
+        final List<AvatarData> characterList = DatabaseManager.characterAccessor().getAvatarDataByAccountId(c.getAccount().getId());
+        account.setCharacterList(characterList.stream().sorted(Comparator.comparingInt(AvatarData::getLevel).reversed()).toList());
     }
 
     private static void handleMigration(Client c, Account account, int characterId) {

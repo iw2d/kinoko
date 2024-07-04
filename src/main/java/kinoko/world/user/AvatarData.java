@@ -29,6 +29,10 @@ public final class AvatarData implements Encodable {
         return characterStat.getName();
     }
 
+    public int getLevel() {
+        return characterStat.getLevel();
+    }
+
     public static AvatarData from(CharacterStat characterStat, Inventory equipped, Inventory cashInventory) {
         return new AvatarData(characterStat, AvatarLook.from(characterStat, equipped, cashInventory));
     }

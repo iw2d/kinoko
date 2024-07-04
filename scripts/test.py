@@ -1,1 +1,1 @@
-print("ScriptDispatcher initialization complete")
+# noop
