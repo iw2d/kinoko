@@ -1,8 +1,8 @@
 package kinoko.handler;
 
-import kinoko.server.client.Client;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
+import kinoko.server.node.Client;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import org.apache.logging.log4j.LogManager;

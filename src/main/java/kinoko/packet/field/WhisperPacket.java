@@ -2,7 +2,6 @@ package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.social.whisper.WhisperFlag;
 
 public final class WhisperPacket {
     // CField::OnWhisper -----------------------------------------------------------------------------------------------

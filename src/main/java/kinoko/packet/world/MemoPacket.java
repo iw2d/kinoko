@@ -1,9 +1,9 @@
 package kinoko.packet.world;
 
 import kinoko.server.header.OutHeader;
+import kinoko.server.memo.Memo;
+import kinoko.server.memo.MemoResultType;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.social.memo.Memo;
-import kinoko.world.social.memo.MemoResultType;
 
 import java.util.List;
 

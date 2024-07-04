@@ -1,13 +1,13 @@
 package kinoko.packet.field;
 
 import kinoko.provider.map.FieldType;
+import kinoko.server.cashshop.CashItemResultType;
+import kinoko.server.dialog.shop.ShopDialog;
+import kinoko.server.dialog.shop.ShopResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
-import kinoko.world.cashshop.CashItemResultType;
-import kinoko.world.dialog.shop.ShopDialog;
-import kinoko.world.dialog.shop.ShopResultType;
 import kinoko.world.field.OpenGate;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.drop.Drop;
@@ -15,7 +15,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
-import kinoko.world.user.config.FuncKeyMapped;
+import kinoko.world.user.info.FuncKeyMapped;
 
 public final class FieldPacket {
     // CField::OnPacket ------------------------------------------------------------------------------------------------

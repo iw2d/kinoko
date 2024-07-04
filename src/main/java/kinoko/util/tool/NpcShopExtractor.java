@@ -6,7 +6,7 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.world.dialog.shop.ShopItem;
+import kinoko.server.dialog.shop.ShopItem;
 import kinoko.world.item.ItemConstants;
 
 import java.io.BufferedWriter;

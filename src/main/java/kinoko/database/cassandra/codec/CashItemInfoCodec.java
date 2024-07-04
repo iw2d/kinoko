@@ -8,7 +8,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.CashItemInfoUDT;
-import kinoko.world.cashshop.CashItemInfo;
+import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.Item;
 
 public final class CashItemInfoCodec extends MappingCodec<UdtValue, CashItemInfo> {

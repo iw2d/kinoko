@@ -1,7 +1,7 @@
 package kinoko.world.user.info;
 
+import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.dialog.miniroom.MiniRoomType;
 
 public final class MiniGameRecord {
     private int omokGameWins = 0;

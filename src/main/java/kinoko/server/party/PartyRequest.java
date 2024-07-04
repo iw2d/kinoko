@@ -4,7 +4,6 @@ import kinoko.server.header.CentralHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
-import kinoko.world.social.party.PartyRequestType;
 
 /**
  * Utility class for {@link CentralHeader#PartyRequest}

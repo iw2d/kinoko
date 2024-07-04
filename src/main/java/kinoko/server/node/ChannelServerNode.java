@@ -7,7 +7,6 @@ import kinoko.packet.CentralPacket;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.server.client.Client;
 import kinoko.server.event.EventManager;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;

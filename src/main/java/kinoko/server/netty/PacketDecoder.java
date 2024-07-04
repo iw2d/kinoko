@@ -4,11 +4,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import kinoko.server.ServerConstants;
-import kinoko.server.crypto.IGCipher;
-import kinoko.server.crypto.MapleCrypto;
-import kinoko.server.crypto.ShandaCrypto;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.NioBufferInPacket;
+import kinoko.util.crypto.IGCipher;
+import kinoko.util.crypto.MapleCrypto;
+import kinoko.util.crypto.ShandaCrypto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

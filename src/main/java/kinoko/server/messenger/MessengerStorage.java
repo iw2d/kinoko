@@ -1,7 +1,5 @@
 package kinoko.server.messenger;
 
-import kinoko.world.social.messenger.Messenger;
-
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;

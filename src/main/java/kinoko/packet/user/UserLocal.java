@@ -1,8 +1,8 @@
 package kinoko.packet.user;
 
+import kinoko.server.dialog.UIType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.dialog.UIType;
 import kinoko.world.job.explorer.Bowman;
 import kinoko.world.user.effect.Effect;
 

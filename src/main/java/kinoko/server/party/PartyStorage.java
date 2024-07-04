@@ -1,7 +1,5 @@
 package kinoko.server.party;
 
-import kinoko.world.social.party.Party;
-
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;

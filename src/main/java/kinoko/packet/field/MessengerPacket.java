@@ -1,9 +1,9 @@
 package kinoko.packet.field;
 
 import kinoko.server.header.OutHeader;
+import kinoko.server.messenger.MessengerProtocol;
+import kinoko.server.messenger.MessengerUser;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.social.messenger.MessengerProtocol;
-import kinoko.world.social.messenger.MessengerUser;
 import kinoko.world.user.AvatarLook;
 import kinoko.world.user.User;
 

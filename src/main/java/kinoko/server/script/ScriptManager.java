@@ -15,6 +15,7 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reward.Reward;
+import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
 import kinoko.server.field.Instance;

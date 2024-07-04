@@ -8,11 +8,11 @@ import kinoko.database.AccountAccessor;
 import kinoko.database.cassandra.table.AccountTable;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.server.ServerConfig;
-import kinoko.world.cashshop.CashItemInfo;
-import kinoko.world.cashshop.Locker;
+import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.Item;
 import kinoko.world.item.Trunk;
 import kinoko.world.user.Account;
+import kinoko.world.user.Locker;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Collections;

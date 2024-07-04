@@ -5,7 +5,7 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import kinoko.database.GiftAccessor;
 import kinoko.database.cassandra.table.GiftTable;
-import kinoko.world.cashshop.Gift;
+import kinoko.server.cashshop.Gift;
 
 import java.util.ArrayList;
 import java.util.List;

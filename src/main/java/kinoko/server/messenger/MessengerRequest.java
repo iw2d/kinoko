@@ -3,8 +3,6 @@ package kinoko.server.messenger;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
-import kinoko.world.social.messenger.MessengerProtocol;
-import kinoko.world.social.messenger.MessengerUser;
 import kinoko.world.user.User;
 
 public final class MessengerRequest implements Encodable {

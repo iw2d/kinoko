@@ -1,7 +1,7 @@
 package kinoko.provider;
 
 import kinoko.server.ServerConfig;
-import kinoko.world.dialog.shop.ShopItem;
+import kinoko.server.dialog.shop.ShopItem;
 import org.snakeyaml.engine.v2.api.Load;
 import org.snakeyaml.engine.v2.api.LoadSettings;
 

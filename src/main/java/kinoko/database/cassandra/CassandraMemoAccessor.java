@@ -6,8 +6,8 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import kinoko.database.MemoAccessor;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.database.cassandra.table.MemoTable;
-import kinoko.world.social.memo.Memo;
-import kinoko.world.social.memo.MemoType;
+import kinoko.server.memo.Memo;
+import kinoko.server.memo.MemoType;
 
 import java.util.ArrayList;
 import java.util.List;

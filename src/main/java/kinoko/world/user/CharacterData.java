@@ -1,9 +1,10 @@
 package kinoko.world.user;
 
+import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.FileTime;
-import kinoko.world.dialog.miniroom.MiniRoomType;
+import kinoko.world.friend.FriendManager;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
@@ -13,8 +14,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.social.friend.FriendManager;
-import kinoko.world.user.config.ConfigManager;
+import kinoko.world.user.info.ConfigManager;
 import kinoko.world.user.info.MapTransferInfo;
 import kinoko.world.user.info.MiniGameRecord;
 import kinoko.world.user.info.WildHunterInfo;

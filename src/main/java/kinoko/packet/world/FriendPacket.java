@@ -2,8 +2,8 @@ package kinoko.packet.world;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.social.friend.Friend;
-import kinoko.world.social.friend.FriendResultType;
+import kinoko.world.friend.Friend;
+import kinoko.world.friend.FriendResultType;
 
 import java.util.List;
 

@@ -1,18 +1,18 @@
 package kinoko.packet.world;
 
+import kinoko.server.cashshop.CashItemResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.FileTime;
 import kinoko.world.GameConstants;
-import kinoko.world.cashshop.CashItemResultType;
 import kinoko.world.field.TownPortal;
 import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.config.SingleMacro;
+import kinoko.world.user.info.SingleMacro;
 import kinoko.world.user.info.WildHunterInfo;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.ExtendSp;

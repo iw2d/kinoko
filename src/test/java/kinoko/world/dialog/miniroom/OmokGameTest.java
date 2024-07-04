@@ -1,5 +1,6 @@
 package kinoko.world.dialog.miniroom;
 
+import kinoko.server.dialog.miniroom.OmokGame;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

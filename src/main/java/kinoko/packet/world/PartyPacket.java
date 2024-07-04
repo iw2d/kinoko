@@ -2,10 +2,10 @@ package kinoko.packet.world;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.party.Party;
+import kinoko.server.party.PartyResultType;
 import kinoko.server.user.RemoteTownPortal;
 import kinoko.server.user.RemoteUser;
-import kinoko.world.social.party.Party;
-import kinoko.world.social.party.PartyResultType;
 
 public final class PartyPacket {
     // CWvsContext::OnPartyResult --------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 package kinoko.packet.field;
 
+import kinoko.server.dialog.trunk.TrunkResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.dialog.trunk.TrunkResultType;
 import kinoko.world.item.Trunk;
 import kinoko.world.user.DBChar;
 

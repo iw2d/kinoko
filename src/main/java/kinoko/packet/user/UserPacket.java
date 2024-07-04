@@ -1,9 +1,9 @@
 package kinoko.packet.user;
 
 import kinoko.provider.map.FieldType;
+import kinoko.server.dialog.miniroom.MiniGameRoom;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.dialog.miniroom.MiniGameRoom;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Evan;

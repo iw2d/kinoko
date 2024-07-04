@@ -1,7 +1,6 @@
 package kinoko.world.user;
 
 import kinoko.util.Lockable;
-import kinoko.world.cashshop.Locker;
 import kinoko.world.item.Trunk;
 
 import java.util.List;
