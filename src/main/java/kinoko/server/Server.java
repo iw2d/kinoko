@@ -34,8 +34,8 @@ public final class Server {
         QuestProvider.initialize();     // Quest.wz
         StringProvider.initialize();    // String.wz
         EtcProvider.initialize();       // Etc.wz
-        ShopProvider.initialize();      // npc_shop.csv
-        RewardProvider.initialize();    // mob_reward.csv + reactor_reward.csv
+        ShopProvider.initialize();      // data/shop
+        RewardProvider.initialize();    // data/reward
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 

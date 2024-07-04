@@ -40,6 +40,15 @@ public final class InstanceStorage {
         return instanceMap.remove(instance.getInstanceId(), instance);
     }
 
+    public void clear() {
+        final var iter = instanceMap.values().iterator();
+        while (iter.hasNext()) {
+            final Instance instance = iter.next();
+            instance.getFieldStorage().clear();
+            iter.remove();
+        }
+    }
+
     public int getNewInstanceId() {
         return instanceIdCounter.getAndIncrement();
     }

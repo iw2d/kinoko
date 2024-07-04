@@ -251,6 +251,11 @@ public final class ChannelServerNode extends ServerNode {
             client.close();
         }
 
+        // Clean up
+        eventManager.shutdown();
+        fieldStorage.clear();
+        instanceStorage.clear();
+
         // Close channel server
         channelServerFuture.channel().close().sync();
         getShutdownFuture().orTimeout(ServerConfig.SHUTDOWN_TIMEOUT, TimeUnit.SECONDS);
