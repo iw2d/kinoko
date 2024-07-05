@@ -1,6 +1,5 @@
 package kinoko.util.crypto;
 
-import kinoko.util.crypto.ShandaCrypto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
