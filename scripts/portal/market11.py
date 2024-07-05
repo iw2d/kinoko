@@ -1,4 +1,5 @@
 # Herb Town : Herb Town (251000000)
+#   market00 (1020, -66)
 
 QR_FreeMarket = 7600
 

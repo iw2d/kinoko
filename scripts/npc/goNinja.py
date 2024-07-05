@@ -1,4 +1,6 @@
 # Palanquin (9110107)
+#   Zipangu : Mushroom Shrine (800000000)
+#   Zipangu : Outside Ninja Castle (800040000)
 
 MUSHROOM_SHRINE = 800000000
 OUTSIDE_NINJA_CASTLE = 800040000

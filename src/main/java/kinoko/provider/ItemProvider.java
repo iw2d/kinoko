@@ -42,6 +42,10 @@ public final class ItemProvider implements WzProvider {
         }
     }
 
+    public static List<ItemInfo> getItemInfos() {
+        return itemInfos.values().stream().toList();
+    }
+
     public static Optional<ItemInfo> getItemInfo(int itemId) {
         return Optional.ofNullable(itemInfos.get(itemId));
     }

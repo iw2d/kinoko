@@ -1,4 +1,7 @@
 # Crane : Public Transportation (2090005)
+#   Orbis : Cabin <To Mu Lung> (200000141)
+#   Mu Lung : Mu Lung Temple (250000100)
+#   Herb Town : Herb Town (251000000)
 
 ORBIS_CABIN_TO_MU_LUNG = 200000141
 MU_LUNG_TEMPLE = 250000100

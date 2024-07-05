@@ -14,6 +14,7 @@ import kinoko.util.Tuple;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,10 @@ public final class ReactorProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Reactor.wz", e);
         }
+    }
+
+    public static List<ReactorTemplate> getReactorTemplates() {
+        return reactorTemplates.values().stream().toList();
     }
 
     public static Optional<ReactorTemplate> getReactorTemplate(int reactorId) {

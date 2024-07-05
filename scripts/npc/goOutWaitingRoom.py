@@ -1,4 +1,18 @@
-# ContiMove - warp from waiting field to boarding field
+# Purin : Crewmember (1032009)
+#   Port Road : To Orbis <Before Starting> (104020111)
+# Erin : Crewmember (2012002)
+#   Orbis : Pre-Departure <Victoria Bound> (200000112)
+# Pelace : Crewmember (2012022)
+#   Orbis : Cabin <To Leafre> (200000132)
+# Egnet : Crew (2012024)
+#   Orbis : Station <To Ariant> (200000152)
+# Rosey : Crewmember (2041001)
+#   Orbis : Before the Departure <Ludibrium> (200000122)
+#   Ludibrium : Before the Departure <Orbis> (220000111)
+# Harry : Crewmember (2082002)
+#   Leafre : Before Takeoff <To Orbis> (240000111)
+# Slyn : Crew (2102001)
+#   Ariant : Before Takeoff <To Orbis> (260000110)
 
 WAITING_ROOM_TYPES = [
     (200000111, 200000112), # Orbis : Station <Victoria Bound>

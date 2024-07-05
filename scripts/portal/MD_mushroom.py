@@ -1,4 +1,7 @@
 # Singing Mushroom Forest : Ghost Mushroom Forest (100020400)
+#   MD00 (289, -867)
+# Singing Mushroom Forest : Warm Shade (100020500)
+#   out00 (497, -716)
 
 GHOST_MUSHROOM_FOREST = 100020400
 WARM_SHADE = 100020500

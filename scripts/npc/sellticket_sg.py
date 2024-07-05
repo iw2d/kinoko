@@ -1,4 +1,5 @@
 # Irene : Ticketing Usher (9270041)
+#   Kerning City : Kerning City (103000000)
 
 KERNING_AIRPORT = 540010100
 TICKET_TO_SINGAPORE = 4031731

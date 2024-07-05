@@ -1,4 +1,5 @@
-# Henesys : Henesys Market (100000100)
+# Henesys : Henesys Park (100000200)
+#   in02 (3941, 693)
 
 BOWMAN_INSTRUCTIONAL_SCHOOL = 100000201
 

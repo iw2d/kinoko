@@ -1,6 +1,7 @@
 # The Ticket Gate (1052007)
+#   Victoria Road : Subway Ticketing Booth (103000100)
+#   Kerning City Subway : Subway Ticketing Booth (103020000)
 
-# Kerning City Subway
 ALONG_THE_SUBWAY = 103020100
 
 # Lerning Square Shopping Center

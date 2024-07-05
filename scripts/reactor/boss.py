@@ -1,4 +1,5 @@
-# Last Mission : Zakum's Altar (280030000)
+# boss (2111001)
+#   Last Mission : Zakum's Altar (280030000)
 
 sm.broadcastMessage("Zakum is summoned by the force of Eye of Fire.")
 sm.spawnMob(8800000, -4, -10, -204)

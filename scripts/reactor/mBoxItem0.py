@@ -1,4 +1,10 @@
-# Rainbow Street : Amherst (1000000)
+# mBoxItem0 (2000)
+#   Orbis : Top of the Hill (200000300)
+# mBoxItem0 (2001)
+#   Rainbow Street : Amherst (1000000)
+#   Rainbow Street : Amherst Townstreet (1000002)
+# mBoxItem0 (9008000)
+# mBoxItem0 (9008001)
 
 sm.dropRewards([
     (0, 10, 10, 0.7), # money

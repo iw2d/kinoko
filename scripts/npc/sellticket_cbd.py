@@ -1,4 +1,5 @@
 # Shalon : Ticketing Usher (9270038)
+#   Singapore : Changi Airport (540010000)
 
 BEFORE_DEPARTURE_TO_KERNING_CITY = 540010001
 TICKET_TO_KERNING_CITY = 4031732

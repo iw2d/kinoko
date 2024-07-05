@@ -1,4 +1,5 @@
 # Xinga : Pilot (9270017)
+#   Victoria Island : Kerning Airport (540010100)
 
 KERNING_CITY = 103000000
 KERNING_AIRPORT = 540010100

@@ -1,4 +1,7 @@
 # Alcadno Research Institute : Lab - Area C-1 (261020300)
+#   MD00 (234, -93)
+# Hidden Street : Critical Error (261020301)
+#   out00 (-310, -85)
 
 LAB_AREA_C_1 = 261020300
 CRITICAL_ERROR = 261020301

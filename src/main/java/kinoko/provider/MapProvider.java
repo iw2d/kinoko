@@ -15,6 +15,7 @@ import java.util.*;
 public final class MapProvider implements WzProvider {
     public static final Path MAP_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz");
     private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
+    private static final Map<Integer, Integer> mapLinks = new HashMap<>();
     private static final Map<Integer, Integer> areaCodes = new HashMap<>(); // key -> category
 
     public static void initialize() {
@@ -33,6 +34,10 @@ public final class MapProvider implements WzProvider {
 
     public static Optional<MapInfo> getMapInfo(int mapId) {
         return Optional.ofNullable(mapInfos.get(mapId));
+    }
+
+    public static Optional<Integer> getMapLink(int mapId) {
+        return Optional.ofNullable(mapLinks.get(mapId));
     }
 
     public static boolean isConnected(int fromFieldId, int toFieldId) {
@@ -103,6 +108,7 @@ public final class MapProvider implements WzProvider {
                     linkInfo.getReactorInfos(),
                     linkInfo.isClock()
             ));
+            mapLinks.put(mapId, link);
         }
     }
 

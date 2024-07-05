@@ -13,6 +13,7 @@ import kinoko.util.Tuple;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,6 +28,10 @@ public final class NpcProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Npc.wz", e);
         }
+    }
+
+    public static List<NpcTemplate> getNpcTemplates() {
+        return npcTemplates.values().stream().toList();
     }
 
     public static Optional<NpcTemplate> getNpcTemplate(int npcId) {

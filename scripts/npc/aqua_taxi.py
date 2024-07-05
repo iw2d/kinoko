@@ -1,4 +1,6 @@
-# Dophin (2060009)
+# Dolphin (2060009)
+#   Aquarium : Aquarium (230000000)
+#   Herb Town : Pier on the Beach (251000100)
 
 AQUARIUM = 230000000
 THE_SHARP_UNKNOWN = 230030200

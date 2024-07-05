@@ -1,4 +1,19 @@
 # Spinel : World Tour Guide (9000020)
+#   Henesys : Henesys (100000000)
+#   Ellinia : Ellinia (101000000)
+#   Perion : Perion (102000000)
+#   Kerning City : Kerning City (103000000)
+#   Lith Harbor : Lith Harbor (104000000)
+#   Orbis : Orbis (200000000)
+#   Ludibrium : Ludibrium (220000000)
+#   Leafre : Leafre (240000000)
+#   Mu Lung : Mu Lung (250000000)
+#   The Burning Road : Ariant (260000000)
+#   Singapore : Boat Quay Town (541000000)
+#   Amoria : Amoria (680000000)
+#   Zipangu : Mushroom Shrine (800000000)
+#   Hidden Street : Travel's End (950000000)
+#   Hidden Street : Spinel's Forest (950000100)
 
 QR_WorldTrip = 8792
 

@@ -1,4 +1,7 @@
 # Audrey : Malaysia Tour Guide (9201135)
+#   Singapore : CBD (540000000)
+#   Malaysia : Trend Zone Metropolis (550000000)
+#   Malaysia : Kampung Village (551000000)
 
 SINGAPORE_CBD = 540000000
 TREND_ZONE_METROPOLIS = 550000000

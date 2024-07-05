@@ -1,4 +1,7 @@
 # Leafre : Destroyed Dragon Nest (240040520)
+#   MD00 (-1082, 1106)
+# Mini Dungeon : Newt Secured Zone (240040900)
+#   out00 (305, 445)
 
 DESTROYED_DRAGON_NEST = 240040520
 NEWT_SECURED_ZONE = 240040900

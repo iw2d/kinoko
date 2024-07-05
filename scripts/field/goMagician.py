@@ -1,4 +1,4 @@
-# 1020200
+# null (1020200)
 
 sm.setDirectionMode(True, 0)
 sm.squibEffect("Effect/Direction3.img/magician/Scene" + str(sm.getGender()))

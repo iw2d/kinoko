@@ -1,4 +1,5 @@
 # Mu Lung : Mu Lung (250000000)
+#   market00 (-197, -547)
 
 QR_FreeMarket = 7600
 

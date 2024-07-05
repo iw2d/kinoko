@@ -1,4 +1,5 @@
 # Singapore : CBD (540000000)
+#   market00 (4582, 43)
 
 QR_FreeMarket = 7600
 

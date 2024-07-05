@@ -1,4 +1,5 @@
 # El Nath : El Nath Market (211000100)
+#   market00 (-1098, -85)
 
 QR_FreeMarket = 7600
 

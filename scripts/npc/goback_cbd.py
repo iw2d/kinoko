@@ -1,4 +1,7 @@
 # Kerny : Pilot (9270018)
+#   Singapore : Before Departure (To Kerning City) (540010001)
+#   Singapore : On the way to Kerning City (540010002)
+#   Victoria Island : On the way to CBD (540010101)
 
 CHANGI_AIRPORT = 540010000
 BEFORE_DEPARTURE_TO_KERNING_CITY = 540010001

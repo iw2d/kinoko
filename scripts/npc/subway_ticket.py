@@ -1,4 +1,6 @@
 # Jake : Subway Worker (1052006)
+#   Victoria Road : Subway Ticketing Booth (103000100)
+#   Kerning City Subway : Subway Ticketing Booth (103020000)
 
 TICKET_TO_CONSTRUCTION_SITE_B1 = 4031036
 TICKET_TO_CONSTRUCTION_SITE_B2 = 4031037

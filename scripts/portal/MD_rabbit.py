@@ -1,4 +1,7 @@
 # Ludibrium : Eos Tower 71st - 90th Floor (221022200)
+#   MD00 (-233, -1572)
+# Mini Dungeon : Drummer Bunny's Lair (221023401)
+#   out00 (196, 466)
 
 EOS_TOWER = 221022200
 DRUMMER_BUNNYS_LAIR = 221023401

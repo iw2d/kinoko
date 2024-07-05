@@ -1,4 +1,13 @@
-# ContiMove - station attendant
+# Joel : Station Clerk (1032007)
+#   Port Road : Station to Orbis (104020110)
+# Agatha (2012000)
+#   Orbis : Orbis Station Entrance (200000100)
+# Mel : Selling Ticket to Orbis (2040000)
+#   Ludibrium : Ludibrium Ticketing Place (220000100)
+# Mue : Ticket Usher (2082000)
+#   Leafre : Leafre Station Entrance (240000100)
+# Syras : Ticket Box Desk (2102002)
+#   Ariant : Ariant Station Platform (260000100)
 
 STATION_TO_ORBIS = 104020110
 ORBIS_STATION_ENTRANCE = 200000100

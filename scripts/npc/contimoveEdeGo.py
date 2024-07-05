@@ -1,6 +1,6 @@
 # Ace : Pilot (2150008)
+#   Edelstein : Edelstein Temporary Airport (310000010)
 
-# move_EdeEli
 VICTORIA_ISLAND_BOUND = 200090710
 STATION_TO_EDELSTEIN = 104020130
 

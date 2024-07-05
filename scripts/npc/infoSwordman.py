@@ -1,4 +1,5 @@
-# Dances with Balrog (10202) - Maple Road : Split Road of Destiny (1020000)
+# Dances with Balrog : Warrior Job Instructor (10202)
+#   Maple Road : Split Road of Destiny (1020000)
 
 GO_SWORDMAN = 1020100
 

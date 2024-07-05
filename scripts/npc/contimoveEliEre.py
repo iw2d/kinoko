@@ -1,6 +1,6 @@
 # Kiriru : Station Guide (1100007)
+#   Port Road : Station to Ereve (104020120)
 
-# move_EliEre
 TO_EREVE = 200090030
 SKY_FERRY = 130000210
 

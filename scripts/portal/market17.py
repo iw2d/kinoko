@@ -1,4 +1,5 @@
 # Nautilus : Mid Floor - Hallway (120000200)
+#   market00 (1867, 148)
 
 QR_FreeMarket = 7600
 

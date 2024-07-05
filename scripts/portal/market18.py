@@ -1,4 +1,5 @@
 # Sunset Road : Magatia (261000000)
+#   market0 (336, -227)
 
 QR_FreeMarket = 7600
 

@@ -1,4 +1,7 @@
 # Sunset Road : Sahel 2 (260020600)
+#   MD00 (-180, -178)
+# Mini Dungeon : Hill of Sandstorms (260020630)
+#   out00 (742, 97)
 
 SAHEL_2 = 260020600
 HILL_OF_SANDSTORMS = 260020630

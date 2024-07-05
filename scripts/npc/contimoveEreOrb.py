@@ -1,6 +1,6 @@
 # Kiru : Station Guide (1100004)
+#   Empress' Road : Sky Ferry  (130000210)
 
-# move_EreOrb
 TO_ORBIS = 200090021
 STATION = 200000161
 

@@ -1,4 +1,6 @@
 # NLC Taxi (9201056)
+#   New Leaf City : NLC Town Center (600000000)
+#   Phantom Forest : Haunted House (682000000)
 
 NLC_TOWN_CENTER = 600000000
 HAUNTED_HOUSE = 682000000

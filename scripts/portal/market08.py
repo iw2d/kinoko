@@ -1,4 +1,5 @@
-# Zipangu : Show Street Market (801000300)
+# Zipangu : Showa Street Market (801000300)
+#   market00 (258, 151)
 
 QR_FreeMarket = 7600
 

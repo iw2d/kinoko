@@ -1,4 +1,9 @@
 # Bell : NLC Subway Staff (9201057)
+#   Victoria Road : Subway Ticketing Booth (103000100)
+#   Kerning City Subway : Subway Ticketing Booth (103020000)
+#   New Leaf City : NLC Subway Station (600010001)
+#   New Leaf City : Waiting Room(From NLC to KC) (600010002)
+#   Kerning City Town Street : Waiting Room(From KC to NLC) (600010004)
 
 SUBWAY_TICKETING_BOOTH = 103020000
 NLC_SUBWAY_STATION = 600010001

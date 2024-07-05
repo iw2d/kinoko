@@ -1,4 +1,5 @@
 # Aqua Road : The Dangerous Cave (230040410)
+#   boss00 (1090, 46)
 
 THE_CAVE_OF_PIANUS = 230040420
 

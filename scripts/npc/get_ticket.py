@@ -1,4 +1,19 @@
-# ContiMove - warp from boarding field to waiting field
+# Cherry : Cabin Crew (1032008)
+#   Port Road : Station to Orbis (104020110)
+# Rini : Cabin Crew (2012001)
+#   Orbis : Station <Victoria Bound> (200000111)
+# Sunny : Cabin Crew (2012013)
+#   Orbis : Station<Ludibrium> (200000121)
+# Ramini : Crewmember (2012021)
+#   Orbis : Cabin <To Leafre> (200000131)
+# Geras : Crew (2012025)
+#   Orbis : Station <To Ariant> (200000151)
+# Tian : Cabin Crew (2041000)
+#   Ludibrium : Station<Orbis> (220000110)
+# Tommie : Crewmember (2082001)
+#   Leafre : Station (240000110)
+# Asesson : Crew (2102000)
+#   Ariant : Ariant Station Platform (260000100)
 
 GET_TICKET_TYPES = [
     ("CM_VICTORIA", "ship", 200000111, 200000112),  # Orbis : Station <Victoria Bound>

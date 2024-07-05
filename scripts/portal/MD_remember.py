@@ -1,4 +1,7 @@
 # Leafre : The Dragon Nest Left Behind (240040511)
+#   MD00 (1028, 1099)
+# Mini Dungeon : The Restoring Memory (240040800)
+#   out00 (1080, 1094)
 
 THE_DRAGON_NEST_LEFT_BEHIND = 240040511
 THE_RESTORING_MEMORY = 240040800

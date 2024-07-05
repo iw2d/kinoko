@@ -1,4 +1,5 @@
-# During the Ride : Cabin <To Orbis> (200090011)
+# sBoxItem0 (9102000)
+#   During the Ride : Cabin <To Orbis> (200090011)
 
 sm.dropRewards([
     (0, 15, 15, 0.7), # money

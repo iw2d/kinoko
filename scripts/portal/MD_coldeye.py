@@ -1,4 +1,7 @@
 # North Forest : Young Tree Forest (101030300)
+#   MD00 (-1300, -338)
+# North Forest : One-Eyed Lizard (101030400)
+#   out00 (194, 267)
 
 YOUNG_TREE_FOREST = 101030300
 ONE_EYED_LIZARD = 101030400

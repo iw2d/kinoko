@@ -1,4 +1,5 @@
-# Grendel the Really Old (10201) - Maple Road : Split Road of Destiny (1020000)
+# Grendel the Really Old : Magician Job Instructor (10201)
+#   Maple Road : Split Road of Destiny (1020000)
 
 GO_MAGICIAN = 1020200
 

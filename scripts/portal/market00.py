@@ -1,4 +1,5 @@
 # Hidden Street : Free Market Entrance (910000000)
+#   out00 (-538, 30)
 
 QR_FreeMarket = 7600
 

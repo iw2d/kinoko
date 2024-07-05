@@ -1,4 +1,10 @@
 # Regular Cab in Victoria (1012000)
+#   Henesys : Henesys (100000000)
+#   Ellinia : Ellinia (101000000)
+#   Perion : Perion (102000000)
+#   Kerning City : Kerning City (103000000)
+#   Lith Harbor : Lith Harbor (104000000)
+#   Nautilus : Nautilus Harbor (120000000)
 
 IS_BEGINNER = sm.getJob() % 1000 == 0 or sm.getJob() == 2001
 

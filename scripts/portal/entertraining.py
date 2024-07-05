@@ -1,4 +1,5 @@
 # Maple Road : Entrance to Adventurer Training Center (1010000)
+#   in00 (74, 154)
 
 if sm.hasQuestStarted(1041):
     sm.playPortalSE()

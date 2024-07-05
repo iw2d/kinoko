@@ -1,4 +1,7 @@
 # Herb Town : Red-Nose Pirate Den 2 (251010402)
+#   MD00 (549, -234)
+# Mini Dungeon : Pillage of Treasure Island (251010410)
+#   out00 (361, -394)
 
 RED_NOSE_PIRATE_DEN_2 = 251010402
 PILLAGE_OF_TREASURE_ISLAND = 251010410

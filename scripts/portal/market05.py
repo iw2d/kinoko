@@ -1,4 +1,5 @@
 # Aquarium : Aquarium (230000000)
+#   market01 (1511, 38)
 
 QR_FreeMarket = 7600
 

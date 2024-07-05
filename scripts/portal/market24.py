@@ -1,4 +1,5 @@
 # Black Wing Territory : Edelstein (310000000)
+#   market00 (780, -16)
 
 QR_FreeMarket = 7600
 

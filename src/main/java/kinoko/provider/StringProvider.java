@@ -170,7 +170,11 @@ public final class StringProvider implements WzProvider {
                     !(prop.getItems().get("name") instanceof String name)) {
                 continue;
             }
-            npcNames.put(npcId, name);
+            if (prop.getItems().get("func") instanceof String func) {
+                npcNames.put(npcId, String.format("%s : %s", name, func));
+            } else {
+                npcNames.put(npcId, name);
+            }
         }
     }
 

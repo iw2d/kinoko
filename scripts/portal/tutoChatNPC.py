@@ -1,4 +1,5 @@
 # Maple Road : Mushroom Park (10000)
+#   tuto00 (-95, 428)
 
 MAPLESTORY_ADMINISTRATOR = 2007
 

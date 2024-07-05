@@ -1,6 +1,6 @@
 # Kiru : Station Guide (1100008)
+#   Orbis : Station (200000161)
 
-# move_OrbEre
 TO_EREVE = 200090020
 SKY_FERRY = 130000210
 

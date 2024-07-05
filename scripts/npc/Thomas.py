@@ -1,4 +1,6 @@
 # Thomas Swift : Amoria Ambassador (9201022)
+#   Henesys : Henesys (100000000)
+#   Amoria : Amoria (680000000)
 
 HENESYS = 100000000
 AMORIA = 680000000

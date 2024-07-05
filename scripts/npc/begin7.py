@@ -1,4 +1,5 @@
-# Shanks (22000) - Maple Road : Southperry (2000000)
+# Shanks (22000)
+#   Maple Road : Southperry (2000000)
 
 LUCAS_S_RECOMMENDATION_LETTER = 4031801
 GO_LITH = 2010000

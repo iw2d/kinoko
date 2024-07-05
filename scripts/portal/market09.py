@@ -1,4 +1,5 @@
 # Leafre : Leafre (240000000)
+#   market00 (-1936, -32)
 
 QR_FreeMarket = 7600
 

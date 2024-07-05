@@ -1,4 +1,7 @@
 # Beach : Wave Beach (120020100)
+#   MD00 (1077, -56)
+# Beach : The Pig Beach (120020200)
+#   out00 (612, 212)
 
 WAVE_BEACH = 120020100
 THE_PIG_BEACH = 120020200

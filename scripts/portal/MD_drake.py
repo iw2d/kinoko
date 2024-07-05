@@ -1,4 +1,7 @@
 # Drake Cave : Cave Exit (105020400)
+#   MD00 (2442, 107)
+# Drake Cave : Blue Drake Cave (105020500)
+#   out00 (441, -1029)
 
 CAVE_EXIT = 105020400
 BLUE_DRAKE_CAVE = 105020500

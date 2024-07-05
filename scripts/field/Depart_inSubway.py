@@ -1,4 +1,6 @@
 # Kerning City Subway : Kerning Square Subway (103020010)
+# Kerning City Subway : Kerning Square Subway (103020011)
+# Kerning City Subway : Kerning Square Subway (103020012)
 
 KERNING_SQUARE_SUBWAY_1 = 103020010
 KERNING_SQUARE_SUBWAY_2 = 103020011

@@ -1,4 +1,5 @@
 # Corba : Retired Dragon Trainer (2082003)
+#   Leafre : Station (240000110)
 
 WAY_TO_TEMPLE_OF_TIME = 200090500
 MINI_DRACO_TRANSFORMATION = 2210016

@@ -1,4 +1,7 @@
-# Ludibrium : Helios Tower 2nd Floor (222020100) | Ludibrium : Helios Tower 99th Floor (222020200)
+# Ludibrium : Helios Tower <2nd Floor> (222020100)
+#   in00 (-139, 286)
+# Ludibrium : Helios Tower <99th Floor> (222020200)
+#   in00 (-133, 1963)
 
 HELIOS_TOWER_2ND_FLOOR = 222020100
 HELIOS_TOWER_99TH_FLOOR = 222020200

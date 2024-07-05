@@ -1,4 +1,5 @@
-# Kyrin (10204) - Maple Road : Split Road of Destiny (1020000)
+# Kyrin : Pirate Job Instructor (10204)
+#   Maple Road : Split Road of Destiny (1020000)
 
 GO_PIRATE = 1020500
 

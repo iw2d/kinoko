@@ -1,4 +1,5 @@
-# Athena Pierce (10200) - Maple Road : Split Road of Destiny (1020000)
+# Athena Pierce : Bowman Job Instructor (10200)
+#   Maple Road : Split Road of Destiny (1020000)
 
 GO_ARCHER = 1020300
 

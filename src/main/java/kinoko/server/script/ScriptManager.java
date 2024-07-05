@@ -52,7 +52,7 @@ import java.util.concurrent.CompletableFuture;
  * input to act as a guard against multiple dialogs during script execution. It also keeps the reference to the
  * ScriptManager object associated with the user to accept the user input.
  */
-public class ScriptManager {
+public final class ScriptManager {
     private static final Logger log = LogManager.getLogger(ScriptManager.class);
     private final Context context;
     private final User user;

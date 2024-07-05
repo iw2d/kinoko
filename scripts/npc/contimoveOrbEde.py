@@ -1,6 +1,6 @@
 # Ace : Pilot (2150009)
+#   Orbis : Station <Edelstein Bound> (200000170)
 
-# move_OrbEde
 EDELSTEIN_BOUND = 200090600
 EDELSTEIN_TEMPORARY_AIRPORT = 310000010
 

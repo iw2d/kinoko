@@ -1,4 +1,5 @@
-# Portal to Leafre : Forest of the Priest - Leafre : Valley of the Antelope (240010500)
+# Leafre : Valley of the Antelope (240010500)
+#   in00 (622, -1025)
 
 FOREST_OF_THE_PRIEST = 240010501
 

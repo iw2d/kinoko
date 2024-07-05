@@ -1,4 +1,5 @@
 # Kerning Square : Kerning Square Station (103020020)
+#   out00 (465, 26)
 
 KERNING_SQUARE_SUBWAY_2 = 103020011
 SUBWAY_TICKETING_BOOTH = 103020000

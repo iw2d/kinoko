@@ -1,6 +1,6 @@
-# Ace : Pilot (2150009)
+# Ace : Pilot (2150010)
+#   Port Road : Station to Edelstein (104020130)
 
-# move_EliEde
 EDELSTEIN_BOUND = 200090700
 EDELSTEIN_TEMPORARY_AIRPORT = 310000010
 

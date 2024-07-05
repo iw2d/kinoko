@@ -1,4 +1,5 @@
-# Dark Lord (10203) - Maple Road : Split Road of Destiny (1020000)
+# Dark Lord : Thief Job Instructor (10203)
+#   Maple Road : Split Road of Destiny (1020000)
 
 GO_ROGUE = 1020400
 
