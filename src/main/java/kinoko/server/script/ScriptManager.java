@@ -9,6 +9,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
 import kinoko.provider.NpcProvider;
+import kinoko.provider.StringProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
@@ -80,7 +81,11 @@ public final class ScriptManager {
     }
 
 
-    // UTILITY METHODS --------------------------------------------------------------------------------------------
+    // UTILITY METHODS -------------------------------------------------------------------------------------------------
+
+    public int getRandom(int fromInclusive, int toInclusive) {
+        return Util.getRandom(fromInclusive, toInclusive);
+    }
 
     public void dispose() {
         user.dispose();
@@ -136,6 +141,14 @@ public final class ScriptManager {
 
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    public int getHair() {
+        return user.getCharacterStat().getHair();
+    }
+
+    public int getFace() {
+        return user.getCharacterStat().getFace();
+    }
 
     public int getGender() {
         return user.getGender();
@@ -524,6 +537,32 @@ public final class ScriptManager {
             return;
         }
         ScriptDispatcher.startNpcScript(user, user, scriptName, templateId);
+    }
+
+    public void changeAvatar(int look) {
+        if (look >= 0 && look <= GameConstants.SKIN_MAX) {
+            user.getCharacterStat().setSkin((byte) look);
+            user.write(WvsContext.statChanged(Stat.SKIN, user.getCharacterStat().getSkin(), false));
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+        } else if (look >= GameConstants.FACE_MIN && look <= GameConstants.FACE_MAX) {
+            if (StringProvider.getItemName(look) == null) {
+                log.error("Tried to change face with invalid ID : {}", look);
+                return;
+            }
+            user.getCharacterStat().setFace(look);
+            user.write(WvsContext.statChanged(Stat.FACE, user.getCharacterStat().getFace(), false));
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+        } else if (look >= GameConstants.HAIR_MIN && look <= GameConstants.HAIR_MAX) {
+            if (StringProvider.getItemName(look) == null) {
+                log.error("Tried to change hair with invalid ID : {}", look);
+                return;
+            }
+            user.getCharacterStat().setHair(look);
+            user.write(WvsContext.statChanged(Stat.HAIR, user.getCharacterStat().getHair(), false));
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+        } else {
+            log.error("Tried to change avatar with invalid ID : {}", look);
+        }
     }
 
     public int getSpeakerId() {

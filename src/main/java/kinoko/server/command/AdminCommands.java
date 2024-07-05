@@ -513,12 +513,41 @@ public final class AdminCommands {
         }
     }
 
+    @Command("avatar")
+    @Arguments("new look")
+    public static void avatar(User user, String[] args) {
+        final int look = Integer.parseInt(args[1]);
+        if (look >= 0 && look <= GameConstants.SKIN_MAX) {
+            user.getCharacterStat().setSkin((byte) look);
+            user.write(WvsContext.statChanged(Stat.SKIN, user.getCharacterStat().getSkin(), false));
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+        } else if (look >= GameConstants.FACE_MIN && look <= GameConstants.FACE_MAX) {
+            if (StringProvider.getItemName(look) == null) {
+                user.write(MessagePacket.system("Tried to change face with invalid ID : %d", look));
+                return;
+            }
+            user.getCharacterStat().setFace(look);
+            user.write(WvsContext.statChanged(Stat.FACE, user.getCharacterStat().getFace(), false));
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+        } else if (look >= GameConstants.HAIR_MIN && look <= GameConstants.HAIR_MAX) {
+            if (StringProvider.getItemName(look) == null) {
+                user.write(MessagePacket.system("Tried to change hair with invalid ID : %d", look));
+                return;
+            }
+            user.getCharacterStat().setHair(look);
+            user.write(WvsContext.statChanged(Stat.HAIR, user.getCharacterStat().getHair(), false));
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
+        } else {
+            user.write(MessagePacket.system("Tried to change avatar with invalid ID : %d", look));
+        }
+    }
+
     @Command("level")
     @Arguments("new level")
     public static void level(User user, String[] args) {
         final int level = Integer.parseInt(args[1]);
         if (level < 1 || level > GameConstants.LEVEL_MAX) {
-            user.write(MessagePacket.system("Could not change level to : {}", level));
+            user.write(MessagePacket.system("Could not change level to : %d", level));
             return;
         }
         try (var locked = user.acquire()) {
@@ -534,7 +563,7 @@ public final class AdminCommands {
     public static void job(User user, String[] args) {
         final int jobId = Integer.parseInt(args[1]);
         if (Job.getById(jobId) == null) {
-            user.write(MessagePacket.system("Could not change to unknown job : {}", jobId));
+            user.write(MessagePacket.system("Could not change to unknown job : %d", jobId));
             return;
         }
         try (var locked = user.acquire()) {
@@ -559,7 +588,7 @@ public final class AdminCommands {
         final int slv = Integer.parseInt(args[2]);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find skill : {}", skillId));
+            user.write(MessagePacket.system("Could not find skill : %d", skillId));
             return;
         }
         final SkillInfo si = skillInfoResult.get();
@@ -676,7 +705,7 @@ public final class AdminCommands {
         }
         final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
         if (cts == null) {
-            user.write(MessagePacket.system("Could not resolve mob skill {} does not apply a CTS", skillType));
+            user.write(MessagePacket.system("Could not resolve mob skill %s does not apply a CTS", skillType));
             return;
         }
         // Apply mob skill
