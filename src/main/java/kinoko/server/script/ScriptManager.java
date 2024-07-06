@@ -347,9 +347,9 @@ public final class ScriptManager {
             return;
         }
         final Field targetField = fieldResult.get();
-        final Optional<PortalInfo> portalResult = targetField.getPortalById(0);
+        final Optional<PortalInfo> portalResult = targetField.getRandomStartPoint();
         if (portalResult.isEmpty()) {
-            log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
+            log.error("Could not resolve start point portal for field ID : {}", targetField.getFieldId());
             dispose();
             return;
         }
@@ -646,8 +646,8 @@ public final class ScriptManager {
         return handleAnswer().getAnswer();
     }
 
-    public int askSlideMenu(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKSLIDEMENU, text));
+    public int askSlideMenu(int slideMenuType, String text) {
+        sendMessage(ScriptMessage.askSlideMenu(speakerId, messageParams, slideMenuType, text));
         return handleAnswer().getAnswer();
     }
 

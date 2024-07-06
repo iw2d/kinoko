@@ -169,7 +169,7 @@ public final class MigrationHandler {
             if (portalResult.isPresent()) {
                 targetPortal = portalResult.get();
             } else {
-                log.error("Tried to warp to portal : {} on field ID : {}", 0, targetField.getFieldId());
+                log.error("Could not resolve default portal : {} on field ID : {}", 0, targetField.getFieldId());
                 targetPortal = targetField.getPortalById(0).orElse(PortalInfo.EMPTY);
             }
 
@@ -388,12 +388,16 @@ public final class MigrationHandler {
             }
         }
         // Resolve Portal
-        final Optional<PortalInfo> targetPortalResult = targetField.getPortalByName(portalName);
+        Optional<PortalInfo> targetPortalResult = targetField.getPortalByName(portalName);
         if (targetPortalResult.isEmpty()) {
-            log.error("Tried to warp to portal : {} on field ID : {}", portalName, targetField.getFieldId());
-            user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
-            user.dispose();
-            return;
+            log.warn("Tried to warp to portal : {} on field ID : {}, defaulting to 0", portalName, targetField.getFieldId());
+            targetPortalResult = targetField.getPortalById(0);
+            if (targetPortalResult.isEmpty()) {
+                log.error("Could not resolve default portal : {} on field ID : {}", 0, targetField.getFieldId());
+                user.write(FieldPacket.transferFieldReqIgnored(TransferFieldType.NOT_CONNECTED_AREA)); // You cannot go to that place.
+                user.dispose();
+                return;
+            }
         }
         user.warp(targetField, targetPortalResult.get(), false, isRevive);
     }

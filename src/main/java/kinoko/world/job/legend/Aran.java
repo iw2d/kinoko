@@ -27,6 +27,7 @@ public final class Aran extends SkillProcessor {
     public static final int MONSTER_RIDER = 20001004;
     public static final int ECHO_OF_HERO = 20001005;
     public static final int MAKER = 20001007;
+    public static final int SOARING = 20001026;
     // ARAN_1
     public static final int COMBO_ABILITY = 21000000;
     public static final int DOUBLE_SWING = 21000002;

@@ -11,4 +11,5 @@ public final class Noblesse {
     public static final int MONSTER_RIDER = 10001004;
     public static final int ECHO_OF_HERO = 10001005;
     public static final int MAKER = 10001007;
+    public static final int SOARING = 10001026;
 }

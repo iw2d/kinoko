@@ -203,6 +203,17 @@ public abstract class SkillProcessor {
                 }
                 user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, tamingMobItem.getItemId(), skillId, 0));
                 return;
+            case Beginner.SOARING:
+            case Noblesse.SOARING:
+            case Aran.SOARING:
+            case Evan.SOARING:
+            case Citizen.SOARING:
+                if (!user.getField().getMapInfo().isFly()) {
+                    log.error("Tried to use Soaring skill outside of a flying map");
+                    return;
+                }
+                user.setTemporaryStat(CharacterTemporaryStat.Flying, TemporaryStatOption.of(1, skillId, 0));
+                return;
             case Beginner.ECHO_OF_HERO:
             case Noblesse.ECHO_OF_HERO:
             case Aran.ECHO_OF_HERO:

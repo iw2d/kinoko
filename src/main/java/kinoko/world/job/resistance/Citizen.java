@@ -39,6 +39,7 @@ public final class Citizen extends SkillProcessor {
     public static final int HEROS_ECHO = 30001005;
     public static final int MAKER = 30001007;
     public static final int FOLLOW_THE_LEAD = 30001024;
+    public static final int SOARING = 30001026;
 
     public static final int CAPTURE = 30001061;
     public static final int CALL_OF_THE_HUNTER = 30001062;

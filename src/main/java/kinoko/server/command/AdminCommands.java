@@ -166,7 +166,7 @@ public final class AdminCommands {
                 }
             }
         } else if (type.equalsIgnoreCase("map")) {
-            int mapId = -1;
+            final int mapId;
             if (isNumber) {
                 mapId = Integer.parseInt(query);
             } else {
@@ -178,12 +178,15 @@ public final class AdminCommands {
                     if (searchResult.size() == 1) {
                         mapId = searchResult.get(0).getKey();
                     } else {
+                        mapId = -1;
                         user.write(MessagePacket.system("Results for map name : \"%s\"", query));
                         for (var entry : searchResult) {
                             user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue()));
                         }
                         return;
                     }
+                } else {
+                    mapId = -1;
                 }
             }
             final Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapId);
@@ -191,6 +194,10 @@ public final class AdminCommands {
                 user.write(MessagePacket.system("Could not find map with %s : %s", isNumber ? "ID" : "name", query));
                 return;
             }
+            final List<MapInfo> connectedMaps = MapProvider.getMapInfos().stream()
+                    .filter((mapInfo) -> mapInfo.getPortalInfos().stream().anyMatch((portalInfo) -> portalInfo.getDestinationFieldId() == mapId))
+                    .sorted(Comparator.comparingInt(MapInfo::getMapId))
+                    .toList();
             final MapInfo mapInfo = mapInfoResult.get();
             user.write(MessagePacket.system("Map : %s (%d)", StringProvider.getMapName(mapId), mapId));
             user.write(MessagePacket.system("  type : %s", mapInfo.getFieldType().name()));
@@ -198,6 +205,18 @@ public final class AdminCommands {
             user.write(MessagePacket.system("  forcedReturn : %d", mapInfo.getForcedReturn()));
             user.write(MessagePacket.system("  onFirstUserEnter : %s", mapInfo.getOnFirstUserEnter()));
             user.write(MessagePacket.system("  onUserEnter : %s", mapInfo.getOnUserEnter()));
+            if (!mapInfo.getPortalInfos().isEmpty()) {
+                user.write(MessagePacket.system("  portals :"));
+                for (PortalInfo portalInfo : mapInfo.getPortalInfos().stream().sorted(Comparator.comparingInt(PortalInfo::getPortalId)).toList()) {
+                    user.write(MessagePacket.system("    %s (%d, %d)", portalInfo.getPortalName(), portalInfo.getX(), portalInfo.getY()));
+                }
+            }
+            if (!connectedMaps.isEmpty()) {
+                user.write(MessagePacket.system("  connectedMap :"));
+                for (MapInfo connectedMapInfo : connectedMaps) {
+                    user.write(MessagePacket.system("    %s (%d)", StringProvider.getMapName(connectedMapInfo.getMapId()), connectedMapInfo.getMapId()));
+                }
+            }
         } else if (type.equalsIgnoreCase("mob")) {
             int mobId = -1;
             if (isNumber) {
@@ -309,6 +328,8 @@ public final class AdminCommands {
             user.write(MessagePacket.system("  price : %d", commodity.getPrice()));
             user.write(MessagePacket.system("  period : %d", commodity.getPeriod()));
             user.write(MessagePacket.system("  gender : %d", commodity.getGender()));
+        } else {
+            user.write(MessagePacket.system("Unknown type : %s", type));
         }
     }
 
@@ -330,19 +351,25 @@ public final class AdminCommands {
         ScriptDispatcher.startNpcScript(user, user, scriptName, templateId);
     }
 
-    @Command("map")
+    @Command({ "map", "warp" })
     @Arguments("field ID to warp to")
     public static void map(User user, String[] args) {
         final int fieldId = Integer.parseInt(args[1]);
+        final String portalName;
+        if (args.length > 2) {
+            portalName = args[2];
+        } else {
+            portalName = GameConstants.DEFAULT_PORTAL_NAME;
+        }
         final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
         if (fieldResult.isEmpty()) {
             user.write(MessagePacket.system("Could not resolve field ID : %d", fieldId));
             return;
         }
         final Field targetField = fieldResult.get();
-        final Optional<PortalInfo> portalResult = targetField.getPortalById(0);
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
         if (portalResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not resolve portal for field ID : %d", fieldId));
+            user.write(MessagePacket.system("Could not resolve portal %s for field ID : %d", portalName, fieldId));
             return;
         }
         try (var locked = user.acquire()) {

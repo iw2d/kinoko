@@ -16,25 +16,28 @@ public final class ScriptMessage implements Encodable {
     private boolean hasPrev;
     private boolean hasNext;
 
-    // SAY_IMAGE
+    // SAYIMAGE
     private List<String> images;
 
-    // ASK_TEXT
+    // ASKTEXT
     private String textDefault;
     private int textLengthMin;
     private int textLengthMax;
 
-    // ASK_NUMBER
+    // ASKNUMBER
     private int numberDefault;
     private int numberMin;
     private int numberMax;
 
-    // ASK_AVATAR
+    // ASKAVATAR
     private List<Integer> options;
 
-    // ASK_BOX_TEXT
+    // ASKBOXTEXT
     private int textBoxColumns;
     private int textBoxLines;
+
+    // ASKSLIDEMENU
+    private int slideMenuType;
 
     private ScriptMessage(int speakerId, ScriptMessageType messageType, Set<ScriptMessageParam> messageParams) {
         this.speakerId = speakerId;
@@ -96,10 +99,10 @@ public final class ScriptMessage implements Encodable {
                 outPacket.encodeShort(textBoxLines); // nLine
             }
             case ASKSLIDEMENU -> {
-                outPacket.encodeInt(0); // slide menu dialog type
+                outPacket.encodeInt(slideMenuType); // slide menu dialog type
                 // CSlideMenuDlgEX::SetSlideMenuDlg
-                outPacket.encodeInt(0); // unused
-                outPacket.encodeString(text); // #<DimensionalPortalType.getValue()>#<DimensionalPortalType.getDescription()>
+                outPacket.encodeInt(0); // last index
+                outPacket.encodeString(text); // #index#description (UI.wz/UIWindow2.img/SlideMenu/%d/BtMain/%d
             }
             case ASKQUIZ, ASKSPEEDQUIZ, ASKPET, ASKPETALL -> {
                 throw new IllegalArgumentException("Unsupported message type : " + messageType.name());
@@ -122,7 +125,7 @@ public final class ScriptMessage implements Encodable {
     }
 
     public static ScriptMessage ask(int speakerId, Set<ScriptMessageParam> messageParams, ScriptMessageType messageType, String text) {
-        // ASK_YES_NO, ASK_YES_NO_QUEST, ASK_MENU, ASK_SLIDE_MENU
+        // ASK_YES_NO, ASK_YES_NO_QUEST, ASK_MENU
         final ScriptMessage message = new ScriptMessage(speakerId, messageType, messageParams);
         message.text = text;
         return message;
@@ -159,6 +162,13 @@ public final class ScriptMessage implements Encodable {
         message.textDefault = textDefault;
         message.textBoxColumns = textBoxColumns;
         message.textBoxLines = textBoxLines;
+        return message;
+    }
+
+    public static ScriptMessage askSlideMenu(int speakerId, Set<ScriptMessageParam> messageParams, int slideMenuType, String text) {
+        final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKSLIDEMENU, messageParams);
+        message.slideMenuType = slideMenuType;
+        message.text = text;
         return message;
     }
 }
