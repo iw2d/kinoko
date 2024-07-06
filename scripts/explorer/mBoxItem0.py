@@ -12,5 +12,5 @@ sm.dropRewards([
     (2000001, 1, 1, 0.1), # Orange Potion
     (2010000, 1, 1, 0.1), # Apple
     (4031161, 1, 1, 1.0, 1008), # Rusty Screw
-    (4031162, 1, 1, 1.0, 1008) # Old Wooden Board
+    (4031162, 1, 1, 1.0, 1008), # Old Wooden Board
 ])

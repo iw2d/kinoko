@@ -1,5 +1,5 @@
-# Naran : Dermatologist (2090102)
-#   Mu Lung : Mu Lung (250000000)
+# Lila : Skin Care Expert (2100007)
+#   The Burning Road : Ariant (260000000)
 
 CHOICES = [ 0, 1, 2, 3, 4, 5, 9, 10, 11 ]
 SKIN_COUPON = 5153015

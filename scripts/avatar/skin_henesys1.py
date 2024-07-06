@@ -1,7 +1,7 @@
 # Ms. Tan : Dermatologist (1012105)
 #   Henesys : Henesys Skin-Care (100000105)
 
-CHOICES = [ 0, 1, 2, 3, 4 ]
+CHOICES = [ 0, 1, 2, 3, 4, 5, 9, 10, 11 ]
 SKIN_COUPON = 5153015
 
 sm.sayNext("Welcome to Henesys Skin-Care! For just one teeny-weeny #b#t5153015##k, I can make your skin supple and glow-y, like mine! Trust me, you don't want to miss my facials.")
