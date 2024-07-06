@@ -1,38 +1,36 @@
-# Grandpa Luo : Lead Hair Stylist (2090100)
-#   Mu Lung : Mu Lung Hair Salon (250000003)
+# Mino the Owner : Lead Hair Stylist (2010001)
+#   Orbis Park : Orbis Hair Salon (200000202)
 
 VIP_HAIR_M = [
-    30750, # Black Buddha Fire
-    30420, # Black Cozy Amber
-    30150, # Black Dreadlocks
-    30810, # Black Gruff & Tough
-    30240, # Black Monkey
-    30710, # Black Puffy Fro
-    30370, # Black Shaggy Dragon
-    30640, # Black Urban Dragon
+    33240, # Black Clean-Cut Short Hair
+    30230, # Black Foil Perm
+    30490, # Black Messy Spike
+    30260, # Black Metrosexual
+    30280, # Black Mohecan Shaggy Do
+    33050, # Black Spiky Shag
+    30340, # Black Tristan
 ]
 VIP_HAIR_F = [
-    31300, # Black Chantelle
-    31180, # Black Cutey Doll
-    31910, # Black Housewife
-    31460, # Black Lady Mariko
-    31160, # Black Lori
-    31470, # Black Ming Ming
-    31140, # Black Pei Pei
-    31660, # Black Tighty Bun
+    34060, # Black Bow Hair
+    31220, # Black Caspia
+    31110, # Black Monica
+    31790, # Black Princessa
+    31230, # Black Rose
+    31630, # Black The Honeybun
+    34260, # Black Top Tied Hair
 ]
 
 HAIR_STYLE_COUPON_VIP = 5150053
 HAIR_COLOR_COUPON_VIP = 5151036
 
-answer = sm.askMenu("Welcome to the Mu Lung hair shop. If you have #b#t5150053##k or a #b#t5151036##k allow me to take care of your hairdo. Please choose the one you want.\r\n" + \
+answer = sm.askMenu("Hello I'm Mino the Owner. If you have either #b#t5150053##k or #b#t5151036##k, then please let me take care of your hair. Choose what you want to do with it.\r\n" + \
         "#L0##bHaircut (VIP coupon)#k#l\r\n" + \
         "#L1##bDye your hair (VIP coupon)#k#l"
 )
 if answer == 0:
     color = sm.getHair() % 10
     choices = [ hair + color for hair in (VIP_HAIR_M if sm.getGender() == 0 else VIP_HAIR_F) ]
-    answer = sm.askAvatar("I can totally change up your hairstyle and make it look so good. Why don't you change it up a bit? With #b#t5150053##k I'll change it for you. Choose the one to your liking~", choices)
+    answer = sm.askAvatar("I can completely change the look of your hair. Aren't you ready for a change? With #b#t5150053##k, I'll take care of the rest for you.", choices)
     if answer >= 0 and answer < len(choices):
         if sm.removeItem(HAIR_STYLE_COUPON_VIP, 1):
             sm.changeAvatar(choices[answer])
@@ -43,7 +41,7 @@ elif answer == 1:
     hair = sm.getHair()
     hair = hair - (hair % 10)
     choices = [ hair + i for i in range(8) ]
-    answer = sm.askAvatar("I can totally dye your hair and make it look so good. Why don't you change it up a bit? With #b#t5151036##k I'll change it for you. Choose the one to your liking~", choices)
+    answer = sm.askAvatar("I can completely change the look of your hair. Aren't you ready for a change? With #b#t5151036##k, I'll take care of the rest for you.", choices)
     if answer >= 0 and answer < len(choices):
         if sm.removeItem(HAIR_COLOR_COUPON_VIP, 1):
             sm.changeAvatar(choices[answer])
