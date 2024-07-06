@@ -143,6 +143,12 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static Effect reservedEffect(String effectPath) {
+        final Effect effect = new Effect(EffectType.ReservedEffect);
+        effect.string1 = effectPath; // sEffect
+        return effect;
+    }
+
     public static Effect gainItem(Item item) {
         return gainItem(item.getItemId(), item.getQuantity());
     }

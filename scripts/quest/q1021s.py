@@ -19,5 +19,5 @@ if not sm.hasItem(ROGERS_APPLE) and not sm.addItem(ROGERS_APPLE, 1):
     sm.sayNext("Please check if your inventory is full or not.")
     sm.dispose()
 
-sm.forceStartQuest(questId)
+sm.forceStartQuest(1021)
 sm.avatarOriented("UI/tutorial.img/28")

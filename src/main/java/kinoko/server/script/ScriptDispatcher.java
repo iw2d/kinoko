@@ -86,7 +86,7 @@ public final class ScriptDispatcher {
     }
 
     public static void startReactorScript(User user, Reactor reactor, String scriptName) {
-        startScript(ScriptType.PORTAL, scriptName, user, reactor, GameConstants.DEFAULT_SPEAKER_ID);
+        startScript(ScriptType.REACTOR, scriptName, user, reactor, GameConstants.DEFAULT_SPEAKER_ID);
     }
 
     public static void startFirstUserEnterScript(User user, String scriptName) {

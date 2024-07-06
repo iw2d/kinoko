@@ -119,6 +119,10 @@ public final class ScriptManager {
         user.write(UserLocal.effect(Effect.squibEffect(effectPath)));
     }
 
+    public void reservedEffect(String effectPath) {
+        user.write(UserLocal.effect(Effect.reservedEffect(effectPath)));
+    }
+
     public void balloonMsg(String text, int width, int duration) {
         user.write(UserLocal.balloonMsg(text, width, duration));
     }
@@ -141,6 +145,10 @@ public final class ScriptManager {
 
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    public String getCharacterName() {
+        return user.getCharacterName();
+    }
 
     public int getHair() {
         return user.getCharacterStat().getHair();
@@ -285,6 +293,10 @@ public final class ScriptManager {
 
     public boolean hasItem(int itemId, int quantity) {
         return user.getInventoryManager().hasItem(itemId, quantity);
+    }
+
+    public int getItemCount(int itemId) {
+        return user.getInventoryManager().getItemCount(itemId);
     }
 
 
@@ -646,12 +658,20 @@ public final class ScriptManager {
 
     public int askNumber(String text, int numberDefault, int numberMin, int numberMax) {
         sendMessage(ScriptMessage.askNumber(speakerId, messageParams, text, numberDefault, numberMin, numberMax));
-        return handleAnswer().getAnswer();
+        final int answer = handleAnswer().getAnswer();
+        if (answer < numberMin || answer > numberMax) {
+            throw new IllegalArgumentException(String.format("Received number answer out of range : %d, min : %d, max %d", answer, numberMin, numberMax));
+        }
+        return answer;
     }
 
     public String askText(String text, String textDefault, int textLengthMin, int textLengthMax) {
         sendMessage(ScriptMessage.askText(speakerId, messageParams, text, textDefault, textLengthMin, textLengthMax));
-        return handleAnswer().getTextAnswer();
+        final String answer = handleAnswer().getTextAnswer();
+        if (answer.length() < textLengthMin || answer.length() > textLengthMax) {
+            throw new IllegalArgumentException(String.format("Received text answer with invalid length : %d, min : %d, max %d", answer, textLengthMin, textLengthMax));
+        }
+        return answer;
     }
 
     public String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines) {

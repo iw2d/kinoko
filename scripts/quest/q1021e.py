@@ -18,4 +18,4 @@ if not sm.addItems([(APPLE, 3), (GREEN_APPLE, 3)]):
     sm.dispose()
 
 sm.addExp(10)
-sm.forceCompleteQuest(questId)
+sm.forceCompleteQuest(1021)
