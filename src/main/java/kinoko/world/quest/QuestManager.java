@@ -57,6 +57,11 @@ public final class QuestManager {
         return qr != null && qr.getState() == QuestState.PERFORM;
     }
 
+    public boolean hasQuestCompleted(int questId) {
+        final QuestRecord qr = questRecords.get(questId);
+        return qr != null && qr.getState() == QuestState.COMPLETE;
+    }
+
     public QuestRecord forceStartQuest(int questId) {
         final QuestRecord qr = new QuestRecord(questId);
         qr.setState(QuestState.PERFORM);

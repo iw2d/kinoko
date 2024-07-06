@@ -294,6 +294,10 @@ public final class ScriptManager {
         return user.getQuestManager().hasQuestStarted(questId);
     }
 
+    public boolean hasQuestCompleted(int questId) {
+        return user.getQuestManager().hasQuestCompleted(questId);
+    }
+
     public void forceStartQuest(int questId) {
         final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
         user.write(MessagePacket.questRecord(qr));
@@ -685,10 +689,12 @@ public final class ScriptManager {
             dispose();
         } else if (answer.getAction() == 0 && scriptMemory.isPrevPossible()) {
             // prev message in memory
+            user.setDialog(ScriptDialog.from(this));
             user.write(FieldPacket.scriptMessage(scriptMemory.prevMessage()));
             return handleAnswer();
         } else if (scriptMemory.isInMemory()) {
             // next message in memory
+            user.setDialog(ScriptDialog.from(this));
             user.write(FieldPacket.scriptMessage(scriptMemory.nextMessage()));
             return handleAnswer();
         }
