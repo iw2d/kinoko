@@ -1,5 +1,5 @@
-# Dr. Feeble : Doctor w/o License (1052005)
-#   Henesys : Henesys Plastic Surgery (100000103)
+# Franz the Owner : Plastic Surgeon (2010002)
+#   Orbis Park : Orbis Plastic Surgery (200000201)
 
 VIP_FACE_M = [
     20000, # Motivated Look
@@ -9,11 +9,9 @@ VIP_FACE_M = [
     20004, # Rebel's Fire
     20005, # Alert Face
     20006, # Babyface Pout
-    20007, # Sad Innocence
     20008, # Worrisome Glare
     20012, # Curious Dog
     20014, # Look of Wonder
-    20015, # Eye of the Lion
     20022, # Child's Play
     20028, # Sarcastic Face
 ]
@@ -28,18 +26,18 @@ VIP_FACE_F = [
     21007, # Dollface Look
     21008, # Hopeless Gaze
     21012, # Soul's Window
-    21013, # Wide-eyed Girl
     21023, # Innocent Look
     21026, # Tender Love
 ]
 
-FACE_COUPON_REG = 5152056
+FACE_COUPON_VIP = 5152057
 
-if sm.askYesNo("If you use the regular coupon, you may end up with a random new look for your face...do you still want to do it using #b#t5152056##k?"):
-    if sm.removeItem(FACE_COUPON_REG, 1):
-        choices = VIP_FACE_M if sm.getGender() == 0 else VIP_FACE_F
-        face = choices[sm.getRandom(0, len(choices) - 1)] + (sm.getFace() % 1000) - (sm.getFace() % 100)
-        sm.changeAvatar(face)
-        sm.sayNext("The surgery's complete. Don't you like it? I think it came out great!")
+color = (sm.getFace() % 1000) - (sm.getFace() % 100)
+choices = [ face + color for face in (VIP_FACE_M if sm.getGender() == 0 else VIP_FACE_F) ]
+answer = sm.askAvatar("Welcome, welcome! Not happy with your look? Neither am I. But for #b#t5152057##k, I can transform your face and get you the look you've always wanted.", choices) # GPT
+if answer >= 0 and answer < len(choices):
+    if sm.removeItem(FACE_COUPON_VIP, 1):
+        sm.changeAvatar(choices[answer])
+        sm.sayNext("Ok, the surgery's over. See for it yourself.. What do you think? Quite fantastic, if I should say so myself. Please come again when you want another look, okay?")
     else:
         sm.sayNext("Hmmm...it looks like you don't have our designated coupon...I'm afraid I can't perform plastic surgery for you without it. I'm sorry...")

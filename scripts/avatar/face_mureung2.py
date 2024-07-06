@@ -1,34 +1,28 @@
-# Dr. Feeble : Doctor w/o License (1052005)
-#   Henesys : Henesys Plastic Surgery (100000103)
+# Noma : Assistant Plastic Surgeon (2090104)
+#   Mu Lung : Mu Lung (250000000)
 
 VIP_FACE_M = [
+    20010, # Anger's Blaze
     20000, # Motivated Look
-    20001, # Perplexed Stare
     20002, # Leisure Look
-    20003, # Dramatic Face
     20004, # Rebel's Fire
     20005, # Alert Face
     20006, # Babyface Pout
-    20007, # Sad Innocence
-    20008, # Worrisome Glare
     20012, # Curious Dog
-    20014, # Look of Wonder
-    20015, # Eye of the Lion
+    20009, # Smart Aleck
     20022, # Child's Play
     20028, # Sarcastic Face
 ]
 VIP_FACE_F = [
+    21011, # Hypnotized Look
     21000, # Motivated Look
-    21001, # Fearful Stare
     21002, # Leisure Look
     21003, # Strong Stare
-    21004, # Angel Glow
     21005, # Babyface Pout
     21006, # Pucker Up Face
-    21007, # Dollface Look
     21008, # Hopeless Gaze
     21012, # Soul's Window
-    21013, # Wide-eyed Girl
+    21009, # Look of Death
     21023, # Innocent Look
     21026, # Tender Love
 ]

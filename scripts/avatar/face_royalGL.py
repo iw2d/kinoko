@@ -2,23 +2,10 @@
 #   Henesys : Henesys Plastic Surgery (100000103)
 
 ROYAL_FACE_M = [
-    20020, # Fierce Edge
-    20021, # Overjoyed Smile
-    20023, # Hypnotized Look
-    20024, # Intense Stare
-    20026, # Shuteye
-    20028, # Sarcastic Face
     20036, # Male Aran Face
     20037, # Male Evan Face
 ]
 ROYAL_FACE_F = [
-    21020, # Gentle Glow
-    21021, # Compassion Look
-    21022, # Glitzy Face
-    21023, # Innocent Look
-    21024, # Leisure Look
-    21025, # Shuteye
-    21026, # Tender Love
     21034, # Female Aran Face
     21035, # Female Evan Face
 ]

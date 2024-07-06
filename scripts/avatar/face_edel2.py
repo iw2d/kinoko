@@ -1,5 +1,5 @@
-# Dr. Feeble : Doctor w/o License (1052005)
-#   Henesys : Henesys Plastic Surgery (100000103)
+# Wendelline : Plastic Surgery Assistant (2150006)
+#   Black Wing Territory : Edelstein (310000000)
 
 VIP_FACE_M = [
     20000, # Motivated Look
@@ -9,13 +9,19 @@ VIP_FACE_M = [
     20004, # Rebel's Fire
     20005, # Alert Face
     20006, # Babyface Pout
-    20007, # Sad Innocence
     20008, # Worrisome Glare
     20012, # Curious Dog
     20014, # Look of Wonder
-    20015, # Eye of the Lion
+    20016, # Ghostface Stare
+    20020, # Fierce Edge
+    20017, # Demure Poise
+    20013, # Insomniac Daze
     20022, # Child's Play
+    20025, # Edge of Emotion
+    20027, # Pensive Look
     20028, # Sarcastic Face
+    20029, # Shade of Cool
+    20031, # Fearful Glance
 ]
 VIP_FACE_F = [
     21000, # Motivated Look
@@ -28,9 +34,16 @@ VIP_FACE_F = [
     21007, # Dollface Look
     21008, # Hopeless Gaze
     21012, # Soul's Window
+    21016, # Beauty Stare
+    21020, # Gentle Glow
+    21017, # Demure Poise Eyes
     21013, # Wide-eyed Girl
+    21021, # Compassion Look
     21023, # Innocent Look
+    # Lazy Look?
     21026, # Tender Love
+    21027, # Glamorous Edge
+    21029, # Kitty Cat
 ]
 
 FACE_COUPON_REG = 5152056

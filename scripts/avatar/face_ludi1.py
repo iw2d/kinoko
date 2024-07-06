@@ -1,5 +1,5 @@
-# Denma the Owner : Plastic Surgeon (1052004)
-#   Henesys : Henesys Plastic Surgery (100000103)
+# Ellie : Plastic Surgeon (2041010)
+#   Ludibrium : Ludibrium Plastic Surgery (220000003)
 
 VIP_FACE_M = [
     20000, # Motivated Look
@@ -9,13 +9,10 @@ VIP_FACE_M = [
     20004, # Rebel's Fire
     20005, # Alert Face
     20006, # Babyface Pout
-    20007, # Sad Innocence
     20008, # Worrisome Glare
     20012, # Curious Dog
     20014, # Look of Wonder
-    20015, # Eye of the Lion
-    20022, # Child's Play
-    20028, # Sarcastic Face
+    20011, # Cool Guy Gaze
 ]
 VIP_FACE_F = [
     21000, # Motivated Look
@@ -28,9 +25,7 @@ VIP_FACE_F = [
     21007, # Dollface Look
     21008, # Hopeless Gaze
     21012, # Soul's Window
-    21013, # Wide-eyed Girl
-    21023, # Innocent Look
-    21026, # Tender Love
+    21010, # Wisdom Glance
 ]
 
 FACE_COUPON_VIP = 5152057
