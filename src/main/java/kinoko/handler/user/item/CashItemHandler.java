@@ -4,6 +4,7 @@ import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.TrunkPacket;
 import kinoko.packet.user.UserPacket;
+import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MapTransferPacket;
 import kinoko.packet.world.WvsContext;
@@ -487,6 +488,27 @@ public final class CashItemHandler extends ItemHandler {
                     // Update client
                     user.validateStat();
                     user.write(WvsContext.statChanged(statMap, true));
+                }
+                case COLORLENS -> {
+                    // Resolve face
+                    final int face = user.getCharacterStat().getFace();
+                    final int color = (face % 1000) - (face % 100);
+                    final int newFace = (face - color) + ((itemId - 5152100) * 100);
+                    if (ItemProvider.getItemInfo(newFace).isEmpty()) {
+                        log.error("Tried to change use color lens to change to face {} using item ID : {}", newFace, itemId);
+                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
+                        return;
+                    }
+                    // Consume item
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not remove color lens item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    // Change avatar
+                    user.getCharacterStat().setFace(newFace);
+                    user.write(WvsContext.statChanged(Stat.FACE, user.getCharacterStat().getFace(), true));
+                    user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
                 }
                 case null -> {
                     log.error("Unknown cash item type for item ID : {}", item.getItemId());

@@ -34,6 +34,7 @@ import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
+import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
@@ -412,6 +413,41 @@ public final class AdminCommands {
                 user.write(UserLocal.effect(Effect.gainItem(item)));
             } else {
                 user.write(MessagePacket.system("Failed to add item ID %d (%d) to inventory", itemId, quantity));
+            }
+        }
+    }
+
+    @Command("clearinventory")
+    @Arguments("inventory type")
+    public static void clearInventory(User user, String[] args) {
+        final Optional<InventoryType> inventoryTypeResult = Arrays.stream(InventoryType.values())
+                .filter((type) -> type.name().equalsIgnoreCase(args[1]))
+                .findFirst();
+        if (inventoryTypeResult.isEmpty()) {
+            user.write(MessagePacket.system("Please specify a valid inventory type : EQUIP | CONSUME | INSTALL | ETC | CASH"));
+            return;
+        }
+        final InventoryType inventoryType = inventoryTypeResult.get();
+        try (var locked = user.acquire()) {
+            final List<InventoryOperation> removeOperations = new ArrayList<>();
+            final var iter = locked.get().getInventoryManager().getInventoryByType(inventoryType).getItems().entrySet().iterator();
+            while (iter.hasNext()) {
+                final var tuple = iter.next();
+                final int position = tuple.getKey();
+                removeOperations.add(InventoryOperation.delItem(inventoryType, position));
+                iter.remove();
+            }
+            user.write(WvsContext.inventoryOperation(removeOperations, true));
+            user.write(MessagePacket.system("%s inventory cleared!"));
+        }
+    }
+
+    @Command("clearlocker")
+    public static void clearLocker(User user, String[] args) {
+        try (var locked = user.acquire()) {
+            try (var lockedAccount = user.getAccount().acquire()) {
+                user.getAccount().getLocker().getCashItems().clear();
+                user.write(MessagePacket.system("Locker inventory cleared!"));
             }
         }
     }
