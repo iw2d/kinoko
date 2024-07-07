@@ -373,7 +373,7 @@ public final class SkillHandler {
 
         // Skill effects and party handling
         final Field field = user.getField();
-        field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skill.skillId, skill.slv, user.getLevel())), user);
+        field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skill, user.getLevel())), user);
         skill.forEachAffectedMember(user, field, (member) -> {
             try (var lockedMember = member.acquire()) {
                 SkillProcessor.processSkill(lockedMember, skill);

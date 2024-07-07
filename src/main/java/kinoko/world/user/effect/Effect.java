@@ -3,6 +3,9 @@ package kinoko.world.user.effect;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.item.Item;
+import kinoko.world.job.explorer.Thief;
+import kinoko.world.job.resistance.Citizen;
+import kinoko.world.skill.Skill;
 
 public class Effect implements Encodable {
     protected final EffectType type;
@@ -169,6 +172,27 @@ public class Effect implements Encodable {
         final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
+        effect.charLevel = charLevel;
+        return effect;
+    }
+
+    public static SkillEffect skillUse(Skill skill, int charLevel) {
+        final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
+        effect.skillId = skill.skillId;
+        effect.skillLevel = skill.slv;
+        switch (skill.skillId) {
+            case Thief.CHAINS_OF_HELL -> {
+                effect.left = skill.left; // bLeft
+                if (skill.mobIds != null && skill.mobIds.length > 0) {
+                    effect.info = skill.mobIds[0]; // dwMobID
+                }
+            }
+            case Citizen.CALL_OF_THE_HUNTER -> {
+                effect.left = skill.left; // bLeft
+                effect.positionX = skill.positionX; // ptOffset.x
+                effect.positionY = skill.positionY; // ptOffset.x
+            }
+        }
         effect.charLevel = charLevel;
         return effect;
     }

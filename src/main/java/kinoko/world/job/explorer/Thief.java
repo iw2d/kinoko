@@ -274,6 +274,9 @@ public final class Thief extends SkillProcessor {
                     mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL)); // for MobTimeBombEnd check
                 });
                 return;
+            case CHAINS_OF_HELL:
+                // noop
+                return;
         }
         log.error("Unhandled skill {}", skill.skillId);
     }
