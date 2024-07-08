@@ -55,12 +55,11 @@ public final class ScriptDispatcher {
                                 throw new RuntimeException(String.format("Incorrect parameters for script method \"%s\"", method.getName()));
                             }
                             final Script annotation = method.getAnnotation(Script.class);
-                            for (String alias : annotation.value()) {
-                                if (scriptMap.containsKey(alias)) {
-                                    throw new RuntimeException(String.format("Multiple methods found for script name \"%s\"", alias));
-                                }
-                                scriptMap.put(alias, method);
+                            final String scriptName = annotation.value();
+                            if (scriptMap.containsKey(scriptName)) {
+                                throw new RuntimeException(String.format("Multiple methods found for script name \"%s\"", scriptName));
                             }
+                            scriptMap.put(scriptName, method);
                         }
                     }
                 }

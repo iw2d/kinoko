@@ -1,4 +1,4 @@
-package kinoko.script;
+package kinoko.script.quest;
 
 import kinoko.provider.reward.Reward;
 import kinoko.script.common.Script;
@@ -10,51 +10,11 @@ import kinoko.world.user.User;
 import java.util.List;
 import java.util.Map;
 
-public final class MapleIsland extends ScriptHandler {
-    public static final int ROGERS_APPLE = 2010007;
-
-    @Script("glTutoMsg0")
-    public static void glTutoMsg0(ScriptManager sm) {
-        sm.balloonMsg("Once you leave this area you won't be able to return.", 150, 5);
-        sm.dispose();
-    }
-
-    @Script("entertraining")
-    public static void entertraining(ScriptManager sm) {
-        // Maple Road : Entrance to Adventurer Training Center (1010000)
-        //   in00 (74, 154)
-        if (sm.hasQuestStarted(1041)) {
-            sm.playPortalSE();
-            sm.warp(1010100, "out00");
-        } else if (sm.hasQuestStarted(1042)) {
-            sm.playPortalSE();
-            sm.warp(1010200, "out00");
-        } else if (sm.hasQuestStarted(1043)) {
-            sm.playPortalSE();
-            sm.warp(1010300, "out00");
-        } else if (sm.hasQuestStarted(1044)) {
-            sm.playPortalSE();
-            sm.warp(1010400, "out00");
-        } else {
-            sm.message("Only the adventurers that have been trained by Mai may enter.");
-            sm.dispose();
-        }
-    }
-
-    @Script("mBoxItem0")
-    public static void mBoxItem0(ScriptManager sm) {
-        sm.dropRewards(List.of(
-                Reward.money(10, 10, 0.7),
-                Reward.item(2000000, 1, 1, 0.1),
-                Reward.item(2000001, 1, 1, 0.1),
-                Reward.item(2010000, 1, 1, 0.1),
-                Reward.item(4031161, 1, 1, 1.0, 1008), // Rusty Screw
-                Reward.item(4031162, 1, 1, 1.0, 1008) // Old Wooden Board
-        ));
-    }
-
+public final class ExplorerTutorial extends ScriptHandler {
     @Script("begin5")
     public static void begin5(ScriptManager sm) {
+        // Robin (2003)
+        //   Maple Road : Inside the Dangerous Forest (50000)
         final int answer = sm.askMenu("Now...ask me any questions you may have on traveling!!\r\n", Map.ofEntries(
                 Map.entry(0, "How do I move?"),
                 Map.entry(1, "How do I take down the monsters?"),
@@ -138,8 +98,63 @@ public final class MapleIsland extends ScriptHandler {
         }
     }
 
+    @Script("glTutoMsg0")
+    public static void glTutoMsg0(ScriptManager sm) {
+        // Maple Road : Mushroom Park (10000)
+        //   glBmsg0 (987, 430)
+        //   glBmsg1 (1164, 431)
+        // Maple Road : Snail Park (20000)
+        //   glBmsg0 (543, 168)
+        // Maple Road : Snail Garden (30000)
+        //   glBmsg0 (915, 53)
+        sm.balloonMsg("Once you leave this area you won't be able to return.", 150, 5);
+        sm.dispose();
+    }
+
+    @Script("entertraining")
+    public static void entertraining(ScriptManager sm) {
+        // Maple Road : Entrance to Adventurer Training Center (1010000)
+        //   in00 (74, 154)
+        if (sm.hasQuestStarted(1041)) {
+            sm.playPortalSE();
+            sm.warp(1010100, "out00");
+        } else if (sm.hasQuestStarted(1042)) {
+            sm.playPortalSE();
+            sm.warp(1010200, "out00");
+        } else if (sm.hasQuestStarted(1043)) {
+            sm.playPortalSE();
+            sm.warp(1010300, "out00");
+        } else if (sm.hasQuestStarted(1044)) {
+            sm.playPortalSE();
+            sm.warp(1010400, "out00");
+        } else {
+            sm.message("Only the adventurers that have been trained by Mai may enter.");
+            sm.dispose();
+        }
+    }
+
+    @Script("mBoxItem0")
+    public static void mBoxItem0(ScriptManager sm) {
+        // mBoxItem0 (2000)
+        //   Orbis : Top of the Hill (200000300)
+        // mBoxItem0 (2001)
+        //   Rainbow Street : Amherst (1000000)
+        //   Rainbow Street : Amherst Townstreet (1000002)
+        // mBoxItem0 (9008000)
+        // mBoxItem0 (9008001)
+        sm.dropRewards(List.of(
+                Reward.money(10, 10, 0.7),
+                Reward.item(2000000, 1, 1, 0.1),
+                Reward.item(2000001, 1, 1, 0.1),
+                Reward.item(2010000, 1, 1, 0.1),
+                Reward.item(4031161, 1, 1, 1.0, 1008), // Rusty Screw
+                Reward.item(4031162, 1, 1, 1.0, 1008) // Old Wooden Board
+        ));
+    }
+
     @Script("q1021s")
     public static void q1021s(ScriptManager sm) {
+        // Roger's Apple (1021 - start)
         final User user = sm.getUser();
         sm.sayNext("Hey, " + (user.getGender() == 0 ? "Man" : "Miss") + "~ What's up? Haha! I am Roger who teaches you new travellers with lots of information.");
         sm.sayBoth("You are asking who made me do this? Ahahahaha! Myself! I wanted to do this and just be kind to you new travellers.");
@@ -149,7 +164,7 @@ public final class MapleIsland extends ScriptHandler {
         user.setHp(25);
         sm.sayNext("Surprised? If HP becomes 0, then you are in trouble. Now, I will give you  #rRoger's Apple#k. Please take it. You will feel stronger. Open the item window and double click to consume. Hey, It's very simple to open the item window. Just press #bI#k on your keyboard.");
         sm.sayBoth("Please take all Roger's Apples that I gave you. You will be able to see the HP bar increasing right away. Please talk to me again when you recover your HP 100%.");
-        if (!sm.hasItem(ROGERS_APPLE, 1) && !sm.addItem(ROGERS_APPLE, 1)) {
+        if (!sm.hasItem(2010007, 1) && !sm.addItem(2010007, 1)) {
             sm.sayNext("Please check if your inventory is full or not.");
             return;
         }
@@ -159,6 +174,7 @@ public final class MapleIsland extends ScriptHandler {
 
     @Script("q1021e")
     public static void q1021e(ScriptManager sm) {
+        // Roger's Apple (1021 - end)
         final User user = sm.getUser();
         if (user.getHp() < user.getMaxHp()) {
             sm.sayNext("Hey, your HP is not fully recovered yet. Did you take all the Roger's Apple that I gave you? Are you sure?");

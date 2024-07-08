@@ -56,8 +56,31 @@ public final class UnityPortal extends ScriptHandler {
         sm.warp(fallbackMapId, fallbackPortalName);
     }
 
-    @Script({ "unityPortal", "unityPortal2" })
+    @Script("unityPortal")
     public static void unityPortal(ScriptManager sm) {
+        // Dimensional Mirror : Multi-Functional Portal (9010022)
+        //   Henesys : Henesys (100000000)
+        //   Ellinia : Ellinia (101000000)
+        //   Perion : Perion (102000000)
+        //   Kerning City : Kerning City (103000000)
+        //   Sleepywood : Sleepywood (105000000)
+        //   Dungeon : Sleepywood (105040300)
+        //   Nautilus : Nautilus Harbor (120000000)
+        //   Orbis : Orbis Park (200000200)
+        //   El Nath : El Nath (211000000)
+        //   Ludibrium : Ludibrium (220000000)
+        //   Omega Sector : Omega Sector (221000000)
+        //   Korean Folk Town : Korean Folk Town (222000000)
+        //   Aquarium : Aquarium (230000000)
+        //   Leafre : Leafre (240000000)
+        //   Mu Lung : Mu Lung (250000000)
+        //   Herb Town : Herb Town (251000000)
+        //   The Burning Road : Ariant (260000000)
+        //   Sunset Road : Magatia (261000000)
+        //   Black Wing Territory : Edelstein (310000000)
+        //   Singapore : CBD (540000000)
+        //   New Leaf City : NLC Town Center (600000000)
+        //   Zipangu : Mushroom Shrine (800000000)
         final Map<Integer, String> options = new HashMap<>();
         options.put(0, "Ariant Coliseum");
         options.put(1, "Mu Lung Dojo");
@@ -176,5 +199,48 @@ public final class UnityPortal extends ScriptHandler {
                 }
             }
         }
+    }
+
+    @Script("unityPortal2")
+    public static void unityPortal2(ScriptManager sm) {
+        // Henesys : Henesys (100000000)
+        //   unityPortal2 (2453, 331)
+        // Ellinia : Ellinia (101000000)
+        //   unityPortal2 (-169, 357)
+        // Perion : Perion (102000000)
+        //   unityPortal2 (2071, 1723)
+        // Kerning City : Kerning City (103000000)
+        //   unityPortal2 (-2140, -53)
+        // Sleepywood : Sleepywood (105000000)
+        //   unityPortal2 (1297, -166)
+        // Dungeon : Sleepywood (105040300)
+        //   unityPortal2 (1291, -161)
+        // Nautilus : Nautilus Harbor (120000000)
+        //   unityPortal2 (3855, 10)
+        // Orbis : Orbis Park (200000200)
+        //   unityPortal2 (-241, 139)
+        // El Nath : El Nath (211000000)
+        //   unityPortal2 (-1088, 93)
+        // Ludibrium : Ludibrium (220000000)
+        //   unityPortal2 (2305, -315)
+        // Omega Sector : Omega Sector (221000000)
+        //   unityPortal2 (3725, 160)
+        // Korean Folk Town : Korean Folk Town (222000000)
+        //   unityPortal2 (2566, -208)
+        // Aquarium : Aquarium (230000000)
+        //   unityPortal2 (-43, -82)
+        // Leafre : Leafre (240000000)
+        //   unityPortal2 (-409, 88)
+        // Mu Lung : Mu Lung (250000000)
+        //   unityPortal2 (889, -551)
+        // Herb Town : Herb Town (251000000)
+        //   unityPortal2 (-129, 236)
+        // The Burning Road : Ariant (260000000)
+        //   unityPortal2 (-1100, 271)
+        // Sunset Road : Magatia (261000000)
+        //   unityPortal2 (769, -171)
+        // Black Wing Territory : Edelstein (310000000)
+        //   unityPortal2 (-95, 587)
+        unityPortal(sm);
     }
 }

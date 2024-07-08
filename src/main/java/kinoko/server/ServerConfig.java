@@ -14,7 +14,6 @@ public final class ServerConfig {
     public static final boolean REQUIRE_SECONDARY_PASSWORD = true;
     public static final String WZ_DIRECTORY = "wz";
     public static final String DATA_DIRECTORY = "data";
-    public static final String SCRIPT_DIRECTORY = "scripts";
 
     public static final int CHARACTER_BASE_SLOTS = 3;
     public static final int INVENTORY_BASE_SLOTS = 24;

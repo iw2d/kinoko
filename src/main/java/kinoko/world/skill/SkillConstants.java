@@ -232,6 +232,7 @@ public final class SkillConstants {
             return true;
         }
         switch (skillId) {
+            case Thief.TORNADO_SPIN_ATTACK:
             case Thief.CHAINS_OF_HELL:
             case BattleMage.TWISTER_SPIN:
             case Mechanic.MECH_SIEGE_MODE:

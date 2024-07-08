@@ -14,5 +14,5 @@ public @interface Script {
      *
      * @return an array of the script aliases that can be used to reference the script.
      */
-    String[] value();
+    String value();
 }
