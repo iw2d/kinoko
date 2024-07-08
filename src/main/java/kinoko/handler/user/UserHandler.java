@@ -12,6 +12,9 @@ import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.script.common.ScriptAnswer;
+import kinoko.script.common.ScriptDispatcher;
+import kinoko.script.common.ScriptMessageType;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.*;
 import kinoko.server.command.CommandProcessor;
@@ -29,10 +32,6 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.party.PartyRequestType;
 import kinoko.server.party.PartyResultType;
-import kinoko.server.script.ScriptAnswer;
-import kinoko.server.script.ScriptDispatcher;
-import kinoko.server.script.ScriptManager;
-import kinoko.server.script.ScriptMessageType;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
@@ -211,33 +210,32 @@ public final class UserHandler {
                 log.error("Received UserScriptMessageAnswer without an associated script dialog");
                 return;
             }
-            final ScriptManager scriptManager = scriptDialog.getScriptManager();
             switch (lastMessageType) {
                 case SAY, SAYIMAGE, ASKYESNO, ASKACCEPT -> {
-                    scriptManager.submitAnswer(ScriptAnswer.withAction(action));
+                    scriptDialog.submitAnswer(ScriptAnswer.withAction(action));
                 }
                 case ASKTEXT, ASKBOXTEXT -> {
                     if (action == 1) {
                         final String answer = inPacket.decodeString(); // sInputStr_Result
-                        scriptManager.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
+                        scriptDialog.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
                     } else {
-                        scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                        scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
                     }
                 }
                 case ASKNUMBER, ASKMENU, ASKSLIDEMENU -> {
                     if (action == 1) {
                         final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
-                        scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                        scriptDialog.submitAnswer(ScriptAnswer.withAnswer(action, answer));
                     } else {
-                        scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                        scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
                     }
                 }
                 case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
                     if (action == 1) {
                         final byte answer = inPacket.decodeByte(); // nAvatarIndex
-                        scriptManager.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                        scriptDialog.submitAnswer(ScriptAnswer.withAnswer(action, answer));
                     } else {
-                        scriptManager.submitAnswer(ScriptAnswer.withAction(-1));
+                        scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
                     }
                 }
                 default -> {

@@ -1,19 +1,24 @@
 package kinoko.server.dialog;
 
-import kinoko.server.script.ScriptManager;
+import kinoko.script.common.ScriptAnswer;
+import kinoko.script.common.ScriptManagerImpl;
 
 public final class ScriptDialog implements Dialog {
-    private final ScriptManager scriptManager;
+    private final ScriptManagerImpl scriptManager;
 
-    public ScriptDialog(ScriptManager scriptManager) {
+    public ScriptDialog(ScriptManagerImpl scriptManager) {
         this.scriptManager = scriptManager;
     }
 
-    public ScriptManager getScriptManager() {
-        return scriptManager;
+    public void submitAnswer(ScriptAnswer answer) {
+        scriptManager.submitAnswer(answer);
     }
 
-    public static ScriptDialog from(ScriptManager scriptManager) {
+    public void close() {
+        scriptManager.close();
+    }
+
+    public static ScriptDialog from(ScriptManagerImpl scriptManager) {
         return new ScriptDialog(scriptManager);
     }
 }

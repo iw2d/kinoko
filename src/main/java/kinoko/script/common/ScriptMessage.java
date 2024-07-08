@@ -1,4 +1,4 @@
-package kinoko.server.script;
+package kinoko.script.common;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;

@@ -10,7 +10,6 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.server.script.ScriptDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,10 +37,10 @@ final class ScriptHelper {
         final Map<String, Path> scriptFiles = new HashMap<>();
         try (final Stream<Path> stream = Files.walk(Path.of(ServerConfig.SCRIPT_DIRECTORY))) {
             for (Path path : stream.toList()) {
-                if (!Files.isRegularFile(path) || !path.toString().endsWith(ScriptDispatcher.SCRIPT_EXTENSION)) {
+                if (!Files.isRegularFile(path) || !path.toString().endsWith(".py")) {
                     continue;
                 }
-                final String scriptName = path.getFileName().toString().replace(ScriptDispatcher.SCRIPT_EXTENSION, "");
+                final String scriptName = path.getFileName().toString().replace(".py", "");
                 if (scriptFiles.containsKey(scriptName)) {
                     throw new RuntimeException("Duplicate script : " + path);
                 }

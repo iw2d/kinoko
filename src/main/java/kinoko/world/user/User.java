@@ -206,7 +206,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void closeDialog() {
         if (getDialog() instanceof ScriptDialog scriptDialog) {
-            scriptDialog.getScriptManager().dispose();
+            scriptDialog.close();
         } else if (getDialog() instanceof TradingRoom tradingRoom) {
             tradingRoom.cancelTradeUnsafe(this);
         } else if (getDialog() instanceof MiniGameRoom miniGameRoom) {

@@ -30,7 +30,6 @@ import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
-import org.graalvm.collections.Pair;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -339,12 +338,12 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (isStealUsed()) {
             return;
         }
-        final Set<Pair<Drop, Reward>> stealItems = new HashSet<>();
+        final Set<Tuple<Drop, Reward>> stealItems = new HashSet<>();
         for (Reward reward : rewards) {
             final Optional<Drop> dropResult = createDrop(attacker, reward);
             dropResult.ifPresent((drop) -> new Tuple<>(drop, reward));
         }
-        final Optional<Pair<Drop, Reward>> stealResult = Util.getRandomFromCollection(stealItems);
+        final Optional<Tuple<Drop, Reward>> stealResult = Util.getRandomFromCollection(stealItems);
         if (stealResult.isPresent()) {
             getField().getDropPool().addDrop(stealResult.get().getLeft(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
             rewards.remove(stealResult.get().getRight());

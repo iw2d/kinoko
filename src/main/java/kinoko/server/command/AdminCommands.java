@@ -19,10 +19,10 @@ import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.provider.skill.SkillStringInfo;
+import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashShop;
 import kinoko.server.cashshop.Commodity;
-import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.BitFlag;
 import kinoko.util.Rect;
 import kinoko.util.Util;
@@ -50,13 +50,13 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.*;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
+        CommandProcessor.initialize();
         user.dispose();
     }
 
@@ -65,6 +65,13 @@ public final class AdminCommands {
         user.closeDialog();
         user.dispose();
         user.write(MessagePacket.system("You have been disposed."));
+    }
+
+    @Command("dispose2")
+    public static void dispose2(User user, String[] args) {
+        user.closeDialog();
+        user.dispose();
+        user.write(MessagePacket.system("You have been disposed twice."));
     }
 
     @Command("info")
@@ -734,14 +741,26 @@ public final class AdminCommands {
     }
 
     @Command({ "questex", "qr" })
-    @Arguments({ "quest ID", "QR value" })
+    @Arguments("quest ID")
     public static void questex(User user, String[] args) {
         final int questId = Integer.parseInt(args[1]);
-        final String infoValue = args[2];
+        final String newValue;
+        if (args.length > 2) {
+            newValue = args[2];
+        } else {
+            newValue = null;
+        }
         try (var locked = user.acquire()) {
-            final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, infoValue);
-            user.write(MessagePacket.questRecord(qr));
-            user.validateStat();
+            if (newValue == null) {
+                final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+                final String value = questRecordResult.map(QuestRecord::getValue).orElse("");
+                user.write(MessagePacket.system("Get QR value for quest ID %d : %s", questId, value));
+            } else {
+                final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, newValue);
+                user.write(MessagePacket.questRecord(qr));
+                user.validateStat();
+                user.write(MessagePacket.system("Set QR value for quest ID %d : %s", questId, newValue));
+            }
         }
     }
 
@@ -900,23 +919,6 @@ public final class AdminCommands {
             }
             final Method method = commandResult.get();
             user.write(MessagePacket.system("Syntax : %s", CommandProcessor.getHelpString(method)));
-        }
-    }
-
-    @Command("reloaddrops")
-    public static void reloadDrops(User user, String[] args) {
-        RewardProvider.initialize();
-        user.write(MessagePacket.system("Reloaded all drops."));
-    }
-
-    @Command("reloadscripts")
-    public static void reloadScripts(User user, String[] args) {
-        try {
-            ScriptDispatcher.loadSourceMap();
-            user.write(MessagePacket.system("Reloaded all scripts."));
-        } catch (IOException exception) {
-            user.write(MessagePacket.system("Failed to reload scripts."));
-            exception.printStackTrace();
         }
     }
 }

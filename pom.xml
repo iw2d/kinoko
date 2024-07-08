@@ -17,7 +17,6 @@
 
         <netty.version>4.1.100.Final</netty.version>
         <driver.version>4.17.0</driver.version>
-        <graalvm.version>23.1.1</graalvm.version>
         <slfj4.version>2.0.9</slfj4.version>
         <log4j.version>2.20.0</log4j.version>
         <junit.version>5.10.0</junit.version>
@@ -38,17 +37,6 @@
             <groupId>com.datastax.oss</groupId>
             <artifactId>java-driver-query-builder</artifactId>
             <version>${driver.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.polyglot</groupId>
-            <artifactId>polyglot</artifactId>
-            <version>${graalvm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.polyglot</groupId>
-            <artifactId>python-community</artifactId>
-            <version>${graalvm.version}</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.snakeyaml</groupId>

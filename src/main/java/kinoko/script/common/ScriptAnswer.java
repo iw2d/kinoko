@@ -1,4 +1,4 @@
-package kinoko.server.script;
+package kinoko.script.common;
 
 public final class ScriptAnswer {
     private final int action;

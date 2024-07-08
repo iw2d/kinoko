@@ -1,12 +1,12 @@
 package kinoko.packet.field;
 
 import kinoko.provider.map.FieldType;
+import kinoko.script.common.ScriptMessage;
 import kinoko.server.cashshop.CashItemResultType;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.shop.ShopResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.server.script.ScriptMessage;
 import kinoko.world.GameConstants;
 import kinoko.world.field.OpenGate;
 import kinoko.world.field.affectedarea.AffectedArea;

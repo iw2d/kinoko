@@ -1,4 +1,4 @@
-package kinoko.server.script;
+package kinoko.script.common;
 
 import java.util.Set;
 

@@ -54,6 +54,10 @@ public final class Reward {
                 '}';
     }
 
+    public static Reward item(int itemId, int min, int max, double prob) {
+        return new Reward(itemId, min, max, prob, 0);
+    }
+
     public static Reward item(int itemId, int min, int max, double prob, int questId) {
         return new Reward(itemId, min, max, prob, questId);
     }

@@ -2,11 +2,11 @@ package kinoko.server;
 
 import kinoko.database.DatabaseManager;
 import kinoko.provider.*;
+import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
-import kinoko.server.script.ScriptDispatcher;
 import kinoko.util.crypto.MapleCrypto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

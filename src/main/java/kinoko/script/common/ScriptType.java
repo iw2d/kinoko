@@ -1,10 +1,10 @@
-package kinoko.server.script;
+package kinoko.script.common;
 
 /**
  * Enum for classifying scripts that can run in parallel.
  */
 public enum ScriptType {
-    NPC,                // npc, item
+    NPC,                // npc scripts
     ITEM,               // item scripts
     QUEST,              // quest scripts
     PORTAL,             // portal scripts
