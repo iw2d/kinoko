@@ -72,6 +72,15 @@ public final class Drop extends FieldObjectImpl {
         return source instanceof User;
     }
 
+    public boolean canPickUp(User user) {
+        // CDropPool::TryPickUpDrop, CDropPool::TryPickUpDropByPet
+        if ((ownType == DropOwnType.USEROWN && ownerId != user.getCharacterId()) ||
+                (ownType == DropOwnType.PARTYOWN && ownerId != user.getPartyId())) {
+            return createTime.plus(GameConstants.DROP_OWNERSHIP_EXPIRE_TIME, ChronoUnit.SECONDS).isBefore(Instant.now());
+        }
+        return true;
+    }
+
     public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId) {
         return item(ownType, source, item, ownerId, 0);
     }

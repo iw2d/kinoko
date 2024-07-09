@@ -58,7 +58,14 @@ public final class FieldHandler {
             user.dispose();
             return;
         }
-        final Drop drop = dropResult.get(); // TODO : check owner and ownership expiry
+        final Drop drop = dropResult.get();
+
+        // Verify user can pick up drop
+        if (!drop.canPickUp(user)) {
+            log.error("Tried to pick up drop not owned by user");
+            user.dispose();
+            return;
+        }
 
         try (var locked = user.acquire()) {
             // Check if drop can be added to inventory
