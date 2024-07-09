@@ -1200,13 +1200,109 @@ public final class StyleHair extends ScriptHandler {
     public static void NLC_HairVip(ScriptManager sm) {
         // Mani : Lead Hair Stylist (9201064)
         //   New Leaf City : NLC Mall (600000001)
-        sm.sayNext("TODO"); // TODO
+        final List<Integer> vipHairM = List.of(
+                30250, // Black Afro
+                30870, // Black Hector Hair
+                30490, // Black Messy Spike
+                30730, // Black Roving Rockstar
+                33050, // Black Spiky Shag
+                33100, // Black The Coco
+                30880 // Black Unbalanced
+        );
+        final List<Integer> vipHairF = List.of(
+                31830, // Black Eye-skimming Bang
+                31450, // Black Fluffy Dolly
+                34130, // Black Low Cut Bob
+                34220, // Black Messy Pigtails
+                31730, // Black Model's Ambition
+                31320, // Black Roxy
+                31560 // Black Sunflower Power
+        );
+        final int answer = sm.askMenu("I'm the head of this hair salon Mani. If you have a #b#t5150053##k or a #b#t5151036##k allow me to take care of your hairdo. Please choose the one you want.", Map.of(
+                0, "Change hairstyle (VIP coupon)",
+                1, "Dye your hair (VIP coupon)"
+        ));
+        if (answer == 0) {
+            final List<Integer> hairOptions = getHairOptions(sm.getUser(), vipHairM, vipHairF);
+            final int hairAnswer = sm.askAvatar("I can totally change up your hairstyle and make it look so good. Why don't you change it up a bit? With #b#t5150053##k I'll change it for you. Choose the one to your liking~", hairOptions);
+            if (hairAnswer >= 0 && hairAnswer < hairOptions.size()) {
+                if (sm.removeItem(HAIR_STYLE_COUPON_VIP, 1)) {
+                    sm.setAvatar(hairOptions.get(hairAnswer));
+                    sm.sayNext("Check it out!! What do you think? Even I think this one is a work of art! AHAHAHA. Please let me know when you want to change your hairstyle again, because I'll make you look good each time!");
+                } else {
+                    sm.sayNext("Hmmm...it looks like you don't have our designated coupon...I'm afraid I can't give you a haircut without it. I'm sorry...");
+                }
+            }
+        } else if (answer == 1) {
+            final List<Integer> colorOptions = getColorOptions(sm.getUser());
+            final int colorAnswer = sm.askAvatar("I can totally dye your hair and make it look so good. Why don't you change it up a bit? With #b#t5151036##k I'll change it for you. Choose the one to your liking~", colorOptions);
+            if (colorAnswer >= 0 && colorAnswer < colorOptions.size()) {
+                if (sm.removeItem(HAIR_COLOR_COUPON_VIP, 1)) {
+                    sm.setAvatar(colorOptions.get(colorAnswer));
+                    sm.sayNext("Check it out!! What do you think? Even I think this one is a work of art! AHAHAHA. Please let me know when you want to dye your hair again, because I'll make you look good each time!");
+                } else {
+                    sm.sayNext("Hmmm...it looks like you don't have our designated coupon...I'm afraid I can't dye your hair without it. I'm sorry...");
+                }
+            }
+        }
     }
 
     @Script("NLC_HairExp")
     public static void NLC_HairExp(ScriptManager sm) {
         // Ari : Hair Salon Assistant (9201063)
         //   New Leaf City : NLC Mall (600000001)
-        sm.sayNext("TODO"); // TODO
+        final List<Integer> regHairM = List.of(
+                30250, // Black Afro
+                30820, // Black Alex
+                31990, // Black Evan Hair (M)
+                30440, // Black Fury
+                30870, // Black Hector Hair
+                30490, // Black Messy Spike
+                30730, // Black Roving Rockstar
+                33050, // Black Spiky Shag
+                33100, // Black The Coco
+                30400, // Black Tribal Fuzz
+                30880 // Black Unbalanced
+        );
+        final List<Integer> regHairF = List.of(
+                31690, // Black Demolishing Diva
+                31830, // Black Eye-skimming Bang
+                33150, // Black Evan Hair (F)
+                31450, // Black Fluffy Dolly
+                34130, // Black Low Cut Bob
+                31570, // Black Maiden's Weave
+                34220, // Black Messy Pigtails
+                31730, // Black Model's Ambition
+                31320, // Black Roxy
+                31720, // Black Streaky Siren
+                31560 // Black Sunflower Power
+        );
+        final int answer = sm.askMenu("I'm Ari the assistant. If you have a #b#t5150052##k or #b#t5151035##k by any chance, then how about letting me change your hairdo?", Map.of(
+                0, "Change hairstyle (REG coupon)",
+                1, "Dye your hair (REG coupon)"
+        ));
+        if (answer == 0) {
+            if (sm.askYesNo("If you use the REG coupon your hair will change RANDOMLY with a chance to obtain a new experimental style that I came up with. Are you going to use #b#t5150052##k and really change your hairstyle?")) {
+                if (sm.removeItem(HAIR_STYLE_COUPON_REG, 1)) {
+                    final List<Integer> hairOptions = getHairOptions(sm.getUser(), regHairM, regHairF);
+                    final int hair = Util.getRandomFromCollection(hairOptions).orElseThrow();
+                    sm.setAvatar(hair);
+                    sm.sayNext("Enjoy your new and improved hairstyle!");
+                } else {
+                    sm.sayNext("Hmmm...it looks like you don't have our designated coupon...I'm afraid I can't give you a haircut without it. I'm sorry...");
+                }
+            }
+        } else if (answer == 1) {
+            if (sm.askYesNo("If you use the REG coupon your hair will change to a RANDOM new color. Are you going to use #b#t5151035##k and really change your hair color?")) {
+                if (sm.removeItem(HAIR_COLOR_COUPON_REG, 1)) {
+                    final List<Integer> colorOptions = getColorOptions(sm.getUser());
+                    final int hair = Util.getRandomFromCollection(colorOptions).orElseThrow();
+                    sm.setAvatar(hair);
+                    sm.sayNext("Enjoy your new and improved hairstyle!");
+                } else {
+                    sm.sayNext("Hmmm...it looks like you don't have our designated coupon...I'm afraid I can't dye your hair without it. I'm sorry...");
+                }
+            }
+        }
     }
 }
