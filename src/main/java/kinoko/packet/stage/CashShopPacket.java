@@ -3,6 +3,7 @@ package kinoko.packet.stage;
 import kinoko.server.cashshop.*;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Tuple;
 import kinoko.world.item.InventoryType;
 import kinoko.world.item.Item;
 import kinoko.world.user.Account;
@@ -161,6 +162,18 @@ public final class CashShopPacket {
         final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
         outPacket.encodeByte(CashItemResultType.MoveStoL_Done.getValue());
         cashItemInfo.encode(outPacket); // GW_CashItemInfo (55)
+        return outPacket;
+    }
+
+    public static OutPacket buyNormalDone(List<Tuple<Integer, Integer>> updates) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
+        outPacket.encodeByte(CashItemResultType.BuyNormal_Done.getValue());
+        outPacket.encodeInt(updates.size());
+        for (var tuple : updates) {
+            outPacket.encodeShort(0);
+            outPacket.encodeShort(tuple.getLeft()); // nPos
+            outPacket.encodeInt(tuple.getRight()); // nItemID
+        }
         return outPacket;
     }
 

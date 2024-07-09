@@ -4,6 +4,9 @@ import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.world.MemoPacket;
+import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.server.cashshop.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
@@ -51,19 +54,19 @@ public final class CashShopHandler {
                 // Resolve Commodity and create CashItemInfo
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
                 if (commodityResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not resolve commodity with ID : {}", commodityId);
                     return;
                 }
                 final Commodity commodity = commodityResult.get();
                 if (!commodity.isOnSale()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Tried to buy commodity ID : {}, which is not available for purchase", commodity.getCommodityId());
                     return;
                 }
                 final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
                 if (cashItemInfoResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not create cash item info for commodity ID : {}, item ID : {}", commodityId, commodity.getItemId());
                     return;
                 }
@@ -125,19 +128,19 @@ public final class CashShopHandler {
                 // Resolve Commodity and create Gift
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
                 if (commodityResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not resolve commodity with ID : {}", commodityId);
                     return;
                 }
                 final Commodity commodity = commodityResult.get();
                 if (!commodity.isOnSale()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Tried to gift commodity ID : {}, which is not available for purchase", commodity.getCommodityId());
                     return;
                 }
                 final Optional<Gift> giftResult = commodity.createGift(user, giftMessage);
                 if (giftResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not create gift for commodity ID : {}, item ID : {}", commodityId, commodity.getItemId());
                     return;
                 }
@@ -153,7 +156,7 @@ public final class CashShopHandler {
 
                     // Record gift in DB and deduct nx credit
                     if (!DatabaseManager.giftAccessor().newGift(gift, receiverCharacterId)) {
-                        user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         return;
                     }
                     account.setNxPrepaid(account.getNxPrepaid() - commodity.getPrice());
@@ -166,7 +169,7 @@ public final class CashShopHandler {
                 // Create memo
                 final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
                 if (memoIdResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;
                 }
                 final Memo memo = new Memo(
@@ -179,7 +182,7 @@ public final class CashShopHandler {
 
                 // Save memo and update client
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {
-                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                 }
 
                 // Notify memo recipient
@@ -212,7 +215,7 @@ public final class CashShopHandler {
                         // Check inventory type
                         final InventoryType inventoryType = InventoryType.getByValue(inPacket.decodeByte()); // nTI
                         if (inventoryType == null || inventoryType == InventoryType.EQUIPPED) {
-                            user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                             return;
                         }
                         handleIncSlotCount(user, inventoryType, 4, paymentType, CashShop.ADD_4_SLOTS_PRICE);
@@ -224,7 +227,7 @@ public final class CashShopHandler {
                     final int commodityId = inPacket.decodeInt(); // nCommSN
                     final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
                     if (commodityResult.isEmpty()) {
-                        user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         log.error("Could not resolve commodity with ID : {}", commodityId);
                         return;
                     }
@@ -246,7 +249,7 @@ public final class CashShopHandler {
                             handleIncSlotCount(user, InventoryType.ETC, 8, paymentType, commodity.getPrice());
                         }
                         default -> {
-                            user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                             log.error("Tried to increase slot count with item ID : {}", commodity.getItemId());
                         }
                     }
@@ -261,13 +264,13 @@ public final class CashShopHandler {
                 // Resolve and verify commodity
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
                 if (commodityResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.IncCharSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.IncCharSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not resolve commodity with ID : {}", commodityId);
                     return;
                 }
                 final Commodity commodity = commodityResult.get();
                 if (commodity.getItemId() != CashShop.ADD_CHAR_SLOTS) {
-                    user.write(CashShopPacket.fail(CashItemResultType.IncCharSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.IncCharSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Tried to increase char slot count with item ID : {}", commodity.getItemId());
                     return;
                 }
@@ -276,7 +279,7 @@ public final class CashShopHandler {
                     final Account account = lockedAccount.get();
                     final int newSize = account.getSlotCount() + 1;
                     if (newSize > GameConstants.CHARACTER_SLOT_MAX) {
-                        user.write(CashShopPacket.fail(CashItemResultType.IncCharSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.IncCharSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         log.error("Tried to increase char slot count over maximum number");
                         return;
                     }
@@ -299,13 +302,13 @@ public final class CashShopHandler {
                 // Resolve and verify commodity
                 final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
                 if (commodityResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.EnableEquipSlotExt_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.EnableEquipSlotExt_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not resolve commodity with ID : {}", commodityId);
                     return;
                 }
                 final Commodity commodity = commodityResult.get();
                 if (commodity.getItemId() != CashShop.EQUIP_SLOT_EXT_30_DAYS && commodity.getItemId() != CashShop.EQUIP_SLOT_EXT_7_days) {
-                    user.write(CashShopPacket.fail(CashItemResultType.EnableEquipSlotExt_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.EnableEquipSlotExt_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Tried to enable equip slot ext with item ID : {}", commodity.getItemId());
                 }
 
@@ -337,7 +340,7 @@ public final class CashShopHandler {
 
                 // Verify inventory type
                 if (inventoryType == null || inventoryType == InventoryType.EQUIPPED) {
-                    user.write(CashShopPacket.fail(CashItemResultType.MoveLtoS_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.MoveLtoS_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;
                 }
                 try (var locked = user.acquire()) {
@@ -345,7 +348,7 @@ public final class CashShopHandler {
                     final InventoryManager im = user.getInventoryManager();
                     final Inventory inventory = im.getInventoryByType(inventoryType);
                     if (inventory.getItem(position) != null) {
-                        user.write(CashShopPacket.fail(CashItemResultType.MoveLtoS_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.MoveLtoS_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         log.error("Tried to move locker item to {} inventory position {} which was not empty", inventoryType.name(), position);
                         return;
                     }
@@ -363,7 +366,7 @@ public final class CashShopHandler {
                             }
                         }
                         if (removed == null) {
-                            user.write(CashShopPacket.fail(CashItemResultType.MoveLtoS_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            user.write(CashShopPacket.fail(CashItemResultType.MoveLtoS_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                             log.error("Could not resolve cash item in locker with sn : {}", itemSn);
                             return;
                         }
@@ -380,14 +383,14 @@ public final class CashShopHandler {
 
                 // Verify inventory type
                 if (inventoryType == null || inventoryType == InventoryType.EQUIPPED) {
-                    user.write(CashShopPacket.fail(CashItemResultType.MoveStoL_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.MoveStoL_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;
                 }
                 try (var lockedAccount = user.getAccount().acquire()) {
                     // Verify locker size
                     final Locker locker = lockedAccount.get().getLocker();
                     if (locker.getRemaining() < 1) {
-                        user.write(CashShopPacket.fail(CashItemResultType.MoveStoL_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.MoveStoL_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         return;
                     }
                     try (var locked = user.acquire()) {
@@ -405,7 +408,7 @@ public final class CashShopHandler {
                             }
                         }
                         if (removed == null) {
-                            user.write(CashShopPacket.fail(CashItemResultType.MoveStoL_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                            user.write(CashShopPacket.fail(CashItemResultType.MoveStoL_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                             log.error("Could not resolve cash item in {} inventory with sn : {}", inventoryType.name(), itemSn);
                             return;
                         }
@@ -425,13 +428,13 @@ public final class CashShopHandler {
                 // Resolve package commodity and create CashItemInfos
                 final Optional<Tuple<Commodity, Set<Commodity>>> cashPackageResult = CashShop.getCashPackage(commodityId);
                 if (cashPackageResult.isEmpty()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.BuyPackage_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.BuyPackage_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not resolve cash package commodity with ID : {}", commodityId);
                     return;
                 }
                 final Commodity packageCommodity = cashPackageResult.get().getLeft();
                 if (!packageCommodity.isOnSale()) {
-                    user.write(CashShopPacket.fail(CashItemResultType.BuyPackage_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                    user.write(CashShopPacket.fail(CashItemResultType.BuyPackage_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Tried to buy package commodity ID : {}, which is not available for purchase", packageCommodity.getCommodityId());
                     return;
                 }
@@ -440,7 +443,7 @@ public final class CashShopHandler {
                 for (Commodity commodity : packageContents) {
                     final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
                     if (cashItemInfoResult.isEmpty()) {
-                        user.write(CashShopPacket.fail(CashItemResultType.BuyPackage_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                        user.write(CashShopPacket.fail(CashItemResultType.BuyPackage_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         log.error("Could not create cash item info for commodity ID : {}, item ID : {}", commodityId, commodity.getItemId());
                         return;
                     }
@@ -472,8 +475,64 @@ public final class CashShopHandler {
             case BuyNormal -> {
                 // CCashShop::OnBuyNormal
                 final int commodityId = inPacket.decodeInt(); // nCommoditySn
-                user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
-                log.error("Unhandled BUY_NORMAL operation for commodity ID : {}", commodityId);
+                if (commodityId / 10000000 != 8) {
+                    user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                    log.error("Tried to buy commodity ID {} with mesos", commodityId);
+                    return;
+                }
+
+                // Resolve Commodity
+                final Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
+                if (commodityResult.isEmpty()) {
+                    user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                    log.error("Could not resolve commodity with ID : {}", commodityId);
+                    return;
+                }
+                final Commodity commodity = commodityResult.get();
+                if (!commodity.isOnSale()) {
+                    user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                    log.error("Tried to buy commodity ID : {}, which is not available for purchase", commodity.getCommodityId());
+                    return;
+                }
+
+                try (var locked = user.acquire()) {
+                    // Check if user has enough money
+                    final InventoryManager im = locked.get().getInventoryManager();
+                    if (!im.canAddMoney(-commodity.getPrice())) {
+                        user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.NoRemainMeso)); // You do not have enough mesos.
+                        return;
+                    }
+
+                    // Check if user can add item to inventory
+                    if (!im.canAddItem(commodity.getItemId(), 1)) {
+                        user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.NoEmptyPos)); // Please check if your inventory is full or not.
+                        return;
+                    }
+
+                    // Create item
+                    final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(commodity.getItemId());
+                    if (itemInfoResult.isEmpty()) {
+                        user.write(CashShopPacket.fail(CashItemResultType.BuyNormal_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                        return;
+                    }
+                    final Item boughtItem = itemInfoResult.get().createItem(user.getNextItemSn(), 1);
+
+                    // Deduct money and add item to inventory
+                    if (!im.addMoney(-commodity.getPrice())) {
+                        throw new IllegalStateException("Could not deduct price from user");
+                    }
+                    final Optional<List<InventoryOperation>> addResult = im.addItem(boughtItem);
+                    if (addResult.isEmpty()) {
+                        throw new IllegalStateException("Could not add bought item to inventory");
+                    }
+
+                    // Update client
+                    final List<Tuple<Integer, Integer>> updates = addResult.get().stream()
+                            .map((op) -> Tuple.of(op.getPosition(), commodity.getItemId()))
+                            .toList();
+                    user.write(WvsContext.inventoryOperation(addResult.get(), false));
+                    user.write(CashShopPacket.buyNormalDone(updates));
+                }
             }
             case PurchaseRecord -> {
                 // CCashShop::RequestCashPurchaseRecord
@@ -499,7 +558,7 @@ public final class CashShopHandler {
             final Inventory inventory = im.getInventoryByType(inventoryType);
             final int newSize = inventory.getSize() + incSlots;
             if (newSize > GameConstants.INVENTORY_SLOT_MAX) {
-                user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                user.write(CashShopPacket.fail(CashItemResultType.IncSlotCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                 return;
             }
             try (var lockedAccount = user.getAccount().acquire()) {
@@ -523,7 +582,7 @@ public final class CashShopHandler {
             final Trunk trunk = account.getTrunk();
             final int newSize = trunk.getSize() + incSlots;
             if (newSize > GameConstants.TRUNK_SLOT_MAX) {
-                user.write(CashShopPacket.fail(CashItemResultType.IncTrunkCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error%2C\r\nthe request for Cash Shop has failed.
+                user.write(CashShopPacket.fail(CashItemResultType.IncTrunkCount_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                 return;
             }
             // Check payment type and deduct price

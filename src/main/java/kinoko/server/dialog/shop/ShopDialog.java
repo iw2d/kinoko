@@ -70,7 +70,7 @@ public final class ShopDialog implements Dialog {
                     return;
                 }
                 // Check if user can add item to inventory
-                if (im.getInventoryByItemId(itemId).getRemaining() == 0) {
+                if (!im.canAddItem(itemId, count)) {
                     user.write(FieldPacket.shopResult(ShopResultType.BuyUnknown)); // Please check if your inventory is full or not.
                     return;
                 }

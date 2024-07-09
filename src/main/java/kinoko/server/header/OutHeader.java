@@ -535,6 +535,7 @@ public enum OutHeader {
             CharacterInfo,
             PartyResult,
             SetField,
+            SetCashShop,
             StatChanged,
             UserMove,
             PetActivated,
