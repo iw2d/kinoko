@@ -61,6 +61,10 @@ public final class Commodity {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public Optional<CashItemInfo> createCashItemInfo(User user) {
+        return createCashItemInfo(user, "");
+    }
+
+    public Optional<CashItemInfo> createCashItemInfo(User user, String characterName) {
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(getItemId());
         if (itemInfoResult.isEmpty()) {
             return Optional.empty();
@@ -82,7 +86,7 @@ public final class Commodity {
                 getCommodityId(),
                 user.getAccountId(),
                 user.getCharacterId(),
-                ""
+                characterName
         );
         return Optional.of(cashItemInfo);
     }

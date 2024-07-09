@@ -692,9 +692,6 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void logout(boolean disconnect) {
-        if (disconnect && isInTransfer()) {
-            return;
-        }
         // Remove user from field, set spawn portal
         final Field field = getField();
         if (field != null) {

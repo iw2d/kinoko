@@ -1465,7 +1465,7 @@ public final class UserHandler {
                 if (packageResult.isPresent()) {
                     // Cash package
                     for (Commodity commodity : packageResult.get().getRight()) {
-                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user);
+                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user, gift.getSender());
                         if (cashItemInfoResult.isEmpty()) {
                             log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
                             user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
@@ -1475,7 +1475,7 @@ public final class UserHandler {
                     }
                 } else {
                     // Normal gift
-                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user);
+                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user, gift.getSender());
                     if (cashItemInfoResult.isEmpty()) {
                         log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
                         user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.

@@ -15,7 +15,9 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.Gift;
+import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
+import kinoko.server.memo.Memo;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
@@ -25,7 +27,6 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
-import kinoko.world.friend.Friend;
 import kinoko.world.friend.FriendManager;
 import kinoko.world.friend.FriendResultType;
 import kinoko.world.item.*;
@@ -186,12 +187,7 @@ public final class MigrationHandler {
 
             // Load friends from database and central server
             FriendManager.updateFriendsFromDatabase(user);
-            FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done, true); // notify
-
-            // Process friend requests
-            for (Friend friend : user.getFriendManager().getFriendRequests()) {
-                user.write(FriendPacket.invite(friend));
-            }
+            FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done, true);
 
             // Load party from central server
             channelServerNode.submitPartyRequest(user, PartyRequest.loadParty());
@@ -199,10 +195,13 @@ public final class MigrationHandler {
             // Load messenger from central server
             channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
 
-            // Check memos
-            if (DatabaseManager.memoAccessor().hasMemo(user.getCharacterId())) {
-                user.write(MemoPacket.receive());
-            }
+            // Load memos
+            EventScheduler.submit(() -> {
+                final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
+                if (!memos.isEmpty()) {
+                    user.write(MemoPacket.load(memos));
+                }
+            });
         }
     }
 

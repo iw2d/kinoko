@@ -62,7 +62,7 @@ public final class Client extends NettyClient {
                     DatabaseManager.accountAccessor().saveAccount(account);
                 }
             }
-        } else {
+        } else if (!user.isInTransfer()) {
             try (var locked = user.acquire()) {
                 try (var lockedAccount = account.acquire()) {
                     user.logout(true);
