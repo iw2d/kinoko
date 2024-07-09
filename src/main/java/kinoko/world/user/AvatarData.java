@@ -38,7 +38,7 @@ public final class AvatarData implements Encodable {
     }
 
     public static AvatarData from(CharacterStat characterStat, Inventory equipped) {
-        // If when you don't care about the pets
+        // When you don't care about the pets
         return AvatarData.from(characterStat, equipped, EMPTY_INVENTORY);
     }
 

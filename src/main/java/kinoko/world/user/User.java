@@ -35,8 +35,11 @@ import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.user.data.ConfigManager;
+import kinoko.world.user.data.MapTransferInfo;
+import kinoko.world.user.data.MiniGameRecord;
+import kinoko.world.user.data.WildHunterInfo;
 import kinoko.world.user.effect.Effect;
-import kinoko.world.user.info.*;
 import kinoko.world.user.stat.*;
 
 import java.time.Instant;

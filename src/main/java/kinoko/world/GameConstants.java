@@ -2,8 +2,8 @@ package kinoko.world;
 
 import kinoko.util.Tuple;
 import kinoko.world.job.Job;
-import kinoko.world.user.info.FuncKeyMapped;
-import kinoko.world.user.info.FuncKeyType;
+import kinoko.world.user.data.FuncKeyMapped;
+import kinoko.world.user.data.FuncKeyType;
 
 import java.util.Arrays;
 

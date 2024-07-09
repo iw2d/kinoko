@@ -7,7 +7,7 @@ import kinoko.server.migration.TransferInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.user.RemoteUser;
-import kinoko.world.user.info.PartyInfo;
+import kinoko.world.user.PartyInfo;
 
 import java.util.Set;
 

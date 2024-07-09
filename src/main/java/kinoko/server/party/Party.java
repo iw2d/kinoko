@@ -6,7 +6,7 @@ import kinoko.server.user.RemoteUser;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
-import kinoko.world.user.info.PartyInfo;
+import kinoko.world.user.PartyInfo;
 
 import java.util.ArrayList;
 import java.util.List;

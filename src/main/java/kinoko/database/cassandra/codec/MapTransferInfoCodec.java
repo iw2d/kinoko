@@ -8,7 +8,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.MapTransferInfoUDT;
-import kinoko.world.user.info.MapTransferInfo;
+import kinoko.world.user.data.MapTransferInfo;
 
 import java.util.List;
 

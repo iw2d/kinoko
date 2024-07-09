@@ -1,4 +1,4 @@
-package kinoko.world.user.info;
+package kinoko.world.user.data;
 
 public enum FuncKeyType {
     // T

@@ -8,7 +8,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.MiniGameRecordUDT;
-import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.data.MiniGameRecord;
 
 public final class MiniGameRecordCodec extends MappingCodec<UdtValue, MiniGameRecord> {
     public MiniGameRecordCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<MiniGameRecord> outerJavaType) {

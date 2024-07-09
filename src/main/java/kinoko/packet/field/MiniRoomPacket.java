@@ -5,7 +5,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
-import kinoko.world.user.info.MiniGameRecord;
+import kinoko.world.user.data.MiniGameRecord;
 
 import java.util.List;
 

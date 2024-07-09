@@ -2,8 +2,8 @@ package kinoko.packet.world;
 
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.user.info.MapTransferInfo;
-import kinoko.world.user.info.MapTransferResultType;
+import kinoko.world.user.data.MapTransferInfo;
+import kinoko.world.user.data.MapTransferResultType;
 
 public final class MapTransferPacket {
     // CWvsContext::OnMapTransferResult --------------------------------------------------------------------------------

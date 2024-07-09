@@ -8,7 +8,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.WildHunterInfoUDT;
-import kinoko.world.user.info.WildHunterInfo;
+import kinoko.world.user.data.WildHunterInfo;
 
 import java.util.List;
 

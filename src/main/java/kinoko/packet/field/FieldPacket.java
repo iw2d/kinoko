@@ -15,7 +15,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
-import kinoko.world.user.info.FuncKeyMapped;
+import kinoko.world.user.data.FuncKeyMapped;
 
 public final class FieldPacket {
     // CField::OnPacket ------------------------------------------------------------------------------------------------

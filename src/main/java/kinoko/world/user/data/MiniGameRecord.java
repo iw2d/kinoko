@@ -1,4 +1,4 @@
-package kinoko.world.user.info;
+package kinoko.world.user.data;
 
 import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;

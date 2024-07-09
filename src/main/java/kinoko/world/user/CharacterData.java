@@ -14,10 +14,10 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.info.ConfigManager;
-import kinoko.world.user.info.MapTransferInfo;
-import kinoko.world.user.info.MiniGameRecord;
-import kinoko.world.user.info.WildHunterInfo;
+import kinoko.world.user.data.ConfigManager;
+import kinoko.world.user.data.MapTransferInfo;
+import kinoko.world.user.data.MiniGameRecord;
+import kinoko.world.user.data.WildHunterInfo;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Duration;

@@ -9,10 +9,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.ConfigUDT;
 import kinoko.world.GameConstants;
-import kinoko.world.user.info.ConfigManager;
-import kinoko.world.user.info.FuncKeyMapped;
-import kinoko.world.user.info.FuncKeyType;
-import kinoko.world.user.info.SingleMacro;
+import kinoko.world.user.data.ConfigManager;
+import kinoko.world.user.data.FuncKeyMapped;
+import kinoko.world.user.data.FuncKeyType;
+import kinoko.world.user.data.SingleMacro;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
