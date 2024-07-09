@@ -287,19 +287,20 @@ public final class ItemConstants {
         return BodyPart.getByItemId(itemId).contains(bodyPart);
     }
 
-    public static BodyPart getExclusiveEquipItemBodyPart(Inventory equipped, int itemId) {
+    public static BodyPart getExclusiveEquipItemBodyPart(Inventory equipped, int itemId, boolean isCash) {
         // CItemInfo::GetExclusiveEquipItemBodyPart
-        final BodyPart result = getExclusiveWeaponShieldBodyPart(equipped, itemId);
+        final BodyPart result = getExclusiveWeaponShieldBodyPart(equipped, itemId, isCash);
         if (result != null) {
             return result;
         }
-        return getExclusiveClothesBodyPart(equipped, itemId);
+        return getExclusiveClothesBodyPart(equipped, itemId, isCash);
     }
 
-    private static BodyPart getExclusiveWeaponShieldBodyPart(Inventory equipped, int itemId) {
+    private static BodyPart getExclusiveWeaponShieldBodyPart(Inventory equipped, int itemId, boolean isCash) {
         // CItemInfo::GetExclusiveWeaponShieldBodyPart
-        final Item weapon = equipped.getItem(BodyPart.WEAPON.getValue());
-        final Item shield = equipped.getItem(BodyPart.SHIELD.getValue());
+        final int offset = (isCash ? BodyPart.CASH_BASE.getValue() : 0);
+        final Item weapon = equipped.getItem(BodyPart.WEAPON.getValue() + offset);
+        final Item shield = equipped.getItem(BodyPart.SHIELD.getValue() + offset);
         if (itemId / 100000 == 14 && shield != null) {
             return BodyPart.SHIELD;
         }
@@ -309,10 +310,11 @@ public final class ItemConstants {
         return null;
     }
 
-    private static BodyPart getExclusiveClothesBodyPart(Inventory equipped, int itemId) {
+    private static BodyPart getExclusiveClothesBodyPart(Inventory equipped, int itemId, boolean isCash) {
         // CItemInfo::GetExclusiveClothesBodyPart
-        final Item clothes = equipped.getItem(BodyPart.CLOTHES.getValue());
-        final Item pants = equipped.getItem(BodyPart.PANTS.getValue());
+        final int offset = (isCash ? BodyPart.CASH_BASE.getValue() : 0);
+        final Item clothes = equipped.getItem(BodyPart.CLOTHES.getValue() + offset);
+        final Item pants = equipped.getItem(BodyPart.PANTS.getValue() + offset);
         if (itemId / 10000 == 105 && pants != null) {
             return BodyPart.PANTS;
         }

@@ -446,10 +446,10 @@ public final class UserHandler {
                         user.dispose();
                         return;
                     }
-                    final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId());
+                    final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId(), isCash);
                     if (exclusiveBodyPart != null) {
                         // Move exclusive body part equip item to inventory
-                        final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue());
+                        final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue() + (isCash ? BodyPart.CASH_BASE.getValue() : 0));
                         final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(im.getEquipInventory());
                         if (availablePositionResult.isEmpty()) {
                             log.error("No room in inventory remove exclusive equip item body part item ID {} in position {}", exclusiveEquipItem.getItemId(), exclusiveBodyPart);
