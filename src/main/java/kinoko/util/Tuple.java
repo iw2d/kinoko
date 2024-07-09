@@ -36,4 +36,8 @@ public final class Tuple<L, R> {
     public int hashCode() {
         return Objects.hash(left, right);
     }
+
+    public static <L, R> Tuple<L, R> of(L left, R right) {
+        return new Tuple<>(left, right);
+    }
 }

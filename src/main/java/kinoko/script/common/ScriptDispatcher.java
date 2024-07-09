@@ -109,7 +109,7 @@ public final class ScriptDispatcher {
         final Method handler = scriptMap.get(scriptName);
         if (handler == null) {
             log.error("Could not resolve {} script file : {}", scriptType, scriptName);
-            if (scriptType == ScriptType.PORTAL) {
+            if (scriptType == ScriptType.ITEM || scriptType == ScriptType.PORTAL) {
                 user.dispose();
             }
             return;
@@ -128,6 +128,10 @@ public final class ScriptDispatcher {
                 }
             } finally {
                 user.unlock();
+                // Dispose after item scripts, and portal scripts if not warped
+                if (scriptType == ScriptType.ITEM || (scriptType == ScriptType.PORTAL && user.getFieldId() == field.getFieldId())) {
+                    user.dispose();
+                }
             }
         });
     }

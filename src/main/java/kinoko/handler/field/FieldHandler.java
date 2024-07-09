@@ -58,7 +58,7 @@ public final class FieldHandler {
             user.dispose();
             return;
         }
-        final Drop drop = dropResult.get();
+        final Drop drop = dropResult.get(); // TODO : check owner and ownership expiry
 
         try (var locked = user.acquire()) {
             // Check if drop can be added to inventory

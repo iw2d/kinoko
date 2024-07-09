@@ -29,7 +29,6 @@ public final class DropPool extends FieldObjectPool<Drop> {
         if (boundLeft <= boundRight) {
             x = Math.clamp(x, boundLeft, boundRight);
         }
-
         // Assign foothold
         final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y);
         if (footholdResult.isPresent()) {
@@ -41,13 +40,11 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
         drop.setField(field);
         drop.setId(field.getNewObjectId());
-
         // Handle drop reactors
         if (enterType != DropEnterType.FADING_OUT) {
             addObject(drop);
             field.getReactorPool().forEach((reactor) -> reactor.handleDrop(drop));
         }
-
         // Handle quest drops
         if (drop.isQuest()) {
             field.getUserPool().forEach((user) -> {

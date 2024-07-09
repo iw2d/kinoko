@@ -43,4 +43,8 @@ public final class Triple<T, U, V> {
     public int hashCode() {
         return Objects.hash(first, second, third);
     }
+
+    public static <T, U, V> Triple<T, U, V> of(T first, U second, V third) {
+        return new Triple<>(first, second, third);
+    }
 }

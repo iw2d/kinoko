@@ -87,6 +87,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public void scriptProgressMessage(String message) {
+        user.write(WvsContext.scriptProgressMessage(message));
+    }
+
+    @Override
     public void playPortalSE() {
         user.write(UserLocal.effect(Effect.playPortalSE()));
     }
@@ -128,6 +133,16 @@ public final class ScriptManagerImpl implements ScriptManager {
 
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    @Override
+    public int getGender() {
+        return user.getGender();
+    }
+
+    @Override
+    public int getLevel() {
+        return user.getLevel();
+    }
 
     @Override
     public void addExp(int exp) {
@@ -222,7 +237,7 @@ public final class ScriptManagerImpl implements ScriptManager {
             if (addItemResult.isEmpty()) {
                 throw new IllegalStateException("Failed to add item to inventory");
             }
-            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
             user.write(UserLocal.effect(Effect.gainItem(item)));
         }
         return true;
@@ -242,12 +257,17 @@ public final class ScriptManagerImpl implements ScriptManager {
     public boolean removeItem(int itemId, int quantity) {
         final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemId, quantity);
         if (removeItemResult.isPresent()) {
-            user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
+            user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
             user.write(UserLocal.effect(Effect.gainItem(itemId, -quantity)));
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean hasItem(int itemId) {
+        return hasItem(itemId, 1);
     }
 
     @Override
@@ -329,7 +349,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         final Field targetField = fieldResult.get();
         final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
         if (portalResult.isEmpty()) {
-            throw new ScriptError("Tried to warp to portal : {} on field ID : {}", targetField.getFieldId());
+            throw new ScriptError("Tried to warp to portal : %s on field ID : %d", portalName, targetField.getFieldId());
         }
         user.warp(fieldResult.get(), portalResult.get(), false, false);
     }
@@ -401,7 +421,11 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public EventState getEventState(EventType eventType) {
-        return user.getConnectedServer().getEventState(eventType).orElse(null);
+        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventType);
+        if (eventStateResult.isEmpty()) {
+            throw new ScriptError("Could not resolve event state for event type : %s", eventType);
+        }
+        return eventStateResult.get();
     }
 
     @Override
@@ -526,9 +550,9 @@ public final class ScriptManagerImpl implements ScriptManager {
     public int askMenu(String text, Map<Integer, String> options) {
         final String optionString = options.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .map(entry -> String.format("#L%d##b%s#k#l", entry.getKey(), entry.getValue()))
+                .map(entry -> String.format("#L%d# #b%s#k#l", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining("\r\n"));
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKMENU, text + optionString));
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKMENU, String.join("\r\n", text, optionString)));
         final int answer = handleAnswer().getAnswer();
         if (!options.containsKey(answer)) {
             throw new ScriptError("Received unexpected answer %d for askMenu options : %s", answer, options);

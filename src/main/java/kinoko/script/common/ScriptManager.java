@@ -21,6 +21,8 @@ public interface ScriptManager {
 
     void message(String message);
 
+    void scriptProgressMessage(String message);
+
     void playPortalSE();
 
     void balloonMsg(String text, int width, int duration);
@@ -39,6 +41,10 @@ public interface ScriptManager {
 
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
+
+    int getGender();
+
+    int getLevel();
 
     void addExp(int exp);
 
@@ -64,6 +70,8 @@ public interface ScriptManager {
     boolean canAddItems(List<Tuple<Integer, Integer>> items);
 
     boolean removeItem(int itemId, int quantity);
+
+    boolean hasItem(int itemId);
 
     boolean hasItem(int itemId, int quantity);
 

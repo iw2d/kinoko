@@ -36,6 +36,7 @@ final class ScriptHelper {
 
         // Load scripts
         final Pattern scriptPattern = Pattern.compile("(\\ +)@Script\\(\\\"(.+)\\\"\\)");
+        final Map<Path, Map<Integer, String>> separators = new HashMap<>();
         final Map<Path, List<String>> scriptMapping = new HashMap<>();
         final Map<String, List<String>> scriptMethods = new HashMap<>();
         try (final Stream<Path> stream = Files.walk(Path.of("src/main/java/kinoko/script"))) {
@@ -57,7 +58,14 @@ final class ScriptHelper {
                         scriptBody.add(lines.get(start + i));
                     }
                     scriptMethods.put(scriptName, scriptBody);
-                    scriptMapping.computeIfAbsent(path, (key) -> new ArrayList<>()).add(scriptName);
+                    // Script ordering
+                    final List<String> scriptList = scriptMapping.computeIfAbsent(path, (key) -> new ArrayList<>());
+                    scriptList.add(scriptName);
+                    // Handle separator
+                    final String separator = lines.get(start - 2);
+                    if (separator.trim().startsWith("//") && separator.endsWith("-----")) {
+                        separators.computeIfAbsent(path, (key) -> new HashMap<>()).put(scriptList.size() - 1, separator);
+                    }
                 }
             }
         }
@@ -233,8 +241,15 @@ final class ScriptHelper {
                 }
                 // Rewrite script file
                 Files.write(path, lines.subList(0, start), StandardOpenOption.TRUNCATE_EXISTING);
-                List<String> scriptNames = scriptMapping.get(path);
+                final Map<Integer, String> sep = separators.getOrDefault(path, Map.of());
+                final List<String> scriptNames = scriptMapping.get(path);
                 for (int i = 0; i < scriptNames.size(); i++) {
+                    // Separator
+                    if (sep.containsKey(i)) {
+                        System.out.printf("%d %s\n", i, sep.get(i));
+                        Files.writeString(path, String.format("\n%s\n\n", sep.get(i)), StandardOpenOption.APPEND);
+                    }
+                    // Script content
                     final String scriptName = scriptNames.get(i);
                     final List<String> scriptBody = scriptMethods.get(scriptName);
                     int bodyStart;
@@ -244,8 +259,12 @@ final class ScriptHelper {
                         }
                     }
                     Files.write(path, scriptBody.subList(0, 2), StandardOpenOption.APPEND);
-                    for (String comment : collectedComments.get(scriptName)) {
-                        Files.writeString(path, String.format("        %s\n", comment), StandardOpenOption.APPEND);
+                    if (bodyStart != scriptBody.size() - 1) {
+                        for (String comment : collectedComments.get(scriptName)) {
+                            Files.writeString(path, String.format("        %s\n", comment), StandardOpenOption.APPEND);
+                        }
+                    } else {
+                        log.info("Blank script method : {}", scriptName);
                     }
                     Files.write(path, scriptBody.subList(bodyStart, scriptBody.size()), StandardOpenOption.APPEND);
                     if (i != scriptNames.size() - 1) {

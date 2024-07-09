@@ -1,6 +1,7 @@
-package kinoko.script;
+package kinoko.script.event;
 
 import kinoko.script.common.Script;
+import kinoko.script.common.ScriptError;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.util.Util;
@@ -45,15 +46,19 @@ public final class UnityPortal extends ScriptHandler {
         if (Util.isInteger(returnMap)) {
             final int returnMapId = Integer.parseInt(returnMap);
             if (AVAILABLE_FIELDS.contains(returnMapId)) {
-                sm.setQRValue(QuestRecordType.UnityPortal, "");
                 sm.playPortalSE();
                 sm.warp(returnMapId, returnMapId < 540000000 ? "unityPortal2" : "sp"); // missing portal for CBD, NLC and Mushroom Shrine
+                sm.setQRValue(QuestRecordType.UnityPortal, "");
                 return;
             }
             log.error("Tried to use Dimensional Mirror to warp to {}", returnMapId);
         }
         sm.playPortalSE();
-        sm.warp(fallbackMapId, fallbackPortalName);
+        if (fallbackPortalName == null || fallbackPortalName.isEmpty()) {
+            sm.warp(fallbackMapId);
+        } else {
+            sm.warp(fallbackMapId, fallbackPortalName);
+        }
     }
 
     @Script("unityPortal")
@@ -104,99 +109,100 @@ public final class UnityPortal extends ScriptHandler {
         // options.put(99, "Leafre?");
 
         final int fieldId = sm.getFieldId();
-        if (AVAILABLE_FIELDS.contains(fieldId)) {
-            final int answer = sm.askSlideMenu(0, options);
-            switch (answer) {
-                case 0 -> {
-                    // Ariant Coliseum :Battle Arena Lobby
-                    sm.warp(980010000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 1 -> {
-                    // Mu Lung Dojo : Mu Lung Dojo Entrance
-                    sm.warp(925020000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 2 -> {
-                    // Monster Carnival : Spiegelmann's Office
-                    sm.warp(980000000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 3 -> {
-                    // The 2nd Monster Carnival : Spiegelmann's Office
-                    sm.warp(980030000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 4 -> {
-                    // Sea of Fog : Shipwrecked Ghost Ship
-                    sm.warp(923020000, "sp");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 5 -> {
-                    // Hidden Street : Pyramid Dunes
-                    sm.warp(926010000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 6 -> {
-                    // Hidden Street : Abandoned Subway Station
-                    sm.warp(910320000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 7 -> {
-                    // Hidden Street : Happyville
-                    sm.warp(209000000, "st00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 8 -> {
-                    // Golden Temple : Golden Temple
-                    sm.warp(950100000, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 9 -> {
-                    // Hidden Street : Moon Bunny Lobby
-                    sm.warp(910010500, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 10 -> {
-                    // Hidden Street : First Time Together Lobby
-                    sm.warp(910340700, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 11 -> {
-                    // Ludibrium : Eos Tower 101st Floor
-                    sm.warp(221023300, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 12 -> {
-                    // Elin Forest : Deep Fairy Forest
-                    sm.warp(300030100, "west00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 13 -> {
-                    // Orbis : The Unknown Tower
-                    sm.warp(200080101, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 14 -> {
-                    // Herb Town : Over the Pirate Ship
-                    sm.warp(251010404, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 15 -> {
-                    // Magatia : Alcadno - Hidden Room
-                    sm.warp(261000021, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 16 -> {
-                    // El Nath : Shammos's Solitary Room
-                    sm.warp(211000002, "out00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
-                case 17 -> {
-                    // Leafre : Crimson Sky Dock
-                    sm.warp(240080000, "left00");
-                    sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
-                }
+        if (!AVAILABLE_FIELDS.contains(fieldId)) {
+            throw new ScriptError("Tried to use Dimensional Mirror from field ID : %d", fieldId);
+        }
+        final int answer = sm.askSlideMenu(0, options);
+        switch (answer) {
+            case 0 -> {
+                // Ariant Coliseum :Battle Arena Lobby
+                sm.warp(980010000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 1 -> {
+                // Mu Lung Dojo : Mu Lung Dojo Entrance
+                sm.warp(925020000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 2 -> {
+                // Monster Carnival : Spiegelmann's Office
+                sm.warp(980000000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 3 -> {
+                // The 2nd Monster Carnival : Spiegelmann's Office
+                sm.warp(980030000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 4 -> {
+                // Sea of Fog : Shipwrecked Ghost Ship
+                sm.warp(923020000, "sp");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 5 -> {
+                // Hidden Street : Pyramid Dunes
+                sm.warp(926010000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 6 -> {
+                // Hidden Street : Abandoned Subway Station
+                sm.warp(910320000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 7 -> {
+                // Hidden Street : Happyville
+                sm.warp(209000000, "st00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 8 -> {
+                // Golden Temple : Golden Temple
+                sm.warp(950100000, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 9 -> {
+                // Hidden Street : Moon Bunny Lobby
+                sm.warp(910010500, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 10 -> {
+                // Hidden Street : First Time Together Lobby
+                sm.warp(910340700, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 11 -> {
+                // Ludibrium : Eos Tower 101st Floor
+                sm.warp(221023300, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 12 -> {
+                // Elin Forest : Deep Fairy Forest
+                sm.warp(300030100, "west00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 13 -> {
+                // Orbis : The Unknown Tower
+                sm.warp(200080101, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 14 -> {
+                // Herb Town : Over the Pirate Ship
+                sm.warp(251010404, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 15 -> {
+                // Magatia : Alcadno - Hidden Room
+                sm.warp(261000021, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 16 -> {
+                // El Nath : Shammos's Solitary Room
+                sm.warp(211000002, "out00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
+            }
+            case 17 -> {
+                // Leafre : Crimson Sky Dock
+                sm.warp(240080000, "left00");
+                sm.setQRValue(QuestRecordType.UnityPortal, String.valueOf(fieldId));
             }
         }
     }
@@ -242,5 +248,133 @@ public final class UnityPortal extends ScriptHandler {
         // Black Wing Territory : Edelstein (310000000)
         //   unityPortal2 (-95, 587)
         unityPortal(sm);
+    }
+
+
+    // RETURN SCRIPTS --------------------------------------------------------------------------------------------------
+
+    @Script("aMatchMove2")
+    public static void aMatchMove2(ScriptManager sm) {
+        // Ariant Coliseum : Battle Arena Lobby (980010000)
+        //   out00 (-601, 274)
+        returnPortal(sm);
+    }
+
+    @Script("dojang_exit")
+    public static void dojang_exit(ScriptManager sm) {
+        // Mu Lung Dojo : Mu Lung Dojo Entrance (925020000)
+        //   out00 (-2142, 50)
+        returnPortal(sm);
+    }
+
+    @Script("mc_out")
+    public static void mc_out(ScriptManager sm) {
+        //  Monster Carnival : Spiegelmann's Office (980000000)
+        //   out00 (-518, 133)
+        // The 2nd Monster Carnival : Spiegelmann's Office (980030000)
+        //   out00 (-411, 133)
+        returnPortal(sm, 103000000, null); // Kerning City : Kerning City
+    }
+
+    @Script("aqua_taxi3")
+    public static void aqua_taxi3(ScriptManager sm) {
+        // Dolphin (2060010)
+        //   Sea of Fog : Shipwrecked Ghost Ship (923020000)
+        if (sm.askYesNo("Do you want to go back now?")) {
+            returnPortal(sm, 230000000, null); // Aquarium : Aquarium
+        }
+    }
+
+    @Script("nets_out")
+    public static void nets_out(ScriptManager sm) {
+        // Hidden Street : Pyramid Dunes (926010000)
+        //   out00 (-169, 212)
+        returnPortal(sm);
+    }
+
+    @Script("met_out")
+    public static void met_out(ScriptManager sm) {
+        // Hidden Street : Abandoned Subway Station (910320000)
+        //   out00 (-209, -167)
+        returnPortal(sm);
+    }
+
+    @Script("goback")
+    public static void goback(ScriptManager sm) {
+        // Golden Temple : Golden Temple (809060000)
+        //   out00 (1830, 472)
+        // Golden Temple : Golden Temple (950100000)
+        //   out00 (-1391, 470)
+        returnPortal(sm);
+    }
+
+    @Script("moonrabbit_exit")
+    public static void moonrabbit_exit(ScriptManager sm) {
+        // Hidden Street : Moon Bunny Lobby (910010500)
+        //   out00 (-420, 267)
+        returnPortal(sm, 100000200, "event00"); // Henesys : Henesys Park
+    }
+
+    @Script("party_exit")
+    public static void party_exit(ScriptManager sm) {
+        // Hidden Street : First Time Together Lobby (910340700)
+        //   out00 (-259, 158)
+        returnPortal(sm, 103000000, null); // Kerning City : Kerning City
+    }
+
+    @Script("party2_exit")
+    public static void party2_exit(ScriptManager sm) {
+        // Ludibrium : Eos Tower 101st Floor (221023300)
+        //   out00 (173, 2005)
+        returnPortal(sm, 221023200, "in00"); // Ludibrium : Eos Tower 100th Floor
+    }
+
+    @Script("exit_party6")
+    public static void exit_party6(ScriptManager sm) {
+        // Elin Forest : Deep Fairy Forest (300030100)
+        //   west00 (-344, 149)
+        returnPortal(sm, 300030000, "east00"); // Elin Forest : Eastern Region of Mossy Tree Forest
+    }
+
+    @Script("exit_party3")
+    public static void exit_party3(ScriptManager sm) {
+        // Orbis : The Unknown Tower (200080101)
+        //   out00 (-322, 173)
+        returnPortal(sm, 200080100, "in00"); // Orbis : Entrance to Orbis Tower
+    }
+
+    @Script("davy_exit")
+    public static void davy_exit(ScriptManager sm) {
+        // Herb Town : Over the Pirate Ship (251010404)
+        //   out00 (-1954, 243)
+        returnPortal(sm, 251010401, "in00"); // Herb Town : Red-Nose Pirate Den 1
+    }
+
+    @Script("exit_juliet")
+    public static void exit_juliet(ScriptManager sm) {
+        // Magatia : Alcadno - Hidden Room (261000021)
+        //   out00 (-474, 146)
+        returnPortal(sm, 261000020, "in00"); // Magatia : Alcadno Society
+    }
+
+    @Script("exit_romio")
+    public static void exit_romio(ScriptManager sm) {
+        // Magatia : Zenumist - Hidden Room (261000011)
+        //   out00 (-314, 181)
+        returnPortal(sm, 261000010, "in00"); // Magatia : Zenumist Society
+    }
+
+    @Script("exit_shmmosP")
+    public static void exit_shmmosP(ScriptManager sm) {
+        // El Nath : Shammos's Solitary Room (211000002)
+        //   out00 (-282, 64)
+        returnPortal(sm, 211000001, "in00"); // El Nath : Chief's Residence
+    }
+
+    @Script("exit_dragonR")
+    public static void exit_dragonR(ScriptManager sm) {
+        // Leafre : Crimson Sky Dock (240080000)
+        //   left00 (-512, 80)
+        returnPortal(sm, 240030102, "right00"); // Leafre : The Forest That Disappeared
     }
 }
