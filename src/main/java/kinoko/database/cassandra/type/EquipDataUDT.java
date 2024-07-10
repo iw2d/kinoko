@@ -38,7 +38,7 @@ public final class EquipDataUDT {
     public static final String EXP = "exp";
     public static final String DURABILITY = "durability";
 
-    private static final String typeName = "equip_info_type";
+    private static final String typeName = "equip_data_type";
 
     public static String getTypeName() {
         return typeName;

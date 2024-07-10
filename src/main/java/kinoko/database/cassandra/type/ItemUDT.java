@@ -15,8 +15,9 @@ public final class ItemUDT {
     public static final String ATTRIBUTE = "attribute";
     public static final String TITLE = "title";
     public static final String DATE_EXPIRE = "date_expire";
-    public static final String EQUIP_INFO = "equip_info";
-    public static final String PET_INFO = "pet_info";
+    public static final String EQUIP_DATA = "equip_data";
+    public static final String PET_DATA = "pet_data";
+    public static final String RING_DATA = "ring_data";
 
     private static final String typeName = "item_type";
 
@@ -36,8 +37,9 @@ public final class ItemUDT {
                         .withField(ATTRIBUTE, DataTypes.SMALLINT)
                         .withField(TITLE, DataTypes.TEXT)
                         .withField(DATE_EXPIRE, DataTypes.TIMESTAMP)
-                        .withField(EQUIP_INFO, udt(EquipDataUDT.getTypeName(), true))
-                        .withField(PET_INFO, udt(PetDataUDT.getTypeName(), true))
+                        .withField(EQUIP_DATA, udt(EquipDataUDT.getTypeName(), true))
+                        .withField(PET_DATA, udt(PetDataUDT.getTypeName(), true))
+                        .withField(RING_DATA, udt(RingDataUDT.getTypeName(), true))
                         .build()
         );
     }

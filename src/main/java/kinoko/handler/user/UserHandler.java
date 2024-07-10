@@ -1,5 +1,6 @@
 package kinoko.handler.user;
 
+import kinoko.database.CharacterInfo;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.field.*;
@@ -471,6 +472,7 @@ public final class UserHandler {
             }
             // Update user
             if (inventoryType == InventoryType.EQUIP) {
+                user.getCharacterData().getCoupleRecord().reset(im.getEquipped(), im.getEquipInventory());
                 user.validateStat();
                 user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
             }
@@ -1328,12 +1330,13 @@ public final class UserHandler {
                     }
                 } else {
                     // Create new friend - resolve target character id
-                    final Optional<Tuple<Integer, Integer>> targetIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(targetName);
-                    if (targetIdResult.isEmpty()) {
+                    final Optional<CharacterInfo> characterInfoResult = DatabaseManager.characterAccessor().getCharacterInfoByName(targetName);
+                    if (characterInfoResult.isEmpty()) {
                         user.write(FriendPacket.setFriendUnknownUser()); // That character is not registered.
                         return;
                     }
-                    final int targetCharacterId = targetIdResult.get().getRight();
+                    final int targetCharacterId = characterInfoResult.get().getCharacterId();
+                    final String targetCharacterName = characterInfoResult.get().getCharacterName();
                     // Check if target can be added as a friend
                     final List<Friend> friends = user.getFriendManager().getRegisteredFriends();
                     if (friends.size() >= user.getFriendManager().getFriendMax()) {
@@ -1345,7 +1348,7 @@ public final class UserHandler {
                         return;
                     }
                     // Add target as friend, force creation
-                    final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetName, friendGroup, FriendStatus.NORMAL);
+                    final Friend friendForUser = new Friend(user.getCharacterId(), targetCharacterId, targetCharacterName, friendGroup, FriendStatus.NORMAL);
                     if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
                         user.write(FriendPacket.setFriendUnknown()); // The request was denied due to an unknown error.
                         return;
@@ -1355,7 +1358,7 @@ public final class UserHandler {
                     if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
                         // Send invite to target if request was created
                         // This operation is a noop if target offline, the request will be processed on target login
-                        user.getConnectedServer().submitUserPacketRequest(targetName, FriendPacket.invite(friendForTarget));
+                        user.getConnectedServer().submitUserPacketRequest(targetCharacterName, FriendPacket.invite(friendForTarget));
                     }
                 }
                 // Reload friends and update client
@@ -1448,8 +1451,8 @@ public final class UserHandler {
                     return;
                 }
                 final Gift gift = giftResult.get();
-                if (!receiverName.equalsIgnoreCase(gift.getSender())) {
-                    log.error("Tried to send gift receipt memo with mismatching sender name - expected : {}, actual : {}", gift.getSender(), receiverName);
+                if (!receiverName.equalsIgnoreCase(gift.getSenderName())) {
+                    log.error("Tried to send gift receipt memo with mismatching sender name - expected : {}, actual : {}", gift.getSenderName(), receiverName);
                     user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;
                 }
@@ -1460,12 +1463,12 @@ public final class UserHandler {
                     user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;
                 }
-                final Set<CashItemInfo> cashItemInfos = new HashSet<>();
-                final Optional<Tuple<Commodity, Set<Commodity>>> packageResult = CashShop.getCashPackage(gift.getCommodityId());
+                final List<CashItemInfo> cashItemInfos = new ArrayList<>();
+                final Optional<Tuple<Commodity, List<Commodity>>> packageResult = CashShop.getCashPackage(gift.getCommodityId());
                 if (packageResult.isPresent()) {
                     // Cash package
                     for (Commodity commodity : packageResult.get().getRight()) {
-                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(user, gift.getSender());
+                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
                         if (cashItemInfoResult.isEmpty()) {
                             log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
                             user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
@@ -1475,13 +1478,22 @@ public final class UserHandler {
                     }
                 } else {
                     // Normal gift
-                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user, gift.getSender());
+                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
                     if (cashItemInfoResult.isEmpty()) {
                         log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
                         user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         return;
                     }
-                    cashItemInfos.add(cashItemInfoResult.get());
+                    final CashItemInfo cashItemInfo = cashItemInfoResult.get();
+                    // Create RingData if pairItemSn was set
+                    if (gift.getPairItemSn() != 0) {
+                        final RingData ringData = new RingData();
+                        ringData.setPairCharacterId(gift.getSenderId());
+                        ringData.setPairCharacterName(gift.getSenderName());
+                        ringData.setPairItemSn(gift.getPairItemSn());
+                        cashItemInfo.getItem().setRingData(ringData);
+                    }
+                    cashItemInfos.add(cashItemInfo);
                 }
                 // Receive gift
                 try (var lockedAccount = user.getAccount().acquire()) {
@@ -1502,12 +1514,12 @@ public final class UserHandler {
                     user.write(CashShopPacket.loadLockerDone(lockedAccount.get()));
                 }
                 // Resolve receiver
-                final Optional<Tuple<Integer, Integer>> receiverIdResult = DatabaseManager.characterAccessor().getAccountAndCharacterIdByName(receiverName);
+                final Optional<CharacterInfo> receiverIdResult = DatabaseManager.characterAccessor().getCharacterInfoByName(receiverName);
                 if (receiverIdResult.isEmpty()) {
                     user.write(MemoPacket.sendWarningName()); // Please check the name of the receiving character.
                     return;
                 }
-                final int receiverCharacterId = receiverIdResult.get().getRight();
+                final int receiverCharacterId = receiverIdResult.get().getCharacterId();
                 // Create memo
                 final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
                 if (memoIdResult.isEmpty()) {

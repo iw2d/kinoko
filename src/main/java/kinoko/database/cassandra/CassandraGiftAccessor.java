@@ -23,8 +23,10 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
                 row.getLong(GiftTable.GIFT_SN),
                 row.getInt(GiftTable.ITEM_ID),
                 row.getInt(GiftTable.COMMODITY_ID),
+                row.getInt(GiftTable.SENDER_ID),
                 row.getString(GiftTable.SENDER_NAME),
-                row.getString(GiftTable.MESSAGE)
+                row.getString(GiftTable.SENDER_MESSAGE),
+                row.getLong(GiftTable.PAIR_ITEM_SN)
         );
     }
 
@@ -63,8 +65,9 @@ public final class CassandraGiftAccessor extends CassandraAccessor implements Gi
                         .value(GiftTable.RECEIVER_ID, literal(receiverId))
                         .value(GiftTable.ITEM_ID, literal(gift.getItemId()))
                         .value(GiftTable.COMMODITY_ID, literal(gift.getCommodityId()))
-                        .value(GiftTable.SENDER_NAME, literal(gift.getSender()))
-                        .value(GiftTable.MESSAGE, literal(gift.getMessage()))
+                        .value(GiftTable.SENDER_NAME, literal(gift.getSenderName()))
+                        .value(GiftTable.SENDER_MESSAGE, literal(gift.getSenderMessage()))
+                        .value(GiftTable.PAIR_ITEM_SN, literal(gift.getPairItemSn()))
                         .ifNotExists()
                         .build()
         );

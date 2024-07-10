@@ -5,9 +5,9 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
+import kinoko.database.CharacterInfo;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
-import kinoko.util.Tuple;
 import kinoko.world.friend.FriendManager;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
@@ -17,10 +17,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
-import kinoko.world.user.data.ConfigManager;
-import kinoko.world.user.data.MapTransferInfo;
-import kinoko.world.user.data.MiniGameRecord;
-import kinoko.world.user.data.WildHunterInfo;
+import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Instant;
@@ -87,6 +84,9 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         final MiniGameRecord mgr = row.get(CharacterTable.MINIGAME_RECORD, MiniGameRecord.class);
         cd.setMiniGameRecord(mgr);
 
+        final CoupleRecord cr = CoupleRecord.from(im.getEquipped(), im.getEquipInventory());
+        cd.setCoupleRecord(cr);
+
         final MapTransferInfo mti = row.get(CharacterTable.MAP_TRANSFER_INFO, MapTransferInfo.class);
         cd.setMapTransferInfo(mti);
 
@@ -149,20 +149,22 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
     }
 
     @Override
-    public Optional<Tuple<Integer, Integer>> getAccountAndCharacterIdByName(String name) {
+    public Optional<CharacterInfo> getCharacterInfoByName(String name) {
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), CharacterTable.getTableName())
                         .columns(
                                 CharacterTable.ACCOUNT_ID,
-                                CharacterTable.CHARACTER_ID
+                                CharacterTable.CHARACTER_ID,
+                                CharacterTable.CHARACTER_NAME
                         )
                         .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
                         .build()
         );
         for (Row row : selectResult) {
-            return Optional.of(new Tuple<>(
+            return Optional.of(new CharacterInfo(
                     row.getInt(CharacterTable.ACCOUNT_ID),
-                    row.getInt(CharacterTable.CHARACTER_ID)
+                    row.getInt(CharacterTable.CHARACTER_ID),
+                    row.getString(CharacterTable.CHARACTER_NAME)
             ));
         }
         return Optional.empty();

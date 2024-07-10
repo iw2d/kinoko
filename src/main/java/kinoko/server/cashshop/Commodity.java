@@ -61,16 +61,16 @@ public final class Commodity {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public Optional<CashItemInfo> createCashItemInfo(User user) {
-        return createCashItemInfo(user, "");
+        return createCashItemInfo(user.getNextItemSn(), user.getAccountId(), user.getCharacterId(), "");
     }
 
-    public Optional<CashItemInfo> createCashItemInfo(User user, String characterName) {
+    public Optional<CashItemInfo> createCashItemInfo(long itemSn, int accountId, int characterId, String characterName) {
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(getItemId());
         if (itemInfoResult.isEmpty()) {
             return Optional.empty();
         }
         final ItemInfo ii = itemInfoResult.get();
-        final Item item = ii.createItem(user.getNextItemSn(), getCount());
+        final Item item = ii.createItem(itemSn, getCount());
         if (item.getItemType() == ItemType.PET) {
             final int life = ii.getInfo(ItemInfoType.life);
             if (life > 0) {
@@ -84,20 +84,26 @@ public final class Commodity {
         final CashItemInfo cashItemInfo = new CashItemInfo(
                 item,
                 getCommodityId(),
-                user.getAccountId(),
-                user.getCharacterId(),
+                accountId,
+                characterId,
                 characterName
         );
         return Optional.of(cashItemInfo);
     }
 
     public Optional<Gift> createGift(User user, String message) {
+        return createGift(user.getNextItemSn(), user.getCharacterId(), user.getCharacterName(), message, 0);
+    }
+
+    public Optional<Gift> createGift(long itemSn, int characterId, String characterName, String message, long pairItemSn) {
         final Gift gift = new Gift(
-                user.getNextItemSn(),
+                itemSn,
                 getItemId(),
                 getCommodityId(),
-                user.getCharacterName(),
-                message
+                characterId,
+                characterName,
+                message,
+                pairItemSn
         );
         return Optional.of(gift);
     }

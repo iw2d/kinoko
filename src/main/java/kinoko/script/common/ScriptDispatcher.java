@@ -108,7 +108,7 @@ public final class ScriptDispatcher {
         // Resolve script handler
         final Method handler = scriptMap.get(scriptName);
         if (handler == null) {
-            log.error("Could not resolve {} script file : {}", scriptType, scriptName);
+            log.error("Could not resolve {} script with name : {}", scriptType, scriptName);
             if (scriptType == ScriptType.ITEM || scriptType == ScriptType.PORTAL) {
                 user.dispose();
             }

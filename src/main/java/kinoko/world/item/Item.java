@@ -16,6 +16,7 @@ public final class Item implements Encodable {
     private String title = "";
     private EquipData equipData;
     private PetData petData;
+    private RingData ringData;
 
     public Item(ItemType itemType) {
         this.itemType = itemType;
@@ -32,6 +33,7 @@ public final class Item implements Encodable {
         this.title = item.title;
         this.equipData = item.equipData != null ? new EquipData(item.equipData) : null;
         this.petData = item.petData != null ? new PetData(item.petData) : null;
+        this.ringData = item.ringData != null ? new RingData(item.ringData) : null;
     }
 
     @Override
@@ -142,6 +144,14 @@ public final class Item implements Encodable {
 
     public void setPetData(PetData petData) {
         this.petData = petData;
+    }
+
+    public RingData getRingData() {
+        return ringData;
+    }
+
+    public void setRingData(RingData ringData) {
+        this.ringData = ringData;
     }
 
 

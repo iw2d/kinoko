@@ -177,6 +177,16 @@ public final class CashShopPacket {
         return outPacket;
     }
 
+    public static OutPacket coupleDone(CashItemInfo cashItemInfo, String receiverName, int itemId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
+        outPacket.encodeByte(CashItemResultType.Couple_Done.getValue());
+        cashItemInfo.encode(outPacket); // GW_CashItemInfo
+        outPacket.encodeString(receiverName);
+        outPacket.encodeInt(itemId);
+        outPacket.encodeShort(1); // count
+        return outPacket;
+    }
+
     public static OutPacket purchaseRecord(int commodityId, boolean purchaseRecord) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
         outPacket.encodeByte(CashItemResultType.PurchaseRecord_Done.getValue());

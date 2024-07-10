@@ -27,30 +27,30 @@ public final class PetDataCodec extends MappingCodec<UdtValue, PetData> {
         if (value == null) {
             return null;
         }
-        final PetData info = new PetData();
-        info.setPetName(value.getString(PetDataUDT.PET_NAME));
-        info.setLevel(value.getByte(PetDataUDT.LEVEL));
-        info.setFullness(value.getByte(PetDataUDT.FULLNESS));
-        info.setTameness(value.getShort(PetDataUDT.TAMENESS));
-        info.setPetSkill(value.getShort(PetDataUDT.PET_SKILL));
-        info.setPetAttribute(value.getShort(PetDataUDT.PET_ATTRIBUTE));
-        info.setRemainLife(value.getInt(PetDataUDT.REMAIN_LIFE));
-        return info;
+        final PetData petData = new PetData();
+        petData.setPetName(value.getString(PetDataUDT.PET_NAME));
+        petData.setLevel(value.getByte(PetDataUDT.LEVEL));
+        petData.setFullness(value.getByte(PetDataUDT.FULLNESS));
+        petData.setTameness(value.getShort(PetDataUDT.TAMENESS));
+        petData.setPetSkill(value.getShort(PetDataUDT.PET_SKILL));
+        petData.setPetAttribute(value.getShort(PetDataUDT.PET_ATTRIBUTE));
+        petData.setRemainLife(value.getInt(PetDataUDT.REMAIN_LIFE));
+        return petData;
     }
 
     @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable PetData info) {
-        if (info == null) {
+    protected UdtValue outerToInner(@Nullable PetData petData) {
+        if (petData == null) {
             return null;
         }
         return getCqlType().newValue()
-                .setString(PetDataUDT.PET_NAME, info.getPetName())
-                .setByte(PetDataUDT.LEVEL, info.getLevel())
-                .setByte(PetDataUDT.FULLNESS, info.getFullness())
-                .setShort(PetDataUDT.TAMENESS, info.getTameness())
-                .setShort(PetDataUDT.PET_SKILL, info.getPetSkill())
-                .setShort(PetDataUDT.PET_ATTRIBUTE, info.getPetAttribute())
-                .setInt(PetDataUDT.REMAIN_LIFE, info.getRemainLife());
+                .setString(PetDataUDT.PET_NAME, petData.getPetName())
+                .setByte(PetDataUDT.LEVEL, petData.getLevel())
+                .setByte(PetDataUDT.FULLNESS, petData.getFullness())
+                .setShort(PetDataUDT.TAMENESS, petData.getTameness())
+                .setShort(PetDataUDT.PET_SKILL, petData.getPetSkill())
+                .setShort(PetDataUDT.PET_ATTRIBUTE, petData.getPetAttribute())
+                .setInt(PetDataUDT.REMAIN_LIFE, petData.getRemainLife());
     }
 }

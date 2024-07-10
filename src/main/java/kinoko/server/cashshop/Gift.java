@@ -7,15 +7,19 @@ public final class Gift implements Encodable {
     private final long giftSn;
     private final int itemId;
     private final int commodityId;
-    private final String sender;
-    private final String message;
+    private final int senderId;
+    private final String senderName;
+    private final String senderMessage;
+    private final long pairItemSn;
 
-    public Gift(long giftSn, int itemId, int commodityId, String sender, String message) {
+    public Gift(long giftSn, int itemId, int commodityId, int senderId, String senderName, String senderMessage, long pairItemSn) {
         this.giftSn = giftSn;
         this.itemId = itemId;
+        this.senderId = senderId;
         this.commodityId = commodityId;
-        this.sender = sender;
-        this.message = message;
+        this.senderName = senderName;
+        this.senderMessage = senderMessage;
+        this.pairItemSn = pairItemSn;
     }
 
     public long getGiftSn() {
@@ -30,12 +34,20 @@ public final class Gift implements Encodable {
         return commodityId;
     }
 
-    public String getSender() {
-        return sender;
+    public int getSenderId() {
+        return senderId;
     }
 
-    public String getMessage() {
-        return message;
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public String getSenderMessage() {
+        return senderMessage;
+    }
+
+    public long getPairItemSn() {
+        return pairItemSn;
     }
 
     @Override
@@ -43,7 +55,7 @@ public final class Gift implements Encodable {
         // GW_GiftList struct (98)
         outPacket.encodeLong(getGiftSn()); // liSN
         outPacket.encodeInt(getItemId()); // nItemID
-        outPacket.encodeString(sender, 13); // sBuyCharacterName
-        outPacket.encodeString(message, 73); // sText
+        outPacket.encodeString(senderName, 13); // sBuyCharacterName
+        outPacket.encodeString(senderMessage, 73); // sText
     }
 }

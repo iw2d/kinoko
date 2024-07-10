@@ -275,6 +275,14 @@ public final class ItemConstants {
         return itemId / 10000 == 429;
     }
 
+    public static boolean isCoupleEquipItem(int itemId) {
+        return itemId / 100 == 11120 && itemId != 1112000;
+    }
+
+    public static boolean isFriendshipEquipItem(int itemId) {
+        return itemId / 100 == 11128 && itemId % 10 <= 2;
+    }
+
     public static boolean isMatchedItemIdGender(int itemId, int gender) {
         final int genderFromId = getGenderFromId(itemId);
         return gender == 2 || genderFromId == 2 || gender == genderFromId;

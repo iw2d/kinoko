@@ -8,10 +8,7 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.ItemUDT;
-import kinoko.world.item.EquipData;
-import kinoko.world.item.Item;
-import kinoko.world.item.ItemType;
-import kinoko.world.item.PetData;
+import kinoko.world.item.*;
 
 public final class ItemCodec extends MappingCodec<UdtValue, Item> {
     public ItemCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<Item> outerJavaType) {
@@ -42,11 +39,9 @@ public final class ItemCodec extends MappingCodec<UdtValue, Item> {
         item.setAttribute(value.getShort(ItemUDT.ATTRIBUTE));
         item.setTitle(value.getString(ItemUDT.TITLE));
         item.setDateExpire(value.getInstant(ItemUDT.DATE_EXPIRE));
-        if (item.getItemType() == ItemType.EQUIP) {
-            item.setEquipData(value.get(ItemUDT.EQUIP_INFO, EquipData.class));
-        } else if (item.getItemType() == ItemType.PET) {
-            item.setPetData(value.get(ItemUDT.PET_INFO, PetData.class));
-        }
+        item.setEquipData(value.get(ItemUDT.EQUIP_DATA, EquipData.class));
+        item.setPetData(value.get(ItemUDT.PET_DATA, PetData.class));
+        item.setRingData(value.get(ItemUDT.RING_DATA, RingData.class));
         return item;
     }
 
@@ -64,12 +59,10 @@ public final class ItemCodec extends MappingCodec<UdtValue, Item> {
                 .setShort(ItemUDT.QUANTITY, item.getQuantity())
                 .setShort(ItemUDT.ATTRIBUTE, item.getAttribute())
                 .setString(ItemUDT.TITLE, item.getTitle())
-                .setInstant(ItemUDT.DATE_EXPIRE, item.getDateExpire());
-        if (item.getItemType() == ItemType.EQUIP) {
-            value = value.set(ItemUDT.EQUIP_INFO, item.getEquipData(), EquipData.class);
-        } else if (item.getItemType() == ItemType.PET) {
-            value = value.set(ItemUDT.PET_INFO, item.getPetData(), PetData.class);
-        }
+                .setInstant(ItemUDT.DATE_EXPIRE, item.getDateExpire())
+                .set(ItemUDT.EQUIP_DATA, item.getEquipData(), EquipData.class)
+                .set(ItemUDT.PET_DATA, item.getPetData(), PetData.class)
+                .set(ItemUDT.RING_DATA, item.getRingData(), RingData.class);
         return value;
     }
 }

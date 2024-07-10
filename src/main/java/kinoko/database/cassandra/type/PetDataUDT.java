@@ -13,7 +13,7 @@ public final class PetDataUDT {
     public static final String PET_ATTRIBUTE = "pet_attribute";
     public static final String REMAIN_LIFE = "remain_life";
 
-    private static final String typeName = "pet_info_type";
+    private static final String typeName = "pet_data_type";
 
     public static String getTypeName() {
         return typeName;

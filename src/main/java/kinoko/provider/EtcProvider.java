@@ -18,7 +18,7 @@ public final class EtcProvider implements WzProvider {
     private static final Set<SetItemInfo> setItemInfos = new HashSet<>();
     // CashShop info
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
-    private static final Map<Integer, Set<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
+    private static final Map<Integer, List<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
     // Other info
     private static final Set<Integer> titleQuestIds = new HashSet<>();
     private static final Set<String> forbiddenNames = new HashSet<>();
@@ -45,7 +45,7 @@ public final class EtcProvider implements WzProvider {
         return commodities;
     }
 
-    public static Map<Integer, Set<Integer>> getCashPackages() {
+    public static Map<Integer, List<Integer>> getCashPackages() {
         return cashPackages;
     }
 
@@ -103,11 +103,11 @@ public final class EtcProvider implements WzProvider {
                     !(cashPackageProp.get("SN") instanceof WzListProperty snProp)) {
                 throw new ProviderError("Failed to resolve cash package");
             }
-            final Set<Integer> commodityIds = new HashSet<>();
+            final List<Integer> commodityIds = new ArrayList<>();
             for (var snEntry : snProp.getItems().entrySet()) {
                 commodityIds.add(WzProvider.getInteger(snEntry.getValue()));
             }
-            cashPackages.put(packageId, Collections.unmodifiableSet(commodityIds));
+            cashPackages.put(packageId, Collections.unmodifiableList(commodityIds));
         }
     }
 

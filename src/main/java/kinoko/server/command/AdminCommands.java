@@ -879,6 +879,9 @@ public final class AdminCommands {
             // Add skills
             final Set<SkillRecord> skillRecords = new HashSet<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
+                if (JobConstants.isBeginnerJob(skillRoot)) {
+                    continue;
+                }
                 final Job job = Job.getById(skillRoot);
                 for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
                     final SkillRecord skillRecord = si.createRecord();

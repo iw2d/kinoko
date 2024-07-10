@@ -8,6 +8,7 @@ import kinoko.world.job.explorer.Bowman;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.*;
+import kinoko.world.user.CharacterData;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -168,14 +169,11 @@ public final class UserRemote {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserAvatarModified);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(-1); // flag : AVATAR_LOOK = 0x1, AVATAR_SPEED = 0x2, AVATAR_CHOCO = 0x4
-        user.getCharacterData().getAvatarLook().encode(outPacket);
+        final CharacterData characterData = user.getCharacterData();
+        characterData.getAvatarLook().encode(outPacket);
         outPacket.encodeByte(user.getSecondaryStat().getSpeed());
         outPacket.encodeByte(0); // nCount
-
-        outPacket.encodeByte(false); // couple record
-        outPacket.encodeByte(false); // friend record
-        outPacket.encodeByte(false); // marriage record
-
+        characterData.getCoupleRecord().encodeForRemote(outPacket);
         outPacket.encodeInt(0); // nCompletedSetItemID
         return outPacket;
     }

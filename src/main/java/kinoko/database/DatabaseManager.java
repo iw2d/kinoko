@@ -17,10 +17,7 @@ import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.cashshop.CashItemInfo;
-import kinoko.world.item.EquipData;
-import kinoko.world.item.Inventory;
-import kinoko.world.item.Item;
-import kinoko.world.item.PetData;
+import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.data.ConfigManager;
@@ -104,6 +101,7 @@ public final class DatabaseManager {
         // Create UDTs
         EquipDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         PetDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        RingDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CashItemInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
@@ -126,6 +124,7 @@ public final class DatabaseManager {
         // Register Codecs
         registerCodec(cqlSession, EquipDataUDT.getTypeName(), (ic) -> new EquipDataCodec(ic, GenericType.of(EquipData.class)));
         registerCodec(cqlSession, PetDataUDT.getTypeName(), (ic) -> new PetDataCodec(ic, GenericType.of(PetData.class)));
+        registerCodec(cqlSession, RingDataUDT.getTypeName(), (ic) -> new RingDataCodec(ic, GenericType.of(RingData.class)));
         registerCodec(cqlSession, ItemUDT.getTypeName(), (ic) -> new ItemCodec(ic, GenericType.of(Item.class)));
         registerCodec(cqlSession, InventoryUDT.getTypeName(), (ic) -> new InventoryCodec(ic, GenericType.of(Inventory.class)));
         registerCodec(cqlSession, CashItemInfoUDT.getTypeName(), (ic) -> new CashItemInfoCodec(ic, GenericType.of(CashItemInfo.class)));

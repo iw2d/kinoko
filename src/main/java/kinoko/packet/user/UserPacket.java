@@ -73,9 +73,7 @@ public final class UserPacket {
             outPacket.encodeString(user.getAdBoard()); // sMsg
         }
 
-        outPacket.encodeByte(false); // coupleItem
-        outPacket.encodeByte(false); // friendShipItem
-        outPacket.encodeByte(false); // marriageRecord
+        user.getCharacterData().getCoupleRecord().encodeForRemote(outPacket);
 
         // CUser::DarkForceEffect | CDragon::CreateEffect | CUser::LoadSwallowingEffect
         byte effectFlag = 0;

@@ -4,9 +4,9 @@ import kinoko.provider.EtcProvider;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Tuple;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 public final class CashShop {
@@ -24,7 +24,7 @@ public final class CashShop {
         return Optional.ofNullable(EtcProvider.getCommodities().get(commodityId));
     }
 
-    public static Optional<Tuple<Commodity, Set<Commodity>>> getCashPackage(int packageId) {
+    public static Optional<Tuple<Commodity, List<Commodity>>> getCashPackage(int packageId) {
         // Resolve package commodity
         final Optional<Commodity> packageCommodityResult = getCommodity(packageId);
         if (packageCommodityResult.isEmpty()) {
@@ -32,11 +32,11 @@ public final class CashShop {
         }
         final Commodity packageCommodity = packageCommodityResult.get();
         // Resolve package contents
-        final Set<Integer> packageContentIds = EtcProvider.getCashPackages().get(packageCommodity.getItemId());
+        final List<Integer> packageContentIds = EtcProvider.getCashPackages().get(packageCommodity.getItemId());
         if (packageContentIds == null) {
             return Optional.empty();
         }
-        final Set<Commodity> packageContents = new HashSet<>();
+        final List<Commodity> packageContents = new ArrayList<>();
         for (int commodityId : packageContentIds) {
             final Optional<Commodity> commodityResult = getCommodity(commodityId);
             if (commodityResult.isEmpty()) {

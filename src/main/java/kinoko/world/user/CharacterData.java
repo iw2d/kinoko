@@ -14,10 +14,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.data.ConfigManager;
-import kinoko.world.user.data.MapTransferInfo;
-import kinoko.world.user.data.MiniGameRecord;
-import kinoko.world.user.data.WildHunterInfo;
+import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Duration;
@@ -36,6 +33,7 @@ public final class CharacterData implements Encodable {
     private FriendManager friendManager;
     private ConfigManager configManager;
     private MiniGameRecord miniGameRecord;
+    private CoupleRecord coupleRecord;
     private MapTransferInfo mapTransferInfo;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
@@ -102,6 +100,14 @@ public final class CharacterData implements Encodable {
 
     public void setMiniGameRecord(MiniGameRecord miniGameRecord) {
         this.miniGameRecord = miniGameRecord;
+    }
+
+    public CoupleRecord getCoupleRecord() {
+        return coupleRecord;
+    }
+
+    public void setCoupleRecord(CoupleRecord coupleRecord) {
+        this.coupleRecord = coupleRecord;
     }
 
     public MapTransferInfo getMapTransferInfo() {
@@ -300,10 +306,8 @@ public final class CharacterData implements Encodable {
             miniGameRecord.encode(MiniRoomType.OmokRoom, outPacket);
             miniGameRecord.encode(MiniRoomType.MemoryGameRoom, outPacket);
         }
-        if (flag.hasFlag(DBChar.COUPLERECORD)) { // TODO
-            outPacket.encodeShort(0); // short * GW_CoupleRecord::Decode
-            outPacket.encodeShort(0); // short * GW_FriendRecord::Decode
-            outPacket.encodeShort(0); // short * GW_MarriageRecord::Decode
+        if (flag.hasFlag(DBChar.COUPLERECORD)) {
+            coupleRecord.encodeForLocal(outPacket);
         }
         if (flag.hasFlag(DBChar.MAPTRANSFER)) {
             mapTransferInfo.encodeMapTransfer(outPacket); // adwMapTransfer
