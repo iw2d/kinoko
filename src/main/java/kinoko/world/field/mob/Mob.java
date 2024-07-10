@@ -17,7 +17,10 @@ import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.*;
+import kinoko.util.BitFlag;
+import kinoko.util.Encodable;
+import kinoko.util.Lockable;
+import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.field.drop.Drop;
@@ -45,7 +48,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
-    private final List<Reward> rewards = new ArrayList<>();
     private final MobTemplate template;
     private final MobSpawnPoint spawnPoint;
     private final int startFoothold;
@@ -56,8 +58,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private int hp;
     private int mp;
     private boolean slowUsed;
-    private boolean stealUsed;
     private int swallowCharacterId;
+    private Reward stolenReward;
     private Instant nextRecovery;
     private Instant removeAfter;
 
@@ -75,9 +77,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.mp = template.getMaxMp();
         this.nextRecovery = Instant.now();
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
-        // Reward initialization
-        this.rewards.addAll(RewardProvider.getMobRewards(this));
-        this.rewards.add(RewardProvider.getMobMoneyReward(this));
     }
 
     public MobTemplate getTemplate() {
@@ -194,14 +193,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setSlowUsed(boolean slowUsed) {
         this.slowUsed = slowUsed;
-    }
-
-    public boolean isStealUsed() {
-        return stealUsed;
-    }
-
-    public void setStealUsed(boolean stealUsed) {
-        this.stealUsed = stealUsed;
     }
 
     public int getSwallowCharacterId() {
@@ -335,19 +326,19 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void steal(User attacker) {
-        if (isStealUsed()) {
+        if (stolenReward != null) {
             return;
         }
-        final List<Tuple<Drop, Reward>> stealItems = new ArrayList<>();
-        for (Reward reward : rewards) {
-            final Optional<Drop> dropResult = createDrop(attacker, reward);
-            dropResult.ifPresent((drop) -> Tuple.of(drop, reward));
+        final List<Reward> possibleRewards = RewardProvider.getMobRewards(getTemplateId());
+        final Optional<Reward> stealResult = Util.getRandomFromCollection(possibleRewards, Reward::getProb);
+        if (stealResult.isEmpty()) {
+            return;
         }
-        final Optional<Tuple<Drop, Reward>> stealResult = Util.getRandomFromCollection(stealItems);
-        if (stealResult.isPresent()) {
-            getField().getDropPool().addDrop(stealResult.get().getLeft(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
-            rewards.remove(stealResult.get().getRight());
-            setStealUsed(true);
+        final Reward reward = stealResult.get();
+        final Optional<Drop> dropResult = createDrop(attacker, reward);
+        if (dropResult.isPresent()) {
+            getField().getDropPool().addDrop(dropResult.get(), DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
+            stolenReward = reward;
         }
     }
 
@@ -493,7 +484,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
         // Create drops from possible rewards
         final List<Drop> drops = new ArrayList<>();
-        for (Reward reward : rewards) {
+        for (Reward reward : RewardProvider.getMobRewards(getTemplateId())) {
+            if (stolenReward == reward) {
+                continue;
+            }
             final Optional<Drop> dropResult = createDrop(owner, reward);
             dropResult.ifPresent(drops::add);
         }

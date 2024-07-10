@@ -1,10 +1,10 @@
 package kinoko.provider;
 
+import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.reward.Reward;
 import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
-import kinoko.world.field.mob.Mob;
 import org.snakeyaml.engine.v2.api.Load;
 import org.snakeyaml.engine.v2.api.LoadSettings;
 
@@ -37,13 +37,8 @@ public final class RewardProvider implements DataProvider {
         }
     }
 
-    public static List<Reward> getMobRewards(Mob mob) {
-        return mobRewards.getOrDefault(mob.getTemplateId(), List.of());
-    }
-
-    public static Reward getMobMoneyReward(Mob mob) {
-        final Tuple<Integer, Integer> money = GameConstants.getMoneyForMobLevel(mob.getLevel());
-        return Reward.money(money.getLeft(), money.getRight(), GameConstants.DROP_MONEY_PROB);
+    public static List<Reward> getMobRewards(int mobId) {
+        return mobRewards.getOrDefault(mobId, List.of());
     }
 
     private static void loadMobRewards(int mobId, Object yamlObject) throws ProviderError {
@@ -65,6 +60,15 @@ public final class RewardProvider implements DataProvider {
             final double prob = ((Number) rewardInfo.get(3)).doubleValue();
             final int questId = rewardInfo.size() > 4 ? ((Number) rewardInfo.get(4)).intValue() : 0;
             rewards.add(Reward.item(itemId, min, max, prob, questId));
+        }
+        // Add money reward
+        if (mobId / 1000000 != 9 || mobId / 100000 == 94 || mobId / 100000 == 95) {
+            final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
+            if (mobTemplateResult.isEmpty()) {
+                throw new ProviderError("Could not resolve mob template ID : %d", mobId);
+            }
+            final Tuple<Integer, Integer> moneyRange = GameConstants.getMoneyForMobLevel(mobTemplateResult.get().getLevel());
+            rewards.add(Reward.money(moneyRange.getLeft(), moneyRange.getRight(), GameConstants.DROP_MONEY_PROB));
         }
         mobRewards.put(mobId, Collections.unmodifiableList(rewards));
     }
