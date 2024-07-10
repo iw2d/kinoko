@@ -6,9 +6,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.world.job.Job;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public final class QuestItemData {
     private final int itemId;
@@ -72,8 +70,8 @@ public final class QuestItemData {
         return this.gender == 2 || this.gender == gender;
     }
 
-    public static Set<QuestItemData> resolveItemData(WzListProperty itemList, int defaultCount) throws ProviderError {
-        final Set<QuestItemData> items = new HashSet<>();
+    public static List<QuestItemData> resolveItemData(WzListProperty itemList, int defaultCount) throws ProviderError {
+        final List<QuestItemData> items = new ArrayList<>();
         for (var itemEntry : itemList.getItems().entrySet()) {
             if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
                 throw new ProviderError("Failed to resolve quest item list");

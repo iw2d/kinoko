@@ -2,7 +2,8 @@ package kinoko.world.field;
 
 import kinoko.util.Rect;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,8 +26,8 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         return Optional.ofNullable(objects.get(id));
     }
 
-    public final Set<T> getInsideRect(Rect rect) {
-        final Set<T> inside = new HashSet<>();
+    public final List<T> getInsideRect(Rect rect) {
+        final List<T> inside = new ArrayList<>();
         for (T object : getObjects()) {
             if (rect.isInsideRect(object.getX(), object.getY())) {
                 inside.add(object);

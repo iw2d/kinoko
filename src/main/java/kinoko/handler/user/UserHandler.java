@@ -283,7 +283,7 @@ public final class UserHandler {
             final InventoryManager im = user.getInventoryManager();
             final Inventory inventory = im.getInventoryByType(inventoryType);
             // Find stackable items : itemId -> Set<Tuple<position, item>>
-            final Map<Integer, Set<Tuple<Integer, Item>>> stackable = new HashMap<>();
+            final Map<Integer, List<Tuple<Integer, Item>>> stackable = new HashMap<>();
             for (var entry : inventory.getItems().entrySet()) {
                 final int position = entry.getKey();
                 final Item item = entry.getValue();
@@ -295,9 +295,9 @@ public final class UserHandler {
                     continue;
                 }
                 if (!stackable.containsKey(item.getItemId())) {
-                    stackable.put(item.getItemId(), new HashSet<>());
+                    stackable.put(item.getItemId(), new ArrayList<>());
                 }
-                stackable.get(item.getItemId()).add(new Tuple<>(position, item));
+                stackable.get(item.getItemId()).add(Tuple.of(position, item));
             }
             // Get required inventory operations
             final List<InventoryOperation> inventoryOperations = new ArrayList<>();
@@ -768,7 +768,7 @@ public final class UserHandler {
         switch (questRequestType) {
             case LostItem -> {
                 final int size = inPacket.decodeInt();
-                final Set<Integer> lostItems = new HashSet<>();
+                final List<Integer> lostItems = new ArrayList<>();
                 for (int i = 0; i < size; i++) {
                     lostItems.add(inPacket.decodeInt()); // item id
                 }

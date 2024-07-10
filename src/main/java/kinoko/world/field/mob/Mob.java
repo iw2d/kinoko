@@ -338,10 +338,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (isStealUsed()) {
             return;
         }
-        final Set<Tuple<Drop, Reward>> stealItems = new HashSet<>();
+        final List<Tuple<Drop, Reward>> stealItems = new ArrayList<>();
         for (Reward reward : rewards) {
             final Optional<Drop> dropResult = createDrop(attacker, reward);
-            dropResult.ifPresent((drop) -> new Tuple<>(drop, reward));
+            dropResult.ifPresent((drop) -> Tuple.of(drop, reward));
         }
         final Optional<Tuple<Drop, Reward>> stealResult = Util.getRandomFromCollection(stealItems);
         if (stealResult.isPresent()) {

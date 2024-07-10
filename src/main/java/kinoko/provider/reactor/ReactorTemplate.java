@@ -84,7 +84,7 @@ public final class ReactorTemplate {
             }
             int timeOut = 0;
             // Process events
-            final Set<ReactorEvent> events = new HashSet<>();
+            final List<ReactorEvent> events = new ArrayList<>();
             if (stateProp.get("event") instanceof WzListProperty eventList) {
                 timeOut = WzProvider.getInteger(eventList.get("timeOut"), 0);
                 for (int j = 0; j < Integer.MAX_VALUE; j++) {
@@ -95,7 +95,7 @@ public final class ReactorTemplate {
                 }
             }
             states.put(i, new ReactorState(
-                    Collections.unmodifiableSet(events),
+                    Collections.unmodifiableList(events),
                     timeOut
             ));
         }

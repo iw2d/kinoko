@@ -211,7 +211,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public boolean addItem(int itemId, int quantity) {
-        return addItems(List.of(new Tuple<>(itemId, quantity)));
+        return addItems(List.of(Tuple.of(itemId, quantity)));
     }
 
     @Override
@@ -245,7 +245,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public boolean canAddItem(int itemId, int quantity) {
-        return canAddItems(List.of(new Tuple<>(itemId, quantity)));
+        return canAddItems(List.of(Tuple.of(itemId, quantity)));
     }
 
     @Override

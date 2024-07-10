@@ -80,7 +80,7 @@ public final class FriendManager {
     public static void updateFriendsFromCentralServer(User user, FriendResultType resultType, boolean isMigrateIn) {
         final FriendManager fm = user.getFriendManager();
         // Load mutual friends
-        final Set<Friend> mutualFriends = new HashSet<>();
+        final List<Friend> mutualFriends = new ArrayList<>();
         for (Friend self : DatabaseManager.friendAccessor().getFriendsByFriendId(user.getCharacterId())) {
             if (self.getStatus() != FriendStatus.NORMAL) {
                 continue;

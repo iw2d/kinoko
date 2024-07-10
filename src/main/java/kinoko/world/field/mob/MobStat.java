@@ -21,11 +21,11 @@ public final class MobStat {
     }
 
     public void addBurnedInfo(BurnedInfo burnedInfo) {
-        burnedInfos.put(new Tuple<>(burnedInfo.getCharacterId(), burnedInfo.getSkillId()), burnedInfo);
+        burnedInfos.put(Tuple.of(burnedInfo.getCharacterId(), burnedInfo.getSkillId()), burnedInfo);
     }
 
     public boolean hasBurnedInfo(int characterId, int skillId) {
-        return burnedInfos.containsKey(new Tuple<>(characterId, skillId));
+        return burnedInfos.containsKey(Tuple.of(characterId, skillId));
     }
 
     public void clear() {

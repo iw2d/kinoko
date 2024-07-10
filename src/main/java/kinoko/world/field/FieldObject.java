@@ -1,7 +1,7 @@
 package kinoko.world.field;
 
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 public interface FieldObject {
     Field getField();
@@ -20,5 +20,5 @@ public interface FieldObject {
 
     void setY(int y);
 
-    <T extends FieldObject> Optional<T> getNearestObject(Set<T> objects);
+    <T extends FieldObject> Optional<T> getNearestObject(Collection<T> objects);
 }

@@ -15,7 +15,7 @@ import java.util.*;
 public final class EtcProvider implements WzProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
     // Item info
-    private static final Set<SetItemInfo> setItemInfos = new HashSet<>();
+    private static final List<SetItemInfo> setItemInfos = new ArrayList<>();
     // CashShop info
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
     private static final Map<Integer, List<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
@@ -37,7 +37,7 @@ public final class EtcProvider implements WzProvider {
         }
     }
 
-    public static Set<SetItemInfo> getSetItemInfos() {
+    public static List<SetItemInfo> getSetItemInfos() {
         return setItemInfos;
     }
 

@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public final class MobPool extends FieldObjectPool<Mob> {
-    private final Set<MobSpawnPoint> mobSpawnPoints;
+    private final List<MobSpawnPoint> mobSpawnPoints;
     private final int mobCapacityMin;
     private final int mobCapacityMax;
 
@@ -117,8 +117,8 @@ public final class MobPool extends FieldObjectPool<Mob> {
         }
     }
 
-    private static Set<MobSpawnPoint> initializeMobSpawnPoints(Field field) {
-        final Set<MobSpawnPoint> spawnPoints = new HashSet<>();
+    private static List<MobSpawnPoint> initializeMobSpawnPoints(Field field) {
+        final List<MobSpawnPoint> spawnPoints = new ArrayList<>();
         for (LifeInfo lifeInfo : field.getMapInfo().getLifeInfos()) {
             if (lifeInfo.getLifeType() != LifeType.MOB) {
                 continue;
@@ -132,7 +132,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
                     lifeInfo.getMobTime()
             ));
         }
-        return Collections.unmodifiableSet(spawnPoints);
+        return Collections.unmodifiableList(spawnPoints);
     }
 
     private static int initializeMobCapacity(Field field) {

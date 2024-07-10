@@ -2,8 +2,8 @@ package kinoko.world.field;
 
 import kinoko.util.Util;
 
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 public abstract class FieldObjectImpl implements FieldObject {
     private Field field;
@@ -52,7 +52,7 @@ public abstract class FieldObjectImpl implements FieldObject {
     }
 
     @Override
-    public final <T extends FieldObject> Optional<T> getNearestObject(Set<T> objects) {
+    public final <T extends FieldObject> Optional<T> getNearestObject(Collection<T> objects) {
         double nearestDistance = Double.MAX_VALUE;
         T nearestObject = null;
         for (T object : objects) {

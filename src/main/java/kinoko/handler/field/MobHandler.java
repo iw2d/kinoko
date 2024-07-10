@@ -57,7 +57,7 @@ public final class MobHandler {
         final List<Tuple<Integer, Integer>> multiTargetForBall = new ArrayList<>();
         final int multiTargetForBallCount = inPacket.decodeInt();
         for (int i = 0; i < multiTargetForBallCount; i++) {
-            multiTargetForBall.add(new Tuple<>(
+            multiTargetForBall.add(Tuple.of(
                     inPacket.decodeInt(), // aMultiTargetForBall[i].x
                     inPacket.decodeInt() // aMultiTargetForBall[i].y
             ));
@@ -238,7 +238,7 @@ public final class MobHandler {
         // Apply mob temporary stat
         final MobTemporaryStat mts = skillType.getMobTemporaryStat();
         if (mts != null) {
-            final Set<Mob> targetMobs = new HashSet<>();
+            final List<Mob> targetMobs = new ArrayList<>();
             if (si.getRect() != null) {
                 targetMobs.addAll(mob.getField().getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
             }
@@ -256,7 +256,7 @@ public final class MobHandler {
         // Apply character temporary stat
         final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
         if (cts != null) {
-            final Set<User> targetUsers = new HashSet<>();
+            final List<User> targetUsers = new ArrayList<>();
             if (si.getRect() != null) {
                 targetUsers.addAll(mob.getField().getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
             }
@@ -283,7 +283,7 @@ public final class MobHandler {
         // Special handling
         switch (skillType) {
             case HEAL_M -> {
-                final Set<Mob> targetMobs = new HashSet<>();
+                final List<Mob> targetMobs = new ArrayList<>();
                 if (si.getRect() != null) {
                     targetMobs.addAll(mob.getField().getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
                 }

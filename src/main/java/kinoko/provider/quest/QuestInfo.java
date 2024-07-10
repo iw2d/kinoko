@@ -23,12 +23,12 @@ public final class QuestInfo {
     private final int nextQuest;
     private final boolean autoStart;
     private final boolean autoComplete;
-    private final Set<QuestAct> startActs;
-    private final Set<QuestAct> completeActs;
-    private final Set<QuestCheck> startChecks;
-    private final Set<QuestCheck> completeChecks;
+    private final List<QuestAct> startActs;
+    private final List<QuestAct> completeActs;
+    private final List<QuestCheck> startChecks;
+    private final List<QuestCheck> completeChecks;
 
-    public QuestInfo(int questId, int questArea, int nextQuest, boolean autoStart, boolean autoComplete, Set<QuestAct> startActs, Set<QuestAct> completeActs, Set<QuestCheck> startChecks, Set<QuestCheck> completeChecks) {
+    public QuestInfo(int questId, int questArea, int nextQuest, boolean autoStart, boolean autoComplete, List<QuestAct> startActs, List<QuestAct> completeActs, List<QuestCheck> startChecks, List<QuestCheck> completeChecks) {
         this.questId = questId;
         this.questArea = questArea;
         this.nextQuest = nextQuest;
@@ -60,19 +60,19 @@ public final class QuestInfo {
         return autoComplete;
     }
 
-    public Set<QuestAct> getStartActs() {
+    public List<QuestAct> getStartActs() {
         return startActs;
     }
 
-    public Set<QuestAct> getCompleteActs() {
+    public List<QuestAct> getCompleteActs() {
         return completeActs;
     }
 
-    public Set<QuestCheck> getStartChecks() {
+    public List<QuestCheck> getStartChecks() {
         return startChecks;
     }
 
-    public Set<QuestCheck> getCompleteChecks() {
+    public List<QuestCheck> getCompleteChecks() {
         return completeChecks;
     }
 
@@ -93,7 +93,7 @@ public final class QuestInfo {
                 "completeChecks=" + completeChecks + ']';
     }
 
-    public void restoreLostItems(Locked<User> locked, Set<Integer> lostItems) {
+    public void restoreLostItems(Locked<User> locked, List<Integer> lostItems) {
         // Check that the quest has been started
         final User user = locked.get();
         final QuestManager qm = user.getQuestManager();
@@ -156,7 +156,7 @@ public final class QuestInfo {
         }
         // Mark as completed and return
         final QuestRecord qr = qm.forceCompleteQuest(questId);
-        return Optional.of(new Tuple<>(qr, getNextQuest()));
+        return Optional.of(Tuple.of(qr, getNextQuest()));
     }
 
     public Optional<QuestRecord> resignQuest(Locked<User> locked) {
@@ -266,15 +266,15 @@ public final class QuestInfo {
                 nextQuest,
                 autoStart,
                 autoComplete,
-                Collections.unmodifiableSet(resolveQuestActs(questId, questAct.get("0"))),
-                Collections.unmodifiableSet(resolveQuestActs(questId, questAct.get("1"))),
-                Collections.unmodifiableSet(resolveQuestChecks(questId, questCheck.get("0"))),
-                Collections.unmodifiableSet(resolveQuestChecks(questId, questCheck.get("1")))
+                Collections.unmodifiableList(resolveQuestActs(questId, questAct.get("0"))),
+                Collections.unmodifiableList(resolveQuestActs(questId, questAct.get("1"))),
+                Collections.unmodifiableList(resolveQuestChecks(questId, questCheck.get("0"))),
+                Collections.unmodifiableList(resolveQuestChecks(questId, questCheck.get("1")))
         );
     }
 
-    private static Set<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
-        final Set<QuestAct> questActs = new HashSet<>();
+    private static List<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
+        final List<QuestAct> questActs = new ArrayList<>();
         for (var entry : actProps.getItems().entrySet()) {
             final String actType = entry.getKey();
             switch (actType) {
@@ -311,8 +311,8 @@ public final class QuestInfo {
         return questActs;
     }
 
-    private static Set<QuestCheck> resolveQuestChecks(int questId, WzListProperty checkProps) {
-        final Set<QuestCheck> questChecks = new HashSet<>();
+    private static List<QuestCheck> resolveQuestChecks(int questId, WzListProperty checkProps) {
+        final List<QuestCheck> questChecks = new ArrayList<>();
         for (var entry : checkProps.getItems().entrySet()) {
             final String checkType = entry.getKey();
             switch (checkType) {

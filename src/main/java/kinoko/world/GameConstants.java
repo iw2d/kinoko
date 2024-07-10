@@ -192,7 +192,7 @@ public final class GameConstants {
             min = 6.0;
             max = 9.0;
         }
-        return new Tuple<>((int) (min * level), (int) (max * level));
+        return Tuple.of((int) (min * level), (int) (max * level));
     }
 
     public static int getPartyBonusExp(int exp, int memberCount) {

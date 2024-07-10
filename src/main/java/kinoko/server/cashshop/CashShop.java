@@ -44,7 +44,7 @@ public final class CashShop {
             }
             packageContents.add(commodityResult.get());
         }
-        return Optional.of(new Tuple<>(packageCommodity, packageContents));
+        return Optional.of(Tuple.of(packageCommodity, packageContents));
     }
 
     public static void encode(OutPacket outPacket) {

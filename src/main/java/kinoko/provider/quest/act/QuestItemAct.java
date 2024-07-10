@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 
 public final class QuestItemAct implements QuestAct {
     private final int questId;
-    private final Set<QuestItemData> items;
+    private final List<QuestItemData> items;
     private final List<QuestItemData> choices;
 
-    public QuestItemAct(int questId, Set<QuestItemData> items, List<QuestItemData> choices) {
+    public QuestItemAct(int questId, List<QuestItemData> items, List<QuestItemData> choices) {
         this.questId = questId;
         this.items = items;
         this.choices = choices;
     }
 
-    public Set<QuestItemData> getItems() {
+    public List<QuestItemData> getItems() {
         return items;
     }
 
@@ -35,7 +35,7 @@ public final class QuestItemAct implements QuestAct {
         return choices;
     }
 
-    public void restoreLostItems(Locked<User> locked, Set<Integer> lostItems) {
+    public void restoreLostItems(Locked<User> locked, List<Integer> lostItems) {
         final User user = locked.get();
         final InventoryManager im = user.getInventoryManager();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob()).stream()
@@ -125,7 +125,7 @@ public final class QuestItemAct implements QuestAct {
     public boolean canAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         final InventoryManager im = user.getInventoryManager();
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
+        final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Handle required slots for random items
         final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
@@ -181,7 +181,7 @@ public final class QuestItemAct implements QuestAct {
     public boolean doAct(Locked<User> locked, int rewardIndex) {
         final User user = locked.get();
         final InventoryManager im = user.getInventoryManager();
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
+        final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
         // Take required items
         for (QuestItemData itemData : filteredItems) {
@@ -257,18 +257,18 @@ public final class QuestItemAct implements QuestAct {
         return true;
     }
 
-    private Set<QuestItemData> getFilteredItems(int gender, int job) {
+    private List<QuestItemData> getFilteredItems(int gender, int job) {
         return items.stream()
                 .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
     }
 
     public static QuestItemAct from(int questId, WzListProperty itemList) {
-        final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList, 1);
+        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList, 1);
         final List<QuestItemData> choices = QuestItemData.resolveChoiceItemData(itemList);
         return new QuestItemAct(
                 questId,
-                Collections.unmodifiableSet(items),
+                Collections.unmodifiableList(items),
                 Collections.unmodifiableList(choices)
         );
     }

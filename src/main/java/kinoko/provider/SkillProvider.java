@@ -20,7 +20,7 @@ import java.util.*;
 public final class SkillProvider implements WzProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
     public static final Path MORPH_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Morph.wz");
-    private static final Map<Job, Set<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
+    private static final Map<Job, List<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
     private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
     private static final Map<Integer, MorphInfo> morphInfos = new HashMap<>();
@@ -44,8 +44,8 @@ public final class SkillProvider implements WzProvider {
         }
     }
 
-    public static Set<SkillInfo> getSkillsForJob(Job job) {
-        return jobSkills.getOrDefault(job, Set.of());
+    public static List<SkillInfo> getSkillsForJob(Job job) {
+        return jobSkills.getOrDefault(job, List.of());
     }
 
     public static Optional<SkillInfo> getSkillInfoById(int skillId) {
@@ -83,7 +83,7 @@ public final class SkillProvider implements WzProvider {
                 final SkillInfo skillInfo = SkillInfo.from(skillId, skillProp);
 
                 if (!jobSkills.containsKey(job)) {
-                    jobSkills.put(job, new HashSet<>());
+                    jobSkills.put(job, new ArrayList<>());
                 }
                 jobSkills.get(job).add(skillInfo);
                 skillInfos.put(skillId, skillInfo);

@@ -10,13 +10,13 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public final class QuestSkillAct implements QuestAct {
-    private final Set<QuestSkillData> skills;
+    private final List<QuestSkillData> skills;
 
-    public QuestSkillAct(Set<QuestSkillData> skills) {
+    public QuestSkillAct(List<QuestSkillData> skills) {
         this.skills = skills;
     }
 
@@ -48,9 +48,9 @@ public final class QuestSkillAct implements QuestAct {
     }
 
     public static QuestSkillAct from(WzListProperty skillList) {
-        final Set<QuestSkillData> skills = QuestSkillData.resolveSkillData(skillList);
+        final List<QuestSkillData> skills = QuestSkillData.resolveSkillData(skillList);
         return new QuestSkillAct(
-                Collections.unmodifiableSet(skills)
+                Collections.unmodifiableList(skills)
         );
     }
 }

@@ -1,17 +1,17 @@
 package kinoko.provider.reactor;
 
-import java.util.Set;
+import java.util.List;
 
 public final class ReactorState {
-    private final Set<ReactorEvent> events;
+    private final List<ReactorEvent> events;
     private final int timeOut;
 
-    public ReactorState(Set<ReactorEvent> events, int timeOut) {
+    public ReactorState(List<ReactorEvent> events, int timeOut) {
         this.events = events;
         this.timeOut = timeOut;
     }
 
-    public Set<ReactorEvent> getEvents() {
+    public List<ReactorEvent> getEvents() {
         return events;
     }
 

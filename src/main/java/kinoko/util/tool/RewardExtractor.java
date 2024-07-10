@@ -162,7 +162,7 @@ abstract class RewardExtractor {
                         continue;
                     }
                     final ItemInfo ii = itemInfoResult.get();
-                    final Set<Integer> questIds = new HashSet<>();
+                    final List<Integer> questIds = new ArrayList<>();
                     if (ii.isQuest()) {
                         for (QuestInfo qi : QuestProvider.getQuestInfos()) {
                             for (QuestCheck qc : qi.getCompleteChecks()) {

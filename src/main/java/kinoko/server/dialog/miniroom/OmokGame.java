@@ -20,7 +20,7 @@ public final class OmokGame {
 
     public void putStone(int x, int y, int type) {
         board[x][y] = type;
-        history.add(new Triple<>(x, y, type));
+        history.add(Triple.of(x, y, type));
     }
 
     public int retreat() {

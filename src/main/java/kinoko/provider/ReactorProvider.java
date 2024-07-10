@@ -54,7 +54,7 @@ public final class ReactorProvider implements WzProvider {
                 // Handle linked reactors
                 if (infoProp.getItems().containsKey("link")) {
                     final int link = WzProvider.getInteger(infoProp.get("link"));
-                    linkedReactors.put(reactorId, new Triple<>(link, new Tuple<>(notHitable, activateByTouch), action));
+                    linkedReactors.put(reactorId, Triple.of(link, Tuple.of(notHitable, activateByTouch), action));
                     continue;
                 }
             }

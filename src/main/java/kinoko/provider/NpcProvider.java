@@ -46,7 +46,7 @@ public final class NpcProvider implements WzProvider {
                 throw new ProviderError("Failed to resolve info property");
             }
             if (infoProp.getItems().containsKey("link")) {
-                linkedNpcs.put(npcId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
+                linkedNpcs.put(npcId, Tuple.of(WzProvider.getInteger(infoProp.get("link")), infoProp));
                 continue;
             }
             final boolean move = npcEntry.getValue().getProperty().get("move") instanceof WzListProperty;

@@ -35,7 +35,7 @@ public final class Messenger implements Lockable<Messenger> {
     public boolean addUser(RemoteUser remoteUser, MessengerUser messengerUser) {
         for (int i = 0; i < GameConstants.MESSENGER_MAX; i++) {
             if (!users.containsKey(i)) {
-                users.put(i, new Tuple<>(remoteUser, messengerUser));
+                users.put(i, Tuple.of(remoteUser, messengerUser));
                 return true;
             }
         }
@@ -52,7 +52,7 @@ public final class Messenger implements Lockable<Messenger> {
         for (int i = 0; i < GameConstants.MESSENGER_MAX; i++) {
             final var tuple = users.get(i);
             if (tuple != null && tuple.getLeft().getCharacterId() == remoteUser.getCharacterId()) {
-                users.put(i, new Tuple<>(remoteUser, tuple.getRight()));
+                users.put(i, Tuple.of(remoteUser, tuple.getRight()));
             }
         }
     }

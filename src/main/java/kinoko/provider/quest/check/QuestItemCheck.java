@@ -6,17 +6,18 @@ import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class QuestItemCheck implements QuestCheck {
-    private final Set<QuestItemData> items;
+    private final List<QuestItemData> items;
 
-    public QuestItemCheck(Set<QuestItemData> items) {
+    public QuestItemCheck(List<QuestItemData> items) {
         this.items = items;
     }
 
-    public Set<QuestItemData> getItems() {
+    public List<QuestItemData> getItems() {
         return items;
     }
 
@@ -45,9 +46,9 @@ public final class QuestItemCheck implements QuestCheck {
     }
 
     public static QuestItemCheck from(WzListProperty itemList) {
-        final Set<QuestItemData> items = QuestItemData.resolveItemData(itemList, 0);
+        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList, 0);
         return new QuestItemCheck(
-                Collections.unmodifiableSet(items)
+                Collections.unmodifiableList(items)
         );
     }
 }

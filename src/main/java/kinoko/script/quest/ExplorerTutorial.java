@@ -468,8 +468,8 @@ public final class ExplorerTutorial extends ScriptHandler {
         sm.sayBoth("Alright! Now that you have learned alot, I will give you a present. This is a must for your travel in Maple World, so thank me! Please use this under emergency cases!");
         sm.sayBoth("Okay, this is all I can teach you. I know it's sad but it is time to say good bye. Well take care of yourself and Good luck my friend!\r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0#\r\n#i2010000# 3 Apple\r\n#i2010009# 3 Green apple\r\n\r\n#fUI/UIWindow.img/QuestIcon/8/0# 10 exp");
         if (!sm.addItems(List.of(
-                new Tuple<>(2010000, 3), // Apple
-                new Tuple<>(2010009, 3) // Green Apple
+                Tuple.of(2010000, 3), // Apple
+                Tuple.of(2010009, 3) // Green Apple
         ))) {
             sm.sayNext("Please check if your inventory is full or not.");
             return;

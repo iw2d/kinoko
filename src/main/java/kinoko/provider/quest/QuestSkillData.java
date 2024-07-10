@@ -4,9 +4,7 @@ import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public final class QuestSkillData {
     private final int skillId;
@@ -37,8 +35,8 @@ public final class QuestSkillData {
         return jobs;
     }
 
-    public static Set<QuestSkillData> resolveSkillData(WzListProperty skillList) {
-        final Set<QuestSkillData> skills = new HashSet<>();
+    public static List<QuestSkillData> resolveSkillData(WzListProperty skillList) {
+        final List<QuestSkillData> skills = new ArrayList<>();
         for (var skillEntry : skillList.getItems().entrySet()) {
             if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
                 throw new ProviderError("Failed to resolve quest skill list");

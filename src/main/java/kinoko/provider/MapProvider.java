@@ -83,7 +83,7 @@ public final class MapProvider implements WzProvider {
                     throw new ProviderError("Failed to resolve info property");
                 }
                 if (infoProp.getItems().containsKey("link")) {
-                    linkedMaps.put(mapId, new Tuple<>(WzProvider.getInteger(infoProp.get("link")), infoProp));
+                    linkedMaps.put(mapId, Tuple.of(WzProvider.getInteger(infoProp.get("link")), infoProp));
                     continue;
                 }
                 final boolean clock = mapEntry.getValue().getProperty().getItems().containsKey("clock");
