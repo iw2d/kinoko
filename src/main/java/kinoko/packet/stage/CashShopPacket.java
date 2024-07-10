@@ -88,6 +88,17 @@ public final class CashShopPacket {
         return outPacket;
     }
 
+    public static OutPacket giftPackageDone(String receiverName, Commodity commodity) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
+        outPacket.encodeByte(CashItemResultType.GiftPackage_Done.getValue());
+        outPacket.encodeString(receiverName); // sRcvCharacterName
+        outPacket.encodeInt(commodity.getItemId()); // nItemID
+        outPacket.encodeShort(0); // ignored
+        outPacket.encodeShort(0); // ignored
+        outPacket.encodeInt(commodity.getPrice()); // nSpentNXCash
+        return outPacket;
+    }
+
     public static OutPacket loadGiftDone(List<Gift> gifts) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemResult);
         outPacket.encodeByte(CashItemResultType.LoadGift_Done.getValue());

@@ -1463,44 +1463,46 @@ public final class UserHandler {
                     user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;
                 }
-                final List<CashItemInfo> cashItemInfos = new ArrayList<>();
                 final Optional<Tuple<Commodity, List<Commodity>>> packageResult = CashShop.getCashPackage(gift.getCommodityId());
-                if (packageResult.isPresent()) {
-                    // Cash package
-                    for (Commodity commodity : packageResult.get().getRight()) {
-                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
-                        if (cashItemInfoResult.isEmpty()) {
-                            log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
-                            user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
-                            return;
-                        }
-                        cashItemInfos.add(cashItemInfoResult.get());
-                    }
-                } else {
-                    // Normal gift
-                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
-                    if (cashItemInfoResult.isEmpty()) {
-                        log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
-                        user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
-                        return;
-                    }
-                    final CashItemInfo cashItemInfo = cashItemInfoResult.get();
-                    // Create RingData if pairItemSn was set
-                    if (gift.getPairItemSn() != 0) {
-                        final RingData ringData = new RingData();
-                        ringData.setPairCharacterId(gift.getSenderId());
-                        ringData.setPairCharacterName(gift.getSenderName());
-                        ringData.setPairItemSn(gift.getPairItemSn());
-                        cashItemInfo.getItem().setRingData(ringData);
-                    }
-                    cashItemInfos.add(cashItemInfo);
-                }
+                final int commodityCount = packageResult.map(tuple -> tuple.getRight().size()).orElse(1);
                 // Receive gift
                 try (var lockedAccount = user.getAccount().acquire()) {
                     final Locker locker = lockedAccount.get().getLocker();
-                    if (locker.getRemaining() < cashItemInfos.size()) {
+                    if (locker.getRemaining() < commodityCount) {
                         user.write(BroadcastPacket.alert("Could not receive gift as the locker is full."));
                         return;
+                    }
+                    // Create CashItemInfo(s)
+                    final List<CashItemInfo> cashItemInfos = new ArrayList<>();
+                    if (packageResult.isPresent()) {
+                        // Cash package
+                        for (Commodity commodity : packageResult.get().getRight()) {
+                            final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
+                            if (cashItemInfoResult.isEmpty()) {
+                                log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
+                                user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                                return;
+                            }
+                            cashItemInfos.add(cashItemInfoResult.get());
+                        }
+                    } else {
+                        // Normal gift
+                        final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
+                        if (cashItemInfoResult.isEmpty()) {
+                            log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
+                            user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                            return;
+                        }
+                        final CashItemInfo cashItemInfo = cashItemInfoResult.get();
+                        // Create RingData if pairItemSn was set
+                        if (gift.getPairItemSn() != 0) {
+                            final RingData ringData = new RingData();
+                            ringData.setPairCharacterId(gift.getSenderId());
+                            ringData.setPairCharacterName(gift.getSenderName());
+                            ringData.setPairItemSn(gift.getPairItemSn());
+                            cashItemInfo.getItem().setRingData(ringData);
+                        }
+                        cashItemInfos.add(cashItemInfo);
                     }
                     // Delete gift from DB and add to locker
                     if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
