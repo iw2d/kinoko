@@ -473,7 +473,7 @@ public final class ScriptManagerImpl implements ScriptManager {
             }
         }
         // Add drops to field
-        source.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, source.getX(), source.getY() - GameConstants.DROP_HEIGHT, 0);
+        source.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, source.getX(), source.getY() - GameConstants.DROP_HEIGHT, 200);
     }
 
 

@@ -244,7 +244,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void remove(Instant now) {
-        if (template.getRemoveAfter() <= 0 && now.isBefore(removeAfter)) {
+        if (template.getRemoveAfter() <= 0 || now.isBefore(removeAfter)) {
             return;
         }
         if (getField().getMobPool().removeMob(this)) {
@@ -456,8 +456,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                             finalPartyBonus = (int) (finalPartyBonus * multiplier);
                         }
                     }
-                    user.addExp(finalExp + finalPartyBonus);
-                    user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
+                    if (finalExp + finalPartyBonus > 0) {
+                        user.addExp(finalExp + finalPartyBonus);
+                        user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
+                    }
                     // Process mob kill for quest
                     for (QuestRecord qr : user.getQuestManager().getStartedQuests()) {
                         final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());

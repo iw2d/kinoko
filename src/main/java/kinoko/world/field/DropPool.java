@@ -4,6 +4,7 @@ import kinoko.packet.field.FieldPacket;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.util.Rect;
 import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
@@ -24,8 +25,9 @@ public final class DropPool extends FieldObjectPool<Drop> {
 
     public void addDrop(Drop drop, DropEnterType enterType, int x, int y, int delay) {
         // Clamp x position to map bounds
-        final int boundLeft = field.getMapInfo().getBoundLeft() + GameConstants.DROP_BOUND_OFFSET;
-        final int boundRight = field.getMapInfo().getBoundRight() + GameConstants.DROP_BOUND_OFFSET;
+        final Rect rootBounds = field.getMapInfo().getRootBounds();
+        final int boundLeft = rootBounds.getLeft() + GameConstants.DROP_BOUND_OFFSET;
+        final int boundRight = rootBounds.getRight() - GameConstants.DROP_BOUND_OFFSET;
         if (boundLeft <= boundRight) {
             x = Math.clamp(x, boundLeft, boundRight);
         }

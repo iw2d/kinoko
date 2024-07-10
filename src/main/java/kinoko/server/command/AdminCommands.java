@@ -56,7 +56,6 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        CommandProcessor.initialize();
         user.dispose();
     }
 

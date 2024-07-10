@@ -17,6 +17,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
+import kinoko.world.field.Field;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
@@ -454,13 +455,14 @@ public final class AttackHandler {
         }
 
         // Broadcast packet
-        user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
+        final Field field = user.getField();
+        field.broadcastPacket(UserRemote.attack(user, attack), user);
 
         // Process attack
         int hpGain = 0;
         int mpGain = 0;
         for (AttackInfo ai : attack.getAttackInfo()) {
-            final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
+            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
                 continue;
             }

@@ -93,7 +93,7 @@ public final class GameConstants {
 
     public static final int DROP_HEIGHT = 100;
     public static final int DROP_SPREAD = 20;
-    public static final int DROP_BOUND_OFFSET = 25;
+    public static final int DROP_BOUND_OFFSET = 20;
     public static final int DROP_EXPIRE_INTERVAL = 3;
     public static final int DROP_OWNERSHIP_EXPIRE_TIME = 15;
     public static final int DROP_REMAIN_ON_GROUND_TIME = 120;
