@@ -72,6 +72,13 @@ public enum FieldType {
         return value;
     }
 
+    public final boolean hasFieldSpecificData() {
+        return switch (this) {
+            case COCONUT, BATTLEFIELD, MONSTERCARNIVAL, MONSTERCARNIVALREVIVE, TUTORIAL, SHOWABATH -> true;
+            default -> false;
+        };
+    }
+
     public static FieldType getByValue(int value) {
         for (FieldType type : values()) {
             if (type.getValue() == value) {

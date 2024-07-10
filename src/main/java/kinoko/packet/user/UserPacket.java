@@ -94,7 +94,7 @@ public final class UserPacket {
 
         // field->DecodeFieldSpecificData
         final FieldType fieldType = user.getField().getFieldType();
-        if (fieldType == FieldType.BATTLEFIELD || fieldType == FieldType.COCONUT) {
+        if (fieldType == FieldType.COCONUT || fieldType == FieldType.BATTLEFIELD) {
             // CField_BattleField::DecodeFieldSpecificData, CField_Coconut::DecodeFieldSpecificData
             outPacket.encodeByte(0); // nTeam
         } else if (fieldType == FieldType.MONSTERCARNIVAL || fieldType == FieldType.MONSTERCARNIVALREVIVE) {

@@ -35,7 +35,7 @@ public final class FieldPacket {
     public static OutPacket fieldSpecificData(FieldType fieldType, int data) {
         // field->DecodeFieldSpecificData
         final OutPacket outPacket = OutPacket.of(OutHeader.FieldSpecificData);
-        if (fieldType == FieldType.BATTLEFIELD || fieldType == FieldType.COCONUT) {
+        if (fieldType == FieldType.COCONUT || fieldType == FieldType.BATTLEFIELD) {
             // CField_BattleField::DecodeFieldSpecificData, CField_Coconut::DecodeFieldSpecificData
             outPacket.encodeByte(data); // nTeam
         } else if (fieldType == FieldType.MONSTERCARNIVAL || fieldType == FieldType.MONSTERCARNIVALREVIVE) {

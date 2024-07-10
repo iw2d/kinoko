@@ -303,6 +303,10 @@ public final class Field {
             final LocalDateTime now = LocalDateTime.now();
             user.write(FieldPacket.clock(now.getHour(), now.getMinute(), now.getSecond()));
         }
+        // Handle field specific data
+        if (mapInfo.getFieldType().hasFieldSpecificData()) {
+            user.write(FieldPacket.fieldSpecificData(mapInfo.getFieldType(), 0));
+        }
         // Handle instance
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
             try (var lockedInstance = instanceFieldStorage.getInstance().acquire()) {
