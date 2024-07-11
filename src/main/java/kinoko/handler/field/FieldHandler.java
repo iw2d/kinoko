@@ -7,7 +7,6 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
-import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.event.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -153,11 +152,7 @@ public final class FieldHandler {
                 log.error("{} : could not hit reactor with skill ID {}", reactor, skillId);
                 return;
             }
-            field.getReactorPool().hitReactor(reactor, delay);
-            // Dispatch reactor script
-            if (reactor.isLastState() && reactor.hasAction()) {
-                ScriptDispatcher.startReactorScript(user, reactor, reactor.getAction());
-            }
+            field.getReactorPool().hitReactor(user, reactor, delay);
         }
     }
 

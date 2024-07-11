@@ -83,12 +83,14 @@ final class ScriptHelper {
         for (MapInfo mapInfo : mapInfoList) {
             final int mapId = mapInfo.getMapId();
             final String firstUserEnter = mapInfo.getOnFirstUserEnter();
+            alertScript("Map FUE", mapId, firstUserEnter);
             if (firstUserEnter != null && !firstUserEnter.isEmpty() && scriptMethods.containsKey(firstUserEnter)) {
                 final Map<Integer, List<String>> commentMap = mapComments.computeIfAbsent(firstUserEnter, (key) -> new HashMap<>());
                 final List<String> commentList = commentMap.computeIfAbsent(mapId, mapperFunction);
                 // commentList.add("//   onFirstUserEnter");
             }
             final String userEnter = mapInfo.getOnUserEnter();
+            alertScript("Map UE", mapId, userEnter);
             if (userEnter != null && !userEnter.isEmpty() && scriptMethods.containsKey(userEnter)) {
                 final Map<Integer, List<String>> commentMap = mapComments.computeIfAbsent(userEnter, (key) -> new HashMap<>());
                 final List<String> commentList = commentMap.computeIfAbsent(mapId, mapperFunction);
@@ -104,6 +106,7 @@ final class ScriptHelper {
             }
             for (PortalInfo portalInfo : mapInfo.getPortalInfos().stream().sorted(Comparator.comparing(PortalInfo::getPortalName)).toList()) {
                 final String scriptName = portalInfo.getScript();
+                alertScript("Portal " + portalInfo.getPortalName(), mapId, scriptName);
                 if (scriptName == null || scriptName.isEmpty() || !scriptMethods.containsKey(scriptName)) {
                     continue;
                 }
@@ -127,6 +130,7 @@ final class ScriptHelper {
         for (NpcTemplate npcTemplate : NpcProvider.getNpcTemplates().stream().sorted(Comparator.comparingInt(NpcTemplate::getId)).toList()) {
             final int npcId = npcTemplate.getId();
             final String scriptName = npcTemplate.getScript();
+            alertScript("Npc", npcId, scriptName);
             if (scriptName == null || scriptName.isEmpty() || !scriptMethods.containsKey(scriptName)) {
                 continue;
             }
@@ -148,6 +152,7 @@ final class ScriptHelper {
         for (ItemInfo itemInfo : ItemProvider.getItemInfos()) {
             final int itemId = itemInfo.getItemId();
             final String scriptName = itemInfo.getScript();
+            alertScript("Item", itemId, scriptName);
             if (scriptName == null || scriptName.isEmpty() || !scriptMethods.containsKey(scriptName)) {
                 continue;
             }
@@ -205,6 +210,7 @@ final class ScriptHelper {
         for (ReactorTemplate reactorTemplate : ReactorProvider.getReactorTemplates().stream().sorted(Comparator.comparingInt(ReactorTemplate::getId)).toList()) {
             final int reactorId = reactorTemplate.getId();
             final String scriptName = reactorTemplate.getAction();
+            alertScript("Reactor", reactorId, scriptName);
             if (scriptName == null || scriptName.isEmpty() || !scriptMethods.containsKey(scriptName)) {
                 continue;
             }
@@ -246,7 +252,7 @@ final class ScriptHelper {
                 for (int i = 0; i < scriptNames.size(); i++) {
                     // Separator
                     if (sep.containsKey(i)) {
-                        System.out.printf("%d %s\n", i, sep.get(i));
+                        // System.out.printf("%d %s\n", i, sep.get(i));
                         Files.writeString(path, String.format("\n%s\n\n", sep.get(i)), StandardOpenOption.APPEND);
                     }
                     // Script content
@@ -264,7 +270,7 @@ final class ScriptHelper {
                             Files.writeString(path, String.format("        %s\n", comment), StandardOpenOption.APPEND);
                         }
                     } else {
-                        log.info("Blank script method : {}", scriptName);
+                        // log.info("Blank script method : {}", scriptName);
                     }
                     Files.write(path, scriptBody.subList(bodyStart, scriptBody.size()), StandardOpenOption.APPEND);
                     if (i != scriptNames.size() - 1) {
@@ -303,5 +309,11 @@ final class ScriptHelper {
             return null;
         }
         return StringProvider.getMapName(linkResult.get());
+    }
+
+    private static void alertScript(String scriptType, int source, String scriptName) {
+        if (scriptName != null && scriptName.toLowerCase().startsWith("moon")) {
+            log.info("{} script for {} : {}", scriptType, source, scriptName);
+        }
     }
 }

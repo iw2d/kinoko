@@ -392,19 +392,22 @@ public final class UserHandler {
         final short count = inPacket.decodeShort(); // nCount
 
         try (var locked = user.acquire()) {
-            final InventoryManager im = user.getInventoryManager();
+            final InventoryManager im = locked.get().getInventoryManager();
             final Inventory inventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, oldPos));
             final Item item = inventory.getItem(oldPos);
             if (item == null) {
                 log.error("Could not find item in {} inventory, position {}", inventoryType.name(), oldPos);
                 return;
             }
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+            if (itemInfoResult.isEmpty()) {
+                log.error("Could not resolve item info for item ID : {}, position {}", item.getItemId(), oldPos);
+                return;
+            }
+            final ItemInfo itemInfo = itemInfoResult.get();
             if (newPos == 0) {
-                // CDraggableItem::ThrowItem : item is deleted if (quest || tradeBlock) && POSSIBLE_TRADING attribute not set
-                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
-                final boolean isQuest = itemInfoResult.map(ItemInfo::isQuest).orElse(false);
-                final boolean isTradeBlock = itemInfoResult.map(ItemInfo::isTradeBlock).orElse(false);
-                final DropEnterType dropEnterType = ((isQuest || isTradeBlock) && !item.isPossibleTrading()) ?
+                // CDraggableItem::ThrowItem - item is deleted if (binded || quest || tradeBlock) && POSSIBLE_TRADING attribute not set
+                final DropEnterType dropEnterType = ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) ?
                         DropEnterType.FADING_OUT :
                         DropEnterType.CREATE;
                 if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
@@ -447,9 +450,9 @@ public final class UserHandler {
                         user.dispose();
                         return;
                     }
+                    // Move exclusive body part equip item to inventory
                     final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId(), isCash);
                     if (exclusiveBodyPart != null) {
-                        // Move exclusive body part equip item to inventory
                         final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue() + (isCash ? BodyPart.CASH_BASE.getValue() : 0));
                         final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(im.getEquipInventory());
                         if (availablePositionResult.isEmpty()) {
@@ -463,6 +466,11 @@ public final class UserHandler {
                         }
                         im.getEquipInventory().putItem(availablePosition, exclusiveEquipItem);
                         user.write(WvsContext.inventoryOperation(InventoryOperation.position(InventoryType.EQUIP, -exclusiveBodyPart.getValue(), availablePosition), false)); // client uses negative index for equipped
+                    }
+                    // Handle items binded on equip
+                    if (itemInfo.isEquipTradeBlock() && !item.hasAttribute(ItemAttribute.EQUIP_BINDED)) {
+                        item.addAttribute(ItemAttribute.EQUIP_BINDED);
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.EQUIP, oldPos, item), false));
                     }
                 }
                 // Swap item position and update client

@@ -23,6 +23,12 @@ public final class BroadcastPacket {
         return outPacket;
     }
 
+    public static OutPacket noticeWithoutPrefix(String message) {
+        final OutPacket outPacket = BroadcastPacket.of(BroadcastType.NOTICEWITHOUTPREFIX, message);
+        outPacket.encodeInt(0); // nItemID
+        return outPacket;
+    }
+
     public static OutPacket speakerChannel(String message) {
         return BroadcastPacket.of(BroadcastType.SPEAKERCHANNEL, message);
     }

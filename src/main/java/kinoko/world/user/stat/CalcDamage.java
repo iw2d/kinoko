@@ -361,7 +361,7 @@ public final class CalcDamage {
         return getRand(rand, damage, totalMastery * damage + 0.5);
     }
 
-    private static double getRand(int rand, double f0, double f1) {
+    public static double getRand(int rand, double f0, double f1) {
         // get_rand
         if (f0 == f1) {
             return f0;

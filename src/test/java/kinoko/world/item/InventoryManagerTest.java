@@ -72,6 +72,7 @@ public final class InventoryManagerTest {
         Assertions.assertEquals(0, im.getItemCount(RED_POTION));
         Assertions.assertNull(im.getConsumeInventory().getItem(1));
         Assertions.assertFalse(im.removeItem(RED_POTION, 1).isPresent());
+        Assertions.assertFalse(im.removeItem(RED_POTION, -1).isPresent());
 
         im.getConsumeInventory().putItem(1, createItem(RED_POTION, 5));
         Assertions.assertTrue(im.removeItem(1, im.getConsumeInventory().getItem(1)).isPresent());

@@ -22,6 +22,7 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -269,17 +270,27 @@ public final class UserPool extends FieldObjectPool<User> {
         return fieldObject.getNearestObject(getObjects());
     }
 
+    public List<User> getPartyMembers(int partyId) {
+        if (partyId == 0) {
+            return List.of();
+        }
+        final List<User> members = new ArrayList<>();
+        for (User user : getObjects()) {
+            if (user.getPartyId() == partyId) {
+                members.add(user);
+            }
+        }
+        return members;
+    }
+
     /**
      * Does not include user.
      */
     public void forEachPartyMember(User user, Consumer<User> consumer) {
-        final int partyId = user.getPartyId();
-        if (partyId != 0) {
-            forEach((member) -> {
-                if (member.getCharacterId() != user.getCharacterId() && member.getPartyId() == partyId) {
-                    consumer.accept(member);
-                }
-            });
+        for (User member : getPartyMembers(user.getPartyId())) {
+            if (member.getCharacterId() != user.getCharacterId()) {
+                consumer.accept(member);
+            }
         }
     }
 

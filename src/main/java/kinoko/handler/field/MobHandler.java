@@ -3,12 +3,15 @@ package kinoko.handler.field;
 import kinoko.handler.Handler;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.world.BroadcastPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
 import kinoko.provider.mob.MobSkillType;
+import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.script.event.MoonBunny;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -106,6 +109,43 @@ public final class MobHandler {
         inPacket.decodeInt(); // dwMobID
         inPacket.decodeInt(); // unk
         // do nothing, controller logic is handled in UserPool
+    }
+
+    @Handler(InHeader.MobHitByMob)
+    public static void handleMobHitByMob(User user, InPacket inPacket) {
+        // CMob::Update
+        final int attackerMobId = inPacket.decodeInt(); // dwMobID
+        inPacket.decodeInt(); // dwCharacterID
+        final int targetMobId = inPacket.decodeInt(); // MobID
+
+        // Resolve mobs
+        final Field field = user.getField();
+        final Optional<Mob> attackerMobResult = field.getMobPool().getById(attackerMobId);
+        final Optional<Mob> targetMobResult = field.getMobPool().getById(targetMobId);
+        if (attackerMobResult.isEmpty() || targetMobResult.isEmpty()) {
+            log.error("Received MobHitByMob for invalid objects : {}, {}", attackerMobId, targetMobId);
+            return;
+        }
+        final Mob attackerMob = attackerMobResult.get();
+        final Mob targetMob = targetMobResult.get();
+
+        // Apply damage
+        try (var lockedMob = targetMob.acquire()) {
+            final int damage = calcMobDamage(attackerMob.getTemplate(), targetMob.getTemplate());
+            targetMob.setHp(targetMob.getHp() - damage);
+            field.broadcastPacket(MobPacket.mobDamaged(targetMob, damage));
+            if (targetMob.getHp() > 0) {
+                targetMob.resetDropItemPeriod();
+                return;
+            }
+            // Process mob death
+            field.getMobPool().removeMob(targetMob);
+            switch (targetMob.getTemplateId()) {
+                case MoonBunny.MOON_BUNNY -> {
+                    field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
+                }
+            }
+        }
     }
 
     @Handler(InHeader.MobAttackMob)
@@ -325,5 +365,12 @@ public final class MobHandler {
             }
         }
         return true;
+    }
+
+    private static int calcMobDamage(MobTemplate attackerTemplate, MobTemplate targetTemplate) {
+        // `anonymous namespace'::calc_mob_base_damamge
+        final int pad = attackerTemplate.getPad();
+        final double baseDamage = CalcDamage.getRand(Util.getRandom().nextInt(), pad, pad * 0.85);
+        return (int) Math.max(1, baseDamage * ((100.0 - targetTemplate.getPdr()) / 100.0));
     }
 }

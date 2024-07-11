@@ -1,6 +1,7 @@
 package kinoko.world.field.mob;
 
 import kinoko.packet.field.MobPacket;
+import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
@@ -15,6 +16,7 @@ import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillStat;
+import kinoko.script.event.MoonBunny;
 import kinoko.server.event.EventScheduler;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -57,11 +59,13 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private User controller;
     private int hp;
     private int mp;
+    private int itemDropCount;
     private boolean slowUsed;
     private int swallowCharacterId;
     private Reward stolenReward;
     private Instant nextRecovery;
     private Instant removeAfter;
+    private Instant nextDropItem;
 
     public Mob(MobTemplate template, MobSpawnPoint spawnPoint, int x, int y, int fh) {
         this.template = template;
@@ -71,12 +75,13 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         setX(x);
         setY(y);
         setFoothold(fh);
-        setMoveAction(MobActionType.REGEN.getValue());
+        setMoveAction(MobActionType.REGEN.getValue() << 1);
         // Mob initialization
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
         this.nextRecovery = Instant.now();
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
+        this.nextDropItem = template.getDropItemPeriod() > 0 ? Instant.now().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS) : Instant.MAX;
     }
 
     public MobTemplate getTemplate() {
@@ -113,6 +118,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public boolean isBoss() {
         return template.isBoss();
+    }
+
+    public boolean isDamagedByMob() {
+        return template.isDamagedByMob();
     }
 
     public Map<ElementAttribute, DamagedAttribute> getDamagedElemAttr() {
@@ -211,6 +220,12 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.removeAfter = removeAfter;
     }
 
+    public void resetDropItemPeriod() {
+        if (template.getDropItemPeriod() > 0) {
+            nextDropItem = Instant.now().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS);
+        }
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
@@ -243,6 +258,24 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
         if (spawnPoint != null) {
             spawnPoint.setNextMobRespawn();
+        }
+    }
+
+    public void dropItem(Instant now) {
+        if (template.getDropItemPeriod() <= 0 || now.isBefore(nextDropItem)) {
+            return;
+        }
+        final Optional<User> ownerResult = getField().getUserPool().getNearestUser(this);
+        if (ownerResult.isEmpty()) {
+            return;
+        }
+        dropRewards(ownerResult.get());
+        itemDropCount++;
+        nextDropItem = now.plus(template.getDropItemPeriod(), ChronoUnit.SECONDS);
+        switch (template.getId()) {
+            case MoonBunny.MOON_BUNNY -> {
+                getField().broadcastPacket(BroadcastPacket.noticeWithoutPrefix(String.format("The Moon Bunny made rice cake number %d", itemDropCount)));
+            }
         }
     }
 

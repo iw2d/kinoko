@@ -26,6 +26,7 @@ public final class MobTemplate {
     private final int mpRecovery;
     private final int fixedDamage;
     private final int removeAfter;
+    private final int dropItemPeriod;
     private final boolean boss;
     private final boolean noFlip;
     private final boolean damagedByMob;
@@ -39,8 +40,8 @@ public final class MobTemplate {
 
     public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int pad, int pdr, int mad, int mdr,
                        int acc, int eva, int hpRecovery, int mpRecovery, int fixedDamage, int removeAfter,
-                       boolean boss, boolean noFlip, boolean damagedByMob, boolean onlyNormalAttack,
-                       Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
+                       int dropItemPeriod, boolean boss, boolean noFlip, boolean damagedByMob,
+                       boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
                        Map<ElementAttribute, DamagedAttribute> damagedElemAttr, Set<Integer> damagedBySkill,
                        List<Integer> revives, int reviveDelay) {
         this.id = id;
@@ -58,6 +59,7 @@ public final class MobTemplate {
         this.mpRecovery = mpRecovery;
         this.fixedDamage = fixedDamage;
         this.removeAfter = removeAfter;
+        this.dropItemPeriod = dropItemPeriod;
         this.boss = boss;
         this.noFlip = noFlip;
         this.damagedByMob = damagedByMob;
@@ -128,6 +130,10 @@ public final class MobTemplate {
 
     public int getRemoveAfter() {
         return removeAfter;
+    }
+
+    public int getDropItemPeriod() {
+        return dropItemPeriod;
     }
 
     public boolean isBoss() {
@@ -206,6 +212,7 @@ public final class MobTemplate {
                 ", mpRecovery=" + mpRecovery +
                 ", fixedDamage=" + fixedDamage +
                 ", removeAfter=" + removeAfter +
+                ", dropItemPeriod=" + dropItemPeriod +
                 ", boss=" + boss +
                 ", noFlip=" + noFlip +
                 ", damagedByMob=" + damagedByMob +
@@ -234,6 +241,7 @@ public final class MobTemplate {
         int mpRecovery = 0;
         int fixedDamage = 0;
         int removeAfter = 0;
+        int dropItemPeriod = 0;
         boolean boss = false;
         boolean noFlip = false;
         boolean damagedByMob = false;
@@ -327,6 +335,9 @@ public final class MobTemplate {
                 case "removeAfter" -> {
                     removeAfter = WzProvider.getInteger(infoEntry.getValue());
                 }
+                case "dropItemPeriod" -> {
+                    dropItemPeriod = WzProvider.getInteger(infoEntry.getValue());
+                }
                 case "boss" -> {
                     boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
@@ -418,6 +429,7 @@ public final class MobTemplate {
                 mpRecovery,
                 fixedDamage,
                 removeAfter,
+                dropItemPeriod,
                 boss,
                 noFlip,
                 damagedByMob,

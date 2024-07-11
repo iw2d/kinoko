@@ -86,6 +86,10 @@ public final class ItemInfo {
         return getInfo(ItemInfoType.tradeBlock) != 0;
     }
 
+    public boolean isEquipTradeBlock() {
+        return getInfo(ItemInfoType.equipTradeBlock) != 0;
+    }
+
     public boolean isAbleToEquip(int gender, int level, int job, int subJob, int totalStr, int totalDex, int totalInt, int totalLuk, int pop, int durability, int weaponId, int petTemplateId) {
         // Check durability
         if (getInfo(ItemInfoType.durability) > 0 && durability == 0) {

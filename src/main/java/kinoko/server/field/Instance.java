@@ -2,22 +2,22 @@ package kinoko.server.field;
 
 import kinoko.packet.field.FieldPacket;
 import kinoko.server.node.ChannelServerNode;
-import kinoko.util.Lockable;
 import kinoko.world.user.User;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public final class Instance implements Lockable<Instance> {
+public final class Instance {
     private final Lock lock = new ReentrantLock();
     private final int instanceId;
     private final int returnMap;
     private final Map<Integer, User> userMap;
+    private final Map<String, String> variables;
     private final ChannelServerNode channelServerNode;
     private final Instant expireTime;
 
@@ -26,7 +26,8 @@ public final class Instance implements Lockable<Instance> {
     public Instance(int instanceId, int returnMap, ChannelServerNode channelServerNode, Instant expireTime) {
         this.instanceId = instanceId;
         this.returnMap = returnMap;
-        this.userMap = new HashMap<>();
+        this.userMap = new ConcurrentHashMap<>();
+        this.variables = new ConcurrentHashMap<>();
         this.channelServerNode = channelServerNode;
         this.expireTime = expireTime;
     }
@@ -70,13 +71,11 @@ public final class Instance implements Lockable<Instance> {
         return userMap.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 
-    @Override
-    public void lock() {
-        lock.lock();
+    public String getVariable(String key) {
+        return variables.getOrDefault(key, "");
     }
 
-    @Override
-    public void unlock() {
-        lock.unlock();
+    public void setVariable(String key, String value) {
+        variables.put(key, value);
     }
 }

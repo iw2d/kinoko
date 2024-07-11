@@ -55,6 +55,8 @@ public final class Field {
     private final TownPortalPool townPortalPool;
     private final AffectedAreaPool affectedAreaPool;
 
+    private WeatherEffect weatherEffect;
+
     private Instant nextMobRespawn = Instant.now();
     private Instant nextDropExpire = Instant.now();
     private Instant nextReactorExpire = Instant.now();
@@ -224,6 +226,13 @@ public final class Field {
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
         affectedAreaPool.updateAffectedAreas(now);
+        // Handle weather effect
+        if (weatherEffect != null) {
+            if (now.isAfter(weatherEffect.getExpireTime())) {
+                broadcastPacket(FieldPacket.blowWeather(0, ""));
+                weatherEffect = null;
+            }
+        }
         // Handle instance
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
             final Instance instance = instanceFieldStorage.getInstance();
@@ -238,6 +247,23 @@ public final class Field {
                     }
                 });
                 instance.getChannelServerNode().removeInstance(instance);
+            }
+        }
+    }
+
+    public synchronized void blowWeather(int itemId, String message, int duration) {
+        broadcastPacket(FieldPacket.blowWeather(itemId, message));
+        weatherEffect = new WeatherEffect(itemId, message, Instant.now().plus(duration, ChronoUnit.SECONDS));
+    }
+
+    public synchronized void setMobSpawn(boolean enabled) {
+        if (enabled) {
+            nextMobRespawn = Instant.now().plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
+        } else {
+            nextMobRespawn = Instant.MAX;
+            // Clear existing mobs
+            for (Mob mob : mobPool.getObjects()) {
+                mobPool.removeMob(mob);
             }
         }
     }
@@ -309,9 +335,7 @@ public final class Field {
         }
         // Handle instance
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
-            try (var lockedInstance = instanceFieldStorage.getInstance().acquire()) {
-                lockedInstance.get().addUser(user);
-            }
+            instanceFieldStorage.getInstance().addUser(user);
         }
     }
 
@@ -321,9 +345,7 @@ public final class Field {
         user.closeDialog();
         // Handle instance
         if (fieldStorage instanceof InstanceFieldStorage instanceFieldStorage) {
-            try (var lockedInstance = instanceFieldStorage.getInstance().acquire()) {
-                lockedInstance.get().removeUser(user);
-            }
+            instanceFieldStorage.getInstance().removeUser(user);
         }
     }
 

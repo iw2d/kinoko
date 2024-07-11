@@ -83,7 +83,7 @@ public final class AdminCommands {
         user.write(MessagePacket.system("INT : %d", user.getBasicStat().getInt()));
         user.write(MessagePacket.system("LUK : %d", user.getBasicStat().getLuk()));
         user.write(MessagePacket.system("Damage : %d ~ %d", (int) CalcDamage.calcDamageMin(user), (int) CalcDamage.calcDamageMax(user)));
-        user.write(MessagePacket.system("Field ID : %d", field.getFieldId()));
+        user.write(MessagePacket.system("Field ID : %d (%s)", field.getFieldId(), field.getFieldType()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
         final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getFootholdId())).orElse("unk");
@@ -104,7 +104,7 @@ public final class AdminCommands {
                     nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript()));
         }
         // Compute nearest mob
-        final Rect detectRect = new Rect(-100, -100, 100, 100);
+        final Rect detectRect = new Rect(-400, -400, 400, 400);
         final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(detectRect)));
         if (nearestMobResult.isPresent()) {
             final Mob mob = nearestMobResult.get();
@@ -397,6 +397,23 @@ public final class AdminCommands {
         field.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
     }
 
+    @Command("hitreactor")
+    @Arguments("reactor template ID")
+    public static void hitReactor(User user, String[] args) {
+        final int templateId = Integer.parseInt(args[1]);
+        final Field field = user.getField();
+        final Optional<Reactor> reactorResult = field.getReactorPool().getByTemplateId(templateId);
+        if (reactorResult.isEmpty()) {
+            user.write(MessagePacket.system("Could not resolve reactor with template ID : %d", templateId));
+            return;
+        }
+        try (var lockedReactor = reactorResult.get().acquire()) {
+            final Reactor reactor = lockedReactor.get();
+            reactor.setState(reactor.getState() + 1);
+            field.getReactorPool().hitReactor(user, reactor, 0);
+        }
+    }
+
     @Command({ "mob", "spawn" })
     @Arguments("mob template ID")
     public static void mob(User user, String[] args) {
@@ -417,6 +434,18 @@ public final class AdminCommands {
         );
         field.getMobPool().addMob(mob);
         mob.setAppearType(MobAppearType.NORMAL);
+    }
+
+    @Command("togglemob")
+    @Arguments("true/false")
+    public static void disableMob(User user, String[] args) {
+        if (args[1].equalsIgnoreCase("true")) {
+            user.getField().setMobSpawn(true);
+            user.write(MessagePacket.system("Enabled mob spawns"));
+        } else if (args[1].equalsIgnoreCase("false")) {
+            user.getField().setMobSpawn(false);
+            user.write(MessagePacket.system("Disabled mob spawns"));
+        }
     }
 
     @Command("item")

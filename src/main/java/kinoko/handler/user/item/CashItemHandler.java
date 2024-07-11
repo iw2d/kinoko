@@ -343,10 +343,7 @@ public final class CashItemHandler extends ItemHandler {
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
                     // Blow weather
                     final Field field = user.getField();
-                    field.broadcastPacket(FieldPacket.blowWeather(itemId, String.format("%s : %s", user.getCharacterName(), message)));
-                    EventScheduler.addEvent(() -> {
-                        field.broadcastPacket(FieldPacket.blowWeather(0, ""));
-                    }, 30, TimeUnit.SECONDS); // TODO : register to field
+                    field.blowWeather(itemId, String.format("%s : %s", user.getCharacterName(), message), 30);
                     // Apply state change item
                     final int stateChangeItem = itemInfo.getInfo(ItemInfoType.stateChangeItem);
                     if (stateChangeItem == 0) {

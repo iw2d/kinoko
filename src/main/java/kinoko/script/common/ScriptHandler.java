@@ -27,12 +27,16 @@ public abstract class ScriptHandler {
         return String.format("#t%d#", itemId);
     }
 
+    protected static String itemImage(int itemId) {
+        return String.format("#v%d#", itemId);
+    }
+
     protected static String mapName(int mapId) {
         return String.format("#m%d#", mapId);
     }
 
     protected static String npcName(int npcId) {
-        return String.format("#n%d#", npcId);
+        return String.format("#p%d#", npcId);
     }
 
     protected static <T> Map<Integer, String> createOptions(List<T> list, Function<T, String> mapper) {

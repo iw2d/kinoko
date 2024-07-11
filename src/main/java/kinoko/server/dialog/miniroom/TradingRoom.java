@@ -203,9 +203,11 @@ public final class TradingRoom extends MiniRoom {
             return false;
         }
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
-        final boolean isQuest = itemInfoResult.map(ItemInfo::isQuest).orElse(false);
-        final boolean isTradeBlock = itemInfoResult.map(ItemInfo::isTradeBlock).orElse(false);
-        if ((isQuest || isTradeBlock) && !item.isPossibleTrading()) {
+        if (itemInfoResult.isEmpty()) {
+            return false;
+        }
+        final ItemInfo itemInfo = itemInfoResult.get();
+        if ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) {
             return false;
         }
         if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&

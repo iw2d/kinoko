@@ -308,13 +308,6 @@ public final class UnityPortal extends ScriptHandler {
         returnPortal(sm);
     }
 
-    @Script("moonrabbit_exit")
-    public static void moonrabbit_exit(ScriptManager sm) {
-        // Hidden Street : Moon Bunny Lobby (910010500)
-        //   out00 (-420, 267)
-        returnPortal(sm, 100000200, "event00"); // Henesys : Henesys Park
-    }
-
     @Script("party_exit")
     public static void party_exit(ScriptManager sm) {
         // Hidden Street : First Time Together Lobby (910340700)

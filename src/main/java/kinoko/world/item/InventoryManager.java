@@ -180,6 +180,10 @@ public final class InventoryManager {
     }
 
     public Optional<List<InventoryOperation>> removeItem(int itemId, int quantity) {
+        if (quantity < 0) {
+            log.error("Tried to remove a negative quantity {}", quantity);
+            return Optional.empty();
+        }
         final List<InventoryOperation> inventoryOperations = new ArrayList<>();
         final InventoryType inventoryType = InventoryType.getByItemId(itemId);
         final Inventory inventory = getInventoryByType(inventoryType);

@@ -3,6 +3,7 @@ package kinoko.script.common;
 import kinoko.provider.reward.Reward;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
+import kinoko.server.packet.OutPacket;
 import kinoko.util.Tuple;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.MobAppearType;
@@ -69,6 +70,8 @@ public interface ScriptManager {
 
     boolean canAddItems(List<Tuple<Integer, Integer>> items);
 
+    boolean removeItem(int itemId);
+
     boolean removeItem(int itemId, int quantity);
 
     boolean hasItem(int itemId);
@@ -99,6 +102,8 @@ public interface ScriptManager {
 
     void warp(int mapId, String portalName);
 
+    void partyWarp(int mapId, String portalName);
+
     void warpInstance(int mapId, String portalName, int returnMap, int timeLimit);
 
     void warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit);
@@ -114,11 +119,30 @@ public interface ScriptManager {
 
     int getFieldId();
 
-    EventState getEventState(EventType eventType);
-
     void spawnMob(int templateId, MobAppearType appearType, int x, int y);
 
     void dropRewards(List<Reward> rewards);
+
+
+    // EVENT METHODS ---------------------------------------------------------------------------------------------------
+
+    boolean checkParty(int memberCount, int levelMin);
+
+    EventState getEventState(EventType eventType);
+
+    String getInstanceVariable(String key);
+
+    void setInstanceVariable(String key, String value);
+
+    void addExpAll(int exp);
+
+    void broadcastPacket(OutPacket outPacket);
+
+    void broadcastMessage(String message);
+
+    void broadcastScreenEffect(String effectPath);
+
+    void broadcastSoundEffect(String effectPath);
 
 
     // CONVERSATION METHODS --------------------------------------------------------------------------------------------

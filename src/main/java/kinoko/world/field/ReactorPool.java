@@ -1,12 +1,18 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.script.common.ScriptDispatcher;
+import kinoko.script.event.MoonBunny;
 import kinoko.world.GameConstants;
 import kinoko.world.field.reactor.Reactor;
+import kinoko.world.user.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ReactorPool extends FieldObjectPool<Reactor> {
@@ -16,6 +22,25 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         super(field);
     }
 
+    public Optional<Reactor> getByTemplateId(int templateId) {
+        for (Reactor reactor : getObjects()) {
+            if (reactor.getTemplateId() == templateId) {
+                return Optional.of(reactor);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public List<Reactor> getAllByTemplateId(int templateId) {
+        final List<Reactor> reactors = new ArrayList<>();
+        for (Reactor reactor : getObjects()) {
+            if (reactor.getTemplateId() == templateId) {
+                reactors.add(reactor);
+            }
+        }
+        return reactors;
+    }
+
     public void addReactor(Reactor reactor) {
         reactor.setField(field);
         reactor.setId(field.getNewObjectId());
@@ -23,11 +48,33 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         field.broadcastPacket(FieldPacket.reactorEnterField(reactor));
     }
 
-    public synchronized void hitReactor(Reactor reactor, int delay) {
+    public synchronized void hitReactor(User user, Reactor reactor, int delay) {
+        // Register reactor expiry
         if (reactor.getReactorTime() > 0) {
             hitReactors.put(reactor, Instant.now().plus(reactor.getReactorTime(), ChronoUnit.SECONDS));
         }
+        // Broadcast reactor changing state
         field.broadcastPacket(FieldPacket.reactorChangeState(reactor, delay, 0, GameConstants.REACTOR_END_DELAY));
+        // Dispatch reactor script
+        if (reactor.isLastState() && reactor.hasAction()) {
+            ScriptDispatcher.startReactorScript(user, reactor, reactor.getAction());
+        }
+        // Special handling for reactors without scripts
+        switch (reactor.getTemplateId()) {
+            case 9108000, 9108001, 9108002, 9108003, 9108004, 9108005 -> {
+                // Moon Bunny Primrose reactors
+                final Optional<Reactor> moonReactorResult = getByTemplateId(MoonBunny.MOON_REACTOR);
+                if (moonReactorResult.isPresent()) {
+                    try (var lockedReactor = moonReactorResult.get().acquire()) {
+                        final Reactor moonReactor = lockedReactor.get();
+                        if (!moonReactor.isLastState()) {
+                            moonReactor.setState(moonReactor.getState() + 1);
+                            hitReactor(user, moonReactor, 0);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void expireReactors(Instant now) {

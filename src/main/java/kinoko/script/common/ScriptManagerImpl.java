@@ -18,6 +18,8 @@ import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
 import kinoko.server.field.Instance;
+import kinoko.server.field.InstanceFieldStorage;
+import kinoko.server.packet.OutPacket;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -254,6 +256,15 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public boolean removeItem(int itemId) {
+        final int itemCount = getItemCount(itemId);
+        if (itemCount > 0) {
+            return removeItem(itemId, itemCount);
+        }
+        return true;
+    }
+
+    @Override
     public boolean removeItem(int itemId, int quantity) {
         final Optional<List<InventoryOperation>> removeItemResult = user.getInventoryManager().removeItem(itemId, quantity);
         if (removeItemResult.isPresent()) {
@@ -328,30 +339,69 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public void warp(int mapId) {
-        final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(mapId);
-        if (fieldResult.isEmpty()) {
-            throw new ScriptError("Could not resolve field ID : %d", mapId);
+        final Field targetField;
+        final Optional<Field> instanceFieldResult = field.getFieldStorage().getFieldById(mapId);
+        if (instanceFieldResult.isPresent()) {
+            targetField = instanceFieldResult.get();
+        } else {
+            final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(mapId);
+            if (fieldResult.isEmpty()) {
+                throw new ScriptError("Could not resolve field ID : %d", mapId);
+            }
+            targetField = fieldResult.get();
         }
-        final Field targetField = fieldResult.get();
         final Optional<PortalInfo> portalResult = targetField.getRandomStartPoint();
         if (portalResult.isEmpty()) {
             throw new ScriptError("Could not resolve start point portal for field ID : %d", targetField.getFieldId());
         }
-        user.warp(fieldResult.get(), portalResult.get(), false, false);
+        user.warp(targetField, portalResult.get(), false, false);
     }
 
     @Override
     public void warp(int mapId, String portalName) {
-        final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(mapId);
-        if (fieldResult.isEmpty()) {
-            throw new ScriptError("Could not resolve field ID : %d", mapId);
+        final Field targetField;
+        final Optional<Field> instanceFieldResult = field.getFieldStorage().getFieldById(mapId);
+        if (instanceFieldResult.isPresent()) {
+            targetField = instanceFieldResult.get();
+        } else {
+            final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(mapId);
+            if (fieldResult.isEmpty()) {
+                throw new ScriptError("Could not resolve field ID : %d", mapId);
+            }
+            targetField = fieldResult.get();
         }
-        final Field targetField = fieldResult.get();
         final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
         if (portalResult.isEmpty()) {
             throw new ScriptError("Tried to warp to portal : %s on field ID : %d", portalName, targetField.getFieldId());
         }
-        user.warp(fieldResult.get(), portalResult.get(), false, false);
+        user.warp(targetField, portalResult.get(), false, false);
+    }
+
+    @Override
+    public void partyWarp(int mapId, String portalName) {
+        final Field targetField;
+        final Optional<Field> instanceFieldResult = field.getFieldStorage().getFieldById(mapId);
+        if (instanceFieldResult.isPresent()) {
+            targetField = instanceFieldResult.get();
+        } else {
+            final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(mapId);
+            if (fieldResult.isEmpty()) {
+                throw new ScriptError("Could not resolve field ID : %d", mapId);
+            }
+            targetField = fieldResult.get();
+        }
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
+        if (portalResult.isEmpty()) {
+            throw new ScriptError("Tried to warp to portal : %s on field ID : %d", portalName, targetField.getFieldId());
+        }
+        final PortalInfo targetPortal = portalResult.get();
+        // Warp user and party members in field
+        field.getUserPool().forEachPartyMember(user, (member) -> {
+            try (var lockedMember = member.acquire()) {
+                member.warp(targetField, targetPortal, false, false);
+            }
+        });
+        user.warp(targetField, targetPortal, false, false);
     }
 
     @Override
@@ -420,15 +470,6 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public EventState getEventState(EventType eventType) {
-        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventType);
-        if (eventStateResult.isEmpty()) {
-            throw new ScriptError("Could not resolve event state for event type : %s", eventType);
-        }
-        return eventStateResult.get();
-    }
-
-    @Override
     public void spawnMob(int templateId, MobAppearType appearType, int x, int y) {
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
         if (mobTemplateResult.isEmpty()) {
@@ -474,6 +515,84 @@ public final class ScriptManagerImpl implements ScriptManager {
         }
         // Add drops to field
         source.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, source.getX(), source.getY() - GameConstants.DROP_HEIGHT, 200);
+    }
+
+
+    // EVENT METHODS ---------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean checkParty(int memberCount, int levelMin) {
+        final List<User> members = field.getUserPool().getPartyMembers(user.getPartyId());
+        if (members.size() < memberCount) {
+            return false;
+        }
+        for (User member : members) {
+            if (member.getLevel() < levelMin) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public EventState getEventState(EventType eventType) {
+        final Optional<EventState> eventStateResult = user.getConnectedServer().getEventState(eventType);
+        if (eventStateResult.isEmpty()) {
+            throw new ScriptError("Could not resolve event state for event type : %s", eventType);
+        }
+        return eventStateResult.get();
+    }
+
+    @Override
+    public String getInstanceVariable(String key) {
+        if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
+            final Instance instance = instanceFieldStorage.getInstance();
+            return instance.getVariable(key);
+        } else {
+            throw new ScriptError("Tried to get instance variable %s while not in an instance", key);
+        }
+    }
+
+    @Override
+    public void setInstanceVariable(String key, String value) {
+        if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
+            final Instance instance = instanceFieldStorage.getInstance();
+            instance.setVariable(key, value);
+        } else {
+            throw new ScriptError("Tried to set instance variable %s while not in an instance", key);
+        }
+    }
+
+    @Override
+    public void addExpAll(int exp) {
+        addExp(exp);
+        field.getUserPool().forEach((member) -> {
+            if (member.getCharacterId() != user.getCharacterId()) {
+                try (var lockedMember = member.acquire()) {
+                    member.addExp(exp);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void broadcastPacket(OutPacket outPacket) {
+        field.broadcastPacket(outPacket);
+    }
+
+    @Override
+    public void broadcastMessage(String message) {
+        field.broadcastPacket(MessagePacket.system(message));
+    }
+
+    @Override
+    public void broadcastScreenEffect(String effectPath) {
+        field.broadcastPacket(FieldEffectPacket.screen(effectPath));
+    }
+
+    @Override
+    public void broadcastSoundEffect(String effectPath) {
+        field.broadcastPacket(FieldEffectPacket.sound(effectPath));
     }
 
 

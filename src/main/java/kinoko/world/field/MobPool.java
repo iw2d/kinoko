@@ -74,6 +74,8 @@ public final class MobPool extends FieldObjectPool<Mob> {
                 mob.recovery(now);
                 // Try removing mob (removeAfter)
                 mob.remove(now);
+                // Try dropping item (dropItemPeriod)
+                mob.dropItem(now);
             }
         }
     }

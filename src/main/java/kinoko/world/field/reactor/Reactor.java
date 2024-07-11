@@ -3,7 +3,6 @@ package kinoko.world.field.reactor;
 import kinoko.provider.map.ReactorInfo;
 import kinoko.provider.reactor.ReactorEvent;
 import kinoko.provider.reactor.ReactorTemplate;
-import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.event.EventScheduler;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
@@ -124,10 +123,7 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
                 }
                 // Advance state and dispatch reactor script
                 reactor.setState(dropEvent.getNextState());
-                reactor.getField().getReactorPool().hitReactor(reactor, 0);
-                if (reactor.isLastState() && reactor.hasAction()) {
-                    ScriptDispatcher.startReactorScript(userResult.get(), reactor, reactor.getAction());
-                }
+                reactor.getField().getReactorPool().hitReactor(userResult.get(), reactor, 0);
             }
         }, GameConstants.REACTOR_DROP_DELAY, TimeUnit.SECONDS);
     }
