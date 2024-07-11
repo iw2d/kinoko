@@ -46,4 +46,11 @@ public final class NpcPacket {
         }
         return outPacket;
     }
+
+    public static OutPacket npcSpecialAction(Npc npc, String action) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.NpcSpecialAction);
+        outPacket.encodeInt(npc.getId());
+        outPacket.encodeString(action);
+        return outPacket;
+    }
 }

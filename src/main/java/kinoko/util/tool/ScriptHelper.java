@@ -312,7 +312,7 @@ final class ScriptHelper {
     }
 
     private static void alertScript(String scriptType, int source, String scriptName) {
-        if (scriptName != null && scriptName.toLowerCase().startsWith("moon")) {
+        if (scriptName != null && scriptName.toLowerCase().startsWith("naut")) {
             log.info("{} script for {} : {}", scriptType, source, scriptName);
         }
     }

@@ -263,8 +263,8 @@ public final class QuestItemAct implements QuestAct {
                 .toList();
     }
 
-    public static QuestItemAct from(int questId, WzListProperty itemList) {
-        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList, 1);
+    public static QuestItemAct from(int questId, WzListProperty itemList, int defaultCount) {
+        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList, defaultCount);
         final List<QuestItemData> choices = QuestItemData.resolveChoiceItemData(itemList);
         return new QuestItemAct(
                 questId,

@@ -123,6 +123,8 @@ public interface ScriptManager {
 
     void dropRewards(List<Reward> rewards);
 
+    void setNpcAction(int templateId, String action);
+
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
 

@@ -3,9 +3,20 @@ package kinoko.world.field;
 import kinoko.packet.field.NpcPacket;
 import kinoko.world.field.npc.Npc;
 
+import java.util.Optional;
+
 public final class NpcPool extends FieldObjectPool<Npc> {
     public NpcPool(Field field) {
         super(field);
+    }
+
+    public Optional<Npc> getByTemplateId(int templateId) {
+        for (Npc npc : getObjects()) {
+            if (npc.getTemplateId() == templateId) {
+                return Optional.of(npc);
+            }
+        }
+        return Optional.empty();
     }
 
     public void addNpc(Npc npc) {

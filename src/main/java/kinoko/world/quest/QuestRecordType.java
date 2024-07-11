@@ -4,11 +4,12 @@ package kinoko.world.quest;
  * Special quest IDs used to store various state information for the user.
  */
 public enum QuestRecordType {
-    MushroomCastleOpening(2311),
-    UnityPortal(7050),
-    FreeMarket(7600),
-    TatamoLikeness(7810),
-    WorldTour(8792);
+    NautilusMomCow(2180),           // Find Fresh Milk
+    MushroomCastleOpening(2311),    // Mushroom Castle Opening Cutscene
+    UnityPortal(7050),              // Dimensional Mirror Return Map
+    FreeMarket(7600),               // Free Market Return Map
+    TatamoLikeness(7810),           // Chief Tatamo Magic Seed Discount
+    WorldTour(8792);                // World Tour Return Map
 
     private final int questId;
 

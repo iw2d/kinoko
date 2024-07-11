@@ -2,6 +2,7 @@ package kinoko.script.common;
 
 import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.field.NpcPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
@@ -30,6 +31,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.npc.Npc;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
@@ -515,6 +517,16 @@ public final class ScriptManagerImpl implements ScriptManager {
         }
         // Add drops to field
         source.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, source.getX(), source.getY() - GameConstants.DROP_HEIGHT, 200);
+    }
+
+    @Override
+    public void setNpcAction(int templateId, String action) {
+        final Optional<Npc> npcResult = field.getNpcPool().getByTemplateId(templateId);
+        if (npcResult.isEmpty()) {
+            throw new ScriptError("Could not resolve npc with template ID : %d", templateId);
+        }
+        final Npc npc = npcResult.get();
+        npc.getController().write(NpcPacket.npcSpecialAction(npc, action));
     }
 
 

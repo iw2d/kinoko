@@ -6,6 +6,7 @@ import kinoko.script.common.ScriptError;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.server.event.*;
+import kinoko.util.Util;
 
 import java.util.List;
 import java.util.Map;
@@ -507,6 +508,86 @@ public final class ContiMove extends ScriptHandler {
                 sm.playPortalSE();
                 sm.warp(222020210, "out00"); // Ludibrium : Elevator <To Korean Folk Town>
             }
+        }
+    }
+
+    @Script("nihal_taxi")
+    public static void nihal_taxi(ScriptManager sm) {
+        // Camel Cab (2110005)
+        //   The Burning Sands : Outside North Entrance of Ariant (260020000)
+        //   Sunset Road : Sahel 1 (260020700)
+        if (sm.getFieldId() == 260020000) {
+            // The Burning Sands : Outside North Entrance of Ariant
+            if (sm.askYesNo("Would you like to take the #b#p2110005##k to #b#m261000000##k, the town of Alchemy? The fare is #b1500 mesos#k.")) {
+                if (sm.addMoney(-1500)) {
+                    sm.warp(261000000); // Sunset Road : Magatia
+                } else {
+                    sm.sayNext("I am sorry, but I think you are short on mesos. I am afraid I can't let you ride this if you do not have enough money to do so. Please come back when you have enough money to use this.");
+                }
+            } else {
+                sm.sayNext("Hmmm... too busy to do it right now? If you feel like doing it, though, come back and find me.");
+            }
+        } else if (sm.getFieldId() == 260020700) {
+            // Sunset Road : Sahel 1
+            if (sm.askYesNo("Would you like to take the #b#p2110005##k to #b#m260000000##k, the town of Burning Roads? The fare is #b1500 mesos#k.")) {
+                if (sm.addMoney(-1500)) {
+                    sm.warp(260000000); // The Burning Road : Ariant
+                } else {
+                    sm.sayNext("I am sorry, but I think you are short on mesos. I am afraid I can't let you ride this if you do not have enough money to do so. Please come back when you have enough money to use this.");
+                }
+            } else {
+                sm.sayNext("Hmmm... too busy to do it right now? If you feel like doing it, though, come back and find me.");
+            }
+        }
+    }
+
+    @Script("karakasa")
+    public static void karakasa(ScriptManager sm) {
+        // Karcasa (2101013)
+        //   The Burning Sands : Tent of the Entertainers (260010600)
+        final List<Integer> towns = List.of(
+                100000000, // Henesys : Henesys
+                101000000, // Ellinia : Ellinia
+                102000000, // Perion : Perion
+                103000000 // Kerning City : Kerning City
+        );
+        if (!sm.askAccept("I don't know how you found out about this, but you came to the right place! For those who wandered around Nihal Desert and are getting homesick, I am offering a flight straight to Victoria Island, non-stop. Don't worry about the flying ship - it's only fallen once or twice! Don't you feel claustrophobic being in a long flight on that small ship? What do you think? Are you willing to take the offer on this direct flight?")) {
+            sm.sayNext("Aye...are you scared of speed or heights? You can't trust my flying skills? Trust me, I've worked out all the kinks!");
+            return;
+        }
+        if (!sm.askAccept("Please remember two things. One, this line is actually for overseas shipping, so #rI cannot guarantee which town you'll land#k. Two, since I am putting you in this special flight, it'll be a bit expensive. The service charge is #b#e10,000 mesos#n#k. There's a flight that's about to take off. Are you interested?")) {
+            sm.sayNext("Aye...are you scared of speed or heights? You can't trust my flying skills? Trust me, I've worked out all the kinks!");
+            return;
+        }
+        sm.sayNext("Okay, ready for takeoff!");
+        if (sm.addMoney(-10000)) {
+            sm.warp(Util.getRandomFromCollection(towns).orElseThrow());
+        } else {
+            sm.sayNext("Hey, are you short on cash? I told you you'll need #b10,000 mesos#k to get on this.");
+        }
+    }
+
+    @Script("enter_earth00")
+    public static void enter_earth00(ScriptManager sm) {
+        // Nautilus : Navigation Room (120000101)
+        //   earth01 (570, -120)
+        if (sm.removeItem(4031890, 1)) {
+            sm.playPortalSE();
+            sm.warp(221000300, "earth00"); // Omega Sector : Command Center
+        } else {
+            sm.message("You need a warp card to activate this portal.");
+        }
+    }
+
+    @Script("enter_earth01")
+    public static void enter_earth01(ScriptManager sm) {
+        // Omega Sector : Command Center (221000300)
+        //   earth00 (218, 0)
+        if (sm.removeItem(4031890, 1)) {
+            sm.playPortalSE();
+            sm.warp(120000101, "earth01"); // Nautilus : Navigation Room
+        } else {
+            sm.message("You need a warp card to activate this portal.");
         }
     }
 }

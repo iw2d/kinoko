@@ -6,7 +6,9 @@ import kinoko.script.common.ScriptManager;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
 import kinoko.server.event.Subway;
+import kinoko.util.Util;
 import kinoko.world.job.JobConstants;
+import kinoko.world.quest.QuestRecordType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -238,5 +240,159 @@ public final class Victoria extends ScriptHandler {
         //   in01 (-422, -745)
         sm.playPortalSE();
         sm.warp(104020120, "out00"); // Port Road : Station to Ereve
+    }
+
+    @Script("nautil_black")
+    public static void nautil_black(ScriptManager sm) {
+        // Muirhat (1092007)
+        //   Nautilus : Top Floor - Hallway (120000100)
+
+        // TODO
+    }
+
+    @Script("nautil_stone")
+    public static void nautil_stone(ScriptManager sm) {
+        // Shiny Stone (1092016)
+        //   Nautilus : Generator Room (120000301)
+        if (sm.hasQuestStarted(2166)) {
+            sm.sayNext("It's a beautiful, shiny rock. I can feel the mysterious power surrounding it.");
+            sm.forceCompleteQuest(2166);
+        } else {
+            sm.sayNext("I touched the shiny rock with my hand, and I felt a mysterious power flowing into my body.");
+        }
+    }
+
+    @Script("nautil_letter")
+    public static void nautil_letter(ScriptManager sm) {
+        // Trash Can (1092018)
+        //   Nautilus : Top Floor - Hallway (120000100)
+        if (sm.hasQuestCompleted(2162) || sm.hasItem(4031839)) {
+            return;
+        }
+        if (sm.addItem(4031839, 1)) {
+            sm.sayNext("(You retrieved a Crumpled Paper standing out of the trash can. It's content seems important.)");
+        } else {
+            sm.sayNext("(You see a Crumpled Paper standing out of the trash can. It's content seems important, but you can't retrieve it since your inventory is full.)");
+        }
+    }
+
+    @Script("nautil_cow")
+    public static void nautil_cow(ScriptManager sm) {
+        // Tangyoon (1092000)
+        //   Nautilus : Cafeteria (120000103)
+        if (sm.hasQuestStarted(2180)) {
+            sm.sayNext("Okay, I'll now send you to the stable where my cows are. Watch out for the calves that drink all the milk. You don't want your effort to go to waste.");
+            sm.sayBoth("It won't be easy to tell at a glance between a calf and a cow. Those calves may only be a month or two old, but they have already grown to the size of their mother. They even look alike...even I get confused at times! Good luck!");
+            if (sm.addItem(4031847, 1)) {
+                sm.warp(912000100, "sp"); // Hidden Chamber : The Nautilus - Stable
+            } else {
+                sm.sayOk("I can't give you the empty bottle because your inventory is full. Please make some room in your Etc window.");
+            }
+        }
+    }
+
+    @Script("mom_cow")
+    public static void mom_cow(ScriptManager sm) {
+        // Mother Milk Cow (1092090)
+        //   Hidden Chamber : The Nautilus - Stable (912000100)
+        // Mother Milk Cow (1092091)
+        //   Hidden Chamber : The Nautilus - Stable (912000100)
+        // Mother Milk Cow (1092092)
+        if (sm.getQRValue(QuestRecordType.NautilusMomCow).equals(String.valueOf(sm.getSpeakerId()))) {
+            sm.sayNext("You have taken milk from this cow recently, check another cow.");
+            return;
+        }
+        if (sm.canAddItem(4031848, 1) && sm.hasItem(4031847)) {
+            sm.removeItem(4031847, 1);
+            sm.addItem(4031848, 1);
+            sm.sayNext("Now filling up the bottle with milk. The bottle is now 1/3 full of milk.");
+            sm.setQRValue(QuestRecordType.NautilusMomCow, String.valueOf(sm.getSpeakerId()));
+        } else if (sm.canAddItem(4031849, 1) && sm.hasItem(4031848)) {
+            sm.removeItem(4031848, 1);
+            sm.addItem(4031849, 1);
+            sm.sayNext("Now filling up the bottle with milk. The bottle is now 2/3 full of milk.");
+            sm.setQRValue(QuestRecordType.NautilusMomCow, String.valueOf(sm.getSpeakerId()));
+        } else if (sm.canAddItem(4031850, 1) && sm.hasItem(4031849)) {
+            sm.removeItem(4031849, 1);
+            sm.addItem(4031850, 1);
+            sm.sayNext("Now filling up the bottle with milk. The bottle is now completely full of milk.");
+            sm.setQRValue(QuestRecordType.NautilusMomCow, String.valueOf(sm.getSpeakerId()));
+        }
+    }
+
+    @Script("baby_cow")
+    public static void baby_cow(ScriptManager sm) {
+        // Baby Milk Cow (1092093)
+        // Baby Milk Cow (1092094)
+        //   Hidden Chamber : The Nautilus - Stable (912000100)
+        // Baby Milk Cow (1092095)
+        //   Hidden Chamber : The Nautilus - Stable (912000100)
+        if (sm.hasItem(4031847)) {
+            sm.sayNext("The hungry calf is drinking all the milk! The bottle remains empty...");
+        } else if (sm.hasItem(4031848) || sm.hasItem(4031849) || sm.hasItem(4031850)) {
+            sm.removeItem(4031848);
+            sm.removeItem(4031849);
+            sm.removeItem(4031850);
+            sm.addItem(4031847, 1);
+            sm.sayNext("The hungry calf is drinking all the milk! The bottle is now empty.");
+        }
+    }
+
+    @Script("end_cow")
+    public static void end_cow(ScriptManager sm) {
+        // Hidden Chamber : The Nautilus - Stable (912000100)
+        //   ntq2 (793, 148)
+        if (sm.hasQuestStarted(2180) && !sm.hasItem(4031850)) {
+            sm.message("Your milk jug is not full...");
+        } else {
+            sm.playPortalSE();
+            sm.warp(120000103); // Nautilus : Cafeteria
+        }
+    }
+
+    @Script("nautil_Abel1")
+    public static void nautil_Abel1(ScriptManager sm) {
+        // Bush (1094002)
+        //   Nautilus : Nautilus Harbor (120000000)
+        // Bush (1094003)
+        //   Nautilus : Nautilus Harbor (120000000)
+        // Bush (1094004)
+        //   Nautilus : Nautilus Harbor (120000000)
+        // Bush (1094005)
+        //   Nautilus : Nautilus Harbor (120000000)
+        // Bush (1094006)
+        //   Nautilus : Nautilus Harbor (120000000)
+        final List<Integer> items = List.of(
+                4031853,
+                4031854,
+                4031855
+        );
+        if (sm.hasQuestStarted(2186) && !sm.hasItem(4031853)) {
+            final int itemId = Util.getRandomFromCollection(items).orElseThrow();
+            if (sm.addItem(itemId, 1)) {
+                if (itemId == 4031853) {
+                    sm.sayNext("I found Abel's glasses.");
+                } else {
+                    sm.sayOk("I found a pair of glasses, but it doesn't seem to be Abel's. Abel's pair is horn-rimmed...");
+                }
+            } else {
+                sm.sayNext("I can't find any space to store Abel's glasses. I better check the Etc. tab of my inventory.");
+            }
+        }
+    }
+
+    @Script("q2186e")
+    public static void q2186e(ScriptManager sm) {
+        // Help Me Find My Glasses (2186 - end)
+        sm.sayNext("What? You found my glasses? I better put it on first, to make sure that it''s really mine. Oh, it really is mine. Thank you so much!\r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0#\r\n#v2030019# 5 #t2030019#s\r\n\r\n#fUI/UIWindow.img/QuestIcon/8/0#  1000 EXP");
+        if (sm.canAddItem(2030019, 5) && sm.removeItem(4031853)) {
+            sm.addItem(2030019, 5); // Nautilus Return Scroll
+            sm.addExp(1000);
+            sm.forceCompleteQuest(2186);
+            sm.setNpcAction(1094001, "quest"); // Abel
+            sm.sayNext("Yes...time for some fishing!");
+        } else {
+            sm.sayOk("I need you to have an USE slot available to reward you properly!");
+        }
     }
 }
