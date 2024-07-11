@@ -373,7 +373,7 @@ public final class ExplorerTutorial extends ScriptHandler {
     public static void goSwordman(ScriptManager sm) {
         // null (1020100)
         sm.setDirectionMode(true, 0);
-        sm.squibEffect("Effect/Direction3.img/swordman/Scene" + sm.getGender());
+        sm.reservedEffect("Effect/Direction3.img/swordman/Scene" + sm.getGender());
         sm.setDirectionMode(false, 3000);
     }
 
@@ -381,7 +381,7 @@ public final class ExplorerTutorial extends ScriptHandler {
     public static void goMagician(ScriptManager sm) {
         // null (1020200)
         sm.setDirectionMode(true, 0);
-        sm.squibEffect("Effect/Direction3.img/magician/Scene" + sm.getGender());
+        sm.reservedEffect("Effect/Direction3.img/magician/Scene" + sm.getGender());
         sm.setDirectionMode(false, 4000);
     }
 
@@ -389,7 +389,7 @@ public final class ExplorerTutorial extends ScriptHandler {
     public static void goArcher(ScriptManager sm) {
         // null (1020300)
         sm.setDirectionMode(true, 0);
-        sm.squibEffect("Effect/Direction3.img/archer/Scene" + sm.getGender());
+        sm.reservedEffect("Effect/Direction3.img/archer/Scene" + sm.getGender());
         sm.setDirectionMode(false, 3000);
     }
 
@@ -397,7 +397,7 @@ public final class ExplorerTutorial extends ScriptHandler {
     public static void goRogue(ScriptManager sm) {
         // null (1020400)
         sm.setDirectionMode(true, 0);
-        sm.squibEffect("Effect/Direction3.img/rogue/Scene" + sm.getGender());
+        sm.reservedEffect("Effect/Direction3.img/rogue/Scene" + sm.getGender());
         sm.setDirectionMode(false, 3000);
     }
 
@@ -405,7 +405,7 @@ public final class ExplorerTutorial extends ScriptHandler {
     public static void goPirate(ScriptManager sm) {
         // null (1020500)
         sm.setDirectionMode(true, 0);
-        sm.squibEffect("Effect/Direction3.img/pirate/Scene" + sm.getGender());
+        sm.reservedEffect("Effect/Direction3.img/pirate/Scene" + sm.getGender());
         sm.setDirectionMode(false, 4000);
     }
 
@@ -466,7 +466,7 @@ public final class ExplorerTutorial extends ScriptHandler {
         }
         sm.sayNext("How easy is it to consume the item? Simple, right? You can set a #bhotkey#k on the right bottom slot. Haha you didn't know that! right? Oh, and if you are a beginner, HP will automatically recover itself as time goes by. Well it takes time but this is one of the strategies for the beginners.");
         sm.sayBoth("Alright! Now that you have learned alot, I will give you a present. This is a must for your travel in Maple World, so thank me! Please use this under emergency cases!");
-        sm.sayBoth("Okay, this is all I can teach you. I know it's sad but it is time to say good bye. Well take care of yourself and Good luck my friend!\r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0#\r\n#i2010000# 3 Apple\r\n#i2010009# 3 Green apple\r\n\r\n#fUI/UIWindow.img/QuestIcon/8/0# 10 exp");
+        sm.sayBoth("Okay, this is all I can teach you. I know it's sad but it is time to say good bye. Well take care of yourself and Good luck my friend!\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i2010000# 3 Apple\r\n#i2010009# 3 Green apple\r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 10 exp");
         if (!sm.addItems(List.of(
                 Tuple.of(2010000, 3), // Apple
                 Tuple.of(2010009, 3) // Green Apple

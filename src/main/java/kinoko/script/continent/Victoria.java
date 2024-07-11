@@ -384,7 +384,7 @@ public final class Victoria extends ScriptHandler {
     @Script("q2186e")
     public static void q2186e(ScriptManager sm) {
         // Help Me Find My Glasses (2186 - end)
-        sm.sayNext("What? You found my glasses? I better put it on first, to make sure that it''s really mine. Oh, it really is mine. Thank you so much!\r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0#\r\n#v2030019# 5 #t2030019#s\r\n\r\n#fUI/UIWindow.img/QuestIcon/8/0#  1000 EXP");
+        sm.sayNext("What? You found my glasses? I better put it on first, to make sure that it''s really mine. Oh, it really is mine. Thank you so much!\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#v2030019# 5 #t2030019#s\r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0#  1000 EXP");
         if (sm.canAddItem(2030019, 5) && sm.removeItem(4031853)) {
             sm.addItem(2030019, 5); // Nautilus Return Scroll
             sm.addExp(1000);

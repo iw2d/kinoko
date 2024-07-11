@@ -69,8 +69,17 @@ public final class UserLocal {
 
     public static OutPacket tutorMsg(int index, int duration) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTutorMsg);
-        outPacket.encodeByte(true); // false -> str, int, int
+        outPacket.encodeByte(true);
         outPacket.encodeInt(index); // nIdx
+        outPacket.encodeInt(duration); // nDuration
+        return outPacket;
+    }
+
+    public static OutPacket tutorMsg(String message, int width, int duration) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserTutorMsg);
+        outPacket.encodeByte(false);
+        outPacket.encodeString(message);
+        outPacket.encodeInt(width); // nWidth
         outPacket.encodeInt(duration); // nDuration
         return outPacket;
     }

@@ -9,7 +9,9 @@ public enum QuestRecordType {
     UnityPortal(7050),              // Dimensional Mirror Return Map
     FreeMarket(7600),               // Free Market Return Map
     TatamoLikeness(7810),           // Chief Tatamo Magic Seed Discount
-    WorldTour(8792);                // World Tour Return Map
+    WorldTour(8792),                // World Tour Return Map
+
+    CygnusTutorial(20022);          // Cygnus Tutorial
 
     private final int questId;
 

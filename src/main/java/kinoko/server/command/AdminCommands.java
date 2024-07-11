@@ -42,6 +42,7 @@ import kinoko.world.job.explorer.Beginner;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.quest.QuestState;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
@@ -56,6 +57,8 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
+        user.write(UserLocal.hireTutor(true));
+        user.write(UserLocal.tutorMsg(10, 4000));
         user.dispose();
     }
 
@@ -736,6 +739,23 @@ public final class AdminCommands {
         }
     }
 
+    @Command("clearquest")
+    @Arguments("quest ID")
+    public static void clearQuest(User user, String[] args) {
+        final int questId = Integer.parseInt(args[1]);
+        try (var locked = user.acquire()) {
+            final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+            if (questRecordResult.isEmpty()) {
+                user.write(MessagePacket.system("Could not find quest record : %d", questId));
+                return;
+            }
+            final QuestRecord qr = questRecordResult.get();
+            qr.setState(QuestState.NONE);
+            user.write(MessagePacket.questRecord(qr));
+            user.validateStat();
+        }
+    }
+
     @Command("startquest")
     @Arguments("quest ID")
     public static void startQuest(User user, String[] args) {
@@ -951,5 +971,10 @@ public final class AdminCommands {
             final Method method = commandResult.get();
             user.write(MessagePacket.system("Syntax : %s", CommandProcessor.getHelpString(method)));
         }
+    }
+
+    @Command("reloaddrops")
+    public static void reloadDrops(User user, String[] args) {
+        RewardProvider.initialize();
     }
 }

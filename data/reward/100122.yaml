@@ -1,0 +1,20 @@
+# Timu (100122)
+
+rewards:
+  - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
+  - [ 1052095, 1, 1, 0.000100 ] # Brown Rocky Suit
+  - [ 1061029, 1, 1, 0.000100 ] # Red Cloth Pants
+  - [ 1072060, 1, 1, 0.000100 ] # Brown Woodsman Boots
+  - [ 1082029, 1, 1, 0.000100 ] # Brown Duo
+  - [ 1322007, 1, 1, 0.000100 ] # Leather Purse
+  - [ 1372002, 1, 1, 0.000100 ] # Metal Wand
+  - [ 1402001, 1, 1, 0.000100 ] # Wooden Sword
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2010009, 1, 1, 0.010000 ] # Green Apple
+  - [ 2040502, 1, 1, 0.000100 ] # Scroll for Overall Armor for DEX 10%
+  - [ 2041009, 1, 1, 0.000100 ] # Scroll for Cape for MP 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000484, 1, 1, 0.400000 ] # Timu's Feather
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore

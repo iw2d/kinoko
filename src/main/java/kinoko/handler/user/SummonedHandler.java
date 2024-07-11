@@ -32,6 +32,9 @@ public final class SummonedHandler {
     @Handler(InHeader.SummonedMove)
     public static void handleSummonedMove(User user, InPacket inPacket) {
         final int summonedId = inPacket.decodeInt(); // dwSummonedID
+        if (summonedId == 0) {
+            return; // CTutor, ignore
+        }
 
         // Resolve summoned
         final Optional<Summoned> summonedResult = user.getField().getSummonedPool().getById(summonedId);

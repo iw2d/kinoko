@@ -20,6 +20,8 @@ public interface ScriptManager {
 
     void dispose();
 
+    void write(OutPacket outPacket);
+
     void message(String message);
 
     void scriptProgressMessage(String message);

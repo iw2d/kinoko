@@ -268,12 +268,7 @@ public final class MigrationHandler {
                     handleRevive(user, false);
                     return;
                 }
-                // Return to field via client request (usually SquibEffect)
-                if (targetFieldId != currentField.getReturnMap()) {
-                    log.error("Tried to return to field : {} from field : {}", targetFieldId, currentField.getFieldId());
-                    user.dispose();
-                    return;
-                }
+                // Transfer field by client request
                 handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false, false);
                 return;
             }

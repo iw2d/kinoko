@@ -86,6 +86,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public void write(OutPacket outPacket) {
+        user.write(outPacket);
+    }
+
+    @Override
     public void message(String message) {
         user.write(MessagePacket.system(message));
     }
