@@ -1,6 +1,7 @@
 package kinoko.script.event;
 
 import kinoko.provider.reward.Reward;
+import kinoko.script.UnityPortal;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;

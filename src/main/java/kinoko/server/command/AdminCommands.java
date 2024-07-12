@@ -57,8 +57,6 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        user.write(UserLocal.hireTutor(true));
-        user.write(UserLocal.tutorMsg(10, 4000));
         user.dispose();
     }
 

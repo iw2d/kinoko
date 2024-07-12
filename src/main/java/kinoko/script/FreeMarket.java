@@ -1,4 +1,4 @@
-package kinoko.script.continent;
+package kinoko.script;
 
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;

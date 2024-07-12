@@ -65,7 +65,6 @@ public final class Field {
         this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
         this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
-        this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
         this.mobSpawnModifiers = new ConcurrentHashMap<>();
         // Initialize field object pools
         this.userPool = new UserPool(this);
@@ -77,6 +76,8 @@ public final class Field {
         this.miniRoomPool = new MiniRoomPool(this);
         this.townPortalPool = new TownPortalPool(this);
         this.affectedAreaPool = new AffectedAreaPool(this);
+        // Initialize field updates
+        this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
     }
 
     public FieldStorage getFieldStorage() {

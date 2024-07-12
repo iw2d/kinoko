@@ -590,4 +590,66 @@ public final class ContiMove extends ScriptHandler {
             sm.message("You need a warp card to activate this portal.");
         }
     }
+
+    @Script("rankRoom")
+    public static void rankRoom(ScriptManager sm) {
+        // Henesys : Bowman Instructional School (100000201)
+        //   rank00 (-323, 181)
+        // Ellinia : Magic Library (101000003)
+        //   rank00 (-2, 183)
+        // Perion : Warriors' Sanctuary (102000003)
+        //   rank00 (55, -29)
+        // Kerning City : Thieves' Hideout (103000003)
+        //   rank00 (291, 181)
+        // Nautilus : Navigation Room (120000101)
+        //   rank00 (-296, 149)
+        // Empress' Road : Ereve (130000000)
+        //   west00 (-1644, 86)
+        // Empress' Road : Crossroads of Ereve (130000200)
+        //   east00 (3303, 87)
+        // Snow Island : Dangerous Forest (140010100)
+        //   in01 (-2763, -375)
+        switch (sm.getFieldId()) {
+            case 100000201 -> {
+                // Henesys : Bowman Instructional School
+                sm.playPortalSE();
+                sm.warp(100000204, "out00"); // Henesys : Hall of Bowmen
+            }
+            case 101000003 -> {
+                // Ellinia : Magic Library
+                sm.playPortalSE();
+                sm.warp(101000004, "out00"); // Ellinia : Hall of Magicians
+            }
+            case 102000003 -> {
+                // Perion : Warriors' Sanctuary
+                sm.playPortalSE();
+                sm.warp(102000004, "out00"); // Perion : Hall of Warriors
+            }
+            case 103000003 -> {
+                // Kerning City : Thieves' Hideout
+                sm.playPortalSE();
+                sm.warp(103000008, "out00"); // Kerning City : Hall of Thieves
+            }
+            case 120000101 -> {
+                // Nautilus : Navigation Room
+                sm.playPortalSE();
+                sm.warp(120000105, "out00"); // Nautilus : Training Room
+            }
+            case 130000000 -> {
+                // Empress' Road : Ereve
+                sm.playPortalSE();
+                sm.warp(130000100, "east00"); // Empress' Road : Knights Chamber
+            }
+            case 130000200 -> {
+                // Empress' Road : Crossroads of Ereve
+                sm.playPortalSE();
+                sm.warp(130000100, "west00"); // Empress' Road : Knights Chamber
+            }
+            case 140010100 -> {
+                // Snow Island : Dangerous Forest
+                sm.playPortalSE();
+                sm.warp(140010110, "out00"); // Snow Island : Palace of the Master
+            }
+        }
+    }
 }
