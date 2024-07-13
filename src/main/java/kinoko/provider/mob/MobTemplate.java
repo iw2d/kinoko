@@ -29,6 +29,8 @@ public final class MobTemplate {
     private final int dropItemPeriod;
     private final boolean boss;
     private final boolean noFlip;
+    private final boolean pickUpDrop;
+    private final boolean firstAttack;
     private final boolean damagedByMob;
     private final boolean onlyNormalAttack;
     private final Map<Integer, MobAttack> attacks;
@@ -40,7 +42,7 @@ public final class MobTemplate {
 
     public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int pad, int pdr, int mad, int mdr,
                        int acc, int eva, int hpRecovery, int mpRecovery, int fixedDamage, int removeAfter,
-                       int dropItemPeriod, boolean boss, boolean noFlip, boolean damagedByMob,
+                       int dropItemPeriod, boolean boss, boolean noFlip, boolean pickUpDrop, boolean firstAttack, boolean damagedByMob,
                        boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
                        Map<ElementAttribute, DamagedAttribute> damagedElemAttr, Set<Integer> damagedBySkill,
                        List<Integer> revives, int reviveDelay) {
@@ -62,6 +64,8 @@ public final class MobTemplate {
         this.dropItemPeriod = dropItemPeriod;
         this.boss = boss;
         this.noFlip = noFlip;
+        this.pickUpDrop = pickUpDrop;
+        this.firstAttack = firstAttack;
         this.damagedByMob = damagedByMob;
         this.onlyNormalAttack = onlyNormalAttack;
         this.attacks = attacks;
@@ -142,6 +146,14 @@ public final class MobTemplate {
 
     public boolean isNoFlip() {
         return noFlip;
+    }
+
+    public boolean isPickUpDrop() {
+        return pickUpDrop;
+    }
+
+    public boolean isFirstAttack() {
+        return firstAttack;
     }
 
     public boolean isDamagedByMob() {
@@ -244,6 +256,8 @@ public final class MobTemplate {
         int dropItemPeriod = 0;
         boolean boss = false;
         boolean noFlip = false;
+        boolean pickUpDrop = false;
+        boolean firstAttack = false;
         boolean damagedByMob = false;
         boolean onlyNormalAttack = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
@@ -344,6 +358,12 @@ public final class MobTemplate {
                 case "noFlip" -> {
                     noFlip = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
+                case "pickUp" -> {
+                    pickUpDrop = WzProvider.getInteger(infoEntry.getValue()) != 0;
+                }
+                case "firstAttack" -> {
+                    firstAttack = WzProvider.getInteger(infoEntry.getValue()) != 0;
+                }
                 case "damagedByMob" -> {
                     damagedByMob = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
@@ -432,6 +452,8 @@ public final class MobTemplate {
                 dropItemPeriod,
                 boss,
                 noFlip,
+                pickUpDrop,
+                firstAttack,
                 damagedByMob,
                 onlyNormalAttack,
                 Collections.unmodifiableMap(attacks),

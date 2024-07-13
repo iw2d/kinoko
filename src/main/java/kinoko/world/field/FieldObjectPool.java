@@ -5,10 +5,8 @@ import kinoko.util.Rect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public abstract class FieldObjectPool<T extends FieldObject> {
     protected final ConcurrentHashMap<Integer, T> objects = new ConcurrentHashMap<>(); // FieldObject::getId() -> FieldObject
@@ -56,7 +54,7 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         return objects.remove(object.getId(), object);
     }
 
-    protected Set<T> getObjects() {
-        return objects.values().stream().collect(Collectors.toUnmodifiableSet());
+    protected List<T> getObjects() {
+        return objects.values().stream().toList();
     }
 }

@@ -76,7 +76,7 @@ public final class Npc extends Life implements ControlledObject, Encodable {
 
     @Override
     public String toString() {
-        return String.format("Npc { %d, oid : %d, script : %s }", getTemplateId(), getId(), hasScript() ? getScript() : "-");
+        return String.format("Npc { %d, oid : %d, script : %s, controller : %s }", getTemplateId(), getId(), hasScript() ? getScript() : "-", getController() != null ? getController().getCharacterName() : "null");
     }
 
     @Override

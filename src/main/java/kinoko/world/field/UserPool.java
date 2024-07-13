@@ -158,9 +158,9 @@ public final class UserPool extends FieldObjectPool<User> {
                 assignController(mob);
             }
         });
-        field.getNpcPool().forEach((mob) -> {
-            if (mob.getController() == user) {
-                assignController(mob);
+        field.getNpcPool().forEach((npc) -> {
+            if (npc.getController() == user) {
+                assignController(npc);
             }
         });
 
@@ -236,15 +236,13 @@ public final class UserPool extends FieldObjectPool<User> {
     // CONTROLLER METHODS ----------------------------------------------------------------------------------------------
 
     public void assignController(ControlledObject controlled) {
-        final Optional<User> controllerResult = getNearestUser(controlled); // closest user to controlled object
-        if (controllerResult.isEmpty()) {
-            controlled.setController(null);
-            return;
-        }
-        setController(controlled, controllerResult.get());
+        // closest user to controlled object
+        final List<User> controllers = objects.values().stream().toList();
+        final Optional<User> controllerResult = controlled.getNearestObject(controllers);
+        controllerResult.ifPresent(user -> setController(controlled, user));
     }
 
-    private void setController(ControlledObject controlled, User controller) {
+    public void setController(ControlledObject controlled, User controller) {
         controlled.setController(controller);
         controller.write(controlled.changeControllerPacket(true));
         broadcastPacket(controlled.changeControllerPacket(false), controller);

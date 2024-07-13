@@ -50,44 +50,48 @@ public final class MobHandler {
             log.error("Received MobMove for invalid object with ID : {}", objectId);
             return;
         }
-        final Mob mob = mobResult.get();
+        try (var lockedMob = mobResult.get().acquire()) {
+            final Mob mob = lockedMob.get();
+            if (mob.getController() != user) {
+                log.info("MobMove : {} {}", mob, user.getCharacterName());
+                field.getUserPool().setController(mob, user);
+            }
 
-        final short mobCtrlSn = inPacket.decodeShort(); // nMobCtrlSN
-        final byte actionMask = inPacket.decodeByte(); // bDirLeft | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
-        final byte actionAndDir = inPacket.decodeByte(); // nActionAndDir
-        final int targetInfo = inPacket.decodeInt(); // CMob::TARGETINFO { short x, short y } || { short nSkillIDandLev, short nDelay }
+            final short mobCtrlSn = inPacket.decodeShort(); // nMobCtrlSN
+            final byte actionMask = inPacket.decodeByte(); // bDirLeft | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
+            final byte actionAndDir = inPacket.decodeByte(); // nActionAndDir
+            final int targetInfo = inPacket.decodeInt(); // CMob::TARGETINFO { short x, short y } || { short nSkillIDandLev, short nDelay }
 
-        final List<Tuple<Integer, Integer>> multiTargetForBall = new ArrayList<>();
-        final int multiTargetForBallCount = inPacket.decodeInt();
-        for (int i = 0; i < multiTargetForBallCount; i++) {
-            multiTargetForBall.add(Tuple.of(
-                    inPacket.decodeInt(), // aMultiTargetForBall[i].x
-                    inPacket.decodeInt() // aMultiTargetForBall[i].y
-            ));
-        }
-        final List<Integer> randTimeForAreaAttack = new ArrayList<>();
-        final int randTimeForAreaAttackCount = inPacket.decodeInt();
-        for (int i = 0; i < randTimeForAreaAttackCount; i++) {
-            randTimeForAreaAttack.add(inPacket.decodeInt()); // aRandTimeforAreaAttack[i]
-        }
+            final List<Tuple<Integer, Integer>> multiTargetForBall = new ArrayList<>();
+            final int multiTargetForBallCount = inPacket.decodeInt();
+            for (int i = 0; i < multiTargetForBallCount; i++) {
+                multiTargetForBall.add(Tuple.of(
+                        inPacket.decodeInt(), // aMultiTargetForBall[i].x
+                        inPacket.decodeInt() // aMultiTargetForBall[i].y
+                ));
+            }
+            final List<Integer> randTimeForAreaAttack = new ArrayList<>();
+            final int randTimeForAreaAttackCount = inPacket.decodeInt();
+            for (int i = 0; i < randTimeForAreaAttackCount; i++) {
+                randTimeForAreaAttack.add(inPacket.decodeInt()); // aRandTimeforAreaAttack[i]
+            }
 
-        inPacket.decodeByte(); // (bActive == 0) | (16 * !(CVecCtrlMob::IsCheatMobMoveRand(pvcActive) == 0))
-        inPacket.decodeInt(); // HackedCode
-        inPacket.decodeInt(); // moveCtx.fc.ptTarget->x
-        inPacket.decodeInt(); // moveCtx.fc.ptTarget->y
-        inPacket.decodeInt(); // dwHackedCodeCRC
+            inPacket.decodeByte(); // (bActive == 0) | (16 * !(CVecCtrlMob::IsCheatMobMoveRand(pvcActive) == 0))
+            inPacket.decodeInt(); // HackedCode
+            inPacket.decodeInt(); // moveCtx.fc.ptTarget->x
+            inPacket.decodeInt(); // moveCtx.fc.ptTarget->y
+            inPacket.decodeInt(); // dwHackedCodeCRC
 
-        final MovePath movePath = MovePath.decode(inPacket);
-        movePath.applyTo(mob);
+            final MovePath movePath = MovePath.decode(inPacket);
+            movePath.applyTo(mob);
 
-        inPacket.decodeByte(); // this->bChasing
-        inPacket.decodeByte(); // pTarget != 0
-        inPacket.decodeByte(); // pvcActive->bChasing
-        inPacket.decodeByte(); // pvcActive->bChasingHack
-        inPacket.decodeInt(); // pvcActive->tChaseDuration
+            inPacket.decodeByte(); // this->bChasing
+            inPacket.decodeByte(); // pTarget != 0
+            inPacket.decodeByte(); // pvcActive->bChasing
+            inPacket.decodeByte(); // pvcActive->bChasingHack
+            inPacket.decodeInt(); // pvcActive->tChaseDuration
 
-        try (var lockedMob = mob.acquire()) {
-            // handle mob attack / skill
+            // Handle mob attack / skill
             final MobAttackInfo mai = new MobAttackInfo();
             mai.actionMask = actionMask;
             mai.actionAndDir = actionAndDir;
@@ -96,7 +100,7 @@ public final class MobHandler {
             mai.randTimeForAreaAttack = randTimeForAreaAttack;
             handleMobAttack(lockedMob, mai);
 
-            // update mob position and write response
+            // Update client
             final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
             user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, mai));
             field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
@@ -106,9 +110,32 @@ public final class MobHandler {
     @Handler(InHeader.MobApplyCtrl)
     public static void handleMobApplyCtrl(User user, InPacket inPacket) {
         // CMob::ApplyControl
-        inPacket.decodeInt(); // dwMobID
-        inPacket.decodeInt(); // unk
-        // do nothing, controller logic is handled in UserPool
+        final int objectId = inPacket.decodeInt(); // dwMobID
+        inPacket.decodeInt(); // crc?
+
+        final Field field = user.getField();
+        final Optional<Mob> mobResult = field.getMobPool().getById(objectId);
+        if (mobResult.isEmpty()) {
+            log.error("Received MobApplyCtrl for invalid object with ID : {}", objectId);
+            return;
+        }
+        try (var lockedMob = mobResult.get().acquire()) {
+            final Mob mob = lockedMob.get();
+            if (!mob.getTemplate().isPickUpDrop() && !mob.getTemplate().isFirstAttack()) {
+                log.error("Received invalid MobApplyCtrl request for mob template ID : {}", mob.getTemplateId());
+            }
+            // Assign controller
+            if (mob.getController() == null) {
+                field.getUserPool().setController(mob, user);
+            } else if (mob.getController() != user) {
+                final double userDistance = Util.distance(mob.getX(), mob.getY(), user.getX(), user.getY());
+                final double controllerDistance = Util.distance(mob.getX(), mob.getY(), mob.getController().getX(), mob.getController().getY());
+                if (userDistance < controllerDistance - 20) {
+                    log.info("MobApplyCtrl : {} {}, {}, {}", mob, user.getCharacterName(), userDistance, controllerDistance);
+                    field.getUserPool().setController(mob, user);
+                }
+            }
+        }
     }
 
     @Handler(InHeader.MobHitByMob)
@@ -128,6 +155,10 @@ public final class MobHandler {
         }
         final Mob attackerMob = attackerMobResult.get();
         final Mob targetMob = targetMobResult.get();
+        if (!targetMob.isDamagedByMob()) {
+            log.error("Received MobHitByMob for illegal mob template ID : {}", targetMob.getTemplateId());
+            return;
+        }
 
         // Apply damage
         try (var lockedMob = targetMob.acquire()) {

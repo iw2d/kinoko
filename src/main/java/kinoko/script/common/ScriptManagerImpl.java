@@ -531,7 +531,7 @@ public final class ScriptManagerImpl implements ScriptManager {
             throw new ScriptError("Could not resolve npc with template ID : %d", templateId);
         }
         final Npc npc = npcResult.get();
-        npc.getController().write(NpcPacket.npcSpecialAction(npc, action));
+        user.write(NpcPacket.npcSpecialAction(npc, action));
     }
 
 

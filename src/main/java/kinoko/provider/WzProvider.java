@@ -10,6 +10,8 @@ public interface WzProvider {
             return value;
         } else if (object instanceof Integer value) {
             return value;
+        } else if (object instanceof Float value) {
+            return value.intValue();
         } else if (object instanceof String value) {
             return Integer.parseInt(value);
         }
@@ -21,6 +23,8 @@ public interface WzProvider {
             return value;
         } else if (object instanceof Integer value) {
             return value;
+        } else if (object instanceof Float value) {
+            return value.intValue();
         } else if (object instanceof String value) {
             return Integer.parseInt(value);
         }

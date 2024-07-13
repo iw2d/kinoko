@@ -42,6 +42,10 @@ public final class MovePath implements Encodable {
         return moveElems;
     }
 
+    public int getDuration() {
+        return moveElems.stream().mapToInt(MoveElem::getElapse).sum();
+    }
+
     public void applyTo(Life life) {
         for (MoveElem elem : getElems()) {
             switch (MoveType.fromAttr(elem.getAttr())) {

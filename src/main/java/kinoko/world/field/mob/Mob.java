@@ -79,7 +79,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         // Mob initialization
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
-        this.nextRecovery = Instant.now();
+        this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
         this.nextDropItem = template.getDropItemPeriod() > 0 ? Instant.now().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS) : Instant.MAX;
     }

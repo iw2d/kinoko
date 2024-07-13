@@ -13,7 +13,7 @@ public final class MobPacket {
 
     public static OutPacket mobEnterField(Mob mob) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobEnterField);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(1); // nCalcDamageIndex
         outPacket.encodeInt(mob.getTemplateId()); // dwTemplateID
         mob.getMobStat().encodeTemporary(outPacket);
@@ -34,7 +34,7 @@ public final class MobPacket {
     public static OutPacket mobChangeController(Mob mob, boolean forController) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobChangeController);
         outPacket.encodeByte(forController);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         if (forController) {
             outPacket.encodeByte(1); // nCalcDamageIndex
             // CMobPool::SetLocalMob
@@ -50,7 +50,7 @@ public final class MobPacket {
 
     public static OutPacket mobMove(Mob mob, MobAttackInfo mai, MovePath movePath) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobMove);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(false); // bNotForceLandingWhenDiscard
         outPacket.encodeByte(false); // bNotChangeAction
         outPacket.encodeByte(mai.actionMask);
@@ -81,7 +81,7 @@ public final class MobPacket {
 
     public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobCtrlAck);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
         outPacket.encodeByte(nextAttackPossible); // bNextAttackPossible
         outPacket.encodeShort(mob.getMp()); // nMP
@@ -92,7 +92,7 @@ public final class MobPacket {
 
     public static OutPacket mobStatSet(Mob mob, MobStat mobStat, BitFlag<MobTemporaryStat> flag) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobStatSet);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         // CMob::ProcessStatSet
         mobStat.encodeTemporary(flag, outPacket);
         outPacket.encodeShort(0); // tDelay
@@ -103,7 +103,7 @@ public final class MobPacket {
 
     public static OutPacket mobStatReset(Mob mob, BitFlag<MobTemporaryStat> flag, Set<BurnedInfo> resetBurnedInfos) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobStatReset);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         flag.encode(outPacket); // uFlagReset
         if (flag.hasFlag(MobTemporaryStat.Burned)) {
             outPacket.encodeInt(resetBurnedInfos.size());
@@ -119,7 +119,7 @@ public final class MobPacket {
 
     public static OutPacket mobAffected(Mob mob, int skillId, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobAffected);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeInt(skillId); // nSkillID
         outPacket.encodeShort(delay); // tStart = delay + update_time
         return outPacket;
@@ -127,10 +127,10 @@ public final class MobPacket {
 
     public static OutPacket mobDamaged(Mob mob, int damage) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobDamaged);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(0); // (byte != 2) -> CMob::ShowDamage
         outPacket.encodeInt(damage); // nDamage
-        if (mob.getTemplate().isDamagedByMob()) { // this->m_pTemplate->bDamagedByMob
+        if (mob.isDamagedByMob()) { // this->m_pTemplate->bDamagedByMob
             outPacket.encodeInt(mob.getHp());
             outPacket.encodeInt(mob.getMaxHp());
         }
@@ -139,7 +139,7 @@ public final class MobPacket {
 
     public static OutPacket mobSpecialEffectBySkill(Mob mob, int skillId, int characterId, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobSpecialEffectBySkill);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeInt(skillId); // nSkillID
         outPacket.encodeInt(characterId); // dwCharacterID, only used for mortal blow?
         outPacket.encodeShort(delay); // tDelay
@@ -148,14 +148,14 @@ public final class MobPacket {
 
     public static OutPacket mobHpIndicator(Mob mob, int percentage) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobHPIndicator);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(percentage); // nHPpercentage
         return outPacket;
     }
 
     public static OutPacket mobCatchEffect(Mob mob, boolean success, boolean delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobCatchEffect);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeByte(success); // bSuccess
         outPacket.encodeByte(delay); // tDelay = bool ? 270 : 0
         return outPacket;
@@ -163,9 +163,16 @@ public final class MobPacket {
 
     public static OutPacket mobEffectByItem(Mob mob, int itemId, boolean success) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobEffectByItem);
-        outPacket.encodeInt(mob.getId()); // dwMobId
+        outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeInt(itemId); // nItemID
         outPacket.encodeByte(success); // bSuccess
+        return outPacket;
+    }
+
+    public static OutPacket mobNextAttack(Mob mob) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MobNextAttack);
+        outPacket.encodeInt(mob.getId()); // dwMobID
+        outPacket.encodeInt(0); // ignored
         return outPacket;
     }
 }

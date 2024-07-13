@@ -108,6 +108,9 @@ public final class HitHandler {
 
         // Resolve mob skill, check if it applies a CTS
         final int skillId = mobAttack.getSkillId();
+        if (skillId == 0) {
+            return;
+        }
         final MobSkillType skillType = MobSkillType.getByValue(skillId);
         if (skillType == null) {
             log.error("Could not resolve mob skill type for mob skill ID : {}", skillId);
