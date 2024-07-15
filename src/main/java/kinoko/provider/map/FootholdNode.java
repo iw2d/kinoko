@@ -57,7 +57,7 @@ public final class FootholdNode {
 
     private void resize(Foothold fh) {
         final boolean slopeDown = fh.getY1() < fh.getY2();
-        Rect rect = new Rect(
+        Rect rect = Rect.of(
                 fh.getX1(),
                 slopeDown ? fh.getY1() : fh.getY2(),
                 fh.getX2(),

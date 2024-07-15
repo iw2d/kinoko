@@ -105,7 +105,7 @@ public final class AdminCommands {
                     nearestPortal.getX(), nearestPortal.getY(), nearestPortal.getScript()));
         }
         // Compute nearest mob
-        final Rect detectRect = new Rect(-400, -400, 400, 400);
+        final Rect detectRect = Rect.of(-400, -400, 400, 400);
         final Optional<Mob> nearestMobResult = user.getNearestObject(field.getMobPool().getInsideRect(user.getRelativeRect(detectRect)));
         if (nearestMobResult.isPresent()) {
             final Mob mob = nearestMobResult.get();

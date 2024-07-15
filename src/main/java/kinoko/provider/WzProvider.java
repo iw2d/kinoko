@@ -52,7 +52,7 @@ public interface WzProvider {
     static Rect getRect(WzListProperty prop) {
         final WzVectorProperty lt = prop.get("lt");
         final WzVectorProperty rb = prop.get("rb");
-        return new Rect(
+        return Rect.of(
                 lt.getX(),
                 lt.getY(),
                 rb.getX(),

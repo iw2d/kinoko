@@ -72,4 +72,10 @@ public final class Rect {
                 y + getBottom()
         );
     }
+
+    public static Rect of(int left, int top, int right, int bottom) {
+        return new Rect(
+                left, top, right, bottom
+        );
+    }
 }

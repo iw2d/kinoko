@@ -35,8 +35,8 @@ public final class SkillConstants {
     public static final int BATTLESHIP_VEHICLE = 1932000;
     public static final int BATTLESHIP_DURABILITY = 5221999;
     public static final int ENERGY_CHARGE_MAX = 10000;
-    public static final Rect DARK_FLARE_RANGE = new Rect(-400, -200, 400, 200);
-    public static final Rect MONSTER_BOMB_RANGE = new Rect(-220, -150, 220, 0);
+    public static final Rect DARK_FLARE_RANGE = Rect.of(-400, -200, 400, 200);
+    public static final Rect MONSTER_BOMB_RANGE = Rect.of(-220, -150, 220, 0);
 
     public static int getSkillRoot(int skillId) {
         return skillId / 10000;

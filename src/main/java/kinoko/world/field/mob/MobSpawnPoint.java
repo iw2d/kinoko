@@ -27,7 +27,7 @@ public final class MobSpawnPoint {
         this.y = y;
         this.fh = fh;
         this.mobTime = mobTime;
-        this.checkArea = new Rect(x - 100, y - 100, x + 100, y + 100);
+        this.checkArea = Rect.of(x - 100, y - 100, x + 100, y + 100);
     }
 
     public Field getField() {
