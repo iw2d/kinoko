@@ -57,7 +57,7 @@ public final class NioBufferInPacket implements InPacket {
     @Override
     public String decodeString() {
         final short length = decodeShort();
-        return decodeString(length);
+        return new String(decodeArray(length), StandardCharsets.US_ASCII);
     }
 
     @Override

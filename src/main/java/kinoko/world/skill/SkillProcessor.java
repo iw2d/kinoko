@@ -220,13 +220,11 @@ public abstract class SkillProcessor {
             case Evan.HEROS_ECHO:
             case Citizen.HEROS_ECHO:
                 user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                field.getUserPool().forEach((other) -> {
-                    if (user.getCharacterId() != other.getCharacterId()) {
-                        try (var lockedOther = other.acquire()) {
-                            other.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                            other.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
-                            field.broadcastPacket(UserRemote.effect(other, Effect.skillAffected(skill.skillId, skill.slv)), other);
-                        }
+                skill.forEachAffectedUser(field, (other) -> {
+                    try (var lockedOther = other.acquire()) {
+                        other.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                        other.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
+                        field.broadcastPacket(UserRemote.effect(other, Effect.skillAffected(skill.skillId, skill.slv)), other);
                     }
                 });
                 return;

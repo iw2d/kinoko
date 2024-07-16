@@ -316,7 +316,7 @@ public final class LoginHandler {
             loadCharacterList(c);
             c.write(LoginPacket.createNewCharacterResultSuccess(characterData));
         } else {
-            c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.Timeout));
+            c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.DBFail));
         }
     }
 

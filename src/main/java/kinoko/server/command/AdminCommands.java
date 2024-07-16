@@ -57,6 +57,8 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
+        user.write(MessagePacket.system("Users in channel: %d", user.getConnectedServer().getConnectedUsers().size()));
+        user.write(MessagePacket.system("Users in field : %d", user.getField().getUserPool().getCount()));
         user.dispose();
     }
 

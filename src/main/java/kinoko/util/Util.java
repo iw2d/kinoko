@@ -15,6 +15,10 @@ public final class Util {
         return hexFormat.formatHex(array);
     }
 
+    public static byte[] stringToByteArray(String string) {
+        return hexFormat.parseHex(string);
+    }
+
     public static String opToString(int op) {
         return String.format("%d/0x%X", op, op);
     }

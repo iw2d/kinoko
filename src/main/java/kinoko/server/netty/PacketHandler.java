@@ -16,15 +16,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(PacketHandler.class);
-    private static final ThreadFactory executorThreadFactory = Thread.ofVirtual().factory();
-    private final Map<Client, ExecutorService> executorMap = new ConcurrentHashMap<>();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Map<InHeader, Method> handlerMap;
 
     protected PacketHandler(Map<InHeader, Method> handlerMap) {
@@ -34,31 +31,30 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
     @Override
     public final void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        final ExecutorService executor = executorMap.computeIfAbsent(client, (key) -> Executors.newSingleThreadExecutor(executorThreadFactory));
+        final short op = inPacket.decodeShort();
+        final InHeader header = InHeader.getByValue(op);
+        if (header == null) {
+            log.error("Unknown opcode {} | {}", Util.opToString(op), inPacket);
+            return;
+        }
+        final Method handler = handlerMap.get(header);
+        if (handler == null) {
+            log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+            return;
+        }
+        log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
         executor.submit(() -> {
-            final short op = inPacket.decodeShort();
-            final InHeader header = InHeader.getByValue(op);
-            final Method handler = handlerMap.get(header);
-            if (header == null) {
-                log.debug("Unknown opcode {} | {}", Util.opToString(op), inPacket);
-            } else if (handler == null) {
-                if (!header.isIgnoreHeader()) {
-                    log.debug("Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+            try {
+                if (handler.getParameterTypes()[0] == Client.class) {
+                    handler.invoke(null, client, inPacket);
+                } else if (handler.getParameterTypes()[0] == User.class) {
+                    handler.invoke(null, client.getUser(), inPacket);
+                } else {
+                    throw new IllegalStateException("Handler with incorrect parameter types.");
                 }
-            } else {
-                log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
-                try {
-                    if (handler.getParameterTypes()[0] == Client.class) {
-                        handler.invoke(null, client, inPacket);
-                    } else if (handler.getParameterTypes()[0] == User.class) {
-                        handler.invoke(null, client.getUser(), inPacket);
-                    } else {
-                        throw new IllegalStateException("Handler with incorrect parameter types.");
-                    }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.error("Exception caught while invoking packet handler", e);
-                    e.printStackTrace();
-                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                log.error("Exception caught while invoking packet handler", e);
+                e.printStackTrace();
             }
         });
     }
@@ -70,10 +66,6 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
         if (client != null) {
             log.debug("Closing client");
             client.close();
-            final ExecutorService executor = executorMap.remove(client);
-            if (executor != null) {
-                executor.close();
-            }
         }
     }
 

@@ -183,8 +183,8 @@ public class Effect implements Encodable {
         switch (skill.skillId) {
             case Thief.CHAINS_OF_HELL -> {
                 effect.left = skill.left; // bLeft
-                if (skill.mobIds != null && skill.mobIds.length > 0) {
-                    effect.info = skill.mobIds[0]; // dwMobID
+                if (skill.targetIds != null && skill.targetIds.length > 0) {
+                    effect.info = skill.targetIds[0]; // dwMobID
                 }
             }
             case Citizen.CALL_OF_THE_HUNTER -> {

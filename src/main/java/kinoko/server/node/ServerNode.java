@@ -19,9 +19,9 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class ServerNode {
     private static final Random random = new SecureRandom();
+    private static final EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private static final EventLoopGroup workerGroup = new NioEventLoopGroup();
     protected final ClientStorage clientStorage = new ClientStorage();
-    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
     private boolean isShutdown = false;

@@ -72,6 +72,12 @@ public interface OutPacket {
         return outPacket;
     }
 
+    static OutPacket of(short op) {
+        final OutPacket outPacket = OutPacket.of();
+        outPacket.encodeShort(op);
+        return outPacket;
+    }
+
     static OutPacket of(OutHeader op) {
         final OutPacket outPacket = OutPacket.of();
         outPacket.encodeShort(op.getValue());

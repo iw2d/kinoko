@@ -18,7 +18,7 @@ public final class Skill {
 
     public int affectedMemberBitMap = Byte.MIN_VALUE; // default when nPartyID = 0 (CUserLocal::FindParty)
 
-    public int[] mobIds;
+    public int[] targetIds;
 
     public int captureTargetMobId;
     public int randomCapturedMobId;
@@ -60,11 +60,30 @@ public final class Skill {
         });
     }
 
-    public void forEachAffectedMob(Field field, Consumer<Mob> consumer) {
-        if (mobIds == null) {
+    public void forEachAffectedUser(Field field, Consumer<User> consumer) {
+        // Echo of Hero, GM Buffs
+        if (targetIds == null) {
             return;
         }
-        for (int mobId : mobIds) {
+        for (int characterId : targetIds) {
+            final Optional<User> userResult = field.getUserPool().getById(characterId);
+            if (userResult.isEmpty()) {
+                continue;
+            }
+            try (var locked = userResult.get().acquire()) {
+                final User user = locked.get();
+                if (user.getHp() > 0) {
+                    consumer.accept(user);
+                }
+            }
+        }
+    }
+
+    public void forEachAffectedMob(Field field, Consumer<Mob> consumer) {
+        if (targetIds == null) {
+            return;
+        }
+        for (int mobId : targetIds) {
             final Optional<Mob> mobResult = field.getMobPool().getById(mobId);
             if (mobResult.isEmpty()) {
                 continue;
@@ -86,7 +105,7 @@ public final class Skill {
                 ", positionX=" + positionX +
                 ", positionY=" + positionY +
                 ", affectedMemberBitMap=" + affectedMemberBitMap +
-                ", mobIds=" + Arrays.toString(mobIds) +
+                ", mobIds=" + Arrays.toString(targetIds) +
                 ", captureTargetMobId=" + captureTargetMobId +
                 ", randomCapturedMobId=" + randomCapturedMobId +
                 ", spiritJavelinItemId=" + spiritJavelinItemId +

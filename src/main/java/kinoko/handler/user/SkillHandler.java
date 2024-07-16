@@ -89,11 +89,11 @@ public final class SkillHandler {
             }
         }
         if (inPacket.getRemaining() > 2) {
-            // CUserLocal::SendSkillUseRequest
-            final int mobCount = inPacket.decodeByte(); // nMobCount
-            skill.mobIds = new int[mobCount];
-            for (int i = 0; i < mobCount; i++) {
-                skill.mobIds[i] = inPacket.decodeInt();
+            // CUserLocal::SendSkillUseRequest, CUserLocal::DoActiveSkill_StatChangeAdmin
+            final int targetCount = Byte.toUnsignedInt(inPacket.decodeByte());
+            skill.targetIds = new int[targetCount];
+            for (int i = 0; i < targetCount; i++) {
+                skill.targetIds[i] = inPacket.decodeInt();
                 if (skill.skillId == Thief.CHAINS_OF_HELL) {
                     // CUserLocal::TryDoingMonsterMagnet
                     inPacket.decodeByte(); // anMobMove[k] == 3 || anMobMove[k] == 4
