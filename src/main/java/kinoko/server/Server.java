@@ -4,9 +4,9 @@ import kinoko.database.DatabaseManager;
 import kinoko.provider.*;
 import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.command.CommandProcessor;
-import kinoko.server.event.EventScheduler;
 import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
+import kinoko.server.node.ServerExecutor;
 import kinoko.util.crypto.MapleCrypto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +41,7 @@ public final class Server {
 
         // Initialize server classes
         MapleCrypto.initialize();
-        EventScheduler.initialize();
+        ServerExecutor.initialize();
         CommandProcessor.initialize();
 
         // Initialize database
@@ -56,24 +56,24 @@ public final class Server {
 
         // Initialize nodes
         centralServerNode = new CentralServerNode();
-        EventScheduler.submit(() -> {
+        new Thread(() -> {
             try {
                 centralServerNode.initialize();
             } catch (Exception e) {
                 log.error("Failed to initialize central server node", e);
                 System.exit(1);
             }
-        });
+        }).start();
         for (int channelId = 0; channelId < ServerConfig.CHANNELS_PER_WORLD; channelId++) {
             final ChannelServerNode channelServerNode = new ChannelServerNode(channelId, ServerConstants.CHANNEL_PORT + channelId);
-            EventScheduler.submit(() -> {
+            new Thread(() -> {
                 try {
                     channelServerNode.initialize();
                 } catch (Exception e) {
                     log.error("Failed to initialize channel server node {}", channelServerNode.getChannelId() + 1, e);
                     System.exit(1);
                 }
-            });
+            }).start();
         }
 
         // Setup shutdown hook
@@ -91,7 +91,7 @@ public final class Server {
         log.info("Shutting down Server");
         centralServerNode.shutdown();
         ScriptDispatcher.shutdown();
-        EventScheduler.shutdown();
+        ServerExecutor.shutdown();
         DatabaseManager.shutdown();
         LogManager.shutdown();
     }

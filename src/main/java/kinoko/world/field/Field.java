@@ -9,10 +9,10 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.ServerConfig;
-import kinoko.server.event.EventScheduler;
 import kinoko.server.field.FieldStorage;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceFieldStorage;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -77,7 +78,7 @@ public final class Field {
         this.townPortalPool = new TownPortalPool(this);
         this.affectedAreaPool = new AffectedAreaPool(this);
         // Initialize field updates
-        this.fieldEventFuture = EventScheduler.addFixedDelayEvent(this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL);
+        this.fieldEventFuture = ServerExecutor.scheduleWithFixedDelay(this, this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     public FieldStorage getFieldStorage() {

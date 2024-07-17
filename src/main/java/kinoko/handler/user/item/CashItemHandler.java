@@ -19,8 +19,8 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.ServerConfig;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
-import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
@@ -154,7 +154,7 @@ public final class CashItemHandler extends ItemHandler {
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
                     user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
-                    EventScheduler.addEvent(() -> {
+                    ServerExecutor.schedule(user.getField(), () -> {
                         user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneClearMessage());
                     }, 5, TimeUnit.SECONDS); // TODO : scheduling system?
                 }

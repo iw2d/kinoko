@@ -722,7 +722,7 @@ public final class User extends Life implements Lockable<User> {
     /**
      * This should be used in unfortunate cases where a method cannot accept a {@link kinoko.util.Locked<User>} to
      * ensure that the method is called after acquiring the lock. It is preferable to submit a runnable to the
-     * {@link kinoko.server.event.EventScheduler} to acquire the lock in a separate thread, but sometimes we want our
+     * {@link kinoko.server.node.ServerExecutor} to acquire the lock in a separate thread, but sometimes we want our
      * code to run first - e.g. before saving to database.
      *
      * @return true if the current thread has acquired the {@link kinoko.util.Lockable<User>} object.

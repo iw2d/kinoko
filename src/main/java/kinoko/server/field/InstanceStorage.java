@@ -34,8 +34,10 @@ public final class InstanceStorage {
         return Optional.of(instance);
     }
 
-    public boolean removeInstance(Instance instance) {
-        assert instance.getUsers().isEmpty();
+    public synchronized boolean removeInstance(Instance instance) {
+        if (!instance.getUsers().isEmpty()) {
+            return false;
+        }
         instance.getFieldStorage().clear();
         return instanceMap.remove(instance.getInstanceId(), instance);
     }

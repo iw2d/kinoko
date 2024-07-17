@@ -17,7 +17,7 @@ import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillStat;
 import kinoko.script.event.MoonBunny;
-import kinoko.server.event.EventScheduler;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Encodable;
@@ -39,6 +39,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -453,7 +454,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             final int exp = entry.getValue();
             final int memberCount = partyMembers.getOrDefault(user.getPartyId(), Set.of()).size();
             final int partyBonus = GameConstants.getPartyBonusExp(exp, memberCount);
-            EventScheduler.addEvent(() -> {
+            ServerExecutor.submit(getField(), () -> {
                 try (var locked = user.acquire()) {
                     // Distribute exp
                     if (locked.get().getField() != getField()) {
@@ -498,7 +499,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         user.validateStat();
                     }
                 }
-            }, 0);
+            });
         }
     }
 
@@ -585,7 +586,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (template.getRevives().isEmpty()) {
             return;
         }
-        EventScheduler.addEvent(() -> {
+        ServerExecutor.schedule(getField(), () -> {
             for (int reviveId : template.getRevives()) {
                 final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(reviveId);
                 if (mobTemplateResult.isEmpty()) {
@@ -604,7 +605,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 getField().getMobPool().addMob(reviveMob);
                 reviveMob.setAppearType(MobAppearType.NORMAL);
             }
-        }, template.getReviveDelay());
+        }, template.getReviveDelay(), TimeUnit.MILLISECONDS);
     }
 
 

@@ -3,7 +3,7 @@ package kinoko.world.field.reactor;
 import kinoko.provider.map.ReactorInfo;
 import kinoko.provider.reactor.ReactorEvent;
 import kinoko.provider.reactor.ReactorTemplate;
-import kinoko.server.event.EventScheduler;
+import kinoko.server.node.ServerExecutor;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObjectImpl;
@@ -105,7 +105,7 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
             return;
         }
         // Schedule event to consume drop and trigger event
-        EventScheduler.addEvent(() -> {
+        ServerExecutor.schedule(getField(), () -> {
             // Acquire and check state after delay
             try (var lockedReactor = this.acquire()) {
                 final Reactor reactor = lockedReactor.get();

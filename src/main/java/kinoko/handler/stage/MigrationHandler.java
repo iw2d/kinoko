@@ -15,7 +15,6 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.Gift;
-import kinoko.server.event.EventScheduler;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.messenger.MessengerRequest;
@@ -23,6 +22,7 @@ import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.world.GameConstants;
@@ -196,7 +196,7 @@ public final class MigrationHandler {
             channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
 
             // Load memos
-            EventScheduler.submit(() -> {
+            ServerExecutor.submit(c, () -> {
                 final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
                 if (!memos.isEmpty()) {
                     user.write(MemoPacket.load(memos));

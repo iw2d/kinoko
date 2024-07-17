@@ -3,7 +3,7 @@ package kinoko.world.friend;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.world.FriendPacket;
 import kinoko.server.ServerConfig;
-import kinoko.server.event.EventScheduler;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.user.RemoteUser;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
@@ -88,7 +88,7 @@ public final class FriendManager {
             final Optional<Friend> mutualFriendResult = fm.getFriend(self.getCharacterId());
             mutualFriendResult.ifPresent(mutualFriends::add);
         }
-        EventScheduler.submit(() -> {
+        ServerExecutor.submit(user.getClient(), () -> {
             // Query mutual friends' status
             final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(
                     mutualFriends.stream().map(Friend::getFriendName).collect(Collectors.toUnmodifiableSet())

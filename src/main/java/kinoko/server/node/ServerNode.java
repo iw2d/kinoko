@@ -63,6 +63,8 @@ public abstract class ServerNode {
         b.group(workerGroup);
         b.channel(NioSocketChannel.class);
         b.handler(initializer);
+        b.option(ChannelOption.TCP_NODELAY, true);
+        b.option(ChannelOption.SO_KEEPALIVE, true);
         return b.connect(host, port);
     }
 

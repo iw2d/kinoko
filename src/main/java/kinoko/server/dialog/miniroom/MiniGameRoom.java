@@ -2,7 +2,7 @@ package kinoko.server.dialog.miniroom;
 
 import kinoko.packet.field.MiniRoomPacket;
 import kinoko.packet.user.UserPacket;
-import kinoko.server.event.EventScheduler;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
@@ -206,7 +206,7 @@ public abstract class MiniGameRoom extends MiniRoom {
         final User other = isOwner(user) ? getGuest() : getOwner();
         // Conclude game
         if (other != null && !isOpen()) {
-            EventScheduler.submit(() -> {
+            ServerExecutor.submit(user.getField(), () -> {
                 try (var lockedOther = other.acquire()) {
                     gameResult(GameResultType.GIVEUP, other, user);
                 }

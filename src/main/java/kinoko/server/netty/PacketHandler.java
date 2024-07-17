@@ -5,6 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.handler.Handler;
 import kinoko.server.header.InHeader;
 import kinoko.server.node.Client;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.user.User;
@@ -16,12 +17,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(PacketHandler.class);
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Map<InHeader, Method> handlerMap;
 
     protected PacketHandler(Map<InHeader, Method> handlerMap) {
@@ -43,7 +41,7 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
             return;
         }
         log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
-        executor.submit(() -> {
+        ServerExecutor.submit(client, () -> {
             try {
                 if (handler.getParameterTypes()[0] == Client.class) {
                     handler.invoke(null, client, inPacket);
@@ -65,7 +63,7 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (client != null) {
             log.debug("Closing client");
-            client.close();
+            ServerExecutor.submit(client, client::close);
         }
     }
 

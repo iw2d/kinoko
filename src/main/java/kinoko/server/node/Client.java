@@ -7,7 +7,11 @@ import kinoko.server.netty.NettyClient;
 import kinoko.world.user.Account;
 import kinoko.world.user.User;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public final class Client extends NettyClient {
+    private static final AtomicInteger clientIdCounter = new AtomicInteger(1);
+    private final int clientId;
     private Account account;
     private User user;
     private byte[] machineId;
@@ -15,6 +19,11 @@ public final class Client extends NettyClient {
 
     public Client(ServerNode serverNode, SocketChannel socketChannel) {
         super(serverNode, socketChannel);
+        this.clientId = clientIdCounter.getAndIncrement();
+    }
+
+    public int getClientId() {
+        return clientId;
     }
 
     public Account getAccount() {

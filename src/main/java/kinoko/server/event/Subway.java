@@ -1,6 +1,7 @@
 package kinoko.server.event;
 
 import kinoko.server.field.FieldStorage;
+import kinoko.server.node.ServerExecutor;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -40,7 +41,7 @@ public final class Subway extends Event {
         }
         // Schedule event - run every minute
         final LocalDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
-        eventFuture = EventScheduler.addFixedDelayEvent(this::nextState, now.until(nextStateTime, ChronoUnit.MILLIS), 60 * 1000, TimeUnit.MILLISECONDS);
+        eventFuture = ServerExecutor.scheduleWithFixedDelay(this, this::nextState, now.until(nextStateTime, ChronoUnit.MILLIS), 60 * 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
