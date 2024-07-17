@@ -3,7 +3,9 @@ package kinoko.server.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.util.crypto.IGCipher;
@@ -20,15 +22,16 @@ public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
     @Override
     protected void encode(ChannelHandlerContext ctx, OutPacket outPacket, ByteBuf out) {
         final NettyClient c = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        final OutHeader header = outPacket.getHeader();
         final byte[] data = outPacket.getData();
         if (c == null) {
-            log.debug("[Out] | Plain sending " + Util.readableByteArray(data));
+            log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[Out] | Plain sending " + Util.readableByteArray(data));
             out.writeBytes(data);
             return;
         }
         c.acquireEncoderState();
         try {
-            log.log(outPacket.getHeader().isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[Out] | {}", outPacket);
+            log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[Out] | {}", outPacket);
             final byte[] iv = c.getSendIv();
             final int rawSeq = ((iv[2] & 0xFF) | ((iv[3] << 8) & 0xFF00)) ^ SEND_VERSION;
             final int dataLen = data.length ^ rawSeq;

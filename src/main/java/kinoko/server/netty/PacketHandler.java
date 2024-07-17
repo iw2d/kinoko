@@ -3,6 +3,7 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import kinoko.handler.Handler;
+import kinoko.server.ServerConfig;
 import kinoko.server.header.InHeader;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
@@ -37,10 +38,10 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
         }
         final Method handler = handlerMap.get(header);
         if (handler == null) {
-            log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+            log.log(!header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
             return;
         }
-        log.log(header.isIgnoreHeader() ? Level.TRACE : Level.DEBUG, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
+        log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
         ServerExecutor.submit(client, () -> {
             try {
                 if (handler.getParameterTypes()[0] == Client.class) {

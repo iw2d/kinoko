@@ -22,4 +22,5 @@ public final class ServerConfig {
     public static final int FRIEND_MAX_BASE = 20;
 
     public static final String COMMAND_PREFIX = "!";
+    public static final boolean DEBUG_MODE = false;
 }
