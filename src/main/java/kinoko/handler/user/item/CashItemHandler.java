@@ -154,7 +154,7 @@ public final class CashItemHandler extends ItemHandler {
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
                     user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
-                    ServerExecutor.schedule(user.getField(), () -> {
+                    ServerExecutor.scheduleService(() -> {
                         user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneClearMessage());
                     }, 5, TimeUnit.SECONDS); // TODO : scheduling system?
                 }

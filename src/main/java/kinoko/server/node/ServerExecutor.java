@@ -1,6 +1,5 @@
 package kinoko.server.node;
 
-import kinoko.server.event.Event;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.world.field.Field;
 
@@ -11,14 +10,16 @@ import java.util.concurrent.*;
 
 public final class ServerExecutor {
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private static final List<ExecutorService> executorArray;
+    private static final List<ExecutorService> gameExecutors;
+    private static final ExecutorService serviceExecutor;
 
     static {
         final List<ExecutorService> executors = new ArrayList<>();
         for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {
             executors.add(Executors.newSingleThreadExecutor());
         }
-        executorArray = Collections.unmodifiableList(executors);
+        gameExecutors = Collections.unmodifiableList(executors);
+        serviceExecutor = Executors.newFixedThreadPool(gameExecutors.size());
     }
 
     public static void initialize() {
@@ -26,12 +27,13 @@ public final class ServerExecutor {
     }
 
     public static void shutdown() {
-        executorArray.forEach(ExecutorService::shutdown);
+        gameExecutors.forEach(ExecutorService::shutdown);
+        serviceExecutor.shutdown();
     }
 
     public static void submit(Client client, Runnable runnable) {
         if (client.getUser() == null || client.getUser().getField() == null) {
-            executorArray.get(client.getClientId() % executorArray.size()).submit(runnable);
+            serviceExecutor.submit(runnable);
         } else {
             submit(client.getUser().getField(), runnable);
         }
@@ -39,22 +41,29 @@ public final class ServerExecutor {
 
     public static void submit(Field field, Runnable runnable) {
         if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
-            executorArray.get(instanceFieldStorage.getInstance().getInstanceId() % executorArray.size()).submit(runnable);
+            gameExecutors.get(instanceFieldStorage.getInstance().getInstanceId() % gameExecutors.size()).submit(runnable);
         } else {
-            executorArray.get(Byte.toUnsignedInt(field.getFieldKey()) % executorArray.size()).submit(runnable);
+            gameExecutors.get(Byte.toUnsignedInt(field.getFieldKey()) % gameExecutors.size()).submit(runnable);
         }
+    }
+
+    public static void submitService(Runnable runnable) {
+        serviceExecutor.submit(runnable);
     }
 
     public static ScheduledFuture<?> schedule(Field field, Runnable runnable, long delay, TimeUnit timeUnit) {
         return scheduler.schedule(() -> submit(field, runnable), delay, timeUnit);
     }
 
+    public static ScheduledFuture<?> scheduleService(Runnable runnable, long delay, TimeUnit timeUnit) {
+        return scheduler.schedule(() -> submitService(runnable), delay, timeUnit);
+    }
+
     public static ScheduledFuture<?> scheduleWithFixedDelay(Field field, Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
         return scheduler.scheduleWithFixedDelay(() -> submit(field, runnable), initialDelay, delay, timeUnit);
     }
 
-    public static ScheduledFuture<?> scheduleWithFixedDelay(Event event, Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
-        final ExecutorService eventExecutor = executorArray.get(event.getType().ordinal() % executorArray.size());
-        return scheduler.scheduleWithFixedDelay(() -> eventExecutor.submit(runnable), initialDelay, delay, timeUnit);
+    public static ScheduledFuture<?> scheduleServiceWithFixedDelay(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
+        return scheduler.scheduleWithFixedDelay(() -> submitService(runnable), initialDelay, delay, timeUnit);
     }
 }

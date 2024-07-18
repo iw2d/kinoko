@@ -56,24 +56,24 @@ public final class Server {
 
         // Initialize nodes
         centralServerNode = new CentralServerNode();
-        new Thread(() -> {
+        ServerExecutor.submitService(() -> {
             try {
                 centralServerNode.initialize();
             } catch (Exception e) {
                 log.error("Failed to initialize central server node", e);
                 System.exit(1);
             }
-        }).start();
+        });
         for (int channelId = 0; channelId < ServerConfig.CHANNELS_PER_WORLD; channelId++) {
             final ChannelServerNode channelServerNode = new ChannelServerNode(channelId, ServerConstants.CHANNEL_PORT + channelId);
-            new Thread(() -> {
+            ServerExecutor.submitService(() -> {
                 try {
                     channelServerNode.initialize();
                 } catch (Exception e) {
                     log.error("Failed to initialize channel server node {}", channelServerNode.getChannelId() + 1, e);
                     System.exit(1);
                 }
-            }).start();
+            });
         }
 
         // Setup shutdown hook

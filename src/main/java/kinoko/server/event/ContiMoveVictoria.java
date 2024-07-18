@@ -57,7 +57,7 @@ public final class ContiMoveVictoria extends ContiMoveEvent {
         }
         // Schedule event - run every minute
         final LocalDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
-        eventFuture = ServerExecutor.scheduleWithFixedDelay(this, this::nextState, now.until(nextStateTime, ChronoUnit.MILLIS), 60 * 1000, TimeUnit.MILLISECONDS);
+        eventFuture = ServerExecutor.scheduleServiceWithFixedDelay(this::nextState, now.until(nextStateTime, ChronoUnit.MILLIS), 60 * 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
