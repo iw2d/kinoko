@@ -1,7 +1,8 @@
 package kinoko.server.header;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public enum OutHeader {
@@ -530,7 +531,7 @@ public enum OutHeader {
     NO(433);
 
 
-    private static final Map<Short, OutHeader> headerMap = new HashMap<>();
+    private static final List<OutHeader> headers;
     private static final Set<OutHeader> ignoreHeaders = Set.of(
             CharacterInfo,
             PartyResult,
@@ -562,9 +563,11 @@ public enum OutHeader {
     );
 
     static {
+        final List<OutHeader> headerList = new ArrayList<>(Collections.nCopies(NO.getValue() + 1, null));
         for (OutHeader header : values()) {
-            headerMap.put(header.getValue(), header);
+            headerList.set(header.getValue(), header);
         }
+        headers = Collections.unmodifiableList(headerList);
     }
 
     private final short value;
@@ -582,6 +585,9 @@ public enum OutHeader {
     }
 
     public static OutHeader getByValue(short op) {
-        return headerMap.get(op);
+        if (op >= 0 && op < NO.getValue()) {
+            return headers.get(op);
+        }
+        return null;
     }
 }

@@ -1,7 +1,6 @@
 package kinoko.server.header;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Central server communication opcode enum, which uses integer ordinal values for en/decoding.
@@ -138,19 +137,16 @@ public enum CentralHeader {
     GuildResult,
     FriendRequest;
 
-    private static final Map<Integer, CentralHeader> headerMap = new HashMap<>();
-
-    static {
-        for (CentralHeader header : values()) {
-            headerMap.put(header.getValue(), header);
-        }
-    }
+    private static final List<CentralHeader> headers = List.of(values());
 
     public final int getValue() {
         return ordinal();
     }
 
     public static CentralHeader getByValue(int op) {
-        return headerMap.get(op);
+        if (op >= 0 && op < values().length) {
+            return headers.get(op);
+        }
+        return null;
     }
 }

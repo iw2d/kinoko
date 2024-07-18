@@ -1,7 +1,8 @@
 package kinoko.server.header;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public enum InHeader {
@@ -322,7 +323,7 @@ public enum InHeader {
     LogoutGiftSelect(313),
     NO(314);
 
-    private static final Map<Short, InHeader> headerMap = new HashMap<>();
+    private static final List<InHeader> headers;
     private static final Set<InHeader> ignoreHeaders = Set.of(
             CreateSecurityHandle,
             UpdateScreenSetting,
@@ -343,9 +344,11 @@ public enum InHeader {
     );
 
     static {
+        final List<InHeader> headerList = new ArrayList<>(Collections.nCopies(NO.getValue() + 1, null));
         for (InHeader header : values()) {
-            headerMap.put(header.getValue(), header);
+            headerList.set(header.getValue(), header);
         }
+        headers = Collections.unmodifiableList(headerList);
     }
 
     private final short value;
@@ -363,6 +366,9 @@ public enum InHeader {
     }
 
     public static InHeader getByValue(short op) {
-        return headerMap.get(op);
+        if (op >= 0 && op < NO.getValue()) {
+            return headers.get(op);
+        }
+        return null;
     }
 }
