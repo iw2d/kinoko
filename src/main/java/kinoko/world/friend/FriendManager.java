@@ -2,8 +2,6 @@ package kinoko.world.friend;
 
 import kinoko.database.DatabaseManager;
 import kinoko.packet.world.FriendPacket;
-import kinoko.server.ServerConfig;
-import kinoko.server.node.ServerExecutor;
 import kinoko.server.user.RemoteUser;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
@@ -11,10 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /**
@@ -88,39 +82,28 @@ public final class FriendManager {
             final Optional<Friend> mutualFriendResult = fm.getFriend(self.getCharacterId());
             mutualFriendResult.ifPresent(mutualFriends::add);
         }
-        ServerExecutor.submit(user.getClient(), () -> {
-            // Query mutual friends' status
-            final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(
-                    mutualFriends.stream().map(Friend::getFriendName).collect(Collectors.toUnmodifiableSet())
-            );
-            try {
-                final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
-                // Update friend data and update client
-                for (Friend friend : mutualFriends) {
-                    final Optional<RemoteUser> userResult = queryResult.stream()
-                            .filter((remoteUser) -> remoteUser.getCharacterId() == friend.getFriendId())
-                            .findFirst();
-                    if (userResult.isPresent()) {
-                        friend.setChannelId(userResult.get().getChannelId());
-                    } else {
-                        friend.setChannelId(GameConstants.CHANNEL_OFFLINE);
-                    }
+        user.getConnectedServer().submitUserQueryRequest(mutualFriends.stream().map(Friend::getFriendName).collect(Collectors.toUnmodifiableSet()), (queryResult) -> {
+            for (Friend friend : mutualFriends) {
+                final Optional<RemoteUser> userResult = queryResult.stream()
+                        .filter((remoteUser) -> remoteUser.getCharacterId() == friend.getFriendId())
+                        .findFirst();
+                if (userResult.isPresent()) {
+                    friend.setChannelId(userResult.get().getChannelId());
+                } else {
+                    friend.setChannelId(GameConstants.CHANNEL_OFFLINE);
                 }
-                user.write(FriendPacket.reset(resultType, fm.getRegisteredFriends()));
-                if (isMigrateIn) {
-                    // Notify friends
-                    user.getConnectedServer().submitUserPacketBroadcast(
-                            fm.getBroadcastTargets(),
-                            FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false)
-                    );
-                    // Process friend requests
-                    for (Friend friend : user.getFriendManager().getFriendRequests()) {
-                        user.write(FriendPacket.invite(friend));
-                    }
+            }
+            user.write(FriendPacket.reset(resultType, fm.getRegisteredFriends()));
+            if (isMigrateIn) {
+                // Notify friends
+                user.getConnectedServer().submitUserPacketBroadcast(
+                        fm.getBroadcastTargets(),
+                        FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false)
+                );
+                // Process friend requests
+                for (Friend friend : user.getFriendManager().getFriendRequests()) {
+                    user.write(FriendPacket.invite(friend));
                 }
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                log.error("Exception caught while waiting for user query result", e);
-                e.printStackTrace();
             }
         });
     }

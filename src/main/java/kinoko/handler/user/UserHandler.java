@@ -63,10 +63,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public final class UserHandler {
     private static final Logger log = LogManager.getLogger(UserHandler.class);
@@ -903,9 +899,7 @@ public final class UserHandler {
             case LocationRequest, LocationRequest_F -> {
                 final String targetName = inPacket.decodeString();
                 // Query target user
-                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
-                try {
-                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                user.getConnectedServer().submitUserQueryRequest(Set.of(targetName), (queryResult) -> {
                     final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
                     if (targetResult.isEmpty()) {
                         user.write(WhisperPacket.locationResultNone(targetName));
@@ -917,19 +911,13 @@ public final class UserHandler {
                     } else {
                         user.write(WhisperPacket.locationResultOtherChannel(targetName, whisperFlag == WhisperFlag.LocationRequest_F, target.getChannelId()));
                     }
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    log.error("Exception caught while waiting for user query result", e);
-                    user.write(WhisperPacket.locationResultNone(targetName));
-                    e.printStackTrace();
-                }
+                });
             }
             case WhisperRequest, WhisperRequestmanager -> {
                 final String targetName = inPacket.decodeString();
                 final String message = inPacket.decodeString();
                 // Query target user
-                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
-                try {
-                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                user.getConnectedServer().submitUserQueryRequest(Set.of(targetName), (queryResult) -> {
                     if (queryResult.isEmpty()) {
                         user.write(WhisperPacket.whisperResult(targetName, false));
                         return;
@@ -937,11 +925,7 @@ public final class UserHandler {
                     // Write packet to target user
                     user.getConnectedServer().submitUserPacketRequest(targetName, WhisperPacket.whisperReceive(user.getChannelId(), user.getCharacterName(), message));
                     user.write(WhisperPacket.whisperResult(targetName, true));
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    log.error("Exception caught while waiting for user query result", e);
-                    user.write(WhisperPacket.whisperResult(targetName, false));
-                    e.printStackTrace();
-                }
+                });
             }
             case WhisperBlocked -> {
                 final String targetName = inPacket.decodeString();
@@ -979,9 +963,7 @@ public final class UserHandler {
                 }
                 final String targetName = inPacket.decodeString(); // sTarget
                 // Query target user
-                final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
-                try {
-                    final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                user.getConnectedServer().submitUserQueryRequest(Set.of(targetName), (queryResult) -> {
                     final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
                     if (targetResult.isEmpty()) {
                         user.write(MessengerPacket.inviteResult(targetName, false));
@@ -989,11 +971,7 @@ public final class UserHandler {
                     }
                     user.getConnectedServer().submitUserPacketReceive(targetResult.get().getCharacterId(), MessengerPacket.invite(user, user.getMessengerId()));
                     user.write(MessengerPacket.inviteResult(targetName, true));
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    log.error("Exception caught while waiting for user query result", e);
-                    user.write(MessengerPacket.inviteResult(targetName, false));
-                    e.printStackTrace();
-                }
+                });
             }
             case MSMP_Blocked -> {
                 // CUIMessenger::OnInvite

@@ -16,7 +16,6 @@ import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemOptionInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.npc.NpcTemplate;
-import kinoko.server.ServerConfig;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.header.InHeader;
@@ -32,10 +31,7 @@ import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.StatConstants;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public final class CashItemHandler extends ItemHandler {
 
@@ -415,9 +411,7 @@ public final class CashItemHandler extends ItemHandler {
                     if (targetUser) {
                         // Resolve target location
                         final String targetName = inPacket.decodeString();
-                        final CompletableFuture<Set<RemoteUser>> userRequestFuture = user.getConnectedServer().submitUserQueryRequest(Set.of(targetName));
-                        try {
-                            final Set<RemoteUser> queryResult = userRequestFuture.get(ServerConfig.CENTRAL_REQUEST_TTL, TimeUnit.SECONDS);
+                        user.getConnectedServer().submitUserQueryRequest(Set.of(targetName), (queryResult) -> {
                             final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
                             if (targetResult.isEmpty()) {
                                 user.write(MapTransferPacket.targetNotExist()); // %s is currently difficult to locate, so the teleport will not take place.
@@ -431,12 +425,7 @@ public final class CashItemHandler extends ItemHandler {
                                 return;
                             }
                             handleMapTransfer(user, target.getFieldId(), item, position);
-                        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                            log.error("Exception caught while waiting for user query result", e);
-                            e.printStackTrace();
-                            user.write(MapTransferPacket.targetNotExist()); // %s is currently difficult to locate, so the teleport will not take place.
-                            user.dispose();
-                        }
+                        });
                     } else {
                         final int targetField = inPacket.decodeInt(); // dwTargetField
                         final List<Integer> availableFields = itemId / 1000 != 5040 ? // canTransferContinent

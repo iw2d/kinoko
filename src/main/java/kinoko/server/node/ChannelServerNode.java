@@ -35,6 +35,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public final class ChannelServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(ChannelServerNode.class);
@@ -68,12 +69,12 @@ public final class ChannelServerNode extends ServerNode {
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
 
-    public CompletableFuture<Optional<MigrationInfo>> submitMigrationRequest(int accountId, int characterId, byte[] machineId, byte[] clientKey) {
-        final int requestId = getNewRequestId();
+    public void submitMigrationRequest(int accountId, int characterId, byte[] machineId, byte[] clientKey, Consumer<Optional<MigrationInfo>> consumer) {
         final CompletableFuture<Optional<MigrationInfo>> migrationRequestFuture = new CompletableFuture<>();
+        migrationRequestFuture.thenAccept(consumer);
+        final int requestId = getNewRequestId();
         requestFutures.put(requestId, migrationRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.migrateRequest(requestId, accountId, characterId, machineId, clientKey));
-        return migrationRequestFuture;
     }
 
     @SuppressWarnings("unchecked")
@@ -84,12 +85,12 @@ public final class ChannelServerNode extends ServerNode {
         }
     }
 
-    public CompletableFuture<Optional<TransferInfo>> submitTransferRequest(MigrationInfo migrationInfo) {
-        final int requestId = getNewRequestId();
+    public void submitTransferRequest(MigrationInfo migrationInfo, Consumer<Optional<TransferInfo>> consumer) {
         final CompletableFuture<Optional<TransferInfo>> transferRequestFuture = new CompletableFuture<>();
+        transferRequestFuture.thenAccept(consumer);
+        final int requestId = getNewRequestId();
         requestFutures.put(requestId, transferRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.transferRequest(requestId, migrationInfo));
-        return transferRequestFuture;
     }
 
     @SuppressWarnings("unchecked")
@@ -139,12 +140,12 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketBroadcast(characterIds, remotePacket));
     }
 
-    public CompletableFuture<Set<RemoteUser>> submitUserQueryRequest(Set<String> characterNames) {
-        final int requestId = getNewRequestId();
+    public void submitUserQueryRequest(Set<String> characterNames, Consumer<Set<RemoteUser>> consumer) {
         final CompletableFuture<Set<RemoteUser>> userRequestFuture = new CompletableFuture<>();
+        userRequestFuture.thenAccept(consumer);
+        final int requestId = getNewRequestId();
         requestFutures.put(requestId, userRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.userQueryRequest(requestId, characterNames));
-        return userRequestFuture;
     }
 
     @SuppressWarnings("unchecked")
