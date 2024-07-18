@@ -8,7 +8,6 @@ import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
-import kinoko.world.friend.FriendManager;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
@@ -75,9 +74,6 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         }
         cd.setQuestManager(qm);
 
-        final FriendManager fm = new FriendManager(row.getInt(CharacterTable.FRIEND_MAX));
-        cd.setFriendManager(fm);
-
         final ConfigManager cm = row.get(CharacterTable.CONFIG, ConfigManager.class);
         cd.setConfigManager(cm);
 
@@ -94,6 +90,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setWildHunterInfo(whi);
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(CharacterTable.ITEM_SN_COUNTER)));
+        cd.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
         return cd;
     }
 
@@ -238,7 +235,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
-                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendManager().getFriendMax()))
+                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
                         .setColumn(CharacterTable.MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
                         .setColumn(CharacterTable.MAP_TRANSFER_INFO, literal(characterData.getMapTransferInfo(), registry))

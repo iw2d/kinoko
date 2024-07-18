@@ -1,4 +1,4 @@
-package kinoko.world.friend;
+package kinoko.server.friend;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;

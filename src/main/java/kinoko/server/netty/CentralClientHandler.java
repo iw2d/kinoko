@@ -58,10 +58,14 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
                 case UserPacketBroadcast -> handleUserPacketBroadcast(inPacket);
                 case UserQueryResult -> handleUserQueryResult(inPacket);
                 case ServerPacketBroadcast -> handleServerPacketBroadcast(inPacket);
-                case PartyResult -> handlePartyResult(inPacket);
                 case MessengerResult -> handleMessengerResult(inPacket);
-                case null -> log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);
-                default -> log.error("Central client {} received an unhandled header : {}", channelServerNode.getChannelId() + 1, header);
+                case PartyResult -> handlePartyResult(inPacket);
+                case null -> {
+                    log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);
+                }
+                default -> {
+                    log.error("Central client {} received an unhandled header : {}", channelServerNode.getChannelId() + 1, header);
+                }
             }
         });
     }
@@ -146,6 +150,21 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
         channelServerNode.submitChannelPacketBroadcast(outPacket);
     }
 
+    private void handleMessengerResult(InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final int messengerId = inPacket.decodeInt();
+        // Resolve target user
+        final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
+        if (targetUserResult.isEmpty()) {
+            log.error("Could not resolve target user for MessengerResult");
+            return;
+        }
+        try (var locked = targetUserResult.get().acquire()) {
+            final User user = locked.get();
+            user.setMessengerId(messengerId);
+        }
+    }
+
     private void handlePartyResult(InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final boolean hasParty = inPacket.decodeBoolean();
@@ -174,21 +193,6 @@ public final class CentralClientHandler extends SimpleChannelInboundHandler<InPa
             if (user.getTownPortal() != null && user.getTownPortal().getTownField() == user.getField()) {
                 user.write(FieldPacket.townPortalRemoved(user, false));
             }
-        }
-    }
-
-    private void handleMessengerResult(InPacket inPacket) {
-        final int characterId = inPacket.decodeInt();
-        final int messengerId = inPacket.decodeInt();
-        // Resolve target user
-        final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
-        if (targetUserResult.isEmpty()) {
-            log.error("Could not resolve target user for MessengerResult");
-            return;
-        }
-        try (var locked = targetUserResult.get().acquire()) {
-            final User user = locked.get();
-            user.setMessengerId(messengerId);
         }
     }
 }

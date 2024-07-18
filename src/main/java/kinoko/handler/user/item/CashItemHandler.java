@@ -411,7 +411,7 @@ public final class CashItemHandler extends ItemHandler {
                     if (targetUser) {
                         // Resolve target location
                         final String targetName = inPacket.decodeString();
-                        user.getConnectedServer().submitUserQueryRequest(Set.of(targetName), (queryResult) -> {
+                        user.getConnectedServer().submitUserQueryRequest(List.of(targetName), (queryResult) -> {
                             final Optional<RemoteUser> targetResult = queryResult.stream().findFirst();
                             if (targetResult.isEmpty()) {
                                 user.write(MapTransferPacket.targetNotExist()); // %s is currently difficult to locate, so the teleport will not take place.

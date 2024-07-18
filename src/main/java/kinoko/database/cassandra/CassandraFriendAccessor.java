@@ -6,8 +6,8 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.querybuilder.insert.Insert;
 import kinoko.database.FriendAccessor;
 import kinoko.database.cassandra.table.FriendTable;
-import kinoko.world.friend.Friend;
-import kinoko.world.friend.FriendStatus;
+import kinoko.server.friend.Friend;
+import kinoko.server.friend.FriendStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public final class CassandraFriendAccessor extends CassandraAccessor implements 
         final ResultSet deleteResult = getSession().execute(
                 deleteFrom(getKeyspace(), FriendTable.getTableName())
                         .whereColumn(FriendTable.CHARACTER_ID).isEqualTo(literal(characterId))
-                        .ifColumn(FriendTable.FRIEND_ID).isEqualTo(literal(friendId))
+                        .whereColumn(FriendTable.FRIEND_ID).isEqualTo(literal(friendId))
                         .build()
         );
         return deleteResult.wasApplied();

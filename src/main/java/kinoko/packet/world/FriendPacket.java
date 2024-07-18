@@ -1,16 +1,16 @@
 package kinoko.packet.world;
 
+import kinoko.server.friend.Friend;
+import kinoko.server.friend.FriendResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
-import kinoko.world.friend.Friend;
-import kinoko.world.friend.FriendResultType;
 
-import java.util.List;
+import java.util.Collection;
 
 public final class FriendPacket {
     // CWvsContext::OnFriendResult -------------------------------------------------------------------------------------
 
-    public static OutPacket loadFriendDone(List<Friend> friends) {
+    public static OutPacket loadFriendDone(Collection<Friend> friends) {
         return FriendPacket.reset(FriendResultType.LoadFriend_Done, friends);
     }
 
@@ -34,7 +34,7 @@ public final class FriendPacket {
         return outPacket;
     }
 
-    public static OutPacket setFriendDone(List<Friend> friends) {
+    public static OutPacket setFriendDone(Collection<Friend> friends) {
         return FriendPacket.reset(FriendResultType.SetFriend_Done, friends);
     }
 
@@ -62,7 +62,7 @@ public final class FriendPacket {
         return FriendPacket.unknown(FriendResultType.AcceptFriend_Unknown, null);
     }
 
-    public static OutPacket deleteFriendDone(List<Friend> friends) {
+    public static OutPacket deleteFriendDone(Collection<Friend> friends) {
         return FriendPacket.reset(FriendResultType.DeleteFriend_Done, friends);
     }
 
@@ -88,7 +88,7 @@ public final class FriendPacket {
         return FriendPacket.unknown(FriendResultType.IncMaxCount_Unknown, null);
     }
 
-    public static OutPacket reset(FriendResultType resultType, List<Friend> friends) {
+    public static OutPacket reset(FriendResultType resultType, Collection<Friend> friends) {
         // CWvsContext::CFriend::Reset
         final OutPacket outPacket = FriendPacket.of(resultType);
         outPacket.encodeByte(friends.size());

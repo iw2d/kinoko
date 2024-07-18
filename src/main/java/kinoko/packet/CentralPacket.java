@@ -1,5 +1,6 @@
 package kinoko.packet;
 
+import kinoko.server.friend.FriendRequest;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
@@ -9,7 +10,7 @@ import kinoko.server.party.PartyRequest;
 import kinoko.server.user.RemoteUser;
 import kinoko.world.user.PartyInfo;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * See {@link CentralHeader} for more info.
@@ -112,7 +113,7 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket userPacketBroadcast(Set<Integer> characterIds, OutPacket remotePacket) {
+    public static OutPacket userPacketBroadcast(List<Integer> characterIds, OutPacket remotePacket) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.UserPacketBroadcast);
         outPacket.encodeInt(characterIds.size());
         for (int characterId : characterIds) {
@@ -124,7 +125,7 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket userQueryRequest(int requestId, Set<String> characterNames) {
+    public static OutPacket userQueryRequest(int requestId, List<String> characterNames) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.UserQueryRequest);
         outPacket.encodeInt(requestId);
         outPacket.encodeInt(characterNames.size());
@@ -134,7 +135,7 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket userQueryResult(int requestId, Set<RemoteUser> remoteUsers) {
+    public static OutPacket userQueryResult(int requestId, List<RemoteUser> remoteUsers) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.UserQueryResult);
         outPacket.encodeInt(requestId);
         outPacket.encodeInt(remoteUsers.size());
@@ -149,6 +150,20 @@ public final class CentralPacket {
         final byte[] packetData = remotePacket.getData();
         outPacket.encodeInt(packetData.length);
         outPacket.encodeArray(packetData);
+        return outPacket;
+    }
+
+    public static OutPacket messengerRequest(int characterId, MessengerRequest messengerRequest) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MessengerRequest);
+        outPacket.encodeInt(characterId);
+        messengerRequest.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket messengerResult(int characterId, int messengerId) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.MessengerResult);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeInt(messengerId);
         return outPacket;
     }
 
@@ -169,17 +184,10 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket messengerRequest(int characterId, MessengerRequest messengerRequest) {
-        final OutPacket outPacket = OutPacket.of(CentralHeader.MessengerRequest);
+    public static OutPacket friendRequest(int characterId, FriendRequest friendRequest) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.FriendRequest);
         outPacket.encodeInt(characterId);
-        messengerRequest.encode(outPacket);
-        return outPacket;
-    }
-
-    public static OutPacket messengerResult(int characterId, int messengerId) {
-        final OutPacket outPacket = OutPacket.of(CentralHeader.MessengerResult);
-        outPacket.encodeInt(characterId);
-        outPacket.encodeInt(messengerId);
+        friendRequest.encode(outPacket);
         return outPacket;
     }
 }

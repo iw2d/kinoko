@@ -1,4 +1,4 @@
-package kinoko.world.friend;
+package kinoko.server.friend;
 
 public enum FriendRequestType {
     // FriendReq

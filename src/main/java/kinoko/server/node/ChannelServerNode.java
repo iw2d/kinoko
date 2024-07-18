@@ -13,6 +13,7 @@ import kinoko.server.event.EventType;
 import kinoko.server.field.ChannelFieldStorage;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceStorage;
+import kinoko.server.friend.FriendRequest;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
@@ -136,11 +137,11 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketReceive(characterId, remotePacket));
     }
 
-    public void submitUserPacketBroadcast(Set<Integer> characterIds, OutPacket remotePacket) {
+    public void submitUserPacketBroadcast(List<Integer> characterIds, OutPacket remotePacket) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketBroadcast(characterIds, remotePacket));
     }
 
-    public void submitUserQueryRequest(Set<String> characterNames, Consumer<Set<RemoteUser>> consumer) {
+    public void submitUserQueryRequest(List<String> characterNames, Consumer<Set<RemoteUser>> consumer) {
         final CompletableFuture<Set<RemoteUser>> userRequestFuture = new CompletableFuture<>();
         userRequestFuture.thenAccept(consumer);
         final int requestId = getNewRequestId();
@@ -169,12 +170,16 @@ public final class ChannelServerNode extends ServerNode {
 
     // OTHER CENTRAL REQUESTS ------------------------------------------------------------------------------------------
 
+    public void submitMessengerRequest(User user, MessengerRequest messengerRequest) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.messengerRequest(user.getCharacterId(), messengerRequest));
+    }
+
     public void submitPartyRequest(User user, PartyRequest partyRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.partyRequest(user.getCharacterId(), partyRequest));
     }
 
-    public void submitMessengerRequest(User user, MessengerRequest messengerRequest) {
-        centralClientFuture.channel().writeAndFlush(CentralPacket.messengerRequest(user.getCharacterId(), messengerRequest));
+    public void submitFriendRequest(User user, FriendRequest friendRequest) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.friendRequest(user.getCharacterId(), friendRequest));
     }
 
 

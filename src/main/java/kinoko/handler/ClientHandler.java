@@ -30,6 +30,5 @@ public final class ClientHandler {
 
         final short op = inPacket.decodeShort();
         log.error("Error {} | {}({}) | {}", errorType, OutHeader.getByValue(op), Util.opToString(op), inPacket);
-        c.close();
     }
 }

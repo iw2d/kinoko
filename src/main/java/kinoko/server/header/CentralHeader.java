@@ -130,10 +130,13 @@ public enum CentralHeader {
     UserQueryRequest,
     UserQueryResult,
     ServerPacketBroadcast,
+    MessengerRequest,
+    MessengerResult,
     PartyRequest,
     PartyResult,
-    MessengerRequest,
-    MessengerResult;
+    GuildRequest, // TODO
+    GuildResult,
+    FriendRequest;
 
     private static final Map<Integer, CentralHeader> headerMap = new HashMap<>();
 

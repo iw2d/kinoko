@@ -17,7 +17,6 @@ import kinoko.server.node.Client;
 import kinoko.server.node.RemoteChildNode;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
-import kinoko.world.friend.FriendManager;
 import kinoko.world.item.*;
 import kinoko.world.job.Job;
 import kinoko.world.job.RaceSelect;
@@ -287,10 +286,6 @@ public final class LoginHandler {
         final QuestManager qm = new QuestManager();
         characterData.setQuestManager(qm);
 
-        // Initialize Friend Manager
-        final FriendManager fm = new FriendManager(ServerConfig.FRIEND_MAX_BASE);
-        characterData.setFriendManager(fm);
-
         // Initialize Config Manager
         final ConfigManager cm = ConfigManager.defaults();
         characterData.setConfigManager(cm);
@@ -310,6 +305,9 @@ public final class LoginHandler {
         // Initialize Wild Hunter Info
         final WildHunterInfo whi = new WildHunterInfo();
         characterData.setWildHunterInfo(whi);
+
+        // Initialize Friend Max Count
+        characterData.setFriendMax(ServerConfig.FRIEND_MAX_BASE);
 
         // Save character
         if (DatabaseManager.characterAccessor().newCharacter(characterData)) {

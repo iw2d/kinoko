@@ -9,11 +9,11 @@ import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserLocal;
-import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.cashshop.Gift;
+import kinoko.server.friend.FriendRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.messenger.MessengerRequest;
@@ -25,8 +25,6 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
-import kinoko.world.friend.FriendManager;
-import kinoko.world.friend.FriendResultType;
 import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
 import kinoko.world.user.CharacterData;
@@ -169,15 +167,14 @@ public final class MigrationHandler {
                 user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
                 user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
-                // Load friends from database and central server - TODO : move friend handling to central server
-                FriendManager.updateFriendsFromDatabase(user);
-                FriendManager.updateFriendsFromCentralServer(user, FriendResultType.LoadFriend_Done, true);
+                // Load messenger from central server
+                channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
 
                 // Load party from central server
                 channelServerNode.submitPartyRequest(user, PartyRequest.loadParty());
 
-                // Load messenger from central server
-                channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
+                // Load friends from central server
+                channelServerNode.submitFriendRequest(user, FriendRequest.loadFriend());
 
                 // Load memos
                 final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
@@ -286,12 +283,6 @@ public final class MigrationHandler {
         try (var locked = user.acquire()) {
             // Remove user from field
             user.getField().removeUser(user);
-
-            // Update friends
-            user.getConnectedServer().submitUserPacketBroadcast(
-                    user.getFriendManager().getBroadcastTargets(),
-                    FriendPacket.notify(user.getCharacterId(), user.getChannelId(), true)
-            );
 
             // Load gifts
             final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());

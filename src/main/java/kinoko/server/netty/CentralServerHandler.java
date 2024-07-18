@@ -2,10 +2,16 @@ package kinoko.server.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import kinoko.database.CharacterInfo;
+import kinoko.database.DatabaseManager;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.field.MessengerPacket;
 import kinoko.packet.world.BroadcastPacket;
+import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.PartyPacket;
+import kinoko.server.friend.Friend;
+import kinoko.server.friend.FriendRequest;
+import kinoko.server.friend.FriendStatus;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.messenger.Messenger;
 import kinoko.server.messenger.MessengerRequest;
@@ -27,9 +33,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public final class CentralServerHandler extends SimpleChannelInboundHandler<InPacket> {
@@ -64,8 +68,9 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 case UserPacketBroadcast -> handleUserPacketBroadcast(remoteChildNode, inPacket);
                 case UserQueryRequest -> handleUserQueryRequest(remoteChildNode, inPacket);
                 case ServerPacketBroadcast -> handleServerPacketBroadcast(remoteChildNode, inPacket);
-                case PartyRequest -> handlePartyRequest(remoteChildNode, inPacket);
                 case MessengerRequest -> handleMessengerRequest(remoteChildNode, inPacket);
+                case PartyRequest -> handlePartyRequest(remoteChildNode, inPacket);
+                case FriendRequest -> handleFriendRequest(remoteChildNode, inPacket);
                 case null -> log.error("Central Server received an unknown opcode : {}", op);
                 default -> log.error("Central Server received an unhandled header : {}", header);
             }
@@ -168,15 +173,25 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
     private void handleUserConnect(RemoteChildNode remoteChildNode, InPacket inPacket) {
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
         centralServerNode.addUser(remoteUser);
-        updatePartyMember(remoteUser);
         updateMessengerUser(remoteUser);
+        updatePartyMember(remoteUser);
+        // Notify friends
+        final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
+        final List<Integer> characterIds = friendMap.values().stream()
+                .filter((f) -> f.getStatus() == FriendStatus.NORMAL)
+                .map(Friend::getFriendId)
+                .toList();
+        final OutPacket outPacket = FriendPacket.notify(remoteUser.getCharacterId(), remoteUser.getChannelId(), false);
+        for (RemoteChildNode childNode : centralServerNode.getConnectedNodes()) {
+            childNode.write(CentralPacket.userPacketBroadcast(characterIds, outPacket));
+        }
     }
 
     private void handleUserUpdate(RemoteChildNode remoteChildNode, InPacket inPacket) {
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
         centralServerNode.updateUser(remoteUser);
-        updatePartyMember(remoteUser);
         updateMessengerUser(remoteUser);
+        updatePartyMember(remoteUser);
     }
 
     private void handleUserDisconnect(RemoteChildNode remoteChildNode, InPacket inPacket) {
@@ -186,12 +201,22 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         if (centralServerNode.isMigrating(remoteUser.getAccountId())) {
             return;
         }
+        // Leave messenger
+        leaveMessenger(remoteUser);
         // Update party
         remoteUser.setChannelId(GameConstants.CHANNEL_OFFLINE);
         remoteUser.setFieldId(GameConstants.UNDEFINED_FIELD_ID);
         updatePartyMember(remoteUser);
-        // Leave messenger
-        leaveMessenger(remoteUser);
+        // Notify friends
+        final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
+        final List<Integer> characterIds = friendMap.values().stream()
+                .filter((f) -> f.getStatus() == FriendStatus.NORMAL)
+                .map(Friend::getFriendId)
+                .toList();
+        final OutPacket outPacket = FriendPacket.notify(remoteUser.getCharacterId(), GameConstants.CHANNEL_OFFLINE, false);
+        for (RemoteChildNode childNode : centralServerNode.getConnectedNodes()) {
+            childNode.write(CentralPacket.userPacketBroadcast(characterIds, outPacket));
+        }
     }
 
     private void handleUserPacketRequest(RemoteChildNode remoteChildNode, InPacket inPacket) {
@@ -236,7 +261,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
 
     private void handleUserPacketBroadcast(RemoteChildNode remoteChildNode, InPacket inPacket) {
         final int size = inPacket.decodeInt();
-        final Set<Integer> characterIds = new HashSet<>();
+        final List<Integer> characterIds = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             characterIds.add(inPacket.decodeInt());
         }
@@ -252,11 +277,10 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         // Resolve queried users
         final int requestId = inPacket.decodeInt();
         final int size = inPacket.decodeInt();
-        final Set<RemoteUser> remoteUsers = new HashSet<>();
+        final List<RemoteUser> remoteUsers = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             final String characterName = inPacket.decodeString();
-            centralServerNode.getUserByCharacterName(characterName)
-                    .ifPresent(remoteUsers::add);
+            centralServerNode.getUserByCharacterName(characterName).ifPresent(remoteUsers::add);
         }
         // Reply with queried remote users
         remoteChildNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));
@@ -268,6 +292,142 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final OutPacket outPacket = OutPacket.of(packetData);
         for (RemoteChildNode childNode : centralServerNode.getConnectedNodes()) {
             childNode.write(CentralPacket.serverPacketBroadcast(outPacket));
+        }
+    }
+
+    private void handleMessengerRequest(RemoteChildNode remoteChildNode, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final MessengerRequest messengerRequest = MessengerRequest.decode(inPacket);
+        // Resolve requester user
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        if (remoteUserResult.isEmpty()) {
+            log.error("Failed to resolve user with character ID : {} for MessengerRequest", characterId);
+            return;
+        }
+        final RemoteUser remoteUser = remoteUserResult.get();
+        // Process request
+        switch (messengerRequest.getRequestType()) {
+            case MSMP_Enter -> {
+                final int messengerId = messengerRequest.getMessengerId();
+                final MessengerUser messengerUser = messengerRequest.getMessengerUser();
+                // Check if already in messenger
+                final Optional<Messenger> userMessengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
+                if (userMessengerResult.isPresent()) {
+                    log.error("Tried to enter messenger ID {} while already in messenger ID {}", messengerId, remoteUser.getMessengerId());
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), BroadcastPacket.alert("This request has failed due to an unknown error.")));
+                    return;
+                }
+                // Create messenger
+                if (messengerId == 0) {
+                    createMessenger(remoteChildNode, remoteUser, messengerUser);
+                    return;
+                }
+                // Resolve messenger
+                final Optional<Messenger> targetMessengerResult = centralServerNode.getMessengerById(messengerId);
+                if (targetMessengerResult.isEmpty()) {
+                    // Create messenger
+                    createMessenger(remoteChildNode, remoteUser, messengerUser);
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), MessengerPacket.selfEnterResult(-1))); // You have been unable to join the invited chat room.
+                    return;
+                }
+                // Join messenger
+                try (var lockedMessenger = targetMessengerResult.get().acquire()) {
+                    final Messenger messenger = lockedMessenger.get();
+                    if (!messenger.addUser(remoteUser, messengerUser)) {
+                        // Create messenger
+                        createMessenger(remoteChildNode, remoteUser, messengerUser);
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), MessengerPacket.selfEnterResult(-1))); // You have been unable to join the invited chat room.
+                        return;
+                    }
+                    remoteUser.setMessengerId(messenger.getMessengerId());
+                    remoteChildNode.write(CentralPacket.messengerResult(remoteUser.getCharacterId(), messenger.getMessengerId()));
+                    // Update users
+                    final int userIndex = messenger.getUserIndex(remoteUser);
+                    final OutPacket outPacket = MessengerPacket.enter(userIndex, messengerUser, true);
+                    forEachMessengerUser(messenger, (user, node) -> {
+                        if (user.getCharacterId() == remoteUser.getCharacterId()) {
+                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), MessengerPacket.selfEnterResult(userIndex)));
+                            for (var entry : messenger.getMessengerUsers().entrySet()) {
+                                if (entry.getKey() != userIndex) {
+                                    node.write(CentralPacket.userPacketReceive(user.getCharacterId(), MessengerPacket.enter(entry.getKey(), entry.getValue(), false)));
+                                }
+                            }
+                        } else {
+                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), outPacket));
+                        }
+                    });
+                }
+            }
+            case MSMP_Leave -> {
+                leaveMessenger(remoteUser);
+                remoteUser.setMessengerId(0);
+                remoteChildNode.write(CentralPacket.messengerResult(remoteUser.getCharacterId(), 0));
+            }
+            case MSMP_Chat -> {
+                final String message = messengerRequest.getMessage();
+                // Resolve messenger
+                final Optional<Messenger> messengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
+                if (messengerResult.isEmpty()) {
+                    log.error("Could not resolve messenger for MSMP_Chat");
+                    return;
+                }
+                // Update users
+                try (var lockedMessenger = messengerResult.get().acquire()) {
+                    final Messenger messenger = lockedMessenger.get();
+                    final OutPacket outPacket = MessengerPacket.chat(message);
+                    forEachMessengerUser(messenger, (user, node) -> {
+                        if (user.getCharacterId() != remoteUser.getCharacterId()) {
+                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), outPacket));
+                        }
+                    });
+                }
+
+            }
+            case MSMP_Avatar -> {
+                final MessengerUser messengerUser = messengerRequest.getMessengerUser();
+                // Resolve messenger
+                final Optional<Messenger> messengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
+                if (messengerResult.isEmpty()) {
+                    log.error("Could not resolve messenger for MSMP_Avatar");
+                    return;
+                }
+                // Update users
+                try (var lockedMessenger = messengerResult.get().acquire()) {
+                    final Messenger messenger = lockedMessenger.get();
+                    final int userIndex = messengerResult.get().getUserIndex(remoteUser);
+                    if (userIndex < 0) {
+                        log.error("Could not update user avatar in messenger ID {}", messenger.getMessengerId());
+                        return;
+                    }
+                    final OutPacket outPacket = MessengerPacket.avatar(userIndex, messengerUser.getAvatarLook());
+                    forEachMessengerUser(messengerResult.get(), (user, node) -> {
+                        if (user.getCharacterId() != remoteUser.getCharacterId()) {
+                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), outPacket));
+                        }
+                    });
+                }
+            }
+            case MSMP_Migrated -> {
+                // Resolve messenger
+                final Optional<Messenger> messengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
+                if (messengerResult.isEmpty()) {
+                    remoteChildNode.write(CentralPacket.messengerResult(remoteUser.getCharacterId(), 0));
+                    return;
+                }
+                try (var lockedMessenger = messengerResult.get().acquire()) {
+                    final Messenger messenger = lockedMessenger.get();
+                    final int userIndex = messengerResult.get().getUserIndex(remoteUser);
+                    if (userIndex < 0) {
+                        log.error("Could not migrate in messenger ID {}", messenger.getMessengerId());
+                        return;
+                    }
+                    for (var entry : messenger.getMessengerUsers().entrySet()) {
+                        if (entry.getKey() != userIndex) {
+                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), MessengerPacket.enter(entry.getKey(), entry.getValue(), false)));
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -462,154 +622,127 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
     }
 
-    private void handleMessengerRequest(RemoteChildNode remoteChildNode, InPacket inPacket) {
+    private void handleFriendRequest(RemoteChildNode remoteChildNode, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
-        final MessengerRequest messengerRequest = MessengerRequest.decode(inPacket);
+        final FriendRequest friendRequest = FriendRequest.decode(inPacket);
         // Resolve requester user
         final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
         if (remoteUserResult.isEmpty()) {
-            log.error("Failed to resolve user with character ID : {} for MessengerRequest", characterId);
+            log.error("Failed to resolve user with character ID : {} for FriendRequest", characterId);
             return;
         }
         final RemoteUser remoteUser = remoteUserResult.get();
-        // Process request
-        switch (messengerRequest.getRequestType()) {
-            case MSMP_Enter -> {
-                final int messengerId = messengerRequest.getMessengerId();
-                final MessengerUser messengerUser = messengerRequest.getMessengerUser();
-                // Check if already in messenger
-                final Optional<Messenger> userMessengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
-                if (userMessengerResult.isPresent()) {
-                    log.error("Tried to enter messenger ID {} while already in messenger ID {}", messengerId, remoteUser.getMessengerId());
-                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), BroadcastPacket.alert("This request has failed due to an unknown error.")));
-                    return;
-                }
-                // Create messenger
-                if (messengerId == 0) {
-                    createMessenger(remoteChildNode, remoteUser, messengerUser);
-                    return;
-                }
-                // Resolve messenger
-                final Optional<Messenger> targetMessengerResult = centralServerNode.getMessengerById(messengerId);
-                if (targetMessengerResult.isEmpty()) {
-                    // Create messenger
-                    createMessenger(remoteChildNode, remoteUser, messengerUser);
-                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), MessengerPacket.selfEnterResult(-1))); // You have been unable to join the invited chat room.
-                    return;
-                }
-                // Join messenger
-                try (var lockedMessenger = targetMessengerResult.get().acquire()) {
-                    final Messenger messenger = lockedMessenger.get();
-                    if (!messenger.addUser(remoteUser, messengerUser)) {
-                        // Create messenger
-                        createMessenger(remoteChildNode, remoteUser, messengerUser);
-                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), MessengerPacket.selfEnterResult(-1))); // You have been unable to join the invited chat room.
+        switch (friendRequest.getRequestType()) {
+            case LoadFriend -> {
+                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
+                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.loadFriendDone(friendMap.values())));
+            }
+            case SetFriend -> {
+                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
+                final Optional<Friend> friendResult = friendMap.values().stream().filter((f) -> f.getFriendName().equals(friendRequest.getTargetName())).findFirst();
+                if (friendResult.isPresent() && friendResult.get().getStatus() == FriendStatus.NORMAL) {
+                    // Update friend group
+                    final Friend friend = friendResult.get();
+                    friend.setFriendGroup(friendRequest.getFriendGroup());
+                    if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendUnknown())); // The request was denied due to an unknown error.
                         return;
                     }
-                    remoteUser.setMessengerId(messenger.getMessengerId());
-                    remoteChildNode.write(CentralPacket.messengerResult(remoteUser.getCharacterId(), messenger.getMessengerId()));
-                    // Update users
-                    final int userIndex = messenger.getUserIndex(remoteUser);
-                    final OutPacket outPacket = MessengerPacket.enter(userIndex, messengerUser, true);
-                    forEachMessengerUser(messenger, (user, node) -> {
-                        if (user.getCharacterId() == remoteUser.getCharacterId()) {
-                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), MessengerPacket.selfEnterResult(userIndex)));
-                            for (var entry : messenger.getMessengerUsers().entrySet()) {
-                                if (entry.getKey() != userIndex) {
-                                    node.write(CentralPacket.userPacketReceive(user.getCharacterId(), MessengerPacket.enter(entry.getKey(), entry.getValue(), false)));
-                                }
-                            }
-                        } else {
-                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), outPacket));
+                    // Update client
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendDone(friendMap.values())));
+                } else {
+                    // Create new friend, resolve target info
+                    final Optional<CharacterInfo> characterInfoResult = DatabaseManager.characterAccessor().getCharacterInfoByName(friendRequest.getTargetName());
+                    if (characterInfoResult.isEmpty()) {
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendUnknownUser())); // That character is not registered.
+                        return;
+                    }
+                    final int targetCharacterId = characterInfoResult.get().getCharacterId();
+                    final String targetCharacterName = characterInfoResult.get().getCharacterName();
+                    // Check if target can be added as a friend
+                    if (friendMap.size() >= friendRequest.getFriendMax()) {
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendFullMe())); // Your buddy list is full.
+                        return;
+                    }
+                    if (friendMap.containsKey(targetCharacterId)) {
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendAlreadySet())); // That character is already registered as your buddy.
+                        return;
+                    }
+                    // Add target as friend, force creation
+                    final Friend friendForUser = new Friend(remoteUser.getCharacterId(), targetCharacterId, targetCharacterName, friendRequest.getFriendGroup(), FriendStatus.NORMAL);
+                    if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
+                        remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendUnknown())); // The request was denied due to an unknown error.
+                        return;
+                    }
+                    // Update client
+                    friendMap.put(targetCharacterId, friendForUser);
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendDone(friendMap.values())));
+                    // Add user as a friend for target, not forced - existing friends, requests, and refused records
+                    final Friend friendForTarget = new Friend(targetCharacterId, remoteUser.getCharacterId(), remoteUser.getCharacterName(), GameConstants.DEFAULT_FRIEND_GROUP, FriendStatus.REQUEST);
+                    if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
+                        // Send invite to target if request was created
+                        final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(targetCharacterId);
+                        if (targetResult.isPresent()) {
+                            final RemoteUser target = targetResult.get();
+                            friendForUser.setChannelId(target.getChannelId());
+                            final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
+                            targetNodeResult.ifPresent(childNode -> childNode.write(CentralPacket.userPacketReceive(target.getCharacterId(), FriendPacket.invite(friendForTarget))));
                         }
-                    });
-                }
-            }
-            case MSMP_Leave -> {
-                leaveMessenger(remoteUser);
-                remoteUser.setMessengerId(0);
-                remoteChildNode.write(CentralPacket.messengerResult(remoteUser.getCharacterId(), 0));
-            }
-            case MSMP_Chat -> {
-                final String message = messengerRequest.getMessage();
-                // Resolve messenger
-                final Optional<Messenger> messengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
-                if (messengerResult.isEmpty()) {
-                    log.error("Could not resolve messenger for MSMP_Chat");
-                    return;
-                }
-                // Update users
-                try (var lockedMessenger = messengerResult.get().acquire()) {
-                    final Messenger messenger = lockedMessenger.get();
-                    final OutPacket outPacket = MessengerPacket.chat(message);
-                    forEachMessengerUser(messenger, (user, node) -> {
-                        if (user.getCharacterId() != remoteUser.getCharacterId()) {
-                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), outPacket));
-                        }
-                    });
+                    }
                 }
 
             }
-            case MSMP_Avatar -> {
-                final MessengerUser messengerUser = messengerRequest.getMessengerUser();
-                // Resolve messenger
-                final Optional<Messenger> messengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
-                if (messengerResult.isEmpty()) {
-                    log.error("Could not resolve messenger for MSMP_Avatar");
+            case AcceptFriend -> {
+                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
+                final Friend friend = friendMap.get(friendRequest.getFriendId());
+                if (friend == null) {
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.acceptFriendUnknown())); // The request was denied due to an unknown error.
                     return;
                 }
-                // Update users
-                try (var lockedMessenger = messengerResult.get().acquire()) {
-                    final Messenger messenger = lockedMessenger.get();
-                    final int userIndex = messengerResult.get().getUserIndex(remoteUser);
-                    if (userIndex < 0) {
-                        log.error("Could not update user avatar in messenger ID {}", messenger.getMessengerId());
-                        return;
-                    }
-                    final OutPacket outPacket = MessengerPacket.avatar(userIndex, messengerUser.getAvatarLook());
-                    forEachMessengerUser(messengerResult.get(), (user, node) -> {
-                        if (user.getCharacterId() != remoteUser.getCharacterId()) {
-                            node.write(CentralPacket.userPacketReceive(user.getCharacterId(), outPacket));
-                        }
-                    });
+                friend.setStatus(FriendStatus.NORMAL);
+                if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.acceptFriendUnknown())); // The request was denied due to an unknown error.
+                    return;
                 }
+                // Notify target if online
+                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(friend.getFriendId());
+                if (targetResult.isPresent()) {
+                    final RemoteUser target = targetResult.get();
+                    friend.setChannelId(target.getChannelId());
+                    final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
+                    targetNodeResult.ifPresent(childNode -> childNode.write(CentralPacket.userPacketReceive(target.getCharacterId(), FriendPacket.notify(remoteUser.getCharacterId(), remoteUser.getChannelId(), false))));
+                }
+                // Update client
+                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendDone(friendMap.values())));
             }
-            case MSMP_Migrated -> {
-                // Resolve messenger
-                final Optional<Messenger> messengerResult = centralServerNode.getMessengerById(remoteUser.getMessengerId());
-                if (messengerResult.isEmpty()) {
-                    remoteChildNode.write(CentralPacket.messengerResult(remoteUser.getCharacterId(), 0));
+            case DeleteFriend -> {
+                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
+                final Friend friend = friendMap.get(friendRequest.getFriendId());
+                if (friend == null) {
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.deleteFriendUnknown())); // The request was denied due to an unknown error.
                     return;
                 }
-                try (var lockedMessenger = messengerResult.get().acquire()) {
-                    final Messenger messenger = lockedMessenger.get();
-                    final int userIndex = messengerResult.get().getUserIndex(remoteUser);
-                    if (userIndex < 0) {
-                        log.error("Could not migrate in messenger ID {}", messenger.getMessengerId());
-                        return;
-                    }
-                    for (var entry : messenger.getMessengerUsers().entrySet()) {
-                        if (entry.getKey() != userIndex) {
-                            remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), MessengerPacket.enter(entry.getKey(), entry.getValue(), false)));
-                        }
-                    }
+                // Delete friend
+                if (!DatabaseManager.friendAccessor().deleteFriend(remoteUser.getCharacterId(), friend.getFriendId())) {
+                    remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.deleteFriendUnknown())); // The request was denied due to an unknown error.
+                    return;
                 }
+                // Notify deleted friend if online
+                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(friend.getFriendId());
+                if (targetResult.isPresent()) {
+                    final RemoteUser target = targetResult.get();
+                    final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(target.getChannelId());
+                    targetNodeResult.ifPresent(childNode -> childNode.write(CentralPacket.userPacketReceive(target.getCharacterId(), FriendPacket.notify(remoteUser.getCharacterId(), GameConstants.CHANNEL_OFFLINE, false))));
+                }
+                // Update client
+                friendMap.remove(friend.getFriendId());
+                remoteChildNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.deleteFriendDone(friendMap.values())));
             }
         }
     }
 
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
-
-    private void forEachPartyMember(Party party, BiConsumer<RemoteUser, RemoteChildNode> biConsumer) {
-        party.forEachMember((member) -> {
-            final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(member.getChannelId());
-            if (targetNodeResult.isEmpty()) {
-                return;
-            }
-            biConsumer.accept(member, targetNodeResult.get());
-        });
-    }
 
     private void createMessenger(RemoteChildNode remoteChildNode, RemoteUser remoteUser, MessengerUser messengerUser) {
         final Messenger newMessenger = centralServerNode.createNewMessenger(remoteUser, messengerUser);
@@ -662,5 +795,34 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             }
             biConsumer.accept(member, targetNodeResult.get());
         });
+    }
+
+    private void forEachPartyMember(Party party, BiConsumer<RemoteUser, RemoteChildNode> biConsumer) {
+        party.forEachMember((member) -> {
+            final Optional<RemoteChildNode> targetNodeResult = centralServerNode.getChildNodeByChannelId(member.getChannelId());
+            if (targetNodeResult.isEmpty()) {
+                return;
+            }
+            biConsumer.accept(member, targetNodeResult.get());
+        });
+    }
+
+    private Map<Integer, Friend> loadFriends(RemoteUser remoteUser) {
+        final Map<Integer, Friend> friendMap = new HashMap<>();
+        for (Friend friend : DatabaseManager.friendAccessor().getFriendsByCharacterId(remoteUser.getCharacterId())) {
+            friendMap.put(friend.getFriendId(), friend);
+        }
+        for (Friend mutualFriend : DatabaseManager.friendAccessor().getFriendsByFriendId(remoteUser.getCharacterId())) {
+            if (mutualFriend.getStatus() != FriendStatus.NORMAL) {
+                continue;
+            }
+            final Friend friend = friendMap.get(mutualFriend.getCharacterId());
+            if (friend == null || friend.getStatus() != FriendStatus.NORMAL) {
+                continue;
+            }
+            final Optional<RemoteUser> friendUserResult = centralServerNode.getUserByCharacterId(friend.getFriendId());
+            friendUserResult.ifPresent((friendUser) -> friend.setChannelId(friendUser.getChannelId()));
+        }
+        return friendMap;
     }
 }

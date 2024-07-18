@@ -4,7 +4,6 @@ import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.FileTime;
-import kinoko.world.friend.FriendManager;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
@@ -30,13 +29,13 @@ public final class CharacterData implements Encodable {
     private InventoryManager inventoryManager;
     private SkillManager skillManager;
     private QuestManager questManager;
-    private FriendManager friendManager;
     private ConfigManager configManager;
     private MiniGameRecord miniGameRecord;
     private CoupleRecord coupleRecord;
     private MapTransferInfo mapTransferInfo;
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
+    private int friendMax;
 
     public CharacterData(int accountId) {
         this.accountId = accountId;
@@ -76,14 +75,6 @@ public final class CharacterData implements Encodable {
 
     public void setQuestManager(QuestManager questManager) {
         this.questManager = questManager;
-    }
-
-    public FriendManager getFriendManager() {
-        return friendManager;
-    }
-
-    public void setFriendManager(FriendManager friendManager) {
-        this.friendManager = friendManager;
     }
 
     public ConfigManager getConfigManager() {
@@ -134,6 +125,14 @@ public final class CharacterData implements Encodable {
         this.itemSnCounter = itemSnCounter;
     }
 
+    public int getFriendMax() {
+        return friendMax;
+    }
+
+    public void setFriendMax(int friendMax) {
+        this.friendMax = friendMax;
+    }
+
     public long getNextItemSn() {
         return ((long) itemSnCounter.getAndIncrement()) | (((long) getCharacterId()) << 32);
     }
@@ -157,7 +156,7 @@ public final class CharacterData implements Encodable {
 
         if (flag.hasFlag(DBChar.CHARACTER)) {
             characterStat.encode(outPacket);
-            outPacket.encodeByte(friendManager.getFriendMax()); // nFriendMax
+            outPacket.encodeByte(friendMax); // nFriendMax
             outPacket.encodeByte(false); // sLinkedCharacter: bool -> str
         }
         if (flag.hasFlag(DBChar.MONEY)) {

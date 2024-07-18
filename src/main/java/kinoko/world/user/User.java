@@ -3,7 +3,6 @@ package kinoko.world.user;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
-import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.WzProvider;
@@ -28,7 +27,6 @@ import kinoko.world.field.TownPortal;
 import kinoko.world.field.life.Life;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedLeaveType;
-import kinoko.world.friend.FriendManager;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
 import kinoko.world.quest.QuestManager;
@@ -129,10 +127,6 @@ public final class User extends Life implements Lockable<User> {
 
     public QuestManager getQuestManager() {
         return characterData.getQuestManager();
-    }
-
-    public FriendManager getFriendManager() {
-        return characterData.getFriendManager();
     }
 
     public ConfigManager getConfigManager() {
@@ -711,12 +705,6 @@ public final class User extends Life implements Lockable<User> {
         }
         // Notify central server
         getConnectedServer().notifyUserDisconnect(this);
-        if (disconnect) {
-            getConnectedServer().submitUserPacketBroadcast(
-                    getFriendManager().getBroadcastTargets(),
-                    FriendPacket.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE, false)
-            );
-        }
     }
 
     /**
