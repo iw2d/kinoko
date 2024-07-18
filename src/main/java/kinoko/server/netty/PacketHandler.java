@@ -60,10 +60,10 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
 
     @Override
     public final void channelInactive(ChannelHandlerContext ctx) {
-        log.debug("Channel inactive");
+        log.log(ServerConfig.DEBUG_MODE ? Level.DEBUG : Level.TRACE, "Channel inactive");
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
         if (client != null) {
-            log.debug("Closing client");
+            log.log(ServerConfig.DEBUG_MODE ? Level.DEBUG : Level.TRACE, "Closing client");
             ServerExecutor.submit(client, client::close);
         }
     }
