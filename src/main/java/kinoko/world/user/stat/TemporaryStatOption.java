@@ -54,7 +54,7 @@ public class TemporaryStatOption implements Encodable {
     }
 
     public final long getRemainingMillis() {
-        return expireTime.toEpochMilli() - Instant.now().toEpochMilli();
+        return expireTime.toEpochMilli() - System.currentTimeMillis();
     }
 
     @Override

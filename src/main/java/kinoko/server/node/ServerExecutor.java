@@ -17,12 +17,13 @@ public final class ServerExecutor {
     private static final ExecutorService serviceExecutor;
 
     static {
+        final int executorCount = Runtime.getRuntime().availableProcessors();
         final List<ExecutorService> executors = new ArrayList<>();
-        for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {
+        for (int i = 0; i < executorCount; i++) {
             executors.add(Executors.newSingleThreadExecutor());
         }
         gameExecutors = Collections.unmodifiableList(executors);
-        serviceExecutor = Executors.newFixedThreadPool(gameExecutors.size());
+        serviceExecutor = Executors.newFixedThreadPool(executorCount);
     }
 
     public static void initialize() {

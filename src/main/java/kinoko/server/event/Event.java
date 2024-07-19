@@ -11,6 +11,7 @@ import kinoko.world.field.mob.Mob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
@@ -43,7 +44,8 @@ public abstract class Event {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     protected final int getNearestMinute() {
-        return LocalDateTime.now().plusSeconds(30).getMinute();
+        long seconds = (System.currentTimeMillis() / 1000) % 3600;
+        return (int) Math.round(seconds / 60.0) % 60;
     }
 
     protected final void warp(int sourceFieldId, int destinationFieldId, String portalName) {

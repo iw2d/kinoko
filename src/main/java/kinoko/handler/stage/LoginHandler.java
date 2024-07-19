@@ -166,6 +166,11 @@ public final class LoginHandler {
             c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.InvalidCharacterName));
             return;
         }
+        if (!DatabaseManager.characterAccessor().checkCharacterNameAvailable(name)) {
+            c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.InvalidCharacterName));
+            return;
+        }
+
         final Optional<RaceSelect> raceSelectResult = RaceSelect.getByRace(selectedRace);
         if (raceSelectResult.isEmpty()) {
             log.error("Could not resolve selected race : {}", selectedRace);
