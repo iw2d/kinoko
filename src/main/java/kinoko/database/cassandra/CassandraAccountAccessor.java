@@ -5,6 +5,7 @@ import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.AccountAccessor;
+import kinoko.database.DatabaseManager;
 import kinoko.database.cassandra.table.AccountTable;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.server.ServerConfig;
@@ -109,6 +110,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .column(columnName)
                         .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
+                        .setExecutionProfileName(DatabaseManager.PROFILE_ONE)
         );
         for (Row row : selectResult) {
             final String hashedPassword = row.getString(columnName);

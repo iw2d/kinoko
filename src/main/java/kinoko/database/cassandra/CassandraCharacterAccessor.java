@@ -6,6 +6,7 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
+import kinoko.database.DatabaseManager;
 import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.database.cassandra.table.IdTable;
 import kinoko.world.item.Inventory;
@@ -156,6 +157,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         )
                         .whereColumn(CharacterTable.CHARACTER_NAME_INDEX).isEqualTo(literal(lowerName(name)))
                         .build()
+                        .setExecutionProfileName(DatabaseManager.PROFILE_ONE)
         );
         for (Row row : selectResult) {
             return Optional.of(new CharacterInfo(
@@ -176,6 +178,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         )
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterId))
                         .build()
+                        .setExecutionProfileName(DatabaseManager.PROFILE_ONE)
         );
         for (Row row : selectResult) {
             return Optional.of(row.getInt(CharacterTable.ACCOUNT_ID));

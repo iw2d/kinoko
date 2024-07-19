@@ -27,12 +27,15 @@ import kinoko.world.user.data.WildHunterInfo;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
 
 public final class DatabaseManager {
     public static final InetSocketAddress DATABASE_ADDRESS = new InetSocketAddress("127.0.0.1", 9042);
     public static final String DATABASE_DATACENTER = "datacenter1";
     public static final String DATABASE_KEYSPACE = "kinoko";
+    public static final String PROFILE_ONE = "profile_one";
     private static CqlSession cqlSession;
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
@@ -85,8 +88,16 @@ public final class DatabaseManager {
     public static void initialize() {
         // Create Config
         final DriverConfigLoader configLoader = DriverConfigLoader.programmaticBuilder()
+                // Default profile
+                .withDuration(DefaultDriverOption.REQUEST_TIMEOUT, Duration.of(5, ChronoUnit.SECONDS))
                 .withString(DefaultDriverOption.REQUEST_CONSISTENCY, "ALL")
                 .withString(DefaultDriverOption.REQUEST_SERIAL_CONSISTENCY, "SERIAL")
+                // Fast profile
+                .startProfile(PROFILE_ONE)
+                .withDuration(DefaultDriverOption.REQUEST_TIMEOUT, Duration.of(2, ChronoUnit.SECONDS))
+                .withString(DefaultDriverOption.REQUEST_CONSISTENCY, "ONE")
+                .withString(DefaultDriverOption.REQUEST_SERIAL_CONSISTENCY, "SERIAL")
+                .endProfile()
                 .build();
         // Create Session
         cqlSession = new CqlSessionBuilder()
