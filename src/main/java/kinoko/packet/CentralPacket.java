@@ -5,6 +5,7 @@ import kinoko.server.header.CentralHeader;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
+import kinoko.server.node.RemoteServerNode;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.user.RemoteUser;
@@ -29,6 +30,16 @@ public final class CentralPacket {
         return outPacket;
     }
 
+    public static OutPacket initializeComplete(List<RemoteServerNode> serverNodes) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.InitializeComplete);
+        outPacket.encodeInt(serverNodes.size());
+        for (RemoteServerNode serverNode : serverNodes) {
+            outPacket.encodeInt(serverNode.getChannelId());
+            outPacket.encodeInt(serverNode.getUserCount());
+        }
+        return outPacket;
+    }
+
     public static OutPacket shutdownRequest() {
         return OutPacket.of(CentralHeader.ShutdownRequest);
     }
@@ -37,6 +48,20 @@ public final class CentralPacket {
         final OutPacket outPacket = OutPacket.of(CentralHeader.ShutdownResult);
         outPacket.encodeInt(channelId);
         outPacket.encodeByte(success);
+        return outPacket;
+    }
+
+    public static OutPacket onlineRequest(int requestId, int accountId) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.OnlineRequest);
+        outPacket.encodeInt(requestId);
+        outPacket.encodeInt(accountId);
+        return outPacket;
+    }
+
+    public static OutPacket onlineResult(int requestId, boolean online) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.OnlineResult);
+        outPacket.encodeInt(requestId);
+        outPacket.encodeByte(online);
         return outPacket;
     }
 

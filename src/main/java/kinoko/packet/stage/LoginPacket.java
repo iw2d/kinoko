@@ -3,7 +3,7 @@ package kinoko.packet.stage;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.header.OutHeader;
-import kinoko.server.node.RemoteChildNode;
+import kinoko.server.node.ChannelInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
@@ -76,7 +76,7 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket worldInformation(List<RemoteChildNode> connectedNodes) {
+    public static OutPacket worldInformation(List<ChannelInfo> channels) {
         final OutPacket outPacket = OutPacket.of(OutHeader.WorldInformation);
         outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
         outPacket.encodeString(ServerConfig.WORLD_NAME);
@@ -86,12 +86,12 @@ public final class LoginPacket {
         outPacket.encodeShort(100); // nWorldEventDrop_WSE
         outPacket.encodeByte(0); // nBlockCharCreation
 
-        outPacket.encodeByte(connectedNodes.size());
-        for (RemoteChildNode childNode : connectedNodes) {
-            outPacket.encodeString(String.format("%s - %d", ServerConfig.WORLD_NAME, childNode.getChannelId() + 1)); // sName
-            outPacket.encodeInt(childNode.getUserCount()); // nUserNo
+        outPacket.encodeByte(channels.size());
+        for (ChannelInfo channelInfo : channels) {
+            outPacket.encodeString(channelInfo.getName()); // sName
+            outPacket.encodeInt(channelInfo.getUserCount()); // nUserNo
             outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
-            outPacket.encodeByte(childNode.getChannelId()); // nChannelID
+            outPacket.encodeByte(channelInfo.getId()); // nChannelID
             outPacket.encodeByte(false); // bAdultChannel
         }
 

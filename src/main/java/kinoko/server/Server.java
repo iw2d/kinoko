@@ -6,6 +6,7 @@ import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
+import kinoko.server.node.LoginServerNode;
 import kinoko.server.node.ServerExecutor;
 import kinoko.util.crypto.MapleCrypto;
 import org.apache.logging.log4j.LogManager;
@@ -75,6 +76,15 @@ public final class Server {
                 }
             });
         }
+        ServerExecutor.submitService(() -> {
+            final LoginServerNode loginServerNode = new LoginServerNode();
+            try {
+                loginServerNode.initialize();
+            } catch (Exception e) {
+                log.error("Failed to initialize login server node", e);
+                System.exit(1);
+            }
+        });
 
         // Setup shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

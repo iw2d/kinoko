@@ -27,11 +27,11 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public final class CentralClientHandler extends SimpleChannelInboundHandler<InPacket> {
-    private static final Logger log = LogManager.getLogger(CentralClientHandler.class);
+public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPacket> {
+    private static final Logger log = LogManager.getLogger(ChannelServerHandler.class);
     private final ChannelServerNode channelServerNode;
 
-    public CentralClientHandler(ChannelServerNode channelServerNode) {
+    public ChannelServerHandler(ChannelServerNode channelServerNode) {
         this.channelServerNode = channelServerNode;
     }
 

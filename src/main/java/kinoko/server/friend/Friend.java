@@ -62,7 +62,7 @@ public final class Friend implements Encodable {
     }
 
     public boolean isInShop() {
-        return getChannelId() == GameConstants.CHANNEL_SHOP;
+        return getChannelId() == GameConstants.CHANNEL_LOGIN;
     }
 
     @Override

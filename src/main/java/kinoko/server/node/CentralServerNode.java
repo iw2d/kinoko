@@ -4,20 +4,20 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
-import kinoko.packet.stage.LoginPacket;
-import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.messenger.Messenger;
 import kinoko.server.messenger.MessengerStorage;
 import kinoko.server.messenger.MessengerUser;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.MigrationStorage;
-import kinoko.server.netty.*;
+import kinoko.server.netty.CentralPacketDecoder;
+import kinoko.server.netty.CentralPacketEncoder;
+import kinoko.server.netty.CentralServerHandler;
+import kinoko.server.netty.NettyContext;
 import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
-import kinoko.world.user.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,11 +26,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
-public final class CentralServerNode extends ServerNode {
+public final class CentralServerNode extends Node {
     private static final Logger log = LogManager.getLogger(CentralServerNode.class);
-    private final ChannelStorage channelStorage = new ChannelStorage();
+    private final ServerStorage serverStorage = new ServerStorage();
     private final MigrationStorage migrationStorage = new MigrationStorage();
     private final UserStorage userStorage = new UserStorage();
     private final PartyStorage partyStorage = new PartyStorage();
@@ -39,35 +38,38 @@ public final class CentralServerNode extends ServerNode {
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
     private ChannelFuture centralServerFuture;
-    private ChannelFuture loginServerFuture;
 
 
     // CHANNEL METHODS -------------------------------------------------------------------------------------------------
 
-    public synchronized void addChildNode(RemoteChildNode childNode) {
-        channelStorage.addChildNode(childNode);
-        if (channelStorage.isFull()) {
+    public synchronized void addServerNode(RemoteServerNode serverNode) {
+        serverStorage.addServerNode(serverNode);
+        if (serverStorage.isFull()) {
             initializeFuture.complete(null);
         }
     }
 
-    public synchronized void removeChildNode(int channelId) {
-        channelStorage.removeChildNode(channelId);
-        if (channelStorage.isEmpty()) {
+    public synchronized void removeServerNode(int channelId) {
+        serverStorage.removeServerNode(channelId);
+        if (serverStorage.isEmpty()) {
             shutdownFuture.complete(null);
         }
     }
 
-    public Optional<RemoteChildNode> getChildNodeByChannelId(int channelId) {
-        return channelStorage.getChildNodeByChannelId(channelId);
+    public Optional<RemoteServerNode> getChannelServerNodeById(int channelId) {
+        return serverStorage.getChannelServerNodeById(channelId);
     }
 
-    public List<RemoteChildNode> getConnectedNodes() {
-        return channelStorage.getConnectedNodes();
+    public List<RemoteServerNode> getChannelServerNodes() {
+        return serverStorage.getChannelServerNodes();
     }
 
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
+
+    public boolean isOnline(int accountId) {
+        return migrationStorage.isMigrating(accountId) || userStorage.getByAccountId(accountId).isPresent();
+    }
 
     public boolean isMigrating(int accountId) {
         return migrationStorage.isMigrating(accountId);
@@ -94,7 +96,7 @@ public final class CentralServerNode extends ServerNode {
 
     public void addUser(RemoteUser remoteUser) {
         userStorage.putUser(remoteUser);
-        getChildNodeByChannelId(remoteUser.getChannelId()).ifPresent(RemoteChildNode::incrementUserCount);
+        getChannelServerNodeById(remoteUser.getChannelId()).ifPresent(RemoteServerNode::incrementUserCount);
     }
 
     public void updateUser(RemoteUser remoteUser) {
@@ -103,7 +105,7 @@ public final class CentralServerNode extends ServerNode {
 
     public void removeUser(RemoteUser remoteUser) {
         userStorage.removeUser(remoteUser);
-        getChildNodeByChannelId(remoteUser.getChannelId()).ifPresent(RemoteChildNode::decrementUserCount);
+        getChannelServerNodeById(remoteUser.getChannelId()).ifPresent(RemoteServerNode::decrementUserCount);
     }
 
 
@@ -155,12 +157,6 @@ public final class CentralServerNode extends ServerNode {
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean isConnected(Account account) {
-        return clientStorage.isConnected(account) || migrationStorage.isMigrating(account.getId()) ||
-                userStorage.getByAccountId(account.getId()).isPresent();
-    }
-
-    @Override
     public void initialize() throws InterruptedException {
         // Start central server
         final CentralServerNode self = this;
@@ -169,7 +165,7 @@ public final class CentralServerNode extends ServerNode {
             protected void initChannel(SocketChannel ch) {
                 ch.pipeline().addLast(new CentralPacketDecoder(), new CentralServerHandler(self), new CentralPacketEncoder());
                 ch.attr(NettyContext.CONTEXT_KEY).set(new NettyContext());
-                ch.attr(RemoteChildNode.NODE_KEY).set(new RemoteChildNode(ch));
+                ch.attr(RemoteServerNode.NODE_KEY).set(new RemoteServerNode(ch));
                 ch.writeAndFlush(CentralPacket.initializeRequest());
             }
         }, ServerConstants.CENTRAL_PORT);
@@ -179,45 +175,25 @@ public final class CentralServerNode extends ServerNode {
         // Wait for child node connections
         final Instant start = Instant.now();
         initializeFuture.join();
-        log.info("All channels connected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("All servers connected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
-        // Start login server
-        loginServerFuture = startServer(new ChannelInitializer<>() {
-            @Override
-            protected void initChannel(SocketChannel ch) {
-                ch.pipeline().addLast(new PacketDecoder(), new LoginPacketHandler(), new PacketEncoder());
-                final Client c = new Client(self, ch);
-                c.setSendIv(getNewIv());
-                c.setRecvIv(getNewIv());
-                c.setClientKey(getNewClientKey());
-                c.write(LoginPacket.connect(c.getRecvIv(), c.getSendIv()));
-                ch.attr(NettyClient.CLIENT_KEY).set(c);
-            }
-        }, ServerConstants.LOGIN_PORT);
-        loginServerFuture.sync();
-        log.info("Login server listening on port {}", ServerConstants.LOGIN_PORT);
+        // Complete initialization for login server node
+        final RemoteServerNode loginServerNode = serverStorage.getLoginServerNode().orElseThrow();
+        loginServerNode.write(CentralPacket.initializeComplete(serverStorage.getChannelServerNodes()));
     }
 
     @Override
     public void shutdown() throws InterruptedException {
-        // Close client channels
-        startShutdown();
-        for (Client client : clientStorage.getConnectedClients()) {
-            client.close();
-        }
-
-        // Close login server
-        loginServerFuture.channel().close().sync();
-        getShutdownFuture().orTimeout(ServerConfig.SHUTDOWN_TIMEOUT, TimeUnit.SECONDS);
-        log.info("Login server closed");
-
-        // Shutdown child nodes
+        // Shutdown login server node
         final Instant start = Instant.now();
-        for (RemoteChildNode childNode : channelStorage.getConnectedNodes()) {
-            childNode.write(CentralPacket.shutdownRequest());
+        serverStorage.getLoginServerNode().ifPresent((serverNode) -> serverNode.write(CentralPacket.shutdownRequest()));
+
+        // Shutdown channel server nodes
+        for (RemoteServerNode serverNode : serverStorage.getChannelServerNodes()) {
+            serverNode.write(CentralPacket.shutdownRequest());
         }
         shutdownFuture.join();
-        log.info("All channels disconnected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("All servers disconnected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Close central server
         centralServerFuture.channel().close().sync();

@@ -1,51 +1,34 @@
 package kinoko.server.node;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import kinoko.util.Util;
 import kinoko.world.user.Account;
 
 import java.net.InetAddress;
-import java.security.SecureRandom;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ServerNode {
-    private static final Random random = new SecureRandom();
-    private static final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private static final EventLoopGroup workerGroup = new NioEventLoopGroup();
+public abstract class ServerNode extends Node {
+    protected static final AtomicInteger requestIdCounter = new AtomicInteger(1);
+    protected final ConcurrentHashMap<Integer, CompletableFuture<?>> requestFutures = new ConcurrentHashMap<>();
     protected final ClientStorage clientStorage = new ClientStorage();
 
-    private final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
-    private boolean isShutdown = false;
-
-    public abstract void initialize() throws Exception;
-
-    public abstract void shutdown() throws Exception;
-
-    public abstract boolean isConnected(Account account);
-
-    public final CompletableFuture<Void> getShutdownFuture() {
-        return shutdownFuture;
+    public int getNewRequestId() {
+        return requestIdCounter.getAndIncrement();
     }
 
-    public final boolean isShutdown() {
-        return isShutdown;
-    }
-
-    public final void startShutdown() {
-        this.isShutdown = true;
+    public final boolean isConnected(Account account) {
+        return clientStorage.isConnected(account);
     }
 
     public final void addClient(Client client) {
-        if (isShutdown) {
+        if (isShutdown()) {
             throw new IllegalStateException("Tried to add client after shutdown");
         }
         clientStorage.addClient(client);
@@ -53,8 +36,8 @@ public abstract class ServerNode {
 
     public final void removeClient(Client client) {
         clientStorage.removeClient(client);
-        if (isShutdown && clientStorage.isEmpty()) {
-            shutdownFuture.complete(null);
+        if (isShutdown() && clientStorage.isEmpty()) {
+            getShutdownFuture().complete(null);
         }
     }
 
@@ -68,25 +51,16 @@ public abstract class ServerNode {
         return b.connect(host, port);
     }
 
-    protected final ChannelFuture startServer(ChannelInitializer<SocketChannel> initializer, int port) {
-        final ServerBootstrap b = new ServerBootstrap();
-        b.group(bossGroup, workerGroup);
-        b.channel(NioServerSocketChannel.class);
-        b.childHandler(initializer);
-        b.childOption(ChannelOption.TCP_NODELAY, true);
-        b.childOption(ChannelOption.SO_KEEPALIVE, true);
-        return b.bind(port);
-    }
 
     protected static byte[] getNewIv() {
         final byte[] iv = new byte[4];
-        random.nextBytes(iv);
+        Util.getRandom().nextBytes(iv);
         return iv;
     }
 
     protected static byte[] getNewClientKey() {
         final byte[] clientKey = new byte[8];
-        random.nextBytes(clientKey);
+        Util.getRandom().nextBytes(clientKey);
         return clientKey;
     }
 }

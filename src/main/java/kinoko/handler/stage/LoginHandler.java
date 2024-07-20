@@ -12,9 +12,10 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.server.ServerConfig;
 import kinoko.server.header.InHeader;
 import kinoko.server.migration.MigrationInfo;
-import kinoko.server.node.CentralServerNode;
+import kinoko.server.migration.TransferInfo;
+import kinoko.server.node.ChannelInfo;
 import kinoko.server.node.Client;
-import kinoko.server.node.RemoteChildNode;
+import kinoko.server.node.LoginServerNode;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
@@ -53,6 +54,7 @@ public final class LoginHandler {
         final byte channelId = inPacket.decodeByte();
         final byte[] partnerCode = inPacket.decodeArray(4);
 
+        // Resolve account
         final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
         if (accountResult.isEmpty()) {
             if (ServerConfig.AUTO_CREATE_ACCOUNT) {
@@ -61,27 +63,33 @@ public final class LoginHandler {
             c.write(LoginPacket.checkPasswordResultFail(LoginResultType.NotRegistered));
             return;
         }
-
         final Account account = accountResult.get();
-        if (c.getServerNode().isConnected(account)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginResultType.AlreadyConnected));
-            return;
-        }
-        if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
-            c.write(LoginPacket.checkPasswordResultFail(LoginResultType.IncorrectPassword));
-            return;
-        }
 
-        c.setAccount(account);
-        c.setMachineId(machineId);
-        c.getServerNode().addClient(c);
-        c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
+        // Check if logged in
+        final LoginServerNode loginServerNode = (LoginServerNode) c.getServerNode();
+        loginServerNode.submitOnlineRequest(account, (online) -> {
+            if (online || loginServerNode.isConnected(account)) {
+                c.write(LoginPacket.checkPasswordResultFail(LoginResultType.AlreadyConnected));
+                return;
+            }
+
+            // Check password
+            if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
+                c.write(LoginPacket.checkPasswordResultFail(LoginResultType.IncorrectPassword));
+                return;
+            }
+
+            c.setAccount(account);
+            c.setMachineId(machineId);
+            c.getServerNode().addClient(c);
+            c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
+        });
     }
 
     @Handler({ InHeader.WorldInfoRequest, InHeader.WorldRequest })
     public static void handleWorldRequest(Client c, InPacket inPacket) {
-        final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
-        c.write(LoginPacket.worldInformation(centralServerNode.getConnectedNodes()));
+        final LoginServerNode loginServerNode = (LoginServerNode) c.getServerNode();
+        c.write(LoginPacket.worldInformation(loginServerNode.getChannels()));
         c.write(LoginPacket.worldInformationEnd());
         c.write(LoginPacket.latestConnectedWorld(ServerConfig.WORLD_ID));
     }
@@ -110,9 +118,9 @@ public final class LoginHandler {
         inPacket.decodeInt(); // unk
 
         // Check World ID and Channel ID
-        final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
-        final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(channelId);
-        if (worldId != ServerConfig.WORLD_ID || childNodeResult.isEmpty()) {
+        final LoginServerNode loginServerNode = (LoginServerNode) c.getServerNode();
+        final Optional<ChannelInfo> channelInfoResult = loginServerNode.getChannelById(channelId);
+        if (worldId != ServerConfig.WORLD_ID || channelInfoResult.isEmpty()) {
             c.write(LoginPacket.selectWorldResultFail(LoginResultType.Unknown));
             return;
         }
@@ -415,23 +423,24 @@ public final class LoginHandler {
 
         // Resolve target channel
         final int targetChannelId = account.getChannelId();
-        final CentralServerNode centralServerNode = (CentralServerNode) c.getServerNode();
-        final Optional<RemoteChildNode> childNodeResult = centralServerNode.getChildNodeByChannelId(targetChannelId);
-        if (childNodeResult.isEmpty()) {
+        final LoginServerNode loginServerNode = (LoginServerNode) c.getServerNode();
+        final Optional<ChannelInfo> channelInfoResult = loginServerNode.getChannelById(targetChannelId);
+        if (channelInfoResult.isEmpty()) {
             log.error("Could not resolve target channel for migration request for character ID : {}", characterId);
             c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
             return;
         }
-        final RemoteChildNode targetNode = childNodeResult.get();
 
         // Create and submit migration request
         final MigrationInfo migrationInfo = MigrationInfo.from(targetChannelId, account.getId(), characterId, c.getMachineId(), c.getClientKey());
-        if (!centralServerNode.submitMigrationRequest(migrationInfo)) {
-            log.error("Failed to submit migration request for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
-            return;
-        }
-
-        c.write(LoginPacket.selectCharacterResultSuccess(targetNode.getChannelHost(), targetNode.getChannelPort(), characterId));
+        loginServerNode.submitLoginRequest(migrationInfo, (transferResult) -> {
+            if (transferResult.isEmpty()) {
+                log.error("Failed to submit migration request for character ID : {}", characterId);
+                c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+                return;
+            }
+            final TransferInfo transferInfo = transferResult.get();
+            c.write(LoginPacket.selectCharacterResultSuccess(transferInfo.getChannelHost(), transferInfo.getChannelPort(), characterId));
+        });
     }
 }

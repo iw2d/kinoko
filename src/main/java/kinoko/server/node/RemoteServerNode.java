@@ -6,15 +6,15 @@ import kinoko.server.packet.OutPacket;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class RemoteChildNode {
-    public static final AttributeKey<RemoteChildNode> NODE_KEY = AttributeKey.valueOf("R");
+public final class RemoteServerNode {
+    public static final AttributeKey<RemoteServerNode> NODE_KEY = AttributeKey.valueOf("R");
     private final AtomicInteger userCount = new AtomicInteger(0);
     private final SocketChannel socketChannel;
     private int channelId;
     private byte[] channelHost;
     private int channelPort;
 
-    public RemoteChildNode(SocketChannel socketChannel) {
+    public RemoteServerNode(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 

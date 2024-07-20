@@ -22,7 +22,6 @@ import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.user.RemoteUser;
 import kinoko.world.field.Field;
-import kinoko.world.user.Account;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,15 +32,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public final class ChannelServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(ChannelServerNode.class);
-    private final AtomicInteger requestIdCounter = new AtomicInteger(1);
-    private final ConcurrentHashMap<Integer, CompletableFuture<?>> requestFutures = new ConcurrentHashMap<>();
     private final ChannelFieldStorage fieldStorage = new ChannelFieldStorage();
     private final InstanceStorage instanceStorage = new InstanceStorage();
     private final EventManager eventManager = new EventManager();
@@ -61,10 +56,6 @@ public final class ChannelServerNode extends ServerNode {
 
     public int getChannelPort() {
         return channelPort;
-    }
-
-    public int getNewRequestId() {
-        return requestIdCounter.getAndIncrement();
     }
 
 
@@ -211,11 +202,6 @@ public final class ChannelServerNode extends ServerNode {
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean isConnected(Account account) {
-        return clientStorage.isConnected(account);
-    }
-
-    @Override
     public void initialize() throws InterruptedException, UnknownHostException {
         // Initialize event manager
         eventManager.initialize(fieldStorage);
@@ -241,7 +227,7 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture = startClient(new ChannelInitializer<>() {
             @Override
             protected void initChannel(SocketChannel ch) {
-                ch.pipeline().addLast(new CentralPacketDecoder(), new CentralClientHandler(self), new CentralPacketEncoder());
+                ch.pipeline().addLast(new CentralPacketDecoder(), new ChannelServerHandler(self), new CentralPacketEncoder());
                 ch.attr(NettyContext.CONTEXT_KEY).set(new NettyContext());
             }
         }, InetAddress.getByAddress(ServerConstants.CENTRAL_HOST), ServerConstants.CENTRAL_PORT);
