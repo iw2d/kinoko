@@ -236,10 +236,12 @@ public final class UserPool extends FieldObjectPool<User> {
     // CONTROLLER METHODS ----------------------------------------------------------------------------------------------
 
     public void assignController(ControlledObject controlled) {
-        // closest user to controlled object
-        final List<User> controllers = objects.values().stream().toList();
-        final Optional<User> controllerResult = controlled.getNearestObject(controllers);
-        controllerResult.ifPresent(user -> setController(controlled, user));
+        final Optional<User> controllerResult = getNearestUser(controlled); // closest user to controlled object
+        if (controllerResult.isEmpty()) {
+            controlled.setController(null);
+            return;
+        }
+        setController(controlled, controllerResult.get());
     }
 
     public void setController(ControlledObject controlled, User controller) {
