@@ -69,13 +69,6 @@ public final class AdminCommands {
         user.write(MessagePacket.system("You have been disposed."));
     }
 
-    @Command("dispose2")
-    public static void dispose2(User user, String[] args) {
-        user.closeDialog();
-        user.dispose();
-        user.write(MessagePacket.system("You have been disposed twice."));
-    }
-
     @Command("info")
     public static void info(User user, String[] args) {
         // User stats

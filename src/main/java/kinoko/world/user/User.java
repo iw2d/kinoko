@@ -61,6 +61,7 @@ public final class User extends Life implements Lockable<User> {
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
 
     private PartyInfo partyInfo;
+    private GuildInfo guildInfo;
 
     private Dialog dialog;
     private Dragon dragon;
@@ -187,6 +188,14 @@ public final class User extends Life implements Lockable<User> {
 
     public boolean isPartyBoss() {
         return getPartyInfo().isBoss();
+    }
+
+    public GuildInfo getGuildInfo() {
+        return guildInfo != null ? guildInfo : GuildInfo.EMPTY;
+    }
+
+    public void setGuildInfo(GuildInfo guildInfo) {
+        this.guildInfo = guildInfo;
     }
 
     public Dialog getDialog() {

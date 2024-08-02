@@ -26,6 +26,7 @@ public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
         final byte[] data = outPacket.getData();
         if (c == null) {
             log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[Out] | Plain sending " + Util.readableByteArray(data));
+            out.writeShortLE(data.length);
             out.writeBytes(data);
             return;
         }

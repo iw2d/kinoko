@@ -7,6 +7,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Evan;
+import kinoko.world.user.GuildInfo;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -21,11 +22,13 @@ public final class UserPacket {
         // CUserRemote::Init
         outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeString(user.getCharacterName()); // sCharacterName
-        outPacket.encodeString(""); // sGuildName
-        outPacket.encodeShort(0); // nGuildMarkBg
-        outPacket.encodeByte(0); // nGuildMarkBgColor
-        outPacket.encodeShort(0); // nGuildMark
-        outPacket.encodeByte(0); // nGuildMarkColor
+
+        final GuildInfo guildInfo = user.getGuildInfo();
+        outPacket.encodeString(guildInfo.getGuildName()); // sGuildName
+        outPacket.encodeShort(guildInfo.getMarkBg()); // nGuildMarkBg
+        outPacket.encodeByte(guildInfo.getMarkBgColor()); // nGuildMarkBgColor
+        outPacket.encodeShort(guildInfo.getMark()); // nGuildMark
+        outPacket.encodeByte(guildInfo.getMarkColor()); // nGuildMarkColor
 
         user.getSecondaryStat().encodeForRemote(outPacket); // SecondaryStat::DecodeForRemote
         outPacket.encodeShort(user.getJob()); // nJobCode

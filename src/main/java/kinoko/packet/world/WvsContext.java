@@ -146,8 +146,8 @@ public final class WvsContext {
         outPacket.encodeShort(user.getJob()); // nJob
         outPacket.encodeShort(user.getPop()); // nPOP
         outPacket.encodeByte(false); // bIsMarried
-        outPacket.encodeString(""); // sCommunity
-        outPacket.encodeString(""); // sAlliance
+        outPacket.encodeString(user.getGuildInfo().getGuildName()); // sCommunity
+        outPacket.encodeString(user.getGuildInfo().getAllianceName()); // sAlliance
         outPacket.encodeByte(false); // bMedalInfo
 
         // CUIUserInfo::SetMultiPetInfo
