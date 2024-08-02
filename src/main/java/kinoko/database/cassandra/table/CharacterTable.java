@@ -22,13 +22,14 @@ public final class CharacterTable {
     public static final String SKILL_COOLTIMES = "skill_cooltimes";
     public static final String SKILL_RECORDS = "skill_records";
     public static final String QUEST_RECORDS = "quest_records";
-    public static final String FRIEND_MAX = "friend_max";
     public static final String CONFIG = "config";
     public static final String MINIGAME_RECORD = "minigame_record";
     public static final String MAP_TRANSFER_INFO = "map_transfer_info";
     public static final String WILD_HUNTER_INFO = "wild_hunter_info";
     public static final String ITEM_SN_COUNTER = "item_sn_counter";
-
+    public static final String FRIEND_MAX = "friend_max";
+    public static final String PARTY_ID = "party_id";
+    public static final String GUILD_ID = "guild_id";
 
     private static final String tableName = "character_table";
 
@@ -56,12 +57,14 @@ public final class CharacterTable {
                         .withColumn(SKILL_COOLTIMES, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.TIMESTAMP))
                         .withColumn(SKILL_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
                         .withColumn(QUEST_RECORDS, DataTypes.frozenSetOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
-                        .withColumn(FRIEND_MAX, DataTypes.INT)
                         .withColumn(MINIGAME_RECORD, SchemaBuilder.udt(MiniGameRecordUDT.getTypeName(), true))
                         .withColumn(MAP_TRANSFER_INFO, SchemaBuilder.udt(MapTransferInfoUDT.getTypeName(), true))
                         .withColumn(WILD_HUNTER_INFO, SchemaBuilder.udt(WildHunterInfoUDT.getTypeName(), true))
                         .withColumn(CONFIG, SchemaBuilder.udt(ConfigUDT.getTypeName(), true))
                         .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
+                        .withColumn(FRIEND_MAX, DataTypes.INT)
+                        .withColumn(PARTY_ID, DataTypes.INT)
+                        .withColumn(GUILD_ID, DataTypes.INT)
                         .build()
         );
         session.execute(

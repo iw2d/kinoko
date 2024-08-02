@@ -36,6 +36,8 @@ public final class CharacterData implements Encodable {
     private WildHunterInfo wildHunterInfo;
     private AtomicInteger itemSnCounter;
     private int friendMax;
+    private int partyId;
+    private int guildId;
 
     public CharacterData(int accountId) {
         this.accountId = accountId;
@@ -131,6 +133,22 @@ public final class CharacterData implements Encodable {
 
     public void setFriendMax(int friendMax) {
         this.friendMax = friendMax;
+    }
+
+    public int getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(int partyId) {
+        this.partyId = partyId;
+    }
+
+    public int getGuildId() {
+        return guildId;
+    }
+
+    public void setGuildId(int guildId) {
+        this.guildId = guildId;
     }
 
     public long getNextItemSn() {

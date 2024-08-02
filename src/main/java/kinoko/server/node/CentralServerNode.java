@@ -111,8 +111,8 @@ public final class CentralServerNode extends Node {
 
     // PARTY METHODS ---------------------------------------------------------------------------------------------------
 
-    public Party createNewParty(RemoteUser remoteUser) {
-        final Party party = new Party(partyStorage.getNewPartyId(), remoteUser);
+    public Party createNewParty(int partyId, RemoteUser remoteUser) {
+        final Party party = new Party(partyId, remoteUser);
         partyStorage.addParty(party);
         return party;
     }
@@ -126,10 +126,6 @@ public final class CentralServerNode extends Node {
             return Optional.empty();
         }
         return partyStorage.getPartyById(partyId);
-    }
-
-    public Optional<Party> getPartyByCharacterId(int characterId) {
-        return partyStorage.getPartyByCharacterId(characterId);
     }
 
 

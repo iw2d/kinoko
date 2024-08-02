@@ -7,7 +7,6 @@ import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.AccountAccessor;
 import kinoko.database.DatabaseManager;
 import kinoko.database.cassandra.table.AccountTable;
-import kinoko.database.cassandra.table.IdTable;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.Item;
@@ -150,7 +149,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
 
     @Override
     public synchronized boolean newAccount(String username, String password) {
-        final Optional<Integer> accountId = getNextId(IdTable.ACCOUNT_TABLE);
+        final Optional<Integer> accountId = DatabaseManager.idAccessor().nextAccountId();
         if (accountId.isEmpty()) {
             return false;
         }

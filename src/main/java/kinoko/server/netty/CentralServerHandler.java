@@ -162,14 +162,17 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
     }
 
     private void updatePartyMember(RemoteUser remoteUser) {
-        final Optional<Party> partyResult = centralServerNode.getPartyByCharacterId(remoteUser.getCharacterId());
+        final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
         if (partyResult.isEmpty()) {
             return;
         }
         try (var lockedParty = partyResult.get().acquire()) {
-            // Set party ID
+            // Check if still in party
             final Party party = lockedParty.get();
-            remoteUser.setPartyId(party.getPartyId());
+            if (!party.hasMember(remoteUser.getCharacterId())) {
+                remoteUser.setPartyId(0);
+                return;
+            }
             // Update user for all members
             party.updateMember(remoteUser);
             final OutPacket outPacket = PartyPacket.loadPartyDone(party);
@@ -471,8 +474,14 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.CreateNewParty_AlreadyJoined))); // Already have joined a party.
                     return;
                 }
+                // New party id
+                final Optional<Integer> partyIdResult = DatabaseManager.idAccessor().nextPartyId();
+                if (partyIdResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.serverMsg("Your request has failed. Please try again later")));
+                    return;
+                }
                 // Create party
-                final Party party = centralServerNode.createNewParty(remoteUser);
+                final Party party = centralServerNode.createNewParty(partyIdResult.get(), remoteUser);
                 remoteUser.setPartyId(party.getPartyId());
                 remoteServerNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.createInfo(remoteUser)));
                 remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.createNewPartyDone(party, remoteUser.getTownPortal()))); // You have created a new party.
@@ -525,9 +534,14 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Already have joined a party.
                     return;
                 }
-                // Resolve party
+                // Resolve inviter
                 final int inviterId = partyRequest.getCharacterId();
-                final Optional<Party> partyResult = centralServerNode.getPartyByCharacterId(inviterId);
+                final Optional<RemoteUser> inviterResult = centralServerNode.getUserByCharacterId(inviterId);
+                if (inviterResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
+                    return;
+                }
+                final Optional<Party> partyResult = centralServerNode.getPartyById(inviterResult.get().getPartyId());
                 if (partyResult.isEmpty()) {
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                     return;
@@ -553,8 +567,14 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 // Resolve party
                 final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
                 if (partyResult.isEmpty()) {
+                    // New party id
+                    final Optional<Integer> partyIdResult = DatabaseManager.idAccessor().nextPartyId();
+                    if (partyIdResult.isEmpty()) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.serverMsg("Your request has failed. Please try again later")));
+                        return;
+                    }
                     // Create party
-                    final Party party = centralServerNode.createNewParty(remoteUser);
+                    final Party party = centralServerNode.createNewParty(partyIdResult.get(), remoteUser);
                     remoteUser.setPartyId(party.getPartyId());
                     remoteServerNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), party.createInfo(remoteUser)));
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.createNewPartyDone(party, remoteUser.getTownPortal()))); // You have created a new party.

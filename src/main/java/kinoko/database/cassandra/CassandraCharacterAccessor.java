@@ -8,7 +8,6 @@ import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
 import kinoko.database.DatabaseManager;
 import kinoko.database.cassandra.table.CharacterTable;
-import kinoko.database.cassandra.table.IdTable;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.quest.QuestManager;
@@ -92,16 +91,13 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(CharacterTable.ITEM_SN_COUNTER)));
         cd.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
+        cd.setPartyId(row.getInt(CharacterTable.PARTY_ID));
+        cd.setGuildId(row.getInt(CharacterTable.GUILD_ID));
         return cd;
     }
 
     private String lowerName(String name) {
         return name.toLowerCase();
-    }
-
-    @Override
-    public Optional<Integer> nextCharacterId() {
-        return getNextId(IdTable.CHARACTER_TABLE);
     }
 
     @Override
@@ -238,12 +234,14 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
-                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
                         .setColumn(CharacterTable.MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
                         .setColumn(CharacterTable.MAP_TRANSFER_INFO, literal(characterData.getMapTransferInfo(), registry))
                         .setColumn(CharacterTable.WILD_HUNTER_INFO, literal(characterData.getWildHunterInfo(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
+                        .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
+                        .setColumn(CharacterTable.PARTY_ID, literal(characterData.getPartyId()))
+                        .setColumn(CharacterTable.GUILD_ID, literal(characterData.getGuildId()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
                         .build()
         );

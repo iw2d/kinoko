@@ -752,7 +752,7 @@ public final class CashShopHandler {
 
     private static boolean sendGiftMemo(User user, int receiverCharacterId) {
         // Create memo
-        final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
+        final Optional<Integer> memoIdResult = DatabaseManager.idAccessor().nextMemoId();
         if (memoIdResult.isEmpty()) {
             return false;
         }

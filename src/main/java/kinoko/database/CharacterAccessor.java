@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CharacterAccessor {
-    Optional<Integer> nextCharacterId();
-
     boolean checkCharacterNameAvailable(String name);
 
     Optional<CharacterData> getCharacterById(int characterId);

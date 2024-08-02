@@ -10,6 +10,7 @@ import kinoko.util.Encodable;
  */
 public final class PartyRequest implements Encodable {
     private final PartyRequestType requestType;
+    private int partyId;
     private int characterId;
     private String characterName;
 
@@ -19,6 +20,10 @@ public final class PartyRequest implements Encodable {
 
     public PartyRequestType getRequestType() {
         return requestType;
+    }
+
+    public int getPartyId() {
+        return partyId;
     }
 
     public int getCharacterId() {
@@ -33,7 +38,10 @@ public final class PartyRequest implements Encodable {
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
         switch (requestType) {
-            case LoadParty, CreateNewParty, WithdrawParty -> {
+            case LoadParty -> {
+                outPacket.encodeInt(partyId);
+            }
+            case CreateNewParty, WithdrawParty -> {
                 // no encodes
             }
             case JoinParty, KickParty, ChangePartyBoss -> {
@@ -49,7 +57,10 @@ public final class PartyRequest implements Encodable {
         final int type = inPacket.decodeByte();
         final PartyRequest partyRequest = new PartyRequest(PartyRequestType.getByValue(type));
         switch (partyRequest.requestType) {
-            case LoadParty, CreateNewParty, WithdrawParty -> {
+            case LoadParty -> {
+                partyRequest.partyId = inPacket.decodeInt();
+            }
+            case CreateNewParty, WithdrawParty -> {
                 // no decodes
             }
             case JoinParty, KickParty, ChangePartyBoss -> {
@@ -68,8 +79,10 @@ public final class PartyRequest implements Encodable {
         return partyRequest;
     }
 
-    public static PartyRequest loadParty() {
-        return new PartyRequest(PartyRequestType.LoadParty);
+    public static PartyRequest loadParty(int partyId) {
+        final PartyRequest request = new PartyRequest(PartyRequestType.LoadParty);
+        request.partyId = partyId;
+        return request;
     }
 
     public static PartyRequest createNewParty() {

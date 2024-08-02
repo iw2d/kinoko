@@ -171,7 +171,7 @@ public final class MigrationHandler {
                 channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
 
                 // Load party from central server
-                channelServerNode.submitPartyRequest(user, PartyRequest.loadParty());
+                channelServerNode.submitPartyRequest(user, PartyRequest.loadParty(user.getCharacterData().getPartyId()));
 
                 // Load friends from central server
                 channelServerNode.submitFriendRequest(user, FriendRequest.loadFriend());

@@ -59,6 +59,7 @@ public final class AdminCommands {
     public static void test(User user, String[] args) {
         user.write(MessagePacket.system("Users in channel: %d", user.getConnectedServer().getConnectedUsers().size()));
         user.write(MessagePacket.system("Users in field : %d", user.getField().getUserPool().getCount()));
+        user.write(MessagePacket.system("Party ID : %d (%d)", user.getPartyId(), user.getCharacterData().getPartyId()));
         user.dispose();
     }
 

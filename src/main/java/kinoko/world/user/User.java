@@ -60,6 +60,7 @@ public final class User extends Life implements Lockable<User> {
     private final List<Pet> pets = new ArrayList<>();
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
 
+    private int messengerId;
     private PartyInfo partyInfo;
     private GuildInfo guildInfo;
 
@@ -67,7 +68,6 @@ public final class User extends Life implements Lockable<User> {
     private Dragon dragon;
     private TownPortal townPortal;
     private OpenGate openGate;
-    private int messengerId;
     private int effectItemId;
     private int portableChairId;
     private String adBoard;
@@ -170,12 +170,21 @@ public final class User extends Life implements Lockable<User> {
         return summoned;
     }
 
+    public int getMessengerId() {
+        return messengerId;
+    }
+
+    public void setMessengerId(int messengerId) {
+        this.messengerId = messengerId;
+    }
+
     public PartyInfo getPartyInfo() {
         return partyInfo != null ? partyInfo : PartyInfo.EMPTY;
     }
 
     public void setPartyInfo(PartyInfo partyInfo) {
         this.partyInfo = partyInfo;
+        getCharacterData().setPartyId(getPartyInfo().getPartyId());
     }
 
     public int getPartyId() {
@@ -196,6 +205,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void setGuildInfo(GuildInfo guildInfo) {
         this.guildInfo = guildInfo;
+        getCharacterData().setGuildId(getGuildInfo().getGuildId());
     }
 
     public Dialog getDialog() {
@@ -248,14 +258,6 @@ public final class User extends Life implements Lockable<User> {
 
     public void setOpenGate(OpenGate openGate) {
         this.openGate = openGate;
-    }
-
-    public int getMessengerId() {
-        return messengerId;
-    }
-
-    public void setMessengerId(int messengerId) {
-        this.messengerId = messengerId;
     }
 
     public int getEffectItemId() {

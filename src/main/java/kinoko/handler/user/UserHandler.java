@@ -1421,7 +1421,7 @@ public final class UserHandler {
                 }
                 final int receiverCharacterId = receiverIdResult.get().getCharacterId();
                 // Create memo
-                final Optional<Integer> memoIdResult = DatabaseManager.memoAccessor().nextMemoId();
+                final Optional<Integer> memoIdResult = DatabaseManager.idAccessor().nextMemoId();
                 if (memoIdResult.isEmpty()) {
                     user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     return;

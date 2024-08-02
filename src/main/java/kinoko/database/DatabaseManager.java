@@ -37,11 +37,16 @@ public final class DatabaseManager {
     public static final String DATABASE_KEYSPACE = "kinoko";
     public static final String PROFILE_ONE = "profile_one";
     private static CqlSession cqlSession;
+    private static IdAccessor idAccessor;
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
     private static FriendAccessor friendAccessor;
     private static GiftAccessor giftAccessor;
     private static MemoAccessor memoAccessor;
+
+    public static IdAccessor idAccessor() {
+        return idAccessor;
+    }
 
     public static AccountAccessor accountAccessor() {
         return accountAccessor;
@@ -148,6 +153,7 @@ public final class DatabaseManager {
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
 
         // Create Accessors
+        idAccessor = new CassandraIdAccessor(cqlSession, DATABASE_KEYSPACE);
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
         friendAccessor = new CassandraFriendAccessor(cqlSession, DATABASE_KEYSPACE);

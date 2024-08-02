@@ -206,7 +206,7 @@ public final class LoginHandler {
         }
 
         // Create character
-        final Optional<Integer> characterIdResult = DatabaseManager.characterAccessor().nextCharacterId();
+        final Optional<Integer> characterIdResult = DatabaseManager.idAccessor().nextCharacterId();
         if (characterIdResult.isEmpty()) {
             c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.Timeout));
             return;
