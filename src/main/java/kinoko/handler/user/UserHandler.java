@@ -25,6 +25,7 @@ import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendRequestType;
+import kinoko.server.guild.GuildRequestType;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
@@ -1215,7 +1216,7 @@ public final class UserHandler {
         switch (requestType) {
             case CreateNewParty -> {
                 // CField::SendCreateNewPartyMsg
-                if (user.getPartyId() != 0) {
+                if (user.hasParty()) {
                     user.write(PartyPacket.of(PartyResultType.CreateNewParty_AlreadyJoined));
                     return;
                 }
@@ -1289,6 +1290,26 @@ public final class UserHandler {
             }
             default -> {
                 log.error("Unhandled party result type : {}", resultType);
+            }
+        }
+    }
+
+    @Handler(InHeader.GuildRequest)
+    public static void handleGuildRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final GuildRequestType requestType = GuildRequestType.getByValue(type);
+        switch (requestType) {
+            case CheckGuildName -> {
+                final String guildName = inPacket.decodeString(); // sGuildName
+            }
+            case CreateNewGuild -> {
+
+            }
+            case null -> {
+                log.error("Unknown guild request type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled guild request type : {}", requestType);
             }
         }
     }

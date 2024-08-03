@@ -51,8 +51,9 @@ public final class GameConstants {
     public static final int MESSENGER_MAX = 3;
     public static final int PARTY_MAX = 6;
     public static final int EXPEDITION_MAX = 5;
-    public static final int GUILD_CREATE_MIN = 6; // GUILD_INIT_REQUIREDMEMBER
     public static final int GUILD_GRADE_MAX = 5;
+    public static final int GUILD_CAPACITY_MIN = 20;
+    public static final int GUILD_CAPACITY_MAX = 100;
 
     public static final int MACRO_SYS_DATA_SIZE = 5;
     public static final int MACRO_SKILL_COUNT = 3;

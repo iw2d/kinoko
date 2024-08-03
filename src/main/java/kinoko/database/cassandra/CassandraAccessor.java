@@ -18,4 +18,8 @@ public abstract class CassandraAccessor {
     public final String getKeyspace() {
         return keyspace;
     }
+
+    protected final String lowerName(String name) {
+        return name.toLowerCase();
+    }
 }

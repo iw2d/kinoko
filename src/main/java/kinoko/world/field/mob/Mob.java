@@ -563,9 +563,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUpByItem).nOption + 100) / 100.0;
                 money = (int) (money * multiplier);
             }
-            return Optional.of(owner.getPartyId() == 0 ?
-                    Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId()) :
-                    Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId())
+            return Optional.of(owner.hasParty() ?
+                    Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId()) :
+                    Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId())
             );
         } else {
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(reward.getItemId());
@@ -574,9 +574,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             }
             final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
             final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
-            return Optional.of(owner.getPartyId() == 0 ?
-                    Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId()) :
-                    Drop.item(DropOwnType.PARTYOWN, this, item, owner.getPartyId(), reward.getQuestId())
+            return Optional.of(owner.hasParty() ?
+                    Drop.item(DropOwnType.PARTYOWN, this, item, owner.getPartyId(), reward.getQuestId()) :
+                    Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId())
             );
         }
     }

@@ -40,4 +40,13 @@ public enum GuildRequestType {
     public final int getValue() {
         return value;
     }
+
+    public static GuildRequestType getByValue(int value) {
+        for (GuildRequestType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

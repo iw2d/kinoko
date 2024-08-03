@@ -6,22 +6,24 @@ import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Guild instance managed by CentralServerNode. RemoteUser instances managed by this object should always be pointing to
- * the instance stored in UserStorage.
+ * Guild instance managed by CentralServerNode.
  */
 public final class Guild implements Encodable, Lockable<Party> {
+    public static final List<String> DEFAULT_GRADE_NAMES = List.of("Master", "Jr.Master", "Member", "Member", "Member");
+    public static final Comparator<GuildMember> MEMBER_COMPARATOR = Comparator.comparing(GuildMember::getGuildRank)
+            .thenComparing(Comparator.comparing(GuildMember::getLevel).reversed());
+
     private final Lock lock = new ReentrantLock();
     private final int guildId;
     private final String guildName;
-    private List<String> gradeNames;
-    private Map<Integer, GuildMember> guildMembers;
-    private int maxMemberNum;
+    private final List<String> gradeNames;
+    private final Map<Integer, GuildMember> guildMembers;
+    private int memberMax;
 
     private int allianceId;
     private String allianceName;
@@ -39,6 +41,9 @@ public final class Guild implements Encodable, Lockable<Party> {
     public Guild(int guildId, String guildName) {
         this.guildId = guildId;
         this.guildName = guildName;
+        this.gradeNames = new ArrayList<>(DEFAULT_GRADE_NAMES);
+        this.guildMembers = new HashMap<>();
+        this.memberMax = GameConstants.GUILD_CAPACITY_MIN;
     }
 
     public int getGuildId() {
@@ -53,24 +58,17 @@ public final class Guild implements Encodable, Lockable<Party> {
         return gradeNames;
     }
 
-    public void setGradeNames(List<String> gradeNames) {
-        this.gradeNames = gradeNames;
+    public List<GuildMember> getGuildMembers() {
+        return guildMembers.values().stream().sorted(MEMBER_COMPARATOR) // sort by rank, then level
+                .toList();
     }
 
-    public Map<Integer, GuildMember> getGuildMembers() {
-        return guildMembers;
+    public int getMemberMax() {
+        return memberMax;
     }
 
-    public void setGuildMembers(Map<Integer, GuildMember> guildMembers) {
-        this.guildMembers = guildMembers;
-    }
-
-    public int getMaxMemberNum() {
-        return maxMemberNum;
-    }
-
-    public void setMaxMemberNum(int maxMemberNum) {
-        this.maxMemberNum = maxMemberNum;
+    public void setMemberMax(int memberMax) {
+        this.memberMax = memberMax;
     }
 
     public int getAllianceId() {
@@ -145,6 +143,20 @@ public final class Guild implements Encodable, Lockable<Party> {
         this.level = level;
     }
 
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public boolean addMember(GuildMember guildMember) {
+        if (getMemberMax() >= guildMembers.size()) {
+            return false;
+        }
+        if (guildMembers.containsKey(guildMember.getCharacterId())) {
+            return false;
+        }
+        guildMembers.put(guildMember.getCharacterId(), guildMember);
+        return true;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         // GUILDDATA::Decode
@@ -154,7 +166,7 @@ public final class Guild implements Encodable, Lockable<Party> {
             outPacket.encodeString(gradeNames.get(i)); // asGradeName
         }
 
-        final List<GuildMember> members = guildMembers.values().stream().toList();
+        final List<GuildMember> members = getGuildMembers();
         outPacket.encodeByte(members.size());
         for (GuildMember member : members) {
             outPacket.encodeInt(member.getCharacterId()); // adwCharacterID
@@ -163,7 +175,7 @@ public final class Guild implements Encodable, Lockable<Party> {
             member.encode(outPacket); // aMemberData (37)
         }
 
-        outPacket.encodeInt(maxMemberNum); // nMaxMemberNum
+        outPacket.encodeInt(memberMax); // nMaxMemberNum
         outPacket.encodeShort(markBg); // nMarkBg
         outPacket.encodeByte(markBgColor); // nMarkBgColor
         outPacket.encodeShort(mark); // nMark

@@ -688,7 +688,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> String.format("#L%d# #b%s#k#l", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining("\r\n"));
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKMENU, String.join("\r\n", text, optionString)));
+        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKMENU, text != null ? String.join("\r\n", text, optionString) : optionString));
         final int answer = handleAnswer().getAnswer();
         if (!options.containsKey(answer)) {
             throw new ScriptError("Received unexpected answer %d for askMenu options : %s", answer, options);

@@ -191,6 +191,10 @@ public final class User extends Life implements Lockable<User> {
         return getPartyInfo().getPartyId();
     }
 
+    public boolean hasParty() {
+        return getPartyId() != 0;
+    }
+
     public int getPartyMemberIndex() {
         return getPartyInfo().getMemberIndex();
     }
@@ -206,6 +210,14 @@ public final class User extends Life implements Lockable<User> {
     public void setGuildInfo(GuildInfo guildInfo) {
         this.guildInfo = guildInfo;
         getCharacterData().setGuildId(getGuildInfo().getGuildId());
+    }
+
+    public int getGuildId() {
+        return getGuildInfo().getGuildId();
+    }
+
+    public boolean hasGuild() {
+        return getGuildId() != 0;
     }
 
     public Dialog getDialog() {
@@ -249,7 +261,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public int getTownPortalIndex() {
-        return getPartyId() != 0 ? getPartyMemberIndex() - 1 : 0;
+        return hasParty() ? getPartyMemberIndex() - 1 : 0;
     }
 
     public OpenGate getOpenGate() {

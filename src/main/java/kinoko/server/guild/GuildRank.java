@@ -18,4 +18,13 @@ public enum GuildRank {
     public final int getValue() {
         return value;
     }
+
+    public static GuildRank getByValue(int value) {
+        for (GuildRank rank : values()) {
+            if (rank.getValue() == value) {
+                return rank;
+            }
+        }
+        return NONE;
+    }
 }

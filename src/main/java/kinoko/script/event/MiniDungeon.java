@@ -9,7 +9,7 @@ public final class MiniDungeon extends ScriptHandler {
     public static void handleMiniDungeon(ScriptManager sm, int mapId, int dungeonId, int timeLimit) {
         if (sm.getFieldId() == mapId) {
             final User user = sm.getUser();
-            if (user.getPartyId() != 0 && !user.isPartyBoss()) {
+            if (user.hasParty() && !user.isPartyBoss()) {
                 sm.message("You are not the leader of the party.");
             } else {
                 sm.playPortalSE();

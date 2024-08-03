@@ -17,6 +17,7 @@ import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.cashshop.CashItemInfo;
+import kinoko.server.guild.GuildMember;
 import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
@@ -41,6 +42,7 @@ public final class DatabaseManager {
     private static AccountAccessor accountAccessor;
     private static CharacterAccessor characterAccessor;
     private static FriendAccessor friendAccessor;
+    private static GuildAccessor guildAccessor;
     private static GiftAccessor giftAccessor;
     private static MemoAccessor memoAccessor;
 
@@ -58,6 +60,10 @@ public final class DatabaseManager {
 
     public static FriendAccessor friendAccessor() {
         return friendAccessor;
+    }
+
+    public static GuildAccessor guildAccessor() {
+        return guildAccessor;
     }
 
     public static GiftAccessor giftAccessor() {
@@ -128,12 +134,14 @@ public final class DatabaseManager {
         MapTransferInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         WildHunterInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        GuildMemberUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
         // Create Tables
         IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
         AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
         CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
         FriendTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        GuildTable.createTable(cqlSession, DATABASE_KEYSPACE);
         GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
         MemoTable.createTable(cqlSession, DATABASE_KEYSPACE);
 
@@ -151,12 +159,14 @@ public final class DatabaseManager {
         registerCodec(cqlSession, MapTransferInfoUDT.getTypeName(), (ic) -> new MapTransferInfoCodec(ic, GenericType.of(MapTransferInfo.class)));
         registerCodec(cqlSession, WildHunterInfoUDT.getTypeName(), (ic) -> new WildHunterInfoCodec(ic, GenericType.of(WildHunterInfo.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
+        registerCodec(cqlSession, GuildMemberUDT.getTypeName(), (ic) -> new GuildMemberCodec(ic, GenericType.of(GuildMember.class)));
 
         // Create Accessors
         idAccessor = new CassandraIdAccessor(cqlSession, DATABASE_KEYSPACE);
         accountAccessor = new CassandraAccountAccessor(cqlSession, DATABASE_KEYSPACE);
         characterAccessor = new CassandraCharacterAccessor(cqlSession, DATABASE_KEYSPACE);
         friendAccessor = new CassandraFriendAccessor(cqlSession, DATABASE_KEYSPACE);
+        guildAccessor = new CassandraGuildAccessor(cqlSession, DATABASE_KEYSPACE);
         giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
         memoAccessor = new CassandraMemoAccessor(cqlSession, DATABASE_KEYSPACE);
     }

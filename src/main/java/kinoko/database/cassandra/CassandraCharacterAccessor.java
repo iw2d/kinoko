@@ -96,10 +96,6 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         return cd;
     }
 
-    private String lowerName(String name) {
-        return name.toLowerCase();
-    }
-
     @Override
     public boolean checkCharacterNameAvailable(String name) {
         final ResultSet selectResult = getSession().execute(

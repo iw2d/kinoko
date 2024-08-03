@@ -128,8 +128,8 @@ public final class UserPool extends FieldObjectPool<User> {
         });
         field.getTownPortalPool().forEach((townPortal) -> {
             final User owner = townPortal.getOwner();
-            if ((owner.getCharacterId() == user.getCharacterId() && owner.getPartyId() == 0) ||
-                    (owner.getPartyId() != 0 && owner.getPartyId() == user.getPartyId())) {
+            if ((!owner.hasParty() && owner.getCharacterId() == user.getCharacterId()) ||
+                    (owner.hasParty() && owner.getPartyId() == user.getPartyId())) {
                 if (townPortal.getTownField() == field) {
                     final Optional<PortalInfo> portalPointResult = townPortal.getTownPortalPoint();
                     if (portalPointResult.isPresent()) {
