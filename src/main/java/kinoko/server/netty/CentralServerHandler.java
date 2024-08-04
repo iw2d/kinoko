@@ -691,24 +691,42 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             return;
                         }
                         // Update members
-                        for (int memberId : guild.getMemberIds()) {
-                            final Optional<RemoteUser> remoteMemberResult = centralServerNode.getUserByCharacterId(memberId);
-                            if (remoteMemberResult.isEmpty()) {
-                                continue;
-                            }
-                            final RemoteUser member = remoteMemberResult.get();
-                            final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(member.getChannelId());
-                            if (targetNodeResult.isEmpty()) {
-                                return;
-                            }
-                            final RemoteServerNode targetNode = targetNodeResult.get();
-                            targetNode.write(CentralPacket.guildResult(member.getCharacterId(), null));
-                            targetNode.write(CentralPacket.userPacketReceive(member.getCharacterId(), GuildPacket.removeGuildDone(guild.getGuildId())));
-                        }
+                        final OutPacket outPacket = GuildPacket.removeGuildDone(guild.getGuildId());
+                        forEachGuildMember(guild, (member, node) -> {
+                            node.write(CentralPacket.guildResult(member.getCharacterId(), null));
+                            node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                        });
                     }
                 } else {
                     remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
+                }
+            }
+            case SetMark -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMarkUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check requester rank
+                    if (guild.getMember(remoteUser.getCharacterId()).getGuildRank() != GuildRank.MASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMarkUnknown())); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Apply new mark
+                    guild.setMarkBg(guildRequest.getMarkBg());
+                    guild.setMarkBgColor(guildRequest.getMarkBgColor());
+                    guild.setMark(guildRequest.getMark());
+                    guild.setMarkColor(guildRequest.getMarkColor());
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.setMarkDone(guild.getGuildId(), guild.getMarkBg(), guild.getMarkBgColor(), guild.getMark(), guild.getMarkColor());
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.guildResult(member.getCharacterId(), GuildInfo.from(guild, member.getCharacterId())));
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
                 }
             }
         }
@@ -940,6 +958,21 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             }
             biConsumer.accept(member, targetNodeResult.get());
         });
+    }
+
+    private void forEachGuildMember(Guild guild, BiConsumer<RemoteUser, RemoteServerNode> biConsumer) {
+        for (int memberId : guild.getMemberIds()) {
+            final Optional<RemoteUser> remoteMemberResult = centralServerNode.getUserByCharacterId(memberId);
+            if (remoteMemberResult.isEmpty()) {
+                continue;
+            }
+            final RemoteUser member = remoteMemberResult.get();
+            final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(member.getChannelId());
+            if (targetNodeResult.isEmpty()) {
+                return;
+            }
+            biConsumer.accept(member, targetNodeResult.get());
+        }
     }
 
     private Map<Integer, Friend> loadFriends(RemoteUser remoteUser) {

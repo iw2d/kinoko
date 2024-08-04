@@ -86,6 +86,20 @@ public final class GuildPacket {
         return outPacket;
     }
 
+    public static OutPacket setMarkDone(int guildId, short markBg, byte markBgColor, short mark, byte markColor) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.SetMark_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeShort(markBg);
+        outPacket.encodeByte(markBgColor);
+        outPacket.encodeShort(mark);
+        outPacket.encodeByte(markColor);
+        return outPacket;
+    }
+
+    public static OutPacket setMarkUnknown() {
+        return GuildPacket.of(GuildResultType.SetMark_Unknown);
+    }
+
     public static OutPacket serverMsg(String message) {
         final OutPacket outPacket = GuildPacket.of(GuildResultType.ServerMsg);
         outPacket.encodeByte(message != null); // The guild request has not been accepted due to unknown reason.

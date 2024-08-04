@@ -8,6 +8,10 @@ public final class GuildRequest implements Encodable {
     private final GuildRequestType requestType;
     private int guildId;
     private String guildName;
+    private short markBg;
+    private byte markBgColor;
+    private short mark;
+    private byte markColor;
 
     public GuildRequest(GuildRequestType requestType) {
         this.requestType = requestType;
@@ -25,6 +29,22 @@ public final class GuildRequest implements Encodable {
         return guildName;
     }
 
+    public short getMarkBg() {
+        return markBg;
+    }
+
+    public byte getMarkBgColor() {
+        return markBgColor;
+    }
+
+    public short getMark() {
+        return mark;
+    }
+
+    public byte getMarkColor() {
+        return markColor;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
@@ -35,6 +55,12 @@ public final class GuildRequest implements Encodable {
             case CreateNewGuild -> {
                 outPacket.encodeInt(guildId);
                 outPacket.encodeString(guildName);
+            }
+            case SetMark -> {
+                outPacket.encodeShort(markBg);
+                outPacket.encodeByte(markBgColor);
+                outPacket.encodeShort(mark);
+                outPacket.encodeByte(markColor);
             }
         }
     }
@@ -50,6 +76,12 @@ public final class GuildRequest implements Encodable {
                 request.guildId = inPacket.decodeInt();
                 request.guildName = inPacket.decodeString();
             }
+            case SetMark -> {
+                request.markBg = inPacket.decodeShort();
+                request.markBgColor = inPacket.decodeByte();
+                request.mark = inPacket.decodeShort();
+                request.markColor = inPacket.decodeByte();
+            }
         }
         return request;
     }
@@ -60,16 +92,25 @@ public final class GuildRequest implements Encodable {
         return request;
     }
 
+    public static GuildRequest createNewGuild(int guildId, String guildName) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.CreateNewGuild);
+        request.guildId = guildId;
+        request.guildName = guildName;
+        return request;
+    }
+
     public static GuildRequest removeGuild(int guildId) {
         final GuildRequest request = new GuildRequest(GuildRequestType.RemoveGuild);
         request.guildId = guildId;
         return request;
     }
 
-    public static GuildRequest createNewGuild(int guildId, String guildName) {
-        final GuildRequest request = new GuildRequest(GuildRequestType.CreateNewGuild);
-        request.guildId = guildId;
-        request.guildName = guildName;
+    public static GuildRequest setMark(short markBg, byte markBgColor, short mark, byte markColor) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.SetMark);
+        request.markBg = markBg;
+        request.markBgColor = markBgColor;
+        request.mark = mark;
+        request.markColor = markColor;
         return request;
     }
 }

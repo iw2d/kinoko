@@ -4,6 +4,7 @@ import kinoko.packet.world.GuildPacket;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.server.guild.GuildRank;
 import kinoko.server.guild.GuildRequest;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
@@ -54,7 +55,7 @@ public final class GuildHQ extends ScriptHandler {
                     1, "I want to disband the guild.",
                     2, "I want to change the guild leader."
             ));
-            if (!user.isGuildMaster()) {
+            if (user.getGuildRank() != GuildRank.MASTER) {
                 sm.sayNext("Hey, you're not the Guild Master!! This decision can only be made by the Guild Master.");
                 return;
             }
@@ -82,7 +83,40 @@ public final class GuildHQ extends ScriptHandler {
     public static void guild_mark(ScriptManager sm) {
         // Lea : Guild Emblem Creator (2010008)
         //   Orbis : Guild Headquarters <Hall of Fame> (200000301)
-
+        final User user = sm.getUser();
+        final int answer = sm.askMenu("Hi! My name is #bLea#k. I am in charge of the #bGuild Emblem#k.", Map.of(
+                0, "I'd like to register a guild emblem.",
+                1, "I'd like to delete a guild emblem."
+        ));
+        if (user.getGuildRank() != GuildRank.MASTER) {
+            sm.sayNext("Hey, you're not the Guild Master!! This decision can only be made by the Guild Master.");
+            return;
+        }
+        if (answer == 0) {
+            if (!sm.askYesNo(String.format("There is a fee of #r%,d mesos#k for creating a Guild Emblem. To further explain, a Guild Emblem is like a coat of arms that is unique to a guild. It will be displayed to the left of the guild name. How does that sound? Would you like to create a Guild Emblem?", GameConstants.CREATE_EMBLEM_COST))) {
+                sm.sayNext("Oh... okay... A guild emblem would make the guild more unified. Do you need more time for preparing for the guild emblem? Please come back to me when you are ready...");
+                return;
+            }
+            if (!sm.canAddMoney(-GameConstants.CREATE_EMBLEM_COST)) {
+                sm.sayNext("Oh... You don't have enough mesos to create an emblem...");
+                return;
+            }
+            sm.write(GuildPacket.inputMark());
+        } else if (answer == 1) {
+            if (user.getGuildInfo().getMark() == 0) {
+                sm.sayNext("You don't have a guild emblem to delete...");
+                return;
+            }
+            if (!sm.askYesNo(String.format("If you delete the current guild emblem, you can make a new guild emblem. You will need #r%,d mesos#k to delete your guild emblem. Would you like to do it?", GameConstants.DELETE_EMBLEM_COST))) {
+                sm.sayNext("Please come back to me when you are ready.");
+                return;
+            }
+            if (!sm.addMoney(-GameConstants.DELETE_EMBLEM_COST)) {
+                sm.sayNext("Oh... You don't have enough mesos to delete the emblem.");
+                return;
+            }
+            user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMark((short) 0, (byte) 0, (short) 0, (byte) 0));
+        }
     }
 
     @Script("guild_union")
@@ -103,14 +137,26 @@ public final class GuildHQ extends ScriptHandler {
             sm.sayBoth("Once you have 2 guild leaders together, you'll need 5 million mesos to register the guild union.");
             sm.sayBoth("One more thing! It should be obvious, but you cannot create a new Guild Union if you already belong as a member to another one!");
         } else if (answer == 2) {
-            sm.sayNext("Only the guild leader can form a Guild Union.");
-            sm.sayNext("Only the party leader can form a Guild Union.");
+            if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
+                sm.sayNext("Only the guild leader can form a Guild Union.");
+                return;
+            }
+            if (!sm.getUser().isPartyBoss()) {
+                sm.sayNext("Only the party leader can form a Guild Union.");
+                return;
+            }
             sm.sayNext("You can create a Guild Union if your party consists of two people.");
             // TODO
         } else if (answer == 3) {
-            sm.sayNext("Only the Guild Union Master can expand the number of guilds in the Union.");
+            if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
+                sm.sayNext("Only the Guild Union Master can expand the number of guilds in the Union.");
+            }
+            // TODO
         } else if (answer == 4) {
-            sm.sayNext("Only the Guild Union Master may disband the Guild Union.");
+            if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
+                sm.sayNext("Only the Guild Union Master may disband the Guild Union.");
+            }
+            // TODO
         }
     }
 }

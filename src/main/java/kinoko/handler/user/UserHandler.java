@@ -26,6 +26,7 @@ import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendRequestType;
+import kinoko.server.guild.GuildRank;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.guild.GuildRequestType;
 import kinoko.server.header.InHeader;
@@ -1344,6 +1345,34 @@ public final class UserHandler {
                     user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
                     // Submit guild creation request
                     user.getConnectedServer().submitGuildRequest(user, GuildRequest.createNewGuild(guildIdResult.get(), guildName));
+                }
+            }
+            case SetMark -> {
+                final short markBg = inPacket.decodeShort();
+                final byte markBgColor = inPacket.decodeByte();
+                final short mark = inPacket.decodeShort();
+                final byte markColor = inPacket.decodeByte();
+                try (var locked = user.acquire()) {
+                    // Check if in guild HQ map
+                    if (user.getFieldId() != GuildHQ.GUILD_HEADQUARTERS) {
+                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Check if guild master
+                    if (user.getGuildRank() != GuildRank.MASTER) {
+                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Deduct emblem cost
+                    final InventoryManager im = user.getInventoryManager();
+                    if (!im.canAddMoney(-GameConstants.CREATE_EMBLEM_COST)) {
+                        user.write(GuildPacket.serverMsg("You do not have enough mesos to register a guild emblem."));
+                        return;
+                    }
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
+                    user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
+                    // Submit guild emblem request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMark(markBg, markBgColor, mark, markColor));
                 }
             }
             case null -> {

@@ -15,6 +15,7 @@ import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniGameRoom;
 import kinoko.server.dialog.miniroom.TradingRoom;
+import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
@@ -220,8 +221,8 @@ public final class User extends Life implements Lockable<User> {
         return getGuildId() != 0;
     }
 
-    public boolean isGuildMaster() {
-        return getGuildInfo().isMaster();
+    public GuildRank getGuildRank() {
+        return getGuildInfo().getGuildRank();
     }
 
     public Dialog getDialog() {

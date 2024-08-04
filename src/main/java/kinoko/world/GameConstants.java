@@ -55,6 +55,8 @@ public final class GameConstants {
     public static final int GUILD_CAPACITY_MIN = 20;
     public static final int GUILD_CAPACITY_MAX = 100;
     public static final int CREATE_GUILD_COST = 5_000_000;
+    public static final int CREATE_EMBLEM_COST = 500_000;
+    public static final int DELETE_EMBLEM_COST = 1_000_000;
     public static final int CREATE_UNION_COST = 5_000_000;
 
     public static final int MACRO_SYS_DATA_SIZE = 5;
