@@ -4,19 +4,21 @@ import kinoko.packet.world.GuildPacket;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.server.guild.GuildRequest;
 import kinoko.world.GameConstants;
+import kinoko.world.user.User;
 
 import java.util.Map;
 
-public final class Guild extends ScriptHandler {
-    public static final int CREATE_GUILD_COST = 5_000_000;
-    public static final int CREATE_UNION_COST = 5_000_000;
+public final class GuildHQ extends ScriptHandler {
+    public static final int GUILD_HEADQUARTERS = 200000301;
 
     @Script("guild_proc")
     public static void guild_proc(ScriptManager sm) {
         // Heracle (2010007)
         //   Orbis : Guild Headquarters <Hall of Fame> (200000301)
-        if (!sm.getUser().hasGuild()) {
+        final User user = sm.getUser();
+        if (!user.hasGuild()) {
             sm.sayNext("Hey...would you happen to be interested in GUILDS by any chance?");
             final int answer = sm.askMenu(null, Map.of( // null shows a bar
                     0, "What's a guild?",
@@ -28,10 +30,10 @@ public final class Guild extends ScriptHandler {
                 // sm.sayBoth("There are a variety of benefits that you can get through guild activities. For example, you can obtain a guild skill or an item that is exclusive to guilds.");
             } else if (answer == 1) {
                 sm.sayNext("You must be at least Lv. 101 to create a guild.");
-                sm.sayBoth(String.format("You also need %,d mesos. This is the registration fee.", CREATE_GUILD_COST));
+                sm.sayBoth(String.format("You also need %,d mesos. This is the registration fee.", GameConstants.CREATE_GUILD_COST));
                 sm.sayBoth("So, come see me if you would like to register a guild! Oh, and of course you can't be already registered to another guild!");
             } else if (answer == 2) {
-                if (!sm.askYesNo(String.format("Oh! So you're here to register a guild... You need %,d mesos to register a guild. I trust that you are ready. Would you like to create a guild?", CREATE_GUILD_COST))) {
+                if (!sm.askYesNo(String.format("Oh! So you're here to register a guild... You need %,d mesos to register a guild. I trust that you are ready. Would you like to create a guild?", GameConstants.CREATE_GUILD_COST))) {
                     sm.sayNext("You're not ready yet? Come back to me when you want to create a guild.");
                     return;
                 }
@@ -39,13 +41,12 @@ public final class Guild extends ScriptHandler {
                     sm.sayNext("Hey, you level is a bit low to be a guild leader. You need to be at least level 101 to create a guild.");
                     return;
                 }
-                if (!sm.canAddMoney(-CREATE_GUILD_COST)) {
+                if (!sm.canAddMoney(-GameConstants.CREATE_GUILD_COST)) {
                     sm.sayNext("Please check again. You'll need to pay the service fee to create and register a guild.");
                     return;
                 }
                 sm.sayNext("Enter the name of your guild, and your guild will be created. The guild will also be officially registered under our Guild Headquarters, so best of luck to you and your guild!");
                 sm.write(GuildPacket.inputGuildName());
-                // TODO
             }
         } else {
             final int answer = sm.askMenu("What do you need help with?", Map.of(
@@ -53,6 +54,10 @@ public final class Guild extends ScriptHandler {
                     1, "I want to disband the guild.",
                     2, "I want to change the guild leader."
             ));
+            if (!user.isGuildMaster()) {
+                sm.sayNext("Hey, you're not the Guild Master!! This decision can only be made by the Guild Master.");
+                return;
+            }
             if (answer == 0) {
                 sm.sayNext(String.format("Are you here because you want to expand your guild? To increase the number of people you can accept into your guild, you'll have to re-register. You'll also have to pay a fee. Just so you know, the absolute maximum size for a guild is %d members.", GameConstants.GUILD_CAPACITY_MAX));
                 if (!sm.askYesNo("#TODO")) {
@@ -68,7 +73,7 @@ public final class Guild extends ScriptHandler {
                     sm.sayNext("Good choice. You can't just give up on a guild that you build yourself...");
                     return;
                 }
-                // TODO
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.removeGuild(user.getGuildId()));
             }
         }
     }

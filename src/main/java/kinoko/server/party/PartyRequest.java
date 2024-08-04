@@ -55,19 +55,19 @@ public final class PartyRequest implements Encodable {
 
     public static PartyRequest decode(InPacket inPacket) {
         final int type = inPacket.decodeByte();
-        final PartyRequest partyRequest = new PartyRequest(PartyRequestType.getByValue(type));
-        switch (partyRequest.requestType) {
+        final PartyRequest request = new PartyRequest(PartyRequestType.getByValue(type));
+        switch (request.requestType) {
             case LoadParty -> {
-                partyRequest.partyId = inPacket.decodeInt();
+                request.partyId = inPacket.decodeInt();
             }
             case CreateNewParty, WithdrawParty -> {
                 // no decodes
             }
             case JoinParty, KickParty, ChangePartyBoss -> {
-                partyRequest.characterId = inPacket.decodeInt();
+                request.characterId = inPacket.decodeInt();
             }
             case InviteParty -> {
-                partyRequest.characterName = inPacket.decodeString();
+                request.characterName = inPacket.decodeString();
             }
             case null -> {
                 throw new IllegalStateException(String.format("Unknown party request type %d", type));
@@ -76,7 +76,7 @@ public final class PartyRequest implements Encodable {
                 throw new IllegalStateException(String.format("Unhandled party request type %d", type));
             }
         }
-        return partyRequest;
+        return request;
     }
 
     public static PartyRequest loadParty(int partyId) {

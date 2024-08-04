@@ -8,10 +8,14 @@ import kinoko.packet.CentralPacket;
 import kinoko.packet.field.MessengerPacket;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.FriendPacket;
+import kinoko.packet.world.GuildPacket;
 import kinoko.packet.world.PartyPacket;
 import kinoko.server.friend.Friend;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendStatus;
+import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildRank;
+import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.messenger.Messenger;
 import kinoko.server.messenger.MessengerRequest;
@@ -29,6 +33,7 @@ import kinoko.server.party.PartyResultType;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
+import kinoko.world.user.GuildInfo;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,6 +76,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 case ServerPacketBroadcast -> handleServerPacketBroadcast(remoteServerNode, inPacket);
                 case MessengerRequest -> handleMessengerRequest(remoteServerNode, inPacket);
                 case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
+                case GuildRequest -> handleGuildRequest(remoteServerNode, inPacket);
                 case FriendRequest -> handleFriendRequest(remoteServerNode, inPacket);
                 case null -> log.error("Central Server received an unknown opcode : {}", op);
                 default -> log.error("Central Server received an unhandled header : {}", header);
@@ -161,32 +167,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         )));
     }
 
-    private void updatePartyMember(RemoteUser remoteUser) {
-        final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
-        if (partyResult.isEmpty()) {
-            return;
-        }
-        try (var lockedParty = partyResult.get().acquire()) {
-            // Check if still in party
-            final Party party = lockedParty.get();
-            if (!party.hasMember(remoteUser.getCharacterId())) {
-                remoteUser.setPartyId(0);
-                return;
-            }
-            // Update user for all members
-            party.updateMember(remoteUser);
-            final OutPacket outPacket = PartyPacket.loadPartyDone(party);
-            forEachPartyMember(party, (member, node) -> {
-                node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
-            });
-        }
-    }
-
     private void handleUserConnect(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
         centralServerNode.addUser(remoteUser);
         updateMessengerUser(remoteUser);
         updatePartyMember(remoteUser);
+        updateGuildMember(remoteUser, false);
         // Notify friends
         final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
         final List<Integer> characterIds = friendMap.values().stream()
@@ -204,6 +190,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         centralServerNode.updateUser(remoteUser);
         updateMessengerUser(remoteUser);
         updatePartyMember(remoteUser);
+        updateGuildMember(remoteUser, true);
     }
 
     private void handleUserDisconnect(RemoteServerNode remoteServerNode, InPacket inPacket) {
@@ -215,10 +202,11 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
         // Leave messenger
         leaveMessenger(remoteUser);
-        // Update party
+        // Update party and guild
         remoteUser.setChannelId(GameConstants.CHANNEL_OFFLINE);
         remoteUser.setFieldId(GameConstants.UNDEFINED_FIELD_ID);
         updatePartyMember(remoteUser);
+        updateGuildMember(remoteUser, false);
         // Notify friends
         final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
         final List<Integer> characterIds = friendMap.values().stream()
@@ -651,6 +639,82 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
     }
 
+    private void handleGuildRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final GuildRequest guildRequest = GuildRequest.decode(inPacket);
+        // Resolve requester user
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        if (remoteUserResult.isEmpty()) {
+            log.error("Failed to resolve user with character ID : {} for GuildRequest", characterId);
+            return;
+        }
+        final RemoteUser remoteUser = remoteUserResult.get();
+        switch (guildRequest.getRequestType()) {
+            case LoadGuild -> {
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
+                if (guildResult.isPresent()) {
+                    try (var lockedGuild = guildResult.get().acquire()) {
+                        final Guild guild = lockedGuild.get();
+                        guild.updateMember(remoteUser);
+                        remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(guild)));
+                    }
+                } else {
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(null)));
+                }
+            }
+            case CreateNewGuild -> {
+                final Optional<Guild> guildResult = centralServerNode.createNewGuild(guildRequest.getGuildId(), guildRequest.getGuildName(), remoteUser);
+                if (guildResult.isPresent()) {
+                    final Guild guild = guildResult.get();
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.createNewGuildDone(guild)));
+                } else {
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.createNewGuildUnknown())); // The problem has happened during the process of forming the guild... Plese try again later..
+                }
+            }
+            case RemoveGuild -> {
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
+                if (guildResult.isPresent()) {
+                    try (var lockedGuild = guildResult.get().acquire()) {
+                        final Guild guild = lockedGuild.get();
+                        // Check requester rank
+                        if (guild.getMember(remoteUser.getCharacterId()).getGuildRank() != GuildRank.MASTER) {
+                            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
+                            return;
+                        }
+                        // Remove guild from storage + database
+                        if (!centralServerNode.removeGuild(guild)) {
+                            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
+                            return;
+                        }
+                        // Update members
+                        for (int memberId : guild.getMemberIds()) {
+                            final Optional<RemoteUser> remoteMemberResult = centralServerNode.getUserByCharacterId(memberId);
+                            if (remoteMemberResult.isEmpty()) {
+                                continue;
+                            }
+                            final RemoteUser member = remoteMemberResult.get();
+                            final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(member.getChannelId());
+                            if (targetNodeResult.isEmpty()) {
+                                return;
+                            }
+                            final RemoteServerNode targetNode = targetNodeResult.get();
+                            targetNode.write(CentralPacket.guildResult(member.getCharacterId(), null));
+                            targetNode.write(CentralPacket.userPacketReceive(member.getCharacterId(), GuildPacket.removeGuildDone(guild.getGuildId())));
+                        }
+                    }
+                } else {
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
+                }
+            }
+        }
+    }
+
+
     private void handleFriendRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final FriendRequest friendRequest = FriendRequest.decode(inPacket);
@@ -813,6 +877,48 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
         try (var lockedMessenger = messengerResult.get().acquire()) {
             lockedMessenger.get().updateUser(remoteUser);
+        }
+    }
+
+    private void updatePartyMember(RemoteUser remoteUser) {
+        final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
+        if (partyResult.isEmpty()) {
+            return;
+        }
+        try (var lockedParty = partyResult.get().acquire()) {
+            // Check if still in party
+            final Party party = lockedParty.get();
+            if (!party.hasMember(remoteUser.getCharacterId())) {
+                remoteUser.setPartyId(0);
+                return;
+            }
+            // Update user for all members
+            party.updateMember(remoteUser);
+            final OutPacket outPacket = PartyPacket.loadPartyDone(party);
+            forEachPartyMember(party, (member, node) -> {
+                node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+            });
+        }
+    }
+
+    private void updateGuildMember(RemoteUser remoteUser, boolean isUpdate) {
+        final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+        if (guildResult.isEmpty()) {
+            return;
+        }
+        try (var lockedGuild = guildResult.get().acquire()) {
+            // Update user for all members
+            final Guild guild = lockedGuild.get();
+            guild.updateMember(remoteUser);
+            final List<Integer> guildMemberIds = isUpdate ?
+                    guild.getMemberIds() :
+                    guild.getMemberIds(remoteUser.getCharacterId());
+            final OutPacket outPacket = isUpdate ?
+                    GuildPacket.changeLevelOrJob(guild.getGuildId(), remoteUser.getCharacterId(), remoteUser.getLevel(), remoteUser.getJob()) :
+                    GuildPacket.notifyLoginOrLogout(guild.getGuildId(), remoteUser.getCharacterId(), remoteUser.getChannelId() != GameConstants.CHANNEL_OFFLINE);
+            for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
+                serverNode.write(CentralPacket.userPacketBroadcast(guildMemberIds, outPacket));
+            }
         }
     }
 

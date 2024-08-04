@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
 
-public class CassandraIdAccessor extends CassandraAccessor implements IdAccessor {
+public final class CassandraIdAccessor extends CassandraAccessor implements IdAccessor {
     public CassandraIdAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
     }

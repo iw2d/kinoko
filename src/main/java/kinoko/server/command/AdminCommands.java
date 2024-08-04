@@ -650,6 +650,7 @@ public final class AdminCommands {
             cs.setLevel((short) level);
             user.validateStat();
             user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
+            user.getConnectedServer().notifyUserUpdate(user);
         }
     }
 

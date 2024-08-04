@@ -89,11 +89,10 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
         final CodecRegistry registry = getSession().getContext().getCodecRegistry();
         final ResultSet updateResult = getSession().execute(
                 update(getKeyspace(), GuildTable.getTableName())
-                        .setColumn(GuildTable.GUILD_ID, literal(guild.getGuildId()))
                         .setColumn(GuildTable.GUILD_NAME, literal(guild.getGuildName()))
                         .setColumn(GuildTable.GUILD_NAME_INDEX, literal(lowerName(guild.getGuildName())))
                         .setColumn(GuildTable.GRADE_NAMES, literal(guild.getGradeNames()))
-                        .setColumn(GuildTable.MEMBERS, literal(guild.getGuildMembers()))
+                        .setColumn(GuildTable.MEMBERS, literal(guild.getGuildMembers(), registry))
                         .setColumn(GuildTable.MARK_BG, literal(guild.getMarkBg()))
                         .setColumn(GuildTable.MARK_BG_COLOR, literal(guild.getMarkBgColor()))
                         .setColumn(GuildTable.MARK, literal(guild.getMark()))

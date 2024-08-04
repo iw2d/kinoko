@@ -30,7 +30,7 @@ public enum CentralHeader {
     MessengerResult,
     PartyRequest,
     PartyResult,
-    GuildRequest, // TODO
+    GuildRequest,
     GuildResult,
     FriendRequest;
 

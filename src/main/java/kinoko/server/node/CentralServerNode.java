@@ -5,6 +5,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
 import kinoko.server.ServerConstants;
+import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildMember;
+import kinoko.server.guild.GuildRank;
+import kinoko.server.guild.GuildStorage;
 import kinoko.server.messenger.Messenger;
 import kinoko.server.messenger.MessengerStorage;
 import kinoko.server.messenger.MessengerUser;
@@ -32,8 +36,9 @@ public final class CentralServerNode extends Node {
     private final ServerStorage serverStorage = new ServerStorage();
     private final MigrationStorage migrationStorage = new MigrationStorage();
     private final UserStorage userStorage = new UserStorage();
-    private final PartyStorage partyStorage = new PartyStorage();
     private final MessengerStorage messengerStorage = new MessengerStorage();
+    private final PartyStorage partyStorage = new PartyStorage();
+    private final GuildStorage guildStorage = new GuildStorage();
 
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
@@ -109,6 +114,27 @@ public final class CentralServerNode extends Node {
     }
 
 
+    // MESSENGER METHODS -----------------------------------------------------------------------------------------------
+
+    public Messenger createNewMessenger(RemoteUser remoteUser, MessengerUser messengerUser) {
+        final Messenger messenger = new Messenger(messengerStorage.getNewMessengerId());
+        messenger.addUser(remoteUser, messengerUser);
+        messengerStorage.addMessenger(messenger);
+        return messenger;
+    }
+
+    public boolean removeMessenger(Messenger messenger) {
+        return messengerStorage.removeMessenger(messenger);
+    }
+
+    public Optional<Messenger> getMessengerById(int messengerId) {
+        if (messengerId == 0) {
+            return Optional.empty();
+        }
+        return messengerStorage.getMessengerById(messengerId);
+    }
+
+
     // PARTY METHODS ---------------------------------------------------------------------------------------------------
 
     public Party createNewParty(int partyId, RemoteUser remoteUser) {
@@ -129,24 +155,30 @@ public final class CentralServerNode extends Node {
     }
 
 
-    // MESSENGER METHODS -----------------------------------------------------------------------------------------------
+    // GUILD METHODS ---------------------------------------------------------------------------------------------------
 
-    public Messenger createNewMessenger(RemoteUser remoteUser, MessengerUser messengerUser) {
-        final Messenger messenger = new Messenger(messengerStorage.getNewMessengerId());
-        messenger.addUser(remoteUser, messengerUser);
-        messengerStorage.addMessenger(messenger);
-        return messenger;
-    }
-
-    public boolean removeMessenger(Messenger messenger) {
-        return messengerStorage.removeMessenger(messenger);
-    }
-
-    public Optional<Messenger> getMessengerById(int messengerId) {
-        if (messengerId == 0) {
+    public Optional<Guild> createNewGuild(int guildId, String guildName, RemoteUser remoteUser) {
+        final Guild guild = new Guild(guildId, guildName);
+        final GuildMember member = GuildMember.from(remoteUser);
+        member.setGuildRank(GuildRank.MASTER);
+        if (!guild.addMember(member)) {
+            throw new IllegalStateException("Could not add master to guild");
+        }
+        if (!guildStorage.addGuild(guild)) {
             return Optional.empty();
         }
-        return messengerStorage.getMessengerById(messengerId);
+        return Optional.of(guild);
+    }
+
+    public boolean removeGuild(Guild guild) {
+        return guildStorage.removeGuild(guild);
+    }
+
+    public Optional<Guild> getGuildById(int guildId) {
+        if (guildId == 0) {
+            return Optional.empty();
+        }
+        return guildStorage.getGuildById(guildId);
     }
 
 

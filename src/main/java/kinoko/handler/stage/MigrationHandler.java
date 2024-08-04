@@ -14,6 +14,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.cashshop.Gift;
 import kinoko.server.friend.FriendRequest;
+import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.messenger.MessengerRequest;
@@ -168,10 +169,21 @@ public final class MigrationHandler {
                 user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
                 // Load messenger from central server
-                channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
+                if (user.getMessengerId() != 0) {
+                    channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
+                }
 
                 // Load party from central server
-                channelServerNode.submitPartyRequest(user, PartyRequest.loadParty(user.getCharacterData().getPartyId()));
+                final int partyId = user.getCharacterData().getPartyId();
+                if (partyId != 0) {
+                    channelServerNode.submitPartyRequest(user, PartyRequest.loadParty(partyId));
+                }
+
+                // Load guild from central server
+                final int guildId = user.getCharacterData().getGuildId();
+                if (guildId != 0) {
+                    channelServerNode.submitGuildRequest(user, GuildRequest.loadGuild(guildId));
+                }
 
                 // Load friends from central server
                 channelServerNode.submitFriendRequest(user, FriendRequest.loadFriend());

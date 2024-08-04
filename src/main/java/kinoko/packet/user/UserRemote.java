@@ -9,6 +9,7 @@ import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.*;
 import kinoko.world.user.CharacterData;
+import kinoko.world.user.GuildInfo;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -205,6 +206,21 @@ public final class UserRemote {
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(user.getHp());
         outPacket.encodeInt(user.getMaxHp());
+        return outPacket;
+    }
+
+    public static OutPacket guildNameChanged(GuildInfo guildInfo) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserGuildNameChanged);
+        outPacket.encodeString(guildInfo != null ? guildInfo.getGuildName() : ""); // sGuildName
+        return outPacket;
+    }
+
+    public static OutPacket guildMarkChanged(GuildInfo guildInfo) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserGuildMarkChanged);
+        outPacket.encodeShort(guildInfo != null ? guildInfo.getMarkBg() : 0); // nGuildMarkBg
+        outPacket.encodeByte(guildInfo != null ? guildInfo.getMarkBgColor() : 0); // nGuildMarkBgColor
+        outPacket.encodeShort(guildInfo != null ? guildInfo.getMark() : 0); // nGuildMark
+        outPacket.encodeByte(guildInfo != null ? guildInfo.getMarkColor() : 0); // nGuildMarkColor
         return outPacket;
     }
 

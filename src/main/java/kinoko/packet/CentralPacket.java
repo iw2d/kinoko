@@ -1,6 +1,7 @@
 package kinoko.packet;
 
 import kinoko.server.friend.FriendRequest;
+import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
@@ -9,6 +10,7 @@ import kinoko.server.node.RemoteServerNode;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.user.RemoteUser;
+import kinoko.world.user.GuildInfo;
 import kinoko.world.user.PartyInfo;
 
 import java.util.List;
@@ -205,6 +207,23 @@ public final class CentralPacket {
         outPacket.encodeByte(partyInfo != null);
         if (partyInfo != null) {
             partyInfo.encode(outPacket);
+        }
+        return outPacket;
+    }
+
+    public static OutPacket guildRequest(int characterId, GuildRequest guildRequest) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.GuildRequest);
+        outPacket.encodeInt(characterId);
+        guildRequest.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket guildResult(int characterId, GuildInfo guildInfo) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.GuildResult);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeByte(guildInfo != null);
+        if (guildInfo != null) {
+            guildInfo.encode(outPacket);
         }
         return outPacket;
     }

@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface GuildAccessor {
     Optional<Guild> getGuildById(int guildId);
 
-    boolean checkGuildNameAvailable(String guildName);
+    boolean checkGuildNameAvailable(String name);
 
     boolean newGuild(Guild guild);
 

@@ -13,6 +13,7 @@ import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.script.GuildHQ;
 import kinoko.script.common.ScriptAnswer;
 import kinoko.script.common.ScriptDispatcher;
 import kinoko.script.common.ScriptMessageType;
@@ -25,6 +26,7 @@ import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendRequestType;
+import kinoko.server.guild.GuildRequest;
 import kinoko.server.guild.GuildRequestType;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
@@ -1301,9 +1303,48 @@ public final class UserHandler {
         switch (requestType) {
             case CheckGuildName -> {
                 final String guildName = inPacket.decodeString(); // sGuildName
-            }
-            case CreateNewGuild -> {
-
+                try (var locked = user.acquire()) {
+                    // Check if in guild HQ map
+                    if (user.getFieldId() != GuildHQ.GUILD_HEADQUARTERS) {
+                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Check if already in guild
+                    if (user.hasGuild()) {
+                        user.write(GuildPacket.createNewGuildAlreadyJoined()); // Already joined the guild.
+                        return;
+                    }
+                    // Check level requirement
+                    if (user.getLevel() < 101) {
+                        user.write(GuildPacket.createNewGuildBeginner()); // You cannot make a guild due to the limitation of minimum level requirement.
+                        return;
+                    }
+                    // Check for creation cost
+                    final InventoryManager im = user.getInventoryManager();
+                    if (!im.canAddMoney(-GameConstants.CREATE_GUILD_COST)) {
+                        user.write(GuildPacket.serverMsg("You do not have enough mesos to create a guild."));
+                        return;
+                    }
+                    // Check if guild name is available
+                    if (!DatabaseManager.guildAccessor().checkGuildNameAvailable(guildName)) {
+                        user.write(GuildPacket.checkGuildNameAlreadyUsed()); // The name is already in use... Please try other ones....
+                        return;
+                    }
+                    // Resolve new guild ID
+                    final Optional<Integer> guildIdResult = DatabaseManager.idAccessor().nextGuildId();
+                    if (guildIdResult.isEmpty()) {
+                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Deduct creation cost
+                    if (!im.addMoney(-GameConstants.CREATE_GUILD_COST)) {
+                        throw new IllegalStateException("Could not deduct guild creation cost");
+                    }
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
+                    user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
+                    // Submit guild creation request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.createNewGuild(guildIdResult.get(), guildName));
+                }
             }
             case null -> {
                 log.error("Unknown guild request type : {}", type);

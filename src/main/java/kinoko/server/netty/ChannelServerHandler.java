@@ -16,6 +16,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
 import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.user.GuildInfo;
 import kinoko.world.user.PartyInfo;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -60,6 +61,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
                 case ServerPacketBroadcast -> handleServerPacketBroadcast(inPacket);
                 case MessengerResult -> handleMessengerResult(inPacket);
                 case PartyResult -> handlePartyResult(inPacket);
+                case GuildResult -> handleGuildResult(inPacket);
                 case null -> {
                     log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);
                 }
@@ -193,6 +195,25 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             if (user.getTownPortal() != null && user.getTownPortal().getTownField() == user.getField()) {
                 user.write(FieldPacket.townPortalRemoved(user, false));
             }
+        }
+    }
+
+    private void handleGuildResult(InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final boolean hasGuild = inPacket.decodeBoolean();
+        final GuildInfo guildInfo = hasGuild ? GuildInfo.decode(inPacket) : null;
+        // Resolve target user
+        final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
+        if (targetUserResult.isEmpty()) {
+            log.error("Could not resolve target user for GuildResult");
+            return;
+        }
+        try (var locked = targetUserResult.get().acquire()) {
+            final User user = locked.get();
+            // Set guild info and broadcast
+            user.setGuildInfo(guildInfo);
+            user.getField().broadcastPacket(UserRemote.guildNameChanged(guildInfo), user);
+            user.getField().broadcastPacket(UserRemote.guildMarkChanged(guildInfo), user);
         }
     }
 }

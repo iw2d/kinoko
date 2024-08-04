@@ -53,20 +53,20 @@ public final class MessengerRequest implements Encodable {
 
     public static MessengerRequest decode(InPacket inPacket) {
         final int type = inPacket.decodeByte();
-        final MessengerRequest messengerRequest = new MessengerRequest(MessengerProtocol.getByValue(type));
-        switch (messengerRequest.requestType) {
+        final MessengerRequest request = new MessengerRequest(MessengerProtocol.getByValue(type));
+        switch (request.requestType) {
             case MSMP_Enter -> {
-                messengerRequest.messengerId = inPacket.decodeInt();
-                messengerRequest.messengerUser = MessengerUser.decode(inPacket);
+                request.messengerId = inPacket.decodeInt();
+                request.messengerUser = MessengerUser.decode(inPacket);
             }
             case MSMP_Leave, MSMP_Migrated -> {
                 // no decodes
             }
             case MSMP_Chat -> {
-                messengerRequest.message = inPacket.decodeString();
+                request.message = inPacket.decodeString();
             }
             case MSMP_Avatar -> {
-                messengerRequest.messengerUser = MessengerUser.decode(inPacket);
+                request.messengerUser = MessengerUser.decode(inPacket);
             }
             case null -> {
                 throw new IllegalStateException(String.format("Unknown messenger request type %d", type));
@@ -75,14 +75,14 @@ public final class MessengerRequest implements Encodable {
                 throw new IllegalStateException(String.format("Unhandled messenger request type %d", type));
             }
         }
-        return messengerRequest;
+        return request;
     }
 
     public static MessengerRequest enter(int messengerId, User user) {
-        final MessengerRequest messengerRequest = new MessengerRequest(MessengerProtocol.MSMP_Enter);
-        messengerRequest.messengerId = messengerId;
-        messengerRequest.messengerUser = MessengerUser.from(user);
-        return messengerRequest;
+        final MessengerRequest request = new MessengerRequest(MessengerProtocol.MSMP_Enter);
+        request.messengerId = messengerId;
+        request.messengerUser = MessengerUser.from(user);
+        return request;
     }
 
     public static MessengerRequest leave() {
@@ -90,15 +90,15 @@ public final class MessengerRequest implements Encodable {
     }
 
     public static MessengerRequest chat(String message) {
-        final MessengerRequest messengerRequest = new MessengerRequest(MessengerProtocol.MSMP_Chat);
-        messengerRequest.message = message;
-        return messengerRequest;
+        final MessengerRequest request = new MessengerRequest(MessengerProtocol.MSMP_Chat);
+        request.message = message;
+        return request;
     }
 
     public static MessengerRequest avatar(User user) {
-        final MessengerRequest messengerRequest = new MessengerRequest(MessengerProtocol.MSMP_Avatar);
-        messengerRequest.messengerUser = MessengerUser.from(user);
-        return messengerRequest;
+        final MessengerRequest request = new MessengerRequest(MessengerProtocol.MSMP_Avatar);
+        request.messengerUser = MessengerUser.from(user);
+        return request;
     }
 
     public static MessengerRequest migrated() {

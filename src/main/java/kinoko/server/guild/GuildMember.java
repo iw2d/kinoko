@@ -1,6 +1,7 @@
 package kinoko.server.guild;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.server.user.RemoteUser;
 import kinoko.util.Encodable;
 
 public final class GuildMember implements Encodable {
@@ -73,12 +74,24 @@ public final class GuildMember implements Encodable {
     @Override
     public void encode(OutPacket outPacket) {
         // GUILDMEMBER (37)
-        outPacket.encodeString(characterName); // sCharacterName
+        outPacket.encodeString(characterName, 13); // sCharacterName
         outPacket.encodeInt(job); // nJob
         outPacket.encodeInt(level); // nLevel
         outPacket.encodeInt(guildRank.getValue()); // nGrade
         outPacket.encodeInt(online); // bOnline
         outPacket.encodeInt(0); // nCommitment
         outPacket.encodeInt(allianceRank.getValue()); // nAllianceGrade
+    }
+
+    public static GuildMember from(RemoteUser remoteUser) {
+        return new GuildMember(
+                remoteUser.getCharacterId(),
+                remoteUser.getCharacterName(),
+                remoteUser.getJob(),
+                remoteUser.getLevel(),
+                true,
+                GuildRank.MEMBER3,
+                GuildRank.NONE
+        );
     }
 }

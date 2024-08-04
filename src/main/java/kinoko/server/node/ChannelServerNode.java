@@ -14,6 +14,7 @@ import kinoko.server.field.ChannelFieldStorage;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceStorage;
 import kinoko.server.friend.FriendRequest;
+import kinoko.server.guild.GuildRequest;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
@@ -167,6 +168,10 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitPartyRequest(User user, PartyRequest partyRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.partyRequest(user.getCharacterId(), partyRequest));
+    }
+
+    public void submitGuildRequest(User user, GuildRequest guildRequest) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.guildRequest(user.getCharacterId(), guildRequest));
     }
 
     public void submitFriendRequest(User user, FriendRequest friendRequest) {

@@ -1,7 +1,7 @@
 package kinoko.server.guild;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.server.party.Party;
+import kinoko.server.user.RemoteUser;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
@@ -13,8 +13,9 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Guild instance managed by CentralServerNode.
  */
-public final class Guild implements Encodable, Lockable<Party> {
+public final class Guild implements Encodable, Lockable<Guild> {
     public static final List<String> DEFAULT_GRADE_NAMES = List.of("Master", "Jr.Master", "Member", "Member", "Member");
+    public static final GuildMember EMPTY_MEMBER = new GuildMember(0, "", 0, 0, false, GuildRank.NONE, GuildRank.NONE);
     public static final Comparator<GuildMember> MEMBER_COMPARATOR = Comparator.comparing(GuildMember::getGuildRank)
             .thenComparing(Comparator.comparing(GuildMember::getLevel).reversed());
 
@@ -44,6 +45,7 @@ public final class Guild implements Encodable, Lockable<Party> {
         this.gradeNames = new ArrayList<>(DEFAULT_GRADE_NAMES);
         this.guildMembers = new HashMap<>();
         this.memberMax = GameConstants.GUILD_CAPACITY_MIN;
+        this.level = 1;
     }
 
     public int getGuildId() {
@@ -146,8 +148,23 @@ public final class Guild implements Encodable, Lockable<Party> {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
+    public List<Integer> getMemberIds() {
+        return guildMembers.keySet().stream().toList();
+    }
+
+    public List<Integer> getMemberIds(int exceptId) {
+        return guildMembers.keySet().stream()
+                .filter((id) -> id != exceptId)
+                .toList();
+    }
+
+    public GuildMember getMember(int characterId) {
+        final GuildMember member = guildMembers.get(characterId);
+        return member != null ? member : EMPTY_MEMBER;
+    }
+
     public boolean addMember(GuildMember guildMember) {
-        if (getMemberMax() >= guildMembers.size()) {
+        if (guildMembers.size() >= getMemberMax()) {
             return false;
         }
         if (guildMembers.containsKey(guildMember.getCharacterId())) {
@@ -155,6 +172,15 @@ public final class Guild implements Encodable, Lockable<Party> {
         }
         guildMembers.put(guildMember.getCharacterId(), guildMember);
         return true;
+    }
+
+    public void updateMember(RemoteUser remoteUser) {
+        final GuildMember member = guildMembers.get(remoteUser.getCharacterId());
+        if (member != null) {
+            member.setJob(remoteUser.getJob());
+            member.setLevel(remoteUser.getLevel());
+            member.setOnline(remoteUser.getChannelId() != GameConstants.CHANNEL_OFFLINE);
+        }
     }
 
     @Override

@@ -220,6 +220,10 @@ public final class User extends Life implements Lockable<User> {
         return getGuildId() != 0;
     }
 
+    public boolean isGuildMaster() {
+        return getGuildInfo().isMaster();
+    }
+
     public Dialog getDialog() {
         return dialog;
     }
