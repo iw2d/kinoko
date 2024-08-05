@@ -905,6 +905,37 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     });
                 }
             }
+            case IncMaxMemberNum -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.incMaxMemberNumUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check requester rank
+                    if (guild.getMember(remoteUser.getCharacterId()).getGuildRank() != GuildRank.MASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not the master of the guild.")));
+                        return;
+                    }
+                    // Check that max member can be increased
+                    if (guild.getMemberMax() >= GameConstants.GUILD_CAPACITY_MAX || guild.getMemberMax() >= guildRequest.getMemberMax()) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.incMaxMemberNumUnknown())); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Set guild capacity
+                    guild.setMemberMax(guildRequest.getMemberMax());
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.incMaxMemberNumDone(guild.getGuildId(), guild.getMemberMax());
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.guildResult(member.getCharacterId(), GuildInfo.from(guild, member.getCharacterId())));
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                }
+            }
             case SetGradeName -> {
                 // Resolve guild
                 final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
@@ -918,6 +949,49 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     guild.setGradeNames(guildRequest.getGradeNames());
                     final OutPacket outPacket = GuildPacket.setGradeNameDone(guild.getGuildId(), guild.getGradeNames());
                     forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                }
+            }
+            case SetMemberGrade -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMemberGradeUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Resolve target
+                    if (!guild.hasMember(guildRequest.getTargetId())) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMemberGradeUnknown())); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    final GuildMember targetMember = guild.getMember(guildRequest.getTargetId());
+                    // Check if requester can modify target's rank
+                    if (targetMember.getGuildRank() == GuildRank.MASTER || guildRequest.getGuildRank() == GuildRank.MASTER || guildRequest.getGuildRank() == GuildRank.NONE) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMemberGradeUnknown())); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    final GuildRank requesterRank = guild.getMember(remoteUser.getCharacterId()).getGuildRank();
+                    if ((requesterRank != GuildRank.MASTER && requesterRank != GuildRank.SUBMASTER) ||
+                            (requesterRank != GuildRank.MASTER && targetMember.getGuildRank() == GuildRank.SUBMASTER) ||
+                            (requesterRank != GuildRank.MASTER && guildRequest.getGuildRank() == GuildRank.SUBMASTER)) {
+                        // Non-master/submaster trying to modify rank; Non-master trying to modify rank of submaster; Non-master trying to modify rank to submaster
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not the master of the guild.")));
+                        return;
+                    }
+                    // Update rank
+                    targetMember.setGuildRank(guildRequest.getGuildRank());
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.setMemberGradeDone(guild.getGuildId(), targetMember);
+                    forEachGuildMember(guild, (member, node) -> {
+                        if (member.getCharacterId() == targetMember.getCharacterId()) {
+                            // Update target's guild rank
+                            node.write(CentralPacket.guildResult(member.getCharacterId(), GuildInfo.from(guild, member.getCharacterId())));
+                        }
                         node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                     });
                     // Save to database

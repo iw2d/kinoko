@@ -132,6 +132,17 @@ public final class GuildPacket {
         return outPacket;
     }
 
+    public static OutPacket incMaxMemberNumDone(int guildId, int memberMax) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.IncMaxMemberNum_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeByte(memberMax);
+        return outPacket;
+    }
+
+    public static OutPacket incMaxMemberNumUnknown() {
+        return GuildPacket.of(GuildResultType.IncMaxMemberNum_Unknown);
+    }
+
     public static OutPacket changeLevelOrJob(int guildId, int characterId, int level, int job) {
         final OutPacket outPacket = GuildPacket.of(GuildResultType.ChangeLevelOrJob);
         outPacket.encodeInt(guildId);
@@ -160,6 +171,18 @@ public final class GuildPacket {
 
     public static OutPacket setGradeNameUnknown() {
         return GuildPacket.of(GuildResultType.SetGradeName_Unknown);
+    }
+
+    public static OutPacket setMemberGradeDone(int guildId, GuildMember member) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.SetMemberGrade_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeInt(member.getCharacterId());
+        outPacket.encodeByte(member.getGuildRank().getValue());
+        return outPacket;
+    }
+
+    public static OutPacket setMemberGradeUnknown() {
+        return GuildPacket.of(GuildResultType.SetMemberGrade_Unknown);
     }
 
     public static OutPacket setMarkDone(int guildId, short markBg, byte markBgColor, short mark, byte markColor) {

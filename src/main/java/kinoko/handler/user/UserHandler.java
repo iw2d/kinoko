@@ -1421,6 +1421,23 @@ public final class UserHandler {
                     user.getConnectedServer().submitGuildRequest(user, GuildRequest.setGradeName(gradeNames));
                 }
             }
+            case SetMemberGrade -> {
+                final int targetId = inPacket.decodeInt();
+                final GuildRank guildRank = GuildRank.getByValue(inPacket.decodeByte());
+                if (guildRank == GuildRank.MASTER || guildRank == GuildRank.NONE) {
+                    user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var locked = user.acquire()) {
+                    // Check if guild master or submaster
+                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                        return;
+                    }
+                    // Submit set member grade request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMemberGrade(targetId, guildRank));
+                }
+            }
             case SetMark -> {
                 final short markBg = inPacket.decodeShort();
                 final byte markBgColor = inPacket.decodeByte();

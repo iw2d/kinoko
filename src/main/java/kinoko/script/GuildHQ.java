@@ -61,10 +61,20 @@ public final class GuildHQ extends ScriptHandler {
             }
             if (answer == 0) {
                 sm.sayNext(String.format("Are you here because you want to expand your guild? To increase the number of people you can accept into your guild, you'll have to re-register. You'll also have to pay a fee. Just so you know, the absolute maximum size for a guild is %d members.", GameConstants.GUILD_CAPACITY_MAX));
-                if (!sm.askYesNo("#TODO")) {
-
+                final int currentCapacity = user.getGuildInfo().getMemberMax();
+                if (currentCapacity >= GameConstants.GUILD_CAPACITY_MAX) {
+                    sm.sayNext("Your guild seems to have grown quite a bit. I cannot expand your guild any more...");
+                    return;
                 }
-                // TODO
+                final int expandCost = GameConstants.getGuildExpandCost(currentCapacity);
+                if (!sm.askYesNo(String.format("The service fee will only cost you #r%,d mesos#k. Would you like to expand your guild?", expandCost))) {
+                    return;
+                }
+                if (!sm.addMoney(-expandCost)) {
+                    sm.sayNext("Please check again. You'll need to pay the service fee in order to expand your guild and re-register it....");
+                    return;
+                }
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.incMaxMemberNum(currentCapacity + 5));
             } else if (answer == 1) {
                 if (!sm.askYesNo("Are you sure you want to break up your guild?\r\nRemember, once you break up your guild, it will be gone forever. Are you sure you still want to do it?")) {
                     sm.sayNext("Good choice. You can't just give up on a guild that you build yourself...");

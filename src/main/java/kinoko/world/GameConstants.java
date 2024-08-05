@@ -52,7 +52,7 @@ public final class GameConstants {
     public static final int PARTY_MAX = 6;
     public static final int EXPEDITION_MAX = 5;
     public static final int GUILD_GRADE_MAX = 5;
-    public static final int GUILD_CAPACITY_MIN = 20;
+    public static final int GUILD_CAPACITY_MIN = 10;
     public static final int GUILD_CAPACITY_MAX = 100;
     public static final int CREATE_GUILD_COST = 5_000_000;
     public static final int CREATE_EMBLEM_COST = 500_000;
@@ -162,6 +162,22 @@ public final class GameConstants {
             return Math.round(money * 0.992f); // 0.80%
         }
         return money;
+    }
+
+    public static int getGuildExpandCost(int memberMax) {
+        if (memberMax < 15) {
+            return 500_000;
+        } else if (memberMax < 20) {
+            return 1_500_000;
+        } else if (memberMax < 25) {
+            return 2_500_000;
+        } else if (memberMax < 30) {
+            return 3_500_000;
+        } else if (memberMax < 35) {
+            return 4_500_000;
+        } else {
+            return 5_000_000;
+        }
     }
 
     public static Tuple<Integer, Integer> getMoneyForMobLevel(int level) {

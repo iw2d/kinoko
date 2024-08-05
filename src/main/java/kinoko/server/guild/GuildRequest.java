@@ -14,6 +14,7 @@ public final class GuildRequest implements Encodable {
     private String guildName;
     private String guildNotice;
     private List<String> gradeNames;
+    private int memberMax;
     private short markBg;
     private byte markBgColor;
     private short mark;
@@ -22,6 +23,7 @@ public final class GuildRequest implements Encodable {
     private int inviterId;
     private int targetId;
     private String targetName;
+    private GuildRank guildRank;
 
     public GuildRequest(GuildRequestType requestType) {
         this.requestType = requestType;
@@ -45,6 +47,10 @@ public final class GuildRequest implements Encodable {
 
     public List<String> getGradeNames() {
         return gradeNames;
+    }
+
+    public int getMemberMax() {
+        return memberMax;
     }
 
     public short getMarkBg() {
@@ -75,6 +81,10 @@ public final class GuildRequest implements Encodable {
         return targetName;
     }
 
+    public GuildRank getGuildRank() {
+        return guildRank;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
@@ -96,10 +106,17 @@ public final class GuildRequest implements Encodable {
                 outPacket.encodeInt(targetId);
                 outPacket.encodeString(targetName);
             }
+            case IncMaxMemberNum -> {
+                outPacket.encodeInt(memberMax);
+            }
             case SetGradeName -> {
                 for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
                     outPacket.encodeString(gradeNames.get(i));
                 }
+            }
+            case SetMemberGrade -> {
+                outPacket.encodeInt(targetId);
+                outPacket.encodeByte(guildRank.getValue());
             }
             case SetMark -> {
                 outPacket.encodeShort(markBg);
@@ -134,11 +151,18 @@ public final class GuildRequest implements Encodable {
                 request.targetId = inPacket.decodeInt();
                 request.targetName = inPacket.decodeString();
             }
+            case IncMaxMemberNum -> {
+                request.memberMax = inPacket.decodeInt();
+            }
             case SetGradeName -> {
                 request.gradeNames = new ArrayList<>();
                 for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
                     request.gradeNames.add(inPacket.decodeString());
                 }
+            }
+            case SetMemberGrade -> {
+                request.targetId = inPacket.decodeInt();
+                request.guildRank = GuildRank.getByValue(inPacket.decodeByte());
             }
             case SetMark -> {
                 request.markBg = inPacket.decodeShort();
@@ -197,9 +221,22 @@ public final class GuildRequest implements Encodable {
         return request;
     }
 
+    public static GuildRequest incMaxMemberNum(int memberMax) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.IncMaxMemberNum);
+        request.memberMax = memberMax;
+        return request;
+    }
+
     public static GuildRequest setGradeName(List<String> gradeNames) {
         final GuildRequest request = new GuildRequest(GuildRequestType.SetGradeName);
         request.gradeNames = gradeNames;
+        return request;
+    }
+
+    public static GuildRequest setMemberGrade(int targetId, GuildRank guildRank) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.SetMemberGrade);
+        request.targetId = targetId;
+        request.guildRank = guildRank;
         return request;
     }
 
