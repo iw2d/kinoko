@@ -209,14 +209,16 @@ public final class UserRemote {
         return outPacket;
     }
 
-    public static OutPacket guildNameChanged(GuildInfo guildInfo) {
+    public static OutPacket guildNameChanged(User user, GuildInfo guildInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserGuildNameChanged);
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeString(guildInfo != null ? guildInfo.getGuildName() : ""); // sGuildName
         return outPacket;
     }
 
-    public static OutPacket guildMarkChanged(GuildInfo guildInfo) {
+    public static OutPacket guildMarkChanged(User user, GuildInfo guildInfo) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserGuildMarkChanged);
+        outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeShort(guildInfo != null ? guildInfo.getMarkBg() : 0); // nGuildMarkBg
         outPacket.encodeByte(guildInfo != null ? guildInfo.getMarkBgColor() : 0); // nGuildMarkBgColor
         outPacket.encodeShort(guildInfo != null ? guildInfo.getMark() : 0); // nGuildMark

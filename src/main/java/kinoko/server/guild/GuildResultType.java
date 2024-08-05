@@ -67,4 +67,13 @@ public enum GuildResultType {
     public final int getValue() {
         return value;
     }
+
+    public static GuildResultType getByValue(int value) {
+        for (GuildResultType type : values()) {
+            if (type.getValue() == value) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

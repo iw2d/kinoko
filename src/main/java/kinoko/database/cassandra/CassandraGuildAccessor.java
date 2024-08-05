@@ -90,6 +90,7 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .setColumn(GuildTable.GUILD_NAME_INDEX, literal(lowerName(guild.getGuildName())))
                         .setColumn(GuildTable.GRADE_NAMES, literal(guild.getGradeNames()))
                         .setColumn(GuildTable.MEMBERS, literal(guild.getGuildMembers(), registry))
+                        .setColumn(GuildTable.MEMBER_MAX, literal(guild.getMemberMax()))
                         .setColumn(GuildTable.MARK_BG, literal(guild.getMarkBg()))
                         .setColumn(GuildTable.MARK_BG_COLOR, literal(guild.getMarkBgColor()))
                         .setColumn(GuildTable.MARK, literal(guild.getMark()))

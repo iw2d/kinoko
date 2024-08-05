@@ -23,7 +23,8 @@ public final class Guild implements Encodable, Lockable<Guild> {
     private final int guildId;
     private final String guildName;
     private final List<String> gradeNames;
-    private final Map<Integer, GuildMember> guildMembers;
+    private final Map<Integer, GuildMember> guildMembers; // character ID -> guild member
+    private final Map<Integer, Integer> guildInvites; // invitee ID -> inviter ID
     private int memberMax;
 
     private int allianceId;
@@ -44,6 +45,7 @@ public final class Guild implements Encodable, Lockable<Guild> {
         this.guildName = guildName;
         this.gradeNames = new ArrayList<>(DEFAULT_GRADE_NAMES);
         this.guildMembers = new HashMap<>();
+        this.guildInvites = new HashMap<>();
         this.memberMax = GameConstants.GUILD_CAPACITY_MIN;
         this.level = 1;
     }
@@ -147,11 +149,19 @@ public final class Guild implements Encodable, Lockable<Guild> {
         return level;
     }
 
+    public void setLevel(byte level) {
+        this.level = level;
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
-    public void setLevel(byte level) {
-        this.level = level;
+    public void registerInvite(int inviterId, int targetId) {
+        guildInvites.put(targetId, inviterId);
+    }
+
+    public boolean unregisterInvite(int inviterId, int targetId) {
+        return guildInvites.remove(targetId) == inviterId;
     }
 
     public List<Integer> getMemberIds() {
@@ -164,20 +174,32 @@ public final class Guild implements Encodable, Lockable<Guild> {
                 .toList();
     }
 
+    public boolean hasMember(int characterId) {
+        return guildMembers.containsKey(characterId);
+    }
+
     public GuildMember getMember(int characterId) {
         final GuildMember member = guildMembers.get(characterId);
         return member != null ? member : EMPTY_MEMBER;
     }
 
-    public boolean addMember(GuildMember guildMember) {
+    public boolean canAddMember(int characterId) {
         if (guildMembers.size() >= getMemberMax()) {
             return false;
         }
-        if (guildMembers.containsKey(guildMember.getCharacterId())) {
+        return !guildMembers.containsKey(characterId);
+    }
+
+    public boolean addMember(GuildMember guildMember) {
+        if (!canAddMember(guildMember.getCharacterId())) {
             return false;
         }
         guildMembers.put(guildMember.getCharacterId(), guildMember);
         return true;
+    }
+
+    public void removeMember(GuildMember member) {
+        guildMembers.remove(member.getCharacterId());
     }
 
     public void updateMember(RemoteUser remoteUser) {

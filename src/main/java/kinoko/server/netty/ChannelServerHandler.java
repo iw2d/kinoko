@@ -212,8 +212,8 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             final User user = locked.get();
             // Set guild info and broadcast
             user.setGuildInfo(guildInfo);
-            user.getField().broadcastPacket(UserRemote.guildNameChanged(guildInfo), user);
-            user.getField().broadcastPacket(UserRemote.guildMarkChanged(guildInfo), user);
+            user.getField().broadcastPacket(UserRemote.guildNameChanged(user, guildInfo), user);
+            user.getField().broadcastPacket(UserRemote.guildMarkChanged(user, guildInfo), user);
         }
     }
 }

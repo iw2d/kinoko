@@ -29,6 +29,7 @@ import kinoko.server.friend.FriendRequestType;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.guild.GuildRequestType;
+import kinoko.server.guild.GuildResultType;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
@@ -1302,6 +1303,9 @@ public final class UserHandler {
         final int type = inPacket.decodeByte();
         final GuildRequestType requestType = GuildRequestType.getByValue(type);
         switch (requestType) {
+            case LoadGuild -> {
+                // handled in CentralServerHandler::handleGuildRequest
+            }
             case CheckGuildName -> {
                 final String guildName = inPacket.decodeString(); // sGuildName
                 try (var locked = user.acquire()) {
@@ -1347,6 +1351,61 @@ public final class UserHandler {
                     user.getConnectedServer().submitGuildRequest(user, GuildRequest.createNewGuild(guildIdResult.get(), guildName));
                 }
             }
+            case InviteGuild -> {
+                final String targetName = inPacket.decodeString();
+                try (var locked = user.acquire()) {
+                    // Check if guild master or submaster
+                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                        return;
+                    }
+                    // Submit invite guild request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.inviteGuild(targetName));
+                }
+            }
+            case JoinGuild -> {
+                final int inviterId = inPacket.decodeInt();
+                inPacket.decodeInt(); // dwCharacterId
+                try (var locked = user.acquire()) {
+                    // Check if already in guild
+                    if (user.hasGuild()) {
+                        user.write(GuildPacket.joinGuildAlreadyJoined());
+                        return;
+                    }
+                    // Submit join guild request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.joinGuild(inviterId));
+                }
+            }
+            case WithdrawGuild -> {
+                inPacket.decodeInt(); // dwCharacterId
+                inPacket.decodeString(); // sCharacterName
+                try (var locked = user.acquire()) {
+                    // Check if user can leave the guild
+                    if (!user.hasGuild()) {
+                        user.write(GuildPacket.withdrawGuildNotJoined()); // You are not in the guild.
+                        return;
+                    }
+                    if (user.getGuildRank() == GuildRank.MASTER) {
+                        user.write(GuildPacket.serverMsg("You cannot quit the guild since you are the master of the guild."));
+                        return;
+                    }
+                    // Submit withdraw guild request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.withdrawGuild(user.getGuildId()));
+                }
+            }
+            case KickGuild -> {
+                final int targetId = inPacket.decodeInt();
+                final String targetName = inPacket.decodeString();
+                try (var locked = user.acquire()) {
+                    // Check if guild master or submaster
+                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                        return;
+                    }
+                    // Submit invite guild request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.kickGuild(targetId, targetName));
+                }
+            }
             case SetGradeName -> {
                 final List<String> gradeNames = new ArrayList<>();
                 for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
@@ -1355,7 +1414,7 @@ public final class UserHandler {
                 try (var locked = user.acquire()) {
                     // Check if guild master
                     if (user.getGuildRank() != GuildRank.MASTER) {
-                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
                         return;
                     }
                     // Submit guild grade name request
@@ -1375,7 +1434,7 @@ public final class UserHandler {
                     }
                     // Check if guild master
                     if (user.getGuildRank() != GuildRank.MASTER) {
-                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
                         return;
                     }
                     // Deduct emblem cost
@@ -1393,9 +1452,9 @@ public final class UserHandler {
             case SetNotice -> {
                 final String notice = inPacket.decodeString();
                 try (var locked = user.acquire()) {
-                    // Check if guild master
+                    // Check if guild master or submaster
                     if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
-                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
                         return;
                     }
                     // Submit guild notice request
@@ -1407,6 +1466,26 @@ public final class UserHandler {
             }
             default -> {
                 log.error("Unhandled guild request type : {}", requestType);
+            }
+        }
+    }
+
+    @Handler(InHeader.GuildResult)
+    public static void handleGuildResult(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final GuildResultType resultType = GuildResultType.getByValue(type);
+        switch (resultType) {
+            case InviteGuild_BlockedUser, InviteGuild_AlreadyInvited, InviteGuild_Rejected -> {
+                final String inviterName = inPacket.decodeString();
+                inPacket.decodeString(); // sCharacterName
+                // Update inviter
+                user.getConnectedServer().submitUserPacketRequest(inviterName, GuildPacket.inviteGuildFailed(resultType, user.getCharacterName()));
+            }
+            case null -> {
+                log.error("Unknown guild result type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled guild result type : {}", resultType);
             }
         }
     }

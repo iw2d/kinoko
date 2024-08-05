@@ -12,12 +12,16 @@ public final class GuildRequest implements Encodable {
     private final GuildRequestType requestType;
     private int guildId;
     private String guildName;
+    private String guildNotice;
     private List<String> gradeNames;
     private short markBg;
     private byte markBgColor;
     private short mark;
     private byte markColor;
-    private String notice;
+
+    private int inviterId;
+    private int targetId;
+    private String targetName;
 
     public GuildRequest(GuildRequestType requestType) {
         this.requestType = requestType;
@@ -33,6 +37,10 @@ public final class GuildRequest implements Encodable {
 
     public String getGuildName() {
         return guildName;
+    }
+
+    public String getGuildNotice() {
+        return guildNotice;
     }
 
     public List<String> getGradeNames() {
@@ -55,20 +63,38 @@ public final class GuildRequest implements Encodable {
         return markColor;
     }
 
-    public String getNewNotice() {
-        return notice;
+    public int getInviterId() {
+        return inviterId;
+    }
+
+    public int getTargetId() {
+        return targetId;
+    }
+
+    public String getTargetName() {
+        return targetName;
     }
 
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
         switch (requestType) {
-            case LoadGuild, RemoveGuild -> {
+            case LoadGuild, RemoveGuild, WithdrawGuild -> {
                 outPacket.encodeInt(guildId);
             }
             case CreateNewGuild -> {
                 outPacket.encodeInt(guildId);
                 outPacket.encodeString(guildName);
+            }
+            case InviteGuild -> {
+                outPacket.encodeString(targetName);
+            }
+            case JoinGuild -> {
+                outPacket.encodeInt(inviterId);
+            }
+            case KickGuild -> {
+                outPacket.encodeInt(targetId);
+                outPacket.encodeString(targetName);
             }
             case SetGradeName -> {
                 for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
@@ -82,7 +108,7 @@ public final class GuildRequest implements Encodable {
                 outPacket.encodeByte(markColor);
             }
             case SetNotice -> {
-                outPacket.encodeString(notice);
+                outPacket.encodeString(guildNotice);
             }
         }
     }
@@ -91,12 +117,22 @@ public final class GuildRequest implements Encodable {
         final int type = inPacket.decodeByte();
         final GuildRequest request = new GuildRequest(GuildRequestType.getByValue(type));
         switch (request.requestType) {
-            case LoadGuild, RemoveGuild -> {
+            case LoadGuild, RemoveGuild, WithdrawGuild -> {
                 request.guildId = inPacket.decodeInt();
             }
             case CreateNewGuild -> {
                 request.guildId = inPacket.decodeInt();
                 request.guildName = inPacket.decodeString();
+            }
+            case InviteGuild -> {
+                request.targetName = inPacket.decodeString();
+            }
+            case JoinGuild -> {
+                request.inviterId = inPacket.decodeInt();
+            }
+            case KickGuild -> {
+                request.targetId = inPacket.decodeInt();
+                request.targetName = inPacket.decodeString();
             }
             case SetGradeName -> {
                 request.gradeNames = new ArrayList<>();
@@ -111,7 +147,7 @@ public final class GuildRequest implements Encodable {
                 request.markColor = inPacket.decodeByte();
             }
             case SetNotice -> {
-                request.notice = inPacket.decodeString();
+                request.guildNotice = inPacket.decodeString();
             }
         }
         return request;
@@ -127,6 +163,31 @@ public final class GuildRequest implements Encodable {
         final GuildRequest request = new GuildRequest(GuildRequestType.CreateNewGuild);
         request.guildId = guildId;
         request.guildName = guildName;
+        return request;
+    }
+
+    public static GuildRequest inviteGuild(String targetName) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.InviteGuild);
+        request.targetName = targetName;
+        return request;
+    }
+
+    public static GuildRequest joinGuild(int inviterId) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.JoinGuild);
+        request.inviterId = inviterId;
+        return request;
+    }
+
+    public static GuildRequest withdrawGuild(int guildId) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.WithdrawGuild);
+        request.guildId = guildId;
+        return request;
+    }
+
+    public static GuildRequest kickGuild(int targetId, String targetName) {
+        final GuildRequest request = new GuildRequest(GuildRequestType.KickGuild);
+        request.targetId = targetId;
+        request.targetName = targetName;
         return request;
     }
 
@@ -153,7 +214,7 @@ public final class GuildRequest implements Encodable {
 
     public static GuildRequest setNotice(String notice) {
         final GuildRequest request = new GuildRequest(GuildRequestType.SetNotice);
-        request.notice = notice;
+        request.guildNotice = notice;
         return request;
     }
 }

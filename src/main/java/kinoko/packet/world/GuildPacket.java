@@ -1,6 +1,7 @@
 package kinoko.packet.world;
 
 import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRequestType;
 import kinoko.server.guild.GuildResultType;
 import kinoko.server.header.OutHeader;
@@ -62,6 +63,58 @@ public final class GuildPacket {
         return GuildPacket.of(GuildResultType.CreateNewGuild_Unknown);
     }
 
+    public static OutPacket joinGuildDone(int guildId, GuildMember member) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.JoinGuild_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeInt(member.getCharacterId());
+        member.encode(outPacket);
+        return outPacket;
+    }
+
+    public static OutPacket joinGuildAlreadyJoined() {
+        return GuildPacket.of(GuildResultType.JoinGuild_AlreadyJoined);
+    }
+
+    public static OutPacket joinGuildAlreadyFull() {
+        return GuildPacket.of(GuildResultType.JoinGuild_AlreadyFull);
+    }
+
+    public static OutPacket joinGuildUnknown() {
+        return GuildPacket.of(GuildResultType.JoinGuild_Unknown);
+    }
+
+    public static OutPacket withdrawGuildDone(int guildId, GuildMember member) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.WithdrawGuild_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeInt(member.getCharacterId());
+        outPacket.encodeString(member.getCharacterName());
+        return outPacket;
+    }
+
+    public static OutPacket withdrawGuildNotJoined() {
+        return GuildPacket.of(GuildResultType.WithdrawGuild_NotJoined);
+    }
+
+    public static OutPacket withdrawGuildUnknown() {
+        return GuildPacket.of(GuildResultType.WithdrawGuild_Unknown);
+    }
+
+    public static OutPacket kickGuildDone(int guildId, GuildMember member) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.KickGuild_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeInt(member.getCharacterId());
+        outPacket.encodeString(member.getCharacterName());
+        return outPacket;
+    }
+
+    public static OutPacket kickGuildNotJoined() {
+        return GuildPacket.of(GuildResultType.KickGuild_NotJoined);
+    }
+
+    public static OutPacket kickGuildUnknown() {
+        return GuildPacket.of(GuildResultType.KickGuild_Unknown);
+    }
+
     public static OutPacket removeGuildDone(int guildId) {
         final OutPacket outPacket = GuildPacket.of(GuildResultType.RemoveGuild_Done);
         outPacket.encodeInt(guildId);
@@ -70,6 +123,13 @@ public final class GuildPacket {
 
     public static OutPacket removeGuildUnknown() {
         return GuildPacket.of(GuildResultType.RemoveGuild_Unknown);
+    }
+
+    public static OutPacket inviteGuildFailed(GuildResultType resultType, String characterName) {
+        assert resultType == GuildResultType.InviteGuild_BlockedUser || resultType == GuildResultType.InviteGuild_AlreadyInvited || resultType == GuildResultType.InviteGuild_Rejected;
+        final OutPacket outPacket = GuildPacket.of(resultType);
+        outPacket.encodeString(characterName);
+        return outPacket;
     }
 
     public static OutPacket changeLevelOrJob(int guildId, int characterId, int level, int job) {

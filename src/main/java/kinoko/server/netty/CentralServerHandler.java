@@ -14,9 +14,12 @@ import kinoko.server.friend.Friend;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendStatus;
 import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.CentralHeader;
+import kinoko.server.memo.Memo;
+import kinoko.server.memo.MemoType;
 import kinoko.server.messenger.Messenger;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.messenger.MessengerUser;
@@ -38,6 +41,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -653,55 +657,252 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             case LoadGuild -> {
                 // Load guild from storage / database
                 final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
-                if (guildResult.isPresent()) {
-                    try (var lockedGuild = guildResult.get().acquire()) {
-                        final Guild guild = lockedGuild.get();
-                        guild.updateMember(remoteUser);
-                        remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(guild)));
-                    }
-                } else {
+                if (guildResult.isEmpty()) {
+                    remoteUser.setGuildId(0);
                     remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(null)));
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    if (!guild.hasMember(remoteUser.getCharacterId())) {
+                        remoteUser.setGuildId(0);
+                        remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(null)));
+                        return;
+                    }
+                    guild.updateMember(remoteUser);
+                    remoteUser.setGuildId(guild.getGuildId());
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(guild)));
                 }
             }
             case CreateNewGuild -> {
                 // Create new guild in storage + database
                 final Optional<Guild> guildResult = centralServerNode.createNewGuild(guildRequest.getGuildId(), guildRequest.getGuildName(), remoteUser);
-                if (guildResult.isPresent()) {
-                    final Guild guild = guildResult.get();
-                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.createNewGuildDone(guild)));
-                } else {
+                if (guildResult.isEmpty()) {
                     remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.createNewGuildUnknown())); // The problem has happened during the process of forming the guild... Plese try again later..
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    remoteUser.setGuildId(guild.getGuildId());
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.createNewGuildDone(guild)));
+                }
+            }
+            case InviteGuild -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg(null))); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                // Resolve target
+                final String targetName = guildRequest.getTargetName();
+                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterName(targetName); // target name
+                if (targetResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg(String.format("Unable to find '%s'", targetName))));
+                    return;
+                }
+                final RemoteUser target = targetResult.get();
+                if (target.getGuildId() != 0) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg(String.format("'%s' is already in a guild.", targetName))));
+                    return;
+                }
+                // Resolve target node
+                final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(target.getChannelId());
+                if (targetNodeResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg(String.format("Unable to find '%s'", targetName))));
+                    return;
+                }
+                final RemoteServerNode targetNode = targetNodeResult.get();
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check requester rank
+                    final GuildRank guildRank = guild.getMember(remoteUser.getCharacterId()).getGuildRank();
+                    if (guildRank != GuildRank.MASTER && guildRank != GuildRank.SUBMASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not the master of the guild.")));
+                        return;
+                    }
+                    // Check capacity
+                    if (!guild.canAddMember(target.getCharacterId())) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You cannot invite more people to the guild.")));
+                        return;
+                    }
+                    // Register invite and send guild invite to target
+                    guild.registerInvite(remoteUser.getCharacterId(), target.getCharacterId());
+                    targetNodeResult.get().write(CentralPacket.userPacketReceive(target.getCharacterId(), GuildPacket.inviteGuild(remoteUser)));
+                }
+            }
+            case JoinGuild -> {
+                // Resolve inviter
+                final int inviterId = guildRequest.getInviterId();
+                final Optional<RemoteUser> inviterResult = centralServerNode.getUserByCharacterId(inviterId);
+                if (inviterResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.joinGuildUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                final RemoteUser inviter = inviterResult.get();
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(inviter.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.joinGuildUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check if user has been invited by the inviter
+                    if (!guild.unregisterInvite(inviterId, remoteUser.getCharacterId())) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.joinGuildUnknown())); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Try adding user as a member to the guild
+                    final GuildMember newMember = GuildMember.from(remoteUser);
+                    newMember.setGuildRank(GuildRank.MEMBER3);
+                    if (!guild.addMember(newMember)) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.joinGuildAlreadyFull())); // The guild you are trying to join has already reached the max number of users.
+                        return;
+                    }
+                    // Update user
+                    remoteUser.setGuildId(guild.getGuildId());
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(guild)));
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.joinGuildDone(guild.getGuildId(), newMember);
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                }
+            }
+            case WithdrawGuild -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.withdrawGuildUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check if user can leave the guild
+                    if (!guild.hasMember(remoteUser.getCharacterId())) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.withdrawGuildNotJoined())); // You are not in the guild.
+                        return;
+                    }
+                    final GuildMember removedMember = guild.getMember(remoteUser.getCharacterId());
+                    if (removedMember.getGuildRank() == GuildRank.MASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You cannot quit the guild since you are the master of the guild.")));
+                        return;
+                    }
+                    // Remove user from guild
+                    guild.removeMember(removedMember);
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.withdrawGuildDone(guild.getGuildId(), removedMember);
+                    remoteUser.setGuildId(0);
+                    remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), outPacket));
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                }
+            }
+            case KickGuild -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.kickGuildUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check requester rank
+                    final GuildRank guildRank = guild.getMember(remoteUser.getCharacterId()).getGuildRank();
+                    if (guildRank != GuildRank.MASTER && guildRank != GuildRank.SUBMASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not the master of the guild.")));
+                        return;
+                    }
+                    // Check if target can be kicked
+                    if (!guild.hasMember(guildRequest.getTargetId())) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg(String.format("Unable to find '%s'", guildRequest.getTargetName()))));
+                        return;
+                    }
+                    final GuildMember targetMember = guild.getMember(guildRequest.getTargetId());
+                    if (targetMember.getGuildRank() == GuildRank.MASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You may not ban the Guild Master.")));
+                        return;
+                    }
+                    if (targetMember.getGuildRank() == GuildRank.SUBMASTER && guildRank != GuildRank.MASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("Only Guild Master can expel Jr.Masters.")));
+                        return;
+                    }
+                    // Remove target from guild
+                    guild.removeMember(targetMember);
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.kickGuildDone(guild.getGuildId(), targetMember);
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                    // Resolve target
+                    final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(guildRequest.getTargetId());
+                    if (targetResult.isPresent()) {
+                        final RemoteUser targetUser = targetResult.get();
+                        targetUser.setGuildId(0);
+                        final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(targetUser.getChannelId());
+                        if (targetNodeResult.isEmpty()) {
+                            log.error("Could not resolve server node for kicked guild member");
+                            return;
+                        }
+                        targetNodeResult.get().write(CentralPacket.guildResult(targetUser.getCharacterId(), null));
+                        targetNodeResult.get().write(CentralPacket.userPacketReceive(targetUser.getCharacterId(), outPacket)); // You have been expelled from the guild.
+                    } else {
+                        // Write memo
+                        final Optional<Integer> memoIdResult = DatabaseManager.idAccessor().nextMemoId();
+                        if (memoIdResult.isEmpty()) {
+                            log.error("Could not resolve memo ID for kicked guild member");
+                            return;
+                        }
+                        final Memo memo = new Memo(MemoType.DEFAULT, memoIdResult.get(), remoteUser.getCharacterName(), "You have been expelled from the guild.", Instant.now());
+                        if (!DatabaseManager.memoAccessor().newMemo(memo, guildRequest.getTargetId())) {
+                            log.error("Could not create memo for kicked guild member");
+                        }
+                    }
                 }
             }
             case RemoveGuild -> {
+                // Resolve guild
                 final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
-                if (guildResult.isPresent()) {
-                    try (var lockedGuild = guildResult.get().acquire()) {
-                        final Guild guild = lockedGuild.get();
-                        // Check requester rank
-                        if (guild.getMember(remoteUser.getCharacterId()).getGuildRank() != GuildRank.MASTER) {
-                            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
-                            return;
-                        }
-                        // Remove guild from storage + database
-                        if (!centralServerNode.removeGuild(guild)) {
-                            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
-                            return;
-                        }
-                        // Update members
-                        final OutPacket outPacket = GuildPacket.removeGuildDone(guild.getGuildId());
-                        forEachGuildMember(guild, (member, node) -> {
-                            node.write(CentralPacket.guildResult(member.getCharacterId(), null));
-                            node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
-                        });
-                    }
-                } else {
+                if (guildResult.isEmpty()) {
                     remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Check requester rank
+                    if (guild.getMember(remoteUser.getCharacterId()).getGuildRank() != GuildRank.MASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not the master of the guild.")));
+                        return;
+                    }
+                    // Remove guild from storage + database
+                    if (!centralServerNode.removeGuild(guild)) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
+                        return;
+                    }
+                    // Update members
+                    final OutPacket outPacket = GuildPacket.removeGuildDone(guild.getGuildId());
+                    forEachGuildMember(guild, (member, node) -> {
+                        member.setGuildId(0);
+                        node.write(CentralPacket.guildResult(member.getCharacterId(), null));
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
                 }
             }
             case SetGradeName -> {
@@ -757,7 +958,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 try (var lockedGuild = guildResult.get().acquire()) {
                     final Guild guild = lockedGuild.get();
                     // Set notice and update members
-                    guild.setNotice(guildRequest.getNewNotice());
+                    guild.setNotice(guildRequest.getGuildNotice());
                     final OutPacket outPacket = GuildPacket.setNoticeDone(guild.getGuildId(), guild.getNotice());
                     forEachGuildMember(guild, (member, node) -> {
                         node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
@@ -956,21 +1157,28 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
     }
 
-    private void updateGuildMember(RemoteUser remoteUser, boolean isUpdate) {
+    private void updateGuildMember(RemoteUser remoteUser, boolean isUserUpdate) {
         final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
         if (guildResult.isEmpty()) {
             return;
         }
         try (var lockedGuild = guildResult.get().acquire()) {
-            // Update user for all members
+            // Update member
             final Guild guild = lockedGuild.get();
+            final boolean isOnline = remoteUser.getChannelId() != GameConstants.CHANNEL_OFFLINE;
+            final boolean wasOnline = guild.getMember(remoteUser.getCharacterId()).isOnline();
             guild.updateMember(remoteUser);
-            final List<Integer> guildMemberIds = isUpdate ?
+            // No update needed
+            if (!isUserUpdate && isOnline == wasOnline) {
+                return;
+            }
+            // Update user for all members
+            final List<Integer> guildMemberIds = isUserUpdate ?
                     guild.getMemberIds() :
-                    guild.getMemberIds(remoteUser.getCharacterId());
-            final OutPacket outPacket = isUpdate ?
+                    guild.getMemberIds(remoteUser.getCharacterId()); // do not need to update self online status
+            final OutPacket outPacket = isUserUpdate ?
                     GuildPacket.changeLevelOrJob(guild.getGuildId(), remoteUser.getCharacterId(), remoteUser.getLevel(), remoteUser.getJob()) :
-                    GuildPacket.notifyLoginOrLogout(guild.getGuildId(), remoteUser.getCharacterId(), remoteUser.getChannelId() != GameConstants.CHANNEL_OFFLINE);
+                    GuildPacket.notifyLoginOrLogout(guild.getGuildId(), remoteUser.getCharacterId(), isOnline);
             for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
                 serverNode.write(CentralPacket.userPacketBroadcast(guildMemberIds, outPacket));
             }
