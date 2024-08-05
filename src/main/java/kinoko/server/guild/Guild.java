@@ -60,6 +60,12 @@ public final class Guild implements Encodable, Lockable<Guild> {
         return gradeNames;
     }
 
+    public void setGradeNames(List<String> gradeNames) {
+        for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
+            this.gradeNames.set(i, gradeNames.get(i));
+        }
+    }
+
     public List<GuildMember> getGuildMembers() {
         return guildMembers.values().stream().sorted(MEMBER_COMPARATOR) // sort by rank, then level
                 .toList();
@@ -141,12 +147,12 @@ public final class Guild implements Encodable, Lockable<Guild> {
         return level;
     }
 
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
     public void setLevel(byte level) {
         this.level = level;
     }
-
-
-    // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public List<Integer> getMemberIds() {
         return guildMembers.keySet().stream().toList();

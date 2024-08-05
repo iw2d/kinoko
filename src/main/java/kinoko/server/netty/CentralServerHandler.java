@@ -651,6 +651,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final RemoteUser remoteUser = remoteUserResult.get();
         switch (guildRequest.getRequestType()) {
             case LoadGuild -> {
+                // Load guild from storage / database
                 final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
                 if (guildResult.isPresent()) {
                     try (var lockedGuild = guildResult.get().acquire()) {
@@ -665,6 +666,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
             }
             case CreateNewGuild -> {
+                // Create new guild in storage + database
                 final Optional<Guild> guildResult = centralServerNode.createNewGuild(guildRequest.getGuildId(), guildRequest.getGuildName(), remoteUser);
                 if (guildResult.isPresent()) {
                     final Guild guild = guildResult.get();
@@ -702,6 +704,25 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.removeGuildUnknown())); // The problem has happened during the process of disbanding the guild... Plese try again later...
                 }
             }
+            case SetGradeName -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setGradeNameUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Set grade names and update members
+                    guild.setGradeNames(guildRequest.getGradeNames());
+                    final OutPacket outPacket = GuildPacket.setGradeNameDone(guild.getGuildId(), guild.getGradeNames());
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                }
+            }
             case SetMark -> {
                 // Resolve guild
                 final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
@@ -711,11 +732,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 try (var lockedGuild = guildResult.get().acquire()) {
                     final Guild guild = lockedGuild.get();
-                    // Check requester rank
-                    if (guild.getMember(remoteUser.getCharacterId()).getGuildRank() != GuildRank.MASTER) {
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMarkUnknown())); // The guild request has not been accepted due to unknown reason.
-                        return;
-                    }
                     // Apply new mark
                     guild.setMarkBg(guildRequest.getMarkBg());
                     guild.setMarkBgColor(guildRequest.getMarkBgColor());
@@ -727,6 +743,27 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         node.write(CentralPacket.guildResult(member.getCharacterId(), GuildInfo.from(guild, member.getCharacterId())));
                         node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
                     });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
+                }
+            }
+            case SetNotice -> {
+                // Resolve guild
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+                if (guildResult.isEmpty()) {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.setMarkUnknown())); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedGuild = guildResult.get().acquire()) {
+                    final Guild guild = lockedGuild.get();
+                    // Set notice and update members
+                    guild.setNotice(guildRequest.getNewNotice());
+                    final OutPacket outPacket = GuildPacket.setNoticeDone(guild.getGuildId(), guild.getNotice());
+                    forEachGuildMember(guild, (member, node) -> {
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                    });
+                    // Save to database
+                    DatabaseManager.guildAccessor().saveGuild(guild);
                 }
             }
         }

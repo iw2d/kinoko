@@ -8,7 +8,6 @@ import kinoko.database.GuildAccessor;
 import kinoko.database.cassandra.table.GuildTable;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
-import kinoko.world.GameConstants;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +25,7 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
         final Guild guild = new Guild(guildId, guildName);
         final List<String> gradeNames = row.getList(GuildTable.GRADE_NAMES, String.class);
         if (gradeNames != null) {
-            for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
-                guild.getGradeNames().set(i, gradeNames.get(i));
-            }
+            guild.setGradeNames(gradeNames);
         }
         final List<GuildMember> members = row.getList(GuildTable.MEMBERS, GuildMember.class);
         if (members != null) {

@@ -6,6 +6,9 @@ import kinoko.server.guild.GuildResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
+import kinoko.world.GameConstants;
+
+import java.util.List;
 
 public final class GuildPacket {
     // CWvsContext::OnGuildResult --------------------------------------------------------------------------------------
@@ -86,6 +89,19 @@ public final class GuildPacket {
         return outPacket;
     }
 
+    public static OutPacket setGradeNameDone(int guildId, List<String> gradeNames) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.SetGradeName_Done);
+        outPacket.encodeInt(guildId);
+        for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
+            outPacket.encodeString(gradeNames.get(i));
+        }
+        return outPacket;
+    }
+
+    public static OutPacket setGradeNameUnknown() {
+        return GuildPacket.of(GuildResultType.SetGradeName_Unknown);
+    }
+
     public static OutPacket setMarkDone(int guildId, short markBg, byte markBgColor, short mark, byte markColor) {
         final OutPacket outPacket = GuildPacket.of(GuildResultType.SetMark_Done);
         outPacket.encodeInt(guildId);
@@ -98,6 +114,13 @@ public final class GuildPacket {
 
     public static OutPacket setMarkUnknown() {
         return GuildPacket.of(GuildResultType.SetMark_Unknown);
+    }
+
+    public static OutPacket setNoticeDone(int guildId, String notice) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.SetNotice_Done);
+        outPacket.encodeInt(guildId);
+        outPacket.encodeString(notice);
+        return outPacket;
     }
 
     public static OutPacket serverMsg(String message) {

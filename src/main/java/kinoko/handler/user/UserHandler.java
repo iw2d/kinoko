@@ -1347,6 +1347,21 @@ public final class UserHandler {
                     user.getConnectedServer().submitGuildRequest(user, GuildRequest.createNewGuild(guildIdResult.get(), guildName));
                 }
             }
+            case SetGradeName -> {
+                final List<String> gradeNames = new ArrayList<>();
+                for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
+                    gradeNames.add(inPacket.decodeString());
+                }
+                try (var locked = user.acquire()) {
+                    // Check if guild master
+                    if (user.getGuildRank() != GuildRank.MASTER) {
+                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Submit guild grade name request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setGradeName(gradeNames));
+                }
+            }
             case SetMark -> {
                 final short markBg = inPacket.decodeShort();
                 final byte markBgColor = inPacket.decodeByte();
@@ -1373,6 +1388,18 @@ public final class UserHandler {
                     user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
                     // Submit guild emblem request
                     user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMark(markBg, markBgColor, mark, markColor));
+                }
+            }
+            case SetNotice -> {
+                final String notice = inPacket.decodeString();
+                try (var locked = user.acquire()) {
+                    // Check if guild master
+                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                        return;
+                    }
+                    // Submit guild notice request
+                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setNotice(notice));
                 }
             }
             case null -> {
