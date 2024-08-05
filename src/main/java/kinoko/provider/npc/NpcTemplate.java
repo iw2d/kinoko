@@ -1,6 +1,7 @@
 package kinoko.provider.npc;
 
 import kinoko.provider.ProviderError;
+import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 
 public final class NpcTemplate {
@@ -9,13 +10,15 @@ public final class NpcTemplate {
     private final String script;
     private final int trunkPut;
     private final int trunkGet;
+    private final boolean guildRank;
 
-    public NpcTemplate(int id, boolean move, String script, int trunkPut, int trunkGet) {
+    public NpcTemplate(int id, boolean move, String script, int trunkPut, int trunkGet, boolean guildRank) {
         this.id = id;
         this.move = move;
         this.script = script;
         this.trunkPut = trunkPut;
         this.trunkGet = trunkGet;
+        this.guildRank = guildRank;
     }
 
     public int getId() {
@@ -46,20 +49,27 @@ public final class NpcTemplate {
         return getTrunkGet() > 0 || getTrunkPut() > 0;
     }
 
+    public boolean isGuildRank() {
+        return guildRank;
+    }
+
     @Override
     public String toString() {
-        return "NpcTemplate[" +
-                "id=" + id + ", " +
-                "move=" + move + ", " +
-                "script=" + script + ", " +
-                "trunkPut=" + trunkPut + ", " +
-                "trunkGet=" + trunkGet + ']';
+        return "NpcTemplate{" +
+                "id=" + id +
+                ", move=" + move +
+                ", script='" + script + '\'' +
+                ", trunkPut=" + trunkPut +
+                ", trunkGet=" + trunkGet +
+                ", guildRank=" + guildRank +
+                '}';
     }
 
     public static NpcTemplate from(int npcId, boolean move, WzListProperty infoProp) throws ProviderError {
         String script = null;
         int trunkPut = 0;
         int trunkGet = 0;
+        boolean guildRank = false;
         for (var entry : infoProp.getItems().entrySet()) {
             switch (entry.getKey()) {
                 case "script" -> {
@@ -78,17 +88,20 @@ public final class NpcTemplate {
                     }
                 }
                 case "trunkPut" -> {
-                    trunkPut = (int) entry.getValue();
+                    trunkPut = WzProvider.getInteger(entry.getValue());
                 }
                 case "trunkGet" -> {
-                    trunkGet = (int) entry.getValue();
+                    trunkGet = WzProvider.getInteger(entry.getValue());
+                }
+                case "guildRank" -> {
+                    guildRank = WzProvider.getInteger(entry.getValue()) != 0;
                 }
                 default -> {
                     // System.err.printf("Unhandled info %s in npc %d%n", entry.getKey(), npcId);
                 }
             }
         }
-        return new NpcTemplate(npcId, move, script, trunkPut, trunkGet);
+        return new NpcTemplate(npcId, move, script, trunkPut, trunkGet, guildRank);
     }
 
 }

@@ -26,16 +26,14 @@ import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendRequestType;
-import kinoko.server.guild.GuildRank;
-import kinoko.server.guild.GuildRequest;
-import kinoko.server.guild.GuildRequestType;
-import kinoko.server.guild.GuildResultType;
+import kinoko.server.guild.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
 import kinoko.server.memo.MemoType;
 import kinoko.server.messenger.MessengerProtocol;
 import kinoko.server.messenger.MessengerRequest;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.party.PartyRequestType;
@@ -176,6 +174,14 @@ public final class UserHandler {
         // Handle script
         if (npc.hasScript()) {
             ScriptDispatcher.startNpcScript(user, npc, npc.getScript(), npc.getTemplateId());
+            return;
+        }
+        // Handle guild rank
+        if (npc.isGuildRank()) {
+            ServerExecutor.submitService(() -> {
+                final List<GuildRanking> guildRankings = DatabaseManager.guildAccessor().getGuildRankings(50);
+                user.write(GuildPacket.showGuildRanking(guildRankings));
+            });
             return;
         }
         // Handle trunk / npc shop dialog, lock user
@@ -1681,8 +1687,10 @@ public final class UserHandler {
             }
             case Load -> {
                 // CWvsContext::OnMemoNotify_Receive
-                final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
-                user.write(MemoPacket.load(memos));
+                ServerExecutor.submitService(() -> {
+                    final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
+                    user.write(MemoPacket.load(memos));
+                });
             }
             case null -> {
                 log.error("Unknown memo request type : {}", type);

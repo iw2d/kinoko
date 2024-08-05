@@ -59,6 +59,10 @@ public final class Npc extends Life implements ControlledObject, Encodable {
         return template.isTrunk();
     }
 
+    public boolean isGuildRank() {
+        return template.isGuildRank();
+    }
+
     @Override
     public User getController() {
         return controller;

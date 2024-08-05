@@ -1,9 +1,6 @@
 package kinoko.packet.world;
 
-import kinoko.server.guild.Guild;
-import kinoko.server.guild.GuildMember;
-import kinoko.server.guild.GuildRequestType;
-import kinoko.server.guild.GuildResultType;
+import kinoko.server.guild.*;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
@@ -203,6 +200,16 @@ public final class GuildPacket {
         final OutPacket outPacket = GuildPacket.of(GuildResultType.SetNotice_Done);
         outPacket.encodeInt(guildId);
         outPacket.encodeString(notice);
+        return outPacket;
+    }
+
+    public static OutPacket showGuildRanking(List<GuildRanking> guildRankings) {
+        final OutPacket outPacket = GuildPacket.of(GuildResultType.ShowGuildRanking);
+        outPacket.encodeInt(0); // ignored
+        outPacket.encodeInt(guildRankings.size());
+        for (GuildRanking guildRanking : guildRankings) {
+            guildRanking.encode(outPacket);
+        }
         return outPacket;
     }
 

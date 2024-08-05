@@ -8,7 +8,10 @@ import kinoko.database.GuildAccessor;
 import kinoko.database.cassandra.table.GuildTable;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
+import kinoko.server.guild.GuildRanking;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,5 +115,34 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .build()
         );
         return updateResult.wasApplied();
+    }
+
+    @Override
+    public List<GuildRanking> getGuildRankings(int limit) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), GuildTable.getTableName())
+                        .column(GuildTable.GUILD_NAME)
+                        .column(GuildTable.POINTS)
+                        .column(GuildTable.MARK)
+                        .column(GuildTable.MARK_COLOR)
+                        .column(GuildTable.MARK_BG)
+                        .column(GuildTable.MARK_BG_COLOR)
+                        .build()
+        );
+        final List<GuildRanking> guildRankings = new ArrayList<>();
+        for (Row row : selectResult) {
+            guildRankings.add(new GuildRanking(
+                    row.getString(GuildTable.GUILD_NAME),
+                    row.getInt(GuildTable.POINTS),
+                    row.getShort(GuildTable.MARK),
+                    row.getByte(GuildTable.MARK_COLOR),
+                    row.getShort(GuildTable.MARK_BG),
+                    row.getByte(GuildTable.MARK_BG_COLOR)
+            ));
+        }
+        return guildRankings.stream()
+                .sorted(Comparator.comparingInt(GuildRanking::getPoints).reversed())
+                .limit(limit)
+                .toList();
     }
 }
