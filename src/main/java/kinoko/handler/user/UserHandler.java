@@ -1234,27 +1234,47 @@ public final class UserHandler {
             }
             case WithdrawParty -> {
                 // CField::SendWithdrawPartyMsg
+                if (!user.hasParty()) {
+                    user.write(PartyPacket.of(PartyResultType.WithdrawParty_NotJoined));
+                    return;
+                }
                 inPacket.decodeByte(); // hardcoded 0
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.withdrawParty());
             }
             case JoinParty -> {
                 // CWvsContext::OnPartyResult
+                if (user.hasParty()) {
+                    user.write(PartyPacket.of(PartyResultType.JoinParty_AlreadyJoined));
+                    return;
+                }
                 final int inviterId = inPacket.decodeInt();
-                inPacket.decodeByte(); // unknown byte from INVITE_PARTY
+                inPacket.decodeByte(); // unknown byte from InviteParty
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.joinParty(inviterId));
             }
             case InviteParty -> {
                 // CField::SendJoinPartyMsg
+                if (user.hasParty() && !user.isPartyBoss()) {
+                    user.write(PartyPacket.serverMsg("You are not the leader of the party."));
+                    return;
+                }
                 final String targetName = inPacket.decodeString();
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.invite(targetName));
             }
             case KickParty -> {
                 // CField::SendKickPartyMsg
+                if (!user.isPartyBoss()) {
+                    user.write(PartyPacket.serverMsg("You are not the leader of the party."));
+                    return;
+                }
                 final int targetId = inPacket.decodeInt();
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.kickParty(targetId));
             }
             case ChangePartyBoss -> {
                 // CField::SendChangePartyBossMsg
+                if (!user.isPartyBoss()) {
+                    user.write(PartyPacket.serverMsg("You are not the leader of the party."));
+                    return;
+                }
                 final int targetId = inPacket.decodeInt();
                 user.getConnectedServer().submitPartyRequest(user, PartyRequest.changePartyBoss(targetId));
             }

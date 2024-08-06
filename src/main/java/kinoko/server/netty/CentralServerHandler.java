@@ -602,20 +602,25 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     // Check that the kick request is valid
                     final Party party = lockedParty.get();
                     final int targetId = partyRequest.getCharacterId();
-                    final Optional<RemoteUser> targetMember = party.getMember(targetId);
-                    if (party.getPartyBossId() != remoteUser.getCharacterId() || targetMember.isEmpty() || !party.removeMember(targetMember.get())) {
+                    final Optional<RemoteUser> targetMemberResult = party.getMember(targetId);
+                    if (party.getPartyBossId() != remoteUser.getCharacterId() || targetMemberResult.isEmpty() || !party.removeMember(targetMemberResult.get())) {
                         remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.KickParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                         return;
                     }
+                    final RemoteUser targetMember = targetMemberResult.get();
+                    targetMember.setPartyId(0);
                     // Broadcast kick packet to party
-                    final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, targetMember.get(), false, true); // You have been expelled from the party. | '%s' have been expelled from the party.
+                    final OutPacket outPacket = PartyPacket.withdrawPartyDone(party, targetMember, false, true);
                     forEachPartyMember(party, (member, node) -> {
-                        if (member.getCharacterId() == targetId) {
-                            member.setPartyId(0);
-                            node.write(CentralPacket.partyResult(member.getCharacterId(), null));
-                        }
-                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
+                        node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket)); // '%s' have been expelled from the party.
                     });
+                    // Resolve target node
+                    final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(targetMember.getChannelId());
+                    if (targetNodeResult.isPresent()) {
+                        final RemoteServerNode node = targetNodeResult.get();
+                        node.write(CentralPacket.partyResult(targetMember.getCharacterId(), null));
+                        node.write(CentralPacket.userPacketReceive(targetMember.getCharacterId(), outPacket)); // You have been expelled from the party.
+                    }
                 }
             }
             case ChangePartyBoss -> {
