@@ -19,8 +19,8 @@ import kinoko.world.user.stat.CharacterStat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CharacterData implements Encodable {
@@ -303,7 +303,7 @@ public final class CharacterData implements Encodable {
             }
         }
         if (flag.hasFlag(DBChar.QUESTRECORD)) {
-            final Set<QuestRecord> questRecords = questManager.getStartedQuests();
+            final List<QuestRecord> questRecords = questManager.getStartedQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
@@ -311,7 +311,7 @@ public final class CharacterData implements Encodable {
             }
         }
         if (flag.hasFlag(DBChar.QUESTCOMPLETE)) {
-            final Set<QuestRecord> questRecords = questManager.getCompletedQuests();
+            final List<QuestRecord> questRecords = questManager.getCompletedQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());
@@ -334,7 +334,7 @@ public final class CharacterData implements Encodable {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord
         }
         if (flag.hasFlag(DBChar.QUESTRECORDEX)) {
-            final Set<QuestRecord> questRecords = questManager.getExQuests();
+            final List<QuestRecord> questRecords = questManager.getExQuests();
             outPacket.encodeShort(questRecords.size());
             for (QuestRecord qr : questRecords) {
                 outPacket.encodeShort(qr.getQuestId());

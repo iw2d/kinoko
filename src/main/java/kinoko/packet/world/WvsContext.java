@@ -181,7 +181,7 @@ public final class WvsContext {
         // MedalAchievementInfo::Decode
         final Item medalItem = equipped.getItem(BodyPart.MEDAL.getValue());
         outPacket.encodeInt(medalItem != null ? medalItem.getItemId() : 0); // nEquipedMedalID
-        final Set<QuestRecord> titleQuestRecords = user.getQuestManager().getTitleQuests();
+        final List<QuestRecord> titleQuestRecords = user.getQuestManager().getTitleQuests();
         outPacket.encodeShort(titleQuestRecords.size());
         titleQuestRecords.forEach((qr) -> outPacket.encodeShort(qr.getQuestId())); // p_ausMedalQuestID
         // ~MedalAchievementInfo::Decode

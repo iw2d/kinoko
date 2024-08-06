@@ -7,7 +7,6 @@ import kinoko.world.user.stat.SecondaryStat;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class SkillManager {
     private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
@@ -16,8 +15,8 @@ public final class SkillManager {
 
     // SKILL RECORD METHODS --------------------------------------------------------------------------------------------
 
-    public Set<SkillRecord> getSkillRecords() {
-        return skillRecords.values().stream().collect(Collectors.toUnmodifiableSet());
+    public List<SkillRecord> getSkillRecords() {
+        return skillRecords.values().stream().toList();
     }
 
     public Optional<SkillRecord> getSkill(int skillId) {

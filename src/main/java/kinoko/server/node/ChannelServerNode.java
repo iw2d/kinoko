@@ -64,7 +64,11 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitMigrationRequest(int accountId, int characterId, byte[] machineId, byte[] clientKey, Consumer<Optional<MigrationInfo>> consumer) {
         final CompletableFuture<Optional<MigrationInfo>> migrationRequestFuture = new CompletableFuture<>();
-        migrationRequestFuture.thenAccept(consumer);
+        migrationRequestFuture.thenAccept(consumer).exceptionally(e -> {
+            log.error("Exception caught while consuming migration request", e);
+            e.printStackTrace();
+            return null;
+        });
         final int requestId = getNewRequestId();
         requestFutures.put(requestId, migrationRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.migrateRequest(requestId, accountId, characterId, machineId, clientKey));
@@ -80,7 +84,11 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitTransferRequest(MigrationInfo migrationInfo, Consumer<Optional<TransferInfo>> consumer) {
         final CompletableFuture<Optional<TransferInfo>> transferRequestFuture = new CompletableFuture<>();
-        transferRequestFuture.thenAccept(consumer);
+        transferRequestFuture.thenAccept(consumer).exceptionally(e -> {
+            log.error("Exception caught while consuming transfer request", e);
+            e.printStackTrace();
+            return null;
+        });
         final int requestId = getNewRequestId();
         requestFutures.put(requestId, transferRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.transferRequest(requestId, migrationInfo));
@@ -135,7 +143,11 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitUserQueryRequest(List<String> characterNames, Consumer<Set<RemoteUser>> consumer) {
         final CompletableFuture<Set<RemoteUser>> userRequestFuture = new CompletableFuture<>();
-        userRequestFuture.thenAccept(consumer);
+        userRequestFuture.thenAccept(consumer).exceptionally(e -> {
+            log.error("Exception caught while consuming user query request", e);
+            e.printStackTrace();
+            return null;
+        });
         final int requestId = getNewRequestId();
         requestFutures.put(requestId, userRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.userQueryRequest(requestId, characterNames));

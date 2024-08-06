@@ -11,7 +11,7 @@ public final class ServerConfig {
     public static final int SHUTDOWN_TIMEOUT = 30;
 
     public static final boolean AUTO_CREATE_ACCOUNT = true;
-    public static final boolean REQUIRE_SECONDARY_PASSWORD = false;
+    public static final boolean REQUIRE_SECONDARY_PASSWORD = true;
     public static final String WZ_DIRECTORY = "wz";
     public static final String DATA_DIRECTORY = "data";
 

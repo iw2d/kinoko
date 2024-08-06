@@ -4,40 +4,39 @@ import kinoko.provider.EtcProvider;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class QuestManager {
     private final Map<Integer, QuestRecord> questRecords = new HashMap<>();
 
-    public Set<QuestRecord> getQuestRecords() {
-        return questRecords.values().stream().collect(Collectors.toUnmodifiableSet());
+    public List<QuestRecord> getQuestRecords() {
+        return questRecords.values().stream().toList();
     }
 
-    public Set<QuestRecord> getStartedQuests() {
+    public List<QuestRecord> getStartedQuests() {
         return questRecords.values().stream()
                 .filter(qr -> qr.getState() == QuestState.PERFORM)
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
     }
 
-    public Set<QuestRecord> getCompletedQuests() {
+    public List<QuestRecord> getCompletedQuests() {
         return questRecords.values().stream()
                 .filter(qr -> qr.getState() == QuestState.COMPLETE)
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
     }
 
-    public Set<QuestRecord> getTitleQuests() {
+    public List<QuestRecord> getTitleQuests() {
         return questRecords.values().stream()
                 .filter(qr -> qr.getState() == QuestState.COMPLETE && EtcProvider.isTitleQuest(qr.getQuestId()))
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
     }
 
-    public Set<QuestRecord> getExQuests() {
+    public List<QuestRecord> getExQuests() {
         return questRecords.values().stream()
                 .filter(qr -> qr.getState() == QuestState.PARTYQUEST)
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
     }
 
     public void addQuestRecord(QuestRecord questRecord) {

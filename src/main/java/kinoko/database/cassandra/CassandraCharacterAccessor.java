@@ -20,7 +20,10 @@ import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
@@ -57,7 +60,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         if (skillCooltimes != null) {
             sm.getSkillCooltimes().putAll(skillCooltimes);
         }
-        final Set<SkillRecord> skillRecords = row.getSet(CharacterTable.SKILL_RECORDS, SkillRecord.class);
+        final List<SkillRecord> skillRecords = row.getList(CharacterTable.SKILL_RECORDS, SkillRecord.class);
         if (skillRecords != null) {
             for (SkillRecord sr : skillRecords) {
                 sm.addSkill(sr);
@@ -66,7 +69,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setSkillManager(sm);
 
         final QuestManager qm = new QuestManager();
-        final Set<QuestRecord> questRecords = row.getSet(CharacterTable.QUEST_RECORDS, QuestRecord.class);
+        final List<QuestRecord> questRecords = row.getList(CharacterTable.QUEST_RECORDS, QuestRecord.class);
         if (questRecords != null) {
             for (QuestRecord qr : questRecords) {
                 qm.addQuestRecord(qr);
