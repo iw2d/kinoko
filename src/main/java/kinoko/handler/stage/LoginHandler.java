@@ -213,6 +213,7 @@ public final class LoginHandler {
         }
         final CharacterData characterData = new CharacterData(c.getAccount().getId());
         characterData.setItemSnCounter(new AtomicInteger(1));
+        characterData.setCreationTime(Instant.now());
 
         // Initial Stats
         final short level = 1;

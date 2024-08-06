@@ -400,6 +400,14 @@ public final class CharacterStat implements Encodable {
         return statMap;
     }
 
+    public long getCumulativeExp() {
+        long levelExp = 0;
+        for (int level = 1; level < getLevel(); level++) {
+            levelExp += GameConstants.getNextLevelExp(level);
+        }
+        return levelExp + getExp();
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(id); // dwCharacterID

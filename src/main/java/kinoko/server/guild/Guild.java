@@ -14,7 +14,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Guild instance managed by CentralServerNode.
  */
 public final class Guild implements Encodable, Lockable<Guild> {
-    public static final List<String> DEFAULT_GRADE_NAMES = List.of("Master", "Jr.Master", "Member", "Member", "Member");
     public static final GuildMember EMPTY_MEMBER = new GuildMember(0, "", 0, 0, false, GuildRank.NONE, GuildRank.NONE);
     public static final Comparator<GuildMember> MEMBER_COMPARATOR = Comparator.comparing(GuildMember::getGuildRank)
             .thenComparing(Comparator.comparing(GuildMember::getLevel).reversed());
@@ -43,7 +42,7 @@ public final class Guild implements Encodable, Lockable<Guild> {
     public Guild(int guildId, String guildName) {
         this.guildId = guildId;
         this.guildName = guildName;
-        this.gradeNames = new ArrayList<>(DEFAULT_GRADE_NAMES);
+        this.gradeNames = new ArrayList<>(GameConstants.GUILD_GRADE_NAMES);
         this.guildMembers = new HashMap<>();
         this.guildInvites = new HashMap<>();
         this.memberMax = GameConstants.GUILD_CAPACITY_MIN;

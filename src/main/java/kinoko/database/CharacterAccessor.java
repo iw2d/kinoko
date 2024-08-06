@@ -1,9 +1,11 @@
 package kinoko.database;
 
+import kinoko.server.rank.CharacterRank;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface CharacterAccessor {
@@ -24,4 +26,6 @@ public interface CharacterAccessor {
     boolean saveCharacter(CharacterData characterData);
 
     boolean deleteCharacter(int accountId, int characterId);
+
+    Map<Integer, CharacterRank> getCharacterRanks();
 }

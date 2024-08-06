@@ -8,6 +8,7 @@ import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.LoginServerNode;
 import kinoko.server.node.ServerExecutor;
+import kinoko.server.rank.RankManager;
 import kinoko.util.crypto.MapleCrypto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +50,11 @@ public final class Server {
         start = Instant.now();
         DatabaseManager.initialize();
         log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+
+        // Initialize ranks
+        start = Instant.now();
+        RankManager.initialize();
+        log.info("Loaded ranks in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Initialize scripts
         start = Instant.now();
@@ -101,6 +107,7 @@ public final class Server {
         log.info("Shutting down Server");
         centralServerNode.shutdown();
         ScriptDispatcher.shutdown();
+        RankManager.shutdown();
         ServerExecutor.shutdown();
         DatabaseManager.shutdown();
         LogManager.shutdown();

@@ -8,8 +8,10 @@ import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
 import kinoko.database.DatabaseManager;
 import kinoko.database.cassandra.table.CharacterTable;
+import kinoko.server.rank.CharacterRank;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
+import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
@@ -20,10 +22,7 @@ import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
@@ -96,6 +95,8 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         cd.setFriendMax(row.getInt(CharacterTable.FRIEND_MAX));
         cd.setPartyId(row.getInt(CharacterTable.PARTY_ID));
         cd.setGuildId(row.getInt(CharacterTable.GUILD_ID));
+        cd.setCreationTime(row.getInstant(CharacterTable.CREATION_TIME));
+        cd.setMaxLevelTime(row.getInstant(CharacterTable.MAX_LEVEL_TIME));
         return cd;
     }
 
@@ -241,6 +242,8 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.FRIEND_MAX, literal(characterData.getFriendMax()))
                         .setColumn(CharacterTable.PARTY_ID, literal(characterData.getPartyId()))
                         .setColumn(CharacterTable.GUILD_ID, literal(characterData.getGuildId()))
+                        .setColumn(CharacterTable.CREATION_TIME, literal(characterData.getCreationTime()))
+                        .setColumn(CharacterTable.MAX_LEVEL_TIME, literal(characterData.getMaxLevelTime()))
                         .whereColumn(CharacterTable.CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
                         .build()
         );
@@ -256,5 +259,78 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .build()
         );
         return updateResult.wasApplied();
+    }
+
+    @Override
+    public Map<Integer, CharacterRank> getCharacterRanks() {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), CharacterTable.getTableName())
+                        .columns(
+                                CharacterTable.CHARACTER_ID,
+                                CharacterTable.CHARACTER_STAT,
+                                CharacterTable.MAX_LEVEL_TIME
+                        )
+                        .build()
+                        .setExecutionProfileName(DatabaseManager.PROFILE_ONE)
+        );
+        final List<CharacterRankData> rankDataList = new ArrayList<>();
+        for (Row row : selectResult) {
+            final int characterId = row.getInt(CharacterTable.CHARACTER_ID);
+            final CharacterStat characterStat = row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class);
+            final Instant maxLevelTime = row.getInstant(CharacterTable.MAX_LEVEL_TIME);
+            rankDataList.add(new CharacterRankData(
+                    characterId,
+                    JobConstants.getJobCategory(characterStat.getJob()),
+                    characterStat.getCumulativeExp(),
+                    maxLevelTime
+            ));
+        }
+        // Sort and process rank data
+        rankDataList.sort(Comparator.comparing(CharacterRankData::getCumulativeExp).reversed().thenComparing(CharacterRankData::getMaxLevelTime));
+        final Map<Integer, Integer> jobRanks = new HashMap<>(); // job rank counter
+        final Map<Integer, CharacterRank> characterRanks = new HashMap<>(); // character id -> character rank
+        for (CharacterRankData rankData : rankDataList) {
+            final int characterId = rankData.getCharacterId();
+            final int jobCategory = rankData.getJobCategory();
+            final int worldRank = characterRanks.size() + 1;
+            final int jobRank = jobRanks.getOrDefault(jobCategory, 0) + 1;
+            jobRanks.put(jobCategory, jobRank);
+            characterRanks.put(characterId, new CharacterRank(
+                    characterId,
+                    worldRank,
+                    jobRank
+            ));
+        }
+        return characterRanks;
+    }
+
+    private static class CharacterRankData {
+        private final int characterId;
+        private final int jobCategory;
+        private final long cumulativeExp;
+        private final Instant maxLevelTime;
+
+        private CharacterRankData(int characterId, int jobCategory, long cumulativeExp, Instant maxLevelTime) {
+            this.characterId = characterId;
+            this.jobCategory = jobCategory;
+            this.cumulativeExp = cumulativeExp;
+            this.maxLevelTime = maxLevelTime;
+        }
+
+        public int getCharacterId() {
+            return characterId;
+        }
+
+        public int getJobCategory() {
+            return jobCategory;
+        }
+
+        public long getCumulativeExp() {
+            return cumulativeExp;
+        }
+
+        public Instant getMaxLevelTime() {
+            return maxLevelTime != null ? maxLevelTime : Instant.MAX;
+        }
     }
 }

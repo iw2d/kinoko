@@ -30,6 +30,8 @@ public final class CharacterTable {
     public static final String FRIEND_MAX = "friend_max";
     public static final String PARTY_ID = "party_id";
     public static final String GUILD_ID = "guild_id";
+    public static final String CREATION_TIME = "creation_time";
+    public static final String MAX_LEVEL_TIME = "max_level_time";
 
     private static final String tableName = "character_table";
 
@@ -65,6 +67,8 @@ public final class CharacterTable {
                         .withColumn(FRIEND_MAX, DataTypes.INT)
                         .withColumn(PARTY_ID, DataTypes.INT)
                         .withColumn(GUILD_ID, DataTypes.INT)
+                        .withColumn(CREATION_TIME, DataTypes.TIMESTAMP)
+                        .withColumn(MAX_LEVEL_TIME, DataTypes.TIMESTAMP)
                         .build()
         );
         session.execute(

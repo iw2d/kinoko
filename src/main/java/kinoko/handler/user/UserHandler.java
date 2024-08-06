@@ -26,7 +26,10 @@ import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendRequestType;
-import kinoko.server.guild.*;
+import kinoko.server.guild.GuildRank;
+import kinoko.server.guild.GuildRequest;
+import kinoko.server.guild.GuildRequestType;
+import kinoko.server.guild.GuildResultType;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
@@ -38,6 +41,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.party.PartyRequestType;
 import kinoko.server.party.PartyResultType;
+import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
@@ -178,10 +182,7 @@ public final class UserHandler {
         }
         // Handle guild rank
         if (npc.isGuildRank()) {
-            ServerExecutor.submitService(() -> {
-                final List<GuildRanking> guildRankings = DatabaseManager.guildAccessor().getGuildRankings(50);
-                user.write(GuildPacket.showGuildRanking(guildRankings));
-            });
+            user.write(GuildPacket.showGuildRanking(RankManager.getGuildRankings()));
             return;
         }
         // Handle trunk / npc shop dialog, lock user

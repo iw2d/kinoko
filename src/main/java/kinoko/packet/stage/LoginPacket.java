@@ -5,12 +5,15 @@ import kinoko.server.ServerConstants;
 import kinoko.server.header.OutHeader;
 import kinoko.server.node.ChannelInfo;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.rank.CharacterRank;
+import kinoko.server.rank.RankManager;
 import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public final class LoginPacket {
     // CLogin::OnPacket ------------------------------------------------------------------------------------------------
@@ -119,7 +122,13 @@ public final class LoginPacket {
         for (AvatarData avatarData : account.getCharacterList()) {
             avatarData.encode(outPacket);
             outPacket.encodeByte(false); // m_abOnFamily
-            outPacket.encodeByte(false); // bool -> CLogin::RANK
+            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData.getCharacterId());
+            if (characterRankResult.isPresent()) {
+                outPacket.encodeByte(true);
+                characterRankResult.get().encode(outPacket); // CLogin::RANK
+            } else {
+                outPacket.encodeByte(false);
+            }
         }
 
         outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt

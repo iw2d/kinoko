@@ -17,5 +17,5 @@ public interface GuildAccessor {
 
     boolean deleteGuild(int guildId);
 
-    List<GuildRanking> getGuildRankings(int limit);
+    List<GuildRanking> getGuildRankings();
 }
