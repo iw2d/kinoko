@@ -7,6 +7,7 @@ import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -24,6 +25,8 @@ public final class Guild implements Encodable, Lockable<Guild> {
     private final List<String> gradeNames;
     private final Map<Integer, GuildMember> guildMembers; // character ID -> guild member
     private final Map<Integer, Integer> guildInvites; // invitee ID -> inviter ID
+    private final List<GuildBoardEntry> boardEntries;
+    private AtomicInteger boardEntryCounter;
     private int memberMax;
 
     private int allianceId;
@@ -45,6 +48,8 @@ public final class Guild implements Encodable, Lockable<Guild> {
         this.gradeNames = new ArrayList<>(GameConstants.GUILD_GRADE_NAMES);
         this.guildMembers = new HashMap<>();
         this.guildInvites = new HashMap<>();
+        this.boardEntries = new ArrayList<>();
+        this.boardEntryCounter = new AtomicInteger(1);
         this.memberMax = GameConstants.GUILD_CAPACITY_MIN;
         this.level = 1;
     }
@@ -70,6 +75,18 @@ public final class Guild implements Encodable, Lockable<Guild> {
     public List<GuildMember> getGuildMembers() {
         return guildMembers.values().stream().sorted(MEMBER_COMPARATOR) // sort by rank, then level
                 .toList();
+    }
+
+    public List<GuildBoardEntry> getBoardEntries() {
+        return boardEntries;
+    }
+
+    public AtomicInteger getBoardEntryCounter() {
+        return boardEntryCounter;
+    }
+
+    public void setBoardEntryCounter(AtomicInteger boardEntryCounter) {
+        this.boardEntryCounter = boardEntryCounter;
     }
 
     public int getMemberMax() {
@@ -150,6 +167,13 @@ public final class Guild implements Encodable, Lockable<Guild> {
 
     public void setLevel(byte level) {
         this.level = level;
+    }
+
+
+    // BBS METHODS -----------------------------------------------------------------------------------------------------
+
+    public int getNextBoardEntryId() {
+        return boardEntryCounter.getAndIncrement();
     }
 
 

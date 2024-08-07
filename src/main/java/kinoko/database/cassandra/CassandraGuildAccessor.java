@@ -8,6 +8,7 @@ import kinoko.database.DatabaseManager;
 import kinoko.database.GuildAccessor;
 import kinoko.database.cassandra.table.GuildTable;
 import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildBoardEntry;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRanking;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
 
@@ -45,6 +47,11 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
         guild.setNotice(row.getString(GuildTable.NOTICE));
         guild.setPoints(row.getInt(GuildTable.POINTS));
         guild.setLevel(row.getByte(GuildTable.LEVEL));
+        final List<GuildBoardEntry> boardEntries = row.getList(GuildTable.BOARD_ENTRY_LIST, GuildBoardEntry.class);
+        if (boardEntries != null) {
+            guild.getBoardEntries().addAll(boardEntries);
+        }
+        guild.setBoardEntryCounter(new AtomicInteger(row.getInt(GuildTable.BOARD_ENTRY_COUNTER)));
         return guild;
     }
 
@@ -102,6 +109,8 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .setColumn(GuildTable.NOTICE, literal(guild.getNotice()))
                         .setColumn(GuildTable.POINTS, literal(guild.getPoints()))
                         .setColumn(GuildTable.LEVEL, literal(guild.getLevel()))
+                        .setColumn(GuildTable.BOARD_ENTRY_LIST, literal(guild.getBoardEntries(), registry))
+                        .setColumn(GuildTable.BOARD_ENTRY_COUNTER, literal(guild.getBoardEntryCounter().get()))
                         .whereColumn(GuildTable.GUILD_ID).isEqualTo(literal(guild.getGuildId()))
                         .build()
         );

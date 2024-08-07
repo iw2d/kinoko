@@ -53,7 +53,7 @@ public final class GameConstants {
     public static final int PARTY_MAX = 6;
     public static final int EXPEDITION_MAX = 5;
 
-    public static final List<String> GUILD_GRADE_NAMES = List.of("Master", "Jr.Master", "Member", "Member", "Member");;
+    public static final List<String> GUILD_GRADE_NAMES = List.of("Master", "Jr.Master", "Member", "Member", "Member");
     public static final int GUILD_GRADE_MAX = GUILD_GRADE_NAMES.size();
     public static final int GUILD_CAPACITY_MIN = 10;
     public static final int GUILD_CAPACITY_MAX = 100;

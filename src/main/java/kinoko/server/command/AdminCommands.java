@@ -674,6 +674,7 @@ public final class AdminCommands {
             if (JobConstants.isWildHunterJob(jobId)) {
                 user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
             }
+            user.getConnectedServer().notifyUserUpdate(user);
         }
     }
 

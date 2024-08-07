@@ -215,7 +215,7 @@ public final class LoginHandler {
         characterData.setItemSnCounter(new AtomicInteger(1));
         characterData.setCreationTime(Instant.now());
 
-        // Initial Stats
+        // Initial stats
         final short level = 1;
         final int hp = StatConstants.getMinHp(level, job.getJobId());
         final int mp = StatConstants.getMinMp(level, job.getJobId());

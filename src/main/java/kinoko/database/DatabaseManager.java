@@ -17,6 +17,8 @@ import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.cashshop.CashItemInfo;
+import kinoko.server.guild.GuildBoardComment;
+import kinoko.server.guild.GuildBoardEntry;
 import kinoko.server.guild.GuildMember;
 import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
@@ -135,6 +137,8 @@ public final class DatabaseManager {
         WildHunterInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
         GuildMemberUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        GuildBoardCommentUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+        GuildBoardEntryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
         // Create Tables
         IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
@@ -160,6 +164,8 @@ public final class DatabaseManager {
         registerCodec(cqlSession, WildHunterInfoUDT.getTypeName(), (ic) -> new WildHunterInfoCodec(ic, GenericType.of(WildHunterInfo.class)));
         registerCodec(cqlSession, CharacterStatUDT.getTypeName(), (ic) -> new CharacterStatCodec(ic, GenericType.of(CharacterStat.class)));
         registerCodec(cqlSession, GuildMemberUDT.getTypeName(), (ic) -> new GuildMemberCodec(ic, GenericType.of(GuildMember.class)));
+        registerCodec(cqlSession, GuildBoardCommentUDT.getTypeName(), (ic) -> new GuildBoardCommentCodec(ic, GenericType.of(GuildBoardComment.class)));
+        registerCodec(cqlSession, GuildBoardEntryUDT.getTypeName(), (ic) -> new GuildBoardEntryCodec(ic, GenericType.of(GuildBoardEntry.class)));
 
         // Create Accessors
         idAccessor = new CassandraIdAccessor(cqlSession, DATABASE_KEYSPACE);
