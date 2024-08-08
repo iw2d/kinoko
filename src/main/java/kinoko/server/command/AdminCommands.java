@@ -497,7 +497,7 @@ public final class AdminCommands {
                 iter.remove();
             }
             user.write(WvsContext.inventoryOperation(removeOperations, true));
-            user.write(MessagePacket.system("%s inventory cleared!"));
+            user.write(MessagePacket.system("%s inventory cleared!", inventoryType));
         }
     }
 

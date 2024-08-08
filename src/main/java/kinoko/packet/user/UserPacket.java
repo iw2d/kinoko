@@ -166,6 +166,13 @@ public final class UserPacket {
         return outPacket;
     }
 
+    public static OutPacket userConsumeItemEffect(User user, int itemId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserConsumeItemEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeInt(itemId); // nConsumeItemID
+        return outPacket;
+    }
+
     public static OutPacket userItemUpgradeEffect(User user, boolean success, boolean cursed, boolean enchantSkill, boolean whiteScroll) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserItemUpgradeEffect);
         outPacket.encodeInt(user.getCharacterId());

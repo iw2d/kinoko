@@ -142,6 +142,10 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         return AffectedArea.from(AffectedAreaType.UserSkill, owner, si, slv, delay, 1, x, y);
     }
 
+    public static AffectedArea buff(User owner, int itemId, Rect rect, Instant expireTime) {
+        return new AffectedArea(AffectedAreaType.Buff, owner, itemId, 0, 0, 0, owner.getRelativeRect(rect), ElementAttribute.PHYSICAL, expireTime);
+    }
+
     public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int interval, int x, int y) {
         final Rect rect = si.getRect().translate(x, y);
         final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);

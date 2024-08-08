@@ -326,6 +326,10 @@ public final class Field {
         if (mapInfo.hasOnUserEnter()) {
             ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
         }
+        // Handle weather effect
+        if (weatherEffect != null) {
+            user.write(FieldPacket.blowWeather(weatherEffect.getItemId(), weatherEffect.getMessage()));
+        }
         // Handle clock
         if (mapInfo.isClock()) {
             final LocalDateTime now = LocalDateTime.now();

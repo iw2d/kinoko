@@ -580,7 +580,7 @@ public final class UserHandler {
         }
     }
 
-    @Handler(InHeader.UserChangeStatRequest)
+    @Handler({ InHeader.UserChangeStatRequest, InHeader.UserChangeStatRequestByItemOption })
     public static void handleUserChangeStatRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int mask = inPacket.decodeInt(); // 0x1400
@@ -590,8 +590,7 @@ public final class UserHandler {
         }
         final int hp = Short.toUnsignedInt(inPacket.decodeShort()); // nHP
         final int mp = Short.toUnsignedInt(inPacket.decodeShort()); // nMP
-        inPacket.decodeByte(); // nOption
-
+        // inPacket.decodeByte(); // nOption for UserChangeStatRequest
         try (var locked = user.acquire()) {
             if (hp > 0) {
                 user.addHp(hp);

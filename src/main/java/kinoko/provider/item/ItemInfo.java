@@ -4,6 +4,8 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.property.WzVectorProperty;
+import kinoko.util.Rect;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
@@ -53,6 +55,17 @@ public final class ItemInfo {
 
     public String getScript() {
         return WzProvider.getString(itemSpecs.get(ItemSpecType.script), "");
+    }
+
+    public Rect getRect() {
+        final WzVectorProperty lt = (WzVectorProperty) itemInfos.get(ItemInfoType.lt);
+        final WzVectorProperty rb = (WzVectorProperty) itemInfos.get(ItemInfoType.rb);
+        return new Rect(
+                lt.getX(),
+                lt.getY(),
+                rb.getX(),
+                rb.getY()
+        );
     }
 
     public boolean isCash() {

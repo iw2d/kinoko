@@ -66,6 +66,11 @@ public abstract class ItemHandler {
         }
     }
 
+    @Handler(InHeader.UserStatChangeByPortableChairRequest)
+    public static void handleUserStatChangeByPortableChairRequest(User user, InPacket inPacket) {
+        // Client notifying the server that the recovery amount from UserChangeStatRequest has changed
+    }
+
     @Handler(InHeader.UserPetFoodItemUseRequest)
     public static void handleUserPetFoodItemUseRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time

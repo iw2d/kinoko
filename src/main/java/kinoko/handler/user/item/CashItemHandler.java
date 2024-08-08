@@ -3,6 +3,7 @@ package kinoko.handler.user.item;
 import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.TrunkPacket;
+import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.BroadcastPacket;
@@ -24,12 +25,16 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.item.*;
 import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.StatConstants;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -159,6 +164,22 @@ public final class CashItemHandler extends ItemHandler {
                     user.setAdBoard(message);
                     user.getField().broadcastPacket(UserPacket.userAdBoard(user, message));
                     user.dispose();
+                }
+                case CONSUMEEFFECTITEM -> {
+                    // Remove item
+                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+                    if (removeResult.isEmpty()) {
+                        log.error("Could not remove consume effect item from inventory");
+                        user.dispose();
+                        return;
+                    }
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    // Show effect
+                    user.write(UserLocal.effect(Effect.consumeEffect(item.getItemId())));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.consumeEffect(item.getItemId())), user);
+                    // Create affected area
+                    final Instant expireTime = Instant.now().plus(itemInfo.getInfo(ItemInfoType.time, 60), ChronoUnit.SECONDS);
+                    user.getField().getAffectedAreaPool().addAffectedArea(AffectedArea.buff(user, item.getItemId(), itemInfo.getRect(), expireTime));
                 }
                 case KARMASCISSORS -> {
                     // Resolve target item

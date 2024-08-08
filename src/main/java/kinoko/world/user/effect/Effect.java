@@ -152,6 +152,12 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static Effect consumeEffect(int itemId) {
+        final Effect effect = new Effect(EffectType.ConsumeEffect);
+        effect.int1 = itemId; // nItemID
+        return effect;
+    }
+
     public static Effect gainItem(Item item) {
         return gainItem(item.getItemId(), item.getQuantity());
     }

@@ -105,6 +105,9 @@ public enum ItemInfoType {
     addition,
     npc,
     stateChangeItem, // weather effect
+    lt, // consume effect
+    rb,
+    time,
 
     recoveryHP,
     recoveryMP;
