@@ -74,6 +74,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 case UserPacketReceive -> handleUserPacketReceive(remoteServerNode, inPacket);
                 case UserPacketBroadcast -> handleUserPacketBroadcast(remoteServerNode, inPacket);
                 case UserQueryRequest -> handleUserQueryRequest(remoteServerNode, inPacket);
+                case WorldSpeakerRequest -> handleWorldSpeakerRequest(remoteServerNode, inPacket);
                 case ServerPacketBroadcast -> handleServerPacketBroadcast(remoteServerNode, inPacket);
                 case MessengerRequest -> handleMessengerRequest(remoteServerNode, inPacket);
                 case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
@@ -286,6 +287,17 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
         // Reply with queried remote users
         remoteServerNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));
+    }
+
+    private void handleWorldSpeakerRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final boolean avatar = inPacket.decodeBoolean();
+        final int packetLength = inPacket.decodeInt();
+        final byte[] packetData = inPacket.decodeArray(packetLength);
+        final OutPacket outPacket = OutPacket.of(packetData);
+        for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
+            serverNode.write(CentralPacket.worldSpeakerRequest(characterId, avatar, outPacket));
+        }
     }
 
     private void handleServerPacketBroadcast(RemoteServerNode remoteServerNode, InPacket inPacket) {

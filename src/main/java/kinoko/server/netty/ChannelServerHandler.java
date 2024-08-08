@@ -58,6 +58,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
                 case UserPacketReceive -> handleUserPacketReceive(inPacket);
                 case UserPacketBroadcast -> handleUserPacketBroadcast(inPacket);
                 case UserQueryResult -> handleUserQueryResult(inPacket);
+                case WorldSpeakerRequest -> handleWorldSpeakerRequest(inPacket);
                 case ServerPacketBroadcast -> handleServerPacketBroadcast(inPacket);
                 case MessengerResult -> handleMessengerResult(inPacket);
                 case PartyResult -> handlePartyResult(inPacket);
@@ -143,6 +144,15 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             remoteUsers.add(RemoteUser.decode(inPacket));
         }
         channelServerNode.completeUserQueryRequest(requestId, remoteUsers);
+    }
+
+    private void handleWorldSpeakerRequest(InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final boolean avatar = inPacket.decodeBoolean();
+        final int packetLength = inPacket.decodeInt();
+        final byte[] packetData = inPacket.decodeArray(packetLength);
+        final OutPacket outPacket = OutPacket.of(packetData);
+        channelServerNode.completeWorldSpeakerRequest(characterId, avatar, outPacket);
     }
 
     private void handleServerPacketBroadcast(InPacket inPacket) {

@@ -25,6 +25,7 @@ public enum CentralHeader {
     UserPacketBroadcast,
     UserQueryRequest,
     UserQueryResult,
+    WorldSpeakerRequest,
     ServerPacketBroadcast,
     MessengerRequest,
     MessengerResult,

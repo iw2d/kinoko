@@ -20,8 +20,8 @@ import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.header.InHeader;
-import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
+import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
@@ -36,7 +36,6 @@ import kinoko.world.user.stat.StatConstants;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public final class CashItemHandler extends ItemHandler {
 
@@ -69,6 +68,11 @@ public final class CashItemHandler extends ItemHandler {
             switch (cashItemType) {
                 case SPEAKERCHANNEL -> {
                     final String message = formatSpeakerMessage(user, inPacket.decodeString());
+                    // Check level
+                    if (user.getLevel() < 10) {
+                        user.write(WvsContext.avatarMegaphoneResLevelLimit()); // This megaphone is only available for characters that are over Level 10.
+                        return;
+                    }
                     // Remove item
                     final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
                     if (removeResult.isEmpty()) {
@@ -77,24 +81,16 @@ public final class CashItemHandler extends ItemHandler {
                         return;
                     }
                     user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    // Channel broadcast
                     user.getConnectedServer().submitChannelPacketBroadcast(BroadcastPacket.speakerChannel(message));
                 }
                 case SPEAKERWORLD, SKULLSPEAKER -> {
                     final String message = formatSpeakerMessage(user, inPacket.decodeString());
                     final boolean whisperIcon = inPacket.decodeBoolean();
-                    // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
-                        log.error("Could not remove speaker world item from inventory");
-                        user.dispose();
-                        return;
-                    }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
-                    if (cashItemType == CashItemType.SPEAKERWORLD) {
-                        user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.speakerWorld(message, user.getChannelId(), whisperIcon));
-                    } else {
-                        user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.skullSpeaker(message, user.getChannelId(), whisperIcon));
-                    }
+                    final OutPacket outPacket = cashItemType == CashItemType.SPEAKERWORLD ?
+                            BroadcastPacket.speakerWorld(message, user.getChannelId(), whisperIcon) :
+                            BroadcastPacket.skullSpeaker(message, user.getChannelId(), whisperIcon);
+                    handleWorldSpeaker(user, position, item, false, outPacket);
                 }
                 case ITEMSPEAKER -> {
                     final String message = formatSpeakerMessage(user, inPacket.decodeString());
@@ -113,15 +109,7 @@ public final class CashItemHandler extends ItemHandler {
                     } else {
                         targetItem = null;
                     }
-                    // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
-                        log.error("Could not remove item speaker item from inventory");
-                        user.dispose();
-                        return;
-                    }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
-                    user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.itemSpeaker(message, targetItem, user.getChannelId(), whisperIcon));
+                    handleWorldSpeaker(user, position, item, false, BroadcastPacket.itemSpeaker(message, targetItem, user.getChannelId(), whisperIcon));
                 }
                 case ARTSPEAKERWORLD -> {
                     final List<String> messages = new ArrayList<>();
@@ -130,15 +118,7 @@ public final class CashItemHandler extends ItemHandler {
                         messages.add(formatSpeakerMessage(user, inPacket.decodeString()));
                     }
                     final boolean whisperIcon = inPacket.decodeBoolean();
-                    // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
-                        log.error("Could not remove art speaker world item from inventory");
-                        user.dispose();
-                        return;
-                    }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
-                    user.getConnectedServer().submitServerPacketBroadcast(BroadcastPacket.artSpeakerWorld(messages, user.getChannelId(), whisperIcon));
+                    handleWorldSpeaker(user, position, item, false, BroadcastPacket.artSpeakerWorld(messages, user.getChannelId(), whisperIcon));
                 }
                 case AVATARMEGAPHONE -> {
                     final String s1 = inPacket.decodeString();
@@ -146,18 +126,7 @@ public final class CashItemHandler extends ItemHandler {
                     final String s3 = inPacket.decodeString();
                     final String s4 = inPacket.decodeString();
                     final boolean whisperIcon = inPacket.decodeBoolean();
-                    // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
-                        log.error("Could not remove avatar megaphone item from inventory");
-                        user.dispose();
-                        return;
-                    }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
-                    user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
-                    ServerExecutor.scheduleService(() -> {
-                        user.getConnectedServer().submitServerPacketBroadcast(WvsContext.avatarMegaphoneClearMessage());
-                    }, 5, TimeUnit.SECONDS); // TODO : scheduling system?
+                    handleWorldSpeaker(user, position, item, true, WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
                 }
                 case ADBOARD -> {
                     final String message = inPacket.decodeString();
@@ -540,6 +509,32 @@ public final class CashItemHandler extends ItemHandler {
         } else {
             return String.format("%s : %s", user.getCharacterName(), message);
         }
+    }
+
+    private static void handleWorldSpeaker(User user, int position, Item item, boolean avatar, OutPacket outPacket) {
+        // Check if speaker can be sent
+        if (user.getLevel() < 10) {
+            user.write(WvsContext.avatarMegaphoneResLevelLimit()); // This megaphone is only available for characters that are over Level 10.
+            return;
+        }
+        if (avatar && !user.getConnectedServer().canSubmitAvatarSpeaker()) {
+            user.write(WvsContext.avatarMegaphoneResQueueFull()); // The waiting line is longer than 15 seconds. Please try using it at a later time.
+            return;
+        }
+        if (!user.getConnectedServer().canSubmitWorldSpeaker(user.getCharacterId())) {
+            user.write(WvsContext.avatarMegaphoneRes("You may not use this item yet."));
+            return;
+        }
+        // Remove item
+        final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
+        if (removeResult.isEmpty()) {
+            log.error("Could not remove world speaker item from inventory");
+            user.dispose();
+            return;
+        }
+        user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+        // Submit world speaker request
+        user.getConnectedServer().submitWorldSpeakerRequest(user.getCharacterId(), avatar, outPacket);
     }
 
     private static void handleMapTransfer(User user, int targetFieldId, Item item, int position) {

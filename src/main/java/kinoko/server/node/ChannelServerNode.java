@@ -23,6 +23,7 @@ import kinoko.server.netty.*;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.user.RemoteUser;
+import kinoko.server.user.SpeakerManager;
 import kinoko.world.field.Field;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +42,7 @@ public final class ChannelServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(ChannelServerNode.class);
     private final ChannelFieldStorage fieldStorage = new ChannelFieldStorage();
     private final InstanceStorage instanceStorage = new InstanceStorage();
+    private final SpeakerManager speakerManager = new SpeakerManager();
     private final EventManager eventManager = new EventManager();
     private final int channelId;
     private final int channelPort;
@@ -162,14 +164,33 @@ public final class ChannelServerNode extends ServerNode {
         }
     }
 
-    public void submitChannelPacketBroadcast(OutPacket remotePacket) {
-        for (User user : getConnectedUsers()) {
-            user.write(remotePacket);
+
+    // BROADCAST METHODS -----------------------------------------------------------------------------------------------
+
+    public boolean canSubmitAvatarSpeaker() {
+        return speakerManager.canSubmitAvatarSpeaker();
+    }
+
+    public boolean canSubmitWorldSpeaker(int characterId) {
+        return speakerManager.canSubmitWorldSpeaker(characterId);
+    }
+
+    public void submitWorldSpeakerRequest(int characterId, boolean avatar, OutPacket outPacket) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.worldSpeakerRequest(characterId, avatar, outPacket));
+    }
+
+    public void completeWorldSpeakerRequest(int characterId, boolean avatar, OutPacket outPacket) {
+        speakerManager.registerWorldSpeaker(characterId, avatar, outPacket);
+    }
+
+    public void submitChannelPacketBroadcast(OutPacket outPacket) {
+        for (User user : clientStorage.getConnectedUsers()) {
+            user.write(outPacket);
         }
     }
 
-    public void submitServerPacketBroadcast(OutPacket remotePacket) {
-        centralClientFuture.channel().writeAndFlush(CentralPacket.serverPacketBroadcast(remotePacket));
+    public void submitServerPacketBroadcast(OutPacket outPacket) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.serverPacketBroadcast(outPacket));
     }
 
 
@@ -225,7 +246,8 @@ public final class ChannelServerNode extends ServerNode {
 
     @Override
     public void initialize() throws InterruptedException, UnknownHostException {
-        // Initialize event manager
+        // Initialize channel server classes
+        speakerManager.initialize(clientStorage);
         eventManager.initialize(fieldStorage);
 
         // Start channel server

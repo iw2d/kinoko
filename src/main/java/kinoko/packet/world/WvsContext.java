@@ -216,12 +216,22 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket avatarMegaphoneRes(CashItemResultType resultType, String message) {
+    public static OutPacket avatarMegaphoneResQueueFull() {
         final OutPacket outPacket = OutPacket.of(OutHeader.AvatarMegaphoneRes);
-        outPacket.encodeByte(resultType.getValue());
-        if (resultType != CashItemResultType.AvatarMegaphone_Queue_Full && resultType != CashItemResultType.AvatarMegaphone_Level_Limit) {
-            outPacket.encodeString(message);
-        }
+        outPacket.encodeByte(CashItemResultType.AvatarMegaphone_Queue_Full.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket avatarMegaphoneResLevelLimit() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.AvatarMegaphoneRes);
+        outPacket.encodeByte(CashItemResultType.AvatarMegaphone_Level_Limit.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket avatarMegaphoneRes(String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.AvatarMegaphoneRes);
+        outPacket.encodeByte(0);
+        outPacket.encodeString(message);
         return outPacket;
     }
 

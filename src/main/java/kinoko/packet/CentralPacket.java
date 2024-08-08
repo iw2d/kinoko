@@ -173,6 +173,16 @@ public final class CentralPacket {
         return outPacket;
     }
 
+    public static OutPacket worldSpeakerRequest(int characterId, boolean avatar, OutPacket remotePacket) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.WorldSpeakerRequest);
+        outPacket.encodeInt(characterId);
+        outPacket.encodeByte(avatar);
+        final byte[] packetData = remotePacket.getData();
+        outPacket.encodeInt(packetData.length);
+        outPacket.encodeArray(packetData);
+        return outPacket;
+    }
+
     public static OutPacket serverPacketBroadcast(OutPacket remotePacket) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.ServerPacketBroadcast);
         final byte[] packetData = remotePacket.getData();
