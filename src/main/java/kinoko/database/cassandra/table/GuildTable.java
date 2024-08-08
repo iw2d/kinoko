@@ -3,7 +3,7 @@ package kinoko.database.cassandra.table;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import kinoko.database.cassandra.type.GuildBoardCommentUDT;
+import kinoko.database.cassandra.type.GuildBoardEntryUDT;
 import kinoko.database.cassandra.type.GuildMemberUDT;
 
 public final class GuildTable {
@@ -21,6 +21,7 @@ public final class GuildTable {
     public static final String POINTS = "points";
     public static final String LEVEL = "level";
     public static final String BOARD_ENTRY_LIST = "board_entry_list";
+    public static final String BOARD_ENTRY_NOTICE = "board_entry_notice";
     public static final String BOARD_ENTRY_COUNTER = "board_entry_counter";
 
     private static final String tableName = "guild_table";
@@ -46,7 +47,8 @@ public final class GuildTable {
                         .withColumn(NOTICE, DataTypes.TEXT)
                         .withColumn(POINTS, DataTypes.INT)
                         .withColumn(LEVEL, DataTypes.TINYINT)
-                        .withColumn(BOARD_ENTRY_LIST, DataTypes.frozenListOf(SchemaBuilder.udt(GuildBoardCommentUDT.getTypeName(), true)))
+                        .withColumn(BOARD_ENTRY_LIST, DataTypes.frozenListOf(SchemaBuilder.udt(GuildBoardEntryUDT.getTypeName(), true)))
+                        .withColumn(BOARD_ENTRY_NOTICE, SchemaBuilder.udt(GuildBoardEntryUDT.getTypeName(), true))
                         .withColumn(BOARD_ENTRY_COUNTER, DataTypes.INT)
                         .build()
         );

@@ -5,6 +5,7 @@ import kinoko.server.packet.OutPacket;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class GuildBoardEntry {
@@ -82,6 +83,30 @@ public final class GuildBoardEntry {
 
     public void setCommentSnCounter(AtomicInteger commentSnCounter) {
         this.commentSnCounter = commentSnCounter;
+    }
+
+
+    // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public int getNextCommentSn() {
+        return commentSnCounter.getAndIncrement();
+    }
+
+    public Optional<GuildBoardComment> getComment(int commentSn) {
+        for (GuildBoardComment comment : comments) {
+            if (comment.getCommentSn() == commentSn) {
+                return Optional.of(comment);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void addComment(GuildBoardComment comment) {
+        comments.add(comment);
+    }
+
+    public void removeComment(int commentSn) {
+        comments.removeIf((comment) -> comment.getCommentSn() == commentSn);
     }
 
     public void encodeList(OutPacket outPacket) {

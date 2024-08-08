@@ -26,6 +26,7 @@ public final class Guild implements Encodable, Lockable<Guild> {
     private final Map<Integer, GuildMember> guildMembers; // character ID -> guild member
     private final Map<Integer, Integer> guildInvites; // invitee ID -> inviter ID
     private final List<GuildBoardEntry> boardEntries;
+    private GuildBoardEntry boardNoticeEntry;
     private AtomicInteger boardEntryCounter;
     private int memberMax;
 
@@ -79,6 +80,14 @@ public final class Guild implements Encodable, Lockable<Guild> {
 
     public List<GuildBoardEntry> getBoardEntries() {
         return boardEntries;
+    }
+
+    public GuildBoardEntry getBoardNoticeEntry() {
+        return boardNoticeEntry;
+    }
+
+    public void setBoardNoticeEntry(GuildBoardEntry boardNoticeEntry) {
+        this.boardNoticeEntry = boardNoticeEntry;
     }
 
     public AtomicInteger getBoardEntryCounter() {
@@ -171,6 +180,39 @@ public final class Guild implements Encodable, Lockable<Guild> {
 
 
     // BBS METHODS -----------------------------------------------------------------------------------------------------
+
+    public Optional<GuildBoardEntry> getBoardEntry(int entryId) {
+        if (entryId == 0 || (boardNoticeEntry != null && boardNoticeEntry.getEntryId() == entryId)) {
+            return Optional.ofNullable(boardNoticeEntry);
+        }
+        for (GuildBoardEntry entry : boardEntries) {
+            if (entry.getEntryId() == entryId) {
+                return Optional.of(entry);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void addBoardEntry(GuildBoardEntry entry) {
+        boardEntries.add(entry);
+    }
+
+    public void removeBoardEntry(int entryId) {
+        if (entryId == 0 || (boardNoticeEntry != null && boardNoticeEntry.getEntryId() == entryId)) {
+            boardNoticeEntry = null;
+            return;
+        }
+        boardEntries.removeIf((entry) -> entry.getEntryId() == entryId);
+    }
+
+    public List<GuildBoardEntry> getBoardEntryList(int page) {
+        final int start = page * 10;
+        final int end = Math.min(boardEntries.size(), start + 10);
+        if (start > end) {
+            return List.of();
+        }
+        return boardEntries.subList(start, end);
+    }
 
     public int getNextBoardEntryId() {
         return boardEntryCounter.getAndIncrement();

@@ -9,6 +9,37 @@ import kinoko.world.GameConstants;
 import java.util.List;
 
 public final class GuildPacket {
+    // CUIGuildBBS::OnGuildBBSPacket -----------------------------------------------------------------------------------
+
+    public static OutPacket loadEntryListResult(GuildBoardEntry notice, List<GuildBoardEntry> entries, int totalCount) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.GuildBBS);
+        outPacket.encodeByte(GuildBoardProtocol.LoadListResult.getValue());
+        outPacket.encodeByte(notice != null);
+        if (notice != null) {
+            notice.encodeList(outPacket); // CUIGuildBBS::ENTRYLIST
+        }
+        outPacket.encodeInt(totalCount); // nEntryListTotalCount
+        outPacket.encodeInt(entries.size());
+        for (GuildBoardEntry entry : entries) {
+            entry.encodeList(outPacket); // CUIGuildBBS::ENTRYLIST
+        }
+        return outPacket;
+    }
+
+    public static OutPacket viewEntryResult(GuildBoardEntry entry) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.GuildBBS);
+        outPacket.encodeByte(GuildBoardProtocol.ViewEntryResult.getValue());
+        entry.encodeCurrent(outPacket); // CUIGuildBBS::CURENTRY
+        return outPacket;
+    }
+
+    public static OutPacket boardEntryNotFound() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.GuildBBS);
+        outPacket.encodeByte(GuildBoardProtocol.EntryNotFound.getValue());
+        return outPacket;
+    }
+
+
     // CWvsContext::OnGuildResult --------------------------------------------------------------------------------------
 
     public static OutPacket inputGuildName() {

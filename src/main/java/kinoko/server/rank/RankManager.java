@@ -59,7 +59,7 @@ public final class RankManager {
     }
 
     public static List<GuildRanking> getGuildRankings() {
-        return guildRankings.subList(0, 100);
+        return guildRankings.subList(0, Math.min(guildRankings.size(), 100));
     }
 
     private static int getNearestHour() {

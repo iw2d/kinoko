@@ -51,6 +51,7 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
         if (boardEntries != null) {
             guild.getBoardEntries().addAll(boardEntries);
         }
+        guild.setBoardNoticeEntry(row.get(GuildTable.BOARD_ENTRY_NOTICE, GuildBoardEntry.class));
         guild.setBoardEntryCounter(new AtomicInteger(row.getInt(GuildTable.BOARD_ENTRY_COUNTER)));
         return guild;
     }
@@ -110,6 +111,7 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .setColumn(GuildTable.POINTS, literal(guild.getPoints()))
                         .setColumn(GuildTable.LEVEL, literal(guild.getLevel()))
                         .setColumn(GuildTable.BOARD_ENTRY_LIST, literal(guild.getBoardEntries(), registry))
+                        .setColumn(GuildTable.BOARD_ENTRY_NOTICE, literal(guild.getBoardNoticeEntry(), registry))
                         .setColumn(GuildTable.BOARD_ENTRY_COUNTER, literal(guild.getBoardEntryCounter().get()))
                         .whereColumn(GuildTable.GUILD_ID).isEqualTo(literal(guild.getGuildId()))
                         .build()

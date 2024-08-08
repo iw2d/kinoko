@@ -13,10 +13,7 @@ import kinoko.packet.world.PartyPacket;
 import kinoko.server.friend.Friend;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendStatus;
-import kinoko.server.guild.Guild;
-import kinoko.server.guild.GuildMember;
-import kinoko.server.guild.GuildRank;
-import kinoko.server.guild.GuildRequest;
+import kinoko.server.guild.*;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoType;
@@ -81,6 +78,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 case MessengerRequest -> handleMessengerRequest(remoteServerNode, inPacket);
                 case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
                 case GuildRequest -> handleGuildRequest(remoteServerNode, inPacket);
+                case BoardRequest -> handleBoardRequest(remoteServerNode, inPacket);
                 case FriendRequest -> handleFriendRequest(remoteServerNode, inPacket);
                 case null -> log.error("Central Server received an unknown opcode : {}", op);
                 default -> log.error("Central Server received an unhandled header : {}", header);
@@ -1049,6 +1047,130 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
     }
 
+    private void handleBoardRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final GuildBoardRequest boardRequest = GuildBoardRequest.decode(inPacket);
+        // Resolve requester user
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        if (remoteUserResult.isEmpty()) {
+            log.error("Failed to resolve user with character ID : {} for GuildBoardRequest", characterId);
+            return;
+        }
+        final RemoteUser remoteUser = remoteUserResult.get();
+        // Resolve guild
+        final Optional<Guild> guildResult = centralServerNode.getGuildById(remoteUser.getGuildId());
+        if (guildResult.isEmpty()) {
+            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not in a guild yet.")));
+            return;
+        }
+        try (var lockedGuild = guildResult.get().acquire()) {
+            final Guild guild = lockedGuild.get();
+            final GuildRank guildRank = guild.getMember(characterId).getGuildRank();
+            switch (boardRequest.getRequestType()) {
+                case Register -> {
+                    if (boardRequest.isModify()) {
+                        // Resolve entry
+                        final Optional<GuildBoardEntry> entryResult = guild.getBoardEntry(boardRequest.getEntryId());
+                        if (entryResult.isEmpty()) {
+                            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.boardEntryNotFound()));
+                            return;
+                        }
+                        final GuildBoardEntry entry = entryResult.get();
+                        if (entry.getCharacterId() != remoteUser.getCharacterId() && guildRank != GuildRank.MASTER && guildRank != GuildRank.SUBMASTER) {
+                            remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You cannot edit this entry.")));
+                            return;
+                        }
+                        // Modify entry
+                        entry.setTitle(boardRequest.getTitle());
+                        entry.setText(boardRequest.getText());
+                        entry.setDate(Instant.now());
+                        entry.setEmoticon(boardRequest.getEmoticon());
+                    } else {
+                        if (boardRequest.isNotice()) {
+                            // Check if notice can be created
+                            if (guildRank != GuildRank.MASTER && guildRank != GuildRank.SUBMASTER) {
+                                remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You are not the master of the guild yet.")));
+                                return;
+                            }
+                            if (guild.getBoardNoticeEntry() != null) {
+                                remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("Please delete the current notice and then try again.")));
+                                return;
+                            }
+                        }
+                        // Create board entry
+                        final GuildBoardEntry entry = new GuildBoardEntry(
+                                guild.getNextBoardEntryId(),
+                                remoteUser.getCharacterId(),
+                                boardRequest.getTitle(),
+                                boardRequest.getText(),
+                                Instant.now(),
+                                boardRequest.getEmoticon()
+                        );
+                        if (boardRequest.isNotice()) {
+                            guild.setBoardNoticeEntry(entry);
+                        } else {
+                            guild.addBoardEntry(entry);
+                        }
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.viewEntryResult(entry)));
+                    }
+                }
+                case Delete -> {
+                    final Optional<GuildBoardEntry> entryResult = guild.getBoardEntry(boardRequest.getEntryId());
+                    if (entryResult.isEmpty()) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.boardEntryNotFound()));
+                        return;
+                    }
+                    if (entryResult.get().getCharacterId() != remoteUser.getCharacterId() && guildRank != GuildRank.MASTER && guildRank != GuildRank.SUBMASTER) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You cannot delete this entry.")));
+                        return;
+                    }
+                    guild.removeBoardEntry(boardRequest.getEntryId());
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadEntryListResult(guild.getBoardNoticeEntry(), guild.getBoardEntryList(0), guild.getBoardEntries().size())));
+                }
+                case LoadListRequest -> {
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadEntryListResult(guild.getBoardNoticeEntry(), guild.getBoardEntryList(boardRequest.getStart()), guild.getBoardEntries().size())));
+                }
+                case ViewEntryRequest -> {
+                    final Optional<GuildBoardEntry> entryResult = guild.getBoardEntry(boardRequest.getEntryId());
+                    if (entryResult.isEmpty()) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.boardEntryNotFound()));
+                        return;
+                    }
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.viewEntryResult(entryResult.get())));
+                }
+                case RegisterComment -> {
+                    final Optional<GuildBoardEntry> entryResult = guild.getBoardEntry(boardRequest.getEntryId());
+                    if (entryResult.isEmpty()) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.boardEntryNotFound()));
+                        return;
+                    }
+                    final GuildBoardEntry entry = entryResult.get();
+                    entry.addComment(new GuildBoardComment(
+                            entry.getNextCommentSn(),
+                            remoteUser.getCharacterId(),
+                            boardRequest.getText(),
+                            Instant.now()
+                    ));
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.viewEntryResult(entry)));
+                }
+                case DeleteComment -> {
+                    final Optional<GuildBoardEntry> entryResult = guild.getBoardEntry(boardRequest.getEntryId());
+                    if (entryResult.isEmpty()) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.boardEntryNotFound()));
+                        return;
+                    }
+                    final GuildBoardEntry entry = entryResult.get();
+                    final Optional<GuildBoardComment> commentResult = entry.getComment(boardRequest.getCommentSn());
+                    if (commentResult.isEmpty() || (commentResult.get().getCharacterId() != remoteUser.getCharacterId() && guildRank != GuildRank.MASTER && guildRank != GuildRank.SUBMASTER)) {
+                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg("You cannot delete this comment.")));
+                        return;
+                    }
+                    entry.removeComment(boardRequest.getCommentSn());
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.viewEntryResult(entry)));
+                }
+            }
+        }
+    }
 
     private void handleFriendRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();

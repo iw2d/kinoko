@@ -26,10 +26,7 @@ import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.friend.FriendRequest;
 import kinoko.server.friend.FriendRequestType;
-import kinoko.server.guild.GuildRank;
-import kinoko.server.guild.GuildRequest;
-import kinoko.server.guild.GuildRequestType;
-import kinoko.server.guild.GuildResultType;
+import kinoko.server.guild.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
@@ -1797,11 +1794,67 @@ public final class UserHandler {
                     cm.setPetConsumeMpItem(itemId);
                 }
                 case null -> {
-                    log.error("Received unknown type {} for FUNC_KEY_MAPPED_MODIFIED", type);
+                    log.error("Received unknown type {} for FuncKeyMappedModified", type);
                 }
                 default -> {
                     log.error("Unhandled func key mapped type : {}", funcKeyMappedType);
                 }
+            }
+        }
+    }
+
+    @Handler(InHeader.GuildBBS)
+    public static void handleGuildBBS(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        if (!user.hasGuild()) {
+            log.error("Received GuildBBS without a guild");
+            user.write(GuildPacket.serverMsg("You are not in a guild yet."));
+            return;
+        }
+        final GuildBoardProtocol requestType = GuildBoardProtocol.getByValue(type);
+        switch (requestType) {
+            case Register -> {
+                // CUIGuildBBS::OnRegister
+                final boolean modify = inPacket.decodeBoolean(); // bModify
+                final int entryId = modify ? inPacket.decodeInt() : -1; // nCurEntryID
+                final boolean notice = inPacket.decodeBoolean(); // bNotice
+                final String title = inPacket.decodeString(); // sTitle
+                final String text = inPacket.decodeString(); // sText
+                final int emoticon = inPacket.decodeInt(); // nEmoticonID
+                user.getConnectedServer().submitBoardRequest(user, GuildBoardRequest.register(modify, entryId, notice, title, text, emoticon));
+            }
+            case Delete -> {
+                // CUIGuildBBS::OnDelete
+                final int entryId = inPacket.decodeInt(); // nCurEntryID
+                user.getConnectedServer().submitBoardRequest(user, GuildBoardRequest.delete(entryId));
+            }
+            case LoadListRequest -> {
+                // CUIGuildBBS::SendLoadListRequest
+                final int start = inPacket.decodeInt(); // nEntryListStart
+                user.getConnectedServer().submitBoardRequest(user, GuildBoardRequest.loadList(start));
+            }
+            case ViewEntryRequest -> {
+                // CUIGuildBBS::SendViewEntryRequest
+                final int entryId = inPacket.decodeInt(); // nViewRequestEntryID
+                user.getConnectedServer().submitBoardRequest(user, GuildBoardRequest.viewEntry(entryId));
+            }
+            case RegisterComment -> {
+                // CUIGuildBBS::OnComment
+                final int entryId = inPacket.decodeInt(); // nCurEntryID
+                final String text = inPacket.decodeString(); // sText
+                user.getConnectedServer().submitBoardRequest(user, GuildBoardRequest.registerComment(entryId, text));
+            }
+            case DeleteComment -> {
+                // CUIGuildBBS::OnCommentDelete
+                final int entryId = inPacket.decodeInt(); // nCurEntryID
+                final int commentSn = inPacket.decodeInt(); // nSN
+                user.getConnectedServer().submitBoardRequest(user, GuildBoardRequest.deleteComment(entryId, commentSn));
+            }
+            case null -> {
+                log.error("Unknown guild board request type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled guild board request type : {}", requestType);
             }
         }
     }

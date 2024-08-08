@@ -32,6 +32,7 @@ public enum CentralHeader {
     PartyResult,
     GuildRequest,
     GuildResult,
+    BoardRequest,
     FriendRequest;
 
     private static final List<CentralHeader> headers = List.of(values());
