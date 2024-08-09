@@ -458,8 +458,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         // Process request
         switch (partyRequest.getRequestType()) {
             case LoadParty -> {
-                // Remote user party ID is set on UserConnect
-                final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
+                final Optional<Party> partyResult = centralServerNode.getPartyById(partyRequest.getPartyId());
                 if (partyResult.isEmpty()) {
                     remoteUser.setPartyId(0);
                     remoteServerNode.write(CentralPacket.partyResult(remoteUser.getCharacterId(), null));
