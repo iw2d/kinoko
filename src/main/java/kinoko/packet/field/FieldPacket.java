@@ -45,9 +45,9 @@ public final class FieldPacket {
         return outPacket;
     }
 
-    public static OutPacket groupMessage(GroupMessageType messageType, String characterName, String message) {
+    public static OutPacket groupMessage(ChatGroupType groupType, String characterName, String message) {
         final OutPacket outPacket = OutPacket.of(OutHeader.GroupMessage);
-        outPacket.encodeByte(messageType.getValue());
+        outPacket.encodeByte(groupType.getValue());
         outPacket.encodeString(characterName); // sFrom
         outPacket.encodeString(message); // sMsg
         return outPacket;

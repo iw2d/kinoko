@@ -881,9 +881,9 @@ public final class UserHandler {
     public static void handleGroupMessage(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int type = inPacket.decodeByte(); // nChatTarget
-        final GroupMessageType messageType = GroupMessageType.getByValue(type);
-        if (messageType == null) {
-            log.error("Unknown group message type : {}", type);
+        final ChatGroupType groupType = ChatGroupType.getByValue(type);
+        if (groupType == null) {
+            log.error("Unknown chat group type : {}", type);
             return;
         }
         final int count = inPacket.decodeByte(); // nMemberCnt
@@ -896,7 +896,7 @@ public final class UserHandler {
             CommandProcessor.tryProcessCommand(user, text);
             return;
         }
-        user.getConnectedServer().submitUserPacketBroadcast(targetIds, FieldPacket.groupMessage(messageType, user.getCharacterName(), text));
+        user.getConnectedServer().submitUserPacketBroadcast(targetIds, FieldPacket.groupMessage(groupType, user.getCharacterName(), text));
     }
 
     @Handler(InHeader.Whisper)
