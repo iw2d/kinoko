@@ -104,6 +104,8 @@ public enum ItemInfoType {
     setKey,
     addition,
     npc,
+    keyword,
+    keywordEffect,
     stateChangeItem, // weather effect
     lt, // consume effect
     rb,

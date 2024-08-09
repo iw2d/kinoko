@@ -115,7 +115,9 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             return;
         }
         // Write to target client
-        targetUserResult.get().write(OutPacket.of(packetData));
+        try (var locked = targetUserResult.get().acquire()) {
+            locked.get().write(OutPacket.of(packetData));
+        }
     }
 
     private void handleUserPacketBroadcast(InPacket inPacket) {
