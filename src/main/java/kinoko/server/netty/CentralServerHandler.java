@@ -533,7 +533,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             case JoinParty -> {
                 // Check current party
                 if (remoteUser.getPartyId() != 0) {
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Already have joined a party.
+                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_AlreadyJoined))); // Already have joined a party.
                     return;
                 }
                 // Resolve inviter

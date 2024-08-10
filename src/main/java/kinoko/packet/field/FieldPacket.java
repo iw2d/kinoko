@@ -137,6 +137,27 @@ public final class FieldPacket {
     }
 
 
+    // CMessageBoxPool::OnPacket ---------------------------------------------------------------------------------------
+
+    public static OutPacket messageBoxEnterField(User user, int messageBoxId, int itemId, String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MessageBoxEnterField);
+        outPacket.encodeInt(messageBoxId); // dwMessageBoxID
+        outPacket.encodeInt(itemId); // nItemID
+        outPacket.encodeString(message); // sHope
+        outPacket.encodeString(user.getCharacterName()); // sCharacterName
+        outPacket.encodeShort(user.getX()); // ptHost.x
+        outPacket.encodeShort(user.getY()); // ptHost.y
+        return outPacket;
+    }
+
+    public static OutPacket messageBoxLeaveField(int messageBoxId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MessageBoxLeaveField);
+        outPacket.encodeByte(0); // 0 = animate, 1 = no animation
+        outPacket.encodeInt(messageBoxId); // dwMessageBoxID
+        return outPacket;
+    }
+
+
     // CAffectedAreaPool::OnPacket -------------------------------------------------------------------------------------
 
     public static OutPacket affectedAreaCreated(AffectedArea affectedArea) {
