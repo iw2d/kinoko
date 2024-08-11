@@ -696,7 +696,8 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         switch (guildRequest.getRequestType()) {
             case LoadGuild -> {
                 // Load guild from storage / database
-                final Optional<Guild> guildResult = centralServerNode.getGuildById(guildRequest.getGuildId());
+                final int guildId = guildRequest.getGuildId() != 0 ? guildRequest.getGuildId() : remoteUser.getGuildId();
+                final Optional<Guild> guildResult = centralServerNode.getGuildById(guildId);
                 if (guildResult.isEmpty()) {
                     remoteUser.setGuildId(0);
                     remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), null));
@@ -808,7 +809,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     // Update user
                     remoteUser.setGuildId(guild.getGuildId());
                     remoteServerNode.write(CentralPacket.guildResult(remoteUser.getCharacterId(), GuildInfo.from(guild, remoteUser.getCharacterId())));
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.loadGuildDone(guild)));
                     // Update members
                     final OutPacket outPacket = GuildPacket.joinGuildDone(guild.getGuildId(), newMember);
                     forEachGuildMember(guild, (member, node) -> {

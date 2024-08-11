@@ -18,6 +18,8 @@ import kinoko.script.common.ScriptAnswer;
 import kinoko.script.common.ScriptDispatcher;
 import kinoko.script.common.ScriptMessageType;
 import kinoko.server.ServerConfig;
+import kinoko.server.alliance.AllianceRequestType;
+import kinoko.server.alliance.AllianceResultType;
 import kinoko.server.cashshop.*;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.dialog.ScriptDialog;
@@ -1327,7 +1329,7 @@ public final class UserHandler {
         final GuildRequestType requestType = GuildRequestType.getByValue(type);
         switch (requestType) {
             case LoadGuild -> {
-                // handled in CentralServerHandler::handleGuildRequest
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.loadGuild(user.getGuildId()));
             }
             case CheckGuildName -> {
                 final String guildName = inPacket.decodeString(); // sGuildName
@@ -1800,6 +1802,20 @@ public final class UserHandler {
                 }
             }
         }
+    }
+
+    @Handler(InHeader.AllianceRequest)
+    public static void handleAllianceRequest(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final AllianceRequestType requestType = AllianceRequestType.getByValue(type);
+        // TODO
+    }
+
+    @Handler(InHeader.AllianceResult)
+    public static void handleAllianceResult(User user, InPacket inPacket) {
+        final int type = inPacket.decodeByte();
+        final AllianceResultType resultType = AllianceResultType.getByValue(type);
+        // TODO
     }
 
     @Handler(InHeader.GuildBBS)

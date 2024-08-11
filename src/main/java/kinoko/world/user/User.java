@@ -226,6 +226,14 @@ public final class User extends Life implements Lockable<User> {
         return getGuildInfo().getGuildRank();
     }
 
+    public int getAllianceId() {
+        return getGuildInfo().getAllianceId();
+    }
+
+    public boolean hasAlliance() {
+        return getAllianceId() != 0;
+    }
+
     public Dialog getDialog() {
         return dialog;
     }
