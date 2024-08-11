@@ -173,6 +173,12 @@ public final class GuildRequest implements Encodable {
             case SetNotice -> {
                 request.guildNotice = inPacket.decodeString();
             }
+            case null -> {
+                throw new IllegalStateException(String.format("Unknown guild request type %d", type));
+            }
+            default -> {
+                throw new IllegalStateException(String.format("Unhandled guild request type %d", type));
+            }
         }
         return request;
     }

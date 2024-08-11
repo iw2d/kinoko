@@ -1273,7 +1273,7 @@ public final class UserHandler {
                     return;
                 }
                 final int targetId = inPacket.decodeInt();
-                user.getConnectedServer().submitPartyRequest(user, PartyRequest.changePartyBoss(targetId));
+                user.getConnectedServer().submitPartyRequest(user, PartyRequest.changePartyBoss(targetId, false));
             }
             case null -> {
                 log.error("Unknown party request type : {}", type);

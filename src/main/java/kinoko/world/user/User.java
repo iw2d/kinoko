@@ -19,6 +19,7 @@ import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
+import kinoko.server.party.PartyRequest;
 import kinoko.util.BitFlag;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
@@ -718,10 +719,11 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void logout(boolean disconnect) {
-        // Remove user from field, set spawn portal
+        // Remove user from field
         final Field field = getField();
         if (field != null) {
             field.removeUser(this);
+            // Set spawn point
             if (field.hasForcedReturn()) {
                 getCharacterStat().setPosMap(field.getForcedReturn());
                 getCharacterStat().setPortal((byte) 0);
@@ -730,7 +732,15 @@ public final class User extends Life implements Lockable<User> {
                     getCharacterStat().setPortal((byte) pi.getPortalId());
                 });
             }
+            // Assign new party leader on disconnect
+            if (disconnect && isPartyBoss()) {
+                for (User member : field.getUserPool().getPartyMembers(getPartyId())) {
+                    getConnectedServer().submitPartyRequest(this, PartyRequest.changePartyBoss(member.getCharacterId(), true));
+                    break;
+                }
+            }
         }
+        // Remove town portal
         if (getTownPortal() != null) {
             getTownPortal().destroy();
             setTownPortal(null);

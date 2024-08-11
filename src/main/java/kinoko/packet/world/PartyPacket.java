@@ -55,10 +55,10 @@ public final class PartyPacket {
         return outPacket;
     }
 
-    public static OutPacket changePartyBossDone(int newBossId, boolean isFromDisconnect) {
+    public static OutPacket changePartyBossDone(int newBossId, boolean isDisconnect) {
         final OutPacket outPacket = PartyPacket.of(PartyResultType.ChangePartyBoss_Done);
         outPacket.encodeInt(newBossId);
-        outPacket.encodeByte(isFromDisconnect);
+        outPacket.encodeByte(isDisconnect);
         return outPacket;
     }
 

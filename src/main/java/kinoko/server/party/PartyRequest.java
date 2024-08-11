@@ -13,6 +13,7 @@ public final class PartyRequest implements Encodable {
     private int partyId;
     private int characterId;
     private String characterName;
+    private boolean isDisconnect;
 
     PartyRequest(PartyRequestType requestType) {
         this.requestType = requestType;
@@ -34,6 +35,10 @@ public final class PartyRequest implements Encodable {
         return characterName;
     }
 
+    public boolean isDisconnect() {
+        return isDisconnect;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
@@ -44,11 +49,15 @@ public final class PartyRequest implements Encodable {
             case CreateNewParty, WithdrawParty -> {
                 // no encodes
             }
-            case JoinParty, KickParty, ChangePartyBoss -> {
+            case JoinParty, KickParty -> {
                 outPacket.encodeInt(characterId);
             }
             case InviteParty -> {
                 outPacket.encodeString(characterName);
+            }
+            case ChangePartyBoss -> {
+                outPacket.encodeInt(characterId);
+                outPacket.encodeByte(isDisconnect);
             }
         }
     }
@@ -63,11 +72,15 @@ public final class PartyRequest implements Encodable {
             case CreateNewParty, WithdrawParty -> {
                 // no decodes
             }
-            case JoinParty, KickParty, ChangePartyBoss -> {
+            case JoinParty, KickParty -> {
                 request.characterId = inPacket.decodeInt();
             }
             case InviteParty -> {
                 request.characterName = inPacket.decodeString();
+            }
+            case ChangePartyBoss -> {
+                request.characterId = inPacket.decodeInt();
+                request.isDisconnect = inPacket.decodeBoolean();
             }
             case null -> {
                 throw new IllegalStateException(String.format("Unknown party request type %d", type));
@@ -111,9 +124,10 @@ public final class PartyRequest implements Encodable {
         return request;
     }
 
-    public static PartyRequest changePartyBoss(int targetId) {
+    public static PartyRequest changePartyBoss(int targetId, boolean isDisconnect) {
         final PartyRequest request = new PartyRequest(PartyRequestType.ChangePartyBoss);
         request.characterId = targetId;
+        request.isDisconnect = isDisconnect;
         return request;
     }
 }

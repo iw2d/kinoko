@@ -8,9 +8,7 @@ import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.user.PartyInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -24,12 +22,14 @@ public final class Party implements Encodable, Lockable<Party> {
     private final Lock lock = new ReentrantLock();
     private final int partyId;
     private final List<RemoteUser> partyMembers;
+    private final Map<Integer, Integer> partyInvites; // invitee ID -> inviter ID
     private int partyBossId;
 
     public Party(int partyId, RemoteUser remoteUser) {
         this.partyId = partyId;
         this.partyMembers = new ArrayList<>(GameConstants.PARTY_MAX);
         this.partyMembers.add(remoteUser);
+        this.partyInvites = new HashMap<>();
         this.partyBossId = remoteUser.getCharacterId();
     }
 
@@ -37,7 +37,7 @@ public final class Party implements Encodable, Lockable<Party> {
         return partyId;
     }
 
-    public boolean addMember(RemoteUser remoteUser) {
+    public boolean canAddMember(RemoteUser remoteUser) {
         if (partyMembers.size() >= GameConstants.PARTY_MAX) {
             return false;
         }
@@ -46,12 +46,27 @@ public final class Party implements Encodable, Lockable<Party> {
                 return false;
             }
         }
+        return true;
+    }
+
+    public boolean addMember(RemoteUser remoteUser) {
+        if (!canAddMember(remoteUser)) {
+            return false;
+        }
         partyMembers.add(remoteUser);
         return true;
     }
 
     public boolean removeMember(RemoteUser remoteUser) {
         return partyMembers.removeIf((member) -> member.getCharacterId() == remoteUser.getCharacterId());
+    }
+
+    public void registerInvite(int inviterId, int targetId) {
+        partyInvites.put(targetId, inviterId);
+    }
+
+    public boolean unregisterInvite(int inviterId, int targetId) {
+        return partyInvites.remove(targetId) == inviterId;
     }
 
     public int getPartyBossId() {
