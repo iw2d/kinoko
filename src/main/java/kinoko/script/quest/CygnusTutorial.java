@@ -5,7 +5,6 @@ import kinoko.provider.reward.Reward;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
-import kinoko.script.common.ScriptMessageParam;
 import kinoko.util.Tuple;
 import kinoko.world.quest.QuestRecordType;
 
@@ -164,6 +163,14 @@ public final class CygnusTutorial extends ScriptHandler {
         }
     }
 
+    @Script("enterDisguise0")
+    public static void enterDisguise0(ScriptManager sm) {
+        // Empress' Road : Crossroads of Ereve (130000200)
+        //   west00 (-675, 92)
+        sm.playPortalSE();
+        sm.warp(130010000, "east00"); // Empress' Road : Training Forest I
+    }
+
     @Script("erebItem0")
     public static void erebItem0(ScriptManager sm) {
         // erebItem0 (1302000)
@@ -176,14 +183,6 @@ public final class CygnusTutorial extends ScriptHandler {
                 Reward.item(4032267, 1, 1, 1.0, 20013), // Building Stone
                 Reward.item(4032268, 1, 1, 1.0, 20013) // Drape
         ));
-    }
-
-    @Script("enterDisguise0")
-    public static void enterDisguise0(ScriptManager sm) {
-        // Empress' Road : Crossroads of Ereve (130000200)
-        //   west00 (-675, 92)
-        sm.playPortalSE();
-        sm.warp(130010000, "east00"); // Empress' Road : Training Forest I
     }
 
     @Script("q20010s")

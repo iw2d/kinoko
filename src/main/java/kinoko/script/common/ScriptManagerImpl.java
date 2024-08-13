@@ -34,9 +34,7 @@ import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.field.npc.Npc;
-import kinoko.world.item.InventoryManager;
-import kinoko.world.item.InventoryOperation;
-import kinoko.world.item.Item;
+import kinoko.world.item.*;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.skill.SkillRecord;
@@ -317,6 +315,18 @@ public final class ScriptManagerImpl implements ScriptManager {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean removeEquipped(BodyPart bodyPart) {
+        final Inventory equipped = user.getInventoryManager().getEquipped();
+        final Item item = equipped.removeItem(bodyPart.getValue());
+        if (item == null) {
+            return false;
+        }
+        // Equipped inventory = equip inventory with -position
+        user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(InventoryType.EQUIP, -bodyPart.getValue()), false));
+        return true;
     }
 
     @Override

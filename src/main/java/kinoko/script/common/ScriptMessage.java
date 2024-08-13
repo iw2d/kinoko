@@ -4,7 +4,6 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
 import java.util.List;
-import java.util.Set;
 
 public final class ScriptMessage implements Encodable {
     private final int speakerId;
