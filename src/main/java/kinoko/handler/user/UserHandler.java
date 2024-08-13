@@ -16,6 +16,8 @@ import kinoko.provider.quest.QuestInfo;
 import kinoko.script.common.ScriptAnswer;
 import kinoko.script.common.ScriptDispatcher;
 import kinoko.script.common.ScriptMessageType;
+import kinoko.script.quest.AranTutorial;
+import kinoko.script.quest.CygnusTutorial;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.*;
 import kinoko.server.command.CommandProcessor;
@@ -1480,6 +1482,15 @@ public final class UserHandler {
                     log.error("Unhandled func key mapped type : {}", funcKeyMappedType);
                 }
             }
+        }
+    }
+
+    @Handler(InHeader.TalkToTutor)
+    public static void handleTalkToTutor(User user, InPacket inPacket) {
+        if (JobConstants.isCygnusJob(user.getJob())) {
+            ScriptDispatcher.startNpcScript(user, user, CygnusTutorial.TALK_TO_TUTOR_SCRIPT, 1101008);
+        } else {
+            ScriptDispatcher.startNpcScript(user, user, AranTutorial.TALK_TO_TUTOR_SCRIPT, 1202000);
         }
     }
 

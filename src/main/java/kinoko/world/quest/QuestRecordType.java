@@ -13,7 +13,8 @@ public enum QuestRecordType {
 
     CygnusTutorial(20022),          // Cygnus Tutorial
     AranTutorial(21002),            // Aran Tutorial
-    AranGuideEffect(21003);         // Aran Tutorial Effects
+    AranGuideEffect(21003),         // Aran Tutorial Effects
+    AranHelperClear(21019);         // Aran Tutorial Helper
 
     private final int questId;
 

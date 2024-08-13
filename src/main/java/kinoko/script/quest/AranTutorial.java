@@ -1,13 +1,52 @@
 package kinoko.script.quest;
 
+import kinoko.packet.user.UserLocal;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.util.Tuple;
 import kinoko.world.quest.QuestRecordType;
+import kinoko.world.user.User;
 
+import java.util.List;
 import java.util.Map;
 
 public final class AranTutorial extends ScriptHandler {
+    public static final String TALK_TO_TUTOR_SCRIPT = "TalkToTutor_Aran";
+
+    @Script(TALK_TO_TUTOR_SCRIPT)
+    public static void talkToTutor(ScriptManager sm) {
+        final int answer = sm.askMenu("Is there anything you're still curious about? If so, I'll try to explain it better.", Map.of(
+                0, "Who am I?",
+                1, "Where am I?",
+                2, "Who are you?",
+                3, "Tell me what I have to do.",
+                4, "Tell me about my Inventory.",
+                5, "How do I advance my skills?",
+                6, "I want to know how to equip items.",
+                7, "How do I use quick slots?",
+                8, "How can I open breakable containers?",
+                9, "I want to sit in a chair but I forgot how."
+        ));
+        switch (answer) {
+            case 0 -> {
+                sm.sayNext("You are one of the heroes that saved Maple World from the Black Mage hundreds of years ago. You've lost your memory due to the curse of the Black Mage.");
+            }
+            case 1 -> {
+                sm.sayNext("This island is called Rien, and this is where the Black Mage's curse put you to sleep. It's a small island covered in ice and snow, and the majority of the residents are Penguins.");
+            }
+            case 2 -> {
+                sm.sayNext("I'm Lilin, a clan member of Rien, and I've been waiting for your return as the prophecy foretold. I'll be your guide for now.");
+            }
+            case 3 -> {
+                sm.sayNext("Let's not waste any more time and just get to town. I'll give you the details when we get there.");
+            }
+            case 4, 5, 6, 7, 8, 9 -> {
+                sm.write(UserLocal.tutorMsg(answer + 10, 4000));
+            }
+        }
+    }
+
     @Script("aranDirection")
     public static void aranDirection(ScriptManager sm) {
         // null (914090000)
@@ -232,17 +271,6 @@ public final class AranTutorial extends ScriptHandler {
         }
     }
 
-    @Script("iceCave")
-    public static void iceCave(ScriptManager sm) {
-        // Snow Island : Ice Cave (140090000)
-        sm.removeSkill(20000014);
-        sm.removeSkill(20000015);
-        sm.removeSkill(20000016);
-        sm.removeSkill(20000017);
-        sm.removeSkill(20000018);
-        sm.setDirectionMode(false, 0);
-    }
-
     @Script("talkHelena")
     public static void talkHelena(ScriptManager sm) {
         // Athena Pierce (1209000)
@@ -321,5 +349,114 @@ public final class AranTutorial extends ScriptHandler {
         sm.sayBoth("Athena Pierce, why don't you leave for Victoria Island first? I promise I'll come for you later. I'll be alright. I must fight the Black Mage with the other heroes!");
         sm.setDirectionMode(true, 0);
         sm.warp(914090010);
+    }
+
+
+    // SNOW ISLAND SCRIPTS ---------------------------------------------------------------------------------------------
+
+    @Script("iceCave")
+    public static void iceCave(ScriptManager sm) {
+        // Snow Island : Ice Cave (140090000)
+        sm.removeSkill(20000014);
+        sm.removeSkill(20000015);
+        sm.removeSkill(20000016);
+        sm.removeSkill(20000017);
+        sm.removeSkill(20000018);
+        sm.setDirectionMode(false, 0);
+        sm.reservedEffect("Effect/Direction1.img/aranTutorial/ClickLilin");
+    }
+
+    @Script("rienTutor1")
+    public static void rienTutor1(ScriptManager sm) {
+        // Snow Island : Cold Forest 1 (140090100)
+        //   west00 (-1951, 82)
+        if (!sm.hasQuestCompleted(21010)) {
+            sm.message("You must complete the quest before proceeding to the next map.");
+            return;
+        }
+        sm.playPortalSE();
+        sm.warp(140090200, "east00");
+    }
+
+    @Script("awake")
+    public static void awake(ScriptManager sm) {
+        // Lilin (1202000)
+        //   Snow Island : Ice Cave (140090000)
+        if (!sm.hasQRValue(QuestRecordType.AranHelperClear, "helper=clear")) {
+            sm.setFlipSpeaker(true);
+            sm.sayNext("You've finally awoken...!");
+            sm.setPlayerAsSpeaker(true);
+            sm.sayBoth("And you are...?");
+            sm.setPlayerAsSpeaker(false);
+            sm.sayBoth("The hero who fought against the Black Mage... I've been waiting for you to wake up!");
+            sm.setPlayerAsSpeaker(true);
+            sm.sayBoth("Who... Who are you? And what are you talking about?");
+            sm.sayBoth("And who am I...? I can't remember anything... Ouch, my head hurts!");
+            sm.reservedEffect("Effect/Direction1.img/aranTutorial/face");
+            sm.reservedEffect("Effect/Direction1.img/aranTutorial/ClickLilin");
+            sm.setQRValue(QuestRecordType.AranHelperClear, "helper=clear");
+        } else {
+            sm.setFlipSpeaker(true);
+            sm.sayNext("Are you alright?");
+            sm.setPlayerAsSpeaker(true);
+            sm.sayBoth("I can't remember anything. Where am I? And who are you...?");
+            sm.setPlayerAsSpeaker(false);
+            sm.sayBoth("Stay calm. There is no need to panic. You can't remember anything because the curse of the Black Mage erased your memory. I'll tell you everything you need to know... step by step.");
+            sm.sayBoth("You're a hero who fought the Black Mage and saved Maple World hundreds of years ago. But at the very last moment, the curse of the Black Mage put you to sleep for a long, long time. That's when you lost all of your memories.");
+            sm.sayBoth("This island is called Rien, and it's where the Black Mage trapped you. Despite its name, this island is always covered in ice and snow because of the Black Mage's curse. You were found deep inside the Ice Cave.");
+            sm.sayBoth("My name is Lilin and I belong to the clan of Rien. The Rien Clan has been waiting for a hero to return for a long time now, and we finally found you. You've finally returned!");
+            sm.sayBoth("I've said too much. It's okay if you don't really understand everything I just told you. You'll get it eventually. For now, #byou should head to town#k. I'll stay by your side and help you until you get there.");
+            sm.warp(140090100, "st00");
+            sm.write(UserLocal.hireTutor(true));
+        }
+    }
+
+    @Script("q21010s")
+    public static void q21010s(ScriptManager sm) {
+        // The Return of the Hero (21010 - start)
+        sm.sayNext("Hm, what's a human doing on this island? Wait, it's #p1201000#. What are you doing here, #p1201000#? And who's that beside you? Is it someone you know, #p1201000#? What? The hero, you say?");
+        sm.sayBoth("#i4001170#");
+        sm.sayBoth("Ah, this must be the hero you and your clan have been waiting for. Am I right, Lilin? Ah, I knew you weren't just accompanying an average passerby...");
+        if (!sm.askAccept("Oh, but it seems our hero has become very weak since the Black Mage's curse. It only makes sense, considering that the hero has been asleep for hundreds of years. #bHere, I'll give you a HP Recovery Potion...#k")) {
+            sm.sayNext("Oh, no need to decline my offer. It's no big deal. It's just a potion. Well, let me know if you change your mind.");
+            return;
+        }
+        sm.getUser().setHp(25);
+        if (!sm.hasItem(2000022) && !sm.addItem(2000022, 1)) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.forceStartQuest(21010);
+        sm.setFlipSpeaker(true);
+        sm.sayNext("Drink it first. Then we'll talk.");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(How do I drink the potion? I don't remember...)#k");
+        sm.write(UserLocal.tutorMsg(14, 4000));
+    }
+
+    @Script("q21010e")
+    public static void q21010e(ScriptManager sm) {
+        // The Return of the Hero (21010 - end)
+        final User user = sm.getUser();
+        if (user.getHp() < user.getMaxHp()) {
+            sm.sayNext("You didn't drink the potion yet.");
+            return;
+        }
+        sm.sayNext("We've been digging and digging inside the Ice Cave in the hope of finding a hero, but I never thought I'd actually see the day... The prophecy was true! You were right, Lilin! Now that one of the legendary heroes has returned, we have no reason to fear the Black Mage!");
+        sm.sayBoth("Oh, I've kept you too long. I'm sorry, I got a little carried away. I'm sure the other Penguins feel the same way. I know you're busy, but could you #bstop and talk to the other Penguins#k on your way to town? They would be so honored.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i2000022# 5 Special Rien Red Potion\r\n#i2000023# 5 Special Rien Blue Potion\r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 16 exp");
+        if (!sm.addItems(List.of(
+                Tuple.of(2000022, 5), // Special Rien Red Potion
+                Tuple.of(2000023, 5) // Special Rien Blue Potion
+        ))) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.addExp(16);
+        sm.forceCompleteQuest(21010);
+        sm.setFlipSpeaker(true);
+        sm.sayBoth("Oh you've leveled up! You may have even received some skill points. In Maple World, you can acquire 3 skill points every time you level up. Press the #bK key#k to view the Skill window.");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(Everyone's been so nice to me, but I just can't remember anything. Am I really a hero? I should check my skills and see. But how do I check then?)#k");
+        sm.write(UserLocal.tutorMsg(15, 4000));
     }
 }

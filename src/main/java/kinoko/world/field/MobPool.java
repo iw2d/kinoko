@@ -139,7 +139,9 @@ public final class MobPool extends FieldObjectPool<Mob> {
 
     private static int initializeMobCapacity(Field field) {
         final Rect rootBounds = field.getMapInfo().getRootBounds();
-        final int mobCapacity = (int) ((double) (rootBounds.getHeight() * rootBounds.getWidth()) * field.getMapInfo().getMobRate() * GameConstants.MOB_CAPACITY_CONSTANT);
+        final int boundWidth = Math.max(rootBounds.getWidth(), 800);
+        final int boundHeight = Math.max(rootBounds.getHeight() - 450, 600);
+        final int mobCapacity = (int) ((double) (boundWidth * boundHeight) * field.getMapInfo().getMobRate() * GameConstants.MOB_CAPACITY_CONSTANT);
         return Math.clamp(mobCapacity, 1, GameConstants.MOB_CAPACITY_MAX);
     }
 }

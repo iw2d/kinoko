@@ -5,6 +5,7 @@ import kinoko.provider.reward.Reward;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.script.common.ScriptMessageParam;
 import kinoko.util.Tuple;
 import kinoko.world.quest.QuestRecordType;
 
@@ -12,6 +13,40 @@ import java.util.List;
 import java.util.Map;
 
 public final class CygnusTutorial extends ScriptHandler {
+    public static final String TALK_TO_TUTOR_SCRIPT = "TalkToTutor_Cygnus";
+
+    @Script(TALK_TO_TUTOR_SCRIPT)
+    public static void talkToTutor(ScriptManager sm) {
+        final int answer = sm.askMenu("Wait! You'll figure the stuff out by the time you reach Lv. 10 anyway, but if you absolutely want to prepare beforehand, you may view the following information.\r\n\r\nTell me, what would you like to know?", Map.ofEntries(
+                Map.entry(0, "About you"),
+                Map.entry(1, "Mini Map"),
+                Map.entry(2, "Quest Window"),
+                Map.entry(3, "Inventory"),
+                Map.entry(4, "Regular Attack Hunting"),
+                Map.entry(5, "How to Pick Up Items"),
+                Map.entry(6, "How to Equip Items"),
+                Map.entry(7, "Skill Window"),
+                Map.entry(8, "How to Use Quick Slots"),
+                Map.entry(9, "How to Break Boxes"),
+                Map.entry(10, "How to Sit in a Chair"),
+                Map.entry(11, "World Map"),
+                Map.entry(12, "Quest Notifications"),
+                Map.entry(13, "Enhancing Stats"),
+                Map.entry(14, "Who are the Cygnus Knights?")
+        ));
+        switch (answer) {
+            case 0 -> {
+                sm.sayNext("I serve under Shinsoo, the guardian of Empress Cygnus. My master, Shinsoo, has ordered me to guide everyone who comes to Maple World to join Cygnus Knights. I will be assisting and following you around until you become a Knight or reach Lv. 11. Please let me know if you have any questions.");
+            }
+            case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 -> {
+                sm.write(UserLocal.tutorMsg(answer, 4000));
+            }
+            case 14 -> {
+                sm.sayOk("The Black Mage is trying to revive and conquer our peaceful Maple World. As a response to this threat, Empress Cygnus has formed a knighthood, now known as Cygnus Knights. You can become a Knight when you reach Lv. 10.");
+            }
+        }
+    }
+
     @Script("createCygnus")
     public static void createCygnus(ScriptManager sm) {
         // Shinsoo (1101001)

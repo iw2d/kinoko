@@ -692,43 +692,43 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public void sayOk(String text) {
-        sendMessage(ScriptMessage.say(speakerId, messageParams, text, false, false));
+        sendMessage(ScriptMessage.say(speakerId, getParam(), text, false, false));
         handleAnswer();
     }
 
     @Override
     public void sayPrev(String text) {
-        sendMessage(ScriptMessage.say(speakerId, messageParams, text, true, false));
+        sendMessage(ScriptMessage.say(speakerId, getParam(), text, true, false));
         handleAnswer();
     }
 
     @Override
     public void sayNext(String text) {
-        sendMessage(ScriptMessage.say(speakerId, messageParams, text, false, true));
+        sendMessage(ScriptMessage.say(speakerId, getParam(), text, false, true));
         handleAnswer();
     }
 
     @Override
     public void sayBoth(String text) {
-        sendMessage(ScriptMessage.say(speakerId, messageParams, text, true, true));
+        sendMessage(ScriptMessage.say(speakerId, getParam(), text, true, true));
         handleAnswer();
     }
 
     @Override
     public void sayImage(List<String> images) {
-        sendMessage(ScriptMessage.sayImage(speakerId, messageParams, images));
+        sendMessage(ScriptMessage.sayImage(speakerId, getParam(), images));
         handleAnswer();
     }
 
     @Override
     public boolean askYesNo(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKYESNO, text));
+        sendMessage(ScriptMessage.ask(speakerId, getParam(), ScriptMessageType.ASKYESNO, text));
         return handleAnswer().getAction() != 0;
     }
 
     @Override
     public boolean askAccept(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKACCEPT, text));
+        sendMessage(ScriptMessage.ask(speakerId, getParam(), ScriptMessageType.ASKACCEPT, text));
         return handleAnswer().getAction() != 0;
     }
 
@@ -738,7 +738,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> String.format("#L%d# #b%s#k#l", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining("\r\n"));
-        sendMessage(ScriptMessage.ask(speakerId, messageParams, ScriptMessageType.ASKMENU, text != null ? String.join("\r\n", text, optionString) : optionString));
+        sendMessage(ScriptMessage.ask(speakerId, getParam(), ScriptMessageType.ASKMENU, text != null ? String.join("\r\n", text, optionString) : optionString));
         final int answer = handleAnswer().getAnswer();
         if (!options.containsKey(answer)) {
             throw new ScriptError("Received unexpected answer %d for askMenu options : %s", answer, options);
@@ -752,7 +752,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> String.format("#%d#%s", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining());
-        sendMessage(ScriptMessage.askSlideMenu(speakerId, messageParams, type, text));
+        sendMessage(ScriptMessage.askSlideMenu(speakerId, getParam(), type, text));
         final int answer = handleAnswer().getAnswer();
         if (!options.containsKey(answer)) {
             throw new ScriptError("Received unexpected answer %d for askSlideMenu options : %s", answer, options);
@@ -762,7 +762,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public int askAvatar(String text, List<Integer> options) {
-        sendMessage(ScriptMessage.askAvatar(speakerId, messageParams, text, options));
+        sendMessage(ScriptMessage.askAvatar(speakerId, getParam(), text, options));
         final int answer = handleAnswer().getAnswer();
         if (answer < 0 || answer >= options.size()) {
             throw new ScriptError("Received unexpected answer %d for askAvatar options : %s", answer, options);
@@ -772,7 +772,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public int askNumber(String text, int numberDefault, int numberMin, int numberMax) {
-        sendMessage(ScriptMessage.askNumber(speakerId, messageParams, text, numberDefault, numberMin, numberMax));
+        sendMessage(ScriptMessage.askNumber(speakerId, getParam(), text, numberDefault, numberMin, numberMax));
         final int answer = handleAnswer().getAnswer();
         if (answer < numberMin || answer > numberMax) {
             throw new ScriptError("Received number answer out of range : %d, min : %d, max %d", answer, numberMin, numberMax);
@@ -782,7 +782,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public String askText(String text, String textDefault, int textLengthMin, int textLengthMax) {
-        sendMessage(ScriptMessage.askText(speakerId, messageParams, text, textDefault, textLengthMin, textLengthMax));
+        sendMessage(ScriptMessage.askText(speakerId, getParam(), text, textDefault, textLengthMin, textLengthMax));
         final String answer = handleAnswer().getTextAnswer();
         if (answer.length() < textLengthMin || answer.length() > textLengthMax) {
             throw new ScriptError("Received text answer with invalid length : %d, min : %d, max %d", answer, textLengthMin, textLengthMax);
@@ -792,8 +792,12 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines) {
-        sendMessage(ScriptMessage.askBoxText(speakerId, messageParams, text, textDefault, textBoxColumns, textBoxLines));
+        sendMessage(ScriptMessage.askBoxText(speakerId, getParam(), text, textDefault, textBoxColumns, textBoxLines));
         return handleAnswer().getTextAnswer();
+    }
+
+    private byte getParam() {
+        return ScriptMessageParam.from(messageParams);
     }
 
     private void toggleParam(ScriptMessageParam messageParam, boolean enabled) {
