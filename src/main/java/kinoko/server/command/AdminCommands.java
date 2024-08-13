@@ -912,7 +912,7 @@ public final class AdminCommands {
 
             // Reset skills
             final SkillManager sm = user.getSkillManager();
-            final Set<SkillRecord> removedRecords = new HashSet<>();
+            final List<SkillRecord> removedRecords = new ArrayList<>();
             for (SkillRecord skillRecord : sm.getSkillRecords()) {
                 skillRecord.setSkillLevel(0);
                 skillRecord.setMasterLevel(0);
@@ -921,7 +921,7 @@ public final class AdminCommands {
             user.write(WvsContext.changeSkillRecordResult(removedRecords, true));
 
             // Add skills
-            final Set<SkillRecord> skillRecords = new HashSet<>();
+            final List<SkillRecord> skillRecords = new ArrayList<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
                 if (JobConstants.isBeginnerJob(skillRoot)) {
                     continue;

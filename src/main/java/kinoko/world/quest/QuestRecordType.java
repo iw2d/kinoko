@@ -11,7 +11,9 @@ public enum QuestRecordType {
     TatamoLikeness(7810),           // Chief Tatamo Magic Seed Discount
     WorldTour(8792),                // World Tour Return Map
 
-    CygnusTutorial(20022);          // Cygnus Tutorial
+    CygnusTutorial(20022),          // Cygnus Tutorial
+    AranTutorial(21002),            // Aran Tutorial
+    AranGuideEffect(21003);         // Aran Tutorial Effects
 
     private final int questId;
 

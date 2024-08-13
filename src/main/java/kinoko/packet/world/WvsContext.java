@@ -21,7 +21,6 @@ import kinoko.world.user.stat.Stat;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class WvsContext {
     public static OutPacket statChanged(Stat stat, Object value, boolean exclRequest) {
@@ -80,10 +79,10 @@ public final class WvsContext {
     }
 
     public static OutPacket changeSkillRecordResult(SkillRecord skillRecord, boolean exclRequest) {
-        return changeSkillRecordResult(Set.of(skillRecord), exclRequest);
+        return changeSkillRecordResult(List.of(skillRecord), exclRequest);
     }
 
-    public static OutPacket changeSkillRecordResult(Set<SkillRecord> skillRecords, boolean exclRequest) {
+    public static OutPacket changeSkillRecordResult(List<SkillRecord> skillRecords, boolean exclRequest) {
         final OutPacket outPacket = OutPacket.of(OutHeader.ChangeSkillRecordResult);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeShort(skillRecords.size());

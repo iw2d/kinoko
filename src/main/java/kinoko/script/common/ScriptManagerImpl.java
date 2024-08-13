@@ -9,12 +9,14 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
+import kinoko.provider.SkillProvider;
 import kinoko.provider.StringProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.reward.Reward;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
@@ -37,6 +39,7 @@ import kinoko.world.item.InventoryOperation;
 import kinoko.world.item.Item;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRecordType;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.Stat;
@@ -182,6 +185,39 @@ public final class ScriptManagerImpl implements ScriptManager {
         } else {
             throw new ScriptError("Tried to set avatar with invalid ID : %d", look);
         }
+    }
+
+    @Override
+    public void addSkill(int skillId, int skillLevel, int masterLevel) {
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            throw new ScriptError("Could not resolve skill info for skill ID : %d", skillId);
+        }
+        // Create skill record
+        final SkillInfo si = skillInfoResult.get();
+        final SkillRecord sr = si.createRecord();
+        sr.setSkillLevel(Math.min(skillLevel, si.getMaxLevel()));
+        sr.setMasterLevel(masterLevel);
+        // Add skill
+        user.getSkillManager().addSkill(sr);
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.write(WvsContext.changeSkillRecordResult(sr, false));
+    }
+
+    @Override
+    public void removeSkill(int skillId) {
+        final Optional<SkillRecord> skillRecordResult = user.getSkillManager().getSkill(skillId);
+        if (skillRecordResult.isEmpty()) {
+            return;
+        }
+        // Update skill
+        final SkillRecord sr = skillRecordResult.get();
+        sr.setSkillLevel(0);
+        sr.setMasterLevel(0);
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.write(WvsContext.changeSkillRecordResult(sr, false));
     }
 
     @Override
@@ -335,12 +371,26 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public boolean hasQRValue(QuestRecordType questRecordType, String value) {
+        return Arrays.asList(getQRValue(questRecordType).split(";")).contains(value);
+    }
+
+    @Override
     public void setQRValue(QuestRecordType questRecordType, String value) {
         final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questRecordType.getQuestId(), value);
         user.write(MessagePacket.questRecord(qr));
         user.validateStat();
     }
 
+    @Override
+    public void addQRValue(QuestRecordType questRecordType, String value) {
+        final String existingValue = getQRValue(questRecordType);
+        if (existingValue == null || existingValue.isEmpty()) {
+            setQRValue(questRecordType, value);
+        } else {
+            setQRValue(questRecordType, String.format("%s;%s", existingValue, value));
+        }
+    }
 
     // WARP METHODS ----------------------------------------------------------------------------------------------------
 

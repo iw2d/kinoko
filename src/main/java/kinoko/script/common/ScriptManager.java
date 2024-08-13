@@ -53,6 +53,10 @@ public interface ScriptManager {
 
     void setAvatar(int look);
 
+    void addSkill(int skillId, int skillLevel, int masterLevel);
+
+    void removeSkill(int skillId);
+
     void setConsumeItemEffect(int itemId);
 
     void resetConsumeItemEffect(int itemId);
@@ -95,7 +99,11 @@ public interface ScriptManager {
 
     String getQRValue(QuestRecordType questRecordType);
 
+    boolean hasQRValue(QuestRecordType questRecordType, String value);
+
     void setQRValue(QuestRecordType questRecordType, String value);
+
+    void addQRValue(QuestRecordType questRecordType, String value);
 
 
     // WARP METHODS ----------------------------------------------------------------------------------------------------
