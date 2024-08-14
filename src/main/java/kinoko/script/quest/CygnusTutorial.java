@@ -201,7 +201,7 @@ public final class CygnusTutorial extends ScriptHandler {
     @Script("q20010e")
     public static void q20010e(ScriptManager sm) {
         // Welcome to Ereve (20010 - end)
-        sm.sayNext("Are you the Noblesse my brother Kimu sent? Nice to meet you! I'm Kizan. I'll give you the reward Kimu asked me to give you. Remember, you can check your Inventory by pressing the #bI key#k. Red potions help you recover HP, and blue ones help recover MP. It's a good idea to learn how to use them beforehand so you'll be ready with them when you're in danger. \r\n\r\n#fUI/UIWindow.img/Quest/reward# \r\n\r\n#v2000020# 5 #z2000020# \r\n#v2000021# 5 #z2000021# \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 15 exp");
+        sm.sayNext("Are you the Noblesse my brother Kimu sent? Nice to meet you! I'm Kizan. I'll give you the reward Kimu asked me to give you. Remember, you can check your Inventory by pressing the #bI key#k. Red potions help you recover HP, and blue ones help recover MP. It's a good idea to learn how to use them beforehand so you'll be ready with them when you're in danger. \r\n\r\n#fUI/UIWindow2.img/Quest/reward# \r\n\r\n#v2000020# 5 #z2000020# \r\n#v2000021# 5 #z2000021# \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 15 exp");
         if (sm.addItems((List.of(Tuple.of(2000020, 5), Tuple.of(2000021, 5))))) {
             sm.addExp(15);
             sm.forceCompleteQuest(20010);
@@ -324,7 +324,7 @@ public final class CygnusTutorial extends ScriptHandler {
         sm.sayBoth("But that was ages ago and people today don't realize how scary the Black Mage is. We've all become spoiled by the peaceful Maple World we enjoy today and forgotten how chaotic and frightening Maple World once was. If we don't do something, the Black Mage will once again rule Maple World!");
         sm.sayBoth("This is why the young Empress has decided to take matters into her own hands. She's forming a knighthood of brave Maplers to defeat the Black Mage once and for all. You know what you need to do, right? I'm sure you have an idea since you, yourself, signed up to be a Knight.");
         sm.sayBoth("We have to get stronger so we can defeat the Black Mage if he revives. Our primary goal is to prevent him from destroying Maple World, and you will play a prominent role in that.");
-        if (sm.askAccept("That concludes my explanation. Have I answered all your questions? \r\n\r\n#fUI/UIWindow.img/QuestIcon/4/0# \r\n#fUI/UIWindow2.img/QuestIcon/8/0# 380 exp")) {
+        if (sm.askAccept("That concludes my explanation. Have I answered all your questions? \r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0# \r\n#fUI/UIWindow2.img/QuestIcon/8/0# 380 exp")) {
             sm.addExp(380);
             sm.forceCompleteQuest(20016);
             sm.sayNext("I'm glad you're clear about our current situation, but you know, at your current level, you're not even strong enough to face the Black Mage's minions, let alone the Black Mage himself. Not even his minions' minions, as a matter of fact. How will you protect Maple World at your current level?");

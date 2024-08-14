@@ -414,6 +414,47 @@ public final class ContiMove extends ScriptHandler {
     }
 
 
+    // RIEN SCRIPTS ----------------------------------------------------------------------------------------------------
+
+    @Script("contimoveRieRit")
+    public static void contimoveRieRit(ScriptManager sm) {
+        // Puro : To Victoria Island (1200003)
+        //   Snow Island : Penguin Port (140020300)
+        if (!sm.askYesNo("Are you thinking about leaving Rien and heading back? If you board this ship, I can take you from #bLith Harbor#k to #bRien#k and back. Would you like to go to #bVinctoria Island#k?\r\n\r\nThe trip costs #b1000 Mesos#k")) {
+            sm.sayNext("If you're not interested, then oh well...");
+            return;
+        }
+        if (!sm.addMoney(-1000)) {
+            sm.sayNext("Hmm... Are you sure you have #b1000#k Mesos? Check your Inventory and make sure you have enough. You must pay the fee or I can't let you get on...");
+            return;
+        }
+        sm.warpInstance(200090070, "sp", 104000000, 120);
+    }
+
+    @Script("contimoveRitRie")
+    public static void contimoveRitRie(ScriptManager sm) {
+        // Puro : To Rien (1200004)
+        //   Lith Harbor : Lith Harbor (104000000)
+        if (!sm.askYesNo("Are you thinking about leaving Victoria Island and heading to our town? If you board this ship, I can take you from #bLith Harbor#k to #bRien#k and back. Would you like to go to #bRien#k?\r\n\r\nThe trip costs #b1000 Mesos#k")) {
+            sm.sayNext("If you're not interested, then oh well...");
+            return;
+        }
+        if (!sm.addMoney(-1000)) {
+            sm.sayNext("Hmm... Are you sure you have #b1000#k Mesos? Check your Inventory and make sure you have enough. You must pay the fee or I can't let you get on...");
+            return;
+        }
+        sm.warpInstance(200090060, "sp", 140020300, 120);
+    }
+
+    @Script("move_RieRit")
+    public static void move_RieRit(ScriptManager sm) {
+    }
+
+    @Script("move_RitRie")
+    public static void move_RitRie(ScriptManager sm) {
+    }
+
+
     // EDELSTEIN SCRIPTS -----------------------------------------------------------------------------------------------
 
     @Script("contimoveEdeGo")

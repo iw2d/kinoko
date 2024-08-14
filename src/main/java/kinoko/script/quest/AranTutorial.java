@@ -511,6 +511,22 @@ public final class AranTutorial extends ScriptHandler {
         }
     }
 
+    @Script("enterPort")
+    public static void enterPort(ScriptManager sm) {
+        // Snow Island : Snow-covered Field 3 (140020200)
+        //   east00 (4769, 84)
+        sm.playPortalSE();
+        sm.warp(140020300, "west00");
+    }
+
+    @Script("enterInfo")
+    public static void enterInfo(ScriptManager sm) {
+        // Lith Harbor : Lith Harbor (104000000)
+        //   in03 (405, 406)
+        sm.playPortalSE();
+        sm.warp(104000004, "out00");
+    }
+
     @Script("rienItem0")
     public static void rienItem0(ScriptManager sm) {
         // rienItem0 (1402000)
@@ -835,5 +851,62 @@ public final class AranTutorial extends ScriptHandler {
         sm.forceStartQuest(21700);
         sm.sayNext("I gave you a #bPolearm#k because I figured it would be best for you to use a weapon you're familiar with. It will be useful in your training.");
         sm.sayPrev("You'll find a Training Center if you exit to the #bleft#k. There, you'll meet #b#p1202006##k. I'm a bit worried because I think he may be struggling with bouts of Alzheimer's, but he spent a long time researching skills to help you. I'm sure you'll learn a thing or two from him.");
+    }
+
+    @Script("q21703s")
+    public static void q21703s(ScriptManager sm) {
+        // Train or Die! 3 (21703 - start)
+        sm.sayNext("Your abilities are really beginning to take shape. I am surprised that an old man like me was able to help you. I'm tearing up just thinking about how happy it makes me to have been of assistance to you. *Sniff sniff*");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(You didn't even train that long with him... Why is he crying?)#k");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("Alright, here's the third and the final stage of training. Your last opponent is... #r#o9300343#s#k! Do you know anything about #o1210100#s?");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("Well, a little bit...");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("They are natural warriors! They're born with a voracious appetite for food. They devour any food that's visible the moment they sweep by. Terrifying, isn't it?");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(Is that really true?)#k");
+        sm.setPlayerAsSpeaker(false);
+        if (!sm.askAccept("Okay, now... #bEnter the Training Center again#k, defeat #r30#k #o9300343#s, and show me what you're made of! You'll have to exert all your energy to defeat them! Go, go, go! Rise above me!")) {
+            sm.sayNext("I know it takes an incredible amount of strength and will to outdo your instructor, but you weren't meant to let yourself wither away. You must move on to bigger and better things! You must do everything you can to embrace your heroic nature!");
+            return;
+        }
+        sm.forceStartQuest(21703);
+        sm.sayOk("Now go and take on those monstrous #o9300343#s!");
+    }
+
+    @Script("q21703e")
+    public static void q21703e(ScriptManager sm) {
+        // Train or Die! 3 (21703 - end)
+        sm.sayNext("Ah, you've come back after defeating all 30 #o9300343#s. I knew you had it in you... Even though you have no memories and few abilities, I could see that you were different! How? Because you're carrying around a Polearm, obviously!");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(Is he pulling your leg?)#k");
+        sm.setPlayerAsSpeaker(false);
+        if (!sm.askYesNo("I have nothing more to teach you, as you've surpassed my level of skill. Go now! Don't look back! This old man is happy to have served as your instructor.")) {
+            sm.sayNext("Are you reluctant to leave your instructor? *Sniff sniff* I'm so moved, but you can't stop here. You are destined for bigger and better things!");
+            return;
+        }
+        sm.addSkill(21000000, 0, 10); // Combo Ability
+        sm.addExp(2000);
+        sm.forceCompleteQuest(21703);
+        sm.setPlayerAsSpeaker(true);
+        sm.sayNext("(You remembered the #bCombo Ability#k skill! You were skeptical of the training at first, since the old man suffers from Alzheimer's and all, but boy, was it effective!)");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayPrev("Now report back to #p1201000#. I know she'll be ecstatic when she sees the progress you've made!");
+    }
+
+    @Script("q21704s")
+    public static void q21704s(ScriptManager sm) {
+        // Baby Steps (21704 - start)
+        sm.sayNext("How did the training go? The Penguin Teacher #p1202006# likes to exaggerate and it worried me knowing that he has bouts of Alzheimer's, but I'm sure he helped you. He's been studying the skills of heroes for a very long time.");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(You tell her that you were able to remember the Combo Ability skill.)#k");
+        sm.setPlayerAsSpeaker(false);
+        if (!sm.askAccept("That's great! Honestly, though, I think it has less to do with the method of #p1202006#'s training and more to do with your body remembering its old abilities. #bI'm sure your body will remember more skills as you continue to train#k!  \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 500 exp")) {
+            return;
+        }
+        sm.addExp(500);
+        sm.forceCompleteQuest(21704);
     }
 }
