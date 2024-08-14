@@ -3,6 +3,7 @@ package kinoko.script.common;
 import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.NpcPacket;
+import kinoko.packet.user.DragonPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
@@ -35,12 +36,18 @@ import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.item.*;
+import kinoko.world.job.Job;
+import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRecordType;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.Dragon;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
+import kinoko.world.user.stat.StatConstants;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -158,6 +165,159 @@ public final class ScriptManagerImpl implements ScriptManager {
     public void addExp(int exp) {
         user.addExp(exp);
         user.write(MessagePacket.incExp(exp, 0, true, true));
+    }
+
+    @Override
+    public void setJob(Job job) {
+        // Set job
+        final CharacterStat cs = user.getCharacterStat();
+        cs.setJob(job.getJobId());
+        // Assign minimum stats
+        final int sumAp = StatConstants.getSumAp(user.getLevel(), cs.getJob(), cs.getSubJob());
+        switch (job) {
+            case WARRIOR, DAWN_WARRIOR_1, ARAN_1 -> {
+                cs.setBaseStr((short) 35);
+                cs.setBaseDex((short) 4);
+                cs.setBaseInt((short) 4);
+                cs.setBaseLuk((short) 4);
+                cs.setAp((short) (sumAp - (35 + 4 + 4 + 4)));
+            }
+            case MAGICIAN, BLAZE_WIZARD_1, EVAN_1, BATTLE_MAGE_1 -> {
+                cs.setBaseStr((short) 4);
+                cs.setBaseDex((short) 4);
+                cs.setBaseInt((short) 20);
+                cs.setBaseLuk((short) 4);
+                cs.setAp((short) (sumAp - (4 + 4 + 20 + 4)));
+            }
+            case ARCHER, WIND_ARCHER_1, WILD_HUNTER_1, ROGUE, NIGHT_WALKER_1 -> {
+                cs.setBaseStr((short) 4);
+                cs.setBaseDex((short) 25);
+                cs.setBaseInt((short) 4);
+                cs.setBaseLuk((short) 4);
+                cs.setAp((short) (sumAp - (4 + 25 + 4 + 4)));
+            }
+            case PIRATE, THUNDER_BREAKER_1, MECHANIC_1 -> {
+                cs.setBaseStr((short) 4);
+                cs.setBaseDex((short) 20);
+                cs.setBaseInt((short) 4);
+                cs.setBaseLuk((short) 4);
+                cs.setAp((short) (sumAp - (4 + 20 + 4 + 4)));
+            }
+        }
+        // Add max hp / mp for specific jobs, TODO: KOC, Evan, Resistance
+        switch (job) {
+            case WARRIOR -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(200, 250));
+            }
+            case FIGHTER -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(300, 350));
+            }
+            case PAGE, SPEARMAN, MAGICIAN, ARAN_2 -> {
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(100, 150));
+            }
+            case MAGE_FP, MAGE_IL, CLERIC -> {
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(450, 500));
+            }
+            case ARCHER, ROGUE, PIRATE -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(100, 150));
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(25, 50));
+            }
+            case HUNTER, CROSSBOWMAN, ASSASSIN, BANDIT, BRAWLER, GUNSLINGER -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(300, 350));
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
+            }
+            case ARAN_1 -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(250, 300));
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(10, 20));
+            }
+        }
+        // Add ap by job level
+        final int jobId = job.getJobId();
+        final int jobLevel = JobConstants.getJobLevel(jobId);
+        if (JobConstants.isEvanJob(jobId)) {
+            if (jobId >= 2214 && jobId <= 2218) {
+                cs.setAp((short) (cs.getAp() + 5));
+            }
+        } else {
+            if (job == Job.BLADE_RECRUIT || job == Job.BLADE_SPECIALIST) {
+                cs.setAp((short) (cs.getAp() + 1));
+            } else if (jobLevel == 3 || jobLevel == 4) {
+                cs.setAp((short) (cs.getAp() + 5));
+            }
+        }
+        // Add sp by job level
+        if (JobConstants.isEvanJob(jobId)) {
+            switch (jobLevel) {
+                case 1, 2, 3, 4, 5, 6, 10 -> {
+                    cs.getSp().addSp(jobLevel, 3); // 1st – 6th & 10th Mastery -> Extra 3 SP at each activation level
+                }
+                case 7, 8, 9 -> {
+                    cs.getSp().addSp(jobLevel, 5); // 7th-9th Mastery -> Extra 5 SP at each activation level
+                }
+            }
+        } else if (JobConstants.isExtendSpJob(jobId)) {
+            switch (jobLevel) {
+                case 1, 2, 3 -> {
+                    cs.getSp().addSp(jobLevel, 1);
+                }
+                case 4 -> {
+                    cs.getSp().addSp(jobLevel, 3);
+                }
+            }
+        } else {
+            switch (jobLevel) {
+                case 1, 2, 3 -> {
+                    if (job != Job.BLADE_RECRUIT && job != Job.BLADE_SPECIALIST) {
+                        cs.getSp().addNonExtendSp(1);
+                    }
+                }
+                case 4 -> {
+                    cs.getSp().addNonExtendSp(3);
+                }
+            }
+        }
+        // Update stats
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        statMap.put(Stat.STR, cs.getBaseStr());
+        statMap.put(Stat.DEX, cs.getBaseDex());
+        statMap.put(Stat.INT, cs.getBaseInt());
+        statMap.put(Stat.LUK, cs.getBaseLuk());
+        statMap.put(Stat.MHP, cs.getMaxHp());
+        statMap.put(Stat.MMP, cs.getMaxMp());
+        statMap.put(Stat.AP, cs.getAp());
+        statMap.put(Stat.SP, JobConstants.isExtendSpJob(jobId) ? cs.getSp() : (short) cs.getSp().getNonExtendSp());
+        statMap.put(Stat.JOB, cs.getJob());
+        user.write(WvsContext.statChanged(statMap, false));
+        user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
+        // Update skills
+        final List<SkillRecord> skillRecords = new ArrayList<>();
+        for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
+            if (JobConstants.isBeginnerJob(skillRoot)) {
+                continue;
+            }
+            for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                if (si.isInvisible()) {
+                    continue;
+                }
+                final SkillRecord sr = si.createRecord();
+                sr.setSkillLevel(0);
+                sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
+                user.getSkillManager().addSkill(sr);
+                skillRecords.add(sr);
+            }
+        }
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.write(WvsContext.changeSkillRecordResult(skillRecords, false));
+        // Additional handling
+        if (JobConstants.isDragonJob(jobId)) {
+            final Dragon dragon = new Dragon(jobId);
+            user.setDragon(dragon);
+            user.getField().broadcastPacket(DragonPacket.dragonEnterField(user, dragon));
+        } else if (JobConstants.isWildHunterJob(jobId)) {
+            user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
+        }
+        user.getConnectedServer().notifyUserUpdate(user);
     }
 
     @Override

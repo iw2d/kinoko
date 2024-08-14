@@ -71,7 +71,6 @@ public final class CygnusTutorial extends ScriptHandler {
         // Neinheart's Job Introduction   : Cygnus Knights   (913040106)
         switch (sm.getFieldId()) {
             case 913040100 -> {
-                sm.setDirectionMode(true, 0);
                 sm.reservedEffect("Effect/Direction.img/cygnusJobTutorial/Scene0");
             }
             case 913040101 -> {
@@ -365,6 +364,7 @@ public final class CygnusTutorial extends ScriptHandler {
                 sm.forceCompleteQuest(20020);
                 sm.forceCompleteQuest(20100);
                 sm.write(UserLocal.hireTutor(false));
+                sm.setDirectionMode(true, 0);
                 sm.warp(913040100);
             } else {
                 sm.sayOk("Please talk to me after you've given this some more thought. Don't think too hard. Whichever you choose will become your destiny.");

@@ -7,14 +7,10 @@ import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
 
 public final class Dragon extends Life implements Encodable {
-    private final User owner;
+    private final int jobCode;
 
-    public Dragon(User owner) {
-        this.owner = owner;
-    }
-
-    public User getOwner() {
-        return owner;
+    public Dragon(int jobCode) {
+        this.jobCode = jobCode;
     }
 
     public void setPosition(Field field, int x, int y) {
@@ -30,6 +26,6 @@ public final class Dragon extends Life implements Encodable {
         outPacket.encodeInt(getY()); // ptPos.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
         outPacket.encodeShort(getFoothold()); // ignored
-        outPacket.encodeShort(owner.getJob());
+        outPacket.encodeShort(jobCode); // nJobCode
     }
 }

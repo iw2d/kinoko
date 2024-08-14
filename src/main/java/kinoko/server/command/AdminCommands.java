@@ -655,6 +655,21 @@ public final class AdminCommands {
         }
     }
 
+    @Command("levelup")
+    @Arguments("new level")
+    public static void levelUp(User user, String[] args) {
+        final int level = Integer.parseInt(args[1]);
+        if (level <= user.getLevel() || level > GameConstants.LEVEL_MAX) {
+            user.write(MessagePacket.system("Could not level up to : %d", level));
+            return;
+        }
+        try (var locked = user.acquire()) {
+            while (user.getLevel() < level) {
+                user.addExp(GameConstants.getNextLevelExp(user.getLevel()) - user.getCharacterStat().getExp());
+            }
+        }
+    }
+
     @Command("job")
     @Arguments("job ID")
     public static void job(User user, String[] args) {
@@ -664,9 +679,14 @@ public final class AdminCommands {
             return;
         }
         try (var locked = user.acquire()) {
-            user.setJob(jobId);
+            // Set job
+            user.getCharacterStat().setJob((short) jobId);
+            user.write(WvsContext.statChanged(Stat.JOB, (short) jobId, true));
+            user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
+            user.validateStat();
+            // Additional handling
             if (JobConstants.isDragonJob(jobId)) {
-                final Dragon dragon = new Dragon(user);
+                final Dragon dragon = new Dragon(user.getJob());
                 user.setDragon(dragon);
                 user.getField().broadcastPacket(DragonPacket.dragonEnterField(user, dragon));
             } else {

@@ -27,6 +27,10 @@ public final class SkillManager {
         skillRecords.put(skillRecord.getSkillId(), skillRecord);
     }
 
+    public void removeSkill(int skillId) {
+        skillRecords.remove(skillId);
+    }
+
 
     // SKILL COOLTIME METHODS ------------------------------------------------------------------------------------------
 

@@ -8,6 +8,7 @@ import kinoko.util.Tuple;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.item.BodyPart;
+import kinoko.world.job.Job;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
 
@@ -51,6 +52,8 @@ public interface ScriptManager {
     int getLevel();
 
     void addExp(int exp);
+
+    void setJob(Job job);
 
     void setAvatar(int look);
 

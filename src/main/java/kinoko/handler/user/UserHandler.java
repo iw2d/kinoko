@@ -658,6 +658,7 @@ public final class UserHandler {
             }
             // Add skill point and update client
             skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
+            user.write(WvsContext.statChanged(Stat.SP, JobConstants.isExtendSpJob(user.getJob()) ? user.getCharacterStat().getSp() : (short) user.getCharacterStat().getSp().getNonExtendSp(), false));
             user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
             user.updatePassiveSkillData();
             user.validateStat();

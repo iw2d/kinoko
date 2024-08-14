@@ -123,7 +123,7 @@ public final class MigrationHandler {
 
                 // Initialize dragon
                 if (JobConstants.isDragonJob(user.getJob())) {
-                    user.setDragon(new Dragon(user));
+                    user.setDragon(new Dragon(user.getJob()));
                 }
 
                 // Initialize user data from MigrationInfo

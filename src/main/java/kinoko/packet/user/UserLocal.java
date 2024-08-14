@@ -90,6 +90,10 @@ public final class UserLocal {
         return outPacket;
     }
 
+    public static OutPacket openSkillGuide() {
+        return OutPacket.of(OutHeader.UserOpenSkillGuide);
+    }
+
     public static OutPacket resignQuestReturn(int questId) {
         final OutPacket outPacket = OutPacket.of(OutHeader.ResignQuestReturn);
         outPacket.encodeShort(questId); // usQuestID

@@ -7,6 +7,7 @@ import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.util.Tuple;
 import kinoko.world.item.BodyPart;
+import kinoko.world.job.Job;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
 
@@ -80,6 +81,15 @@ public final class AranTutorial extends ScriptHandler {
             }
             case 914090013 -> {
                 sm.reservedEffect("Effect/Direction1.img/aranTutorial/Scene3");
+                sm.setDirectionMode(false, 12000);
+            }
+            case 914090100 -> {
+                sm.reservedEffect("Effect/Direction1.img/aranTutorial/HandedPoleArm" + sm.getGender());
+                sm.setDirectionMode(false, 5000);
+            }
+            case 914090200 -> {
+                sm.reservedEffect("Effect/Direction1.img/aranTutorial/Maha");
+                sm.setDirectionMode(false, 5000);
             }
         }
     }
@@ -357,6 +367,15 @@ public final class AranTutorial extends ScriptHandler {
 
     // SNOW ISLAND SCRIPTS ---------------------------------------------------------------------------------------------
 
+    @Script("rien")
+    public static void rien(ScriptManager sm) {
+        // Snow Island : Rien (140000000)
+        if (sm.hasQuestCompleted(21101) && !sm.hasQRValue(QuestRecordType.AranGuideEffect, "guide=1")) {
+            sm.addQRValue(QuestRecordType.AranGuideEffect, "guide=1");
+            sm.write(UserLocal.openSkillGuide());
+        }
+    }
+
     @Script("iceCave")
     public static void iceCave(ScriptManager sm) {
         // Snow Island : Ice Cave (140090000)
@@ -365,7 +384,6 @@ public final class AranTutorial extends ScriptHandler {
         sm.removeSkill(20000016);
         sm.removeSkill(20000017);
         sm.removeSkill(20000018);
-        sm.setDirectionMode(false, 0);
         sm.reservedEffect("Effect/Direction1.img/aranTutorial/ClickLilin");
     }
 
@@ -472,6 +490,24 @@ public final class AranTutorial extends ScriptHandler {
         } else {
             sm.playPortalSE();
             sm.warp(140000000, "st00");
+        }
+    }
+
+    @Script("enterGym")
+    public static void enterGym(ScriptManager sm) {
+        // Snow Island : Dangerous Forest (140010100)
+        //   in00 (-1999, 86)
+        if (sm.hasQuestStarted(21701)) {
+            sm.playPortalSE();
+            sm.warp(914010000, "out00");
+        } else if (sm.hasQuestStarted(21702)) {
+            sm.playPortalSE();
+            sm.warp(914010100, "out00");
+        } else if (sm.hasQuestStarted(21703)) {
+            sm.playPortalSE();
+            sm.warp(914010200, "out00");
+        } else {
+            sm.message("You will be allowed to enter the Penguin Training Ground only if you are receiving a lesson from Puo.");
         }
     }
 
@@ -742,12 +778,15 @@ public final class AranTutorial extends ScriptHandler {
         sm.sayBoth("I found an incredible weapon while digging through blocks of ice a while back. I figured the weapon belonged to a hero, so I brought it to town and placed it somewhere in the center of the town. Haven't you seen it? #bThe #p1201001##k... \r\r#i4032372#\r\rIt looks like this...");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("Come to think of it, I did see a #p1201001# in town.");
+        sm.setFlipSpeaker(false);
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Yes, that's it. According to what's been recorded, the weapon of a hero will recognize its rightful owner, and if you're the hero that used the #p1201001#, the #p1201001# will react when you grab the #p1201001#. Please go find the #b#p1201001# and click on it.#k")) {
+            sm.setFlipSpeaker(true);
             sm.sayNext("What's stopping you? I promise, I won't be disappointed even if the #p1201001# shows no reaction to you. Please, rush over there and grab the #p1201001#. Just #bclick#k on it.");
             return;
         }
         sm.forceCompleteQuest(21100);
+        sm.setFlipSpeaker(true);
         sm.sayOk("If the #p1201001# reacts to you, then we'll know that you're #bAran#k, the hero that wielded a #p1201001#.");
         sm.reservedEffect("Effect/Direction1.img/aranTutorial/ClickPoleArm");
     }
@@ -757,7 +796,44 @@ public final class AranTutorial extends ScriptHandler {
         // The Polearm-Wielding Hero (21101 - start)
         if (!sm.askYesNo("#b(Are you certain that you were the hero that wielded the #p1201001#? Yes, you're sure. You better grab the #p1201001# really tightly. Surely it will react to you.)#k")) {
             sm.sayNext("#b(You need to think about this for a second...)#k");
+            return;
         }
-        // TODO
+        if (!sm.addItem(1142129, 1)) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.setJob(Job.ARAN_1);
+        sm.forceCompleteQuest(21101);
+        sm.setNotCancellable(true);
+        sm.setPlayerAsSpeaker(true);
+        sm.sayNext("#b(You might be starting to remember something...)#k");
+        sm.setDirectionMode(true, 0);
+        sm.warp(914090100);
+    }
+
+    @Script("q21700s")
+    public static void q21700s(ScriptManager sm) {
+        // New Beginnings (21700 - start)
+        sm.setFlipSpeaker(true);
+        sm.sayNext("It seems like you've started to remember things. Your Polearm must have recognized you. This means you are surely #bAran, the wielder of Polearms#k. Is there anything else you remember? Skills you used with the Polearm perhaps? Anything?");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(You tell her that you remember a few skills.)#k");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("That's not a lot, but it's progress. Our focus, then, should be to get you back to the state before you were frozen. You may have lost your memory, but I'm sure it won't take long for you to recover the abilities that your body remembers.");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("How do I recover my abilities?");
+        sm.setFlipSpeaker(false);
+        sm.setPlayerAsSpeaker(false);
+        if (!sm.askAccept("There is only one way to do that. Train! Train! Train! Train! If you continue to train, your body will instinctively remember its abilities. To help you through the process, I'll introduce you to an instructor.")) {
+            sm.sayNext("No? Are you saying you can train on your own? I'm just letting you know that you'll get better results if you train with an instructor. You can't live in this world alone. You must learn to get along with other people.");
+            return;
+        }
+        if (!sm.addItem(1442000, 1)) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.forceStartQuest(21700);
+        sm.sayNext("I gave you a #bPolearm#k because I figured it would be best for you to use a weapon you're familiar with. It will be useful in your training.");
+        sm.sayPrev("You'll find a Training Center if you exit to the #bleft#k. There, you'll meet #b#p1202006##k. I'm a bit worried because I think he may be struggling with bouts of Alzheimer's, but he spent a long time researching skills to help you. I'm sure you'll learn a thing or two from him.");
     }
 }

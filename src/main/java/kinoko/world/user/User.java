@@ -329,14 +329,6 @@ public final class User extends Life implements Lockable<User> {
         return getCharacterStat().getJob();
     }
 
-    public void setJob(int jobId) {
-        getCharacterStat().setJob((short) jobId);
-        write(WvsContext.statChanged(Stat.JOB, (short) getJob(), true));
-        getField().broadcastPacket(UserRemote.effect(this, Effect.jobChanged()), this);
-        validateStat();
-        getConnectedServer().notifyUserUpdate(this);
-    }
-
     public int getLevel() {
         return getCharacterStat().getLevel();
     }

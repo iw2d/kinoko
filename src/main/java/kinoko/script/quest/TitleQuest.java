@@ -126,4 +126,10 @@ public final class TitleQuest extends ScriptHandler {
         //   highposition (94, -487)
 
     }
+
+    @Script("q29924s")
+    public static void q29924s(ScriptManager sm) {
+        // Awakened Aran (29924 - start)
+        sm.forceStartQuest(29924);
+    }
 }

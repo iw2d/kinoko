@@ -46,4 +46,17 @@ public final class ConstantsTest {
         };
         Assertions.assertArrayEquals(expected, GameConstants.EXP_TABLE);
     }
+
+    @Test
+    public void testJobLevel() {
+        for (Job job : Job.values()) {
+            if (job == Job.MANAGER || job == Job.GM || job == Job.SUPER_GM || job == Job.ADDITIONAL_SKILLS) {
+                continue;
+            }
+
+            final int jobLevel = JobConstants.getJobLevel(job.getJobId());
+
+            // System.out.printf("%s %d\n", job, jobLevel);
+        }
+    }
 }
