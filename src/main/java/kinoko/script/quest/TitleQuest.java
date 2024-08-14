@@ -127,6 +127,11 @@ public final class TitleQuest extends ScriptHandler {
 
     }
 
+    @Script("q29905s")
+    public static void q29905s(ScriptManager sm) {
+        sm.forceStartQuest(29905);
+    }
+
     @Script("q29924s")
     public static void q29924s(ScriptManager sm) {
         // Awakened Aran (29924 - start)

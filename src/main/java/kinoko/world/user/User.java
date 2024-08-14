@@ -382,7 +382,7 @@ public final class User extends Life implements Lockable<User> {
             setMp(getMaxMp());
             getConnectedServer().notifyUserUpdate(this);
             // Max level
-            if (getLevel() == GameConstants.LEVEL_MAX) {
+            if (getLevel() == GameConstants.getLevelMax(getJob())) {
                 getCharacterData().setMaxLevelTime(Instant.now());
             }
         }

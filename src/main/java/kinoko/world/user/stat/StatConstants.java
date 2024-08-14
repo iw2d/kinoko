@@ -11,8 +11,8 @@ public final class StatConstants {
         return stat == Stat.MHP || stat == Stat.MMP || stat == Stat.STR || stat == Stat.DEX || stat == Stat.INT || stat == Stat.LUK;
     }
 
-    public static int getIncAp(int jobId) {
-        if (JobConstants.isCygnusJob(jobId)) {
+    public static int getIncAp(int level, int jobId) {
+        if (level <= 70 && JobConstants.isCygnusJob(jobId)) {
             return 6;
         }
         return 5;

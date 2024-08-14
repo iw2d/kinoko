@@ -1,7 +1,9 @@
 package kinoko.world;
 
+import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
 import kinoko.world.job.Job;
+import kinoko.world.job.JobConstants;
 import kinoko.world.user.data.FuncKeyMapped;
 import kinoko.world.user.data.FuncKeyType;
 
@@ -139,6 +141,14 @@ public final class GameConstants {
             default -> {
                 return 0;
             }
+        }
+    }
+
+    public static int getLevelMax(int jobId) {
+        if (JobConstants.isCygnusJob(jobId)) {
+            return ServerConfig.CYGNUS_LEVEL_MAX;
+        } else {
+            return LEVEL_MAX;
         }
     }
 

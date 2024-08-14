@@ -201,7 +201,7 @@ public final class CygnusTutorial extends ScriptHandler {
     @Script("q20010e")
     public static void q20010e(ScriptManager sm) {
         // Welcome to Ereve (20010 - end)
-        sm.sayNext("Are you the Noblesse my brother Kimu sent? Nice to meet you! I'm Kizan. I'll give you the reward Kimu asked me to give you. Remember, you can check your Inventory by pressing the #bI key#k. Red potions help you recover HP, and blue ones help recover MP. It's a good idea to learn how to use them beforehand so you'll be ready with them when you're in danger. \r\n\r\n#fUI/UIWindow2.img/Quest/reward# \r\n\r\n#v2000020# 5 #z2000020# \r\n#v2000021# 5 #z2000021# \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 15 exp");
+        sm.sayNext("Are you the Noblesse my brother Kimu sent? Nice to meet you! I'm Kizan. I'll give you the reward Kimu asked me to give you. Remember, you can check your Inventory by pressing the #bI key#k. Red potions help you recover HP, and blue ones help recover MP. It's a good idea to learn how to use them beforehand so you'll be ready with them when you're in danger. \r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0# \r\n\r\n#v2000020# 5 #t2000020# \r\n#v2000021# 5 #t2000021# \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 15 exp");
         if (sm.addItems((List.of(Tuple.of(2000020, 5), Tuple.of(2000021, 5))))) {
             sm.addExp(15);
             sm.forceCompleteQuest(20010);
@@ -378,35 +378,5 @@ public final class CygnusTutorial extends ScriptHandler {
                 sm.sayOk("Please talk to me after you've given this some more thought. Don't think too hard. Whichever you choose will become your destiny.");
             }
         }
-    }
-
-    @Script("q20101e")
-    public static void q20101e(ScriptManager sm) {
-        // Path of a Dawn Warrior (20101 - end)
-
-    }
-
-    @Script("q20102e")
-    public static void q20102e(ScriptManager sm) {
-        // Path of a Blaze Wizard (20102 - end)
-
-    }
-
-    @Script("q20103e")
-    public static void q20103e(ScriptManager sm) {
-        // Path of a Wind Archer (20103 - end)
-
-    }
-
-    @Script("q20104e")
-    public static void q20104e(ScriptManager sm) {
-        // Path of a Night Walker (20104 - end)
-
-    }
-
-    @Script("q20105e")
-    public static void q20105e(ScriptManager sm) {
-        // Path of a Thunder Breaker (20105 - end)
-
     }
 }

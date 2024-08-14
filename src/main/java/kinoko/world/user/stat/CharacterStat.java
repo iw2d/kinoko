@@ -344,7 +344,7 @@ public final class CharacterStat implements Encodable {
 
     public Map<Stat, Object> addExp(int delta, int totalInt) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        if (getLevel() >= GameConstants.LEVEL_MAX) {
+        if (getLevel() >= GameConstants.getLevelMax(job)) {
             return statMap;
         }
         long newExp = ((long) getExp()) + delta;
@@ -359,7 +359,7 @@ public final class CharacterStat implements Encodable {
 
     public Map<Stat, Object> levelUp(int totalInt) {
         final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        if (getLevel() >= GameConstants.LEVEL_MAX) {
+        if (getLevel() >= GameConstants.getLevelMax(job)) {
             return statMap;
         }
         // Update level
@@ -385,7 +385,7 @@ public final class CharacterStat implements Encodable {
                 statMap.put(Stat.DEX, getBaseDex());
             }
         } else {
-            setAp((short) (getAp() + StatConstants.getIncAp(getJob())));
+            setAp((short) (getAp() + StatConstants.getIncAp(getLevel(), getJob())));
             statMap.put(Stat.AP, getAp());
         }
         // Update sp

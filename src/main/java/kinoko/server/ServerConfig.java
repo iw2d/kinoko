@@ -20,6 +20,7 @@ public final class ServerConfig {
     public static final int INVENTORY_CASH_SLOTS = GameConstants.INVENTORY_SLOT_MAX;
     public static final int TRUNK_BASE_SLOTS = 4;
     public static final int FRIEND_MAX_BASE = 20;
+    public static final int CYGNUS_LEVEL_MAX = 120;
     public static final int WORLD_SPEAKER_COOLTIME = 60;
 
     public static final String COMMAND_PREFIX = "!";

@@ -109,12 +109,22 @@ public final class QuestInfo {
         }
     }
 
-    public Optional<QuestRecord> startQuest(Locked<User> locked) {
-        // Check that the quest can be started
+    public boolean canStartQuest(Locked<User> locked) {
+        if (locked.get().getQuestManager().hasQuestStarted(questId)) {
+            return false;
+        }
         for (QuestCheck startCheck : getStartChecks()) {
             if (!startCheck.check(locked)) {
-                return Optional.empty();
+                return false;
             }
+        }
+        return true;
+    }
+
+    public Optional<QuestRecord> startQuest(Locked<User> locked) {
+        // Check that the quest can be started
+        if (!canStartQuest(locked)) {
+            return Optional.empty();
         }
         for (QuestAct startAct : getStartActs()) {
             if (!startAct.canAct(locked, -1)) {
@@ -131,17 +141,22 @@ public final class QuestInfo {
         return Optional.of(locked.get().getQuestManager().forceStartQuest(questId));
     }
 
-    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked, int rewardIndex) {
-        // Check that the quest has been started
-        final QuestManager qm = locked.get().getQuestManager();
-        if (!qm.hasQuestStarted(questId)) {
-            return Optional.empty();
+    public boolean canCompleteQuest(Locked<User> locked) {
+        if (!locked.get().getQuestManager().hasQuestStarted(questId)) {
+            return false;
         }
-        // Check that the quest can be completed
         for (QuestCheck completeCheck : getCompleteChecks()) {
             if (!completeCheck.check(locked)) {
-                return Optional.empty();
+                return false;
             }
+        }
+        return true;
+    }
+
+    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked, int rewardIndex) {
+        // Check that the quest can be completed
+        if (!canCompleteQuest(locked)) {
+            return Optional.empty();
         }
         for (QuestAct completeAct : getCompleteActs()) {
             if (!completeAct.canAct(locked, rewardIndex)) {
@@ -155,7 +170,7 @@ public final class QuestInfo {
             }
         }
         // Mark as completed and return
-        final QuestRecord qr = qm.forceCompleteQuest(questId);
+        final QuestRecord qr = locked.get().getQuestManager().forceCompleteQuest(questId);
         return Optional.of(Tuple.of(qr, getNextQuest()));
     }
 

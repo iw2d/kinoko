@@ -843,12 +843,29 @@ public final class UserHandler {
                     user.validateStat();
                 }
             }
-            case OpeningScript, CompleteScript -> {
+            case OpeningScript -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
-                final boolean isStart = questRequestType == QuestRequestType.OpeningScript;
-                ScriptDispatcher.startQuestScript(user, questId, isStart, templateId);
+                try (var locked = user.acquire()) {
+                    if (!questInfo.canStartQuest(locked)) {
+                        log.error("Tried to start opening script for quest {} without meeting requirements", questId);
+                        return;
+                    }
+                    ScriptDispatcher.startQuestScript(user, questId, true, templateId);
+                }
+            }
+            case CompleteScript -> {
+                final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
+                final short x = inPacket.decodeShort(); // ptUserPos.x
+                final short y = inPacket.decodeShort(); // ptUserPos.y
+                try (var locked = user.acquire()) {
+                    if (!questInfo.canCompleteQuest(locked)) {
+                        log.error("Tried to start complete script for quest {} without meeting requirements", questId);
+                        return;
+                    }
+                    ScriptDispatcher.startQuestScript(user, questId, false, templateId);
+                }
             }
             case null -> {
                 log.error("Unknown quest action type : {}", action);
