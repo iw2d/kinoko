@@ -1,6 +1,7 @@
 # Drake (5130100)
 
 rewards:
+  - [ 0, 208, 312, 0.600000 ]
   - [ 1002631, 1, 1, 0.000100 ] # Brown Leather Ocean Hat
   - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
   - [ 1041077, 1, 1, 0.000100 ] # Maroon Moon

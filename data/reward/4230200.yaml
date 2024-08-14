@@ -1,6 +1,7 @@
 # Poopa (4230200)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1002170, 1, 1, 0.000100 ] # Dark Distinction
   - [ 1002207, 1, 1, 0.000100 ] # Red Sonata
   - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet

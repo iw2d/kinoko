@@ -1,6 +1,7 @@
 # Axe Stump (1130100)
 
 rewards:
+  - [ 0, 19, 28, 0.600000 ]
   - [ 1002118, 1, 1, 0.000100 ] # Blue Robin Hat
   - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
   - [ 1040019, 1, 1, 0.000100 ] # Orange Split Piece

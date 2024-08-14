@@ -1,6 +1,7 @@
 # Green Cornian (8150200)
 
 rewards:
+  - [ 0, 816, 1224, 0.600000 ]
   - [ 1002529, 1, 1, 0.000100 ] # Blue Grace Helmet
   - [ 1002646, 1, 1, 0.000100 ] # Black Polax Hat
   - [ 1050102, 1, 1, 0.000100 ] # Green Varuna

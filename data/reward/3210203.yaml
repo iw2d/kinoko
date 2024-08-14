@@ -1,6 +1,7 @@
 # Panda Teddy (3210203)
 
 rewards:
+  - [ 0, 216, 324, 0.600000 ]
   - [ 1002153, 1, 1, 0.000100 ] # Red Guiltian
   - [ 1002166, 1, 1, 0.000100 ] # Red Distinction
   - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt

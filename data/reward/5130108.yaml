@@ -1,6 +1,7 @@
 # Miner Zombie (5130108)
 
 rewards:
+  - [ 0, 792, 1188, 0.600000 ]
   - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
   - [ 1002155, 1, 1, 0.000100 ] # White Guiltian
   - [ 1002169, 1, 1, 0.000100 ] # Brown Distinction

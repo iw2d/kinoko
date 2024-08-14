@@ -1,6 +1,7 @@
 # Bain (9500138)
 
 rewards:
+  - [ 0, 503, 756, 0.600000 ]
   - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
   - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
   - [ 1002330, 1, 1, 0.000100 ] # Dark Pireta Hat

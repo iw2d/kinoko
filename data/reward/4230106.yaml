@@ -1,6 +1,7 @@
 # Lunar Pixie (4230106)
 
 rewards:
+  - [ 0, 114, 172, 0.600000 ]
   - [ 1002210, 1, 1, 0.000100 ] # Brown Sonata
   - [ 1002216, 1, 1, 0.000100 ] # Aqua Golden Circlet
   - [ 1002628, 1, 1, 0.000100 ] # Red Misty

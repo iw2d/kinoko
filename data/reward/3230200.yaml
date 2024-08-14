@@ -1,6 +1,7 @@
 # Star Pixie (3230200)
 
 rewards:
+  - [ 0, 91, 136, 0.600000 ]
   - [ 1002152, 1, 1, 0.000100 ] # Blue Guiltian
   - [ 1002176, 1, 1, 0.000100 ] # Red Burgler
   - [ 1002625, 1, 1, 0.000100 ] # Blue Den Marine

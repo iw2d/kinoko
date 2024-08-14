@@ -1,6 +1,7 @@
 # Memory Monk (8200001)
 
 rewards:
+  - [ 0, 852, 1278, 0.600000 ]
   - [ 1002532, 1, 1, 0.000100 ] # Dark Grace Helmet
   - [ 1051097, 1, 1, 0.000100 ] # Black Oriental Fury Coat
   - [ 1052128, 1, 1, 0.000100 ] # White Marquini

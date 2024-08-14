@@ -1,6 +1,7 @@
 # Nest Golem (8190005)
 
 rewards:
+  - [ 0, 900, 1350, 0.600000 ]
   - [ 1002406, 1, 1, 0.000100 ] # Red Arnah Cap
   - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
   - [ 1050097, 1, 1, 0.000100 ] # Blue Katinas

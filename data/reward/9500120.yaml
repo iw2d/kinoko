@@ -1,6 +1,7 @@
 # King Block Golem (9500120)
 
 rewards:
+  - [ 0, 125, 189, 0.600000 ]
   - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
   - [ 1002144, 1, 1, 0.000100 ] # Brown Matty
   - [ 1002170, 1, 1, 0.000100 ] # Dark Distinction

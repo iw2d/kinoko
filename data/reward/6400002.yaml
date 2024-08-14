@@ -1,6 +1,7 @@
 # Separated Dark Yeti (6400002)
 
 rewards:
+  - [ 0, 714, 1071, 0.600000 ]
   - [ 1040100, 1, 1, 0.000100 ] # Dark Scorpio
   - [ 1051030, 1, 1, 0.000100 ] # Dark Calaf
   - [ 1051031, 1, 1, 0.000100 ] # White Calaf

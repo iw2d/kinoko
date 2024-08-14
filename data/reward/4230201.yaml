@@ -1,6 +1,7 @@
 # Poison Poopa (4230201)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1002137, 1, 1, 0.000100 ] # Green Pole-Feather Hat
   - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
   - [ 1041078, 1, 1, 0.000100 ] # Blue Moon

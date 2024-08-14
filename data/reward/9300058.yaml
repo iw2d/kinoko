@@ -1,6 +1,7 @@
 # Pig (9300058)
 
 rewards:
+  - [ 0, 11, 16, 0.600000 ]
   - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
   - [ 1002026, 1, 1, 0.000100 ] # Brown Bamboo Hat
   - [ 1002050, 1, 1, 0.000100 ] # Orihalcon Burgernet Helm

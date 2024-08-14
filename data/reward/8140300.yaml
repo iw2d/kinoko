@@ -1,6 +1,7 @@
 # Dark Klock (8140300)
 
 rewards:
+  - [ 0, 630, 945, 0.600000 ]
   - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
   - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
   - [ 1002288, 1, 1, 0.000100 ] # Green Patriot

@@ -1,6 +1,7 @@
 # Nependeath (4230105)
 
 rewards:
+  - [ 0, 96, 144, 0.600000 ]
   - [ 1002098, 1, 1, 0.000100 ] # Gold Nordic Helm
   - [ 1002182, 1, 1, 0.000100 ] # Blue Pilfer
   - [ 1040083, 1, 1, 0.000100 ] # Marine Shadow

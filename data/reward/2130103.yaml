@@ -1,6 +1,7 @@
 # Jr. Necki (2130103)
 
 rewards:
+  - [ 0, 30, 45, 0.600000 ]
   - [ 1002027, 1, 1, 0.000100 ] # Steel Sharp Helm
   - [ 1041021, 1, 1, 0.000100 ] # Brown Lamelle
   - [ 1041031, 1, 1, 0.000100 ] # Purple Split

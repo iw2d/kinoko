@@ -1,6 +1,7 @@
 # Pink Teddy (3110101)
 
 rewards:
+  - [ 0, 204, 306, 0.600000 ]
   - [ 1040062, 1, 1, 0.000100 ] # Red Knucklevest
   - [ 1041055, 1, 1, 0.000100 ] # Black Huntress Armor
   - [ 1050002, 1, 1, 0.000100 ] # Blood Chaos Robe

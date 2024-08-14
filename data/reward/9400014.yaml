@@ -1,6 +1,7 @@
 # Black Crow (9400014)
 
 rewards:
+  - [ 0, 690, 1035, 0.600000 ]
   - [ 1032027, 1, 1, 0.000200 ] # Black Emerald Earrings
   - [ 1092021, 1, 1, 0.000200 ] # Mystic Shield
   - [ 1102030, 1, 1, 0.000200 ] # Black Seraph Cape

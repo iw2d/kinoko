@@ -1,6 +1,7 @@
 # Klock (8140200)
 
 rewards:
+  - [ 0, 612, 918, 0.600000 ]
   - [ 1002270, 1, 1, 0.000100 ] # Black Polyfeather Hat
   - [ 1032015, 1, 1, 0.000100 ] # Metal Silver Earrings
   - [ 1032022, 1, 1, 0.000100 ] # Half Earrings

@@ -1,6 +1,7 @@
 # Reinforced Iron Mutae (4110301)
 
 rewards:
+  - [ 0, 470, 705, 0.600000 ]
   - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
   - [ 1041077, 1, 1, 0.000100 ] # Maroon Moon
   - [ 1082010, 1, 1, 0.000100 ] # Mithril Brist

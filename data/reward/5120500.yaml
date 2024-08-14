@@ -1,6 +1,7 @@
 # Grizzly (5120500)
 
 rewards:
+  - [ 0, 475, 714, 0.600000 ]
   - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings
   - [ 1040099, 1, 1, 0.000100 ] # Ocher Scorpio
   - [ 1050058, 1, 1, 0.000100 ] # Orange Tai

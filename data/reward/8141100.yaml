@@ -1,6 +1,7 @@
 # Gigantic Spirit Viking (8141100)
 
 rewards:
+  - [ 0, 732, 1098, 0.600000 ]
   - [ 1002329, 1, 1, 0.000100 ] # Red Pireta Hat
   - [ 1041116, 1, 1, 0.000100 ] # Brown Osfa Suit
   - [ 1050077, 1, 1, 0.000100 ] # Green Pris

@@ -1,6 +1,7 @@
 # Seacle (2230105)
 
 rewards:
+  - [ 0, 216, 324, 0.600000 ]
   - [ 1032005, 1, 1, 0.000100 ] # Red Cross Earrings
   - [ 1041042, 1, 1, 0.000100 ] # Green Fairy Top
   - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe

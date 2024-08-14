@@ -1,6 +1,7 @@
 # Red Flower Serpent (4230504)
 
 rewards:
+  - [ 0, 453, 680, 0.600000 ]
   - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
   - [ 1002631, 1, 1, 0.000100 ] # Brown Leather Ocean Hat
   - [ 1041077, 1, 1, 0.000100 ] # Maroon Moon

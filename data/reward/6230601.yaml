@@ -1,6 +1,7 @@
 # Dark Drake (6230601)
 
 rewards:
+  - [ 0, 232, 348, 0.600000 ]
   - [ 1002208, 1, 1, 0.000100 ] # Blue Sonata
   - [ 1002242, 1, 1, 0.000100 ] # Red Seraphis
   - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
@@ -35,5 +36,5 @@ rewards:
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
   - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
-  - [ 4001105, 1, 1, 0.130000, 7303 ] # Tough Dragon Skin
   - [ 4001077, 1, 1, 0.130000, 7301 ] # Tough Dragon Skin
+  - [ 4001105, 1, 1, 0.130000, 7303 ] # Tough Dragon Skin

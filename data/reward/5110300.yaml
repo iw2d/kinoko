@@ -1,6 +1,7 @@
 # Reinforced Mithril Mutae  (5110300)
 
 rewards:
+  - [ 0, 487, 730, 0.600000 ]
   - [ 1041088, 1, 1, 0.000100 ] # Ivory Shouldermail
   - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
   - [ 1052116, 1, 1, 0.000100 ] # Green Plasteer

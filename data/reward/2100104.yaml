@@ -1,6 +1,7 @@
 # Royal Cactus (2100104)
 
 rewards:
+  - [ 0, 395, 592, 0.600000 ]
   - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
   - [ 1040068, 1, 1, 0.000100 ] # Dark Hunter's Armor
   - [ 1060057, 1, 1, 0.000100 ] # Dark Hunter's Pants

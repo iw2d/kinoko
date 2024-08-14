@@ -1,6 +1,7 @@
 # Risell Squid (8142100)
 
 rewards:
+  - [ 0, 618, 927, 0.600000 ]
   - [ 1002325, 1, 1, 0.000100 ] # Purple Osfa Hat
   - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
   - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top

@@ -1,4 +1,5 @@
 # Candle Monster (9400506)
 
 rewards:
+  - [ 0, 16, 24, 0.600000 ]
   - [ 4031409, 1, 1, 0.050000 ] # Amoria Heart Key

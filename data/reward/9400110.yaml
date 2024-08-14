@@ -1,6 +1,7 @@
 # Leader A (9400110)
 
 rewards:
+  - [ 0, 297, 446, 0.600000 ]
   - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
   - [ 1002167, 1, 1, 0.000100 ] # Blue Distinction
   - [ 1002207, 1, 1, 0.000100 ] # Red Sonata

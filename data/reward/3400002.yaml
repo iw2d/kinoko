@@ -1,6 +1,7 @@
 # Melon Bubble Tea (3400002)
 
 rewards:
+  - [ 0, 81, 122, 0.600000 ]
   - [ 1002098, 1, 1, 0.000100 ] # Gold Nordic Helm
   - [ 1002154, 1, 1, 0.000100 ] # Dark Guiltian
   - [ 1002170, 1, 1, 0.000100 ] # Dark Distinction

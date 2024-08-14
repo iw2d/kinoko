@@ -1,6 +1,7 @@
 # Murukun (100134)
 
 rewards:
+  - [ 0, 14, 21, 0.600000 ]
   - [ 1002042, 1, 1, 0.000100 ] # Blue Metal Gear
   - [ 1002051, 1, 1, 0.000100 ] # Bronze Full Helm
   - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings

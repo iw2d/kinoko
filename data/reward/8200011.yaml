@@ -1,6 +1,7 @@
 # Oblivion Guardian (8200011)
 
 rewards:
+  - [ 0, 984, 1476, 0.600000 ]
   - [ 1002379, 1, 1, 0.000100 ] # Dark Valhalla Helmet
   - [ 1052131, 1, 1, 0.000100 ] # Red Belly Duke
   - [ 1072229, 1, 1, 0.000100 ] # Green Arnah Shoes

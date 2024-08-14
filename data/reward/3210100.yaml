@@ -1,6 +1,7 @@
 # Fire Boar (3210100)
 
 rewards:
+  - [ 0, 52, 78, 0.600000 ]
   - [ 1002141, 1, 1, 0.000100 ] # Red Matty
   - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1040026, 1, 1, 0.000100 ] # Green Hwarang Shirt

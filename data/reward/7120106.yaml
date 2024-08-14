@@ -1,6 +1,7 @@
 # Overlord A (7120106)
 
 rewards:
+  - [ 0, 648, 972, 0.600000 ]
   - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
   - [ 1041092, 1, 1, 0.000100 ] # Red Ice Queen
   - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis

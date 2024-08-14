@@ -1,6 +1,7 @@
 # Pinboom (2230108)
 
 rewards:
+  - [ 0, 208, 312, 0.600000 ]
   - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
   - [ 1002131, 1, 1, 0.000100 ] # Green Loosecap
   - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings

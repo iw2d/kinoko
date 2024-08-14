@@ -1,6 +1,7 @@
 # Red Dragon Turtle (8140701)
 
 rewards:
+  - [ 0, 768, 1152, 0.600000 ]
   - [ 1002365, 1, 1, 0.000100 ] # Red Oriental Fury Hat
   - [ 1040111, 1, 1, 0.000100 ] # Green Commodore
   - [ 1051096, 1, 1, 0.000100 ] # Red Oriental Fury Coat

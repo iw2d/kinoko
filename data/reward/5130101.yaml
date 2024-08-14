@@ -1,6 +1,7 @@
 # Stone Golem (5130101)
 
 rewards:
+  - [ 0, 32, 48, 0.600000 ]
   - [ 1002086, 1, 1, 0.000100 ] # Bronze Crusader Helm
   - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
   - [ 1032002, 1, 1, 0.000100 ] # Sapphire Earrings

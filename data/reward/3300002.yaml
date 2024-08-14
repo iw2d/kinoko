@@ -1,6 +1,7 @@
 # Intoxicated Pig (3300002)
 
 rewards:
+  - [ 0, 76, 115, 0.600000 ]
   - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
   - [ 1040058, 1, 1, 0.000100 ] # Dark Silver Stealer
   - [ 1041058, 1, 1, 0.000100 ] # Blood Sneak

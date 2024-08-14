@@ -1,6 +1,7 @@
 # Water Goblin (9400012)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
   - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
   - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen

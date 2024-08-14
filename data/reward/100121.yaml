@@ -1,6 +1,7 @@
 # Tiv (100121)
 
 rewards:
+  - [ 0, 4, 7, 0.600000 ]
   - [ 1040013, 1, 1, 0.000100 ] # Blue One-lined T-Shirt
   - [ 1040017, 1, 1, 0.000100 ] # Grey / Brown Training Shirt
   - [ 1041012, 1, 1, 0.000100 ] # Red-Striped T-Shirt

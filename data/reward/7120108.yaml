@@ -1,6 +1,7 @@
 # Robby (7120108)
 
 rewards:
+  - [ 0, 672, 1008, 0.600000 ]
   - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
   - [ 1002268, 1, 1, 0.000100 ] # Brown Polyfeather Hat
   - [ 1002282, 1, 1, 0.000100 ] # Blue Nightfox

@@ -1,6 +1,7 @@
 # Wolf Spider (9400545)
 
 rewards:
+  - [ 0, 416, 624, 0.600000 ]
   - [ 1002271, 1, 1, 0.000100 ] # Green Galaxy
   - [ 1002275, 1, 1, 0.000100 ] # Blue Falcon
   - [ 1002285, 1, 1, 0.000100 ] # Blood Nightfox

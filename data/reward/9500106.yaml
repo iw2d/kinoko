@@ -1,6 +1,7 @@
 # Horny Mushroom (9500106)
 
 rewards:
+  - [ 0, 44, 66, 0.600000 ]
   - [ 1002005, 1, 1, 0.000100 ] # Iron Burgernet Helm
   - [ 1040044, 1, 1, 0.000100 ] # Black Pao
   - [ 1041008, 1, 1, 0.000100 ] # Green Able Armor

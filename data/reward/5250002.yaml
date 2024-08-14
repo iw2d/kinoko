@@ -1,6 +1,7 @@
 # Primitive Boar (5250002)
 
 rewards:
+  - [ 0, 470, 705, 0.600000 ]
   - [ 1002634, 1, 1, 0.000100 ] # Purple Cast Linen
   - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
   - [ 1041093, 1, 1, 0.000100 ] # Blue Ice Queen

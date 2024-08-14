@@ -1,6 +1,7 @@
 # Octopus (1120100)
 
 rewards:
+  - [ 0, 12, 19, 0.600000 ]
   - [ 1032001, 1, 1, 0.000100 ] # Single Earring
   - [ 1040037, 1, 1, 0.000100 ] # Brown Corporal
   - [ 1041026, 1, 1, 0.000100 ] # Yellow Arianne

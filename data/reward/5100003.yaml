@@ -1,6 +1,7 @@
 # Hodori (5100003)
 
 rewards:
+  - [ 0, 232, 348, 0.600000 ]
   - [ 1041088, 1, 1, 0.000100 ] # Ivory Shouldermail
   - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
   - [ 1060077, 1, 1, 0.000100 ] # Ocher Shouldermail Pants

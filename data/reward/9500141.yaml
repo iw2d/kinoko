@@ -1,6 +1,7 @@
 # Separated Yeti (9500141)
 
 rewards:
+  - [ 0, 312, 468, 0.600000 ]
   - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
   - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
   - [ 1050069, 1, 1, 0.000100 ] # Brown Requiem

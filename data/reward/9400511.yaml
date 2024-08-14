@@ -1,6 +1,7 @@
 # Yellow Eggy Popp (9400511)
 
 rewards:
+  - [ 0, 32, 48, 0.600000 ]
   - [ 1002039, 1, 1, 0.000100 ] # Bronze Helmet
   - [ 1032001, 1, 1, 0.000100 ] # Single Earring
   - [ 1041018, 1, 1, 0.000100 ] # Green Arianne

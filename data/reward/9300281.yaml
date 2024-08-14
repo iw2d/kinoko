@@ -1,6 +1,7 @@
 # Rex (9300281)
 
 rewards:
+  - [ 0, 416, 624, 0.600000 ]
   - [ 1032077, 1, 1, 0.100000 ] # Rex's Green Earrings
   - [ 1032078, 1, 1, 0.100000 ] # Rex's Red Earrings
   - [ 1032079, 1, 1, 0.100000 ] # Rex's Blue Earrings

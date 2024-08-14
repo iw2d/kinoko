@@ -1,6 +1,7 @@
 # Cico (2230106)
 
 rewards:
+  - [ 0, 232, 348, 0.600000 ]
   - [ 1002146, 1, 1, 0.000100 ] # Red Tiberian
   - [ 1002158, 1, 1, 0.000100 ] # Green Hunter
   - [ 1040040, 1, 1, 0.000100 ] # Silver Master Sergeant

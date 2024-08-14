@@ -1,6 +1,7 @@
 # Qualm Monk Trainee (8200006)
 
 rewards:
+  - [ 0, 918, 1377, 0.600000 ]
   - [ 1002378, 1, 1, 0.000100 ] # Blue Valhalla Helmet
   - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
   - [ 1051107, 1, 1, 0.000100 ] # Red Armis

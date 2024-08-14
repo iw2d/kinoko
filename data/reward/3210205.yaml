@@ -1,6 +1,7 @@
 # Black Ratz (3210205)
 
 rewards:
+  - [ 0, 125, 189, 0.600000 ]
   - [ 1002048, 1, 1, 0.000100 ] # Great Blue Helmet
   - [ 1002136, 1, 1, 0.000100 ] # Dark Pole-Feather Hat
   - [ 1040057, 1, 1, 0.000100 ] # Dark Brown Stealer

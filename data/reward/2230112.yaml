@@ -1,6 +1,7 @@
 # Terrified Wild Boar (2230112)
 
 rewards:
+  - [ 0, 32, 48, 0.600000 ]
   - [ 1002064, 1, 1, 0.000100 ] # Bronze Pride
   - [ 1002151, 1, 1, 0.000100 ] # Brown Guiltian
   - [ 1002166, 1, 1, 0.000100 ] # Red Distinction

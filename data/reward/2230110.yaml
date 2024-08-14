@@ -1,6 +1,7 @@
 # Wooden Mask (2230110)
 
 rewards:
+  - [ 0, 56, 84, 0.600000 ]
   - [ 1002058, 1, 1, 0.000100 ] # Mithril Viking Helm
   - [ 1002121, 1, 1, 0.000100 ] # Brown Robin Hat
   - [ 1002131, 1, 1, 0.000100 ] # Green Loosecap

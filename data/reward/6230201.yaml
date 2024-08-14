@@ -1,6 +1,7 @@
 # Separated Dark Pepe (6230201)
 
 rewards:
+  - [ 0, 137, 205, 0.600000 ]
   - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet
   - [ 1002267, 1, 1, 0.000100 ] # Red Polyfeather Hat
   - [ 1002283, 1, 1, 0.000100 ] # Purple Nightfox

@@ -1,6 +1,7 @@
 # Oblivion Monk (8200009)
 
 rewards:
+  - [ 0, 960, 1440, 0.600000 ]
   - [ 1002381, 1, 1, 0.000100 ] # Blue Canal Hood
   - [ 1050108, 1, 1, 0.000100 ] # Red Arzuna
   - [ 1072221, 1, 1, 0.000100 ] # Blue Crescent Boots

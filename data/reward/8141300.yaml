@@ -1,6 +1,7 @@
 # Squid (8141300)
 
 rewards:
+  - [ 0, 600, 900, 0.600000 ]
   - [ 1002271, 1, 1, 0.000100 ] # Green Galaxy
   - [ 1002365, 1, 1, 0.000100 ] # Red Oriental Fury Hat
   - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings

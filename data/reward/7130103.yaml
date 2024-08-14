@@ -1,6 +1,7 @@
 # Commander Skeleton (7130103)
 
 rewards:
+  - [ 0, 86, 129, 0.600000 ]
   - [ 1040092, 1, 1, 0.000100 ] # Blue Orientican
   - [ 1041092, 1, 1, 0.000100 ] # Red Ice Queen
   - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis

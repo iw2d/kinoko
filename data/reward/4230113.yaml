@@ -1,6 +1,7 @@
 # Tick-Tock (4230113)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1002047, 1, 1, 0.000100 ] # Great Red Helmet
   - [ 1002139, 1, 1, 0.000100 ] # Red Pole-Feather Hat
   - [ 1002142, 1, 1, 0.000100 ] # Blue Matty
@@ -30,5 +31,5 @@ rewards:
   - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
   - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
-  - [ 4031675, 1, 1, 0.050000, 4917 ] # Temporal Fragment
   - [ 4031098, 1, 1, 0.060000, 3232 ] # All-purpose Clock Spring
+  - [ 4031675, 1, 1, 0.050000, 4917 ] # Temporal Fragment

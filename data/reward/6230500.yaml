@@ -1,6 +1,7 @@
 # Master Soul Teddy (6230500)
 
 rewards:
+  - [ 0, 588, 882, 0.600000 ]
   - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
   - [ 1002244, 1, 1, 0.000100 ] # Green Seraphis
   - [ 1002249, 1, 1, 0.000100 ] # Dark Identity

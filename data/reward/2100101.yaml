@@ -1,6 +1,7 @@
 # Desert Rabbit (M) (2100101)
 
 rewards:
+  - [ 0, 326, 489, 0.600000 ]
   - [ 1002129, 1, 1, 0.000100 ] # Brown Loosecap
   - [ 1041027, 1, 1, 0.000100 ] # Red Shivermail
   - [ 1060017, 1, 1, 0.000100 ] # White Martial Arts Pants

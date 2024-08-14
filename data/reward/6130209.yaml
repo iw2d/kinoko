@@ -1,6 +1,7 @@
 # Sage Cat (6130209)
 
 rewards:
+  - [ 0, 570, 855, 0.600000 ]
   - [ 1032014, 1, 1, 0.000100 ] # Pink-Flowered Earrings
   - [ 1040096, 1, 1, 0.000100 ] # Brown China
   - [ 1060085, 1, 1, 0.000100 ] # Brown China Pants

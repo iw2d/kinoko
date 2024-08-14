@@ -1,6 +1,7 @@
 # Dragonoir (8300006)
 
 rewards:
+  - [ 0, 642, 963, 0.600000 ]
   - [ 1051104, 1, 1, 0.000200 ] # Dark Bazura
   - [ 1052071, 1, 1, 0.000200 ] # Red Mantle
   - [ 1052072, 1, 1, 0.000200 ] # Black Garina
@@ -44,4 +45,4 @@ rewards:
   - [ 2047206, 1, 1, 0.010000 ] # Tablet for Armor for MP
   - [ 2047207, 1, 1, 0.010000 ] # Tablet for Armor for DEF
   - [ 2047208, 1, 1, 0.010000 ] # Tablet for Armor for Accuracy
-  - [ 4001401, 1, 1, 1.000000 ] # Dragonoir's Horn
+  - [ 4001401, 1, 1, 1.000000 ] # Dragonoir's Horn 

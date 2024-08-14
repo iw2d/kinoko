@@ -1,6 +1,7 @@
 # Sentinel (3000000)
 
 rewards:
+  - [ 0, 91, 136, 0.600000 ]
   - [ 1002137, 1, 1, 0.000100 ] # Green Pole-Feather Hat
   - [ 1002622, 1, 1, 0.000100 ] # White Oceania Cap
   - [ 1032006, 1, 1, 0.000100 ] # Lightning Earrings

@@ -1,6 +1,7 @@
 # Morphed Blin (6130202)
 
 rewards:
+  - [ 0, 307, 460, 0.600000 ]
   - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
   - [ 1040099, 1, 1, 0.000100 ] # Ocher Scorpio
   - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen

@@ -1,6 +1,7 @@
 # Jr. Wraith (3230101)
 
 rewards:
+  - [ 0, 20, 31, 0.600000 ]
   - [ 1050022, 1, 1, 0.000100 ] # Dark Crusader Chainmail
   - [ 1051008, 1, 1, 0.000100 ] # Blue Avenger
   - [ 1051010, 1, 1, 0.000100 ] # Dark Engrit

@@ -1,6 +1,7 @@
 # Croco (5130103)
 
 rewards:
+  - [ 0, 46, 69, 0.600000 ]
   - [ 1002210, 1, 1, 0.000100 ] # Brown Sonata
   - [ 1002218, 1, 1, 0.000100 ] # Dark Golden Circlet
   - [ 1040098, 1, 1, 0.000100 ] # Light Scorpio

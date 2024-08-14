@@ -1,6 +1,7 @@
 # Mu Gong Merits (9300215)
 
 rewards:
+  - [ 0, 900, 1350, 0.600000 ]
   - [ 2022413, 1, 1, 0.100000 ] # Increases Physical Attack Rate
   - [ 2022414, 1, 1, 0.100000 ] # Increases Magic Attack Rate
   - [ 2022415, 1, 1, 0.100000 ] # Increases Physical Defense Rate

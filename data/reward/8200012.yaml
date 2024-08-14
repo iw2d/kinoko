@@ -1,6 +1,7 @@
 # Chief Oblivion Guardian (8200012)
 
 rewards:
+  - [ 0, 996, 1494, 0.600000 ]
   - [ 1002401, 1, 1, 0.000100 ] # Dark Varr Hat
   - [ 1040122, 1, 1, 0.000100 ] # Black Neos
   - [ 1060111, 1, 1, 0.000100 ] # Black Neos Pants

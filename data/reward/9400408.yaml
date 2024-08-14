@@ -1,6 +1,7 @@
 # Castellan (9400408)
 
 rewards:
+  - [ 0, 1080, 1620, 0.600000 ]
   - [ 1382045, 1, 1, 0.020000 ] # Elemental Staff 1
   - [ 1382046, 1, 1, 0.020000 ] # Elemental Staff 2
   - [ 1382047, 1, 1, 0.020000 ] # Elemental Staff 3

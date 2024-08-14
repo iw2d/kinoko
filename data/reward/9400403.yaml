@@ -1,6 +1,7 @@
 # Ninto (9400403)
 
 rewards:
+  - [ 0, 600, 900, 0.600000 ]
   - [ 1002326, 1, 1, 0.000100 ] # Red Osfa Hat
   - [ 1050107, 1, 1, 0.000100 ] # Blue Arzuna
   - [ 1051097, 1, 1, 0.000100 ] # Black Oriental Fury Coat

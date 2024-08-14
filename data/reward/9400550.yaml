@@ -1,6 +1,7 @@
 # Boomer (9400550)
 
 rewards:
+  - [ 0, 54, 81, 0.600000 ]
   - [ 1002162, 1, 1, 0.000100 ] # Blue Hawkeye
   - [ 1041041, 1, 1, 0.000100 ] # Purple Fairy Top
   - [ 1050028, 1, 1, 0.000100 ] # Green Wizard Robe

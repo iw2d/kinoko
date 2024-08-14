@@ -1,6 +1,7 @@
 # Lioner (5120002)
 
 rewards:
+  - [ 0, 128, 193, 0.600000 ]
   - [ 1002024, 1, 1, 0.000100 ] # Emerald Dome
   - [ 1002045, 1, 1, 0.000100 ] # Blue Bone Helm
   - [ 1002267, 1, 1, 0.000100 ] # Red Polyfeather Hat

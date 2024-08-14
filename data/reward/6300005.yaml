@@ -1,6 +1,7 @@
 # Zombie Mushmom (6300005)
 
 rewards:
+  - [ 0, 46, 69, 0.600000 ]
   - [ 1032014, 1, 1, 0.000200 ] # Pink-Flowered Earrings
   - [ 1092010, 1, 1, 0.000200 ] # Silver Legend Shield
   - [ 1102024, 1, 1, 0.000200 ] # Black Gaia Cape

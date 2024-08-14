@@ -1,6 +1,7 @@
 # Lycanthrope (9500134)
 
 rewards:
+  - [ 0, 416, 624, 0.600000 ]
   - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
   - [ 1002340, 1, 1, 0.000100 ] # Dark Dragon Barbute
   - [ 1032022, 1, 1, 0.000100 ] # Half Earrings

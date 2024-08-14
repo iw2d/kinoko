@@ -1,6 +1,7 @@
 # Toy Trojan (9300131)
 
 rewards:
+  - [ 0, 93, 140, 0.600000 ]
   - [ 2022157, 1, 1, 0.020000 ] # Carnival Point 1
   - [ 2022158, 1, 1, 0.015000 ] # Carnival Point 2
   - [ 2022159, 1, 1, 0.010000 ] # Carnival Point 3

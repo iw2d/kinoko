@@ -1,6 +1,7 @@
 # Death Teddy (9500135)
 
 rewards:
+  - [ 0, 475, 714, 0.600000 ]
   - [ 1041105, 1, 1, 0.000100 ] # Green Pirate Blouse
   - [ 1050094, 1, 1, 0.000100 ] # Red Oriental Fury Coat
   - [ 1061104, 1, 1, 0.000100 ] # Green Pirate Skirt

@@ -1,6 +1,7 @@
 # Phantom Watch (8142000)
 
 rewards:
+  - [ 0, 726, 1089, 0.600000 ]
   - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
   - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top
   - [ 1040111, 1, 1, 0.000100 ] # Green Commodore

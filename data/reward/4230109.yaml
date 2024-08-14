@@ -1,6 +1,7 @@
 # Block Golem (4230109)
 
 rewards:
+  - [ 0, 302, 453, 0.600000 ]
   - [ 1002154, 1, 1, 0.000100 ] # Dark Guiltian
   - [ 1002167, 1, 1, 0.000100 ] # Blue Distinction
   - [ 1002180, 1, 1, 0.000100 ] # Dark Burgler

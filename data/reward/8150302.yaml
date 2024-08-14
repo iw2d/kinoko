@@ -1,6 +1,7 @@
 # Dark Wyvern (8150302)
 
 rewards:
+  - [ 0, 846, 1269, 0.600000 ]
   - [ 1002531, 1, 1, 0.000100 ] # Silver Grace Helmet
   - [ 1040115, 1, 1, 0.000100 ] # Green Osfa Suit
   - [ 1051095, 1, 1, 0.000100 ] # Blue Oriental Fury Coat
@@ -39,10 +40,10 @@ rewards:
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4131004, 1, 1, 0.000300 ] # Two-Handed Axe Forging Manual
   - [ 4031415, 1, 1, 0.100000, 3712 ] # Black Soul of Dark Wyvern
-  - [ 4031485, 1, 1, 0.020000, 6124 ] # Dragon Heart
-  - [ 4001077, 1, 1, 0.060000, 7301 ] # Tough Dragon Skin
-  - [ 4001105, 1, 1, 0.060000, 7303 ] # Tough Dragon Skin
   - [ 4031449, 1, 1, 0.020000, 6120 ] # Dragon Heart
   - [ 4031482, 1, 1, 0.020000, 6121 ] # Dragon Heart
   - [ 4031483, 1, 1, 0.020000, 6122 ] # Dragon Heart
   - [ 4031484, 1, 1, 0.020000, 6123 ] # Dragon Heart
+  - [ 4031485, 1, 1, 0.020000, 6124 ] # Dragon Heart
+  - [ 4001077, 1, 1, 0.060000, 7301 ] # Tough Dragon Skin
+  - [ 4001105, 1, 1, 0.060000, 7303 ] # Tough Dragon Skin

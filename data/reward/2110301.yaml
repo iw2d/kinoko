@@ -1,6 +1,7 @@
 # Scorpion (2110301)
 
 rewards:
+  - [ 0, 453, 680, 0.600000 ]
   - [ 1002164, 1, 1, 0.000100 ] # Brown Hawkeye
   - [ 1040062, 1, 1, 0.000100 ] # Red Knucklevest
   - [ 1050029, 1, 1, 0.000100 ] # Dark Chaos Robe

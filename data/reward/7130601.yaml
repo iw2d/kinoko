@@ -1,6 +1,7 @@
 # Green Hobi (7130601)
 
 rewards:
+  - [ 0, 630, 945, 0.600000 ]
   - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
   - [ 1040106, 1, 1, 0.000100 ] # Blue Studded Top
   - [ 1052125, 1, 1, 0.000100 ] # White Pioneer

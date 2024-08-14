@@ -1,6 +1,7 @@
 # Blue Wyvern (8150301)
 
 rewards:
+  - [ 0, 822, 1233, 0.600000 ]
   - [ 1002532, 1, 1, 0.000100 ] # Dark Grace Helmet
   - [ 1050094, 1, 1, 0.000100 ] # Red Oriental Fury Coat
   - [ 1051105, 1, 1, 0.000100 ] # Green Armis

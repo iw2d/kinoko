@@ -1,6 +1,7 @@
 # Cloud Fox (9400002)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002138, 1, 1, 0.000100 ] # Blue Pole-Feather Hat
   - [ 1002139, 1, 1, 0.000100 ] # Red Pole-Feather Hat
   - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye

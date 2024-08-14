@@ -1,6 +1,7 @@
 # Desert Rabbit (F) (2100100)
 
 rewards:
+  - [ 0, 321, 482, 0.600000 ]
   - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
   - [ 1032009, 1, 1, 0.000100 ] # Yellow Square
   - [ 1050005, 1, 1, 0.000100 ] # Blue Kendo Robe

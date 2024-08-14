@@ -1,6 +1,7 @@
 # Homun (6110300)
 
 rewards:
+  - [ 0, 552, 828, 0.600000 ]
   - [ 1002022, 1, 1, 0.000100 ] # Old Steel Nordic Helm
   - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings
   - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings

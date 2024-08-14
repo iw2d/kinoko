@@ -1,6 +1,7 @@
 # Tiguru (100124)
 
 rewards:
+  - [ 0, 14, 21, 0.600000 ]
   - [ 1002008, 1, 1, 0.000100 ] # Brown Skullcap
   - [ 1002610, 1, 1, 0.000100 ] # Brown Rocky Bandana
   - [ 1040034, 1, 1, 0.000100 ] # Dark Nightshift
@@ -15,6 +16,6 @@ rewards:
   - [ 2041021, 1, 1, 0.000100 ] # Scroll for Cape for LUK 100%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4000486, 1, 1, 0.400000 ] # Pig's Head
+  - [ 4000486, 1, 1, 0.400000 ] # Tiguru's Feather
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore

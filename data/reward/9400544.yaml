@@ -1,6 +1,7 @@
 # Gryphon (9400544)
 
 rewards:
+  - [ 0, 140, 210, 0.600000 ]
   - [ 1002025, 1, 1, 0.000100 ] # Red Duke
   - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
   - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet

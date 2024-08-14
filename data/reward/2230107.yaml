@@ -1,6 +1,7 @@
 # Krappy (2230107)
 
 rewards:
+  - [ 0, 224, 336, 0.600000 ]
   - [ 1041034, 1, 1, 0.000100 ] # Blue Bennis Chainmail
   - [ 1041051, 1, 1, 0.000100 ] # Red Amoria Top
   - [ 1041058, 1, 1, 0.000100 ] # Blood Sneak

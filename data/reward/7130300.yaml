@@ -1,6 +1,7 @@
 # Master Death Teddy (7130300)
 
 rewards:
+  - [ 0, 696, 1044, 0.600000 ]
   - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
   - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
   - [ 1002276, 1, 1, 0.000100 ] # Red Falcon
@@ -40,5 +41,5 @@ rewards:
   - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
   - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
-  - [ 4031175, 1, 1, 0.400000, 7101 ] # Tachion
   - [ 4031171, 1, 1, 0.400000, 7101 ] # Mysterious Powder
+  - [ 4031175, 1, 1, 0.400000, 7101 ] # Tachion

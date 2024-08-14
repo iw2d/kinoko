@@ -1,6 +1,7 @@
 # Shroom (120100)
 
 rewards:
+  - [ 0, 4, 7, 0.600000 ]
   - [ 1002610, 1, 1, 0.000100 ] # Brown Rocky Bandana
   - [ 1060007, 1, 1, 0.000100 ] # Jean Capris
   - [ 1061009, 1, 1, 0.000100 ] # Green Avelin Skirt

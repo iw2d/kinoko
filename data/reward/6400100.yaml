@@ -1,6 +1,7 @@
 # Deep Buffoon (6400100)
 
 rewards:
+  - [ 0, 636, 954, 0.600000 ]
   - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
   - [ 1002268, 1, 1, 0.000100 ] # Brown Polyfeather Hat
   - [ 1002282, 1, 1, 0.000100 ] # Blue Nightfox

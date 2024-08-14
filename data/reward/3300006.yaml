@@ -1,6 +1,7 @@
 # Gold Yeti and King Pepe (3300006)
 
 rewards:
+  - [ 0, 84, 126, 0.600000 ]
   - [ 1002098, 1, 1, 0.000200 ] # Gold Nordic Helm
   - [ 1002154, 1, 1, 0.000200 ] # Dark Guiltian
   - [ 1002170, 1, 1, 0.000200 ] # Dark Distinction

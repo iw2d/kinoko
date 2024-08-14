@@ -1,6 +1,7 @@
 # Red Porky (4230501)
 
 rewards:
+  - [ 0, 400, 600, 0.600000 ]
   - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet
   - [ 1032018, 1, 1, 0.000100 ] # Pansy Earrings
   - [ 1051026, 1, 1, 0.000100 ] # Dark Moonlight

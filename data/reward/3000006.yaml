@@ -1,6 +1,7 @@
 # Krip (3000006)
 
 rewards:
+  - [ 0, 297, 446, 0.600000 ]
   - [ 1040040, 1, 1, 0.000100 ] # Silver Master Sergeant
   - [ 1041052, 1, 1, 0.000100 ] # Blue Amoria Top
   - [ 1050002, 1, 1, 0.000100 ] # Blood Chaos Robe

@@ -1,6 +1,7 @@
 # Gigantic Viking (9500136)
 
 rewards:
+  - [ 0, 588, 882, 0.600000 ]
   - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
   - [ 1002338, 1, 1, 0.000100 ] # Red Dragon Barbute
   - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
@@ -24,10 +25,10 @@ rewards:
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4131003, 1, 1, 0.000300 ] # Two-Handed Sword Forging Manual
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion
   - [ 4031176, 1, 1, 0.050000, 7104 ] # Piece of Cracked Dimension A
   - [ 4031177, 1, 1, 0.100000, 7104 ] # Piece of Cracked Dimension B
   - [ 4031178, 1, 1, 0.010000, 7104 ] # Piece of Cracked Dimension C
-  - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
-  - [ 4131003, 1, 1, 0.000300 ] # Two-Handed Sword Forging Manual

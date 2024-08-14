@@ -1,6 +1,7 @@
 # Maverick Type D (8120106)
 
 rewards:
+  - [ 0, 744, 1116, 0.600000 ]
   - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
   - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
   - [ 1002276, 1, 1, 0.000100 ] # Red Falcon

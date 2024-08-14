@@ -1,6 +1,7 @@
 # Fire Tusk (9400542)
 
 rewards:
+  - [ 0, 86, 129, 0.600000 ]
   - [ 1002153, 1, 1, 0.000100 ] # Red Guiltian
   - [ 1002166, 1, 1, 0.000100 ] # Red Distinction
   - [ 1032039, 1, 1, 0.000100 ] # Eclipse Earrings

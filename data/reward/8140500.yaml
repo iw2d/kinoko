@@ -1,6 +1,7 @@
 # Bain (8140500)
 
 rewards:
+  - [ 0, 816, 1224, 0.600000 ]
   - [ 1002340, 1, 1, 0.000100 ] # Dark Dragon Barbute
   - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
   - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top

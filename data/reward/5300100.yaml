@@ -1,6 +1,7 @@
 # Malady (5300100)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
   - [ 1002168, 1, 1, 0.000100 ] # Green Distinction
   - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings

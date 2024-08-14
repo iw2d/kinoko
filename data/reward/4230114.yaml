@@ -1,6 +1,7 @@
 # Platoon Chronos (4230114)
 
 rewards:
+  - [ 0, 384, 577, 0.600000 ]
   - [ 1002143, 1, 1, 0.000100 ] # Green Matty
   - [ 1002176, 1, 1, 0.000100 ] # Red Burgler
   - [ 1040076, 1, 1, 0.000100 ] # Brown Legolier

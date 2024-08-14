@@ -1,6 +1,7 @@
 # Mask Fish (3230104)
 
 rewards:
+  - [ 0, 307, 460, 0.600000 ]
   - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
   - [ 1002135, 1, 1, 0.000100 ] # Brown Pole-Feather Hat
   - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer

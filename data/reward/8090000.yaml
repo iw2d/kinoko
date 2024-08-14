@@ -1,4 +1,5 @@
 # Deet and Roi (8090000)
 
 rewards:
+  - [ 0, 576, 864, 0.600000 ]
   - [ 4000418, 1, 1, 0.400000 ] # Useless Mechanical Heart

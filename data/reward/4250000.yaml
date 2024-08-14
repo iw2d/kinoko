@@ -1,6 +1,7 @@
 # Mossy Snail (4250000)
 
 rewards:
+  - [ 0, 395, 592, 0.600000 ]
   - [ 1002025, 1, 1, 0.000100 ] # Red Duke
   - [ 1051025, 1, 1, 0.000100 ] # Blue Moonlight
   - [ 1072109, 1, 1, 0.000100 ] # Black Yellow-Lined Shoes

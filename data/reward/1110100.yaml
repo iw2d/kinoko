@@ -1,6 +1,7 @@
 # Green Mushroom (1110100)
 
 rewards:
+  - [ 0, 11, 16, 0.600000 ]
   - [ 1002010, 1, 1, 0.000100 ] # Brown Winter Hat
   - [ 1002033, 1, 1, 0.000100 ] # Old Wisconsin
   - [ 1002143, 1, 1, 0.000100 ] # Green Matty

@@ -1,6 +1,7 @@
 # Extra A (9400100)
 
 rewards:
+  - [ 0, 125, 189, 0.600000 ]
   - [ 1002047, 1, 1, 0.000100 ] # Great Red Helmet
   - [ 1002090, 1, 1, 0.000100 ] # Blue Bamboo Hat
   - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings

@@ -1,6 +1,7 @@
 # Enraged Lord Pirate (9300106)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 2000002, 3, 5, 0.400000 ] # White Potion
   - [ 2000002, 3, 5, 0.300000 ] # White Potion
   - [ 2000002, 3, 5, 1.000000 ] # White Potion

@@ -1,6 +1,7 @@
 # D. Roy (7110300)
 
 rewards:
+  - [ 0, 552, 828, 0.600000 ]
   - [ 1002254, 1, 1, 0.000100 ] # Dark Infinium Circlet
   - [ 1002273, 1, 1, 0.000100 ] # Purple Galaxy
   - [ 1002288, 1, 1, 0.000100 ] # Green Patriot

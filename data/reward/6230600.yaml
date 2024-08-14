@@ -1,6 +1,7 @@
 # Ice Drake (6230600)
 
 rewards:
+  - [ 0, 224, 336, 0.600000 ]
   - [ 1002634, 1, 1, 0.000100 ] # Purple Cast Linen
   - [ 1040091, 1, 1, 0.000100 ] # Red Orientican
   - [ 1040094, 1, 1, 0.000100 ] # Red China

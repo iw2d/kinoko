@@ -1,6 +1,7 @@
 # Eliza (8220000)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002326, 1, 1, 0.000100 ] # Red Osfa Hat
   - [ 1002366, 1, 1, 0.000100 ] # Black Oriental Fury Hat
   - [ 1002405, 1, 1, 0.000100 ] # Dark Arlic Helmet

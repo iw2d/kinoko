@@ -1,6 +1,7 @@
 # Nightmare (9400563)
 
 rewards:
+  - [ 0, 96, 144, 0.600000 ]
   - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
   - [ 1002143, 1, 1, 0.000100 ] # Green Matty
   - [ 1002176, 1, 1, 0.000100 ] # Red Burgler

@@ -1,6 +1,7 @@
 # Rombot (4130103)
 
 rewards:
+  - [ 0, 326, 489, 0.600000 ]
   - [ 1040063, 1, 1, 0.000200 ] # Black Knucklevest
   - [ 1051032, 1, 1, 0.000200 ] # Blue Calaf
   - [ 1060052, 1, 1, 0.000200 ] # Black Knucklevest Pants

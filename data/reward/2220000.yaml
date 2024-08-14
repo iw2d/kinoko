@@ -1,6 +1,7 @@
 # Mano  (2220000)
 
 rewards:
+  - [ 0, 16, 24, 0.600000 ]
   - [ 1002049, 1, 1, 0.000200 ] # Gold Burgernet Helm
   - [ 1002073, 1, 1, 0.000200 ] # Red Wizardry Hat
   - [ 1002150, 1, 1, 0.000200 ] # Dark Tiberian

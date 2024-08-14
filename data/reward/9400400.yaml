@@ -1,6 +1,7 @@
 # Genin (9400400)
 
 rewards:
+  - [ 0, 50, 75, 0.600000 ]
   - [ 1002096, 1, 1, 0.000100 ] # Sky Blue Starry Bandana
   - [ 1050006, 1, 1, 0.000100 ] # Red Kendo Robe
   - [ 1050007, 1, 1, 0.000100 ] # White Kendo Robe

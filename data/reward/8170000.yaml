@@ -1,6 +1,7 @@
 # Thanatos (8170000)
 
 rewards:
+  - [ 0, 756, 1134, 0.600000 ]
   - [ 1002281, 1, 1, 0.000100 ] # Brown Nightfox
   - [ 1002404, 1, 1, 0.000100 ] # Green Arlic Helmet
   - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings

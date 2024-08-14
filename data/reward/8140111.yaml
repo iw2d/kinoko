@@ -1,6 +1,7 @@
 # Dual Birk (8140111)
 
 rewards:
+  - [ 0, 696, 1044, 0.600000 ]
   - [ 1002328, 1, 1, 0.000100 ] # Green Pireta Hat
   - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
   - [ 1051080, 1, 1, 0.000100 ] # Dark Battle Empress

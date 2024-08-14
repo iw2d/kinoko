@@ -1,6 +1,7 @@
 # Loki Box Tr (9400567)
 
 rewards:
+  - [ 0, 1, 1, 0.600000 ]
   - [ 2002023, 1, 1, 0.100000 ] # Ginger Ale
   - [ 2022121, 1, 1, 0.100000 ] # Gelt Chocolate
   - [ 2022242, 1, 1, 0.100000 ] # Edmund's Special Brew

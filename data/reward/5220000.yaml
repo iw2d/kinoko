@@ -1,6 +1,7 @@
 # King Clang (5220000)
 
 rewards:
+  - [ 0, 117, 176, 0.600000 ]
   - [ 1002029, 1, 1, 0.000200 ] # Red Oriental Helmet
   - [ 1002246, 1, 1, 0.000200 ] # Dark Seraphis
   - [ 1002249, 1, 1, 0.000200 ] # Dark Identity

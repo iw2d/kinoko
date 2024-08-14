@@ -1,6 +1,7 @@
 # Tauromacis (7130100)
 
 rewards:
+  - [ 0, 297, 446, 0.600000 ]
   - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
   - [ 1002272, 1, 1, 0.000100 ] # Blue Galaxy
   - [ 1002283, 1, 1, 0.000100 ] # Purple Nightfox
@@ -35,5 +36,5 @@ rewards:
   - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
   - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
   - [ 4130020, 1, 1, 0.000300 ] # Bottomwear Production Stimulator
-  - [ 4031466, 1, 1, 0.080000, 6107 ] # Dark Soul Rock
   - [ 4031214, 1, 1, 0.120000, 2097 ] # Tauromacis's Spirit Rock
+  - [ 4031466, 1, 1, 0.080000, 6107 ] # Dark Soul Rock

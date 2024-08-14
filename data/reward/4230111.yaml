@@ -1,6 +1,7 @@
 # Robo (4230111)
 
 rewards:
+  - [ 0, 292, 439, 0.600000 ]
   - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
   - [ 1002153, 1, 1, 0.000100 ] # Red Guiltian
   - [ 1002168, 1, 1, 0.000100 ] # Green Distinction

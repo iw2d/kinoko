@@ -1,6 +1,7 @@
 # Crying Blue Mushroom (2220110)
 
 rewards:
+  - [ 0, 17, 26, 0.600000 ]
   - [ 1002127, 1, 1, 0.000100 ] # Red Loosecap
   - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1002613, 1, 1, 0.000100 ] # Brown Lagger Cap

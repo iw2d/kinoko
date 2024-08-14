@@ -1,6 +1,7 @@
 # Horny Mushroom (2110200)
 
 rewards:
+  - [ 0, 20, 31, 0.600000 ]
   - [ 1002005, 1, 1, 0.000100 ] # Iron Burgernet Helm
   - [ 1002038, 1, 1, 0.000100 ] # Brown Jester
   - [ 1040044, 1, 1, 0.000100 ] # Black Pao

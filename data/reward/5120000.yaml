@@ -1,6 +1,7 @@
 # Luster Pixie (5120000)
 
 rewards:
+  - [ 0, 120, 180, 0.600000 ]
   - [ 1002086, 1, 1, 0.000100 ] # Bronze Crusader Helm
   - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
   - [ 1040081, 1, 1, 0.000100 ] # White Piette

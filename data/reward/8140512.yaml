@@ -1,6 +1,7 @@
 # Royal Guard (8140512)
 
 rewards:
+  - [ 0, 762, 1143, 0.600000 ]
   - [ 1002254, 1, 1, 0.000100 ] # Dark Infinium Circlet
   - [ 1002278, 1, 1, 0.000100 ] # Dark Falcon
   - [ 1002285, 1, 1, 0.000100 ] # Blood Nightfox

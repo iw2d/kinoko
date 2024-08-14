@@ -1,6 +1,7 @@
 # Kacchuu Musha (9400405)
 
 rewards:
+  - [ 0, 720, 1080, 0.600000 ]
   - [ 1002405, 1, 1, 0.000200 ] # Dark Arlic Helmet
   - [ 1102034, 1, 1, 0.000200 ] # Blue Giles Cape
   - [ 1122005, 1, 1, 0.000200 ] # Bow-tie (Black)

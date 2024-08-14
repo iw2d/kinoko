@@ -1,6 +1,7 @@
 # Scarf Plead (2100107)
 
 rewards:
+  - [ 0, 400, 600, 0.600000 ]
   - [ 1002141, 1, 1, 0.000100 ] # Red Matty
   - [ 1040059, 1, 1, 0.000100 ] # Red Gold Stealer
   - [ 1041054, 1, 1, 0.000100 ] # Green Huntress Armor

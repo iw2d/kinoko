@@ -1,6 +1,7 @@
 # Homunscullo (8110300)
 
 rewards:
+  - [ 0, 600, 900, 0.600000 ]
   - [ 1002288, 1, 1, 0.000100 ] # Green Patriot
   - [ 1040107, 1, 1, 0.000100 ] # Dark Studded Top
   - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants

@@ -1,6 +1,7 @@
 # Kiyo (3100102)
 
 rewards:
+  - [ 0, 410, 616, 0.600000 ]
   - [ 1002181, 1, 1, 0.000100 ] # Red Pilfer
   - [ 1041052, 1, 1, 0.000100 ] # Blue Amoria Top
   - [ 1050022, 1, 1, 0.000100 ] # Dark Crusader Chainmail

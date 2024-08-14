@@ -1,6 +1,7 @@
 # Captain (7130104)
 
 rewards:
+  - [ 0, 630, 945, 0.600000 ]
   - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
   - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
   - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre

@@ -1,6 +1,7 @@
 # Cold Eye (4230100)
 
 rewards:
+  - [ 0, 44, 66, 0.600000 ]
   - [ 1002098, 1, 1, 0.000100 ] # Gold Nordic Helm
   - [ 1002103, 1, 1, 0.000100 ] # Pink Moon Conehat
   - [ 1002166, 1, 1, 0.000100 ] # Red Distinction

@@ -1,6 +1,7 @@
 # Dark Pepe (6230200)
 
 rewards:
+  - [ 0, 137, 205, 0.600000 ]
   - [ 1002100, 1, 1, 0.000100 ] # Old Bronze Nordic Helm
   - [ 1002218, 1, 1, 0.000100 ] # Dark Golden Circlet
   - [ 1002268, 1, 1, 0.000100 ] # Brown Polyfeather Hat

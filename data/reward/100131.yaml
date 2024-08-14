@@ -1,6 +1,7 @@
 # Murupa (100131)
 
 rewards:
+  - [ 0, 4, 7, 0.600000 ]
   - [ 1002002, 1, 1, 0.000100 ] # Metal Koif
   - [ 1002019, 1, 1, 0.000100 ] # White Bandana
   - [ 1040013, 1, 1, 0.000100 ] # Blue One-lined T-Shirt

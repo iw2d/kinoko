@@ -1,6 +1,7 @@
 # Mithril  mutae (4110302)
 
 rewards:
+  - [ 0, 481, 722, 0.600000 ]
   - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
   - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
   - [ 1050045, 1, 1, 0.000100 ] # Blue Calas

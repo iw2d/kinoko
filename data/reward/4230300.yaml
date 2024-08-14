@@ -1,6 +1,7 @@
 # Moon Bunny (4230300)
 
 rewards:
+  - [ 0, 220, 330, 0.600000 ]
   - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
   - [ 1072109, 1, 1, 0.000100 ] # Black Yellow-Lined Shoes
   - [ 1072112, 1, 1, 0.000100 ] # Mithril Trigger

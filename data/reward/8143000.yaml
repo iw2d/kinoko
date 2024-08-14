@@ -1,6 +1,7 @@
 # Grim Phantom Watch (8143000)
 
 rewards:
+  - [ 0, 744, 1116, 0.600000 ]
   - [ 1002283, 1, 1, 0.000100 ] # Purple Nightfox
   - [ 1002328, 1, 1, 0.000100 ] # Green Pireta Hat
   - [ 1002402, 1, 1, 0.000100 ] # Red Arlic Helmet

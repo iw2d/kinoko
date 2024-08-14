@@ -1,6 +1,7 @@
 # Zombie Lupin (9500116)
 
 rewards:
+  - [ 0, 96, 144, 0.600000 ]
   - [ 1002151, 1, 1, 0.000100 ] # Brown Guiltian
   - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
   - [ 1040074, 1, 1, 0.000100 ] # Green Legolier

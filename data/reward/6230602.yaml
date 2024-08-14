@@ -1,6 +1,7 @@
 # Officer Skeleton (6230602)
 
 rewards:
+  - [ 0, 84, 126, 0.600000 ]
   - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
   - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
   - [ 1002248, 1, 1, 0.000100 ] # Silver Identity

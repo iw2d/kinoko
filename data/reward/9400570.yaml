@@ -1,4 +1,5 @@
 # Anniversary Cake (9400570)
 
 rewards:
+  - [ 0, 24, 36, 0.600000 ]
   - [ 2020028, 1, 1, 0.010000 ] # Chocolate

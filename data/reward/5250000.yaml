@@ -1,6 +1,7 @@
 # Mossy Mushroom (5250000)
 
 rewards:
+  - [ 0, 459, 688, 0.600000 ]
   - [ 1002208, 1, 1, 0.000100 ] # Blue Sonata
   - [ 1052116, 1, 1, 0.000100 ] # Green Plasteer
   - [ 1072143, 1, 1, 0.000100 ] # Green Goldwind Shoes

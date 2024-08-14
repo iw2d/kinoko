@@ -1,6 +1,7 @@
 # Ghost Pirate (7140000)
 
 rewards:
+  - [ 0, 660, 990, 0.600000 ]
   - [ 1002094, 1, 1, 0.000100 ] # Bronze Planet
   - [ 1002273, 1, 1, 0.000100 ] # Purple Galaxy
   - [ 1002277, 1, 1, 0.000100 ] # Green Falcon

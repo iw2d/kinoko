@@ -1,6 +1,7 @@
 # Samiho (5100004)
 
 rewards:
+  - [ 0, 297, 446, 0.600000 ]
   - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings
   - [ 1040087, 1, 1, 0.000100 ] # Blue Shouldermail
   - [ 1040099, 1, 1, 0.000100 ] # Ocher Scorpio

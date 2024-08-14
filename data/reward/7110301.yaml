@@ -1,6 +1,7 @@
 # Homunculus (7110301)
 
 rewards:
+  - [ 0, 588, 882, 0.600000 ]
   - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
   - [ 1002094, 1, 1, 0.000100 ] # Bronze Planet
   - [ 1002248, 1, 1, 0.000100 ] # Silver Identity

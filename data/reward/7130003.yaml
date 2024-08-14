@@ -1,6 +1,7 @@
 # Dual Beetle (7130003)
 
 rewards:
+  - [ 0, 630, 945, 0.600000 ]
   - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
   - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
   - [ 1051063, 1, 1, 0.000100 ] # Beige Lineros

@@ -1,6 +1,7 @@
 # Coolie Zombie (5130107)
 
 rewards:
+  - [ 0, 792, 1188, 0.600000 ]
   - [ 1002244, 1, 1, 0.000100 ] # Green Seraphis
   - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
   - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat

@@ -1,6 +1,7 @@
 # Dark Sand Dwarf  (3110301)
 
 rewards:
+  - [ 0, 470, 705, 0.600000 ]
   - [ 1002156, 1, 1, 0.000100 ] # Red Hunter
   - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings
   - [ 1040000, 1, 1, 0.000100 ] # Yellow Jangoon Armor

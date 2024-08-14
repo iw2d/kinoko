@@ -1,6 +1,7 @@
 # Drumming Bunny (3230400)
 
 rewards:
+  - [ 0, 208, 312, 0.600000 ]
   - [ 1002144, 1, 1, 0.000100 ] # Brown Matty
   - [ 1040074, 1, 1, 0.000100 ] # Green Legolier
   - [ 1041033, 1, 1, 0.000100 ] # Red Bennis Chainmail

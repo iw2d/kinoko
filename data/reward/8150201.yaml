@@ -1,6 +1,7 @@
 # Dark Cornian (8150201)
 
 rewards:
+  - [ 0, 852, 1278, 0.600000 ]
   - [ 1002530, 1, 1, 0.000100 ] # Red Grace Helmet
   - [ 1041122, 1, 1, 0.000100 ] # Green Lucida
   - [ 1050098, 1, 1, 0.000100 ] # Red Katinas
@@ -43,6 +44,6 @@ rewards:
   - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
   - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
-  - [ 4001103, 1, 1, 0.050000, 7303 ] # Cornian's Marrow
   - [ 4031414, 1, 1, 0.100000, 3712 ] # Black Soul of Dark Cornian
   - [ 4001075, 1, 1, 0.050000, 7301 ] # Cornian's Marrow
+  - [ 4001103, 1, 1, 0.050000, 7303 ] # Cornian's Marrow

@@ -1,6 +1,7 @@
 # Glutton Ghoul (9400565)
 
 rewards:
+  - [ 0, 42, 63, 0.600000 ]
   - [ 1002027, 1, 1, 0.000100 ] # Steel Sharp Helm
   - [ 1040044, 1, 1, 0.000100 ] # Black Pao
   - [ 1041008, 1, 1, 0.000100 ] # Green Able Armor
@@ -18,7 +19,7 @@ rewards:
   - [ 2048003, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 100%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4031764, 1, 1, 0.200000, 4949 ] # Paranormal Activity Report Page
   - [ 4031769, 1, 1, 0.025000, 4946 ] # Tarrymore Earring
   - [ 4031770, 1, 1, 0.025000, 4946 ] # Sepha Earring
+  - [ 4031764, 1, 1, 0.200000, 4949 ] # Paranormal Activity Report Page
   - [ 4031812, 1, 1, 0.200000, 4950 ] # Paranormal Activity Report Page

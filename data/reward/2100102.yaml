@@ -1,6 +1,7 @@
 # Jr. Cactus (2100102)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1002048, 1, 1, 0.000100 ] # Great Blue Helmet
   - [ 1032006, 1, 1, 0.000100 ] # Lightning Earrings
   - [ 1040044, 1, 1, 0.000100 ] # Black Pao

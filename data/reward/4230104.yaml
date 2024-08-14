@@ -1,6 +1,7 @@
 # Clang (4230104)
 
 rewards:
+  - [ 0, 88, 133, 0.600000 ]
   - [ 1002025, 1, 1, 0.000100 ] # Red Duke
   - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
   - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet

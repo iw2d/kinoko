@@ -1,6 +1,7 @@
 # Giant Centipede (5220004)
 
 rewards:
+  - [ 0, 648, 972, 0.600000 ]
   - [ 1032013, 1, 1, 0.000200 ] # Red-Hearted Earrings
   - [ 1092017, 1, 1, 0.000200 ] # Gold Ancient Shield
   - [ 1102002, 1, 1, 0.000200 ] # Red Napoleon

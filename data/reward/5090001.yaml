@@ -1,4 +1,5 @@
 # Master Dummy (5090001)
 
 rewards:
+  - [ 0, 481, 722, 0.600000 ]
   - [ 4000412, 1, 1, 0.400000 ] # Proof of Training

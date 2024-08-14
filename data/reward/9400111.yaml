@@ -1,6 +1,7 @@
 # Leader B (9400111)
 
 rewards:
+  - [ 0, 307, 460, 0.600000 ]
   - [ 1002211, 1, 1, 0.000100 ] # Blue Maro
   - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet
   - [ 1050055, 1, 1, 0.000100 ] # White Anakamoon

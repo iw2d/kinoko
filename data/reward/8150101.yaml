@@ -1,6 +1,7 @@
 # Cold Shark (8150101)
 
 rewards:
+  - [ 0, 642, 963, 0.600000 ]
   - [ 1002326, 1, 1, 0.000100 ] # Red Osfa Hat
   - [ 1002403, 1, 1, 0.000100 ] # Blue Arlic Helmet
   - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings

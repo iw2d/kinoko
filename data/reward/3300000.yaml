@@ -1,6 +1,7 @@
 # Renegade Spores (3300000)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002156, 1, 1, 0.000100 ] # Red Hunter
   - [ 1002622, 1, 1, 0.000100 ] # White Oceania Cap
   - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings

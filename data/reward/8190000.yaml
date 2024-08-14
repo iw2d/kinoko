@@ -1,6 +1,7 @@
 # Jr. Newtie (8190000)
 
 rewards:
+  - [ 0, 870, 1305, 0.600000 ]
   - [ 1002398, 1, 1, 0.000100 ] # Green Varr Hat
   - [ 1002646, 1, 1, 0.000100 ] # Black Polax Hat
   - [ 1040111, 1, 1, 0.000100 ] # Green Commodore

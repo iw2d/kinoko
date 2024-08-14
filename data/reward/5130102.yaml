@@ -1,6 +1,7 @@
 # Dark Stone Golem (5130102)
 
 rewards:
+  - [ 0, 46, 69, 0.600000 ]
   - [ 1002022, 1, 1, 0.000100 ] # Old Steel Nordic Helm
   - [ 1002209, 1, 1, 0.000100 ] # Green Sonata
   - [ 1002214, 1, 1, 0.000100 ] # Black Maro

@@ -1,6 +1,7 @@
 # Chief Qualm Guardian (8200008)
 
 rewards:
+  - [ 0, 942, 1413, 0.600000 ]
   - [ 1002407, 1, 1, 0.000100 ] # Blue Arnah Cap
   - [ 1050104, 1, 1, 0.000100 ] # Red Varuna
   - [ 1060111, 1, 1, 0.000100 ] # Black Neos Pants

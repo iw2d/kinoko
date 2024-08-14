@@ -1,6 +1,7 @@
 # Panda (6130203)
 
 rewards:
+  - [ 0, 498, 747, 0.600000 ]
   - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
   - [ 1002637, 1, 1, 0.000100 ] # Black Pirate's Bandana
   - [ 1041079, 1, 1, 0.000100 ] # Brown Moon

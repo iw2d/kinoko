@@ -1,6 +1,7 @@
 # Neo Huroid (5110302)
 
 rewards:
+  - [ 0, 498, 747, 0.600000 ]
   - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
   - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
   - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat

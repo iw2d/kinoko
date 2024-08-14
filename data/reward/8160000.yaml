@@ -1,6 +1,7 @@
 # Gatekeeper (8160000)
 
 rewards:
+  - [ 0, 756, 1134, 0.600000 ]
   - [ 1002329, 1, 1, 0.000100 ] # Red Pireta Hat
   - [ 1002403, 1, 1, 0.000100 ] # Blue Arlic Helmet
   - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
@@ -38,8 +39,8 @@ rewards:
   - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
   - [ 4130004, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Stimulator
   - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
-  - [ 4031474, 1, 1, 0.050000, 6295 ] # Soul Contract
   - [ 4031473, 1, 1, 0.020000, 6226 ] # Key to the Other World
+  - [ 4031474, 1, 1, 0.050000, 6295 ] # Soul Contract
   - [ 4031496, 1, 1, 0.020000, 6316 ] # Key to the Other World
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.600000, 7101 ] # Tachion

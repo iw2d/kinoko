@@ -1,6 +1,7 @@
 # Dual Ghost Pirate (7160000)
 
 rewards:
+  - [ 0, 684, 1026, 0.600000 ]
   - [ 1002272, 1, 1, 0.000100 ] # Blue Galaxy
   - [ 1002330, 1, 1, 0.000100 ] # Dark Pireta Hat
   - [ 1032016, 1, 1, 0.000100 ] # Metal Heart Earrings

@@ -1,6 +1,7 @@
 # Dark Yeti (9500128)
 
 rewards:
+  - [ 0, 326, 489, 0.600000 ]
   - [ 1002254, 1, 1, 0.000100 ] # Dark Infinium Circlet
   - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings
   - [ 1050067, 1, 1, 0.000100 ] # Blue Requiem

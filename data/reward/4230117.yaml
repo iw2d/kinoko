@@ -1,6 +1,7 @@
 # Zeta Gray (4230117)
 
 rewards:
+  - [ 0, 321, 482, 0.600000 ]
   - [ 1002208, 1, 1, 0.000100 ] # Blue Sonata
   - [ 1002212, 1, 1, 0.000100 ] # Red Maro
   - [ 1002217, 1, 1, 0.000100 ] # Orange Golden Circlet

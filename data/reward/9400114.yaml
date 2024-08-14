@@ -1,6 +1,7 @@
 # Slot Machine (9400114)
 
 rewards:
+  - [ 0, 140, 210, 0.600000 ]
   - [ 1002020, 1, 1, 0.000100 ] # Red Starry Bandana
   - [ 1002090, 1, 1, 0.000100 ] # Blue Bamboo Hat
   - [ 1092019, 1, 1, 0.000100 ] # Nimble Wristguard

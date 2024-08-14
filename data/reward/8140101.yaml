@@ -1,6 +1,7 @@
 # Black Kentaurus (8140101)
 
 rewards:
+  - [ 0, 708, 1062, 0.600000 ]
   - [ 1002328, 1, 1, 0.000100 ] # Green Pireta Hat
   - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
   - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings

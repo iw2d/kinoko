@@ -1,6 +1,7 @@
 # Sakura Cellion (9400509)
 
 rewards:
+  - [ 0, 79, 118, 0.600000 ]
   - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
   - [ 1032013, 1, 1, 0.000100 ] # Red-Hearted Earrings
   - [ 1040094, 1, 1, 0.000100 ] # Red China

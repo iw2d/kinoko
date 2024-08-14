@@ -1,6 +1,7 @@
 # Master Chronos (4230115)
 
 rewards:
+  - [ 0, 390, 585, 0.600000 ]
   - [ 1040079, 1, 1, 0.000100 ] # Brown Piette
   - [ 1041088, 1, 1, 0.000100 ] # Ivory Shouldermail
   - [ 1050049, 1, 1, 0.000100 ] # Dark Calas

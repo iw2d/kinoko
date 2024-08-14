@@ -1,4 +1,5 @@
 # Lord Pirate's Devoted Captain (9300118)
 
 rewards:
+  - [ 0, 312, 468, 0.600000 ]
   - [ 4001118, 1, 1, 0.500000, 3814 ] # Piece of the Pirate Map

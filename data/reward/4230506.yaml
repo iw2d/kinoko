@@ -1,6 +1,7 @@
 # Ginseng Jar (4230506)
 
 rewards:
+  - [ 0, 558, 837, 0.600000 ]
   - [ 1002083, 1, 1, 0.000100 ] # Black Bandana
   - [ 1002212, 1, 1, 0.000100 ] # Red Maro
   - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings

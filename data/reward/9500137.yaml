@@ -1,6 +1,7 @@
 # G. Phantom Watch (9500137)
 
 rewards:
+  - [ 0, 570, 855, 0.600000 ]
   - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
   - [ 1041117, 1, 1, 0.000100 ] # Purple Osfa Suit
   - [ 1051067, 1, 1, 0.000100 ] # Blue Pria

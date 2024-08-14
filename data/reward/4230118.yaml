@@ -1,6 +1,7 @@
 # Ultra Gray (4230118)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1002024, 1, 1, 0.000100 ] # Emerald Dome
   - [ 1002155, 1, 1, 0.000100 ] # White Guiltian
   - [ 1032012, 1, 1, 0.000100 ] # Skull Earrings

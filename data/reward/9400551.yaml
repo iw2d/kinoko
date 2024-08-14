@@ -1,6 +1,7 @@
 # Bob (9400551)
 
 rewards:
+  - [ 0, 3, 4, 0.600000 ]
   - [ 1002067, 1, 1, 0.000100 ] # Green Headband
   - [ 1040002, 1, 1, 0.000100 ] # White Undershirt
   - [ 1061002, 1, 1, 0.000100 ] # Red Miniskirt

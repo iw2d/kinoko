@@ -1,6 +1,7 @@
 # Rash (7130500)
 
 rewards:
+  - [ 0, 582, 873, 0.600000 ]
   - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
   - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings
   - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre

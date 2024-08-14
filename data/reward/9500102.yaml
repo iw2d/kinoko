@@ -1,6 +1,7 @@
 # Orange Mushroom (9500102)
 
 rewards:
+  - [ 0, 12, 19, 0.600000 ]
   - [ 1002043, 1, 1, 0.000100 ] # Bronze Koif
   - [ 1072004, 1, 1, 0.000100 ] # White Gomushin
   - [ 1072015, 1, 1, 0.000100 ] # Brown Hard Leather Boots

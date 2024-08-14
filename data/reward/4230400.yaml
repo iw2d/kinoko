@@ -1,6 +1,7 @@
 # Iron Boar (4230400)
 
 rewards:
+  - [ 0, 48, 72, 0.600000 ]
   - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer
   - [ 1032018, 1, 1, 0.000100 ] # Pansy Earrings
   - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra

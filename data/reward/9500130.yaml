@@ -1,6 +1,7 @@
 # Blue King Goblin (9500130)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1032022, 1, 1, 0.000200 ] # Half Earrings
   - [ 1040106, 1, 1, 0.000200 ] # Blue Studded Top
   - [ 1051041, 1, 1, 0.000200 ] # Red Choro

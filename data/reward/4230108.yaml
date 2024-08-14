@@ -1,6 +1,7 @@
 # Jr. Cerebes (4230108)
 
 rewards:
+  - [ 0, 738, 1107, 0.600000 ]
   - [ 1002086, 1, 1, 0.000100 ] # Bronze Crusader Helm
   - [ 1002209, 1, 1, 0.000100 ] # Green Sonata
   - [ 1002218, 1, 1, 0.000100 ] # Dark Golden Circlet

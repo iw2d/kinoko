@@ -1,6 +1,7 @@
 # Stumpy (3220000)
 
 rewards:
+  - [ 0, 32, 48, 0.600000 ]
   - [ 1002098, 1, 1, 0.000200 ] # Gold Nordic Helm
   - [ 1002154, 1, 1, 0.000200 ] # Dark Guiltian
   - [ 1002170, 1, 1, 0.000200 ] # Dark Distinction

@@ -1,6 +1,7 @@
 # Electrophant (9400543)
 
 rewards:
+  - [ 0, 114, 172, 0.600000 ]
   - [ 1002143, 1, 1, 0.000100 ] # Green Matty
   - [ 1002176, 1, 1, 0.000100 ] # Red Burgler
   - [ 1040085, 1, 1, 0.000100 ] # Maroon Jangoon Armor
@@ -24,6 +25,6 @@ rewards:
   - [ 2043102, 1, 1, 0.000100 ] # Scroll for One-Handed Axe for ATT 10%
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
-  - [ 4031680, 1, 1, 0.050000, 4914 ] # Hyper Glyph
   - [ 4130009, 1, 1, 0.000300 ] # Pole Arm Forging Stimulator
   - [ 4130015, 1, 1, 0.000300 ] # Claw Production Stimulator
+  - [ 4031680, 1, 1, 0.050000, 4914 ] # Hyper Glyph

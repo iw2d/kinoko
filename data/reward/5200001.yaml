@@ -1,6 +1,7 @@
 # Ice Sentinel (5200001)
 
 rewards:
+  - [ 0, 93, 140, 0.600000 ]
   - [ 1002142, 1, 1, 0.000100 ] # Blue Matty
   - [ 1040024, 1, 1, 0.000100 ] # Blue Bennis Chainmail
   - [ 1041047, 1, 1, 0.000100 ] # Red Steal

@@ -1,6 +1,7 @@
 # Wooden Target Dummy (5120504)
 
 rewards:
+  - [ 0, 464, 697, 0.600000 ]
   - [ 1002215, 1, 1, 0.000100 ] # Flame Golden Circlet
   - [ 1002634, 1, 1, 0.000100 ] # Purple Cast Linen
   - [ 1040097, 1, 1, 0.000100 ] # Green China

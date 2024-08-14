@@ -1,6 +1,7 @@
 # Eye of Time (8200000)
 
 rewards:
+  - [ 0, 816, 1224, 0.600000 ]
   - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
   - [ 1040110, 1, 1, 0.000100 ] # Dark Pirate Top
   - [ 1041107, 1, 1, 0.000100 ] # Dark Pirate Blouse

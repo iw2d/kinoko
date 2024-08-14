@@ -1,6 +1,7 @@
 # Helmet Pepe (3300003)
 
 rewards:
+  - [ 0, 79, 118, 0.600000 ]
   - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
   - [ 1002163, 1, 1, 0.000100 ] # Green Hawkeye
   - [ 1002625, 1, 1, 0.000100 ] # Blue Den Marine

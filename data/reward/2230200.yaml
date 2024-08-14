@@ -1,6 +1,7 @@
 # Flower Fish (2230200)
 
 rewards:
+  - [ 0, 292, 439, 0.600000 ]
   - [ 1002160, 1, 1, 0.000100 ] # Brown Hunter
   - [ 1040062, 1, 1, 0.000100 ] # Red Knucklevest
   - [ 1040072, 1, 1, 0.000100 ] # Red Legolier

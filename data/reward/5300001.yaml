@@ -1,6 +1,7 @@
 # Dark Leatty (5300001)
 
 rewards:
+  - [ 0, 117, 176, 0.600000 ]
   - [ 1002138, 1, 1, 0.000100 ] # Blue Pole-Feather Hat
   - [ 1002175, 1, 1, 0.000100 ] # Dark Guise
   - [ 1002625, 1, 1, 0.000100 ] # Blue Den Marine

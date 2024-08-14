@@ -1,6 +1,7 @@
 # Mateon (4230119)
 
 rewards:
+  - [ 0, 316, 475, 0.600000 ]
   - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1041075, 1, 1, 0.000100 ] # Red Shadow
   - [ 1041084, 1, 1, 0.000100 ] # Red Jangoon Armor
@@ -34,5 +35,5 @@ rewards:
   - [ 4130006, 1, 1, 0.000300 ] # Two-Handed Axe Forging Stimulator
   - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
   - [ 4131004, 1, 1, 0.000300 ] # Two-Handed Axe Forging Manual
-  - [ 4031206, 1, 1, 0.060000, 3441 ] # Ripped Travel Ticket 1
   - [ 4031090, 1, 1, 0.080000, 3227 ] # Piece of Memory
+  - [ 4031206, 1, 1, 0.060000, 3441 ] # Ripped Travel Ticket 1

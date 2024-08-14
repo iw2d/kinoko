@@ -1,6 +1,7 @@
 # Ratz (9500109)
 
 rewards:
+  - [ 0, 76, 115, 0.600000 ]
   - [ 1002164, 1, 1, 0.000100 ] # Brown Hawkeye
   - [ 1002173, 1, 1, 0.000100 ] # Green Guise
   - [ 1040029, 1, 1, 0.000100 ] # Blue Dragon
@@ -22,5 +23,5 @@ rewards:
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
-  - [ 4031129, 1, 1, 0.100000, 3207 ] # Savory Cheese
   - [ 4131002, 1, 1, 0.000300 ] # One-Handed Blunt Weapon Forging Manual
+  - [ 4031129, 1, 1, 0.100000, 3207 ] # Savory Cheese

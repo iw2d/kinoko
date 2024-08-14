@@ -1,6 +1,7 @@
 # Trixter (2230103)
 
 rewards:
+  - [ 0, 131, 197, 0.600000 ]
   - [ 1002020, 1, 1, 0.000100 ] # Red Starry Bandana
   - [ 1050023, 1, 1, 0.000100 ] # Blue Doros Robe
   - [ 1072288, 1, 1, 0.000100 ] # Brown Skeedy Sandals

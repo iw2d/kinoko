@@ -1,6 +1,7 @@
 # Cube Slime (3110300)
 
 rewards:
+  - [ 0, 405, 608, 0.600000 ]
   - [ 1002156, 1, 1, 0.000100 ] # Red Hunter
   - [ 1032007, 1, 1, 0.000100 ] # Emerald Earrings
   - [ 1040000, 1, 1, 0.000100 ] # Yellow Jangoon Armor

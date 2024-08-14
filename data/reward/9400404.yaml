@@ -1,6 +1,7 @@
 # Ashigaru (9400404)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002090, 1, 1, 0.000100 ] # Blue Bamboo Hat
   - [ 1032002, 1, 1, 0.000100 ] # Sapphire Earrings
   - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe

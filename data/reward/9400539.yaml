@@ -1,6 +1,7 @@
 # Urban Fungus (9400539)
 
 rewards:
+  - [ 0, 42, 63, 0.600000 ]
   - [ 1002127, 1, 1, 0.000100 ] # Red Loosecap
   - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1040012, 1, 1, 0.000100 ] # Blue Sergeant

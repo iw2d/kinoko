@@ -1,6 +1,7 @@
 # Werewolf (9500132)
 
 rewards:
+  - [ 0, 390, 585, 0.600000 ]
   - [ 1032016, 1, 1, 0.000100 ] # Metal Heart Earrings
   - [ 1050072, 1, 1, 0.000100 ] # Green Enigmatic
   - [ 1050083, 1, 1, 0.000100 ] # Dark Battle Lord

@@ -1,6 +1,7 @@
 # Psycho Jack (9400558)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002036, 1, 1, 0.000100 ] # Green Jester
   - [ 1002152, 1, 1, 0.000100 ] # Blue Guiltian
   - [ 1002183, 1, 1, 0.000100 ] # Green Pilfer

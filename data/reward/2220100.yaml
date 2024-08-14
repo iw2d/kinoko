@@ -1,6 +1,7 @@
 # Blue Mushroom (2220100)
 
 rewards:
+  - [ 0, 16, 24, 0.600000 ]
   - [ 1002127, 1, 1, 0.000100 ] # Red Loosecap
   - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1002613, 1, 1, 0.000100 ] # Brown Lagger Cap

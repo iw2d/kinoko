@@ -1,6 +1,7 @@
 # Separated Pepe (6130102)
 
 rewards:
+  - [ 0, 134, 201, 0.600000 ]
   - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
   - [ 1002030, 1, 1, 0.000100 ] # Silver Planet
   - [ 1002185, 1, 1, 0.000100 ] # Dark Pilfer
@@ -25,8 +26,8 @@ rewards:
   - [ 2040625, 1, 1, 0.000100 ] # Scroll for Bottomwear for DEX 60%
   - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
   - [ 2041020, 1, 1, 0.000100 ] # Scroll for Cape for DEX 10%
-  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
   - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
   - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
   - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
   - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%

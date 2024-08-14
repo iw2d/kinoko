@@ -1,6 +1,7 @@
 # Roloduck (3210204)
 
 rewards:
+  - [ 0, 212, 318, 0.600000 ]
   - [ 1002004, 1, 1, 0.000100 ] # Great Brown Helmet
   - [ 1040060, 1, 1, 0.000100 ] # Silver Black Stealer
   - [ 1040070, 1, 1, 0.000100 ] # Blue Hunter's Armor

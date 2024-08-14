@@ -1,6 +1,7 @@
 # Grey Yeti and King Pepe (3300005)
 
 rewards:
+  - [ 0, 84, 126, 0.600000 ]
   - [ 1032013, 1, 1, 0.000200 ] # Red-Hearted Earrings
   - [ 1082025, 1, 1, 0.000200 ] # Dark Knuckle
   - [ 1082064, 1, 1, 0.000200 ] # Dark Arten

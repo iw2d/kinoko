@@ -1,6 +1,7 @@
 # Copper Drake (4130100)
 
 rewards:
+  - [ 0, 140, 210, 0.600000 ]
   - [ 1002045, 1, 1, 0.000100 ] # Blue Bone Helm
   - [ 1002138, 1, 1, 0.000100 ] # Blue Pole-Feather Hat
   - [ 1040079, 1, 1, 0.000100 ] # Brown Piette

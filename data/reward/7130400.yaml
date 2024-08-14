@@ -1,6 +1,7 @@
 # Yellow King Goblin (7130400)
 
 rewards:
+  - [ 0, 316, 475, 0.600000 ]
   - [ 1040102, 1, 1, 0.000200 ] # Bronze Platine
   - [ 1041094, 1, 1, 0.000200 ] # Light Mantis
   - [ 1050058, 1, 1, 0.000200 ] # Orange Tai

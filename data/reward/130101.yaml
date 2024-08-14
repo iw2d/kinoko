@@ -1,6 +1,7 @@
 # Red Snail (130101)
 
 rewards:
+  - [ 0, 8, 12, 0.600000 ]
   - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
   - [ 1052095, 1, 1, 0.000100 ] # Brown Rocky Suit
   - [ 1061029, 1, 1, 0.000100 ] # Red Cloth Pants

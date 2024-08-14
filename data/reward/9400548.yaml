@@ -1,6 +1,7 @@
 # Mighty Maple Eater (9400548)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002137, 1, 1, 0.000100 ] # Green Pole-Feather Hat
   - [ 1032006, 1, 1, 0.000100 ] # Lightning Earrings
   - [ 1040021, 1, 1, 0.000100 ] # Red Hwarang Shirt

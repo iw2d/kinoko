@@ -1,6 +1,7 @@
 # Red Drake (6130100)
 
 rewards:
+  - [ 0, 216, 324, 0.600000 ]
   - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
   - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
   - [ 1040080, 1, 1, 0.000100 ] # Dark Piette

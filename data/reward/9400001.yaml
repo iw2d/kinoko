@@ -1,6 +1,7 @@
 # Fire Raccoon (9400001)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings
   - [ 1041067, 1, 1, 0.000100 ] # Green Legolia
   - [ 1041068, 1, 1, 0.000100 ] # Dark Legolia

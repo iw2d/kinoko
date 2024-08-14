@@ -1,6 +1,7 @@
 # Cactus (2100103)
 
 rewards:
+  - [ 0, 379, 569, 0.600000 ]
   - [ 1002096, 1, 1, 0.000100 ] # Sky Blue Starry Bandana
   - [ 1041058, 1, 1, 0.000100 ] # Blood Sneak
   - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe

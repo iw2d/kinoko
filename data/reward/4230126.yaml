@@ -1,6 +1,7 @@
 # Mummydog (4230126)
 
 rewards:
+  - [ 0, 76, 115, 0.600000 ]
   - [ 1002631, 1, 1, 0.000100 ] # Brown Leather Ocean Hat
   - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra
   - [ 1041084, 1, 1, 0.000100 ] # Red Jangoon Armor

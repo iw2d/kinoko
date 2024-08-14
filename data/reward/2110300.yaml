@@ -1,6 +1,7 @@
 # Sand Rat (2110300)
 
 rewards:
+  - [ 0, 400, 600, 0.600000 ]
   - [ 1002055, 1, 1, 0.000100 ] # Bronze Football Helmet
   - [ 1002619, 1, 1, 0.000100 ] # Brown Pitz Bandana
   - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings

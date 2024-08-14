@@ -1,6 +1,7 @@
 # Tick (3210207)
 
 rewards:
+  - [ 0, 326, 489, 0.600000 ]
   - [ 1002139, 1, 1, 0.000100 ] # Red Pole-Feather Hat
   - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
   - [ 1041069, 1, 1, 0.000100 ] # Brown Legolia

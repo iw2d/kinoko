@@ -1,6 +1,7 @@
 # Orange Mushroom (100004)
 
 rewards:
+  - [ 0, 9, 14, 0.600000 ]
   - [ 1002043, 1, 1, 0.000100 ] # Bronze Koif
   - [ 1052095, 1, 1, 0.000100 ] # Brown Rocky Suit
   - [ 1072004, 1, 1, 0.000100 ] # White Gomushin

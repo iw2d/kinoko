@@ -1,6 +1,7 @@
 # Red Wyvern (8150300)
 
 rewards:
+  - [ 0, 804, 1206, 0.600000 ]
   - [ 1002365, 1, 1, 0.000100 ] # Red Oriental Fury Hat
   - [ 1041118, 1, 1, 0.000100 ] # Red Osfa Suit
   - [ 1050089, 1, 1, 0.000100 ] # Blue Ades
@@ -31,10 +32,10 @@ rewards:
   - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
   - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
   - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
-  - [ 4031485, 1, 1, 0.020000, 6124 ] # Dragon Heart
-  - [ 4001077, 1, 1, 0.060000, 7301 ] # Tough Dragon Skin
-  - [ 4001105, 1, 1, 0.060000, 7303 ] # Tough Dragon Skin
   - [ 4031449, 1, 1, 0.020000, 6120 ] # Dragon Heart
   - [ 4031482, 1, 1, 0.020000, 6121 ] # Dragon Heart
   - [ 4031483, 1, 1, 0.020000, 6122 ] # Dragon Heart
   - [ 4031484, 1, 1, 0.020000, 6123 ] # Dragon Heart
+  - [ 4031485, 1, 1, 0.020000, 6124 ] # Dragon Heart
+  - [ 4001077, 1, 1, 0.060000, 7301 ] # Tough Dragon Skin
+  - [ 4001105, 1, 1, 0.060000, 7303 ] # Tough Dragon Skin

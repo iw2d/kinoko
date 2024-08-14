@@ -8,10 +8,12 @@ import kinoko.world.GameConstants;
 import org.snakeyaml.engine.v2.api.Load;
 import org.snakeyaml.engine.v2.api.LoadSettings;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -60,15 +62,6 @@ public final class RewardProvider implements DataProvider {
             final double prob = ((Number) rewardInfo.get(3)).doubleValue();
             final int questId = rewardInfo.size() > 4 ? ((Number) rewardInfo.get(4)).intValue() : 0;
             rewards.add(Reward.item(itemId, min, max, prob, questId));
-        }
-        // Add money reward
-        if (mobId / 1000000 != 9 || mobId / 100000 == 94 || mobId / 100000 == 95) {
-            final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
-            if (mobTemplateResult.isEmpty()) {
-                throw new ProviderError("Could not resolve mob template ID : %d", mobId);
-            }
-            final Tuple<Integer, Integer> moneyRange = GameConstants.getMoneyForMobLevel(mobTemplateResult.get().getLevel());
-            rewards.add(Reward.money(moneyRange.getLeft(), moneyRange.getRight(), GameConstants.DROP_MONEY_PROB));
         }
         mobRewards.put(mobId, Collections.unmodifiableList(rewards));
     }

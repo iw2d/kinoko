@@ -1,6 +1,7 @@
 # Soul Teddy (6230400)
 
 rewards:
+  - [ 0, 576, 864, 0.600000 ]
   - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
   - [ 1002210, 1, 1, 0.000100 ] # Brown Sonata
   - [ 1002281, 1, 1, 0.000100 ] # Brown Nightfox

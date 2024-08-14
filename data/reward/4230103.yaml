@@ -1,6 +1,7 @@
 # Iron Hog (4230103)
 
 rewards:
+  - [ 0, 44, 66, 0.600000 ]
   - [ 1002151, 1, 1, 0.000100 ] # Brown Guiltian
   - [ 1002179, 1, 1, 0.000100 ] # Brown Burgler
   - [ 1050051, 1, 1, 0.000100 ] # Red-Lined Kismet

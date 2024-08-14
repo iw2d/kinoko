@@ -1,6 +1,7 @@
 # Dark Stump (1110101)
 
 rewards:
+  - [ 0, 16, 24, 0.600000 ]
   - [ 1002039, 1, 1, 0.000100 ] # Bronze Helmet
   - [ 1002613, 1, 1, 0.000100 ] # Brown Lagger Cap
   - [ 1032001, 1, 1, 0.000100 ] # Single Earring

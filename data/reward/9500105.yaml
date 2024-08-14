@@ -1,6 +1,7 @@
 # Green Mushroom (9500105)
 
 rewards:
+  - [ 0, 24, 36, 0.600000 ]
   - [ 1041017, 1, 1, 0.000100 ] # Purple Arianne
   - [ 1041044, 1, 1, 0.000100 ] # Red Nightshift
   - [ 1041063, 1, 1, 0.000100 ] # Grey Able Armor

@@ -1,6 +1,7 @@
 # Chipmunk (4230500)
 
 rewards:
+  - [ 0, 395, 592, 0.600000 ]
   - [ 1002023, 1, 1, 0.000100 ] # Jousting Helmet
   - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
   - [ 1002103, 1, 1, 0.000100 ] # Pink Moon Conehat

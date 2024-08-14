@@ -1,6 +1,7 @@
 # Super-Charged Poison Golem (9300182)
 
 rewards:
+  - [ 0, 134, 201, 0.600000 ]
   - [ 2000002, 1, 1, 0.100000 ] # White Potion
   - [ 2000006, 1, 1, 0.100000 ] # Mana Elixir
   - [ 2020013, 1, 1, 0.100000 ] # Reindeer Milk

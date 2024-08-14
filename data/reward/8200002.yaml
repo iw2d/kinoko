@@ -1,6 +1,7 @@
 # Memory Monk Trainee (8200002)
 
 rewards:
+  - [ 0, 864, 1296, 0.600000 ]
   - [ 1002366, 1, 1, 0.000100 ] # Black Oriental Fury Hat
   - [ 1040113, 1, 1, 0.000100 ] # Dark Commodore
   - [ 1051085, 1, 1, 0.000100 ] # Dark Anes

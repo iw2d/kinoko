@@ -1,6 +1,7 @@
 # Male Boss (9400120)
 
 rewards:
+  - [ 0, 570, 855, 0.600000 ]
   - [ 1002276, 1, 1, 0.000200 ] # Red Falcon
   - [ 1002328, 1, 1, 0.000200 ] # Green Pireta Hat
   - [ 1032023, 1, 1, 0.000200 ] # Strawberry Earrings

@@ -1,6 +1,7 @@
 # Roid  (5110301)
 
 rewards:
+  - [ 0, 492, 739, 0.600000 ]
   - [ 1002159, 1, 1, 0.000100 ] # Black Hunter
   - [ 1040057, 1, 1, 0.000100 ] # Dark Brown Stealer
   - [ 1040087, 1, 1, 0.000100 ] # Blue Shouldermail

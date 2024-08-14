@@ -1,6 +1,7 @@
 # Blue Dragon Turtle (8140700)
 
 rewards:
+  - [ 0, 762, 1143, 0.600000 ]
   - [ 1002528, 1, 1, 0.000100 ] # Green Grace Helmet
   - [ 1040117, 1, 1, 0.000100 ] # Purple Osfa Suit
   - [ 1041120, 1, 1, 0.000100 ] # Purple Valkyrie

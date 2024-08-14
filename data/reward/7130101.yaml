@@ -1,6 +1,7 @@
 # Taurospear (7130101)
 
 rewards:
+  - [ 0, 307, 460, 0.600000 ]
   - [ 1002284, 1, 1, 0.000100 ] # White Nightfox
   - [ 1002327, 1, 1, 0.000100 ] # Brown Pireta Hat
   - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen
@@ -34,5 +35,5 @@ rewards:
   - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
   - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
   - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
-  - [ 4031466, 1, 1, 0.080000, 6107 ] # Dark Soul Rock
   - [ 4031215, 1, 1, 0.120000, 2097 ] # Taurospear's Spirit Rock
+  - [ 4031466, 1, 1, 0.080000, 6107 ] # Dark Soul Rock

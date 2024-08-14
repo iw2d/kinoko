@@ -1,6 +1,7 @@
 # Taurospear (9500129)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
   - [ 1032012, 1, 1, 0.000100 ] # Skull Earrings
   - [ 1050073, 1, 1, 0.000100 ] # Blue Enigmatic

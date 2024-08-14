@@ -1,6 +1,7 @@
 # Mushmom (6130101)
 
 rewards:
+  - [ 0, 24, 36, 0.600000 ]
   - [ 1032019, 1, 1, 0.000200 ] # Crystal Flower Earrings
   - [ 1092012, 1, 1, 0.000200 ] # Steel Tower Shield
   - [ 1382006, 1, 1, 0.000200 ] # Thorns

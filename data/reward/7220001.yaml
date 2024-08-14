@@ -1,6 +1,7 @@
 # Nine-Tailed Fox (7220001)
 
 rewards:
+  - [ 0, 312, 468, 0.600000 ]
   - [ 1002095, 1, 1, 0.000200 ] # Mithril Planet
   - [ 1002254, 1, 1, 0.000200 ] # Dark Infinium Circlet
   - [ 1002285, 1, 1, 0.000200 ] # Blood Nightfox

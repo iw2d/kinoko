@@ -1,6 +1,7 @@
 # Wild Kargo (6230100)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
   - [ 1002166, 1, 1, 0.000100 ] # Red Distinction
   - [ 1002218, 1, 1, 0.000100 ] # Dark Golden Circlet
@@ -42,5 +43,5 @@ rewards:
   - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
   - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
   - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
-  - [ 4031466, 1, 1, 0.030000, 6107 ] # Dark Soul Rock
   - [ 4031213, 1, 1, 0.150000, 2097 ] # Wild Kargo's Spirit Rock
+  - [ 4031466, 1, 1, 0.030000, 6107 ] # Dark Soul Rock

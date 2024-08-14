@@ -1,6 +1,7 @@
 # Sparker (4230123)
 
 rewards:
+  - [ 0, 379, 569, 0.600000 ]
   - [ 1002024, 1, 1, 0.000100 ] # Emerald Dome
   - [ 1041083, 1, 1, 0.000100 ] # Dark Piettra
   - [ 1061082, 1, 1, 0.000100 ] # Dark Piettra Skirt

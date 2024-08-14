@@ -1,6 +1,7 @@
 # Muru (100130)
 
 rewards:
+  - [ 0, 1, 1, 0.600000 ]
   - [ 1002008, 1, 1, 0.000100 ] # Brown Skullcap
   - [ 1040010, 1, 1, 0.000100 ] # Grey T-Shirt
   - [ 1041004, 1, 1, 0.000100 ] # Pink Starry Shirt

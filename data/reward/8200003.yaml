@@ -1,6 +1,7 @@
 # Memory Guardian (8200003)
 
 rewards:
+  - [ 0, 876, 1314, 0.600000 ]
   - [ 1002405, 1, 1, 0.000100 ] # Dark Arlic Helmet
   - [ 1041118, 1, 1, 0.000100 ] # Red Osfa Suit
   - [ 1050095, 1, 1, 0.000100 ] # Black Oriental Fury Coat

@@ -1,6 +1,7 @@
 # Nightghost (9400003)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
   - [ 1002247, 1, 1, 0.000100 ] # Bronze Identity
   - [ 1041091, 1, 1, 0.000100 ] # Green Ice Queen

@@ -1,6 +1,7 @@
 # Barnard Gray (4230116)
 
 rewards:
+  - [ 0, 312, 468, 0.600000 ]
   - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
   - [ 1002211, 1, 1, 0.000100 ] # Blue Maro
   - [ 1040084, 1, 1, 0.000100 ] # Dark Shadow
@@ -31,5 +32,5 @@ rewards:
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
-  - [ 4031674, 1, 1, 0.050000, 4916 ] # Elpam Magnet
   - [ 4031103, 1, 1, 0.020000, 3414 ] # Barnard Gray's Cell
+  - [ 4031674, 1, 1, 0.050000, 4916 ] # Elpam Magnet

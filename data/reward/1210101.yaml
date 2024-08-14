@@ -1,6 +1,7 @@
 # Ribbon Pig (1210101)
 
 rewards:
+  - [ 0, 16, 24, 0.600000 ]
   - [ 1032003, 1, 1, 0.000100 ] # Amethyst Earrings
   - [ 1040011, 1, 1, 0.000100 ] # Silver Leather Hoodwear
   - [ 1040014, 1, 1, 0.000100 ] # Orange Sporty T-Shirt

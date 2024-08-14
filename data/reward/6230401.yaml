@@ -1,6 +1,7 @@
 # Jr. Lucida  (6230401)
 
 rewards:
+  - [ 0, 140, 210, 0.600000 ]
   - [ 2040515, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 100%
   - [ 2044410, 1, 1, 0.000100 ] # Scroll for Pole-Arm for Accuracy 100%
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)

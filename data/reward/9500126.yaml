@@ -1,6 +1,7 @@
 # Ice Drake (9500126)
 
 rewards:
+  - [ 0, 307, 460, 0.600000 ]
   - [ 1040091, 1, 1, 0.000100 ] # Red Orientican
   - [ 1040094, 1, 1, 0.000100 ] # Red China
   - [ 1041085, 1, 1, 0.000100 ] # Brown Jangoon Armor

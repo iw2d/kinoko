@@ -1,6 +1,7 @@
 # Papulatus (8500002)
 
 rewards:
+  - [ 0, 750, 1125, 0.600000 ]
   - [ 1002377, 1, 1, 0.000200 ] # Green Valhalla Helmet
   - [ 1002646, 1, 1, 0.000200 ] # Black Polax Hat
   - [ 1040120, 1, 1, 0.000200 ] # Green Neos

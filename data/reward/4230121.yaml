@@ -1,6 +1,7 @@
 # Mecateon (4230121)
 
 rewards:
+  - [ 0, 369, 553, 0.600000 ]
   - [ 1002155, 1, 1, 0.000100 ] # White Guiltian
   - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer
   - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail

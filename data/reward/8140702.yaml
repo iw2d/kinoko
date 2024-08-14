@@ -1,6 +1,7 @@
 # Rexton (8140702)
 
 rewards:
+  - [ 0, 786, 1179, 0.600000 ]
   - [ 1002403, 1, 1, 0.000100 ] # Blue Arlic Helmet
   - [ 1041117, 1, 1, 0.000100 ] # Purple Osfa Suit
   - [ 1050092, 1, 1, 0.000100 ] # Green Oriental Fury Coat

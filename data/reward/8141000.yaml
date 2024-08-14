@@ -1,6 +1,7 @@
 # Spirit Viking (8141000)
 
 rewards:
+  - [ 0, 714, 1071, 0.600000 ]
   - [ 1002254, 1, 1, 0.000100 ] # Dark Infinium Circlet
   - [ 1002278, 1, 1, 0.000100 ] # Dark Falcon
   - [ 1002285, 1, 1, 0.000100 ] # Blood Nightfox
@@ -42,6 +43,6 @@ rewards:
   - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
   - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
   - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
+  - [ 4031193, 1, 1, 0.060000, 3446 ] # Soul Collector
   - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
   - [ 4031175, 1, 1, 0.450000, 7101 ] # Tachion
-  - [ 4031193, 1, 1, 0.060000, 3446 ] # Soul Collector

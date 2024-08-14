@@ -1,6 +1,7 @@
 # Green King Goblin (7130402)
 
 rewards:
+  - [ 0, 316, 475, 0.600000 ]
   - [ 1002637, 1, 1, 0.000200 ] # Black Pirate's Bandana
   - [ 1032019, 1, 1, 0.000200 ] # Crystal Flower Earrings
   - [ 1032022, 1, 1, 0.000200 ] # Half Earrings

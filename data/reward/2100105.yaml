@@ -1,6 +1,7 @@
 # Bellamoa (2100105)
 
 rewards:
+  - [ 0, 369, 553, 0.600000 ]
   - [ 1002013, 1, 1, 0.000100 ] # Golden Pride
   - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
   - [ 1052101, 1, 1, 0.000100 ] # Beige Carribean

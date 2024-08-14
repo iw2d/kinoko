@@ -1,6 +1,7 @@
 # Turkey Commando (9400568)
 
 rewards:
+  - [ 0, 32, 48, 0.600000 ]
   - [ 1000025, 1, 1, 0.000100 ] # Pilgrim Hat
   - [ 1001035, 1, 1, 0.000100 ] # Maplehontas
   - [ 1312017, 1, 1, 0.000100 ] # Chief Axe

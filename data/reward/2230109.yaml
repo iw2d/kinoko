@@ -1,6 +1,7 @@
 # Bubble Fish (2230109)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002034, 1, 1, 0.000100 ] # Blue Jester
   - [ 1002065, 1, 1, 0.000100 ] # Steel Pride
   - [ 1002619, 1, 1, 0.000100 ] # Brown Pitz Bandana

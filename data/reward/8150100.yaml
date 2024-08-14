@@ -1,6 +1,7 @@
 # Shark (8150100)
 
 rewards:
+  - [ 0, 630, 945, 0.600000 ]
   - [ 1002366, 1, 1, 0.000100 ] # Black Oriental Fury Hat
   - [ 1002405, 1, 1, 0.000100 ] # Dark Arlic Helmet
   - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
@@ -34,5 +35,5 @@ rewards:
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
   - [ 4161018, 1, 1, 0.000100 ] # [Storybook] Ancient Book
-  - [ 4031254, 1, 1, 0.060000, 3078 ] # Broken Flashlight
   - [ 4031252, 1, 1, 0.100000, 3078 ] # Wripped Note
+  - [ 4031254, 1, 1, 0.060000, 3078 ] # Broken Flashlight

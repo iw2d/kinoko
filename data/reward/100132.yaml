@@ -1,6 +1,7 @@
 # Murupia (100132)
 
 rewards:
+  - [ 0, 8, 12, 0.600000 ]
   - [ 1002001, 1, 1, 0.000100 ] # Metal Gear
   - [ 1002003, 1, 1, 0.000100 ] # Steel Helmet
   - [ 1040014, 1, 1, 0.000100 ] # Orange Sporty T-Shirt

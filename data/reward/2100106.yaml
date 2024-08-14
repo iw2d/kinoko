@@ -1,6 +1,7 @@
 # Ear Plug Plead (2100106)
 
 rewards:
+  - [ 0, 374, 561, 0.600000 ]
   - [ 1002055, 1, 1, 0.000100 ] # Bronze Football Helmet
   - [ 1032004, 1, 1, 0.000100 ] # Gold Earrings
   - [ 1040049, 1, 1, 0.000100 ] # Blue Sneak

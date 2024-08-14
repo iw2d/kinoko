@@ -1,6 +1,7 @@
 # Sophilia Doll (9400560)
 
 rewards:
+  - [ 0, 140, 210, 0.600000 ]
   - [ 1002028, 1, 1, 0.000100 ] # Silver Crusader Helm
   - [ 1002153, 1, 1, 0.000100 ] # Red Guiltian
   - [ 1002181, 1, 1, 0.000100 ] # Red Pilfer

@@ -1,6 +1,7 @@
 # Yeti (6300000)
 
 rewards:
+  - [ 0, 702, 1053, 0.600000 ]
   - [ 1002022, 1, 1, 0.000100 ] # Old Steel Nordic Helm
   - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings
   - [ 1032020, 1, 1, 0.000100 ] # Gold Drop Earrings

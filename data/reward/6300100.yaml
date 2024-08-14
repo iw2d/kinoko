@@ -1,6 +1,7 @@
 # Buffoon (6300100)
 
 rewards:
+  - [ 0, 384, 577, 0.600000 ]
   - [ 1040098, 1, 1, 0.000100 ] # Light Scorpio
   - [ 1040106, 1, 1, 0.000100 ] # Blue Studded Top
   - [ 1041093, 1, 1, 0.000100 ] # Blue Ice Queen

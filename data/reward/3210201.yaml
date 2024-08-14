@@ -1,6 +1,7 @@
 # Jr. Lioner (3210201)
 
 rewards:
+  - [ 0, 86, 129, 0.600000 ]
   - [ 1002172, 1, 1, 0.000100 ] # Blue Guise
   - [ 1050036, 1, 1, 0.000100 ] # Red Starlight
   - [ 1051016, 1, 1, 0.000100 ] # Silver Fitted Mail

@@ -1,6 +1,7 @@
 # Separated Yeti (6300002)
 
 rewards:
+  - [ 0, 702, 1053, 0.600000 ]
   - [ 1002084, 1, 1, 0.000100 ] # Blue Oriental Helmet
   - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
   - [ 1050069, 1, 1, 0.000100 ] # Brown Requiem
@@ -19,8 +20,8 @@ rewards:
   - [ 2041023, 1, 1, 0.000100 ] # Scroll for Cape for LUK 10%
   - [ 2043017, 1, 1, 0.000100 ] # Scroll for One-Handed Sword for Accuracy 60%
   - [ 2043210, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 100%
-  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
   - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
+  - [ 2044214, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 10%
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000021, 1, 1, 0.040000 ] # Leather
   - [ 4000049, 1, 1, 0.400000 ] # Yeti Horn

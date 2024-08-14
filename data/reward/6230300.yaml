@@ -1,6 +1,7 @@
 # Lazy Buffy (6230300)
 
 rewards:
+  - [ 0, 582, 873, 0.600000 ]
   - [ 1002101, 1, 1, 0.000100 ] # Old Mithril Nordic Helm
   - [ 1002242, 1, 1, 0.000100 ] # Red Seraphis
   - [ 1032015, 1, 1, 0.000100 ] # Metal Silver Earrings
@@ -37,7 +38,7 @@ rewards:
   - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
   - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
   - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator
-  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
-  - [ 4031175, 1, 1, 0.300000, 7101 ] # Tachion
   - [ 4031189, 1, 1, 0.400000, 3448 ] # Aurora Marble
   - [ 4031195, 1, 1, 0.300000, 3449 ] # Aurora Marble
+  - [ 4031170, 1, 1, 0.500000, 7100 ] # Tachion
+  - [ 4031175, 1, 1, 0.300000, 7101 ] # Tachion

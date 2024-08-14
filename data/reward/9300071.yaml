@@ -1,8 +1,8 @@
 # Blue Wyvern 1 in Cave (9300071)
 
 rewards:
+  - [ 4001090, 1, 1, 1.000000 ] # Crystal Key : 4th Room of Maze
+  - [ 4031461, 1, 1, 0.030000, 6169 ] # Life Roots
   - [ 4001080, 1, 1, 0.020000, 7302 ] # Mark of the Squad 1
   - [ 4001081, 1, 1, 0.020000, 7302 ] # Mark of the Squad 2
   - [ 4001082, 1, 1, 0.020000, 7302 ] # Mark of the Squad 3
-  - [ 4001090, 1, 1, 1.000000 ] # Crystal Key : 4th Room of Maze
-  - [ 4031461, 1, 1, 0.030000, 6169 ] # Life Roots

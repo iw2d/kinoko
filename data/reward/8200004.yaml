@@ -1,6 +1,7 @@
 # Chief Memory Guardian (8200004)
 
 rewards:
+  - [ 0, 888, 1332, 0.600000 ]
   - [ 1002326, 1, 1, 0.000100 ] # Red Osfa Hat
   - [ 1041121, 1, 1, 0.000100 ] # Dark Valkyrie
   - [ 1050091, 1, 1, 0.000100 ] # Dark Ades

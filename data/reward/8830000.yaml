@@ -1,6 +1,7 @@
 # Balrog (8830000)
 
 rewards:
+  - [ 0, 336, 504, 0.600000 ]
   - [ 1072376, 1, 1, 0.020000 ] # Balrog's Fur Shoes 
   - [ 1302112, 1, 1, 0.020000 ] # Balrog's Khan 
   - [ 1302113, 1, 1, 0.020000 ] # Balrog's Fraute 
@@ -74,4 +75,4 @@ rewards:
   - [ 2049100, 1, 1, 0.000100 ] # Chaos Scroll 60%
   - [ 2050004, 1, 1, 0.100000 ] # All Cure Potion
   - [ 2330005, 1, 1, 0.000400 ] # Eternal Bullet
-  - [ 4001261, 1, 1, 0.400000 ] # Piece of Balrog Leather
+  - [ 4001261, 1, 1, 0.400000 ] # Piece of Balrog Leather 

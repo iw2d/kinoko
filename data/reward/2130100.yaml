@@ -1,6 +1,7 @@
 # Dark Axe Stump (2130100)
 
 rewards:
+  - [ 0, 22, 33, 0.600000 ]
   - [ 1002097, 1, 1, 0.000100 ] # Yellow Starry Bandana
   - [ 1002616, 1, 1, 0.000100 ] # Brown Double Marine
   - [ 1041028, 1, 1, 0.000100 ] # Purple Shivermail

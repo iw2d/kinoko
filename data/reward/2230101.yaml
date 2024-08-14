@@ -1,6 +1,7 @@
 # Zombie Mushroom (2230101)
 
 rewards:
+  - [ 0, 24, 36, 0.600000 ]
   - [ 1002035, 1, 1, 0.000100 ] # Pink Jester
   - [ 1002158, 1, 1, 0.000100 ] # Green Hunter
   - [ 1032000, 1, 1, 0.000100 ] # Weighted Earrings

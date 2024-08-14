@@ -1,6 +1,7 @@
 # Headless Horseman (9400549)
 
 rewards:
+  - [ 0, 600, 900, 0.600000 ]
   - [ 1372009, 1, 1, 0.000200 ] # Magicodar
   - [ 1402016, 1, 1, 0.000200 ] # Devil's Sunrise
   - [ 1452015, 1, 1, 0.000200 ] # Dark Arund

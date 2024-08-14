@@ -1,6 +1,7 @@
 # Mushmom (9500124)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1032013, 1, 1, 0.000200 ] # Red-Hearted Earrings
   - [ 1092012, 1, 1, 0.000200 ] # Steel Tower Shield
   - [ 1372000, 1, 1, 0.000200 ] # Fairy Wand

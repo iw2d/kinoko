@@ -1,6 +1,7 @@
 # Freezer (4230124)
 
 rewards:
+  - [ 0, 374, 561, 0.600000 ]
   - [ 1002045, 1, 1, 0.000100 ] # Blue Bone Helm
   - [ 1002085, 1, 1, 0.000100 ] # Mithril Crusader Helm
   - [ 1002213, 1, 1, 0.000100 ] # Green Maro

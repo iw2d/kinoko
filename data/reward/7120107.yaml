@@ -1,6 +1,7 @@
 # Overlord B (7120107)
 
 rewards:
+  - [ 0, 660, 990, 0.600000 ]
   - [ 1002252, 1, 1, 0.000100 ] # Red Infinium Circlet
   - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
   - [ 1002288, 1, 1, 0.000100 ] # Green Patriot

@@ -1,6 +1,7 @@
 # White Fang (5140000)
 
 rewards:
+  - [ 0, 220, 330, 0.600000 ]
   - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
   - [ 1002634, 1, 1, 0.000100 ] # Purple Cast Linen
   - [ 1032014, 1, 1, 0.000100 ] # Pink-Flowered Earrings

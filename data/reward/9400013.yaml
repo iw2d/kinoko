@@ -1,6 +1,7 @@
 # Dreamy Ghost (9400013)
 
 rewards:
+  - [ 0, 600, 900, 0.600000 ]
   - [ 1002276, 1, 1, 0.000100 ] # Red Falcon
   - [ 1002403, 1, 1, 0.000100 ] # Blue Arlic Helmet
   - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings

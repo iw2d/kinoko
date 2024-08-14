@@ -1,6 +1,7 @@
 # Oblivion Monk Trainee (8200010)
 
 rewards:
+  - [ 0, 972, 1458, 0.600000 ]
   - [ 1002646, 1, 1, 0.000100 ] # Black Polax Hat
   - [ 1050099, 1, 1, 0.000100 ] # Dark Katinas
   - [ 1072225, 1, 1, 0.000100 ] # Red Varr Shoes

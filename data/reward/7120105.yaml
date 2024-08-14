@@ -1,6 +1,7 @@
 # Gold Slime   (7120105)
 
 rewards:
+  - [ 0, 642, 963, 0.600000 ]
   - [ 1002287, 1, 1, 0.000100 ] # Beige Patriot
   - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
   - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots

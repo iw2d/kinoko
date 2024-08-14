@@ -1,6 +1,7 @@
 # Toy Trojan (9500119)
 
 rewards:
+  - [ 0, 93, 140, 0.600000 ]
   - [ 1002099, 1, 1, 0.000100 ] # Mithril Nordic Helm
   - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer
   - [ 1032002, 1, 1, 0.000100 ] # Sapphire Earrings

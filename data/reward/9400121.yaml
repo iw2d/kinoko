@@ -1,6 +1,7 @@
 # Female Boss (9400121)
 
 rewards:
+  - [ 0, 780, 1170, 0.600000 ]
   - [ 1032023, 1, 1, 0.000200 ] # Strawberry Earrings
   - [ 1061105, 1, 1, 0.000200 ] # Red Pirate Skirt
   - [ 1072239, 1, 1, 0.000200 ] # Yellow Snowshoes

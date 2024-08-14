@@ -1,6 +1,7 @@
 # The Book Ghost (5120506)
 
 rewards:
+  - [ 0, 470, 705, 0.600000 ]
   - [ 1002092, 1, 1, 0.000100 ] # Yellow Duke
   - [ 1002168, 1, 1, 0.000100 ] # Green Distinction
   - [ 1040086, 1, 1, 0.000100 ] # Blue Jangoon Armor

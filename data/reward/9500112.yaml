@@ -1,6 +1,7 @@
 # Jr. Pepe (9500112)
 
 rewards:
+  - [ 0, 84, 126, 0.600000 ]
   - [ 1002021, 1, 1, 0.000100 ] # Steel Nordic Helm
   - [ 1002177, 1, 1, 0.000100 ] # Blue Burgler
   - [ 1040059, 1, 1, 0.000100 ] # Red Gold Stealer

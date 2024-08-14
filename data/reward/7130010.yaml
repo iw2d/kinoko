@@ -1,6 +1,7 @@
 # Death Teddy (7130010)
 
 rewards:
+  - [ 0, 672, 1008, 0.600000 ]
   - [ 1002328, 1, 1, 0.000100 ] # Green Pireta Hat
   - [ 1041101, 1, 1, 0.000100 ] # Blue Mystique
   - [ 1050073, 1, 1, 0.000100 ] # Blue Enigmatic

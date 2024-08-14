@@ -1,6 +1,7 @@
 # Tweeter (9500118)
 
 rewards:
+  - [ 0, 93, 140, 0.600000 ]
   - [ 1041085, 1, 1, 0.000100 ] # Brown Jangoon Armor
   - [ 1051033, 1, 1, 0.000100 ] # Red Calaf
   - [ 1061084, 1, 1, 0.000100 ] # Brown Jangoon Skirt

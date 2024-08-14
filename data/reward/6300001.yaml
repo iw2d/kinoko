@@ -1,6 +1,7 @@
 # Transformed Yeti (6300001)
 
 rewards:
+  - [ 0, 702, 1053, 0.600000 ]
   - [ 1002100, 1, 1, 0.000100 ] # Old Bronze Nordic Helm
   - [ 1002245, 1, 1, 0.000100 ] # White Seraphis
   - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings

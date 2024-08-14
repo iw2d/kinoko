@@ -1,6 +1,7 @@
 # Red Slime (7120103)
 
 rewards:
+  - [ 0, 630, 945, 0.600000 ]
   - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
   - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
   - [ 1032014, 1, 1, 0.000100 ] # Pink-Flowered Earrings

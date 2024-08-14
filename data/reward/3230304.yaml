@@ -1,6 +1,7 @@
 # Planey (3230304)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002167, 1, 1, 0.000100 ] # Blue Distinction
   - [ 1002183, 1, 1, 0.000100 ] # Green Pilfer
   - [ 1032018, 1, 1, 0.000100 ] # Pansy Earrings

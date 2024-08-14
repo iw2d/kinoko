@@ -1,6 +1,7 @@
 # Separated Pepe (9500142)
 
 rewards:
+  - [ 0, 240, 360, 0.600000 ]
   - [ 1002029, 1, 1, 0.000100 ] # Red Oriental Helmet
   - [ 1002154, 1, 1, 0.000100 ] # Dark Guiltian
   - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat

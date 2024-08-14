@@ -1,6 +1,7 @@
 # Blood Harp (8140002)
 
 rewards:
+  - [ 0, 672, 1008, 0.600000 ]
   - [ 1002339, 1, 1, 0.000100 ] # Blue Dragon Barbute
   - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
   - [ 1051057, 1, 1, 0.000100 ] # Purple Enigma

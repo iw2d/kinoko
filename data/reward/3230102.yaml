@@ -1,6 +1,7 @@
 # Lorang (3230102)
 
 rewards:
+  - [ 0, 86, 129, 0.600000 ]
   - [ 1040080, 1, 1, 0.000100 ] # Dark Piette
   - [ 1041074, 1, 1, 0.000100 ] # Purple Shadow
   - [ 1050000, 1, 1, 0.000100 ] # White Crusader Chainmail

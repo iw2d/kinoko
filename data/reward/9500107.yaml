@@ -1,6 +1,7 @@
 # Drumming Bunny (9500107)
 
 rewards:
+  - [ 0, 60, 90, 0.600000 ]
   - [ 1002144, 1, 1, 0.000100 ] # Brown Matty
   - [ 1040074, 1, 1, 0.000100 ] # Green Legolier
   - [ 1041033, 1, 1, 0.000100 ] # Red Bennis Chainmail
@@ -24,7 +25,7 @@ rewards:
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
-  - [ 4031135, 1, 1, 0.070000, 3438 ] # Dull Crystal
-  - [ 4031140, 1, 1, 0.070000, 3440 ] # Dull Crystal
   - [ 4130012, 1, 1, 0.000300 ] # Bow Production Stimulator
   - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4031135, 1, 1, 0.070000, 3438 ] # Dull Crystal
+  - [ 4031140, 1, 1, 0.070000, 3440 ] # Dull Crystal

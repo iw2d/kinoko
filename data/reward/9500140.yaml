@@ -1,6 +1,7 @@
 # Crimson Balrog (9500140)
 
 rewards:
+  - [ 0, 600, 900, 0.600000 ]
   - [ 2040002, 1, 1, 0.010000 ] # Scroll for Helmet for DEF 10%
   - [ 2040005, 1, 1, 0.010000 ] # Scroll for Helmet for HP 10%
   - [ 2040302, 1, 1, 0.010000 ] # Scroll for Earring for INT 10%

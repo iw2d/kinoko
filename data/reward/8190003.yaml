@@ -1,6 +1,7 @@
 # Skelegon (8190003)
 
 rewards:
+  - [ 0, 882, 1323, 0.600000 ]
   - [ 1002377, 1, 1, 0.000100 ] # Green Valhalla Helmet
   - [ 1032017, 1, 1, 0.000100 ] # Rose Earrings
   - [ 1050103, 1, 1, 0.000100 ] # Blue Varuna

@@ -1,6 +1,7 @@
 # Transformed Dark Yeti (6400001)
 
 rewards:
+  - [ 0, 714, 1071, 0.600000 ]
   - [ 1002243, 1, 1, 0.000100 ] # Blue Seraphis
   - [ 1002269, 1, 1, 0.000100 ] # White Polyfeather Hat
   - [ 1032022, 1, 1, 0.000100 ] # Half Earrings

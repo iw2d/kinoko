@@ -1,6 +1,7 @@
 # Master Soul Teddy (9500127)
 
 rewards:
+  - [ 0, 321, 482, 0.600000 ]
   - [ 1032015, 1, 1, 0.000100 ] # Metal Silver Earrings
   - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
   - [ 1040093, 1, 1, 0.000100 ] # Dark Orientican

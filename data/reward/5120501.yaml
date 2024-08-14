@@ -1,6 +1,7 @@
 # Bellflower Root (5120501)
 
 rewards:
+  - [ 0, 570, 855, 0.600000 ]
   - [ 1032019, 1, 1, 0.000100 ] # Crystal Flower Earrings
   - [ 1040102, 1, 1, 0.000100 ] # Bronze Platine
   - [ 1050052, 1, 1, 0.000100 ] # Blue-Lined Kismet

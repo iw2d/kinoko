@@ -1,6 +1,7 @@
 # Blue Flower Serpent (4230503)
 
 rewards:
+  - [ 0, 453, 680, 0.600000 ]
   - [ 1002081, 1, 1, 0.000100 ] # Blue Bandana
   - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
   - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail

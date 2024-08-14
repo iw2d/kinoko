@@ -1,6 +1,7 @@
 # Ghost Stump (1140100)
 
 rewards:
+  - [ 0, 25, 38, 0.600000 ]
   - [ 1002107, 1, 1, 0.000100 ] # Red Thief Hood
   - [ 1002113, 1, 1, 0.000100 ] # Blue Feather Hat
   - [ 1041029, 1, 1, 0.000100 ] # Black Split

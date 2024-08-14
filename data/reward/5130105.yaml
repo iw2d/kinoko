@@ -1,6 +1,7 @@
 # Dark Jr. Yeti (5130105)
 
 rewards:
+  - [ 0, 128, 193, 0.600000 ]
   - [ 1002208, 1, 1, 0.000100 ] # Blue Sonata
   - [ 1002216, 1, 1, 0.000100 ] # Aqua Golden Circlet
   - [ 1032021, 1, 1, 0.000100 ] # Holy Cross Earrings

@@ -1,6 +1,7 @@
 # Lycanthrope (8140000)
 
 rewards:
+  - [ 0, 774, 1161, 0.600000 ]
   - [ 1002271, 1, 1, 0.000100 ] # Green Galaxy
   - [ 1002275, 1, 1, 0.000100 ] # Blue Falcon
   - [ 1002285, 1, 1, 0.000100 ] # Blood Nightfox
@@ -39,5 +40,5 @@ rewards:
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130019, 1, 1, 0.000300 ] # Topwear Production Stimulator
   - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
-  - [ 4031477, 1, 1, 0.150000, 6191 ] # Lycanthrope's Plans
   - [ 4031460, 1, 1, 0.005000, 6168 ] # Cold Heart of a Wolf
+  - [ 4031477, 1, 1, 0.150000, 6191 ] # Lycanthrope's Plans

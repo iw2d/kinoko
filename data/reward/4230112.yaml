@@ -1,6 +1,7 @@
 # Master Robo (4230112)
 
 rewards:
+  - [ 0, 302, 453, 0.600000 ]
   - [ 1002169, 1, 1, 0.000100 ] # Brown Distinction
   - [ 1002214, 1, 1, 0.000100 ] # Black Maro
   - [ 1040097, 1, 1, 0.000100 ] # Green China

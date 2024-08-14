@@ -1,6 +1,7 @@
 # Blue Kentaurus (8140103)
 
 rewards:
+  - [ 0, 708, 1062, 0.600000 ]
   - [ 1002277, 1, 1, 0.000100 ] # Green Falcon
   - [ 1041106, 1, 1, 0.000100 ] # Red Pirate Blouse
   - [ 1061105, 1, 1, 0.000100 ] # Red Pirate Skirt

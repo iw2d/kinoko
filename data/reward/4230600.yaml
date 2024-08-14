@@ -1,6 +1,7 @@
 # Desert Giant  (4230600)
 
 rewards:
+  - [ 0, 492, 739, 0.600000 ]
   - [ 1002210, 1, 1, 0.000100 ] # Brown Sonata
   - [ 1041082, 1, 1, 0.000100 ] # Brown Piettra
   - [ 1061081, 1, 1, 0.000100 ] # Brown Piettra Skirt
