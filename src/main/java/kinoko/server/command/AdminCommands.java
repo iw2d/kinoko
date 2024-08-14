@@ -60,7 +60,7 @@ public final class AdminCommands {
         user.write(MessagePacket.system("Users in channel: %d", user.getConnectedServer().getConnectedUsers().size()));
         user.write(MessagePacket.system("Users in field : %d", user.getField().getUserPool().getCount()));
         user.write(MessagePacket.system("Party ID : %d (%d)", user.getPartyId(), user.getCharacterData().getPartyId()));
-        user.write(UserLocal.hireTutor(true));
+        user.setConsumeItemEffect(ItemProvider.getItemInfo(2022181).orElseThrow());
         user.dispose();
     }
 
@@ -80,6 +80,8 @@ public final class AdminCommands {
         user.write(MessagePacket.system("DEX : %d", user.getBasicStat().getDex()));
         user.write(MessagePacket.system("INT : %d", user.getBasicStat().getInt()));
         user.write(MessagePacket.system("LUK : %d", user.getBasicStat().getLuk()));
+        user.write(MessagePacket.system("AP  : %d", user.getCharacterStat().getAp()));
+        user.write(MessagePacket.system("SP  : %s", user.getCharacterStat().getSp().getMap()));
         user.write(MessagePacket.system("Damage : %d ~ %d", (int) CalcDamage.calcDamageMin(user), (int) CalcDamage.calcDamageMax(user)));
         user.write(MessagePacket.system("Field ID : %d (%s)", field.getFieldId(), field.getFieldType()));
         // Compute foothold below
@@ -595,7 +597,7 @@ public final class AdminCommands {
                         statMap.put(Stat.SP, cs.getSp());
                     } else {
                         cs.getSp().setNonExtendSp(value);
-                        statMap.put(Stat.SP, cs.getSp().getNonExtendSp());
+                        statMap.put(Stat.SP, (short) cs.getSp().getNonExtendSp());
                     }
                 }
                 default -> {

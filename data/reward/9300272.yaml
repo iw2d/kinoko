@@ -1,0 +1,20 @@
+# Target Orange Mushroom (9300272)
+
+rewards:
+  - [ 0, 9, 14, 0.600000 ]
+  - [ 1002043, 1, 1, 0.000100 ] # Bronze Koif
+  - [ 1052095, 1, 1, 0.000100 ] # Brown Rocky Suit
+  - [ 1072004, 1, 1, 0.000100 ] # White Gomushin
+  - [ 1072015, 1, 1, 0.000100 ] # Brown Hard Leather Boots
+  - [ 1072031, 1, 1, 0.000100 ] # Red Ninja Sandals
+  - [ 1082012, 1, 1, 0.000100 ] # Basic Archer Gloves
+  - [ 1312000, 1, 1, 0.000100 ] # Double Axe
+  - [ 1432000, 1, 1, 0.000100 ] # Spear
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2040705, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 10%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2330000, 1, 1, 0.000400 ] # Bullet
+  - [ 4000001, 1, 1, 0.400000 ] # Orange Mushroom Cap
+  - [ 4010000, 1, 1, 0.002000 ] # Bronze Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore

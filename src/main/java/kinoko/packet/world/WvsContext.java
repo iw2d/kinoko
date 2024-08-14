@@ -117,6 +117,13 @@ public final class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket inventoryGrow(InventoryType inventoryType, int newSize) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.InventoryGrow);
+        outPacket.encodeByte(inventoryType.getValue());
+        outPacket.encodeByte(newSize);
+        return outPacket;
+    }
+
     public static OutPacket gatherItemResult(InventoryType inventoryType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.GatherItemResult);
         outPacket.encodeByte(0); // ignored

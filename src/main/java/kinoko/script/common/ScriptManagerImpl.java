@@ -204,25 +204,25 @@ public final class ScriptManagerImpl implements ScriptManager {
                 cs.setAp((short) (sumAp - (4 + 20 + 4 + 4)));
             }
         }
-        // Add max hp / mp for specific jobs, TODO: KOC, Evan, Resistance
+        // Add max hp / mp for specific jobs, TODO: Evan, Resistance
         switch (job) {
-            case WARRIOR -> {
+            case WARRIOR, DAWN_WARRIOR_1 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(200, 250));
             }
-            case FIGHTER -> {
+            case FIGHTER, DAWN_WARRIOR_2 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(300, 350));
             }
-            case PAGE, SPEARMAN, MAGICIAN, ARAN_2 -> {
+            case PAGE, SPEARMAN, MAGICIAN, BLAZE_WIZARD_1, ARAN_2 -> {
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(100, 150));
             }
-            case MAGE_FP, MAGE_IL, CLERIC -> {
+            case MAGE_FP, MAGE_IL, CLERIC, BLAZE_WIZARD_2 -> {
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(450, 500));
             }
-            case ARCHER, ROGUE, PIRATE -> {
+            case ARCHER, ROGUE, PIRATE, WIND_ARCHER_1, NIGHT_WALKER_1, THUNDER_BREAKER_1 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(100, 150));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(25, 50));
             }
-            case HUNTER, CROSSBOWMAN, ASSASSIN, BANDIT, BRAWLER, GUNSLINGER -> {
+            case HUNTER, CROSSBOWMAN, ASSASSIN, BANDIT, BRAWLER, GUNSLINGER, WIND_ARCHER_2, NIGHT_WALKER_2, THUNDER_BREAKER_2 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(300, 350));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
             }
@@ -248,7 +248,10 @@ public final class ScriptManagerImpl implements ScriptManager {
         // Add sp by job level
         if (JobConstants.isEvanJob(jobId)) {
             switch (jobLevel) {
-                case 1, 2, 3, 4, 5, 6, 10 -> {
+                case 1 -> {
+                    cs.getSp().setSp(1, Math.max(cs.getLevel() - 10, 0) * 3 + 3);
+                }
+                case 2, 3, 4, 5, 6, 10 -> {
                     cs.getSp().addSp(jobLevel, 3); // 1st – 6th & 10th Mastery -> Extra 3 SP at each activation level
                 }
                 case 7, 8, 9 -> {
@@ -257,7 +260,10 @@ public final class ScriptManagerImpl implements ScriptManager {
             }
         } else if (JobConstants.isExtendSpJob(jobId)) {
             switch (jobLevel) {
-                case 1, 2, 3 -> {
+                case 1 -> {
+                    cs.getSp().setSp(jobLevel, Math.max(cs.getLevel() - 10, 0) * 3 + 1);
+                }
+                case 2, 3 -> {
                     cs.getSp().addSp(jobLevel, 1);
                 }
                 case 4 -> {
@@ -266,7 +272,14 @@ public final class ScriptManagerImpl implements ScriptManager {
             }
         } else {
             switch (jobLevel) {
-                case 1, 2, 3 -> {
+                case 1 -> {
+                    if (job == Job.MAGICIAN) {
+                        cs.getSp().setNonExtendSp(Math.max(cs.getLevel() - 8, 0) * 3 + 1);
+                    } else {
+                        cs.getSp().setNonExtendSp(Math.max(cs.getLevel() - 10, 0) * 3 + 1);
+                    }
+                }
+                case 2, 3 -> {
                     if (job != Job.BLADE_RECRUIT && job != Job.BLADE_SPECIALIST) {
                         cs.getSp().addNonExtendSp(1);
                     }
@@ -504,6 +517,12 @@ public final class ScriptManagerImpl implements ScriptManager {
         return user.getInventoryManager().getItemCount(itemId);
     }
 
+    @Override
+    public void addInventorySlots(InventoryType inventoryType, int addSlots) {
+        final Inventory inventory = user.getInventoryManager().getInventoryByType(inventoryType);
+        inventory.setSize(Math.min(inventory.getSize() + addSlots, GameConstants.INVENTORY_SLOT_MAX));
+        user.write(WvsContext.inventoryGrow(inventoryType, inventory.getSize()));
+    }
 
     // QUEST METHODS ---------------------------------------------------------------------------------------------------
 

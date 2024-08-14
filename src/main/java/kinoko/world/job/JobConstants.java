@@ -21,6 +21,47 @@ public final class JobConstants {
         return 0;
     }
 
+    public static int getExtendSpJobLevel(int jobId, int level) {
+        if (JobConstants.isEvanJob(jobId)) {
+            // is_jobchange_level_in_evan
+            if (level <= 10) {
+                return 0;
+            } else if (level <= 20) {
+                return 1;
+            } else if (level <= 30) {
+                return 2;
+            } else if (level <= 40) {
+                return 3;
+            } else if (level <= 50) {
+                return 4;
+            } else if (level <= 60) {
+                return 5;
+            } else if (level <= 80) {
+                return 6;
+            } else if (level <= 100) {
+                return 7;
+            } else if (level <= 120) {
+                return 8;
+            } else if (level <= 160) {
+                return 9;
+            } else {
+                return 10;
+            }
+        } else {
+            if (level <= 10) {
+                return 0;
+            } else if (level <= 30) {
+                return 1;
+            } else if (level <= 70) {
+                return 2;
+            } else if (level <= 120) {
+                return 3;
+            } else {
+                return 4;
+            }
+        }
+    }
+
     public static int getJobChangeLevel(int jobId, int subJob, int step) {
         final int race = jobId / 1000;
         if (isResistanceJob(jobId) || isEvanJob(jobId)) { // probably extend sp jank

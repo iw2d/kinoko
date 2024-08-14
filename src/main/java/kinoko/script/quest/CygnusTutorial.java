@@ -162,14 +162,6 @@ public final class CygnusTutorial extends ScriptHandler {
         }
     }
 
-    @Script("enterDisguise0")
-    public static void enterDisguise0(ScriptManager sm) {
-        // Empress' Road : Crossroads of Ereve (130000200)
-        //   west00 (-675, 92)
-        sm.playPortalSE();
-        sm.warp(130010000, "east00"); // Empress' Road : Training Forest I
-    }
-
     @Script("erebItem0")
     public static void erebItem0(ScriptManager sm) {
         // erebItem0 (1302000)

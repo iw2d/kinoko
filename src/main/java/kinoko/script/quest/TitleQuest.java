@@ -129,7 +129,14 @@ public final class TitleQuest extends ScriptHandler {
 
     @Script("q29905s")
     public static void q29905s(ScriptManager sm) {
+        // Noblesse (29905 - start)
         sm.forceStartQuest(29905);
+    }
+
+    @Script("q29906s")
+    public static void q29906s(ScriptManager sm) {
+        // Knight-in-Training (29906 - start)
+        sm.forceStartQuest(29906);
     }
 
     @Script("q29924s")

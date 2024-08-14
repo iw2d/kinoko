@@ -389,13 +389,15 @@ public final class CharacterStat implements Encodable {
             statMap.put(Stat.AP, getAp());
         }
         // Update sp
-        if (JobConstants.isExtendSpJob(getJob())) {
-            final int jobLevel = JobConstants.getJobLevel(getJob());
-            getSp().addSp(jobLevel, StatConstants.getIncSp(getJob(), getLevel()));
-            statMap.put(Stat.SP, getSp());
-        } else {
-            getSp().addNonExtendSp(StatConstants.getIncSp(getJob(), getLevel()));
-            statMap.put(Stat.SP, (short) getSp().getNonExtendSp());
+        if (!JobConstants.isBeginnerJob(getJob())) {
+            if (JobConstants.isExtendSpJob(getJob())) {
+                final int jobLevel = JobConstants.getExtendSpJobLevel(getJob(), getLevel());
+                getSp().addSp(jobLevel, 3);
+                statMap.put(Stat.SP, getSp());
+            } else {
+                getSp().addNonExtendSp(3);
+                statMap.put(Stat.SP, (short) getSp().getNonExtendSp());
+            }
         }
         return statMap;
     }

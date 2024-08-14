@@ -8,6 +8,7 @@ import kinoko.util.Tuple;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.item.BodyPart;
+import kinoko.world.item.InventoryType;
 import kinoko.world.job.Job;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
@@ -91,6 +92,8 @@ public interface ScriptManager {
     boolean hasItem(int itemId, int quantity);
 
     int getItemCount(int itemId);
+
+    void addInventorySlots(InventoryType inventoryType, int addSlots);
 
 
     // QUEST METHODS ---------------------------------------------------------------------------------------------------
