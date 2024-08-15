@@ -61,7 +61,7 @@ public final class Pet extends Life implements Encodable {
         setField(field);
         setX(x);
         setY(y);
-        setFoothold(field.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
+        setFoothold(field.getFootholdBelow(x, y).map(Foothold::getSn).orElse(0));
     }
 
     @Override

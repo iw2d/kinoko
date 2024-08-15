@@ -106,7 +106,7 @@ public final class Summoned extends Life implements Lockable<Summoned> {
         setX(x);
         setY(y);
         setLeft(left);
-        setFoothold(field.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
+        setFoothold(field.getFootholdBelow(x, y).map(Foothold::getSn).orElse(0));
     }
 
     @Override

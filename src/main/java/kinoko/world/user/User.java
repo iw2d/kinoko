@@ -702,7 +702,7 @@ public final class User extends Life implements Lockable<User> {
         setField(destination);
         setX(x);
         setY(y);
-        setFoothold(destination.getFootholdBelow(x, y).map(Foothold::getFootholdId).orElse(0));
+        setFoothold(destination.getFootholdBelow(x, y).map(Foothold::getSn).orElse(0));
         getCharacterStat().setPosMap(destination.getFieldId());
         getCharacterStat().setPortal((byte) portalId);
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));

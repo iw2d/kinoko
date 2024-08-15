@@ -17,19 +17,19 @@ public enum PortalType {
     COLLISION_VERTICAL_JUMP(12),
     COLLISION_CUSTOM_IMPACT(13);
 
-    private final int type;
+    private final int value;
 
-    PortalType(int type) {
-        this.type = type;
+    PortalType(int value) {
+        this.value = value;
     }
 
-    public int getType() {
-        return type;
+    public int getValue() {
+        return value;
     }
 
-    public static PortalType getByValue(int type) {
+    public static PortalType getByValue(int value) {
         for (PortalType pt : PortalType.values()) {
-            if (pt.getType() == type) {
+            if (pt.getValue() == value) {
                 return pt;
             }
         }

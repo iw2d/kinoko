@@ -113,7 +113,7 @@ public final class Citizen extends SkillProcessor {
                         null,
                         skill.positionX,
                         skill.positionY,
-                        field.getFootholdBelow(skill.positionX, skill.positionY).map(Foothold::getFootholdId).orElse(user.getFoothold())
+                        field.getFootholdBelow(skill.positionX, skill.positionY).map(Foothold::getSn).orElse(user.getFoothold())
                 );
                 mob.getMobStat().getTemporaryStats().put(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, 0));
                 mob.setRemoveAfter(Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));

@@ -86,7 +86,7 @@ public final class AdminCommands {
         user.write(MessagePacket.system("Field ID : %d (%s)", field.getFieldId(), field.getFieldType()));
         // Compute foothold below
         final Optional<Foothold> footholdBelowResult = field.getFootholdBelow(user.getX(), user.getY());
-        final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getFootholdId())).orElse("unk");
+        final String footholdBelow = footholdBelowResult.map(foothold -> String.valueOf(foothold.getSn())).orElse("unk");
         user.write(MessagePacket.system("  x : %d, y : %d, fh : %d (%s)", user.getX(), user.getY(), user.getFoothold(), footholdBelow));
         // Compute nearest portal
         double nearestDistance = Double.MAX_VALUE;
@@ -430,7 +430,7 @@ public final class AdminCommands {
                 null,
                 user.getX(),
                 user.getY(),
-                footholdResult.map(Foothold::getFootholdId).orElse(user.getFoothold())
+                footholdResult.map(Foothold::getSn).orElse(user.getFoothold())
         );
         field.getMobPool().addMob(mob);
         mob.setAppearType(MobAppearType.NORMAL);

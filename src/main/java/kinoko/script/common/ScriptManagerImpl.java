@@ -727,7 +727,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 null,
                 x,
                 y,
-                footholdResult.map(Foothold::getFootholdId).orElse(0)
+                footholdResult.map(Foothold::getSn).orElse(0)
         );
         mob.setAppearType(appearType);
         field.getMobPool().addMob(mob);

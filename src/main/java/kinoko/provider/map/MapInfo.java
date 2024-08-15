@@ -4,15 +4,19 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Rect;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public final class MapInfo {
     private final int mapId;
     private final boolean town;
     private final boolean swim;
     private final boolean fly;
+    private final boolean shop;
     private final boolean clock;
-    private final int timeLimit;
+    private final int phase;
     private final int returnMap;
     private final int forcedReturn;
     private final Set<FieldOption> fieldOptions;
@@ -21,18 +25,20 @@ public final class MapInfo {
     private final String onFirstUserEnter;
     private final String onUserEnter;
     private final List<Foothold> footholds;
+    private final List<LadderRope> ladderRope;
     private final List<LifeInfo> lifeInfos;
     private final List<PortalInfo> portalInfos;
     private final List<ReactorInfo> reactorInfos;
     private final FootholdNode footholdRoot = new FootholdNode();
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean clock, int timeLimit, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Foothold> footholds, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean shop, boolean clock, int phase, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Foothold> footholds, List<LadderRope> ladderRope, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
         this.town = town;
         this.swim = swim;
         this.fly = fly;
+        this.shop = shop;
         this.clock = clock;
-        this.timeLimit = timeLimit;
+        this.phase = phase;
         this.returnMap = returnMap;
         this.forcedReturn = forcedReturn;
         this.fieldOptions = fieldOptions;
@@ -41,13 +47,14 @@ public final class MapInfo {
         this.onFirstUserEnter = onFirstUserEnter;
         this.onUserEnter = onUserEnter;
         this.footholds = footholds;
+        this.ladderRope = ladderRope;
         this.lifeInfos = lifeInfos;
         this.portalInfos = portalInfos;
         this.reactorInfos = reactorInfos;
 
         // Initialize Footholds BST
         for (Foothold fh : footholds) {
-            footholdRoot.insert(fh);
+            this.footholdRoot.insert(fh);
         }
     }
 
@@ -67,13 +74,16 @@ public final class MapInfo {
         return fly;
     }
 
+    public boolean isShop() {
+        return shop;
+    }
+
     public boolean isClock() {
         return clock;
     }
 
-
-    public int getTimeLimit() {
-        return timeLimit;
+    public int getPhase() {
+        return phase;
     }
 
     public int getReturnMap() {
@@ -120,6 +130,10 @@ public final class MapInfo {
         return footholds;
     }
 
+    public List<LadderRope> getLadderRopes() {
+        return ladderRope;
+    }
+
     public List<LifeInfo> getLifeInfos() {
         return lifeInfos;
     }
@@ -151,12 +165,6 @@ public final class MapInfo {
                 .toList();
     }
 
-    public Optional<Foothold> getFootholdById(int footholdId) {
-        return footholds.stream()
-                .filter(fh -> fh.getFootholdId() == footholdId)
-                .findFirst();
-    }
-
     public Optional<Foothold> getFootholdBelow(int x, int y) {
         final FootholdNode.SearchResult result = new FootholdNode.SearchResult();
         footholdRoot.searchDown((match) -> {
@@ -186,8 +194,9 @@ public final class MapInfo {
                 ", town=" + town +
                 ", swim=" + swim +
                 ", fly=" + fly +
+                ", shop=" + shop +
                 ", clock=" + clock +
-                ", timeLimit=" + timeLimit +
+                ", phase=" + phase +
                 ", returnMap=" + returnMap +
                 ", forcedReturn=" + forcedReturn +
                 ", fieldOptions=" + fieldOptions +
@@ -196,6 +205,7 @@ public final class MapInfo {
                 ", onFirstUserEnter='" + onFirstUserEnter + '\'' +
                 ", onUserEnter='" + onUserEnter + '\'' +
                 ", footholds=" + footholds +
+                ", ladderRope=" + ladderRope +
                 ", lifeInfos=" + lifeInfos +
                 ", portalInfos=" + portalInfos +
                 ", reactorInfos=" + reactorInfos +
@@ -203,14 +213,15 @@ public final class MapInfo {
                 '}';
     }
 
-    public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
+    public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LadderRope> ladderRope, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
         return new MapInfo(
                 mapId,
                 infoProp.getOrDefault("town", 0) != 0,
                 infoProp.getOrDefault("swim", 0) != 0,
                 infoProp.getOrDefault("fly", 0) != 0,
+                infoProp.getOrDefault("personalShop", 0) != 0,
                 clock,
-                infoProp.getOrDefault("timeLimit", 0),
+                infoProp.getOrDefault("phase", 0),
                 infoProp.get("returnMap"),
                 infoProp.get("forcedReturn"),
                 FieldOption.getByLimit(infoProp.getOrDefault("fieldLimit", 0)),
@@ -218,10 +229,11 @@ public final class MapInfo {
                 infoProp.get("mobRate"),
                 infoProp.get("onFirstUserEnter"),
                 infoProp.get("onUserEnter"),
-                Collections.unmodifiableList(foothold),
-                Collections.unmodifiableList(life),
-                Collections.unmodifiableList(portal),
-                Collections.unmodifiableList(reactor)
+                foothold,
+                ladderRope,
+                life,
+                portal,
+                reactor
         );
     }
 

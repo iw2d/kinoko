@@ -31,6 +31,15 @@ public interface WzProvider {
         return defaultValue;
     }
 
+    static double getDouble(Object object) {
+        if (object instanceof Float value) {
+            return value;
+        } else if (object instanceof Double value) {
+            return value;
+        }
+        throw new ProviderError("Unexpected or missing value while extracting Double");
+    }
+
     static String getString(Object object) {
         if (object instanceof Integer value) {
             return String.valueOf(value);

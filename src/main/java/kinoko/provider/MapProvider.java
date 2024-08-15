@@ -5,6 +5,7 @@ import kinoko.provider.wz.*;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Crc32;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 
@@ -17,12 +18,14 @@ public final class MapProvider implements WzProvider {
     private static final Map<Integer, MapInfo> mapInfos = new HashMap<>();
     private static final Map<Integer, Integer> mapLinks = new HashMap<>();
     private static final Map<Integer, Integer> areaCodes = new HashMap<>(); // key -> category
+    private static int crcConstant;
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadMapInfos(wzPackage);
             loadAreaCodes(wzPackage);
+            loadPhysics(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Map.wz", e);
         }
@@ -40,6 +43,10 @@ public final class MapProvider implements WzProvider {
         return Optional.ofNullable(mapLinks.get(mapId));
     }
 
+    public static int getConstantCrc() {
+        return crcConstant;
+    }
+
     public static boolean isConnected(int fromFieldId, int toFieldId) {
         // CWvsContext::IsConnected
         if (GameConstants.isEventMap(fromFieldId) || GameConstants.isEventMap(toFieldId)) {
@@ -53,17 +60,6 @@ public final class MapProvider implements WzProvider {
             return false;
         }
         return fromCategory.equals(areaCodes.get(toFieldId));
-    }
-
-    private static void loadAreaCodes(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
-            throw new ProviderError("Could not resolve Map.wz/Map");
-        }
-        for (var areaEntry : mapDirectory.getImages().get("AreaCode.img").getProperty().getItems().entrySet()) {
-            final int key = Integer.parseInt(areaEntry.getKey());
-            final int category = WzProvider.getInteger(areaEntry.getValue());
-            areaCodes.put(key, category);
-        }
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {
@@ -103,6 +99,7 @@ public final class MapProvider implements WzProvider {
                     mapId,
                     linkEntry.getValue().getRight(),
                     linkInfo.getFootholds(),
+                    linkInfo.getLadderRopes(),
                     linkInfo.getLifeInfos(),
                     linkInfo.getPortalInfos(),
                     linkInfo.getReactorInfos(),
@@ -114,17 +111,18 @@ public final class MapProvider implements WzProvider {
 
     private static MapInfo resolveMapInfo(int mapId, WzImage image, WzListProperty infoProp, boolean clock) throws ProviderError {
         final List<Foothold> foothold = resolveFoothold(image.getProperty());
+        final List<LadderRope> ladderRope = resolveLadderRope(image.getProperty());
         final List<LifeInfo> life = resolveLife(image.getProperty());
         final List<PortalInfo> portal = resolvePortal(image.getProperty());
         final List<ReactorInfo> reactor = resolveReactor(image.getProperty());
-        return MapInfo.from(mapId, infoProp, foothold, life, portal, reactor, clock);
+        return MapInfo.from(mapId, infoProp, foothold, ladderRope, life, portal, reactor, clock);
     }
 
     private static List<Foothold> resolveFoothold(WzListProperty imageProp) throws ProviderError {
         if (!(imageProp.get("foothold") instanceof WzListProperty listProp)) {
             return List.of();
         }
-        final List<Foothold> foothold = new ArrayList<>();
+        final List<List<Foothold>> footholdGroups = new ArrayList<>();
         for (var layerEntry : listProp.getItems().entrySet()) {
             final int layerId = Integer.parseInt(layerEntry.getKey());
             if (!(layerEntry.getValue() instanceof WzListProperty groupList)) {
@@ -135,16 +133,41 @@ public final class MapProvider implements WzProvider {
                 if (!(groupEntry.getValue() instanceof WzListProperty footholdList)) {
                     throw new ProviderError("Failed to resolve foothold property");
                 }
+                final List<Foothold> group = new ArrayList<>();
                 for (var footholdEntry : footholdList.getItems().entrySet()) {
-                    final int footholdId = Integer.parseInt(footholdEntry.getKey());
+                    final int sn = Integer.parseInt(footholdEntry.getKey());
                     if (!(footholdEntry.getValue() instanceof WzListProperty footholdProp)) {
                         throw new ProviderError("Failed to resolve foothold property");
                     }
-                    foothold.add(Foothold.from(layerId, groupId, footholdId, footholdProp));
+                    group.add(Foothold.from(layerId, groupId, sn, footholdProp));
                 }
+                footholdGroups.add(group.stream()
+                        .sorted(Comparator.comparingInt(Foothold::getSn))
+                        .toList()
+                );
             }
         }
-        return foothold;
+        return footholdGroups.stream()
+                .sorted(Comparator.comparingInt(group -> group.getFirst().getSn()))
+                .flatMap(List::stream)
+                .toList();
+    }
+
+    private static List<LadderRope> resolveLadderRope(WzListProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("ladderRope") instanceof WzListProperty listProp)) {
+            return List.of();
+        }
+        final List<LadderRope> ladderRope = new ArrayList<>();
+        for (var entry : listProp.getItems().entrySet()) {
+            final int sn = Integer.parseInt(entry.getKey());
+            if (!(entry.getValue() instanceof WzListProperty ladderRopeProp)) {
+                throw new ProviderError("Failed to resolve ladder rope property");
+            }
+            ladderRope.add(LadderRope.from(sn, ladderRopeProp));
+        }
+        return ladderRope.stream()
+                .sorted(Comparator.comparingInt(LadderRope::getSn))
+                .toList();
     }
 
     private static List<LifeInfo> resolveLife(WzListProperty imageProp) throws ProviderError {
@@ -159,7 +182,7 @@ public final class MapProvider implements WzProvider {
             final LifeType lifeType = LifeType.fromString(lifeProp.get("type"));
             life.add(LifeInfo.from(lifeType, lifeProp));
         }
-        return life;
+        return Collections.unmodifiableList(life);
     }
 
     private static List<PortalInfo> resolvePortal(WzListProperty imageProp) throws ProviderError {
@@ -178,7 +201,9 @@ public final class MapProvider implements WzProvider {
             }
             portal.add(PortalInfo.from(portalType, portalId, portalProp));
         }
-        return portal;
+        return portal.stream()
+                .sorted(Comparator.comparingInt(PortalInfo::getPortalId))
+                .toList();
     }
 
     private static List<ReactorInfo> resolveReactor(WzListProperty imageProp) throws ProviderError {
@@ -192,6 +217,24 @@ public final class MapProvider implements WzProvider {
             }
             reactor.add(ReactorInfo.from(reactorProp));
         }
-        return reactor;
+        return Collections.unmodifiableList(reactor);
+    }
+
+    private static void loadAreaCodes(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
+            throw new ProviderError("Could not resolve Map.wz/Map");
+        }
+        for (var areaEntry : mapDirectory.getImages().get("AreaCode.img").getProperty().getItems().entrySet()) {
+            final int key = Integer.parseInt(areaEntry.getKey());
+            final int category = WzProvider.getInteger(areaEntry.getValue());
+            areaCodes.put(key, category);
+        }
+    }
+
+    private static void loadPhysics(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getImages().get("Physics.img") instanceof WzImage physicsImage)) {
+            throw new ProviderError("Could not resolve Map.wz/Physics.img");
+        }
+        crcConstant = Crc32.computeCrc32(PhysicsConstants.from(physicsImage.getProperty()));
     }
 }

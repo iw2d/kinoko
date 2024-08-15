@@ -134,10 +134,6 @@ public final class Field {
         return getPortalById(0);
     }
 
-    public Optional<Foothold> getFootholdById(int footholdId) {
-        return mapInfo.getFootholdById(footholdId);
-    }
-
     public Optional<Foothold> getFootholdBelow(int x, int y) {
         return mapInfo.getFootholdBelow(x, y);
     }

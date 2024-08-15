@@ -1,10 +1,11 @@
 package kinoko.provider.map;
 
+import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.world.GameConstants;
 
 public final class PortalInfo {
-    public static final PortalInfo EMPTY = new PortalInfo(PortalType.STARTPOINT, 0, "", GameConstants.UNDEFINED_FIELD_ID, "", 0, 0, "");
+    public static final PortalInfo EMPTY = new PortalInfo(PortalType.STARTPOINT, 0, "", GameConstants.UNDEFINED_FIELD_ID, "", 0, 0, 0, 0, 0, 0, 0, false, "");
     private final PortalType portalType;
     private final int portalId;
     private final String portalName;
@@ -12,9 +13,15 @@ public final class PortalInfo {
     private final String destinationPortalName;
     private final int x;
     private final int y;
+    private final int delay;
+    private final int hRange;
+    private final int vRange;
+    private final int hImpact;
+    private final int vImpact;
+    private final boolean onlyOnce;
     private final String script;
 
-    public PortalInfo(PortalType portalType, int portalId, String portalName, int destinationFieldId, String destinationPortalName, int x, int y, String script) {
+    public PortalInfo(PortalType portalType, int portalId, String portalName, int destinationFieldId, String destinationPortalName, int x, int y, int delay, int hRange, int vRange, int hImpact, int vImpact, boolean onlyOnce, String script) {
         this.portalType = portalType;
         this.portalId = portalId;
         this.portalName = portalName;
@@ -22,6 +29,12 @@ public final class PortalInfo {
         this.destinationPortalName = destinationPortalName;
         this.x = x;
         this.y = y;
+        this.delay = delay;
+        this.hRange = hRange;
+        this.vRange = vRange;
+        this.hImpact = hImpact;
+        this.vImpact = vImpact;
+        this.onlyOnce = onlyOnce;
         this.script = script;
     }
 
@@ -57,21 +70,52 @@ public final class PortalInfo {
         return y;
     }
 
+    public int getHRange() {
+        return hRange;
+    }
+
+    public int getVRange() {
+        return vRange;
+    }
+
+    public int getHImpact() {
+        return hImpact;
+    }
+
+    public int getVImpact() {
+        return vImpact;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public boolean isOnlyOnce() {
+        return onlyOnce;
+    }
+
     public String getScript() {
         return script;
     }
 
     @Override
     public String toString() {
-        return "PortalInfo[" +
-                "pt=" + portalType + ", " +
-                "id=" + portalId + ", " +
-                "pn=" + portalName + ", " +
-                "tm=" + destinationFieldId + ", " +
-                "tn=" + destinationPortalName + ", " +
-                "x=" + x + ", " +
-                "y=" + y + ", " +
-                "script=" + script + ']';
+        return "PortalInfo{" +
+                "portalType=" + portalType +
+                ", portalId=" + portalId +
+                ", portalName='" + portalName + '\'' +
+                ", destinationFieldId=" + destinationFieldId +
+                ", destinationPortalName='" + destinationPortalName + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", delay=" + delay +
+                ", hRange=" + hRange +
+                ", vRange=" + vRange +
+                ", hImpact=" + hImpact +
+                ", vImpact=" + vImpact +
+                ", onlyOnce=" + onlyOnce +
+                ", script='" + script + '\'' +
+                '}';
     }
 
     public static PortalInfo from(PortalType portalType, int portalId, WzListProperty portalProp) {
@@ -83,6 +127,12 @@ public final class PortalInfo {
                 portalProp.get("tn"),
                 portalProp.get("x"),
                 portalProp.get("y"),
+                WzProvider.getInteger(portalProp.get("delay"), 0),
+                WzProvider.getInteger(portalProp.get("hRange"), 100),
+                WzProvider.getInteger(portalProp.get("vRange"), 100),
+                WzProvider.getInteger(portalProp.get("horizontalImpact"), 0),
+                WzProvider.getInteger(portalProp.get("verticalImpact"), 0),
+                WzProvider.getInteger(portalProp.get("onlyOnce"), 0) != 0,
                 portalProp.get("script")
         );
     }
