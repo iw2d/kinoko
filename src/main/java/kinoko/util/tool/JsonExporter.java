@@ -2,10 +2,8 @@ package kinoko.util.tool;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.StringProvider;
-import kinoko.provider.skill.ComputedSkillInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStringInfo;
-import kinoko.provider.skill.StaticSkillInfo;
 import kinoko.util.Rect;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
@@ -145,23 +143,24 @@ final class JsonExporter {
 
                     // Skill stats
                     final JSONObject skillStatObject = new JSONObject();
-                    if (si instanceof StaticSkillInfo ssi) {
-                        skillObject.put("type", "static");
-                        // Stats for each level
-                        for (var entry : ssi.getStats().entrySet()) {
-                            final JSONArray levelArray = new JSONArray();
-                            levelArray.putAll(entry.getValue());
-                            skillStatObject.put(entry.getKey().name(), levelArray);
-                        }
-                    } else if (si instanceof ComputedSkillInfo csi) {
-                        skillObject.put("type", "computed");
-                        // Expression for each stat
-                        for (var entry : csi.getStrings().entrySet()) {
-                            skillStatObject.put(entry.getKey().name(), entry.getValue());
-                        }
-                    } else {
-                        throw new IllegalStateException();
-                    }
+                    // TODO
+//                    if (si instanceof StaticSkillInfo ssi) {
+//                        skillObject.put("type", "static");
+//                        // Stats for each level
+//                        for (var entry : ssi.getStats().entrySet()) {
+//                            final JSONArray levelArray = new JSONArray();
+//                            levelArray.putAll(entry.getValue());
+//                            skillStatObject.put(entry.getKey().name(), levelArray);
+//                        }
+//                    } else if (si instanceof ComputedSkillInfo csi) {
+//                        skillObject.put("type", "computed");
+//                        // Expression for each stat
+//                        for (var entry : csi.getStrings().entrySet()) {
+//                            skillStatObject.put(entry.getKey().name(), entry.getValue());
+//                        }
+//                    } else {
+//                        throw new IllegalStateException();
+//                    }
                     skillObject.put("stats", skillStatObject);
 
                     // Skill rect

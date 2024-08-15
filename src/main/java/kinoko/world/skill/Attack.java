@@ -42,6 +42,8 @@ public final class Attack {
     public int[] drops;
     public int dropExplodeDelay;
 
+    public int crc;
+
     public Attack(OutHeader headerType) {
         this.headerType = headerType;
     }

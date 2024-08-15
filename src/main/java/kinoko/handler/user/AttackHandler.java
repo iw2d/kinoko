@@ -76,7 +76,7 @@ public final class AttackHandler {
         inPacket.decodeInt(); // dwKey
         inPacket.decodeInt(); // Crc32
 
-        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+        attack.crc = inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
         inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
 
         if (SkillConstants.isKeydownSkill(attack.skillId)) {
@@ -134,7 +134,7 @@ public final class AttackHandler {
         inPacket.decodeInt(); // dwKey
         inPacket.decodeInt(); // Crc32
 
-        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+        attack.crc = inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
         inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
 
         if (SkillConstants.isKeydownSkill(attack.skillId)) {
@@ -198,7 +198,7 @@ public final class AttackHandler {
         inPacket.decodeInt(); // dwInit
         inPacket.decodeInt(); // Crc32
 
-        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+        attack.crc = inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
         inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
 
         if (SkillConstants.isMagicKeydownSkill(attack.skillId)) {
@@ -246,7 +246,7 @@ public final class AttackHandler {
         inPacket.decodeInt(); // dwKey
         inPacket.decodeInt(); // Crc32
 
-        inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
+        attack.crc = inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
         inPacket.decodeInt(); // SKILLLEVELDATA::GetCrC
 
         attack.flag = inPacket.decodeByte();
@@ -311,6 +311,17 @@ public final class AttackHandler {
                 log.error("Tried to attack with skill {} while sealed", attack.skillId);
                 return;
             }
+            // Resolve skill info
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
+                return;
+            }
+            // Check CRC
+//            if (skillInfoResult.get().getCrc(attack.slv) != attack.crc) {
+//                log.error("Tried to attack with mismatching CRC for skill {}", attack.skillId);
+//                return;
+//            }
         }
 
         // Check morph
@@ -361,14 +372,8 @@ public final class AttackHandler {
 
         // Process skill
         if (attack.skillId != 0 && !SkillConstants.isNoConsumeAttack(attack.skillId)) {
-            // Resolve skill info
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
-            if (skillInfoResult.isEmpty()) {
-                log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
-                return;
-            }
-            final SkillInfo si = skillInfoResult.get();
             // Check skill cooltime and cost
+            final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
             if (user.getSkillManager().hasSkillCooltime(attack.skillId)) {
                 log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
                 return;
