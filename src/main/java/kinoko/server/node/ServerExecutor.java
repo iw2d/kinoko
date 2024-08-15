@@ -91,7 +91,7 @@ public final class ServerExecutor {
         if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
             gameExecutors.get(instanceFieldStorage.getInstance().getInstanceId() % gameExecutors.size()).submit(wrap(runnable));
         } else {
-            gameExecutors.get(Byte.toUnsignedInt(field.getFieldKey()) % gameExecutors.size()).submit(wrap(runnable));
+            gameExecutors.get(field.getExecutorIndex() % gameExecutors.size()).submit(wrap(runnable));
         }
     }
 

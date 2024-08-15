@@ -36,13 +36,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public final class Field {
-    private static final AtomicInteger fieldKeyCounter = new AtomicInteger(1);
+    private static final AtomicInteger fieldCounter = new AtomicInteger(1);
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
+    private final int executorIndex = fieldCounter.getAndIncrement();
 
     private final FieldStorage fieldStorage;
     private final MapInfo mapInfo;
-    private final byte fieldKey;
     private final ScheduledFuture<?> fieldEventFuture;
     private final Map<Integer, Consumer<Mob>> mobSpawnModifiers;
 
@@ -65,7 +65,6 @@ public final class Field {
     public Field(FieldStorage fieldStorage, MapInfo mapInfo) {
         this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
-        this.fieldKey = (byte) (fieldKeyCounter.getAndIncrement() % 0xFF);
         this.mobSpawnModifiers = new ConcurrentHashMap<>();
         // Initialize field object pools
         this.userPool = new UserPool(this);
@@ -79,6 +78,10 @@ public final class Field {
         this.affectedAreaPool = new AffectedAreaPool(this);
         // Initialize field updates
         this.fieldEventFuture = ServerExecutor.scheduleWithFixedDelay(this, this::update, ServerConfig.FIELD_TICK_INTERVAL, ServerConfig.FIELD_TICK_INTERVAL, TimeUnit.MILLISECONDS);
+    }
+
+    public int getExecutorIndex() {
+        return executorIndex;
     }
 
     public FieldStorage getFieldStorage() {
@@ -188,10 +191,6 @@ public final class Field {
 
     public MapInfo getMapInfo() {
         return mapInfo;
-    }
-
-    public byte getFieldKey() {
-        return fieldKey;
     }
 
     public ScheduledFuture<?> getFieldEventFuture() {

@@ -39,9 +39,8 @@ public final class FieldHandler {
 
     @Handler(InHeader.DropPickUpRequest)
     public static void handleDropPickUpRequest(User user, InPacket inPacket) {
-        final Field field = user.getField();
         final byte fieldKey = inPacket.decodeByte();
-        if (field.getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -52,6 +51,7 @@ public final class FieldHandler {
         inPacket.decodeInt(); // dwCliCrc
 
         // Find drop in field
+        final Field field = user.getField();
         final Optional<Drop> dropResult = field.getDropPool().getById(objectId);
         if (dropResult.isEmpty()) {
             user.dispose();

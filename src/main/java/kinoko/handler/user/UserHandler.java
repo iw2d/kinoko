@@ -74,7 +74,7 @@ public final class UserHandler {
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // 0
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -700,7 +700,7 @@ public final class UserHandler {
     @Handler(InHeader.UserPortalScriptRequest)
     public static void handleUserPortalScriptRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -718,7 +718,7 @@ public final class UserHandler {
     @Handler(InHeader.UserPortalTeleportRequest)
     public static void handleUserPortalTeleportRequest(User user, InPacket inPacket) {
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }

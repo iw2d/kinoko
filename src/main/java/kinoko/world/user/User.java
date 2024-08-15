@@ -45,6 +45,7 @@ import kinoko.world.user.stat.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -61,6 +62,7 @@ public final class User extends Life implements Lockable<User> {
 
     private final List<Pet> pets = new ArrayList<>();
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
+    private final AtomicInteger fieldKey = new AtomicInteger(0);
 
     private int messengerId;
     private PartyInfo partyInfo;
@@ -170,6 +172,14 @@ public final class User extends Life implements Lockable<User> {
 
     public Map<Integer, List<Summoned>> getSummoned() {
         return summoned;
+    }
+
+    public byte getFieldKey() {
+        return (byte) (fieldKey.get() % 0xFF);
+    }
+
+    public byte getNextFieldKey() {
+        return (byte) (fieldKey.incrementAndGet() % 0xFF);
     }
 
     public int getMessengerId() {

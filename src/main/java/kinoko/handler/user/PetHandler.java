@@ -238,8 +238,7 @@ public final class PetHandler {
             return;
         }
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        final Field field = user.getField();
-        if (field.getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             return;
         }
         inPacket.decodeInt(); // update_time
@@ -252,6 +251,7 @@ public final class PetHandler {
         inPacket.decodeByte(); // bLongRange
 
         // Find drop in field
+        final Field field = user.getField();
         final Optional<Drop> dropResult = field.getDropPool().getById(objectId);
         if (dropResult.isEmpty()) {
             return;

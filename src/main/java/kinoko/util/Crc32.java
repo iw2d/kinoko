@@ -1,6 +1,7 @@
 package kinoko.util;
 
 import kinoko.provider.map.*;
+import kinoko.server.ServerConstants;
 
 import java.util.List;
 
@@ -116,7 +117,7 @@ public final class Crc32 {
      */
     public static int computeCrc32(PhysicsConstants constants) {
         // CWvsPhysicalSpace2D::GetConstantCRC
-        int crc = getCrc32(95, 0);
+        int crc = getCrc32(ServerConstants.GAME_VERSION, 0);
         crc = getCrc32((int) constants.getWalkForce(), crc); // dWalkForce
         crc = getCrc32((int) constants.getWalkSpeed(), crc); // dWalkSpeed
         crc = getCrc32((int) constants.getWalkDrag(), crc); // dWalkDrag

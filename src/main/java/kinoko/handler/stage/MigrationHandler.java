@@ -210,9 +210,8 @@ public final class MigrationHandler {
         }
 
         // Normal transfer field request
-        final Field currentField = user.getField();
         final byte fieldKey = inPacket.decodeByte();
-        if (currentField.getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -231,6 +230,7 @@ public final class MigrationHandler {
         }
 
         try (var locked = user.acquire()) {
+            final Field currentField = user.getField();
             if (portalName.isEmpty()) {
                 if (user.getHp() <= 0) {
                     // Premium revive

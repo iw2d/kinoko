@@ -59,7 +59,7 @@ public final class AttackHandler {
         // CUserLocal::TryDoingMeleeAttack, CUserLocal::TryDoingNormalAttack
         final Attack attack = new Attack(OutHeader.UserMeleeAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -120,7 +120,7 @@ public final class AttackHandler {
         // CUserLocal::TryDoingShootAttack
         final Attack attack = new Attack(OutHeader.UserShootAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -180,7 +180,7 @@ public final class AttackHandler {
         // CUserLocal::TryDoingMagicAttack
         final Attack attack = new Attack(OutHeader.UserMagicAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
@@ -232,7 +232,7 @@ public final class AttackHandler {
         // CUserLocal::TryDoingBodyAttack
         final Attack attack = new Attack(OutHeader.UserBodyAttack);
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
-        if (user.getField().getFieldKey() != fieldKey) {
+        if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
