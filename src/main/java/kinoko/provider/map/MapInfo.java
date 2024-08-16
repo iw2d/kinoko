@@ -1,7 +1,9 @@
 package kinoko.provider.map;
 
+import kinoko.provider.MapProvider;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Crc32;
 import kinoko.util.Rect;
 
 import java.util.Comparator;
@@ -29,7 +31,9 @@ public final class MapInfo {
     private final List<LifeInfo> lifeInfos;
     private final List<PortalInfo> portalInfos;
     private final List<ReactorInfo> reactorInfos;
-    private final FootholdNode footholdRoot = new FootholdNode();
+
+    private final FootholdNode footholdRoot;
+    private final int fieldCrc;
 
     public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean shop, boolean clock, int phase, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Foothold> footholds, List<LadderRope> ladderRope, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
@@ -53,9 +57,13 @@ public final class MapInfo {
         this.reactorInfos = reactorInfos;
 
         // Initialize Footholds BST
+        this.footholdRoot = new FootholdNode();
         for (Foothold fh : footholds) {
             this.footholdRoot.insert(fh);
         }
+
+        // Compute Field CRC
+        this.fieldCrc = Crc32.computeCrc32(MapProvider.getConstantCrc(), this);
     }
 
     public int getMapId() {
@@ -185,6 +193,10 @@ public final class MapInfo {
 
     public Rect getRootBounds() {
         return footholdRoot.getRootBounds();
+    }
+
+    public int getFieldCrc() {
+        return fieldCrc;
     }
 
     @Override

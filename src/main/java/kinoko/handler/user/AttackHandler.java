@@ -319,7 +319,7 @@ public final class AttackHandler {
             }
             final SkillInfo si = skillInfoResult.get();
             if (si.getLevelDataCrc(attack.slv) != attack.crc) {
-                log.warn("Attacking with mismatching CRC for skill {}", attack.skillId);
+                log.warn("Received mismatching CRC for skill ID : {}", attack.skillId);
             }
         }
 

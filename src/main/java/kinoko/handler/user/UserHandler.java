@@ -80,13 +80,17 @@ public final class UserHandler {
         }
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // 0
-        inPacket.decodeInt(); // dwCrc
+        final int crc = inPacket.decodeInt(); // dwCrc
         inPacket.decodeInt(); // 0
         inPacket.decodeInt(); // Crc32
 
+        final Field field = user.getField();
+        if (field.getFieldCrc() != crc) {
+            log.warn("Received mismatching CRC for field ID : {}", field.getFieldId());
+        }
         final MovePath movePath = MovePath.decode(inPacket);
         movePath.applyTo(user);
-        user.getField().broadcastPacket(UserRemote.move(user, movePath), user);
+        field.broadcastPacket(UserRemote.move(user, movePath), user);
     }
 
     @Handler(InHeader.UserSitRequest)

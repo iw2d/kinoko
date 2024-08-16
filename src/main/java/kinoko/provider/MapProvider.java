@@ -23,9 +23,9 @@ public final class MapProvider implements WzProvider {
     public static void initialize() {
         try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
+            loadPhysics(wzPackage);
             loadMapInfos(wzPackage);
             loadAreaCodes(wzPackage);
-            loadPhysics(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Map.wz", e);
         }
@@ -60,6 +60,13 @@ public final class MapProvider implements WzProvider {
             return false;
         }
         return fromCategory.equals(areaCodes.get(toFieldId));
+    }
+
+    private static void loadPhysics(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getImages().get("Physics.img") instanceof WzImage physicsImage)) {
+            throw new ProviderError("Could not resolve Map.wz/Physics.img");
+        }
+        crcConstant = Crc32.computeCrc32(PhysicsConstants.from(physicsImage.getProperty()));
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {
@@ -229,12 +236,5 @@ public final class MapProvider implements WzProvider {
             final int category = WzProvider.getInteger(areaEntry.getValue());
             areaCodes.put(key, category);
         }
-    }
-
-    private static void loadPhysics(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("Physics.img") instanceof WzImage physicsImage)) {
-            throw new ProviderError("Could not resolve Map.wz/Physics.img");
-        }
-        crcConstant = Crc32.computeCrc32(PhysicsConstants.from(physicsImage.getProperty()));
     }
 }
