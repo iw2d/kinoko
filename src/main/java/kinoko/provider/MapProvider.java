@@ -66,7 +66,7 @@ public final class MapProvider implements WzProvider {
         if (!(source.getDirectory().getImages().get("Physics.img") instanceof WzImage physicsImage)) {
             throw new ProviderError("Could not resolve Map.wz/Physics.img");
         }
-        crcConstant = Crc32.computeCrc32(PhysicsConstants.from(physicsImage.getProperty()));
+        crcConstant = Crc32.computeCrcConstant(PhysicsConstants.from(physicsImage.getProperty()));
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {

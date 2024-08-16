@@ -458,7 +458,7 @@ public final class CashItemHandler extends ItemHandler {
                     }
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
                     // Add stats
-                    final Map<Stat, Object> statMap = new HashMap<>();
+                    final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
                     statMap.putAll(cs.removeAp(decStat));
                     statMap.putAll(cs.addAp(incStat, user.getBasicStat().getInt()));
                     // Update client

@@ -502,7 +502,7 @@ public final class User extends Life implements Lockable<User> {
     public void setConsumeItemEffect(ItemInfo itemInfo) {
         // Apply recovery and resolve stat ups
         int statUpDuration = 0;
-        final Map<CharacterTemporaryStat, Integer> statUps = new HashMap<>(); // cts -> value
+        final Map<CharacterTemporaryStat, Integer> statUps = new EnumMap<>(CharacterTemporaryStat.class); // cts -> value
         final Set<CharacterTemporaryStat> resetStats = new HashSet<>();
         for (var entry : itemInfo.getItemSpecs().entrySet()) {
             final ItemSpecType specType = entry.getKey();
@@ -550,7 +550,7 @@ public final class User extends Life implements Lockable<User> {
         // Apply stat ups
         if (!statUps.isEmpty()) {
             if (statUpDuration > 0) {
-                final Map<CharacterTemporaryStat, TemporaryStatOption> setStats = new HashMap<>();
+                final Map<CharacterTemporaryStat, TemporaryStatOption> setStats = new EnumMap<>(CharacterTemporaryStat.class);
                 for (var entry : statUps.entrySet()) {
                     setStats.put(entry.getKey(), TemporaryStatOption.of(entry.getValue(), -itemInfo.getItemId(), statUpDuration));
                 }

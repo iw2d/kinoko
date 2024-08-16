@@ -247,7 +247,7 @@ public final class MigrationInfo implements Encodable {
     }
 
     private static Map<CharacterTemporaryStat, TemporaryStatOption> decodeTemporaryStats(InPacket inPacket) {
-        final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new HashMap<>();
+        final Map<CharacterTemporaryStat, TemporaryStatOption> temporaryStats = new EnumMap<>(CharacterTemporaryStat.class);
         final int size = inPacket.decodeInt();
         for (int i = 0; i < size; i++) {
             final CharacterTemporaryStat cts = CharacterTemporaryStat.getByValue(inPacket.decodeInt());

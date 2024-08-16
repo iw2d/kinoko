@@ -104,7 +104,7 @@ public final class UpgradeItemHandler extends ItemHandler {
                 } else if (upgradeItemInfo.getInfo(ItemInfoType.randstat) != 0) {
                     // Chaos scroll
                     final int randMax = upgradeItemInfo.getInfo(ItemInfoType.incRandVol) != 0 ? 10 : 5; // miraculous chaos scroll
-                    final Map<ItemInfoType, Object> randStats = new HashMap<>();
+                    final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
                     if (equipData.getIncStr() > 0) {
                         randStats.put(ItemInfoType.incSTR, Util.getRandom(-randMax, randMax));
                     }

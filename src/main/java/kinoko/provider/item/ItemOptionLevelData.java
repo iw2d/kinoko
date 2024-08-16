@@ -5,6 +5,7 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public final class ItemOptionLevelData {
     }
 
     public static ItemOptionLevelData from(WzListProperty levelProp) throws ProviderError {
-        final Map<ItemOptionStat, Integer> stats = new HashMap<>();
+        final Map<ItemOptionStat, Integer> stats = new EnumMap<>(ItemOptionStat.class);
         for (var propEntry : levelProp.getItems().entrySet()) {
             if (ItemOptionStat.isIgnored(propEntry.getKey())) {
                 continue;

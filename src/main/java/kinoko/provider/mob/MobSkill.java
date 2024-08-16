@@ -1,5 +1,7 @@
 package kinoko.provider.mob;
 
+import java.util.Objects;
+
 public final class MobSkill {
     private final MobSkillType skillType;
     private final int skillId;
@@ -21,5 +23,18 @@ public final class MobSkill {
 
     public int getSkillLevel() {
         return skillLevel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MobSkill mobSkill = (MobSkill) o;
+        return skillId == mobSkill.skillId && skillLevel == mobSkill.skillLevel && skillType == mobSkill.skillType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(skillType, skillId, skillLevel);
     }
 }

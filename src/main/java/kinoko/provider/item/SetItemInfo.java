@@ -43,7 +43,7 @@ public final class SetItemInfo {
             if (!(effectEntry.getValue() instanceof WzListProperty effectProp)) {
                 throw new ProviderError("Could not resolve set item effect prop");
             }
-            final Map<ItemInfoType, Integer> stats = new HashMap<>();
+            final Map<ItemInfoType, Integer> stats = new EnumMap<>(ItemInfoType.class);
             for (var statEntry : effectProp.getItems().entrySet()) {
                 if (ItemInfoType.isIgnored(statEntry.getKey())) {
                     throw new ProviderError("Unhandled set item effect stat : %s", statEntry.getKey());

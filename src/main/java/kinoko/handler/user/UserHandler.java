@@ -534,7 +534,7 @@ public final class UserHandler {
     public static void handleUserAbilityMassUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int size = inPacket.decodeInt();
-        final Map<Stat, Integer> stats = new HashMap<>();
+        final Map<Stat, Integer> stats = new EnumMap<>(Stat.class);
         for (int i = 0; i < size; i++) {
             final int flag = inPacket.decodeInt(); // dwStatFlag
             final int value = inPacket.decodeInt(); // nValue

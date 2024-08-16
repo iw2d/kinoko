@@ -117,7 +117,7 @@ public final class Crc32 {
      * @param constants Physics constants loaded from Map/Physics.img
      * @return constant used for computing CRC for CWvsPhysicalSpace2D
      */
-    public static int computeCrc32(PhysicsConstants constants) {
+    public static int computeCrcConstant(PhysicsConstants constants) {
         // CWvsPhysicalSpace2D::GetConstantCRC
         int crc = getCrc32(ServerConstants.GAME_VERSION, 0);
         crc = getCrc32((int) constants.getWalkForce(), crc); // dWalkForce
@@ -146,10 +146,10 @@ public final class Crc32 {
      * @param mapInfo     Map data
      * @return CRC computed for CField
      */
-    public static int computeCrc32(int constantCrc, MapInfo mapInfo) {
+    public static int computeCrcField(int constantCrc, MapInfo mapInfo) {
         // CField::LoadMap
-        final int crcSpace2D = computeCrc32(constantCrc, mapInfo.getFootholds(), mapInfo.getLadderRopes());
-        final int crcPortalList = computeCrc32(mapInfo.getMapId(), mapInfo.getPortalInfos());
+        final int crcSpace2D = computeCrcSpace2D(constantCrc, mapInfo.getFootholds(), mapInfo.getLadderRopes());
+        final int crcPortalList = computeCrcPortalList(mapInfo.getMapId(), mapInfo.getPortalInfos());
         int crc = crcSpace2D ^ crcPortalList;
         crc = getCrc32(mapInfo.isTown() ? 1 : 0, crc); // bTown
         crc = getCrc32(mapInfo.isSwim() ? 1 : 0, crc); // bSwim
@@ -165,7 +165,7 @@ public final class Crc32 {
      * @param ladderRopes ladderRope list sorted by SN
      * @return CRC computed for CWvsPhysicalSpace2D
      */
-    public static int computeCrc32(int constantCrc, List<Foothold> footholds, List<LadderRope> ladderRopes) {
+    public static int computeCrcSpace2D(int constantCrc, List<Foothold> footholds, List<LadderRope> ladderRopes) {
         // CWvsPhysicalSpace2D::Load
         int crc = constantCrc;
         for (Foothold fh : footholds) {
@@ -198,7 +198,7 @@ public final class Crc32 {
      * @param portalInfos portal list sorted by index
      * @return CRC computed for CPortalList
      */
-    public static int computeCrc32(int mapId, List<PortalInfo> portalInfos) {
+    public static int computeCrcPortalList(int mapId, List<PortalInfo> portalInfos) {
         // CPortalList::RestorePortal
         int crc = getCrc32(mapId, 0); // dwField
         for (PortalInfo pi : portalInfos) {
@@ -217,7 +217,16 @@ public final class Crc32 {
         return crc;
     }
 
-    public static int computeCrc32(SkillInfo si, int slv) {
+    public static int computeCrcSkillEntry(SkillInfo si) {
+        // SKILLENTRY::InitCrc
+        int crc = getCrc32(95, 0);
+        crc = getCrc32(crc, 0);
+        // SKILLENTRY::AddCrc
+        // TODO
+        return crc;
+    }
+
+    public static int computeCrcSkillLevelData(SkillInfo si, int slv) {
         // SKILLLEVELDATA::CalcCrc
         int crc = getCrc32(ServerConstants.GAME_VERSION, 0);
         crc = getCrc32(si.getStatAction() != null ? si.getStatAction().getValue() : -1, crc);

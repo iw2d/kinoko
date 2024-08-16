@@ -262,7 +262,7 @@ public final class MobTemplate {
         boolean onlyNormalAttack = false;
         final Map<Integer, MobAttack> attacks = new HashMap<>();
         final Map<Integer, MobSkill> skills = new HashMap<>();
-        final Map<ElementAttribute, DamagedAttribute> damagedElemAttr = new HashMap<>();
+        final Map<ElementAttribute, DamagedAttribute> damagedElemAttr = new EnumMap<>(ElementAttribute.class);
         final Set<Integer> damagedBySkill = new HashSet<>();
         final List<Integer> revives = new ArrayList<>();
         // Process attacks

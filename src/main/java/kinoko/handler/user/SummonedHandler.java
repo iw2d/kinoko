@@ -3,8 +3,8 @@ package kinoko.handler.user;
 import kinoko.handler.Handler;
 import kinoko.packet.user.SummonedPacket;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
@@ -113,19 +113,17 @@ public final class SummonedHandler {
             attack.getAttackInfo().add(ai);
         }
 
-        inPacket.decodeInt(); // Crc
+        attack.crc = inPacket.decodeInt(); // Crc
 
-        // Check summoned attack info
-        final Optional<SummonedAttackInfo> summonedAttackInfoResult = SkillProvider.getSummonedAttackInfo(summoned.getSkillId(), actionType);
-        if (summonedAttackInfoResult.isEmpty()) {
-            log.error("Failed to resolve summoned attack info for summoned with skill id : {}, action type : {}", summoned.getSkillId(), actionType);
+        // Check CRC
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(summoned.getSkillId());
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not to resolve skill info for summoned attack for {}", summoned);
             return;
         }
-        final SummonedAttackInfo sai = summonedAttackInfoResult.get();
-        final int expectedMobCount = sai.getMobCount();
-        if (actionType != SummonedActionType.ATTACK_TRIANGLE && expectedMobCount < attack.getMobCount()) {
-            log.error("Received SummonedAttack with mob count greater than expected : {}, actual : {}", sai.getMobCount(), attack.getMobCount());
-            return;
+        final SkillInfo si = skillInfoResult.get();
+        if (si.getSkillEntryCrc() != attack.crc) {
+            log.warn("Received mismatching CRC for summoned attack for skill ID : {}", attack.skillId);
         }
 
         // Skill specific handling

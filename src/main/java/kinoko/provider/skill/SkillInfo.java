@@ -5,6 +5,7 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Crc32;
 import kinoko.util.Rect;
+import kinoko.world.field.summoned.SummonedActionType;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
@@ -30,9 +31,12 @@ public final class SkillInfo {
     private final ActionType statAction;
     private final Rect rect;
     private final ElementAttribute elemAttr;
+    private final Map<SummonedActionType, SummonedAttackInfo> summonedAttack;
+
+    private final int skillEntryCrc;
     private final List<Integer> levelDataCrc;
 
-    public SkillInfo(int skillId, int maxLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, List<ActionType> action, Map<SkillStat, List<Integer>> stats, ActionType statAction, Rect rect, ElementAttribute elemAttr) {
+    public SkillInfo(int skillId, int maxLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, List<ActionType> action, Map<SkillStat, List<Integer>> stats, ActionType statAction, Rect rect, ElementAttribute elemAttr, Map<SummonedActionType, SummonedAttackInfo> summonedAttack) {
         this.skillId = skillId;
         this.maxLevel = maxLevel;
         this.invisible = invisible;
@@ -44,8 +48,12 @@ public final class SkillInfo {
         this.statAction = statAction;
         this.rect = rect;
         this.elemAttr = elemAttr;
+        this.summonedAttack = summonedAttack;
+
+        // Compute Skill CRC
+        this.skillEntryCrc = Crc32.computeCrcSkillEntry(this);
         this.levelDataCrc = IntStream.rangeClosed(0, maxLevel + (combatOrders ? 2 : 0))
-                .map((slv) -> Crc32.computeCrc32(this, slv))
+                .map((slv) -> Crc32.computeCrcSkillLevelData(this, slv))
                 .boxed()
                 .toList();
     }
@@ -96,6 +104,14 @@ public final class SkillInfo {
 
     public ElementAttribute getElemAttr() {
         return elemAttr;
+    }
+
+    public Map<SummonedActionType, SummonedAttackInfo> getSummonedAttack() {
+        return summonedAttack;
+    }
+
+    public int getSkillEntryCrc() {
+        return skillEntryCrc;
     }
 
     public int getLevelDataCrc(int slv) {
@@ -170,6 +186,7 @@ public final class SkillInfo {
                 ", statAction=" + statAction +
                 ", rect=" + rect +
                 ", elemAttr=" + elemAttr +
+                ", skillEntryCrc=" + skillEntryCrc +
                 ", levelDataCrc=" + levelDataCrc +
                 '}';
     }
@@ -227,31 +244,10 @@ public final class SkillInfo {
         if (maxLevel == 0) {
             throw new ProviderError("Could not resolve skill max level");
         }
-        // Resolve psd skills
-        final List<Integer> psdSkills = new ArrayList<>();
-        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
-            for (var entry : psdProp.getItems().entrySet()) {
-                psdSkills.add(Integer.parseInt(entry.getKey()));
-            }
-        }
-        // Resolve action
-        final List<ActionType> action = new ArrayList<>();
-        if (skillProp.get("action") instanceof WzListProperty actionProp) {
-            for (var entry : actionProp.getItems().entrySet()) {
-                action.add(ActionType.getByName(WzProvider.getString(entry.getValue())));
-            }
-        }
-        // Resolve element attribute
-        final ElementAttribute elemAttr;
-        final String elemAttrString = skillProp.get("elemAttr");
-        if (elemAttrString != null) {
-            if (elemAttrString.length() != 1) {
-                throw new ProviderError("Failed to resolve skill element attribute");
-            }
-            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
-        } else {
-            elemAttr = ElementAttribute.PHYSICAL;
-        }
+        final List<Integer> psdSkills = resolvePsdSkills(skillProp);
+        final List<ActionType> action = resolveAction(skillProp);
+        final ElementAttribute elemAttr = resolveElemAttr(skillProp);
+        final Map<SummonedActionType, SummonedAttackInfo> summonedAttack = resolveSummonedAttack(skillProp);
         return new SkillInfo(
                 skillId,
                 maxLevel,
@@ -263,7 +259,8 @@ public final class SkillInfo {
                 Collections.unmodifiableMap(stats),
                 statAction,
                 rect,
-                elemAttr
+                elemAttr,
+                summonedAttack
         );
     }
 
@@ -311,31 +308,10 @@ public final class SkillInfo {
             }
             stats.put(stat, levelData);
         }
-        // Resolve psd skills
-        final List<Integer> psdSkills = new ArrayList<>();
-        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
-            for (var entry : psdProp.getItems().entrySet()) {
-                psdSkills.add(Integer.parseInt(entry.getKey()));
-            }
-        }
-        // Resolve action
-        final List<ActionType> action = new ArrayList<>();
-        if (skillProp.get("action") instanceof WzListProperty actionProp) {
-            for (var entry : actionProp.getItems().entrySet()) {
-                action.add(ActionType.getByName(WzProvider.getString(entry.getValue())));
-            }
-        }
-        // Resolve element attribute
-        final ElementAttribute elemAttr;
-        final String elemAttrString = skillProp.get("elemAttr");
-        if (elemAttrString != null) {
-            if (elemAttrString.length() != 1) {
-                throw new ProviderError("Failed to resolve skill element attribute");
-            }
-            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
-        } else {
-            elemAttr = ElementAttribute.PHYSICAL;
-        }
+        final List<Integer> psdSkills = resolvePsdSkills(skillProp);
+        final List<ActionType> action = resolveAction(skillProp);
+        final ElementAttribute elemAttr = resolveElemAttr(skillProp);
+        final Map<SummonedActionType, SummonedAttackInfo> summonedAttack = resolveSummonedAttack(skillProp);
         return new SkillInfo(
                 skillId,
                 maxLevel,
@@ -347,7 +323,57 @@ public final class SkillInfo {
                 Collections.unmodifiableMap(stats),
                 statAction,
                 rect,
-                elemAttr
-        );
+                elemAttr,
+                summonedAttack);
+    }
+
+    private static List<Integer> resolvePsdSkills(WzListProperty skillProp) {
+        final List<Integer> psdSkills = new ArrayList<>();
+        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
+            for (var entry : psdProp.getItems().entrySet()) {
+                psdSkills.add(Integer.parseInt(entry.getKey()));
+            }
+        }
+        return psdSkills;
+    }
+
+    private static List<ActionType> resolveAction(WzListProperty skillProp) {
+        final List<ActionType> action = new ArrayList<>();
+        if (skillProp.get("action") instanceof WzListProperty actionProp) {
+            for (var entry : actionProp.getItems().entrySet()) {
+                action.add(ActionType.getByName(WzProvider.getString(entry.getValue())));
+            }
+        }
+        return action;
+    }
+
+    private static ElementAttribute resolveElemAttr(WzListProperty skillProp) throws ProviderError {
+        final String elemAttrString = skillProp.get("elemAttr");
+        if (elemAttrString != null) {
+            if (elemAttrString.length() != 1) {
+                throw new ProviderError("Failed to resolve skill element attribute");
+            }
+            return ElementAttribute.getByValue(elemAttrString.charAt(0));
+        } else {
+            return ElementAttribute.PHYSICAL;
+        }
+    }
+
+    private static Map<SummonedActionType, SummonedAttackInfo> resolveSummonedAttack(WzListProperty skillProp) {
+        final Map<SummonedActionType, SummonedAttackInfo> summonedAttack = new EnumMap<>(SummonedActionType.class);
+        if (skillProp.get("summon") instanceof WzListProperty summonProp) {
+            for (var summonEntry : summonProp.getItems().entrySet()) {
+                if (!(summonEntry.getValue() instanceof WzListProperty attackProp) ||
+                        !(attackProp.get("info") instanceof WzListProperty infoProp)) {
+                    continue;
+                }
+                final SummonedActionType actionType = SummonedActionType.getByName(summonEntry.getKey());
+                if (actionType == null) {
+                    throw new ProviderError("Failed to resolve summoned action type %s", summonEntry.getKey());
+                }
+                summonedAttack.put(actionType, SummonedAttackInfo.from(infoProp));
+            }
+        }
+        return summonedAttack;
     }
 }

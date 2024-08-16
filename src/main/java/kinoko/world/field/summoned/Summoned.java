@@ -110,6 +110,23 @@ public final class Summoned extends Life implements Lockable<Summoned> {
     }
 
     @Override
+    public String toString() {
+        return "Summoned{" +
+                "skillId=" + skillId +
+                ", skillLevel=" + skillLevel +
+                ", moveAbility=" + moveAbility +
+                ", assistType=" + assistType +
+                ", avatarLook=" + avatarLook +
+                ", expireTime=" + expireTime +
+                ", enterType=" + enterType +
+                ", leaveType=" + leaveType +
+                ", rect=" + rect +
+                ", hp=" + hp +
+                ", teslaCoilState=" + teslaCoilState +
+                '}';
+    }
+
+    @Override
     public void lock() {
         lock.lock();
     }

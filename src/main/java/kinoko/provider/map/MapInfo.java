@@ -63,7 +63,7 @@ public final class MapInfo {
         }
 
         // Compute Field CRC
-        this.fieldCrc = Crc32.computeCrc32(MapProvider.getConstantCrc(), this);
+        this.fieldCrc = Crc32.computeCrcField(MapProvider.getConstantCrc(), this);
     }
 
     public int getMapId() {
