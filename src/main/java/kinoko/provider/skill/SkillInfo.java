@@ -3,11 +3,12 @@ package kinoko.provider.skill;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Crc32;
 import kinoko.util.Rect;
-import kinoko.util.Triple;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
+import kinoko.world.skill.ActionType;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
@@ -15,6 +16,7 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public final class SkillInfo {
     private final int skillId;
@@ -23,22 +25,29 @@ public final class SkillInfo {
     private final boolean combatOrders;
     private final boolean psd;
     private final List<Integer> psdSkills;
+    private final List<ActionType> action;
     private final Map<SkillStat, List<Integer>> stats;
+    private final ActionType statAction;
     private final Rect rect;
     private final ElementAttribute elemAttr;
-    private final List<Integer> crc;
+    private final List<Integer> levelDataCrc;
 
-    public SkillInfo(int skillId, int maxLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, Map<SkillStat, List<Integer>> stats, Rect rect, ElementAttribute elemAttr, List<Integer> crc) {
+    public SkillInfo(int skillId, int maxLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, List<ActionType> action, Map<SkillStat, List<Integer>> stats, ActionType statAction, Rect rect, ElementAttribute elemAttr) {
         this.skillId = skillId;
         this.maxLevel = maxLevel;
         this.invisible = invisible;
         this.combatOrders = combatOrders;
         this.psd = psd;
         this.psdSkills = psdSkills;
+        this.action = action;
         this.stats = stats;
+        this.statAction = statAction;
         this.rect = rect;
         this.elemAttr = elemAttr;
-        this.crc = crc;
+        this.levelDataCrc = IntStream.rangeClosed(0, maxLevel + (combatOrders ? 2 : 0))
+                .map((slv) -> Crc32.computeCrc32(this, slv))
+                .boxed()
+                .toList();
     }
 
     public int getSkillId() {
@@ -77,15 +86,23 @@ public final class SkillInfo {
         return rect;
     }
 
+    public List<ActionType> getAction() {
+        return action;
+    }
+
+    public ActionType getStatAction() {
+        return statAction;
+    }
+
     public ElementAttribute getElemAttr() {
         return elemAttr;
     }
 
-    public int getCrc(int slv) {
-        if (slv < 0 || slv >= crc.size()) {
+    public int getLevelDataCrc(int slv) {
+        if (slv < 0 || slv >= levelDataCrc.size()) {
             return 0;
         }
-        return crc.get(slv);
+        return levelDataCrc.get(slv);
     }
 
 
@@ -148,65 +165,28 @@ public final class SkillInfo {
                 ", combatOrders=" + combatOrders +
                 ", psd=" + psd +
                 ", psdSkills=" + psdSkills +
+                ", action=" + action +
                 ", stats=" + stats +
+                ", statAction=" + statAction +
                 ", rect=" + rect +
                 ", elemAttr=" + elemAttr +
-                ", crc=" + crc +
+                ", levelDataCrc=" + levelDataCrc +
                 '}';
     }
 
     public static SkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {
-        // Resolve skill stats
-        final Triple<Map<SkillStat, List<Integer>>, Integer, Rect> triple = resolveStats(skillProp);
-        final Map<SkillStat, List<Integer>> stats = triple.getFirst();
-        final int maxLevel = triple.getSecond();
-        final Rect rect = triple.getThird();
-        // Resolve psd skills
-        final List<Integer> psdSkills = new ArrayList<>();
-        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
-            for (var entry : psdProp.getItems().entrySet()) {
-                psdSkills.add(Integer.parseInt(entry.getKey()));
-            }
-        }
-        final ElementAttribute elemAttr;
-        final String elemAttrString = skillProp.get("elemAttr");
-        if (elemAttrString != null) {
-            if (elemAttrString.length() != 1) {
-                throw new ProviderError("Failed to resolve skill element attribute");
-            }
-            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
-        } else {
-            elemAttr = ElementAttribute.PHYSICAL;
-        }
-        // Compute CRC
-        final List<Integer> crc = new ArrayList<>();
-        // TODO
-        return new SkillInfo(
-                skillId,
-                maxLevel,
-                WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
-                WzProvider.getInteger(skillProp.get("combatOrders"), 0) != 0,
-                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
-                Collections.unmodifiableList(psdSkills),
-                Collections.unmodifiableMap(stats),
-                rect,
-                elemAttr,
-                Collections.unmodifiableList(crc)
-        );
-    }
-
-    private static Triple<Map<SkillStat, List<Integer>>, Integer, Rect> resolveStats(WzListProperty skillProp) throws ProviderError {
         if (skillProp.get("level") instanceof WzListProperty) {
-            return resolveStaticStats(skillProp);
+            return fromStatic(skillId, skillProp);
         } else {
-            return resolveComputedStats(skillProp);
+            return fromComputed(skillId, skillProp);
         }
     }
 
-    private static Triple<Map<SkillStat, List<Integer>>, Integer, Rect> resolveStaticStats(WzListProperty skillProp) throws ProviderError {
+    private static SkillInfo fromStatic(int skillId, WzListProperty skillProp) throws ProviderError {
         final Map<SkillStat, List<Integer>> stats = new EnumMap<>(SkillStat.class);
-        int maxLevel = 0;
+        ActionType statAction = null;
         Rect rect = null;
+        int maxLevel = 0;
         if (skillProp.get("level") instanceof WzListProperty levelProps) {
             for (int slv = 1; slv < Integer.MAX_VALUE; slv++) {
                 if (!(levelProps.get(String.valueOf(slv)) instanceof WzListProperty statProp)) {
@@ -223,10 +203,13 @@ public final class SkillInfo {
                         case maxLevel -> {
                             maxLevel = WzProvider.getInteger(entry.getValue());
                         }
+                        case action -> {
+                            statAction = ActionType.getByName(WzProvider.getString(entry.getValue()));
+                        }
                         case lt -> {
                             rect = WzProvider.getRect(statProp);
                         }
-                        case rb, hs, hit, ball, action, dateExpire -> {
+                        case rb, hs, hit, ball, dateExpire -> {
                             // skip; rb is handled by lt
                         }
                         default -> {
@@ -242,17 +225,51 @@ public final class SkillInfo {
             }
         }
         if (maxLevel == 0) {
-            throw new ProviderError("Could not resolve static skill info");
+            throw new ProviderError("Could not resolve skill max level");
         }
-        return Triple.of(
-                stats,
+        // Resolve psd skills
+        final List<Integer> psdSkills = new ArrayList<>();
+        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
+            for (var entry : psdProp.getItems().entrySet()) {
+                psdSkills.add(Integer.parseInt(entry.getKey()));
+            }
+        }
+        // Resolve action
+        final List<ActionType> action = new ArrayList<>();
+        if (skillProp.get("action") instanceof WzListProperty actionProp) {
+            for (var entry : actionProp.getItems().entrySet()) {
+                action.add(ActionType.getByName(WzProvider.getString(entry.getValue())));
+            }
+        }
+        // Resolve element attribute
+        final ElementAttribute elemAttr;
+        final String elemAttrString = skillProp.get("elemAttr");
+        if (elemAttrString != null) {
+            if (elemAttrString.length() != 1) {
+                throw new ProviderError("Failed to resolve skill element attribute");
+            }
+            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
+        } else {
+            elemAttr = ElementAttribute.PHYSICAL;
+        }
+        return new SkillInfo(
+                skillId,
                 maxLevel,
-                rect
+                WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("combatOrders"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
+                Collections.unmodifiableList(psdSkills),
+                Collections.unmodifiableList(action),
+                Collections.unmodifiableMap(stats),
+                statAction,
+                rect,
+                elemAttr
         );
     }
 
-    private static Triple<Map<SkillStat, List<Integer>>, Integer, Rect> resolveComputedStats(WzListProperty skillProp) throws ProviderError {
+    private static SkillInfo fromComputed(int skillId, WzListProperty skillProp) throws ProviderError {
         final Map<SkillStat, SkillExpression> expressions = new EnumMap<>(SkillStat.class);
+        ActionType statAction = null;
         Rect rect = null;
         int maxLevel = 0;
         if (skillProp.get("common") instanceof WzListProperty commonProps) {
@@ -262,10 +279,13 @@ public final class SkillInfo {
                     case maxLevel -> {
                         maxLevel = WzProvider.getInteger(entry.getValue());
                     }
+                    case action -> {
+                        statAction = ActionType.getByName(WzProvider.getString(entry.getValue()));
+                    }
                     case lt -> {
                         rect = WzProvider.getRect(commonProps);
                     }
-                    case rb, hs, hit, ball, action, dateExpire -> {
+                    case rb, hs, hit, ball, dateExpire -> {
                         // skip; rb is handled by lt
                     }
                     default -> {
@@ -273,6 +293,9 @@ public final class SkillInfo {
                     }
                 }
             }
+        }
+        if (maxLevel == 0) {
+            throw new ProviderError("Could not resolve skill max level");
         }
         // Resolve maximum level required
         final boolean combatOrders = WzProvider.getInteger(skillProp.get("combatOrders"), 0) != 0;
@@ -288,10 +311,43 @@ public final class SkillInfo {
             }
             stats.put(stat, levelData);
         }
-        return Triple.of(
-                stats,
+        // Resolve psd skills
+        final List<Integer> psdSkills = new ArrayList<>();
+        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
+            for (var entry : psdProp.getItems().entrySet()) {
+                psdSkills.add(Integer.parseInt(entry.getKey()));
+            }
+        }
+        // Resolve action
+        final List<ActionType> action = new ArrayList<>();
+        if (skillProp.get("action") instanceof WzListProperty actionProp) {
+            for (var entry : actionProp.getItems().entrySet()) {
+                action.add(ActionType.getByName(WzProvider.getString(entry.getValue())));
+            }
+        }
+        // Resolve element attribute
+        final ElementAttribute elemAttr;
+        final String elemAttrString = skillProp.get("elemAttr");
+        if (elemAttrString != null) {
+            if (elemAttrString.length() != 1) {
+                throw new ProviderError("Failed to resolve skill element attribute");
+            }
+            elemAttr = ElementAttribute.getByValue(elemAttrString.charAt(0));
+        } else {
+            elemAttr = ElementAttribute.PHYSICAL;
+        }
+        return new SkillInfo(
+                skillId,
                 maxLevel,
-                rect
+                WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("combatOrders"), 0) != 0,
+                WzProvider.getInteger(skillProp.get("psd"), 0) != 0,
+                Collections.unmodifiableList(psdSkills),
+                Collections.unmodifiableList(action),
+                Collections.unmodifiableMap(stats),
+                statAction,
+                rect,
+                elemAttr
         );
     }
 }

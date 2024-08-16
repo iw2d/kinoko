@@ -1,6 +1,8 @@
 package kinoko.util;
 
 import kinoko.provider.map.*;
+import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SkillStat;
 import kinoko.server.ServerConstants;
 
 import java.util.List;
@@ -212,6 +214,33 @@ public final class Crc32 {
             crc = getCrc32(pi.getVImpact(), crc); // nVImpact
             crc = getCrc32(pi.getHImpact(), crc); // nHImpact
         }
+        return crc;
+    }
+
+    public static int computeCrc32(SkillInfo si, int slv) {
+        // SKILLLEVELDATA::CalcCrc
+        int crc = getCrc32(ServerConstants.GAME_VERSION, 0);
+        crc = getCrc32(si.getStatAction() != null ? si.getStatAction().getValue() : -1, crc);
+        crc = getCrc32(si.getValue(SkillStat.speed, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.jump, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.hpCon, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.mpCon, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.damage, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.fixdamage, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.selfDestruction, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.prop, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.range, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.mobCount, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.attackCount, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.bulletCount, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.acc, slv), crc);
+        crc = getCrc32(si.getValue(SkillStat.cooltime, slv), crc);
+        // rcAffectedArea
+        final Rect rect = si.getRect() != null ? si.getRect() : Rect.of(0, 0, 0, 0);
+        crc = getCrc32(rect.getLeft(), crc);
+        crc = getCrc32(rect.getRight(), crc);
+        crc = getCrc32(rect.getTop(), crc);
+        crc = getCrc32(rect.getBottom(), crc);
         return crc;
     }
 }

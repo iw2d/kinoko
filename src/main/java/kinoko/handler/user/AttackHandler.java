@@ -311,17 +311,16 @@ public final class AttackHandler {
                 log.error("Tried to attack with skill {} while sealed", attack.skillId);
                 return;
             }
-            // Resolve skill info
+            // Resolve skill info and check CRC
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
             if (skillInfoResult.isEmpty()) {
                 log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
                 return;
             }
-            // Check CRC
-//            if (skillInfoResult.get().getCrc(attack.slv) != attack.crc) {
-//                log.error("Tried to attack with mismatching CRC for skill {}", attack.skillId);
-//                return;
-//            }
+            final SkillInfo si = skillInfoResult.get();
+            if (si.getLevelDataCrc(attack.slv) != attack.crc) {
+                log.warn("Attacking with mismatching CRC for skill {}", attack.skillId);
+            }
         }
 
         // Check morph
