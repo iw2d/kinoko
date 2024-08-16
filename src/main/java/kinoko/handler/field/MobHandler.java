@@ -46,7 +46,7 @@ public final class MobHandler {
         final Field field = user.getField();
         final Optional<Mob> mobResult = field.getMobPool().getById(objectId);
         if (mobResult.isEmpty()) {
-            log.error("Received MobMove for invalid object with ID : {}", objectId);
+            // log.error("Received MobMove for invalid object with ID : {}", objectId);
             return;
         }
         try (var lockedMob = mobResult.get().acquire()) {

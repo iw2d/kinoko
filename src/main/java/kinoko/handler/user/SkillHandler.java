@@ -109,7 +109,7 @@ public final class SkillHandler {
         try (var locked = user.acquire()) {
             // Check skill root
             final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
-            if (skillRoot != 0 && !JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot)) {
+            if (!JobConstants.isBeginnerJob(skillRoot) && !JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot)) {
                 log.error("Tried to use skill {} as incorrect job : {}", skill.skillId, user.getJob());
                 user.dispose();
                 return;

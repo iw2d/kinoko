@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 public final class Crc32Test {
     @Test
     public void testCrc32() {
+        Assertions.assertEquals(0, Crc32.getCrc32(0, 0));
         Assertions.assertEquals(954028113, Crc32.getCrc32(270, 0));
         Assertions.assertEquals(1249903702, Crc32.getCrc32(-1016079465, 0));
         Assertions.assertEquals(-1187362276, Crc32.getCrc32(0, 909429344));

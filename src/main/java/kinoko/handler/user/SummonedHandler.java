@@ -96,7 +96,7 @@ public final class SummonedHandler {
 
         inPacket.decodeInt(); // CUserLocal::GetRepeatSkillPoint
 
-        for (int i = 0; i < attack.getMobCount(); i++) {
+        while (inPacket.getRemaining() > 4) {
             final AttackInfo ai = new AttackInfo();
             ai.mobId = inPacket.decodeInt(); // mobID
             inPacket.decodeInt(); // dwTemplateID
@@ -123,7 +123,7 @@ public final class SummonedHandler {
         }
         final SkillInfo si = skillInfoResult.get();
         if (si.getSkillEntryCrc() != attack.crc) {
-            log.warn("Received mismatching CRC for summoned attack for skill ID : {}", attack.skillId);
+            log.warn("Received mismatching CRC for summoned attack for skill ID : {}", summoned.getSkillId());
         }
 
         // Skill specific handling

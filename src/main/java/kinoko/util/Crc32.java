@@ -3,9 +3,11 @@ package kinoko.util;
 import kinoko.provider.map.*;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.provider.skill.SummonedAttackInfo;
 import kinoko.server.ServerConstants;
 
 import java.util.List;
+import java.util.Map;
 
 public final class Crc32 {
     private static final int[] CRC_32_TABLE = new int[]{
@@ -219,10 +221,30 @@ public final class Crc32 {
 
     public static int computeCrcSkillEntry(SkillInfo si) {
         // SKILLENTRY::InitCrc
-        int crc = getCrc32(95, 0);
+        int crc = getCrc32(ServerConstants.GAME_VERSION, 0);
         crc = getCrc32(crc, 0);
         // SKILLENTRY::AddCrc
-        // TODO
+        for (var entry : si.getSummonedAttack().entrySet().stream()
+                .filter(entry -> entry.getKey().isAttack())
+                .sorted(Map.Entry.comparingByKey())
+                .toList()) {
+            final SummonedAttackInfo sai = entry.getValue();
+            if (sai.isSp()) {
+                crc ^= getCrc32(sai.getSpX(), 0);
+                crc ^= getCrc32(sai.getSpY(), 0);
+                crc ^= getCrc32(sai.getRange(), 0);
+            }
+            crc ^= getCrc32(sai.getMobCount(), 0);
+            // rcRange
+            final Rect rect = sai.getRect();
+            if (rect != null) {
+                int rectCrc = getCrc32(rect.getBottom(), 0);
+                rectCrc |= getCrc32(rect.getRight(), 0);
+                rectCrc |= getCrc32(rect.getTop(), 0);
+                rectCrc |= getCrc32(rect.getLeft(), 0);
+                crc ^= rectCrc;
+            }
+        }
         return crc;
     }
 

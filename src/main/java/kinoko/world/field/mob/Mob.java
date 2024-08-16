@@ -347,7 +347,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         attacker.write(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
         // Handle death
         if (getHp() <= 0) {
-            getField().broadcastPacket(changeControllerPacket(false));
+            if (getController() != null) {
+                getController().write(changeControllerPacket(false));
+            }
             if (getField().getMobPool().removeMob(this)) {
                 distributeExp();
                 dropRewards(attacker);

@@ -73,6 +73,16 @@ public final class Rect {
         );
     }
 
+    @Override
+    public String toString() {
+        return "Rect{" +
+                "left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }
+
     public static Rect of(int left, int top, int right, int bottom) {
         return new Rect(
                 left, top, right, bottom

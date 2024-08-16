@@ -33,6 +33,13 @@ public enum SummonedActionType {
         return value;
     }
 
+    public boolean isAttack() {
+        return switch (this) {
+            case ATTACK1, ATTACK2, ATTACK_TRIANGLE -> true;
+            default -> false;
+        };
+    }
+
     public static SummonedActionType getByValue(int value) {
         for (SummonedActionType type : values()) {
             if (type.getValue() == value) {

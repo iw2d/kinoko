@@ -20,6 +20,14 @@ public final class Tuple<L, R> {
     }
 
     @Override
+    public String toString() {
+        return "Tuple{" +
+                "left=" + left +
+                ", right=" + right +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

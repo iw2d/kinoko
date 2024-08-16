@@ -26,6 +26,15 @@ public final class Triple<T, U, V> {
     }
 
     @Override
+    public String toString() {
+        return "Triple{" +
+                "first=" + first +
+                ", second=" + second +
+                ", third=" + third +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
