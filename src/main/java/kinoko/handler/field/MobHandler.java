@@ -198,7 +198,7 @@ public final class MobHandler {
         }
         try (var lockedMob = mobResult.get().acquire()) {
             final Mob mob = lockedMob.get();
-            mob.damage(user, damage);
+            mob.damage(user, damage, 0);
             mob.getField().broadcastPacket(MobPacket.mobDamaged(mob, damage), user);
         }
     }
@@ -315,10 +315,10 @@ public final class MobHandler {
             targetMobs.add(mob);
             for (Mob targetMob : targetMobs) {
                 if (mob == targetMob) {
-                    mob.setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                    mob.setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)), 0);
                 } else {
                     try (var lockedTarget = targetMob.acquire()) {
-                        lockedTarget.get().setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                        lockedTarget.get().setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)), 0);
                     }
                 }
             }
@@ -375,13 +375,13 @@ public final class MobHandler {
                 mob.setTemporaryStat(Map.of(
                         MobTemporaryStat.PImmune, MobStatOption.ofMobSkill(1, skillId, slv, si.getDuration(slv)),
                         MobTemporaryStat.PCounter, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv))
-                ));
+                ), 0);
             }
             case MCOUNTER -> {
                 mob.setTemporaryStat(Map.of(
                         MobTemporaryStat.MImmune, MobStatOption.ofMobSkill(1, skillId, slv, si.getDuration(slv)),
                         MobTemporaryStat.MCounter, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv))
-                ));
+                ), 0);
             }
             case PMCOUNTER -> {
                 mob.setTemporaryStat(Map.of(
@@ -389,7 +389,7 @@ public final class MobHandler {
                         MobTemporaryStat.MImmune, MobStatOption.ofMobSkill(1, skillId, slv, si.getDuration(slv)),
                         MobTemporaryStat.PCounter, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)),
                         MobTemporaryStat.MCounter, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv))
-                ));
+                ), 0);
             }
             default -> {
                 log.error("Unhandled mob skill type {}", skillType);

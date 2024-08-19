@@ -137,66 +137,68 @@ public final class Thief extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case SHADOW_MESO:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     mob.resetTemporaryStat(Set.of(MobTemporaryStat.PGuardUp, MobTemporaryStat.MGuardUp));
                 });
                 break;
             case TAUNT_NL:
             case TAUNT_SHAD:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
-                        ));
+                        ), delay);
                     }
                 });
                 break;
             case ASSAULTER:
             case BOOMERANG_STEP:
             case FLYING_ASSAULTER:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case STEAL:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                         mob.steal(user);
                     }
                 });
                 break;
             case MESO_EXPLOSION:
+                int index = 0;
                 for (int dropId : attack.drops) {
                     final Optional<Drop> dropResult = field.getDropPool().getById(dropId);
                     if (dropResult.isEmpty() || !dropResult.get().isMoney()) {
                         log.error("Received invalid drop ID {} for meso explosion skill", dropId);
                         continue;
                     }
-                    field.getDropPool().removeDrop(dropResult.get(), DropLeaveType.EXPLODE, 0, 0, attack.dropExplodeDelay);
+                    final int delay = Math.min(attack.dropExplodeDelay + 100 * (index++ % 5), 1000);
+                    field.getDropPool().removeDrop(dropResult.get(), DropLeaveType.EXPLODE, 0, 0, delay);
                 }
                 break;
             case FLASHBANG:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case UPPER_STAB:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
-                        mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000));
+                        mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000), delay);
                     }
                 });
                 break;
             case SUDDEN_RAID:
-                attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                attack.forEachMob(field, (mob, delay) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 });
                 break;
             case FINAL_CUT:
@@ -225,7 +227,7 @@ public final class Thief extends SkillProcessor {
                 final int damage = (int) Math.clamp(CalcDamage.calcDamageMax(user) * si.getValue(SkillStat.damage, slv) / 100, 1.0, GameConstants.DAMAGE_MAX);
                 final int dotCount = si.getValue(SkillStat.time, slv); // duration / interval
                 skill.forEachAffectedMob(field, (mob) -> {
-                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId, damage, 1000, dotCount));
+                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId, damage, 1000, dotCount), 0);
                 });
                 return;
 
@@ -271,7 +273,7 @@ public final class Thief extends SkillProcessor {
             case MONSTER_BOMB:
                 skill.forEachAffectedMob(field, (mob) -> {
                     field.broadcastPacket(MobPacket.mobAffected(mob, skillId, 0));
-                    mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL)); // for MobTimeBombEnd check
+                    mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL), 0); // for MobTimeBombEnd check
                 });
                 return;
             case CHAINS_OF_HELL:

@@ -97,28 +97,28 @@ public final class Bowman extends SkillProcessor {
             case SILVER_HAWK:
             case GOLDEN_EAGLE:
             case PHOENIX: // knock-down?
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case INFERNO:
-                attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                attack.forEachMob(field, (mob, delay) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 });
                 break;
             case VENGEANCE:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case BLIZZARD:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;

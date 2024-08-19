@@ -127,24 +127,24 @@ public final class Warrior extends SkillProcessor {
         switch (skillId) {
             case MONSTER_MAGNET_HERO:
             case MONSTER_MAGNET_DRK:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 return;
             case SHOUT:
             case CHARGED_BLOW:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case BLAST:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.damage(user, mob.getHp());
+                        mob.damage(user, mob.getHp(), delay);
                     }
                 });
             case HEAVENS_HAMMER:
@@ -170,7 +170,7 @@ public final class Warrior extends SkillProcessor {
             case MAGIC_CRASH_DRK:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)), 0);
                     }
                 });
                 return;
@@ -197,7 +197,7 @@ public final class Warrior extends SkillProcessor {
                                 MobTemporaryStat.MAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.z, slv), skillId, si.getValue(SkillStat.subTime, slv) * 1000)
-                        ));
+                        ), 0);
                     }
                 });
                 return;

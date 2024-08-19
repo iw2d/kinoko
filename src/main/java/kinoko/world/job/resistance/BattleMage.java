@@ -74,16 +74,16 @@ public final class BattleMage extends SkillProcessor {
         switch (skillId) {
             case DARK_CHAIN:
             case ADVANCED_DARK_CHAIN:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case DARK_GENESIS:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;

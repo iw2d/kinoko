@@ -192,7 +192,7 @@ public final class HitHandler {
                 final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() * percentage / 100);
                 final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
                 // Process reflect damage and return amount to subtract from hit damage
-                mob.damage(user, finalDamage);
+                mob.damage(user, finalDamage, 0);
                 return finalDamage;
             }
         } else if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
@@ -205,7 +205,7 @@ public final class HitHandler {
                     final Mob mob = lockedMob.get();
                     final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() / 20); // skill description says 20% of max hp, but coded incorrectly in client
                     final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
-                    mob.damage(user, finalDamage);
+                    mob.damage(user, finalDamage, 0);
                     // no amount is subtracted from hit damage
                 }
             } else {
@@ -323,7 +323,7 @@ public final class HitHandler {
         if (knockbackMobResult.isPresent()) {
             // Acquire and stun mob
             try (var lockedMob = knockbackMobResult.get().acquire()) {
-                lockedMob.get().setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, Warrior.GUARDIAN, stunDuration * 1000));
+                lockedMob.get().setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, Warrior.GUARDIAN, stunDuration * 1000), 0);
             }
         }
     }
@@ -425,7 +425,7 @@ public final class HitHandler {
             attack.getAttackInfo().add(attackInfo);
             // Broadcast packet and process damage
             user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
-            mob.damage(user, attackInfo.damage[0]);
+            mob.damage(user, attackInfo.damage[0], 0);
         }
     }
 
@@ -478,7 +478,7 @@ public final class HitHandler {
                 attack.getAttackInfo().add(attackInfo);
                 // Broadcast packet and process damage
                 user.getField().broadcastPacket(SummonedPacket.summonedAttack(member, summoned, attack));
-                mob.damage(user, attackInfo.damage[0]);
+                mob.damage(user, attackInfo.damage[0], 0);
             }
         });
     }

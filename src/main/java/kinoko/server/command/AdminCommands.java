@@ -836,7 +836,7 @@ public final class AdminCommands {
         user.getField().getMobPool().forEach((mob) -> {
             try (var lockedMob = mob.acquire()) {
                 if (mob.getHp() > 0) {
-                    mob.damage(user, mob.getMaxHp());
+                    mob.damage(user, mob.getMaxHp(), 0);
                 }
             }
         });

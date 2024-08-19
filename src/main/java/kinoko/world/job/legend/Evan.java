@@ -86,22 +86,22 @@ public final class Evan extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case ICE_BREATH:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case FIRE_BREATH:
             case BLAZE:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case KILLER_WINGS:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
                         user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
                     }
@@ -109,8 +109,8 @@ public final class Evan extends SkillProcessor {
                 });
                 break;
             case PHANTOM_IMPRINT:
-                attack.forEachMob(field, (mob) -> {
-                    mob.setTemporaryStat(MobTemporaryStat.Weakness, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                attack.forEachMob(field, (mob, delay) -> {
+                    mob.setTemporaryStat(MobTemporaryStat.Weakness, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
                 });
                 break;
         }

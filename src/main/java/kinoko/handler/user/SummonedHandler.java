@@ -108,7 +108,7 @@ public final class SummonedHandler {
             inPacket.decodeShort(); // y?
             inPacket.decodeShort();
             inPacket.decodeShort();
-            inPacket.decodeShort(); // tDelay
+            ai.delay = Math.min(inPacket.decodeShort(), 1000); // tDelay
             ai.damage[0] = inPacket.decodeInt(); // aDamage[0]
             attack.getAttackInfo().add(ai);
         }
@@ -145,7 +145,7 @@ public final class SummonedHandler {
             // Acquire and damage mob
             final int totalDamage = Arrays.stream(ai.damage).sum();
             try (var lockedMob = mobResult.get().acquire()) {
-                lockedMob.get().damage(user, totalDamage);
+                lockedMob.get().damage(user, totalDamage, ai.delay);
             }
         }
 

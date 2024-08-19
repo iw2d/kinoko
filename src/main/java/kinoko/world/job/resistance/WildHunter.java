@@ -75,27 +75,27 @@ public final class WildHunter extends SkillProcessor {
             case DASH_N_SLASH:
             case SILVER_HAWK:
             case SONIC_ROAR:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case JAGUAR_RAWR:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case STINK_BOMB_SHOT:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
-                        ));
+                        ), delay);
                     }
                 });
                 break;
@@ -136,7 +136,7 @@ public final class WildHunter extends SkillProcessor {
                 try (var lockedMob = targetResult.get().acquire()) {
                     final Mob mob = lockedMob.get();
                     mob.setLeaveType(MobLeaveType.SWALLOW);
-                    mob.damage(user, mob.getHp());
+                    mob.damage(user, mob.getHp(), 0);
                 }
                 return;
             case JAGUAR_OSHI_DIGESTED:

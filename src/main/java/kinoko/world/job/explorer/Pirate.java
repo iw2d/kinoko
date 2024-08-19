@@ -108,22 +108,22 @@ public final class Pirate extends SkillProcessor {
             case DOUBLE_UPPERCUT:
             case SNATCH:
             case BLANK_SHOT:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case ENERGY_BLAST:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case GRENADE:
-                attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+                attack.forEachMob(field, (mob, delay) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 });
                 break;
             case GAVIOTA:
@@ -131,19 +131,19 @@ public final class Pirate extends SkillProcessor {
                 break;
             case FLAMETHROWER:
                 final int dot = si.getValue(SkillStat.dot, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.x);
-                attack.forEachMob(field, (mob) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, dot, mob));
+                attack.forEachMob(field, (mob, delay) -> {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, dot, mob), delay);
                 });
                 break;
             case ICE_SPLITTER:
                 final int time = si.getValue(SkillStat.time, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.y);
-                attack.forEachMob(field, (mob) -> {
-                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, time * 1000));
+                attack.forEachMob(field, (mob, delay) -> {
+                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, time * 1000), delay);
                 });
                 break;
             case HOMING_BEACON:
             case BULLSEYE:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
                         user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
                     }
@@ -151,9 +151,9 @@ public final class Pirate extends SkillProcessor {
                 });
                 break;
             case HYPNOTIZE:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                         if (mob.getController() != user) {
                             mob.setController(user);
                             user.write(MobPacket.mobChangeController(mob, true));

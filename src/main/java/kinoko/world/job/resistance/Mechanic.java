@@ -83,16 +83,16 @@ public final class Mechanic extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case ATOMIC_HAMMER:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case PUNCH_LAUNCHER:
-                attack.forEachMob(field, (mob) -> {
+                attack.forEachMob(field, (mob, delay) -> {
                     if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)));
+                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
@@ -201,7 +201,7 @@ public final class Mechanic extends SkillProcessor {
                                     MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 0),
                                     MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0),
                                     MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, 0)
-                            ));
+                            ), 0);
                         }
                     }
                 });

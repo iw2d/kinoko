@@ -10,6 +10,7 @@ public final class AttackInfo {
 
     public short hitX;
     public short hitY;
+    public int delay;
 
     public byte[] critical = new byte[15];
     public int[] damage = new int[15];
@@ -23,6 +24,7 @@ public final class AttackInfo {
                 ", attackCount=" + attackCount +
                 ", hitX=" + hitX +
                 ", hitY=" + hitY +
+                ", delay=" + delay +
                 ", critical=" + Arrays.toString(critical) +
                 ", damage=" + Arrays.toString(damage) +
                 '}';

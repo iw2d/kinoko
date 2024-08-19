@@ -90,12 +90,12 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobStatSet(Mob mob, MobStat mobStat, BitFlag<MobTemporaryStat> flag) {
+    public static OutPacket mobStatSet(Mob mob, MobStat mobStat, BitFlag<MobTemporaryStat> flag, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobStatSet);
         outPacket.encodeInt(mob.getId()); // dwMobID
         // CMob::ProcessStatSet
         mobStat.encodeTemporary(flag, outPacket);
-        outPacket.encodeShort(0); // tDelay
+        outPacket.encodeShort(delay); // tDelay
         outPacket.encodeByte(true); // nCalcDamageStatIndex
         outPacket.encodeByte(0); // MobStat::IsMovementAffectingStat -> bStat || bDoomReservedSN
         return outPacket;

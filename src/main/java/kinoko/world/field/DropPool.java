@@ -67,7 +67,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
     }
 
-    public void addDrops(List<Drop> drops, DropEnterType enterType, int centerX, int centerY, int addDelay) {
+    public void addDrops(List<Drop> drops, DropEnterType enterType, int centerX, int centerY, int initialDelay, int addDelay) {
         // Split and shuffle drops
         final List<Drop> normalDrops = new ArrayList<>();
         final List<Drop> questDrops = new ArrayList<>();
@@ -82,7 +82,7 @@ public final class DropPool extends FieldObjectPool<Drop> {
         Collections.shuffle(questDrops);
         // Add normal drops
         int dropX = centerX - (normalDrops.size() * GameConstants.DROP_SPREAD / 2);
-        int delay = 0;
+        int delay = initialDelay;
         for (Drop drop : normalDrops) {
             addDrop(drop, enterType, dropX, centerY, delay);
             dropX += GameConstants.DROP_SPREAD;

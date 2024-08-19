@@ -286,7 +286,7 @@ public final class AttackHandler {
                     ai.damage[j] = inPacket.decodeInt();
                 }
             } else {
-                inPacket.decodeShort(); // tDelay
+                ai.delay = Math.min(inPacket.decodeShort(), 1000); // tDelay
                 for (int j = 0; j < attack.getDamagePerMob(); j++) {
                     ai.damage[j] = inPacket.decodeInt();
                 }
@@ -504,17 +504,18 @@ public final class AttackHandler {
                     hpGain += Math.min(absorbAmount, user.getMaxHp() / 10);
                 }
                 // Process damage
-                mob.damage(user, totalDamage);
+                final int delay = attack.skillId == Thief.MESO_EXPLOSION ? attack.dropExplodeDelay : ai.delay;
+                mob.damage(user, totalDamage, delay);
                 mob.setMp(mob.getMp() - mpDamage);
                 mpGain += mpDamage;
                 // Process on-hit effects
                 if (mob.getHp() > 0) {
-                    handleHamString(user, mob);
-                    handleBlind(user, mob);
-                    handleVenom(user, mob);
-                    handleWeaponCharge(user, mob);
-                    handleEvanSlow(user, mob);
-                    handleMortalBlow(user, mob);
+                    handleHamString(user, mob, ai.delay);
+                    handleBlind(user, mob, ai.delay);
+                    handleVenom(user, mob, ai.delay);
+                    handleWeaponCharge(user, mob, ai.delay);
+                    handleEvanSlow(user, mob, ai.delay);
+                    handleMortalBlow(user, mob, ai.delay);
                 }
                 // Process on-kill effects
                 if (mob.getHp() <= 0) {
@@ -630,7 +631,7 @@ public final class AttackHandler {
             }
         }
         if (!drops.isEmpty()) {
-            user.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT, 120);
+            user.getField().getDropPool().addDrops(drops, DropEnterType.CREATE, mob.getX(), mob.getY() - GameConstants.DROP_HEIGHT, 0, 120);
         }
     }
 
@@ -710,7 +711,7 @@ public final class AttackHandler {
         return Math.clamp(delta, 0, mob.getMp());
     }
 
-    private static void handleHamString(User user, Mob mob) {
+    private static void handleHamString(User user, Mob mob, int delay) {
         if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.HamString)) {
             return;
         }
@@ -724,11 +725,11 @@ public final class AttackHandler {
         }
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-            mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000));
+            mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000), delay);
         }
     }
 
-    private static void handleBlind(User user, Mob mob) {
+    private static void handleBlind(User user, Mob mob, int delay) {
         if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.Blind)) {
             return;
         }
@@ -742,11 +743,11 @@ public final class AttackHandler {
         }
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-            mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000));
+            mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000), delay);
         }
     }
 
-    private static void handleVenom(User user, Mob mob) {
+    private static void handleVenom(User user, Mob mob, int delay) {
         final int skillId = SkillConstants.getVenomSkill(user.getJob());
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
@@ -759,11 +760,11 @@ public final class AttackHandler {
         }
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-            mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob));
+            mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
         }
     }
 
-    private static void handleWeaponCharge(User user, Mob mob) {
+    private static void handleWeaponCharge(User user, Mob mob, int delay) {
         if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.WeaponCharge)) {
             return;
         }
@@ -772,17 +773,17 @@ public final class AttackHandler {
         if (skillId == Warrior.ICE_CHARGE) {
             final int duration = user.getSkillStatValue(skillId, SkillStat.y);
             if (duration > 0) {
-                mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, duration * 1000));
+                mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, duration * 1000), delay);
             }
         } else if (skillId == Aran.SNOW_CHARGE) {
             final int duration = user.getSkillStatValue(skillId, SkillStat.y);
             if (duration > 0) {
-                mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(user.getSkillStatValue(skillId, SkillStat.x), skillId, duration * 1000));
+                mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(user.getSkillStatValue(skillId, SkillStat.x), skillId, duration * 1000), delay);
             }
         }
     }
 
-    private static void handleEvanSlow(User user, Mob mob) {
+    private static void handleEvanSlow(User user, Mob mob, int delay) {
         if (mob.isBoss() || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.EvanSlow)) {
             return;
         }
@@ -796,11 +797,11 @@ public final class AttackHandler {
         }
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-            mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000));
+            mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getValue(SkillStat.y, slv) * 1000), delay);
         }
     }
 
-    private static void handleMortalBlow(User user, Mob mob) {
+    private static void handleMortalBlow(User user, Mob mob, int delay) {
         if (mob.isBoss()) {
             return;
         }
@@ -820,8 +821,8 @@ public final class AttackHandler {
         }
         final double percentage = (double) mob.getHp() / mob.getMaxHp();
         if (percentage * 100 < si.getValue(SkillStat.x, slv)) {
-            user.getField().broadcastPacket(MobPacket.mobSpecialEffectBySkill(mob, skillId, user.getCharacterId(), 0));
-            mob.damage(user, mob.getHp());
+            user.getField().broadcastPacket(MobPacket.mobSpecialEffectBySkill(mob, skillId, user.getCharacterId(), delay));
+            mob.damage(user, mob.getHp(), delay);
         }
     }
 

@@ -255,7 +255,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             return;
         }
         if (getField().getMobPool().removeMob(this)) {
-            spawnRevives();
+            spawnRevives(0);
         }
         if (spawnPoint != null) {
             spawnPoint.setNextMobRespawn();
@@ -270,7 +270,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (ownerResult.isEmpty()) {
             return;
         }
-        dropRewards(ownerResult.get());
+        dropRewards(ownerResult.get(), 0);
         itemDropCount++;
         nextDropItem = now.plus(template.getDropItemPeriod(), ChronoUnit.SECONDS);
         switch (template.getId()) {
@@ -280,25 +280,25 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
     }
 
-    public void setBurnedInfo(BurnedInfo burnedInfo) {
-        setTemporaryStat(Map.of(), burnedInfo);
+    public void setBurnedInfo(BurnedInfo burnedInfo, int delay) {
+        setTemporaryStat(Map.of(), burnedInfo, delay);
     }
 
-    public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option) {
-        setTemporaryStat(Map.of(mts, option));
+    public void setTemporaryStat(MobTemporaryStat mts, MobStatOption option, int delay) {
+        setTemporaryStat(Map.of(mts, option), delay);
     }
 
-    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats) {
+    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats, int delay) {
         for (var entry : setStats.entrySet()) {
             getMobStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
         final BitFlag<MobTemporaryStat> flag = BitFlag.from(setStats.keySet(), MobTemporaryStat.FLAG_SIZE);
         if (!flag.isEmpty()) {
-            getField().broadcastPacket(MobPacket.mobStatSet(this, getMobStat(), flag));
+            getField().broadcastPacket(MobPacket.mobStatSet(this, getMobStat(), flag, delay));
         }
     }
 
-    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats, BurnedInfo burnedInfo) {
+    public void setTemporaryStat(Map<MobTemporaryStat, MobStatOption> setStats, BurnedInfo burnedInfo, int delay) {
         setStats = new HashMap<>(setStats);
         setStats.put(MobTemporaryStat.Burned, MobStatOption.of(1, burnedInfo.getSkillId(), 0));
         for (var entry : setStats.entrySet()) {
@@ -307,7 +307,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getMobStat().addBurnedInfo(burnedInfo);
         final BitFlag<MobTemporaryStat> flag = BitFlag.from(setStats.keySet(), MobTemporaryStat.FLAG_SIZE);
         if (!flag.isEmpty()) {
-            getField().broadcastPacket(MobPacket.mobStatSet(this, getMobStat(), flag));
+            getField().broadcastPacket(MobPacket.mobStatSet(this, getMobStat(), flag, delay));
         }
     }
 
@@ -337,7 +337,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         getField().broadcastPacket(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
     }
 
-    public void damage(User attacker, int totalDamage) {
+    public void damage(User attacker, int totalDamage, int delay) {
         // Apply damage
         final int actualDamage = Math.min(getHp(), totalDamage);
         setHp(getHp() - actualDamage);
@@ -352,8 +352,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             }
             if (getField().getMobPool().removeMob(this)) {
                 distributeExp();
-                dropRewards(attacker);
-                spawnRevives();
+                dropRewards(attacker, delay);
+                spawnRevives(delay);
             }
             if (spawnPoint != null) {
                 spawnPoint.setNextMobRespawn();
@@ -505,7 +505,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
     }
 
-    private void dropRewards(User lastAttacker) {
+    private void dropRewards(User lastAttacker, int delay) {
         // Sort damageDone by highest damage, assign owner to the highest damage attacker present in the field
         User owner = lastAttacker;
         final var iter = damageDone.entrySet().stream()
@@ -529,7 +529,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         }
         // Add drops to field if any
         if (!drops.isEmpty()) {
-            getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, 0);
+            getField().getDropPool().addDrops(drops, DropEnterType.CREATE, getX(), getY() - GameConstants.DROP_HEIGHT, delay, 0);
         }
     }
 
@@ -584,7 +584,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
 
-    private void spawnRevives() {
+    private void spawnRevives(int delay) {
         if (template.getRevives().isEmpty()) {
             return;
         }
@@ -607,7 +607,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 getField().getMobPool().addMob(reviveMob);
                 reviveMob.setAppearType(MobAppearType.NORMAL);
             }
-        }, template.getReviveDelay(), TimeUnit.MILLISECONDS);
+        }, template.getReviveDelay() + delay, TimeUnit.MILLISECONDS);
     }
 
 
