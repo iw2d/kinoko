@@ -33,6 +33,7 @@ public final class Citizen extends SkillProcessor {
     // CITIZEN
     public static final int POTION_MASTERY = 30000002;
     public static final int BLESSING_OF_THE_FAIRY = 30000012;
+    public static final int DEADLY_CRITS = 30000022;
     public static final int CRYSTAL_THROW = 30001000;
     public static final int INFILTRATE = 30001001;
     public static final int LEGENDARY_SPIRIT = 30001003;

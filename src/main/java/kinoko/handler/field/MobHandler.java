@@ -402,7 +402,7 @@ public final class MobHandler {
     private static int calcMobDamage(MobTemplate attackerTemplate, MobTemplate targetTemplate) {
         // `anonymous namespace'::calc_mob_base_damamge
         final int pad = attackerTemplate.getPad();
-        final double baseDamage = CalcDamage.getRand(Util.getRandom().nextInt(), pad, pad * 0.85);
+        final double baseDamage = CalcDamage.getRand(Integer.toUnsignedLong(Util.getRandom().nextInt()), pad, pad * 0.85);
         return (int) Math.max(1, baseDamage * ((100.0 - targetTemplate.getPdr()) / 100.0));
     }
 }

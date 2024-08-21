@@ -206,8 +206,8 @@ public final class PassiveSkillData {
             if (si.isPsd() && (si.getSkillId() != Mechanic.PERFECT_ARMOR || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
                 if (si.getSkillId() == Mechanic.MECH_SIEGE_MODE_2) {
                     addPassiveSkillData(si, SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE));
-                } else {
-                    addPassiveSkillData(si, SkillManager.getSkillLevel(ss, sm, skillRecord.getSkillId()));
+                } else if (skillRecord.getSkillLevel() > 0) {
+                    addPassiveSkillData(si, skillRecord.getSkillLevel());
                 }
             }
         }
@@ -249,6 +249,9 @@ public final class PassiveSkillData {
     }
 
     private void addPassiveSkillData(SkillInfo si, int slv) {
+        if (slv <= 0) {
+            return;
+        }
         this.mhpR += si.getValue(SkillStat.mhpR, slv);
         this.mmpR += si.getValue(SkillStat.mmpR, slv);
         if (this.additionPsd.isEmpty()) {

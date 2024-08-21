@@ -25,6 +25,8 @@ public final class StagePacket {
             final int s1 = Util.getRandom().nextInt();
             final int s2 = Util.getRandom().nextInt();
             final int s3 = Util.getRandom().nextInt();
+            user.getCalcDamage().setSeed(s1, s2, s3);
+            user.getCalcDamage().setNextAttackCritical(false);
             outPacket.encodeInt(s1);
             outPacket.encodeInt(s2);
             outPacket.encodeInt(s3);

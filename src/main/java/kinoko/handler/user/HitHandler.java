@@ -172,6 +172,7 @@ public final class HitHandler {
         handleGuardian(user, hitInfo);
         handleDivineShield(user, hitInfo);
         handleBeholderCounter(user, hitInfo);
+        handleEvasionBoost(user, hitInfo);
         handleVengeance(user, hitInfo);
         handleDarkFlare(user, hitInfo);
         handlePiratesRevenge(user, hitInfo);
@@ -426,6 +427,15 @@ public final class HitHandler {
             // Broadcast packet and process damage
             user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
             mob.damage(user, attackInfo.damage[0], 0);
+        }
+    }
+
+    private static void handleEvasionBoost(User user, HitInfo hitInfo) {
+        if (hitInfo.damage > 0) {
+            return;
+        }
+        if (user.getSkillLevel(Bowman.EVASION_BOOST_BM) > 0 || user.getSkillLevel(Bowman.EVASION_BOOST_MM) > 0) {
+            user.getCalcDamage().setNextAttackCritical(true);
         }
     }
 

@@ -46,6 +46,7 @@ public final class SecondaryStat {
     private int itemMddR;
     private int itemAccR;
     private int itemEvaR;
+    private int itemCriR; // computed every attack in client
     private int craft;
     private int speed;
     private int jump;
@@ -100,6 +101,10 @@ public final class SecondaryStat {
 
     public int getItemEvaR() {
         return itemEvaR;
+    }
+
+    public int getItemCriR() {
+        return itemCriR;
     }
 
     public int getCraft() {
@@ -247,6 +252,7 @@ public final class SecondaryStat {
         this.itemMddR = 0;
         this.itemAccR = 0;
         this.itemEvaR = 0;
+        this.itemCriR = 0;
         this.craft = bs.getDex() + bs.getInt() + bs.getLuk();
         this.speed = 100;
         this.jump = 100;
@@ -494,6 +500,7 @@ public final class SecondaryStat {
         this.itemMddR += option.mddR;
         this.itemAccR += option.accR;
         this.itemEvaR += option.evaR;
+        this.itemCriR += option.criR;
 
         // Clamp values
         this.pad = Math.clamp(this.pad, 0, GameConstants.PAD_MAX);
@@ -569,6 +576,7 @@ public final class SecondaryStat {
         private int mddR;
         private int accR;
         private int evaR;
+        private int criR;
 
         private void applyItemOptionR(short itemOptionId, int optionLevel) {
             final Optional<ItemOptionLevelData> itemOptionResult = ItemProvider.getItemOptionInfo(itemOptionId, optionLevel);
@@ -583,6 +591,7 @@ public final class SecondaryStat {
                     case incMDDr -> this.mddR += entry.getValue();
                     case incACCr -> this.accR += entry.getValue();
                     case incEVAr -> this.evaR += entry.getValue();
+                    case incCr -> this.criR += entry.getValue();
                 }
             }
         }

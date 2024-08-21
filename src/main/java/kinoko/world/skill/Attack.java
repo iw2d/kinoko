@@ -7,7 +7,6 @@ import kinoko.world.field.mob.Mob;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public final class Attack {
@@ -102,15 +101,12 @@ public final class Attack {
 
     public void forEachMob(Field field, BiConsumer<Mob, Integer> consumer) {
         for (AttackInfo ai : getAttackInfo()) {
-            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
-            if (mobResult.isEmpty()) {
+            if (ai.lockedMob == null) {
                 continue;
             }
-            try (var lockedMob = mobResult.get().acquire()) {
-                final Mob mob = lockedMob.get();
-                if (mob.getHp() > 0) {
-                    consumer.accept(mob, ai.delay);
-                }
+            final Mob mob = ai.lockedMob.get();
+            if (mob.getHp() > 0) {
+                consumer.accept(mob, ai.delay);
             }
         }
     }
@@ -144,6 +140,8 @@ public final class Attack {
                 ", passiveSkillId=" + passiveSkillId +
                 ", swallowMobTemplateId=" + swallowMobTemplateId +
                 ", drops=" + Arrays.toString(drops) +
+                ", dropExplodeDelay=" + dropExplodeDelay +
+                ", crc=" + crc +
                 '}';
     }
 }

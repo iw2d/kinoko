@@ -1,5 +1,8 @@
 package kinoko.world.skill;
 
+import kinoko.util.Locked;
+import kinoko.world.field.mob.Mob;
+
 import java.util.Arrays;
 
 public final class AttackInfo {
@@ -15,6 +18,9 @@ public final class AttackInfo {
     public byte[] critical = new byte[15];
     public int[] damage = new int[15];
 
+    public long[] random;
+    public Locked<Mob> lockedMob;
+
     @Override
     public String toString() {
         return "AttackInfo{" +
@@ -27,6 +33,8 @@ public final class AttackInfo {
                 ", delay=" + delay +
                 ", critical=" + Arrays.toString(critical) +
                 ", damage=" + Arrays.toString(damage) +
+                ", random=" + Arrays.toString(random) +
+                ", lockedMob=" + lockedMob +
                 '}';
     }
 }

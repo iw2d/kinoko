@@ -59,6 +59,7 @@ public final class User extends Life implements Lockable<User> {
     private final ForcedStat forcedStat = new ForcedStat();
     private final SecondaryStat secondaryStat = new SecondaryStat();
     private final PassiveSkillData passiveSkillData = new PassiveSkillData();
+    private final CalcDamage calcDamage = new CalcDamage();
 
     private final List<Pet> pets = new ArrayList<>();
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
@@ -164,6 +165,10 @@ public final class User extends Life implements Lockable<User> {
 
     public PassiveSkillData getPassiveSkillData() {
         return passiveSkillData;
+    }
+
+    public CalcDamage getCalcDamage() {
+        return calcDamage;
     }
 
     public List<Pet> getPets() {
