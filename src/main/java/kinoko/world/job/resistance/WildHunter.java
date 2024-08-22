@@ -64,7 +64,7 @@ public final class WildHunter extends SkillProcessor {
     public static final int HEROS_WILL_WH = 33121008;
     public static final int WILD_ARROW_BLAST = 33121009;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -75,29 +75,23 @@ public final class WildHunter extends SkillProcessor {
             case DASH_N_SLASH:
             case SILVER_HAWK:
             case SONIC_ROAR:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case JAGUAR_RAWR:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case STINK_BOMB_SHOT:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(Map.of(
-                                MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
-                        ), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(Map.of(
+                            MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
+                    ), delay);
+                }
                 break;
         }
     }

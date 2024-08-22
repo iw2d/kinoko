@@ -5,6 +5,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
@@ -63,7 +64,7 @@ public final class Aran extends SkillProcessor {
     public static final int FREEZE_STANDING = 21121003;
     public static final int HEROS_WILL_ARAN = 21121008;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -71,28 +72,22 @@ public final class Aran extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case BODY_PRESSURE:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(Map.of(
-                                MobTemporaryStat.Stun, MobStatOption.of(1, skillId, 5000),
-                                MobTemporaryStat.BodyPressure, MobStatOption.of(1, skillId, 5000)
-                        ), delay); // x = 5 seconds
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(Map.of(
+                            MobTemporaryStat.Stun, MobStatOption.of(1, skillId, 5000),
+                            MobTemporaryStat.BodyPressure, MobStatOption.of(1, skillId, 5000)
+                    ), delay); // x = 5 seconds
+                }
                 break;
             case FINAL_TOSS:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
-                        mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000), delay);
-                    }
-                });
+                if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
+                    mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000), delay);
+                }
                 break;
             case COMBO_TEMPEST:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
         }
     }

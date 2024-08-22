@@ -18,8 +18,10 @@ import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
+import kinoko.world.field.drop.DropLeaveType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.Mob;
@@ -30,14 +32,15 @@ import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedMoveAbility;
 import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
+import kinoko.world.job.cygnus.BlazeWizard;
+import kinoko.world.job.cygnus.DawnWarrior;
 import kinoko.world.job.cygnus.NightWalker;
 import kinoko.world.job.cygnus.ThunderBreaker;
+import kinoko.world.job.explorer.Magician;
 import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
-import kinoko.world.job.resistance.BattleMage;
-import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
@@ -301,223 +304,178 @@ public final class AttackHandler {
     private static void handleAttack(Locked<User> locked, Attack attack) {
         final User user = locked.get();
         final Field field = user.getField();
-        try {
-            // Acquire mobs - TODO reimplement in a less deadlock prone way
-            for (AttackInfo ai : attack.getAttackInfo()) {
-                ai.random = user.getCalcDamage().getNextAttackRandom();
-                final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
-                if (mobResult.isEmpty()) {
-                    continue;
-                }
-                ai.lockedMob = mobResult.get().acquire();
-            }
+        // Assign attack random
+        for (AttackInfo ai : attack.getAttackInfo()) {
+            ai.random = user.getCalcDamage().getNextAttackRandom();
+        }
 
-            // Set skill level
-            if (attack.skillId != 0) {
-                attack.slv = user.getSkillLevel(attack.skillId);
-                switch (attack.skillId) {
-                    case Aran.DOUBLE_SWING, Aran.TRIPLE_SWING -> {
-                        if (user.getSkillLevel(Aran.OVER_SWING) > 0) {
-                            attack.skillId = attack.skillId == Aran.DOUBLE_SWING ?
-                                    Aran.OVER_SWING_DOUBLE_SWING :
-                                    Aran.OVER_SWING_TRIPLE_SWING;
-                            attack.slv = user.getSkillLevel(Aran.OVER_SWING);
-                        } else if (user.getSkillLevel(Aran.FULL_SWING) > 0) {
-                            attack.skillId = attack.skillId == Aran.DOUBLE_SWING ?
-                                    Aran.FULL_SWING_DOUBLE_SWING :
-                                    Aran.FULL_SWING_TRIPLE_SWING;
-                            attack.slv = user.getSkillLevel(Aran.FULL_SWING);
-                        }
-                    }
-                    case Mechanic.ENHANCED_FLAME_LAUNCHER -> {
-                        attack.slv = user.getSkillLevel(Mechanic.FLAME_LAUNCHER);
-                    }
-                    case Mechanic.ENHANCED_GATLING_GUN -> {
-                        attack.slv = user.getSkillLevel(Mechanic.GATLING_GUN);
-                    }
-                    case 35111008, 35111009, 35111010 -> {
-                        attack.slv = user.getSkillLevel(Mechanic.SATELLITE);
-                    }
-                    case 32001007, 32001008, 32001009, 32001010, 32001011 -> {
-                        attack.slv = user.getSkillLevel(BattleMage.THE_FINISHER);
-                    }
-                }
-                if (attack.slv == 0) {
-                    log.error("Tried to attack with skill {} not learned by user", attack.skillId);
-                    return;
-                }
-                // Check seal
-                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
-                    log.error("Tried to attack with skill {} while sealed", attack.skillId);
-                    return;
-                }
-                // Resolve skill info and check CRC
-                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
-                if (skillInfoResult.isEmpty()) {
-                    log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
-                    return;
-                }
-                final SkillInfo si = skillInfoResult.get();
-                if (si.getLevelDataCrc(attack.slv) != attack.crc) {
-                    log.warn(String.format("Received mismatching CRC for skill ID : %d - %d, 0x%08X != 0x%08X", attack.skillId, attack.slv, si.getLevelDataCrc(attack.slv), attack.crc));
-                }
+        // Set skill level
+        if (attack.skillId != 0) {
+            attack.slv = user.getSkillLevel(attack.skillId);
+            if (attack.slv == 0) {
+                log.error("Tried to attack with skill {} not learned by user", attack.skillId);
+                return;
             }
-
-            // Check morph
-            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Morph)) {
-                final int morphId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Morph).nOption;
-                final Optional<MorphInfo> morphInfoResult = SkillProvider.getMorphInfoById(morphId);
-                if (morphInfoResult.isEmpty()) {
-                    log.error("Could not resolve morph info for morph ID : {}", morphId);
-                    return;
-                }
-                final MorphInfo morphInfo = morphInfoResult.get();
-                if (!morphInfo.isSuperman() && !morphInfo.isAttackable()) {
-                    log.error("Tried to attack with skill {} while morphed as morph ID : {}", attack.skillId, morphId);
-                    return;
-                }
+            // Check seal
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
+                log.error("Tried to attack with skill {} while sealed", attack.skillId);
+                return;
             }
+            // Resolve skill info and check CRC
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(attack.skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not to resolve skill info for attack skill ID : {}", attack.skillId);
+                return;
+            }
+            final SkillInfo si = skillInfoResult.get();
+            if (si.getLevelDataCrc(attack.slv) != attack.crc) {
+                log.warn("Received mismatching CRC for skill ID : {}", attack.skillId);
+            }
+        }
 
-            // Resolve bullet ID
-            if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
-                final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-                final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
-                if (weaponItem == null || bulletItem == null || !ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
-                    log.error("Tried to attack with incorrect bullet {} using weapon {}", bulletItem != null ? bulletItem.getItemId() : 0, weaponItem != null ? weaponItem.getItemId() : 0);
+        // Check morph
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Morph)) {
+            final int morphId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Morph).nOption;
+            final Optional<MorphInfo> morphInfoResult = SkillProvider.getMorphInfoById(morphId);
+            if (morphInfoResult.isEmpty()) {
+                log.error("Could not resolve morph info for morph ID : {}", morphId);
+                return;
+            }
+            final MorphInfo morphInfo = morphInfoResult.get();
+            if (!morphInfo.isSuperman() && !morphInfo.isAttackable()) {
+                log.error("Tried to attack with skill {} while morphed as morph ID : {}", attack.skillId, morphId);
+                return;
+            }
+        }
+
+        // Resolve bullet ID
+        if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
+            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+            final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
+            if (weaponItem == null || bulletItem == null || !ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
+                log.error("Tried to attack with incorrect bullet {} using weapon {}", bulletItem != null ? bulletItem.getItemId() : 0, weaponItem != null ? weaponItem.getItemId() : 0);
+                return;
+            }
+            attack.bulletItemId = bulletItem.getItemId();
+            // Consume bullet for basic attack
+            if (attack.skillId == 0) {
+                final int bulletCount = attack.isShadowPartner() ? 2 : 1;
+                if (bulletItem.getQuantity() < bulletCount) {
+                    log.error("Tried to attack without enough bullets in position {}", attack.bulletPosition);
                     return;
                 }
-                attack.bulletItemId = bulletItem.getItemId();
-                // Consume bullet for basic attack
-                if (attack.skillId == 0) {
-                    final int bulletCount = attack.isShadowPartner() ? 2 : 1;
-                    if (bulletItem.getQuantity() < bulletCount) {
-                        log.error("Tried to attack without enough bullets in position {}", attack.bulletPosition);
+                bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+            }
+        }
+
+        // Resolve swallow template ID
+        if (attack.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
+            if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Swallow_Template)) {
+                log.error("Tried to attack with Jaguar-oshi without Swallow_Template CTS set");
+                return;
+            }
+            attack.swallowMobTemplateId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Swallow_Template).nOption;
+            user.resetTemporaryStat(Set.of(CharacterTemporaryStat.Swallow_Mob, CharacterTemporaryStat.Swallow_Template));
+        }
+
+        // Process skill
+        if (attack.skillId != 0 && !SkillConstants.isNoConsumeAttack(attack.skillId)) {
+            // Check skill cooltime and cost
+            final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
+            if (user.getSkillManager().hasSkillCooltime(attack.skillId)) {
+                log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
+                return;
+            }
+            final int hpCon = si.getHpCon(user, attack.slv, attack.keyDown);
+            if (user.getHp() <= hpCon) {
+                log.error("Tried to use skill {} without enough hp, current : {}, required : {}", attack.skillId, user.getHp(), hpCon);
+                return;
+            }
+            final int mpCon = si.getMpCon(user, attack.slv);
+            if (user.getMp() < mpCon) {
+                log.error("Tried to use skill {} without enough mp, current : {}, required : {}", attack.skillId, user.getMp(), mpCon);
+                return;
+            }
+            final int comboCon = SkillConstants.getRequiredComboCount(attack.skillId);
+            if (comboCon > 0) {
+                if (user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption < comboCon) {
+                    log.error("Tried to use skill {} without required combo count : {}", attack.skillId, comboCon);
+                }
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ComboAbilityBuff));
+            }
+            // Item / Bullet consume are mutually exclusive
+            final int itemCon = si.getValue(SkillStat.itemCon, attack.slv);
+            if (itemCon > 0) {
+                final int itemConNo = si.getValue(SkillStat.itemConNo, attack.slv); // should always be > 0
+                final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(itemCon, itemConNo);
+                if (removeResult.isEmpty()) {
+                    log.error("Tried to use skill {} without required item", itemCon);
+                    return;
+                }
+                user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+            }
+            final int bulletCon = si.getBulletCon(attack.slv);
+            if (bulletCon > 0) {
+                final int exJablinProp = user.getSkillStatValue(Thief.EXPERT_THROWING_STAR_HANDLING, SkillStat.prop);
+                final boolean exJablin = exJablinProp != 0 && Util.succeedProp(exJablinProp);
+                if (exJablin) {
+                    user.write(UserLocal.requestExJablin());
+                }
+                if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
+                    final int bulletCount = bulletCon * (attack.isShadowPartner() ? 2 : 1);
+                    final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
+                    if (bulletItem == null || bulletItem.getQuantity() < bulletCount) {
+                        log.error("Tried to use skill {} without enough bullets", attack.skillId);
                         return;
                     }
-                    bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
-                    user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
-                }
-            }
-
-            // Resolve swallow template ID
-            if (attack.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
-                if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Swallow_Template)) {
-                    log.error("Tried to attack with Jaguar-oshi without Swallow_Template CTS set");
-                    return;
-                }
-                attack.swallowMobTemplateId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Swallow_Template).nOption;
-                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.Swallow_Mob, CharacterTemporaryStat.Swallow_Template));
-            }
-
-            // Process skill
-            if (attack.skillId != 0 && !SkillConstants.isNoConsumeAttack(attack.skillId)) {
-                // Check skill cooltime and cost
-                final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-                if (user.getSkillManager().hasSkillCooltime(attack.skillId)) {
-                    log.error("Tried to use skill {} that is still on cooltime", attack.skillId);
-                    return;
-                }
-                final int hpCon = si.getHpCon(user, attack.slv, attack.keyDown);
-                if (user.getHp() <= hpCon) {
-                    log.error("Tried to use skill {} without enough hp, current : {}, required : {}", attack.skillId, user.getHp(), hpCon);
-                    return;
-                }
-                final int mpCon = si.getMpCon(user, attack.slv);
-                if (user.getMp() < mpCon) {
-                    log.error("Tried to use skill {} without enough mp, current : {}, required : {}", attack.skillId, user.getMp(), mpCon);
-                    return;
-                }
-                final int comboCon = SkillConstants.getRequiredComboCount(attack.skillId);
-                if (comboCon > 0) {
-                    if (user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption < comboCon) {
-                        log.error("Tried to use skill {} without required combo count : {}", attack.skillId, comboCon);
-                    }
-                    user.resetTemporaryStat(Set.of(CharacterTemporaryStat.ComboAbilityBuff));
-                }
-                // Item / Bullet consume are mutually exclusive
-                final int itemCon = si.getValue(SkillStat.itemCon, attack.slv);
-                if (itemCon > 0) {
-                    final int itemConNo = si.getValue(SkillStat.itemConNo, attack.slv); // should always be > 0
-                    final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(itemCon, itemConNo);
-                    if (removeResult.isEmpty()) {
-                        log.error("Tried to use skill {} without required item", itemCon);
-                        return;
-                    }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
-                }
-                final int bulletCon = si.getBulletCon(attack.slv);
-                if (bulletCon > 0) {
-                    final int exJablinProp = user.getSkillStatValue(Thief.EXPERT_THROWING_STAR_HANDLING, SkillStat.prop);
-                    final boolean exJablin = exJablinProp != 0 && Util.succeedProp(exJablinProp);
                     if (exJablin) {
-                        user.write(UserLocal.requestExJablin());
-                    }
-                    if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
-                        final int bulletCount = bulletCon * (attack.isShadowPartner() ? 2 : 1);
-                        final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
-                        if (bulletItem == null || bulletItem.getQuantity() < bulletCount) {
-                            log.error("Tried to use skill {} without enough bullets", attack.skillId);
-                            return;
-                        }
-                        if (exJablin) {
-                            // Recharge 1 throwing star if possible
-                            final int slotMax = ItemProvider.getItemInfo(bulletItem.getItemId()).map(ItemInfo::getSlotMax).orElse(0);
-                            if (bulletItem.getQuantity() < slotMax) {
-                                bulletItem.setQuantity((short) (bulletItem.getQuantity() + 1));
-                                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
-                            }
-                            user.write(UserLocal.requestExJablin());
-                        } else {
-                            // Consume bullets
-                            bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
+                        // Recharge 1 throwing star if possible
+                        final int slotMax = ItemProvider.getItemInfo(bulletItem.getItemId()).map(ItemInfo::getSlotMax).orElse(0);
+                        if (bulletItem.getQuantity() < slotMax) {
+                            bulletItem.setQuantity((short) (bulletItem.getQuantity() + 1));
                             user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
                         }
+                        user.write(UserLocal.requestExJablin());
+                    } else {
+                        // Consume bullets
+                        bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
                     }
                 }
-                // Consume hp/mp
-                user.addHp(-hpCon);
-                user.addMp(-mpCon);
-                // Set cooltime
-                final int cooltime = si.getValue(SkillStat.cooltime, attack.slv);
-                if (cooltime > 0) {
-                    user.setSkillCooltime(attack.skillId, cooltime);
-                }
             }
+            // Consume hp/mp
+            user.addHp(-hpCon);
+            user.addMp(-mpCon);
+            // Set cooltime
+            final int cooltime = si.getValue(SkillStat.cooltime, attack.slv);
+            if (cooltime > 0) {
+                user.setSkillCooltime(attack.skillId, cooltime);
+            }
+        }
 
-            // Verify damage
-            for (AttackInfo ai : attack.getAttackInfo()) {
-                if (ai.lockedMob == null) {
-                    continue;
-                }
+        // Process attack
+        int hpGain = 0;
+        int mpGain = 0;
+        for (AttackInfo ai : attack.getAttackInfo()) {
+            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+            if (mobResult.isEmpty()) {
+                continue;
+            }
+            // Acquire mob
+            try (var lockedMob = mobResult.get().acquire()) {
+                // Verify damage
                 if (attack.isMagicAttack()) {
-                    CalcDamage.calcMDamage(locked, ai.lockedMob, attack, ai);
+                    CalcDamage.calcMDamage(locked, lockedMob, attack, ai);
                 } else {
-                    CalcDamage.calcPDamage(locked, ai.lockedMob, attack, ai);
+                    CalcDamage.calcPDamage(locked, lockedMob, attack, ai);
                 }
-            }
-
-            // CTS updates on attack
-            if (attack.getMobCount() > 0) {
-                handleComboAttack(user);
-                handleEnergyCharge(user);
-                handleDarkSight(user);
-                handleWindWalk(user);
-                handleComboAbility(user, attack);
-            }
-
-            // Skill specific handling
-            if (attack.skillId != 0) {
-                SkillProcessor.processAttack(locked, attack);
-            }
-
-            // Process attack
-            int hpGain = 0;
-            int mpGain = 0;
-            for (AttackInfo ai : attack.getAttackInfo()) {
-                if (ai.lockedMob == null) {
-                    continue;
+                // Skill specific handling
+                if (attack.skillId != 0) {
+                    SkillProcessor.processAttack(locked, lockedMob, attack, ai.delay);
                 }
-                final Mob mob = ai.lockedMob.get();
+                // Process damage
+                final Mob mob = lockedMob.get();
                 int totalDamage = Arrays.stream(ai.damage).sum();
                 int mpDamage = 0;
                 // Handle skills
@@ -549,8 +507,7 @@ public final class AttackHandler {
                     hpGain += Math.min(absorbAmount, user.getMaxHp() / 10);
                 }
                 // Process damage
-                final int delay = attack.skillId == Thief.MESO_EXPLOSION ? attack.dropExplodeDelay : ai.delay;
-                mob.damage(user, totalDamage, delay);
+                mob.damage(user, totalDamage, attack.skillId == Thief.MESO_EXPLOSION ? attack.dropExplodeDelay : ai.delay);
                 mob.setMp(mob.getMp() - mpDamage);
                 mpGain += mpDamage;
                 // Process on-hit effects
@@ -567,106 +524,42 @@ public final class AttackHandler {
                     handleRevive(user, mob);
                 }
             }
+        }
 
-            // Broadcast packet
-            field.broadcastPacket(UserRemote.attack(user, attack), user);
+        // Broadcast packet
+        field.broadcastPacket(UserRemote.attack(user, attack), user);
 
-            // Process hp/mp gains
-            if (hpGain > 0) {
-                user.addHp(hpGain);
-            }
-            if (mpGain > 0) {
-                user.addMp(mpGain);
-                // Show MP eater effect
-                final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
-                final int slv = user.getSkillLevel(skillId);
-                user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
-                field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
-            }
-            if (attack.exJablin != 0) {
-                user.getCalcDamage().setNextAttackCritical(true);
-            }
-        } finally {
-            // Unlock mobs
-            for (AttackInfo ai : attack.getAttackInfo()) {
-                if (ai.lockedMob != null) {
-                    ai.lockedMob.get().lock();
-                    ai.lockedMob = null;
-                }
-            }
+        // Process hp/mp gains
+        if (hpGain > 0) {
+            user.addHp(hpGain);
+        }
+        if (mpGain > 0) {
+            user.addMp(mpGain);
+            // Show MP eater effect
+            final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
+            final int slv = user.getSkillLevel(skillId);
+            user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
+            field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
+        }
+        if (attack.exJablin != 0) {
+            user.getCalcDamage().setNextAttackCritical(true);
+        }
+
+        // Skill effects after attack
+        handleAffectedArea(user, attack);
+        handleMesoExplosion(user, attack);
+        handleFinalCut(user, attack);
+        if (attack.getMobCount() > 0) {
+            handleComboAbility(user, attack);
+            handleComboAttack(user, attack);
+            handleDarkSight(user);
+            handleEnergyCharge(user);
+            handleWindWalk(user);
         }
     }
 
-    private static void handleComboAttack(User user) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
-        if (option.nOption == 0) {
-            return;
-        }
-        final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
-        final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
-        final int maxCombo = 1 + Math.max(
-                user.getSkillStatValue(comboAttackId, SkillStat.x),
-                user.getSkillStatValue(advancedComboId, SkillStat.x)
-        );
-        if (option.nOption < maxCombo) {
-            final int doubleProp = user.getSkillStatValue(advancedComboId, SkillStat.prop);
-            final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
-            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(newCombo));
-        }
-    }
 
-    private static void handleEnergyCharge(User user) {
-        final int skillId = SkillConstants.getEnergyChargeSkill(user.getJob());
-        final int slv = user.getSkillLevel(skillId);
-        if (slv == 0) {
-            return;
-        }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
-        if (skillInfoResult.isEmpty()) {
-            log.error("Could not resolve skill info for energy charge skill ID : {}", skillId);
-            return;
-        }
-        final SkillInfo si = skillInfoResult.get();
-        final SecondaryStat ss = user.getSecondaryStat();
-        final int energyCharge = ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption;
-        if (energyCharge < SkillConstants.ENERGY_CHARGE_MAX) {
-            final TwoStateTemporaryStat option = TemporaryStatOption.ofTwoState(
-                    CharacterTemporaryStat.EnergyCharged,
-                    Math.min(energyCharge + si.getValue(SkillStat.x, slv), SkillConstants.ENERGY_CHARGE_MAX),
-                    skillId,
-                    si.getDuration(slv)
-            );
-            user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
-        }
-    }
-
-    private static void handleDarkSight(User user) {
-        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.DarkSight)) {
-            return;
-        }
-        if (!Util.succeedProp(user.getSkillStatValue(Thief.ADVANCED_DARK_SIGHT, SkillStat.prop))) {
-            user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.DarkSight).rOption);
-        }
-    }
-
-    private static void handleWindWalk(User user) {
-        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.WindWalk)) {
-            return;
-        }
-        user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.WindWalk).rOption);
-    }
-
-    private static void handleComboAbility(User user, Attack attack) {
-        final int skillId = SkillConstants.getComboAbilitySkill(user.getJob());
-        final int slv = user.getSkillLevel(skillId);
-        if (slv == 0) {
-            return;
-        }
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff);
-        final int newCombo = option.nOption + attack.getMobCount();
-        user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(newCombo, skillId, 0));
-        user.write(UserLocal.incCombo(newCombo));
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     private static void handlePickpocket(User user, Attack attack, Mob mob) {
         if (attack.skillId == Thief.MESO_EXPLOSION || !user.getSecondaryStat().hasOption(CharacterTemporaryStat.PickPocket)) {
@@ -903,5 +796,121 @@ public final class AttackHandler {
             summoned.setPosition(user.getField(), mob.getX(), mob.getY(), mob.isLeft());
             user.addSummoned(summoned);
         }
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private static void handleAffectedArea(User user, Attack attack) {
+        switch (attack.skillId) {
+            case Magician.POISON_MIST, BlazeWizard.FLAME_GEAR, NightWalker.POISON_BOMB -> {
+                final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
+                final AffectedArea affectedArea = AffectedArea.userSkill(user, si, attack.slv, 0, attack.userX, attack.userY);
+                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
+            }
+        }
+    }
+
+    private static void handleMesoExplosion(User user, Attack attack) {
+        if (attack.skillId != Thief.MESO_EXPLOSION) {
+            return;
+        }
+        int index = 0;
+        final Field field = user.getField();
+        for (int dropId : attack.drops) {
+            final Optional<Drop> dropResult = field.getDropPool().getById(dropId);
+            if (dropResult.isEmpty() || !dropResult.get().isMoney()) {
+                log.error("Received invalid drop ID {} for meso explosion skill", dropId);
+                continue;
+            }
+            final int delay = Math.min(attack.dropExplodeDelay + 100 * (index++ % 5), 1000);
+            field.getDropPool().removeDrop(dropResult.get(), DropLeaveType.EXPLODE, 0, 0, delay);
+        }
+    }
+
+    private static void handleFinalCut(User user, Attack attack) {
+        if (attack.skillId != Thief.FINAL_CUT) {
+            return;
+        }
+        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
+        final int finalCut = si.getValue(SkillStat.y, attack.slv) * attack.keyDown / SkillConstants.getMaxGaugeTime(attack.skillId);
+        user.setTemporaryStat(CharacterTemporaryStat.FinalCut, TemporaryStatOption.of(finalCut, attack.skillId, si.getDuration(attack.slv)));
+    }
+
+    private static void handleComboAbility(User user, Attack attack) {
+        final int skillId = SkillConstants.getComboAbilitySkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff);
+        final int newCombo = option.nOption + attack.getMobCount();
+        user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(newCombo, skillId, 0));
+        user.write(UserLocal.incCombo(newCombo));
+    }
+
+    private static void handleComboAttack(User user, Attack attack) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
+        if (option.nOption == 0) {
+            return;
+        }
+        switch (attack.skillId) {
+            case Warrior.PANIC, Warrior.COMA, DawnWarrior.PANIC, DawnWarrior.COMA -> {
+                Warrior.resetComboCounter(user);
+                return;
+            }
+        }
+        final int comboAttackId = SkillConstants.getComboAttackSkill(user.getJob());
+        final int advancedComboId = SkillConstants.getAdvancedComboSkill(user.getJob());
+        final int maxCombo = 1 + Math.max(
+                user.getSkillStatValue(comboAttackId, SkillStat.x),
+                user.getSkillStatValue(advancedComboId, SkillStat.x)
+        );
+        if (option.nOption < maxCombo) {
+            final int doubleProp = user.getSkillStatValue(advancedComboId, SkillStat.prop);
+            final int newCombo = Math.min(option.nOption + (Util.succeedProp(doubleProp) ? 2 : 1), maxCombo);
+            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(newCombo));
+        }
+    }
+
+    private static void handleDarkSight(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.DarkSight)) {
+            return;
+        }
+        if (!Util.succeedProp(user.getSkillStatValue(Thief.ADVANCED_DARK_SIGHT, SkillStat.prop))) {
+            user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.DarkSight).rOption);
+        }
+    }
+
+    private static void handleEnergyCharge(User user) {
+        final int skillId = SkillConstants.getEnergyChargeSkill(user.getJob());
+        final int slv = user.getSkillLevel(skillId);
+        if (slv == 0) {
+            return;
+        }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for energy charge skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final SecondaryStat ss = user.getSecondaryStat();
+        final int energyCharge = ss.getOption(CharacterTemporaryStat.EnergyCharged).nOption;
+        if (energyCharge < SkillConstants.ENERGY_CHARGE_MAX) {
+            final TwoStateTemporaryStat option = TemporaryStatOption.ofTwoState(
+                    CharacterTemporaryStat.EnergyCharged,
+                    Math.min(energyCharge + si.getValue(SkillStat.x, slv), SkillConstants.ENERGY_CHARGE_MAX),
+                    skillId,
+                    si.getDuration(slv)
+            );
+            user.setTemporaryStat(CharacterTemporaryStat.EnergyCharged, option);
+        }
+    }
+
+    private static void handleWindWalk(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.WindWalk)) {
+            return;
+        }
+        user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.WindWalk).rOption);
     }
 }

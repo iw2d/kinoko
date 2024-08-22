@@ -6,6 +6,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -86,7 +87,7 @@ public final class Bowman extends SkillProcessor {
     public static final int SNIPE = 3221007;
     public static final int HEROS_WILL_MM = 3221008;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -97,30 +98,22 @@ public final class Bowman extends SkillProcessor {
             case SILVER_HAWK:
             case GOLDEN_EAGLE:
             case PHOENIX: // knock-down?
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case INFERNO:
-                attack.forEachTargetMob((mob, delay) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
-                });
+                mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 break;
             case VENGEANCE:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case BLIZZARD:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
         }
     }

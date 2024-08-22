@@ -126,26 +126,26 @@ public final class SummonedHandler {
             log.warn("Received mismatching CRC for summoned attack for skill ID : {}", summoned.getSkillId());
         }
 
-        // Skill specific handling
+        // Process attack
+        final Field field = summoned.getField();
         try (var locked = user.acquire()) {
-            SkillProcessor.processAttack(locked, attack);
+            for (AttackInfo ai : attack.getAttackInfo()) {
+                final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+                if (mobResult.isEmpty()) {
+                    continue;
+                }
+                try (var lockedMob = mobResult.get().acquire()) {
+                    // Skill specific handling
+                    SkillProcessor.processAttack(locked, lockedMob, attack, ai.delay);
+                    // Process damage
+                    final Mob mob = lockedMob.get();
+                    final int totalDamage = Arrays.stream(ai.damage).sum();
+                    mob.damage(user, totalDamage, ai.delay);
+                }
+            }
 
             if (actionType == SummonedActionType.DIE) {
                 user.removeSummoned(summoned);
-            }
-        }
-
-        // Process attack damage
-        final Field field = summoned.getField();
-        for (AttackInfo ai : attack.getAttackInfo()) {
-            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
-            if (mobResult.isEmpty()) {
-                continue;
-            }
-            // Acquire and damage mob
-            final int totalDamage = Arrays.stream(ai.damage).sum();
-            try (var lockedMob = mobResult.get().acquire()) {
-                lockedMob.get().damage(user, totalDamage, ai.delay);
             }
         }
 

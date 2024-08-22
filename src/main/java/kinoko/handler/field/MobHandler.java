@@ -14,7 +14,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.script.event.MoonBunny;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.util.Locked;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -97,7 +96,7 @@ public final class MobHandler {
             mai.targetInfo = targetInfo;
             mai.multiTargetForBall = multiTargetForBall;
             mai.randTimeForAreaAttack = randTimeForAreaAttack;
-            handleMobAttack(lockedMob, mai);
+            handleMobAttack(mob, mai);
 
             // Update client
             final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
@@ -241,8 +240,7 @@ public final class MobHandler {
         }
     }
 
-    private static void handleMobAttack(Locked<Mob> lockedMob, MobAttackInfo mai) {
-        final Mob mob = lockedMob.get();
+    private static void handleMobAttack(Mob mob, MobAttackInfo mai) {
         final int action = mai.actionAndDir >> 1;
         mai.isAttack = action >= MobActionType.ATTACK1.getValue() && action <= MobActionType.ATTACKF.getValue();
         mai.isSkill = action >= MobActionType.SKILL1.getValue() && action <= MobActionType.SKILLF.getValue();
@@ -287,7 +285,7 @@ public final class MobHandler {
                 log.debug("{} : Using mob skill index {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
                 mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
                 mob.setSkillOnCooltime(mobSkill, Instant.now().plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
-                if (!applyMobSkill(lockedMob, mobSkill, si)) {
+                if (!applyMobSkill(mob, mobSkill, si)) {
                     log.error("{} : Could not apply mob skill effect for skill {}", mob, mobSkill.getSkillType().name());
                 }
             } else {
@@ -299,8 +297,7 @@ public final class MobHandler {
         }
     }
 
-    private static boolean applyMobSkill(Locked<Mob> lockedMob, MobSkill mobSkill, SkillInfo si) {
-        final Mob mob = lockedMob.get();
+    private static boolean applyMobSkill(Mob mob, MobSkill mobSkill, SkillInfo si) {
         final MobSkillType skillType = mobSkill.getSkillType();
         final int skillId = mobSkill.getSkillId();
         final int slv = mobSkill.getSkillLevel();

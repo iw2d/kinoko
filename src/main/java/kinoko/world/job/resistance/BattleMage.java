@@ -7,6 +7,7 @@ import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.affectedarea.AffectedAreaType;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
@@ -65,7 +66,7 @@ public final class BattleMage extends SkillProcessor {
     public static final int MAPLE_WARRIOR_BAM = 32121007;
     public static final int HEROS_WILL_BAM = 32121008;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -74,18 +75,14 @@ public final class BattleMage extends SkillProcessor {
         switch (skillId) {
             case DARK_CHAIN:
             case ADVANCED_DARK_CHAIN:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case DARK_GENESIS:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
         }
     }

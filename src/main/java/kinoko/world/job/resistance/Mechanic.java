@@ -13,6 +13,7 @@ import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.affectedarea.AffectedAreaType;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -75,7 +76,7 @@ public final class Mechanic extends SkillProcessor {
     public static final int LASER_BLAST = 35121012;
     public static final int MECH_SIEGE_MODE_2 = 35121013;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -83,18 +84,14 @@ public final class Mechanic extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case ATOMIC_HAMMER:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case PUNCH_LAUNCHER:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
         }
     }

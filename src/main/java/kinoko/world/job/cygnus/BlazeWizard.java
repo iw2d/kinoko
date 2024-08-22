@@ -1,5 +1,6 @@
 package kinoko.world.job.cygnus;
 
+import kinoko.world.field.mob.Mob;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
@@ -30,7 +31,7 @@ public final class BlazeWizard extends SkillProcessor {
     public static final int FLAME_GEAR = 12111005;
     public static final int FIRE_STRIKE = 12111006;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
     }
 
     public static void handleSkill(User user, Skill skill) {

@@ -1,9 +1,6 @@
 package kinoko.world.job.cygnus;
 
-import kinoko.provider.SkillProvider;
-import kinoko.provider.skill.SkillInfo;
-import kinoko.world.field.Field;
-import kinoko.world.field.affectedarea.AffectedArea;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
@@ -34,18 +31,7 @@ public final class NightWalker extends SkillProcessor {
     public static final int TRIPLE_THROW = 14111005;
     public static final int POISON_BOMB = 14111006;
 
-    public static void handleAttack(User user, Attack attack) {
-        final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
-        final int slv = attack.slv;
-
-        final Field field = user.getField();
-        switch (skillId) {
-            case POISON_BOMB:
-                final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.grenadeX, attack.grenadeY);
-                field.getAffectedAreaPool().addAffectedArea(affectedArea);
-                break;
-        }
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
     }
 
     public static void handleSkill(User user, Skill skill) {

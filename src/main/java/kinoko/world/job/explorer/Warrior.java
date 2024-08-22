@@ -7,6 +7,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -118,37 +119,28 @@ public final class Warrior extends SkillProcessor {
     public static final int BEHOLDER = 1321007;
     public static final int HEROS_WILL_DRK = 1321010;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
 
-        final Field field = user.getField();
         switch (skillId) {
             case MONSTER_MAGNET_HERO:
             case MONSTER_MAGNET_DRK:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 return;
             case SHOUT:
             case CHARGED_BLOW:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case BLAST:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.damage(user, mob.getHp(), delay);
-                    }
-                });
-            case HEAVENS_HAMMER:
-                // Handled in SkillProcessor.processAttack
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.damage(user, mob.getHp(), delay);
+                }
                 break;
         }
     }
@@ -279,6 +271,13 @@ public final class Warrior extends SkillProcessor {
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);
+    }
+
+    public static void resetComboCounter(User user) {
+        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
+        if (option.nOption > 1) {
+            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(1));
+        }
     }
 
     public static void handleBerserkEffect(User user) {

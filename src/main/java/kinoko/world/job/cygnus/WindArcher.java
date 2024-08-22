@@ -3,6 +3,7 @@ package kinoko.world.job.cygnus;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.world.field.Field;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
@@ -35,7 +36,7 @@ public final class WindArcher extends SkillProcessor {
     public static final int WIND_PIERCING = 13111006;
     public static final int WIND_SHOT = 13111007;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
     }
 
     public static void handleSkill(User user, Skill skill) {

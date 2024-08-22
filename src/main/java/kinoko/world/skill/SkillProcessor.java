@@ -9,8 +9,8 @@ import kinoko.util.Locked;
 import kinoko.util.Rect;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
-import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -46,8 +46,9 @@ public abstract class SkillProcessor {
 
     // PROCESS ATTACK --------------------------------------------------------------------------------------------------
 
-    public static void processAttack(Locked<User> locked, Attack attack) {
+    public static void processAttack(Locked<User> locked, Locked<Mob> lockedMob, Attack attack, int delay) {
         final User user = locked.get();
+        final Mob mob = lockedMob.get();
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -56,21 +57,15 @@ public abstract class SkillProcessor {
         switch (skillId) {
             case Warrior.PANIC:
             case DawnWarrior.PANIC:
-                resetComboCounter(user);
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
+                }
                 return;
             case Warrior.COMA:
             case DawnWarrior.COMA:
-                resetComboCounter(user);
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 return;
             case Magician.POISON_BREATH:
             case Magician.FIRE_DEMON:
@@ -78,92 +73,74 @@ public abstract class SkillProcessor {
             case Magician.METEOR_SHOWER:
             case Magician.BLIZZARD:
             case BlazeWizard.METEOR_SHOWER:
-                attack.forEachTargetMob((mob, delay) -> {
-                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
-                });
-                return;
-            case Magician.POISON_MIST:
-            case BlazeWizard.FLAME_GEAR:
-                final AffectedArea affectedArea = AffectedArea.userSkill(user, si, slv, 0, attack.userX, attack.userY);
-                user.getField().getAffectedAreaPool().addAffectedArea(affectedArea);
+                mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 return;
             case Magician.TELEPORT_MASTERY_FP:
             case Magician.TELEPORT_MASTERY_IL:
             case Magician.TELEPORT_MASTERY_BISH:
             case BattleMage.TELEPORT_MASTERY:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 return;
             case Thief.DISORDER:
             case NightWalker.DISORDER:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(Map.of(
-                                MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
-                        ), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(Map.of(
+                            MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                            MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                    ), delay);
+                }
                 return;
         }
 
         final int skillRoot = SkillConstants.getSkillRoot(attack.skillId);
         switch (Job.getById(skillRoot)) {
             case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
-                Warrior.handleAttack(user, attack);
+                Warrior.handleAttack(user, mob, attack, delay);
             }
             case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST, BISHOP -> {
-                Magician.handleAttack(user, attack);
+                Magician.handleAttack(user, mob, attack, delay);
             }
             case ARCHER, HUNTER, RANGER, BOWMASTER, CROSSBOWMAN, SNIPER, MARKSMAN -> {
-                Bowman.handleAttack(user, attack);
+                Bowman.handleAttack(user, mob, attack, delay);
             }
             case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
-                Thief.handleAttack(user, attack);
+                Thief.handleAttack(user, mob, attack, delay);
             }
             case PIRATE, BRAWLER, MARAUDER, BUCCANEER, GUNSLINGER, OUTLAW, CORSAIR -> {
-                Pirate.handleAttack(user, attack);
+                Pirate.handleAttack(user, mob, attack, delay);
             }
             case DAWN_WARRIOR_1, DAWN_WARRIOR_2, DAWN_WARRIOR_3 -> {
-                DawnWarrior.handleAttack(user, attack);
+                DawnWarrior.handleAttack(user, mob, attack, delay);
             }
             case BLAZE_WIZARD_1, BLAZE_WIZARD_2, BLAZE_WIZARD_3 -> {
-                BlazeWizard.handleAttack(user, attack);
+                BlazeWizard.handleAttack(user, mob, attack, delay);
             }
             case WIND_ARCHER_1, WIND_ARCHER_2, WIND_ARCHER_3 -> {
-                WindArcher.handleAttack(user, attack);
+                WindArcher.handleAttack(user, mob, attack, delay);
             }
             case NIGHT_WALKER_1, NIGHT_WALKER_2, NIGHT_WALKER_3 -> {
-                NightWalker.handleAttack(user, attack);
+                NightWalker.handleAttack(user, mob, attack, delay);
             }
             case THUNDER_BREAKER_1, THUNDER_BREAKER_2, THUNDER_BREAKER_3 -> {
-                ThunderBreaker.handleAttack(user, attack);
+                ThunderBreaker.handleAttack(user, mob, attack, delay);
             }
             case ARAN_1, ARAN_2, ARAN_3, ARAN_4 -> {
-                Aran.handleAttack(user, attack);
+                Aran.handleAttack(user, mob, attack, delay);
             }
             case EVAN_1, EVAN_2, EVAN_3, EVAN_4, EVAN_5, EVAN_6, EVAN_7, EVAN_8, EVAN_9, EVAN_10 -> {
-                Evan.handleAttack(user, attack);
+                Evan.handleAttack(user, mob, attack, delay);
             }
             case BATTLE_MAGE_1, BATTLE_MAGE_2, BATTLE_MAGE_3, BATTLE_MAGE_4 -> {
-                BattleMage.handleAttack(user, attack);
+                BattleMage.handleAttack(user, mob, attack, delay);
             }
             case WILD_HUNTER_1, WILD_HUNTER_2, WILD_HUNTER_3, WILD_HUNTER_4 -> {
-                WildHunter.handleAttack(user, attack);
+                WildHunter.handleAttack(user, mob, attack, delay);
             }
             case MECHANIC_1, MECHANIC_2, MECHANIC_3, MECHANIC_4 -> {
-                Mechanic.handleAttack(user, attack);
+                Mechanic.handleAttack(user, mob, attack, delay);
             }
-        }
-    }
-
-    protected static void resetComboCounter(User user) {
-        final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboCounter);
-        if (option.nOption > 1) {
-            user.setTemporaryStat(CharacterTemporaryStat.ComboCounter, option.update(1));
         }
     }
 

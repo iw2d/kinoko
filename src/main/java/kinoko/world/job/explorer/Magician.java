@@ -9,6 +9,7 @@ import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
 import kinoko.world.field.mob.BurnedInfo;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.field.summoned.Summoned;
@@ -123,7 +124,7 @@ public final class Magician extends SkillProcessor {
     public static final int GENESIS = 2321008;
     public static final int HEROS_WILL_BISH = 2321009;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -132,41 +133,33 @@ public final class Magician extends SkillProcessor {
         switch (skillId) {
             case THUNDER_SPEAR:
             case SHINING_RAY:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case ELEMENT_COMPOSITION_FP:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
-                    }
-                });
+                if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
+                }
                 break;
             case PARALYZE:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (mob.isBoss()) {
-                        mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
-                    } else {
-                        mob.setTemporaryStat(
-                                Map.of(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv))),
-                                BurnedInfo.from(user, si, slv, mob),
-                                delay
-                        );
-                    }
-                });
+                if (mob.isBoss()) {
+                    mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
+                } else {
+                    mob.setTemporaryStat(
+                            Map.of(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv))),
+                            BurnedInfo.from(user, si, slv, mob),
+                            delay
+                    );
+                }
                 break;
             case COLD_BEAM:
             case ICE_STRIKE:
             case ELEMENT_COMPOSITION_IL:
             case ELQUINES:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss()) {
+                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
         }
     }

@@ -9,6 +9,7 @@ import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.affectedarea.AffectedAreaType;
+import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Attack;
@@ -78,7 +79,7 @@ public final class Evan extends SkillProcessor {
     public static final int DARK_FOG = 22181002;
     public static final int SOUL_STONE = 22181003;
 
-    public static void handleAttack(User user, Attack attack) {
+    public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
         final int skillId = attack.skillId;
         final int slv = attack.slv;
@@ -86,32 +87,24 @@ public final class Evan extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case ICE_BREATH:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case FIRE_BREATH:
             case BLAZE:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
-                    }
-                });
+                if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
+                    mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
+                }
                 break;
             case KILLER_WINGS:
-                attack.forEachTargetMob((mob, delay) -> {
-                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
-                        user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
-                    }
-                    user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, 1, skillId, mob.getId()));
-                });
+                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
+                    user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
+                }
+                user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, 1, skillId, mob.getId()));
                 break;
             case PHANTOM_IMPRINT:
-                attack.forEachTargetMob((mob, delay) -> {
-                    mob.setTemporaryStat(MobTemporaryStat.Weakness, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
-                });
+                mob.setTemporaryStat(MobTemporaryStat.Weakness, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
                 break;
         }
     }

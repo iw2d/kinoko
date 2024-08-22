@@ -1,13 +1,11 @@
 package kinoko.world.skill;
 
 import kinoko.server.header.OutHeader;
-import kinoko.world.field.mob.Mob;
 import kinoko.world.job.resistance.BattleMage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 public final class Attack {
     private final List<AttackInfo> attackInfo = new ArrayList<>();
@@ -117,18 +115,6 @@ public final class Attack {
                 return true;
         }
         return getHeaderType() == OutHeader.UserMagicAttack;
-    }
-
-    public void forEachTargetMob(BiConsumer<Mob, Integer> consumer) {
-        for (AttackInfo ai : getAttackInfo()) {
-            if (ai.lockedMob == null) {
-                continue;
-            }
-            final Mob mob = ai.lockedMob.get();
-            if (mob.getHp() > 0) {
-                consumer.accept(mob, ai.delay);
-            }
-        }
     }
 
     @Override
