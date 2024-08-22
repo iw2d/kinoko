@@ -5,26 +5,22 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.GuildMemberUDT;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;
 
 public final class GuildMemberCodec extends MappingCodec<UdtValue, GuildMember> {
-    public GuildMemberCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<GuildMember> outerJavaType) {
+    public GuildMemberCodec(TypeCodec<UdtValue> innerCodec, GenericType<GuildMember> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected GuildMember innerToOuter(@Nullable UdtValue value) {
+    protected GuildMember innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -45,9 +41,8 @@ public final class GuildMemberCodec extends MappingCodec<UdtValue, GuildMember> 
         );
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable GuildMember member) {
+    protected UdtValue outerToInner(GuildMember member) {
         if (member == null) {
             return null;
         }

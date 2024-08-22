@@ -5,8 +5,6 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.ConfigUDT;
 import kinoko.world.GameConstants;
 import kinoko.world.user.data.ConfigManager;
@@ -22,19 +20,17 @@ import java.util.List;
 public final class ConfigCodec extends MappingCodec<UdtValue, ConfigManager> {
     public static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 
-    public ConfigCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<ConfigManager> outerJavaType) {
+    public ConfigCodec(TypeCodec<UdtValue> innerCodec, GenericType<ConfigManager> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected ConfigManager innerToOuter(@Nullable UdtValue value) {
+    protected ConfigManager innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -81,9 +77,8 @@ public final class ConfigCodec extends MappingCodec<UdtValue, ConfigManager> {
         return cm;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable ConfigManager cm) {
+    protected UdtValue outerToInner(ConfigManager cm) {
         if (cm == null) {
             return null;
         }

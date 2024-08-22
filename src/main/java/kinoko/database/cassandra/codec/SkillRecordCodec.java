@@ -5,25 +5,21 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.SkillRecordUDT;
 import kinoko.world.skill.SkillRecord;
 
 public final class SkillRecordCodec extends MappingCodec<UdtValue, SkillRecord> {
-    public SkillRecordCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<SkillRecord> outerJavaType) {
+    public SkillRecordCodec(TypeCodec<UdtValue> innerCodec, GenericType<SkillRecord> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected SkillRecord innerToOuter(@Nullable UdtValue value) {
+    protected SkillRecord innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -34,9 +30,8 @@ public final class SkillRecordCodec extends MappingCodec<UdtValue, SkillRecord> 
         return sr;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable SkillRecord sr) {
+    protected UdtValue outerToInner(SkillRecord sr) {
         if (sr == null) {
             return null;
         }

@@ -5,26 +5,22 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.CashItemInfoUDT;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.Item;
 
 public final class CashItemInfoCodec extends MappingCodec<UdtValue, CashItemInfo> {
-    public CashItemInfoCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<CashItemInfo> outerJavaType) {
+    public CashItemInfoCodec(TypeCodec<UdtValue> innerCodec, GenericType<CashItemInfo> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected CashItemInfo innerToOuter(@Nullable UdtValue value) {
+    protected CashItemInfo innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -37,9 +33,8 @@ public final class CashItemInfoCodec extends MappingCodec<UdtValue, CashItemInfo
         );
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable CashItemInfo cii) {
+    protected UdtValue outerToInner(CashItemInfo cii) {
         if (cii == null) {
             return null;
         }

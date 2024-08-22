@@ -5,27 +5,23 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.GuildBoardCommentUDT;
 import kinoko.server.guild.GuildBoardComment;
 
 import java.time.Instant;
 
 public final class GuildBoardCommentCodec extends MappingCodec<UdtValue, GuildBoardComment> {
-    public GuildBoardCommentCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<GuildBoardComment> outerJavaType) {
+    public GuildBoardCommentCodec(TypeCodec<UdtValue> innerCodec, GenericType<GuildBoardComment> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected GuildBoardComment innerToOuter(@Nullable UdtValue value) {
+    protected GuildBoardComment innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -41,9 +37,8 @@ public final class GuildBoardCommentCodec extends MappingCodec<UdtValue, GuildBo
         );
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable GuildBoardComment comment) {
+    protected UdtValue outerToInner(GuildBoardComment comment) {
         if (comment == null) {
             return null;
         }

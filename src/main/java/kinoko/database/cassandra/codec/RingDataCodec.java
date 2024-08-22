@@ -5,25 +5,21 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.RingDataUDT;
 import kinoko.world.item.RingData;
 
 public final class RingDataCodec extends MappingCodec<UdtValue, RingData> {
-    public RingDataCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<RingData> outerJavaType) {
+    public RingDataCodec(TypeCodec<UdtValue> innerCodec, GenericType<RingData> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected RingData innerToOuter(@Nullable UdtValue value) {
+    protected RingData innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -34,9 +30,8 @@ public final class RingDataCodec extends MappingCodec<UdtValue, RingData> {
         return ringData;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable RingData ringData) {
+    protected UdtValue outerToInner(RingData ringData) {
         if (ringData == null) {
             return null;
         }

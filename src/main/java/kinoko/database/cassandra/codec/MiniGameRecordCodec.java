@@ -5,25 +5,21 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.MiniGameRecordUDT;
 import kinoko.world.user.data.MiniGameRecord;
 
 public final class MiniGameRecordCodec extends MappingCodec<UdtValue, MiniGameRecord> {
-    public MiniGameRecordCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<MiniGameRecord> outerJavaType) {
+    public MiniGameRecordCodec(TypeCodec<UdtValue> innerCodec, GenericType<MiniGameRecord> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected MiniGameRecord innerToOuter(@Nullable UdtValue value) {
+    protected MiniGameRecord innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -39,9 +35,8 @@ public final class MiniGameRecordCodec extends MappingCodec<UdtValue, MiniGameRe
         return miniGameRecord;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable MiniGameRecord miniGameRecord) {
+    protected UdtValue outerToInner(MiniGameRecord miniGameRecord) {
         if (miniGameRecord == null) {
             return null;
         }

@@ -5,8 +5,6 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.GuildBoardEntryUDT;
 import kinoko.server.guild.GuildBoardComment;
 import kinoko.server.guild.GuildBoardEntry;
@@ -16,19 +14,17 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class GuildBoardEntryCodec extends MappingCodec<UdtValue, GuildBoardEntry> {
-    public GuildBoardEntryCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<GuildBoardEntry> outerJavaType) {
+    public GuildBoardEntryCodec(TypeCodec<UdtValue> innerCodec, GenericType<GuildBoardEntry> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected GuildBoardEntry innerToOuter(@Nullable UdtValue value) {
+    protected GuildBoardEntry innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -54,9 +50,8 @@ public final class GuildBoardEntryCodec extends MappingCodec<UdtValue, GuildBoar
         return entry;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable GuildBoardEntry entry) {
+    protected UdtValue outerToInner(GuildBoardEntry entry) {
         if (entry == null) {
             return null;
         }

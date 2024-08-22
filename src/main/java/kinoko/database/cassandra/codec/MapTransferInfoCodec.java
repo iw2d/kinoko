@@ -5,27 +5,23 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.MapTransferInfoUDT;
 import kinoko.world.user.data.MapTransferInfo;
 
 import java.util.List;
 
 public final class MapTransferInfoCodec extends MappingCodec<UdtValue, MapTransferInfo> {
-    public MapTransferInfoCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<MapTransferInfo> outerJavaType) {
+    public MapTransferInfoCodec(TypeCodec<UdtValue> innerCodec, GenericType<MapTransferInfo> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected MapTransferInfo innerToOuter(@Nullable UdtValue value) {
+    protected MapTransferInfo innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -41,9 +37,8 @@ public final class MapTransferInfoCodec extends MappingCodec<UdtValue, MapTransf
         return mapTransferInfo;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable MapTransferInfo mapTransferInfo) {
+    protected UdtValue outerToInner(MapTransferInfo mapTransferInfo) {
         if (mapTransferInfo == null) {
             return null;
         }

@@ -5,26 +5,22 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.QuestRecordUDT;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
 
 public final class QuestRecordCodec extends MappingCodec<UdtValue, QuestRecord> {
-    public QuestRecordCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<QuestRecord> outerJavaType) {
+    public QuestRecordCodec(TypeCodec<UdtValue> innerCodec, GenericType<QuestRecord> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected QuestRecord innerToOuter(@Nullable UdtValue value) {
+    protected QuestRecord innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -36,9 +32,8 @@ public final class QuestRecordCodec extends MappingCodec<UdtValue, QuestRecord> 
         return qr;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable QuestRecord qr) {
+    protected UdtValue outerToInner(QuestRecord qr) {
         if (qr == null) {
             return null;
         }

@@ -5,25 +5,21 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.PetDataUDT;
 import kinoko.world.item.PetData;
 
 public final class PetDataCodec extends MappingCodec<UdtValue, PetData> {
-    public PetDataCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<PetData> outerJavaType) {
+    public PetDataCodec(TypeCodec<UdtValue> innerCodec, GenericType<PetData> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected PetData innerToOuter(@Nullable UdtValue value) {
+    protected PetData innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -38,9 +34,8 @@ public final class PetDataCodec extends MappingCodec<UdtValue, PetData> {
         return petData;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable PetData petData) {
+    protected UdtValue outerToInner(PetData petData) {
         if (petData == null) {
             return null;
         }

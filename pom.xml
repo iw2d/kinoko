@@ -15,8 +15,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <mainClass>kinoko.server.Server</mainClass>
 
-        <netty.version>4.1.100.Final</netty.version>
-        <driver.version>4.17.0</driver.version>
+        <netty.version>4.1.112.Final</netty.version>
+        <driver.version>4.18.1</driver.version>
         <slfj4.version>2.0.9</slfj4.version>
         <log4j.version>2.20.0</log4j.version>
         <junit.version>5.10.0</junit.version>
@@ -29,12 +29,12 @@
             <version>${netty.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.datastax.oss</groupId>
+            <groupId>org.apache.cassandra</groupId>
             <artifactId>java-driver-core</artifactId>
             <version>${driver.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.datastax.oss</groupId>
+            <groupId>org.apache.cassandra</groupId>
             <artifactId>java-driver-query-builder</artifactId>
             <version>${driver.version}</version>
         </dependency>

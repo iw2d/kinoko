@@ -5,26 +5,22 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.CharacterStatUDT;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 
 public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterStat> {
-    public CharacterStatCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<CharacterStat> outerJavaType) {
+    public CharacterStatCodec(TypeCodec<UdtValue> innerCodec, GenericType<CharacterStat> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected CharacterStat innerToOuter(@Nullable UdtValue value) {
+    protected CharacterStat innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -56,9 +52,8 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
         return cs;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable CharacterStat cs) {
+    protected UdtValue outerToInner(CharacterStat cs) {
         if (cs == null) {
             return null;
         }

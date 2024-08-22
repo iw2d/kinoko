@@ -5,25 +5,21 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.EquipDataUDT;
 import kinoko.world.item.EquipData;
 
 public final class EquipDataCodec extends MappingCodec<UdtValue, EquipData> {
-    public EquipDataCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<EquipData> outerJavaType) {
+    public EquipDataCodec(TypeCodec<UdtValue> innerCodec, GenericType<EquipData> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected EquipData innerToOuter(@Nullable UdtValue value) {
+    protected EquipData innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -60,9 +56,8 @@ public final class EquipDataCodec extends MappingCodec<UdtValue, EquipData> {
         return equipData;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable EquipData equipData) {
+    protected UdtValue outerToInner(EquipData equipData) {
         if (equipData == null) {
             return null;
         }

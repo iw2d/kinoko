@@ -5,8 +5,6 @@ import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import kinoko.database.cassandra.type.InventoryUDT;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.Item;
@@ -14,19 +12,17 @@ import kinoko.world.item.Item;
 import java.util.Map;
 
 public final class InventoryCodec extends MappingCodec<UdtValue, Inventory> {
-    public InventoryCodec(@NonNull TypeCodec<UdtValue> innerCodec, @NonNull GenericType<Inventory> outerJavaType) {
+    public InventoryCodec(TypeCodec<UdtValue> innerCodec, GenericType<Inventory> outerJavaType) {
         super(innerCodec, outerJavaType);
     }
 
-    @NonNull
     @Override
     public UserDefinedType getCqlType() {
         return (UserDefinedType) super.getCqlType();
     }
 
-    @Nullable
     @Override
-    protected Inventory innerToOuter(@Nullable UdtValue value) {
+    protected Inventory innerToOuter(UdtValue value) {
         if (value == null) {
             return null;
         }
@@ -43,9 +39,8 @@ public final class InventoryCodec extends MappingCodec<UdtValue, Inventory> {
         return inventory;
     }
 
-    @Nullable
     @Override
-    protected UdtValue outerToInner(@Nullable Inventory inventory) {
+    protected UdtValue outerToInner(Inventory inventory) {
         if (inventory == null) {
             return null;
         }
