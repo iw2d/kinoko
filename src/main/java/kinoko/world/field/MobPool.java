@@ -3,6 +3,7 @@ package kinoko.world.field;
 import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
+import kinoko.server.node.ServerExecutor;
 import kinoko.util.BitFlag;
 import kinoko.util.Rect;
 import kinoko.world.GameConstants;
@@ -36,7 +37,10 @@ public final class MobPool extends FieldObjectPool<Mob> {
         if (!removeObject(mob)) {
             return false;
         }
-        field.broadcastPacket(MobPacket.mobLeaveField(mob));
+        // Send MobLeaveField after processing attack
+        ServerExecutor.submit(field, () -> {
+            field.broadcastPacket(MobPacket.mobLeaveField(mob));
+        });
         return true;
     }
 

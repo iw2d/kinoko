@@ -51,7 +51,6 @@ public final class MobHandler {
         try (var lockedMob = mobResult.get().acquire()) {
             final Mob mob = lockedMob.get();
             if (mob.getController() != user) {
-                log.info("MobMove : {} {}", mob, user.getCharacterName());
                 field.getUserPool().setController(mob, user);
             }
 
@@ -129,7 +128,6 @@ public final class MobHandler {
                 final double userDistance = Util.distance(mob.getX(), mob.getY(), user.getX(), user.getY());
                 final double controllerDistance = Util.distance(mob.getX(), mob.getY(), mob.getController().getX(), mob.getController().getY());
                 if (userDistance < controllerDistance - 20) {
-                    log.info("MobApplyCtrl : {} {}, {}, {}", mob, user.getCharacterName(), userDistance, controllerDistance);
                     field.getUserPool().setController(mob, user);
                 }
             }
