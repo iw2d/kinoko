@@ -70,18 +70,17 @@ public final class CalcDamage {
         // CalcDamage::PDamage
         final User user = locked.get();
         final SecondaryStat ss = user.getSecondaryStat();
-        final PassiveSkillData psd = user.getPassiveSkillData();
         final Mob mob = lockedMob.get();
         final MobStat ms = mob.getMobStat();
         final int skillId = attack.skillId;
-        final int baseSkillId = skillId % 10000;
+        final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
         final int criticalRate = getCriticalRate(user, attack);
         final int damagePerMob = skillId == Thief.MESO_EXPLOSION ? ai.attackCount : attack.getDamagePerMob();
         // Process attack info
         int counter = 0;
         for (int i = 0; i < damagePerMob; i++) {
-            if (baseSkillId == 1009 || baseSkillId == 1020) {
-                if (baseSkillId == 1009 && mob.isBoss()) {
+            if (noviceSkill == 1009 || noviceSkill == 1020) {
+                if (noviceSkill == 1009 && mob.isBoss()) {
                     assertDamage((int) (mob.getMaxHp() * 0.3), ai.damage[i]);
                 } else {
                     assertDamage(mob.getMaxHp(), ai.damage[i]);
@@ -146,7 +145,7 @@ public final class CalcDamage {
                         continue;
                     }
                     final int fixDamage = user.getSkillStatValue(skillId, SkillStat.fixdamage);
-                    if (baseSkillId == 1066 || baseSkillId == 1067 || fixDamage != 0) {
+                    if (noviceSkill == 1066 || noviceSkill == 1067 || fixDamage != 0) {
                         assertDamage(fixDamage, ai.damage[i]);
                         continue;
                     }

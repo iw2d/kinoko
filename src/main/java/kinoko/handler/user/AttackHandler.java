@@ -36,6 +36,8 @@ import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
 import kinoko.world.job.legend.Aran;
+import kinoko.world.job.resistance.BattleMage;
+import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.skill.Attack;
 import kinoko.world.skill.AttackInfo;
@@ -313,6 +315,33 @@ public final class AttackHandler {
             // Set skill level
             if (attack.skillId != 0) {
                 attack.slv = user.getSkillLevel(attack.skillId);
+                switch (attack.skillId) {
+                    case Aran.DOUBLE_SWING, Aran.TRIPLE_SWING -> {
+                        if (user.getSkillLevel(Aran.OVER_SWING) > 0) {
+                            attack.skillId = attack.skillId == Aran.DOUBLE_SWING ?
+                                    Aran.OVER_SWING_DOUBLE_SWING :
+                                    Aran.OVER_SWING_TRIPLE_SWING;
+                            attack.slv = user.getSkillLevel(Aran.OVER_SWING);
+                        } else if (user.getSkillLevel(Aran.FULL_SWING) > 0) {
+                            attack.skillId = attack.skillId == Aran.DOUBLE_SWING ?
+                                    Aran.FULL_SWING_DOUBLE_SWING :
+                                    Aran.FULL_SWING_TRIPLE_SWING;
+                            attack.slv = user.getSkillLevel(Aran.FULL_SWING);
+                        }
+                    }
+                    case Mechanic.ENHANCED_FLAME_LAUNCHER -> {
+                        attack.slv = user.getSkillLevel(Mechanic.FLAME_LAUNCHER);
+                    }
+                    case Mechanic.ENHANCED_GATLING_GUN -> {
+                        attack.slv = user.getSkillLevel(Mechanic.GATLING_GUN);
+                    }
+                    case 35111008, 35111009, 35111010 -> {
+                        attack.slv = user.getSkillLevel(Mechanic.SATELLITE);
+                    }
+                    case 32001007, 32001008, 32001009, 32001010, 32001011 -> {
+                        attack.slv = user.getSkillLevel(BattleMage.THE_FINISHER);
+                    }
+                }
                 if (attack.slv == 0) {
                     log.error("Tried to attack with skill {} not learned by user", attack.skillId);
                     return;
@@ -330,7 +359,7 @@ public final class AttackHandler {
                 }
                 final SkillInfo si = skillInfoResult.get();
                 if (si.getLevelDataCrc(attack.slv) != attack.crc) {
-                    log.warn("Received mismatching CRC for skill ID : {}", attack.skillId);
+                    log.warn(String.format("Received mismatching CRC for skill ID : %d - %d, 0x%08X != 0x%08X", attack.skillId, attack.slv, si.getLevelDataCrc(attack.slv), attack.crc));
                 }
             }
 

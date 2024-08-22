@@ -127,7 +127,7 @@ public final class Warrior extends SkillProcessor {
         switch (skillId) {
             case MONSTER_MAGNET_HERO:
             case MONSTER_MAGNET_DRK:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
@@ -135,14 +135,14 @@ public final class Warrior extends SkillProcessor {
                 return;
             case SHOUT:
             case CHARGED_BLOW:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case BLAST:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.damage(user, mob.getHp(), delay);
                     }

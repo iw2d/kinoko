@@ -1,7 +1,7 @@
 package kinoko.world.job;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class JobConstants {
     public static int getJobLevel(int jobId) {
@@ -216,8 +216,8 @@ public final class JobConstants {
         return getJobCategory(jobId) == 5;
     }
 
-    public static Set<Integer> getSkillRootFromJob(int jobId) {
-        final Set<Integer> jobs = new HashSet<>();
+    public static List<Integer> getSkillRootFromJob(int jobId) {
+        final List<Integer> jobs = new ArrayList<>();
         if (Job.getById(jobId) == null) {
             return jobs;
         }
@@ -243,6 +243,14 @@ public final class JobConstants {
             jobs.add(1000 * (jobId / 1000));
         }
         return jobs;
+    }
+
+    public static int getNoviceSkillRootFromJob(int jobId) {
+        if (isEvanJob(jobId)) {
+            return 2001;
+        } else {
+            return 1000 * (jobId / 1000);
+        }
     }
 
     public static boolean isCorrectJobForSkillRoot(int jobId, int skillRoot) {

@@ -75,21 +75,21 @@ public final class WildHunter extends SkillProcessor {
             case DASH_N_SLASH:
             case SILVER_HAWK:
             case SONIC_ROAR:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case JAGUAR_RAWR:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case STINK_BOMB_SHOT:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),

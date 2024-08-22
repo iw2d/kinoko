@@ -132,21 +132,21 @@ public final class Magician extends SkillProcessor {
         switch (skillId) {
             case THUNDER_SPEAR:
             case SHINING_RAY:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case ELEMENT_COMPOSITION_FP:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                     }
                 });
                 break;
             case PARALYZE:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (mob.isBoss()) {
                         mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                     } else {
@@ -162,7 +162,7 @@ public final class Magician extends SkillProcessor {
             case ICE_STRIKE:
             case ELEMENT_COMPOSITION_IL:
             case ELQUINES:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }

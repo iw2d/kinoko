@@ -137,13 +137,15 @@ public final class Thief extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case SHADOW_MESO:
-                attack.forEachMob(field, (mob, delay) -> {
-                    mob.resetTemporaryStat(Set.of(MobTemporaryStat.PGuardUp, MobTemporaryStat.MGuardUp));
+                attack.forEachTargetMob((mob, delay) -> {
+                    if (!mob.isBoss()) {
+                        mob.resetTemporaryStat(Set.of(MobTemporaryStat.PGuardUp, MobTemporaryStat.MGuardUp));
+                    }
                 });
                 break;
             case TAUNT_NL:
             case TAUNT_SHAD:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.Showdown, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
@@ -156,14 +158,14 @@ public final class Thief extends SkillProcessor {
             case ASSAULTER:
             case BOOMERANG_STEP:
             case FLYING_ASSAULTER:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case STEAL:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                         mob.steal(user);
@@ -183,21 +185,21 @@ public final class Thief extends SkillProcessor {
                 }
                 break;
             case FLASHBANG:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
                     }
                 });
                 break;
             case UPPER_STAB:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
                         mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000), delay);
                     }
                 });
                 break;
             case SUDDEN_RAID:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 });
                 break;

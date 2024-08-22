@@ -1,7 +1,6 @@
 package kinoko.world.skill;
 
 import kinoko.server.header.OutHeader;
-import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 
 import java.util.ArrayList;
@@ -99,7 +98,7 @@ public final class Attack {
         return (actionAndDir & 0x8000) != 0;
     }
 
-    public void forEachMob(Field field, BiConsumer<Mob, Integer> consumer) {
+    public void forEachTargetMob(BiConsumer<Mob, Integer> consumer) {
         for (AttackInfo ai : getAttackInfo()) {
             if (ai.lockedMob == null) {
                 continue;

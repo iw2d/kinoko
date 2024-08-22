@@ -71,7 +71,7 @@ public final class Aran extends SkillProcessor {
         final Field field = user.getField();
         switch (skillId) {
             case BODY_PRESSURE:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.Stun, MobStatOption.of(1, skillId, 5000),
@@ -81,14 +81,14 @@ public final class Aran extends SkillProcessor {
                 });
                 break;
             case FINAL_TOSS:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && !mob.getMobStat().hasOption(MobTemporaryStat.RiseByToss)) {
                         mob.setTemporaryStat(MobTemporaryStat.RiseByToss, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, 1000), delay);
                     }
                 });
                 break;
             case COMBO_TEMPEST:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }

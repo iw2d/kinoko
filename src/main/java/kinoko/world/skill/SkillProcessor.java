@@ -57,7 +57,7 @@ public abstract class SkillProcessor {
             case Warrior.PANIC:
             case DawnWarrior.PANIC:
                 resetComboCounter(user);
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
                     }
@@ -66,7 +66,7 @@ public abstract class SkillProcessor {
             case Warrior.COMA:
             case DawnWarrior.COMA:
                 resetComboCounter(user);
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
@@ -78,7 +78,7 @@ public abstract class SkillProcessor {
             case Magician.METEOR_SHOWER:
             case Magician.BLIZZARD:
             case BlazeWizard.METEOR_SHOWER:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 });
                 return;
@@ -91,7 +91,7 @@ public abstract class SkillProcessor {
             case Magician.TELEPORT_MASTERY_IL:
             case Magician.TELEPORT_MASTERY_BISH:
             case BattleMage.TELEPORT_MASTERY:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.subProp, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     }
@@ -99,7 +99,7 @@ public abstract class SkillProcessor {
                 return;
             case Thief.DISORDER:
             case NightWalker.DISORDER:
-                attack.forEachMob(field, (mob, delay) -> {
+                attack.forEachTargetMob((mob, delay) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),

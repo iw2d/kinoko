@@ -6,6 +6,7 @@ import kinoko.world.user.stat.StatConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
 public final class ConstantsTest {
@@ -13,7 +14,7 @@ public final class ConstantsTest {
     public void testSkillRootFromJob() {
         for (Job job : Job.values()) {
             final int jobId = job.getJobId();
-            final Set<Integer> skillRoots = JobConstants.getSkillRootFromJob(jobId);
+            final List<Integer> skillRoots = JobConstants.getSkillRootFromJob(jobId);
             Assertions.assertNotEquals(0, skillRoots.size());
             for (int skillRoot : skillRoots) {
                 Assertions.assertNotNull(Job.getById(skillRoot));
