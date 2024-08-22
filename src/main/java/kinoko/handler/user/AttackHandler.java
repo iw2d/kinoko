@@ -302,7 +302,7 @@ public final class AttackHandler {
         final User user = locked.get();
         final Field field = user.getField();
         try {
-            // Acquire mobs
+            // Acquire mobs - TODO reimplement in a less deadlock prone way
             for (AttackInfo ai : attack.getAttackInfo()) {
                 ai.random = user.getCalcDamage().getNextAttackRandom();
                 final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
@@ -489,8 +489,8 @@ public final class AttackHandler {
                 if (ai.lockedMob == null) {
                     continue;
                 }
-                if (attack.getHeaderType() == OutHeader.UserMagicAttack) {
-                    // TODO CalcDamage.calcMDamage(locked, ai.lockedMob, attack, ai);
+                if (attack.isMagicAttack()) {
+                    CalcDamage.calcMDamage(locked, ai.lockedMob, attack, ai);
                 } else {
                     CalcDamage.calcPDamage(locked, ai.lockedMob, attack, ai);
                 }
@@ -738,7 +738,7 @@ public final class AttackHandler {
         final double k = CalcDamage.getMasteryConstByWT(weaponType);
         final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
         double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
-        damage = damage + user.getPassiveSkillData().getAllPdamR() * damage / 100.0;
+        damage = damage + user.getPassiveSkillData().getPdamR() * damage / 100.0;
         damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
         damage = CalcDamage.getDamageAdjustedByChargedElemAttr(user, damage, mob.getDamagedElemAttr());
         damage += CalcDamage.getDamageAdjustedByAssistChargedElemAttr(user, damage, mob.getDamagedElemAttr());
@@ -746,7 +746,7 @@ public final class AttackHandler {
         if (skillDamage > 0) {
             damage = skillDamage / 100.0 * damage;
         }
-        final int damR = user.getPassiveSkillData().getAllDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+        final int damR = user.getPassiveSkillData().getDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
         damage = damage + damR * damage / 100.0;
         return Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getHp() - 1);
     }

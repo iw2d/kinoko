@@ -25,53 +25,53 @@ public final class UserRemote {
         return outPacket;
     }
 
-    public static OutPacket attack(User user, Attack a) {
-        final OutPacket outPacket = OutPacket.of(a.getHeaderType());
+    public static OutPacket attack(User user, Attack attack) {
+        final OutPacket outPacket = OutPacket.of(attack.getHeaderType());
         outPacket.encodeInt(user.getCharacterId());
-        outPacket.encodeByte(a.mask); // nDamagePerMob | (16 * nMobCount)
+        outPacket.encodeByte(attack.mask); // nDamagePerMob | (16 * nMobCount)
         outPacket.encodeByte(user.getLevel()); // nLevel
-        outPacket.encodeByte(a.slv);
-        if (a.slv != 0) {
-            outPacket.encodeInt(a.skillId);
+        outPacket.encodeByte(attack.slv);
+        if (attack.slv != 0) {
+            outPacket.encodeInt(attack.skillId);
         }
-        if (a.skillId == Bowman.STRAFE_MM) {
-            outPacket.encodeByte(a.passiveSlv); // nPassiveSLV
-            if (a.passiveSlv != 0) {
-                outPacket.encodeInt(a.passiveSkillId); // nSkillID
+        if (attack.skillId == Bowman.STRAFE_MM) {
+            outPacket.encodeByte(attack.passiveSlv); // nPassiveSLV
+            if (attack.passiveSlv != 0) {
+                outPacket.encodeInt(attack.passiveSkillId); // nSkillID
             }
         }
-        outPacket.encodeByte(a.flag);
-        outPacket.encodeShort(a.actionAndDir);
-        if (a.getAction() < ActionType.NO.getValue()) {
-            outPacket.encodeByte(a.attackSpeed);
-            outPacket.encodeByte(a.mastery);
-            outPacket.encodeInt(a.bulletItemId);
-            for (AttackInfo ai : a.getAttackInfo()) {
+        outPacket.encodeByte(attack.flag);
+        outPacket.encodeShort(attack.actionAndDir);
+        if (attack.getAction() < ActionType.NO.getValue()) {
+            outPacket.encodeByte(attack.attackSpeed);
+            outPacket.encodeByte(attack.mastery);
+            outPacket.encodeInt(attack.bulletItemId);
+            for (AttackInfo ai : attack.getAttackInfo()) {
                 outPacket.encodeInt(ai.mobId);
                 if (ai.mobId == 0) {
                     continue;
                 }
                 outPacket.encodeByte(ai.actionAndDir);
-                if (a.skillId == Thief.MESO_EXPLOSION) {
+                if (attack.skillId == Thief.MESO_EXPLOSION) {
                     outPacket.encodeByte(ai.attackCount);
                     for (int i = 0; i < ai.attackCount; i++) {
                         outPacket.encodeInt(ai.damage[i]);
                     }
-                } else if (a.getDamagePerMob() > 0) {
-                    for (int i = 0; i < a.getDamagePerMob(); i++) {
+                } else if (attack.getDamagePerMob() > 0) {
+                    for (int i = 0; i < attack.getDamagePerMob(); i++) {
                         outPacket.encodeByte(ai.critical[i]);
                         outPacket.encodeInt(ai.damage[i]);
                     }
                 }
             }
-            if (a.getHeaderType() == OutHeader.UserShootAttack) { // nType == 212
-                outPacket.encodeShort(a.ballStartX); // ptBallStart.x
-                outPacket.encodeShort(a.ballStartY); // ptBallStart.y
+            if (attack.isShootAttack()) { // nType == 212
+                outPacket.encodeShort(attack.ballStartX); // ptBallStart.x
+                outPacket.encodeShort(attack.ballStartY); // ptBallStart.y
             }
-            if (SkillConstants.isMagicKeydownSkill(a.skillId)) {
-                outPacket.encodeInt(a.keyDown); // tKeyDown
-            } else if (a.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
-                outPacket.encodeInt(a.swallowMobTemplateId); // dwSwallowMobTemplateID
+            if (SkillConstants.isMagicKeydownSkill(attack.skillId)) {
+                outPacket.encodeInt(attack.keyDown); // tKeyDown
+            } else if (attack.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
+                outPacket.encodeInt(attack.swallowMobTemplateId); // dwSwallowMobTemplateID
             }
         }
         return outPacket;

@@ -64,17 +64,18 @@ public final class CalcDamage {
     }
 
 
-    // PHYSICAL DAMAGE -------------------------------------------------------------------------------------------------
+    // DAMAGE CALC -----------------------------------------------------------------------------------------------------
 
     public static void calcPDamage(Locked<User> locked, Locked<Mob> lockedMob, Attack attack, AttackInfo ai) {
         // CalcDamage::PDamage
         final User user = locked.get();
         final SecondaryStat ss = user.getSecondaryStat();
+        final PassiveSkillData psd = user.getPassiveSkillData();
         final Mob mob = lockedMob.get();
         final MobStat ms = mob.getMobStat();
         final int skillId = attack.skillId;
         final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
-        final int criticalRate = getCriticalRate(user, attack);
+        final int criticalRate = getCriticalRate(user, attack) + psd.getAdditionCr(skillId);
         final int damagePerMob = skillId == Thief.MESO_EXPLOSION ? ai.attackCount : attack.getDamagePerMob();
         // Process attack info
         int counter = 0;
@@ -119,7 +120,7 @@ public final class CalcDamage {
                     }
                 }
                 counter++;
-                if ((ms.hasOption(MobTemporaryStat.Freeze) && skillId == Bowman.STRAFE_MM && attack.getHeaderType() == OutHeader.UserShootAttack && i == 0 && !mob.isBoss()) ||
+                if ((ms.hasOption(MobTemporaryStat.Freeze) && skillId == Bowman.STRAFE_MM && attack.isShootAttack() && i == 0 && !mob.isBoss()) ||
                         (skillId == Thief.OWL_SPIRIT && i == 0 && !mob.isBoss())) {
                     final double rand = getRand(ai.random[counter++ % 7], 0.0, 100.0);
                     final int prop = user.getSkillStatValue(skillId, SkillStat.prop);
@@ -206,6 +207,71 @@ public final class CalcDamage {
         user.getCalcDamage().setNextAttackCritical(false);
     }
 
+    public static void calcMDamage(Locked<User> locked, Locked<Mob> lockedMob, Attack attack, AttackInfo ai) {
+        // CalcDamage::MDamage
+        final User user = locked.get();
+        final SecondaryStat ss = user.getSecondaryStat();
+        final Mob mob = lockedMob.get();
+        final MobStat ms = mob.getMobStat();
+        final int skillId = attack.skillId;
+        final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
+        final int criticalRate = getCriticalRate(user, attack);
+        final int damagePerMob = attack.getDamagePerMob();
+        // Process attack info
+        int counter = 0;
+        for (int i = 0; i < damagePerMob; i++) {
+            if (ms.hasOption(MobTemporaryStat.Disable)) {
+                assertDamage(0, ai.damage[i]);
+                continue;
+            }
+            if (ms.hasOption(MobTemporaryStat.MImmune)) {
+                final double rand = ai.random[counter % 7] % 100;
+                if (rand > ss.getOption(CharacterTemporaryStat.RespectMImmune).nOption) {
+                    assertDamage(1, ai.damage[i]);
+                    continue;
+                }
+            }
+            counter++;
+            if (ss.hasOption(CharacterTemporaryStat.Seal)) {
+                continue;
+            }
+            final int mobEva = Math.clamp(mob.getTemplate().getEva() + mob.getMobStat().getOption(MobTemporaryStat.EVA).nOption, 0, 9999);
+            final int accR = calcAccR(user, mobEva, mob.getLevel());
+            final double rand = getRand(ai.random[counter++ % 7], 100.0, 0.0);
+            if (accR < rand) {
+                assertDamage(0, ai.damage[i]);
+                continue;
+            }
+            if (skillId != 0) {
+                final int fixDamage = user.getSkillStatValue(skillId, SkillStat.fixdamage);
+                if (noviceSkill == 1066 || noviceSkill == 1067 || fixDamage != 0) {
+                    assertDamage(fixDamage, ai.damage[i]);
+                    continue;
+                }
+            }
+            // Adjust Random Damage
+            counter++;
+            // Check Critical
+            if (user.getCalcDamage().isNextAttackCritical() || (criticalRate > 0 &&
+                    criticalRate > getRand(ai.random[counter++ % 7], 0.0, 100.0))) {
+                ai.critical[i] = 1;
+                // Adjust Critical Damage
+                counter++;
+            }
+            if (mob.isBoss()) {
+                counter++; // cd->boss.nProb
+            }
+            if (!ms.hasOption(MobTemporaryStat.HardSkin) || ai.critical[i] != 0) {
+                if (!mob.isBoss() && mob.getMaxHp() > ai.damage[i] && i == 0) {
+                    counter++;
+                }
+            } else {
+                assertDamage(0, ai.damage[i]);
+            }
+            user.getCalcDamage().setNextAttackCritical(false);
+        }
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
@@ -233,7 +299,7 @@ public final class CalcDamage {
 
     public static int calcAccR(User user, int mobEva, int mobLevel) {
         // `anonymous namespace'::calc_accr
-        final int ar = user.getPassiveSkillData().getAllAr();
+        final int ar = user.getPassiveSkillData().getAr();
         final int a = (int) Math.sqrt(getAcc(user));
         final int b = (int) Math.sqrt(mobEva);
         int result = a - b + 100 + ar * (a - b + 100) / 100;
@@ -249,10 +315,12 @@ public final class CalcDamage {
 
     private static int getCriticalRate(User user, Attack attack) {
         int criticalRate = user.getSkillStatValue(getCriticalSkillId(user, attack), SkillStat.prop) + 5;
-        final int swallowCritical = user.getSecondaryStat().getOption(CharacterTemporaryStat.SwallowCritical).nOption;
+        if (attack.isMagicAttack()) {
+            criticalRate += user.getSecondaryStat().getOption(CharacterTemporaryStat.SwallowCritical).nOption;
+        }
         final int sharpEyes = user.getSecondaryStat().getOption(CharacterTemporaryStat.SharpEyes).nOption;
         final int thornsEffect = user.getSecondaryStat().getOption(CharacterTemporaryStat.ThornsEffect).nOption;
-        criticalRate = criticalRate + Math.max(sharpEyes >> 8, thornsEffect >> 8) + swallowCritical;
+        criticalRate = criticalRate + Math.max(sharpEyes >> 8, thornsEffect >> 8);
         // ignore cd->critical.nProb
         final int comboCount = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption;
         if (comboCount > 0) {
@@ -261,7 +329,7 @@ public final class CalcDamage {
             criticalRate += stacks * user.getSkillStatValue(comboCriticalSkillId, SkillStat.y);
         }
         criticalRate += user.getSecondaryStat().getItemCriR();
-        criticalRate += user.getPassiveSkillData().getAllCr();
+        criticalRate += user.getPassiveSkillData().getCr();
         if (SkillConstants.WILD_HUNTER_JAGUARS.contains(user.getSecondaryStat().getRidingVehicle())) {
             criticalRate += user.getSkillStatValue(WildHunter.JAGUAR_RIDER, SkillStat.w);
         }
@@ -285,7 +353,7 @@ public final class CalcDamage {
         }
         switch (WeaponType.getByItemId(weapon.getItemId())) {
             case BOW, CROSSBOW -> {
-                if (attack.getHeaderType() != OutHeader.UserShootAttack) {
+                if (!attack.isShootAttack()) {
                     return 0;
                 }
                 if (JobConstants.isCygnusJob(user.getJob())) {
@@ -295,7 +363,7 @@ public final class CalcDamage {
                 }
             }
             case THROWINGGLOVE -> {
-                if (attack.getHeaderType() != OutHeader.UserShootAttack) {
+                if (!attack.isShootAttack()) {
                     return 0;
                 }
                 if (JobConstants.isCygnusJob(user.getJob())) {
@@ -309,70 +377,6 @@ public final class CalcDamage {
             }
         }
         return 0;
-    }
-
-
-    // MAGICAL DAMAGE --------------------------------------------------------------------------------------------------
-
-    public static int calcMDamage(User user, SkillInfo si, int slv, Mob mob) {
-        // CalcDamage::MDamage
-        final int psdCr = user.getPassiveSkillData().getAllCr();
-        final int psdCdMin = user.getPassiveSkillData().getAllCdMin();
-        final int psdMdamR = user.getPassiveSkillData().getAllMdamR();
-        final int psdImpR = user.getPassiveSkillData().getAllImpR();
-        final int psdDipR = user.getPassiveSkillData().getAllDipR();
-
-        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
-
-        final int acc = getAcc(user);
-        final int mad = getMad(user);
-        int mastery = getWeaponMastery(user, weaponType);
-        if (mastery == 0) {
-            mastery = si.getValue(SkillStat.mastery, slv);
-        }
-        final double k = getMasteryConstByWT(weaponType);
-        final int amp = user.getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.y);
-
-        int cr = 5;
-        int cd = 0;
-        if (JobConstants.isEvanJob(user.getJob())) {
-            cr = user.getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.prop) + 5;
-            cd = user.getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.damage);
-        }
-        final int sharpEyes = user.getSecondaryStat().getOption(CharacterTemporaryStat.SharpEyes).nOption;
-        final int thornsEffect = user.getSecondaryStat().getOption(CharacterTemporaryStat.ThornsEffect).nOption;
-        cr = cr + Math.max(sharpEyes >> 8, thornsEffect >> 8) + psdCr; // ignore cd->critical.nProb
-        cd = cd + Math.max(sharpEyes & 0xFF, thornsEffect & 0xFF); // ignore cd->critical.nDamage
-
-        double damage = calcDamageByWT(weaponType, user.getBasicStat(), 0, mad);
-        // damage = adjustRandomDamage(damage, rand, k, mastery);
-        damage = (damage + psdMdamR * damage / 100.0) * amp / 100.0;
-        damage = getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
-
-        // TODO : Process ms->nMDR, ms->nMDR_ v.s. nPsdIMPR + nIgnoreTargetDEF
-        // TODO : Process ms->nMGuardUp_
-
-        final int skillDamage = si.getValue(SkillStat.damage, slv);
-        if (skillDamage > 0) {
-            damage = skillDamage / 100.0 * damage;
-        }
-
-        // Process critical damage
-        cd = Math.max(cd + psdCdMin + 20, 50);
-        // damage = get_rand(rand, cd / 100.0, 50.0) * damage + damage;
-        // Ignore - weakness skills (9000 - 9002), cd->aMobCategoryDamage, cd->boss.nDamage
-        // TODO : Process tKeyDown, guided bullet damage, nDojangBerserk, nWeakness, nAR01Mad, paralyze damage decrease
-        // Ignore cd->aSkill
-        // TODO : nBossDAMr?
-        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Infinity)) {
-            final int infinityDamR = user.getSecondaryStat().getOption(CharacterTemporaryStat.Infinity).nOption - 1;
-            damage = damage + infinityDamR * damage / 100.0;
-        }
-        final int damR = psdDipR + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
-        damage = damage + damR * damage / 100.0;
-
-        return (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
     }
 
 

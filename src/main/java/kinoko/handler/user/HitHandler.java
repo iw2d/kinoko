@@ -408,13 +408,13 @@ public final class HitHandler {
             final double k = CalcDamage.getMasteryConstByWT(weaponType);
             final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
             double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
-            damage = damage + user.getPassiveSkillData().getAllPdamR() * damage / 100.0;
+            damage = damage + user.getPassiveSkillData().getCr() * damage / 100.0;
             damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
             final int skillDamage = si.getValue(SkillStat.damage, slv);
             if (skillDamage > 0) {
                 damage = skillDamage / 100.0 * damage;
             }
-            final int damR = user.getPassiveSkillData().getAllDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+            final int damR = user.getPassiveSkillData().getDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
             damage = damage + damR * damage / 100.0;
             // Create attack
             final Attack attack = new Attack(OutHeader.SummonedAttack);

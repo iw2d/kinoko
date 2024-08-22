@@ -8,12 +8,12 @@ import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.user.stat.BasicStat;
 import kinoko.world.user.stat.SecondaryStat;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public final class PassiveSkillData {
-    private final List<AdditionPsd> additionPsd = new ArrayList<>();
+    private final Map<Integer, AdditionPsd> additionPsd = new HashMap<>();
     private int mhpR;
     private int mmpR;
     private int cr;
@@ -43,10 +43,6 @@ public final class PassiveSkillData {
     private int psdSpeed;
     private int ocR;
     private int dcR;
-
-    public List<AdditionPsd> getAdditionPsd() {
-        return additionPsd;
-    }
 
     public int getMhpR() {
         return mhpR;
@@ -164,32 +160,9 @@ public final class PassiveSkillData {
         return dcR;
     }
 
-    public int getAllCr() {
-        return cr + additionPsd.stream().mapToInt(a -> a.cr).sum();
-    }
-
-    public int getAllCdMin() {
-        return cdMin + additionPsd.stream().mapToInt(a -> a.cdMin).sum();
-    }
-
-    public int getAllAr() {
-        return ar + additionPsd.stream().mapToInt(a -> a.ar).sum();
-    }
-
-    public int getAllDipR() {
-        return dipR + additionPsd.stream().mapToInt(a -> a.dipR).sum();
-    }
-
-    public int getAllPdamR() {
-        return pdamR + additionPsd.stream().mapToInt(a -> a.pdamR).sum();
-    }
-
-    public int getAllMdamR() {
-        return mdamR + additionPsd.stream().mapToInt(a -> a.mdamR).sum();
-    }
-
-    public int getAllImpR() {
-        return impR + additionPsd.stream().mapToInt(a -> a.impR).sum();
+    public int getAdditionCr(int skillId) {
+        final AdditionPsd apsd = additionPsd.get(skillId);
+        return apsd != null ? apsd.cr : 0;
     }
 
     public void setFrom(BasicStat bs, SecondaryStat ss, SkillManager sm) {
@@ -254,13 +227,13 @@ public final class PassiveSkillData {
         }
         this.mhpR += si.getValue(SkillStat.mhpR, slv);
         this.mmpR += si.getValue(SkillStat.mmpR, slv);
-        if (this.additionPsd.isEmpty()) {
+        if (si.getPsdSkills().isEmpty()) {
             this.cr += si.getValue(SkillStat.cr, slv);
             this.cdMin += si.getValue(SkillStat.criticaldamageMin, slv);
         }
         this.accR += si.getValue(SkillStat.accR, slv);
         this.evaR += si.getValue(SkillStat.evaR, slv);
-        if (this.additionPsd.isEmpty()) {
+        if (si.getPsdSkills().isEmpty()) {
             this.ar += si.getValue(SkillStat.ar, slv);
         }
         this.er += si.getValue(SkillStat.er, slv);
@@ -268,7 +241,7 @@ public final class PassiveSkillData {
         this.mddR += si.getValue(SkillStat.mddR, slv);
         this.pdR += si.getValue(SkillStat.pdr, slv);
         this.mdR += si.getValue(SkillStat.mdr, slv);
-        if (this.additionPsd.isEmpty()) {
+        if (si.getPsdSkills().isEmpty()) {
             this.dipR += si.getValue(SkillStat.damR, slv);
             this.pdamR += si.getValue(SkillStat.pdr, slv);
             this.mdamR += si.getValue(SkillStat.mdr, slv);
@@ -288,7 +261,7 @@ public final class PassiveSkillData {
         this.ocR += si.getValue(SkillStat.overChargeR, slv);
         this.dcR += si.getValue(SkillStat.disCountR, slv);
 
-        if (!this.additionPsd.isEmpty()) {
+        for (int skillId : si.getPsdSkills()) {
             final AdditionPsd apsd = new AdditionPsd();
             apsd.cr += si.getValue(SkillStat.cr, slv);
             apsd.cdMin += si.getValue(SkillStat.criticaldamageMin, slv);
@@ -297,7 +270,7 @@ public final class PassiveSkillData {
             apsd.pdamR += si.getValue(SkillStat.pdr, slv);
             apsd.mdamR += si.getValue(SkillStat.mdr, slv);
             apsd.impR += si.getValue(SkillStat.ignoreMobpdpR, slv); // could be bug in client
-            this.additionPsd.add(apsd);
+            this.additionPsd.put(skillId, apsd);
         }
     }
 
