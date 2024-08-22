@@ -11,10 +11,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class WzReader implements AutoCloseable {
     private final RandomAccessFile file;
@@ -208,7 +205,7 @@ public final class WzReader implements AutoCloseable {
         switch (propertyType) {
             case LIST -> {
                 buffer.getShort(); // reserved
-                return new WzListProperty(readListItems(image, buffer));
+                return WzListProperty.from(readListItems(image, buffer));
             }
             case CANVAS -> {
                 buffer.position(buffer.position() + 1);
@@ -216,9 +213,9 @@ public final class WzReader implements AutoCloseable {
                 final WzListProperty properties;
                 if (hasProperties) {
                     buffer.position(buffer.position() + 2);
-                    properties = new WzListProperty(readListItems(image, buffer));
+                    properties = WzListProperty.from(readListItems(image, buffer));
                 } else {
-                    properties = new WzListProperty(Map.of());
+                    properties = WzListProperty.from(new LinkedHashMap<>());
                 }
                 // Canvas meta
                 final int width = readCompressedInt(buffer);
@@ -270,8 +267,8 @@ public final class WzReader implements AutoCloseable {
         }
     }
 
-    public Map<String, Object> readListItems(WzImage image, ByteBuffer buffer) throws WzReaderError {
-        final Map<String, Object> items = new HashMap<>();
+    public SequencedMap<String, Object> readListItems(WzImage image, ByteBuffer buffer) throws WzReaderError {
+        final SequencedMap<String, Object> items = new LinkedHashMap<>();
         final int size = readCompressedInt(buffer);
         for (int i = 0; i < size; i++) {
             final String itemName = readStringBlock(image, buffer);

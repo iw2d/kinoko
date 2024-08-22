@@ -1,15 +1,16 @@
 package kinoko.provider.wz.property;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.SequencedMap;
 
 public final class WzListProperty extends WzProperty {
-    private final Map<String, Object> items;
+    private final SequencedMap<String, Object> items;
 
-    public WzListProperty(Map<String, Object> items) {
+    public WzListProperty(SequencedMap<String, Object> items) {
         this.items = items;
     }
 
-    public Map<String, Object> getItems() {
+    public SequencedMap<String, Object> getItems() {
         return items;
     }
 
@@ -24,5 +25,11 @@ public final class WzListProperty extends WzProperty {
             return defaultValue;
         }
         return (T) items.get(key);
+    }
+
+    public static WzListProperty from(SequencedMap<String, Object> items) {
+        return new WzListProperty(
+                Collections.unmodifiableSequencedMap(items)
+        );
     }
 }

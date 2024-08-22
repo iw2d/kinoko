@@ -148,10 +148,7 @@ public final class MapProvider implements WzProvider {
                     }
                     group.add(Foothold.from(layerId, groupId, sn, footholdProp));
                 }
-                footholdGroups.add(group.stream()
-                        .sorted(Comparator.comparingInt(Foothold::getSn))
-                        .toList()
-                );
+                footholdGroups.add(group);
             }
         }
         return footholdGroups.stream()
