@@ -26,13 +26,13 @@ public final class QuestItemCheck implements QuestCheck {
         final User user = locked.get();
         final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
         for (QuestItemData itemData : filteredItems) {
-            final boolean hasItem = user.getInventoryManager().hasItem(itemData.getItemId(), itemData.getCount());
-            if (itemData.getCount() <= 0 && hasItem) {
-                // Should not have item
+            final int itemCount = user.getInventoryManager().getItemCount(itemData.getItemId());
+            // Should have item
+            if (itemData.getCount() > 0 && itemCount < itemData.getCount()) {
                 return false;
             }
-            if (itemData.getCount() > 0 && !hasItem) {
-                // Should have item
+            // Should not have item
+            if (itemData.getCount() <= 0 && itemCount > 0) {
                 return false;
             }
         }

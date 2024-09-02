@@ -157,7 +157,7 @@ public final class QuestItemAct implements QuestAct {
                 final InventoryType inventoryType = InventoryType.getByItemId(itemData.getItemId());
                 requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
             } else {
-                if (!im.hasItem(itemData.getItemId(), itemData.getCount())) {
+                if (!im.hasItem(itemData.getItemId(), -itemData.getCount())) {
                     user.write(QuestPacket.failedUnknown());
                     return false;
                 }
