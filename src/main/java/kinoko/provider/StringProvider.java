@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public final class StringProvider implements WzProvider {
     public static final Path STRING_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "String.wz");
@@ -55,7 +56,7 @@ public final class StringProvider implements WzProvider {
     }
 
     public static String getItemName(int itemId) {
-        return itemNames.get(itemId);
+        return ItemProvider.getSpecialItemName(itemId).orElseGet(() -> itemNames.get(itemId));
     }
 
     public static String getMapName(int mapId) {

@@ -3,6 +3,7 @@ package kinoko.server;
 import kinoko.database.DatabaseManager;
 import kinoko.provider.*;
 import kinoko.script.common.ScriptDispatcher;
+import kinoko.server.cashshop.CashShop;
 import kinoko.server.command.CommandProcessor;
 import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
@@ -38,6 +39,7 @@ public final class Server {
         EtcProvider.initialize();       // Etc.wz
         ShopProvider.initialize();      // data/shop
         RewardProvider.initialize();    // data/reward
+        CashShop.initialize();          // data/cash
         System.gc();
         log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 

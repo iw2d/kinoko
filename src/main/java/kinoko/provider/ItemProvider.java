@@ -23,6 +23,7 @@ public final class ItemProvider implements WzProvider {
     private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
     private static final Map<Integer, Set<Integer>> petEquips = new HashMap<>(); // petEquipId -> set<petTemplateId>
     private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
+    private static final Map<Integer, String> specialItemNames = new HashMap<>();
 
     public static void initialize() {
         // Character.wz
@@ -37,6 +38,7 @@ public final class ItemProvider implements WzProvider {
             final WzPackage wzPackage = reader.readPackage();
             loadItemInfos(wzPackage);
             loadItemOptionInfos(wzPackage);
+            loadItemNames(wzPackage);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Item.wz", e);
         }
@@ -84,6 +86,10 @@ public final class ItemProvider implements WzProvider {
 
     public static Optional<PetInteraction> getPetInteraction(int templateId, int action) {
         return Optional.ofNullable(petActions.getOrDefault(templateId, Map.of()).get(action));
+    }
+
+    public static Optional<String> getSpecialItemName(int itemId) {
+        return Optional.ofNullable(specialItemNames.get(itemId));
     }
 
     private static void loadEquipInfos(WzPackage source) throws ProviderError, IOException {
@@ -166,6 +172,23 @@ public final class ItemProvider implements WzProvider {
                 throw new ProviderError("Failed to resolve item option prop");
             }
             itemOptionInfos.put(itemOptionId, ItemOptionInfo.from(itemOptionId, itemOptionProp));
+        }
+    }
+
+    private static void loadItemNames(WzPackage source) throws ProviderError {
+        final WzDirectory special = source.getDirectory().getDirectories().get("Special");
+        loadItemNames(special.getImages().get("0910.img"));
+        loadItemNames(special.getImages().get("0911.img"));
+    }
+
+    private static void loadItemNames(WzImage image) throws ProviderError {
+        for (var entry : image.getProperty().getItems().entrySet()) {
+            final int itemId = Integer.parseInt(entry.getKey());
+            if (!(entry.getValue() instanceof WzListProperty itemNameProp)) {
+                throw new ProviderError("Failed to resolve item name prop");
+            }
+            final String itemName = WzProvider.getString(itemNameProp.get("name"));
+            specialItemNames.put(itemId, itemName);
         }
     }
 }
