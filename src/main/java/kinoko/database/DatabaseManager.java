@@ -16,6 +16,7 @@ import kinoko.database.cassandra.*;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
+import kinoko.server.ServerConstants;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.server.guild.GuildBoardComment;
 import kinoko.server.guild.GuildBoardEntry;
@@ -35,7 +36,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
 
 public final class DatabaseManager {
-    public static final InetSocketAddress DATABASE_ADDRESS = new InetSocketAddress("127.0.0.1", 9042);
+    public static final InetSocketAddress DATABASE_ADDRESS = new InetSocketAddress(ServerConstants.DATABASE_HOST, ServerConstants.DATABASE_PORT);
     public static final String DATABASE_DATACENTER = "datacenter1";
     public static final String DATABASE_KEYSPACE = "kinoko";
     public static final String PROFILE_ONE = "profile_one";

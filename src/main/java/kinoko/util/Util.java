@@ -11,6 +11,11 @@ public final class Util {
     private static final HexFormat hexFormat = HexFormat.ofDelimiter(" ").withUpperCase();
     private static final Random random = new SecureRandom();
 
+    public static String getEnv(String name, String defaultValue) {
+        final String value = System.getenv(name);
+        return value != null ? value : defaultValue;
+    }
+
     public static String readableByteArray(byte[] array) {
         return hexFormat.formatHex(array);
     }

@@ -8,19 +8,14 @@ import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Stream;
 
 public final class ScriptDispatcher {
     private static final Logger log = LogManager.getLogger(ScriptDispatcher.class);
@@ -28,44 +23,22 @@ public final class ScriptDispatcher {
     private static ExecutorService executor;
 
     public static void initialize() {
-        try {
-            final String packagePath = String.join(File.separator, "kinoko", "script");
-            final var iter = ClassLoader.getSystemClassLoader().getResources(packagePath).asIterator();
-            while (iter.hasNext()) {
-                final URL url = iter.next();
-                try (final Stream<Path> stream = Files.walk(Path.of(url.toURI()))) {
-                    for (Path path : stream.toList()) {
-                        if (!Files.isRegularFile(path) || !path.toString().endsWith(".class")) {
-                            continue;
-                        }
-                        final String classPath = path.toString();
-                        final String className = classPath
-                                .substring(classPath.indexOf(packagePath))
-                                .replace(".class", "")
-                                .replace(File.separator, ".");
-                        final Class<?> clazz = ClassLoader.getSystemClassLoader().loadClass(className);
-                        if (!ScriptHandler.class.equals(clazz.getSuperclass())) {
-                            continue;
-                        }
-                        for (Method method : clazz.getDeclaredMethods()) {
-                            if (!method.isAnnotationPresent(Script.class)) {
-                                continue;
-                            }
-                            if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != ScriptManager.class) {
-                                throw new RuntimeException(String.format("Incorrect parameters for script method \"%s\"", method.getName()));
-                            }
-                            final Script annotation = method.getAnnotation(Script.class);
-                            final String scriptName = annotation.value();
-                            if (scriptMap.containsKey(scriptName)) {
-                                throw new RuntimeException(String.format("Multiple methods found for script name \"%s\"", scriptName));
-                            }
-                            scriptMap.put(scriptName, method);
-                        }
-                    }
+        final Reflections reflections = new Reflections("kinoko.script", Scanners.SubTypes);
+        for (Class<? extends ScriptHandler> clazz : reflections.getSubTypesOf(ScriptHandler.class)) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (!method.isAnnotationPresent(Script.class)) {
+                    continue;
                 }
+                if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != ScriptManager.class) {
+                    throw new RuntimeException(String.format("Incorrect parameters for script method \"%s\"", method.getName()));
+                }
+                final Script annotation = method.getAnnotation(Script.class);
+                final String scriptName = annotation.value();
+                if (scriptMap.containsKey(scriptName)) {
+                    throw new RuntimeException(String.format("Multiple methods found for script name \"%s\"", scriptName));
+                }
+                scriptMap.put(scriptName, method);
             }
-        } catch (IOException | URISyntaxException | ClassNotFoundException e) {
-            throw new RuntimeException("Exception caught while loading scripts", e);
         }
         executor = Executors.newVirtualThreadPerTaskExecutor();
     }
@@ -136,3 +109,4 @@ public final class ScriptDispatcher {
         });
     }
 }
+
