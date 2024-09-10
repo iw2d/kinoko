@@ -127,6 +127,30 @@ public final class TitleQuest extends ScriptHandler {
 
     }
 
+    @Script("q29900s")
+    public static void q29900s(ScriptManager sm) {
+        // Beginner Adventurer (29900 - start)
+        sm.forceStartQuest(29900);
+    }
+
+    @Script("q29901s")
+    public static void q29901s(ScriptManager sm) {
+        // Junior Adventurer (29901 - start)
+        sm.forceStartQuest(29901);
+    }
+
+    @Script("q29902s")
+    public static void q29902s(ScriptManager sm) {
+        // Veteran Adventurer (29902 - start)
+        sm.forceStartQuest(29902);
+    }
+
+    @Script("q29903s")
+    public static void q29903s(ScriptManager sm) {
+        // Master Adventurer (29903 - start)
+        sm.forceStartQuest(29903);
+    }
+
     @Script("q29905s")
     public static void q29905s(ScriptManager sm) {
         // Noblesse (29905 - start)
@@ -139,9 +163,51 @@ public final class TitleQuest extends ScriptHandler {
         sm.forceStartQuest(29906);
     }
 
-    @Script("q29924s")
-    public static void q29924s(ScriptManager sm) {
-        // Awakened Aran (29924 - start)
-        sm.forceStartQuest(29924);
+    @Script("q29907s")
+    public static void q29907s(ScriptManager sm) {
+        // Official Knight (29907 - start)
+        sm.forceStartQuest(29907);
+    }
+
+    @Script("q29908s")
+    public static void q29908s(ScriptManager sm) {
+        // Advanced Knight (29908 - start)
+        sm.forceStartQuest(29908);
+    }
+
+    @Script("q29909s")
+    public static void q29909s(ScriptManager sm) {
+        // Chief Knight (29909 - start)
+        sm.forceStartQuest(29909);
+    }
+
+    @Script("q29941s")
+    public static void q29941s(ScriptManager sm) {
+        // Special Training Beginner (29941 - start)
+        sm.forceStartQuest(29941);
+    }
+
+    @Script("q29942s")
+    public static void q29942s(ScriptManager sm) {
+        // Special Training Intermediate (29942 - start)
+        sm.forceStartQuest(29942);
+    }
+
+    @Script("q29943s")
+    public static void q29943s(ScriptManager sm) {
+        // Special Training Graduate (29943 - start)
+        sm.forceStartQuest(29943);
+    }
+
+    @Script("q29944s")
+    public static void q29944s(ScriptManager sm) {
+        // Special Training Superior (29944 - start)
+        sm.forceStartQuest(29944);
+    }
+
+    @Script("q29945s")
+    public static void q29945s(ScriptManager sm) {
+        // Special Training Master (29945 - start)
+        sm.forceStartQuest(29945);
     }
 }

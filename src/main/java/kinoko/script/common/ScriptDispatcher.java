@@ -48,36 +48,36 @@ public final class ScriptDispatcher {
     }
 
     public static void startNpcScript(User user, FieldObject source, String scriptName, int speakerId) {
-        startScript(ScriptType.NPC, scriptName, user, source.getField(), source, speakerId);
+        startScript(ScriptType.NPC, scriptName, user, source, speakerId);
     }
 
     public static void startItemScript(User user, String scriptName, int speakerId) {
-        startScript(ScriptType.ITEM, scriptName, user, user.getField(), user, speakerId);
+        startScript(ScriptType.ITEM, scriptName, user, user, speakerId);
     }
 
     public static void startQuestScript(User user, int questId, boolean isStart, int speakerId) {
         final String scriptName = String.format("q%d%s", questId, isStart ? "s" : "e");
-        startScript(ScriptType.QUEST, scriptName, user, user.getField(), user, speakerId);
+        startScript(ScriptType.QUEST, scriptName, user, user, speakerId);
     }
 
     public static void startPortalScript(User user, PortalInfo portalInfo) {
         final String scriptName = portalInfo.getScript();
-        startScript(ScriptType.PORTAL, scriptName, user, user.getField(), user, GameConstants.DEFAULT_SPEAKER_ID);
+        startScript(ScriptType.PORTAL, scriptName, user, user, GameConstants.DEFAULT_SPEAKER_ID);
     }
 
     public static void startReactorScript(User user, Reactor reactor, String scriptName) {
-        startScript(ScriptType.REACTOR, scriptName, user, reactor.getField(), reactor, GameConstants.DEFAULT_SPEAKER_ID);
+        startScript(ScriptType.REACTOR, scriptName, user, reactor, GameConstants.DEFAULT_SPEAKER_ID);
     }
 
     public static void startFirstUserEnterScript(User user, String scriptName) {
-        startScript(ScriptType.FIRST_USER_ENTER, scriptName, user, user.getField(), user, GameConstants.DEFAULT_SPEAKER_ID);
+        startScript(ScriptType.FIRST_USER_ENTER, scriptName, user, user, GameConstants.DEFAULT_SPEAKER_ID);
     }
 
     public static void startUserEnterScript(User user, String scriptName) {
-        startScript(ScriptType.USER_ENTER, scriptName, user, user.getField(), user, GameConstants.DEFAULT_SPEAKER_ID);
+        startScript(ScriptType.USER_ENTER, scriptName, user, user, GameConstants.DEFAULT_SPEAKER_ID);
     }
 
-    private static void startScript(ScriptType scriptType, String scriptName, User user, Field field, FieldObject source, int speakerId) {
+    private static void startScript(ScriptType scriptType, String scriptName, User user, FieldObject source, int speakerId) {
         // Resolve script handler
         final Method handler = scriptMap.get(scriptName);
         if (handler == null) {
@@ -88,6 +88,7 @@ public final class ScriptDispatcher {
             return;
         }
         // Execute script handler
+        final Field field = source.getField();
         final ScriptManagerImpl scriptManager = new ScriptManagerImpl(user, field, source, speakerId);
         executor.submit(() -> {
             try {
