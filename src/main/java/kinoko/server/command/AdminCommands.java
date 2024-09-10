@@ -23,6 +23,8 @@ import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashShop;
 import kinoko.server.cashshop.Commodity;
+import kinoko.server.header.OutHeader;
+import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Rect;
 import kinoko.util.Util;

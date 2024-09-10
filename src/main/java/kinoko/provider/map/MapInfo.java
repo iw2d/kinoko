@@ -26,6 +26,7 @@ public final class MapInfo {
     private final float mobRate;
     private final String onFirstUserEnter;
     private final String onUserEnter;
+    private final List<Rect> areas;
     private final List<Foothold> footholds;
     private final List<LadderRope> ladderRope;
     private final List<LifeInfo> lifeInfos;
@@ -35,7 +36,7 @@ public final class MapInfo {
     private final FootholdNode footholdRoot;
     private final int fieldCrc;
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean shop, boolean clock, int phase, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Foothold> footholds, List<LadderRope> ladderRope, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean shop, boolean clock, int phase, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Rect> areas, List<Foothold> footholds, List<LadderRope> ladderRope, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
         this.town = town;
         this.swim = swim;
@@ -50,6 +51,7 @@ public final class MapInfo {
         this.mobRate = mobRate;
         this.onFirstUserEnter = onFirstUserEnter;
         this.onUserEnter = onUserEnter;
+        this.areas = areas;
         this.footholds = footholds;
         this.ladderRope = ladderRope;
         this.lifeInfos = lifeInfos;
@@ -134,6 +136,10 @@ public final class MapInfo {
         return onUserEnter;
     }
 
+    public List<Rect> getAreas() {
+        return areas;
+    }
+
     public List<Foothold> getFootholds() {
         return footholds;
     }
@@ -216,16 +222,18 @@ public final class MapInfo {
                 ", mobRate=" + mobRate +
                 ", onFirstUserEnter='" + onFirstUserEnter + '\'' +
                 ", onUserEnter='" + onUserEnter + '\'' +
+                ", areas=" + areas +
                 ", footholds=" + footholds +
                 ", ladderRope=" + ladderRope +
                 ", lifeInfos=" + lifeInfos +
                 ", portalInfos=" + portalInfos +
                 ", reactorInfos=" + reactorInfos +
                 ", footholdRoot=" + footholdRoot +
+                ", fieldCrc=" + fieldCrc +
                 '}';
     }
 
-    public static MapInfo from(int mapId, WzListProperty infoProp, List<Foothold> foothold, List<LadderRope> ladderRope, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
+    public static MapInfo from(int mapId, WzListProperty infoProp, List<Rect> area, List<Foothold> foothold, List<LadderRope> ladderRope, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
         return new MapInfo(
                 mapId,
                 infoProp.getOrDefault("town", 0) != 0,
@@ -241,6 +249,7 @@ public final class MapInfo {
                 infoProp.get("mobRate"),
                 infoProp.get("onFirstUserEnter"),
                 infoProp.get("onUserEnter"),
+                area,
                 foothold,
                 ladderRope,
                 life,

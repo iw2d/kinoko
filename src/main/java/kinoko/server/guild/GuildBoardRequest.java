@@ -4,7 +4,7 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
-public class GuildBoardRequest implements Encodable {
+public final class GuildBoardRequest implements Encodable {
     private final GuildBoardProtocol requestType;
     private boolean modify;
     private boolean notice;

@@ -24,6 +24,7 @@ import kinoko.server.event.EventType;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Rect;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -773,6 +774,18 @@ public final class ScriptManagerImpl implements ScriptManager {
         user.write(NpcPacket.npcSpecialAction(npc, action));
     }
 
+    @Override
+    public void setReactorState(int templateId, int newState) {
+        field.getReactorPool().forEach((reactor) -> {
+            if (reactor.getTemplateId() == templateId) {
+                try (var lockedReactor = reactor.acquire()) {
+                    reactor.setState(newState);
+                    field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
+                }
+            }
+        });
+    }
+
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
 
@@ -800,10 +813,32 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public String getAreaCheck() {
+        final List<String> list = new ArrayList<>();
+        for (Rect rect : field.getMapInfo().getAreas()) {
+            final boolean hasUser = !field.getUserPool().getInsideRect(rect).isEmpty();
+            final boolean hasPuppet = field.getDropPool().getInsideRect(rect).stream()
+                    .anyMatch(drop -> drop.getItem() != null && drop.getItem().getItemId() == 4001454);
+            list.add((hasUser || hasPuppet) ? "1" : "0");
+        }
+        return String.join("", list);
+    }
+
+    @Override
+    public int getInstanceUserCount() {
+        if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
+            final Instance instance = instanceFieldStorage.getInstance();
+            return instance.getUsers().size();
+        } else {
+            throw new ScriptError("Tried to get instance user count while not in an instance");
+        }
+    }
+
+    @Override
     public String getInstanceVariable(String key) {
         if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
             final Instance instance = instanceFieldStorage.getInstance();
-            return instance.getVariable(key);
+            return instance.getVariable(key).orElse("");
         } else {
             throw new ScriptError("Tried to get instance variable %s while not in an instance", key);
         }
@@ -839,6 +874,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     @Override
     public void broadcastMessage(String message) {
         field.broadcastPacket(MessagePacket.system(message));
+    }
+
+    @Override
+    public void broadcastScriptProgressMessage(String message) {
+        field.broadcastPacket(WvsContext.scriptProgressMessage(message));
     }
 
     @Override

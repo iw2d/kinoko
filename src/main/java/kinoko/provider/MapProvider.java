@@ -6,6 +6,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.util.Crc32;
+import kinoko.util.Rect;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 
@@ -105,6 +106,7 @@ public final class MapProvider implements WzProvider {
             mapInfos.put(mapId, MapInfo.from(
                     mapId,
                     linkEntry.getValue().getRight(),
+                    linkInfo.getAreas(),
                     linkInfo.getFootholds(),
                     linkInfo.getLadderRopes(),
                     linkInfo.getLifeInfos(),
@@ -117,12 +119,32 @@ public final class MapProvider implements WzProvider {
     }
 
     private static MapInfo resolveMapInfo(int mapId, WzImage image, WzListProperty infoProp, boolean clock) throws ProviderError {
+        final List<Rect> area = resolveArea(image.getProperty());
         final List<Foothold> foothold = resolveFoothold(image.getProperty());
         final List<LadderRope> ladderRope = resolveLadderRope(image.getProperty());
         final List<LifeInfo> life = resolveLife(image.getProperty());
         final List<PortalInfo> portal = resolvePortal(image.getProperty());
         final List<ReactorInfo> reactor = resolveReactor(image.getProperty());
-        return MapInfo.from(mapId, infoProp, foothold, ladderRope, life, portal, reactor, clock);
+        return MapInfo.from(mapId, infoProp, area, foothold, ladderRope, life, portal, reactor, clock);
+    }
+
+    private static List<Rect> resolveArea(WzListProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("area") instanceof WzListProperty listProp)) {
+            return List.of();
+        }
+        final List<Rect> area = new ArrayList<>();
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            if (!(listProp.get(String.valueOf(i)) instanceof WzListProperty areaProp)) {
+                break;
+            }
+            area.add(Rect.of(
+                    WzProvider.getInteger(areaProp.get("x1")),
+                    WzProvider.getInteger(areaProp.get("y1")),
+                    WzProvider.getInteger(areaProp.get("x2")),
+                    WzProvider.getInteger(areaProp.get("y2"))
+            ));
+        }
+        return area;
     }
 
     private static List<Foothold> resolveFoothold(WzListProperty imageProp) throws ProviderError {

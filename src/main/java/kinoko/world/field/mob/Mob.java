@@ -16,7 +16,7 @@ import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillStat;
-import kinoko.script.event.MoonBunny;
+import kinoko.script.party.HenesysPQ;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -274,7 +274,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         itemDropCount++;
         nextDropItem = now.plus(template.getDropItemPeriod(), ChronoUnit.SECONDS);
         switch (template.getId()) {
-            case MoonBunny.MOON_BUNNY -> {
+            case HenesysPQ.MOON_BUNNY -> {
                 getField().broadcastPacket(BroadcastPacket.noticeWithoutPrefix(String.format("The Moon Bunny made rice cake number %d", itemDropCount)));
             }
         }

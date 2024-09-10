@@ -11,7 +11,7 @@ import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
-import kinoko.script.event.MoonBunny;
+import kinoko.script.party.HenesysPQ;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Tuple;
@@ -168,7 +168,7 @@ public final class MobHandler {
             // Process mob death
             field.getMobPool().removeMob(targetMob);
             switch (targetMob.getTemplateId()) {
-                case MoonBunny.MOON_BUNNY -> {
+                case HenesysPQ.MOON_BUNNY -> {
                     field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
                 }
             }

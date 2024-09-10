@@ -325,7 +325,6 @@ public final class AranTutorial extends ScriptHandler {
     @Script("q21001s")
     public static void q21001s(ScriptManager sm) {
         // Find the Missing Kid 2 (21001 - start)
-        sm.sayOk("Wah! *Sniff sniff* Hey, that's Aran! Are you here to rescue me?");
         if (!sm.askAccept("*Sniff sniff* I was so scared... Please take me to Athena Pierce.")) {
             sm.sayNext("*Sob* Aran has declined my request!");
             return;

@@ -94,7 +94,10 @@ public final class ItemProvider implements WzProvider {
             }
             for (var entry : directory.getImages().entrySet()) {
                 final int itemId = Integer.parseInt(entry.getKey().replace(".img", ""));
-                itemInfos.put(itemId, ItemInfo.from(itemId, entry.getValue().getProperty()));
+                if (!(entry.getValue().getProperty() instanceof WzListProperty itemProp)) {
+                    throw new ProviderError("Failed to resolve item property");
+                }
+                itemInfos.put(itemId, ItemInfo.from(itemId, itemProp));
                 // Pet equips
                 if (!ItemConstants.isPetEquipItem(itemId)) {
                     continue;

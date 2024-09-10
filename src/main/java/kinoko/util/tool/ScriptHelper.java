@@ -266,7 +266,7 @@ final class ScriptHelper {
                     }
                     Files.write(path, scriptBody.subList(0, 2), StandardOpenOption.APPEND);
                     if (bodyStart != scriptBody.size() - 1) {
-                        for (String comment : collectedComments.get(scriptName)) {
+                        for (String comment : collectedComments.getOrDefault(scriptName, List.of())) {
                             Files.writeString(path, String.format("        %s\n", comment), StandardOpenOption.APPEND);
                         }
                     } else {
@@ -312,7 +312,7 @@ final class ScriptHelper {
     }
 
     private static void alertScript(String scriptType, int source, String scriptName) {
-        if (scriptName != null && scriptName.toLowerCase().startsWith("rien")) {
+        if (scriptName != null && scriptName.toLowerCase().startsWith("party_")) {
             log.info("{} script for {} : {}", scriptType, source, scriptName);
         }
     }

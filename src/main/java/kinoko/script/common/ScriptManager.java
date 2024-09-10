@@ -144,12 +144,18 @@ public interface ScriptManager {
 
     void setNpcAction(int templateId, String action);
 
+    void setReactorState(int templateId, int state);
+
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
 
     boolean checkParty(int memberCount, int levelMin);
 
     EventState getEventState(EventType eventType);
+
+    String getAreaCheck();
+
+    int getInstanceUserCount();
 
     String getInstanceVariable(String key);
 
@@ -160,6 +166,8 @@ public interface ScriptManager {
     void broadcastPacket(OutPacket outPacket);
 
     void broadcastMessage(String message);
+
+    void broadcastScriptProgressMessage(String message);
 
     void broadcastScreenEffect(String effectPath);
 

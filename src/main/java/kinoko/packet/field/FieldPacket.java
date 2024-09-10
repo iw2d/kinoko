@@ -77,6 +77,13 @@ public final class FieldPacket {
         return outPacket;
     }
 
+    public static OutPacket setObjectState(String name, int state) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SetObjectState);
+        outPacket.encodeString(name); // sName
+        outPacket.encodeInt(state); // nState
+        return outPacket;
+    }
+
     public static OutPacket destroyClock() {
         return OutPacket.of(OutHeader.DestroyClock);
     }

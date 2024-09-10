@@ -7,6 +7,7 @@ import kinoko.world.user.User;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
@@ -72,8 +73,8 @@ public final class Instance implements Lockable<Instance> {
         return userMap.values().stream().collect(Collectors.toUnmodifiableSet());
     }
 
-    public String getVariable(String key) {
-        return variables.getOrDefault(key, "");
+    public Optional<String> getVariable(String key) {
+        return Optional.ofNullable(variables.get(key));
     }
 
     public void setVariable(String key, String value) {

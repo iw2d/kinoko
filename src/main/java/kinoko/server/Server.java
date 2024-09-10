@@ -10,6 +10,7 @@ import kinoko.server.node.LoginServerNode;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.rank.RankManager;
 import kinoko.util.crypto.MapleCrypto;
+import kinoko.world.user.CharacterData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

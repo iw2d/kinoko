@@ -1,8 +1,10 @@
 package kinoko.world.field;
 
+import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.field.MobPacket;
 import kinoko.provider.map.LifeInfo;
 import kinoko.provider.map.LifeType;
+import kinoko.script.party.KerningPQ;
 import kinoko.server.node.ServerExecutor;
 import kinoko.util.BitFlag;
 import kinoko.util.Rect;
@@ -25,6 +27,25 @@ public final class MobPool extends FieldObjectPool<Mob> {
         this.mobCapacityMax = mobCapacityMin * 2;
     }
 
+    public Optional<Mob> getByTemplateId(int templateId) {
+        for (Mob mob : getObjects()) {
+            if (mob.getTemplateId() == templateId) {
+                return Optional.of(mob);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public List<Mob> getAllByTemplateId(int templateId) {
+        final List<Mob> reactors = new ArrayList<>();
+        for (Mob mob : getObjects()) {
+            if (mob.getTemplateId() == templateId) {
+                reactors.add(mob);
+            }
+        }
+        return reactors;
+    }
+
     public void addMob(Mob mob) {
         mob.setField(field);
         mob.setId(field.getNewObjectId());
@@ -41,6 +62,20 @@ public final class MobPool extends FieldObjectPool<Mob> {
         ServerExecutor.submit(field, () -> {
             field.broadcastPacket(MobPacket.mobLeaveField(mob));
         });
+        // Special handling for fields
+        switch (field.getFieldId()) {
+            case KerningPQ.STAGE_4 -> {
+                // Hidden Street : First Time Together <4th Stage>
+                field.broadcastPacket(FieldEffectPacket.screen("quest/party/clear"));
+                field.broadcastPacket(FieldEffectPacket.sound("Party1/Clear"));
+                field.blowWeather(5120017, "All of the Curse Eyes have been defeated. The Party Leader should come talk to me.", 20);
+            }
+            case KerningPQ.STAGE_5 -> {
+                // Hidden Street : First Time Together <Last Stage>
+                field.broadcastPacket(FieldEffectPacket.screen("quest/party/clear"));
+                field.broadcastPacket(FieldEffectPacket.sound("Party1/Clear"));
+            }
+        }
         return true;
     }
 

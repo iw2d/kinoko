@@ -2,7 +2,7 @@ package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
 import kinoko.script.common.ScriptDispatcher;
-import kinoko.script.event.MoonBunny;
+import kinoko.script.party.HenesysPQ;
 import kinoko.world.GameConstants;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
@@ -60,17 +60,14 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
             ScriptDispatcher.startReactorScript(user, reactor, reactor.getAction());
         }
         // Special handling for reactors without scripts
-        switch (reactor.getTemplateId()) {
-            case 9108000, 9108001, 9108002, 9108003, 9108004, 9108005 -> {
-                // Moon Bunny Primrose reactors
-                final Optional<Reactor> moonReactorResult = getByTemplateId(MoonBunny.MOON_REACTOR);
-                if (moonReactorResult.isPresent()) {
-                    try (var lockedReactor = moonReactorResult.get().acquire()) {
-                        final Reactor moonReactor = lockedReactor.get();
-                        if (!moonReactor.isLastState()) {
-                            moonReactor.setState(moonReactor.getState() + 1);
-                            hitReactor(user, moonReactor, 0);
-                        }
+        if (HenesysPQ.PRIMROSE_REACTORS.contains(reactor.getTemplateId())) {
+            final Optional<Reactor> moonReactorResult = getByTemplateId(HenesysPQ.MOON_REACTOR);
+            if (moonReactorResult.isPresent()) {
+                try (var lockedReactor = moonReactorResult.get().acquire()) {
+                    final Reactor moonReactor = lockedReactor.get();
+                    if (!moonReactor.isLastState()) {
+                        moonReactor.setState(moonReactor.getState() + 1);
+                        hitReactor(user, moonReactor, 0);
                     }
                 }
             }

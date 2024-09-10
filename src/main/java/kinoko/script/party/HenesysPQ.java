@@ -1,4 +1,4 @@
-package kinoko.script.event;
+package kinoko.script.party;
 
 import kinoko.provider.reward.Reward;
 import kinoko.script.UnityPortal;
@@ -11,10 +11,12 @@ import kinoko.world.quest.QuestRecordType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public final class MoonBunny extends ScriptHandler {
+public final class HenesysPQ extends ScriptHandler {
     public static final int MOON_BUNNY = 9300061;
     public static final int MOON_REACTOR = 9101000;
+    public static final Set<Integer> PRIMROSE_REACTORS = Set.of(9108000, 9108001, 9108002, 9108003, 9108004, 9108005);
 
     public static final int PRIMROSE_SEED = 4001453;
     public static final int MOON_BUNNYS_RICE_CAKE = 4001101;
@@ -42,7 +44,7 @@ public final class MoonBunny extends ScriptHandler {
             }
         } else if (sm.getFieldId() == 910010500) {
             // Hidden Street : Moon Bunny Lobby
-            final int answer = sm.askMenu("#e<Party Quest: Moon Bunny's Rice Cake>#n\r\nHello, I'm Tory. Have you been to Primrose Hill? It's a beautiful hill where primroses bloom. I hear that a tiger named Growlie over at Primerose Hill is hungry. Won't you go with your party members and help Growlie?\r\n", Map.of(
+            final int answer = sm.askMenu("#e<Party Quest: Moon Bunny's Rice Cake>#n\r\nHello, I'm Tory. Have you been to Primrose Hill? It's a beautiful hill where primroses bloom. I hear that a tiger named Growlie over at Primerose Hill is hungry. Won't you go with your party members and help Growlie?", Map.of(
                     0, "Go to Primrose Hill",
                     1, "Learn about Primrose Hill"
             ));
@@ -60,7 +62,7 @@ public final class MoonBunny extends ScriptHandler {
                 // Hidden Street : Primrose Hill -> Hidden Street : Back to Town
                 sm.partyWarpInstance(910010000, "sp", 910010300, 600);
             } else if (answer == 1) {
-                sm.sayNext("#e<Party Quest: Moon Bunny's Rice Cake>#n\r\nA mysterious Moon Bunny that only appears in #b#m910010000##k during full moons. #b#p1012112##k of #b#m100000200##k is looking for Maplers to find #r#t4001101##k for #b#p1012114##k. If you want to meet the Moon Bunny, plant Primrose Seeds in the designated locations and summon forth a full moon. Protect the Moon Bunny from wild animals until all #r10 Rice Cakes#k are made.\r\n#e - Level:#n 10 or above #r(Recommended Level: 10 - 20 )#k\r\n#e - Time Limit:#n 10 min.\r\n#e - Number of Participants:#n 3 to 6\r\n#e - Items:#n #v1002798# #t1002798#\r\n#b(obtained by giving Tory 10 Rice Cakes.)#k");
+                sm.sayOk("#e<Party Quest: Moon Bunny's Rice Cake>#n\r\nA mysterious Moon Bunny that only appears in #b#m910010000##k during full moons. #b#p1012112##k of #b#m100000200##k is looking for Maplers to find #r#t4001101##k for #b#p1012114##k. If you want to meet the Moon Bunny, plant Primrose Seeds in the designated locations and summon forth a full moon. Protect the Moon Bunny from wild animals until all #r10 Rice Cakes#k are made.\r\n#e - Level:#n 10 or above #r(Recommended Level: 10 - 20)#k\r\n#e - Time Limit:#n 10 min.\r\n#e - Number of Participants:#n 3 to 6\r\n#e - Items:#n #v1002798# #t1002798#\r\n#b(obtained by giving Tory 10 Rice Cakes.)#k");
             }
         } else {
             // Hidden Street : Shortcut

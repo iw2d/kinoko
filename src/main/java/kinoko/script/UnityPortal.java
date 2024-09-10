@@ -308,13 +308,6 @@ public final class UnityPortal extends ScriptHandler {
         returnPortal(sm);
     }
 
-    @Script("party_exit")
-    public static void party_exit(ScriptManager sm) {
-        // Hidden Street : First Time Together Lobby (910340700)
-        //   out00 (-259, 158)
-        returnPortal(sm, 103000000, null); // Kerning City : Kerning City
-    }
-
     @Script("party2_exit")
     public static void party2_exit(ScriptManager sm) {
         // Ludibrium : Eos Tower 101st Floor (221023300)
