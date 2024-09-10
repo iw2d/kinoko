@@ -1,5 +1,7 @@
 package kinoko.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.HexFormat;
@@ -14,6 +16,24 @@ public final class Util {
     public static String getEnv(String name, String defaultValue) {
         final String value = System.getenv(name);
         return value != null ? value : defaultValue;
+    }
+
+    public static int getEnv(String name, int defaultValue) {
+        final String value = System.getenv(name);
+        return value != null ? Integer.parseInt(value) : defaultValue;
+    }
+
+    public static boolean getEnv(String name, boolean defaultValue) {
+        final String value = System.getenv(name);
+        return value != null ? Boolean.parseBoolean(value) : defaultValue;
+    }
+
+    public static byte[] getHost(String name) {
+        try {
+            return InetAddress.getByName(name).getAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String readableByteArray(byte[] array) {

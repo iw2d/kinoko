@@ -12,7 +12,21 @@ services:
       - ./data:/kinoko/data
       - ./wz:/kinoko/wz
     environment:
+      # ServerConstants
+      CENTRAL_HOST: "127.0.0.1"
+      CENTRAL_PORT: "8282"
+      SERVER_HOST: "127.0.0.1"
       DATABASE_HOST: "database"
+      # ServerConfig
+      WORLD_ID: "0"
+      WORLD_NAME: "Kinoko"
+      CHANNEL_COUNT: "5"
+      AUTO_CREATE_ACCOUNT: "true"
+      REQUIRE_SECONDARY_PASSWORD: "true"
+      WZ_DIRECTORY: "/kinoko/wz"
+      DATA_DIRECTORY: "/kinoko/data"
+      COMMAND_PREFIX: "!"
+      DEBUG_MODE: "true"
   database:
     image: cassandra:5.0.0-jammy
     ports:
