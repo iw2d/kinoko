@@ -24,9 +24,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPacket> {
     private static final Logger log = LogManager.getLogger(ChannelServerHandler.class);
@@ -141,7 +139,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
     private void handleUserQueryResult(InPacket inPacket) {
         final int requestId = inPacket.decodeInt();
         final int size = inPacket.decodeInt();
-        final Set<RemoteUser> remoteUsers = new HashSet<>();
+        final List<RemoteUser> remoteUsers = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             remoteUsers.add(RemoteUser.decode(inPacket));
         }

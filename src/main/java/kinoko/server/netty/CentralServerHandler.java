@@ -2,17 +2,12 @@ package kinoko.server.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import kinoko.database.CharacterInfo;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.CentralPacket;
 import kinoko.packet.field.MessengerPacket;
 import kinoko.packet.world.BroadcastPacket;
-import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.GuildPacket;
 import kinoko.packet.world.PartyPacket;
-import kinoko.server.friend.Friend;
-import kinoko.server.friend.FriendRequest;
-import kinoko.server.friend.FriendStatus;
 import kinoko.server.guild.*;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.memo.Memo;
@@ -39,7 +34,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public final class CentralServerHandler extends SimpleChannelInboundHandler<InPacket> {
@@ -80,7 +77,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
                 case GuildRequest -> handleGuildRequest(remoteServerNode, inPacket);
                 case BoardRequest -> handleBoardRequest(remoteServerNode, inPacket);
-                case FriendRequest -> handleFriendRequest(remoteServerNode, inPacket);
                 case null -> log.error("Central Server received an unknown opcode : {}", op);
                 default -> log.error("Central Server received an unhandled header : {}", header);
             }
@@ -176,16 +172,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         updateMessengerUser(remoteUser);
         updatePartyMember(remoteUser);
         updateGuildMember(remoteUser, false);
-        // Notify friends
-        final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
-        final List<Integer> characterIds = friendMap.values().stream()
-                .filter((f) -> f.getStatus() == FriendStatus.NORMAL)
-                .map(Friend::getFriendId)
-                .toList();
-        final OutPacket outPacket = FriendPacket.notify(remoteUser.getCharacterId(), remoteUser.getChannelId(), false);
-        for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
-            serverNode.write(CentralPacket.userPacketBroadcast(characterIds, outPacket));
-        }
     }
 
     private void handleUserUpdate(RemoteServerNode remoteServerNode, InPacket inPacket) {
@@ -210,16 +196,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         remoteUser.setFieldId(GameConstants.UNDEFINED_FIELD_ID);
         updatePartyMember(remoteUser);
         updateGuildMember(remoteUser, false);
-        // Notify friends
-        final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
-        final List<Integer> characterIds = friendMap.values().stream()
-                .filter((f) -> f.getStatus() == FriendStatus.NORMAL)
-                .map(Friend::getFriendId)
-                .toList();
-        final OutPacket outPacket = FriendPacket.notify(remoteUser.getCharacterId(), GameConstants.CHANNEL_OFFLINE, false);
-        for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
-            serverNode.write(CentralPacket.userPacketBroadcast(characterIds, outPacket));
-        }
     }
 
     private void handleUserPacketRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
@@ -1209,125 +1185,6 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
     }
 
-    private void handleFriendRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
-        final int characterId = inPacket.decodeInt();
-        final FriendRequest friendRequest = FriendRequest.decode(inPacket);
-        // Resolve requester user
-        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
-        if (remoteUserResult.isEmpty()) {
-            log.error("Failed to resolve user with character ID : {} for FriendRequest", characterId);
-            return;
-        }
-        final RemoteUser remoteUser = remoteUserResult.get();
-        switch (friendRequest.getRequestType()) {
-            case LoadFriend -> {
-                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
-                remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.loadFriendDone(friendMap.values())));
-            }
-            case SetFriend -> {
-                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
-                final Optional<Friend> friendResult = friendMap.values().stream().filter((f) -> f.getFriendName().equals(friendRequest.getTargetName())).findFirst();
-                if (friendResult.isPresent() && friendResult.get().getStatus() == FriendStatus.NORMAL) {
-                    // Update friend group
-                    final Friend friend = friendResult.get();
-                    friend.setFriendGroup(friendRequest.getFriendGroup());
-                    if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendUnknown())); // The request was denied due to an unknown error.
-                        return;
-                    }
-                    // Update client
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendDone(friendMap.values())));
-                } else {
-                    // Create new friend, resolve target info
-                    final Optional<CharacterInfo> characterInfoResult = DatabaseManager.characterAccessor().getCharacterInfoByName(friendRequest.getTargetName());
-                    if (characterInfoResult.isEmpty()) {
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendUnknownUser())); // That character is not registered.
-                        return;
-                    }
-                    final int targetCharacterId = characterInfoResult.get().getCharacterId();
-                    final String targetCharacterName = characterInfoResult.get().getCharacterName();
-                    // Check if target can be added as a friend
-                    if (friendMap.size() >= friendRequest.getFriendMax()) {
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendFullMe())); // Your buddy list is full.
-                        return;
-                    }
-                    if (friendMap.containsKey(targetCharacterId)) {
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendAlreadySet())); // That character is already registered as your buddy.
-                        return;
-                    }
-                    // Add target as friend, force creation
-                    final Friend friendForUser = new Friend(remoteUser.getCharacterId(), targetCharacterId, targetCharacterName, friendRequest.getFriendGroup(), FriendStatus.NORMAL);
-                    if (!DatabaseManager.friendAccessor().saveFriend(friendForUser, true)) {
-                        remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendUnknown())); // The request was denied due to an unknown error.
-                        return;
-                    }
-                    // Update client
-                    friendMap.put(targetCharacterId, friendForUser);
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendDone(friendMap.values())));
-                    // Add user as a friend for target, not forced - existing friends, requests, and refused records
-                    final Friend friendForTarget = new Friend(targetCharacterId, remoteUser.getCharacterId(), remoteUser.getCharacterName(), GameConstants.DEFAULT_FRIEND_GROUP, FriendStatus.REQUEST);
-                    if (DatabaseManager.friendAccessor().saveFriend(friendForTarget, false)) {
-                        // Send invite to target if request was created
-                        final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(targetCharacterId);
-                        if (targetResult.isPresent()) {
-                            final RemoteUser target = targetResult.get();
-                            friendForUser.setChannelId(target.getChannelId());
-                            final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(target.getChannelId());
-                            targetNodeResult.ifPresent(serverNode -> serverNode.write(CentralPacket.userPacketReceive(target.getCharacterId(), FriendPacket.invite(friendForTarget))));
-                        }
-                    }
-                }
-
-            }
-            case AcceptFriend -> {
-                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
-                final Friend friend = friendMap.get(friendRequest.getFriendId());
-                if (friend == null) {
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.acceptFriendUnknown())); // The request was denied due to an unknown error.
-                    return;
-                }
-                friend.setStatus(FriendStatus.NORMAL);
-                if (!DatabaseManager.friendAccessor().saveFriend(friend, true)) {
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.acceptFriendUnknown())); // The request was denied due to an unknown error.
-                    return;
-                }
-                // Notify target if online
-                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(friend.getFriendId());
-                if (targetResult.isPresent()) {
-                    final RemoteUser target = targetResult.get();
-                    friend.setChannelId(target.getChannelId());
-                    final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(target.getChannelId());
-                    targetNodeResult.ifPresent(serverNode -> serverNode.write(CentralPacket.userPacketReceive(target.getCharacterId(), FriendPacket.notify(remoteUser.getCharacterId(), remoteUser.getChannelId(), false))));
-                }
-                // Update client
-                remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.setFriendDone(friendMap.values())));
-            }
-            case DeleteFriend -> {
-                final Map<Integer, Friend> friendMap = loadFriends(remoteUser);
-                final Friend friend = friendMap.get(friendRequest.getFriendId());
-                if (friend == null) {
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.deleteFriendUnknown())); // The request was denied due to an unknown error.
-                    return;
-                }
-                // Delete friend
-                if (!DatabaseManager.friendAccessor().deleteFriend(remoteUser.getCharacterId(), friend.getFriendId())) {
-                    remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.deleteFriendUnknown())); // The request was denied due to an unknown error.
-                    return;
-                }
-                // Notify deleted friend if online
-                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(friend.getFriendId());
-                if (targetResult.isPresent()) {
-                    final RemoteUser target = targetResult.get();
-                    final Optional<RemoteServerNode> targetNodeResult = centralServerNode.getChannelServerNodeById(target.getChannelId());
-                    targetNodeResult.ifPresent(serverNode -> serverNode.write(CentralPacket.userPacketReceive(target.getCharacterId(), FriendPacket.notify(remoteUser.getCharacterId(), GameConstants.CHANNEL_OFFLINE, false))));
-                }
-                // Update client
-                friendMap.remove(friend.getFriendId());
-                remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), FriendPacket.deleteFriendDone(friendMap.values())));
-            }
-        }
-    }
-
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
@@ -1456,24 +1313,5 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             }
             biConsumer.accept(member, targetNodeResult.get());
         }
-    }
-
-    private Map<Integer, Friend> loadFriends(RemoteUser remoteUser) {
-        final Map<Integer, Friend> friendMap = new HashMap<>();
-        for (Friend friend : DatabaseManager.friendAccessor().getFriendsByCharacterId(remoteUser.getCharacterId())) {
-            friendMap.put(friend.getFriendId(), friend);
-        }
-        for (Friend mutualFriend : DatabaseManager.friendAccessor().getFriendsByFriendId(remoteUser.getCharacterId())) {
-            if (mutualFriend.getStatus() != FriendStatus.NORMAL) {
-                continue;
-            }
-            final Friend friend = friendMap.get(mutualFriend.getCharacterId());
-            if (friend == null || friend.getStatus() != FriendStatus.NORMAL) {
-                continue;
-            }
-            final Optional<RemoteUser> friendUserResult = centralServerNode.getUserByCharacterId(friend.getFriendId());
-            friendUserResult.ifPresent((friendUser) -> friend.setChannelId(friendUser.getChannelId()));
-        }
-        return friendMap;
     }
 }

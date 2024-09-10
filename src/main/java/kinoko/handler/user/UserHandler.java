@@ -25,8 +25,6 @@ import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.*;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
-import kinoko.server.friend.FriendRequest;
-import kinoko.server.friend.FriendRequestType;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
@@ -1231,36 +1229,6 @@ public final class UserHandler {
                 default -> {
                     log.error("Unhandled mini room action {}", mrp);
                 }
-            }
-        }
-    }
-
-    @Handler(InHeader.FriendRequest)
-    public static void handleFriendRequest(User user, InPacket inPacket) {
-        final int type = inPacket.decodeByte();
-        final FriendRequestType requestType = FriendRequestType.getByValue(type);
-        switch (requestType) {
-            case LoadFriend -> {
-                user.getConnectedServer().submitFriendRequest(user, FriendRequest.loadFriend());
-            }
-            case SetFriend -> {
-                final String targetName = inPacket.decodeString(); // sTarget
-                final String friendGroup = inPacket.decodeString(); // sFriendGroup
-                user.getConnectedServer().submitFriendRequest(user, FriendRequest.setFriend(targetName, friendGroup, user.getCharacterData().getFriendMax()));
-            }
-            case AcceptFriend -> {
-                final int friendId = inPacket.decodeInt();
-                user.getConnectedServer().submitFriendRequest(user, FriendRequest.acceptFriend(friendId));
-            }
-            case DeleteFriend -> {
-                final int friendId = inPacket.decodeInt();
-                user.getConnectedServer().submitFriendRequest(user, FriendRequest.deleteFriend(friendId));
-            }
-            case null -> {
-                log.error("Unknown friend request type : {}", type);
-            }
-            default -> {
-                log.error("Unhandled friend request type : {}", requestType);
             }
         }
     }

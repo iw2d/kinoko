@@ -1,4 +1,4 @@
-package kinoko.server.friend;
+package kinoko.world.user.friend;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -71,7 +71,7 @@ public final class Friend implements Encodable {
         outPacket.encodeInt(friendId); // dwFriendID
         outPacket.encodeString(friendName, 13); // sFriendName
         outPacket.encodeByte(status.getValue()); // nFlag
-        outPacket.encodeInt(channelId); // nChannelId
+        outPacket.encodeInt(status == FriendStatus.NORMAL ? channelId : GameConstants.CHANNEL_OFFLINE); // nChannelId
         outPacket.encodeString(friendGroup, 17); // sFriendGroup
     }
 }

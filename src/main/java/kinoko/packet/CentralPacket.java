@@ -1,6 +1,5 @@
 package kinoko.packet;
 
-import kinoko.server.friend.FriendRequest;
 import kinoko.server.guild.GuildBoardRequest;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.CentralHeader;
@@ -243,13 +242,6 @@ public final class CentralPacket {
         final OutPacket outPacket = OutPacket.of(CentralHeader.BoardRequest);
         outPacket.encodeInt(characterId);
         boardRequest.encode(outPacket);
-        return outPacket;
-    }
-
-    public static OutPacket friendRequest(int characterId, FriendRequest friendRequest) {
-        final OutPacket outPacket = OutPacket.of(CentralHeader.FriendRequest);
-        outPacket.encodeInt(characterId);
-        friendRequest.encode(outPacket);
         return outPacket;
     }
 }

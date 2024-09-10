@@ -6,8 +6,8 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.querybuilder.insert.Insert;
 import kinoko.database.FriendAccessor;
 import kinoko.database.cassandra.table.FriendTable;
-import kinoko.server.friend.Friend;
-import kinoko.server.friend.FriendStatus;
+import kinoko.world.user.friend.Friend;
+import kinoko.world.user.friend.FriendStatus;
 
 import java.util.ArrayList;
 import java.util.List;

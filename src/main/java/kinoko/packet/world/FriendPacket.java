@@ -1,9 +1,9 @@
 package kinoko.packet.world;
 
-import kinoko.server.friend.Friend;
-import kinoko.server.friend.FriendResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.user.friend.Friend;
+import kinoko.world.user.friend.FriendResultType;
 
 import java.util.Collection;
 

@@ -1,6 +1,6 @@
 package kinoko.database;
 
-import kinoko.server.friend.Friend;
+import kinoko.world.user.friend.Friend;
 
 import java.util.List;
 

@@ -1,8 +1,10 @@
 package kinoko.world.user;
 
+import kinoko.handler.user.FriendHandler;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.WzProvider;
@@ -40,6 +42,8 @@ import kinoko.world.user.data.MapTransferInfo;
 import kinoko.world.user.data.MiniGameRecord;
 import kinoko.world.user.data.WildHunterInfo;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.friend.Friend;
+import kinoko.world.user.friend.FriendStatus;
 import kinoko.world.user.stat.*;
 
 import java.time.Instant;
@@ -762,6 +766,18 @@ public final class User extends Life implements Lockable<User> {
         }
         // Notify central server
         getConnectedServer().notifyUserDisconnect(this);
+        // Notify friends
+        if (disconnect) {
+            FriendHandler.loadFriends(this, (friendMap) -> {
+                final List<Integer> friendIds = friendMap.values().stream()
+                        .filter((friend) -> friend.getStatus() == FriendStatus.NORMAL)
+                        .map(Friend::getFriendId)
+                        .toList();
+                if (!friendIds.isEmpty()) {
+                    getConnectedServer().submitUserPacketBroadcast(friendIds, FriendPacket.notify(getCharacterId(), GameConstants.CHANNEL_OFFLINE, false));
+                }
+            });
+        }
     }
 
     /**

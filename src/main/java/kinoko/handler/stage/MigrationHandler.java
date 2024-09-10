@@ -2,6 +2,7 @@ package kinoko.handler.stage;
 
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
+import kinoko.handler.user.FriendHandler;
 import kinoko.packet.ClientPacket;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.TransferChannelType;
@@ -9,11 +10,11 @@ import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.cashshop.Gift;
-import kinoko.server.friend.FriendRequest;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
@@ -32,6 +33,8 @@ import kinoko.world.user.CharacterData;
 import kinoko.world.user.*;
 import kinoko.world.user.data.ConfigManager;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.friend.Friend;
+import kinoko.world.user.friend.FriendStatus;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -185,14 +188,23 @@ public final class MigrationHandler {
                     channelServerNode.submitGuildRequest(user, GuildRequest.loadGuild(guildId));
                 }
 
-                // Load friends from central server
-                channelServerNode.submitFriendRequest(user, FriendRequest.loadFriend());
-
                 // Load memos
                 final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
                 if (!memos.isEmpty()) {
                     user.write(MemoPacket.load(memos));
                 }
+
+                // Load friends
+                FriendHandler.loadFriends(user, (friendMap) -> {
+                    user.write(FriendPacket.loadFriendDone(friendMap.values()));
+                    final List<Integer> friendIds = friendMap.values().stream()
+                            .filter((friend) -> friend.getStatus() == FriendStatus.NORMAL)
+                            .map(Friend::getFriendId)
+                            .toList();
+                    if (!friendIds.isEmpty()) {
+                        user.getConnectedServer().submitUserPacketBroadcast(friendIds, FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false));
+                    }
+                });
             }
         });
     }

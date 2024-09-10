@@ -13,7 +13,6 @@ import kinoko.server.event.EventType;
 import kinoko.server.field.ChannelFieldStorage;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceStorage;
-import kinoko.server.friend.FriendRequest;
 import kinoko.server.guild.GuildBoardRequest;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.messenger.MessengerRequest;
@@ -144,8 +143,8 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userPacketBroadcast(characterIds, remotePacket));
     }
 
-    public void submitUserQueryRequest(List<String> characterNames, Consumer<Set<RemoteUser>> consumer) {
-        final CompletableFuture<Set<RemoteUser>> userRequestFuture = new CompletableFuture<>();
+    public void submitUserQueryRequest(List<String> characterNames, Consumer<List<RemoteUser>> consumer) {
+        final CompletableFuture<List<RemoteUser>> userRequestFuture = new CompletableFuture<>();
         userRequestFuture.thenAccept(consumer).exceptionally(e -> {
             log.error("Exception caught while consuming user query request", e);
             e.printStackTrace();
@@ -157,8 +156,8 @@ public final class ChannelServerNode extends ServerNode {
     }
 
     @SuppressWarnings("unchecked")
-    public void completeUserQueryRequest(int requestId, Set<RemoteUser> remoteUsers) {
-        final CompletableFuture<Set<RemoteUser>> userRequestFuture = (CompletableFuture<Set<RemoteUser>>) requestFutures.remove(requestId);
+    public void completeUserQueryRequest(int requestId, List<RemoteUser> remoteUsers) {
+        final CompletableFuture<List<RemoteUser>> userRequestFuture = (CompletableFuture<List<RemoteUser>>) requestFutures.remove(requestId);
         if (userRequestFuture != null) {
             userRequestFuture.complete(remoteUsers);
         }
@@ -210,10 +209,6 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitBoardRequest(User user, GuildBoardRequest boardRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.boardRequest(user.getCharacterId(), boardRequest));
-    }
-
-    public void submitFriendRequest(User user, FriendRequest friendRequest) {
-        centralClientFuture.channel().writeAndFlush(CentralPacket.friendRequest(user.getCharacterId(), friendRequest));
     }
 
 
