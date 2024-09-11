@@ -1,4 +1,4 @@
-# Glibber (2030009) - El Nath : Ice Valley II (211040200)
+# Glibber : Merchant (2030009) - El Nath : Ice Valley II (211040200)
 
 recharge: true
 items:
@@ -29,3 +29,5 @@ items:
   - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

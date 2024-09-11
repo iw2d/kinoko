@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class StringProvider implements WzProvider {
     public static final Path STRING_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "String.wz");

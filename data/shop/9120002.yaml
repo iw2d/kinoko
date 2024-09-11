@@ -1,4 +1,4 @@
-# Doran (9120002) - Zipangu : Showa Street Market (801000300)
+# Doran : Merchant (9120002) - Zipangu : Showa Street Market (801000300)
 
 recharge: true
 items:
@@ -12,3 +12,5 @@ items:
   - [ 2020014, 8100, 1, 100 ] # Sunrise Dew
   - [ 2022002, 1000 ] # Cider
   - [ 2060003, 40, 1, 1000 ] # Red Arrow for Bow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

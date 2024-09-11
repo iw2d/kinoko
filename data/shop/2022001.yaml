@@ -1,4 +1,4 @@
-# Hana (2022001) - El Nath : El Nath General Store (211000102)
+# Hana : Merchant (2022001) - El Nath : El Nath General Store (211000102)
 
 recharge: true
 items:
@@ -34,4 +34,6 @@ items:
   - [ 2050002, 300, 1, 100 ] # Tonic
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
   - [ 2120008, 200, 1, 200 ] # Dry Treat
+  - [ 2330000, 500, 500, 500 ] # Bullet

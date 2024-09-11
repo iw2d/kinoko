@@ -48,6 +48,7 @@ public final class ShopDialog implements Dialog {
                 final int itemId = inPacket.decodeInt(); // nItemID
                 final int count = inPacket.decodeShort(); // nCount
                 final int price = inPacket.decodeInt(); // DiscountPrice
+                final boolean rechargeable = ItemConstants.isRechargeableItem(itemId);
                 // Check buy request matches with shop data
                 if (index >= items.size()) {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
@@ -59,7 +60,7 @@ public final class ShopDialog implements Dialog {
                     return;
                 }
                 // Check if user has enough money
-                final long totalPrice = ((long) count) * price;
+                final long totalPrice = ((long) price) * count;
                 if (totalPrice > GameConstants.MONEY_MAX) {
                     user.write(FieldPacket.shopResult(ShopResultType.BuyNoMoney)); // You do not have enough mesos.
                     return;
@@ -80,7 +81,8 @@ public final class ShopDialog implements Dialog {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
-                final Item boughtItem = itemInfoResult.get().createItem(user.getNextItemSn(), count);
+                final ItemInfo ii = itemInfoResult.get();
+                final Item boughtItem = ii.createItem(user.getNextItemSn(), rechargeable ? ii.getSlotMax() : count);
                 // Deduct money and add item to inventory
                 if (!im.addMoney((int) -totalPrice)) {
                     throw new IllegalStateException("Could not deduct total price from user");
@@ -98,11 +100,12 @@ public final class ShopDialog implements Dialog {
                 final int position = inPacket.decodeShort(); // nPOS
                 final int itemId = inPacket.decodeInt(); // nItemID
                 final int count = inPacket.decodeShort(); // nCount
+                final boolean rechargeable = ItemConstants.isRechargeableItem(itemId);
                 // Check if sell request possible
                 final InventoryManager im = user.getInventoryManager();
                 final Inventory inventory = im.getInventoryByItemId(itemId);
                 final Item sellItem = inventory.getItem(position);
-                if (sellItem.getItemId() != itemId || sellItem.getQuantity() < count) {
+                if (sellItem.getItemId() != itemId || (rechargeable && count != 1) || (!rechargeable && sellItem.getQuantity() < count)) {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
@@ -112,15 +115,16 @@ public final class ShopDialog implements Dialog {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
                     return;
                 }
-                final int price = itemInfoResult.get().getPrice();
-                final long totalPrice = ((long) price) * count;
+                final ItemInfo ii = itemInfoResult.get();
+                final int price = ii.getPrice();
+                final long totalPrice = ((long) price) * count + (long) (rechargeable ? Math.ceil(sellItem.getQuantity() * ii.getUnitPrice()) : 0);
                 // Check if user can add money
                 if (!im.canAddMoney((int) totalPrice)) {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg, "You cannot hold any more mesos."));
                     return;
                 }
                 // Remove items and add money
-                final Optional<InventoryOperation> removeItemResult = im.removeItem(position, sellItem, count);
+                final Optional<InventoryOperation> removeItemResult = im.removeItem(position, sellItem, rechargeable ? sellItem.getQuantity() : count);
                 if (removeItemResult.isEmpty()) {
                     throw new IllegalStateException("Could not remove item from inventory");
                 }

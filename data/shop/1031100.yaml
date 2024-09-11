@@ -1,4 +1,4 @@
-# Len the Fairy (1031100) - Ellinia : Ellinia General Store (101000002)
+# Len the Fairy : Merchant (1031100) - Ellinia : Ellinia General Store (101000002)
 
 recharge: true
 items:
@@ -25,4 +25,6 @@ items:
   - [ 2050003, 500, 1, 100 ] # Holy Water
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
   - [ 2120008, 200, 1, 200 ] # Dry Treat
+  - [ 2330000, 500, 500, 500 ] # Bullet

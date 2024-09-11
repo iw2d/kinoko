@@ -1,4 +1,4 @@
-# Mina (1001100) - Lith Harbor : Lith Harbor General Store (104000002)
+# Mina : Merchant (1001100) - Lith Harbor : Lith Harbor General Store (104000002)
 
 recharge: true
 items:
@@ -22,3 +22,5 @@ items:
   - [ 2030001, 500, 1, 100 ] # Return Scroll to Lith Harbor
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

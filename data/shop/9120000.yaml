@@ -1,4 +1,4 @@
-# Shinta (9120000) - Zipangu : Showa Street Market (801000300)
+# Shinta : Weapon Seller (9120000) - Zipangu : Showa Street Market (801000300)
 
 recharge: true
 items:
@@ -13,3 +13,5 @@ items:
   - [ 1432008, 150000 ] # Fish Spear
   - [ 1462006, 500000 ] # Silver Crow
   - [ 1472008, 250000 ] # Steel Guards
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

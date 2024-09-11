@@ -1,4 +1,4 @@
-# Gali (1091002) - Nautilus : Mid Floor - Hallway (120000200)
+# Gali : Merchant (1091002) - Nautilus : Mid Floor - Hallway (120000200)
 
 recharge: true
 items:
@@ -22,3 +22,5 @@ items:
   - [ 2030019, 500, 1, 100 ] # Nautilus Return Scroll
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

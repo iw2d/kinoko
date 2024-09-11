@@ -40,6 +40,15 @@ public interface WzProvider {
         throw new ProviderError("Unexpected or missing value while extracting Double");
     }
 
+    static double getDouble(Object object, double defaultValue) {
+        if (object instanceof Float value) {
+            return value;
+        } else if (object instanceof Double value) {
+            return value;
+        }
+        return defaultValue;
+    }
+
     static String getString(Object object) {
         if (object instanceof Integer value) {
             return String.valueOf(value);

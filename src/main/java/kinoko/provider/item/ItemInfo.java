@@ -80,6 +80,10 @@ public final class ItemInfo {
         return getInfo(ItemInfoType.price);
     }
 
+    public double getUnitPrice() {
+        return WzProvider.getDouble(getItemInfos().get(ItemInfoType.unitPrice), 0.0);
+    }
+
     public int getSlotMax() {
         if (getItemInfos().containsKey(ItemInfoType.slotMax)) {
             return getInfo(ItemInfoType.slotMax);

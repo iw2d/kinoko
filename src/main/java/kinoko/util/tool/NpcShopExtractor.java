@@ -18,6 +18,11 @@ import java.util.*;
 
 final class NpcShopExtractor {
     public static final Path NPC_SHOP_IMG = Path.of(ServerConfig.WZ_DIRECTORY, "bms", "NpcShop.img");
+    private static final List<ShopItem> subiAndBullet = List.of(
+            ShopItem.from(2070000, 500, 500, 500), // Subi Throwing-Stars
+            ShopItem.from(2330000, 500, 500, 500) // Bullet
+            // TODO magnifying glass?
+    );
 
     public static void main(String[] args) throws IOException {
         ItemProvider.initialize();
@@ -70,13 +75,7 @@ final class NpcShopExtractor {
                     continue;
                 }
                 final ItemInfo ii = itemInfoResult.get();
-                if (unitPrice > 0) {
-                    items.add(ShopItem.rechargeable(itemId, ii.getSlotMax(), unitPrice));
-                } else if (price > 0) {
-                    items.add(ShopItem.from(itemId, price, 1, ii.getSlotMax()));
-                } else {
-                    System.err.printf("Could not resolve price for item ID : %d", itemId);
-                }
+                items.add(new ShopItem(itemId, price, 1, ii.getSlotMax(), 0, 0, unitPrice));
             }
             npcShopItems.put(npcId, items);
         }
@@ -109,19 +108,26 @@ final class NpcShopExtractor {
         // Create YAML
         for (var entry : npcShopItems.entrySet()) {
             final int npcId = entry.getKey();
+            final List<ShopItem> shopItems = entry.getValue();
             final List<String> npcFields = MapProvider.getMapInfos().stream()
                     .filter((mapInfo) -> mapInfo.getLifeInfos().stream().anyMatch((lifeInfo) -> lifeInfo.getTemplateId() == npcId))
                     .map((mapInfo) -> String.format("%s (%d)", StringProvider.getMapName(mapInfo.getMapId()), mapInfo.getMapId()))
                     .toList();
 
+            final boolean recharge = shopItems.stream().anyMatch((si) -> si.getUnitPrice() > 0);
+            final boolean hasSubi = shopItems.stream().anyMatch((si) -> si.getItemId() == 2070000 && si.getPrice() > 0);
+            if (hasSubi) {
+                shopItems.addAll(subiAndBullet);
+            }
+
             final Path filePath = Path.of(ShopProvider.SHOP_DATA.toString(), String.format("%d.yaml", npcId));
             try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
                 bw.write(String.format("# %s (%d) - %s\n\n", StringProvider.getNpcName(npcId), npcId, String.join(", ", npcFields)));
-                if (entry.getValue().stream().anyMatch((si) -> si.getUnitPrice() > 0)) {
+                if (recharge) {
                     bw.write("recharge: true\n");
                 }
                 bw.write("items:\n");
-                for (ShopItem si : entry.getValue().stream()
+                for (ShopItem si : shopItems.stream()
                         .sorted(Comparator.comparingInt(ShopItem::getItemId)).toList()) {
                     if (si.getUnitPrice() > 0) {
                         continue;
@@ -141,7 +147,7 @@ final class NpcShopExtractor {
                                 si.getPrice()
                         );
                     }
-                    bw.write(String.format("%s # %s\n", line, itemName));
+                    bw.write(String.format("%s # %s\n", line, StringProvider.getItemName(si.getItemId())));
                 }
             }
         }

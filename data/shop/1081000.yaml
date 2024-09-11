@@ -1,4 +1,4 @@
-# Valen (1081000) - Florina Beach : A Look-Out Shed Around the Beach (120030000)
+# Valen : Merchant (1081000) - Florina Beach : A Look-Out Shed Around the Beach (120030000)
 
 recharge: true
 items:
@@ -23,3 +23,5 @@ items:
   - [ 2020006, 530, 1, 100 ] # Hot Dog Supreme
   - [ 2022000, 1650, 1, 100 ] # Pure Water
   - [ 2022003, 1100, 1, 100 ] # Unagi
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

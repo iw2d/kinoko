@@ -1,4 +1,4 @@
-# Polar Bear Nell (9001003) - null (910540405), null (910540404), null (910540407), null (910540406), null (910540401), Hidden Street : Dimensional World (910540400), null (910540403), null (910540402), null (910540409), null (910540408)
+# Polar Bear Nell : 잡화 상인 (9001003) - null (910540405), null (910540404), null (910540407), null (910540406), null (910540401), Hidden Street : Dimensional World (910540400), null (910540403), null (910540402), null (910540409), null (910540408)
 
 recharge: true
 items:
@@ -27,3 +27,5 @@ items:
   - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

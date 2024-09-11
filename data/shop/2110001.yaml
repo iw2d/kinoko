@@ -1,4 +1,4 @@
-# Jerry (2110001) - Sunset Road : Magatia (261000000)
+# Jerry : General Dealer (2110001) - Sunset Road : Magatia (261000000)
 
 recharge: true
 items:
@@ -30,4 +30,6 @@ items:
   - [ 2050003, 500, 1, 100 ] # Holy Water
   - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
   - [ 2120000, 30, 1, 200 ] # Pet Food
+  - [ 2330000, 500, 500, 500 ] # Bullet

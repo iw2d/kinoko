@@ -1,4 +1,4 @@
-# Dr. Pepper (2051000) - Omega Sector : Silo (221000200)
+# Dr. Pepper : Pharmacist (2051000) - Omega Sector : Silo (221000200)
 
 recharge: true
 items:
@@ -32,3 +32,5 @@ items:
   - [ 2060001, 10, 1, 1800 ] # Bronze Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
   - [ 2061001, 10, 1, 1800 ] # Bronze Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

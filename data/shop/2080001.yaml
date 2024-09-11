@@ -1,4 +1,4 @@
-# Sly (2080001) - Leafre : General Store (240000002)
+# Sly : Merchant (2080001) - Leafre : General Store (240000002)
 
 recharge: true
 items:
@@ -30,3 +30,5 @@ items:
   - [ 2060001, 10, 1, 1800 ] # Bronze Arrow for Bow
   - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
   - [ 2061001, 10, 1, 1800 ] # Bronze Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet
