@@ -79,17 +79,18 @@ public final class DropPool extends FieldObjectPool<Drop> {
             }
         }
         Collections.shuffle(normalDrops);
-        Collections.shuffle(questDrops);
+        // Add quest drops on the outer edges to avoid displacing normal drops
+        for (int i = 0; i < questDrops.size(); i++) {
+            if (i % 2 == 0) {
+                normalDrops.addFirst(questDrops.get(i));
+            } else {
+                normalDrops.addLast(questDrops.get(i));
+            }
+        }
         // Add normal drops
         int dropX = centerX - (normalDrops.size() * GameConstants.DROP_SPREAD / 2);
         int delay = initialDelay;
         for (Drop drop : normalDrops) {
-            addDrop(drop, enterType, dropX, centerY, delay);
-            dropX += GameConstants.DROP_SPREAD;
-            delay += addDelay;
-        }
-        // Add quest drops
-        for (Drop drop : questDrops) {
             addDrop(drop, enterType, dropX, centerY, delay);
             dropX += GameConstants.DROP_SPREAD;
             delay += addDelay;
