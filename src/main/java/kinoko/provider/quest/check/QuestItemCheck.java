@@ -46,7 +46,7 @@ public final class QuestItemCheck implements QuestCheck {
     }
 
     public static QuestItemCheck from(WzListProperty itemList) {
-        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList, 0);
+        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList);
         return new QuestItemCheck(
                 Collections.unmodifiableList(items)
         );

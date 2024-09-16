@@ -70,15 +70,13 @@ public final class QuestItemData {
         return this.gender == 2 || this.gender == gender;
     }
 
-    public static List<QuestItemData> resolveItemData(WzListProperty itemList, int defaultCount) throws ProviderError {
+    public static List<QuestItemData> resolveItemData(WzListProperty itemList) throws ProviderError {
         final List<QuestItemData> items = new ArrayList<>();
         for (var itemEntry : itemList.getItems().entrySet()) {
             if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
                 throw new ProviderError("Failed to resolve quest item list");
             }
-            final QuestItemData itemData = QuestItemData.from(itemProp, defaultCount);
-            assert !(itemData.getCount() <= 0 && itemData.getProp() != -1);
-            items.add(itemData);
+            items.add(QuestItemData.from(itemProp));
         }
         return items;
     }
@@ -93,17 +91,18 @@ public final class QuestItemData {
             if (prop != -1) {
                 continue;
             }
-            final QuestItemData itemData = QuestItemData.from(itemProp, 1);
-            assert !(itemData.getCount() <= 0 && itemData.getProp() != -1);
-            items.add(itemData);
+            if (itemProp.get("count") == null) {
+                throw new ProviderError("Invalid choice item data");
+            }
+            items.add(QuestItemData.from(itemProp));
         }
         return items;
     }
 
-    private static QuestItemData from(WzListProperty itemProp, int defaultCount) throws ProviderError {
+    private static QuestItemData from(WzListProperty itemProp) throws ProviderError {
         return new QuestItemData(
                 WzProvider.getInteger(itemProp.get("id")),
-                WzProvider.getInteger(itemProp.get("count"), defaultCount),
+                WzProvider.getInteger(itemProp.get("count"), 0),
                 WzProvider.getInteger(itemProp.get("prop"), 0),
                 WzProvider.getInteger(itemProp.get("gender"), 2),
                 WzProvider.getInteger(itemProp.get("job"), -1),

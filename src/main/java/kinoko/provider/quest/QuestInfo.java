@@ -281,14 +281,14 @@ public final class QuestInfo {
                 nextQuest,
                 autoStart,
                 autoComplete,
-                Collections.unmodifiableList(resolveQuestActs(questId, questAct.get("0"), true)),
-                Collections.unmodifiableList(resolveQuestActs(questId, questAct.get("1"), false)),
+                Collections.unmodifiableList(resolveQuestActs(questId, questAct.get("0"))),
+                Collections.unmodifiableList(resolveQuestActs(questId, questAct.get("1"))),
                 Collections.unmodifiableList(resolveQuestChecks(questId, questCheck.get("0"))),
                 Collections.unmodifiableList(resolveQuestChecks(questId, questCheck.get("1")))
         );
     }
 
-    private static List<QuestAct> resolveQuestActs(int questId, WzListProperty actProps, boolean isStart) {
+    private static List<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
         final List<QuestAct> questActs = new ArrayList<>();
         for (var entry : actProps.getItems().entrySet()) {
             final String actType = entry.getKey();
@@ -297,7 +297,7 @@ public final class QuestInfo {
                     if (!(entry.getValue() instanceof WzListProperty itemList)) {
                         throw new ProviderError("Failed to resolve quest act item list");
                     }
-                    questActs.add(QuestItemAct.from(questId, itemList, isStart ? 1 : -1));
+                    questActs.add(QuestItemAct.from(questId, itemList));
                 }
                 case "money" -> {
                     questActs.add(new QuestMoneyAct(WzProvider.getInteger(entry.getValue())));

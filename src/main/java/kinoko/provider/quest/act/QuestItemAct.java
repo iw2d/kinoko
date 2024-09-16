@@ -185,16 +185,16 @@ public final class QuestItemAct implements QuestAct {
 
         // Take required items
         for (QuestItemData itemData : filteredItems) {
-            if (!itemData.isStatic() || itemData.getCount() >= 0) {
+            if (!itemData.isStatic() || itemData.getCount() > 0) {
                 continue;
             }
-            final int quantity = -itemData.getCount();
+            final int quantity = itemData.getCount() != 0 ? -itemData.getCount() : im.getItemCount(itemData.getItemId());
             final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemData.getItemId(), quantity);
             if (removeItemResult.isEmpty()) {
                 return false;
             }
             user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
-            user.write(UserLocal.effect(Effect.gainItem(itemData.getItemId(), itemData.getCount())));
+            user.write(UserLocal.effect(Effect.gainItem(itemData.getItemId(), -quantity)));
         }
 
         // Give choice item
@@ -263,8 +263,8 @@ public final class QuestItemAct implements QuestAct {
                 .toList();
     }
 
-    public static QuestItemAct from(int questId, WzListProperty itemList, int defaultCount) {
-        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList, defaultCount);
+    public static QuestItemAct from(int questId, WzListProperty itemList) {
+        final List<QuestItemData> items = QuestItemData.resolveItemData(itemList);
         final List<QuestItemData> choices = QuestItemData.resolveChoiceItemData(itemList);
         return new QuestItemAct(
                 questId,
