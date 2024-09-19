@@ -688,19 +688,23 @@ public final class AdminCommands {
             user.write(WvsContext.statChanged(Stat.JOB, job.getJobId(), false));
             user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
             // Update skills
+            final SkillManager sm = user.getSkillManager();
             final List<SkillRecord> skillRecords = new ArrayList<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
                 if (JobConstants.isBeginnerJob(skillRoot)) {
                     continue;
                 }
                 for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                    if (sm.getSkill(si.getSkillId()).isPresent()) {
+                        continue;
+                    }
                     if (si.isInvisible()) {
                         continue;
                     }
                     final SkillRecord sr = si.createRecord();
                     sr.setSkillLevel(0);
                     sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
-                    user.getSkillManager().addSkill(sr);
+                    sm.addSkill(sr);
                     skillRecords.add(sr);
                 }
             }

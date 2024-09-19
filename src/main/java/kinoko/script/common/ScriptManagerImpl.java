@@ -42,6 +42,7 @@ import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.skill.SkillConstants;
+import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Dragon;
 import kinoko.world.user.User;
@@ -304,19 +305,23 @@ public final class ScriptManagerImpl implements ScriptManager {
         user.write(WvsContext.statChanged(statMap, false));
         user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
         // Update skills
+        final SkillManager sm = user.getSkillManager();
         final List<SkillRecord> skillRecords = new ArrayList<>();
         for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
             if (JobConstants.isBeginnerJob(skillRoot)) {
                 continue;
             }
             for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                if (sm.getSkill(si.getSkillId()).isPresent()) {
+                    continue;
+                }
                 if (si.isInvisible()) {
                     continue;
                 }
                 final SkillRecord sr = si.createRecord();
                 sr.setSkillLevel(0);
                 sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
-                user.getSkillManager().addSkill(sr);
+                sm.addSkill(sr);
                 skillRecords.add(sr);
             }
         }
