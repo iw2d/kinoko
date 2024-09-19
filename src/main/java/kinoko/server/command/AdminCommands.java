@@ -43,6 +43,7 @@ import kinoko.world.job.explorer.Pirate;
 import kinoko.world.job.legend.Aran;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
+import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
@@ -676,16 +677,36 @@ public final class AdminCommands {
     @Arguments("job ID")
     public static void job(User user, String[] args) {
         final int jobId = Integer.parseInt(args[1]);
-        if (Job.getById(jobId) == null) {
+        final Job job = Job.getById(jobId);
+        if (job == null) {
             user.write(MessagePacket.system("Could not change to unknown job : %d", jobId));
             return;
         }
         try (var locked = user.acquire()) {
             // Set job
-            user.getCharacterStat().setJob((short) jobId);
-            user.write(WvsContext.statChanged(Stat.JOB, (short) jobId, true));
+            user.getCharacterStat().setJob(job.getJobId());
+            user.write(WvsContext.statChanged(Stat.JOB, job.getJobId(), false));
             user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
+            // Update skills
+            final List<SkillRecord> skillRecords = new ArrayList<>();
+            for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
+                if (JobConstants.isBeginnerJob(skillRoot)) {
+                    continue;
+                }
+                for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                    if (si.isInvisible()) {
+                        continue;
+                    }
+                    final SkillRecord sr = si.createRecord();
+                    sr.setSkillLevel(0);
+                    sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
+                    user.getSkillManager().addSkill(sr);
+                    skillRecords.add(sr);
+                }
+            }
+            user.updatePassiveSkillData();
             user.validateStat();
+            user.write(WvsContext.changeSkillRecordResult(skillRecords, true));
             // Additional handling
             if (JobConstants.isDragonJob(jobId)) {
                 final Dragon dragon = new Dragon(user.getJob());
