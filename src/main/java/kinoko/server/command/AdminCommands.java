@@ -694,7 +694,7 @@ public final class AdminCommands {
                 if (JobConstants.isBeginnerJob(skillRoot)) {
                     continue;
                 }
-                for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                for (SkillInfo si : SkillProvider.getSkillsForJob(Job.getById(skillRoot))) {
                     if (sm.getSkill(si.getSkillId()).isPresent()) {
                         continue;
                     }
