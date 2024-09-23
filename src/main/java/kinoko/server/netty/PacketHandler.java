@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -94,6 +95,6 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
                 }
             }
         }
-        return handlerMap;
+        return Collections.unmodifiableMap(handlerMap);
     }
 }

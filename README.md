@@ -39,6 +39,8 @@ $ docker run -d -p 9042:9042 cassandra:5.0.0
 # Alternatively, start ScyllaDB
 $ docker run -d -p 9042:9042 scylladb/scylla --smp 1
 ```
+You can use [Docker Desktop](https://www.docker.com/products/docker-desktop/) or WSL on Windows.
+
 
 #### Docker setup
 Alternatively, docker can be used to build and start the server and the database using the [docker-compose.yml](docker-compose.yml) file. The requirements are as follows:
