@@ -247,7 +247,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 cs.setAp((short) (cs.getAp() + 5));
             }
         }
-        // Add sp by job level
+        // Add sp by job level - TODO adjust sp gain values by taking into account quest reward sp
         if (JobConstants.isEvanJob(jobId)) {
             switch (jobLevel) {
                 case 1 -> {

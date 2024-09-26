@@ -308,6 +308,12 @@ public final class QuestInfo {
                 case "pop" -> {
                     questActs.add(new QuestPopAct(WzProvider.getInteger(entry.getValue())));
                 }
+                case "sp" -> {
+                    if (!(entry.getValue() instanceof WzListProperty spList)) {
+                        throw new ProviderError("Failed to resolve quest act sp list");
+                    }
+                    questActs.add(QuestSpAct.from(spList));
+                }
                 case "skill" -> {
                     if (!(entry.getValue() instanceof WzListProperty skillList)) {
                         throw new ProviderError("Failed to resolve quest act skill list");
