@@ -207,7 +207,7 @@ public final class QuestInfo {
             return Optional.empty();
         }
         final QuestMobCheck mobCheck = (QuestMobCheck) mobCheckResult.get();
-        if (mobCheck.getMobs().stream().noneMatch((mobData) -> mobData.getMobId() == mobId)) {
+        if (mobCheck.getMobs().stream().noneMatch((mobData) -> mobData.isMatch(mobId))) {
             return Optional.empty();
         }
         // Get current progress
@@ -230,7 +230,7 @@ public final class QuestInfo {
         // Increment progress
         for (int i = 0; i < mobCheck.getMobs().size(); i++) {
             final QuestMobData mobData = mobCheck.getMobs().get(i);
-            if (mobData.getMobId() == mobId) {
+            if (mobData.isMatch(mobId)) {
                 progress[i] = Math.min(progress[i] + 1, mobData.getCount());
             }
         }

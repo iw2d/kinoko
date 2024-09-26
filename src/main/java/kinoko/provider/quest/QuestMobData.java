@@ -1,5 +1,6 @@
 package kinoko.provider.quest;
 
+import kinoko.provider.MobProvider;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
@@ -28,6 +29,10 @@ public final class QuestMobData {
 
     public int getCount() {
         return count;
+    }
+
+    public boolean isMatch(int mobId) {
+        return this.mobId == mobId || MobProvider.getQuestCountGroup(this.mobId).contains(mobId);
     }
 
     public static List<QuestMobData> resolveMobData(WzListProperty mobList) {
