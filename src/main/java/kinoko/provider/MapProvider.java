@@ -174,7 +174,6 @@ public final class MapProvider implements WzProvider {
             }
         }
         return footholdGroups.stream()
-                .sorted(Comparator.comparingInt(group -> group.getFirst().getSn()))
                 .flatMap(List::stream)
                 .toList();
     }
