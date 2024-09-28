@@ -76,8 +76,8 @@ public final class MobSpawnPoint {
             return Optional.empty();
         }
         final Mob mob = new Mob(mobTemplateResult.get(), this, x, y, fh);
-        // Spawns with mobTime > 0 can only spawn after death
-        if (mobTime > 0) {
+        // Spawns with mobTime > 0 can only spawn after death, spawns with mobTime < 0 should not respawn
+        if (mobTime != 0) {
             nextMobRespawn = Instant.MAX;
         }
         return Optional.of(mob);
