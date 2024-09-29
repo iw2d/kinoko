@@ -8,6 +8,7 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.npc.NpcImitateData;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
@@ -110,6 +111,9 @@ public final class UserPool extends FieldObjectPool<User> {
                 user.write(NpcPacket.npcChangeController(npc, false));
             }
         });
+        if (field.getNpcPool().hasNpcImitateData()) {
+            user.write(WvsContext.imitatedNpcData(field.getNpcPool().getNpcImitateData()));
+        }
         field.getDropPool().forEach((drop) -> {
             if (drop.isQuest()) {
                 final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());

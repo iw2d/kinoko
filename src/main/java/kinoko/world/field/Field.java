@@ -5,6 +5,7 @@ import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
 import kinoko.provider.map.*;
+import kinoko.provider.npc.NpcImitateData;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.script.common.ScriptDispatcher;
@@ -386,6 +387,12 @@ public final class Field {
             }
             final Npc npc = Npc.from(npcTemplateResult.get(), lifeInfo);
             field.getNpcPool().addNpc(npc);
+            // Handle player npc
+            final Optional<NpcImitateData> npcImitateDataResult = NpcProvider.getNpcImitateData(npc.getTemplateId());
+            if (npcImitateDataResult.isEmpty()) {
+                continue;
+            }
+            field.getNpcPool().addNpcImitateData(npcImitateDataResult.get());
         }
         // Populate reactor pool
         for (ReactorInfo reactorInfo : mapInfo.getReactorInfos()) {

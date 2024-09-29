@@ -1,11 +1,16 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.NpcPacket;
+import kinoko.provider.npc.NpcImitateData;
 import kinoko.world.field.npc.Npc;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class NpcPool extends FieldObjectPool<Npc> {
+    private final ConcurrentHashMap<Integer, NpcImitateData> npcImitateDataMap = new ConcurrentHashMap<>();
+
     public NpcPool(Field field) {
         super(field);
     }
@@ -33,5 +38,17 @@ public final class NpcPool extends FieldObjectPool<Npc> {
         }
         field.broadcastPacket(NpcPacket.npcLeaveField(npc));
         return true;
+    }
+
+    public void addNpcImitateData(NpcImitateData npcImitateData) {
+        npcImitateDataMap.put(npcImitateData.getNpcId(), npcImitateData);
+    }
+
+    public boolean hasNpcImitateData() {
+        return !npcImitateDataMap.isEmpty();
+    }
+
+    public List<NpcImitateData> getNpcImitateData() {
+        return npcImitateDataMap.values().stream().toList();
     }
 }

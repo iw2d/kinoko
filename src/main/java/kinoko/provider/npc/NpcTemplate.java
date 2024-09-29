@@ -11,14 +11,16 @@ public final class NpcTemplate {
     private final int trunkPut;
     private final int trunkGet;
     private final boolean guildRank;
+    private final boolean imitate;
 
-    public NpcTemplate(int id, boolean move, String script, int trunkPut, int trunkGet, boolean guildRank) {
+    public NpcTemplate(int id, boolean move, String script, int trunkPut, int trunkGet, boolean guildRank, boolean imitate) {
         this.id = id;
         this.move = move;
         this.script = script;
         this.trunkPut = trunkPut;
         this.trunkGet = trunkGet;
         this.guildRank = guildRank;
+        this.imitate = imitate;
     }
 
     public int getId() {
@@ -53,6 +55,10 @@ public final class NpcTemplate {
         return guildRank;
     }
 
+    public boolean isImitate() {
+        return imitate;
+    }
+
     @Override
     public String toString() {
         return "NpcTemplate{" +
@@ -62,6 +68,7 @@ public final class NpcTemplate {
                 ", trunkPut=" + trunkPut +
                 ", trunkGet=" + trunkGet +
                 ", guildRank=" + guildRank +
+                ", imitate=" + imitate +
                 '}';
     }
 
@@ -70,6 +77,7 @@ public final class NpcTemplate {
         int trunkPut = 0;
         int trunkGet = 0;
         boolean guildRank = false;
+        boolean imitate = false;
         for (var entry : infoProp.getItems().entrySet()) {
             switch (entry.getKey()) {
                 case "script" -> {
@@ -96,12 +104,15 @@ public final class NpcTemplate {
                 case "guildRank" -> {
                     guildRank = WzProvider.getInteger(entry.getValue()) != 0;
                 }
+                case "imitate" -> {
+                    imitate = WzProvider.getInteger(entry.getValue()) != 0;
+                }
                 default -> {
                     // System.err.printf("Unhandled info %s in npc %d%n", entry.getKey(), npcId);
                 }
             }
         }
-        return new NpcTemplate(npcId, move, script, trunkPut, trunkGet, guildRank);
+        return new NpcTemplate(npcId, move, script, trunkPut, trunkGet, guildRank, imitate);
     }
 
 }

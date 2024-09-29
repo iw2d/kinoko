@@ -1,5 +1,6 @@
 package kinoko.provider;
 
+import kinoko.provider.npc.NpcImitateData;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public final class NpcProvider implements WzProvider {
     public static final Path NPC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Npc.wz");
     private static final Map<Integer, NpcTemplate> npcTemplates = new HashMap<>();
+    private static final Map<Integer, NpcImitateData> npcImitateData = Map.of(
+            9901000, NpcImitateData.NPC_9901000 // TODO move to separate provider, load from database?
+    );
 
     public static void initialize() {
         try (final WzReader reader = WzReader.build(NPC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
@@ -36,6 +40,10 @@ public final class NpcProvider implements WzProvider {
 
     public static Optional<NpcTemplate> getNpcTemplate(int npcId) {
         return Optional.ofNullable(npcTemplates.get(npcId));
+    }
+
+    public static Optional<NpcImitateData> getNpcImitateData(int npcId) {
+        return Optional.ofNullable(npcImitateData.get(npcId));
     }
 
     private static void loadNpcTemplates(WzPackage source) throws ProviderError {

@@ -1,5 +1,6 @@
 package kinoko.packet.world;
 
+import kinoko.provider.npc.NpcImitateData;
 import kinoko.server.cashshop.CashItemResultType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
@@ -219,6 +220,15 @@ public final class WvsContext {
         outPacket.encodeInt(0);
         outPacket.encodeShort(0);
         outPacket.encodeShort(0);
+        return outPacket;
+    }
+
+    public static OutPacket imitatedNpcData(List<NpcImitateData> npcImitateData) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ImitatedNPCData);
+        outPacket.encodeByte(npcImitateData.size());
+        for (NpcImitateData data : npcImitateData) {
+            data.encode(outPacket);
+        }
         return outPacket;
     }
 
