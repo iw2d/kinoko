@@ -45,6 +45,7 @@ public final class MobProvider implements WzProvider {
             }
             if (infoProp.getItems().containsKey("link")) {
                 linkedMobs.put(mobId, Tuple.of(WzProvider.getInteger(infoProp.get("link")), infoProp));
+                mobProperties.put(mobId, mobProperty);
                 continue;
             }
             mobProperties.put(mobId, mobProperty);
