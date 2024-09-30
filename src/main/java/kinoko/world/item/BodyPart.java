@@ -1,8 +1,6 @@
 package kinoko.world.item;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public enum BodyPart {
     // BP
@@ -90,6 +88,7 @@ public enum BodyPart {
     MECHANIC_TRANSISTOR(1104),
     MECHANIC_END(1200);
 
+    private static final Map<Integer, BodyPart> bodyParts;
     private static final Set<BodyPart> armorBodyParts = Set.of(CAP, CLOTHES, PANTS, SHOES, GLOVES, CAPE);
     private static final Set<BodyPart> accessoryBodyParts = Set.of(FACEACC, EYEACC, EARACC, RING1, RING2, RING3, RING4, PENDANT, EXT_PENDANT1);
     private static final Map<BodyPart, List<BodyPart>> petBodyParts = Map.of(
@@ -103,6 +102,25 @@ public enum BodyPart {
             PETABIL_PICKUPOTHERS, List.of(PETABIL_PICKUPOTHERS, PETABIL_PICKUPOTHERS2, PETABIL_PICKUPOTHERS3),
             PETABIL_IGNOREITEMS1, List.of(PETABIL_IGNOREITEMS1, PETABIL_IGNOREITEMS2, PETABIL_IGNOREITEMS3)
     );
+
+    static {
+        final Map<Integer, BodyPart> bodyPartMap = new HashMap<>();
+        for (BodyPart bodyPart : values()) {
+            switch (bodyPart) {
+                case EQUIPPED_BASE:
+                case EQUIPPED_END:
+                case CASH_BASE:
+                case CASH_END:
+                case DRAGON_BASE:
+                case DRAGON_END:
+                case MECHANIC_BASE:
+                case MECHANIC_END:
+                    continue;
+            }
+            bodyPartMap.put(bodyPart.getValue(), bodyPart);
+        }
+        bodyParts = Collections.unmodifiableMap(bodyPartMap);
+    }
 
     private final int value;
 
@@ -131,12 +149,7 @@ public enum BodyPart {
     }
 
     public static BodyPart getByValue(int value) {
-        for (BodyPart bodyPart : values()) {
-            if (bodyPart.getValue() == value) {
-                return bodyPart;
-            }
-        }
-        return null;
+        return bodyParts.get(value);
     }
 
     public static BodyPart getByPetIndex(BodyPart bodyPart, int petIndex) {
