@@ -8,7 +8,6 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.map.PortalInfo;
-import kinoko.provider.npc.NpcImitateData;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;

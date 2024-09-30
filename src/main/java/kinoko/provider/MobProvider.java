@@ -53,7 +53,11 @@ public final class MobProvider implements WzProvider {
         // Process linked mobs
         for (var linkEntry : linkedMobs.entrySet()) {
             final int mobId = linkEntry.getKey();
-            final int link = linkEntry.getValue().getLeft();
+            int link = linkEntry.getValue().getLeft();
+            while (!mobProperties.containsKey(link)) {
+                // Client seems to be able to resolve recursive links for mobs, but not for other data
+                link = linkedMobs.get(link).getLeft();
+            }
             final WzListProperty linkProp = mobProperties.get(link);
             if (linkProp == null) {
                 throw new ProviderError("Failed to resolve linked mob ID : %d, link : %d", mobId, link);
