@@ -186,6 +186,8 @@ public interface ScriptManager {
 
     void setPlayerAsSpeaker(boolean playerAsSpeaker);
 
+    void setSpeakerOnRight(boolean speakerOnRight);
+
     void setFlipSpeaker(boolean flipSpeaker);
 
     void toggleParam(ScriptMessageParam messageParam, boolean enabled);

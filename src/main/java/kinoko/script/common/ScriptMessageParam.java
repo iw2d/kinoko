@@ -4,7 +4,7 @@ public enum ScriptMessageParam {
     NONE(0x0),
     NOT_CANCELLABLE(0x1),
     PLAYER_AS_SPEAKER(0x2),
-    OVERRIDE_SPEAKER_ID(0x4),
+    SPEAKER_ON_RIGHT(0x4),
     FLIP_SPEAKER(0x8);
 
     private final int value;

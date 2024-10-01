@@ -56,7 +56,7 @@ public final class ScriptMessage implements Encodable {
         outPacket.encodeByte(messageParam); // bParam
         switch (messageType) {
             case SAY -> {
-                if ((messageParam & ScriptMessageParam.OVERRIDE_SPEAKER_ID.getValue()) != 0) {
+                if ((messageParam & ScriptMessageParam.SPEAKER_ON_RIGHT.getValue()) != 0) {
                     outPacket.encodeInt(speakerId); // nSpeakerTemplateID
                 }
                 outPacket.encodeString(text); // sText
