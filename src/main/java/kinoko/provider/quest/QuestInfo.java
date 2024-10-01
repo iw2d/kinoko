@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 public final class QuestInfo {
     private final int questId;
+    private final String questName;
+    private final String questParent;
     private final int questArea; // category
     private final int nextQuest;
     private final boolean autoStart;
@@ -28,8 +30,10 @@ public final class QuestInfo {
     private final List<QuestCheck> startChecks;
     private final List<QuestCheck> completeChecks;
 
-    public QuestInfo(int questId, int questArea, int nextQuest, boolean autoStart, boolean autoComplete, List<QuestAct> startActs, List<QuestAct> completeActs, List<QuestCheck> startChecks, List<QuestCheck> completeChecks) {
+    public QuestInfo(int questId, String questName, String questParent, int questArea, int nextQuest, boolean autoStart, boolean autoComplete, List<QuestAct> startActs, List<QuestAct> completeActs, List<QuestCheck> startChecks, List<QuestCheck> completeChecks) {
         this.questId = questId;
+        this.questName = questName;
+        this.questParent = questParent;
         this.questArea = questArea;
         this.nextQuest = nextQuest;
         this.autoStart = autoStart;
@@ -42,6 +46,14 @@ public final class QuestInfo {
 
     public int getQuestId() {
         return questId;
+    }
+
+    public String getQuestName() {
+        return questName;
+    }
+
+    public String getQuestParent() {
+        return questParent;
     }
 
     public int getQuestArea() {
@@ -82,15 +94,19 @@ public final class QuestInfo {
 
     @Override
     public String toString() {
-        return "QuestInfo[" +
-                "id=" + questId + ", " +
-                "nextQuest=" + nextQuest + ", " +
-                "autoStart=" + autoStart + ", " +
-                "autoComplete=" + autoComplete + ", " +
-                "startActs=" + startActs + ", " +
-                "completeActs=" + completeActs + ", " +
-                "startChecks=" + startChecks + ", " +
-                "completeChecks=" + completeChecks + ']';
+        return "QuestInfo{" +
+                "questId=" + questId +
+                ", questName='" + questName + '\'' +
+                ", questParent='" + questParent + '\'' +
+                ", questArea=" + questArea +
+                ", nextQuest=" + nextQuest +
+                ", autoStart=" + autoStart +
+                ", autoComplete=" + autoComplete +
+                ", startActs=" + startActs +
+                ", completeActs=" + completeActs +
+                ", startChecks=" + startChecks +
+                ", completeChecks=" + completeChecks +
+                '}';
     }
 
     public void restoreLostItems(Locked<User> locked, List<Integer> lostItems) {
@@ -261,10 +277,18 @@ public final class QuestInfo {
     }
 
     public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) throws ProviderError {
+        String questName = "";
+        String questParent = "";
         boolean autoStart = false;
         boolean autoComplete = false;
         for (var infoEntry : questInfo.getItems().entrySet()) {
             switch (infoEntry.getKey()) {
+                case "name" -> {
+                    questName = WzProvider.getString(infoEntry.getValue());
+                }
+                case "parent" -> {
+                    questParent = WzProvider.getString(infoEntry.getValue());
+                }
                 case "autoStart" -> {
                     autoStart = (int) infoEntry.getValue() != 0;
                 }
@@ -277,6 +301,8 @@ public final class QuestInfo {
         final int nextQuest = WzProvider.getInteger(((WzListProperty) questAct.get("1")).getItems().get("nextQuest"), 0);
         return new QuestInfo(
                 questId,
+                questName,
+                questParent,
                 WzProvider.getInteger(questInfo.get("area")),
                 nextQuest,
                 autoStart,

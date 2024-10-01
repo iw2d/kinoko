@@ -926,6 +926,15 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public void toggleParam(ScriptMessageParam messageParam, boolean enabled) {
+        if (enabled) {
+            messageParams.add(messageParam);
+        } else {
+            messageParams.remove(messageParam);
+        }
+    }
+
+    @Override
     public void sayOk(String text) {
         sendMessage(ScriptMessage.say(speakerId, getParam(), text, false, false));
         handleAnswer();
@@ -1033,14 +1042,6 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     private byte getParam() {
         return ScriptMessageParam.from(messageParams);
-    }
-
-    private void toggleParam(ScriptMessageParam messageParam, boolean enabled) {
-        if (enabled) {
-            messageParams.add(messageParam);
-        } else {
-            messageParams.remove(messageParam);
-        }
     }
 
     private void sendMessage(ScriptMessage scriptMessage) {

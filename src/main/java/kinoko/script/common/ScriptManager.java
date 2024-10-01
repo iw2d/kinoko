@@ -186,6 +186,8 @@ public interface ScriptManager {
 
     void setFlipSpeaker(boolean flipSpeaker);
 
+    void toggleParam(ScriptMessageParam messageParam, boolean enabled);
+
     void sayOk(String text);
 
     void sayPrev(String text);

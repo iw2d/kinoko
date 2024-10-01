@@ -127,7 +127,7 @@ public final class AdminCommands {
     }
 
     @Command({ "find", "lookup" })
-    @Arguments({ "item/map/mob/npc/skill/commodity", "id or query" })
+    @Arguments({ "item/map/mob/npc/skill/quest/commodity", "id or query" })
     public static void find(User user, String[] args) {
         final String type = args[1];
         final String query = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
@@ -300,7 +300,7 @@ public final class AdminCommands {
                         .toList();
                 if (!searchResult.isEmpty()) {
                     if (searchResult.size() == 1) {
-                        skillId = searchResult.get(0).getKey();
+                        skillId = searchResult.getFirst().getKey();
                     } else {
                         user.write(MessagePacket.system("Results for skill name : \"%s\"", query));
                         for (var entry : searchResult) {
@@ -317,6 +317,41 @@ public final class AdminCommands {
             }
             final SkillInfo si = skillInfoResult.get();
             user.write(MessagePacket.system("Skill : %s (%d)", StringProvider.getSkillName(skillId), skillId));
+        } else if (type.equalsIgnoreCase("quest")) {
+            int questId = -1;
+            if (isNumber) {
+                questId = Integer.parseInt(query);
+            } else {
+                final List<QuestInfo> searchResult = QuestProvider.getQuestInfos().stream()
+                        .filter((questInfo) -> questInfo.getQuestName().toLowerCase().contains(query.toLowerCase()) ||
+                                questInfo.getQuestParent().toLowerCase().contains(query.toLowerCase()))
+                        .sorted(Comparator.comparingInt(QuestInfo::getQuestId))
+                        .toList();
+                if (!searchResult.isEmpty()) {
+                    if (searchResult.size() == 1) {
+                        questId = searchResult.getFirst().getQuestId();
+                    } else {
+                        user.write(MessagePacket.system("Results for quest name : \"%s\"", query));
+                        for (QuestInfo questInfo : searchResult) {
+                            user.write(MessagePacket.system("  %d : %s%s", questInfo.getQuestId(),
+                                    questInfo.getQuestParent().isEmpty() ? "" : String.format("%s : ", questInfo.getQuestParent()),
+                                    questInfo.getQuestName()
+                            ));
+                        }
+                        return;
+                    }
+                }
+            }
+            final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
+            if (questInfoResult.isEmpty()) {
+                user.write(MessagePacket.system("Could not find quest with %s : %s", isNumber ? "ID" : "name", query));
+                return;
+            }
+            final QuestInfo questInfo = questInfoResult.get();
+            user.write(MessagePacket.system("Quest %d : %s%s", questInfo.getQuestId(),
+                    questInfo.getQuestParent().isEmpty() ? "" : String.format("%s : ", questInfo.getQuestParent()),
+                    questInfo.getQuestName()
+            ));
         } else if (type.equalsIgnoreCase("commodity")) {
             if (!isNumber) {
                 user.write(MessagePacket.system("Can only lookup commodity by ID"));
