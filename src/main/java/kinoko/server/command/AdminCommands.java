@@ -691,9 +691,6 @@ public final class AdminCommands {
             final SkillManager sm = user.getSkillManager();
             final List<SkillRecord> skillRecords = new ArrayList<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
-                if (JobConstants.isBeginnerJob(skillRoot)) {
-                    continue;
-                }
                 for (SkillInfo si : SkillProvider.getSkillsForJob(Job.getById(skillRoot))) {
                     if (sm.getSkill(si.getSkillId()).isPresent()) {
                         continue;

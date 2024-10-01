@@ -2,6 +2,7 @@ package kinoko.world.skill;
 
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.util.Rect;
+import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.cygnus.*;
 import kinoko.world.job.explorer.*;
@@ -194,8 +195,11 @@ public final class SkillConstants {
     }
 
     public static boolean isBeginnerSpAddableSkill(int skillId) {
-        if (!JobConstants.isBeginnerJob(getSkillRoot(skillId))) {
+        final int skillRoot = getSkillRoot(skillId);
+        if (!JobConstants.isBeginnerJob(skillRoot)) {
             return false;
+        } else if (skillRoot == Job.CITIZEN.getJobId()) {
+            return skillId == Citizen.POTION_MASTERY || skillId == Citizen.CRYSTAL_THROW || skillId == Citizen.INFILTRATE;
         }
         final int skillType = skillId % 10000;
         return skillType == 1000 || skillType == 1001 || skillType == 1002;
