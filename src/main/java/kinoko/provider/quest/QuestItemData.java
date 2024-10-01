@@ -39,6 +39,18 @@ public final class QuestItemData {
         return prop;
     }
 
+    public int getGender() {
+        return gender;
+    }
+
+    public int getJob() {
+        return job;
+    }
+
+    public int getJobEx() {
+        return jobEx;
+    }
+
     public boolean isResignRemove() {
         return resignRemove;
     }
@@ -56,14 +68,20 @@ public final class QuestItemData {
     }
 
     public boolean checkJob(int jobId) {
-        final int jobFlag;
+        // CQuest::LoadReward
+        final long myJobFlag;
         if (jobId == Job.EVAN_BEGINNER.getJobId()) {
-            jobFlag = 0x20000;
+            myJobFlag = 0x20000L;
         } else {
-            jobFlag = 1 << (jobId / 100);
+            myJobFlag = 1L << (jobId / 100);
         }
-        final int jobExFlag = jobFlag & this.jobEx;
-        return (jobExFlag | jobFlag & this.job) != 0 || jobId / 100 == 9;
+        int job = this.job;
+        int jobEx = this.jobEx;
+        if ((job | jobEx) == 0) {
+            job = -1;
+            jobEx = -1;
+        }
+        return (((myJobFlag >>> 32) & jobEx) | myJobFlag & job) != 0 || jobId / 100 == 9;
     }
 
     public boolean checkGender(int gender) {
@@ -105,8 +123,8 @@ public final class QuestItemData {
                 WzProvider.getInteger(itemProp.get("count"), 0),
                 WzProvider.getInteger(itemProp.get("prop"), 0),
                 WzProvider.getInteger(itemProp.get("gender"), 2),
-                WzProvider.getInteger(itemProp.get("job"), -1),
-                WzProvider.getInteger(itemProp.get("jobEx"), -1),
+                WzProvider.getInteger(itemProp.get("job"), 0),
+                WzProvider.getInteger(itemProp.get("jobEx"), 0),
                 WzProvider.getInteger(itemProp.get("resignRemove"), 0) != 0
         );
     }

@@ -350,6 +350,9 @@ public final class QuestInfo {
                     }
                     questActs.add(QuestSkillAct.from(skillList));
                 }
+                case "buffItemID" -> {
+                    questActs.add(new QuestBuffAct(WzProvider.getInteger(entry.getValue())));
+                }
                 case "nextQuest" -> {
                     // handled in QuestInfo.from
                 }
