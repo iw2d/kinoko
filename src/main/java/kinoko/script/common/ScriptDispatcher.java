@@ -89,7 +89,7 @@ public final class ScriptDispatcher {
         }
         // Execute script handler
         final Field field = source.getField();
-        final ScriptManagerImpl scriptManager = new ScriptManagerImpl(user, field, source, speakerId);
+        final ScriptManagerImpl scriptManager = new ScriptManagerImpl(user, field, source, scriptName, speakerId);
         executor.submit(() -> {
             try {
                 log.debug("Executing {} script : {}", scriptType.name(), scriptName);
