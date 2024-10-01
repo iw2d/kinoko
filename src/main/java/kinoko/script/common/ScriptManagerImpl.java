@@ -913,7 +913,6 @@ public final class ScriptManagerImpl implements ScriptManager {
     @Override
     public void setSpeakerId(int speakerId) {
         this.speakerId = speakerId;
-        toggleParam(ScriptMessageParam.OVERRIDE_SPEAKER_ID, true); // bSpeakerOnRight = (param & 6) != 0;
     }
 
     @Override
@@ -924,6 +923,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     @Override
     public void setPlayerAsSpeaker(boolean playerAsSpeaker) {
         toggleParam(ScriptMessageParam.PLAYER_AS_SPEAKER, playerAsSpeaker);
+    }
+
+    @Override
+    public void setSpeakerOnRight(boolean speakerOnRight) {
+        toggleParam(ScriptMessageParam.SPEAKER_ON_RIGHT, speakerOnRight);
     }
 
     @Override
