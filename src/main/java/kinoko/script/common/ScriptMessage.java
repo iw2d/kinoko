@@ -8,7 +8,7 @@ import java.util.List;
 public final class ScriptMessage implements Encodable {
     private final int speakerId;
     private final ScriptMessageType messageType;
-    private final byte messageParam;
+    private final int messageParam;
 
     // SAY
     private String text;
@@ -38,7 +38,7 @@ public final class ScriptMessage implements Encodable {
     // ASKSLIDEMENU
     private int slideMenuType;
 
-    private ScriptMessage(int speakerId, ScriptMessageType messageType, byte messageParam) {
+    private ScriptMessage(int speakerId, ScriptMessageType messageType, int messageParam) {
         this.speakerId = speakerId;
         this.messageType = messageType;
         this.messageParam = messageParam;
@@ -109,7 +109,7 @@ public final class ScriptMessage implements Encodable {
         }
     }
 
-    public static ScriptMessage say(int speakerId, byte messageParam, String text, boolean hasPrev, boolean hasNext) {
+    public static ScriptMessage say(int speakerId, int messageParam, String text, boolean hasPrev, boolean hasNext) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.SAY, messageParam);
         message.text = text;
         message.hasPrev = hasPrev;
@@ -117,20 +117,20 @@ public final class ScriptMessage implements Encodable {
         return message;
     }
 
-    public static ScriptMessage sayImage(int speakerId, byte messageParam, List<String> images) {
+    public static ScriptMessage sayImage(int speakerId, int messageParam, List<String> images) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.SAYIMAGE, messageParam);
         message.images = images;
         return message;
     }
 
-    public static ScriptMessage ask(int speakerId, byte messageParam, ScriptMessageType messageType, String text) {
+    public static ScriptMessage ask(int speakerId, int messageParam, ScriptMessageType messageType, String text) {
         // ASK_YES_NO, ASK_YES_NO_QUEST, ASK_MENU
         final ScriptMessage message = new ScriptMessage(speakerId, messageType, messageParam);
         message.text = text;
         return message;
     }
 
-    public static ScriptMessage askText(int speakerId, byte messageParam, String text, String textDefault, int textLengthMin, int textLengthMax) {
+    public static ScriptMessage askText(int speakerId, int messageParam, String text, String textDefault, int textLengthMin, int textLengthMax) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKTEXT, messageParam);
         message.text = text;
         message.textDefault = textDefault;
@@ -139,7 +139,7 @@ public final class ScriptMessage implements Encodable {
         return message;
     }
 
-    public static ScriptMessage askNumber(int speakerId, byte messageParam, String text, int numberDefault, int numberMin, int numberMax) {
+    public static ScriptMessage askNumber(int speakerId, int messageParam, String text, int numberDefault, int numberMin, int numberMax) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKNUMBER, messageParam);
         message.text = text;
         message.numberDefault = numberDefault;
@@ -148,14 +148,14 @@ public final class ScriptMessage implements Encodable {
         return message;
     }
 
-    public static ScriptMessage askAvatar(int speakerId, byte messageParam, String text, List<Integer> options) {
+    public static ScriptMessage askAvatar(int speakerId, int messageParam, String text, List<Integer> options) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKAVATAR, messageParam);
         message.text = text;
         message.options = options;
         return message;
     }
 
-    public static ScriptMessage askBoxText(int speakerId, byte messageParam, String text, String textDefault, int textBoxColumns, int textBoxLines) {
+    public static ScriptMessage askBoxText(int speakerId, int messageParam, String text, String textDefault, int textBoxColumns, int textBoxLines) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKBOXTEXT, messageParam);
         message.text = text;
         message.textDefault = textDefault;
@@ -164,7 +164,7 @@ public final class ScriptMessage implements Encodable {
         return message;
     }
 
-    public static ScriptMessage askSlideMenu(int speakerId, byte messageParam, int slideMenuType, String text) {
+    public static ScriptMessage askSlideMenu(int speakerId, int messageParam, int slideMenuType, String text) {
         final ScriptMessage message = new ScriptMessage(speakerId, ScriptMessageType.ASKSLIDEMENU, messageParam);
         message.slideMenuType = slideMenuType;
         message.text = text;

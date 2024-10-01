@@ -4,6 +4,7 @@ import kinoko.packet.user.UserLocal;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.script.common.ScriptMessageParam;
 import kinoko.world.job.Job;
 import kinoko.world.quest.QuestRecordType;
 
@@ -54,28 +55,18 @@ public final class AranQuest extends ScriptHandler {
     @Script("q21100s")
     public static void q21100s(ScriptManager sm) {
         // The Five Heroes (21100 - start)
-        sm.setFlipSpeaker(true);
-        sm.sayNext("There isn't much record left of the heroes that fought against the Black Mage. Even in the Book of Prophecy, the only information available is that there were five of them. There is nothing about who they were or what they looked like. Is there anything you remember? Anything at all?");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("I don't remember a thing...");
-        sm.setPlayerAsSpeaker(false);
-        sm.sayBoth("As I expected. Of course, the curse of the Black Mage was strong enough to wipe out all of your memory. But even if that's the case, there has got to be a point where the past will uncover, especially now that we are certain you are one of the heroes. I know you've lost your armor and weapon during the battle but... Oh, yes, yes. I almost forgot! Your #bweapon#k!");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("My weapon?");
-        sm.setPlayerAsSpeaker(false);
-        sm.sayBoth("I found an incredible weapon while digging through blocks of ice a while back. I figured the weapon belonged to a hero, so I brought it to town and placed it somewhere in the center of the town. Haven't you seen it? #bThe #p1201001##k... \r\r#i4032372#\r\rIt looks like this...");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("Come to think of it, I did see a #p1201001# in town.");
-        sm.setFlipSpeaker(false);
-        sm.setPlayerAsSpeaker(false);
+        sm.sayNext("There isn't much record left of the heroes that fought against the Black Mage. Even in the Book of Prophecy, the only information available is that there were five of them. There is nothing about who they were or what they looked like. Is there anything you remember? Anything at all?", ScriptMessageParam.FLIP_SPEAKER);
+        sm.sayBoth("I don't remember a thing...", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("As I expected. Of course, the curse of the Black Mage was strong enough to wipe out all of your memory. But even if that's the case, there has got to be a point where the past will uncover, especially now that we are certain you are one of the heroes. I know you've lost your armor and weapon during the battle but... Oh, yes, yes. I almost forgot! Your #bweapon#k!", ScriptMessageParam.FLIP_SPEAKER);
+        sm.sayBoth("My weapon?", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I found an incredible weapon while digging through blocks of ice a while back. I figured the weapon belonged to a hero, so I brought it to town and placed it somewhere in the center of the town. Haven't you seen it? #bThe #p1201001##k... \r\r#i4032372#\r\rIt looks like this...", ScriptMessageParam.FLIP_SPEAKER);
+        sm.sayBoth("Come to think of it, I did see a #p1201001# in town.", ScriptMessageParam.PLAYER_AS_SPEAKER);
         if (!sm.askAccept("Yes, that's it. According to what's been recorded, the weapon of a hero will recognize its rightful owner, and if you're the hero that used the #p1201001#, the #p1201001# will react when you grab the #p1201001#. Please go find the #b#p1201001# and click on it.#k")) {
-            sm.setFlipSpeaker(true);
-            sm.sayNext("What's stopping you? I promise, I won't be disappointed even if the #p1201001# shows no reaction to you. Please, rush over there and grab the #p1201001#. Just #bclick#k on it.");
+            sm.sayNext("What's stopping you? I promise, I won't be disappointed even if the #p1201001# shows no reaction to you. Please, rush over there and grab the #p1201001#. Just #bclick#k on it.", ScriptMessageParam.FLIP_SPEAKER);
             return;
         }
         sm.forceCompleteQuest(21100);
-        sm.setFlipSpeaker(true);
-        sm.sayOk("If the #p1201001# reacts to you, then we'll know that you're #bAran#k, the hero that wielded a #p1201001#.");
+        sm.sayOk("If the #p1201001# reacts to you, then we'll know that you're #bAran#k, the hero that wielded a #p1201001#.", ScriptMessageParam.FLIP_SPEAKER);
         sm.reservedEffect("Effect/Direction1.img/aranTutorial/ClickPoleArm");
     }
 
@@ -92,9 +83,7 @@ public final class AranQuest extends ScriptHandler {
         }
         sm.setJob(Job.ARAN_1);
         sm.forceCompleteQuest(21101);
-        sm.setNotCancellable(true);
-        sm.setPlayerAsSpeaker(true);
-        sm.sayNext("#b(You might be starting to remember something...)#k");
+        sm.sayNext("#b(You might be starting to remember something...)#k", ScriptMessageParam.NOT_CANCELLABLE, ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.setDirectionMode(true, 0);
         sm.warp(914090100);
     }
@@ -102,16 +91,10 @@ public final class AranQuest extends ScriptHandler {
     @Script("q21700s")
     public static void q21700s(ScriptManager sm) {
         // New Beginnings (21700 - start)
-        sm.setFlipSpeaker(true);
-        sm.sayNext("It seems like you've started to remember things. Your Polearm must have recognized you. This means you are surely #bAran, the wielder of Polearms#k. Is there anything else you remember? Skills you used with the Polearm perhaps? Anything?");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("#b(You tell her that you remember a few skills.)#k");
-        sm.setPlayerAsSpeaker(false);
-        sm.sayBoth("That's not a lot, but it's progress. Our focus, then, should be to get you back to the state before you were frozen. You may have lost your memory, but I'm sure it won't take long for you to recover the abilities that your body remembers.");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("How do I recover my abilities?");
-        sm.setFlipSpeaker(false);
-        sm.setPlayerAsSpeaker(false);
+        sm.sayNext("It seems like you've started to remember things. Your Polearm must have recognized you. This means you are surely #bAran, the wielder of Polearms#k. Is there anything else you remember? Skills you used with the Polearm perhaps? Anything?", ScriptMessageParam.FLIP_SPEAKER);
+        sm.sayBoth("#b(You tell her that you remember a few skills.)#k", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("That's not a lot, but it's progress. Our focus, then, should be to get you back to the state before you were frozen. You may have lost your memory, but I'm sure it won't take long for you to recover the abilities that your body remembers.", ScriptMessageParam.FLIP_SPEAKER);
+        sm.sayBoth("How do I recover my abilities?", ScriptMessageParam.PLAYER_AS_SPEAKER);
         if (!sm.askAccept("There is only one way to do that. Train! Train! Train! Train! If you continue to train, your body will instinctively remember its abilities. To help you through the process, I'll introduce you to an instructor.")) {
             sm.sayNext("No? Are you saying you can train on your own? I'm just letting you know that you'll get better results if you train with an instructor. You can't live in this world alone. You must learn to get along with other people.");
             return;
@@ -129,17 +112,11 @@ public final class AranQuest extends ScriptHandler {
     public static void q21703s(ScriptManager sm) {
         // Train or Die! 3 (21703 - start)
         sm.sayNext("Your abilities are really beginning to take shape. I am surprised that an old man like me was able to help you. I'm tearing up just thinking about how happy it makes me to have been of assistance to you. *Sniff sniff*");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("#b(You didn't even train that long with him... Why is he crying?)#k");
-        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("#b(You didn't even train that long with him... Why is he crying?)#k", ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.sayBoth("Alright, here's the third and the final stage of training. Your last opponent is... #r#o9300343#s#k! Do you know anything about #o1210100#s?");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("Well, a little bit...");
-        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("Well, a little bit...", ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.sayBoth("They are natural warriors! They're born with a voracious appetite for food. They devour any food that's visible the moment they sweep by. Terrifying, isn't it?");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("#b(Is that really true?)#k");
-        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("#b(Is that really true?)#k", ScriptMessageParam.PLAYER_AS_SPEAKER);
         if (!sm.askAccept("Okay, now... #bEnter the Training Center again#k, defeat #r30#k #o9300343#s, and show me what you're made of! You'll have to exert all your energy to defeat them! Go, go, go! Rise above me!")) {
             sm.sayNext("I know it takes an incredible amount of strength and will to outdo your instructor, but you weren't meant to let yourself wither away. You must move on to bigger and better things! You must do everything you can to embrace your heroic nature!");
             return;
@@ -152,9 +129,7 @@ public final class AranQuest extends ScriptHandler {
     public static void q21703e(ScriptManager sm) {
         // Train or Die! 3 (21703 - end)
         sm.sayNext("Ah, you've come back after defeating all 30 #o9300343#s. I knew you had it in you... Even though you have no memories and few abilities, I could see that you were different! How? Because you're carrying around a Polearm, obviously!");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("#b(Is he pulling your leg?)#k");
-        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("#b(Is he pulling your leg?)#k", ScriptMessageParam.PLAYER_AS_SPEAKER);
         if (!sm.askYesNo("I have nothing more to teach you, as you've surpassed my level of skill. Go now! Don't look back! This old man is happy to have served as your instructor.")) {
             sm.sayNext("Are you reluctant to leave your instructor? *Sniff sniff* I'm so moved, but you can't stop here. You are destined for bigger and better things!");
             return;
@@ -162,9 +137,7 @@ public final class AranQuest extends ScriptHandler {
         sm.addSkill(21000000, 0, 10); // Combo Ability
         sm.addExp(2000);
         sm.forceCompleteQuest(21703);
-        sm.setPlayerAsSpeaker(true);
-        sm.sayNext("(You remembered the #bCombo Ability#k skill! You were skeptical of the training at first, since the old man suffers from Alzheimer's and all, but boy, was it effective!)");
-        sm.setPlayerAsSpeaker(false);
+        sm.sayNext("(You remembered the #bCombo Ability#k skill! You were skeptical of the training at first, since the old man suffers from Alzheimer's and all, but boy, was it effective!)", ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.sayPrev("Now report back to #p1201000#. I know she'll be ecstatic when she sees the progress you've made!");
     }
 
@@ -172,9 +145,7 @@ public final class AranQuest extends ScriptHandler {
     public static void q21704s(ScriptManager sm) {
         // Baby Steps (21704 - start)
         sm.sayNext("How did the training go? The Penguin Teacher #p1202006# likes to exaggerate and it worried me knowing that he has bouts of Alzheimer's, but I'm sure he helped you. He's been studying the skills of heroes for a very long time.");
-        sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("#b(You tell her that you were able to remember the Combo Ability skill.)#k");
-        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("#b(You tell her that you were able to remember the Combo Ability skill.)#k", ScriptMessageParam.PLAYER_AS_SPEAKER);
         if (!sm.askAccept("That's great! Honestly, though, I think it has less to do with the method of #p1202006#'s training and more to do with your body remembering its old abilities. #bI'm sure your body will remember more skills as you continue to train#k!  \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 500 exp")) {
             return;
         }

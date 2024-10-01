@@ -176,6 +176,8 @@ public interface ScriptManager {
 
     // CONVERSATION METHODS --------------------------------------------------------------------------------------------
 
+    String getScriptName();
+
     int getSpeakerId();
 
     void setSpeakerId(int speakerId);
@@ -188,29 +190,29 @@ public interface ScriptManager {
 
     void toggleParam(ScriptMessageParam messageParam, boolean enabled);
 
-    void sayOk(String text);
+    void sayOk(String text, ScriptMessageParam... overrides);
 
-    void sayPrev(String text);
+    void sayPrev(String text, ScriptMessageParam... overrides);
 
-    void sayNext(String text);
+    void sayNext(String text, ScriptMessageParam... overrides);
 
-    void sayBoth(String text);
+    void sayBoth(String text, ScriptMessageParam... overrides);
 
-    void sayImage(List<String> images);
+    void sayImage(List<String> images, ScriptMessageParam... overrides);
 
-    boolean askYesNo(String text);
+    boolean askYesNo(String text, ScriptMessageParam... overrides);
 
-    boolean askAccept(String text);
+    boolean askAccept(String text, ScriptMessageParam... overrides);
 
-    int askMenu(String text, Map<Integer, String> options);
+    int askMenu(String text, Map<Integer, String> options, ScriptMessageParam... overrides);
 
-    int askSlideMenu(int type, Map<Integer, String> options);
+    int askSlideMenu(int type, Map<Integer, String> options, ScriptMessageParam... overrides);
 
-    int askAvatar(String text, List<Integer> options);
+    int askAvatar(String text, List<Integer> options, ScriptMessageParam... overrides);
 
-    int askNumber(String text, int numberDefault, int numberMin, int numberMax);
+    int askNumber(String text, int numberDefault, int numberMin, int numberMax, ScriptMessageParam... overrides);
 
-    String askText(String text, String textDefault, int textLengthMin, int textLengthMax);
+    String askText(String text, String textDefault, int textLengthMin, int textLengthMax, ScriptMessageParam... overrides);
 
-    String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines);
+    String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines, ScriptMessageParam... overrides);
 }

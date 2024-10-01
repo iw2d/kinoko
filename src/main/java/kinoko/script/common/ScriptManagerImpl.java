@@ -56,22 +56,22 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public final class ScriptManagerImpl implements ScriptManager {
+    private final ScriptMemory scriptMemory = new ScriptMemory();
     private final User user;
     private final Field field;
     private final FieldObject source;
-    private final ScriptMemory scriptMemory;
-    private final Set<ScriptMessageParam> messageParams;
-
+    private final String scriptName;
     private int speakerId;
+    private int messageParam;
+
     private CompletableFuture<ScriptAnswer> answerFuture;
 
-    public ScriptManagerImpl(User user, Field field, FieldObject source, int speakerId) {
+    public ScriptManagerImpl(User user, Field field, FieldObject source, String scriptName, int speakerId) {
         this.user = user;
         this.field = field;
         this.source = source;
+        this.scriptName = scriptName;
         this.speakerId = speakerId;
-        this.scriptMemory = new ScriptMemory();
-        this.messageParams = EnumSet.noneOf(ScriptMessageParam.class);
     }
 
     public void submitAnswer(ScriptAnswer answer) {
@@ -85,6 +85,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
 
     // USER METHODS ----------------------------------------------------------------------------------------------------
+
     @Override
     public User getUser() {
         return user;
@@ -900,6 +901,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     // CONVERSATION METHODS --------------------------------------------------------------------------------------------
 
     @Override
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    @Override
     public int getSpeakerId() {
         return speakerId;
     }
@@ -928,61 +934,61 @@ public final class ScriptManagerImpl implements ScriptManager {
     @Override
     public void toggleParam(ScriptMessageParam messageParam, boolean enabled) {
         if (enabled) {
-            messageParams.add(messageParam);
-        } else {
-            messageParams.remove(messageParam);
+            this.messageParam |= messageParam.getValue();
+        } else if ((this.messageParam & messageParam.getValue()) != 0) {
+            this.messageParam ^= messageParam.getValue();
         }
     }
 
     @Override
-    public void sayOk(String text) {
-        sendMessage(ScriptMessage.say(speakerId, getParam(), text, false, false));
+    public void sayOk(String text, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.say(speakerId, getMessageParam(overrides), text, false, false));
         handleAnswer();
     }
 
     @Override
-    public void sayPrev(String text) {
-        sendMessage(ScriptMessage.say(speakerId, getParam(), text, true, false));
+    public void sayPrev(String text, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.say(speakerId, getMessageParam(overrides), text, true, false));
         handleAnswer();
     }
 
     @Override
-    public void sayNext(String text) {
-        sendMessage(ScriptMessage.say(speakerId, getParam(), text, false, true));
+    public void sayNext(String text, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.say(speakerId, getMessageParam(overrides), text, false, true));
         handleAnswer();
     }
 
     @Override
-    public void sayBoth(String text) {
-        sendMessage(ScriptMessage.say(speakerId, getParam(), text, true, true));
+    public void sayBoth(String text, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.say(speakerId, getMessageParam(overrides), text, true, true));
         handleAnswer();
     }
 
     @Override
-    public void sayImage(List<String> images) {
-        sendMessage(ScriptMessage.sayImage(speakerId, getParam(), images));
+    public void sayImage(List<String> images, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.sayImage(speakerId, getMessageParam(overrides), images));
         handleAnswer();
     }
 
     @Override
-    public boolean askYesNo(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, getParam(), ScriptMessageType.ASKYESNO, text));
+    public boolean askYesNo(String text, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.ask(speakerId, getMessageParam(overrides), ScriptMessageType.ASKYESNO, text));
         return handleAnswer().getAction() != 0;
     }
 
     @Override
-    public boolean askAccept(String text) {
-        sendMessage(ScriptMessage.ask(speakerId, getParam(), ScriptMessageType.ASKACCEPT, text));
+    public boolean askAccept(String text, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.ask(speakerId, getMessageParam(overrides), ScriptMessageType.ASKACCEPT, text));
         return handleAnswer().getAction() != 0;
     }
 
     @Override
-    public int askMenu(String text, Map<Integer, String> options) {
+    public int askMenu(String text, Map<Integer, String> options, ScriptMessageParam... overrides) {
         final String optionString = options.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> String.format("#L%d# #b%s#k#l", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining("\r\n"));
-        sendMessage(ScriptMessage.ask(speakerId, getParam(), ScriptMessageType.ASKMENU, text != null ? String.join("\r\n", text, optionString) : optionString));
+        sendMessage(ScriptMessage.ask(speakerId, getMessageParam(overrides), ScriptMessageType.ASKMENU, text != null ? String.join("\r\n", text, optionString) : optionString));
         final int answer = handleAnswer().getAnswer();
         if (!options.containsKey(answer)) {
             throw new ScriptError("Received unexpected answer %d for askMenu options : %s", answer, options);
@@ -991,12 +997,12 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public int askSlideMenu(int type, Map<Integer, String> options) {
+    public int askSlideMenu(int type, Map<Integer, String> options, ScriptMessageParam... overrides) {
         final String text = options.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> String.format("#%d#%s", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining());
-        sendMessage(ScriptMessage.askSlideMenu(speakerId, getParam(), type, text));
+        sendMessage(ScriptMessage.askSlideMenu(speakerId, getMessageParam(overrides), type, text));
         final int answer = handleAnswer().getAnswer();
         if (!options.containsKey(answer)) {
             throw new ScriptError("Received unexpected answer %d for askSlideMenu options : %s", answer, options);
@@ -1005,8 +1011,8 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public int askAvatar(String text, List<Integer> options) {
-        sendMessage(ScriptMessage.askAvatar(speakerId, getParam(), text, options));
+    public int askAvatar(String text, List<Integer> options, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.askAvatar(speakerId, getMessageParam(overrides), text, options));
         final int answer = handleAnswer().getAnswer();
         if (answer < 0 || answer >= options.size()) {
             throw new ScriptError("Received unexpected answer %d for askAvatar options : %s", answer, options);
@@ -1015,8 +1021,8 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public int askNumber(String text, int numberDefault, int numberMin, int numberMax) {
-        sendMessage(ScriptMessage.askNumber(speakerId, getParam(), text, numberDefault, numberMin, numberMax));
+    public int askNumber(String text, int numberDefault, int numberMin, int numberMax, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.askNumber(speakerId, getMessageParam(overrides), text, numberDefault, numberMin, numberMax));
         final int answer = handleAnswer().getAnswer();
         if (answer < numberMin || answer > numberMax) {
             throw new ScriptError("Received number answer out of range : %d, min : %d, max %d", answer, numberMin, numberMax);
@@ -1025,8 +1031,8 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public String askText(String text, String textDefault, int textLengthMin, int textLengthMax) {
-        sendMessage(ScriptMessage.askText(speakerId, getParam(), text, textDefault, textLengthMin, textLengthMax));
+    public String askText(String text, String textDefault, int textLengthMin, int textLengthMax, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.askText(speakerId, getMessageParam(overrides), text, textDefault, textLengthMin, textLengthMax));
         final String answer = handleAnswer().getTextAnswer();
         if (answer.length() < textLengthMin || answer.length() > textLengthMax) {
             throw new ScriptError("Received text answer with invalid length : %d, min : %d, max %d", answer, textLengthMin, textLengthMax);
@@ -1035,13 +1041,9 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines) {
-        sendMessage(ScriptMessage.askBoxText(speakerId, getParam(), text, textDefault, textBoxColumns, textBoxLines));
+    public String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines, ScriptMessageParam... overrides) {
+        sendMessage(ScriptMessage.askBoxText(speakerId, getMessageParam(overrides), text, textDefault, textBoxColumns, textBoxLines));
         return handleAnswer().getTextAnswer();
-    }
-
-    private byte getParam() {
-        return ScriptMessageParam.from(messageParams);
     }
 
     private void sendMessage(ScriptMessage scriptMessage) {
@@ -1076,5 +1078,15 @@ public final class ScriptManagerImpl implements ScriptManager {
             return handleAnswer();
         }
         return answer;
+    }
+
+    private int getMessageParam(ScriptMessageParam... overrides) {
+        if (overrides.length == 0) {
+            return this.messageParam;
+        } else {
+            return Arrays.stream(overrides)
+                    .map(ScriptMessageParam::getValue)
+                    .reduce(0, (a, b) -> a | b);
+        }
     }
 }
