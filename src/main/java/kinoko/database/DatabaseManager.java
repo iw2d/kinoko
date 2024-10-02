@@ -5,6 +5,7 @@ import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.data.UdtValue;
+import com.datastax.oss.driver.api.core.servererrors.AlreadyExistsException;
 import com.datastax.oss.driver.api.core.type.UserDefinedType;
 import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
@@ -77,13 +78,17 @@ public final class DatabaseManager {
         return memoAccessor;
     }
 
-    public static void createKeyspace(CqlSession session, String keyspace) {
-        session.execute(
-                SchemaBuilder.createKeyspace(keyspace)
-                        .ifNotExists()
-                        .withSimpleStrategy(1)
-                        .build()
-        );
+    public static boolean createKeyspace(CqlSession session, String keyspace) {
+        try {
+            session.execute(
+                    SchemaBuilder.createKeyspace(keyspace)
+                            .withSimpleStrategy(1)
+                            .build()
+            );
+            return true;
+        } catch (AlreadyExistsException e) {
+            return false;
+        }
     }
 
     private static UserDefinedType getUserDefinedType(CqlSession session, String typeName) {
@@ -121,34 +126,34 @@ public final class DatabaseManager {
                 .build();
 
         // Create Keyspace
-        createKeyspace(cqlSession, DATABASE_KEYSPACE);
+        if (createKeyspace(cqlSession, DATABASE_KEYSPACE)) {
+            // Create UDTs
+            EquipDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            PetDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            RingDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            CashItemInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            SkillRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            ConfigUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            MiniGameRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            MapTransferInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            WildHunterInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            GuildMemberUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            GuildBoardCommentUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
+            GuildBoardEntryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
-        // Create UDTs
-        EquipDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        PetDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        RingDataUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        ItemUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        InventoryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        CashItemInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        SkillRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        QuestRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        ConfigUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        MiniGameRecordUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        MapTransferInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        WildHunterInfoUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        CharacterStatUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        GuildMemberUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        GuildBoardCommentUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-        GuildBoardEntryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
-
-        // Create Tables
-        IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        FriendTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        GuildTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
-        MemoTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            // Create Tables
+            IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            FriendTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            GuildTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            MemoTable.createTable(cqlSession, DATABASE_KEYSPACE);
+        }
 
         // Register Codecs
         registerCodec(cqlSession, EquipDataUDT.getTypeName(), (ic) -> new EquipDataCodec(ic, GenericType.of(EquipData.class)));
