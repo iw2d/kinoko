@@ -47,7 +47,7 @@ public final class CharacterTable {
                         .withColumn(ACCOUNT_ID, DataTypes.INT)
                         .withColumn(CHARACTER_NAME, DataTypes.TEXT)
                         .withColumn(CHARACTER_NAME_INDEX, DataTypes.TEXT)
-                        .withColumn(CHARACTER_STAT, SchemaBuilder.udt(CharacterStatUDT.getTypeName(), true))
+                        .withColumn(CHARACTER_STAT, SchemaBuilder.udt(CharacterStatUDT.getTypeName(), false)) // to allow fixing characters in DB
                         .withColumn(CHARACTER_EQUIPPED, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(EQUIP_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
                         .withColumn(CONSUME_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
