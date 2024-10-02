@@ -179,15 +179,15 @@ public final class MobTemplate {
     }
 
     public Optional<MobAttack> getAttack(int attackIndex) {
-        return Optional.ofNullable(getAttacks().get(attackIndex));
+        return Optional.ofNullable(attacks.get(attackIndex));
     }
 
     public Map<Integer, MobSkill> getSkills() {
         return skills;
     }
 
-    public Optional<MobSkill> getSkill(int skillIndex) {
-        return Optional.ofNullable(getSkills().get(skillIndex));
+    public Optional<MobSkill> getSkill(int skillId) {
+        return Optional.ofNullable(skills.get(skillId));
     }
 
     public Map<ElementAttribute, DamagedAttribute> getDamagedElemAttr() {
@@ -375,7 +375,6 @@ public final class MobTemplate {
                         throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
                     }
                     for (var skillEntry : skillEntries.getItems().entrySet()) {
-                        final int skillIndex = Integer.parseInt(skillEntry.getKey());
                         if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
                             throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
                         }
@@ -384,7 +383,7 @@ public final class MobTemplate {
                         if (skillType == null) {
                             throw new ProviderError("Failed to resolve mob skill : %d", skillId);
                         }
-                        skills.put(skillIndex, new MobSkill(
+                        skills.put(skillId, new MobSkill(
                                 skillType,
                                 skillId,
                                 WzProvider.getInteger(skillProp.get("level"))

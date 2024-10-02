@@ -989,6 +989,9 @@ public final class AdminCommands {
             final SkillManager sm = user.getSkillManager();
             final List<SkillRecord> removedRecords = new ArrayList<>();
             for (SkillRecord skillRecord : sm.getSkillRecords()) {
+                if (JobConstants.isBeginnerJob(SkillConstants.getSkillRoot(skillRecord.getSkillId()))) {
+                    continue;
+                }
                 skillRecord.setSkillLevel(0);
                 skillRecord.setMasterLevel(0);
                 removedRecords.add(skillRecord);

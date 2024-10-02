@@ -64,6 +64,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private boolean slowUsed;
     private int swallowCharacterId;
     private Reward stolenReward;
+    private Instant nextSkillUse;
     private Instant nextRecovery;
     private Instant removeAfter;
     private Instant nextDropItem;
@@ -80,6 +81,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         // Mob initialization
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
+        this.nextSkillUse = Instant.MIN;
         this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
         this.nextDropItem = template.getDropItemPeriod() > 0 ? Instant.now().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS) : Instant.MAX;
@@ -133,12 +135,16 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         return template.getAttack(attackIndex);
     }
 
-    public Optional<MobSkill> getSkill(int skillIndex) {
-        return template.getSkill(skillIndex);
+    public Optional<MobSkill> getSkill(int skillId) {
+        return template.getSkill(skillId);
     }
 
     public MobStat getMobStat() {
         return mobStat;
+    }
+
+    public void setNextSkillUse(Instant nextSkillUse) {
+        this.nextSkillUse = nextSkillUse;
     }
 
     public boolean isSkillAvailable(MobSkill mobSkill) {
@@ -155,6 +161,20 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setAttackCounter(int value) {
         attackCounter.set(value);
+    }
+
+    public Optional<MobSkill> getNextSkill() {
+        if (mobStat.hasOption(MobTemporaryStat.Seal)) {
+            return Optional.empty();
+        }
+        if (nextSkillUse.isAfter(Instant.now())) {
+            return Optional.empty();
+        }
+        // TODO - filter HP triggered skills
+        final List<MobSkill> available = template.getSkills().values().stream()
+                .filter(this::isSkillAvailable)
+                .toList();
+        return Util.getRandomFromCollection(available);
     }
 
     public MobAppearType getAppearType() {

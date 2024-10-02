@@ -1,5 +1,6 @@
 package kinoko.packet.field;
 
+import kinoko.provider.mob.MobSkill;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -79,14 +80,14 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobAttackInfo mai) {
+    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobSkill skill) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobCtrlAck);
         outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
         outPacket.encodeByte(nextAttackPossible); // bNextAttackPossible
         outPacket.encodeShort(mob.getMp()); // nMP
-        outPacket.encodeByte(mai.skillId); // nSkillCommand
-        outPacket.encodeByte(mai.slv); // nSLV
+        outPacket.encodeByte(skill != null ? skill.getSkillId() : 0); // nSkillCommand
+        outPacket.encodeByte(skill != null ? skill.getSkillLevel() : 0); // nSLV
         return outPacket;
     }
 

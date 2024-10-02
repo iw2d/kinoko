@@ -99,7 +99,8 @@ public final class MobHandler {
 
             // Update client
             final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
-            user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, mai));
+            final Optional<MobSkill> nextSkillResult = nextAttackPossible ? mob.getNextSkill() : Optional.empty();
+            user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, nextSkillResult.orElse(null)));
             field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
         }
     }
@@ -257,19 +258,19 @@ public final class MobHandler {
                     mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
             ));
         } else if (mai.isSkill) {
-            final int skillIndex = action - MobActionType.SKILL1.getValue();
-            final Optional<MobSkill> mobSkillResult = mob.getSkill(skillIndex);
+            mai.skillId = mai.targetInfo & 0xFF;
+            mai.slv = (mai.targetInfo >> 8) & 0xFF;
+            mai.option = (mai.targetInfo >> 16) & 0xFFFF;
+
+            final Optional<MobSkill> mobSkillResult = mob.getSkill(mai.skillId);
             if (mobSkillResult.isEmpty()) {
-                log.error("{} : Could not resolve mob skill for index : {}", mob, skillIndex);
+                log.error("{} : Could not resolve mob skill with ID {}", mob, mai.skillId);
                 return;
             }
             final MobSkill mobSkill = mobSkillResult.get();
 
-            mai.skillId = mai.targetInfo & 0xFF;
-            mai.slv = (mai.targetInfo >> 8) & 0xFF;
-            mai.option = (mai.targetInfo >> 16) & 0xFFFF;
             if (mai.skillId != mobSkill.getSkillId() || mai.slv != mobSkill.getSkillLevel()) {
-                log.error("{} : Mismatching skill ID or level for mob skill index : {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
+                log.error("{} : Mismatching skill ID or level for mob skill ({}, {})", mob, mai.skillId, mai.slv);
                 return;
             }
 
@@ -280,12 +281,19 @@ public final class MobHandler {
             }
             final SkillInfo si = skillInfoResult.get();
             if (mob.isSkillAvailable(mobSkill)) {
-                log.debug("{} : Using mob skill index {} ({}, {})", mob, skillIndex, mai.skillId, mai.slv);
+                log.debug("{} : Using mob skill ({}, {})", mob, mai.skillId, mai.slv);
+                final Instant now = Instant.now();
                 mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
-                mob.setSkillOnCooltime(mobSkill, Instant.now().plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
+                mob.setNextSkillUse(now.plus(GameConstants.MOB_SKILL_COOLTIME, ChronoUnit.SECONDS));
+                mob.setSkillOnCooltime(mobSkill, now.plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
                 if (!applyMobSkill(mob, mobSkill, si)) {
                     log.error("{} : Could not apply mob skill effect for skill {}", mob, mobSkill.getSkillType().name());
+                    return;
                 }
+                mob.setAttackCounter(Util.getRandom(
+                        GameConstants.MOB_ATTACK_COOLTIME_MIN,
+                        mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
+                ));
             } else {
                 log.error("{} : Mob skill ({}, {}) not available", mob, mai.skillId, mai.slv);
                 mai.skillId = 0;
