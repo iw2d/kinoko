@@ -3,12 +3,13 @@ package kinoko.provider.quest.check;
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
+import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryManager;
+import kinoko.world.item.Item;
 import kinoko.world.user.User;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class QuestItemCheck implements QuestCheck {
     private final List<QuestItemData> items;
@@ -24,9 +25,10 @@ public final class QuestItemCheck implements QuestCheck {
     @Override
     public boolean check(Locked<User> locked) {
         final User user = locked.get();
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
+        final InventoryManager im = user.getInventoryManager();
+        final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
         for (QuestItemData itemData : filteredItems) {
-            final int itemCount = user.getInventoryManager().getItemCount(itemData.getItemId());
+            final int itemCount = im.getItemCount(itemData.getItemId()) + getEquippedItemCount(im.getEquipped(), itemData.getItemId());
             // Should have item
             if (itemData.getCount() > 0 && itemCount < itemData.getCount()) {
                 return false;
@@ -39,10 +41,17 @@ public final class QuestItemCheck implements QuestCheck {
         return true;
     }
 
-    private Set<QuestItemData> getFilteredItems(int gender, int job) {
+    private List<QuestItemData> getFilteredItems(int gender, int job) {
         return items.stream()
                 .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
+    }
+
+    private int getEquippedItemCount(Inventory equipped, int itemId) {
+        return equipped.getItems().values().stream()
+                .filter(item -> item.getItemId() == itemId)
+                .mapToInt(Item::getQuantity)
+                .sum();
     }
 
     public static QuestItemCheck from(WzListProperty itemList) {

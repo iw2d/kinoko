@@ -14,7 +14,6 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class QuestItemAct implements QuestAct {
     private final int questId;
@@ -38,9 +37,9 @@ public final class QuestItemAct implements QuestAct {
     public void restoreLostItems(Locked<User> locked, List<Integer> lostItems) {
         final User user = locked.get();
         final InventoryManager im = user.getInventoryManager();
-        final Set<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob()).stream()
+        final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob()).stream()
                 .filter(itemData -> lostItems.contains(itemData.getItemId()))
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
         final Map<InventoryType, Integer> requiredSlots = new EnumMap<>(InventoryType.class);
 
         // Calculate required slots and validate lost items
@@ -235,9 +234,9 @@ public final class QuestItemAct implements QuestAct {
         }
 
         // Give random item
-        final Set<QuestItemData> randomItems = filteredItems.stream()
+        final List<QuestItemData> randomItems = filteredItems.stream()
                 .filter(QuestItemData::isRandom)
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
         final Optional<QuestItemData> randomResult = Util.getRandomFromCollection(randomItems, QuestItemData::getProp);
         if (randomResult.isPresent()) {
             final QuestItemData itemData = randomResult.get();
