@@ -252,6 +252,9 @@ public enum BodyPart {
                     case 1812006 -> {
                         return Set.of(PETABIL_PICKUPOTHERS, PETABIL_PICKUPOTHERS2, PETABIL_PICKUPOTHERS3);
                     }
+                    case 1812007 -> {
+                        return Set.of(PETABIL_IGNOREITEMS1, PETABIL_IGNOREITEMS2, PETABIL_IGNOREITEMS3);
+                    }
                     default -> {
                         return Set.of(PETRING_LABEL, PETRING_LABEL2, PETRING_LABEL3);
                     }
