@@ -80,14 +80,14 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobSkill skill) {
+    public static OutPacket mobCtrlAck(Mob mob, short mobCtrlSn, boolean nextAttackPossible, MobSkill mobSkill) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobCtrlAck);
         outPacket.encodeInt(mob.getId()); // dwMobID
         outPacket.encodeShort(mobCtrlSn); // nMobCtrlSN
         outPacket.encodeByte(nextAttackPossible); // bNextAttackPossible
         outPacket.encodeShort(mob.getMp()); // nMP
-        outPacket.encodeByte(skill != null ? skill.getSkillId() : 0); // nSkillCommand
-        outPacket.encodeByte(skill != null ? skill.getSkillLevel() : 0); // nSLV
+        outPacket.encodeByte(mobSkill != null ? mobSkill.getSkillId() : 0); // nSkillCommand
+        outPacket.encodeByte(mobSkill != null ? mobSkill.getSkillLevel() : 0); // nSLV
         return outPacket;
     }
 

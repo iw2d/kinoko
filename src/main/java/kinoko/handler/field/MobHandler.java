@@ -280,7 +280,7 @@ public final class MobHandler {
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            if (mob.isSkillAvailable(mobSkill)) {
+            if (mob.canUseSkill(mobSkill)) {
                 log.debug("{} : Using mob skill ({}, {})", mob, mai.skillId, mai.slv);
                 final Instant now = Instant.now();
                 mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));

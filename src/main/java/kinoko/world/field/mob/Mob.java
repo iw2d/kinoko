@@ -3,10 +3,7 @@ package kinoko.world.field.mob;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MessagePacket;
-import kinoko.provider.ItemProvider;
-import kinoko.provider.MobProvider;
-import kinoko.provider.QuestProvider;
-import kinoko.provider.RewardProvider;
+import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.mob.DamagedAttribute;
 import kinoko.provider.mob.MobAttack;
@@ -15,6 +12,7 @@ import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.ElementAttribute;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.script.party.HenesysPQ;
 import kinoko.server.node.ServerExecutor;
@@ -147,10 +145,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.nextSkillUse = nextSkillUse;
     }
 
-    public boolean isSkillAvailable(MobSkill mobSkill) {
-        return skillCooltimes.getOrDefault(mobSkill, Instant.MIN).isBefore(Instant.now());
-    }
-
     public void setSkillOnCooltime(MobSkill mobSkill, Instant nextAvailableTime) {
         skillCooltimes.put(mobSkill, nextAvailableTime);
     }
@@ -163,6 +157,22 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         attackCounter.set(value);
     }
 
+    public boolean canUseSkill(MobSkill mobSkill) {
+        if (skillCooltimes.getOrDefault(mobSkill, Instant.MIN).isAfter(Instant.now())) {
+            return false;
+        }
+        final SkillInfo si = SkillProvider.getMobSkillInfoById(mobSkill.getSkillId()).orElseThrow();
+        final int slv = mobSkill.getSkillLevel();
+        final int hp = si.getValue(SkillStat.hp, slv);
+        if (hp > 0) {
+            final double percentage = (double) getHp() / getMaxHp();
+            if (hp < (int) (percentage * 100)) {
+                return false;
+            }
+        }
+        return getMp() >= si.getValue(SkillStat.mpCon, slv);
+    }
+
     public Optional<MobSkill> getNextSkill() {
         if (mobStat.hasOption(MobTemporaryStat.Seal)) {
             return Optional.empty();
@@ -170,9 +180,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (nextSkillUse.isAfter(Instant.now())) {
             return Optional.empty();
         }
-        // TODO - filter HP triggered skills
         final List<MobSkill> available = template.getSkills().values().stream()
-                .filter(this::isSkillAvailable)
+                .filter(this::canUseSkill)
                 .toList();
         return Util.getRandomFromCollection(available);
     }
@@ -602,7 +611,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             );
         }
     }
-
 
     private void spawnRevives(int delay) {
         if (template.getRevives().isEmpty()) {
