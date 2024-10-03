@@ -18,9 +18,7 @@ import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CharacterData implements Encodable {
@@ -40,6 +38,7 @@ public final class CharacterData implements Encodable {
     private int guildId;
     private Instant creationTime;
     private Instant maxLevelTime;
+    private final Set<Integer> exceptionList = new HashSet<>();
 
     public CharacterData(int accountId) {
         this.accountId = accountId;
@@ -179,6 +178,10 @@ public final class CharacterData implements Encodable {
 
     public String getCharacterName() {
         return characterStat.getName();
+    }
+    
+    public Set<Integer> getExceptionList() {
+        return exceptionList;
     }
 
     public AvatarLook getAvatarLook() {

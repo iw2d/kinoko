@@ -68,7 +68,6 @@ public final class User extends Life implements Lockable<User> {
     private final CalcDamage calcDamage = new CalcDamage();
 
     private final List<Pet> pets = new ArrayList<>();
-    private final Set<Integer> exceptionList = new HashSet<>();
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
     private final AtomicInteger fieldKey = new AtomicInteger(0);
 
@@ -183,7 +182,7 @@ public final class User extends Life implements Lockable<User> {
     }
     
     public Set<Integer> getExceptionList() {
-        return exceptionList;
+        return characterData.getExceptionList();
     }
 
     public Map<Integer, List<Summoned>> getSummoned() {
