@@ -11,6 +11,7 @@ import kinoko.provider.QuestProvider;
 import kinoko.provider.item.PetInteraction;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -30,6 +31,7 @@ import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -265,6 +267,7 @@ public final class PetHandler {
             return;
         }
 
+        final Map<User, Integer> sharedMoney = new HashMap<>();
         try (var locked = user.acquire()) {
             // Check if drop can be added to inventory
             final InventoryManager im = user.getInventoryManager();
@@ -302,8 +305,17 @@ public final class PetHandler {
 
             // Add drop to inventory
             if (drop.isMoney()) {
-                if (im.addMoney(drop.getMoney())) {
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
+                if (!drop.isUserDrop() && user.hasParty()) {
+                    List<User> partyMembers = user.getField().getUserPool().getPartyMembers(user.getPartyId());
+                    int money = drop.getMoney() / partyMembers.size();
+                    for (User partyMember : partyMembers) {
+                        sharedMoney.put(partyMember, money);
+                    }
+                } else {
+                    if (!im.addMoney(drop.getMoney())) {
+                        throw new IllegalStateException("Could not add money to inventory");
+                    }
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
                     user.write(MessagePacket.pickUpMoney(drop.getMoney(), false));
                 }
             } else {
@@ -312,6 +324,26 @@ public final class PetHandler {
                     user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
                     user.write(MessagePacket.pickUpItem(drop.getItem()));
                 }
+            }
+        }
+
+        if (!sharedMoney.isEmpty()) {
+            for (var entry : sharedMoney.entrySet()) {
+                User partyMember = entry.getKey();
+                int money = entry.getValue();
+                ServerExecutor.submit(user.getField(), () -> {
+                    try (var locked = partyMember.acquire()) {
+                        if (locked.get().getField() != user.getField()) {
+                            return;
+                        }
+                        InventoryManager pim = partyMember.getInventoryManager();
+                        if (!pim.addMoney(money)) {
+                            throw new IllegalStateException("Could not add money to inventory");
+                        }
+                        partyMember.write(WvsContext.statChanged(Stat.MONEY, pim.getMoney(), true));
+                        partyMember.write(MessagePacket.pickUpMoney(money, false));
+                    }
+                });
             }
         }
     }
