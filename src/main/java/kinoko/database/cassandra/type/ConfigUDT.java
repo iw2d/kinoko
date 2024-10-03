@@ -10,6 +10,7 @@ public final class ConfigUDT {
     public static final String QUICKSLOT_KEY_MAP = "quickslot_key_map";
     public static final String PET_CONSUME_ITEM = "pet_consume_item";
     public static final String PET_CONSUME_MP_ITEM = "pet_consume_mp_item";
+    public static final String PET_EXCEPTION_LIST = "pet_exception_list";
 
     private static final String typeName = "config_type";
 
@@ -26,6 +27,7 @@ public final class ConfigUDT {
                         .withField(QUICKSLOT_KEY_MAP, DataTypes.BLOB)
                         .withField(PET_CONSUME_ITEM, DataTypes.INT)
                         .withField(PET_CONSUME_MP_ITEM, DataTypes.INT)
+                        .withField(PET_EXCEPTION_LIST, DataTypes.frozenListOf(DataTypes.INT))
                         .build()
         );
     }

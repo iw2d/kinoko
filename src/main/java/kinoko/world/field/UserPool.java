@@ -67,6 +67,7 @@ public final class UserPool extends FieldObjectPool<User> {
         for (Pet pet : user.getPets()) {
             pet.setPosition(field, user.getX(), user.getY());
             broadcastPacket(PetPacket.petActivated(user, pet));
+            user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
         }
 
         // Add user dragon

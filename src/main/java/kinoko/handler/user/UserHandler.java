@@ -903,8 +903,8 @@ public final class UserHandler {
             log.error("Unknown chat group type : {}", type);
             return;
         }
-        final int count = inPacket.decodeByte(); // nMemberCnt
         final List<Integer> targetIds = new ArrayList<>();
+        final int count = inPacket.decodeByte(); // nMemberCnt
         for (int i = 0; i < count; i++) {
             targetIds.add(inPacket.decodeInt());
         }

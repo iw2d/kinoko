@@ -74,6 +74,7 @@ public final class ConfigCodec extends MappingCodec<UdtValue, ConfigManager> {
         cm.updateMacroSysData(macroSysData);
         cm.setPetConsumeItem(value.getInt(ConfigUDT.PET_CONSUME_ITEM));
         cm.setPetConsumeMpItem(value.getInt(ConfigUDT.PET_CONSUME_MP_ITEM));
+        cm.setPetExceptionList(value.getList(ConfigUDT.PET_EXCEPTION_LIST, Integer.class));
         return cm;
     }
 
@@ -117,6 +118,7 @@ public final class ConfigCodec extends MappingCodec<UdtValue, ConfigManager> {
                 .setByteBuffer(ConfigUDT.FUNC_KEY_MAP, fkmBuffer.position(0))
                 .setByteBuffer(ConfigUDT.QUICKSLOT_KEY_MAP, qkmBuffer.position(0))
                 .setInt(ConfigUDT.PET_CONSUME_ITEM, cm.getPetConsumeItem())
-                .setInt(ConfigUDT.PET_CONSUME_MP_ITEM, cm.getPetConsumeMpItem());
+                .setInt(ConfigUDT.PET_CONSUME_MP_ITEM, cm.getPetConsumeMpItem())
+                .setList(ConfigUDT.PET_EXCEPTION_LIST, cm.getPetExceptionList(), Integer.class);
     }
 }

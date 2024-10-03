@@ -641,6 +641,9 @@ public final class User extends Life implements Lockable<User> {
         if (index >= GameConstants.PET_COUNT_MAX) {
             return false;
         }
+        if (getPetIndex(pet.getItemSn()).isPresent()) {
+            return false;
+        }
         setPet(pet, index, isMigrate);
         return true;
     }
