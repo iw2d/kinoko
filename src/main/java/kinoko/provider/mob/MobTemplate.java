@@ -383,10 +383,11 @@ public final class MobTemplate {
                         if (skillType == null) {
                             throw new ProviderError("Failed to resolve mob skill : %d", skillId);
                         }
+                        final int skillLevel = WzProvider.getInteger(skillProp.get("level"));
                         skills.put(skillId, new MobSkill(
                                 skillType,
                                 skillId,
-                                WzProvider.getInteger(skillProp.get("level"))
+                                skillLevel
                         ));
                     }
                 }

@@ -200,7 +200,7 @@ public final class SkillInfo {
     }
 
     private static SkillInfo fromStatic(int skillId, WzListProperty skillProp) throws ProviderError {
-        final Map<SkillStat, List<Integer>> stats = new EnumMap<>(SkillStat.class);
+        final Map<SkillStat, Map<Integer, Integer>> statMap = new EnumMap<>(SkillStat.class);
         ActionType statAction = null;
         Rect rect = null;
         int maxLevel = 0;
@@ -230,12 +230,10 @@ public final class SkillInfo {
                             // skip; rb is handled by lt
                         }
                         default -> {
-                            if (!stats.containsKey(stat)) {
-                                final List<Integer> levelData = new ArrayList<>();
-                                levelData.add(0); // level 0
-                                stats.put(stat, levelData);
+                            if (!statMap.containsKey(stat)) {
+                                statMap.put(stat, new HashMap<>());
                             }
-                            stats.get(stat).add(WzProvider.getInteger(entry.getValue()));
+                            statMap.get(stat).put(slv, WzProvider.getInteger(entry.getValue()));
                         }
                     }
                 }
@@ -243,6 +241,14 @@ public final class SkillInfo {
         }
         if (maxLevel == 0) {
             throw new ProviderError("Could not resolve skill max level");
+        }
+        final Map<SkillStat, List<Integer>> stats = new HashMap<>();
+        for (var entry : statMap.entrySet()) {
+            final List<Integer> levelData = new ArrayList<>();
+            for (int slv = 0; slv <= maxLevel; slv++) {
+                levelData.add(entry.getValue().getOrDefault(slv, 0));
+            }
+            stats.put(entry.getKey(), Collections.unmodifiableList(levelData));
         }
         final List<Integer> psdSkills = resolvePsdSkills(skillProp);
         final List<ActionType> action = resolveAction(skillProp);
@@ -306,7 +312,7 @@ public final class SkillInfo {
             for (int i = 0; i <= statMaxLevel; i++) {
                 levelData.add(ex.evaluate(i));
             }
-            stats.put(stat, levelData);
+            stats.put(stat, Collections.unmodifiableList(levelData));
         }
         final List<Integer> psdSkills = resolvePsdSkills(skillProp);
         final List<ActionType> action = resolveAction(skillProp);

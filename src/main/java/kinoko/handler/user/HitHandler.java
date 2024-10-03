@@ -95,6 +95,7 @@ public final class HitHandler {
 
     private static void handleMobAttack(Locked<User> locked, HitInfo hitInfo) {
         // Resolve mob attack and attack index
+        final User user = locked.get();
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(hitInfo.templateId);
         if (mobTemplateResult.isEmpty()) {
             log.error("Could not resolve mob template ID : {}", hitInfo.templateId);
@@ -106,7 +107,7 @@ public final class HitHandler {
         }
         final MobAttack mobAttack = mobAttackResult.get();
 
-        // Resolve mob skill, check if it applies a CTS
+        // Resolve mob skill
         final int skillId = mobAttack.getSkillId();
         if (skillId == 0) {
             return;
@@ -116,13 +117,32 @@ public final class HitHandler {
             log.error("Could not resolve mob skill type for mob skill ID : {}", skillId);
             return;
         }
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
+        if (skillInfoResult.isEmpty()) {
+            log.error("Could not resolve skill info for mob skill ID : {}", skillId);
+            return;
+        }
+        final SkillInfo si = skillInfoResult.get();
+        final int slv = mobAttack.getSkillLevel();
+        final int prop = si.getValue(SkillStat.prop, slv);
+        if (prop > 0 && !Util.succeedProp(prop)) {
+            return;
+        }
+
+        // Handle dispel
+        if (skillType == MobSkillType.DISPEL) {
+            user.resetTemporaryStat((cts, option) -> option.rOption / 1000000 > 0); // SecondaryStat::ResetByUserSkill
+            return;
+        }
+
+        // Check if mob skill should apply a CTS
         final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
         if (cts == null) {
+            log.error("Unhandled mob attack skill type {}", skillType);
             return;
         }
 
         // Apply mob skill
-        final User user = locked.get();
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
             return;
         }
@@ -133,14 +153,7 @@ public final class HitHandler {
                 return;
             }
         }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
-        if (skillInfoResult.isEmpty()) {
-            log.error("Could not resolve skill info for mob skill ID : {}", skillId);
-            return;
-        }
-        final SkillInfo si = skillInfoResult.get();
-        final int slv = mobAttack.getSkillLevel();
-        user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+        user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
     }
 
     private static void handleHit(Locked<User> locked, HitInfo hitInfo) {

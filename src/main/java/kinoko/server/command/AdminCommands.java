@@ -917,7 +917,7 @@ public final class AdminCommands {
         }
         final SkillInfo si = skillInfoResult.get();
         try (var locked = user.acquire()) {
-            locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+            locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
         }
     }
 

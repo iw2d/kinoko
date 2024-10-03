@@ -307,6 +307,7 @@ public final class MobHandler {
         final MobSkillType skillType = mobSkill.getSkillType();
         final int skillId = mobSkill.getSkillId();
         final int slv = mobSkill.getSkillLevel();
+        final int prop = si.getValue(SkillStat.prop, slv);
 
         // Apply mob temporary stat
         final MobTemporaryStat mts = skillType.getMobTemporaryStat();
@@ -317,6 +318,9 @@ public final class MobHandler {
             }
             targetMobs.add(mob);
             for (Mob targetMob : targetMobs) {
+                if (prop > 0 && !Util.succeedProp(prop)) {
+                    continue;
+                }
                 if (mob == targetMob) {
                     mob.setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)), 0);
                 } else {
@@ -336,6 +340,9 @@ public final class MobHandler {
                 targetUsers.addAll(mob.getField().getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
             }
             for (User targetUser : targetUsers) {
+                if (prop > 0 && !Util.succeedProp(prop)) {
+                    continue;
+                }
                 try (var locked = targetUser.acquire()) {
                     if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
                         continue;
@@ -347,7 +354,7 @@ public final class MobHandler {
                             continue;
                         }
                     }
-                    targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)));
+                    targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
                 }
             }
             return true;
@@ -371,6 +378,21 @@ public final class MobHandler {
                         try (var lockedTarget = targetMob.acquire()) {
                             lockedTarget.get().heal(healAmount);
                         }
+                    }
+                }
+            }
+            case DISPEL -> {
+                // Note : slv = 12 : global dispel, but it is not used by any mobs
+                final List<User> targetUsers = new ArrayList<>();
+                if (si.getRect() != null) {
+                    targetUsers.addAll(mob.getField().getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                }
+                for (User targetUser : targetUsers) {
+                    if (prop > 0 && !Util.succeedProp(prop)) {
+                        continue;
+                    }
+                    try (var locked = targetUser.acquire()) {
+                        locked.get().resetTemporaryStat((stat, option) -> option.rOption / 1000000 > 0); // SecondaryStat::ResetByUserSkill
                     }
                 }
             }

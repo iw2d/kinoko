@@ -37,4 +37,13 @@ public final class MobSkill {
     public int hashCode() {
         return Objects.hash(skillType, skillId, skillLevel);
     }
+
+    @Override
+    public String toString() {
+        return "MobSkill{" +
+                "skillType=" + skillType +
+                ", skillId=" + skillId +
+                ", skillLevel=" + skillLevel +
+                '}';
+    }
 }
