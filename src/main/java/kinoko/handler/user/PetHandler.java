@@ -315,4 +315,15 @@ public final class PetHandler {
             }
         }
     }
+
+    @Handler(InHeader.PetUpdateExceptionListRequest)
+    public static void PetUpdateExceptionListRequest(User user, InPacket inPacket) {
+        try (var locked = user.acquire()) {
+            long petSn = inPacket.decodeLong();
+            int count = inPacket.decodeByte();
+            for (int i = 0; i < count; i++) {
+                user.getExceptionList().add(inPacket.decodeInt());
+            }
+        }
+    }
 }
