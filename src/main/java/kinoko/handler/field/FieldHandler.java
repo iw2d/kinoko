@@ -9,6 +9,7 @@ import kinoko.provider.QuestProvider;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.event.*;
 import kinoko.server.header.InHeader;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -24,7 +25,9 @@ import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public final class FieldHandler {
@@ -66,6 +69,7 @@ public final class FieldHandler {
             return;
         }
 
+        final Map<User, Integer> sharedMoney = new HashMap<>();
         try (var locked = user.acquire()) {
             // Check if drop can be added to inventory
             final InventoryManager im = user.getInventoryManager();
@@ -108,11 +112,19 @@ public final class FieldHandler {
 
             // Add drop to inventory
             if (drop.isMoney()) {
-                if (!im.addMoney(drop.getMoney())) {
-                    throw new IllegalStateException("Could not add money to inventory");
+                if (!drop.isUserDrop() && user.hasParty()) {
+                    List<User> partyMembers = user.getField().getUserPool().getPartyMembers(user.getPartyId());
+                    int money = drop.getMoney() / partyMembers.size();
+                    for (User partyMember : partyMembers) {
+                        sharedMoney.put(partyMember, money);
+                    }
+                } else {
+                    if (!im.addMoney(drop.getMoney())) {
+                        throw new IllegalStateException("Could not add money to inventory");
+                    }
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                    user.write(MessagePacket.pickUpMoney(drop.getMoney(), false));
                 }
-                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                user.write(MessagePacket.pickUpMoney(drop.getMoney(), false));
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
                 if (addItemResult.isEmpty()) {
@@ -120,6 +132,26 @@ public final class FieldHandler {
                 }
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
                 user.write(MessagePacket.pickUpItem(drop.getItem()));
+            }
+        }
+        
+        if (!sharedMoney.isEmpty()) {
+            for (var entry : sharedMoney.entrySet()) {
+                User partyMember = entry.getKey();
+                int money = entry.getValue();
+                ServerExecutor.submit(user.getField(), () -> {
+                    try (var locked = partyMember.acquire()) {
+                        if (locked.get().getField() != user.getField()) {
+                            return;
+                        }
+                        InventoryManager pim = partyMember.getInventoryManager();
+                        if (!pim.addMoney(money)) {
+                            throw new IllegalStateException("Could not add money to inventory");
+                        }
+                        partyMember.write(WvsContext.statChanged(Stat.MONEY, pim.getMoney(), true));
+                        partyMember.write(MessagePacket.pickUpMoney(money, false));
+                    }
+                });
             }
         }
     }
@@ -194,7 +226,7 @@ public final class FieldHandler {
         final EventType eventType;
         switch (fieldId) {
             case ContiMoveVictoria.ORBIS_STATION_VICTORIA_BOUND, ContiMoveVictoria.STATION_TO_ORBIS,
-                    ContiMoveVictoria.DURING_THE_RIDE_VICTORIA_BOUND, ContiMoveVictoria.DURING_THE_RIDE_TO_ORBIS -> {
+                 ContiMoveVictoria.DURING_THE_RIDE_VICTORIA_BOUND, ContiMoveVictoria.DURING_THE_RIDE_TO_ORBIS -> {
                 eventType = EventType.CM_VICTORIA;
             }
             case ContiMoveLudibrium.ORBIS_STATION_LUDIBRIUM, ContiMoveLudibrium.LUDIBRIUM_STATION_ORBIS -> {
