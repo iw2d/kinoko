@@ -6,7 +6,7 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 
-import java.util.Set;
+import java.util.List;
 
 public final class PetPacket {
     // CUser::OnPetPacket ----------------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ public final class PetPacket {
         return outPacket;
     }
 
-    public static OutPacket petLoadExceptionList(User user, int petIndex, long petSn, Set<Integer> exceptionList) {
+    public static OutPacket petLoadExceptionList(User user, int petIndex, long petSn, List<Integer> exceptionList) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PetLoadExceptionList);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);

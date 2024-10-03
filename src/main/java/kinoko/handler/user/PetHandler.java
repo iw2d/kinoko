@@ -30,6 +30,7 @@ import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,6 +101,7 @@ public final class PetHandler {
                 }
                 // Update client
                 user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
+                user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
             } else {
                 // Deactivate pet and update client
                 final int petIndex = petIndexResult.get();
@@ -318,11 +320,17 @@ public final class PetHandler {
 
     @Handler(InHeader.PetUpdateExceptionListRequest)
     public static void PetUpdateExceptionListRequest(User user, InPacket inPacket) {
+        inPacket.decodeLong(); // liPetLockerSN
+        final List<Integer> exceptionList = new ArrayList<>();
+        final int count = inPacket.decodeByte();
+        for (int i = 0; i < count; i++) {
+            exceptionList.add(inPacket.decodeInt());
+        }
         try (var locked = user.acquire()) {
-            long petSn = inPacket.decodeLong();
-            int count = inPacket.decodeByte();
-            for (int i = 0; i < count; i++) {
-                user.getExceptionList().add(inPacket.decodeInt());
+            // Overwrite exception list for all pets
+            locked.get().getConfigManager().setPetExceptionList(exceptionList);
+            for (Pet pet : user.getPets()) {
+                user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), exceptionList));
             }
         }
     }

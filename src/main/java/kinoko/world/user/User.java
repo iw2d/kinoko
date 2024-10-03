@@ -54,8 +54,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import static kinoko.packet.user.PetPacket.petLoadExceptionList;
-
 public final class User extends Life implements Lockable<User> {
     private final ReentrantLock lock = new ReentrantLock();
     private final Client client;
@@ -179,10 +177,6 @@ public final class User extends Life implements Lockable<User> {
 
     public List<Pet> getPets() {
         return pets;
-    }
-    
-    public Set<Integer> getExceptionList() {
-        return characterData.getExceptionList();
     }
 
     public Map<Integer, List<Summoned>> getSummoned() {
@@ -647,6 +641,9 @@ public final class User extends Life implements Lockable<User> {
         if (index >= GameConstants.PET_COUNT_MAX) {
             return false;
         }
+        if (getPetIndex(pet.getItemSn()).isPresent()) {
+            return false;
+        }
         setPet(pet, index, isMigrate);
         return true;
     }
@@ -733,13 +730,6 @@ public final class User extends Life implements Lockable<User> {
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
         getConnectedServer().notifyUserUpdate(this);
-
-        if (!getPets().isEmpty()) {
-            Pet pet = getPet(0);
-            if (pet != null) {
-                write(petLoadExceptionList(this, 0, pet.getItemSn(), getExceptionList()));
-            }
-        }
     }
 
     public void write(OutPacket outPacket) {

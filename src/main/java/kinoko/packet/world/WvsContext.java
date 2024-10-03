@@ -159,9 +159,7 @@ public final class WvsContext {
 
         // CUIUserInfo::SetMultiPetInfo
         final Inventory equipped = user.getInventoryManager().getEquipped();
-        final List<Pet> pets = user.getPets();
-        for (int i = 0; i < pets.size(); i++) {
-            final Pet pet = pets.get(i);
+        for (Pet pet : user.getPets()) {
             outPacket.encodeByte(true); // bPetActivated
             outPacket.encodeInt(pet.getTemplateId()); // dwTemplateId
             outPacket.encodeString(pet.getName()); // sName
@@ -169,7 +167,7 @@ public final class WvsContext {
             outPacket.encodeShort(pet.getTameness()); // nTameness
             outPacket.encodeByte(pet.getFullness()); // nRepleteness
             outPacket.encodeShort(pet.getPetSkill()); // usPetSkill
-            final Item petWearItem = equipped.getItem(BodyPart.getByPetIndex(BodyPart.PETWEAR, i).getValue() + BodyPart.CASH_BASE.getValue());
+            final Item petWearItem = equipped.getItem(BodyPart.getByPetIndex(BodyPart.PETWEAR, pet.getPetIndex()).getValue() + BodyPart.CASH_BASE.getValue());
             outPacket.encodeInt(petWearItem != null ? petWearItem.getItemId() : 0); // nItemID
         }
         outPacket.encodeByte(false);

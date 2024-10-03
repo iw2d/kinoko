@@ -35,6 +35,7 @@ import kinoko.world.user.data.ConfigManager;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.friend.Friend;
 import kinoko.world.user.friend.FriendStatus;
+import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -120,9 +121,32 @@ public final class MigrationHandler {
 
             try (var locked = user.acquire()) {
                 // Initialize pets
-                initializePet(user, 0, user.getCharacterStat().getPetSn1());
-                initializePet(user, 1, user.getCharacterStat().getPetSn2());
-                initializePet(user, 2, user.getCharacterStat().getPetSn3());
+                final CharacterStat cs = user.getCharacterStat();
+                final long[] pets = new long[]{
+                        cs.getPetSn1(), cs.getPetSn2(), cs.getPetSn3()
+                };
+                cs.setPetSn1(0);
+                cs.setPetSn2(0);
+                cs.setPetSn3(0);
+                // Resolve pets
+                final Inventory cashInventory = user.getInventoryManager().getCashInventory();
+                for (long petSn : pets) {
+                    final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
+                            .filter((entry) -> entry.getValue().getItemSn() == petSn)
+                            .findFirst();
+                    if (itemEntryResult.isEmpty()) {
+                        // Item not found
+                        continue;
+                    }
+                    final Item item = itemEntryResult.get().getValue();
+                    if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(Instant.now())) {
+                        // Invalid pet or expired
+                        continue;
+                    }
+                    // Create pet and assign to user
+                    final Pet pet = Pet.from(user, item);
+                    user.addPet(pet, true);
+                }
 
                 // Initialize dragon
                 if (JobConstants.isDragonJob(user.getJob())) {
@@ -401,29 +425,5 @@ public final class MigrationHandler {
             user.setHp(50);
             handleTransferField(user, user.getField().getReturnMap(), GameConstants.DEFAULT_PORTAL_NAME, true, true);
         }
-    }
-
-    private static void initializePet(User user, int petIndex, long petSn) {
-        if (petSn == 0) {
-            return;
-        }
-        final Inventory cashInventory = user.getInventoryManager().getCashInventory();
-        final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
-                .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                .findFirst();
-        if (itemEntryResult.isEmpty()) {
-            // Pet item not found
-            user.setPetSn(petIndex, 0, true);
-            return;
-        }
-        final Item item = itemEntryResult.get().getValue();
-        if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(Instant.now())) {
-            // Invalid pet or expired
-            user.setPetSn(petIndex, 0, true);
-            return;
-        }
-        // Create pet and assign to user
-        final Pet pet = Pet.from(user, item);
-        user.addPet(pet, true);
     }
 }
