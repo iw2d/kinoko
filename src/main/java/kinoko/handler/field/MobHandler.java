@@ -4,16 +4,20 @@ import kinoko.handler.Handler;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.BroadcastPacket;
+import kinoko.provider.MobProvider;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.map.Foothold;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
 import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.provider.skill.SummonInfo;
 import kinoko.script.party.HenesysPQ;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Rect;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -304,6 +308,7 @@ public final class MobHandler {
     }
 
     private static boolean applyMobSkill(Mob mob, MobSkill mobSkill, SkillInfo si) {
+        final Field field = mob.getField();
         final MobSkillType skillType = mobSkill.getSkillType();
         final int skillId = mobSkill.getSkillId();
         final int slv = mobSkill.getSkillLevel();
@@ -314,7 +319,7 @@ public final class MobHandler {
         if (mts != null) {
             final List<Mob> targetMobs = new ArrayList<>();
             if (si.getRect() != null) {
-                targetMobs.addAll(mob.getField().getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                targetMobs.addAll(field.getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
             }
             targetMobs.add(mob);
             for (Mob targetMob : targetMobs) {
@@ -337,7 +342,7 @@ public final class MobHandler {
         if (cts != null) {
             final List<User> targetUsers = new ArrayList<>();
             if (si.getRect() != null) {
-                targetUsers.addAll(mob.getField().getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                targetUsers.addAll(field.getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
             }
             for (User targetUser : targetUsers) {
                 if (prop > 0 && !Util.succeedProp(prop)) {
@@ -365,7 +370,7 @@ public final class MobHandler {
             case HEAL_M -> {
                 final List<Mob> targetMobs = new ArrayList<>();
                 if (si.getRect() != null) {
-                    targetMobs.addAll(mob.getField().getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                    targetMobs.addAll(field.getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
                 }
                 targetMobs.add(mob);
                 final int x = si.getValue(SkillStat.x, slv);
@@ -385,7 +390,7 @@ public final class MobHandler {
                 // Note : slv = 12 : global dispel, but it is not used by any mobs
                 final List<User> targetUsers = new ArrayList<>();
                 if (si.getRect() != null) {
-                    targetUsers.addAll(mob.getField().getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                    targetUsers.addAll(field.getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
                 }
                 for (User targetUser : targetUsers) {
                     if (prop > 0 && !Util.succeedProp(prop)) {
@@ -415,6 +420,48 @@ public final class MobHandler {
                         MobTemporaryStat.PCounter, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)),
                         MobTemporaryStat.MCounter, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv))
                 ), 0);
+            }
+            case SUMMON -> {
+                final Optional<SummonInfo> summonInfoResult = SkillProvider.getMobSummonInfoByLevel(mobSkill.getSkillLevel());
+                if (summonInfoResult.isEmpty()) {
+                    log.error("{} | Could not resolve summon info for skill ({}, {})", mob, mobSkill.getSkillId(), mobSkill.getSkillLevel());
+                    return true;
+                }
+                final SummonInfo summonInfo = summonInfoResult.get();
+                final Rect rect = mob.getRelativeRect(summonInfo.getRect()); // default rect from BMS
+                final List<Foothold> footholds = field.getMapInfo().getFootholds().stream()
+                        .filter((fh) -> !fh.isWall() && fh.isIntersect(rect))
+                        .toList();
+                if (footholds.isEmpty()) {
+                    log.error("{} : Could not find any footholds for summon skill ({}, {})", mob, mobSkill.getSkillId(), mobSkill.getSkillLevel());
+                    return true;
+                }
+                for (int summonId : summonInfo.getSummons()) {
+                    if (field.getMobPool().getCount() >= 50) {
+                        break;
+                    }
+                    // Resolve summon position
+                    final Foothold fh = Util.getRandomFromCollection(footholds).orElseThrow();
+                    final int x = Util.getRandom(
+                            Math.max(rect.getLeft(), fh.getX1()),
+                            Math.min(rect.getRight(), fh.getX2())
+                    );
+                    final int y = fh.getYFromX(x);
+                    // Create summon
+                    final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(summonId);
+                    if (mobTemplateResult.isEmpty()) {
+                        log.error("{} : Could not resolve summon ID : {}", mob, summonId);
+                        continue;
+                    }
+                    final Mob summon = new Mob(
+                            mobTemplateResult.get(),
+                            null,
+                            x,
+                            y,
+                            fh.getSn()
+                    );
+                    field.getMobPool().addMob(summon);
+                }
             }
             default -> {
                 log.error("Unhandled mob skill type {}", skillType);

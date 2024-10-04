@@ -217,9 +217,6 @@ public final class SkillInfo {
                         continue;
                     }
                     switch (stat) {
-                        case maxLevel -> {
-                            maxLevel = WzProvider.getInteger(entry.getValue());
-                        }
                         case action -> {
                             statAction = ActionType.getByName(WzProvider.getString(entry.getValue()));
                         }

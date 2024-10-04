@@ -2,6 +2,7 @@ package kinoko.provider.map;
 
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.util.Rect;
 
 import java.util.Objects;
 
@@ -96,6 +97,36 @@ public final class Foothold {
 
     public boolean isWall() {
         return x1 == x2;
+    }
+
+    public boolean isIntersect(Rect rect) {
+        if (rect.isInsideRect(x1, y1) || rect.isInsideRect(x2, y2)) {
+            return true;
+        }
+        if (isIntersect(rect.getLeft(), rect.getTop(), rect.getRight(), rect.getTop())) {
+            return true;
+        }
+        if (isIntersect(rect.getRight(), rect.getTop(), rect.getLeft(), rect.getBottom())) {
+            return true;
+        }
+        if (isIntersect(rect.getLeft(), rect.getBottom(), rect.getRight(), rect.getBottom())) {
+            return true;
+        }
+        return isIntersect(rect.getLeft(), rect.getBottom(), rect.getLeft(), rect.getTop());
+    }
+
+    public boolean isIntersect(int x3, int y3, int x4, int y4) {
+        final int a = x2 - x1;
+        final int b = y2 - y1;
+        final int c = x4 - x3;
+        final int d = y4 - y3;
+        final int denominator = -c * b + a * d;
+        if (denominator == 0) {
+            return false; // parallel or coincident
+        }
+        final double s = (double) (-b * (x1 - x3) + a * (y1 - y3)) / denominator;
+        final double t = (double) (c * (y1 - y3) - d * (x1 - x3)) / denominator;
+        return s >= 0 && s <= 1 && t >= 0 && t <= 1;
     }
 
     @Override

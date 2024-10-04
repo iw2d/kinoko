@@ -1,14 +1,18 @@
 package kinoko.provider;
 
+import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.provider.skill.SummonInfo;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.WzReader;
 import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.util.Rect;
 import kinoko.world.job.Job;
 
 import java.io.IOException;
@@ -19,8 +23,9 @@ public final class SkillProvider implements WzProvider {
     public static final Path SKILL_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Skill.wz");
     public static final Path MORPH_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Morph.wz");
     private static final Map<Job, List<SkillInfo>> jobSkills = new EnumMap<>(Job.class);
-    private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
     private static final Map<Integer, SkillInfo> skillInfos = new HashMap<>();
+    private static final Map<Integer, SkillInfo> mobSkills = new HashMap<>();
+    private static final Map<Integer, SummonInfo> mobSummons = new HashMap<>(); // skill level -> summon info
     private static final Map<Integer, MorphInfo> morphInfos = new HashMap<>();
 
     public static void initialize() {
@@ -51,6 +56,10 @@ public final class SkillProvider implements WzProvider {
 
     public static Optional<SkillInfo> getMobSkillInfoById(int skillId) {
         return Optional.ofNullable(mobSkills.get(skillId));
+    }
+
+    public static Optional<SummonInfo> getMobSummonInfoByLevel(int skillLevel) {
+        return Optional.ofNullable(mobSummons.get(skillLevel));
     }
 
     public static Optional<MorphInfo> getMorphInfoById(int morphId) {
@@ -93,7 +102,34 @@ public final class SkillProvider implements WzProvider {
                 throw new ProviderError("Failed to resolve mob skill property");
             }
             final int skillId = Integer.parseInt(entry.getKey());
-            mobSkills.put(skillId, SkillInfo.from(skillId, skillProp));
+            final SkillInfo skillInfo = SkillInfo.from(skillId, skillProp);
+            mobSkills.put(skillId, skillInfo);
+            if (skillId != MobSkillType.SUMMON.getId()) {
+                continue;
+            }
+            // Resolve mob summons
+            if (!(skillProp.get("level") instanceof WzListProperty levelProps)) {
+                throw new ProviderError("Failed to resolve mob summons");
+            }
+            for (int slv = 1; slv <= skillInfo.getMaxLevel(); slv++) {
+                if (!(levelProps.get(String.valueOf(slv)) instanceof WzListProperty summonProp)) {
+                    throw new ProviderError("Failed to resolve mob summons");
+                }
+                final Rect rect;
+                if (summonProp.get("lt") instanceof WzVectorProperty) {
+                    rect = WzProvider.getRect(summonProp);
+                } else {
+                    rect = Rect.of(-150, -100, 100, 150); // default summon rect from BMS
+                }
+                final List<Integer> summons = new ArrayList<>();
+                for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                    if (summonProp.get(String.valueOf(i)) == null) {
+                        break;
+                    }
+                    summons.add(WzProvider.getInteger(summonProp.get(String.valueOf(i))));
+                }
+                mobSummons.put(slv, new SummonInfo(rect, Collections.unmodifiableList(summons)));
+            }
         }
     }
 
