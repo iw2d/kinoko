@@ -22,6 +22,7 @@ import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
+import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.*;
 import kinoko.world.job.explorer.Thief;
@@ -318,8 +319,8 @@ public final class MobHandler {
         final MobTemporaryStat mts = skillType.getMobTemporaryStat();
         if (mts != null) {
             final List<Mob> targetMobs = new ArrayList<>();
-            if (si.getRect() != null) {
-                targetMobs.addAll(field.getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+            if (si.getRect(slv) != null) {
+                targetMobs.addAll(field.getMobPool().getInsideRect(mob.getRelativeRect(si.getRect(slv))));
             }
             targetMobs.add(mob);
             for (Mob targetMob : targetMobs) {
@@ -341,8 +342,8 @@ public final class MobHandler {
         final CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
         if (cts != null) {
             final List<User> targetUsers = new ArrayList<>();
-            if (si.getRect() != null) {
-                targetUsers.addAll(field.getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+            if (si.getRect(slv) != null) {
+                targetUsers.addAll(field.getUserPool().getInsideRect(mob.getRelativeRect(si.getRect(slv))));
             }
             for (User targetUser : targetUsers) {
                 if (prop > 0 && !Util.succeedProp(prop)) {
@@ -369,8 +370,8 @@ public final class MobHandler {
         switch (skillType) {
             case HEAL_M -> {
                 final List<Mob> targetMobs = new ArrayList<>();
-                if (si.getRect() != null) {
-                    targetMobs.addAll(field.getMobPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                if (si.getRect(slv) != null) {
+                    targetMobs.addAll(field.getMobPool().getInsideRect(mob.getRelativeRect(si.getRect(slv))));
                 }
                 targetMobs.add(mob);
                 final int x = si.getValue(SkillStat.x, slv);
@@ -389,8 +390,8 @@ public final class MobHandler {
             case DISPEL -> {
                 // Note : slv = 12 : global dispel, but it is not used by any mobs
                 final List<User> targetUsers = new ArrayList<>();
-                if (si.getRect() != null) {
-                    targetUsers.addAll(field.getUserPool().getInsideRect(mob.getRelativeRect(si.getRect())));
+                if (si.getRect(slv) != null) {
+                    targetUsers.addAll(field.getUserPool().getInsideRect(mob.getRelativeRect(si.getRect(slv))));
                 }
                 for (User targetUser : targetUsers) {
                     if (prop > 0 && !Util.succeedProp(prop)) {
@@ -400,6 +401,9 @@ public final class MobHandler {
                         locked.get().resetTemporaryStat((stat, option) -> option.rOption / 1000000 > 0); // SecondaryStat::ResetByUserSkill
                     }
                 }
+            }
+            case AREA_FIRE, AREA_POISON -> {
+                field.getAffectedAreaPool().addAffectedArea(AffectedArea.mobSkill(mob, si, slv, 0));
             }
             case PCOUNTER -> {
                 mob.setTemporaryStat(Map.of(
@@ -428,7 +432,7 @@ public final class MobHandler {
                     return true;
                 }
                 final SummonInfo summonInfo = summonInfoResult.get();
-                final Rect rect = mob.getRelativeRect(summonInfo.getRect()); // default rect from BMS
+                final Rect rect = mob.getRelativeRect(si.getRect(slv) != null ? si.getRect(slv) : Rect.of(-150, -100, 100, 150)); // default rect from BMS
                 final List<Foothold> footholds = field.getMapInfo().getFootholds().stream()
                         .filter((fh) -> !fh.isWall() && fh.isIntersect(rect))
                         .toList();

@@ -267,7 +267,7 @@ public final class Crc32 {
         crc = getCrc32(si.getValue(SkillStat.acc, slv), crc);
         crc = getCrc32(si.getValue(SkillStat.cooltime, slv), crc);
         // rcAffectedArea
-        final Rect rect = si.getRect() != null ? si.getRect() : Rect.of(0, 0, 0, 0);
+        final Rect rect = si.getRect(slv) != null ? si.getRect(slv) : Rect.of(0, 0, 0, 0);
         crc = getCrc32(rect.getLeft(), crc);
         crc = getCrc32(rect.getRight(), crc);
         crc = getCrc32(rect.getTop(), crc);

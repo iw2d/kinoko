@@ -249,7 +249,7 @@ public final class Mechanic extends SkillProcessor {
                 // Create summoned
                 final Summoned amplifierRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
                 amplifierRobot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
-                amplifierRobot.setRect(si.getRect().translate(skill.positionX, skill.positionY));
+                amplifierRobot.setRect(si.getRect(slv).translate(skill.positionX, skill.positionY));
                 user.addSummoned(amplifierRobot);
                 // Create affected area (Ar01AreaPAD/MAD)
                 final AffectedArea affectedArea = new AffectedArea(AffectedAreaType.UserSkill, user, skillId, slv, 0, 0, amplifierRobot.getRect(), si.getElemAttr(), amplifierRobot.getExpireTime());

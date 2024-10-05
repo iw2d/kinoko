@@ -1497,6 +1497,7 @@ public final class UserHandler {
     @Handler(InHeader.DragonMove)
     public static void handleDragonMove(User user, InPacket inPacket) {
         final MovePath movePath = MovePath.decode(inPacket);
+        user.getField().broadcastPacket(DragonPacket.dragonMove(user, movePath), user);
     }
 
     @Handler(InHeader.QuickslotKeyMappedModified)

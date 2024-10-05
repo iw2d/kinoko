@@ -619,7 +619,7 @@ public abstract class SkillProcessor {
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            final Rect rect = user.getRelativeRect(si.getRect());
+            final Rect rect = user.getRelativeRect(si.getRect(slv));
             final int x = (cts == CharacterTemporaryStat.DarkAura ? si.getValue(SkillStat.x, slv) : slv);
             // Apply aura buff to self
             if (!user.getSecondaryStat().hasOption(cts)) {

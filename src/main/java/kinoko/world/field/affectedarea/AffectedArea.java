@@ -138,6 +138,12 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         outPacket.encodeInt(0); // nPhase
     }
 
+    public static AffectedArea mobSkill(Mob owner, SkillInfo si, int slv, int delay) {
+        final Rect rect = owner.getRelativeRect(si.getRect(slv));
+        final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
+        return new AffectedArea(AffectedAreaType.MobSkill, owner, si.getSkillId(), slv, delay, 1, rect, si.getElemAttr(), expireTime);
+    }
+
     public static AffectedArea userSkill(User owner, SkillInfo si, int slv, int delay, int x, int y) {
         return AffectedArea.from(AffectedAreaType.UserSkill, owner, si, slv, delay, 1, x, y);
     }
@@ -147,7 +153,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     }
 
     public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int interval, int x, int y) {
-        final Rect rect = si.getRect().translate(x, y);
+        final Rect rect = si.getRect(slv).translate(x, y);
         final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
         return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, interval, rect, si.getElemAttr(), expireTime);
     }

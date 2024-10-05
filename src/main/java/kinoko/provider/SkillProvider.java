@@ -9,10 +9,8 @@ import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.WzReader;
 import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzVectorProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.util.Rect;
 import kinoko.world.job.Job;
 
 import java.io.IOException;
@@ -115,12 +113,6 @@ public final class SkillProvider implements WzProvider {
                 if (!(levelProps.get(String.valueOf(slv)) instanceof WzListProperty summonProp)) {
                     throw new ProviderError("Failed to resolve mob summons");
                 }
-                final Rect rect;
-                if (summonProp.get("lt") instanceof WzVectorProperty) {
-                    rect = WzProvider.getRect(summonProp);
-                } else {
-                    rect = Rect.of(-150, -100, 100, 150); // default summon rect from BMS
-                }
                 final List<Integer> summons = new ArrayList<>();
                 for (int i = 0; i < Integer.MAX_VALUE; i++) {
                     if (summonProp.get(String.valueOf(i)) == null) {
@@ -128,7 +120,7 @@ public final class SkillProvider implements WzProvider {
                     }
                     summons.add(WzProvider.getInteger(summonProp.get(String.valueOf(i))));
                 }
-                mobSummons.put(slv, new SummonInfo(rect, Collections.unmodifiableList(summons)));
+                mobSummons.put(slv, new SummonInfo(Collections.unmodifiableList(summons)));
             }
         }
     }

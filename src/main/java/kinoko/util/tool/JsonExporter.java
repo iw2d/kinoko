@@ -164,7 +164,7 @@ final class JsonExporter {
                     skillObject.put("stats", skillStatObject);
 
                     // Skill rect
-                    if (si.getRect() instanceof Rect rect) {
+                    if (si.getRect(1) instanceof Rect rect) {
                         final JSONObject rectObject = new JSONObject();
                         rectObject.put("left", rect.getLeft());
                         rectObject.put("top", rect.getTop());
