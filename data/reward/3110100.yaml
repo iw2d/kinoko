@@ -28,3 +28,4 @@ rewards:
   - [ 4130008, 1, 1, 0.000300 ] # Spear Forging Stimulator
   - [ 4130010, 1, 1, 0.000300 ] # Wand Production Stimulator
   - [ 4031164, 1, 1, 0.200000, 2084 ] # Alligator Skin Pouch
+  - [ 4032463, 1, 1, 0.050000, 22548 ] # Document with Clue
