@@ -42,6 +42,7 @@ public final class UserPool extends FieldObjectPool<User> {
                 user.write(UserPacket.userEnterField(locked.get()));
                 for (Pet pet : existingUser.getPets()) {
                     user.write(PetPacket.petActivated(existingUser, pet));
+                    user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
                 }
                 for (List<Summoned> summonedList : existingUser.getSummoned().values()) {
                     for (Summoned summoned : summonedList) {
