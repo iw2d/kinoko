@@ -24,13 +24,13 @@ public final class EvanQuest extends ScriptHandler {
 //TODO:
 //-- @Script("periPatrol") : Add official text,
 //-- (@Script("froghiver")) : Remove Hiver from map
-//-- (@Script("q22583s")) : Update kill count for friendly mob Safe Guard after Teddy Soul summon defeats him
+//-- (@Script("q22583s")) & (@Script("blackBag")) : Update kill count for friendly mob Safe Guard after Teddy Soul summon defeats him
 //-- @Script("enterSnowDragon") : Fix "checks"
 //-- Pretty much all quests from 22579+ need to be checked. The QRs get confusing as is how the slumbering dragon island cave itself functions.
 //      A modern MS video is available on youtube that plays through the entire Evan story.
 //      There may not be enough available information to make these quests 100% v95-like as there seems to be SOME changes
 //      in Evan's story between v95 and modern MS (which isn't surprising whatsoever.)
-    
+
     // ITEMS
     @Script("blackBag")
     public static void blackBag(ScriptManager sm) {
@@ -173,6 +173,7 @@ public final class EvanQuest extends ScriptHandler {
             sm.warp(922030002, "out00");
             return;
         }
+        // I'm pretty sure these aren't GMS95-like, but it's here for convenience.
         if (sm.hasQuestStarted(22583)) {
             sm.warpInstance(List.of(
                     922030010,
@@ -320,7 +321,7 @@ public final class EvanQuest extends ScriptHandler {
             return;
         }
         sm.setSpeakerId(2060005);
-        sm.message("Uhm, excuse me? What are you doing? You're not allowed in the animal exhibits");
+        sm.message("Uhm, excuse me? What are you doing? You're not allowed in the animal exhibits.");
     }
 
     @Script("enterSnowDragon")
@@ -334,6 +335,11 @@ public final class EvanQuest extends ScriptHandler {
             sm.playPortalSE();
             sm.warpInstance(914100023, "out00", 914100010, 60 * 5);
             sm.spawnNpc(1013204, -245, 53, false, false);
+            return;
+        }
+        if (sm.hasQuestCompleted(22589)) {
+            sm.playPortalSE();
+            sm.warp(914100021, "out00");
             return;
         }
         sm.message("A mysterious force prevents you from entering.");
@@ -351,29 +357,28 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterBlackFrog")
     public static void enterBlackFrog(ScriptManager sm) {
-        if (sm.hasQuestStarted(22596)) {
+        sm.playPortalSE();
+        if (sm.hasQuestCompleted(22596)) {
             sm.playPortalSE();
-            sm.warpInstance(922030001, "out00", 211000300, 600);
+            sm.warp(922030001, "out00");
+            return;
+        }
+        if (sm.hasQuestStarted(22596)) {
+            sm.warpInstance(922030001, "out00", 211000300, 60 * 10);
             sm.spawnNpc(1013206, 175, 31, false, false);
             return;
         }
-        if (sm.hasQuestStarted(22581)) {
-            sm.playPortalSE();
+        if (sm.hasQuestStarted(22581) || sm.hasQuestCompleted(22581)) {
             sm.warp(922030000, "out00");
             return;
         }
-        if (sm.hasQuestCompleted(22581) || JobConstants.isEvanJob(sm.getUser().getJob())) {
-            sm.playPortalSE();
-            sm.warp(922030000, "out00");
-            return;
-        }
-        sm.message("The door is locked.");
+        sm.warp(922030001, "out00");
     }
 
     @Script("enterBlackBC")
     public static void enterBlackBC(ScriptManager sm) {
+        sm.playPortalSE();
         if (sm.hasQuestStarted(22583)) {
-            sm.playPortalSE();
             sm.warpInstance(List.of(
                     922030010,
                     922030011
@@ -381,7 +386,6 @@ public final class EvanQuest extends ScriptHandler {
             return;
         }
         if (sm.hasQuestStarted(22584)) {
-            sm.playPortalSE();
             sm.warpInstance(List.of(
                     922030020,
                     922030021,
@@ -389,7 +393,6 @@ public final class EvanQuest extends ScriptHandler {
             ), "out00", 220011000, 60 * 10);
             return;
         }
-        sm.playPortalSE();
         sm.warp(220011001, "out00");
     }
 
