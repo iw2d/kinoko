@@ -24,7 +24,7 @@ public enum QuestRecordType {
     EvanExitCave(22600),
     EvanAfrienMemory(22601),
     EvanAfrien(22604),
-    EvanIceWall(22605);       // Aran Tutorial Helper
+    EvanIceWall(22605);
 
     private final int questId;
 
