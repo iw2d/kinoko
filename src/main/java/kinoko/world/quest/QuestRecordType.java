@@ -14,7 +14,17 @@ public enum QuestRecordType {
     CygnusTutorial(20022),          // Cygnus Tutorial
     AranTutorial(21002),            // Aran Tutorial
     AranGuideEffect(21003),         // Aran Tutorial Effects
-    AranHelperClear(21019);         // Aran Tutorial Helper
+    AranHelperClear(21019),         // Aran Tutorial Helper
+    EvanDragonEyes(22012),
+    EvanDreamEffect(22013),
+    EvanTutorialEffect(22014),
+    EvanPerionSigns(22597),
+    EvanEnragedGolem(22598),
+    EvanSnowDragon(22599),
+    EvanExitCave(22600),
+    EvanAfrienMemory(22601),
+    EvanAfrien(22604),
+    EvanIceWall(22605);       // Aran Tutorial Helper
 
     private final int questId;
 
