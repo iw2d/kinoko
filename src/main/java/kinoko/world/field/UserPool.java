@@ -7,6 +7,7 @@ import kinoko.packet.user.*;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
+import kinoko.provider.map.FieldType;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.server.packet.OutPacket;
@@ -48,8 +49,11 @@ public final class UserPool extends FieldObjectPool<User> {
                     }
                 }
                 if (existingUser.getDragon() != null) {
-                    user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
+                    if (existingUser.getField().getFieldType() != FieldType.NODRAGON) {
+                        user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
+                    }
                 }
+
                 if (existingUser.getOpenGate() != null) {
                     user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate(), false));
                     if (existingUser.getOpenGate().getSecondGate() != null) {
@@ -67,13 +71,14 @@ public final class UserPool extends FieldObjectPool<User> {
         for (Pet pet : user.getPets()) {
             pet.setPosition(field, user.getX(), user.getY());
             broadcastPacket(PetPacket.petActivated(user, pet));
-            user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
         }
 
         // Add user dragon
         if (user.getDragon() != null) {
-            user.getDragon().setPosition(field, user.getX(), user.getY());
-            broadcastPacket(DragonPacket.dragonEnterField(user, user.getDragon()));
+            if (user.getField().getFieldType() != FieldType.NODRAGON) {
+                user.getDragon().setPosition(field, user.getX(), user.getY());
+                broadcastPacket(DragonPacket.dragonEnterField(user, user.getDragon()));
+            }
         }
 
         // Add user summoned
