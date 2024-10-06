@@ -20,6 +20,17 @@ import java.util.List;
 import java.util.Optional;
 
 public final class EvanQuest extends ScriptHandler {
+
+//TODO:
+//-- @Script("periPatrol") : Add official text,
+//-- (@Script("froghiver")) : Remove Hiver from map
+//-- (@Script("q22583s")) : Update kill count for friendly mob Safe Guard after Teddy Soul summon defeats him
+//-- @Script("enterSnowDragon") : Fix "checks"
+//-- Pretty much all quests from 22579+ need to be checked. The QRs get confusing as is how the slumbering dragon island cave itself functions.
+//      A modern MS video is available on youtube that plays through the entire Evan story.
+//      There may not be enough available information to make these quests 100% v95-like as there seems to be SOME changes
+//      in Evan's story between v95 and modern MS (which isn't surprising whatsoever.)
+    
     // ITEMS
     @Script("blackBag")
     public static void blackBag(ScriptManager sm) {
@@ -70,12 +81,12 @@ public final class EvanQuest extends ScriptHandler {
     // NPCS
     @Script("periPatrol")
     public static void periPatrol(ScriptManager sm) {
-        if (!sm.hasQuestStarted(22530) || sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("5")) {
+        if (!sm.hasQuestStarted(22530) || sm.getQRValue(QuestRecordType.EvanPerionSigns).equals("5")) {
             sm.sayOk("Information regarding the creatures of the area is displayed.");
         } else {
+            sm.setPlayerAsSpeaker(true);
             if (sm.getFieldId() == 102020100) {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("1")) {
-                    sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#bI've already reviewed this sign.");
                     return;
                 }
@@ -84,7 +95,6 @@ public final class EvanQuest extends ScriptHandler {
             }
             if (sm.getFieldId() == 102030000) {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("2")) {
-                    sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#bI've already reviewed this sign.");
                     return;
                 }
@@ -93,7 +103,6 @@ public final class EvanQuest extends ScriptHandler {
             }
             if (sm.getFieldId() == 102030100) {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("3")) {
-                    sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#bI've already reviewed this sign.");
                     return;
                 }
@@ -102,7 +111,6 @@ public final class EvanQuest extends ScriptHandler {
             }
             if (sm.getFieldId() == 102030200) {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("4")) {
-                    sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#bI've already reviewed this sign.");
                     return;
                 }
@@ -110,8 +118,7 @@ public final class EvanQuest extends ScriptHandler {
                 sm.sayNext("#bI've reviewed and verified the information on this signboard. Only 1 more to go."); // TODO: Add GMS-like text
             }
             if (sm.getFieldId() == 102030300) {
-                if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("5")) {
-                    sm.setPlayerAsSpeaker(true);
+                if (sm.getQRValue(QuestRecordType.EvanPerionSigns).equals("5")) {
                     sm.sayOk("#bI've already reviewed this sign.");
                 }
                 sm.setQRValue(QuestRecordType.EvanPerionSigns, "5");
