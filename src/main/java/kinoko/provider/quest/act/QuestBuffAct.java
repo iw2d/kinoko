@@ -1,5 +1,6 @@
 package kinoko.provider.quest.act;
 
+import kinoko.packet.user.QuestPacket;
 import kinoko.provider.ItemProvider;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
@@ -13,7 +14,11 @@ public final class QuestBuffAct implements QuestAct {
 
     @Override
     public boolean canAct(Locked<User> locked, int rewardIndex) {
-        return ItemProvider.getItemInfo(buffItemId).isPresent();
+        if (ItemProvider.getItemInfo(buffItemId).isEmpty()) {
+            locked.get().write(QuestPacket.failedUnknown());
+            return false;
+        }
+        return true;
     }
 
     @Override
