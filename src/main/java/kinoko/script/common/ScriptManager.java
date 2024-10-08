@@ -140,9 +140,9 @@ public interface ScriptManager {
 
     void spawnMob(int templateId, MobAppearType appearType, int x, int y);
 
-    void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean CurMap);
+    void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean currentMap);
 
-    void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean CurMap);
+    void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean currentMap);
 
     void dropRewards(List<Reward> rewards);
 

@@ -745,7 +745,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         field.getMobPool().addMob(mob);
     }
 
-    public void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean CurMap) {
+    public void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean currentMap) {
         final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
         if (npcTemplateResult.isEmpty()) {
             throw new ScriptError("Could not resolve npc template ID : %d", templateId);
@@ -760,21 +760,21 @@ public final class ScriptManagerImpl implements ScriptManager {
                 footholdResult.map(Foothold::getSn).orElse(0),
                 isFlip
         );
-        if (!CurMap) {
+        if (!currentMap) {
             user.getField().getNpcPool().addNpc(npc);
         } else {
             field.getNpcPool().addNpc(npc);
         }
     }
 
-    public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean CurMap) {
+    public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean currentMap) {
         final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
         if (reactorTemplateResult.isEmpty()) {
             user.write(MessagePacket.system("Could not resolve reactor template ID : %d", templateId));
             return;
         }
         final ReactorInfo reactorInfo = new ReactorInfo(templateId, "", x, y, isFlip, reactorTime);
-        if (!CurMap) {
+        if (!currentMap) {
             user.getField().getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
         } else {
             field.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));

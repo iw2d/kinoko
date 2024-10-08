@@ -263,12 +263,12 @@ public final class EvanTutorial extends ScriptHandler {
         //   scr12 (1934, 168)
         //   scr13 (2032, 168)
         //   scr14 (2131, 168)
+        sm.playPortalSE();
         if (!sm.hasQuestStarted(22005)) { // failsafe incase somehow someone gets in this map without having the quest
-            sm.playPortalSE();
+
             sm.warp(100030300); // Farm Street : Farm Center
             return;
         }
-        sm.playPortalSE();
         sm.warp(900090102); // Video : Tutorial 2
     }
 
@@ -339,6 +339,7 @@ public final class EvanTutorial extends ScriptHandler {
     public static void dragonEgg(ScriptManager sm) {
         // Dragon Nest (1013002)
         //   Hidden Street : Lost Forest  (900020220)
+        sm.playPortalSE();
         sm.warp(900090103); // Video : Job Advancement
     }
 

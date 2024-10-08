@@ -1,4 +1,4 @@
-package kinoko.script.quest;
+package kinoko.script;
 
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
@@ -179,6 +179,48 @@ public final class TitleQuest extends ScriptHandler {
     public static void q29909s(ScriptManager sm) {
         // Chief Knight (29909 - start)
         sm.forceStartQuest(29909);
+    }
+
+    @Script("q29934s")
+    public static void q29934s(ScriptManager sm) {
+        // Well Behaved Child (29934 - start)
+        sm.forceCompleteQuest(29934);
+    }
+
+    @Script("q29935s")
+    public static void q29935s(ScriptManager sm) {
+        // Perion Guard (29935 - start)
+        sm.forceCompleteQuest(29935);
+    }
+
+    @Script("q29936s")
+    public static void q29936s(ScriptManager sm) {
+        // Kerning City Honorary Citizen (29936 - start)
+        sm.forceCompleteQuest(29936);
+    }
+
+    @Script("q29937s")
+    public static void q29937s(ScriptManager sm) {
+        // Secret Organization Temporary Member (29937 - start)
+        sm.forceCompleteQuest(29937);
+    }
+
+    @Script("q29938s")
+    public static void q29938s(ScriptManager sm) {
+        // Dragon Master (29938 - start)
+        sm.forceCompleteQuest(29938);
+    }
+
+    @Script("q29939s")
+    public static void q29939s(ScriptManager sm) {
+        // Dragon Master (29939 - start)
+        sm.forceCompleteQuest(29939);
+    }
+
+    @Script("q29940s")
+    public static void q29940s(ScriptManager sm) {
+        // Hero's Successor (29940 - start)
+        sm.forceCompleteQuest(29940);
     }
 
     @Script("q29941s")
