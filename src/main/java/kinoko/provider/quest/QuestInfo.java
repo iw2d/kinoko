@@ -150,6 +150,7 @@ public final class QuestInfo {
         // Perform start acts
         for (QuestAct startAct : getStartActs()) {
             if (!startAct.doAct(locked, -1)) {
+                locked.get().write(QuestPacket.failedUnknown());
                 throw new IllegalStateException("Failed to perform quest start act");
             }
         }
@@ -182,6 +183,7 @@ public final class QuestInfo {
         // Perform complete acts
         for (QuestAct completeAct : getCompleteActs()) {
             if (!completeAct.doAct(locked, rewardIndex)) {
+                locked.get().write(QuestPacket.failedUnknown());
                 throw new IllegalStateException("Failed to perform quest complete act");
             }
         }

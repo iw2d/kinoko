@@ -1,5 +1,6 @@
 package kinoko.provider.quest.act;
 
+import kinoko.packet.user.QuestPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
@@ -21,7 +22,12 @@ public final class QuestSpAct implements QuestAct {
 
     @Override
     public boolean canAct(Locked<User> locked, int rewardIndex) {
-        return JobConstants.getSkillRootFromJob(locked.get().getJob()).contains(job);
+        final User user = locked.get();
+        if (!JobConstants.getSkillRootFromJob(user.getJob()).contains(job)) {
+            user.write(QuestPacket.failedUnknown());
+            return false;
+        }
+        return true;
     }
 
     @Override

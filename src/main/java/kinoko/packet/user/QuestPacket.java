@@ -53,6 +53,10 @@ public final class QuestPacket {
         return outPacket;
     }
 
+    public static OutPacket failedMeso() {
+        return QuestPacket.of(QuestResultType.Failed_Meso);
+    }
+
     private static OutPacket of(QuestResultType resultType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserQuestResult);
         outPacket.encodeByte(resultType.getValue());
