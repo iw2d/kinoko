@@ -3,6 +3,7 @@ package kinoko.script;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.world.field.mob.MobAppearType;
 
 public final class Consume extends ScriptHandler {
     @Script("consume_2430112")
@@ -21,5 +22,12 @@ public final class Consume extends ScriptHandler {
                 sm.sayNext("Please check if your inventory is full or not.");
             }
         }
+    }
+
+    @Script("blackBag")
+    public static void blackBag(ScriptManager sm) {
+        // Black Bag (2430032) -- QID 22583 (Evan)
+        sm.spawnMob(9300388, MobAppearType.NORMAL, sm.getUser().getX(), sm.getUser().getY());
+        sm.removeItem(2430032);
     }
 }
