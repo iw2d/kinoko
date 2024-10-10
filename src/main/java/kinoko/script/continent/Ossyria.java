@@ -125,4 +125,11 @@ public final class Ossyria extends ScriptHandler {
         sm.playPortalSE();
         sm.warp(230040420, "out00"); // Aqua Road : The Cave of Pianus
     }
+
+    @Script("aquaItem3")
+    public static void aquaItem3(ScriptManager sm) {
+        sm.dropRewards(List.of(
+                Reward.item(4032476, 1, 1, 0.2, 22407) // Captain Alpha's Buckle
+        ));
+    }
 }

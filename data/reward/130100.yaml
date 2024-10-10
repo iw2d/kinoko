@@ -17,3 +17,6 @@ rewards:
   - [ 4000003, 1, 1, 0.400000 ] # Tree Branch
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4032498, 1, 1, 1.000000, 22004 ] # Thick Branch
+  - [ 4032460, 1, 1, 0.050000, 22529 ] # Refreshing Stump Sap
+  

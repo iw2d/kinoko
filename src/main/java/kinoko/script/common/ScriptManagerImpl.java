@@ -8,14 +8,14 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
-import kinoko.provider.ItemProvider;
-import kinoko.provider.MobProvider;
-import kinoko.provider.SkillProvider;
-import kinoko.provider.StringProvider;
+import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
+import kinoko.provider.map.ReactorInfo;
 import kinoko.provider.mob.MobTemplate;
+import kinoko.provider.npc.NpcTemplate;
+import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.dialog.ScriptDialog;
@@ -36,6 +36,7 @@ import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.field.npc.Npc;
+import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.*;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
@@ -232,6 +233,18 @@ public final class ScriptManagerImpl implements ScriptManager {
             case ARAN_1 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(250, 300));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(10, 20));
+            }
+            case EVAN_1, EVAN_2, EVAN_3, EVAN_4 -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(15, 25));
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
+            }
+            case EVAN_5, EVAN_6, EVAN_7, EVAN_8 -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(15, 25));
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(400, 200));
+            }
+            case EVAN_9, EVAN_10 -> {
+                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(15, 25));
+                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
             }
         }
         // Add ap by job level
@@ -738,6 +751,42 @@ public final class ScriptManagerImpl implements ScriptManager {
         );
         mob.setAppearType(appearType);
         field.getMobPool().addMob(mob);
+    }
+
+    public void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean currentMap) {
+        final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
+        if (npcTemplateResult.isEmpty()) {
+            throw new ScriptError("Could not resolve npc template ID : %d", templateId);
+        }
+        final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y - GameConstants.REACTOR_SPAWN_HEIGHT);
+        final Npc npc = new Npc( // x, y, rx0, rx1, fh, flip
+                npcTemplateResult.get(),
+                x,
+                y,
+                (x + 50),
+                (y - 50),
+                footholdResult.map(Foothold::getSn).orElse(0),
+                isFlip
+        );
+        if (!currentMap) {
+            user.getField().getNpcPool().addNpc(npc);
+        } else {
+            field.getNpcPool().addNpc(npc);
+        }
+    }
+
+    public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean currentMap) {
+        final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
+        if (reactorTemplateResult.isEmpty()) {
+            user.write(MessagePacket.system("Could not resolve reactor template ID : %d", templateId));
+            return;
+        }
+        final ReactorInfo reactorInfo = new ReactorInfo(templateId, "", x, y, isFlip, reactorTime);
+        if (!currentMap) {
+            user.getField().getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
+        } else {
+            field.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
+        }
     }
 
     @Override
