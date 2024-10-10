@@ -234,15 +234,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(250, 300));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(10, 20));
             }
-            case EVAN_1, EVAN_2, EVAN_3, EVAN_4 -> {
-                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(15, 25));
-                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
-            }
-            case EVAN_5, EVAN_6, EVAN_7, EVAN_8 -> {
-                cs.setMaxHp(cs.getMaxHp() + Util.getRandom(15, 25));
-                cs.setMaxMp(cs.getMaxMp() + Util.getRandom(400, 200));
-            }
-            case EVAN_9, EVAN_10 -> {
+            case EVAN_1, EVAN_2, EVAN_3, EVAN_4, EVAN_5, EVAN_6, EVAN_7, EVAN_8, EVAN_9, EVAN_10 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(15, 25));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
             }
