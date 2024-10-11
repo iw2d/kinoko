@@ -4,6 +4,7 @@ import kinoko.handler.Handler;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.BroadcastPacket;
+import kinoko.packet.world.MessagePacket;
 import kinoko.provider.MobProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.map.Foothold;
@@ -15,6 +16,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.provider.skill.SummonInfo;
 import kinoko.script.party.HenesysPQ;
+import kinoko.script.quest.EvanQuest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Rect;
@@ -26,6 +28,7 @@ import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.field.mob.*;
 import kinoko.world.job.explorer.Thief;
+import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CalcDamage;
@@ -176,6 +179,15 @@ public final class MobHandler {
             switch (targetMob.getTemplateId()) {
                 case HenesysPQ.MOON_BUNNY -> {
                     field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
+                }
+                case EvanQuest.SAFE_GUARD -> {
+                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(22583); // Releasing the Free Spirits
+                    if (questRecordResult.isPresent()) {
+                        final QuestRecord qr = questRecordResult.get();
+                        qr.setValue("001");
+                        user.write(MessagePacket.questRecord(qr));
+                        user.validateStat();
+                    }
                 }
             }
         }

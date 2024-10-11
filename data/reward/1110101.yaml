@@ -24,3 +24,4 @@ rewards:
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
   - [ 4031590, 1, 1, 0.010000, 8881 ] # Birthday Candle
+  - [ 4032460, 1, 1, 0.050000, 22529 ] # Refreshing Stump Sap

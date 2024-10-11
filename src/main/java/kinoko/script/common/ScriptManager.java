@@ -140,6 +140,10 @@ public interface ScriptManager {
 
     void spawnMob(int templateId, MobAppearType appearType, int x, int y);
 
+    void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField);
+
+    void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean originalField);
+
     void dropRewards(List<Reward> rewards);
 
     void setNpcAction(int templateId, String action);

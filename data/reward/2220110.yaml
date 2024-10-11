@@ -32,3 +32,4 @@ rewards:
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
   - [ 4030012, 1, 1, 0.050000 ] # Monster Card
+  - [ 4032459, 1, 1, 0.050000, 22524 ] # Blue Mushroom Doll
