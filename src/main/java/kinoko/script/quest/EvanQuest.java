@@ -55,8 +55,10 @@ public final class EvanQuest extends ScriptHandler {
         //   Burnt Land : Burning Heat (102030300)
         if (!sm.hasQuestStarted(22530) || sm.getQRValue(QuestRecordType.EvanPerionSigns).equals("5")) {
             sm.sayOk("Information regarding the creatures of the area is displayed.");
-        } else {
-            if (sm.getFieldId() == 102020100) {
+            return;
+        }
+        switch (sm.getFieldId()) {
+            case 102020100 -> {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("1")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(I've already reviewed this sign.)");
@@ -74,104 +76,96 @@ public final class EvanQuest extends ScriptHandler {
                 sm.setPlayerAsSpeaker(true);
                 sm.sayBoth("#bOne #p1022107##k has been checked. Four more to go.");
                 sm.setQRValue(QuestRecordType.EvanPerionSigns, "1");
-                return;
             }
-            if (sm.getFieldId() == 102030000) {
+            case 102030000 -> {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("2")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(I've already reviewed this sign.)");
                     return;
                 }
-                if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("1")) {
-                    sm.sayNext("#b#m102030000# Warning Sign#k\r\n\r\nCreatures: #r#o2130100##k\r\nNotes: None\r\nCheck:");
-                    sm.setPlayerAsSpeaker(true);
-                    if (!sm.askYesNo("#b(There appears to be some incorrect information on this Warning Sign.)")) {
-                        sm.sayOk("#b(I should probably correct the misinformation on this Warning Sign...)");
-                        return;
-                    }
-                    sm.sayNext("#b(I'll just correct the information on the #m102030000# Warning Sign...)");
-                    sm.setPlayerAsSpeaker(false);
-                    sm.sayNext("#b#m102030000# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o2230112##k\r\nNotes: None\r\nCheck: #eO#k");
-                    sm.setPlayerAsSpeaker(true);
-                    sm.sayBoth("#bTwo #p1022107#s#k have been checked. Three more to go.");
-                    sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2");
-                    return;
-                } else {
+                if (!sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("1")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(Hmm, it seems I missed a sign. I better go back.)");
                     return;
                 }
+                sm.sayNext("#b#m102030000# Warning Sign#k\r\n\r\nCreatures: #r#o2130100##k\r\nNotes: None\r\nCheck:");
+                sm.setPlayerAsSpeaker(true);
+                if (!sm.askYesNo("#b(There appears to be some incorrect information on this Warning Sign.)")) {
+                    sm.sayOk("#b(I should probably correct the misinformation on this Warning Sign...)");
+                    return;
+                }
+                sm.sayNext("#b(I'll just correct the information on the #m102030000# Warning Sign...)");
+                sm.setPlayerAsSpeaker(false);
+                sm.sayNext("#b#m102030000# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o2230112##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.setPlayerAsSpeaker(true);
+                sm.sayBoth("#bTwo #p1022107#s#k have been checked. Three more to go.");
+                sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2");
             }
-            if (sm.getFieldId() == 102030100) {
+            case 102030100 -> {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("3")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(I've already reviewed this sign.)");
                     return;
                 }
-                if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("2")) {
-                    sm.sayNext("#b#m102030100# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o4230103##k\r\nNotes: None\r\nCheck:");
-                    sm.setPlayerAsSpeaker(true);
-                    if (!sm.askYesNo("#b(There's no incorrect information on the #m102030100# Warning Sign.)")) {
-                        sm.sayOk("#b(I should probably check off that this sign is correct...)");
-                        return;
-                    }
-                    sm.sayNext("#b(I'll just mark off that the #m102030100# Warning Sign is correct and...)");
-                    sm.setPlayerAsSpeaker(false);
-                    sm.sayNext("#b#m102030100# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o4230103##k\r\nNotes: None\r\nCheck: #eO#k");
-                    sm.setPlayerAsSpeaker(true);
-                    sm.sayBoth("#bThree #p1022107#s#k have been checked. Two more to go.");
-                    sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2;3");
-                    return;
-                } else {
+                if (!sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("2")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(Hmm, it seems I missed a sign. I better go back.)");
+                }
+                sm.sayNext("#b#m102030100# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o4230103##k\r\nNotes: None\r\nCheck:");
+                sm.setPlayerAsSpeaker(true);
+                if (!sm.askYesNo("#b(There's no incorrect information on the #m102030100# Warning Sign.)")) {
+                    sm.sayOk("#b(I should probably check off that this sign is correct...)");
                     return;
                 }
+                sm.sayNext("#b(I'll just mark off that the #m102030100# Warning Sign is correct and...)");
+                sm.setPlayerAsSpeaker(false);
+                sm.sayNext("#b#m102030100# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o4230103##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.setPlayerAsSpeaker(true);
+                sm.sayBoth("#bThree #p1022107#s#k have been checked. Two more to go.");
+                sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2;3");
             }
-            if (sm.getFieldId() == 102030200) {
+            case 102030200 -> {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("4")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#bI've already reviewed this sign.");
                     return;
                 }
-                if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("3")) {
-                    sm.sayNext("#b#m102030200# Warning Sign#k\r\n\r\nCreatures: #r#o4230103##k, #r#o4230400##k\r\nNotes: None\r\nCheck:");
-                    sm.setPlayerAsSpeaker(true);
-                    if (!sm.askYesNo("#b(There's no incorrect information on the #m102030200# Warning Sign.)")) {
-                        sm.sayOk("#b(I should probably check off that this sign is correct...)");
-                        return;
-                    }
-                    sm.sayNext("#b(I'll just mark off that the #m102030200# Warning Sign is correct and...)");
-                    sm.setPlayerAsSpeaker(false);
-                    sm.sayNext("#b#m102030200# Warning Sign#k\r\n\r\nCreatures: #r#o4230103##k, #r#o4230400##k\r\nNotes: None\r\nCheck: #eO#k");
-                    sm.setPlayerAsSpeaker(true);
-                    sm.sayBoth("#bFour #p1022107#s#k have been checked. One more to go.");
-                    sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2;3;4");
-                    return;
-                } else {
+                if (!sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("3")) {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(Hmm, it seems I missed a sign. I better go back.)");
                     return;
                 }
+                sm.sayNext("#b#m102030200# Warning Sign#k\r\n\r\nCreatures: #r#o4230103##k, #r#o4230400##k\r\nNotes: None\r\nCheck:");
+                sm.setPlayerAsSpeaker(true);
+                if (!sm.askYesNo("#b(There's no incorrect information on the #m102030200# Warning Sign.)")) {
+                    sm.sayOk("#b(I should probably check off that this sign is correct...)");
+                    return;
+                }
+                sm.sayNext("#b(I'll just mark off that the #m102030200# Warning Sign is correct and...)");
+                sm.setPlayerAsSpeaker(false);
+                sm.sayNext("#b#m102030200# Warning Sign#k\r\n\r\nCreatures: #r#o4230103##k, #r#o4230400##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.setPlayerAsSpeaker(true);
+                sm.sayBoth("#bFour #p1022107#s#k have been checked. One more to go.");
+                sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2;3;4");
             }
-            if (sm.getFieldId() == 102030300) {
+            case 102030300 -> {
                 if (sm.getQRValue(QuestRecordType.EvanPerionSigns).contains("4")) {
-                    sm.sayNext("#b#m102030300# Warning Sign#k\r\n\r\nCreatures: #r#o4230400##k\r\nNotes: None\r\nCheck:");
-                    sm.setPlayerAsSpeaker(true);
-                    if (!sm.askYesNo("#b(There appears to be some incorrect information on this Warning Sign.)")) {
-                        sm.sayOk("#b(I should probably correct the misinformation on this Warning Sign...)");
-                        return;
-                    }
-                    sm.sayNext("#b(I'll just correct the information on the #m102030300# Warning Sign...)");
-                    sm.setPlayerAsSpeaker(false);
-                    sm.sayNext("#b#m102030300# Warning Sign#k\r\n\r\nCreatures: #r#o3210100##k, #r#o4230400##k\r\nNotes: None\r\nCheck: #eO#k");
-                    sm.setPlayerAsSpeaker(true);
-                    sm.sayBoth("All #b#p1022107#s#k have been checked. Let's report back to #b#p1040001##k.");
-                    sm.setQRValue(QuestRecordType.EvanPerionSigns, "5");
-                } else {
                     sm.setPlayerAsSpeaker(true);
                     sm.sayOk("#b(Hmm, it seems I missed a sign. I better go back.)");
+                    return;
                 }
+                sm.sayNext("#b#m102030300# Warning Sign#k\r\n\r\nCreatures: #r#o4230400##k\r\nNotes: None\r\nCheck:");
+                sm.setPlayerAsSpeaker(true);
+                if (!sm.askYesNo("#b(There appears to be some incorrect information on this Warning Sign.)")) {
+                    sm.sayOk("#b(I should probably correct the misinformation on this Warning Sign...)");
+                    return;
+                }
+                sm.sayNext("#b(I'll just correct the information on the #m102030300# Warning Sign...)");
+                sm.setPlayerAsSpeaker(false);
+                sm.sayNext("#b#m102030300# Warning Sign#k\r\n\r\nCreatures: #r#o3210100##k, #r#o4230400##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.setPlayerAsSpeaker(true);
+                sm.sayBoth("All #b#p1022107#s#k have been checked. Let's report back to #b#p1040001##k.");
+                sm.setQRValue(QuestRecordType.EvanPerionSigns, "5");
             }
         }
     }
@@ -483,24 +477,18 @@ public final class EvanQuest extends ScriptHandler {
     public static void enterBlackFrog(ScriptManager sm) {
         // Ludibrium : Ludibrium Village (220000300)
         //   scr00 (703, 104)
-        sm.playPortalSE();
-        if (sm.hasQuestCompleted(22596)) {
-            // After storyline, warp to map WITHOUT Hiver
-            sm.playPortalSE();
-            sm.warp(922030001, "out00");
-            return;
-        }
         if (sm.hasQuestStarted(22596)) {
+            sm.playPortalSE(); // TODO - don't spawn after defeating hiver
             sm.warpInstance(922030001, "out00", 211000300, 60 * 10);
             sm.spawnNpc(1013206, 175, 31, false, false);
-            return;
-        }
-        if (sm.hasQuestStarted(22581) || sm.hasQuestCompleted(22581)) {
+        } else if (sm.hasQuestStarted(22581) || sm.hasQuestCompleted(22581)) {
             // After this quest, you have free access to the map WITH Hiver until a certain point
+            sm.playPortalSE();
             sm.warp(922030000, "out00");
-            return;
+        } else {
+            sm.playPortalSE();
+            sm.warp(922030001, "out00"); // Everyone else warp to map WITHOUT Hiver
         }
-        sm.warp(922030001, "out00"); // Everyone else warp to map WITHOUT Hiver
     }
 
     @Script("enterBlackBC")
@@ -582,7 +570,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22100s")
     public static void q22100s(ScriptManager sm) {
         // Dragon Master 1st Job Advancement (22100 - start)
-        sm.forceStartQuest(22100);
         sm.forceCompleteQuest(22100);
         sm.setJob(Job.EVAN_1);
         sm.addInventorySlots(InventoryType.EQUIP, 4);
@@ -593,7 +580,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22101s")
     public static void q22101s(ScriptManager sm) {
         // Dragon Master 2nd Job Advancement (22101 - start)
-        sm.forceStartQuest(22101);
         sm.forceCompleteQuest(22101);
         sm.setJob(Job.EVAN_2);
     }
@@ -601,7 +587,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22102s")
     public static void q22102s(ScriptManager sm) {
         // Dragon Master 3rd Job Advancement (22102 - start)
-        sm.forceStartQuest(22102);
         sm.forceCompleteQuest(22102);
         sm.setJob(Job.EVAN_3);
         //sm.addSkill(22111001, 0, 5); // Magic Guard GMS-like, NX Mastery Books are fucking memes
@@ -613,7 +598,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22103s")
     public static void q22103s(ScriptManager sm) {
         // Dragon Master 4th Job Advancement (22103 - start)
-        sm.forceStartQuest(22103);
         sm.forceCompleteQuest(22103);
         sm.setJob(Job.EVAN_4);
     }
@@ -621,7 +605,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22104s")
     public static void q22104s(ScriptManager sm) {
         // Dragon Master 5th Job Advancement (22104 - start)
-        sm.forceStartQuest(22104);
         sm.forceCompleteQuest(22104);
         sm.setJob(Job.EVAN_5);
     }
@@ -629,7 +612,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22105s")
     public static void q22105s(ScriptManager sm) {
         // Dragon Master 6th Job Advancement (22105 - start)
-        sm.forceStartQuest(22105);
         sm.forceCompleteQuest(22105);
         sm.setJob(Job.EVAN_6);
         sm.addSkill(22140000, 0, 15); // Critical Magic
@@ -641,7 +623,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22106s")
     public static void q22106s(ScriptManager sm) {
         // Dragon Master 7th Job Advancement (22106 - start)
-        sm.forceStartQuest(22106);
         sm.forceCompleteQuest(22106);
         sm.setJob(Job.EVAN_7);
         sm.addInventorySlots(InventoryType.EQUIP, 4);
@@ -651,7 +632,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22107s")
     public static void q22107s(ScriptManager sm) {
         // Dragon Master 8th Job Advancement (22107 - start)
-        sm.forceStartQuest(22107);
         sm.forceCompleteQuest(22107);
         sm.setJob(Job.EVAN_8);
     }
@@ -659,7 +639,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22108s")
     public static void q22108s(ScriptManager sm) {
         // Dragon Master 9th Job Advancement (22108 - start)
-        sm.forceStartQuest(22108);
         sm.forceCompleteQuest(22108);
         sm.setJob(Job.EVAN_9);
         sm.addSkill(22170001, 0, 30); // Magic Mastery
@@ -676,7 +655,6 @@ public final class EvanQuest extends ScriptHandler {
     @Script("q22109s")
     public static void q22109s(ScriptManager sm) {
         // Dragon Master 10th Job Advancement (22109 - start)
-        sm.forceStartQuest(22109);
         sm.forceCompleteQuest(22109);
         sm.setJob(Job.EVAN_10);
         sm.addSkill(22181000, 0, 30); // Blessing of the Onyx
@@ -728,7 +706,6 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bY... Yesss?");
         sm.setPlayerAsSpeaker(false);
         sm.sayBoth("Hmm, I see. Well, if a job instructor recommended you, I will put my trust in you as well. I apologize for my late introduction. I am the #b#p1300005##k in charge of the royal family's security. As you can see, I am currently in charge of security of this temporary basecamp and the tower key is missing. We're not in the best of situations, but nevertheless, let me welcome you to the #bMushroom Kingdom#k.");
-        sm.forceStartQuest(2344);
         sm.forceCompleteQuest(2344);
         sm.removeItem(4032375);
     }
@@ -764,7 +741,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayOk("Please check if your inventory is full or not.");
             return;
         }
-        sm.forceStartQuest(22401);
         sm.forceCompleteQuest(22401);
         sm.setPlayerAsSpeaker(true);
         sm.sayNext("#bOf course. We should go talk to #p1032001# in #m101000000#.");
@@ -839,7 +815,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayOk("Please check if your inventory is full or not.");
             return;
         }
-        sm.forceStartQuest(22406);
         sm.forceCompleteQuest(22406);
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI agree. Let's go to #m230000000#.");
@@ -867,7 +842,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayOk("Please check if your inventory is full or not.");
             return;
         }
-        sm.forceStartQuest(22411);
         sm.forceCompleteQuest(22411);
         sm.setPlayerAsSpeaker(true);
         sm.sayOk("#bHmm, you're right. We don't really have a choice, it'll be pricey but I can't NOT get you one. Let's go get another saddle for you.");
@@ -887,7 +861,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayOk("I'm just not sure...");
             return;
         }
-        sm.forceStartQuest(23908);
         sm.forceCompleteQuest(23908);
         sm.sayOk("Ahhh! I'm so confused and flustered. Are the Black Wings good guys or bad guys?!");
     }
@@ -1140,7 +1113,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayNext("You come here implying such things and have the audacity to just walk away?! HMPH!");
             return;
         }
-        sm.forceStartQuest(22536);
         sm.forceCompleteQuest(22536);
         sm.addExp(8000);
         sm.sayNext("I'll investigate the burglar you're looking for, so keep yourself available as much as possible! I'll reach out when I get to the bottom of this!");
@@ -1186,7 +1158,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayNext("Hmm... No matter. If you ever do need help, please come back!");
             return;
         }
-        sm.forceStartQuest(22546);
         sm.forceCompleteQuest(22546);
         sm.removeItem(4161050);
         sm.addExp(12000);
@@ -1256,7 +1227,6 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("But not just anyone can become the master of an Onyx Dragon. Onyx Dragons have a keen eye for those with strong spirits. They are extremely picky, and as I said before... Cautious. You must have an extremely powerful and wholesome spirit, my friend!");
         sm.sayBoth("I wish you'd consider leaving him here in #b#m240000000##k but I know you won't... And I know he wouldn't stay. I wonder, though, are there other Onyx Dragons still out there? With this marvelous revelation... We can't give up! With the help of #b#p1032001##k, we will find other Onyx Dragons, I'm sure of it!");
         sm.sayBoth("I'll send word if I discover anything.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 17000 exp\r\n#fUI/UIWindow2.img/QuestIcon/10/0# 1 sp");
-        sm.forceStartQuest(22564);
         sm.forceCompleteQuest(22564);
         sm.addExp(17000);
         sm.getUser().getCharacterStat().getSp().addSp(JobConstants.getJobLevel(2212), 2); // Have to make sure the SP is being given to the correct job
@@ -1274,7 +1244,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayNext("What?! Why? You're joking, right?!");
             return;
         }
-        sm.forceStartQuest(22565);
         sm.forceCompleteQuest(22565);
         sm.addExp(20000);
         sm.getUser().getCharacterStat().getSp().addSp(JobConstants.getJobLevel(2212), 2); // Have to make sure the SP is being given to the correct job
@@ -1371,7 +1340,6 @@ public final class EvanQuest extends ScriptHandler {
         if (!sm.askAccept("... I don't get it. I love to let people know what I'm up to. Anyway, it just seems so secretive and calculated. It's exciting, yet... I don't know. But don't you agree master?!\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 30000 exp\r\n#fUI/UIWindow2.img/QuestIcon/10/0# 2 sp")) {
             return;
         }
-        sm.forceStartQuest(22578);
         sm.forceCompleteQuest(22578);
         sm.getUser().getCharacterStat().getSp().addSp(JobConstants.getJobLevel(2213), 2); // Have to make sure the SP is being given to the correct job
         sm.getUser().write(WvsContext.statChanged(Stat.SP, sm.getUser().getCharacterStat().getSp(), false));
@@ -1465,7 +1433,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayOk("Hmm, I just don't know... I'd love to hear your thoughts, master.");
             return;
         }
-        sm.forceStartQuest(22585);
         sm.forceCompleteQuest(22585);
         sm.addExp(50000);
         sm.getUser().getCharacterStat().getSp().addSp(JobConstants.getJobLevel(2214), 1);
@@ -1522,7 +1489,6 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bI need to know if the plants in #m200000000# grew abnormally fast.");
         sm.setPlayerAsSpeaker(false);
         sm.sayBoth("Huh? How did you know about that?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 65000 exp");
-        sm.forceStartQuest(22593);
         sm.forceCompleteQuest(22593);
         sm.addExp(65000);
         sm.sayNext("Yes, it was quite a dilemma for us when the #b#o4230105#s started growing like crazy#k! Thankfully, someone that was passing by did some investigating on our behalf and we were able to resolve the issue, but boy, it was a BIG deal!");
@@ -1549,7 +1515,6 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bWhat's in the basement?");
         sm.setPlayerAsSpeaker(false);
         sm.sayBoth("There is an old treasure that's been kept hidden in #m211000000# for a very long time. I can't tell you anything more. It is something that must not get lost. Don't ask me anymore questions about it.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 65000 exp");
-        sm.forceStartQuest(22594);
         sm.forceCompleteQuest(22594);
         sm.addExp(65000);
         sm.sayOk("No need to look so glum. It's not like YOU stole the treasure or helped steal the treasure. #rIt's true our security has become weaker lately#k but we just need to be more watchful, that's all.");
@@ -1564,7 +1529,6 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(false);
         sm.sayBoth("Huh? What? #b#o9300390##k?");
         sm.sayBoth("Shhhh! How do you know about the #b#o9300390##k? I'm an undercover guard watching over the secret Safe, so that's how I know about it. Uhm, erm... Okay. I'll tell you about #b#o9300390##k.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 65000 exp");
-        sm.forceStartQuest(22595);
         sm.forceCompleteQuest(22595);
         sm.addExp(65000);
         sm.sayNext("#b#o9300390##k was vandalized by someone some time ago and broke as a result. #bNo one was watching the secret Safe at the time and so a burglar came in and stole the treasure.#k No one knows what kind of a treasure it was, but... It's a BIG deal...");
@@ -1607,7 +1571,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayNext("Please check if your inventory is full or not.");
             return;
         }
-        sm.forceStartQuest(22602);
         sm.forceCompleteQuest(22602);
         sm.setPlayerAsSpeaker(true);
         sm.sayOk("#b(#p1013000# gave me one of his scales! When I touched it, it transformed into the #r#t1142156#Medal#k#b.)#k"); // there's an extra space in the item name, so I'm not including a space between 1142156 and Medal lul
@@ -1632,7 +1595,6 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayNext("Please check if your inventory is full or not.");
             return;
         }
-        sm.forceStartQuest(22603);
         sm.forceCompleteQuest(22603);
         sm.sayOk("Master, you should use this scale to make something useful that would reduce the damage you take when hit by a monster. You'll get stronger, which means that I'll get stronger. Sounds good to me!");
     }

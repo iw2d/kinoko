@@ -6,14 +6,12 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.provider.MobProvider;
-import kinoko.provider.QuestProvider;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.mob.MobAttack;
 import kinoko.provider.mob.MobSkill;
 import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.mob.MobTemplate;
-import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.provider.skill.SummonInfo;
@@ -183,16 +181,11 @@ public final class MobHandler {
                     field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
                 }
                 case EvanQuest.SAFE_GUARD -> {
-                    for (QuestRecord qr : user.getQuestManager().getStartedQuests()) {
-                        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
-                        if (questInfoResult.isEmpty()) {
-                            continue;
-                        }
-                        final Optional<QuestRecord> questProgressResult = questInfoResult.get().progressQuest(qr, targetMob.getTemplateId());
-                        if (questProgressResult.isEmpty()) {
-                            continue;
-                        }
-                        user.write(MessagePacket.questRecord(questProgressResult.get()));
+                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(22583); // Releasing the Free Spirits
+                    if (questRecordResult.isPresent()) {
+                        final QuestRecord qr = questRecordResult.get();
+                        qr.setValue("001");
+                        user.write(MessagePacket.questRecord(qr));
                         user.validateStat();
                     }
                 }

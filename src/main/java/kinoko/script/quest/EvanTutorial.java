@@ -136,7 +136,6 @@ public final class EvanTutorial extends ScriptHandler {
         // Dream World : Dream Forest  (900010200)
         //   scr02 (-661, -12)
         sm.setQRValue(QuestRecordType.EvanDragonEyes, "1");
-        sm.setQRValue(QuestRecordType.EvanDragonEyes, "2");
     }
 
     @Script("dragon_dream")

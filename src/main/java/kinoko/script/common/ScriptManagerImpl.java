@@ -745,12 +745,13 @@ public final class ScriptManagerImpl implements ScriptManager {
         field.getMobPool().addMob(mob);
     }
 
-    public void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean currentMap) {
+    public void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField) {
         final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
         if (npcTemplateResult.isEmpty()) {
             throw new ScriptError("Could not resolve npc template ID : %d", templateId);
         }
-        final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y - GameConstants.REACTOR_SPAWN_HEIGHT);
+        final Field targetField = originalField ? field : user.getField();
+        final Optional<Foothold> footholdResult = targetField.getFootholdBelow(x, y - GameConstants.REACTOR_SPAWN_HEIGHT);
         final Npc npc = new Npc( // x, y, rx0, rx1, fh, flip
                 npcTemplateResult.get(),
                 x,
@@ -760,25 +761,18 @@ public final class ScriptManagerImpl implements ScriptManager {
                 footholdResult.map(Foothold::getSn).orElse(0),
                 isFlip
         );
-        if (!currentMap) {
-            user.getField().getNpcPool().addNpc(npc);
-        } else {
-            field.getNpcPool().addNpc(npc);
-        }
+        targetField.getNpcPool().addNpc(npc);
     }
 
-    public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean currentMap) {
+    public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean originalField) {
         final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
         if (reactorTemplateResult.isEmpty()) {
             user.write(MessagePacket.system("Could not resolve reactor template ID : %d", templateId));
             return;
         }
+        final Field targetField = originalField ? field : user.getField();
         final ReactorInfo reactorInfo = new ReactorInfo(templateId, "", x, y, isFlip, reactorTime);
-        if (!currentMap) {
-            user.getField().getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
-        } else {
-            field.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
-        }
+        targetField.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
     }
 
     @Override
