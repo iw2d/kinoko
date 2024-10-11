@@ -3,6 +3,7 @@ package kinoko.handler.user.item;
 import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.TrunkPacket;
+import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
@@ -27,6 +28,7 @@ import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.item.*;
+import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterStat;
@@ -351,6 +353,39 @@ public final class CashItemHandler extends ItemHandler {
                             }
                         }
                     });
+                }
+                case SETPETNAME -> {
+                    final String petName = inPacket.decodeString();
+                    // Resolve pet
+                    final Pet pet = user.getPet(0);
+                    if (pet == null) {
+                        log.error("Could not resolve target for pet name change");
+                        user.dispose();
+                        return;
+                    }
+                    // Resolve pet item
+                    final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
+                            .filter((entry) -> entry.getValue().getItemSn() == pet.getItemSn())
+                            .findFirst();
+                    if (itemEntry.isEmpty()) {
+                        throw new IllegalStateException("Could not resolve target pet item");
+                    }
+                    final int petPosition = itemEntry.get().getKey();
+                    final Item petItem = itemEntry.get().getValue();
+                    // Consume item
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        throw new IllegalStateException(String.format("Could not remove weather item %d in position %d", item.getItemId(), position));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    // Set pet name and update item
+                    petItem.getPetData().setPetName(petName);
+                    final Optional<InventoryOperation> updateResult = im.updateItem(petPosition, petItem);
+                    if (updateResult.isEmpty()) {
+                        throw new IllegalStateException("Could not update pet item");
+                    }
+                    user.write(WvsContext.inventoryOperation(updateResult.get(), true));
+                    user.getField().broadcastPacket(PetPacket.petNameChanged(user, pet.getPetIndex(), petName));
                 }
                 case SELECTNPC -> {
                     final int npcId = itemInfo.getInfo(ItemInfoType.npc);
