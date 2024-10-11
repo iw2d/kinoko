@@ -355,6 +355,12 @@ public final class QuestInfo {
                 case "buffItemID" -> {
                     questActs.add(new QuestBuffAct(WzProvider.getInteger(entry.getValue())));
                 }
+                case "pettameness" -> {
+                    questActs.add(new QuestPetAct(WzProvider.getInteger(entry.getValue()), actProps.getItems().containsKey("petspeed")));
+                }
+                case "petspeed" -> {
+                    // always bundled with pettameness
+                }
                 case "nextQuest" -> {
                     // handled in QuestInfo.from
                 }

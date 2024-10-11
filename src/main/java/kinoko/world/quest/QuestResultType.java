@@ -13,7 +13,7 @@ public enum QuestResultType {
     Failed_Inventory(12),
     Failed_Meso(13),
     Failed_Pet(14),
-    Failed_Euipped(15),
+    Failed_Equipped(15),
     Failed_OnlyItem(16),
     Failed_TimeOver(17),
     Reset_QuestTimer(18);
