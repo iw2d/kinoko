@@ -24,6 +24,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.util.BitFlag;
 import kinoko.util.Lockable;
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
@@ -411,7 +412,7 @@ public final class User extends Life implements Lockable<User> {
             getConnectedServer().notifyUserUpdate(this);
             // Max level
             if (getLevel() == GameConstants.getLevelMax(getJob())) {
-                getCharacterData().setMaxLevelTime(Instant.now());
+                getCharacterData().setMaxLevelTime(TimeUtil.getCurrentTime());
             }
         }
     }
@@ -510,7 +511,7 @@ public final class User extends Life implements Lockable<User> {
 
     public void setSkillCooltime(int skillId, int cooltime) {
         if (cooltime > 0) {
-            getSkillManager().setSkillCooltime(skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
+            getSkillManager().setSkillCooltime(skillId, TimeUtil.getCurrentTime().plus(cooltime, ChronoUnit.SECONDS));
         } else {
             getSkillManager().getSkillCooltimes().remove(skillId);
         }

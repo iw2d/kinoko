@@ -15,6 +15,7 @@ import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
@@ -59,9 +60,9 @@ public final class Field {
 
     private WeatherEffect weatherEffect;
 
-    private Instant nextMobRespawn = Instant.now();
-    private Instant nextDropExpire = Instant.now();
-    private Instant nextReactorExpire = Instant.now();
+    private Instant nextMobRespawn = TimeUtil.getCurrentTime();
+    private Instant nextDropExpire = TimeUtil.getCurrentTime();
+    private Instant nextReactorExpire = TimeUtil.getCurrentTime();
 
     public Field(FieldStorage fieldStorage, MapInfo mapInfo) {
         this.fieldStorage = fieldStorage;
@@ -212,7 +213,7 @@ public final class Field {
 
     public void update() {
         // Handle field updates
-        final Instant now = Instant.now();
+        final Instant now = TimeUtil.getCurrentTime();
         if (nextMobRespawn.isBefore(now)) {
             nextMobRespawn = now.plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
             mobPool.respawnMobs(now);
@@ -255,12 +256,12 @@ public final class Field {
 
     public synchronized void blowWeather(int itemId, String message, int duration) {
         broadcastPacket(FieldPacket.blowWeather(itemId, message));
-        weatherEffect = new WeatherEffect(itemId, message, Instant.now().plus(duration, ChronoUnit.SECONDS));
+        weatherEffect = new WeatherEffect(itemId, message, TimeUtil.getCurrentTime().plus(duration, ChronoUnit.SECONDS));
     }
 
     public synchronized void setMobSpawn(boolean enabled) {
         if (enabled) {
-            nextMobRespawn = Instant.now().plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
+            nextMobRespawn = TimeUtil.getCurrentTime().plus(GameConstants.MOB_RESPAWN_TIME, ChronoUnit.SECONDS);
         } else {
             nextMobRespawn = Instant.MAX;
             // Clear existing mobs

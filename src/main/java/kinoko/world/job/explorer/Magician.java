@@ -5,6 +5,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
@@ -182,7 +183,7 @@ public final class Magician extends SkillProcessor {
             case INFINITY_IL:
             case INFINITY_BISH:
                 user.setTemporaryStat(CharacterTemporaryStat.Infinity, TemporaryStatOption.of(1, skillId, buffedDuration));
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(4, ChronoUnit.SECONDS)); // every 4 secs
+                user.getSkillManager().setSkillSchedule(skillId, TimeUtil.getCurrentTime().plus(4, ChronoUnit.SECONDS)); // every 4 secs
                 return;
 
             // BISHOP
@@ -245,7 +246,7 @@ public final class Magician extends SkillProcessor {
                         skillId,
                         skill.positionX,
                         skill.positionY,
-                        Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS)
+                        TimeUtil.getCurrentTime().plus(si.getDuration(slv), ChronoUnit.MILLIS)
                 );
                 if (townPortalResult.isPresent()) {
                     final TownPortal townPortal = townPortalResult.get();

@@ -2,6 +2,7 @@ package kinoko.world.skill;
 
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
+import kinoko.util.TimeUtil;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 
@@ -40,7 +41,7 @@ public final class SkillManager {
 
     public boolean hasSkillCooltime(int skillId) {
         final Instant nextAvailable = skillCooltimes.get(skillId);
-        return nextAvailable != null && nextAvailable.isAfter(Instant.now());
+        return nextAvailable != null && nextAvailable.isAfter(TimeUtil.getCurrentTime());
     }
 
     public void setSkillCooltime(int skillId, Instant nextAvailable) {

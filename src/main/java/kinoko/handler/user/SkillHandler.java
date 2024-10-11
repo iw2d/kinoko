@@ -13,6 +13,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Locked;
+import kinoko.util.TimeUtil;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.item.*;
@@ -138,7 +139,7 @@ public final class SkillHandler {
             }
             // Mystic Door cooltime to avoid crashes
             if (skill.skillId == Magician.MYSTIC_DOOR) {
-                if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
+                if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(TimeUtil.getCurrentTime())) {
                     user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));
                     user.dispose();
                     return;

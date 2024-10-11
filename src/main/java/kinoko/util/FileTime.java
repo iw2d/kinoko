@@ -24,7 +24,7 @@ public final class FileTime {
     }
 
     public static FileTime now() {
-        return FileTime.from(Instant.now());
+        return FileTime.from(TimeUtil.getCurrentTime());
     }
 
     public static FileTime from(Instant timestamp) {

@@ -5,6 +5,7 @@ import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
@@ -229,7 +230,7 @@ public final class Warrior extends SkillProcessor {
                         CharacterTemporaryStat.DragonBlood, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv))
                 ));
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
+                user.getSkillManager().setSkillSchedule(skillId, TimeUtil.getCurrentTime().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
                 return;
             case AURA_OF_THE_BEHOLDER:
                 final int healAmount = si.getValue(SkillStat.hp, slv);
@@ -264,7 +265,7 @@ public final class Warrior extends SkillProcessor {
                 return;
             case BEHOLDER:
                 final int beholderDuration = si.getValue(SkillStat.x, slv) * 60 * 1000; // x min
-                final Summoned beholder = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.HEAL, Instant.now().plus(beholderDuration, ChronoUnit.MILLIS));
+                final Summoned beholder = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.HEAL, TimeUtil.getCurrentTime().plus(beholderDuration, ChronoUnit.MILLIS));
                 beholder.setPosition(user.getField(), skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(beholder);
                 user.setTemporaryStat(CharacterTemporaryStat.Beholder, TemporaryStatOption.of(si.getValue(SkillStat.mastery, slv), skillId, beholderDuration));

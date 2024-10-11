@@ -17,6 +17,7 @@ import kinoko.server.node.ChannelInfo;
 import kinoko.server.node.Client;
 import kinoko.server.node.LoginServerNode;
 import kinoko.server.packet.InPacket;
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.job.Job;
@@ -213,7 +214,7 @@ public final class LoginHandler {
         }
         final CharacterData characterData = new CharacterData(c.getAccount().getId());
         characterData.setItemSnCounter(new AtomicInteger(1));
-        characterData.setCreationTime(Instant.now());
+        characterData.setCreationTime(TimeUtil.getCurrentTime());
 
         // Initial stats
         final short level = 1;
@@ -254,7 +255,7 @@ public final class LoginHandler {
         im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
         im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS));
         im.setMoney(0);
-        im.setExtSlotExpire(Instant.now());
+        im.setExtSlotExpire(TimeUtil.getCurrentTime());
         characterData.setInventoryManager(im);
 
         for (int i = 4; i < selectedAL.length; i++) {

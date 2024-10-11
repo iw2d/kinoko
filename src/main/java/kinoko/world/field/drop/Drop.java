@@ -1,5 +1,6 @@
 package kinoko.world.field.drop;
 
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObject;
 import kinoko.world.field.FieldObjectImpl;
@@ -76,7 +77,7 @@ public final class Drop extends FieldObjectImpl {
         // CDropPool::TryPickUpDrop, CDropPool::TryPickUpDropByPet
         if ((ownType == DropOwnType.USEROWN && ownerId != user.getCharacterId()) ||
                 (ownType == DropOwnType.PARTYOWN && ownerId != user.getPartyId())) {
-            return createTime.plus(GameConstants.DROP_OWNERSHIP_EXPIRE_TIME, ChronoUnit.SECONDS).isBefore(Instant.now());
+            return createTime.plus(GameConstants.DROP_OWNERSHIP_EXPIRE_TIME, ChronoUnit.SECONDS).isBefore(TimeUtil.getCurrentTime());
         }
         return true;
     }
@@ -86,10 +87,10 @@ public final class Drop extends FieldObjectImpl {
     }
 
     public static Drop item(DropOwnType ownType, FieldObject source, Item item, int ownerId, int questId) {
-        return new Drop(ownType, source, item, 0, ownerId, questId, Instant.now());
+        return new Drop(ownType, source, item, 0, ownerId, questId, TimeUtil.getCurrentTime());
     }
 
     public static Drop money(DropOwnType ownType, FieldObject source, int money, int ownerId) {
-        return new Drop(ownType, source, null, money, ownerId, 0, Instant.now());
+        return new Drop(ownType, source, null, money, ownerId, 0, TimeUtil.getCurrentTime());
     }
 }

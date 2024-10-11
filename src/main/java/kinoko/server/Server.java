@@ -10,6 +10,7 @@ import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.LoginServerNode;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.rank.RankManager;
+import kinoko.util.TimeUtil;
 import kinoko.util.crypto.MapleCrypto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +28,7 @@ public final class Server {
 
     private static void initialize() throws Exception {
         // Initialize providers
-        Instant start = Instant.now();
+        Instant start = TimeUtil.getCurrentTime();
         ItemProvider.initialize();      // Character.wz + Item.wz
         SkillProvider.initialize();     // Skill.wz + Morph.wz
         MapProvider.initialize();       // Map.wz
@@ -41,7 +42,7 @@ public final class Server {
         RewardProvider.initialize();    // data/reward
         CashShop.initialize();          // data/cash
         System.gc();
-        log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded providers in {} milliseconds", Duration.between(start, TimeUtil.getCurrentTime()).toMillis());
 
         // Initialize server classes
         MapleCrypto.initialize();
@@ -49,19 +50,19 @@ public final class Server {
         CommandProcessor.initialize();
 
         // Initialize database
-        start = Instant.now();
+        start = TimeUtil.getCurrentTime();
         DatabaseManager.initialize();
-        log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded database connection in {} milliseconds", Duration.between(start, TimeUtil.getCurrentTime()).toMillis());
 
         // Initialize ranks
-        start = Instant.now();
+        start = TimeUtil.getCurrentTime();
         RankManager.initialize();
-        log.info("Loaded ranks in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded ranks in {} milliseconds", Duration.between(start, TimeUtil.getCurrentTime()).toMillis());
 
         // Initialize scripts
-        start = Instant.now();
+        start = TimeUtil.getCurrentTime();
         ScriptDispatcher.initialize();
-        log.info("Loaded scripts in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("Loaded scripts in {} milliseconds", Duration.between(start, TimeUtil.getCurrentTime()).toMillis());
 
         // Initialize nodes
         centralServerNode = new CentralServerNode();

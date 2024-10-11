@@ -15,6 +15,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -814,7 +815,7 @@ public final class AttackHandler {
         }
         final SkillInfo si = skillInfoResult.get();
         if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-            final Summoned summoned = Summoned.from(skillId, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, Instant.now().plus(si.getValue(SkillStat.x, slv), ChronoUnit.SECONDS));
+            final Summoned summoned = Summoned.from(skillId, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, TimeUtil.getCurrentTime().plus(si.getValue(SkillStat.x, slv), ChronoUnit.SECONDS));
             summoned.setPosition(user.getField(), mob.getX(), mob.getY(), mob.isLeft());
             user.addSummoned(summoned);
         }

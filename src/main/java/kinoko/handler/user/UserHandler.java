@@ -35,6 +35,7 @@ import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
+import kinoko.util.TimeUtil;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -1341,7 +1342,7 @@ public final class UserHandler {
                         memoIdResult.get(),
                         user.getCharacterName(),
                         message,
-                        Instant.now()
+                        TimeUtil.getCurrentTime()
                 );
                 // Save memo
                 if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {

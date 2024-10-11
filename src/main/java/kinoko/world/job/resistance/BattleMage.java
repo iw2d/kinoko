@@ -3,6 +3,7 @@ package kinoko.world.job.resistance;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.affectedarea.AffectedArea;
@@ -98,7 +99,7 @@ public final class BattleMage extends SkillProcessor {
             case YELLOW_AURA:
             case BLUE_AURA:
                 user.setTemporaryStat(CharacterTemporaryStat.Aura, TemporaryStatOption.of(slv, skillId, 0)); // slv used for BODY_BOOST
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now());
+                user.getSkillManager().setSkillSchedule(skillId, TimeUtil.getCurrentTime());
                 return;
             case BLOOD_DRAIN:
                 user.setTemporaryStat(CharacterTemporaryStat.ComboDrain, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));

@@ -3,6 +3,7 @@ package kinoko.world.field.mob;
 import kinoko.provider.MobProvider;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.util.Rect;
+import kinoko.util.TimeUtil;
 import kinoko.world.field.Field;
 
 import java.time.Instant;
@@ -18,7 +19,7 @@ public final class MobSpawnPoint {
     private final int mobTime;
     private final Rect checkArea;
 
-    private Instant nextMobRespawn = Instant.now();
+    private Instant nextMobRespawn = TimeUtil.getCurrentTime();
 
     public MobSpawnPoint(Field field, int templateId, int x, int y, int fh, int mobTime) {
         this.field = field;
@@ -57,7 +58,7 @@ public final class MobSpawnPoint {
     public void setNextMobRespawn() {
         // Spawns with mobTime > 0 can only spawn after death
         if (mobTime > 0) {
-            nextMobRespawn = Instant.now().plus(mobTime, ChronoUnit.SECONDS);
+            nextMobRespawn = TimeUtil.getCurrentTime().plus(mobTime, ChronoUnit.SECONDS);
         }
     }
 

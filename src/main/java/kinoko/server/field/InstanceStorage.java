@@ -3,6 +3,7 @@ package kinoko.server.field;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.MapInfo;
 import kinoko.server.node.ChannelServerNode;
+import kinoko.util.TimeUtil;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -27,7 +28,7 @@ public final class InstanceStorage {
             mapInfos.add(mapInfoResult.get());
         }
         // Create instance and field storage
-        final Instance instance = new Instance(getNewInstanceId(), returnMap, channelServerNode, Instant.now().plus(timeLimit, ChronoUnit.SECONDS));
+        final Instance instance = new Instance(getNewInstanceId(), returnMap, channelServerNode, TimeUtil.getCurrentTime().plus(timeLimit, ChronoUnit.SECONDS));
         final InstanceFieldStorage fieldStorage = InstanceFieldStorage.from(instance, mapInfos);
         instance.setFieldStorage(fieldStorage);
         instanceMap.put(instance.getInstanceId(), instance);

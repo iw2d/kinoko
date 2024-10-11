@@ -1,6 +1,7 @@
 package kinoko.world.field;
 
 import kinoko.provider.map.PortalInfo;
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
 
@@ -74,7 +75,7 @@ public final class TownPortal extends FieldObjectImpl {
     }
 
     public static TownPortal from(User owner, int skillId, Field townField, Field targetField, int targetX, int targetY, Instant expireTime) {
-        final TownPortal townPortal = new TownPortal(owner, skillId, townField, Instant.now().plus(5, ChronoUnit.SECONDS), expireTime);
+        final TownPortal townPortal = new TownPortal(owner, skillId, townField, TimeUtil.getCurrentTime().plus(5, ChronoUnit.SECONDS), expireTime);
         townPortal.setField(targetField);
         townPortal.setX(targetX);
         townPortal.setY(targetY);

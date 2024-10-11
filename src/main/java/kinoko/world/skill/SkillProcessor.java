@@ -7,6 +7,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.util.Locked;
 import kinoko.util.Rect;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.BurnedInfo;
@@ -161,7 +162,7 @@ public abstract class SkillProcessor {
             case Aran.RECOVERY:
             case Evan.RECOVER:
                 user.setTemporaryStat(CharacterTemporaryStat.Regen, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(5, ChronoUnit.SECONDS));
+                user.getSkillManager().setSkillSchedule(skillId, TimeUtil.getCurrentTime().plus(5, ChronoUnit.SECONDS));
                 return;
             case Beginner.NIMBLE_FEET:
             case Noblesse.NIMBLE_FEET:

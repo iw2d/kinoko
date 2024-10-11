@@ -8,6 +8,7 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.ServerConfig;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
@@ -114,7 +115,7 @@ public final class Mechanic extends SkillProcessor {
                 return;
             case MECH_MISSILE_TANK:
                 handleMech(user, skillId);
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(5, ChronoUnit.SECONDS)); // - #u MP every 5 sec
+                user.getSkillManager().setSkillSchedule(skillId, TimeUtil.getCurrentTime().plus(5, ChronoUnit.SECONDS)); // - #u MP every 5 sec
                 return;
 
             // BUFFS
@@ -150,7 +151,7 @@ public final class Mechanic extends SkillProcessor {
                 }
                 // Create gate
                 if (user.getOpenGate() == null) {
-                    final OpenGate firstGate = new OpenGate(user, true, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                    final OpenGate firstGate = new OpenGate(user, true, TimeUtil.getCurrentTime().plus(summonDuration, ChronoUnit.MILLIS));
                     firstGate.setPosition(field, skill.positionX, skill.positionY);
                     user.setOpenGate(firstGate);
                     field.broadcastPacket(FieldPacket.openGateCreated(user, firstGate, true));
@@ -171,7 +172,7 @@ public final class Mechanic extends SkillProcessor {
                 return;
             case ROCK_N_SHOCK:
                 // Create summoned
-                final Summoned rockAndShock = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                final Summoned rockAndShock = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, TimeUtil.getCurrentTime().plus(summonDuration, ChronoUnit.MILLIS));
                 rockAndShock.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(rockAndShock);
                 // Check if triangle is complete
@@ -187,7 +188,7 @@ public final class Mechanic extends SkillProcessor {
                 return;
             case ACCELERATION_BOT_EX_7:
                 // Create summoned
-                final Summoned accelerationBot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                final Summoned accelerationBot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, TimeUtil.getCurrentTime().plus(summonDuration, ChronoUnit.MILLIS));
                 accelerationBot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(accelerationBot);
                 // Initial effect
@@ -222,7 +223,7 @@ public final class Mechanic extends SkillProcessor {
                     user.getField().broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(healAmount)), user);
                 } else {
                     // Create summoned
-                    final Summoned healingRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.HEAL, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                    final Summoned healingRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.HEAL, TimeUtil.getCurrentTime().plus(summonDuration, ChronoUnit.MILLIS));
                     healingRobot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                     user.addSummoned(healingRobot);
                 }
@@ -235,19 +236,19 @@ public final class Mechanic extends SkillProcessor {
             case BOTS_N_TOTS:
                 if (skill.isSummonedSkill()) {
                     // Create sub-summon
-                    final Summoned botsAndTotsSummon = Summoned.from(BOTS_N_TOTS_SUMMON, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, Instant.now().plus(getSummonDuration(user, 5000), ChronoUnit.MILLIS)); // 5 second base duration
+                    final Summoned botsAndTotsSummon = Summoned.from(BOTS_N_TOTS_SUMMON, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, TimeUtil.getCurrentTime().plus(getSummonDuration(user, 5000), ChronoUnit.MILLIS)); // 5 second base duration
                     botsAndTotsSummon.setPosition(field, skill.summoned.getX(), skill.summoned.getY(), skill.summoned.isLeft());
                     user.addSummoned(botsAndTotsSummon);
                 } else {
                     // Create summoned
-                    final Summoned botsAndTots = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.SUMMON, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                    final Summoned botsAndTots = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.SUMMON, TimeUtil.getCurrentTime().plus(summonDuration, ChronoUnit.MILLIS));
                     botsAndTots.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                     user.addSummoned(botsAndTots);
                 }
                 return;
             case AMPLIFIER_ROBOT_AF_11:
                 // Create summoned
-                final Summoned amplifierRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, Instant.now().plus(summonDuration, ChronoUnit.MILLIS));
+                final Summoned amplifierRobot = Summoned.from(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, TimeUtil.getCurrentTime().plus(summonDuration, ChronoUnit.MILLIS));
                 amplifierRobot.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 amplifierRobot.setRect(si.getRect(slv).translate(skill.positionX, skill.positionY));
                 user.addSummoned(amplifierRobot);

@@ -4,6 +4,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CalcDamage;
@@ -25,7 +26,7 @@ public final class BurnedInfo implements Encodable {
         this.damage = damage;
         this.interval = interval;
         this.dotCount = dotCount;
-        this.lastUpdate = Instant.now();
+        this.lastUpdate = TimeUtil.getCurrentTime();
     }
 
     public int getCharacterId() {

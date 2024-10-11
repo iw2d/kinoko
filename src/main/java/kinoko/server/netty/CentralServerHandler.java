@@ -26,6 +26,7 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyRequest;
 import kinoko.server.party.PartyResultType;
 import kinoko.server.user.RemoteUser;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.user.GuildInfo;
@@ -885,7 +886,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             log.error("Could not resolve memo ID for kicked guild member");
                             return;
                         }
-                        final Memo memo = new Memo(MemoType.DEFAULT, memoIdResult.get(), remoteUser.getCharacterName(), "You have been expelled from the guild.", Instant.now());
+                        final Memo memo = new Memo(MemoType.DEFAULT, memoIdResult.get(), remoteUser.getCharacterName(), "You have been expelled from the guild.", TimeUtil.getCurrentTime());
                         if (!DatabaseManager.memoAccessor().newMemo(memo, guildRequest.getTargetId())) {
                             log.error("Could not create memo for kicked guild member");
                         }
@@ -1096,7 +1097,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                         // Modify entry
                         entry.setTitle(boardRequest.getTitle());
                         entry.setText(boardRequest.getText());
-                        entry.setDate(Instant.now());
+                        entry.setDate(TimeUtil.getCurrentTime());
                         entry.setEmoticon(boardRequest.getEmoticon());
                     } else {
                         if (boardRequest.isNotice()) {
@@ -1116,7 +1117,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                                 remoteUser.getCharacterId(),
                                 boardRequest.getTitle(),
                                 boardRequest.getText(),
-                                Instant.now(),
+                                TimeUtil.getCurrentTime(),
                                 boardRequest.getEmoticon()
                         );
                         if (boardRequest.isNotice()) {
@@ -1162,7 +1163,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                             entry.getNextCommentSn(),
                             remoteUser.getCharacterId(),
                             boardRequest.getText(),
-                            Instant.now()
+                            TimeUtil.getCurrentTime()
                     ));
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.viewEntryResult(entry)));
                 }

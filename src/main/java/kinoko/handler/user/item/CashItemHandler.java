@@ -24,6 +24,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.affectedarea.AffectedArea;
@@ -149,7 +150,7 @@ public final class CashItemHandler extends ItemHandler {
                     user.write(UserLocal.effect(Effect.consumeEffect(item.getItemId())));
                     user.getField().broadcastPacket(UserRemote.effect(user, Effect.consumeEffect(item.getItemId())), user);
                     // Create affected area
-                    final Instant expireTime = Instant.now().plus(itemInfo.getInfo(ItemInfoType.time, 60), ChronoUnit.SECONDS);
+                    final Instant expireTime = TimeUtil.getCurrentTime().plus(itemInfo.getInfo(ItemInfoType.time, 60), ChronoUnit.SECONDS);
                     user.getField().getAffectedAreaPool().addAffectedArea(AffectedArea.buff(user, item.getItemId(), itemInfo.getRect(), expireTime));
                 }
                 case KARMASCISSORS -> {

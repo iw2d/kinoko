@@ -1,6 +1,7 @@
 package kinoko.world.quest;
 
 import kinoko.provider.EtcProvider;
+import kinoko.util.TimeUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ public final class QuestManager {
     public QuestRecord forceCompleteQuest(int questId) {
         final QuestRecord qr = questRecords.getOrDefault(questId, new QuestRecord(questId));
         qr.setState(QuestState.COMPLETE);
-        qr.setCompletedTime(Instant.now());
+        qr.setCompletedTime(TimeUtil.getCurrentTime());
         addQuestRecord(qr);
         return qr;
     }

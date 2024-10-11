@@ -5,6 +5,7 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.ServerConfig;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -230,7 +231,7 @@ public final class Thief extends SkillProcessor {
                 user.setTemporaryStat(CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case MIRRORED_TARGET:
-                final Summoned summoned = new Summoned(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+                final Summoned summoned = new Summoned(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), TimeUtil.getCurrentTime().plus(si.getDuration(slv), ChronoUnit.MILLIS));
                 summoned.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 summoned.setHp(si.getValue(SkillStat.x, slv));
                 user.addSummoned(summoned);

@@ -6,6 +6,7 @@ import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemOptionLevelData;
 import kinoko.provider.item.SetItemInfo;
+import kinoko.util.TimeUtil;
 import kinoko.world.item.*;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
@@ -137,7 +138,7 @@ public final class EquipStat {
         final Inventory equipped = im.getEquipped();
         for (var entry : equipped.getItems().entrySet()) {
             final BodyPart bodyPart = BodyPart.getByValue(entry.getKey());
-            if (bodyPart == BodyPart.EXT_PENDANT1 && im.getExtSlotExpire().isBefore(Instant.now())) {
+            if (bodyPart == BodyPart.EXT_PENDANT1 && im.getExtSlotExpire().isBefore(TimeUtil.getCurrentTime())) {
                 continue;
             }
             final Item item = entry.getValue();

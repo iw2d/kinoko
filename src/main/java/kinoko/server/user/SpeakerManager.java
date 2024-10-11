@@ -5,6 +5,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.node.ClientStorage;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.TimeUtil;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -47,7 +48,7 @@ public final class SpeakerManager {
     public boolean canSubmitWorldSpeaker(int characterId) {
         lock.lock();
         try {
-            return speakerCooltimes.getOrDefault(characterId, Instant.MIN).isBefore(Instant.now());
+            return speakerCooltimes.getOrDefault(characterId, Instant.MIN).isBefore(TimeUtil.getCurrentTime());
         } finally {
             lock.unlock();
         }
@@ -56,12 +57,12 @@ public final class SpeakerManager {
     public void registerWorldSpeaker(int characterId, boolean avatar, OutPacket outPacket) {
         lock.lock();
         try {
-            speakerCooltimes.put(characterId, Instant.now().plus(ServerConfig.WORLD_SPEAKER_COOLTIME, ChronoUnit.SECONDS));
+            speakerCooltimes.put(characterId, TimeUtil.getCurrentTime().plus(ServerConfig.WORLD_SPEAKER_COOLTIME, ChronoUnit.SECONDS));
             if (avatar) {
                 if (nextBroadcastTime == Instant.MAX) {
                     // No queued broadcasts
                     broadcastPacket(outPacket);
-                    nextBroadcastTime = Instant.now().plus(5, ChronoUnit.SECONDS); // clear or update in 5 seconds
+                    nextBroadcastTime = TimeUtil.getCurrentTime().plus(5, ChronoUnit.SECONDS); // clear or update in 5 seconds
                 } else {
                     // Queue broadcast
                     broadcastQueue.add(outPacket);
@@ -77,7 +78,7 @@ public final class SpeakerManager {
     private void update() {
         lock.lock();
         try {
-            final Instant now = Instant.now();
+            final Instant now = TimeUtil.getCurrentTime();
             if (now.isBefore(nextBroadcastTime)) {
                 return;
             }

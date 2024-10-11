@@ -17,10 +17,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.script.party.HenesysPQ;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.BitFlag;
-import kinoko.util.Encodable;
-import kinoko.util.Lockable;
-import kinoko.util.Util;
+import kinoko.util.*;
 import kinoko.world.GameConstants;
 import kinoko.world.field.ControlledObject;
 import kinoko.world.field.drop.Drop;
@@ -80,9 +77,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
         this.nextSkillUse = Instant.MIN;
-        this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
-        this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
-        this.nextDropItem = template.getDropItemPeriod() > 0 ? Instant.now().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS) : Instant.MAX;
+        this.nextRecovery = TimeUtil.getCurrentTime().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
+        this.removeAfter = template.getRemoveAfter() > 0 ? TimeUtil.getCurrentTime().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
+        this.nextDropItem = template.getDropItemPeriod() > 0 ? TimeUtil.getCurrentTime().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS) : Instant.MAX;
     }
 
     public MobTemplate getTemplate() {
@@ -158,7 +155,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public boolean canUseSkill(MobSkill mobSkill) {
-        if (skillCooltimes.getOrDefault(mobSkill, Instant.MIN).isAfter(Instant.now())) {
+        if (skillCooltimes.getOrDefault(mobSkill, Instant.MIN).isAfter(TimeUtil.getCurrentTime())) {
             return false;
         }
         final SkillInfo si = SkillProvider.getMobSkillInfoById(mobSkill.getSkillId()).orElseThrow();
@@ -177,7 +174,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (mobStat.hasOption(MobTemporaryStat.Seal)) {
             return Optional.empty();
         }
-        if (nextSkillUse.isAfter(Instant.now())) {
+        if (nextSkillUse.isAfter(TimeUtil.getCurrentTime())) {
             return Optional.empty();
         }
         final List<MobSkill> available = template.getSkills().values().stream()
@@ -252,7 +249,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void resetDropItemPeriod() {
         if (template.getDropItemPeriod() > 0) {
-            nextDropItem = Instant.now().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS);
+            nextDropItem = TimeUtil.getCurrentTime().plus(template.getDropItemPeriod(), ChronoUnit.SECONDS);
         }
     }
 

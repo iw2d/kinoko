@@ -14,6 +14,7 @@ import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoType;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
+import kinoko.util.TimeUtil;
 import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
@@ -321,8 +322,8 @@ public final class CashShopHandler {
                     try (var locked = user.acquire()) {
                         final InventoryManager im = locked.get().getInventoryManager();
                         final int addDays = commodity.getItemId() == CashShop.EQUIP_SLOT_EXT_30_DAYS ? 30 : 7;
-                        if (im.getExtSlotExpire().isBefore(Instant.now())) {
-                            im.setExtSlotExpire(Instant.now().plus(addDays, ChronoUnit.DAYS));
+                        if (im.getExtSlotExpire().isBefore(TimeUtil.getCurrentTime())) {
+                            im.setExtSlotExpire(TimeUtil.getCurrentTime().plus(addDays, ChronoUnit.DAYS));
                         } else {
                             im.setExtSlotExpire(im.getExtSlotExpire().plus(addDays, ChronoUnit.DAYS));
                         }
@@ -761,7 +762,7 @@ public final class CashShopHandler {
                 memoIdResult.get(),
                 user.getCharacterName(),
                 user.getCharacterName() + " has sent you a gift! Go check out the Cash Shop.",
-                Instant.now()
+                TimeUtil.getCurrentTime()
         );
         // Save memo and update client
         if (!DatabaseManager.memoAccessor().newMemo(memo, receiverCharacterId)) {

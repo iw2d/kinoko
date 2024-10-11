@@ -20,6 +20,7 @@ import kinoko.script.quest.EvanQuest;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Rect;
+import kinoko.util.TimeUtil;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
@@ -299,7 +300,7 @@ public final class MobHandler {
             final SkillInfo si = skillInfoResult.get();
             if (mob.canUseSkill(mobSkill)) {
                 log.debug("{} : Using mob skill ({}, {})", mob, mai.skillId, mai.slv);
-                final Instant now = Instant.now();
+                final Instant now = TimeUtil.getCurrentTime();
                 mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
                 mob.setNextSkillUse(now.plus(GameConstants.MOB_SKILL_COOLTIME, ChronoUnit.SECONDS));
                 mob.setSkillOnCooltime(mobSkill, now.plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));

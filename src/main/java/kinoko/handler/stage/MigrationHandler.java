@@ -25,6 +25,7 @@ import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
@@ -139,7 +140,7 @@ public final class MigrationHandler {
                         continue;
                     }
                     final Item item = itemEntryResult.get().getValue();
-                    if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(Instant.now())) {
+                    if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(TimeUtil.getCurrentTime())) {
                         // Invalid pet or expired
                         continue;
                     }

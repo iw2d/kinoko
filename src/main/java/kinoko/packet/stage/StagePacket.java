@@ -3,6 +3,7 @@ package kinoko.packet.stage;
 import kinoko.server.cashshop.CashShop;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.TimeUtil;
 import kinoko.util.Util;
 import kinoko.world.user.User;
 
@@ -45,7 +46,7 @@ public final class StagePacket {
             outPacket.encodeByte(false); // bChaseEnable -> int, int
         }
 
-        outPacket.encodeFT(Instant.now()); // ftServer
+        outPacket.encodeFT(TimeUtil.getCurrentTime()); // ftServer
         return outPacket;
     }
 

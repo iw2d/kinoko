@@ -9,6 +9,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Locked;
 import kinoko.util.Rect;
+import kinoko.util.TimeUtil;
 import kinoko.world.field.FieldObject;
 import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.field.mob.BurnedInfo;
@@ -140,7 +141,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
 
     public static AffectedArea mobSkill(Mob owner, SkillInfo si, int slv, int delay) {
         final Rect rect = owner.getRelativeRect(si.getRect(slv));
-        final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
+        final Instant expireTime = TimeUtil.getCurrentTime().plus(si.getDuration(slv), ChronoUnit.MILLIS);
         return new AffectedArea(AffectedAreaType.MobSkill, owner, si.getSkillId(), slv, delay, 1, rect, si.getElemAttr(), expireTime);
     }
 
@@ -154,7 +155,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
 
     public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int interval, int x, int y) {
         final Rect rect = si.getRect(slv).translate(x, y);
-        final Instant expireTime = Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS);
+        final Instant expireTime = TimeUtil.getCurrentTime().plus(si.getDuration(slv), ChronoUnit.MILLIS);
         return new AffectedArea(affectedAreaType, owner, si.getSkillId(), slv, delay, interval, rect, si.getElemAttr(), expireTime);
     }
 }

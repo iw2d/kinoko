@@ -4,6 +4,7 @@ import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.FileTime;
+import kinoko.util.TimeUtil;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
@@ -296,7 +297,7 @@ public final class CharacterData implements Encodable {
         }
         if (flag.hasFlag(DBChar.SKILLCOOLTIME)) {
             final Map<Integer, Long> cooltimes = new HashMap<>();
-            final Instant now = Instant.now();
+            final Instant now = TimeUtil.getCurrentTime();
             final var iter = skillManager.getSkillCooltimes().entrySet().iterator();
             while (iter.hasNext()) {
                 final Map.Entry<Integer, Instant> entry = iter.next();

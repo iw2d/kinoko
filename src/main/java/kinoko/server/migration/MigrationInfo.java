@@ -4,6 +4,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.TimeUtil;
 import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedAssistType;
 import kinoko.world.field.summoned.SummonedEnterType;
@@ -106,7 +107,7 @@ public final class MigrationInfo implements Encodable {
     }
 
     public boolean isExpired() {
-        return Instant.now().isAfter(expireTime);
+        return TimeUtil.getCurrentTime().isAfter(expireTime);
     }
 
     public boolean verify(int channelId, int accountId, int characterId, byte[] machineId, byte[] clientKey) {
@@ -191,7 +192,7 @@ public final class MigrationInfo implements Encodable {
                 user.getMessengerId(),
                 user.getEffectItemId(),
                 user.getAdBoard(),
-                Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS)
+                TimeUtil.getCurrentTime().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS)
         );
     }
 
@@ -208,7 +209,7 @@ public final class MigrationInfo implements Encodable {
                 0,
                 0,
                 null,
-                Instant.now().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS)
+                TimeUtil.getCurrentTime().plus(ServerConfig.CENTRAL_REQUEST_TTL, ChronoUnit.SECONDS)
         );
     }
 

@@ -22,6 +22,7 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
+import kinoko.util.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -201,9 +202,9 @@ public final class CentralServerNode extends Node {
         log.info("Central server listening on port {}", ServerConstants.CENTRAL_PORT);
 
         // Wait for child node connections
-        final Instant start = Instant.now();
+        final Instant start = TimeUtil.getCurrentTime();
         initializeFuture.join();
-        log.info("All servers connected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("All servers connected in {} milliseconds", Duration.between(start, TimeUtil.getCurrentTime()).toMillis());
 
         // Complete initialization for login server node
         final RemoteServerNode loginServerNode = serverStorage.getLoginServerNode().orElseThrow();
@@ -213,7 +214,7 @@ public final class CentralServerNode extends Node {
     @Override
     public void shutdown() throws InterruptedException {
         // Shutdown login server node
-        final Instant start = Instant.now();
+        final Instant start = TimeUtil.getCurrentTime();
         serverStorage.getLoginServerNode().ifPresent((serverNode) -> serverNode.write(CentralPacket.shutdownRequest()));
 
         // Shutdown channel server nodes
@@ -221,7 +222,7 @@ public final class CentralServerNode extends Node {
             serverNode.write(CentralPacket.shutdownRequest());
         }
         shutdownFuture.join();
-        log.info("All servers disconnected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        log.info("All servers disconnected in {} milliseconds", Duration.between(start, TimeUtil.getCurrentTime()).toMillis());
 
         // Close central server
         centralServerFuture.channel().close().sync();

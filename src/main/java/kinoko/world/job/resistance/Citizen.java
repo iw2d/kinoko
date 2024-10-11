@@ -10,6 +10,7 @@ import kinoko.provider.map.Foothold;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.util.TimeUtil;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
@@ -117,7 +118,7 @@ public final class Citizen extends SkillProcessor {
                         field.getFootholdBelow(skill.positionX, skill.positionY).map(Foothold::getSn).orElse(user.getFoothold())
                 );
                 mob.getMobStat().getTemporaryStats().put(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, 0));
-                mob.setRemoveAfter(Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+                mob.setRemoveAfter(TimeUtil.getCurrentTime().plus(si.getDuration(slv), ChronoUnit.MILLIS));
                 mob.setAppearType(MobAppearType.NORMAL);
                 // Add mob to field, force user to be its controller
                 field.getMobPool().addMob(mob);

@@ -2,6 +2,7 @@ package kinoko.world.user.stat;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.TimeUtil;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -24,7 +25,7 @@ public class TemporaryStatOption implements Encodable {
     }
 
     public TemporaryStatOption(int nOption, int rOption, int tOption, DiceInfo diceInfo) {
-        this(nOption, rOption, tOption, diceInfo, tOption == 0 ? Instant.MAX : Instant.now().plus(tOption, ChronoUnit.MILLIS));
+        this(nOption, rOption, tOption, diceInfo, tOption == 0 ? Instant.MAX : TimeUtil.getCurrentTime().plus(tOption, ChronoUnit.MILLIS));
     }
 
     public TemporaryStatOption(int nOption, int rOption, int tOption, Instant expireTime) {

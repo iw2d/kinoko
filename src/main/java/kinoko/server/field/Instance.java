@@ -3,6 +3,7 @@ package kinoko.server.field;
 import kinoko.packet.field.FieldPacket;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.util.Lockable;
+import kinoko.util.TimeUtil;
 import kinoko.world.user.User;
 
 import java.time.Instant;
@@ -61,7 +62,7 @@ public final class Instance implements Lockable<Instance> {
     public void addUser(User user) {
         userMap.put(user.getId(), user);
         // Show clock
-        final int remain = (int) (getExpireTime().getEpochSecond() - Instant.now().getEpochSecond());
+        final int remain = (int) (getExpireTime().getEpochSecond() - TimeUtil.getCurrentTime().getEpochSecond());
         user.write(FieldPacket.clock(remain));
     }
 

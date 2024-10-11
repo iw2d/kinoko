@@ -2,6 +2,7 @@ package kinoko.world.field.mob;
 
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.TimeUtil;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +23,7 @@ public final class MobStatOption implements Encodable {
     }
 
     public MobStatOption(int nOption, int rOption, int tOption) {
-        this(nOption, rOption, tOption, tOption == 0 ? Instant.MAX : Instant.now().plus(tOption, ChronoUnit.MILLIS));
+        this(nOption, rOption, tOption, tOption == 0 ? Instant.MAX : TimeUtil.getCurrentTime().plus(tOption, ChronoUnit.MILLIS));
     }
 
     public Instant getExpireTime() {

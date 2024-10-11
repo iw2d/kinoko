@@ -4,6 +4,7 @@ import kinoko.provider.map.Foothold;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.util.Lockable;
 import kinoko.util.Rect;
+import kinoko.util.TimeUtil;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
 import kinoko.world.user.AvatarLook;
@@ -137,7 +138,7 @@ public final class Summoned extends Life implements Lockable<Summoned> {
     }
 
     public static Summoned from(SkillInfo si, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType) {
-        return Summoned.from(si.getSkillId(), slv, moveAbility, assistType, Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+        return Summoned.from(si.getSkillId(), slv, moveAbility, assistType, TimeUtil.getCurrentTime().plus(si.getDuration(slv), ChronoUnit.MILLIS));
     }
 
     public static Summoned from(int skillId, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
