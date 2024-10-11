@@ -81,10 +81,12 @@ public final class User extends Life implements Lockable<User> {
     private int portableChairId;
     private String adBoard;
     private boolean inTransfer;
+    private Instant nextCheckItemExpire;
 
     public User(Client client, CharacterData characterData) {
         this.client = client;
         this.characterData = characterData;
+        this.nextCheckItemExpire = Instant.MIN;
     }
 
     public Client getClient() {
@@ -337,6 +339,13 @@ public final class User extends Life implements Lockable<User> {
         this.inTransfer = inTransfer;
     }
 
+    public Instant getNextCheckItemExpire() {
+        return nextCheckItemExpire;
+    }
+
+    public void setNextCheckItemExpire(Instant nextCheckItemExpire) {
+        this.nextCheckItemExpire = nextCheckItemExpire;
+    }
 
     // STAT METHODS ----------------------------------------------------------------------------------------------------
 

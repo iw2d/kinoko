@@ -22,6 +22,7 @@ public final class ServerConfig {
     public static final int TRUNK_BASE_SLOTS = Util.getEnv("TRUNK_BASE_SLOTS", 4);
     public static final int FRIEND_MAX_BASE = 20;
     public static final int CYGNUS_LEVEL_MAX = 120;
+    public static final int ITEM_EXPIRE_INTERVAL = 60; // 180 seconds in BMS
     public static final int WORLD_SPEAKER_COOLTIME = 60;
 
     public static final String COMMAND_PREFIX = Util.getEnv("COMMAND_PREFIX", "!");

@@ -88,6 +88,14 @@ public final class MessagePacket {
         return outPacket;
     }
 
+    public static OutPacket generalItemExpire(int itemId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.Message);
+        outPacket.encodeByte(MessageType.GeneralItemExpire.getValue());
+        outPacket.encodeByte(1); // count
+        outPacket.encodeInt(itemId); // nItemID -> CItemInfo::GetItemName
+        return outPacket;
+    }
+
     public static OutPacket system(String format, Object... args) {
         return MessagePacket.system(String.format(format, args));
     }

@@ -9,9 +9,11 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.server.ServerConfig;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.summoned.Summoned;
+import kinoko.world.item.*;
 import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
@@ -22,6 +24,7 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -230,6 +233,61 @@ public final class UserPool extends FieldObjectPool<User> {
                     if (openGate.getExpireTime().isBefore(now)) {
                         openGate.destroy();
                         user.setOpenGate(null);
+                    }
+                }
+                // Expire items
+                if (now.isAfter(user.getNextCheckItemExpire())) {
+                    user.setNextCheckItemExpire(now.plus(ServerConfig.ITEM_EXPIRE_INTERVAL, ChronoUnit.SECONDS));
+                    boolean itemExpired = false;
+                    final InventoryManager im = user.getInventoryManager();
+                    for (InventoryType inventoryType : List.of(InventoryType.EQUIPPED, InventoryType.EQUIP, InventoryType.CONSUME, InventoryType.INSTALL, InventoryType.ETC)) {
+                        final var iter = im.getInventoryByType(inventoryType).getItems().entrySet().iterator();
+                        while (iter.hasNext()) {
+                            final var entry = iter.next();
+                            final int position = entry.getKey();
+                            final Item item = entry.getValue();
+                            if (item.getDateExpire() == null || now.isBefore(item.getDateExpire())) {
+                                continue;
+                            }
+                            // Remove item from inventory
+                            iter.remove();
+                            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(
+                                    inventoryType == InventoryType.EQUIPPED ? InventoryType.EQUIP : inventoryType,
+                                    inventoryType == InventoryType.EQUIPPED ? -position : position
+                            ), false));
+                            user.write(MessagePacket.generalItemExpire(item.getItemId()));
+                            itemExpired = true;
+                        }
+                    }
+                    // Expire cash items and pets
+                    final var iter = im.getCashInventory().getItems().entrySet().iterator();
+                    while (iter.hasNext()) {
+                        final var entry = iter.next();
+                        final int position = entry.getKey();
+                        final Item item = entry.getValue();
+                        if (item.getDateExpire() == null || now.isBefore(item.getDateExpire())) {
+                            continue;
+                        }
+                        if (item.getItemType() == ItemType.PET) {
+                            // Set pet as expired - FileTime.DEFAULT_TIME should be encoded to turn them into dolls
+                            item.setDateExpire(null);
+                            user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.CASH, position, item), false));
+                            // Deactivate pet if required
+                            final Optional<Integer> petIndexResult = user.getPetIndex(item.getItemSn());
+                            if (petIndexResult.isPresent() && user.removePet(petIndexResult.get())) {
+                                user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndexResult.get(), 2)); // The pet's magical time has run out and so it has turned back into a doll.
+                            }
+                        } else {
+                            // Remove item from inventory
+                            iter.remove();
+                            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(InventoryType.CASH, position), false));
+                            user.write(MessagePacket.cashItemExpire(item.getItemId()));
+                        }
+                        itemExpired = true;
+                    }
+                    // Validate stat
+                    if (itemExpired) {
+                        user.validateStat();
                     }
                 }
             }
