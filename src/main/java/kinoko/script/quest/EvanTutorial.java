@@ -13,6 +13,7 @@ public final class EvanTutorial extends ScriptHandler {
     public static void evanAlone(ScriptManager sm) {
         // Dream World : Dream Forest Entrance (900010000)
         // Hidden Street : Lush Forest (900020100)
+
     }
 
     @Script("evantalk00")
@@ -132,8 +133,10 @@ public final class EvanTutorial extends ScriptHandler {
 
     @Script("dragoneyes")
     public static void dragoneyes(ScriptManager sm) {
-		sm.setQRValue(QuestRecordType.EvanDragonEyes, "1");
-		sm.setQRValue(QuestRecordType.EvanDragonEyes, "2");
+        // Dream World : Dream Forest  (900010200)
+        //   scr02 (-661, -12)
+        sm.setQRValue(QuestRecordType.EvanDragonEyes, "1");
+        sm.setQRValue(QuestRecordType.EvanDragonEyes, "2");
     }
 
     @Script("dragon_dream")
@@ -471,7 +474,7 @@ public final class EvanTutorial extends ScriptHandler {
     @Script("q22002e")
     public static void q22002e(ScriptManager sm) {
         // Sandwich for Breakfast (22002 - end)
-		sm.sayNext("Did you eat your breakfast, Evan? Then, will you do me a favor?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i1003028# 1 #t1003028#\r\n#i2022621# 5 #t2022621#s\r\n#i2022622# 5 #t2022622#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 60 exp");
+        sm.sayNext("Did you eat your breakfast, Evan? Then, will you do me a favor?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i1003028# 1 #t1003028#\r\n#i2022621# 5 #t2022621#s\r\n#i2022622# 5 #t2022622#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 60 exp");
         if (!sm.addItems(List.of(
                 Tuple.of(1003028, 1), // Straw Hat
                 Tuple.of(2022621, 5), // Tasty Milk

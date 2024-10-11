@@ -16,27 +16,23 @@ import java.util.List;
 
 public final class EvanQuest extends ScriptHandler {
     public static final int SAFE_GUARD = 9300389;
-    //TODO:
-    //-- @Script("froghiver") : add removeNpc script function to remove Hiver (1013206)
 
     // FIELDS
     @Script("dollCave01")
     public static void dollCave01(ScriptManager sm) {
-        // Not sure what this is for. (910050300)
     }
 
     @Script("moveSDIRit")
     public static void moveSDIRit(ScriptManager sm) {
-        // Not sure what this is for. Probably handles the instance which is handled elsewhere.
     }
 
     @Script("move_RitSDI")
     public static void move_RitSDI(ScriptManager sm) {
-        // Not sure what this is for. Probably handles the instance which is handled elsewhere.
     }
 
     @Script("onSDI")
     public static void onSDI(ScriptManager sm) {
+        // Slumbering Dragon Island  : Snowy Forest (914100010)
         if (sm.getQRValue(QuestRecordType.EvanSnowDragon).isBlank()) {
             sm.setQRValue(QuestRecordType.EvanSnowDragon, "1");
         }
@@ -44,12 +40,19 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("evanTogether")
     public static void evanTogether(ScriptManager sm) {
-        // Not sure what this is for. Skipping.
     }
 
-    // NPCS
+
+    // NPCS ------------------------------------------------------------------------------------------------------------
+
     @Script("periPatrol")
     public static void periPatrol(ScriptManager sm) {
+        // Perion Warning Post (1022107)
+        //   North Rocky Mountain : Dusty Wind Hill (102020100)
+        //   Burnt Land : Wild Boar Land (102030000)
+        //   Burnt Land : Wild Pig Land (102030100)
+        //   Burnt Land : Armor Pig Land (102030200)
+        //   Burnt Land : Burning Heat (102030300)
         if (!sm.hasQuestStarted(22530) || sm.getQRValue(QuestRecordType.EvanPerionSigns).equals("5")) {
             sm.sayOk("Information regarding the creatures of the area is displayed.");
         } else {
@@ -175,6 +178,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("downCamillar")
     public static void downCamillar(ScriptManager sm) {
+        // Camila (1013201)
         if (sm.hasQuestStarted(22557)) {
             if (sm.getUser().getField().getMobPool().getCount() > 0) {
                 sm.setPlayerAsSpeaker(true);
@@ -189,6 +193,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("contimoveSDIRit")
     public static void contimoveSDIRit(ScriptManager sm) {
+        // Olaf (1002101)
+        //   Lith Harbor : Lith Harbor (104000000)
         if (sm.hasQuestCompleted(22579)) {
             if (!sm.askAccept("Would you like to set sail? It's a pretty lengthy trip, it'll take some time to get there. Approximately #b15 minutes#k... It's not the kind of place you want to go to without reason. Would you like to go?")) {
                 sm.sayOk("Just come back and let me know if you change your mind.");
@@ -202,6 +208,10 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("contimoveRitSDI")
     public static void contimoveRitSDI(ScriptManager sm) {
+        // Olaf (1013207)
+        //   Olaf's Voyage : To the Slumbering Dragon Island  (200090080)
+        //   Olaf's Voyage : To Lith Harbor (200090090)
+        //   Slumbering Dragon Island  : Temporary Harbor  (914100000)
         if (sm.getUser().getFieldId() == 914100000) {
             if (!sm.askAccept("Do you want to return to #b#m104000000##k?")) {
                 sm.sayOk("Are you sure? What are you even doing here?");
@@ -232,6 +242,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("ibech")
     public static void ibech(ScriptManager sm) {
+        // Hiver : Black Wing Captain (1013203)
+        //   Hidden Street : Frog House  (922030000)
         if (sm.hasQuestStarted(22582)) {
             sm.warp(922030002, "out00");
             return;
@@ -255,7 +267,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("Afirentalk")
     public static void Afirentalk(ScriptManager sm) {
-        // Yes this is how they named it
+        // Afrien (1013205)
+        //   Afrien's Memory  : Behind the Stronghold  (900030000)
         if (sm.hasQuestStarted(22591)) {
             sm.sayNext("Are you okay, master? You look so tired...");
             sm.setPlayerAsSpeaker(true);
@@ -302,6 +315,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("froghiver")
     public static void froghiver(ScriptManager sm) {
+        // Hiver (1013206)
         if (sm.hasQuestStarted(22596)) {
             sm.sayNext("I can't believe you've come all this way. Judging by the look on your face, you are quite angry.");
             sm.setPlayerAsSpeaker(true);
@@ -310,12 +324,13 @@ public final class EvanQuest extends ScriptHandler {
             sm.sayBoth("What do you mean I deceived you? You let yourself imagine what you wanted. Anyway, thanks to you, we were able to accomplish quite a lot. But you are nothing but a hindrance now.");
             sm.sayBoth("You better get out of here. Now!");
             sm.spawnMob(9300393, MobAppearType.NORMAL, 230, 31);
+            // TODO: add removeNpc script function to remove Hiver (1013206)
         }
     }
 
     @Script("SDIhiver")
     public static void SDIhiver(ScriptManager sm) {
-        // Should be no need to remove him from the map as it's instanced + auto warp after hitting next
+        // Hiver (1013204)
         if (sm.getUser().getField().getMobPool().getCount() > 0) {
             sm.sayOk("Heh heh heh...");
             return;
@@ -325,9 +340,13 @@ public final class EvanQuest extends ScriptHandler {
         sm.warp(914100021, "out00");
     }
 
-    // PORTALS
+
+    // PORTALS ---------------------------------------------------------------------------------------------------------
+
     @Script("evanEntrance")
     public static void evanEntrance(ScriptManager sm) {
+        // Farm Street : Large Forest Trail 2 (100030320)
+        //   west00 (-2046, 36)
         if (sm.getUser().getCharacterStat().getJob() == 2001) {
             sm.message("You are not allowed to leave the farm yet.");
             return;
@@ -337,6 +356,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterDollcave")
     public static void enterDollcave(ScriptManager sm) {
+        // South Rocky Mountain : Rocky Wasteland (102010100)
+        //   in00 (502, 1901)
         if (sm.hasQuestStarted(22549) || sm.hasQuestCompleted(22549)) {
             sm.playPortalSE();
             sm.warp(910050300, "out00");
@@ -347,6 +368,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("evanGolemDoor")
     public static void evanGolemDoor(ScriptManager sm) {
+        // Singing Mushroom Forest : Windflower Forest (100020200)
+        //   east00 (1287, -470)
         if (sm.hasQuestStarted(22557)) {
             sm.playPortalSE();
             sm.warpInstance(910600000, "out00", 100020200, 60 * 10);
@@ -359,6 +382,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("evanDollGR")
     public static void evanDollGR(ScriptManager sm) {
+        // Golem's Temple : Golem's Temple Entrance (100040000)
+        //   scr00 (1453, 252)
         if (sm.hasQuestStarted(22556)) {
             sm.setQRValue(QuestRecordType.EvanEnragedGolem, "1");
             sm.setPlayerAsSpeaker(true);
@@ -373,12 +398,16 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterBlackRoom")
     public static void enterBlackRoom(ScriptManager sm) {
+        // Orbis : Orbis Tower <16th Floor> (200080600)
+        //   in00 (-46, -1447)
         sm.playPortalSE();
         sm.warp(200080601, "out00");
     }
 
     @Script("goQuest_22575")
     public static void goQuest_22575(ScriptManager sm) {
+        // El Nath : Chief's Residence (211000001)
+        //   out01 (304, 185)
         if (sm.hasQuestStarted(22575)) {
             sm.playPortalSE();
             sm.warp(921110100, "out00");
@@ -389,6 +418,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("goQuest_22404")
     public static void goQuest_22404(ScriptManager sm) {
+        // Aquarium : Zoo (230000003)
+        //   out02 (-7, -150)
         if (sm.hasQuestStarted(22404)) {
             sm.playPortalSE();
             sm.warp(923030000, "out00");
@@ -400,6 +431,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterSnowDragon")
     public static void enterSnowDragon(ScriptManager sm) {
+        // Slumbering Dragon Island  : Snowy Forest (914100010)
+        //   in00 (2545, 84)
         if (sm.hasQuestStarted(22580)) {
             sm.playPortalSE();
             sm.warp(914100020, "out00");
@@ -427,6 +460,17 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("stopIceWall")
     public static void stopIceWall(ScriptManager sm) {
+        // Slumbering Dragon Island  : Cave of Silence (914100020)
+        //   scr00 (56, 99)
+        //   scr01 (56, 2)
+        //   scr02 (56, -95)
+        //   scr03 (56, -193)
+        //   scr04 (56, -290)
+        //   scr05 (153, 100)
+        //   scr06 (153, 2)
+        //   scr07 (154, -93)
+        //   scr08 (155, -192)
+        //   scr09 (155, -290)
         if (sm.getQRValue(QuestRecordType.EvanSnowDragon).equals("1")) {
             sm.setQRValue(QuestRecordType.EvanSnowDragon, "2");
             sm.warp(914100020, "out00");
@@ -437,6 +481,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterBlackFrog")
     public static void enterBlackFrog(ScriptManager sm) {
+        // Ludibrium : Ludibrium Village (220000300)
+        //   scr00 (703, 104)
         sm.playPortalSE();
         if (sm.hasQuestCompleted(22596)) {
             // After storyline, warp to map WITHOUT Hiver
@@ -459,6 +505,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterBlackBC")
     public static void enterBlackBC(ScriptManager sm) {
+        // Ludibrium : Sky Terrace<5> (220011000)
+        //   in00 (613, 136)
         sm.playPortalSE();
         if (sm.hasQuestStarted(22583)) {
             sm.warpInstance(List.of(
@@ -480,6 +528,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("enterSDI")
     public static void enterSDI(ScriptManager sm) {
+        // Hidden Street : Frog House  (922030000)
+        //   tel00 (-205, 32)
         if (sm.hasQuestStarted(22588)) {
             sm.playPortalSE();
             sm.warpInstance(914100020, "out00", 922030000, 60 * 10);
@@ -489,6 +539,8 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("outSDI")
     public static void outSDI(ScriptManager sm) {
+        // Slumbering Dragon Island  : Cave of Silence (914100022)
+        //   out00 (-548, 143)
         sm.playPortalSE();
         sm.setQRValue(QuestRecordType.EvanExitCave, "1");
         sm.warp(914100010, "in00");
@@ -496,13 +548,19 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("outAfrienMemory")
     public static void outAfrienMemory(ScriptManager sm) {
+        // Afrien's Memory  : Behind the Stronghold  (900030000)
+        //   out00 (857, 4)
         sm.setPlayerAsSpeaker(true);
         sm.sayOk("#bAfrien is in the other direction.");
     }
 
-    // REACTORS
+
+    // REACTORS --------------------------------------------------------------------------------------------------------
+
     @Script("farmItem0")
     public static void farmItem0(ScriptManager sm) {
+        // farmItem0 (1002008)
+        //   Farm Street : Farm Center (100030300)
         sm.dropRewards(List.of(
                 Reward.item(4032452, 1, 1, 1.0, 22502) // Bundle of Hay
         ));
@@ -510,16 +568,20 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("SDIScript0")
     public static void SDIScript0(ScriptManager sm) {
+        // SDIScript0 (1409000)
+        //   Slumbering Dragon Island  : Cave of Silence (914100022)
         sm.setPlayerAsSpeaker(true);
         sm.sayOk("#b(The cave begins to shake violently.)");
         sm.setQRValue(QuestRecordType.EvanIceWall, "1");
         sm.warp(914100022, "out00");
     }
 
-    // QUESTS - JOB ADVANCEMENT
+
+    // QUESTS - JOB ADVANCEMENT ----------------------------------------------------------------------------------------
+
     @Script("q22100s")
     public static void q22100s(ScriptManager sm) {
-        // First Job Advancement (22100 - Start / End)
+        // Dragon Master 1st Job Advancement (22100 - start)
         sm.forceStartQuest(22100);
         sm.forceCompleteQuest(22100);
         sm.setJob(Job.EVAN_1);
@@ -530,7 +592,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22101s")
     public static void q22101s(ScriptManager sm) {
-        // Second Job Advancement (22101 - Start / End)
+        // Dragon Master 2nd Job Advancement (22101 - start)
         sm.forceStartQuest(22101);
         sm.forceCompleteQuest(22101);
         sm.setJob(Job.EVAN_2);
@@ -538,7 +600,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22102s")
     public static void q22102s(ScriptManager sm) {
-        // Third Job Advancement (22102 - Start / End)
+        // Dragon Master 3rd Job Advancement (22102 - start)
         sm.forceStartQuest(22102);
         sm.forceCompleteQuest(22102);
         sm.setJob(Job.EVAN_3);
@@ -550,7 +612,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22103s")
     public static void q22103s(ScriptManager sm) {
-        // Fourth Job Advancement (22103 - Start / End)
+        // Dragon Master 4th Job Advancement (22103 - start)
         sm.forceStartQuest(22103);
         sm.forceCompleteQuest(22103);
         sm.setJob(Job.EVAN_4);
@@ -558,7 +620,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22104s")
     public static void q22104s(ScriptManager sm) {
-        // Fifth Job Advancement (22104 - Start / End)
+        // Dragon Master 5th Job Advancement (22104 - start)
         sm.forceStartQuest(22104);
         sm.forceCompleteQuest(22104);
         sm.setJob(Job.EVAN_5);
@@ -566,7 +628,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22105s")
     public static void q22105s(ScriptManager sm) {
-        // Six Job Advancement (22105 - Start / End)
+        // Dragon Master 6th Job Advancement (22105 - start)
         sm.forceStartQuest(22105);
         sm.forceCompleteQuest(22105);
         sm.setJob(Job.EVAN_6);
@@ -578,7 +640,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22106s")
     public static void q22106s(ScriptManager sm) {
-        // Seventh Job Advancement (22106 - Start / End)
+        // Dragon Master 7th Job Advancement (22106 - start)
         sm.forceStartQuest(22106);
         sm.forceCompleteQuest(22106);
         sm.setJob(Job.EVAN_7);
@@ -588,7 +650,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22107s")
     public static void q22107s(ScriptManager sm) {
-        // Eighth Job Advancement (22107 - Start / End)
+        // Dragon Master 8th Job Advancement (22107 - start)
         sm.forceStartQuest(22107);
         sm.forceCompleteQuest(22107);
         sm.setJob(Job.EVAN_8);
@@ -596,7 +658,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22108s")
     public static void q22108s(ScriptManager sm) {
-        // Ninth Job Advancement (22108 - Start / End)
+        // Dragon Master 9th Job Advancement (22108 - start)
         sm.forceStartQuest(22108);
         sm.forceCompleteQuest(22108);
         sm.setJob(Job.EVAN_9);
@@ -613,7 +675,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22109s")
     public static void q22109s(ScriptManager sm) {
-        // Tenth Job Advancement (22109 - Start / End)
+        // Dragon Master 10th Job Advancement (22109 - start)
         sm.forceStartQuest(22109);
         sm.forceCompleteQuest(22109);
         sm.setJob(Job.EVAN_10);
@@ -625,10 +687,9 @@ public final class EvanQuest extends ScriptHandler {
         sm.addSkill(22181003, 0, 20); // Soul Stone
     }
 
-    // QUESTS - GENERAL
     @Script("q2344s")
     public static void q2344s(ScriptManager sm) {
-        // Mushking Empire in Danger (2344 - Start) -- not GMS-like. Whatever. Copy and pasted from the other job's scripts.
+        // Mushking Empire in Danger (2344 - start)
         if (!sm.askAccept("Evan, your progress is astonishing! You look like you're ready for this now. I have something I'd like to ask you for help. Are you willing to listen?")) {
             sm.sayNext("Really? It's an urgent matter, so if you have some time, please see me.");
             return;
@@ -661,7 +722,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q2344e")
     public static void q2344e(ScriptManager sm) {
-        // Mushking Empire in Danger (2344 - End) -- IS GMS-like :o most videos skip the first part of this quest fml
+        // Mushking Empire in Danger (2344 - end)
         sm.sayNext("Huh? #b#t4032375##k? What's this? You're the one sent here to save our #bMushroom Kingdom#k?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bY... Yesss?");
@@ -672,10 +733,12 @@ public final class EvanQuest extends ScriptHandler {
         sm.removeItem(4032375);
     }
 
-    // QUESTS - EVAN MOUNT
+
+    // QUESTS - EVAN MOUNT ---------------------------------------------------------------------------------------------
+
     @Script("q22401s")
     public static void q22401s(ScriptManager sm) {
-        // Is Dragon Mounting Possible? (q22401s - Start)
+        // Is Dragon Mounting Possible? (22401 - start)
         sm.sayNext("Master, what is it? Huh? Mounting? Isn't that like riding around on pigs, birds, or wolves? What about it?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWell, I was wondering if you think it's possible for me to ride an Onyx Dragon?");
@@ -711,7 +774,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22403s")
     public static void q22403s(ScriptManager sm) {
-        // In Search of a Cool Saddle (22403 - Start)
+        // In Search of a Cool Saddle (22403 - start)
         sm.sayNext("What gives you the right to step into Ereve without permission?! State your name, job, and purpose! If you lie or if your purpose is not adequate, you will not be allowed to enter.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bThis is a restricted area? But I've seen so many people enter and leave freely...");
@@ -742,7 +805,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22404s")
     public static void q22404s(ScriptManager sm) {
-        // Making a Saddle (22404 - Start)
+        // Making a Saddle (22404 - start)
         sm.sayNext("Welcome to the #b#m230000000##k! Are you an explorer? What? You want a saddle so you can ride the animal standing next to you?");
         sm.sayBoth("Hmm... That is a really strange-looking lizard. It almost looks like a dragon! Of course, I doubt anyone would ride a dragon! ... That's a REALLY peculiar looking lizard there! Sorry for repeating myself but I'm mesmerized by him for some reason!");
         sm.sayBoth("Anyway, you're looking to mount and ride this lizard, right? I'm an animal expert, I've measured more creatures than you can imagine so I know my stuff! Though, I can't really tell the exact size of this specific lizard. May I take some measurements?");
@@ -764,7 +827,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22406s")
     public static void q22406s(ScriptManager sm) {
-        // Uncomfortable Saddle (22406 - Start)
+        // Uncomfortable Saddle (22406 - start)
         sm.sayNext("Master, this saddle is getting pretty uncomfortable. It's too small!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bIt's getting pretty uncomfortable for me too. There's rips, tears, and holes everywhere!");
@@ -784,7 +847,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22411s")
     public static void q22411s(ScriptManager sm) {
-        // Uncomfortable Saddle II (22411 - Start)
+        // Uncomfortable Saddle II (22411 - start)
         sm.sayNext("Master, does seeing me all grown up remind you of anything?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bAre you talking about your saddle?");
@@ -810,10 +873,12 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayOk("#bHmm, you're right. We don't really have a choice, it'll be pricey but I can't NOT get you one. Let's go get another saddle for you.");
     }
 
-    // QUESTS - STORY
+
+    // QUESTS - STORY --------------------------------------------------------------------------------------------------
+
     @Script("q23908s")
     public static void q23908s(ScriptManager sm) {
-        // Mir's Reaction (23908 - Start)
+        // Mir's Reaction (23908 - start)
         sm.sayNext("Master! Doesn't the relationship between the town of #m310000000# and the group we joined strike you as... Weird? We seem to be getting more and more involved with the Black Wings. Are you sure that's a good thing?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bYeah, the more we help the Black Wings, the more I get the feeling that something is... Off. The people in #m310000000# really dislike the Black Wings. It really makes me wonder...");
@@ -829,7 +894,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22500s")
     public static void q22500s(ScriptManager sm) {
-        // Baby Dragon Awakens (22500 - Start)
+        // Baby Dragon Awakens (22500 - start)
         sm.sayNext("I'm finally here! *inhales* Ah, this must be air I'm breathing. And that, that must be the sun! And that, a tree! And that, a plant! And that, a flower! Woohahahaha! This is incredible! This is much better than I imagined the world to be while I was trapped inside the egg. And you... Are you my master? Hm, I pictured you differently.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWhoooooa, it talks!");
@@ -866,7 +931,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22501s")
     public static void q22501s(ScriptManager sm) {
-        // Hungry Baby Dragon (22501 - Start)
+        // Hungry Baby Dragon (22501 - start)
         sm.sayNext("Yo, master. Now that I've shown you what I can do, it's your turn. Prove to me...that you can find food! I'm starving. You can use my power now, so you have to take care of me.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bEh, I still don't get what's going on, but I can't let a poor little critter like you starve, right? Food, you say? What do you want to eat?");
@@ -883,7 +948,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22502s")
     public static void q22502s(ScriptManager sm) {
-        // A Bite of Hay (22502 - Start)
+        // A Bite of Hay (22502 - start)
         if (!sm.askAccept("Wouldn't a lizard enjoy a #b#t4032452##k, like a cow? There are a lot of #bHaystacks#k nearby, so try feeding it that.")) {
             sm.sayNext("Hm, you never know unless you try. That lizard is big enough to be on Maple's Believe It Or Not. It might eat hay.");
             return;
@@ -894,7 +959,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22503s")
     public static void q22503s(ScriptManager sm) {
-        // A Bite of Pork (22503 - Start)
+        // A Bite of Pork (22503 - start)
         sm.sayNext("No, no, no. This isn't what I need. I need something more nutritious, master!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bHm... So you're not a herbivore. You might be a carnivore. You're a Dragon, after all. How does some #t4032453# sound?");
@@ -910,7 +975,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22504s")
     public static void q22504s(ScriptManager sm) {
-        // Tasty Milk 1 (22504 - Start)
+        // Tasty Milk 1 (22504 - start)
         sm.sayNext("Ugh. This isn't going to work. I need something else. No plants. No meat. What, you have no idea? But you're the master, and you're older than me, too. You must know what'd be good for me!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bBut I don't. It's not like age has anything to do with this...");
@@ -926,7 +991,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22507s")
     public static void q22507s(ScriptManager sm) {
-        // What Is A Dragon Master? (22507 - Start)
+        // What is a Dragon Master? (22507 - start)
         sm.sayNext("I knew it! I knew we were connected, master! When you get stronger, I get stronger, too. And when I get stronger, you can use my strength! That's our pact. I knew I picked a good master!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI see. How did we end up in this pact anyway?");
@@ -969,7 +1034,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22510s")
     public static void q22510s(ScriptManager sm) {
-        // Letter Delivery (22510 - Start)
+        // Letter Delivery (22510 - start)
         sm.sayNext("Hm? What is it, Evan? Are you here to help your old dad? Huh? What do you mean, you defeated the #o1210111#s?! Geez, are you hurt?!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI'm fine, Dad! It was easy."); // In GMS, this was displayed as menu option with the text above for some reason. Changed to fit with the rest of the scripts lol
@@ -990,7 +1055,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22512s")
     public static void q22512s(ScriptManager sm) {
-        // The Dragon Master's Calling (22512 - Start)
+        // The Dragon Master's Calling (22512 - start)
         sm.sayNext("Master! I'm touched! You are such a good person. Let's help all the people who need our help, okay? That's our calling!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWhat the...? What calling?");
@@ -1010,7 +1075,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22514s")
     public static void q22514s(ScriptManager sm) {
-        // Let's Train (22514 - Start)
+        // Let's Train (22514 - start)
         sm.sayNext("Let's train and get stronger, then! Let's train until we can beat a Blue Mushroom with ease, then go back and help that lady! All you have to do is train! Train! Traaaaaaaaaaiiiiiiiiinnnnn!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#b(Geez, this dragon isn't going to let up!)"); // not GMS-like, gamers don't read text. No videos have this line complete.
@@ -1031,7 +1096,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22518s")
     public static void q22518s(ScriptManager sm) {
-        // Power B. Fore's Never Ending Paranoia (22518 - Start)
+        // Power B. Fore's Never Ending Paranoia (22518 - start)
         sm.sayNext("I just don't believe it. That Stan is... the same miser who wouldn't speak to me for two years because I ate one of his candies. The same cheapskate that loaned me 3,000 mesos then calculated interest for each SSECOND I was late... I just don't believe it!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#b(Wow, I had no idea that #p1012003# was such a grinch...)");
@@ -1050,7 +1115,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22536s")
     public static void q22536s(ScriptManager sm) {
-        // Kerning City Investigation: Nella (22536 - Start)
+        // Kerning City Investigation: Nella (22536 - start)
         sm.sayNext("Hmm? I don't recall seeing you around here before. What brings you to #b#m103000000##k? Are you here to become a Thief?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bHave you caught a whiff of anyone smelling of herbs?");
@@ -1084,7 +1149,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22541s")
     public static void q22541s(ScriptManager sm) {
-        // Where's the Book (22541 - Start) -- Not GMS-like. I could only find a MSEA video and... Engrish. Let's say that. I "retranslated" this.
+        // Where's the Book? 1 (22541 - start)
         sm.sayNext("Do you come seeking knowledge? Remember that a constant thirst for knowledge never leads to any good. Continue growing your willpower and you will find boundless power within yourself. Excuse me, are you here for a book?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI'm looking for #t4161050#.");
@@ -1112,7 +1177,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22546e")
     public static void q22546e(ScriptManager sm) {
-        // Dragon Types and Characteristics (Vol. II) (22546 - End) -- See above.
+        // Dragon Types and Characteristics (Vol. II) (22546 - end)
         sm.sayNext("Ahh... yes, you've returned! I heard from #b#p1032104##k that you traveled all around #bVictoria Island#k to retrieve that book. I hope it contained the information you needed. What did you find out?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWell, I learned about Onyx Dragons, they're the most fascinating to me.");
@@ -1136,7 +1201,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22560s")
     public static void q22560s(ScriptManager sm) {
-        // Condition for Joining the Secret Organization 1 (22560 - Start)
+        // Condition for Joining the Secret Organization 1 (22560 - start)
         sm.sayNext("Great to see you again, lifesaver! My master has been very busy lately, letting his wounds heal and finding a new base for us, which is why there has been no communication from him lately. He just made contact recently, though!");
         sm.sayBoth("I told my master about you and he agreed that you could join the secret organization! There is one condition, however. I think it must be the entrance exam!");
         if (!sm.askAccept("A strong fancy hero like you should be able to pass the test, I think. Should I tell you about the test?")) {
@@ -1150,7 +1215,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22564e")
     public static void q22564e(ScriptManager sm) {
-        // Knowledge About Dragons 3 (22564 - End)
+        // Knowledge about Dragons 3 (22564 - end)
         sm.sayNext("Hmm. You look like a human, so what brings you to the Halflingers' village of #m240000000#? Ack! That... That dragon next to you is... AN ONYX DRAGON?! That would make you the human #b#p1032001##k was talking about? The human with the Onyx Dragon?!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#b(#p2081000# must indeed be a Halflinger because he instantly recognized #p1013000# as an Onyx Dragon. Since he's a Halflinger, it is unlikely he would do any harm to #p1013000#.)#k");
@@ -1200,7 +1265,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22565s")
     public static void q22565s(ScriptManager sm) {
-        // Never Give Up (22565 - Start)
+        // Never Give Up! (22565 - start)
         sm.sayNext("Master, do you really think I'm the only survivor of my race? Are the others really all gone? Why were they killed? And why was I spared? I just can't figure it out, and it makes me so sad...");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#b#p1013000#...");
@@ -1219,7 +1284,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22567e")
     public static void q22567e(ScriptManager sm) {
-        // Secret Organization's First Mission (22567 - End)
+        // Secret Organization's First Mission (22567 - end)
         sm.setSpeakerOnRight(true);
         sm.setPlayerAsSpeaker(true);
         sm.sayOk("#bAlright, just got to put these back here and replace the brick...#k\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 22500 exp\r\n#fUI/UIWindow2.img/QuestIcon/10/0# 1 sp");
@@ -1250,7 +1315,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22575s")
     public static void q22575s(ScriptManager sm) {
-        // Secret Organization's Second Mission (22575 - Start)
+        // Secret Organization's Second Mission (22575 - start)
         sm.sayNext("Hello, Mr. Evan. You look shocked. I suppose I did just abruptly talk to you seemingly from no where, huh? Don't worry, I'm not a suspicious person. I am a member of the organization you just joined.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bAre you the owner of that abandoned doll?!");
@@ -1286,7 +1351,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22578s")
     public static void q22578s(ScriptManager sm) {
-        // Question about the Secret Organization (22578 - Start)
+        // Question about the Secret Organization (22578 - start)
         sm.sayNext("Master! Master! Nicely done! Do you think your last mission was of great help to the people of #bMaple World#k?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWell, I defeated most of the zombies in #m211000000#, so it must have been a good thing, right?");
@@ -1317,7 +1382,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22581s")
     public static void q22581s(ScriptManager sm) {
-        // Before Receiving the Secret Organization's Third Mission (22581 - Start)
+        // Before Receiving the Secret Organization's Third Mission (22581 - start)
         sm.sayNext("It's been quite some time, Mr. Evan. How are you? We are doing pretty well thanks to you help. It's time for your next mission.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bCan I ask a question first?");
@@ -1341,7 +1406,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22582s")
     public static void q22582s(ScriptManager sm) {
-        // Secret Organization's Third Mission (22582 - Start)
+        // Secret Organization's Third Mission (22582 - start)
         if (!sm.askAccept("Your third mission is to collect #r100#k #b#t4000594##k from #b#o9001028##k.\r\n\r\n#bI will have to take you to where they are.#k")) {
             sm.sayNext("Come back and see me when you're ready. Don't wait too long, though...");
             return;
@@ -1352,7 +1417,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22582e")
     public static void q22582e(ScriptManager sm) {
-        // Secret Organization's Third Mission (22582 - End)
+        // Secret Organization's Third Mission (22582 - end)
         if (!sm.askYesNo("Heh! You completed the task? Please hand over the #b#t4000594##ks.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 50000 exp")) {
             sm.sayOk("What? Hand them over!");
             return;
@@ -1371,7 +1436,6 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22583s")
     public static void q22583s(ScriptManager sm) {
-        // Releasing the Free Spirits (22583 - Start)
         if (!sm.askYesNo("This mission isn't complete yet, I have another task for you. Are you ready?")) {
             sm.sayOk("Please come back as soon as possible.");
             return;
@@ -1392,7 +1456,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22585s")
     public static void q22585s(ScriptManager sm) {
-        // Suspicions About the Secret Organization (22585 - Start)
+        // Suspicions about the Secret Organization (22585 - start)
         sm.sayNext("Look, master. Don't you think the mission you just completed for the Black Wings is a little strange? Things just don't add up! I thought dropping off the Free Spirit was supposed to be a good thing?!");
         sm.sayBoth("Doesn't it seem unnecessary for them to have wrapped it in a pouch like that? And what about the fact that you could only unwrap the pouch in front of the #m922030010#? If the intention was to free it, why does it matter where you let it go?");
         sm.sayBoth("And then, did you hear the #o9300389#s screaming when you unwrapped the pouch? Remember how mad they were that we were getting in their way? Do you really think the #o9300389#s were the bad guys?");
@@ -1411,7 +1475,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22587s")
     public static void q22587s(ScriptManager sm) {
-        // Map of Turtle Island (22587 - Start)
+        // Map of Turtle Island (22587 - start)
         sm.sayNext("Do you like adventure? You exude a strong energy, it's quite amazing. So, what is someone like you doing in a town like this? Are you here to see me?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bDo you have the Map of Turtle Island?");
@@ -1438,7 +1502,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22591s")
     public static void q22591s(ScriptManager sm) {
-        // The Past, Onyx Dragons, the Black Mage (22591 - Start)
+        // The Past, Onyx Dragons, Black Mage (22591 - start)
         sm.sayNext("Hundreds of years ago in Maple World, there were many Onyx Dragons. There were just as many humans who loved the Onyx Dragons very much... We, my friend Freud and I, always hoped that humans and the Onyx Dragons could forever live in peace...");
         sm.sayBoth("As powerful as we are, Onyx Dragons are born with incomplete spirits. Humans are born with strong wills but weak bodies. Put the two together, and a Dragon Master is born. We wanted the two races to exist in a symbolic relationship, each helping each.");
         sm.sayNext("Unfortunately, our wish was destroyed by the #rBlack Mage#k.");
@@ -1452,7 +1516,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22593s")
     public static void q22593s(ScriptManager sm) {
-        // Results of the First Mission (22593 - Start)
+        // Result of the First Mission (22593 - start)
         sm.sayNext("Hmm? Is there something I can do for you? You have such a determined expression.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI need to know if the plants in #m200000000# grew abnormally fast.");
@@ -1467,7 +1531,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22594s")
     public static void q22594s(ScriptManager sm) {
-        // Results of the Second Mission (22594 - Start)
+        // Result of the Second Mission (22594 - start)
         sm.sayNext("What is it? You don't look like you require my teachings.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI just... I need to know if it's a good thing to eliminate monsters around #m211000000#?");
@@ -1493,7 +1557,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22595s")
     public static void q22595s(ScriptManager sm) {
-        // Results of the Third Mission (22595 - Start)
+        // Result of the Third Mission (22595 - start)
         sm.sayNext("Hi there. I'm a #b#m220000000# Guard#k and my name is #b#p2041004##k. Is there something I can help you with?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI need to ask about #o9300390#.#k");
@@ -1509,7 +1573,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22602s")
     public static void q22602s(ScriptManager sm) {
-        // After Shedding 1 (22602 - Start)
+        // After Shedding 1 (22602 - start)
         sm.sayNext("Master! Look! I've grown some more!");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bOh my! You really grew! Whoa, your voice is even different!");
@@ -1551,7 +1615,7 @@ public final class EvanQuest extends ScriptHandler {
 
     @Script("q22603s")
     public static void q22603s(ScriptManager sm) {
-        // After Shedding 2 (22603 - Start)
+        // After Shedding 2 (22603 - start)
         sm.sayNext("Master, look. I think I'm really coming into my own strength.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bYou're right. You look quite imposing. I can feel so much of the strength of an Onyx Dragon!");
