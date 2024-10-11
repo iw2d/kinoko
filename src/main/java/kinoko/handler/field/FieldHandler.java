@@ -14,6 +14,7 @@ import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropLeaveType;
+import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
@@ -108,11 +109,30 @@ public final class FieldHandler {
 
             // Add drop to inventory
             if (drop.isMoney()) {
-                if (!im.addMoney(drop.getMoney())) {
+                int money = drop.getMoney();
+                if (drop.getOwnType() == DropOwnType.PARTYOWN) {
+                    final List<User> partyMembers = user.getField().getUserPool().getPartyMembers(user.getPartyId());
+                    if (!partyMembers.isEmpty()) {
+                        final int split = money / partyMembers.size();
+                        for (User member : partyMembers) {
+                            if (member.getCharacterId() == user.getCharacterId()) {
+                                continue;
+                            }
+                            try (var lockedMember = member.acquire()) {
+                                if (member.getInventoryManager().addMoney(split)) {
+                                    money -= split;
+                                    member.write(WvsContext.statChanged(Stat.MONEY, member.getInventoryManager().getMoney(), false));
+                                    member.write(MessagePacket.pickUpMoney(split, false));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (money <= 0 || !im.addMoney(money)) {
                     throw new IllegalStateException("Could not add money to inventory");
                 }
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                user.write(MessagePacket.pickUpMoney(drop.getMoney(), false));
+                user.write(MessagePacket.pickUpMoney(money, false));
             } else {
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
                 if (addItemResult.isEmpty()) {
