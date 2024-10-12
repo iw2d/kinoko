@@ -72,7 +72,7 @@ public final class EvanQuest extends ScriptHandler {
                 }
                 sm.sayNext("#b(I'll just mark off that the #m102020100# Warning Sign is correct and...)");
                 sm.setPlayerAsSpeaker(false);
-                sm.sayNext("#b#m102020100# Warning Sign#k\r\n\r\nCreatures: #r#o130100##k, #r#o1110101##k\r\nNotes: #r3-Way Road to #m102030300##k\r\nCheck: #eO#k");
+                sm.sayBoth("#b#m102020100# Warning Sign#k\r\n\r\nCreatures: #r#o130100##k, #r#o1110101##k\r\nNotes: #r3-Way Road to #m102030300##k\r\nCheck: #eO#k");
                 sm.setPlayerAsSpeaker(true);
                 sm.sayBoth("#bOne #p1022107##k has been checked. Four more to go.");
                 sm.setQRValue(QuestRecordType.EvanPerionSigns, "1");
@@ -96,7 +96,7 @@ public final class EvanQuest extends ScriptHandler {
                 }
                 sm.sayNext("#b(I'll just correct the information on the #m102030000# Warning Sign...)");
                 sm.setPlayerAsSpeaker(false);
-                sm.sayNext("#b#m102030000# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o2230112##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.sayBoth("#b#m102030000# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o2230112##k\r\nNotes: None\r\nCheck: #eO#k");
                 sm.setPlayerAsSpeaker(true);
                 sm.sayBoth("#bTwo #p1022107#s#k have been checked. Three more to go.");
                 sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2");
@@ -119,7 +119,7 @@ public final class EvanQuest extends ScriptHandler {
                 }
                 sm.sayNext("#b(I'll just mark off that the #m102030100# Warning Sign is correct and...)");
                 sm.setPlayerAsSpeaker(false);
-                sm.sayNext("#b#m102030100# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o4230103##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.sayBoth("#b#m102030100# Warning Sign#k\r\n\r\nCreatures: #r#o2230102##k, #r#o4230103##k\r\nNotes: None\r\nCheck: #eO#k");
                 sm.setPlayerAsSpeaker(true);
                 sm.sayBoth("#bThree #p1022107#s#k have been checked. Two more to go.");
                 sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2;3");
@@ -143,7 +143,7 @@ public final class EvanQuest extends ScriptHandler {
                 }
                 sm.sayNext("#b(I'll just mark off that the #m102030200# Warning Sign is correct and...)");
                 sm.setPlayerAsSpeaker(false);
-                sm.sayNext("#b#m102030200# Warning Sign#k\r\n\r\nCreatures: #r#o4230103##k, #r#o4230400##k\r\nNotes: None\r\nCheck: #eO#k");
+                sm.sayBoth("#b#m102030200# Warning Sign#k\r\n\r\nCreatures: #r#o4230103##k, #r#o4230400##k\r\nNotes: None\r\nCheck: #eO#k");
                 sm.setPlayerAsSpeaker(true);
                 sm.sayBoth("#bFour #p1022107#s#k have been checked. One more to go.");
                 sm.setQRValue(QuestRecordType.EvanPerionSigns, "1;2;3;4");
@@ -381,7 +381,7 @@ public final class EvanQuest extends ScriptHandler {
         if (sm.hasQuestStarted(22556)) {
             sm.setQRValue(QuestRecordType.EvanEnragedGolem, "1");
             sm.setPlayerAsSpeaker(true);
-            sm.sayNext("#bHmm, this puppet looks familiar. I better go report back to #p1012003#.");
+            sm.sayOk("#bHmm, this puppet looks familiar. I better go report back to #p1012003#.");
             return;
         }
         if (sm.hasQuestStarted(22559)) {
@@ -647,7 +647,6 @@ public final class EvanQuest extends ScriptHandler {
         sm.addSkill(22171002, 0, 30); // Illusion
         //sm.addSkill(22171000, 0, 10); // Maple Warrior
         //sm.addSkill(22171002, 0, 10); // Illusion
-        sm.addSkill(22171004, 0, 5); // Hero's Will
         sm.addInventorySlots(InventoryType.EQUIP, 4);
         sm.addInventorySlots(InventoryType.ETC, 4);
     }
@@ -745,7 +744,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(true);
         sm.sayNext("#bOf course. We should go talk to #p1032001# in #m101000000#.");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Ok! Ok! Let's gooo!");
+        sm.sayBoth("Ok! Ok! Let's gooo!");
     }
 
     @Script("q22403s")
@@ -776,7 +775,7 @@ public final class EvanQuest extends ScriptHandler {
         }
         sm.forceStartQuest(22403);
         sm.sayNext("All our saddles are made by #b#p2060005##k who oversees the #b#m230000003##k at the #b#m230000000##k.\r\n\r\n#bThey are very high quality saddles, but they cost so much you'll feel as though your eyeballs are popping out of your head. So prepare yourself.");
-        sm.sayOk("Is that all you need then? Then please see to it that you leave the island immediately. You seem nice, but rules are rules. We don't permit outsiders to linger.");
+        sm.sayBoth("Is that all you need then? Then please see to it that you leave the island immediately. You seem nice, but rules are rules. We don't permit outsiders to linger.");
     }
 
     @Script("q22404s")
@@ -809,7 +808,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bIt's getting pretty uncomfortable for me too. There's rips, tears, and holes everywhere!");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Maybe we should go talk to #b#p2060005##k over at the #b#m230000000##k again?#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i1902041# #t1902041#")) {
-            sm.sayBoth("Please? Can we go get a new saddle?");
+            sm.sayOk("Please? Can we go get a new saddle?");
         }
         if (!sm.addItem(1902041, 1)) {
             sm.sayOk("Please check if your inventory is full or not.");
@@ -817,7 +816,7 @@ public final class EvanQuest extends ScriptHandler {
         }
         sm.forceCompleteQuest(22406);
         sm.setPlayerAsSpeaker(true);
-        sm.sayBoth("#bI agree. Let's go to #m230000000#.");
+        sm.sayOk("#bI agree. Let's go to #m230000000#.");
     }
 
     @Script("q22411s")
@@ -836,7 +835,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bI'm just terrified at the just the thought of how much this will cost me.");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("I know, Master, but we can't possibly continue using this thing. We should go talk to #b#p2060005##k over at the #b#m230000000##k again?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i1902042# #t1902042#")) {
-            sm.sayBoth("Please? Can we go get a new saddle?");
+            sm.sayOk("Please? Can we go get a new saddle?");
         }
         if (!sm.addItem(1902042, 1)) {
             sm.sayOk("Please check if your inventory is full or not.");
@@ -911,7 +910,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(false);
         sm.sayBoth("Uhm, hello?! I was just born a few minutes ago! How would I know what I eat? All I know is that I'm a Dragon... I'm YOUR Dragon. And you're my master. You have to treat me well!");
         if (!sm.askAccept("I guess we're supposed to learn together. But I'm hungry. Master, I want food. Remember, I'm a baby! I'll start crying soon!")) {
-            sm.sayNext("*gasp* How can you refuse to feed your Dragon? This is child abuse!");
+            sm.sayOk("*gasp* How can you refuse to feed your Dragon? This is child abuse!");
             return;
         }
         sm.forceStartQuest(22501);
@@ -923,7 +922,7 @@ public final class EvanQuest extends ScriptHandler {
     public static void q22502s(ScriptManager sm) {
         // A Bite of Hay (22502 - start)
         if (!sm.askAccept("Wouldn't a lizard enjoy a #b#t4032452##k, like a cow? There are a lot of #bHaystacks#k nearby, so try feeding it that.")) {
-            sm.sayNext("Hm, you never know unless you try. That lizard is big enough to be on Maple's Believe It Or Not. It might eat hay.");
+            sm.sayOk("Hm, you never know unless you try. That lizard is big enough to be on Maple's Believe It Or Not. It might eat hay.");
             return;
         }
         sm.forceStartQuest(22502);
@@ -938,12 +937,12 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bHm... So you're not a herbivore. You might be a carnivore. You're a Dragon, after all. How does some #t4032453# sound?");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("What's a...#t4032453#? Never heard of it, but if it's yummy, I accept! Just feed me something tasty. Anything but plants!")) {
-            sm.sayNext("How can you starve me like this. I'm just a baby. This is wrong!");
+            sm.sayOk("How can you starve me like this. I'm just a baby. This is wrong!");
             return;
         }
         sm.forceStartQuest(22503);
         sm.setPlayerAsSpeaker(true);
-        sm.sayNext("#b(Try giving #p1013000# some #t4032453#. You have to hunt a few #o1210100#s at the farm. Ten should be plenty...)");
+        sm.sayOk("#b(Try giving #p1013000# some #t4032453#. You have to hunt a few #o1210100#s at the farm. Ten should be plenty...)");
     }
 
     @Script("q22504s")
@@ -954,12 +953,12 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bBut I don't. It's not like age has anything to do with this...");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Since you're older, you must be more experienced in the world, too. Makes sense that you'd know more than me. Oh, fine. I'll ask someone who's even older than you, master!")) {
-            sm.sayNext("No use trying to find an answer to this on my own. I'd better look for #bsomeone older and wiser than master#k!");
+            sm.sayOk("No use trying to find an answer to this on my own. I'd better look for #bsomeone older and wiser than master#k!");
             return;
         }
         sm.forceStartQuest(22504);
         sm.setPlayerAsSpeaker(true);
-        sm.sayNext("#b(I've already asked Dad once, but I really don't have any better ideas. Time to ask him again!)");
+        sm.sayOk("#b(I've already asked Dad once, but I really don't have any better ideas. Time to ask him again!)");
     }
 
     @Script("q22507s")
@@ -994,7 +993,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bIt's not part of my five year plan. I'm just kidding, but seriously, I'm a farmer's kid...");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Bah, well let me tell you this. It's impossible for a Dragon Master to live a peaceful life. I'll have plenty of chances to prove my skills. Trust me, our life will be one big adventure. Promise me that you'll stick with me, okay?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 810 exp")) {
-            sm.sayNext("Uh, you're kidding me, right? Tell me you're kidding...?");
+            sm.sayOk("Uh, you're kidding me, right? Tell me you're kidding...?");
             return;
         }
         sm.forceStartQuest(22507);
@@ -1013,7 +1012,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bI'm fine, Dad! It was easy."); // In GMS, this was displayed as menu option with the text above for some reason. Changed to fit with the rest of the scripts lol
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("What a relief. You need to be careful, though. It could've been dangerous... By the way, I've got something for you to do. Can you run an errand for me?")) {
-            sm.sayNext("Hm, #p1013101# would have done it at the drop of a hat.");
+            sm.sayOk("Hm, #p1013101# would have done it at the drop of a hat.");
             return;
         }
         if (!sm.addItem(4032455, 1)) {
@@ -1038,12 +1037,12 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bMy calling as... a Dragon Master?");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Yup! That's what I'm talking about! I just KNOW there are people out there in desperate need of the Dragon Master's help.")) {
-            sm.sayNext("But... it's your calling, master...");
+            sm.sayOk("But... it's your calling, master...");
             return;
         }
         sm.forceStartQuest(22512);
         sm.setPlayerAsSpeaker(true);
-        sm.sayNext("#b(You agree to help others using your powers as a Dragon Master. Sounds grandiose, even to you. But you'd better get started! Check around Henesys to see if anyone needs help.)");
+        sm.sayOk("#b(You agree to help others using your powers as a Dragon Master. Sounds grandiose, even to you. But you'd better get started! Check around Henesys to see if anyone needs help.)");
     }
 
     @Script("q22514s")
@@ -1058,13 +1057,13 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bOkay, okay! Fine, geez. I'll go talk to #p1012003#.");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Really? We're going to go train?")) {
-            sm.sayNext("Don't tease me like that! You're so mean!");
+            sm.sayOk("Don't tease me like that! You're so mean!");
             return;
         }
         sm.forceStartQuest(22514);
         sm.sayNext("Yippee! That's why I love you!");
         sm.setPlayerAsSpeaker(true);
-        sm.sayNext("#b(I've finally calmed him down a bit. I should go talk to #p1012003# about the training center.)");
+        sm.sayBoth("#b(I've finally calmed him down a bit. I should go talk to #p1012003# about the training center.)");
     }
 
     @Script("q22518s")
@@ -1079,7 +1078,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bI swear, Stan and I aren't trying to pull a fast one on you!");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("This test is simple. You have to defeat #r#k in the training center, that's all. It's not going to be easy finding them, since they hang out amongst the Orange Mushrooms. Haha... Do you still want to enter?")) {
-            sm.sayNext("I KNEW it!");
+            sm.sayOk("I KNEW it!");
             return;
         }
         sm.forceStartQuest(22518);
@@ -1110,7 +1109,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bOh? Well, where is the burglar from, you think?");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("I haven't got a clue! I'm still upset about your implications and accusations, but I WILL find the thief who stole #b#p1061005##k's herbs myself! Then I will take #b#m103000000##k's honor back! Did you get that?! I will find it by MYSELF!\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0#\r\n8000 exp")) {
-            sm.sayNext("You come here implying such things and have the audacity to just walk away?! HMPH!");
+            sm.sayOk("You come here implying such things and have the audacity to just walk away?! HMPH!");
             return;
         }
         sm.forceCompleteQuest(22536);
@@ -1140,7 +1139,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("I can warp you to #b#m103000000##k, if you'd like?")) {
             sm.forceStartQuest(22541);
-            sm.sayNext("No matter. You may take the #b#p1012003##k and pay a small fee or you can walk there. Check your map for directions. Good luck, young Evan.");
+            sm.sayOk("No matter. You may take the #b#p1012003##k and pay a small fee or you can walk there. Check your map for directions. Good luck, young Evan.");
             return;
         }
         sm.forceStartQuest(22541);
@@ -1155,7 +1154,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bWell, I learned about Onyx Dragons, they're the most fascinating to me.");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askYesNo("Onyx Dragons? Onyx Dragons have been extinct for quite some time, as you probably learned from that book. However, I'm happy to continue helping you with your research, if you'd like.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0#\r\n12000 exp")) {
-            sm.sayNext("Hmm... No matter. If you ever do need help, please come back!");
+            sm.sayOk("Hmm... No matter. If you ever do need help, please come back!");
             return;
         }
         sm.forceCompleteQuest(22546);
@@ -1176,7 +1175,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayNext("Great to see you again, lifesaver! My master has been very busy lately, letting his wounds heal and finding a new base for us, which is why there has been no communication from him lately. He just made contact recently, though!");
         sm.sayBoth("I told my master about you and he agreed that you could join the secret organization! There is one condition, however. I think it must be the entrance exam!");
         if (!sm.askAccept("A strong fancy hero like you should be able to pass the test, I think. Should I tell you about the test?")) {
-            sm.sayNext("Maybe I was wrong about you!");
+            sm.sayOk("Maybe I was wrong about you!");
             return;
         }
         sm.forceStartQuest(22560);
@@ -1241,7 +1240,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#b#p1013000#...");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("But, I refuse to give up! I beat the odds, so there must be others. I will find them! Master, you'll help me, right?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 20000 exp\r\n#fUI/UIWindow2.img/QuestIcon/10/0# 2 sp")) {
-            sm.sayNext("What?! Why? You're joking, right?!");
+            sm.sayOk("What?! Why? You're joking, right?!");
             return;
         }
         sm.forceCompleteQuest(22565);
@@ -1289,23 +1288,23 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bAre you the owner of that abandoned doll?!");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Oh? Are you talking about Francis? No, I am not, but I certainly am his superior. I am the one who dispatched you on your first mission.");
+        sm.sayBoth("Oh? Are you talking about Francis? No, I am not, but I certainly am his superior. I am the one who dispatched you on your first mission.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bYou mean you left the note in the wall of #m200000000##k #bTower?#k");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Yes, I was the one who left the note. I made good use of the #b#t4032468##k you got for me. You helped us out greatly! Thank you.");
+        sm.sayBoth("Yes, I was the one who left the note. I made good use of the #b#t4032468##k you got for me. You helped us out greatly! Thank you.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bIt's not a problem! I'm always down to help out if it's to help out others!");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("You did well despite not being a full member of our organization. I think I can still trust you with this mission, however.");
+        sm.sayBoth("You did well despite not being a full member of our organization. I think I can still trust you with this mission, however.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bYou have another mission for me?");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("I do. This will be quite the difficult task though, but you seem capable. I need you to go to #b#m211000000##k's #bForest of the Dead#k and defeat #r#o9001027##k to retrieve #b#t4000593##ks.");
+        sm.sayBoth("I do. This will be quite the difficult task though, but you seem capable. I need you to go to #b#m211000000##k's #bForest of the Dead#k and defeat #r#o9001027##k to retrieve #b#t4000593##ks.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bForest of the Dead? Zombies...? I've got a baaad feeling about this.");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Heh, you'll be fine. It's very important you find me #r150#k #b#t4000593##ks and deliver them to #b#m211000001##k in #b#m211000000##k. There resides #b#p2022003##k. He will know what to do.");
+        sm.sayBoth("Heh, you'll be fine. It's very important you find me #r150#k #b#t4000593##ks and deliver them to #b#m211000001##k in #b#m211000000##k. There resides #b#p2022003##k. He will know what to do.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWell... okay. Got it. If it's THAT important and necessary, I'll do it.");
         sm.setPlayerAsSpeaker(false);
@@ -1325,19 +1324,20 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWell, I defeated most of the zombies in #m211000000#, so it must have been a good thing, right?");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("The more monsters you defeat, the better, I suppose? But what about that #t4032471#? What do you think that was for?");
+        sm.sayBoth("The more monsters you defeat, the better, I suppose? But what about that #t4032471#? What do you think that was for?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI'm not sure... But this organization is all about doing good deeds, so it's got to be for a good purpose.");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("I suppose... But why do you think this organization carries out its activities in secret? How is anyone supposed to know of their good deeds if no one even knows they exist?");
+        sm.sayBoth("I suppose... But why do you think this organization carries out its activities in secret? How is anyone supposed to know of their good deeds if no one even knows they exist?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bWell, like the saying goes, let not your left hand know what your right hand is doing!");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Left hand? Right hand? What?! Are you saying you should let your left hand be a loser that doesn't know anything?");
+        sm.sayBoth("Left hand? Right hand? What?! Are you saying you should let your left hand be a loser that doesn't know anything?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bHaha, no! I think it just means you should keep your good deeds to yourself since it's not virtuous to brag about your good deeds.");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("... I don't get it. I love to let people know what I'm up to. Anyway, it just seems so secretive and calculated. It's exciting, yet... I don't know. But don't you agree master?!\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 30000 exp\r\n#fUI/UIWindow2.img/QuestIcon/10/0# 2 sp")) {
+            sm.sayOk("I'd love to hear your thoughts, master.");
             return;
         }
         sm.forceCompleteQuest(22578);
@@ -1355,17 +1355,17 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bCan I ask a question first?");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Sure. Ask me anything. If you have questions, I'll do my best with an answer.");
+        sm.sayBoth("Sure. Ask me anything. If you have questions, I'll do my best with an answer.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bI'm a temporary member of this organization, but I don't know anything about it. Tell me more about this organization.");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("... Yes, right. It was only a matter of time before you became more curious about our organization. I suppose I can tell you about it, you'll have to meet up with me.");
+        sm.sayBoth("... Yes, right. It was only a matter of time before you became more curious about our organization. I suppose I can tell you about it, you'll have to meet up with me.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bOkay! Where should I go?");
         sm.setPlayerAsSpeaker(false);
         if (!sm.askAccept("Come to #b#m220000300##k, there you will find one of our organization's bases, I will meet you there. The house's entrance is in the shape of a #bfrog#k.\r\n\r\n#bIf you'd like, I can provide a shortcut for you?#k\r\n#r(You will be instantly warped to #k#b#m220000300##k#r.)#k")) {
             sm.forceStartQuest(22581);
-            sm.sayNext("Okay, that's fine. To get to #b#m220000000##k, you can take a ferry, boat, or something similar.");
+            sm.sayOk("Okay, that's fine. To get to #b#m220000000##k, you can take a ferry, boat, or something similar.");
             return;
         }
         sm.forceStartQuest(22581);
@@ -1376,7 +1376,7 @@ public final class EvanQuest extends ScriptHandler {
     public static void q22582s(ScriptManager sm) {
         // Secret Organization's Third Mission (22582 - start)
         if (!sm.askAccept("Your third mission is to collect #r100#k #b#t4000594##k from #b#o9001028##k.\r\n\r\n#bI will have to take you to where they are.#k")) {
-            sm.sayNext("Come back and see me when you're ready. Don't wait too long, though...");
+            sm.sayOk("Come back and see me when you're ready. Don't wait too long, though...");
             return;
         }
         sm.forceStartQuest(22582);
@@ -1447,11 +1447,11 @@ public final class EvanQuest extends ScriptHandler {
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bDo you have the Map of Turtle Island?");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("Turtle Island? Ahh, that island I saw a long time ago, during my days as a fisherman. To answer your question, yes, I have it. You can't go too far because of the pirates, but I kept the map, anyway.");
+        sm.sayBoth("Turtle Island? Ahh, that island I saw a long time ago, during my days as a fisherman. To answer your question, yes, I have it. You can't go too far because of the pirates, but I kept the map, anyway.");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bCan I have it?");
         sm.setPlayerAsSpeaker(false);
-        sm.sayNext("The island is surrounded by coral reef and powerful waves, not to mention the strong wind. It was given its name because it looks so much like a turtle, but not many people even know about it. Do you still want it?");
+        sm.sayBoth("The island is surrounded by coral reef and powerful waves, not to mention the strong wind. It was given its name because it looks so much like a turtle, but not many people even know about it. Do you still want it?");
         sm.setPlayerAsSpeaker(true);
         sm.sayBoth("#bYes, please!");
         sm.setPlayerAsSpeaker(false);
@@ -1472,7 +1472,7 @@ public final class EvanQuest extends ScriptHandler {
         // The Past, Onyx Dragons, Black Mage (22591 - start)
         sm.sayNext("Hundreds of years ago in Maple World, there were many Onyx Dragons. There were just as many humans who loved the Onyx Dragons very much... We, my friend Freud and I, always hoped that humans and the Onyx Dragons could forever live in peace...");
         sm.sayBoth("As powerful as we are, Onyx Dragons are born with incomplete spirits. Humans are born with strong wills but weak bodies. Put the two together, and a Dragon Master is born. We wanted the two races to exist in a symbolic relationship, each helping each.");
-        sm.sayNext("Unfortunately, our wish was destroyed by the #rBlack Mage#k.");
+        sm.sayBoth("Unfortunately, our wish was destroyed by the #rBlack Mage#k.");
         if (!sm.askAccept("Perhaps it would be best to show you. #bI will send you on a journey through my memories#k. Travel back hundreds of years, to just before the war against the Black Mage started. Go to into my memory of when Freud and I conversed about making our dream a reality...")) {
             sm.sayOk("...");
             return;
@@ -1492,7 +1492,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.forceCompleteQuest(22593);
         sm.addExp(65000);
         sm.sayNext("Yes, it was quite a dilemma for us when the #b#o4230105#s started growing like crazy#k! Thankfully, someone that was passing by did some investigating on our behalf and we were able to resolve the issue, but boy, it was a BIG deal!");
-        sm.sayOk("Why are you making that face? We've already resolved the issue so you don't need to worry about it.");
+        sm.sayBoth("Why are you making that face? We've already resolved the issue so you don't need to worry about it.");
     }
 
     @Script("q22594s")
@@ -1568,7 +1568,7 @@ public final class EvanQuest extends ScriptHandler {
             return;
         }
         if (!sm.addItem(1142156, 1)) {
-            sm.sayNext("Please check if your inventory is full or not.");
+            sm.sayOk("Please check if your inventory is full or not.");
             return;
         }
         sm.forceCompleteQuest(22602);
@@ -1592,7 +1592,7 @@ public final class EvanQuest extends ScriptHandler {
             return;
         }
         if (!sm.addItem(1142157, 1)) {
-            sm.sayNext("Please check if your inventory is full or not.");
+            sm.sayOk("Please check if your inventory is full or not.");
             return;
         }
         sm.forceCompleteQuest(22603);
