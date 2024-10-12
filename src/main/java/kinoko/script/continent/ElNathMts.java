@@ -10,7 +10,7 @@ import kinoko.world.quest.QuestRecordType;
 import java.util.List;
 import java.util.Map;
 
-public final class Ossyria extends ScriptHandler {
+public final class ElNathMts extends ScriptHandler {
     @Script("getAboard")
     public static void getAboard(ScriptManager sm) {
         // Isa the Station Guide : Platform Usher (2012006)
@@ -56,9 +56,7 @@ public final class Ossyria extends ScriptHandler {
         ));
     }
 
-
-    // AQUARIUM SCRIPTS ------------------------------------------------------------------------------------------------
-
+    // AQUA ROAD SCRIPTS -----------------------------------------------------------------------------------------------
     @Script("aqua_taxi")
     public static void aqua_taxi(ScriptManager sm) {
         // Dolphin (2060009)

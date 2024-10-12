@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public final class Minar extends ScriptHandler {
+public final class MinarForest extends ScriptHandler {
     public static final int MAGIC_SEED = 4031346;
     public static final int MINI_DRACO_TRANSFORMATION = 2210016;
 

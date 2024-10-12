@@ -4,7 +4,7 @@ import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 
-public final class MuLung extends ScriptHandler {
+public final class MuLungGarden extends ScriptHandler {
     // NPCS
     @Script("hwang")
     public static void hwang(ScriptManager sm) {
@@ -34,6 +34,7 @@ public final class MuLung extends ScriptHandler {
         }
     }
 
+    // PORTALS
     @Script("enterPottery")
     public static void enterPottery(ScriptManager sm) {
         // Herb Town : Red-Nose Pirate Den 3 (251010403)

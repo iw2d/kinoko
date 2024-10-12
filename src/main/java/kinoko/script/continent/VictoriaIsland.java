@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public final class Victoria extends ScriptHandler {
+public final class VictoriaIsland extends ScriptHandler {
     public static final int TICKET_TO_CONSTRUCTION_SITE_B1 = 4031036;
     public static final int TICKET_TO_CONSTRUCTION_SITE_B2 = 4031037;
     public static final int TICKET_TO_CONSTRUCTION_SITE_B3 = 4031038;
