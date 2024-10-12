@@ -36,6 +36,7 @@ public final class NpcPool extends FieldObjectPool<Npc> {
         if (!removeObject(npc)) {
             return false;
         }
+        field.broadcastPacket(NpcPacket.npcChangeController(npc, false));
         field.broadcastPacket(NpcPacket.npcLeaveField(npc));
         return true;
     }

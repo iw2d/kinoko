@@ -62,6 +62,8 @@ public interface ScriptManager {
 
     void removeSkill(int skillId);
 
+    void addSp(int skillPoint);
+
     void setConsumeItemEffect(int itemId);
 
     void resetConsumeItemEffect(int itemId);
@@ -138,9 +140,13 @@ public interface ScriptManager {
 
     int getFieldId();
 
+    void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft);
+
     void spawnMob(int templateId, MobAppearType appearType, int x, int y);
 
     void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField);
+
+    void removeNpc(int templateId);
 
     void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean originalField);
 

@@ -404,6 +404,25 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public void addSp(int skillPoint) {
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        try (var locked = user.acquire()) {
+            final CharacterStat cs = locked.get().getCharacterStat();
+
+            if (JobConstants.isExtendSpJob(cs.getJob())) {
+                cs.getSp().setSp(JobConstants.getJobLevel(cs.getJob()), skillPoint);
+                statMap.put(Stat.SP, cs.getSp());
+            } else {
+                cs.getSp().setNonExtendSp(skillPoint);
+                statMap.put(Stat.SP, (short) cs.getSp().getNonExtendSp());
+            }
+            user.write(MessagePacket.incSp(user.getJob(), skillPoint));
+        }
+        user.validateStat();
+        user.write(WvsContext.statChanged(statMap, true));
+    }
+
+    @Override
     public void setConsumeItemEffect(int itemId) {
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
@@ -728,7 +747,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void spawnMob(int templateId, MobAppearType appearType, int x, int y) {
+    public void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft) {
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
         if (mobTemplateResult.isEmpty()) {
             throw new ScriptError("Could not resolve mob template ID : %d", templateId);
@@ -741,10 +760,17 @@ public final class ScriptManagerImpl implements ScriptManager {
                 y,
                 footholdResult.map(Foothold::getSn).orElse(0)
         );
+        mob.setLeft(isLeft);
         mob.setAppearType(appearType);
         field.getMobPool().addMob(mob);
     }
 
+    @Override
+    public void spawnMob(int templateId, MobAppearType appearType, int x, int y) {
+        spawnMob(templateId, appearType, x, y, false);
+    }
+
+    @Override
     public void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField) {
         final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
         if (npcTemplateResult.isEmpty()) {
@@ -764,6 +790,16 @@ public final class ScriptManagerImpl implements ScriptManager {
         targetField.getNpcPool().addNpc(npc);
     }
 
+    @Override
+    public void removeNpc(int templateId) {
+        final Optional<Npc> npcResult = field.getNpcPool().getByTemplateId(templateId);
+        if (npcResult.isEmpty()) {
+            throw new ScriptError("Could not find npc with template ID : %d", templateId);
+        }
+        field.getNpcPool().removeNpc(npcResult.get());
+    }
+
+    @Override
     public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean originalField) {
         final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
         if (reactorTemplateResult.isEmpty()) {
