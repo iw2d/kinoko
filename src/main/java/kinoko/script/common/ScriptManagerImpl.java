@@ -263,16 +263,16 @@ public final class ScriptManagerImpl implements ScriptManager {
                     cs.getSp().addSp(jobLevel, 3); // 1st – 6th & 10th Mastery -> Extra 3 SP at each activation level
                 }
                 case 7, 8, 9 -> {
-                    cs.getSp().addSp(jobLevel, 5); // 7th-9th Mastery -> Extra 5 SP at each activation level
+                    cs.getSp().addSp(jobLevel, 5); // 7th - 9th Mastery -> Extra 5 SP at each activation level
                 }
             }
-        } else if (JobConstants.isExtendSpJob(jobId)) {
+        } else if (JobConstants.isResistanceJob(jobId)) {
             switch (jobLevel) {
                 case 1 -> {
-                    cs.getSp().setSp(jobLevel, Math.max(cs.getLevel() - 10, 0) * 3 + 1);
+                    cs.getSp().setSp(jobLevel, Math.max(cs.getLevel() - 10, 0) * 3 + 5);
                 }
                 case 2, 3 -> {
-                    cs.getSp().addSp(jobLevel, 1);
+                    cs.getSp().addSp(jobLevel, 3);
                 }
                 case 4 -> {
                     cs.getSp().addSp(jobLevel, 3);
@@ -404,22 +404,17 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void addSp(int skillPoint) {
-        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-        try (var locked = user.acquire()) {
-            final CharacterStat cs = locked.get().getCharacterStat();
-
-            if (JobConstants.isExtendSpJob(cs.getJob())) {
-                cs.getSp().setSp(JobConstants.getJobLevel(cs.getJob()), skillPoint);
-                statMap.put(Stat.SP, cs.getSp());
-            } else {
-                cs.getSp().setNonExtendSp(skillPoint);
-                statMap.put(Stat.SP, (short) cs.getSp().getNonExtendSp());
-            }
-            user.write(MessagePacket.incSp(user.getJob(), skillPoint));
+    public void addSp(int jobLevel, int skillPoint) {
+        final CharacterStat cs = user.getCharacterStat();
+        if (JobConstants.isExtendSpJob(cs.getJob())) {
+            cs.getSp().addSp(jobLevel, skillPoint);
+            user.validateStat();
+            user.write(WvsContext.statChanged(Stat.SP, cs.getSp(), false));
+        } else {
+            cs.getSp().addNonExtendSp(skillPoint);
+            user.validateStat();
+            user.write(WvsContext.statChanged(Stat.SP, (short) cs.getSp().getNonExtendSp(), false));
         }
-        user.validateStat();
-        user.write(WvsContext.statChanged(statMap, true));
     }
 
     @Override

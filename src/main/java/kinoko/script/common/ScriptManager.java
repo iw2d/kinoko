@@ -62,7 +62,7 @@ public interface ScriptManager {
 
     void removeSkill(int skillId);
 
-    void addSp(int skillPoint);
+    void addSp(int jobLevel, int skillPoint);
 
     void setConsumeItemEffect(int itemId);
 
