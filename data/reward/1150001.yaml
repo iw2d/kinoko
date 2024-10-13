@@ -1,0 +1,14 @@
+# Strange Sign (1150001)
+
+rewards:
+  - [ 0, 22, 33, 0.600000 ]
+  - [ 1041062, 1, 1, 0.000100 ] # Yellow Able Armor
+  - [ 1050005, 1, 1, 0.000100 ] # Blue Kendo Robe
+  - [ 1060025, 1, 1, 0.000100 ] # Blue Nightshift Pants
+  - [ 1061016, 1, 1, 0.000100 ] # Red Ramel Skirt
+  - [ 1382004, 1, 1, 0.000100 ] # Old Wooden Staff
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 4000599, 1, 1, 0.400000 ] # Wooden Board

@@ -5,7 +5,9 @@ import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.util.Tuple;
+import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;
+import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
 
@@ -21,7 +23,7 @@ public final class Edelstein extends ScriptHandler {
         // Wendelline : Treatment Specialist (2151006)
         //   Resistance Headquarters : Training Room Entrance (310010010)
         if (sm.askYesNo("Are you hurt? Allow me to treat your wounds.")) {
-            User user = sm.getUser();
+            final User user = sm.getUser();
             user.setHp(user.getMaxHp());
             user.setMp(user.getMaxMp());
             sm.sayOk("There you go. You're fully healed.");
@@ -32,16 +34,14 @@ public final class Edelstein extends ScriptHandler {
     public static void Edelstein_taxi(ScriptManager sm) {
         // Taxi : Affiliated with Black Wings (2150007)
         //   Black Wing Territory : Edelstein (310000000)
-        User user = sm.getUser();
-
         //sm.setFlipSpeaker(true); //Uncomment if using fixed taxi sprite
         if (!sm.askYesNo("Hello, welcome to the Edelstein Taxi. I can take members of the Black Wings safely and quickly to #bVerne Mines#k. And if you're not part of the Black Wings? Well, I guess I'll take you as long as you pay... So, are you going to the mines?")) {
             sm.sayNext("Let me know if you change your mind.");
             return;
         }
-        Item equippedCap = user.getInventoryManager().getEquipped().getItem(1);
-        boolean hat = equippedCap != null && equippedCap.getItemId() == 1003134;
-        int cost = hat ? 3000 : 10000;
+        final Item equippedCap = sm.getUser().getInventoryManager().getEquipped().getItem(BodyPart.CAP.getValue());
+        final boolean hat = equippedCap != null && equippedCap.getItemId() == 1003134;
+        final int cost = hat ? 3000 : 10000;
         String askWhat = hat ? "Oh, you're a member of the Black Wings. I have a special discount for the Black Wings. You can ride for a mere #b3000 Mesos#k. Hop on." :
                 "Please pay #b10000 Mesos#k to go to Verne Mine."; //Not GMS-like
         if (!sm.askYesNo(askWhat)) {
@@ -71,7 +71,6 @@ public final class Edelstein extends ScriptHandler {
         final int answer = sm.askMenu("An elevator that will take you to your desired training room.\r\nChoose the floor you'd like to go to.", options);
         if (answer >= 0 && answer < rooms.size()) {
             final int mapId = rooms.get(answer).getLeft();
-
             if (answer == 4) {
                 if (!sm.hasQuestStarted(23118)) {
                     sm.sayOk("You cannot go there at this time."); //Unsure if GMS-like
@@ -81,7 +80,6 @@ public final class Edelstein extends ScriptHandler {
                 sm.warpInstance(mapId, "out00", 310010000, 60 * 5);
                 return;
             }
-
             sm.playPortalSE();
             sm.warp(mapId, "out00");
         }
@@ -91,13 +89,11 @@ public final class Edelstein extends ScriptHandler {
     public static void giveDress(ScriptManager sm) {
         // Gabrielle's Suitcase (2159301)
         //   Edelstein : Guarded Mansion (931010010)
-        User user = sm.getUser();
-
+        final User user = sm.getUser();
         if (!user.getField().getMobPool().isEmpty()) {
             sm.message("Defeat the robots first."); //Unsure if GMS-like
             return;
         }
-
         if (sm.addItem(4032757, 1)) {
             sm.sayOk("#b(You've grabbed Gabrielle's clothes. Deliver them quickly to #p2152006#.)#k");
             return;
@@ -175,7 +171,6 @@ public final class Edelstein extends ScriptHandler {
         // Black Wing Territory : Edelstein (310000000)
         //   in03 (1090, 587)
         sm.playPortalSE();
-
         if (sm.hasQuestStarted(23940) && !sm.hasQRValue(QuestRecordType.EdelsteinFabioFirebombs, "1")) {
             final LocalDateTime now = LocalDateTime.now();
             if (now.getHour() == 18) {
@@ -183,7 +178,6 @@ public final class Edelstein extends ScriptHandler {
                 return;
             }
         }
-
         sm.warp(310000003, "out00"); // Edelstein : Edelstein Hair Salon
     }
 
@@ -200,13 +194,11 @@ public final class Edelstein extends ScriptHandler {
         // Black Wing Territory : Edelstein (310000000)
         //   in01 (1290, -53)
         sm.playPortalSE();
-
         if (sm.hasQuestStarted(23925) && !sm.hasItem(4032757)) {
             sm.warpInstance(931010010, "out00", 310000000, 10 * 60);
             sm.scriptProgressMessage("Defeat the robots and get Gabrielle's clothes.");
             return;
         }
-
         sm.warp(310000004, "out00");
     }
 
@@ -239,10 +231,8 @@ public final class Edelstein extends ScriptHandler {
     public static void enterBlackWing(ScriptManager sm) {
         // Dry Road : Mine Entrance (310040200)
         //   east00 (2240, -15)
-        Item equippedCap = sm.getUser().getInventoryManager().getEquipped().getItem(1); //wow
-        boolean hat = equippedCap != null && equippedCap.getItemId() == 1003134;
-
-        if (!hat) {
+        final Item equippedCap = sm.getUser().getInventoryManager().getEquipped().getItem(BodyPart.CAP.getValue());
+        if (equippedCap == null || equippedCap.getItemId() != 1003134) {
             sm.message("You can't enter without proof that you are a member of the Black Wings. Equip something with the Black Wings' logo on it to enter.");
             return;
         }
@@ -285,16 +275,12 @@ public final class Edelstein extends ScriptHandler {
         }
         if (sm.hasQuestStarted(23043) || sm.hasQuestStarted(23044) || sm.hasQuestStarted(23045)) {
             sm.message("Find the missing Job Instructor!");
-            switch (sm.getUser().getJob() / 100) {
-                case 32:
-                    sm.warpInstance(List.of(931000300, 931000310, 931000320), "sp", 310050100, 60 * 15);
-                    break;
-                case 33:
-                    sm.warpInstance(List.of(931000301, 931000311, 931000321), "sp", 310050100, 60 * 15);
-                    break;
-                case 35:
-                    sm.warpInstance(List.of(931000302, 931000312, 931000322), "sp", 310050100, 60 * 15);
-                    break;
+            if (JobConstants.isBattleMageJob(sm.getUser().getJob())) {
+                sm.warpInstance(List.of(931000300, 931000310, 931000320), "sp", 310050100, 60 * 15);
+            } else if (JobConstants.isWildHunterJob(sm.getUser().getJob())) {
+                sm.warpInstance(List.of(931000301, 931000311, 931000321), "sp", 310050100, 60 * 15);
+            } else if (JobConstants.isMechanicJob(sm.getUser().getJob())) {
+                sm.warpInstance(List.of(931000302, 931000312, 931000322), "sp", 310050100, 60 * 15);
             }
         }
     }
@@ -305,7 +291,6 @@ public final class Edelstein extends ScriptHandler {
         //   west00 (-799, -103)
         sm.playPortalSE();
         sm.warp(931000320);
-
     }
 
     @Script("enterNewWeapon2")

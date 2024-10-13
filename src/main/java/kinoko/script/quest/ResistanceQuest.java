@@ -177,7 +177,6 @@ public class ResistanceQuest extends ScriptHandler {
             sm.sayOk("Grrrr....\r\n(You can't enter. Only Wild Hunters may enter.)");
             return;
         }
-
         if (sm.askAccept("Enter Jaguar Habitat?")) {
             sm.warp(931000500);
         }
@@ -208,7 +207,6 @@ public class ResistanceQuest extends ScriptHandler {
             }
             sm.setJob(Job.BATTLE_MAGE_1);
             sm.forceCompleteQuest(23011);
-            sm.forceCompleteQuest(29941);
             sm.sayNext("Okay, okay. Welcome to the Resistance, kid. From now on, you will play the role of a Battle Mage, a fierce Magician always ready to lead your party into battle.");
             sm.sayBoth("But don't go spreading it around that you're a Battle Mage, hm No need to tempt the Black Wings to come after you. From now on, I'll be your teacher. If anyone asks, you're visiting me just as a regular student, not as a member of the Resistance. I'll give you special lessons now and then. You better not fall asleep in class, hear?");
         }
@@ -232,7 +230,6 @@ public class ResistanceQuest extends ScriptHandler {
             sm.addSkill(30001061, 1, 0);
             sm.addSkill(30001062, 1, 0);
             sm.forceCompleteQuest(23012);
-            sm.forceCompleteQuest(29941);
             sm.sayNext("Well, well! Congratulations! You're now an official member of the Resistance and a Wild Hunter. Hop on your mount, move like the wind, and slay all enemies who get in your way!");
             sm.sayPrev("Now, a warning. Don't lure the Black Wings' attention to you by telling people you're a Wild Hunter. I'll be your \"teacher\" from now on. This IS a school after all, right? I'll give you special lessons to turn you into the best Wild Hunter ever!");
         }
@@ -252,7 +249,6 @@ public class ResistanceQuest extends ScriptHandler {
             sm.setJob(Job.MECHANIC_1);
             sm.addSkill(30001068, 1, 0);
             sm.forceCompleteQuest(23013);
-            sm.forceCompleteQuest(29941);
             sm.sayNext("Welcome to the Resistance. From now on, you are a Mechanic. As one who works with machines, use every method available to defeat the enemies before you!");
             sm.sayBoth("We have to be careful that our identity is not revealed to the Black Wings. So from now on, refer to me as teacher. You will pretend to be a student who is coming here for extracurricular lessons. It's during these lessons that I will teach you to become a strong Mechanic.");
         }
@@ -303,7 +299,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23023e")
     public static void q23023e(ScriptManager sm) {
         // Revenge and Growth (23023 - end)
-
         sm.sayNext("You brought the Black Wings Report? Good!");
         sm.sayBoth("You know, I gave you that mission on purpose. That member of the Black Wings was the one who hurt you in the past. How's it feel to defeat someone who once seemed impossible to fight?");
         sm.sayBoth("Still, I had no idea you'd handle the mission so excellently. To be honest, I had my doubts about you. But I'm starting to think there's something... special about you.");
@@ -325,7 +320,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23024e")
     public static void q23024e(ScriptManager sm) {
         // Revenge and Growth (23024 - end)
-
         sm.sayNext("So you have the Black Wings Report. Ha! I knew I was right about you!");
         sm.sayBoth("This mission was supposed to go to someone else but I had it re-assigned to you. That guy from the Black Wings was the one who attacked you in the past. I gave you the mission so you could take your revenge. Two birds with one stone, eh?");
         sm.sayBoth("To be honest though, you completed the mission more easily than I expected. You've really developed your skills...");
@@ -347,7 +341,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23025e")
     public static void q23025e(ScriptManager sm) {
         // Revenge and Growth (23025 - end)
-
         sm.sayNext("So this is the Black Wings Report we needed. With this document, we can figure out the plans of the Black Wings. Thank you so much.");
         sm.sayBoth("This mission was not originally assigned to you, but I swapped a few things around. I wanted you to defeat that individual personally, give you a chance to right past wrongs, you know?");
         sm.sayBoth("Even so, I didn't think you would accomplish the mission so easily. You're progressing much faster than I expected.");
@@ -369,7 +362,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23033e")
     public static void q23033e(ScriptManager sm) {
         // Destroying the Energy Conducting Device (23033 - end)
-
         sm.sayNext("You destroyed the Energy Conducting Device! Good. This should alleviate the problem of insufficient energy in town. We'll all be able to sleep a little easier now. You've done a tremendous good for Edelstein.");
         if (!sm.askYesNo("You've proven yourself so thoroughly that there's no reason to put this off. I think you are ready for your advancement. Now you will become an even stronger Battle Mage. I trust you'll be able to handle it...")) {
             sm.sayOk("Come back when you're ready."); //Unsure if GMS-like
@@ -388,7 +380,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23034e")
     public static void q23034e(ScriptManager sm) {
         // Destroying the Energy Conducting Device (23034 - end)
-
         sm.sayNext("You destroyed the Energy Conducting Device! I was right about you. Now our town won't have to worry about energy issues for a while. You've really done a great thing for #m310000000#.");
         if (!sm.askYesNo("Now that I know how much you've grown, I will give you the next lesson. I believe you are now strong enough to be reborn as a more powerful Wild Hunter!")) {
             sm.sayOk("Come back when you're ready."); //Unsure if GMS-like
@@ -407,7 +398,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23035e")
     public static void q23035e(ScriptManager sm) {
         // Destroying the Energy Conducting Device (23035 - end)
-
         sm.sayNext("You've successfully destroyed the Energy Conducting Device! Now we don't have to worry about energy for a while. You've accomplished a truly great feat for Edelstein.");
         sm.sayBoth("This mission was not originally assigned to you");
         sm.sayBoth("Even so, I didn't think you would accomplish the mission so easily. You're progressing much faster than I expected.");
@@ -421,7 +411,6 @@ public class ResistanceQuest extends ScriptHandler {
         }
         sm.setJob(Job.MECHANIC_3);
         sm.forceCompleteQuest(23035);
-        sm.forceCompleteQuest(29943);
         sm.sayNext("I have advanced you. You will now wield a skill that is more varied, more complex, and much, much more powerful. Don't worry, I trust that you will be able to handle it with ease.");
         sm.sayPrev("I'll see you for your next mission. Keep fighting the good fight.");
     }
@@ -484,9 +473,7 @@ public class ResistanceQuest extends ScriptHandler {
         sm.addSkill(32121005, 0, 10);
         sm.addSkill(32121006, 0, 10);
         sm.addSkill(32121007, 0, 10);
-
         sm.forceCompleteQuest(23052);
-        sm.forceCompleteQuest(29944);
         sm.sayNext("I've advanced you. I've also given you some sills that I know of but haven't mastered yet. I have a hunch that you'll be able to master them. After all, you are the most skilled member of the Resistance now!");
         sm.sayBoth("Could this be my last lesson with you? Nah, can't be. You may be stronger, but I'm still smarter. I'm sure there's plenty more you can learn from me. So I'll see you at your next lesson... whenever that is...");
         sm.sayPrev("Until then, I look forward to seeing what you accomplish.");
@@ -495,7 +482,6 @@ public class ResistanceQuest extends ScriptHandler {
     @Script("q23053s")
     public static void q23053s(ScriptManager sm) {
         // You Surpass Me (23053 - start)
-
         sm.sayNext("Well, if it isn't the town hero, #h0#! It's so wonderful to see you. Ah, even though it's under the control of the Black Wings, I do so love #m310000000#.");
         sm.sayBoth("Are you feeling better?", ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.sayBoth("I still have a few aches and pains, but I'm fine. #p2151003# is the best healer around, after all. The only problem is...");
@@ -503,8 +489,7 @@ public class ResistanceQuest extends ScriptHandler {
         if (!sm.askYesNo("Haha, no, no. Rest easy. The problem is... you! You've become so strong that I don't have much to do. I used to be the best Wild Hunter in the Resistance, but now I'm not even good enough to teach you. That's why I want to give you an even more difficult mission!")) {
             return;
         }
-        if (!sm.addItem(1142245, 1)
-        ) {
+        if (!sm.addItem(1142245, 1)) {
             sm.sayNext("I was going to give you a gift for making the job advancement but I can't. Your Inventory Equip tab is full. Empty out at least one slot if you're interested in my gift.");
             return;
         }
@@ -534,8 +519,7 @@ public class ResistanceQuest extends ScriptHandler {
         if (!sm.askYesNo("Haha, no, no. Rest easy. The problem is... you! You've become so strong that I don't have much to do. I used to be the best Wild Hunter in the Resistance, but now I'm not even good enough to teach you. That's why I want to give you an even more difficult mission!")) {
             return;
         }
-        if (!sm.addItem(1142245, 1)
-        ) {
+        if (!sm.addItem(1142245, 1)) {
             sm.sayNext("I wanted to give you a gift to commemorate your new powers but I can't. Why do you carry so many things in your Inventory's Equip tab?");
             return;
         }
@@ -550,7 +534,6 @@ public class ResistanceQuest extends ScriptHandler {
         sm.addSkill(35121010, 0, 10);
         sm.addSkill(35121012, 0, 10);
         sm.forceCompleteQuest(23054);
-        sm.forceCompleteQuest(29944);
         sm.sayNext("I've advanced you. I've also given you some sills that I know of but haven't mastered yet. I have a hunch that you'll be able to master them. After all, you are the most skilled member of the Resistance now.");
         sm.sayBoth("With this, the end of my lessons has... neared. Though you are stronger than I am, there are a lot of things you can still learn from me. I will see you at our next lesson... Whenever that may be...");
         sm.sayPrev("Until then, I look forward to seeing your accomplishments!");

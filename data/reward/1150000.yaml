@@ -1,0 +1,19 @@
+# Patrol Robot (1150000)
+
+rewards:
+  - [ 0, 22, 33, 0.600000 ]
+  - [ 1002058, 1, 1, 0.000100 ] # Mithril Viking Helm
+  - [ 1002613, 1, 1, 0.000100 ] # Brown Lagger Cap
+  - [ 1041029, 1, 1, 0.000100 ] # Black Split
+  - [ 1050007, 1, 1, 0.000100 ] # White Kendo Robe
+  - [ 1050025, 1, 1, 0.000100 ] # White Doros Robe
+  - [ 1302002, 1, 1, 0.000100 ] # Viking Sword
+  - [ 1462002, 1, 1, 0.000100 ] # Battle Crossbow
+  - [ 1472004, 1, 1, 0.000100 ] # Bronze Igor
+  - [ 1472005, 1, 1, 0.000100 ] # Steel Igor
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000598, 1, 1, 0.400000 ] # Patrol Robot Memory Chip
