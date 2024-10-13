@@ -147,12 +147,10 @@ public final class Edelstein extends ScriptHandler {
         //   Concrete Road : Edelstein Park 2 (310020100)
         //   Concrete Road : Edelstein Park 3 (310020200)
         sm.dropRewards(List.of(
-                Reward.item(2022712, 1, 1, 1),
-                Reward.item(2022712, 1, 1, 1)
+                Reward.item(2022712, 1, 1, 1.0),
+                Reward.item(2022712, 1, 1, 0.7),
+                Reward.item(2022712, 1, 1, 0.3)
         ));
-
-        //TODO: Tree regen has a delay
-        sm.setReactorState(3102000, 0);
     }
 
     @Script("edelItem1")
