@@ -271,10 +271,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 case 1 -> {
                     cs.getSp().setSp(jobLevel, Math.max(cs.getLevel() - 10, 0) * 3 + 5);
                 }
-                case 2, 3 -> {
-                    cs.getSp().addSp(jobLevel, 3);
-                }
-                case 4 -> {
+                case 2, 3, 4 -> {
                     cs.getSp().addSp(jobLevel, 3);
                 }
             }
@@ -758,11 +755,6 @@ public final class ScriptManagerImpl implements ScriptManager {
         mob.setLeft(isLeft);
         mob.setAppearType(appearType);
         field.getMobPool().addMob(mob);
-    }
-
-    @Override
-    public void spawnMob(int templateId, MobAppearType appearType, int x, int y) {
-        spawnMob(templateId, appearType, x, y, false);
     }
 
     @Override

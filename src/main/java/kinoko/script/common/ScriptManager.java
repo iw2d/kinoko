@@ -142,8 +142,6 @@ public interface ScriptManager {
 
     void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft);
 
-    void spawnMob(int templateId, MobAppearType appearType, int x, int y);
-
     void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField);
 
     void removeNpc(int templateId);

@@ -175,7 +175,7 @@ public class ResistanceTutorial extends ScriptHandler {
         //   Dangerous Hide-and-Seek : Suspicious Laboratory (931000010)
         //   Dangerous Hide-and-Seek : Suspicious Laboratory (931000011)
         //   Dangerous Hide-and-Seek : Suspicious Laboratory (931000012)
-        if(!sm.hasQRValue(QuestRecordType.ResistanceHideSeek, "vel00=1")) {
+        if (!sm.hasQRValue(QuestRecordType.ResistanceHideSeek, "vel00=1")) {
             sm.sayNext("Stay back!");
 
             sm.sayBoth("How did you get here? This place is prohibited!");
@@ -187,7 +187,7 @@ public class ResistanceTutorial extends ScriptHandler {
             sm.reservedEffect("Effect/Direction4.img/Resistance/ClickVel");
             return;
         }
-        if(!sm.hasQRValue(QuestRecordType.ResistanceHideSeek, "vel00=2")) {
+        if (!sm.hasQRValue(QuestRecordType.ResistanceHideSeek, "vel00=2")) {
             sm.sayNext("My name is #b#p2159006##k. I'm one of #rDoctor #p2159012#'s#k test subjects. But that's not important right now. You have to get out of here before someone sees you!");
 
             sm.sayBoth("Wait, what are you talking about? Someone's doing experiments on you?! And who's #p2159012#?", ScriptMessageParam.PLAYER_AS_SPEAKER);
@@ -216,7 +216,7 @@ public class ResistanceTutorial extends ScriptHandler {
         sm.sayBoth("I can't just leave you here! And you shouldn't give up hope so easily!", ScriptMessageParam.PLAYER_AS_SPEAKER);
 
         sm.sayBoth("But it IS hopeless. I'm stuck in here. But thank you for caring. It's been a long time since anyone's been kind to me. But now, hurry! You must go!");
-        if(!sm.askYesNo("#b(#p2159006# closes her eyes like she's given up. What should you do? How about trying to break open the vat?)#k")) {
+        if (!sm.askYesNo("#b(#p2159006# closes her eyes like she's given up. What should you do? How about trying to break open the vat?)#k")) {
             sm.sayNext("#b(You tried to hit the vat with all your might, but your hand slipped!)#k");
         }
 
@@ -261,7 +261,7 @@ public class ResistanceTutorial extends ScriptHandler {
         if (sm.getFieldId() == MAP_ESCAPE1) {
             User user = sm.getUser();
 
-            if(!user.hasDialog()) { //Try at fixing ScriptError spam due to user.addHP()
+            if (!user.hasDialog()) { //Try at fixing ScriptError spam due to user.addHP()
 
                 sm.setSpeakerId(SCHILLER);
                 sm.sayNext("Little rats. I say, how DARE you try to escape this place?");
@@ -438,7 +438,7 @@ public class ResistanceTutorial extends ScriptHandler {
     public static void labVita(ScriptManager sm) {
         // Dangerous Hide-and-Seek : Suspicious Laboratory (931000010)
         //   tutor00 (841, -33)
-        if(!sm.hasQRValue(QuestRecordType.ResistanceHideSeek, "vel00=1")) {
+        if (!sm.hasQRValue(QuestRecordType.ResistanceHideSeek, "vel00=1")) {
             sm.setSpeakerId(VITA);
             talkVitaLab(sm);
         }
@@ -465,7 +465,7 @@ public class ResistanceTutorial extends ScriptHandler {
     public static void q23005ing(ScriptManager sm) {
         // Edelstein Message Board (2152019)
         //   Black Wing Territory : Edelstein (310000000)
-        if(sm.hasQuestStarted(23005) && sm.hasItem(4032783)) {
+        if (sm.hasQuestStarted(23005) && sm.hasItem(4032783)) {
             sm.removeItem(4032783);
             sm.setQRValue(QuestRecordType.ResistanceCheckyFlier, "1");
             sm.sayNext("You pin the poster to the message board.");

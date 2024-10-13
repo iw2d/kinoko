@@ -20,7 +20,7 @@ public final class Edelstein extends ScriptHandler {
     public static void WendelinHeal(ScriptManager sm) {
         // Wendelline : Treatment Specialist (2151006)
         //   Resistance Headquarters : Training Room Entrance (310010010)
-        if(sm.askYesNo("Are you hurt? Allow me to treat your wounds.")) {
+        if (sm.askYesNo("Are you hurt? Allow me to treat your wounds.")) {
             User user = sm.getUser();
             user.setHp(user.getMaxHp());
             user.setMp(user.getMaxMp());
@@ -35,8 +35,7 @@ public final class Edelstein extends ScriptHandler {
         User user = sm.getUser();
 
         //sm.setFlipSpeaker(true); //Uncomment if using fixed taxi sprite
-        if(!sm.askYesNo("Hello, welcome to the Edelstein Taxi. I can take members of the Black Wings safely and quickly to #bVerne Mines#k. And if you're not part of the Black Wings? Well, I guess I'll take you as long as you pay... So, are you going to the mines?"))
-        {
+        if (!sm.askYesNo("Hello, welcome to the Edelstein Taxi. I can take members of the Black Wings safely and quickly to #bVerne Mines#k. And if you're not part of the Black Wings? Well, I guess I'll take you as long as you pay... So, are you going to the mines?")) {
             sm.sayNext("Let me know if you change your mind.");
             return;
         }
@@ -45,11 +44,11 @@ public final class Edelstein extends ScriptHandler {
         int cost = hat ? 3000 : 10000;
         String askWhat = hat ? "Oh, you're a member of the Black Wings. I have a special discount for the Black Wings. You can ride for a mere #b3000 Mesos#k. Hop on." :
                 "Please pay #b10000 Mesos#k to go to Verne Mine."; //Not GMS-like
-        if(!sm.askYesNo(askWhat)) {
+        if (!sm.askYesNo(askWhat)) {
             sm.sayNext("Let me know if you change your mind.");
             return;
         }
-        if(!sm.addMoney(-cost)) {
+        if (!sm.addMoney(-cost)) {
             sm.sayOk("It appears that you do not have enough mesos.");
             return;
         }
@@ -79,7 +78,7 @@ public final class Edelstein extends ScriptHandler {
                     return;
                 }
                 sm.playPortalSE();
-                sm.warpInstance(mapId, "out00", 310010000, 60*5);
+                sm.warpInstance(mapId, "out00", 310010000, 60 * 5);
                 return;
             }
 
@@ -94,12 +93,12 @@ public final class Edelstein extends ScriptHandler {
         //   Edelstein : Guarded Mansion (931010010)
         User user = sm.getUser();
 
-        if(!user.getField().getMobPool().isEmpty()) {
+        if (!user.getField().getMobPool().isEmpty()) {
             sm.message("Defeat the robots first."); //Unsure if GMS-like
             return;
         }
 
-        if(sm.addItem(4032757, 1)) {
+        if (sm.addItem(4032757, 1)) {
             sm.sayOk("#b(You've grabbed Gabrielle's clothes. Deliver them quickly to #p2152006#.)#k");
             return;
         }
@@ -110,9 +109,9 @@ public final class Edelstein extends ScriptHandler {
     public static void talk2159305(ScriptManager sm) {
         // Wonny (2159305)
         //   Black Wing Territory : Edelstein (310000000)
-        if(sm.hasQuestStarted(23938)) {
+        if (sm.hasQuestStarted(23938)) {
             final LocalDateTime now = LocalDateTime.now();
-            if(now.getHour() == 22 && !sm.hasQRValue(QuestRecordType.EdelsteinWonny10PM, "1")) {
+            if (now.getHour() == 22 && !sm.hasQRValue(QuestRecordType.EdelsteinWonny10PM, "1")) {
                 sm.setQRValue(QuestRecordType.EdelsteinWonny10PM, "1");
                 sm.sayNext("What are you looking at? I'm not standing here because I miss #p2154004#. I just... want to make sure that no thieves get in. Yeah.");
             }
@@ -123,7 +122,7 @@ public final class Edelstein extends ScriptHandler {
     public static void talkPavio(ScriptManager sm) {
         // Fabio (2159300)
         //   Edelstein : Shady Hair Salon (931010030)
-        if(sm.getField().getMobPool().isEmpty()) {
+        if (sm.getField().getMobPool().isEmpty()) {
             sm.sayNext("What are you doing?! How dare you try to destroy the #o5100002#s I worked so hard to obtain! Do you realize how expensive these are? I paid an exorbitant amount of money so that I could learn a new perm!!");
             sm.sayBoth("What? You've come in the name of the Watchmen to keep an eye on me? I don't even have the freedom to pursure beautiful hair?! I won't stand for this! I'm going to require compensation for the damage you've caused!");
             sm.setQRValue(QuestRecordType.EdelsteinFabioFirebombs, "1");
@@ -147,7 +146,7 @@ public final class Edelstein extends ScriptHandler {
         //   Concrete Road : Edelstein Park (310020000)
         //   Concrete Road : Edelstein Park 2 (310020100)
         //   Concrete Road : Edelstein Park 3 (310020200)
-        sm.dropRewards (List.of(
+        sm.dropRewards(List.of(
                 Reward.item(2022712, 1, 1, 1),
                 Reward.item(2022712, 1, 1, 1)
         ));
@@ -179,9 +178,9 @@ public final class Edelstein extends ScriptHandler {
         //   in03 (1090, 587)
         sm.playPortalSE();
 
-        if(sm.hasQuestStarted(23940) && !sm.hasQRValue(QuestRecordType.EdelsteinFabioFirebombs, "1")) {
+        if (sm.hasQuestStarted(23940) && !sm.hasQRValue(QuestRecordType.EdelsteinFabioFirebombs, "1")) {
             final LocalDateTime now = LocalDateTime.now();
-            if(now.getHour() == 18) {
+            if (now.getHour() == 18) {
                 sm.warpInstance(931010030, "out00", 310000000, 10 * 60);
                 return;
             }
@@ -204,7 +203,7 @@ public final class Edelstein extends ScriptHandler {
         //   in01 (1290, -53)
         sm.playPortalSE();
 
-        if(sm.hasQuestStarted(23925) && !sm.hasItem(4032757)) {
+        if (sm.hasQuestStarted(23925) && !sm.hasItem(4032757)) {
             sm.warpInstance(931010010, "out00", 310000000, 10 * 60);
             sm.scriptProgressMessage("Defeat the robots and get Gabrielle's clothes.");
             return;
@@ -226,11 +225,11 @@ public final class Edelstein extends ScriptHandler {
         // Black Wing Territory : Edelstein (310000000)
         //   in02 (1864, -16)
         sm.playPortalSE();
-        if(sm.hasQuestStarted(23023) || sm.hasQuestStarted(23024) || sm.hasQuestStarted(23025)) {
+        if (sm.hasQuestStarted(23023) || sm.hasQuestStarted(23024) || sm.hasQuestStarted(23025)) {
             sm.warpInstance(List.of(931000100, 931000101), "out00", 310000000, 10 * 60);
             return;
         }
-        if(sm.hasQuestStarted(23121) && !sm.hasQRValue(QuestRecordType.ResistanceWaterTrade, "1")) {
+        if (sm.hasQuestStarted(23121) && !sm.hasQRValue(QuestRecordType.ResistanceWaterTrade, "1")) {
             sm.warpInstance(931000420, "out00", 310000000, 10 * 60);
             sm.scriptProgressMessage("Thieves have attacked! Defeat all the thieves and then go see Ace the Pilot.");
             return;
@@ -245,12 +244,12 @@ public final class Edelstein extends ScriptHandler {
         Item equippedCap = sm.getUser().getInventoryManager().getEquipped().getItem(1); //wow
         boolean hat = equippedCap != null && equippedCap.getItemId() == 1003134;
 
-        if(!hat) {
+        if (!hat) {
             sm.message("You can't enter without proof that you are a member of the Black Wings. Equip something with the Black Wings' logo on it to enter.");
             return;
         }
         sm.playPortalSE();
-        sm.warp(310050000,"west00");
+        sm.warp(310050000, "west00");
     }
 
     @Script("enterFranRoom")
@@ -272,7 +271,7 @@ public final class Edelstein extends ScriptHandler {
         // Verne Mine : Power Plant Security (310050100)
         //   in00 (793, 16)
         sm.playPortalSE();
-        if(sm.hasQuestStarted(23033) || sm.hasQuestStarted(23034) || sm.hasQuestStarted(23035)) {
+        if (sm.hasQuestStarted(23033) || sm.hasQuestStarted(23034) || sm.hasQuestStarted(23035)) {
             sm.warpInstance(931000200, "out00", 310050100, 60 * 15);
         }
     }
@@ -282,11 +281,11 @@ public final class Edelstein extends ScriptHandler {
         // Hidden Street : Leery Corridor (310060221)
         //   in00 (953, 20)
         sm.playPortalSE();
-        if(!sm.hasItem(4032743)) {
+        if (!sm.hasItem(4032743)) {
             sm.message("You cannot enter without a keycard."); //Not GMS-like
             return;
         }
-        if(sm.hasQuestStarted(23043) || sm.hasQuestStarted(23044) || sm.hasQuestStarted(23045)) {
+        if (sm.hasQuestStarted(23043) || sm.hasQuestStarted(23044) || sm.hasQuestStarted(23045)) {
             sm.message("Find the missing Job Instructor!");
             switch (sm.getUser().getJob() / 100) {
                 case 32:
