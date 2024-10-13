@@ -50,6 +50,7 @@ public class ResistanceQuest extends ScriptHandler {
         sm.sayNext("I should actually be a Thief job instructor, but I've taken this position since the Resistance doesn't train thieves. It's the same as why #p2151000#, who should be a Warrior Job Instructor, is in charge of education.");
         sm.sayNext("In any case, since I'm in charge of missions, you'll be seeing me more often than even #p2151001#, your job instructor. Now, let's drive those Black Wings out of our territory.");
         sm.setQRValue(QuestRecordType.ResistanceFirstMission, "1");
+        sm.addExp(20);
         sm.forceCompleteQuest(23107);
     }
 
@@ -60,6 +61,7 @@ public class ResistanceQuest extends ScriptHandler {
         sm.sayNext("I should actually be a Thief job instructor, but I've taken this position since the Resistance doesn't train thieves. It's the same as why #p2151000#, who should be a Warrior Job Instructor, is in charge of education.");
         sm.sayNext("In any case, since I'm in charge of missions, you'll be seeing me more often than even #p2151002#, your job instructor. Now, let's drive those Black Wings out of our territory.");
         sm.setQRValue(QuestRecordType.ResistanceFirstMission, "1");
+        sm.addExp(20);
         sm.forceCompleteQuest(23108);
     }
 
@@ -70,6 +72,7 @@ public class ResistanceQuest extends ScriptHandler {
         sm.sayNext("I should actually be a Thief job instructor, but I've taken this position since the Resistance doesn't train thieves. It's the same as why #p2151000#, who should be a Warrior Job Instructor, is in charge of education.");
         sm.sayNext("In any case, since I'm in charge of missions, you'll be seeing me more often than even #p2151004#, your job instructor. Now, let's drive those Black Wings out of our territory.");
         sm.setQRValue(QuestRecordType.ResistanceFirstMission, "1");
+        sm.addExp(20);
         sm.forceCompleteQuest(23109);
     }
 
@@ -77,14 +80,14 @@ public class ResistanceQuest extends ScriptHandler {
     public static void q2345s(ScriptManager sm) {
         // Endangered Mushking Empire (2345 - start)
         if (!sm.askYesNo("#h0#, I know you're busy carrying out your Resistance missions, but could you spare me a moment? I received a request for help from outside, and I can't think of anyone better than you.")) {
-            sm.sayOk("Really? It's an urgent matter, so if you have some time, please see me."); //Unsure if this is GMS-like.
+            sm.sayOk("Oh really? Well, this is very urgent, so please talk to me again if you change your mind.");
             return;
         }
-        sm.sayNext("#bMushking Empire#k is in great danger right now. Their former Emperor is seriously ill... something terrible must have happened! Mushking Empire is located near Henesys. Please hurry!");
-        sm.sayBoth("Unlike the Cygnus Knights, who declined Edelstein's help during a time of need, members of the Resistance cannot just stand back and watch others suffer. Please, go save the Mushking Empire from danger. Here is a recommendation letter.");
-        boolean decision = sm.askYesNo("Mushking Empire is near Henesys. If you say yes, I'll send you to the Mushking Empire right away.");
+        sm.sayNext("#bMushking Empire#k is in great danger right now. Their former Emperor is seriously ill... something terrible must have happened! Mushking Empire is located near #m100000000#. Please hurry!");
+        sm.sayBoth("Unlike the Cygnus Knights, who declined #m310000000#'s help during a time of need, members of the Resistance cannot just stand back and watch others suffer. Please, go save the Mushking Empire from danger. Here is a recommendation letter.");
+        boolean decision = sm.askYesNo("Mushking Empire is near #m100000000#. If you say yes, I'll send you to the Mushking Empire right away.");
         if (!sm.addItem(4032375, 1)) {
-            sm.sayOk("Please make some space in your etc inventory."); //Unsure if this is GMS-like.
+            sm.sayOk("Please check and see if you have an empty slot available at your etc. inventory.");
             return;
         }
         sm.forceStartQuest(2345);
@@ -93,12 +96,13 @@ public class ResistanceQuest extends ScriptHandler {
             return;
         }
 
+        sm.playPortalSE();
         if (sm.getQRValue(QuestRecordType.MushroomCastleOpening).equals("1")) {
-            sm.playPortalSE();
             sm.warp(106020000, "left00"); // Mushroom Castle : Mushroom Forest Field
         } else {
             sm.warp(106020001); // TD_MC_Openning
         }
+
     }
 
     @Script("q2345e")
@@ -107,6 +111,7 @@ public class ResistanceQuest extends ScriptHandler {
         sm.sayNext("Huh? #bRecommendation Letter from a job instructor#k! What's this? You're the one sent here to save our Mushking Kingdom?");
         sm.sayBoth("Y...Yesss?", ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.sayBoth("Hmm, I see. Well, if a job instructor recommended you, I will put my trust in you as well. I apologize for my late introduction. I am the #bHead Security Officer#k in charge of the royal family's security. As you can see, I am currently in charge of security over this temporary housing and the key figures inside. We're not in the best of situations, but nevertheless, let me welcome you to the Mushking Empire.");
+        sm.addExp(1200);
         sm.removeItem(4032375);
         sm.setQRValue(QuestRecordType.MushroomCastleOpening, "1");
         sm.forceCompleteQuest(2345);
