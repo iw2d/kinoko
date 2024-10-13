@@ -226,30 +226,30 @@ public final class TitleQuest extends ScriptHandler {
     @Script("q29941s")
     public static void q29941s(ScriptManager sm) {
         // Special Training Beginner (29941 - start)
-        sm.forceStartQuest(29941);
+        sm.forceCompleteQuest(29941);
     }
 
     @Script("q29942s")
     public static void q29942s(ScriptManager sm) {
         // Special Training Intermediate (29942 - start)
-        sm.forceStartQuest(29942);
+        sm.forceCompleteQuest(29942);
     }
 
     @Script("q29943s")
     public static void q29943s(ScriptManager sm) {
         // Special Training Graduate (29943 - start)
-        sm.forceStartQuest(29943);
+        sm.forceCompleteQuest(29943);
     }
 
     @Script("q29944s")
     public static void q29944s(ScriptManager sm) {
         // Special Training Superior (29944 - start)
-        sm.forceStartQuest(29944);
+        sm.forceCompleteQuest(29944);
     }
 
     @Script("q29945s")
     public static void q29945s(ScriptManager sm) {
         // Special Training Master (29945 - start)
-        sm.forceStartQuest(29945);
+        sm.forceCompleteQuest(29945);
     }
 }

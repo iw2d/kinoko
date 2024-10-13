@@ -1,0 +1,11 @@
+# Grape Juice Bottle (150002)
+
+rewards:
+  - [ 0, 12, 19, 0.600000 ]
+  - [ 1060008, 1, 1, 0.000100 ] # Brown Lolico Pants
+  - [ 1372006, 1, 1, 0.000100 ] # Hardwood Wand
+  - [ 1472002, 1, 1, 0.000100 ] # Mithril Titans
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 4000597, 1, 1, 0.400000 ] # Cork Stopper

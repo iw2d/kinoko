@@ -2,6 +2,7 @@ package kinoko.world.field.reactor;
 
 import kinoko.provider.map.ReactorInfo;
 import kinoko.provider.reactor.ReactorEvent;
+import kinoko.provider.reactor.ReactorState;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.node.ServerExecutor;
 import kinoko.util.Lockable;
@@ -66,6 +67,11 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
 
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
+
+    public int getTimeOut() {
+        final ReactorState reactorState = template.getStates().get(state);
+        return reactorState != null ? reactorState.getTimeOut() : 0;
+    }
 
     public boolean hasAction() {
         return getAction() != null && !getAction().isEmpty();

@@ -1051,4 +1051,9 @@ public final class AdminCommands {
     public static void reloadDrops(User user, String[] args) {
         RewardProvider.initialize();
     }
+
+    @Command("reloadshops")
+    public static void reloadShops(User user, String[] args) {
+        ShopProvider.initialize();
+    }
 }

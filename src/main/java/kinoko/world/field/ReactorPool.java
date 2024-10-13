@@ -53,6 +53,9 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         if (reactor.getReactorTime() > 0) {
             hitReactors.put(reactor, Instant.now().plus(reactor.getReactorTime(), ChronoUnit.SECONDS));
         }
+        if (reactor.getTimeOut() > 0) {
+            hitReactors.put(reactor, Instant.now().plus(reactor.getTimeOut(), ChronoUnit.MILLIS));
+        }
         // Broadcast reactor changing state
         field.broadcastPacket(FieldPacket.reactorChangeState(reactor, delay, 0, GameConstants.REACTOR_END_DELAY));
         // Dispatch reactor script

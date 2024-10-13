@@ -138,11 +138,12 @@ public final class QuestItemAct implements QuestAct {
 
         // Handle required slots for choice items
         if (rewardIndex >= 0) {
-            if (choices.size() < rewardIndex) {
+            final List<QuestItemData> filteredChoices = getFilteredChoices(user.getGender(), user.getJob());
+            if (filteredChoices.size() < rewardIndex) {
                 user.write(QuestPacket.failedUnknown());
                 return false;
             }
-            final QuestItemData choiceItemData = choices.get(rewardIndex);
+            final QuestItemData choiceItemData = filteredChoices.get(rewardIndex);
             final InventoryType inventoryType = InventoryType.getByItemId(choiceItemData.getItemId());
             requiredSlots.put(inventoryType, requiredSlots.getOrDefault(inventoryType, 0) + 1);
         }
@@ -198,10 +199,11 @@ public final class QuestItemAct implements QuestAct {
 
         // Give choice item
         if (rewardIndex >= 0) {
-            if (choices.size() < rewardIndex) {
+            final List<QuestItemData> filteredChoices = getFilteredChoices(user.getGender(), user.getJob());
+            if (filteredChoices.size() < rewardIndex) {
                 return false;
             }
-            final QuestItemData choiceItemData = choices.get(rewardIndex);
+            final QuestItemData choiceItemData = filteredChoices.get(rewardIndex);
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(choiceItemData.getItemId());
             if (itemInfoResult.isEmpty()) {
                 return false;
@@ -258,6 +260,12 @@ public final class QuestItemAct implements QuestAct {
 
     private List<QuestItemData> getFilteredItems(int gender, int job) {
         return items.stream()
+                .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
+                .toList();
+    }
+
+    private List<QuestItemData> getFilteredChoices(int gender, int job) {
+        return choices.stream()
                 .filter(itemData -> itemData.checkGender(gender) && itemData.checkJob(job))
                 .toList();
     }

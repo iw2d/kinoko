@@ -1,0 +1,14 @@
+# Potted Morning Glory (150001)
+
+rewards:
+  - [ 0, 9, 14, 0.600000 ]
+  - [ 1002053, 1, 1, 0.000100 ] # Green Skullcap
+  - [ 1002126, 1, 1, 0.000100 ] # Green Ghetto Beanie
+  - [ 1082002, 1, 1, 0.000100 ] # Work Gloves
+  - [ 1422002, 1, 1, 0.000100 ] # Heavy Mace
+  - [ 1452002, 1, 1, 0.000100 ] # War Bow
+  - [ 1452003, 1, 1, 0.000100 ] # Composite Bow
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 4000596, 1, 1, 0.400000 ] # Morning Glory

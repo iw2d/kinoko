@@ -5,7 +5,6 @@ import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 
 public final class MuLungGarden extends ScriptHandler {
-    // NPCS
     @Script("hwang")
     public static void hwang(ScriptManager sm) {
         // Captain Hwang (2092001)
@@ -34,7 +33,6 @@ public final class MuLungGarden extends ScriptHandler {
         }
     }
 
-    // PORTALS
     @Script("enterPottery")
     public static void enterPottery(ScriptManager sm) {
         // Herb Town : Red-Nose Pirate Den 3 (251010403)

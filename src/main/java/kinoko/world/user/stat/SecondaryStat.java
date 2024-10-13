@@ -135,7 +135,7 @@ public final class SecondaryStat {
     }
 
     public int getRidingVehicle() {
-        return getOption(CharacterTemporaryStat.RideVehicle).rOption;
+        return getOption(CharacterTemporaryStat.RideVehicle).nOption;
     }
 
     public DiceInfo getDiceInfo() {
