@@ -83,28 +83,29 @@ public final class MushroomCastle extends ScriptHandler {
     }
 
     @Script("killarmush")
-    public static void killarmush(ScriptManager sm) {  //Unsure if GMS-like, Referenced Vertisy for these ones
+    public static void killarmush(ScriptManager sm) {
         // Killer Mushroom Spore (2430014)
-        if (sm.askAccept("#bDo you want to use the killer mushroom Spore?#k\r\n\r\n#r#e<Caution>\r\n#nNot for human consumption!\r\nIf ingested, seek medical attention immediately!")) {
-            if(sm.getFieldId() != 106020300) {
-                sm.sayOk("It doesn't look like there's anything to use the Killer Mushroom Spore on around here!");
-                return;
-            }
+        if(sm.getFieldId() != 106020300) {
+            sm.sayOk("It doesn't look like there's anything to use the Killer Mushroom Spore on around here!");
+            return;
+        }
 
-            PortalInfo ptObstacle = sm.getField().getPortalByName("obstacle").get();
-            boolean close = (sm.getUser().getX() >= (ptObstacle.getX() - 300)); //210 in Vertisy
-            if (!close) {
-                sm.message("You must be closer in order to use the Killer Mushroom Spore."); //Not GMS-like, unsure what this should say.
-                return;
-            }
+        PortalInfo ptObstacle = sm.getField().getPortalByName("obstacle").get();
+        boolean close = (sm.getUser().getX() >= (ptObstacle.getX() - 300)); //210 in Vertisy
+        if (!close) {
+            sm.message("You must be closer in order to use the Killer Mushroom Spore."); //Not GMS-like, unsure what this should say.
+            return;
+        }
+        if (sm.askAccept("#bDo you want to use the killer mushroom Spore?#k\r\n\r\n#r#e<Caution>\r\n#nNot for human consumption!\r\nIf ingested, seek medical attention immediately!")) {
             sm.sayNext("Success! The barrier is broken!");
             sm.scriptProgressMessage("Mushroom Forest Barrier Removal Complete 1/1");
             sm.message("The Mushroom Forest Barrier has been removed and penetrated.");
             sm.removeItem(2430014);
 
-            if(!sm.hasQuestStarted(2338))
+            if(!sm.hasQuestStarted(2338)) {
                 sm.forceStartQuest(2338);
-            sm.forceCompleteQuest(2338);
+            }
+            sm.forceCompleteQuest(2338); //Unsure if this is right, referenced Vertisy for this ID
 
             sm.playPortalSE();
             sm.warp(106020400, "left00");
@@ -290,13 +291,13 @@ public final class MushroomCastle extends ScriptHandler {
         final int choice = sm.askMenu("You will be moved to the #b#m106021401##k. Where would you like to go?\r\n", options);
         final int mapId = maps.get(choice).getLeft();
         if(choice == 0) {
-            //if(sm.checkParty(2, 30)) {
-            sm.playPortalSE();
-            sm.partyWarpInstance(mapId, "out01", 106021400, 10 * 60);
+            if(sm.checkParty(2, 30)) {
+                sm.playPortalSE();
+                sm.partyWarpInstance(mapId, "out01", 106021400, 10 * 60);
+                return;
+            }
+            sm.sayOk("You must be in a party of 2-6 members at level 30 or higher to continue.");
             return;
-            //}
-            //sm.sayOk("You must be in a party of 2-6 members at level 30 or higher to continue.");
-            //return;
         }
         if(!sm.hasItem(4032388)) {
             sm.sayOk("You cannot enter without the #t4032388#.");
