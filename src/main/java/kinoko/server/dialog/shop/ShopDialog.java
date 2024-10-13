@@ -48,7 +48,6 @@ public final class ShopDialog implements Dialog {
                 final int itemId = inPacket.decodeInt(); // nItemID
                 final int count = inPacket.decodeShort(); // nCount
                 final int price = inPacket.decodeInt(); // DiscountPrice
-                final boolean rechargeable = ItemConstants.isRechargeableItem(itemId);
                 // Check buy request matches with shop data
                 if (index >= items.size()) {
                     user.write(FieldPacket.shopResult(ShopResultType.ServerMsg)); // Due to an error, the trade did not happen.
@@ -71,7 +70,8 @@ public final class ShopDialog implements Dialog {
                     return;
                 }
                 // Check if user can add item to inventory
-                if (!im.canAddItem(itemId, count)) {
+                final int totalQuantity = shopItem.getQuantity() * count;
+                if (!im.canAddItem(itemId, totalQuantity)) {
                     user.write(FieldPacket.shopResult(ShopResultType.BuyUnknown)); // Please check if your inventory is full or not.
                     return;
                 }
@@ -82,7 +82,7 @@ public final class ShopDialog implements Dialog {
                     return;
                 }
                 final ItemInfo ii = itemInfoResult.get();
-                final Item boughtItem = ii.createItem(user.getNextItemSn(), rechargeable ? ii.getSlotMax() : count);
+                final Item boughtItem = ii.createItem(user.getNextItemSn(), totalQuantity);
                 // Deduct money and add item to inventory
                 if (!im.addMoney((int) -totalPrice)) {
                     throw new IllegalStateException("Could not deduct total price from user");
