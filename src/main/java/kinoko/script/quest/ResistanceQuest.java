@@ -140,8 +140,10 @@ public class ResistanceQuest extends ScriptHandler {
     public static void enterResi_23120(ScriptManager sm) {
         // Black Wing Territory : Edelstein (310000000)
         //   in05 (915, 581)
-        sm.playPortalSE();
-        sm.warpInstance(931000410, "out00", 310000000, 10 * 60);
+        if(sm.hasQuestStarted(23120)) {
+            sm.playPortalSE();
+            sm.warpInstance(931000410, "out00", 310000000, 10 * 60);
+        }
     }
 
     @Script("enterDelivery")
@@ -159,7 +161,7 @@ public class ResistanceQuest extends ScriptHandler {
     public static void enterSuar(ScriptManager sm) {
         // Concrete Road : Edelstein Park 2 (310020100)
         //   in00 (862, -674)
-        if (sm.hasQuestCompleted(23127)) {
+        if (sm.hasQuestCompleted(23126) && sm.hasQuestCompleted(23127)) {
             return;
         }
         sm.playPortalSE();

@@ -6,6 +6,7 @@ import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.script.common.ScriptMessageParam;
 import kinoko.util.Tuple;
+import kinoko.world.field.MobPool;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
@@ -243,7 +244,7 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("q2327s")
     public static void q2327s(ScriptManager sm) {
         // James's Whereabouts (3) (2327 - start)
-        if(!sm.askYesNo("Okay, it's time to use the #t4001317#")) {
+        if(!sm.askYesNo("Okay, it's time to use the #b#t4001317##k that #b#h0##k brought me to escape. I'll escape first, so please watch my back, okay? Again, thank you so much! I'll be sure to tell my brother about you.")) {
             return;
         }
         sm.sayNext("Thank you so much. Let me put on this disguise before we start.");
@@ -256,18 +257,25 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("TD_MC_keycheck")
     public static void TD_MC_keycheck(ScriptManager sm) {
         // Mushroom Castle : East Castle Tower (106021400)
-        User user = sm.getUser();
-        boolean hasKey = user.getInventoryManager().hasItem(4032388, 1);
-        if(hasKey && !sm.hasQuestStarted(2332)) {
+        boolean hasKey = sm.getUser().getInventoryManager().hasItem(4032388, 1);
+        if(hasKey && !sm.hasQRValue(QuestRecordType.MushroomCastleVioletta, "1")) {
             sm.scriptProgressMessage("Acquired the Wedding Hall Key 1/1");
-            sm.sayNext("This is #b#t4032388##k! This will allow us to enter the #m106021600#, where #bPrincess #p1300002##k is imprisoned.", ScriptMessageParam.PLAYER_AS_SPEAKER);
         }
+    }
+
+    @Script("TD_MD_Bgate")
+    public static void TD_MD_Bgate(ScriptManager sm) {
+        // Mushroom Castle : The Last Castle Tower (106021402)
+        //   left00 (-192, 140)
+        sm.playPortalSE();
+        sm.warp(106021401, "right00");
     }
 
     @Script("q2332s")
     public static void q2332s(ScriptManager sm) {
         // Where's Violetta? (2332 - start)
         sm.forceStartQuest(2332);
+        sm.sayNext("This is #b#t4032388##k! This will allow us to enter the #m106021600#, where #bPrincess #p1300002##k is imprisoned.", ScriptMessageParam.PLAYER_AS_SPEAKER);
     }
 
     @Script("TD_MC_Egate")
@@ -284,7 +292,7 @@ public final class MushroomCastle extends ScriptHandler {
         //   TD_MC_enterboss1 (268, -699)
         sm.setSpeakerId(1300012);
         final List<Tuple<Integer, String>> maps = List.of(
-                Tuple.of(106021500, "1. Bringing Down King Pepe (Party: 2-6 / Level: 30 or higher)"),
+                Tuple.of(106021501, "1. Bringing Down King Pepe (Party: 2-6 / Level: 30 or higher)"),
                 Tuple.of(106021401, "2. Saving Violetta (Solo only / Level: 30 or higher)")
         );
         final Map<Integer, String> options = createOptions(maps, Tuple::getRight);
@@ -296,7 +304,7 @@ public final class MushroomCastle extends ScriptHandler {
                 sm.partyWarpInstance(mapId, "out01", 106021400, 10 * 60);
                 return;
             }
-            sm.sayOk("You must be in a party of 2-6 members at level 30 or higher to continue.");
+            sm.sayOk("You must be in a party of 2-6 members at level 30 or higher to continue."); //Not GMS-like
             return;
         }
         if(!sm.hasItem(4032388)) {
@@ -321,14 +329,12 @@ public final class MushroomCastle extends ScriptHandler {
     public static void TD_MC_enterboss2(ScriptManager sm) {
         // Mushroom Castle : The Last Castle Tower (106021402)
         //   right00 (255, 141)
-        if(!sm.hasQuestCompleted(2332)) { //Unsure if GMS-like, don't think it matters though.
-            sm.setSpeakerId(1300013);
-            if (!sm.hasItem(4032388) || !sm.askYesNo("You can enter the #m106021600# using the #t4032388#")) {
-                return;
-            }
+        sm.setSpeakerId(1300013);
+        if (!sm.hasItem(4032388) || !sm.askYesNo("You can enter the #m106021600# using the #t4032388#. Would you like to enter?")) {
+            return;
         }
         sm.playPortalSE();
-        sm.warpInstance(106021600, "left00", 106021402, 10 * 60); //GMS-like would have you warp to "sp" instead.
+        sm.warpInstance(106021600, "left00", 106021402, 10 * 60); //Not GMS-like, would warp to "sp" instead.
     }
 
     @Script("TD_MC_violetaEnter")
@@ -350,7 +356,7 @@ public final class MushroomCastle extends ScriptHandler {
         // Mushroom Castle : Entrance to Wedding Hall (106021507)
         // Mushroom Castle : Entrance to Wedding Hall (106021508)
         // Mushroom Castle : Entrance to Wedding Hall (106021509)
-        int variant = random.nextInt(3);
+        int variant = random.nextInt(3); //Unsure if chances are GMS-like
         sm.setInstanceVariable("pepeVariant", String.valueOf(variant));
         sm.spawnMob(3300005 + variant, MobAppearType.NORMAL, 100, -100, true);
     }
@@ -362,7 +368,8 @@ public final class MushroomCastle extends ScriptHandler {
 
 
         if(sm.hasQRValue(QuestRecordType.MushroomCastlePepe, "001001001") && !sm.getUser().getInventoryManager().hasItem(4032388, 1)) {
-            if(sm.getField().getMobPool().isEmpty()) {
+            MobPool mobPool = sm.getField().getMobPool();
+            if(mobPool.getByTemplateId(3300005).isEmpty() && mobPool.getByTemplateId(3300006).isEmpty() && mobPool.getByTemplateId(3300007).isEmpty()) {
                 if (!sm.addItem(4032388, 1)) {
                     sm.message("Please make room in your Etc inventory."); //Unsure if GMS-like
                     return;
@@ -371,7 +378,7 @@ public final class MushroomCastle extends ScriptHandler {
             }
         }
         sm.playPortalSE();
-        sm.warp(106021400, "TD_MC_enterboss1"); //portalName not GMS-like, QOL so you don't have to climb every time.
+        sm.warp(106021400, "TD_MC_enterboss1"); //Not GMS-like, portalName is QOL.
     }
 
     @Script("findvioleta")
@@ -396,22 +403,30 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("q2333s")
     public static void q2333s(ScriptManager sm) {
         // The Story of Betrayal (2333 - start)
-        sm.sayNext("Ah, you're the brave hero that has come to save me, #b#h0##k! I knew you'd come! *Sniff sniff*", ScriptMessageParam.FLIP_SPEAKER);
-        sm.sayBoth("Are you alright, Princess?", ScriptMessageParam.PLAYER_AS_SPEAKER);
-        sm.sayBoth("Yes, I'm fine. But my father... how is my father? Is he alright?", ScriptMessageParam.FLIP_SPEAKER);
-        sm.sayBoth("Yes, #b#p1300000##k is in a safe place outside the castle with his ministers.", ScriptMessageParam.PLAYER_AS_SPEAKER);
-        sm.setSpeakerId(1300001);
-        sm.sayBoth("How dare you step foot in here! You're terribly mistaken if you think this is how it ends!", ScriptMessageParam.SPEAKER_ON_RIGHT);
-        sm.setSpeakerId(1300002);
-        sm.sayBoth("Watch out! It's dangerous. He's trying to summon the one who's behind all of this!", ScriptMessageParam.FLIP_SPEAKER);
-        sm.sayBoth("The one who's behind all of this? Are you saying there is someone else that's responsible for this?", ScriptMessageParam.PLAYER_AS_SPEAKER);
-        sm.setSpeakerId(1300001);
-        sm.sayBoth("Silence! He'll be here soon!", ScriptMessageParam.SPEAKER_ON_RIGHT);
-        sm.setSpeakerId(1300002);
-        sm.sayBoth("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
-        sm.spawnMob(3300008, MobAppearType.PRIMEMINISTER, 215, 142, true);
+        String spawnedPM = sm.getInstanceVariable("spawnedPM");
+
+        if(spawnedPM != "1") {
+            sm.sayNext("Ah, you're the brave hero that has come to save me, #b#h0##k! I knew you'd come! *Sniff sniff*", ScriptMessageParam.FLIP_SPEAKER);
+            sm.sayBoth("Are you alright, Princess?", ScriptMessageParam.PLAYER_AS_SPEAKER);
+            sm.sayBoth("Yes, I'm fine. But my father... how is my father? Is he alright?", ScriptMessageParam.FLIP_SPEAKER);
+            sm.sayBoth("Yes, #b#p1300000##k is in a safe place outside the castle with his ministers.", ScriptMessageParam.PLAYER_AS_SPEAKER);
+            sm.setSpeakerId(1300001);
+            sm.sayBoth("How dare you step foot in here! You're terribly mistaken if you think this is how it ends!", ScriptMessageParam.SPEAKER_ON_RIGHT);
+            sm.setSpeakerId(1300002);
+            sm.sayBoth("Watch out! It's dangerous. He's trying to summon the one who's behind all of this!", ScriptMessageParam.FLIP_SPEAKER);
+            sm.sayBoth("The one who's behind all of this? Are you saying there is someone else that's responsible for this?", ScriptMessageParam.PLAYER_AS_SPEAKER);
+            sm.setSpeakerId(1300001);
+            sm.sayBoth("Silence! He'll be here soon!", ScriptMessageParam.SPEAKER_ON_RIGHT);
+            sm.setSpeakerId(1300002);
+            sm.sayBoth("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
+            sm.setInstanceVariable("spawnedPM", "1");
+            sm.spawnMob(3300008, MobAppearType.PRIMEMINISTER, 215, 142, true);
+            sm.forceStartQuest(2333);
+            sm.scriptProgressMessage("New Mission! Defeat the Prime Minister!");
+            return;
+        }
+        sm.sayOk("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
         sm.forceStartQuest(2333);
-        sm.scriptProgressMessage("New Mission! Defeat the Prime Minister!");
     }
 
     @Script("q2333e")
@@ -440,7 +455,7 @@ public final class MushroomCastle extends ScriptHandler {
         // The Identity of the Princess (2334 - start)
         sm.sayNext("Thank you so much, #b#h0##k. You are the hero that has saved our empire from danger. I'm so grateful for what you've done, I don't know how to thank you. And please understand why I can't show you my face.", ScriptMessageParam.FLIP_SPEAKER);
         sm.sayBoth("It's humiliating to say this, but ever since I was a baby, my family has kept my face veiled from the world. They feared of men falling hopelessly in love with me. I've grown so accustomed to it that I even shy away from women. I know, it's rude of me to have my back turned against the hero, but I'll need some time to muster my courage before I can greet you face to face.", ScriptMessageParam.FLIP_SPEAKER);
-        sm.sayBoth("I see... \r\n#b(Wow, how pretty could she be?)", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I see...\r\n#b(Wow, how pretty could she be?)", ScriptMessageParam.PLAYER_AS_SPEAKER);
 
         sm.forceStartQuest(2334);
         sm.forceCompleteQuest(2334);
@@ -509,6 +524,7 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("TD_MC_Openning")
     public static void TD_MC_Openning(ScriptManager sm) {
         // null (106020001)
+        sm.setQRValue(QuestRecordType.MushroomCastleOpening, "1");
         sm.setDirectionMode(true, 0);
         sm.reservedEffect("Effect/Direction2.img/open/back0");
         sm.reservedEffect("Effect/Direction2.img/open/back1");
@@ -520,7 +536,7 @@ public final class MushroomCastle extends ScriptHandler {
         sm.reservedEffect("Effect/Direction2.img/open/frame");
         sm.reservedEffect("Effect/Direction2.img/open/chat");
         sm.reservedEffect("Effect/Direction2.img/open/out");
-        sm.setDirectionMode(false, 12000);
+        sm.setDirectionMode(false, 13000);
     }
 
     @Script("TD_MC_gasi")
@@ -536,12 +552,11 @@ public final class MushroomCastle extends ScriptHandler {
         sm.reservedEffect("Effect/Direction2.img/gasi/gasi6");
         sm.reservedEffect("Effect/Direction2.img/gasi/gasi7");
         sm.reservedEffect("Effect/Direction2.img/gasi/gasi8");
-        //sm.setDirectionMode(false, 13000); //Already done in TD_MC_gasi2
+        sm.setDirectionMode(false, 9000);
     }
 
     @Script("TD_MC_gasi2")
     public static void TD_MC_gasi2(ScriptManager sm) {
         // Mushroom Castle : Castle Wall Edge (106020501)
-        sm.setDirectionMode(false, 0);
     }
 }
