@@ -449,11 +449,6 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public boolean addItem(int itemId, int quantity) {
-        return addItems(List.of(Tuple.of(itemId, quantity)));
-    }
-
-    @Override
     public boolean addItems(List<Tuple<Integer, Integer>> items) {
         if (!canAddItems(items)) {
             return false;
@@ -483,22 +478,8 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public boolean canAddItem(int itemId, int quantity) {
-        return canAddItems(List.of(Tuple.of(itemId, quantity)));
-    }
-
-    @Override
     public boolean canAddItems(List<Tuple<Integer, Integer>> items) {
         return user.getInventoryManager().canAddItems(items);
-    }
-
-    @Override
-    public boolean removeItem(int itemId) {
-        final int itemCount = getItemCount(itemId);
-        if (itemCount > 0) {
-            return removeItem(itemId, itemCount);
-        }
-        return true;
     }
 
     @Override
@@ -523,11 +504,6 @@ public final class ScriptManagerImpl implements ScriptManager {
         // Equipped inventory = equip inventory with -position
         user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(InventoryType.EQUIP, -bodyPart.getValue()), false));
         return true;
-    }
-
-    @Override
-    public boolean hasItem(int itemId) {
-        return hasItem(itemId, 1);
     }
 
     @Override
@@ -674,18 +650,14 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void warpInstance(int mapId, String portalName, int returnMap, int timeLimit) {
-        warpInstance(List.of(mapId), portalName, returnMap, timeLimit);
-    }
-
-    @Override
-    public void warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit) {
+    public void warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit, Map<String, String> variables) {
         // Create instance
         final Optional<Instance> instanceResult = user.getConnectedServer().createInstance(mapIds, returnMap, timeLimit);
         if (instanceResult.isEmpty()) {
             throw new ScriptError("Could not create instance for map IDs : %s", mapIds);
         }
         final Instance instance = instanceResult.get();
+        variables.forEach(instance::setVariable);
         final Field targetField = instance.getFieldStorage().getFieldById(mapIds.get(0)).orElseThrow();
         // Resolve portal
         final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
@@ -697,18 +669,14 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void partyWarpInstance(int mapId, String portalName, int returnMap, int timeLimit) {
-        partyWarpInstance(List.of(mapId), portalName, returnMap, timeLimit);
-    }
-
-    @Override
-    public void partyWarpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit) {
+    public void partyWarpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit, Map<String, String> variables) {
         // Create instance
         final Optional<Instance> instanceResult = user.getConnectedServer().createInstance(mapIds, returnMap, timeLimit);
         if (instanceResult.isEmpty()) {
             throw new ScriptError("Could not create instance for map IDs : %s", mapIds);
         }
         final Instance instance = instanceResult.get();
+        variables.forEach(instance::setVariable);
         final Field targetField = instance.getFieldStorage().getFieldById(mapIds.get(0)).orElseThrow();
         // Resolve portal
         final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);

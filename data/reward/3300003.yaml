@@ -31,3 +31,4 @@ rewards:
   - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4131008, 1, 1, 0.000300 ] # Wand Production Manual
+  - [ 4001317, 1, 1, 0.010000, 2326 ] # Helmet Pepe's Helmet

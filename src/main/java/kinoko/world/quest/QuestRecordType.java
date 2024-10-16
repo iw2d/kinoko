@@ -5,7 +5,13 @@ package kinoko.world.quest;
  */
 public enum QuestRecordType {
     NautilusMomCow(2180),           // Find Fresh Milk
+
     MushroomCastleOpening(2311),    // Mushroom Castle Opening Cutscene
+    MushroomCastleInvestigation(2314),
+    MushroomCastleInvestigation2(2322),
+    MushroomCastleThornRemover(2324),
+    MushroomCastlePepe(2330),
+
     UnityPortal(7050),              // Dimensional Mirror Return Map
     FreeMarket(7600),               // Free Market Return Map
     TatamoLikeness(7810),           // Chief Tatamo Magic Seed Discount
