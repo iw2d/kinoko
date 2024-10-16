@@ -11,7 +11,6 @@ public enum QuestRecordType {
     MushroomCastleInvestigation2(2322),
     MushroomCastleThornRemover(2324),
     MushroomCastlePepe(2330),
-    MushroomCastleVioletta(2332),
 
     UnityPortal(7050),              // Dimensional Mirror Return Map
     FreeMarket(7600),               // Free Market Return Map

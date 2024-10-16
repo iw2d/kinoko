@@ -95,14 +95,7 @@ public class ResistanceQuest extends ScriptHandler {
             sm.sayOk("Are you planning to walk all the way there? If so, please hurry. You can get to the Mushking Empire #bby heading west from Ghost Mushroom Forest#k, where the Henesys Mushroom Forest ends. #b<Theme Dungeon: Mushroom Castle>#k is its entrance.");
             return;
         }
-
-        sm.playPortalSE();
-        if (sm.getQRValue(QuestRecordType.MushroomCastleOpening).equals("1")) {
-            sm.warp(106020000, "left00"); // Mushroom Castle : Mushroom Forest Field
-        } else {
-            sm.warp(106020001); // TD_MC_Openning
-        }
-
+        MushroomCastle.enterThemeDungeon(sm);
     }
 
     @Script("q2345e")
@@ -111,10 +104,9 @@ public class ResistanceQuest extends ScriptHandler {
         sm.sayNext("Huh? #bRecommendation Letter from a job instructor#k! What's this? You're the one sent here to save our Mushking Kingdom?");
         sm.sayBoth("Y...Yesss?", ScriptMessageParam.PLAYER_AS_SPEAKER);
         sm.sayBoth("Hmm, I see. Well, if a job instructor recommended you, I will put my trust in you as well. I apologize for my late introduction. I am the #bHead Security Officer#k in charge of the royal family's security. As you can see, I am currently in charge of security over this temporary housing and the key figures inside. We're not in the best of situations, but nevertheless, let me welcome you to the Mushking Empire.");
-        sm.addExp(1200);
         sm.removeItem(4032375);
-        sm.setQRValue(QuestRecordType.MushroomCastleOpening, "1");
         sm.forceCompleteQuest(2345);
+        sm.addExp(1200);
     }
 
     @Script("q23127s")
@@ -140,7 +132,7 @@ public class ResistanceQuest extends ScriptHandler {
     public static void enterResi_23120(ScriptManager sm) {
         // Black Wing Territory : Edelstein (310000000)
         //   in05 (915, 581)
-        if(sm.hasQuestStarted(23120)) {
+        if (sm.hasQuestStarted(23120)) {
             sm.playPortalSE();
             sm.warpInstance(931000410, "out00", 310000000, 10 * 60);
         }

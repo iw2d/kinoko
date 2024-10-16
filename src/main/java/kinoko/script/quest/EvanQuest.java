@@ -688,13 +688,7 @@ public final class EvanQuest extends ScriptHandler {
             return;
         }
         sm.forceStartQuest(2344);
-        if (sm.getQRValue(QuestRecordType.MushroomCastleOpening).equals("1")) {
-            sm.playPortalSE();
-            sm.warp(106020000, "left00"); // Mushroom Castle : Mushroom Forest Field
-        } else {
-            sm.playPortalSE();
-            sm.warp(106020001); // TD_MC_Openning
-        }
+        MushroomCastle.enterThemeDungeon(sm);
     }
 
     @Script("q2344e")
@@ -705,8 +699,8 @@ public final class EvanQuest extends ScriptHandler {
         sm.sayBoth("#bY... Yesss?");
         sm.setPlayerAsSpeaker(false);
         sm.sayBoth("Hmm, I see. Well, if a job instructor recommended you, I will put my trust in you as well. I apologize for my late introduction. I am the #b#p1300005##k in charge of the royal family's security. As you can see, I am currently in charge of security of this temporary basecamp and the tower key is missing. We're not in the best of situations, but nevertheless, let me welcome you to the #bMushroom Kingdom#k.");
-        sm.forceCompleteQuest(2344);
         sm.removeItem(4032375);
+        sm.forceCompleteQuest(2344);
     }
 
 

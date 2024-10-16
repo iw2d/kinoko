@@ -1,32 +1,31 @@
 package kinoko.script.quest;
 
 import kinoko.provider.map.PortalInfo;
-import kinoko.script.common.Script;
-import kinoko.script.common.ScriptHandler;
-import kinoko.script.common.ScriptManager;
-import kinoko.script.common.ScriptMessageParam;
-import kinoko.util.Tuple;
+import kinoko.script.common.*;
+import kinoko.util.Util;
 import kinoko.world.field.MobPool;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.quest.QuestRecordType;
-import kinoko.world.user.User;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public final class MushroomCastle extends ScriptHandler {
-
-    static Random random = new Random();
+    public static void enterThemeDungeon(ScriptManager sm) {
+        if (sm.getQRValue(QuestRecordType.MushroomCastleOpening).equals("1")) {
+            sm.warp(106020000, "left00"); // Mushroom Castle : Mushroom Forest Field
+        } else {
+            sm.warp(106020001); // TD_MC_Openning
+        }
+    }
 
     @Script("q2314s")
     public static void q2314s(ScriptManager sm) {
         // Exploring Mushroom Forest (1) (2314 - start)
-        if(!sm.askAccept("In order to rescue the princess, you must first investigate the Mushroom Forest. King Pepe has somehow set up a powerful barrier preventing anyone from entering the castle. Please investigate this matter for us right away.")) {
+        if (!sm.askAccept("In order to rescue the princess, you must first investigate the Mushroom Forest. King Pepe has somehow set up a powerful barrier preventing anyone from entering the castle. Please investigate this matter for us right away.")) {
             sm.sayOk("Please do not give up on the Mushking Empire!");
             return;
         }
-
         sm.forceStartQuest(2314);
         sm.sayNext("You'll run into the barrier in the Mushroom Forest if you head over to the east from your current location. Please be careful, though. From what I've heard, the area is infested with many atrocious monsters.");
     }
@@ -35,13 +34,13 @@ public final class MushroomCastle extends ScriptHandler {
     public static void investigate1(ScriptManager sm) {
         // Mushroom Castle : Deep Inside Mushroom Forest (106020300)
         //   investigate1 (1112, -18)
-        if(sm.hasQuestStarted(2314) && !sm.hasQRValue(QuestRecordType.MushroomCastleInvestigation, "1")) {
+        if (sm.hasQuestStarted(2314) && !sm.getQRValue(QuestRecordType.MushroomCastleInvestigation).equals("1")) {
             sm.sayNext("This looks to be a type of \"Mushroom Spore\" that has been transformed by magic into a strong defense barrier. It doesn't appear penetrable through physical force. Return to the #bSecretary of Domestic Affairs#k and report this matter.", ScriptMessageParam.PLAYER_AS_SPEAKER);
             sm.avatarOriented("Effect/OnUserEff.img/normalEffect/mushroomcastle/chatBalloon1");
             sm.setQRValue(QuestRecordType.MushroomCastleInvestigation, "1");
             return;
         }
-        if(sm.hasItem(2430014) && !sm.hasQuestCompleted(2338)) {
+        if (sm.hasItem(2430014) && !sm.hasQuestCompleted(2338)) {
             sm.sayOk("It seems as if the barrier could be broken using a Killer Mushroom Spore.", ScriptMessageParam.PLAYER_AS_SPEAKER);
         }
     }
@@ -57,11 +56,10 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("q2322s")
     public static void q2322s(ScriptManager sm) {
         // Over the Castle Walls (2) (2322 - start)
-        if(!sm.askAccept("Like I told you, we can't be relieved just because the barrier has been broken. The castle of the Mushking Empire is impenetrable from the outside, so it won't be easy for you to enter. First, would you mind investigating the outer walls of the castle?")) {
+        if (!sm.askAccept("Like I told you, we can't be relieved just because the barrier has been broken. The castle of the Mushking Empire is impenetrable from the outside, so it won't be easy for you to enter. First, would you mind investigating the outer walls of the castle?")) {
             sm.sayOk("Oh, really? You think you have a better idea?! Come talk to me when you get stuck outside the Castle Walls.");
             return;
         }
-
         sm.forceStartQuest(2322);
         sm.sayNext("Head over to the castle from the #b#m106020400##k, past the Mushroom Forest. Good luck.");
     }
@@ -70,27 +68,29 @@ public final class MushroomCastle extends ScriptHandler {
     public static void obstacle(ScriptManager sm) {
         // Mushroom Castle : Deep Inside Mushroom Forest (106020300)
         //   obstacle (1313, -11)
-        if(!sm.hasQuestCompleted(2338)) {
-            if(!sm.hasItem(4000507)) {
-                sm.message(!sm.hasItem(2430014) ? "The overgrown vines are blocking the way." : "You must remove the barrier by using the Killer Mushroom Spore first.");
-                sm.scriptProgressMessage("You cannot move forward due to the barrier.");
-                return;
+        if (sm.hasQuestCompleted(2338)) {
+            sm.playPortalSE();
+            sm.warp(106020400, "left00");
+        } else if (sm.removeItem(4000507, 1)) {
+            sm.playPortalSE();
+            sm.warp(106020400, "left00");
+        } else {
+            if (sm.hasItem(2430014)) {
+                sm.message("You must remove the barrier by using the Killer Mushroom Spore first.");
+            } else {
+                sm.message("The overgrown vines are blocking the way.");
             }
-            sm.removeItem(4000507, 1);
-            sm.message("You have used a Poison Spore to pass through the barrier.");
+            sm.scriptProgressMessage("You cannot move forward due to the barrier.");
         }
-        sm.playPortalSE();
-        sm.warp(106020400, "left00");
     }
 
     @Script("killarmush")
     public static void killarmush(ScriptManager sm) {
         // Killer Mushroom Spore (2430014)
-        if(sm.getFieldId() != 106020300) {
+        if (sm.getFieldId() != 106020300) {
             sm.sayOk("It doesn't look like there's anything to use the Killer Mushroom Spore on around here!");
             return;
         }
-
         PortalInfo ptObstacle = sm.getField().getPortalByName("obstacle").get();
         boolean close = (sm.getUser().getX() >= (ptObstacle.getX() - 300)); //210 in Vertisy
         if (!close) {
@@ -98,12 +98,13 @@ public final class MushroomCastle extends ScriptHandler {
             return;
         }
         if (sm.askAccept("#bDo you want to use the killer mushroom Spore?#k\r\n\r\n#r#e<Caution>\r\n#nNot for human consumption!\r\nIf ingested, seek medical attention immediately!")) {
+            if (!sm.removeItem(2430014, 1)) {
+                return;
+            }
             sm.sayNext("Success! The barrier is broken!");
             sm.scriptProgressMessage("Mushroom Forest Barrier Removal Complete 1/1");
             sm.message("The Mushroom Forest Barrier has been removed and penetrated.");
-            sm.removeItem(2430014);
-
-            if(!sm.hasQuestStarted(2338)) {
+            if (!sm.hasQuestStarted(2338)) {
                 sm.forceStartQuest(2338);
             }
             sm.forceCompleteQuest(2338); //Unsure if this is right, referenced Vertisy for this ID
@@ -117,7 +118,7 @@ public final class MushroomCastle extends ScriptHandler {
     public static void gotocastle(ScriptManager sm) {
         // Mushroom Castle : Split Road of Destiny (106020400)
         //   right00 (1388, -24)
-        boolean thorns = !sm.hasQRValue(QuestRecordType.MushroomCastleThornRemover, "1");
+        final boolean thorns = !sm.getQRValue(QuestRecordType.MushroomCastleThornRemover).equals("1");
         sm.playPortalSE();
         sm.warp(thorns ? 106020500 : 106020501);
     }
@@ -127,7 +128,7 @@ public final class MushroomCastle extends ScriptHandler {
         // Mushroom Castle : Castle Wall Edge (106020500)
         //   investigate2 (258, -14)
         //   investigate2-1 (258, -114)
-        if(!sm.hasQRValue(QuestRecordType.MushroomCastleInvestigation2, "1")) {
+        if (!sm.getQRValue(QuestRecordType.MushroomCastleInvestigation2).equals("1")) {
             sm.setNotCancellable(true);
             sm.sayNext("The colossal castle wall is covered with thorny vines. It's going to be difficult getting into the castle. For now, go report this to the #b#p1300003##k.", ScriptMessageParam.PLAYER_AS_SPEAKER);
             sm.setQRValue(QuestRecordType.MushroomCastleInvestigation2, "1");
@@ -143,8 +144,10 @@ public final class MushroomCastle extends ScriptHandler {
             return;
         }
         if (sm.askAccept("Do you wish to use the #bThorn Remover#k?")) {
+            if (!sm.removeItem(2430015, 1)) {
+                return;
+            }
             sm.setQRValue(QuestRecordType.MushroomCastleThornRemover, "1");
-            sm.removeItem(2430015);
             sm.warp(106020502);
         }
     }
@@ -152,25 +155,19 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("q2338s")
     public static void q2338s(ScriptManager sm) {
         // Killer Mushroom Spores, Again (2338 - start)
-        // Unsure what to do for this quest
-        boolean hasSpores = sm.getUser().getInventoryManager().hasItem(2430014, 1);
-        if(!sm.hasQuestCompleted(2338)) {
-            if (hasSpores) {
-                sm.sayOk("Just use the #bKiller Mushroom Spores#k I gave you."); //Not GMS-like
-                return;
-            }
-            sm.sayOk("You need more Killer Mushroom Spores?"); //Not GMS-like
-            sm.forceStartQuest(2338);
+        if (sm.hasItem(2430014)) {
+            sm.sayOk("Just use the #bKiller Mushroom Spores#k I gave you."); //Not GMS-like
+            return;
         }
-
+        sm.sayOk("You need more Killer Mushroom Spores?"); //Not GMS-like
+        sm.forceStartQuest(2338);
     }
 
     @Script("TD_MC_jump")
     public static void TD_MC_jump(ScriptManager sm) {
         // Mushroom Castle : Shadow Cliffs (106020403)
         //   top00 (1174, -970)
-        int which = random.nextInt(2);
-        sm.warp(106020600 + which);
+        sm.warp(106020600 + Util.getRandom(0, 1));
     }
 
     @Script("TD_MC_faild")
@@ -179,26 +176,22 @@ public final class MushroomCastle extends ScriptHandler {
         //   trap00 (-936, -139)
         sm.reservedEffect("Effect/Direction2.img/mushCatle/nugu");
         sm.message("You've been spotted by the guard and will now be sent to the bottom of the cliff.");
-
         // As seen here: https://youtu.be/E-oFRZcYbF4?t=277
         // For some reason this effect has no field node, unless I used the wrong one.
         try {
             Thread.sleep(2000); // Wait for 2 seconds (2000 milliseconds)
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Handle the interruption
-            e.printStackTrace();
+            throw new ScriptError("Interrupted during sleep");
         }
-
-        gotocastle(sm);
+        sm.warp(106020403); // Mushroom Castle : Shadow Cliffs
     }
 
     @Script("go_secretroom")
     public static void go_secretroom(ScriptManager sm) {
         // Mushroom Castle : Skyscraper 3 (106021000)
         //   in00 (927, -97)
-        if(sm.hasQuestStarted(2335) && sm.hasItem(4032405)) {
+        if (sm.hasQuestStarted(2335) && sm.removeItem(4032405, 1)) {
             sm.message("You used the Secret Key to enter.");
-            sm.removeItem(4032405);
             sm.warpInstance(106021001, "out00", 106021000, 60 * 60);
             return;
         }
@@ -237,19 +230,18 @@ public final class MushroomCastle extends ScriptHandler {
         sm.sayNext("H-h-help! I'm so scared!");
         sm.setNpcAction(1300008, "out");
         sm.sayBoth("What? My brother sent you here? Whew... I'm safe now. Thank you so much.");
-        sm.addExp(800);
         sm.forceCompleteQuest(2325);
+        sm.addExp(800);
     }
 
     @Script("q2327s")
     public static void q2327s(ScriptManager sm) {
         // James's Whereabouts (3) (2327 - start)
-        if(!sm.askYesNo("Okay, it's time to use the #b#t4001317##k that #b#h0##k brought me to escape. I'll escape first, so please watch my back, okay? Again, thank you so much! I'll be sure to tell my brother about you.")) {
+        if (!sm.askYesNo("Okay, it's time to use the #b#t4001317##k that #b#h0##k brought me to escape. I'll escape first, so please watch my back, okay? Again, thank you so much! I'll be sure to tell my brother about you.")) {
             return;
         }
         sm.sayNext("Thank you so much. Let me put on this disguise before we start.");
         sm.setNpcAction(1300008, "hat");
-        sm.forceStartQuest(2327);
         sm.forceCompleteQuest(2327);
         sm.addExp(800);
     }
@@ -257,10 +249,7 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("TD_MC_keycheck")
     public static void TD_MC_keycheck(ScriptManager sm) {
         // Mushroom Castle : East Castle Tower (106021400)
-        boolean hasKey = sm.getUser().getInventoryManager().hasItem(4032388, 1);
-        if(hasKey && !sm.hasQRValue(QuestRecordType.MushroomCastleVioletta, "1")) {
-            sm.scriptProgressMessage("Acquired the Wedding Hall Key 1/1");
-        }
+
     }
 
     @Script("TD_MD_Bgate")
@@ -274,8 +263,11 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("q2332s")
     public static void q2332s(ScriptManager sm) {
         // Where's Violetta? (2332 - start)
-        sm.forceStartQuest(2332);
-        sm.sayNext("This is #b#t4032388##k! This will allow us to enter the #m106021600#, where #bPrincess #p1300002##k is imprisoned.", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        if (sm.getFieldId() == 106021400) {
+            sm.forceStartQuest(2332);
+            sm.sayNext("This is #b#t4032388##k! This will allow us to enter the #m106021600#, where #bPrincess #p1300002##k is imprisoned.", ScriptMessageParam.PLAYER_AS_SPEAKER);
+            sm.scriptProgressMessage("Acquired the Wedding Hall Key 1/1");
+        }
     }
 
     @Script("TD_MC_Egate")
@@ -290,32 +282,27 @@ public final class MushroomCastle extends ScriptHandler {
     public static void TD_MC_enterboss1(ScriptManager sm) {
         // Mushroom Castle : East Castle Tower (106021400)
         //   TD_MC_enterboss1 (268, -699)
-        sm.setSpeakerId(1300012);
-        final List<Tuple<Integer, String>> maps = List.of(
-                Tuple.of(106021501, "1. Bringing Down King Pepe (Party: 2-6 / Level: 30 or higher)"),
-                Tuple.of(106021401, "2. Saving Violetta (Solo only / Level: 30 or higher)")
-        );
-        final Map<Integer, String> options = createOptions(maps, Tuple::getRight);
-        final int choice = sm.askMenu("You will be moved to the #b#m106021401##k. Where would you like to go?\r\n", options);
-        final int mapId = maps.get(choice).getLeft();
-        if(choice == 0) {
-            if(sm.checkParty(2, 30)) {
-                sm.playPortalSE();
-                sm.partyWarpInstance(mapId, "out01", 106021400, 10 * 60);
+        sm.setSpeakerId(1300012); // Door to East Castle Tower
+        final int choice = sm.askMenu("You will be moved to the #b#m106021401##k. Where would you like to go?\r\n", Map.of(
+                0, "1. Bringing Down King Pepe (Party: 1-6 / Level: 30 or higher)",
+                1, "2. Saving Violetta (Solo only / Level: 30 or higher)"
+        ));
+        if (choice == 0) {
+            if (!sm.checkParty(1, 30)) {
+                sm.sayOk("You must be in a party of 1-6 members at level 30 or higher to continue.");
                 return;
             }
-            sm.sayOk("You must be in a party of 2-6 members at level 30 or higher to continue."); //Not GMS-like
-            return;
-        }
-        if(!sm.hasItem(4032388)) {
-            sm.sayOk("You cannot enter without the #t4032388#.");
-            return;
-        }
-        if(sm.checkParty(1, 30) || sm.checkParty(0, 30)) {
+            // Warp to Entrance to Wedding Hall
             sm.playPortalSE();
-            sm.warp(mapId, "out00");
+            sm.partyWarpInstance(List.of(106021500), "out01", 106021400, 10 * 60, Map.of("pepeVariant", String.valueOf(Util.getRandom(0, 2))));
+        } else if (choice == 1) {
+            if (!sm.hasItem(4032388)) {
+                sm.sayOk("You cannot enter without the #t4032388#.");
+                return;
+            }
+            sm.playPortalSE();
+            sm.warp(106021401, "out00");
         }
-
     }
 
     @Script("TD_MC_bossEnter")
@@ -356,8 +343,7 @@ public final class MushroomCastle extends ScriptHandler {
         // Mushroom Castle : Entrance to Wedding Hall (106021507)
         // Mushroom Castle : Entrance to Wedding Hall (106021508)
         // Mushroom Castle : Entrance to Wedding Hall (106021509)
-        int variant = random.nextInt(3); //Unsure if chances are GMS-like
-        sm.setInstanceVariable("pepeVariant", String.valueOf(variant));
+        final int variant = Integer.parseInt(sm.getInstanceVariable("pepeVariant"));
         sm.spawnMob(3300005 + variant, MobAppearType.NORMAL, 100, -100, true);
     }
 
@@ -365,11 +351,9 @@ public final class MushroomCastle extends ScriptHandler {
     public static void out_pepeking(ScriptManager sm) {
         // Mushroom Castle : Entrance to Wedding Hall (106021500)
         //   out01 (-487, -66)
-
-
-        if(sm.hasQRValue(QuestRecordType.MushroomCastlePepe, "001001001") && !sm.getUser().getInventoryManager().hasItem(4032388, 1)) {
-            MobPool mobPool = sm.getField().getMobPool();
-            if(mobPool.getByTemplateId(3300005).isEmpty() && mobPool.getByTemplateId(3300006).isEmpty() && mobPool.getByTemplateId(3300007).isEmpty()) {
+        if (sm.getQRValue(QuestRecordType.MushroomCastlePepe).equals("001001001") && !sm.hasItem(4032388)) {
+            final MobPool mobPool = sm.getField().getMobPool();
+            if (mobPool.getByTemplateId(3300005).isEmpty() && mobPool.getByTemplateId(3300006).isEmpty() && mobPool.getByTemplateId(3300007).isEmpty()) {
                 if (!sm.addItem(4032388, 1)) {
                     sm.message("Please make room in your Etc inventory."); //Unsure if GMS-like
                     return;
@@ -393,7 +377,7 @@ public final class MushroomCastle extends ScriptHandler {
         // Mushroom Castle : Wedding Hall (106021607)
         // Mushroom Castle : Wedding Hall (106021608)
         // Mushroom Castle : Wedding Hall (106021609)
-        if(sm.hasQuestStarted(2332)) {
+        if (sm.hasQuestStarted(2332)) {
             sm.forceCompleteQuest(2332);
             sm.addExp(800);
             sm.scriptProgressMessage("<Where is Violetta?> Quest Complete 1/1");
@@ -403,9 +387,10 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("q2333s")
     public static void q2333s(ScriptManager sm) {
         // The Story of Betrayal (2333 - start)
-        String spawnedPM = sm.getInstanceVariable("spawnedPM");
-
-        if(spawnedPM != "1") {
+        if (sm.getInstanceVariable("spawnedPM").equals("1")) {
+            sm.sayOk("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
+            sm.forceStartQuest(2333);
+        } else {
             sm.sayNext("Ah, you're the brave hero that has come to save me, #b#h0##k! I knew you'd come! *Sniff sniff*", ScriptMessageParam.FLIP_SPEAKER);
             sm.sayBoth("Are you alright, Princess?", ScriptMessageParam.PLAYER_AS_SPEAKER);
             sm.sayBoth("Yes, I'm fine. But my father... how is my father? Is he alright?", ScriptMessageParam.FLIP_SPEAKER);
@@ -420,19 +405,16 @@ public final class MushroomCastle extends ScriptHandler {
             sm.setSpeakerId(1300002);
             sm.sayBoth("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
             sm.setInstanceVariable("spawnedPM", "1");
-            sm.spawnMob(3300008, MobAppearType.PRIMEMINISTER, 215, 142, true);
+            sm.spawnMob(3300008, MobAppearType.PRIMEMINISTER, 215, 142, true); // TODO : better handling for mob summon type (Effect/Summon.img)
             sm.forceStartQuest(2333);
             sm.scriptProgressMessage("New Mission! Defeat the Prime Minister!");
-            return;
         }
-        sm.sayOk("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
-        sm.forceStartQuest(2333);
     }
 
     @Script("q2333e")
     public static void q2333e(ScriptManager sm) {
         // The Story of Betrayal (2333 - end)
-        if(!sm.canAddItem(4032386, 1)) {
+        if (!sm.canAddItem(4032386, 1)) {
             sm.sayOk("Please have at least 1 slot empty in your Etc window.", ScriptMessageParam.FLIP_SPEAKER);
             return;
         }
@@ -457,7 +439,6 @@ public final class MushroomCastle extends ScriptHandler {
         sm.sayBoth("It's humiliating to say this, but ever since I was a baby, my family has kept my face veiled from the world. They feared of men falling hopelessly in love with me. I've grown so accustomed to it that I even shy away from women. I know, it's rude of me to have my back turned against the hero, but I'll need some time to muster my courage before I can greet you face to face.", ScriptMessageParam.FLIP_SPEAKER);
         sm.sayBoth("I see...\r\n#b(Wow, how pretty could she be?)", ScriptMessageParam.PLAYER_AS_SPEAKER);
 
-        sm.forceStartQuest(2334);
         sm.forceCompleteQuest(2334);
         sm.addExp(1000);
         sm.setNpcAction(1300002, "face");
@@ -471,18 +452,18 @@ public final class MushroomCastle extends ScriptHandler {
     public static void q2335s(ScriptManager sm) {
         // Eliminating the Rest (2335 - start)
         sm.sayNext("This is not the end, #b#h0##k. Minions of the #b#o3300008##k can still be found scattered throughout the castle.", ScriptMessageParam.FLIP_SPEAKER);
-        if(sm.askAccept("From what I've heard, there is a place near #b#m##k where a group of the #o3300008#'s minions can be found. I've picked up a key that the #o3300008# has dropped the other day. Here, use this key.", ScriptMessageParam.FLIP_SPEAKER)) {
-            if(!sm.addItem(4032405, 1)) {
+        if (sm.askAccept("From what I've heard, there is a place near #b#m106021000##k where a group of the #o3300008#'s minions can be found. I've picked up a key that the #o3300008# has dropped the other day. Here, use this key.", ScriptMessageParam.FLIP_SPEAKER)) {
+            if (!sm.addItem(4032405, 1)) {
                 sm.sayOk("Please have at least 1 slot empty in your Etc window.", ScriptMessageParam.FLIP_SPEAKER);
                 return;
             }
-            sm.sayNext("For one last time, good luck.", ScriptMessageParam.FLIP_SPEAKER);
             sm.forceStartQuest(2335);
+            sm.sayNext("For one last time, good luck.", ScriptMessageParam.FLIP_SPEAKER);
         }
     }
 
     @Script("pepeking_effect")
-    public static void pepeking_effect(ScriptManager sm) { //TODO: This part doesn't always work for some reason.
+    public static void pepeking_effect(ScriptManager sm) {
         // Mushroom Castle : Entrance to Wedding Hall (106021500)
         // Mushroom Castle : Castle Tower that leads to the Top (106021501)
         // Mushroom Castle : Entrance to Wedding Hall (106021502)
@@ -493,8 +474,8 @@ public final class MushroomCastle extends ScriptHandler {
         // Mushroom Castle : Entrance to Wedding Hall (106021507)
         // Mushroom Castle : Entrance to Wedding Hall (106021508)
         // Mushroom Castle : Entrance to Wedding Hall (106021509)
-        int variant = Integer.parseInt(sm.getInstanceVariable("pepeVariant"));
-        String which = variant == 2 ? "W" : (variant == 1 ? "G" : "B");
+        final int variant = Integer.parseInt(sm.getInstanceVariable("pepeVariant"));
+        final String which = variant == 2 ? "W" : (variant == 1 ? "G" : "B");
         sm.screenEffect("pepeKing/frame/W");
         sm.screenEffect("pepeKing/pepe/pepe" + which);
         sm.screenEffect("pepeKing/frame/B");
@@ -505,13 +486,11 @@ public final class MushroomCastle extends ScriptHandler {
     public static void TD_MC_first(ScriptManager sm) {
         // Singing Mushroom Forest : Ghost Mushroom Forest (100020400)
         //   TD00 (-1094, 214)
-        if (sm.getLevel() < 30) {
+        if (sm.getLevel() < 30) { // TODO : maybe prevent entering without the quest?
             sm.message("A strange force is blocking you from entering.");
-        } else if (sm.getQRValue(QuestRecordType.MushroomCastleOpening).equals("1")) {
-            sm.playPortalSE();
-            sm.warp(106020000, "left00"); // Mushroom Castle : Mushroom Forest Field
         } else {
-            sm.warp(106020001); // TD_MC_Openning
+            sm.playPortalSE();
+            MushroomCastle.enterThemeDungeon(sm);
         }
     }
 
@@ -558,5 +537,6 @@ public final class MushroomCastle extends ScriptHandler {
     @Script("TD_MC_gasi2")
     public static void TD_MC_gasi2(ScriptManager sm) {
         // Mushroom Castle : Castle Wall Edge (106020501)
+
     }
 }

@@ -75,21 +75,33 @@ public interface ScriptManager {
 
     boolean canAddMoney(int money);
 
-    boolean addItem(int itemId, int quantity);
+    default boolean addItem(int itemId, int quantity) {
+        return addItems(List.of(Tuple.of(itemId, quantity)));
+    }
 
     boolean addItems(List<Tuple<Integer, Integer>> items);
 
-    boolean canAddItem(int itemId, int quantity);
+    default boolean canAddItem(int itemId, int quantity) {
+        return canAddItems(List.of(Tuple.of(itemId, quantity)));
+    }
 
     boolean canAddItems(List<Tuple<Integer, Integer>> items);
 
-    boolean removeItem(int itemId);
+    default boolean removeItem(int itemId) {
+        final int itemCount = getItemCount(itemId); // TODO : rename method for clarity
+        if (itemCount > 0) {
+            return removeItem(itemId, itemCount);
+        }
+        return true;
+    }
 
     boolean removeItem(int itemId, int quantity);
 
     boolean removeEquipped(BodyPart bodyPart);
 
-    boolean hasItem(int itemId);
+    default boolean hasItem(int itemId) {
+        return hasItem(itemId, 1);
+    }
 
     boolean hasItem(int itemId, int quantity);
 
@@ -125,13 +137,25 @@ public interface ScriptManager {
 
     void partyWarp(int mapId, String portalName);
 
-    void warpInstance(int mapId, String portalName, int returnMap, int timeLimit);
+    default void warpInstance(int mapId, String portalName, int returnMap, int timeLimit) {
+        warpInstance(List.of(mapId), portalName, returnMap, timeLimit, Map.of());
+    }
 
-    void warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit);
+    default void warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit) {
+        warpInstance(mapIds, portalName, returnMap, timeLimit, Map.of());
+    }
 
-    void partyWarpInstance(int mapId, String portalName, int returnMap, int timeLimit);
+    void warpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit, Map<String, String> variables);
 
-    void partyWarpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit);
+    default void partyWarpInstance(int mapId, String portalName, int returnMap, int timeLimit) {
+        partyWarpInstance(List.of(mapId), portalName, returnMap, timeLimit, Map.of());
+    }
+
+    default void partyWarpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit) {
+        partyWarpInstance(mapIds, portalName, returnMap, timeLimit, Map.of());
+    }
+
+    void partyWarpInstance(List<Integer> mapIds, String portalName, int returnMap, int timeLimit, Map<String, String> variables);
 
 
     // FIELD METHODS ---------------------------------------------------------------------------------------------------

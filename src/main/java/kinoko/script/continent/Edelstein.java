@@ -34,7 +34,6 @@ public final class Edelstein extends ScriptHandler {
     public static void Edelstein_taxi(ScriptManager sm) {
         // Taxi : Affiliated with Black Wings (2150007)
         //   Black Wing Territory : Edelstein (310000000)
-        //sm.setFlipSpeaker(true); //Uncomment if using fixed taxi sprite
         if (!sm.askYesNo("Hello, welcome to the Edelstein Taxi. I can take members of the Black Wings safely and quickly to #bVerne Mines#k. And if you're not part of the Black Wings? Well, I guess I'll take you as long as you pay... So, are you going to the mines?")) {
             sm.sayNext("Let me know if you change your mind.");
             return;
