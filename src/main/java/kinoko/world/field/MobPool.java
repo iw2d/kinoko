@@ -51,16 +51,19 @@ public final class MobPool extends FieldObjectPool<Mob> {
         mob.setId(field.getNewObjectId());
         addObject(mob);
         field.broadcastPacket(MobPacket.mobEnterField(mob));
+        if (mob.getSummonType() != MobAppearType.SUSPENDED.getValue()) {
+            mob.setSummonType(MobAppearType.NORMAL.getValue());
+        }
         field.getUserPool().assignController(mob);
     }
 
-    public synchronized boolean removeMob(Mob mob) {
+    public synchronized boolean removeMob(Mob mob, MobLeaveType leaveType) {
         if (!removeObject(mob)) {
             return false;
         }
         // Send MobLeaveField after processing attack
         ServerExecutor.submit(field, () -> {
-            field.broadcastPacket(MobPacket.mobLeaveField(mob));
+            field.broadcastPacket(MobPacket.mobLeaveField(mob, leaveType));
         });
         // Special handling for fields
         switch (field.getFieldId()) {
@@ -142,7 +145,6 @@ public final class MobPool extends FieldObjectPool<Mob> {
             }
             // Add mob to pool
             addMob(mob);
-            mob.setAppearType(MobAppearType.NORMAL);
         }
     }
 

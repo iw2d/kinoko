@@ -18,6 +18,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
+import kinoko.world.field.mob.MobLeaveType;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
@@ -265,7 +266,7 @@ public final class Field {
             nextMobRespawn = Instant.MAX;
             // Clear existing mobs
             for (Mob mob : mobPool.getObjects()) {
-                mobPool.removeMob(mob);
+                mobPool.removeMob(mob, MobLeaveType.REMAINHP);
             }
         }
     }

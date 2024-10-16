@@ -13,7 +13,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
-import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.mob.MobLeaveType;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
 import kinoko.world.skill.Skill;
@@ -82,7 +82,7 @@ public final class Citizen extends SkillProcessor {
                     }
                     // Capture success
                     user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 0))); // Monster successfully captured.
-                    field.getMobPool().removeMob(mob);
+                    field.getMobPool().removeMob(mob, MobLeaveType.ETC);
                     // Update WildHunterInfo
                     if (GameConstants.isJaguarMob(templateId)) {
                         user.getWildHunterInfo().setRidingType((templateId % 10) + 1);
@@ -118,7 +118,6 @@ public final class Citizen extends SkillProcessor {
                 );
                 mob.getMobStat().getTemporaryStats().put(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, 0));
                 mob.setRemoveAfter(Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
-                mob.setAppearType(MobAppearType.NORMAL);
                 // Add mob to field, force user to be its controller
                 field.getMobPool().addMob(mob);
                 if (mob.getController() != user) {

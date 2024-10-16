@@ -175,7 +175,7 @@ public final class MobHandler {
                 return;
             }
             // Process mob death
-            field.getMobPool().removeMob(targetMob);
+            field.getMobPool().removeMob(targetMob, MobLeaveType.ETC);
             switch (targetMob.getTemplateId()) {
                 case HenesysPQ.MOON_BUNNY -> {
                     field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
@@ -476,6 +476,7 @@ public final class MobHandler {
                             y,
                             fh.getSn()
                     );
+                    summon.setSummonType(si.getValue(SkillStat.summonEffect, slv));
                     field.getMobPool().addMob(summon);
                 }
             }

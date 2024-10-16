@@ -164,7 +164,11 @@ public interface ScriptManager {
 
     int getFieldId();
 
-    void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft);
+    default void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft) {
+        spawnMob(templateId, appearType.getValue(), x, y, isLeft);
+    }
+
+    void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft);
 
     void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField);
 

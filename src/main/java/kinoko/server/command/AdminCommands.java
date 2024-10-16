@@ -29,7 +29,7 @@ import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
-import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.mob.MobLeaveType;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.InventoryManager;
@@ -469,7 +469,6 @@ public final class AdminCommands {
                 footholdResult.map(Foothold::getSn).orElse(user.getFoothold())
         );
         field.getMobPool().addMob(mob);
-        mob.setAppearType(MobAppearType.NORMAL);
     }
 
     @Command("togglemob")
@@ -888,7 +887,7 @@ public final class AdminCommands {
         user.getField().getMobPool().forEach((mob) -> {
             try (var lockedMob = mob.acquire()) {
                 if (mob.getHp() > 0) {
-                    mob.damage(user, mob.getMaxHp(), 0);
+                    mob.damage(user, mob.getMaxHp(), 0, MobLeaveType.ETC);
                 }
             }
         });

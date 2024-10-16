@@ -34,7 +34,6 @@ import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.mob.Mob;
-import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.item.*;
@@ -707,7 +706,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft) {
+    public void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft) {
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
         if (mobTemplateResult.isEmpty()) {
             throw new ScriptError("Could not resolve mob template ID : %d", templateId);
@@ -721,7 +720,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 footholdResult.map(Foothold::getSn).orElse(0)
         );
         mob.setLeft(isLeft);
-        mob.setAppearType(appearType);
+        mob.setSummonType(summonType);
         field.getMobPool().addMob(mob);
     }
 

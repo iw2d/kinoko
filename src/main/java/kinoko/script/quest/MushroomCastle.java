@@ -405,7 +405,7 @@ public final class MushroomCastle extends ScriptHandler {
             sm.setSpeakerId(1300002);
             sm.sayBoth("#bThe #o3300008#! Please defeat the #o3300008#!", ScriptMessageParam.FLIP_SPEAKER);
             sm.setInstanceVariable("spawnedPM", "1");
-            sm.spawnMob(3300008, MobAppearType.PRIMEMINISTER, 215, 142, true); // TODO : better handling for mob summon type (Effect/Summon.img)
+            sm.spawnMob(3300008, 23, 215, 142, true);
             sm.forceStartQuest(2333);
             sm.scriptProgressMessage("New Mission! Defeat the Prime Minister!");
         }

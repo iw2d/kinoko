@@ -53,11 +53,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private final MobSpawnPoint spawnPoint;
     private final int startFoothold;
 
-    private MobAppearType appearType = MobAppearType.REGEN;
-    private MobLeaveType leaveType = MobLeaveType.ETC;
     private User controller;
     private int hp;
     private int mp;
+    private int summonType;
     private int itemDropCount;
     private boolean slowUsed;
     private int swallowCharacterId;
@@ -79,6 +78,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         // Mob initialization
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
+        this.summonType = MobAppearType.NORMAL.getValue();
         this.nextSkillUse = Instant.MIN;
         this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
@@ -186,22 +186,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         return Util.getRandomFromCollection(available);
     }
 
-    public MobAppearType getAppearType() {
-        return appearType;
-    }
-
-    public void setAppearType(MobAppearType appearType) {
-        this.appearType = appearType;
-    }
-
-    public MobLeaveType getLeaveType() {
-        return leaveType;
-    }
-
-    public void setLeaveType(MobLeaveType leaveType) {
-        this.leaveType = leaveType;
-    }
-
     public int getHp() {
         return hp;
     }
@@ -216,6 +200,14 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setMp(int mp) {
         this.mp = mp;
+    }
+
+    public int getSummonType() {
+        return summonType;
+    }
+
+    public void setSummonType(int summonType) {
+        this.summonType = summonType;
     }
 
     public int getExp() {
@@ -283,7 +275,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         if (template.getRemoveAfter() <= 0 || now.isBefore(removeAfter)) {
             return;
         }
-        if (getField().getMobPool().removeMob(this)) {
+        if (getField().getMobPool().removeMob(this, MobLeaveType.ETC)) {
             spawnRevives(0);
         }
         if (spawnPoint != null) {
@@ -367,6 +359,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void damage(User attacker, int totalDamage, int delay) {
+        damage(attacker, totalDamage, delay, MobLeaveType.ETC);
+    }
+
+    public void damage(User attacker, int totalDamage, int delay, MobLeaveType leaveType) {
         // Apply damage
         final int actualDamage = Math.min(getHp(), totalDamage);
         setHp(getHp() - actualDamage);
@@ -379,7 +375,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             if (getController() != null) {
                 getController().write(changeControllerPacket(false));
             }
-            if (getField().getMobPool().removeMob(this)) {
+            if (getField().getMobPool().removeMob(this, leaveType)) {
                 distributeExp();
                 dropRewards(attacker, delay);
                 spawnRevives(delay);
@@ -631,9 +627,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                         getFoothold()
                 );
                 reviveMob.setLeft(isLeft());
-                reviveMob.setAppearType(MobAppearType.REVIVED);
+                reviveMob.setSummonType(MobAppearType.REVIVED.getValue());
                 getField().getMobPool().addMob(reviveMob);
-                reviveMob.setAppearType(MobAppearType.NORMAL);
             }
         }, template.getReviveDelay() + delay, TimeUnit.MILLISECONDS);
     }
@@ -677,8 +672,8 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         outPacket.encodeByte(getMoveAction()); // nMoveAction
         outPacket.encodeShort(getFoothold()); // pvcMobActiveObj (current foothold)
         outPacket.encodeShort(startFoothold); // Foothold (start foothold)
-        outPacket.encodeByte(appearType.getValue()); // nAppearType
-        if (appearType == MobAppearType.REVIVED || appearType.getValue() >= 0) {
+        outPacket.encodeByte(summonType); // nAppearType
+        if (summonType == MobAppearType.REVIVED.getValue() || summonType >= 0) {
             outPacket.encodeInt(0); // dwOption
         }
         outPacket.encodeByte(0); // nTeamForMCarnival

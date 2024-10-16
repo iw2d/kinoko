@@ -96,7 +96,8 @@ public enum SkillStat {
     action,
     dateExpire,
     maxLevel,
-    interval;
+    interval,
+    summonEffect;
 
     private static final Map<String, SkillStat> nameMap = new HashMap<>();
 

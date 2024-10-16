@@ -22,11 +22,11 @@ public final class MobPacket {
         return outPacket;
     }
 
-    public static OutPacket mobLeaveField(Mob mob) {
+    public static OutPacket mobLeaveField(Mob mob, MobLeaveType leaveType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.MobLeaveField);
         outPacket.encodeInt(mob.getId()); // dwMobID
-        outPacket.encodeByte(mob.getLeaveType().getValue()); // nDeadType
-        if (mob.getLeaveType() == MobLeaveType.SWALLOW) {
+        outPacket.encodeByte(leaveType.getValue()); // nDeadType
+        if (leaveType == MobLeaveType.SWALLOW) {
             outPacket.encodeInt(mob.getSwallowCharacterId()); // dwSwallowCharacterID
         }
         return outPacket;
