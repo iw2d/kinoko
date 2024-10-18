@@ -58,11 +58,13 @@ import java.util.*;
 public final class AdminCommands {
     @Command("test")
     public static void test(User user, String[] args) {
-        user.write(MessagePacket.system("Users in channel: %d", user.getConnectedServer().getConnectedUsers().size()));
-        user.write(MessagePacket.system("Users in field : %d", user.getField().getUserPool().getCount()));
-        user.write(MessagePacket.system("Party ID : %d (%d)", user.getPartyId(), user.getCharacterData().getPartyId()));
-        user.setConsumeItemEffect(ItemProvider.getItemInfo(2022181).orElseThrow());
-        user.dispose();
+        user.getConnectedServer().submitUserQueryRequestAll((queryResult) -> {
+            user.write(MessagePacket.system("Users in world: %d", queryResult.size()));
+            user.write(MessagePacket.system("Users in field : %d", user.getField().getUserPool().getCount()));
+            user.write(MessagePacket.system("Party ID : %d (%d)", user.getPartyId(), user.getCharacterData().getPartyId()));
+            user.setConsumeItemEffect(ItemProvider.getItemInfo(2022181).orElseThrow());
+            user.dispose();
+        });
     }
 
     @Command("dispose")

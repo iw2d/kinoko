@@ -256,10 +256,15 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         // Resolve queried users
         final int requestId = inPacket.decodeInt();
         final int size = inPacket.decodeInt();
-        final List<RemoteUser> remoteUsers = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            final String characterName = inPacket.decodeString();
-            centralServerNode.getUserByCharacterName(characterName).ifPresent(remoteUsers::add);
+        final List<RemoteUser> remoteUsers;
+        if (size < 0) {
+            remoteUsers = centralServerNode.getUsers(); // Get all connected users
+        } else {
+            remoteUsers = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                final String characterName = inPacket.decodeString();
+                centralServerNode.getUserByCharacterName(characterName).ifPresent(remoteUsers::add);
+            }
         }
         // Reply with queried remote users
         remoteServerNode.write(CentralPacket.userQueryResult(requestId, remoteUsers));

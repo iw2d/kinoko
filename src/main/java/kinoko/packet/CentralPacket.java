@@ -162,6 +162,13 @@ public final class CentralPacket {
         return outPacket;
     }
 
+    public static OutPacket userQueryRequestAll(int requestId) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.UserQueryRequest);
+        outPacket.encodeInt(requestId);
+        outPacket.encodeInt(-1);
+        return outPacket;
+    }
+
     public static OutPacket userQueryResult(int requestId, List<RemoteUser> remoteUsers) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.UserQueryResult);
         outPacket.encodeInt(requestId);

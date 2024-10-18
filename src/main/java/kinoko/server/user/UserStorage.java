@@ -1,6 +1,7 @@
 package kinoko.server.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -29,6 +30,15 @@ public final class UserStorage {
             mapByAccountId.remove(remoteUser.getAccountId());
             mapByCharacterId.remove(remoteUser.getCharacterId());
             mapByCharacterName.remove(normalizeName(remoteUser.getCharacterName()));
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public List<RemoteUser> getUsers() {
+        lock.lock();
+        try {
+            return mapByAccountId.values().stream().toList();
         } finally {
             lock.unlock();
         }

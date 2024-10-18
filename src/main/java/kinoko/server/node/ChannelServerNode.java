@@ -155,6 +155,18 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userQueryRequest(requestId, characterNames));
     }
 
+    public void submitUserQueryRequestAll(Consumer<List<RemoteUser>> consumer) {
+        final CompletableFuture<List<RemoteUser>> userRequestFuture = new CompletableFuture<>();
+        userRequestFuture.thenAccept(consumer).exceptionally(e -> {
+            log.error("Exception caught while consuming user query request", e);
+            e.printStackTrace();
+            return null;
+        });
+        final int requestId = getNewRequestId();
+        requestFutures.put(requestId, userRequestFuture);
+        centralClientFuture.channel().writeAndFlush(CentralPacket.userQueryRequestAll(requestId));
+    }
+
     @SuppressWarnings("unchecked")
     public void completeUserQueryRequest(int requestId, List<RemoteUser> remoteUsers) {
         final CompletableFuture<List<RemoteUser>> userRequestFuture = (CompletableFuture<List<RemoteUser>>) requestFutures.remove(requestId);
