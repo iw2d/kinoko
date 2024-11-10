@@ -276,7 +276,9 @@ public final class MobTemplate {
                 int skillId = 0;
                 int skillLevel = 0;
                 int conMp = 0;
+                int mpBurn = 0;
                 boolean magic = false;
+                boolean deadlyAttack = false;
                 for (var attackInfoEntry : attackInfoProp.getItems().entrySet()) {
                     switch (attackInfoEntry.getKey()) {
                         case "disease" -> {
@@ -288,8 +290,14 @@ public final class MobTemplate {
                         case "conMP" -> {
                             conMp = WzProvider.getInteger(attackInfoEntry.getValue());
                         }
+                        case "mpBurn" -> {
+                            mpBurn = WzProvider.getInteger(attackInfoEntry.getValue());
+                        }
                         case "magic" -> {
                             magic = WzProvider.getInteger(attackInfoEntry.getValue()) != 0;
+                        }
+                        case "deadlyAttack" -> {
+                            deadlyAttack = WzProvider.getInteger(attackInfoEntry.getValue()) != 0;
                         }
                         default -> {
                             // System.err.printf("Unhandled mob attack info %s in mob %d%n", infoEntry.getKey(), mobId);
@@ -300,7 +308,9 @@ public final class MobTemplate {
                         skillId,
                         skillLevel,
                         conMp,
-                        magic
+                        mpBurn,
+                        magic,
+                        deadlyAttack
                 ));
             }
         }

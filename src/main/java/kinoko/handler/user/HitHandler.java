@@ -86,7 +86,7 @@ public final class HitHandler {
         }
 
         try (var locked = user.acquire()) {
-            if (hitInfo.attackIndex > 0) {
+            if (hitInfo.attackIndex >= 0) {
                 handleMobAttack(locked, hitInfo);
             }
             handleHit(locked, hitInfo);
@@ -106,6 +106,13 @@ public final class HitHandler {
             return;
         }
         final MobAttack mobAttack = mobAttackResult.get();
+
+        // Handle mpBurn and deadlyAttack
+        hitInfo.mpDamage = mobAttack.getMpBurn();
+        if (mobAttack.isDeadlyAttack()) {
+            hitInfo.damage = user.getHp() - 1;
+            hitInfo.mpDamage = user.getMp() - 1;
+        }
 
         // Resolve mob skill
         final int skillId = mobAttack.getSkillId();
@@ -178,6 +185,9 @@ public final class HitHandler {
         // Process hit damage
         if (hitInfo.finalDamage > 0) {
             user.addHp(-hitInfo.finalDamage);
+        }
+        if (hitInfo.mpDamage > 0) {
+            user.addMp(-hitInfo.mpDamage);
         }
         user.getField().broadcastPacket(UserRemote.hit(user, hitInfo), user);
 

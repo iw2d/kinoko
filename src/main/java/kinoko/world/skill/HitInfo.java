@@ -23,6 +23,7 @@ public final class HitInfo {
 
     public int finalDamage;
     public int missSkillId;
+    public int mpDamage;
 
     @Override
     public String toString() {
@@ -47,6 +48,7 @@ public final class HitInfo {
                 ", stance=" + stance +
                 ", finalDamage=" + finalDamage +
                 ", missSkillId=" + missSkillId +
+                ", mpDamage=" + mpDamage +
                 '}';
     }
 }
