@@ -32,7 +32,7 @@ services:
     ports:
       - 9042:9042
     healthcheck:
-      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      test: [ "CMD", "cqlsh", "-e", "describe keyspaces" ]
       interval: 10s
       timeout: 5s
       retries: 5
