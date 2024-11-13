@@ -13,6 +13,7 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.MapProvider;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.cashshop.Gift;
 import kinoko.server.guild.GuildRequest;
@@ -254,15 +255,16 @@ public final class MigrationHandler {
         final int targetFieldId = inPacket.decodeInt(); // dwTargetField
         final String portalName = inPacket.decodeString(); // sPortal
         if (!portalName.isEmpty()) {
-            inPacket.decodeShort();
-            inPacket.decodeShort();
+            // TODO: validate distance relative to server-side position and portal position
+            inPacket.decodeShort(); // GetPos()->x
+            inPacket.decodeShort(); // GetPos()->y
         }
         inPacket.decodeByte(); // 0
         final boolean premium = inPacket.decodeBoolean(); // bPremium - also set as true on normal revives, probably a client bug in CUIRevive::OnCreate
         final boolean chase = inPacket.decodeBoolean(); // bChase
         if (chase) {
-            inPacket.decodeInt();
-            inPacket.decodeInt();
+            inPacket.decodeInt(); // nTargetPosition_X
+            inPacket.decodeInt(); // nTargetPosition_Y
         }
 
         try (var locked = user.acquire()) {
@@ -296,7 +298,10 @@ public final class MigrationHandler {
                     handleRevive(user, false);
                     return;
                 }
-                // Transfer field by client request
+                // Transfer field by client request : ReservedEffect, CField::OBSTACLE, /m <map ID> - TODO: disallow /m command for non-GM
+                if (!isWhitelistedTransferField(currentField.getFieldId(), targetFieldId)) {
+                    log.warn("Received non-whitelisted transfer field request from {} to {}", currentField.getFieldId(), targetFieldId);
+                }
                 handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false, false);
                 return;
             }
@@ -348,25 +353,65 @@ public final class MigrationHandler {
         }
     }
 
-    private static void handleTransferChannel(User user, Account account, int targetChannelId) {
-        // Submit transfer request
-        final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
-        user.getConnectedServer().submitTransferRequest(migrationInfo, (transferResult) -> {
-            if (transferResult.isEmpty()) {
-                log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
-                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
-                return;
-            }
-            // Logout user and save
-            user.logout(false);
-            user.setInTransfer(true);
-            DatabaseManager.accountAccessor().saveAccount(account);
-            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
-
-            // Send migrate command
-            final TransferInfo transferInfo = transferResult.get();
-            user.write(ClientPacket.migrateCommand(transferInfo.getChannelHost(), transferInfo.getChannelPort()));
-        });
+    private static boolean isWhitelistedTransferField(int currentFieldId, int targetFieldId) {
+        final int sourceFieldId = MapProvider.getMapLink(currentFieldId).orElse(currentFieldId);
+        final int whitelistedFieldId = switch (sourceFieldId) {
+            // Witch Tower : Witch Tower Entrance
+            case 980040000, 980041000, 980041100, 980042000, 980042100, 980043000, 980043100, 980044000, 980044100 ->
+                    980040000;
+            // Effect/Direction.img/cygnus/Scene%d - unused
+            // Effect/Direction.img/cygnusJobTutorial/Scene%d (cygnusJobTutorial)
+            case 913040100 -> 913040101;
+            case 913040101 -> 913040102;
+            case 913040102 -> 913040103;
+            case 913040103 -> 913040104;
+            case 913040104 -> 913040105;
+            case 913040105 -> 913040106;
+            case 913040106 -> 130000000;
+            // Effect/Direction1.img/aranDirection/Scene%d -> unused
+            // Effect/Direction1.img/aranTutorial/* (aranDirection)
+            case 914090010 -> 914090011;
+            case 914090011 -> 914090012;
+            case 914090012 -> 914090013;
+            case 914090013 -> 140090000;
+            case 914090100 -> 140000000;
+            case 914090200 -> 140000000;
+            case 914090201 -> 140030000;
+            // Effect/Direction2.img/open/out (TD_MC_Openning)
+            case 106020001 -> 106020000;
+            // Effect/Direction2.img/gasi/gasi6 (TD_MC_gasi)
+            case 106020502 -> 106020501;
+            // Effect/Direction3.img/goAdventure/Scene%d (goAdventure)
+            case 0 -> 10000;
+            // Effect/Direction3.img/%s/Scene%d (goSwordman/goMagician/goArcher/goRogue/goPirate)
+            case 1020100, 1020200, 1020300, 1020400, 1020500 -> 1020000;
+            // Effect/Direction3.img/goLith/Scene%d (goLith)
+            case 2010000 -> 104000000;
+            // Effect/Direction4.img/promotion/Scene%d - unused
+            // Effect/Direction4.img/meetWithDragon/Scene%d (meetWithDragon)
+            case 900090100 -> 900010200;
+            // Effect/Direction4.img/PromiseDragon/Scene0 (PromiseDragon)
+            case 900090101 -> 100030100;
+            // Effect/Direction4.img/crash/Scene%d (crash_Dragon)
+            case 900090102 -> 900020200;
+            // Effect/Direction4.img/getDragonEgg/Scene%d (getDragonEgg)
+            case 900090103 -> 900020110;
+            // Effect/Direction4.img/Resistance/TalkInLab (talk2159012)
+            case 931000011 -> 931000012;
+            // Effect/Direction4.img/Resistance/TalkJ (Resi_tutor70)
+            case 931000021 -> 931000030;
+            // Effect/DirectionVisitor.img/visitor/Basic -> 502050001
+            // Effect/DirectionVisitor.img/visitor/BingCube -> 502050000
+            // Effect/DirectionVisitor.img/visitor/BlackHole -> 502050000
+            // Effect/DirectionVisitor.img/visitor/Shuttle -> 502050000
+            // Effect/DirectionVisitor.img/visitor/Stage1 -> 502050001
+            // Effect/DirectionVisitor.img/visitor/Stage2 -> 502050001
+            // Effect/DirectionVisitor.img/visitor/Stage3 -> 502050001
+            // Effect/DirectionVisitor.img/visitor/Stage4 -> 502050001
+            // Effect/DirectionVisitor.img/visitor/TimeTravel -> 502050000
+            default -> -1;
+        };
+        return targetFieldId == whitelistedFieldId;
     }
 
     private static void handleTransferField(User user, int fieldId, String portalName, boolean isRevive, boolean isLeaveInstance) {
@@ -425,5 +470,26 @@ public final class MigrationHandler {
             user.setHp(50);
             handleTransferField(user, user.getField().getReturnMap(), GameConstants.DEFAULT_PORTAL_NAME, true, true);
         }
+    }
+
+    private static void handleTransferChannel(User user, Account account, int targetChannelId) {
+        // Submit transfer request
+        final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
+        user.getConnectedServer().submitTransferRequest(migrationInfo, (transferResult) -> {
+            if (transferResult.isEmpty()) {
+                log.error("Failed to retrieve transfer result for character ID : {}", user.getCharacterId());
+                user.write(FieldPacket.transferChannelReqIgnored(TransferChannelType.GAMESVR_DISCONNECTED)); // Cannot move to that Channel
+                return;
+            }
+            // Logout user and save
+            user.logout(false);
+            user.setInTransfer(true);
+            DatabaseManager.accountAccessor().saveAccount(account);
+            DatabaseManager.characterAccessor().saveCharacter(user.getCharacterData());
+
+            // Send migrate command
+            final TransferInfo transferInfo = transferResult.get();
+            user.write(ClientPacket.migrateCommand(transferInfo.getChannelHost(), transferInfo.getChannelPort()));
+        });
     }
 }

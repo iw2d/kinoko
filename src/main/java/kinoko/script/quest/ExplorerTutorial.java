@@ -153,7 +153,7 @@ public final class ExplorerTutorial extends ScriptHandler {
         //   Maple Road : Split Road of Destiny (1020000)
         sm.sayNext("Warriors possess an enormous power with stamina to back it up, and they shine the brightest in melee combat situation. Regular attacks are powerful to begin with, and armed with complex skills, the job is perfect for explosive attacks.");
         if (sm.askYesNo("Would you like to experience what it's like to be a Warrior?")) {
-            sm.warp(1020100); // goSwordsman
+            sm.warp(1020100); // goSwordman
         } else {
             sm.sayNext("If you wish to experience what it's like to be a Warrior, come see me again.");
         }
@@ -165,7 +165,7 @@ public final class ExplorerTutorial extends ScriptHandler {
         //   Maple Road : Split Road of Destiny (1020000)
         sm.sayNext("Magicians are armed with flashy element-based spells and secondary magic that aids party as a whole. After the 2nd job adv., the elemental-based magic will provide ample amount of damage to enemies of opposite element.");
         if (sm.askYesNo("Would you like to experience what it's like to be a Magician?")) {
-            sm.warp(1020200);
+            sm.warp(1020200); // goMagician
         } else {
             sm.sayNext("If you wish to experience what it's like to be a Magician, come see me again.");
         }

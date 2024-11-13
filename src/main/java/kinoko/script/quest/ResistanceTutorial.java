@@ -7,7 +7,7 @@ import kinoko.script.common.ScriptMessageParam;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
 
-public class ResistanceTutorial extends ScriptHandler {
+public final class ResistanceTutorial extends ScriptHandler {
 
     private static final int JUN = 2159000, ULRIKA = 2159001, VON = 2159002;
 

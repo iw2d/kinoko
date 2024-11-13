@@ -150,7 +150,7 @@ public final class MushroomCastle extends ScriptHandler {
                 return;
             }
             sm.setQRValue(QuestRecordType.MushroomCastleThornRemover, "1");
-            sm.warp(106020502);
+            sm.warp(106020502); // TD_MC_gasi
         }
     }
 

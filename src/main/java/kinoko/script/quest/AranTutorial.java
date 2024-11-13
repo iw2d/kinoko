@@ -90,6 +90,10 @@ public final class AranTutorial extends ScriptHandler {
                 sm.reservedEffect("Effect/Direction1.img/aranTutorial/Maha");
                 sm.setDirectionMode(false, 5000);
             }
+            case 914090201 -> {
+                sm.reservedEffect("Effect/Direction1.img/aranTutorial/PoleArm");
+                sm.setDirectionMode(false, 5000);
+            }
         }
     }
 

@@ -14,7 +14,7 @@ import kinoko.world.user.User;
 
 import java.util.List;
 
-public class ResistanceQuest extends ScriptHandler {
+public final class ResistanceQuest extends ScriptHandler {
 
     @Script("q23100e")
     public static void q23100e(ScriptManager sm) {
