@@ -2,6 +2,7 @@ package kinoko.script.quest;
 
 import kinoko.provider.map.PortalInfo;
 import kinoko.script.common.*;
+import kinoko.server.node.ServerExecutor;
 import kinoko.util.Util;
 import kinoko.world.field.MobPool;
 import kinoko.world.field.mob.MobAppearType;
@@ -9,6 +10,7 @@ import kinoko.world.quest.QuestRecordType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public final class MushroomCastle extends ScriptHandler {
     public static void enterThemeDungeon(ScriptManager sm) {
@@ -178,12 +180,11 @@ public final class MushroomCastle extends ScriptHandler {
         sm.message("You've been spotted by the guard and will now be sent to the bottom of the cliff.");
         // As seen here: https://youtu.be/E-oFRZcYbF4?t=277
         // For some reason this effect has no field node, unless I used the wrong one.
-        try {
-            Thread.sleep(2000); // Wait for 2 seconds (2000 milliseconds)
-        } catch (InterruptedException e) {
-            throw new ScriptError("Interrupted during sleep");
-        }
-        sm.warp(106020403); // Mushroom Castle : Shadow Cliffs
+        ServerExecutor.schedule(sm.getUser(), () -> {
+            if (sm.getUser().getFieldId() == 106020601) {
+                sm.warp(106020403); // Mushroom Castle : Shadow Cliffs
+            }
+        }, 2000, TimeUnit.MILLISECONDS);
     }
 
     @Script("go_secretroom")

@@ -2,6 +2,7 @@ package kinoko.server.node;
 
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.world.field.Field;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,15 +40,27 @@ public final class ServerExecutor {
     // GAME EXECUTOR METHODS -------------------------------------------------------------------------------------------
 
     public static void submit(Client client, Runnable runnable) {
-        if (client.getUser() == null || client.getUser().getField() == null) {
+        if (client.getUser() == null) {
             submitService(runnable);
         } else {
-            submit(client.getUser().getField(), runnable);
+            submit(client.getUser(), runnable);
+        }
+    }
+
+    public static void submit(User user, Runnable runnable) {
+        if (user.getField() == null) {
+            submitService(runnable);
+        } else {
+            submit(user.getField(), runnable);
         }
     }
 
     public static void submit(Field field, Runnable runnable) {
         wrapAndSubmit(field, runnable);
+    }
+
+    public static ScheduledFuture<?> schedule(User user, Runnable runnable, long delay, TimeUnit timeUnit) {
+        return scheduler.schedule(() -> submit(user, runnable), delay, timeUnit);
     }
 
     public static ScheduledFuture<?> schedule(Field field, Runnable runnable, long delay, TimeUnit timeUnit) {

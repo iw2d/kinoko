@@ -51,8 +51,10 @@ import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.StatConstants;
 
+import javax.script.ScriptException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public final class ScriptManagerImpl implements ScriptManager {
@@ -819,6 +821,18 @@ public final class ScriptManagerImpl implements ScriptManager {
 
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
+
+    @Override
+    public void sleep(long delay, TimeUnit timeUnit) {
+        user.unlock();
+        try {
+            timeUnit.sleep(delay); // Thread.sleep
+        } catch (InterruptedException e) {
+            throw new ScriptError("Interrupted during sleep");
+        } finally {
+            user.lock(); // executes before ScriptError propagates to ScriptDispatcher
+        }
+    }
 
     @Override
     public boolean checkParty(int memberCount, int levelMin) {

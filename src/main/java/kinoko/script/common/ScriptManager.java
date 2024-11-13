@@ -15,6 +15,7 @@ import kinoko.world.user.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public interface ScriptManager {
     // USER METHODS ----------------------------------------------------------------------------------------------------
@@ -184,6 +185,8 @@ public interface ScriptManager {
 
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
+
+    void sleep(long delay, TimeUnit timeUnit);
 
     boolean checkParty(int memberCount, int levelMin);
 

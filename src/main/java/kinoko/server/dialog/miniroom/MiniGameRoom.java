@@ -206,7 +206,7 @@ public abstract class MiniGameRoom extends MiniRoom {
         final User other = isOwner(user) ? getGuest() : getOwner();
         // Conclude game
         if (other != null && !isOpen()) {
-            ServerExecutor.submit(user.getField(), () -> {
+            ServerExecutor.submit(user, () -> {
                 try (var lockedOther = other.acquire()) {
                     gameResult(GameResultType.GIVEUP, other, user);
                 }
