@@ -362,7 +362,7 @@ public final class MobHandler {
                     continue;
                 }
                 try (var locked = targetUser.acquire()) {
-                    if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+                    if ((cts != CharacterTemporaryStat.Stun && cts != CharacterTemporaryStat.Attract) && targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
                         continue;
                     }
                     if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {

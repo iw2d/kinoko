@@ -150,7 +150,7 @@ public final class HitHandler {
         }
 
         // Apply mob skill
-        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+        if ((cts != CharacterTemporaryStat.Stun && cts != CharacterTemporaryStat.Attract) && user.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
             return;
         }
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {
