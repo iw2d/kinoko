@@ -47,6 +47,7 @@ public final class Item implements Encodable {
             outPacket.encodeLong(itemSn); // liCashItemSN
         }
         outPacket.encodeFT(dateExpire); // dateExpire
+        outPacket.encodeInt(-1); // nBagIndex
 
         switch (getItemType()) {
             case EQUIP -> {

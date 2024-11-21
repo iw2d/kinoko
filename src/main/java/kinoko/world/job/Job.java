@@ -110,7 +110,8 @@ public enum Job {
     MANAGER(800),
     GM(900),
     SUPER_GM(910),
-    ADDITIONAL_SKILLS(9000);
+    ADDITIONAL_SKILLS(9000),
+    GUILD_SKILLS(9100);
 
     private static final Map<Short, Job> jobMap;
 
