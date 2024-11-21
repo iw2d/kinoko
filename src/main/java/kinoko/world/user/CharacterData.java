@@ -194,6 +194,8 @@ public final class CharacterData implements Encodable {
             characterStat.encode(outPacket);
             outPacket.encodeByte(friendMax); // nFriendMax
             outPacket.encodeByte(false); // sLinkedCharacter: bool -> str
+            outPacket.encodeByte(false); // sTopCygnusCharacter: bool -> str
+            outPacket.encodeByte(false); // sParentCharacter: bool -> str
         }
         if (flag.hasFlag(DBChar.MONEY)) {
             outPacket.encodeInt(inventoryManager.getMoney()); // nMoney
@@ -283,6 +285,9 @@ public final class CharacterData implements Encodable {
             }
             outPacket.encodeByte(0);
         }
+
+        outPacket.encodeInt(-1); // bag?
+
         if (flag.hasFlag(DBChar.SKILLRECORD)) {
             outPacket.encodeShort(skillManager.getSkillRecords().size());
             for (SkillRecord sr : skillManager.getSkillRecords()) {
@@ -347,6 +352,9 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.MAPTRANSFER)) {
             mapTransferInfo.encodeMapTransfer(outPacket); // adwMapTransfer
             mapTransferInfo.encodeMapTransferEx(outPacket); // adwMapTransferEx
+            for (int i = 0; i < 13; i++) {
+                outPacket.encodeInt(0); // adwMapTransferPremium
+            }
         }
         if (flag.hasFlag(DBChar.NEWYEARCARD)) {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord

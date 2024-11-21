@@ -81,6 +81,7 @@ public final class MobPacket {
         outPacket.encodeShort(mob.getMp()); // nMP
         outPacket.encodeByte(mobSkill != null ? mobSkill.getSkillId() : 0); // nSkillCommand
         outPacket.encodeByte(mobSkill != null ? mobSkill.getSkillLevel() : 0); // nSLV
+        outPacket.encodeInt(0); // nForcedAttackIdx
         return outPacket;
     }
 

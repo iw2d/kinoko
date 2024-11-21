@@ -17,6 +17,7 @@ public final class StagePacket {
         outPacket.encodeInt(channelId); // nChannelID
         outPacket.encodeInt(0); // dwOldDriverID
         outPacket.encodeByte(user.getNextFieldKey()); // bFieldKey
+        outPacket.encodeInt(0); // int -> CWvsContext::ClearAnnouncedQuest
         outPacket.encodeByte(isMigrate); // bCharacterData
         outPacket.encodeShort(0); // nNotifierCheck
 
@@ -46,6 +47,7 @@ public final class StagePacket {
         }
 
         outPacket.encodeFT(Instant.now()); // ftServer
+        outPacket.encodeInt(0); // nMobStatAdjustRate
         return outPacket;
     }
 

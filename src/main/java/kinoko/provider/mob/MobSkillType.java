@@ -13,6 +13,7 @@ public enum MobSkillType {
     PGUARDUP(102),
     MGUARDUP(103),
     HASTE(104),
+    MOBCONSUME(105),
     POWERUP_M(110),
     MAGICUP_M(111),
     PGUARDUP_M(112),
@@ -37,6 +38,7 @@ public enum MobSkillType {
     STOPMOTION(135),
     FEAR(136),
     FROZEN(137),
+    DISPEL_ITEMOPTION(138),
     PHYSICALIMMUNE(140),
     MAGICIMMUNE(141),
     HARDSKIN(142),
@@ -55,6 +57,7 @@ public enum MobSkillType {
     SPREADSKILLFROMUSER(160),
     HEALBYDAMAGE(161),
     BIND(162),
+    TELEPORT(170),
     SUMMON(200),
     SUMMON_CUBE(201);
 

@@ -136,7 +136,7 @@ public final class UserLocal {
     public static OutPacket skillCooltimeSet(int skillId, int remainSeconds) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SkillCooltimeSet);
         outPacket.encodeInt(skillId);
-        outPacket.encodeShort(remainSeconds); // usRemainSec
+        outPacket.encodeInt(remainSeconds); // usRemainSec
         return outPacket;
     }
 }
