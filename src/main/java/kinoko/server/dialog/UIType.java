@@ -45,8 +45,9 @@ public enum UIType {
     ACCOUNTMOREINFO(40),
     FINDFRIEND(41),
     DRAGONBOX(42),
-    WNDNO(43),
-    UNRELEASE(44);
+    CREATE_PREMIUMADVENTURER(43),
+    WNDNO(44),
+    UNRELEASE(45);
 
     private final int value;
 

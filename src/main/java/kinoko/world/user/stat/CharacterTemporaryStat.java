@@ -128,16 +128,14 @@ public enum CharacterTemporaryStat implements BitIndex {
     TeleportMasteryOn(119),
     CombatOrders(120),
     Beholder(121),
-    EnergyCharged(122),
-    Dash_Speed(123),
-    Dash_Jump(124),
-    RideVehicle(125),
-    PartyBooster(126),
-    GuidedBullet(127),
-
-    // Cannot send these CTS in v95 due to flag size
-    Undead(128),
-    SummonBomb(129),
+    DispelItemOption(122),
+    EnergyCharged(123),
+    Dash_Speed(124),
+    Dash_Jump(125),
+    RideVehicle(126),
+    PartyBooster(127),
+    GuidedBullet(128),
+    Undead(129),
 
     // Additional info for CTS
     DefenseAtt_Elem(1000),      // Element Attribute to be resisted by DefenseAtt
@@ -147,7 +145,7 @@ public enum CharacterTemporaryStat implements BitIndex {
     Swallow_Mob(1004),          // Target mob ID for Jaguar-oshi skill (33101005)
     Swallow_Template(1005);     // Target mob template ID for Jaguar-oshi skill (33101005)
 
-    public static final int FLAG_SIZE = 128;
+    public static final int FLAG_SIZE = 160;
     public static final List<CharacterTemporaryStat> LOCAL_ENCODE_ORDER = List.of(
             PAD, PDD, MAD, MDD, ACC, EVA, Craft, Speed, Jump, EMHP, EMMP, EPAD, EPDD, EMDD, MagicGuard, DarkSight,
             Booster, PowerGuard, Guard, SafetyDamage, SafetyAbsorb, MaxHP, MaxMP, Invincible, SoulArrow, Stun, Poison,
@@ -161,7 +159,7 @@ public enum CharacterTemporaryStat implements BitIndex {
             MagicResistance, SoulStone, Flying, Frozen, AssistCharge, Enrage, SuddenDeath, NotDamaged, FinalCut,
             ThornsEffect, SwallowAttackDamage, MorewildDamageUp, Mine, Cyclone, SwallowCritical, SwallowMaxMP,
             SwallowDefence, SwallowEvasion, Conversion, Revive, Sneak, Mechanic, Aura, DarkAura, BlueAura, YellowAura,
-            SuperBody, MorewildMaxHP, Dice, BlessingArmor, DamR, TeleportMasteryOn, CombatOrders, Beholder, SummonBomb
+            SuperBody, MorewildMaxHP, Dice, BlessingArmor, DamR, TeleportMasteryOn, CombatOrders, Beholder, DispelItemOption
     );
     public static final List<CharacterTemporaryStat> REMOTE_ENCODE_ORDER = List.of(
             Speed, ComboCounter, WeaponCharge, Stun, Darkness, Seal, Weakness, Curse, Poison, ShadowPartner, DarkSight,
