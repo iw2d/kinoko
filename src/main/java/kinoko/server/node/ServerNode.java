@@ -41,17 +41,6 @@ public abstract class ServerNode extends Node {
         }
     }
 
-    protected final ChannelFuture startClient(ChannelInitializer<SocketChannel> initializer, InetAddress host, int port) {
-        final Bootstrap b = new Bootstrap();
-        b.group(workerGroup);
-        b.channel(NioSocketChannel.class);
-        b.handler(initializer);
-        b.option(ChannelOption.TCP_NODELAY, true);
-        b.option(ChannelOption.SO_KEEPALIVE, true);
-        return b.connect(host, port);
-    }
-
-
     protected static byte[] getNewIv() {
         final byte[] iv = new byte[4];
         Util.getRandom().nextBytes(iv);

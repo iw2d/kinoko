@@ -461,16 +461,24 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not resolve mob template ID : %d", templateId));
             return;
         }
+        final int count;
+        if (args.length > 2) {
+            count = Integer.parseInt(args[2]);
+        } else {
+            count = 1;
+        }
         final Field field = user.getField();
         final Optional<Foothold> footholdResult = field.getFootholdBelow(user.getX(), user.getY());
-        final Mob mob = new Mob(
-                mobTemplateResult.get(),
-                null,
-                user.getX(),
-                user.getY(),
-                footholdResult.map(Foothold::getSn).orElse(user.getFoothold())
-        );
-        field.getMobPool().addMob(mob);
+        for (int i = 0; i < count; i++) {
+            final Mob mob = new Mob(
+                    mobTemplateResult.get(),
+                    null,
+                    user.getX(),
+                    user.getY(),
+                    footholdResult.map(Foothold::getSn).orElse(user.getFoothold())
+            );
+            field.getMobPool().addMob(mob);
+        }
     }
 
     @Command("togglemob")

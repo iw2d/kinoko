@@ -1,5 +1,6 @@
 package kinoko.server.node;
 
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -8,12 +9,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.net.InetAddress;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class Node {
-    protected static final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    protected static final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
     private final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
     private boolean shutdown = false;
 
@@ -41,5 +44,15 @@ public abstract class Node {
         b.childOption(ChannelOption.TCP_NODELAY, true);
         b.childOption(ChannelOption.SO_KEEPALIVE, true);
         return b.bind(port);
+    }
+
+    protected final ChannelFuture startClient(ChannelInitializer<SocketChannel> initializer, InetAddress host, int port) {
+        final Bootstrap b = new Bootstrap();
+        b.group(workerGroup);
+        b.channel(NioSocketChannel.class);
+        b.handler(initializer);
+        b.option(ChannelOption.TCP_NODELAY, true);
+        b.option(ChannelOption.SO_KEEPALIVE, true);
+        return b.connect(host, port);
     }
 }
