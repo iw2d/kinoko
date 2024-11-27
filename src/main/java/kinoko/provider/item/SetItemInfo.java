@@ -46,12 +46,10 @@ public final class SetItemInfo {
             final Map<ItemInfoType, Integer> stats = new EnumMap<>(ItemInfoType.class);
             for (var statEntry : effectProp.getItems().entrySet()) {
                 if (ItemInfoType.isIgnored(statEntry.getKey())) {
-                    System.err.printf("Unhandled set item effect stat : %s%n", statEntry.getKey());
-                    continue;
-                    // throw new ProviderError("Unhandled set item effect stat : %s", statEntry.getKey());
+                    throw new ProviderError("Unhandled set item effect stat : %s", statEntry.getKey());
                 }
                 final ItemInfoType type = ItemInfoType.fromName(statEntry.getKey());
-                if (type == ItemInfoType.setKey) {
+                if (type == ItemInfoType.setKey || type == ItemInfoType.Option) {
                     // Visitor set property
                     continue;
                 }

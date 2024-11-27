@@ -111,7 +111,10 @@ public enum ItemInfoType {
     time,
 
     recoveryHP,
-    recoveryMP;
+    recoveryMP,
+    incAllStat,
+    incPVPDamage,
+    Option;
 
     private static final Map<String, ItemInfoType> nameMap;
 

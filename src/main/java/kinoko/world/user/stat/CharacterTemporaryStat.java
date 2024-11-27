@@ -145,7 +145,7 @@ public enum CharacterTemporaryStat implements BitIndex {
     Swallow_Mob(1004),          // Target mob ID for Jaguar-oshi skill (33101005)
     Swallow_Template(1005);     // Target mob template ID for Jaguar-oshi skill (33101005)
 
-    public static final int FLAG_SIZE = 160;
+    public static final int FLAG_SIZE = 256; // TODO: CTS
     public static final List<CharacterTemporaryStat> LOCAL_ENCODE_ORDER = List.of(
             PAD, PDD, MAD, MDD, ACC, EVA, Craft, Speed, Jump, EMHP, EMMP, EPAD, EPDD, EMDD, MagicGuard, DarkSight,
             Booster, PowerGuard, Guard, SafetyDamage, SafetyAbsorb, MaxHP, MaxMP, Invincible, SoulArrow, Stun, Poison,

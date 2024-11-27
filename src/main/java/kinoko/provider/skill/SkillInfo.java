@@ -293,8 +293,11 @@ public final class SkillInfo {
                     case rb, hs, hit, ball, dateExpire -> {
                         // skip; rb is handled by lt
                     }
+                    case null -> {
+                        System.err.println(entry.getKey());
+                    }
                     default -> {
-                        expressions.put(stat, SkillExpression.from(WzProvider.getString(entry.getValue())));
+                        expressions.put(stat, SkillExpression.from(WzProvider.getString(entry.getValue()).replace("=", "")));
                     }
                 }
             }
