@@ -39,7 +39,7 @@ public final class SkillStringInfo {
 
     public static SkillStringInfo from(WzListProperty stringProp) throws ProviderError {
         final String name = WzProvider.getString(stringProp.get("name"));
-        final String desc = WzProvider.getString(stringProp.get("desc"));
+        final String desc = WzProvider.getString(stringProp.get("desc"), "");
         final String h = WzProvider.getString(stringProp.get("h"), "");
         final HashMap<Integer, String> hMap = new HashMap<>();
         for (int i = 1; i < Integer.MAX_VALUE; i++) {

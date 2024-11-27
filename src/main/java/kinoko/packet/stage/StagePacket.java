@@ -48,6 +48,8 @@ public final class StagePacket {
 
         outPacket.encodeFT(Instant.now()); // ftServer
         outPacket.encodeInt(0); // nMobStatAdjustRate
+        outPacket.encodeByte(0);
+        outPacket.encodeByte(0);
         return outPacket;
     }
 

@@ -38,7 +38,7 @@ public final class ItemOptionLevelData {
             if (ItemOptionStat.isIgnored(propEntry.getKey())) {
                 continue;
             }
-            final ItemOptionStat stat = ItemOptionStat.fromName(propEntry.getKey());
+            final ItemOptionStat stat = ItemOptionStat.fromName(propEntry.getKey().trim());
             if (stat == null) {
                 throw new ProviderError("Unknown item option stat : %s", propEntry.getKey());
             }

@@ -199,6 +199,10 @@ public final class ItemInfo {
                             continue;
                         }
                         final ItemSpecType type = ItemSpecType.fromName(specEntry.getKey());
+                        if (type == null) {
+                            System.err.printf("Unhandled item spec type : %s%n", specEntry.getKey());
+                            continue;
+                        }
                         spec.put(type, specEntry.getValue());
                     }
                 }
