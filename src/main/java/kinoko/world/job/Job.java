@@ -111,7 +111,12 @@ public enum Job {
     GM(900),
     SUPER_GM(910),
     ADDITIONAL_SKILLS(9000),
-    GUILD_SKILLS(9100);
+    GUILD_SKILLS(9100),
+    HERBALISM(9200),
+    MINING(9201),
+    SMITHING(9202),
+    ACCESSORY_CRAFTING(9203),
+    ALCHEMY(9204);
 
     private static final Map<Short, Job> jobMap;
 

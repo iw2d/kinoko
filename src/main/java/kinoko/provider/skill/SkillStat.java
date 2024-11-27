@@ -103,7 +103,12 @@ public enum SkillStat {
     extendPrice,
     reqGuildLevel,
     period,
-    priceUnit;
+    priceUnit,
+
+    PVPdamage,
+    indiePad,
+    indieMad,
+    iceGageCon;
 
     private static final Map<String, SkillStat> nameMap = new HashMap<>();
 

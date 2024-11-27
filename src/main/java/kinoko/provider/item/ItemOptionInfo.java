@@ -101,7 +101,7 @@ public final class ItemOptionInfo {
         ItemOptionType optionType = ItemOptionType.ANY_EQUIP;
         if (itemOptionProp.get("info") instanceof WzListProperty infoProp) {
             reqLevel = WzProvider.getInteger(infoProp.get("reqLevel"), 0);
-            optionType = ItemOptionType.getByValue(WzProvider.getInteger(infoProp.get("optionType")));
+            optionType = ItemOptionType.getByValue(WzProvider.getInteger(infoProp.get("optionType"), 0));
             assert optionType != null;
         }
         if (!(itemOptionProp.get("level") instanceof WzListProperty levelList)) {

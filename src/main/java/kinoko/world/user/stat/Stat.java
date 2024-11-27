@@ -26,21 +26,31 @@ public enum Stat {
     MONEY(0x40000),
     PETSN2(0x80000),
     PETSN3(0x100000),
-    TEMPEXP(0x200000);
+    TEMPEXP(0x200000),
+    FATIGUE(0x400000),
+    CHARISMAEXP(0x800000),
+    INSIGHTEXP(0x1000000),
+    WILLEXP(0x2000000),
+    CRAFTEXP(0x4000000),
+    SENSEEXP(0x8000000),
+    CHARMEXP(0x10000000),
+    NCSLIMIT(0x20000000),
+    PVP(0x40000000),
+    PVPMODELEVEL(0x80000000L);
 
     public static final List<Stat> ENCODE_ORDER = List.of(values());
 
-    private final int value;
+    private final long value;
 
-    Stat(int value) {
+    Stat(long value) {
         this.value = value;
     }
 
-    public final int getValue() {
+    public final long getValue() {
         return value;
     }
 
-    public static Stat getByValue(int value) {
+    public static Stat getByValue(long value) {
         for (Stat stat : values()) {
             if (stat.getValue() == value) {
                 return stat;
@@ -49,9 +59,9 @@ public enum Stat {
         return null;
     }
 
-    public static int from(Set<Stat> stats) {
+    public static long from(Set<Stat> stats) {
         return stats.stream()
-                .mapToInt(Stat::getValue)
+                .mapToLong(Stat::getValue)
                 .reduce(0, (a, b) -> a | b);
     }
 }

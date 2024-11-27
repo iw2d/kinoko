@@ -8,6 +8,7 @@ public enum ReactorEventType {
     SKILL(5),
     ENTER(6), // not sure
     LEAVE(7), // not sure
+    UNK_8(8),
     DROP(100),
     TIME_OUT(101);
 

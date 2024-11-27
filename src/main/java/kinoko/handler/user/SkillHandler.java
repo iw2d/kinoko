@@ -153,6 +153,7 @@ public final class SkillHandler {
     @Handler(InHeader.UserSkillCancelRequest)
     public static void handleUserSkillCancelRequest(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
+        final boolean active = inPacket.decodeBoolean(); // bActive
         if (SkillConstants.isKeydownSkill(skillId)) {
             return;
         }

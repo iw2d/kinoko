@@ -38,6 +38,7 @@ public final class AvatarLook implements Encodable {
         outPacket.encodeByte(gender); // nGender
         outPacket.encodeByte(skin); // nSkin
         outPacket.encodeInt(face); // nFace
+        outPacket.encodeInt(0); // nJob
         // anHairEquip
         outPacket.encodeByte(0);
         outPacket.encodeInt(hair); // nHair

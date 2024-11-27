@@ -45,6 +45,7 @@ public enum MobSkillType {
     PCOUNTER(143),
     MCOUNTER(144),
     PMCOUNTER(145),
+    INVINCIBLE(146),
     PAD(150),
     MAD(151),
     PDR(152),
@@ -58,6 +59,9 @@ public enum MobSkillType {
     HEALBYDAMAGE(161),
     BIND(162),
     TELEPORT(170),
+    USER_BOMB(171),
+    USER_MORPH(172),
+    DARK_TORNADO(173),
     SUMMON(200),
     SUMMON_CUBE(201);
 

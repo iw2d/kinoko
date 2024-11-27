@@ -670,6 +670,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         outPacket.encodeByte(0); // nTeamForMCarnival
         outPacket.encodeInt(0); // nEffectItemID
         outPacket.encodeInt(0); // nPhase
+        outPacket.encodeByte(0);
     }
 
     @Override

@@ -420,7 +420,7 @@ public final class User extends Life implements Lockable<User> {
     }
 
     public void addPop(int pop) {
-        final short newPop = (short) Math.min(getPop() + pop, Short.MAX_VALUE);
+        final int newPop = (short) Math.min(getPop() + pop, Short.MAX_VALUE);
         getCharacterStat().setPop(newPop);
         validateStat();
         write(WvsContext.statChanged(Stat.POP, newPop, true));

@@ -30,7 +30,7 @@ public final class CharacterStat implements Encodable {
     private short ap;
     private ExtendSp sp;
     private int exp;
-    private short pop;
+    private int pop;
     private int posMap;
     private byte portal;
     private long petSn1;
@@ -197,11 +197,11 @@ public final class CharacterStat implements Encodable {
         this.exp = exp;
     }
 
-    public short getPop() {
+    public int getPop() {
         return pop;
     }
 
-    public void setPop(short pop) {
+    public void setPop(int pop) {
         this.pop = pop;
     }
 
@@ -442,11 +442,25 @@ public final class CharacterStat implements Encodable {
         }
 
         outPacket.encodeInt(exp); // nEXP
-        outPacket.encodeShort(pop); // nPOP
+        outPacket.encodeInt(pop); // nPOP
         outPacket.encodeInt(0); // nTempEXP
         outPacket.encodeInt(posMap); // dwPosMap
         outPacket.encodeByte(portal); // nPortal
         outPacket.encodeInt(0); // nPlayTime
         outPacket.encodeShort(subJob); // nSubJob
+
+        outPacket.encodeByte(0); // nFatigue
+        outPacket.encodeInt(0); // nLastFatigueUpdateTime
+        outPacket.encodeInt(0); // nCharismaEXP
+        outPacket.encodeInt(0); // nInsightEXP
+        outPacket.encodeInt(0); // nWillEXP
+        outPacket.encodeInt(0); // nCraftEXP
+        outPacket.encodeInt(0); // nSenseEXP
+        outPacket.encodeInt(0); // nCharmEXP
+        outPacket.encodeArray(new byte[0xC]); // DayLimit
+        outPacket.encodeInt(0); // nPvPExp
+        outPacket.encodeByte(0); // nPvPGrade
+        outPacket.encodeInt(0); // nPvPPoint
+        outPacket.encodeByte(0); // nPvPModeLevel
     }
 }

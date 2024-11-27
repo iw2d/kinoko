@@ -77,19 +77,12 @@ public final class UserHandler {
 
     @Handler(InHeader.UserMove)
     public static void handleUserMove(User user, InPacket inPacket) {
-        inPacket.decodeInt(); // 0
-        inPacket.decodeInt(); // 0
         final byte fieldKey = inPacket.decodeByte(); // bFieldKey
         if (user.getFieldKey() != fieldKey) {
             user.dispose();
             return;
         }
-        inPacket.decodeInt(); // 0
-        inPacket.decodeInt(); // 0
         final int crc = inPacket.decodeInt(); // dwCrc
-        inPacket.decodeInt(); // 0
-        inPacket.decodeInt(); // Crc32
-
         final Field field = user.getField();
         if (field.getFieldCrc() != crc) {
             log.warn("Received mismatching CRC for field ID : {}", field.getFieldId());

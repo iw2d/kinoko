@@ -44,7 +44,7 @@ public enum MobTemporaryStat implements BitIndex {
     MagicCrash(36),
     HealByDamage(37);
 
-    public static final int FLAG_SIZE = 160;
+    public static final int FLAG_SIZE = 256;
     public static final List<MobTemporaryStat> ENCODE_ORDER = List.of(
             PAD, PDR, MAD, MDR, ACC, EVA, Speed, Stun, Freeze, Poison, Seal, Darkness, PowerUp, MagicUp, PGuardUp,
             MGuardUp, PImmune, MImmune, Doom, Web, HardSkin, Ambush, Venom, Blind, SealSkill, Dazzle, PCounter,

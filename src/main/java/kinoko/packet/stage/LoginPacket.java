@@ -98,6 +98,7 @@ public final class LoginPacket {
         }
 
         outPacket.encodeShort(0); // nBalloonCount
+        outPacket.encodeInt(0);
         return outPacket;
     }
 

@@ -32,17 +32,19 @@ public final class WvsContext {
         final OutPacket outPacket = OutPacket.of(OutHeader.StatChanged);
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
 
-        outPacket.encodeInt(Stat.from(statMap.keySet()));
+        // GW_CharacterStat::DecodeChangeStat
+        outPacket.encodeLong(Stat.from(statMap.keySet()));
         for (Stat stat : Stat.ENCODE_ORDER) {
             if (statMap.containsKey(stat)) {
                 switch (stat) {
-                    case SKIN, LEVEL -> {
+                    case SKIN, LEVEL, FATIGUE, PVPMODELEVEL -> {
                         outPacket.encodeByte((byte) statMap.get(stat));
                     }
-                    case JOB, STR, DEX, INT, LUK, AP, POP -> {
+                    case JOB, STR, DEX, INT, LUK, AP -> {
                         outPacket.encodeShort((short) statMap.get(stat));
                     }
-                    case FACE, HAIR, HP, MHP, MP, MMP, EXP, MONEY, TEMPEXP -> {
+                    case FACE, HAIR, HP, MHP, MP, MMP, EXP, POP, MONEY, TEMPEXP,
+                            CHARISMAEXP, INSIGHTEXP, WILLEXP, CRAFTEXP, SENSEEXP, CHARMEXP, PVP -> {
                         outPacket.encodeInt((int) statMap.get(stat));
                     }
                     case PETSN, PETSN2, PETSN3 -> {
@@ -54,6 +56,9 @@ public final class WvsContext {
                         } else {
                             outPacket.encodeShort((short) statMap.get(stat));
                         }
+                    }
+                    case NCSLIMIT -> {
+                        outPacket.encodeArray(new byte[12]);
                     }
                 }
             }

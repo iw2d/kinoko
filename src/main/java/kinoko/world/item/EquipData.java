@@ -110,6 +110,7 @@ public final class EquipData {
         outPacket.encodeInt(getDurability()); // nDurability
 
         outPacket.encodeInt(getIuc()); // nIUC
+        outPacket.encodeShort(0); // niPVPDamage
         outPacket.encodeByte(getGrade()); // nGrade
         outPacket.encodeByte(getChuc()); // nCHUC
 

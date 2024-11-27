@@ -188,6 +188,8 @@ public final class CharacterData implements Encodable {
     public void encodeCharacterData(DBChar flag, OutPacket outPacket) {
         outPacket.encodeLong(flag.getValue());
         outPacket.encodeByte(0); // nCombatOrders
+        outPacket.encodeByte(0); // byte * int
+        outPacket.encodeInt(0); // int * (int, 8)
         outPacket.encodeByte(false); // bool -> byte, int * FT, int * FT
 
         if (flag.hasFlag(DBChar.CHARACTER)) {
@@ -256,6 +258,15 @@ public final class CharacterData implements Encodable {
                 }
             }
             outPacket.encodeShort(0);
+            // Android Equips
+            for (var entry : equippedItems.entrySet()) {
+                final int bodyPart = entry.getKey();
+                if (bodyPart >= BodyPart.ANDROID_BASE.getValue() && bodyPart < BodyPart.ANDROID_END.getValue()) {
+                    outPacket.encodeShort(bodyPart);
+                    entry.getValue().encode(outPacket);
+                }
+            }
+            outPacket.encodeShort(0);
         }
         if (flag.hasFlag(DBChar.ITEMSLOTCONSUME)) {
             for (var entry : inventoryManager.getConsumeInventory().getItems().entrySet()) {
@@ -287,6 +298,12 @@ public final class CharacterData implements Encodable {
         }
 
         outPacket.encodeInt(-1); // bag?
+        if (flag.hasFlag(DBChar.UNK_0x20000000)) {
+            outPacket.encodeInt(0); // int * (int, 8)
+        }
+        if (flag.hasFlag(DBChar.UNK_0x10000000)) {
+            outPacket.encodeByte(0);
+        }
 
         if (flag.hasFlag(DBChar.SKILLRECORD)) {
             outPacket.encodeShort(skillManager.getSkillRecords().size());
@@ -355,6 +372,25 @@ public final class CharacterData implements Encodable {
             for (int i = 0; i < 13; i++) {
                 outPacket.encodeInt(0); // adwMapTransferPremium
             }
+            for (int i = 0; i < 13; i++) {
+                outPacket.encodeInt(0); // ?
+            }
+        }
+        if (flag.hasFlag(DBChar.MONSTERBOOKCOVER)) {
+            outPacket.encodeInt(0);
+        }
+        if (flag.hasFlag(DBChar.MONSTERBOOKCARD)) {
+            outPacket.encodeByte(0);
+            outPacket.encodeShort(0);
+            outPacket.encodeShort(0);
+            outPacket.encodeByte(0);
+            outPacket.encodeByte(0);
+        }
+        if (flag.hasFlag(DBChar.UNK_0x40000000)) {
+            outPacket.encodeInt(0);
+        }
+        if (flag.hasFlag(DBChar.UNK_0x80000000)) {
+            outPacket.encodeShort(0);
         }
         if (flag.hasFlag(DBChar.NEWYEARCARD)) {
             outPacket.encodeShort(0); // short * GW_NewYearCardRecord

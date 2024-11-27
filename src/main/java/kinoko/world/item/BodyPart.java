@@ -86,7 +86,18 @@ public enum BodyPart {
     MECHANIC_LEG(1102),
     MECHANIC_FRAME(1103),
     MECHANIC_TRANSISTOR(1104),
-    MECHANIC_END(1200);
+    MECHANIC_END(1200),
+
+    // AP
+    ANDROID_BASE(1200),
+    ANDROID_CAP(1200),
+    ANDROID_CAPE(1201),
+    ANDROID_FACEACC(1202),
+    ANDROID_CLOTHES(1203),
+    ANDROID_PANTS(1204),
+    ANDROID_SHOES(1205),
+    ANDROID_GLOVES(1206),
+    ANDROID_END(1207);
 
     private static final Map<Integer, BodyPart> bodyParts;
     private static final Set<BodyPart> armorBodyParts = Set.of(CAP, CLOTHES, PANTS, SHOES, GLOVES, CAPE);
@@ -115,6 +126,8 @@ public enum BodyPart {
                 case DRAGON_END:
                 case MECHANIC_BASE:
                 case MECHANIC_END:
+                case ANDROID_BASE:
+                case ANDROID_END:
                     continue;
             }
             bodyPartMap.put(bodyPart.getValue(), bodyPart);

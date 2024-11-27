@@ -158,16 +158,16 @@ public final class Foothold {
                 layerId,
                 groupId,
                 sn,
-                WzProvider.getInteger(footholdProp.get("x1")),
-                WzProvider.getInteger(footholdProp.get("y1")),
-                WzProvider.getInteger(footholdProp.get("x2")),
-                WzProvider.getInteger(footholdProp.get("y2")),
+                WzProvider.getInteger(footholdProp.get("x1"), 0),
+                WzProvider.getInteger(footholdProp.get("y1"), 0),
+                WzProvider.getInteger(footholdProp.get("x2"), 0),
+                WzProvider.getInteger(footholdProp.get("y2"), 0),
                 WzProvider.getInteger(footholdProp.get("drag"), 0),
                 WzProvider.getInteger(footholdProp.get("force"), 0),
                 WzProvider.getInteger(footholdProp.get("forbidFallDown"), 0),
                 WzProvider.getInteger(footholdProp.get("cantThrough"), 0),
-                WzProvider.getInteger(footholdProp.get("prev")),
-                WzProvider.getInteger(footholdProp.get("next"))
+                WzProvider.getInteger(footholdProp.get("prev"), 0),
+                WzProvider.getInteger(footholdProp.get("next"), 0)
         );
     }
 }

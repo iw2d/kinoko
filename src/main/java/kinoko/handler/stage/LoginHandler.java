@@ -44,6 +44,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class LoginHandler {
     private static final Logger log = LogManager.getLogger(LoginHandler.class);
 
+    @Handler(InHeader.PermissionRequest)
+    public static void handlePermissionRequest(Client c, InPacket inPacket) {
+        final byte locale = inPacket.decodeByte();
+        final short majorVersion = inPacket.decodeShort();
+        final short minorVersion = inPacket.decodeShort();
+    }
+
     @Handler(InHeader.CheckPassword)
     public static void handleCheckPassword(Client c, InPacket inPacket) {
         final String username = inPacket.decodeString();
@@ -241,7 +248,7 @@ public final class LoginHandler {
         cs.setAp((short) 0);
         cs.setSp(ExtendSp.from(Map.of()));
         cs.setExp(0);
-        cs.setPop((short) 0);
+        cs.setPop(0);
         cs.setPosMap(GameConstants.getStartingMap(job, selectedSubJob));
         cs.setPortal((byte) 0);
         characterData.setCharacterStat(cs);
