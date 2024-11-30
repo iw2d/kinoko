@@ -54,8 +54,11 @@ public final class MessagePacket {
         outPacket.encodeInt(0); // nItemBonusEXP
         outPacket.encodeInt(0); // nPremiumIPEXP
         outPacket.encodeInt(0); // nRainbowWeekEventEXP
+        outPacket.encodeByte(0); // "Monster Card Set Completion EXP (+%d)"
+        outPacket.encodeInt(0); // nBoomUpEventBonusExp
         outPacket.encodeInt(0); // nPartyEXPRingEXP
         outPacket.encodeInt(0); // nCakePieEventBonus
+        outPacket.encodeInt(0); // "You have received extra EXP from Quest Booster (+%d)"
         return outPacket;
     }
 
