@@ -1065,4 +1065,9 @@ public final class AdminCommands {
     public static void reloadShops(User user, String[] args) {
         ShopProvider.initialize();
     }
+
+    @Command({"reloadcashshop", "reloadcs"})
+    public static void reloadCashShop(User user, String[] args) {
+        CashShop.initialize();
+    }
 }

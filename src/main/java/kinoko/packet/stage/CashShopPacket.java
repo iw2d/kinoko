@@ -29,6 +29,26 @@ public final class CashShopPacket {
         return outPacket;
     }
 
+    public static OutPacket cashItemGachaponResultSuccess(long itemSn, int remain, CashItemInfo cashItemInfo) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemGachaponResult);
+        outPacket.encodeByte(CashItemResultType.CashItemGachapon_Done.getValue());
+        outPacket.encodeLong(itemSn);
+        outPacket.encodeInt(remain);
+        cashItemInfo.encode(outPacket);
+        // CUICashItemGachapon::OnCashItemGachaponResult
+        final Item item = cashItemInfo.getItem();
+        outPacket.encodeInt(item.getItemId()); // nSelectedItemID
+        outPacket.encodeByte(item.getQuantity()); // nSelectedItemCount
+        outPacket.encodeByte(0); // bJackpot
+        return outPacket;
+    }
+
+    public static OutPacket cashItemGachaponResultFailed() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CashShopCashItemGachaponResult);
+        outPacket.encodeByte(CashItemResultType.GashItemGachapon_Failed.getValue());
+        return outPacket;
+    }
+
 
     // CCashShop::OnCashItemResult ---------------------------------------------------------------------------------------------
 

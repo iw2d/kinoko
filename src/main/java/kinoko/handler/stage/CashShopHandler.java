@@ -655,6 +655,56 @@ public final class CashShopHandler {
         }
     }
 
+    @Handler(InHeader.CashItemGachaponRequest)
+    public static void handleCashItemGachaponRequest(User user, InPacket inPacket) {
+        // CUICashItemGachapon::OnButtonClicked
+        final long itemSn = inPacket.decodeLong();
+        try (var lockedAccount = user.getAccount().acquire()) {
+            // Check account locker
+            final Account account = lockedAccount.get();
+            final Locker locker = account.getLocker();
+            if (locker.getRemaining() < 1) {
+                user.write(CashShopPacket.cashItemGachaponResultFailed());
+                return;
+            }
+            // Create CashItemInfo
+            final Optional<Commodity> commodityResult = CashShop.getCommodity(10000000); // TODO : pick from random
+            if (commodityResult.isEmpty()) {
+                user.write(CashShopPacket.cashItemGachaponResultFailed());
+                return;
+            }
+            final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(user);
+            if (cashItemInfoResult.isEmpty()) {
+                user.write(CashShopPacket.cashItemGachaponResultFailed());
+                return;
+            }
+            final CashItemInfo added = cashItemInfoResult.get();
+            // Consume surprise box
+            final var iter = locker.getCashItems().iterator();
+            CashItemInfo removed = null;
+            while (iter.hasNext()) {
+                final CashItemInfo cii = iter.next();
+                final Item item = cii.getItem();
+                if (item.getItemSn() == itemSn && item.getItemId() == 5222000) { // Premium Cash Shop Surprise
+                    removed = cii;
+                    item.setQuantity((short) (item.getQuantity() - 1));
+                    if (item.getQuantity() <= 0) {
+                        iter.remove();
+                    }
+                    break;
+                }
+            }
+            if (removed == null) {
+                user.write(CashShopPacket.cashItemGachaponResultFailed());
+                log.error("Could not resolve cash item gachapon item in locker with sn : {}", itemSn);
+                return;
+            }
+            // Add CashItemInfo to locker
+            locker.addCashItem(added);
+            user.write(CashShopPacket.cashItemGachaponResultSuccess(itemSn, removed.getItem().getQuantity(), added));
+        }
+    }
+
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
