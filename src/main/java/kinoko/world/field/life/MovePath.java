@@ -115,6 +115,13 @@ public final class MovePath implements Encodable {
                     outPacket.encodeShort(elem.getVx()); // vx
                     outPacket.encodeShort(elem.getVy()); // vy
                 }
+                case MOB_TELEPORT -> {
+                    outPacket.encodeShort(elem.getX()); // x
+                    outPacket.encodeShort(elem.getY()); // y
+                    outPacket.encodeShort(elem.getVx()); // vx
+                    outPacket.encodeShort(elem.getVy()); // vy
+                    outPacket.encodeShort(elem.getFh()); // fh
+                }
                 case ACTION -> {
                     // noop
                 }
@@ -181,6 +188,13 @@ public final class MovePath implements Encodable {
                     elem.setVx(inPacket.decodeShort()); // vx
                     elem.setVy(inPacket.decodeShort()); // vy
                 }
+                case MOB_TELEPORT -> {
+                    elem.setX(inPacket.decodeShort()); // x
+                    elem.setY(inPacket.decodeShort()); // y
+                    elem.setVx(inPacket.decodeShort()); // vx
+                    elem.setVy(inPacket.decodeShort()); // vy
+                    elem.setFh(inPacket.decodeShort()); // fh
+                }
                 case ACTION -> {
                     elem.setX(x);
                     elem.setY(y);
@@ -203,27 +217,31 @@ public final class MovePath implements Encodable {
         STAT_CHANGE,
         START_FALL_DOWN,
         FLYING_BLOCK,
+        MOB_TELEPORT,
         ACTION;
 
         private static MoveType fromAttr(byte attr) {
             switch (attr) {
-                case 0, 5, 12, 14, 35, 36 -> {
+                case 0, 6, 13, 15, 37, 38 -> {
                     return NORMAL;
                 }
-                case 1, 2, 13, 16, 18, 31, 32, 33, 34 -> {
+                case 1, 2, 14, 17, 19, 32, 33, 34, 35 -> {
                     return JUMP;
                 }
-                case 3, 4, 6, 7, 8, 10 -> {
+                case 3, 4, 5, 7, 8, 9, 11 -> {
                     return TELEPORT;
                 }
-                case 9 -> {
+                case 10 -> {
                     return STAT_CHANGE;
                 }
-                case 11 -> {
+                case 12 -> {
                     return START_FALL_DOWN;
                 }
-                case 17 -> {
+                case 18 -> {
                     return FLYING_BLOCK;
+                }
+                case 36 -> {
+                    return MOB_TELEPORT;
                 }
                 default -> {
                     return ACTION;

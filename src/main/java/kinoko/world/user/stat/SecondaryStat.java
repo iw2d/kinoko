@@ -229,6 +229,7 @@ public final class SecondaryStat {
 
         outPacket.encodeByte(getOption(CharacterTemporaryStat.DefenseAtt_Elem).nOption);
         outPacket.encodeByte(getOption(CharacterTemporaryStat.DefenseState_Stat).nOption);
+        outPacket.encodeByte(0); // PvPDamage
 
         for (CharacterTemporaryStat cts : CharacterTemporaryStat.TWO_STATE_ORDER) {
             if (flag.hasFlag(cts)) {

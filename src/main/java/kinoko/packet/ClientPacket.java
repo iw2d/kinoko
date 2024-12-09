@@ -12,6 +12,7 @@ public final class ClientPacket {
         outPacket.encodeByte(true);
         outPacket.encodeArray(channelHost);
         outPacket.encodeShort(channelPort);
+        outPacket.encodeByte(0);
         return outPacket;
     }
 
