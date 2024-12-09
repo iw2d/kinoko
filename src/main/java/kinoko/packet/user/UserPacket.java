@@ -22,6 +22,7 @@ public final class UserPacket {
         // CUserRemote::Init
         outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeString(user.getCharacterName()); // sCharacterName
+        outPacket.encodeString(""); // sParentName
 
         final GuildInfo guildInfo = user.getGuildInfo();
         outPacket.encodeString(guildInfo.getGuildName()); // sGuildName
@@ -36,6 +37,11 @@ public final class UserPacket {
 
         outPacket.encodeInt(0); // dwDriverID
         outPacket.encodeInt(0); // dwPassenserID
+
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0); // int * (int, int)
+
         outPacket.encodeInt(0); // nChocoCount
         outPacket.encodeInt(user.getEffectItemId()); // nActiveEffectItemID
         outPacket.encodeInt(0); // nCompletedSetItemID
@@ -89,6 +95,7 @@ public final class UserPacket {
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Swallow_Mob)) {
             effectFlag |= 0x4;
         }
+        // TODO: 0x8 (PvPRageEffect), 0x10 (PvPChampionEffect), 0x20 (HitPeriodRemain_Revive)
         outPacket.encodeByte(effectFlag);
 
         outPacket.encodeByte(false); // bool -> int * int (CUserPool::OnNewYearCardRecordAdd)
