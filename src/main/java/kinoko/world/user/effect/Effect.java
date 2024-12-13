@@ -6,6 +6,7 @@ import kinoko.world.item.Item;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.skill.Skill;
+import kinoko.world.user.User;
 
 public class Effect implements Encodable {
     protected final EffectType type;
@@ -251,4 +252,20 @@ public class Effect implements Encodable {
         effect.int2 = petIndex;
         return effect;
     }
+
+    public static Effect ItemMakerResult(boolean is_success) {
+        final Effect effect = new Effect(EffectType.Quest);
+        effect.int1 = (17);
+        effect.bool1 = is_success;
+        return effect;
+    }
+
+    public static Effect ItemMakerResultTo(User user, boolean is_success) {
+        final Effect effect = new Effect(EffectType.Quest); // Could be EffectType.buff not sure
+        effect.int1 = user.getCharacterId();
+        effect.int2 = (17);
+        effect.bool1 = is_success;
+        return effect;
+    }
+
 }

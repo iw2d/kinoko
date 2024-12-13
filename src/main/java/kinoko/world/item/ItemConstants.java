@@ -73,9 +73,25 @@ public final class ItemConstants {
         return itemId / 1000000 == 4;
     }
 
+    public static boolean isGem(final int id) {
+        return id >= 4250000 && id <= 4251402;
+    }
+
+    public static boolean isOtherGem(final int id) {
+        return switch (id) {
+            case 4001174, 4001175, 4001176, 4001177, 4001178, 4001179, 4001180, 4001181, 4001182, 4001183, 4001184,
+                 4001185, 4001186, 4031980, 2041058, 2040727, 1032062, 4032334, 4032312, 1142156, 1142157 -> true;
+            default -> //mostly quest items
+                    false;
+        };
+    }
     public static boolean isWeapon(int itemId) {
         final int weaponPrefix = itemId / 100000;
         return weaponPrefix == 13 || weaponPrefix == 14 || weaponPrefix == 16 || weaponPrefix == 17;
+    }
+
+    public static boolean isOverall(final int itemId) {
+        return itemId / 10000 == 105;
     }
 
     public static boolean isPet(int itemId) {

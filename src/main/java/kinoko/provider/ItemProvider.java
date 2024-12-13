@@ -7,6 +7,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.util.Util;
 import kinoko.world.item.BodyPart;
+import kinoko.world.item.EquipData;
 import kinoko.world.item.ItemConstants;
 import kinoko.world.item.ItemGrade;
 
@@ -20,6 +21,7 @@ public final class ItemProvider implements WzProvider {
     public static final List<String> EQUIP_TYPES = List.of("Accessory", "Cap", "Cape", "Coat", "Dragon", "Face", "Glove", "Hair", "Longcoat", "Mechanic", "Pants", "PetEquip", "Ring", "Shield", "Shoes", "TamingMob", "Weapon");
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
+    private static final Map<Integer, Map<String, Byte>> itemMakeStatsCache = new HashMap<Integer, Map<String, Byte>>();
     private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
     private static final Map<Integer, Set<Integer>> petEquips = new HashMap<>(); // petEquipId -> set<petTemplateId>
     private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
@@ -190,5 +192,55 @@ public final class ItemProvider implements WzProvider {
             final String itemName = WzProvider.getString(itemNameProp.get("name"));
             specialItemNames.put(itemId, itemName);
         }
+    }
+
+    public static Map<String, Byte> getItemMakeStats(final int itemId) {
+        // Check if stats are already cached
+        if (itemMakeStatsCache.containsKey(itemId)) {
+            return itemMakeStatsCache.get(itemId);
+        }
+
+        // Ensure the item ID belongs to the desired category
+        if (itemId / 10000 != 425) {
+            return null;
+        }
+
+        // Retrieve item information
+        Optional<ItemInfo> itemInfoOpt = ItemProvider.getItemInfo(itemId);
+        if (itemInfoOpt.isEmpty()) {
+            return null;
+        }
+
+        // Convert ItemInfo to EquipData
+        EquipData equipData = EquipData.from(itemInfoOpt.get());
+
+        // Extract stats from EquipData
+        final Map<String, Byte> ret = new LinkedHashMap<>();
+        ret.put("incPAD", (byte) equipData.getIncPad()); // Physical attack
+        ret.put("incMAD", (byte) equipData.getIncMad()); // Magic attack
+        ret.put("incACC", (byte) equipData.getIncAcc()); // Accuracy
+        ret.put("incEVA", (byte) equipData.getIncEva()); // Evasion
+        ret.put("incSpeed", (byte) equipData.getIncSpeed()); // Speed
+        ret.put("incJump", (byte) equipData.getIncJump()); // Jump
+        ret.put("incMaxHP", (byte) equipData.getIncMaxHp()); // Max HP
+        ret.put("incMaxMP", (byte) equipData.getIncMaxMp()); // Max MP
+        ret.put("incSTR", (byte) equipData.getIncStr()); // Strength
+        ret.put("incINT", (byte) equipData.getIncInt()); // Intelligence
+        ret.put("incLUK", (byte) equipData.getIncLuk()); // Luck
+        ret.put("incDEX", (byte) equipData.getIncDex()); // Dexterity
+
+        // Optional fields //TODO: Not sure if this needs added in v95
+        /*if (itemInfoOpt.get().getItemInfos().containsKey(ItemInfoType.randoption)) {
+            ret.put("randOption", (byte) itemInfoOpt.get().getInfo(ItemInfoType.));
+        }*/
+
+        if (itemInfoOpt.get().getItemInfos().containsKey(ItemInfoType.randstat)) {
+            ret.put("randStat", (byte) itemInfoOpt.get().getInfo(ItemInfoType.randstat));
+        }
+
+        // Cache the result for future use
+        itemMakeStatsCache.put(itemId, ret);
+
+        return ret;
     }
 }
