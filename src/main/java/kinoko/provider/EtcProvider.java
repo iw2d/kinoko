@@ -7,6 +7,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.cashshop.Commodity;
+import kinoko.server.maker.MakerInfo;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,6 +17,8 @@ public final class EtcProvider implements WzProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
     // Item info
     private static final List<SetItemInfo> setItemInfos = new ArrayList<>();
+    // ItemMake info
+    private static final Map<Integer, MakerInfo> itemMakeInfo = new HashMap<>(); // Item ID -> ItemMake Data
     // CashShop info
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
     private static final Map<Integer, List<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
@@ -35,6 +38,10 @@ public final class EtcProvider implements WzProvider {
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Etc.wz", e);
         }
+    }
+
+    public static Map<Integer, MakerInfo> getItemMakeInfo() {
+        return itemMakeInfo;
     }
 
     public static List<SetItemInfo> getSetItemInfos() {
@@ -108,6 +115,84 @@ public final class EtcProvider implements WzProvider {
                 commodityIds.add(WzProvider.getInteger(snEntry.getValue()));
             }
             cashPackages.put(packageId, Collections.unmodifiableList(commodityIds));
+        }
+    }
+
+    private static void loadItemMake(WzPackage source) throws ProviderError {
+        // Load ItemMake data
+        if (!(source.getDirectory().getImages().get("ItemMake.img") instanceof WzImage itemMakeImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/ItemMake.img");
+        }
+
+        for (var outerEntry : itemMakeImage.getProperty().getItems().entrySet()) {
+            String groupKey = outerEntry.getKey();
+
+            if (!(outerEntry.getValue() instanceof WzListProperty groupProp)) {
+                System.err.println("Failed to resolve group property for key: " + groupKey);
+                continue;
+            }
+
+            for (var itemEntry : groupProp.getItems().entrySet()) {
+                String itemKey = itemEntry.getKey();
+
+                if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
+                    System.err.println("Failed to resolve item property for key: " + itemKey);
+                    continue;
+                }
+
+                try {
+                    // Extract item properties
+                    final int itemId = Integer.parseInt(itemKey); // Use the secondary key as itemId
+                    final int reqLevel = WzProvider.getInteger(itemProp.get("reqLevel"), 0);
+                    final int reqSkillLevel = WzProvider.getInteger(itemProp.get("reqSkillLevel"), 0);
+                    final int itemNum = WzProvider.getInteger(itemProp.get("itemNum"), 0);
+                    final int tuc = WzProvider.getInteger(itemProp.get("tuc"), 0);
+                    final int meso = WzProvider.getInteger(itemProp.get("meso"), 0);
+                    final int catalyst = WzProvider.getInteger(itemProp.get("catalyst"), 0);
+
+                    // Parse random rewards
+                    List<MakerInfo.Reward> randomRewards = new ArrayList<>();
+                    if (itemProp.get("randomReward") instanceof WzListProperty randomRewardProp) {
+                        // Loop through the entries in randomReward
+                        for (var rewardEntry : randomRewardProp.getItems().entrySet()) {
+
+                            if (rewardEntry.getValue() instanceof WzListProperty rewardProp) {
+                                final int rewardItem = WzProvider.getInteger(rewardProp.get("item"), 0);
+                                final int rewardCount = WzProvider.getInteger(rewardProp.get("itemNum"), 0);
+                                final int rewardProb = WzProvider.getInteger(rewardProp.get("prob"), 0);
+
+                                // Add to the rewards list
+                                randomRewards.add(new MakerInfo.Reward(rewardItem, rewardCount, rewardProb));
+                            }
+                        }
+                    }
+
+                    // Parse recipes
+                    List<MakerInfo.Recipe> recipeList = new ArrayList<>();
+                    if (itemProp.get("recipe") instanceof WzListProperty recipeProp) {
+
+                        for (var recipeEntry : recipeProp.getItems().entrySet()) {
+
+                            if (recipeEntry.getValue() instanceof WzListProperty recipeItemProp) {
+                                final int recipeItem = WzProvider.getInteger(recipeItemProp.get("item"), 0);
+                                final int recipeCount = WzProvider.getInteger(recipeItemProp.get("count"), 0);
+
+                                // Add to the recipe list
+                                recipeList.add(new MakerInfo.Recipe(recipeItem, recipeCount));
+                            }
+                        }
+                    }
+
+                    // Create MakerInfo and store it in the map
+                    MakerInfo makerInfo = new MakerInfo(itemId, reqLevel, reqSkillLevel, itemNum, tuc, meso, catalyst, recipeList, randomRewards);
+                    itemMakeInfo.put(itemId, makerInfo);
+
+                } catch (NumberFormatException ex) {
+                    System.err.println("Invalid itemKey format: " + itemKey + " - " + ex.getMessage());
+                } catch (Exception ex) {
+                    System.err.println("Error processing itemKey: " + itemKey + " - " + ex.getMessage());
+                }
+            }
         }
     }
 
