@@ -62,6 +62,16 @@ public final class Trunk implements Encodable {
         return true;
     }
 
+    public Item getItem(InventoryType inventoryType, int position) {
+        final List<Item> filteredItems = items.stream()
+                .filter((item) -> InventoryType.getByItemId(item.getItemId()) == inventoryType)
+                .toList();
+        if (position < 0 || position >= filteredItems.size()) {
+            return null;
+        }
+        return filteredItems.get(position);
+    }
+
     public void encodeItems(DBChar flag, OutPacket outPacket) {
         // CTrunkDlg::SetGetItems
         outPacket.encodeByte(size); // nSlotCount

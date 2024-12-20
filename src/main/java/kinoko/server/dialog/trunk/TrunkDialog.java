@@ -45,7 +45,7 @@ public final class TrunkDialog implements Dialog {
             final Trunk trunk = lockedAccount.get().getTrunk();
             switch (requestType) {
                 case GetItem -> {
-                    inPacket.decodeByte(); // nItemID / 1000000, can be ignored
+                    final InventoryType inventoryType = InventoryType.getByValue(inPacket.decodeByte());
                     final int position = inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
                     // Check if user has enough money
                     final InventoryManager im = user.getInventoryManager();
@@ -54,7 +54,7 @@ public final class TrunkDialog implements Dialog {
                         return;
                     }
                     // Check if user can move item from trunk to inventory
-                    final Item item = trunk.getItems().get(position);
+                    final Item item = trunk.getItem(inventoryType, position);
                     if (item == null) {
                         user.write(TrunkPacket.serverMsg("Due to an error, the trade did not happen."));
                         return;
