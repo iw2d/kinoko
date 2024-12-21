@@ -26,6 +26,7 @@ import kinoko.server.dialog.miniroom.*;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.header.InHeader;
+import kinoko.server.maker.ItemMakerHandler;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoRequestType;
 import kinoko.server.memo.MemoType;
@@ -891,6 +892,10 @@ public final class UserHandler {
         }
     }
 
+    @Handler(InHeader.UserItemMakeRequest)
+    public static void handleUserItemMakeRequest(User user, InPacket inPacket) {
+        ItemMakerHandler.ItemMaker(inPacket, user);
+    }
 
     // SOCIAL HANDLERS -------------------------------------------------------------------------------------------------
 
