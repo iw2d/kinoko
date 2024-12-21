@@ -1,8 +1,13 @@
 package kinoko.world.item;
 
+import kinoko.packet.user.UserLocal;
+import kinoko.packet.world.MessagePacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.util.Tuple;
+import kinoko.world.user.User;
+import kinoko.world.user.effect.Effect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -142,6 +147,21 @@ public final class InventoryManager {
         return getItemCount(itemId) >= quantity;
     }
 
+    public static boolean hasItems(final User user, final List<Tuple<Integer, Integer>> recipe) {
+        // Check if the user has all required items in sufficient quantities
+        for (Tuple<Integer, Integer> requirement : recipe) {
+            int itemId = requirement.getLeft(); // Extract the item ID
+            int itemQty = requirement.getRight(); // Extract the item quantity
+
+            if (!user.getInventoryManager().hasItem(itemId, itemQty)) {
+                System.out.println("Missing or insufficient item: ID " + itemId + ", Required quantity: " + itemQty);
+                return false; // Not enough items
+            }
+        }
+
+        return true; // Has all items
+    }
+
     public Optional<InventoryOperation> updateItem(int position, Item item) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
         final Inventory inventory = getInventoryByType(InventoryType.getByPosition(inventoryType, position));
@@ -149,6 +169,21 @@ public final class InventoryManager {
             return Optional.empty();
         }
         return Optional.of(InventoryOperation.newItem(inventoryType, position, item));
+    }
+
+    public static boolean hasMakerItems(final User user, final List<Tuple<Integer, Integer>> recipe) {
+        // Check for all required items and sufficient quantities
+        for (Tuple<Integer, Integer> requirement : recipe) {
+            int itemId = requirement.getLeft(); // Extract the item ID
+            int itemQty = requirement.getRight(); // Extract the item quantity
+
+            if (!user.getInventoryManager().hasItem(itemId, itemQty)) {
+                System.out.println("Missing or insufficient item: ID " + itemId + ", Required quantity: " + itemQty);
+                return false; // Not enough items
+            }
+        }
+
+        return true; // Has all items
     }
 
     public Optional<InventoryOperation> removeItem(int position, Item item) {
@@ -252,6 +287,29 @@ public final class InventoryManager {
         }
         applyInventoryOperations(inventoryOperations);
         return Optional.of(inventoryOperations);
+    }
+
+    public static boolean addItemToInventory(User user, int itemId, int quantity) {
+        Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            user.write(MessagePacket.system("Could not resolve item ID: " + itemId));
+            return false;
+        }
+        ItemInfo itemInfo = itemInfoResult.get();
+        Item item = itemInfo.createItem(user.getNextItemSn(), Math.min(quantity, itemInfo.getSlotMax()));
+
+        try (var locked = user.acquire()) {
+            InventoryManager im = locked.get().getInventoryManager();
+            Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+            if (addItemResult.isPresent()) {
+                user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                user.write(UserLocal.effect(Effect.gainItem(item)));
+                return true;
+            } else {
+                user.write(MessagePacket.system("Failed to add item: " + itemId));
+                return false;
+            }
+        }
     }
 
     public boolean canAddItem(Item item) {
