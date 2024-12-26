@@ -1,5 +1,6 @@
 package kinoko.world.item;
 
+import kinoko.util.Util;
 import kinoko.world.GameConstants;
 
 public final class ItemConstants {
@@ -261,6 +262,25 @@ public final class ItemConstants {
             return GameConstants.LEVEL_MAX;
         }
         return -1;
+    }
+
+    public static int getVariation(int v, ItemVariationOption option) {
+        if (v <= 0 || option == ItemVariationOption.NONE) {
+            return v;
+        }
+        final int a = Math.min(
+                v / (option == ItemVariationOption.GACHAPON ? 5 : 10) + 1,
+                option == ItemVariationOption.GACHAPON ? 7 : 5
+        );
+        final int b = 1 << (a + 2);
+        int c = Util.getRandom(b);
+        int d = -2;
+        int i = option == ItemVariationOption.GACHAPON ? (a + 2) : 7;
+        while (i-- > 0) {
+            d += c & 1;
+            c >>= 1;
+        }
+        return Math.max(v + (Util.succeedProp(50) ? d : -d), 0);
     }
 
     public static boolean isPortableChairItem(int itemId) {

@@ -142,6 +142,15 @@ public final class InventoryManager {
         return getItemCount(itemId) >= quantity;
     }
 
+    public boolean hasEquipped(int itemId) {
+        for (Item item : getEquipped().getItems().values()) {
+            if (item.getItemId() == itemId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Optional<InventoryOperation> updateItem(int position, Item item) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
         final Inventory inventory = getInventoryByType(InventoryType.getByPosition(inventoryType, position));

@@ -51,7 +51,6 @@ import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.StatConstants;
 
-import javax.script.ScriptException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -789,7 +788,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                     continue;
                 }
                 final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
-                final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), quantity);
+                final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), quantity, ItemVariationOption.NORMAL);
                 drops.add(Drop.item(DropOwnType.USEROWN, source, item, user.getCharacterId(), reward.getQuestId()));
             }
         }

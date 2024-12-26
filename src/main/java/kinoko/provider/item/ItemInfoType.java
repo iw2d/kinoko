@@ -108,6 +108,9 @@ public enum ItemInfoType {
     stateChangeItem, // weather effect
     lt, // consume effect
     rb,
+    lv, // monster crystal level
+    randOption, // black crystal
+    randStat, // dark crystal
     time,
 
     recoveryHP,

@@ -32,10 +32,7 @@ import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobLeaveType;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
-import kinoko.world.item.InventoryManager;
-import kinoko.world.item.InventoryOperation;
-import kinoko.world.item.InventoryType;
-import kinoko.world.item.Item;
+import kinoko.world.item.*;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import kinoko.world.job.explorer.Beginner;
@@ -509,7 +506,7 @@ public final class AdminCommands {
             return;
         }
         final ItemInfo ii = itemInfoResult.get();
-        final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()));
+        final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()), ItemVariationOption.NORMAL);
 
         // Add item
         try (var locked = user.acquire()) {
@@ -1066,7 +1063,7 @@ public final class AdminCommands {
         ShopProvider.initialize();
     }
 
-    @Command({"reloadcashshop", "reloadcs"})
+    @Command({ "reloadcashshop", "reloadcs" })
     public static void reloadCashShop(User user, String[] args) {
         CashShop.initialize();
     }

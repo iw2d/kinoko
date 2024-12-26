@@ -464,54 +464,54 @@ public final class EquipData {
         }
     }
 
-    public static EquipData from(ItemInfo itemInfo) {
+    public static EquipData from(ItemInfo itemInfo, ItemVariationOption option) {
         final EquipData equipData = new EquipData();
         for (ItemInfoType infoType : itemInfo.getItemInfos().keySet()) {
             switch (infoType) {
                 case incSTR -> {
-                    equipData.setIncStr((short) itemInfo.getInfo(infoType));
+                    equipData.setIncStr((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incDEX -> {
-                    equipData.setIncDex((short) itemInfo.getInfo(infoType));
+                    equipData.setIncDex((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incINT -> {
-                    equipData.setIncInt((short) itemInfo.getInfo(infoType));
+                    equipData.setIncInt((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incLUK -> {
-                    equipData.setIncLuk((short) itemInfo.getInfo(infoType));
+                    equipData.setIncLuk((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incMHP, incMaxHP -> {
-                    equipData.setIncMaxHp((short) itemInfo.getInfo(infoType));
+                    equipData.setIncMaxHp((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incMMP, incMaxMP -> {
-                    equipData.setIncMaxMp((short) itemInfo.getInfo(infoType));
+                    equipData.setIncMaxMp((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incPAD -> {
-                    equipData.setIncPad((short) itemInfo.getInfo(infoType));
+                    equipData.setIncPad((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incMAD -> {
-                    equipData.setIncMad((short) itemInfo.getInfo(infoType));
+                    equipData.setIncMad((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incPDD -> {
-                    equipData.setIncPdd((short) itemInfo.getInfo(infoType));
+                    equipData.setIncPdd((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incMDD -> {
-                    equipData.setIncMdd((short) itemInfo.getInfo(infoType));
+                    equipData.setIncMdd((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incACC -> {
-                    equipData.setIncAcc((short) itemInfo.getInfo(infoType));
+                    equipData.setIncAcc((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incEVA -> {
-                    equipData.setIncEva((short) itemInfo.getInfo(infoType));
+                    equipData.setIncEva((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incCraft -> {
-                    equipData.setIncCraft((short) itemInfo.getInfo(infoType));
+                    equipData.setIncCraft((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incSpeed -> {
-                    equipData.setIncSpeed((short) itemInfo.getInfo(infoType));
+                    equipData.setIncSpeed((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case incJump -> {
-                    equipData.setIncJump((short) itemInfo.getInfo(infoType));
+                    equipData.setIncJump((short) ItemConstants.getVariation(itemInfo.getInfo(infoType), option));
                 }
                 case tuc -> {
                     equipData.setRuc((byte) itemInfo.getInfo(infoType));

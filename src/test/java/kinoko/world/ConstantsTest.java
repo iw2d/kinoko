@@ -1,5 +1,7 @@
 package kinoko.world;
 
+import kinoko.world.item.ItemConstants;
+import kinoko.world.item.ItemVariationOption;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import kinoko.world.user.stat.StatConstants;
@@ -58,5 +60,22 @@ public final class ConstantsTest {
 
             // System.out.printf("%s %d\n", job, jobLevel);
         }
+    }
+
+    @Test
+    public void testItemVariation() {
+        final int v = 10;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < 20000; i++) {
+            final int r = ItemConstants.getVariation(v, ItemVariationOption.NORMAL);
+            if (r - v > max) {
+                max = r - v;
+            }
+            if (r - v < min) {
+                min = r - v;
+            }
+        }
+        System.out.printf("%d : %d ~ +%d\n", v, min, max);
     }
 }

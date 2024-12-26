@@ -1,7 +1,10 @@
 package kinoko.script.quest;
 
 import kinoko.provider.map.PortalInfo;
-import kinoko.script.common.*;
+import kinoko.script.common.Script;
+import kinoko.script.common.ScriptHandler;
+import kinoko.script.common.ScriptManager;
+import kinoko.script.common.ScriptMessageParam;
 import kinoko.server.node.ServerExecutor;
 import kinoko.util.Util;
 import kinoko.world.field.MobPool;

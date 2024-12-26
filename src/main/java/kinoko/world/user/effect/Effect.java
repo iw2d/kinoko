@@ -6,6 +6,7 @@ import kinoko.world.item.Item;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.skill.Skill;
+import kinoko.world.skill.maker.MakerResult;
 
 public class Effect implements Encodable {
     protected final EffectType type;
@@ -23,7 +24,7 @@ public class Effect implements Encodable {
         outPacket.encodeByte(type.getValue());
         switch (type) {
             case LevelUp, PlayPortalSE, JobChanged, QuestComplete, MonsterBookCardGet, ItemLevelUp,
-                    ItemMaker, ExpItemConsumed, Buff, SoulStoneUse, RepeatEffectRemove, EvolRing -> {
+                    ExpItemConsumed, Buff, SoulStoneUse, RepeatEffectRemove, EvolRing -> {
                 // no encodes
             }
             case Quest -> {
@@ -52,8 +53,8 @@ public class Effect implements Encodable {
             case IncDecHPEffect -> {
                 outPacket.encodeByte(int1); // nDelta
             }
-            case BuffItemEffect -> {
-                outPacket.encodeInt(int1); // nItemID
+            case BuffItemEffect, ItemMaker -> {
+                outPacket.encodeInt(int1); // nItemID, ITEM_MAKER_RESULT
             }
             case SquibEffect -> {
                 outPacket.encodeString(string1); // sEffect
@@ -112,8 +113,19 @@ public class Effect implements Encodable {
         return new Effect(EffectType.JobChanged);
     }
 
+    public static Effect questComplete() {
+        return new Effect(EffectType.QuestComplete);
+    }
+
     public static Effect soulStoneUse() {
         return new Effect(EffectType.SoulStoneUse);
+    }
+
+    public static Effect petLevelUp(int petIndex) {
+        final Effect effect = new Effect(EffectType.Pet);
+        effect.int1 = PetEffectType.LevelUp.getValue(); // nType
+        effect.int2 = petIndex;
+        return effect;
     }
 
     public static Effect upgradeTombItemUse(int remain) {
@@ -170,8 +182,10 @@ public class Effect implements Encodable {
         return effect;
     }
 
-    public static Effect questComplete() {
-        return new Effect(EffectType.QuestComplete);
+    public static Effect itemMaker(MakerResult makerResult) {
+        final Effect effect = new Effect(EffectType.ItemMaker);
+        effect.int1 = makerResult.getValue();
+        return effect;
     }
 
     public static SkillEffect skillUse(int skillId, int skillLevel, int charLevel) {
@@ -242,13 +256,6 @@ public class Effect implements Encodable {
         effect.skillLevel = skillLevel;
         effect.positionX = positionX;
         effect.positionY = positionY;
-        return effect;
-    }
-
-    public static Effect petLevelUp(int petIndex) {
-        final Effect effect = new Effect(EffectType.Pet);
-        effect.int1 = PetEffectType.LevelUp.getValue(); // nType
-        effect.int2 = petIndex;
         return effect;
     }
 }

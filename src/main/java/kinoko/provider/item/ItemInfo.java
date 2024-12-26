@@ -145,11 +145,52 @@ public final class ItemInfo {
                         );
     }
 
+    public int calcEquipItemQuality(Item item) {
+        // CItemInfo::CalcEquipItemQuality
+        if (item.getItemType() != ItemType.EQUIP || isCash() || item.getItemId() / 100000 == 19) {
+            return 0;
+        }
+        final EquipData ed = item.getEquipData();
+        int delta = 0;
+        delta += ed.getIncStr() - getInfo(ItemInfoType.incSTR);
+        delta += ed.getIncDex() - getInfo(ItemInfoType.incDEX);
+        delta += ed.getIncInt() - getInfo(ItemInfoType.incINT);
+        delta += ed.getIncLuk() - getInfo(ItemInfoType.incLUK);
+        delta += (ed.getIncMaxHp() - Math.max(getInfo(ItemInfoType.incMHP), getInfo(ItemInfoType.incMaxHP))) / 10;
+        delta += (ed.getIncMaxMp() - Math.max(getInfo(ItemInfoType.incMMP), getInfo(ItemInfoType.incMaxMP))) / 10;
+        delta += ed.getIncPad() - getInfo(ItemInfoType.incPAD);
+        delta += ed.getIncMad() - getInfo(ItemInfoType.incMAD);
+        delta += ed.getIncPdd() - getInfo(ItemInfoType.incPDD);
+        delta += ed.getIncMdd() - getInfo(ItemInfoType.incMDD);
+        delta += ed.getIncAcc() - getInfo(ItemInfoType.incACC);
+        delta += ed.getIncEva() - getInfo(ItemInfoType.incEVA);
+        delta += ed.getIncSpeed() - getInfo(ItemInfoType.incSpeed);
+        delta += ed.getIncJump() - getInfo(ItemInfoType.incJump);
+        if (delta < 0) {
+            return -1;
+        } else if (delta < 6) {
+            return 0;
+        } else if (delta < 23) {
+            return 1;
+        } else if (delta < 40) {
+            return 2;
+        } else if (delta < 55) {
+            return 3;
+        } else if (delta < 70) {
+            return 4;
+        }
+        return 5;
+    }
+
     public Item createItem(long itemSn) {
-        return createItem(itemSn, 1);
+        return createItem(itemSn, 1, ItemVariationOption.NONE);
     }
 
     public Item createItem(long itemSn, int quantity) {
+        return createItem(itemSn, quantity, ItemVariationOption.NONE);
+    }
+
+    public Item createItem(long itemSn, int quantity, ItemVariationOption option) {
         final ItemType type = ItemType.getByItemId(itemId);
         final Item item = new Item(type);
         item.setItemSn(itemSn);
@@ -157,7 +198,7 @@ public final class ItemInfo {
         item.setCash(isCash());
         item.setQuantity((short) quantity);
         if (type == ItemType.EQUIP) {
-            item.setEquipData(EquipData.from(this));
+            item.setEquipData(EquipData.from(this, option));
         } else if (type == ItemType.PET) {
             item.setPetData(PetData.from(this));
         }

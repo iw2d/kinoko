@@ -28,6 +28,7 @@ import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.Life;
 import kinoko.world.item.Item;
+import kinoko.world.item.ItemVariationOption;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.quest.QuestRecord;
@@ -600,7 +601,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 return Optional.empty();
             }
             final int quantity = Util.getRandom(reward.getMin(), reward.getMax());
-            final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity);
+            final Item item = itemInfoResult.get().createItem(owner.getNextItemSn(), quantity, ItemVariationOption.NORMAL);
             return Optional.of(owner.hasParty() ?
                     Drop.item(DropOwnType.PARTYOWN, this, item, owner.getPartyId(), reward.getQuestId()) :
                     Drop.item(DropOwnType.USEROWN, this, item, owner.getCharacterId(), reward.getQuestId())

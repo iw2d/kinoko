@@ -1,5 +1,6 @@
 package kinoko.provider;
 
+import kinoko.provider.item.ItemMakeInfo;
 import kinoko.provider.item.SetItemInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.provider.wz.*;
@@ -16,6 +17,7 @@ public final class EtcProvider implements WzProvider {
     public static final Path ETC_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Etc.wz");
     // Item info
     private static final List<SetItemInfo> setItemInfos = new ArrayList<>();
+    private static final Map<Integer, ItemMakeInfo> itemMakeInfos = new HashMap<>();
     // CashShop info
     private static final Map<Integer, Commodity> commodities = new HashMap<>(); // commodity id -> commodity
     private static final Map<Integer, List<Integer>> cashPackages = new HashMap<>(); // package id -> set<commodity id>
@@ -28,6 +30,7 @@ public final class EtcProvider implements WzProvider {
         try (final WzReader reader = WzReader.build(ETC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadSetItemInfo(wzPackage);
+            loadItemMakeInfo(wzPackage);
             loadCashShop(wzPackage);
             loadTitleQuestIds(wzPackage);
             loadForbiddenNames(wzPackage);
@@ -39,6 +42,10 @@ public final class EtcProvider implements WzProvider {
 
     public static List<SetItemInfo> getSetItemInfos() {
         return setItemInfos;
+    }
+
+    public static Optional<ItemMakeInfo> getItemMakeInfo(int itemId) {
+        return Optional.of(itemMakeInfos.get(itemId));
     }
 
     public static Map<Integer, Commodity> getCommodities() {
@@ -70,6 +77,25 @@ public final class EtcProvider implements WzProvider {
                 throw new ProviderError("Could not resolve set item info prop");
             }
             setItemInfos.add(SetItemInfo.from(setItemProp));
+        }
+    }
+
+    private static void loadItemMakeInfo(WzPackage source) throws ProviderError {
+        if (!(source.getDirectory().getImages().get("ItemMake.img") instanceof WzImage infoImage)) {
+            throw new ProviderError("Could not resolve Etc.wz/ItemMake.img");
+        }
+        for (var entry : infoImage.getProperty().getItems().entrySet()) {
+            final int reqJob = Integer.parseInt(entry.getKey());
+            if (!(entry.getValue() instanceof WzListProperty itemMakeInfoList)) {
+                throw new ProviderError("Could not resolve item make info list");
+            }
+            for (var itemMakeInfoEntry : itemMakeInfoList.getItems().entrySet()) {
+                final int itemId = Integer.parseInt(itemMakeInfoEntry.getKey());
+                if (!(itemMakeInfoEntry.getValue() instanceof WzListProperty itemMakeInfoProp)) {
+                    throw new ProviderError("Could not resolve item make info prop");
+                }
+                itemMakeInfos.put(itemId, ItemMakeInfo.from(itemId, reqJob, itemMakeInfoProp));
+            }
         }
     }
 

@@ -7,10 +7,13 @@ import kinoko.packet.field.*;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.user.*;
 import kinoko.packet.world.*;
+import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.ShopProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemInfoType;
+import kinoko.provider.item.ItemMakeInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.quest.QuestInfo;
 import kinoko.script.common.ScriptAnswer;
@@ -35,7 +38,9 @@ import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
+import kinoko.util.Triple;
 import kinoko.util.Tuple;
+import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.TownPortal;
@@ -51,6 +56,9 @@ import kinoko.world.quest.QuestRequestType;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.skill.maker.MakerConstants;
+import kinoko.world.skill.maker.MakerResult;
+import kinoko.world.skill.maker.RecipeClass;
 import kinoko.world.user.Locker;
 import kinoko.world.user.User;
 import kinoko.world.user.data.*;
@@ -888,6 +896,274 @@ public final class UserHandler {
         }
         try (var locked = user.acquire()) {
             locked.get().getConfigManager().updateMacroSysData(macroSysData);
+        }
+    }
+
+    @Handler(InHeader.UserItemMakeRequest)
+    public static void handleUserItemMakeRequest(User user, InPacket inPacket) {
+        // CUIItemMaker::RequestItemMake
+        final int type = inPacket.decodeInt();
+        final RecipeClass recipeClass = RecipeClass.getByValue(type); // nRecipeClass
+        switch (recipeClass) {
+            case NORMAL, HIDDEN -> {
+                final int itemId = inPacket.decodeInt(); // nTargetItem
+                final boolean catalyst = inPacket.decodeBoolean(); // CatalystSlot.bMounted
+                final int gemCount = inPacket.decodeInt(); // nNumGem_Mounted
+                final List<Integer> gems = new ArrayList<>();
+                for (int i = 0; i < gemCount; i++) {
+                    gems.add(inPacket.decodeInt()); // aGemSlot[i].pItem.p->nItemID
+                }
+                final Optional<ItemMakeInfo> itemMakeInfoResult = EtcProvider.getItemMakeInfo(itemId);
+                if (itemMakeInfoResult.isEmpty()) {
+                    log.error("Could not resolve item make info for item ID : {}", itemId);
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final ItemMakeInfo itemMakeInfo = itemMakeInfoResult.get();
+                try (var locked = user.acquire()) {
+                    // Check requirements and validate
+                    if (!itemMakeInfo.canCreateItem(locked, catalyst, gems)) {
+                        user.write(MakerPacket.unknown());
+                        return;
+                    }
+                    if (!itemMakeInfo.canAddReward(locked)) {
+                        user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
+                        return;
+                    }
+                    // Resolve reward item
+                    final int rewardItemId;
+                    final int rewardItemCount;
+                    if (itemMakeInfo.getRandomReward().isEmpty()) {
+                        rewardItemId = itemMakeInfo.getItemId();
+                        rewardItemCount = 1;
+                    } else {
+                        final Optional<Triple<Integer, Integer, Integer>> rewardResult = Util.getRandomFromCollection(itemMakeInfo.getRandomReward(), Triple::getThird);
+                        if (rewardResult.isEmpty()) {
+                            log.error("Could not resolve maker random reward for item ID : {}", itemId);
+                            user.write(MakerPacket.unknown());
+                            return;
+                        }
+                        rewardItemId = rewardResult.get().getFirst();
+                        rewardItemCount = rewardResult.get().getSecond();
+                    }
+                    final Optional<ItemInfo> rewardItemInfoResult = ItemProvider.getItemInfo(rewardItemId);
+                    if (rewardItemInfoResult.isEmpty()) {
+                        log.error("Could not resolve item info for item ID : {}", rewardItemId);
+                        user.write(MakerPacket.unknown());
+                        return;
+                    }
+                    // Deduct cost and items
+                    final InventoryManager im = user.getInventoryManager();
+                    final int totalCost = MakerConstants.getTotalCostToMake(itemMakeInfo.getCost(), catalyst, gems);
+                    if (!im.addMoney(-totalCost)) {
+                        throw new IllegalStateException("Could not deduct total price from user");
+                    }
+                    final List<Tuple<Integer, Integer>> lostItems = new ArrayList<>(itemMakeInfo.getRecipe());
+                    if (catalyst) {
+                        lostItems.add(Tuple.of(itemMakeInfo.getCatalyst(), 1));
+                    }
+                    for (int gemItemId : gems) {
+                        lostItems.add(Tuple.of(gemItemId, 1));
+                    }
+                    final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+                    for (var tuple : lostItems) {
+                        final Optional<List<InventoryOperation>> removeResult = im.removeItem(tuple.getLeft(), tuple.getRight());
+                        if (removeResult.isEmpty()) {
+                            throw new IllegalStateException("Could not remove item from inventory");
+                        }
+                        inventoryOperations.addAll(removeResult.get());
+                    }
+                    // Add reward
+                    final boolean success = !catalyst || Util.succeedProp(90);
+                    if (success) {
+                        final Item rewardItem = rewardItemInfoResult.get().createItem(user.getNextItemSn(), rewardItemCount, catalyst ? ItemVariationOption.NORMAL : ItemVariationOption.NONE);
+                        if (rewardItem.getEquipData() != null) {
+                            final EquipData originalEquipData = new EquipData(rewardItem.getEquipData());
+                            for (int gemItemId : gems) {
+                                final Optional<ItemInfo> gemItemInfoResult = ItemProvider.getItemInfo(gemItemId);
+                                if (gemItemInfoResult.isEmpty()) {
+                                    log.error("Could not resolve item info for item ID : {}", gemItemId);
+                                    continue;
+                                }
+                                final ItemInfo gemItemInfo = gemItemInfoResult.get();
+                                if (gemItemInfo.getInfo(ItemInfoType.randOption) != 0) {
+                                    // Black Crystal
+                                    final int randMax = gemItemInfo.getInfo(ItemInfoType.randOption);
+                                    final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
+                                    if (originalEquipData.getIncPad() > 0) {
+                                        randStats.put(ItemInfoType.incPAD, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncMad() > 0) {
+                                        randStats.put(ItemInfoType.incMAD, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncSpeed() > 0) {
+                                        randStats.put(ItemInfoType.incSpeed, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncJump() > 0) {
+                                        randStats.put(ItemInfoType.incJump, Util.getRandom(-randMax, randMax));
+                                    }
+                                    rewardItem.getEquipData().applyScrollStats(randStats);
+                                } else if (gemItemInfo.getInfo(ItemInfoType.randStat) != 0) {
+                                    // Dark Crystal
+                                    final int randMax = gemItemInfo.getInfo(ItemInfoType.randStat);
+                                    final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
+                                    if (originalEquipData.getIncStr() > 0) {
+                                        randStats.put(ItemInfoType.incSTR, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncDex() > 0) {
+                                        randStats.put(ItemInfoType.incDEX, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncInt() > 0) {
+                                        randStats.put(ItemInfoType.incINT, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncLuk() > 0) {
+                                        randStats.put(ItemInfoType.incLUK, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncAcc() > 0) {
+                                        randStats.put(ItemInfoType.incACC, Util.getRandom(-randMax, randMax));
+                                    }
+                                    if (originalEquipData.getIncEva() > 0) {
+                                        randStats.put(ItemInfoType.incEVA, Util.getRandom(-randMax, randMax));
+                                    }
+                                    rewardItem.getEquipData().applyScrollStats(randStats);
+                                } else {
+                                    // Other gems
+                                    rewardItem.getEquipData().applyScrollStats(gemItemInfo.getItemInfos());
+                                }
+                            }
+                        }
+                        final Optional<List<InventoryOperation>> addResult = im.addItem(rewardItem);
+                        if (addResult.isEmpty()) {
+                            throw new IllegalStateException("Could not add item to inventory");
+                        }
+                        inventoryOperations.addAll(addResult.get());
+                    }
+                    // Update client
+                    user.write(WvsContext.inventoryOperation(inventoryOperations, false));
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                    user.write(MakerPacket.normal(success, rewardItemId, rewardItemCount, lostItems, totalCost));
+                    user.write(UserLocal.effect(Effect.itemMaker(success ? MakerResult.SUCCESS : MakerResult.DESTROYED)));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(success ? MakerResult.SUCCESS : MakerResult.DESTROYED)));
+                }
+            }
+            case MONSTER_CRYSTAL -> {
+                final int itemId = inPacket.decodeInt(); // aRecipeSlot[0].pItem.p->nItemID
+                final int trophyLevel = MakerConstants.getMonsterTrophyLevel(itemId);
+                final int monsterCrystalId = MakerConstants.getMonsterCrystalByLevel(trophyLevel);
+                if (monsterCrystalId == 0) {
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(monsterCrystalId);
+                if (itemInfoResult.isEmpty()) {
+                    log.error("Could not resolve item info for item ID : {}", monsterCrystalId);
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                try (var locked = user.acquire()) {
+                    final InventoryManager im = locked.get().getInventoryManager();
+                    if (!im.canAddItem(monsterCrystalId, 1)) {
+                        user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
+                        return;
+                    }
+                    final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemId, 100);
+                    if (removeItemResult.isEmpty()) {
+                        user.write(MakerPacket.unknown());
+                        return;
+                    }
+                    final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), 1);
+                    final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+                    if (addItemResult.isEmpty()) {
+                        throw new IllegalStateException("Failed to add item to inventory");
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                    user.write(MakerPacket.monsterCrystal(monsterCrystalId, itemId));
+                    user.write(UserLocal.effect(Effect.itemMaker(MakerResult.SUCCESS)));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(MakerResult.SUCCESS)));
+                }
+            }
+            case EQUIP_DISASSEMBLE -> {
+                final int itemId = inPacket.decodeInt(); // aRecipeSlot[0].pItem.p->nItemID
+                final int inventoryType = inPacket.decodeInt(); // nTI_DisassbleItem
+                final int slotPosition = inPacket.decodeInt(); // nSlotPosition_DisassbleItem
+                if (!ItemConstants.isEquip(itemId) || InventoryType.getByValue(inventoryType) != InventoryType.EQUIP || slotPosition < 0) {
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+                if (itemInfoResult.isEmpty()) {
+                    log.error("Could not resolve item info for item ID : {}", itemId);
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final ItemInfo itemInfo = itemInfoResult.get();
+                final Optional<ItemMakeInfo> itemMakeInfoResult = EtcProvider.getItemMakeInfo(itemId);
+                if (itemMakeInfoResult.isEmpty()) {
+                    log.error("Could not resolve item make info for item ID : {}", itemId);
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final ItemMakeInfo itemMakeInfo = itemMakeInfoResult.get();
+                try (var locked = user.acquire()) {
+                    final InventoryManager im = locked.get().getInventoryManager();
+                    if (!im.canAddItems(itemMakeInfo.getRecipe())) {
+                        user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
+                        return;
+                    }
+                    final Item item = im.getEquipInventory().getItem(slotPosition);
+                    if (item == null || item.getItemId() != itemId) {
+                        log.error("Could not resolve item ID : {} for disassembly at position : {}", itemId, slotPosition);
+                        user.write(MakerPacket.unknown());
+                        return;
+                    }
+                    final int totalCost = MakerConstants.getTotalCostToDisassemble(itemMakeInfo.getCost(), itemInfo.calcEquipItemQuality(item));
+                    if (!im.canAddMoney(-totalCost)) {
+                        user.write(MakerPacket.unknown());
+                        return;
+                    }
+                    final List<Item> rewardItems = new ArrayList<>();
+                    for (var tuple : itemMakeInfo.getRecipe()) {
+                        final int rewardItemId = tuple.getLeft();
+                        final int rewardItemCount = tuple.getRight() / 2; // TODO : probably incorrect
+                        if (rewardItemId / 10000 != 426 || rewardItemCount <= 0) {
+                            continue;
+                        }
+                        final Optional<ItemInfo> rewardItemInfoResult = ItemProvider.getItemInfo(rewardItemId);
+                        if (rewardItemInfoResult.isEmpty()) {
+                            log.error("Could not resolve item info for item ID : {}", itemId);
+                            user.write(MakerPacket.unknown());
+                            return;
+                        }
+                        rewardItems.add(rewardItemInfoResult.get().createItem(user.getNextItemSn(), rewardItemCount));
+                    }
+                    if (!im.addMoney(-totalCost)) {
+                        throw new IllegalStateException("Could not deduct total price from user");
+                    }
+                    final Optional<InventoryOperation> removeResult = im.removeItem(slotPosition, item);
+                    if (removeResult.isEmpty()) {
+                        throw new IllegalStateException("Failed to remove item from inventory");
+                    }
+                    for (Item rewardItem : rewardItems) {
+                        final Optional<List<InventoryOperation>> addResult = im.addItem(rewardItem);
+                        if (addResult.isEmpty()) {
+                            throw new IllegalStateException("Failed to add item to inventory");
+                        }
+                        user.write(WvsContext.inventoryOperation(addResult.get(), false));
+                    }
+                    user.write(WvsContext.inventoryOperation(removeResult.get(), false));
+                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                    user.write(MakerPacket.equipDisassemble(itemId, rewardItems, totalCost));
+                    user.write(UserLocal.effect(Effect.itemMaker(MakerResult.SUCCESS)));
+                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(MakerResult.SUCCESS)));
+                }
+            }
+            case null -> {
+                log.error("Unknown recipe class : {}", type);
+            }
+            default -> {
+                log.error("Unhandled recipe class : {}", recipeClass);
+            }
         }
     }
 
