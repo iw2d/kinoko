@@ -230,6 +230,12 @@ public final class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket mapleTvUseRes(String message) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.MapleTVUseRes);
+        outPacket.encodeString(message);
+        return outPacket;
+    }
+
     public static OutPacket avatarMegaphoneResQueueFull() {
         final OutPacket outPacket = OutPacket.of(OutHeader.AvatarMegaphoneRes);
         outPacket.encodeByte(CashItemResultType.AvatarMegaphone_Queue_Full.getValue());

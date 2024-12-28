@@ -28,22 +28,7 @@ public final class MobPool extends FieldObjectPool<Mob> {
     }
 
     public Optional<Mob> getByTemplateId(int templateId) {
-        for (Mob mob : getObjects()) {
-            if (mob.getTemplateId() == templateId) {
-                return Optional.of(mob);
-            }
-        }
-        return Optional.empty();
-    }
-
-    public List<Mob> getAllByTemplateId(int templateId) {
-        final List<Mob> reactors = new ArrayList<>();
-        for (Mob mob : getObjects()) {
-            if (mob.getTemplateId() == templateId) {
-                reactors.add(mob);
-            }
-        }
-        return reactors;
+        return getBy((mob) -> mob.getTemplateId() == templateId);
     }
 
     public void addMob(Mob mob) {

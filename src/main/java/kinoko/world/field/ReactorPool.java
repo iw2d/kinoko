@@ -9,8 +9,6 @@ import kinoko.world.user.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,22 +21,7 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
     }
 
     public Optional<Reactor> getByTemplateId(int templateId) {
-        for (Reactor reactor : getObjects()) {
-            if (reactor.getTemplateId() == templateId) {
-                return Optional.of(reactor);
-            }
-        }
-        return Optional.empty();
-    }
-
-    public List<Reactor> getAllByTemplateId(int templateId) {
-        final List<Reactor> reactors = new ArrayList<>();
-        for (Reactor reactor : getObjects()) {
-            if (reactor.getTemplateId() == templateId) {
-                reactors.add(reactor);
-            }
-        }
-        return reactors;
+        return getBy((reactor) -> reactor.getTemplateId() == templateId);
     }
 
     public void addReactor(Reactor reactor) {

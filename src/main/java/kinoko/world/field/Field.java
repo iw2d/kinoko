@@ -1,6 +1,7 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.field.MapleTvPacket;
 import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,6 +49,7 @@ public final class Field {
     private final MapInfo mapInfo;
     private final ScheduledFuture<?> fieldEventFuture;
     private final Map<Integer, Consumer<Mob>> mobSpawnModifiers;
+    private final List<MapleTvMessage> mapleTvQueue;
 
     private final UserPool userPool;
     private final MobPool mobPool;
@@ -68,6 +71,7 @@ public final class Field {
         this.fieldStorage = fieldStorage;
         this.mapInfo = mapInfo;
         this.mobSpawnModifiers = new ConcurrentHashMap<>();
+        this.mapleTvQueue = new CopyOnWriteArrayList<>();
         // Initialize field object pools
         this.userPool = new UserPool(this);
         this.mobPool = new MobPool(this);
@@ -207,6 +211,10 @@ public final class Field {
         return mobSpawnModifiers;
     }
 
+    public List<MapleTvMessage> getMapleTvQueue() {
+        return mapleTvQueue;
+    }
+
     public int getNewObjectId() {
         return fieldObjectCounter.getAndIncrement();
     }
@@ -229,6 +237,18 @@ public final class Field {
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
         affectedAreaPool.updateAffectedAreas(now);
+        // Handle maple tv
+        if (!mapleTvQueue.isEmpty()) {
+            if (now.isAfter(mapleTvQueue.getFirst().getExpireTime())) {
+                mapleTvQueue.removeFirst();
+                if (mapleTvQueue.isEmpty()) {
+                    broadcastPacket(MapleTvPacket.clearMessage());
+                } else {
+                    final int totalWaitTime = (int) Math.max(mapleTvQueue.getLast().getExpireTime().getEpochSecond() - now.getEpochSecond(), 0);
+                    broadcastPacket(MapleTvPacket.updateMessage(mapleTvQueue.getFirst(), totalWaitTime));
+                }
+            }
+        }
         // Handle weather effect
         if (weatherEffect != null) {
             if (now.isAfter(weatherEffect.getExpireTime())) {
@@ -326,6 +346,11 @@ public final class Field {
         }
         if (mapInfo.hasOnUserEnter()) {
             ScriptDispatcher.startUserEnterScript(user, mapInfo.getOnUserEnter());
+        }
+        // Handle maple tv
+        if (!mapleTvQueue.isEmpty()) {
+            final int totalWaitTime = (int) Math.max(mapleTvQueue.getLast().getExpireTime().getEpochSecond() - Instant.now().getEpochSecond(), 0);
+            broadcastPacket(MapleTvPacket.updateMessage(mapleTvQueue.getFirst(), totalWaitTime));
         }
         // Handle weather effect
         if (weatherEffect != null) {

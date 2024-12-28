@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class FieldObjectPool<T extends FieldObject> {
     protected final ConcurrentHashMap<Integer, T> objects = new ConcurrentHashMap<>(); // FieldObject::getId() -> FieldObject
@@ -22,6 +23,15 @@ public abstract class FieldObjectPool<T extends FieldObject> {
 
     public final Optional<T> getById(int id) {
         return Optional.ofNullable(objects.get(id));
+    }
+
+    public final Optional<T> getBy(Predicate<T> predicate) {
+        for (T object : objects.values()) {
+            if (predicate.test(object)) {
+                return Optional.of(object);
+            }
+        }
+        return Optional.empty();
     }
 
     public final List<T> getInsideRect(Rect rect) {

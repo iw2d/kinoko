@@ -2,6 +2,7 @@ package kinoko.handler.user.item;
 
 import kinoko.handler.Handler;
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.field.MapleTvPacket;
 import kinoko.packet.field.TrunkPacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
@@ -26,8 +27,10 @@ import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
 import kinoko.world.field.Field;
+import kinoko.world.field.MapleTvMessage;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.item.*;
+import kinoko.world.user.AvatarLook;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
@@ -76,13 +79,13 @@ public final class CashItemHandler extends ItemHandler {
                         return;
                     }
                     // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
                         log.error("Could not remove speaker channel item from inventory");
                         user.dispose();
                         return;
                     }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
                     // Channel broadcast
                     user.getConnectedServer().submitChannelPacketBroadcast(BroadcastPacket.speakerChannel(message));
                 }
@@ -130,6 +133,68 @@ public final class CashItemHandler extends ItemHandler {
                     final boolean whisperIcon = inPacket.decodeBoolean();
                     handleWorldSpeaker(user, position, item, true, WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
                 }
+                case MAPLETV, MAPLESOLETV, MAPLELOVETV -> {
+                    final int flag = cashItemType == CashItemType.MAPLETV ? inPacket.decodeByte() : (cashItemType == CashItemType.MAPLESOLETV ? 1 : 3);
+                    String receiverName = null;
+                    AvatarLook receiver = null;
+                    if ((flag & 2) != 0) {
+                        receiverName = inPacket.decodeString();
+                        final Optional<User> receiverResult = user.getField().getUserPool().getByCharacterName(receiverName);
+                        if (receiverResult.isEmpty()) {
+                            user.write(WvsContext.mapleTvUseRes("Unable to find the character."));
+                            return;
+                        }
+                        try (var lockedReceiver = receiverResult.get().acquire()) {
+                            receiver = lockedReceiver.get().getCharacterData().getAvatarLook();
+                        }
+                    }
+                    final String s1 = inPacket.decodeString();
+                    final String s2 = inPacket.decodeString();
+                    final String s3 = inPacket.decodeString();
+                    final String s4 = inPacket.decodeString();
+                    final String s5 = inPacket.decodeString();
+                    // Check maple tv queue
+                    final Instant expireTime;
+                    final int duration = cashItemType == CashItemType.MAPLETV ? 15 : (cashItemType == CashItemType.MAPLESOLETV ? 30 : 60);
+                    if (user.getField().getMapleTvQueue().isEmpty()) {
+                        expireTime = Instant.now().plus(duration, ChronoUnit.SECONDS);
+                    } else {
+                        final Instant lastExpire = user.getField().getMapleTvQueue().getLast().getExpireTime();
+                        if (lastExpire.isAfter(Instant.now().plus(60, ChronoUnit.SECONDS))) {
+                            user.write(WvsContext.mapleTvUseRes("The waiting line is longer than a minute. Please try using it at a later time."));
+                            return;
+                        }
+                        expireTime = lastExpire.plus(duration, ChronoUnit.SECONDS);
+                    }
+                    // Remove item
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
+                        log.error("Could not remove maple tv item from inventory");
+                        user.dispose();
+                        return;
+                    }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
+                    // Show message
+                    final MapleTvMessage message = new MapleTvMessage(
+                            flag,
+                            cashItemType == CashItemType.MAPLETV ? 0 : (cashItemType == CashItemType.MAPLESOLETV ? 1 : 2),
+                            user.getCharacterData().getAvatarLook(),
+                            user.getCharacterName(),
+                            receiver,
+                            receiverName,
+                            s1,
+                            s2,
+                            s3,
+                            s4,
+                            s5,
+                            expireTime
+                    );
+                    final int totalWaitTime = (int) Math.max(expireTime.getEpochSecond() - Instant.now().getEpochSecond(), 0);
+                    if (user.getField().getMapleTvQueue().isEmpty()) {
+                        user.getField().broadcastPacket(MapleTvPacket.updateMessage(message, totalWaitTime));
+                    }
+                    user.getField().getMapleTvQueue().addLast(message);
+                }
                 case ADBOARD -> {
                     final String message = inPacket.decodeString();
                     user.setAdBoard(message);
@@ -138,13 +203,13 @@ public final class CashItemHandler extends ItemHandler {
                 }
                 case CONSUMEEFFECTITEM -> {
                     // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
                         log.error("Could not remove consume effect item from inventory");
                         user.dispose();
                         return;
                     }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
                     // Show effect
                     user.write(UserLocal.effect(Effect.consumeEffect(item.getItemId())));
                     user.getField().broadcastPacket(UserRemote.effect(user, Effect.consumeEffect(item.getItemId())), user);
@@ -169,12 +234,13 @@ public final class CashItemHandler extends ItemHandler {
                         return;
                     }
                     // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
                         log.error("Could not remove karma scissors item from inventory");
                         user.dispose();
                         return;
                     }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
                     // Update target item
                     targetItem.setPossibleTrading(true);
                     final Optional<InventoryOperation> updateResult = im.updateItem(targetPosition, targetItem);
@@ -223,10 +289,11 @@ public final class CashItemHandler extends ItemHandler {
                         return;
                     }
                     // Remove item
-                    final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-                    if (removeResult.isEmpty()) {
+                    final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                    if (removeItemResult.isEmpty()) {
                         throw new IllegalStateException(String.format("Could not remove vicious' hammer item %d in position %d", item.getItemId(), position));
                     }
+                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
                     // Update target item
                     equipData.setRuc((byte) (equipData.getRuc() + 1));
                     equipData.setIuc(equipData.getIuc() + 1);
@@ -330,8 +397,7 @@ public final class CashItemHandler extends ItemHandler {
                     }
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
                     // Blow weather
-                    final Field field = user.getField();
-                    field.blowWeather(itemId, String.format("%s : %s", user.getCharacterName(), message), 30);
+                    user.getField().blowWeather(itemId, String.format("%s : %s", user.getCharacterName(), message), 30);
                     // Apply state change item
                     final int stateChangeItem = itemInfo.getInfo(ItemInfoType.stateChangeItem);
                     if (stateChangeItem == 0) {
@@ -346,7 +412,7 @@ public final class CashItemHandler extends ItemHandler {
                     }
                     final ItemInfo stateChangeItemInfo = stateChangeItemInfoResult.get();
                     changeStat(locked, stateChangeItemInfo);
-                    field.getUserPool().forEach((other) -> {
+                    user.getField().getUserPool().forEach((other) -> {
                         if (other.getCharacterId() != user.getCharacterId()) {
                             try (var lockedOther = other.acquire()) {
                                 changeStat(lockedOther, stateChangeItemInfo);
@@ -561,13 +627,13 @@ public final class CashItemHandler extends ItemHandler {
             return;
         }
         // Remove item
-        final Optional<InventoryOperation> removeResult = user.getInventoryManager().removeItem(position, item, 1);
-        if (removeResult.isEmpty()) {
+        final Optional<InventoryOperation> removeItemResult = user.getInventoryManager().removeItem(position, item, 1);
+        if (removeItemResult.isEmpty()) {
             log.error("Could not remove world speaker item from inventory");
             user.dispose();
             return;
         }
-        user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+        user.write(WvsContext.inventoryOperation(removeItemResult.get(), true));
         // Submit world speaker request
         user.getConnectedServer().submitWorldSpeakerRequest(user.getCharacterId(), avatar, outPacket);
     }

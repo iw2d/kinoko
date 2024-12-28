@@ -16,12 +16,7 @@ public final class NpcPool extends FieldObjectPool<Npc> {
     }
 
     public Optional<Npc> getByTemplateId(int templateId) {
-        for (Npc npc : getObjects()) {
-            if (npc.getTemplateId() == templateId) {
-                return Optional.of(npc);
-            }
-        }
-        return Optional.empty();
+        return getBy((npc) -> npc.getTemplateId() == templateId);
     }
 
     public void addNpc(Npc npc) {

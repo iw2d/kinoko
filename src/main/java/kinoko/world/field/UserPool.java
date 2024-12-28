@@ -37,6 +37,10 @@ public final class UserPool extends FieldObjectPool<User> {
         super(field);
     }
 
+    public Optional<User> getByCharacterName(String name) {
+        return getBy((user) -> user.getCharacterName().equalsIgnoreCase(name));
+    }
+
     public synchronized void addUser(User user) {
         // Update client with existing users in pool
         forEach((existingUser) -> {
