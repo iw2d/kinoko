@@ -133,8 +133,15 @@ public final class CashItemHandler extends ItemHandler {
                     final boolean whisperIcon = inPacket.decodeBoolean();
                     handleWorldSpeaker(user, position, item, true, WvsContext.avatarMegaphoneUpdateMessage(user, itemId, s1, s2, s3, s4, whisperIcon));
                 }
-                case MAPLETV, MAPLESOLETV, MAPLELOVETV -> {
-                    final int flag = cashItemType == CashItemType.MAPLETV ? inPacket.decodeByte() : (cashItemType == CashItemType.MAPLESOLETV ? 1 : 3);
+                case MAPLETV, MAPLESOLETV, MAPLELOVETV, MEGATV, MEGASOLETV, MEGALOVETV -> {
+                    final boolean isMega = cashItemType == CashItemType.MEGATV || cashItemType == CashItemType.MEGASOLETV || cashItemType == CashItemType.MEGALOVETV;
+                    final int type = switch (cashItemType) {
+                        case MAPLESOLETV, MEGASOLETV -> 1;
+                        case MAPLELOVETV, MEGALOVETV -> 2;
+                        default -> 0;
+                    };
+                    final int flag = type == 0 ? inPacket.decodeByte() : (type == 1 ? 1 : 3);
+                    final boolean whisperIcon = isMega && inPacket.decodeBoolean();
                     String receiverName = null;
                     AvatarLook receiver = null;
                     if ((flag & 2) != 0) {
@@ -155,7 +162,7 @@ public final class CashItemHandler extends ItemHandler {
                     final String s5 = inPacket.decodeString();
                     // Check maple tv queue
                     final Instant expireTime;
-                    final int duration = cashItemType == CashItemType.MAPLETV ? 15 : (cashItemType == CashItemType.MAPLESOLETV ? 30 : 60);
+                    final int duration = type == 0 ? 15 : (type == 1 ? 30 : 60);
                     if (user.getField().getMapleTvQueue().isEmpty()) {
                         expireTime = Instant.now().plus(duration, ChronoUnit.SECONDS);
                     } else {
@@ -177,7 +184,7 @@ public final class CashItemHandler extends ItemHandler {
                     // Show message
                     final MapleTvMessage message = new MapleTvMessage(
                             flag,
-                            cashItemType == CashItemType.MAPLETV ? 0 : (cashItemType == CashItemType.MAPLESOLETV ? 1 : 2),
+                            type,
                             user.getCharacterData().getAvatarLook(),
                             user.getCharacterName(),
                             receiver,
@@ -194,6 +201,9 @@ public final class CashItemHandler extends ItemHandler {
                         user.getField().broadcastPacket(MapleTvPacket.updateMessage(message, totalWaitTime));
                     }
                     user.getField().getMapleTvQueue().addLast(message);
+                    if (isMega) {
+                        user.getConnectedServer().submitWorldSpeakerRequest(user.getCharacterId(), false, BroadcastPacket.speakerWorld(formatSpeakerMessage(user, String.join("", s1, s2, s3, s4, s5)), user.getChannelId(), whisperIcon));
+                    }
                 }
                 case ADBOARD -> {
                     final String message = inPacket.decodeString();
