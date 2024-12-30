@@ -17,6 +17,7 @@ public final class GameConstants {
     public static final int INVENTORY_SLOT_MAX = 96;
     public static final int TRUNK_SLOT_MAX = 48;
     public static final int LOCKER_SLOT_MAX = 500; // avoid reaching packet size limit
+    public static final int PLAYER_SHOP_SLOT_MAX = 16;
 
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
     public static final int MONEY_MAX = Integer.MAX_VALUE;
