@@ -2,6 +2,7 @@ package kinoko.packet.user;
 
 import kinoko.provider.map.FieldType;
 import kinoko.server.dialog.miniroom.MiniGameRoom;
+import kinoko.server.dialog.miniroom.PersonalShop;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.summoned.Summoned;
@@ -67,6 +68,15 @@ public final class UserPacket {
             outPacket.encodeByte(miniGameRoom.getUsers().size()); // nCurUsers
             outPacket.encodeByte(miniGameRoom.getMaxUsers()); // nMaxUsers
             outPacket.encodeByte(!miniGameRoom.isOpen()); // bGameOn
+        } else if (user.getDialog() instanceof PersonalShop personalShop){
+            outPacket.encodeByte(personalShop.getType().getValue()); // nMiniRoomType
+            outPacket.encodeInt(personalShop.getId()); // dwMiniRoomSN
+            outPacket.encodeString(personalShop.getTitle()); // sMiniRoomTitle
+            outPacket.encodeByte(false); // bPrivate
+            outPacket.encodeByte(0); // nGameKind
+            outPacket.encodeByte(personalShop.getUsers().size()); // nCurUsers
+            outPacket.encodeByte(personalShop.getMaxUsers()); // nMaxUsers
+            outPacket.encodeByte(!personalShop.isOpen()); // bGameOn
         } else {
             outPacket.encodeByte(0); // nMiniRoomType
         }
@@ -156,6 +166,20 @@ public final class UserPacket {
         outPacket.encodeByte(miniGameRoom.getUsers().size()); // nCurUsers
         outPacket.encodeByte(miniGameRoom.getMaxUsers()); // nMaxUsers
         outPacket.encodeByte(!miniGameRoom.isOpen()); // bGameOn
+        return outPacket;
+    }
+
+    public static OutPacket userMiniRoomBalloon(User user, PersonalShop personalShop) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserMiniRoomBalloon);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(personalShop.getType().getValue()); // nMiniRoomType
+        outPacket.encodeInt(personalShop.getId()); // dwMiniRoomSN
+        outPacket.encodeString(personalShop.getTitle()); // sMiniRoomTitle
+        outPacket.encodeByte(true); // bPrivate
+        outPacket.encodeByte(0); // nGameKind
+        outPacket.encodeByte(personalShop.getUsers().size()); // nCurUsers
+        outPacket.encodeByte(personalShop.getMaxUsers()); // nMaxUsers
+        outPacket.encodeByte(!personalShop.isOpen()); // bGameOn
         return outPacket;
     }
 
