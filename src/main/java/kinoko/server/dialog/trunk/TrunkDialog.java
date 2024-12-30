@@ -1,8 +1,11 @@
 package kinoko.server.dialog.trunk;
 
 import kinoko.packet.field.TrunkPacket;
+import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.npc.NpcTemplate;
+import kinoko.server.cashshop.CashItemFailReason;
+import kinoko.server.cashshop.CashItemResultType;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
@@ -47,6 +50,10 @@ public final class TrunkDialog implements Dialog {
                 case GetItem -> {
                     final InventoryType inventoryType = InventoryType.getByValue(inPacket.decodeByte());
                     final int position = inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
+                    if (inventoryType == null || inventoryType == InventoryType.EQUIPPED) {
+                        user.write(TrunkPacket.of(TrunkResultType.GetUnknown));
+                        return;
+                    }
                     // Check if user has enough money
                     final InventoryManager im = user.getInventoryManager();
                     if (im.getMoney() < getTrunkGet()) {
