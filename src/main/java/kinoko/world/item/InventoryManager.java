@@ -176,7 +176,7 @@ public final class InventoryManager {
             return Optional.empty();
         } else if (item.getQuantity() > quantity) {
             // Deduct quantity
-            item.setQuantity((short) (item.getQuantity() - 1));
+            item.setQuantity((short) (item.getQuantity() - quantity));
             return Optional.of(InventoryOperation.itemNumber(inventoryType, position, item.getQuantity()));
         } else {
             // Remove item
