@@ -2,6 +2,7 @@ package kinoko.handler.user.item;
 
 import kinoko.handler.Handler;
 import kinoko.packet.user.UserPacket;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
@@ -31,13 +32,13 @@ public final class UpgradeItemHandler extends ItemHandler {
             final Item upgradeItem = im.getInventoryByType(InventoryType.CONSUME).getItem(upgradeItemPosition);
             if (upgradeItem == null) {
                 log.error("Received UserUpgradeItemUseRequest with upgrade item position {}", upgradeItemPosition);
-                user.dispose();
+                itemUpgradeEffectError(user, enchantSkill);
                 return;
             }
             final Optional<ItemInfo> upgradeItemInfoResult = ItemProvider.getItemInfo(upgradeItem.getItemId());
             if (upgradeItemInfoResult.isEmpty()) {
                 log.error("Could not resolve item info for upgrade item ID : {}", upgradeItem.getItemId());
-                user.dispose();
+                itemUpgradeEffectError(user, enchantSkill);
                 return;
             }
             final ItemInfo upgradeItemInfo = upgradeItemInfoResult.get();
@@ -47,7 +48,7 @@ public final class UpgradeItemHandler extends ItemHandler {
             final Item equipItem = im.getInventoryByType(equipInventoryType).getItem(equipItemPosition);
             if (equipItem == null) {
                 log.error("Received UserUpgradeItemUseRequest with equip item position {}", equipItemPosition);
-                user.dispose();
+                itemUpgradeEffectError(user, enchantSkill);
                 return;
             }
             final boolean recoverSlotItem = upgradeItemInfo.getInfo(ItemInfoType.recover) != 0;
@@ -55,19 +56,20 @@ public final class UpgradeItemHandler extends ItemHandler {
             final EquipData equipData = equipItem.getEquipData();
             if (equipData == null || (requireUpgradeCount && equipData.getRuc() <= 0) || !ItemConstants.isCorrectUpgradeEquip(upgradeItem.getItemId(), equipItem.getItemId())) {
                 log.error("Tried to upgrade equip item {} with upgrade item {}", equipItem.getItemId(), upgradeItem.getItemId());
-                user.dispose();
+                itemUpgradeEffectError(user, enchantSkill);
                 return;
             }
             final Optional<ItemInfo> equipItemInfoResult = ItemProvider.getItemInfo(equipItem.getItemId());
             if (equipItemInfoResult.isEmpty()) {
                 log.error("Could not resolve item info for equip item ID : {}", equipItem.getItemId());
-                user.dispose();
+                itemUpgradeEffectError(user, enchantSkill);
                 return;
             }
             final ItemInfo equipItemInfo = equipItemInfoResult.get();
-            if (recoverSlotItem && equipData.getRuc() >= equipItemInfo.getInfo(ItemInfoType.tuc)) {
-                log.error("Tried to use recover slot item {} on item {} in position {}", upgradeItem.getItemId(), equipItem.getItemId(), equipItemPosition);
-                user.dispose();
+            if (recoverSlotItem && equipData.getRuc() + equipData.getCuc() >= equipItemInfo.getInfo(ItemInfoType.tuc) + equipData.getIuc()) {
+                // log.error("Tried to use recover slot item {} on item {} in position {}", upgradeItem.getItemId(), equipItem.getItemId(), equipItemPosition);
+                // This is not checked by client
+                itemUpgradeEffectError(user, enchantSkill);
                 return;
             }
 
@@ -76,7 +78,7 @@ public final class UpgradeItemHandler extends ItemHandler {
                 final Optional<List<InventoryOperation>> removeWhiteScrollResult = im.removeItem(ItemConstants.WHITE_SCROLL, 1);
                 if (removeWhiteScrollResult.isEmpty()) {
                     log.error("Failed to consume a white scroll while upgrading equip item {}", equipItem.getItemId());
-                    user.dispose();
+                    itemUpgradeEffectError(user, enchantSkill);
                     return;
                 }
                 user.write(WvsContext.inventoryOperation(removeWhiteScrollResult.get(), false));
@@ -403,5 +405,14 @@ public final class UpgradeItemHandler extends ItemHandler {
             user.write(WvsContext.inventoryOperation(updateItemResult.get(), true));
             user.write(UserPacket.userItemReleaseEffect(user, equipItemPosition));
         }
+    }
+
+    private static void itemUpgradeEffectError(User user, boolean enchantSkill) {
+        if (enchantSkill) {
+            user.write(UserPacket.userItemUpgradeEffectEnchantError(user));
+        } else {
+            user.write(MessagePacket.system("That scroll cannot be used on this item."));
+        }
+        user.dispose();
     }
 }

@@ -181,6 +181,18 @@ public final class UserPacket {
         outPacket.encodeByte(enchantSkill); // bEnchantSkill
         outPacket.encodeInt(0); // nEnchantCategory
         outPacket.encodeByte(whiteScroll); // bWhiteScroll
+        outPacket.encodeByte(false); // bRecoverable -> CWvsContext::AskWhetherUsePamsSong
+        return outPacket;
+    }
+
+    public static OutPacket userItemUpgradeEffectEnchantError(User user) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserItemUpgradeEffect);
+        outPacket.encodeInt(user.getCharacterId());
+        outPacket.encodeByte(-1); // CUIEnchantDlg::SetResult => CUtilDlg::Notice("You cannot use a Scroll with this item.");
+        outPacket.encodeByte(false); // bCursed
+        outPacket.encodeByte(true); // bEnchantSkill
+        outPacket.encodeInt(0); // nEnchantCategory
+        outPacket.encodeByte(false); // bWhiteScroll
         outPacket.encodeByte(false); // bRecoverable
         return outPacket;
     }
