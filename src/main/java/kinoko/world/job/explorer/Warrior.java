@@ -185,9 +185,7 @@ public final class Warrior extends SkillProcessor {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
                                 MobTemporaryStat.PAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.MAD, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                                MobTemporaryStat.MDR, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
+                                MobTemporaryStat.PDR, MobStatOption.of(si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv)),
                                 MobTemporaryStat.Blind, MobStatOption.of(si.getValue(SkillStat.z, slv), skillId, si.getValue(SkillStat.subTime, slv) * 1000)
                         ), 0);
                     }
