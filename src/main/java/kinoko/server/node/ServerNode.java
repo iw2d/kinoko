@@ -1,6 +1,5 @@
 package kinoko.server.node;
 
-import kinoko.util.Util;
 import kinoko.world.user.Account;
 
 import java.util.concurrent.CompletableFuture;

@@ -3,11 +3,8 @@ package kinoko.server.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import kinoko.server.ServerConstants;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.NioBufferInPacket;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
