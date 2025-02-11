@@ -4,7 +4,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
-import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.migration.MigrationInfo;
@@ -27,11 +26,22 @@ import java.util.function.Consumer;
 public final class LoginServerNode extends ServerNode {
     private static final Logger log = LogManager.getLogger(LoginServerNode.class);
     private final ConcurrentHashMap<Integer, ChannelInfo> channels = new ConcurrentHashMap<>();
+    private final int port;
 
     private ChannelFuture centralClientFuture;
     private ChannelFuture loginServerFuture;
     private boolean initialized = false;
 
+
+    public LoginServerNode() {
+        this(ServerConstants.LOGIN_PORT);
+    }
+
+    public LoginServerNode(int port) {
+        this.port = port;
+    }
+
+    @Override
     public boolean isInitialized() {
         return initialized;
     }
@@ -94,24 +104,12 @@ public final class LoginServerNode extends ServerNode {
     public void initialize() throws InterruptedException, UnknownHostException {
         // Start login server
         final LoginServerNode self = this;
-        loginServerFuture = startServer(new ChannelInitializer<>() {
-            @Override
-            protected void initChannel(SocketChannel ch) {
-                ch.pipeline().addLast(new PacketDecoder(), new LoginPacketHandler(), new PacketEncoder());
-                if (!self.isInitialized()) {
-                    ch.close();
-                    return;
-                }
-                final Client c = new Client(self, ch);
-                c.setSendIv(getNewIv());
-                c.setRecvIv(getNewIv());
-                c.setClientKey(getNewClientKey());
-                c.write(LoginPacket.connect(c.getRecvIv(), c.getSendIv()));
-                ch.attr(NettyClient.CLIENT_KEY).set(c);
-            }
-        }, ServerConstants.LOGIN_PORT);
+        loginServerFuture = startServer(
+                new PacketChannelInitializer(new LoginPacketHandler(), self),
+                port
+        );
         loginServerFuture.sync();
-        log.info("Login server listening on port {}", ServerConstants.LOGIN_PORT);
+        log.info("Login server listening on port {}", port);
 
         // Start central client
         centralClientFuture = startClient(new ChannelInitializer<>() {
