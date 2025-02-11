@@ -29,5 +29,5 @@ public final class ServerConfig {
     public static final boolean DEBUG_MODE = Util.getEnv("DEBUG_MODE", true);
 
 
-    public static final boolean PLAIN_TRAFFIC = Util.getEnv("PLAIN_PACKETS", false);
+    public static final boolean PLAIN_TRAFFIC = Util.getEnv("PLAIN_TRAFFIC", false);
 }
