@@ -528,7 +528,11 @@ public enum OutHeader {
     ITCNormalItemResult(412),
 
     LogoutGift(432),
-    NO(433);
+
+
+    // Custom Packets
+    RegisterMigrationResult(1000),
+    NO(2000);
 
 
     private static final List<OutHeader> headers;
