@@ -321,7 +321,11 @@ public enum InHeader {
     CheckDuplicatedIDInCS(311),
     // END_CHARACTERSALE(312),
     LogoutGiftSelect(313),
-    NO(314);
+
+
+    // Custom Packets
+    RegisterMigration(1000),
+    NO(2000);
 
     private static final List<InHeader> headers;
     private static final Set<InHeader> ignoreHeaders = Set.of(
