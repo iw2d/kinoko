@@ -4,7 +4,7 @@ import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.field.MapleTvMessage;
 
-public class MapleTvPacket {
+public final class MapleTvPacket {
     // CMapleTVMan::OnPacket -------------------------------------------------------------------------------------------
 
     public static OutPacket updateMessage(MapleTvMessage message, int totalWaitTime) {
