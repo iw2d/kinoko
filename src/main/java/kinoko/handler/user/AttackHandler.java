@@ -370,9 +370,15 @@ public final class AttackHandler {
             }
         }
 
+        // Resolve mastery
+        final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        if (weaponItem != null) {
+            final int mastery = CalcDamage.getWeaponMastery(user, WeaponType.getByItemId(weaponItem.getItemId()));
+            attack.mastery = (byte) Math.clamp(mastery, 0, 90); // changes attack afterimages
+        }
+
         // Resolve bullet ID
         if (attack.bulletPosition != 0 && !attack.isSoulArrow() && !attack.isSpiritJavelin()) {
-            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
             final Item bulletItem = user.getInventoryManager().getConsumeInventory().getItem(attack.bulletPosition);
             if (weaponItem == null || bulletItem == null || !ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
                 log.error("Tried to attack with incorrect bullet {} using weapon {}", bulletItem != null ? bulletItem.getItemId() : 0, weaponItem != null ? weaponItem.getItemId() : 0);
