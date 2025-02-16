@@ -17,30 +17,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public final class TradingRoom extends MiniRoom {
-    private final Map<User, Map<Integer, Item>> items = new HashMap<>(); // position -> slot, items
-    private final Map<User, Integer> money = new HashMap<>(); // position -> money
-    private final Map<User, Boolean> confirm = new HashMap<>(); // position -> trade confirmation
-    private final User inviter;
-    private User target;
+    private final Map<User, Map<Integer, Item>> items = new HashMap<>(); // user -> slot, items
+    private final Map<User, Integer> money = new HashMap<>(); // user -> offered money
+    private final Map<User, Boolean> confirm = new HashMap<>(); // user -> trade confirmation
 
-    public TradingRoom(User inviter) {
-        this.inviter = inviter;
+
+    public TradingRoom() {
+        super(null, null, 0);
     }
 
-    public User getInviter() {
-        return inviter;
-    }
-
-    public boolean isInviter(User user) {
-        return inviter.getCharacterId() == user.getCharacterId();
-    }
-
-    public User getTarget() {
-        return target;
-    }
-
-    public void setTarget(User target) {
-        this.target = target;
+    public User getOther(User user) {
+        return getUserIndex(user) == 0 ? getUser(1) : getUser(0);
     }
 
     @Override
@@ -49,45 +36,16 @@ public final class TradingRoom extends MiniRoom {
     }
 
     @Override
-    public boolean checkPassword(String password) {
-        return true;
-    }
-
-    @Override
     public int getMaxUsers() {
         return 2;
     }
 
     @Override
-    public boolean addUser(User user) {
-        if (getTarget() != null) {
-            return false;
-        }
-        setTarget(user);
-        getInviter().write(MiniRoomPacket.enterBase(1, user));
-        return true;
-    }
-
-    @Override
-    public Map<Integer, User> getUsers() {
-        if (getTarget() == null) {
-            return Map.of(
-                    0, getInviter()
-            );
-        } else {
-            return Map.of(
-                    0, getInviter(),
-                    1, getTarget()
-            );
-        }
-    }
-
-    @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
-        final User other = isInviter(user) ? getTarget() : getInviter();
+        final User other = getOther(user);
         if (other == null) {
-            log.error("Received trading room action {} without another player in the trading room", mrp);
+            log.error("Received mini room action {} without another player in the trading room", mrp);
             return;
         }
         switch (mrp) {
@@ -102,7 +60,7 @@ public final class TradingRoom extends MiniRoom {
                 final int position = inPacket.decodeShort(); // nSlotPosition
                 final int quantity = inPacket.decodeShort(); // nInputNo_Result
                 final int index = inPacket.decodeByte(); // ItemIndexFromPoint
-                if (!addItem(locked, inventoryType, position, quantity, index)) {
+                if (!putItem(user, inventoryType, position, quantity, index)) {
                     log.error("Failed to add item to trading room");
                     user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                 }
@@ -110,7 +68,7 @@ public final class TradingRoom extends MiniRoom {
             case TRP_PutMoney -> {
                 // CTradingRoomDlg::PutMoney
                 final int addMoney = inPacket.decodeInt(); // nInputNo_Result
-                if (!addMoney(locked, addMoney)) {
+                if (!putMoney(user, addMoney)) {
                     log.error("Failed to add money to trading room");
                     user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                 }
@@ -124,8 +82,8 @@ public final class TradingRoom extends MiniRoom {
                     return;
                 }
                 // Complete trade
-                if (!completeTrade(locked)) {
-                    cancelTrade(locked, LeaveType.TradeFail); // Trade unsuccessful.
+                if (!completeTrade(user)) {
+                    cancelTradeUnsafe(user, LeaveType.TradeFail); // Trade unsuccessful.
                 }
             }
             case TRP_ItemCRC -> {
@@ -137,54 +95,45 @@ public final class TradingRoom extends MiniRoom {
         }
     }
 
+    @Override
+    public void leaveUnsafe(User user, LeaveType leaveType) {
+        assert user.isLocked();
+        cancelTradeUnsafe(user, leaveType);
+    }
+
+    @Override
+    public void updateBalloon() {
+        throw new IllegalStateException("Tried to update balloon for trading room");
+    }
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
 
-    /**
-     * This should only be called after acquiring the {@link kinoko.util.Lockable<User>} object.
-     *
-     * @see User#isLocked()
-     */
-    public void cancelTradeUnsafe(User user) {
-        // Return items and update client
-        assert user.isLocked();
-        addItemsAndMoney(user, items.getOrDefault(user, Map.of()).values(), money.getOrDefault(user, 0));
-        user.write(MiniRoomPacket.leave(0, LeaveType.UserRequest)); // no message
-        user.setDialog(null);
-        final User other = isInviter(user) ? getTarget() : getInviter();
-        if (other != null) {
-            try (var lockedOther = other.acquire()) {
-                // Return the other user's items and update their client
-                addItemsAndMoney(lockedOther.get(), items.getOrDefault(other, Map.of()).values(), money.getOrDefault(other, 0));
-                other.write(MiniRoomPacket.leave(1, LeaveType.Closed)); // Trade cancelled by the other character.
-                other.setDialog(null);
-            }
-        }
-        close();
+    public void cancelTrade(Locked<User> locked, LeaveType leaveType) {
+        cancelTradeUnsafe(locked.get(), leaveType);
     }
 
-    public void cancelTrade(Locked<User> locked, LeaveType leaveType) {
+    private void cancelTradeUnsafe(User user, LeaveType leaveType) {
+        assert user.isLocked();
         // Return items and update client
-        final User user = locked.get();
         addItemsAndMoney(user, items.getOrDefault(user, Map.of()).values(), money.getOrDefault(user, 0));
         user.write(MiniRoomPacket.leave(0, leaveType));
         user.setDialog(null);
-        final User other = isInviter(user) ? getTarget() : getInviter();
+        final User other = getOther(user);
         if (other != null) {
             try (var lockedOther = other.acquire()) {
                 // Return the other user's items and update their client
-                addItemsAndMoney(lockedOther.get(), items.getOrDefault(other, Map.of()).values(), money.getOrDefault(other, 0));
+                addItemsAndMoney(other, items.getOrDefault(other, Map.of()).values(), money.getOrDefault(other, 0));
                 other.write(MiniRoomPacket.leave(1, leaveType));
                 other.setDialog(null);
             }
         }
-        close();
+        getField().getMiniRoomPool().removeMiniRoom(this);
     }
 
-    private boolean addItem(Locked<User> locked, InventoryType inventoryType, int position, int quantity, int index) {
+    private boolean putItem(User user, InventoryType inventoryType, int position, int quantity, int index) {
+        assert user.isLocked();
         // Resolve other user
-        final User user = locked.get();
-        final User other = isInviter(user) ? getTarget() : getInviter();
+        final User other = getOther(user);
         if (other == null) {
             return false;
         }
@@ -237,10 +186,10 @@ public final class TradingRoom extends MiniRoom {
         return true;
     }
 
-    private boolean addMoney(Locked<User> locked, int addMoney) {
+    private boolean putMoney(User user, int addMoney) {
+        assert user.isLocked();
         // Resolve other user
-        final User user = locked.get();
-        final User other = isInviter(user) ? getTarget() : getInviter();
+        final User other = getOther(user);
         if (other == null) {
             return false;
         }
@@ -264,13 +213,13 @@ public final class TradingRoom extends MiniRoom {
         return true;
     }
 
-    private boolean completeTrade(Locked<User> locked) {
+    private boolean completeTrade(User user) {
+        assert user.isLocked();
         // Check for confirmations
-        final User user = locked.get();
         if (!confirm.getOrDefault(user, false)) {
             return false;
         }
-        final User other = isInviter(user) ? getTarget() : getInviter();
+        final User other = getOther(user);
         if (other == null || !confirm.getOrDefault(other, false)) {
             return false;
         }
@@ -315,13 +264,11 @@ public final class TradingRoom extends MiniRoom {
             broadcastPacket(MiniRoomPacket.leave(0, LeaveType.TradeDone)); // Trade successful. Please check the results.
             user.setDialog(null);
             other.setDialog(null);
-            close();
         }
         return true;
     }
 
     private void addItemsAndMoney(User user, Collection<Item> addItems, int addMoney) {
-        assert user.isLocked();
         final InventoryManager im = user.getInventoryManager();
         final List<InventoryOperation> inventoryOperations = new ArrayList<>();
         for (Item item : addItems) {

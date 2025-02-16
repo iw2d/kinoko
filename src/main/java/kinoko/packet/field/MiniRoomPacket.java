@@ -48,7 +48,7 @@ public final class MiniRoomPacket {
         outPacket.encodeByte(miniRoom.getType().getValue()); // nMiniRoomType
         // CMiniRoomBaseDlg::OnEnterResultBase
         outPacket.encodeByte(miniRoom.getMaxUsers()); // nMaxUsers
-        outPacket.encodeByte(miniRoom.getPosition(me)); // nMyPosition
+        outPacket.encodeByte(miniRoom.getUserIndex(me)); // nMyPosition
         miniRoom.getUsers().forEach((i, user) -> {
             outPacket.encodeByte(i);
             user.getCharacterData().getAvatarLook().encode(outPacket); // CMiniRoomBaseDlg::DecodeAvatar
@@ -205,8 +205,8 @@ public final class MiniRoomPacket {
             if (resultType != GameResultType.DRAW) {
                 outPacket.encodeByte(winnerIndex); // nWinnerIdx
             }
-            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getOwner()); // apMGR[0]
-            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getGuest()); // apMGR[1]
+            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getUser(0)); // apMGR[0]
+            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getUser(1)); // apMGR[1]
             return outPacket;
         }
 

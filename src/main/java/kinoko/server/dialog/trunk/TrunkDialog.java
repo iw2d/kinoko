@@ -1,11 +1,8 @@
 package kinoko.server.dialog.trunk;
 
 import kinoko.packet.field.TrunkPacket;
-import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.npc.NpcTemplate;
-import kinoko.server.cashshop.CashItemFailReason;
-import kinoko.server.cashshop.CashItemResultType;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;

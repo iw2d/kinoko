@@ -6,149 +6,70 @@ import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
+import kinoko.world.user.data.MiniGameRecord;
 
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 public abstract class MiniGameRoom extends MiniRoom {
-    private final String title;
-    private final String password;
-    private final int gameSpec;
-    private final User owner;
-    private final Set<User> leaveEngage = new HashSet<>();
-    private User guest;
-    private boolean open = true;
-    private boolean ready = false;
-    private int nextTurn = 0;
+    private final Set<User> leaveBooked = new HashSet<>();
 
-    public MiniGameRoom(String title, String password, int gameSpec, User owner) {
-        this.title = title;
-        this.password = password;
-        this.gameSpec = gameSpec;
-        this.owner = owner;
+    public MiniGameRoom(String title, String password, int gameSpec) {
+        super(title, password, gameSpec);
     }
 
-    public final String getTitle() {
-        return title;
-    }
+    public abstract boolean isScorePenalty();
 
-    public final boolean isPrivate() {
-        return password != null;
-    }
-
-    public final int getGameSpec() {
-        return gameSpec;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public boolean isOwner(User user) {
-        return owner.getCharacterId() == user.getCharacterId();
-    }
-
-    public User getGuest() {
-        return guest;
-    }
-
-    public void setGuest(User guest) {
-        this.guest = guest;
-    }
-
-    public final boolean isOpen() {
-        return open;
-    }
-
-    public final void setOpen(boolean open) {
-        this.open = open;
-    }
-
-    public final boolean isReady() {
-        return ready;
-    }
-
-    public final void setReady(boolean ready) {
-        this.ready = ready;
-    }
-
-    public final int getNextTurn() {
-        return nextTurn;
-    }
-
-    public final void setNextTurn(int nextTurn) {
-        this.nextTurn = nextTurn;
-    }
-
-    protected abstract boolean isScorePenalty();
-
-    @Override
-    public final boolean checkPassword(String password) {
-        return Objects.equals(this.password, password);
+    public final User getOther(User user) {
+        return getUserIndex(user) == 0 ? getUser(1) : getUser(0);
     }
 
     @Override
-    public final int getMaxUsers() {
+    public int getMaxUsers() {
         return 2;
-    }
-
-    @Override
-    public final boolean addUser(User user) {
-        if (getGuest() != null) {
-            return false;
-        }
-        setGuest(user);
-        getOwner().write(MiniRoomPacket.MiniGame.enter(1, user, getType()));
-        updateBalloon();
-        return true;
-    }
-
-    @Override
-    public final Map<Integer, User> getUsers() {
-        if (getGuest() == null) {
-            return Map.of(0, getOwner());
-        } else {
-            return Map.of(0, getOwner(), 1, getGuest());
-        }
     }
 
     @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
-        final User other = isOwner(user) ? getGuest() : getOwner();
+        final User other = getOther(user);
         if (other == null) {
-            log.error("Received mini game room action {} without a guest in the room", mrp);
+            log.error("Received mini room action {} without another player in the mini game room", mrp);
             return;
         }
         switch (mrp) {
             case MGRP_TieRequest -> {
-                other.write(MiniRoomPacket.MiniGame.tieRequest());
+                if (isGameOn()) {
+                    other.write(MiniRoomPacket.MiniGame.tieRequest());
+                }
             }
             case MGRP_TieResult -> {
-                if (inPacket.decodeBoolean()) {
-                    try (var lockedOther = other.acquire()) {
-                        gameResult(GameResultType.DRAW, other, user);
+                if (isGameOn()) {
+                    if (inPacket.decodeBoolean()) {
+                        gameSet(GameResultType.DRAW, user, other);
+                    } else {
+                        other.write(MiniRoomPacket.MiniGame.tieResult());
                     }
-                } else {
-                    other.write(MiniRoomPacket.MiniGame.tieResult());
                 }
             }
             case MGRP_GiveUpRequest -> {
-                setNextTurn(getPosition(user));
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserGiveUp, user.getCharacterName()));
-                try (var lockedOther = other.acquire()) {
-                    gameResult(GameResultType.GIVEUP, other, user);
+                if (isGameOn()) {
+                    setNextTurn(getUserIndex(user));
+                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserGiveUp, user.getCharacterName()));
+                    gameSet(GameResultType.GIVEUP, other, user);
                 }
             }
             case MGRP_LeaveEngage -> {
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngage, user.getCharacterName()));
-                leaveEngage.add(user);
+                if (isGameOn()) {
+                    leaveBooked.add(user);
+                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngage, user.getCharacterName()));
+                }
             }
             case MGRP_LeaveEngageCancel -> {
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngageCancel, user.getCharacterName()));
-                leaveEngage.remove(user);
+                if (isGameOn()) {
+                    leaveBooked.remove(user);
+                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngageCancel, user.getCharacterName()));
+                }
             }
             case MGRP_Ready, MGRP_CancelReady -> {
                 if (isOwner(user)) {
@@ -163,18 +84,14 @@ public abstract class MiniGameRoom extends MiniRoom {
                     log.error("Tried to ban user as guest of the omok game room");
                     return;
                 }
-                if (!isOpen()) {
+                if (isGameOn()) {
                     log.error("Tried to ban user during game");
+                    return;
                 }
-                try (var lockedOther = other.acquire()) {
-                    broadcastPacket(MiniRoomPacket.leave(getPosition(other), LeaveType.Kicked));
-                    other.setDialog(null);
-                    setGuest(null);
-                    updateBalloon();
-                }
+                setLeaveRequest(other, LeaveType.Kicked);
             }
             case MGRP_TimeOver -> {
-                setNextTurn(getPosition(other));
+                setNextTurn(getUserIndex(other));
                 broadcastPacket(MiniRoomPacket.MiniGame.timeOver(getNextTurn()));
             }
             default -> {
@@ -184,70 +101,44 @@ public abstract class MiniGameRoom extends MiniRoom {
     }
 
     @Override
-    public final void close() {
-        super.close();
-        getOwner().getField().broadcastPacket(UserPacket.userMiniRoomBalloonRemove(getOwner()));
-    }
-
-
-    // UTILITY METHODS -------------------------------------------------------------------------------------------------
-
-    public final void updateBalloon() {
-        getOwner().getField().broadcastPacket(UserPacket.userMiniRoomBalloon(getOwner(), this));
-    }
-
-    /**
-     * This should only be called after acquiring the {@link kinoko.util.Lockable<User>} object.
-     *
-     * @see User#isLocked()
-     */
-    public final void leaveUnsafe(User user) {
+    public void leaveUnsafe(User user, LeaveType leaveType) {
         assert user.isLocked();
-        final User other = isOwner(user) ? getGuest() : getOwner();
-        // Conclude game
-        if (other != null && !isOpen()) {
-            ServerExecutor.submit(user, () -> {
-                try (var lockedOther = other.acquire()) {
-                    gameResult(GameResultType.GIVEUP, other, user);
-                }
-            });
-        }
-        // Close game if owner
-        if (isOwner(user)) {
-            if (other != null) {
-                other.write(MiniRoomPacket.leave(getPosition(other), LeaveType.HostOut)); // The room is closed.
-                other.setDialog(null);
+        final User other = getOther(user);
+        if (other != null && isGameOn()) {
+            try (var lockedOther = other.acquire()) {
+                MiniGameRecord.processResult(getType(), other.getMiniGameRecord(), user.getMiniGameRecord(), false, isScorePenalty());
             }
-            user.write(MiniRoomPacket.leave(getPosition(user), LeaveType.UserRequest)); // You have left the room.
-            user.setDialog(null);
-            close();
-        } else {
-            broadcastPacket(MiniRoomPacket.leave(getPosition(user), LeaveType.UserRequest)); // You have left the room. | [%s] have left.
-            user.setDialog(null);
-            setGuest(null);
-            updateBalloon();
+            broadcastPacket(MiniRoomPacket.MiniGame.gameResult(GameResultType.GIVEUP, this, getUserIndex(other)));
+            setGameOn(false);
+            setReady(false);
         }
-        leaveEngage.remove(user);
+        setLeaveRequest(user, LeaveType.UserRequest);
+        leaveBooked.clear();
     }
 
-    protected final void gameResult(GameResultType resultType, User winner, User loser) {
-        assert winner.isLocked();
-        assert loser.isLocked();
-        // Process score
+    @Override
+    public void updateBalloon() {
+        getField().broadcastPacket(UserPacket.userMiniRoomBalloon(getUser(0), this));
+    }
+
+    protected final void gameSet(GameResultType resultType, User winner, User loser) {
         final boolean isDraw = resultType == GameResultType.DRAW;
-        final boolean scorePenalty = resultType == GameResultType.GIVEUP && isScorePenalty();
-        winner.getMiniGameRecord().processResult(getType(), loser.getMiniGameRecord(), isDraw, scorePenalty);
-        // Update clients
-        broadcastPacket(MiniRoomPacket.MiniGame.gameResult(resultType, this, getPosition(winner)));
-        setReady(false);
-        setOpen(true);
-        updateBalloon();
-        // Handle leave engage
-        if (leaveEngage.contains(getOwner())) {
-            leaveUnsafe(getOwner());
-        } else if (leaveEngage.contains(getGuest())) {
-            leaveUnsafe(getGuest());
-        }
-        leaveEngage.clear();
+        final boolean isScorePenalty = resultType == GameResultType.GIVEUP && isScorePenalty();
+        ServerExecutor.submit(winner, () -> {
+            try (var lockedRoom = this.acquire()) {
+                try (var lockedWinner = winner.acquire()) {
+                    try (var lockedLoser = loser.acquire()) {
+                        MiniGameRecord.processResult(getType(), winner.getMiniGameRecord(), loser.getMiniGameRecord(), isDraw, isScorePenalty);
+                    }
+                }
+                broadcastPacket(MiniRoomPacket.MiniGame.gameResult(resultType, this, getUserIndex(winner)));
+                setGameOn(false);
+                setReady(false);
+                for (User leaver : leaveBooked) {
+                    setLeaveRequest(leaver, LeaveType.UserRequest);
+                }
+                leaveBooked.clear();
+            }
+        });
     }
 }

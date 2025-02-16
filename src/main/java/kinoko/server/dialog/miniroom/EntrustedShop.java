@@ -4,34 +4,25 @@ import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
 
-import java.util.Map;
-
 public final class EntrustedShop extends MiniRoom {
-    private final int ownerId;
-    private final String ownerName;
-    private final String title;
+    private final String employerName;
+    private final int employerId;
     private final int templateId;
-    private final int foothold;
-    private boolean open = false;
+    private int foothold;
 
-    public EntrustedShop(int ownerId, String ownerName, String title, int templateId, int foothold) {
-        this.ownerId = ownerId;
-        this.ownerName = ownerName;
-        this.title = title;
+    public EntrustedShop(String title, String password, String employerName, int employerId, int templateId) {
+        super(title, password, 0);
+        this.employerName = employerName;
+        this.employerId = employerId;
         this.templateId = templateId;
-        this.foothold = foothold;
     }
 
-    public int getOwnerId() {
-        return ownerId;
+    public String getEmployerName() {
+        return employerName;
     }
 
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public String getTitle() {
-        return title;
+    public int getEmployerId() {
+        return employerId;
     }
 
     public int getTemplateId() {
@@ -42,27 +33,9 @@ public final class EntrustedShop extends MiniRoom {
         return foothold;
     }
 
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-
-    @Override
-    public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
-
-    }
-
     @Override
     public MiniRoomType getType() {
         return MiniRoomType.EntrustedShop;
-    }
-
-    @Override
-    public boolean checkPassword(String password) {
-        return false;
     }
 
     @Override
@@ -71,12 +44,17 @@ public final class EntrustedShop extends MiniRoom {
     }
 
     @Override
-    public boolean addUser(User user) {
-        return false;
+    public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
+
     }
 
     @Override
-    public Map<Integer, User> getUsers() {
-        return null;
+    public void leaveUnsafe(User user, LeaveType leaveType) {
+
+    }
+
+    @Override
+    public void updateBalloon() {
+
     }
 }

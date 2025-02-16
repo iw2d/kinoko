@@ -9,13 +9,8 @@ public final class MemoryGameRoom extends MiniGameRoom {
     private MemoryGame memoryGame;
     private int firstCard;
 
-    public MemoryGameRoom(String title, String password, int gameSpec, User owner) {
-        super(title, password, gameSpec, owner);
-    }
-
-    @Override
-    public MiniRoomType getType() {
-        return MiniRoomType.MemoryGameRoom;
+    public MemoryGameRoom(String title, String password, int gameSpec) {
+        super(title, password, gameSpec);
     }
 
     @Override
@@ -24,21 +19,26 @@ public final class MemoryGameRoom extends MiniGameRoom {
     }
 
     @Override
+    public MiniRoomType getType() {
+        return MiniRoomType.MemoryGameRoom;
+    }
+
+    @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
-        final User other = isOwner(user) ? getGuest() : getOwner();
+        final User other = getOther(user);
         if (other == null) {
-            log.error("Received memory game room action {} without a guest in the room", mrp);
+            log.error("Received mini room action {} without another player in the memory game room", mrp);
             return;
         }
         switch (mrp) {
             case MGRP_Start -> {
-                if (!isOpen() || !isReady() || !isOwner(user)) {
+                if (isGameOn() || !isReady() || isOwner(user)) {
                     log.error("Tried to start memory game without meeting the requirements");
                     return;
                 }
                 memoryGame = new MemoryGame(getGameSpec());
-                setOpen(false);
+                setGameOn(true);
                 updateBalloon();
                 broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.GameStart, ""));
                 broadcastPacket(MiniRoomPacket.MiniGame.memoryGameStart(getNextTurn() == 0 ? 1 : 0, memoryGame.getShuffle()));
@@ -50,22 +50,20 @@ public final class MemoryGameRoom extends MiniGameRoom {
                     firstCard = cardIndex;
                     other.write(MiniRoomPacket.MiniGame.turnUpCard(cardIndex));
                 } else {
-                    final MemoryGame.TurnUpResult result = memoryGame.turnUpCard(firstCard, cardIndex, getPosition(user));
-                    broadcastPacket(MiniRoomPacket.MiniGame.turnUpCard(firstCard, cardIndex, getPosition(user), result != MemoryGame.TurnUpResult.NO_MATCH));
-                    try (var lockedOther = other.acquire()) {
-                        switch (result) {
-                            case NO_MATCH -> {
-                                setNextTurn(getPosition(other));
-                            }
-                            case WIN -> {
-                                gameResult(GameResultType.NORMAL, user, other);
-                            }
-                            case DRAW -> {
-                                gameResult(GameResultType.DRAW, user, other);
-                            }
-                            case LOSE -> {
-                                gameResult(GameResultType.NORMAL, other, user);
-                            }
+                    final MemoryGame.TurnUpResult result = memoryGame.turnUpCard(firstCard, cardIndex, getUserIndex(user));
+                    broadcastPacket(MiniRoomPacket.MiniGame.turnUpCard(firstCard, cardIndex, getUserIndex(user), result != MemoryGame.TurnUpResult.NO_MATCH));
+                    switch (result) {
+                        case NO_MATCH -> {
+                            setNextTurn(getUserIndex(other));
+                        }
+                        case WIN -> {
+                            gameSet(GameResultType.NORMAL, user, other);
+                        }
+                        case DRAW -> {
+                            gameSet(GameResultType.DRAW, user, other);
+                        }
+                        case LOSE -> {
+                            gameSet(GameResultType.NORMAL, other, user);
                         }
                     }
                 }

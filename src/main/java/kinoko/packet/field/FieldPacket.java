@@ -105,13 +105,13 @@ public final class FieldPacket {
 
     public static OutPacket employeeEnterField(EntrustedShop shop) {
         final OutPacket outPacket = OutPacket.of(OutHeader.EmployeeEnterField);
-        outPacket.encodeInt(shop.getOwnerId()); // dwEmployerID
+        outPacket.encodeInt(shop.getEmployerId()); // dwEmployerID
         outPacket.encodeInt(shop.getTemplateId()); // dwTemplateID
         // CEmployee::Init
         outPacket.encodeShort(shop.getX());
         outPacket.encodeShort(shop.getY());
         outPacket.encodeShort(shop.getFoothold());
-        outPacket.encodeString(shop.getOwnerName()); // %s's Hired Merchant
+        outPacket.encodeString(shop.getEmployerName()); // %s's Hired Merchant
         // CEmployee::SetBalloon
         outPacket.encodeByte(shop.getType().getValue()); // nMiniRoomType
         outPacket.encodeInt(shop.getId()); // dwMiniRoomSN
@@ -131,7 +131,7 @@ public final class FieldPacket {
 
     public static OutPacket employeeMiniRoomBalloon(EntrustedShop shop) {
         final OutPacket outPacket = OutPacket.of(OutHeader.EmployeeLeaveField);
-        outPacket.encodeInt(shop.getOwnerId());
+        outPacket.encodeInt(shop.getEmployerId());
         // CEmployee::SetBalloon
         outPacket.encodeByte(shop.getType().getValue()); // nMiniRoomType
         outPacket.encodeInt(shop.getId()); // dwMiniRoomSN
