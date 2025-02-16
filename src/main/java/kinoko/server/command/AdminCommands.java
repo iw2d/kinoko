@@ -66,8 +66,10 @@ public final class AdminCommands {
 
     @Command("dispose")
     public static void dispose(User user, String[] args) {
-        user.closeDialog();
-        user.dispose();
+        try (var locked = user.acquire()) {
+            user.closeDialog();
+            user.dispose();
+        }
         user.write(MessagePacket.system("You have been disposed."));
     }
 
