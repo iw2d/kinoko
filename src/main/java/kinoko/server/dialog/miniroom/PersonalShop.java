@@ -138,7 +138,7 @@ public final class PersonalShop extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, LeaveType leaveType) {
+    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
         throw new Error("TODO");
     }
 

@@ -2,8 +2,8 @@ package kinoko.world.field;
 
 import kinoko.packet.field.MiniRoomPacket;
 import kinoko.packet.user.UserPacket;
-import kinoko.server.dialog.miniroom.LeaveType;
 import kinoko.server.dialog.miniroom.MiniRoom;
+import kinoko.server.dialog.miniroom.MiniRoomLeaveType;
 import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.util.Rect;
 import kinoko.world.user.User;
@@ -44,7 +44,7 @@ public final class MiniRoomPool extends FieldObjectPool<MiniRoom> {
         while (iter.hasNext()) {
             try (var lockedRoom = iter.next().acquire()) {
                 final MiniRoom miniRoom = lockedRoom.get();
-                final Map<User, LeaveType> leaveRequests = miniRoom.getLeaveRequests();
+                final Map<User, MiniRoomLeaveType> leaveRequests = miniRoom.getLeaveRequests();
                 if (leaveRequests.isEmpty()) {
                     continue;
                 }
@@ -62,7 +62,7 @@ public final class MiniRoomPool extends FieldObjectPool<MiniRoom> {
                             if (userIndex == 0) {
                                 user.write(MiniRoomPacket.leave(userIndex, leaveRequests.get(user)));
                             } else {
-                                user.write(MiniRoomPacket.leave(userIndex, LeaveType.HostOut));
+                                user.write(MiniRoomPacket.leave(userIndex, MiniRoomLeaveType.HostOut));
                             }
                             user.setDialog(null);
                             userIter.remove();

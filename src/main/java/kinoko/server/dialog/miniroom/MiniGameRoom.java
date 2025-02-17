@@ -46,7 +46,7 @@ public abstract class MiniGameRoom extends MiniRoom {
             case MGRP_TieResult -> {
                 if (isGameOn()) {
                     if (inPacket.decodeBoolean()) {
-                        gameSet(GameResultType.DRAW, user, other);
+                        gameSet(MiniGameResultType.DRAW, user, other);
                     } else {
                         other.write(MiniRoomPacket.MiniGame.tieResult());
                     }
@@ -55,20 +55,20 @@ public abstract class MiniGameRoom extends MiniRoom {
             case MGRP_GiveUpRequest -> {
                 if (isGameOn()) {
                     setNextTurn(getUserIndex(user));
-                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserGiveUp, user.getCharacterName()));
-                    gameSet(GameResultType.GIVEUP, other, user);
+                    broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.UserGiveUp, user.getCharacterName()));
+                    gameSet(MiniGameResultType.GIVEUP, other, user);
                 }
             }
             case MGRP_LeaveEngage -> {
                 if (isGameOn()) {
                     leaveBooked.add(user);
-                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngage, user.getCharacterName()));
+                    broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.UserLeaveEngage, user.getCharacterName()));
                 }
             }
             case MGRP_LeaveEngageCancel -> {
                 if (isGameOn()) {
                     leaveBooked.remove(user);
-                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserLeaveEngageCancel, user.getCharacterName()));
+                    broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.UserLeaveEngageCancel, user.getCharacterName()));
                 }
             }
             case MGRP_Ready, MGRP_CancelReady -> {
@@ -88,7 +88,7 @@ public abstract class MiniGameRoom extends MiniRoom {
                     log.error("Tried to ban user during game");
                     return;
                 }
-                setLeaveRequest(other, LeaveType.Kicked);
+                setLeaveRequest(other, MiniRoomLeaveType.Kicked);
             }
             case MGRP_TimeOver -> {
                 setNextTurn(getUserIndex(other));
@@ -101,18 +101,18 @@ public abstract class MiniGameRoom extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, LeaveType leaveType) {
+    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
         assert user.isLocked();
         final User other = getOther(user);
         if (other != null && isGameOn()) {
             try (var lockedOther = other.acquire()) {
                 MiniGameRecord.processResult(getType(), other.getMiniGameRecord(), user.getMiniGameRecord(), false, isScorePenalty());
             }
-            broadcastPacket(MiniRoomPacket.MiniGame.gameResult(GameResultType.GIVEUP, this, getUserIndex(other)));
+            broadcastPacket(MiniRoomPacket.MiniGame.gameResult(MiniGameResultType.GIVEUP, this, getUserIndex(other)));
             setGameOn(false);
             setReady(false);
         }
-        setLeaveRequest(user, LeaveType.UserRequest);
+        setLeaveRequest(user, MiniRoomLeaveType.UserRequest);
         leaveBooked.clear();
     }
 
@@ -121,9 +121,9 @@ public abstract class MiniGameRoom extends MiniRoom {
         getField().broadcastPacket(UserPacket.userMiniRoomBalloon(getUser(0), this));
     }
 
-    protected final void gameSet(GameResultType resultType, User winner, User loser) {
-        final boolean isDraw = resultType == GameResultType.DRAW;
-        final boolean isScorePenalty = resultType == GameResultType.GIVEUP && isScorePenalty();
+    protected final void gameSet(MiniGameResultType resultType, User winner, User loser) {
+        final boolean isDraw = resultType == MiniGameResultType.DRAW;
+        final boolean isScorePenalty = resultType == MiniGameResultType.GIVEUP && isScorePenalty();
         ServerExecutor.submit(winner, () -> {
             try (var lockedRoom = this.acquire()) {
                 try (var lockedWinner = winner.acquire()) {
@@ -135,7 +135,7 @@ public abstract class MiniGameRoom extends MiniRoom {
                 setGameOn(false);
                 setReady(false);
                 for (User leaver : leaveBooked) {
-                    setLeaveRequest(leaver, LeaveType.UserRequest);
+                    setLeaveRequest(leaver, MiniRoomLeaveType.UserRequest);
                 }
                 leaveBooked.clear();
             }

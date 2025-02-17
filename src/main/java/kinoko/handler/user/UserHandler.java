@@ -1441,15 +1441,15 @@ public final class UserHandler {
                     final int targetId = inPacket.decodeInt();
                     final Optional<User> targetResult = field.getUserPool().getById(targetId);
                     if (targetResult.isEmpty()) {
-                        user.write(MiniRoomPacket.inviteResult(InviteType.NoCharacter, null)); // Unable to find the character.
-                        tradingRoom.cancelTrade(locked, LeaveType.UserRequest);
+                        user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.NoCharacter, null)); // Unable to find the character.
+                        tradingRoom.cancelTrade(locked, MiniRoomLeaveType.UserRequest);
                         return;
                     }
                     try (var lockedTarget = targetResult.get().acquire()) {
                         final User target = lockedTarget.get();
                         if (target.getDialog() != null) {
-                            user.write(MiniRoomPacket.inviteResult(InviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
-                            tradingRoom.cancelTrade(locked, LeaveType.UserRequest);
+                            user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
+                            tradingRoom.cancelTrade(locked, MiniRoomLeaveType.UserRequest);
                             return;
                         }
                         target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TradingRoom, user.getCharacterName(), tradingRoom.getId()));
@@ -1459,7 +1459,7 @@ public final class UserHandler {
                     // CMiniRoomBaseDlg::SendInviteResult
                     final int miniRoomId = inPacket.decodeInt(); // dwSN
                     final int type = inPacket.decodeByte(); // nErrCode
-                    final InviteType resultType = InviteType.getByValue(type);
+                    final MiniRoomInviteType resultType = MiniRoomInviteType.getByValue(type);
                     if (resultType == null) {
                         log.error("Unknown invite result type {}", type);
                         return;
@@ -1472,7 +1472,7 @@ public final class UserHandler {
                     // Cancel trade
                     try (var lockedOwner = tradingRoom.getUser(0).acquire()) {
                         lockedOwner.get().write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
-                        tradingRoom.cancelTrade(lockedOwner, LeaveType.UserRequest);
+                        tradingRoom.cancelTrade(lockedOwner, MiniRoomLeaveType.UserRequest);
                     }
                 }
                 case MRP_Enter -> {
@@ -1553,9 +1553,9 @@ public final class UserHandler {
                             log.error("Received {} with user index", userIndex);
                         }
                         if (miniRoom instanceof TradingRoom tradingRoom) {
-                            tradingRoom.cancelTrade(locked, LeaveType.Closed); // Trade cancelled by the other character.
+                            tradingRoom.cancelTrade(locked, MiniRoomLeaveType.Closed); // Trade cancelled by the other character.
                         } else {
-                            miniRoom.setLeaveRequest(user, LeaveType.UserRequest); // Defer to MiniRoomPool::updateMiniRooms
+                            miniRoom.setLeaveRequest(user, MiniRoomLeaveType.UserRequest); // Defer to MiniRoomPool::updateMiniRooms
                         }
                     }
                 }

@@ -40,7 +40,7 @@ public final class MemoryGameRoom extends MiniGameRoom {
                 memoryGame = new MemoryGame(getGameSpec());
                 setGameOn(true);
                 updateBalloon();
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.GameStart, ""));
+                broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.GameStart, ""));
                 broadcastPacket(MiniRoomPacket.MiniGame.memoryGameStart(getNextTurn() == 0 ? 1 : 0, memoryGame.getShuffle()));
             }
             case MGP_TurnUpCard -> {
@@ -57,13 +57,13 @@ public final class MemoryGameRoom extends MiniGameRoom {
                             setNextTurn(getUserIndex(other));
                         }
                         case WIN -> {
-                            gameSet(GameResultType.NORMAL, user, other);
+                            gameSet(MiniGameResultType.NORMAL, user, other);
                         }
                         case DRAW -> {
-                            gameSet(GameResultType.DRAW, user, other);
+                            gameSet(MiniGameResultType.DRAW, user, other);
                         }
                         case LOSE -> {
-                            gameSet(GameResultType.NORMAL, other, user);
+                            gameSet(MiniGameResultType.NORMAL, other, user);
                         }
                     }
                 }

@@ -22,11 +22,11 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket inviteResult(InviteType inviteType, String targetName) {
+    public static OutPacket inviteResult(MiniRoomInviteType inviteType, String targetName) {
         // CMiniRoomBaseDlg::OnInviteResultStatic
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_InviteResult);
         outPacket.encodeByte(inviteType.getValue());
-        if (inviteType != InviteType.NoCharacter) {
+        if (inviteType != MiniRoomInviteType.NoCharacter) {
             outPacket.encodeString(targetName); // sTargetName
         }
         return outPacket;
@@ -80,7 +80,7 @@ public final class MiniRoomPacket {
         return chat(userIndex, String.format("%s : %s", characterName, message));
     }
 
-    public static OutPacket gameMessage(GameMessageType messageType, String characterName) {
+    public static OutPacket gameMessage(MiniGameMessageType messageType, String characterName) {
         // CMiniRoomBaseDlg::MakeGameMessage
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_Chat);
         outPacket.encodeByte(MiniRoomProtocol.MRP_GameMessage.getValue());
@@ -89,7 +89,7 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket leave(int userIndex, LeaveType leaveType) {
+    public static OutPacket leave(int userIndex, MiniRoomLeaveType leaveType) {
         // CMiniRoomBaseDlg::OnEnterBase
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_Leave);
         outPacket.encodeByte(userIndex);
@@ -199,10 +199,10 @@ public final class MiniRoomPacket {
             return outPacket;
         }
 
-        public static OutPacket gameResult(GameResultType resultType, MiniGameRoom miniGameRoom, int winnerIndex) {
+        public static OutPacket gameResult(MiniGameResultType resultType, MiniGameRoom miniGameRoom, int winnerIndex) {
             final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MGRP_GameResult);
             outPacket.encodeByte(resultType.getValue());
-            if (resultType != GameResultType.DRAW) {
+            if (resultType != MiniGameResultType.DRAW) {
                 outPacket.encodeByte(winnerIndex); // nWinnerIdx
             }
             encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getUser(0)); // apMGR[0]
