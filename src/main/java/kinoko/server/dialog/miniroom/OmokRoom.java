@@ -43,7 +43,7 @@ public final class OmokRoom extends MiniGameRoom {
                         if (count % 2 != 0) {
                             setNextTurn(getNextTurn() == 0 ? 1 : 0);
                         }
-                        broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserRetreatSuccess, user.getCharacterName()));
+                        broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.UserRetreatSuccess, user.getCharacterName()));
                         broadcastPacket(MiniRoomPacket.MiniGame.retreatResult(true, count, getNextTurn()));
                     } else {
                         other.write(MiniRoomPacket.MiniGame.retreatResult(false, -1, -1));
@@ -58,7 +58,7 @@ public final class OmokRoom extends MiniGameRoom {
                 omokGame = new OmokGame();
                 setGameOn(true);
                 updateBalloon();
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.GameStart, ""));
+                broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.GameStart, ""));
                 broadcastPacket(MiniRoomPacket.MiniGame.omokStart(getNextTurn() == 0 ? 1 : 0));
             }
             case ORP_PutStoneChecker -> {
@@ -80,7 +80,7 @@ public final class OmokRoom extends MiniGameRoom {
                 setNextTurn(getUserIndex(other));
                 broadcastPacket(MiniRoomPacket.MiniGame.putStoneChecker(x, y, type));
                 if (omokGame.checkWin(x, y, type)) {
-                    gameSet(GameResultType.NORMAL, user, other);
+                    gameSet(MiniGameResultType.NORMAL, user, other);
                 }
             }
             default -> {

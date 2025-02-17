@@ -1,6 +1,6 @@
 package kinoko.server.dialog.miniroom;
 
-public enum InviteType {
+public enum MiniRoomInviteType {
     // MRInvite
     Success(0),
     NoCharacter(1),
@@ -10,7 +10,7 @@ public enum InviteType {
 
     private final int value;
 
-    InviteType(int value) {
+    MiniRoomInviteType(int value) {
         this.value = value;
     }
 
@@ -18,8 +18,8 @@ public enum InviteType {
         return value;
     }
 
-    public static InviteType getByValue(int value) {
-        for (InviteType type : values()) {
+    public static MiniRoomInviteType getByValue(int value) {
+        for (MiniRoomInviteType type : values()) {
             if (type.getValue() == value) {
                 return type;
             }

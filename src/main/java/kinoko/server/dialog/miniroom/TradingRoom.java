@@ -83,7 +83,7 @@ public final class TradingRoom extends MiniRoom {
                 }
                 // Complete trade
                 if (!completeTrade(user)) {
-                    cancelTradeUnsafe(user, LeaveType.TradeFail); // Trade unsuccessful.
+                    cancelTradeUnsafe(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
                 }
             }
             case TRP_ItemCRC -> {
@@ -96,7 +96,7 @@ public final class TradingRoom extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, LeaveType leaveType) {
+    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
         assert user.isLocked();
         cancelTradeUnsafe(user, leaveType);
     }
@@ -108,11 +108,11 @@ public final class TradingRoom extends MiniRoom {
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
 
-    public void cancelTrade(Locked<User> locked, LeaveType leaveType) {
+    public void cancelTrade(Locked<User> locked, MiniRoomLeaveType leaveType) {
         cancelTradeUnsafe(locked.get(), leaveType);
     }
 
-    private void cancelTradeUnsafe(User user, LeaveType leaveType) {
+    private void cancelTradeUnsafe(User user, MiniRoomLeaveType leaveType) {
         assert user.isLocked();
         // Return items and update client
         addItemsAndMoney(user, items.getOrDefault(user, Map.of()).values(), money.getOrDefault(user, 0));
@@ -261,7 +261,7 @@ public final class TradingRoom extends MiniRoom {
             addItemsAndMoney(user, itemsForUser, moneyForUser);
             addItemsAndMoney(other, itemsForOther, moneyForOther);
             // Complete trade
-            broadcastPacket(MiniRoomPacket.leave(0, LeaveType.TradeDone)); // Trade successful. Please check the results.
+            broadcastPacket(MiniRoomPacket.leave(0, MiniRoomLeaveType.TradeDone)); // Trade successful. Please check the results.
             user.setDialog(null);
             other.setDialog(null);
         }

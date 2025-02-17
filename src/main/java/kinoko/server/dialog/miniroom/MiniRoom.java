@@ -23,7 +23,7 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
     private final String password;
     private final int gameSpec;
     private final Map<Integer, User> users = new HashMap<>();
-    private final Map<User, LeaveType> leaveRequests = new HashMap<>();
+    private final Map<User, MiniRoomLeaveType> leaveRequests = new HashMap<>();
     private boolean gameOn = false;
     private boolean ready = false;
     private int nextTurn = 0;
@@ -40,7 +40,7 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
 
     public abstract void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket);
 
-    public abstract void leaveUnsafe(User user, LeaveType leaveType);
+    public abstract void leaveUnsafe(User user, MiniRoomLeaveType leaveType);
 
     public abstract void updateBalloon();
 
@@ -81,11 +81,11 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
         return -1;
     }
 
-    public final Map<User, LeaveType> getLeaveRequests() {
+    public final Map<User, MiniRoomLeaveType> getLeaveRequests() {
         return leaveRequests;
     }
 
-    public final void setLeaveRequest(User user, LeaveType leaveType) {
+    public final void setLeaveRequest(User user, MiniRoomLeaveType leaveType) {
         leaveRequests.put(user, leaveType);
     }
 
