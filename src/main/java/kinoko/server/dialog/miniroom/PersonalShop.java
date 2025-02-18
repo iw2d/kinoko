@@ -21,14 +21,31 @@ import java.util.Optional;
 public final class PersonalShop extends MiniRoom {
     private final List<PlayerShopItem> items = new ArrayList<>();
     private final List<String> blockedList = new ArrayList<>();
+    private boolean open = false;
 
     public PersonalShop(String title) {
         super(title, null, 0);
-        setOpen(false);
     }
 
     public List<PlayerShopItem> getItems() {
         return items;
+    }
+
+    public int getOpenUserIndex() {
+        for (int i = 0; i < getMaxUsers(); i++) {
+            if (!getUsers().containsKey(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     @Override
@@ -38,7 +55,7 @@ public final class PersonalShop extends MiniRoom {
 
     @Override
     public int getMaxUsers() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -116,7 +133,7 @@ public final class PersonalShop extends MiniRoom {
                 }
                 final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(items.remove(itemIndex).getItem());
                 if (addItemResult.isEmpty()) {
-                    throw new IllegalStateException("Could not add item to inventory");
+                    throw new IllegalStateException("Could not add personal shop item to inventory");
                 }
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
                 user.write(MiniRoomPacket.PlayerShop.refresh(items));
@@ -138,8 +155,42 @@ public final class PersonalShop extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
-        throw new Error("TODO");
+    public void leaveUnsafe(User user) {
+        assert user.isLocked();
+        final int userIndex = getUserIndex(user);
+        if (userIndex == 0) {
+            // Return items
+            final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+            for (PlayerShopItem item : items) {
+                final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item.getItem());
+                if (addItemResult.isEmpty()) {
+                    throw new IllegalStateException("Could not add personal shop item to inventory");
+                }
+                inventoryOperations.addAll(addItemResult.get());
+            }
+            user.write(WvsContext.inventoryOperation(inventoryOperations, false));
+            // Remove guests
+            for (int i = 1; i < getMaxUsers(); i++) {
+                final User guest = getUser(i);
+                if (guest == null) {
+                    continue;
+                }
+                try (var lockedGuest = guest.acquire()) {
+                    guest.write(MiniRoomPacket.leave(i, MiniRoomLeaveType.HostOut)); // The shop is closed.
+                    guest.setDialog(null);
+                }
+            }
+            // Remove shop
+            broadcastPacket(MiniRoomPacket.leave(userIndex, MiniRoomLeaveType.UserRequest));
+            user.setDialog(null);
+            getField().getMiniRoomPool().removeMiniRoom(this);
+            getField().broadcastPacket(UserPacket.userMiniRoomBalloonRemove(user));
+        } else {
+            broadcastPacket(MiniRoomPacket.leave(userIndex, MiniRoomLeaveType.UserRequest));
+            removeUser(userIndex);
+            user.setDialog(null);
+            updateBalloon();
+        }
     }
 
     @Override

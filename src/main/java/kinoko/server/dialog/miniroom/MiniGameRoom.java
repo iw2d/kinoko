@@ -101,7 +101,7 @@ public abstract class MiniGameRoom extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
+    public void leaveUnsafe(User user) {
         assert user.isLocked();
         final User other = getOther(user);
         if (other != null && isGameOn()) {

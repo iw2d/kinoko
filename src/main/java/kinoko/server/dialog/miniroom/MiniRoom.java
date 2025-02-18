@@ -40,7 +40,7 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
 
     public abstract void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket);
 
-    public abstract void leaveUnsafe(User user, MiniRoomLeaveType leaveType);
+    public abstract void leaveUnsafe(User user);
 
     public abstract void updateBalloon();
 
@@ -126,14 +126,6 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
 
     public final boolean isPrivate() {
         return password != null && !password.isEmpty();
-    }
-
-    public boolean isOpen() {
-        return !isGameOn();
-    }
-
-    public void setOpen(boolean open) {
-        setGameOn(!open);
     }
 
     public final void broadcastPacket(OutPacket outPacket) {

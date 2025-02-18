@@ -16,8 +16,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
-import kinoko.server.dialog.miniroom.MiniRoomLeaveType;
-import kinoko.server.dialog.miniroom.TradingRoom;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
@@ -271,10 +269,10 @@ public final class User extends Life implements Lockable<User> {
     public void closeDialog() {
         if (getDialog() instanceof ScriptDialog scriptDialog) {
             scriptDialog.close();
-        } else if (getDialog() instanceof TradingRoom tradingRoom) {
-            tradingRoom.leaveUnsafe(this, MiniRoomLeaveType.Closed); // Trade cancelled by the other character.
         } else if (getDialog() instanceof MiniRoom miniRoom) {
-            miniRoom.leaveUnsafe(this, MiniRoomLeaveType.UserRequest);
+            try (var lockedRoom = miniRoom.acquire()) {
+                lockedRoom.get().leaveUnsafe(this);
+            }
         } else {
             setDialog(null);
         }
