@@ -49,10 +49,10 @@ public final class MiniRoomPool extends FieldObjectPool<MiniRoom> {
                     continue;
                 }
                 assert miniRoom.getType() != MiniRoomType.TradingRoom;
+                assert miniRoom.getType() != MiniRoomType.PersonalShop;
                 final User owner = miniRoom.getUser(0);
                 if (leaveRequests.containsKey(owner)) {
                     // Close room
-                    assert miniRoom.getType() != MiniRoomType.PersonalShop;
                     var userIter = miniRoom.getUsers().entrySet().iterator();
                     while (userIter.hasNext()) {
                         final var entry = userIter.next();

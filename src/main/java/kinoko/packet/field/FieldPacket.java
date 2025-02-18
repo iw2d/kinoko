@@ -119,7 +119,7 @@ public final class FieldPacket {
         outPacket.encodeByte(0); // nGameKind
         outPacket.encodeByte(shop.getUsers().size()); // nCurUsers
         outPacket.encodeByte(shop.getMaxUsers()); // nMaxUsers
-        outPacket.encodeByte(!shop.isOpen()); // bGameOn
+        outPacket.encodeByte(shop.isGameOn()); // bGameOn
         return outPacket;
     }
 
@@ -139,7 +139,7 @@ public final class FieldPacket {
         outPacket.encodeByte(0); // nGameKind
         outPacket.encodeByte(shop.getUsers().size()); // nCurUsers
         outPacket.encodeByte(shop.getMaxUsers()); // nMaxUsers
-        outPacket.encodeByte(!shop.isOpen()); // bGameOn
+        outPacket.encodeByte(shop.isGameOn()); // bGameOn
         return outPacket;
     }
 

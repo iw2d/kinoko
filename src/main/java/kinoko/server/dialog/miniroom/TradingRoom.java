@@ -96,15 +96,16 @@ public final class TradingRoom extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
+    public void leaveUnsafe(User user) {
         assert user.isLocked();
-        cancelTradeUnsafe(user, leaveType);
+        cancelTradeUnsafe(user, MiniRoomLeaveType.Closed); // Trade cancelled by the other character.
     }
 
     @Override
     public void updateBalloon() {
         throw new IllegalStateException("Tried to update balloon for trading room");
     }
+
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
 

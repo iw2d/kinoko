@@ -58,7 +58,7 @@ public final class UserPacket {
         outPacket.encodeInt(0); // nTamingMobExp
         outPacket.encodeInt(0); // nTamingMobFatigue
 
-        if (user.getDialog() instanceof MiniRoom miniRoom && miniRoom.getType().isBalloon()) {
+        if (user.getDialog() instanceof MiniRoom miniRoom && miniRoom.getType().isBalloon() && miniRoom.isOwner(user)) {
             outPacket.encodeByte(miniRoom.getType().getValue()); // nMiniRoomType
             outPacket.encodeInt(miniRoom.getId()); // dwMiniRoomSN
             outPacket.encodeString(miniRoom.getTitle()); // sMiniRoomTitle
@@ -66,7 +66,7 @@ public final class UserPacket {
             outPacket.encodeByte(miniRoom.getGameSpec()); // nGameKind
             outPacket.encodeByte(miniRoom.getUsers().size()); // nCurUsers
             outPacket.encodeByte(miniRoom.getMaxUsers()); // nMaxUsers
-            outPacket.encodeByte(!miniRoom.isOpen()); // bGameOn
+            outPacket.encodeByte(miniRoom.isGameOn()); // bGameOn
         } else {
             outPacket.encodeByte(0); // nMiniRoomType
         }

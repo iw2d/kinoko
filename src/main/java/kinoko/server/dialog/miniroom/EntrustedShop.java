@@ -49,7 +49,7 @@ public final class EntrustedShop extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user, MiniRoomLeaveType leaveType) {
+    public void leaveUnsafe(User user) {
 
     }
 
