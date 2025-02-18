@@ -102,52 +102,52 @@ public final class MiniGameRecord {
         }
     }
 
-    public void processResult(MiniRoomType miniRoomType, MiniGameRecord other, boolean isDraw, boolean scorePenalty) {
+    public int getOmokGameTotal() {
+        return omokGameWins + omokGameTies + omokGameLosses;
+    }
+
+    public int getMemoryGameTotal() {
+        return memoryGameWins + memoryGameTies + memoryGameLosses;
+    }
+
+    public static void processResult(MiniRoomType miniRoomType, MiniGameRecord winner, MiniGameRecord loser, boolean isDraw, boolean scorePenalty) {
         final double multiplier = scorePenalty ? 0.1 : 1.0;
         switch (miniRoomType) {
             case OmokRoom -> {
                 // Update stats
                 if (isDraw) {
-                    this.omokGameTies++;
-                    other.omokGameTies++;
+                    winner.omokGameTies++;
+                    loser.omokGameTies++;
                 } else {
-                    this.omokGameWins++;
-                    other.omokGameLosses++;
+                    winner.omokGameWins++;
+                    loser.omokGameLosses++;
                 }
                 // Update ratings
-                final int k1 = this.omokGameScore > 3000 ? 20 : (this.getOmokGameTotal() > 50 ? 50 : 30);
-                final int k2 = other.omokGameScore > 3000 ? 20 : (other.getOmokGameTotal() > 50 ? 30 : 20);
-                final double r1 = computeScoreGain(this.omokGameScore, other.omokGameScore, isDraw ? 0.5 : 1.0, k1);
-                final double r2 = computeScoreGain(other.omokGameScore, this.omokGameScore, isDraw ? 0.5 : 0.0, k2);
-                this.omokGameScore += (r1 * multiplier);
-                other.omokGameScore += (r2 * multiplier);
+                final int k1 = winner.omokGameScore > 3000 ? 20 : (winner.getOmokGameTotal() > 50 ? 50 : 30);
+                final int k2 = loser.omokGameScore > 3000 ? 20 : (loser.getOmokGameTotal() > 50 ? 30 : 20);
+                final double r1 = computeScoreGain(winner.omokGameScore, loser.omokGameScore, isDraw ? 0.5 : 1.0, k1);
+                final double r2 = computeScoreGain(loser.omokGameScore, winner.omokGameScore, isDraw ? 0.5 : 0.0, k2);
+                winner.omokGameScore += (r1 * multiplier);
+                loser.omokGameScore += (r2 * multiplier);
             }
             case MemoryGameRoom -> {
                 // Update stats
                 if (isDraw) {
-                    this.memoryGameTies++;
-                    other.memoryGameTies++;
+                    winner.memoryGameTies++;
+                    loser.memoryGameTies++;
                 } else {
-                    this.memoryGameWins++;
-                    other.memoryGameLosses++;
+                    winner.memoryGameWins++;
+                    loser.memoryGameLosses++;
                 }
                 // Update ratings
-                final int k1 = this.memoryGameScore > 3000 ? 20 : (this.getMemoryGameTotal() > 50 ? 50 : 30);
-                final int k2 = other.memoryGameScore > 3000 ? 20 : (other.getMemoryGameTotal() > 50 ? 30 : 20);
-                final double r1 = computeScoreGain(this.memoryGameScore, other.memoryGameScore, isDraw ? 0.5 : 1.0, k1);
-                final double r2 = computeScoreGain(other.memoryGameScore, this.memoryGameScore, isDraw ? 0.5 : 0.0, k2);
-                this.memoryGameScore += (r1 * multiplier);
-                other.memoryGameScore += (r2 * multiplier);
+                final int k1 = winner.memoryGameScore > 3000 ? 20 : (winner.getMemoryGameTotal() > 50 ? 50 : 30);
+                final int k2 = loser.memoryGameScore > 3000 ? 20 : (loser.getMemoryGameTotal() > 50 ? 30 : 20);
+                final double r1 = computeScoreGain(winner.memoryGameScore, loser.memoryGameScore, isDraw ? 0.5 : 1.0, k1);
+                final double r2 = computeScoreGain(loser.memoryGameScore, winner.memoryGameScore, isDraw ? 0.5 : 0.0, k2);
+                winner.memoryGameScore += (r1 * multiplier);
+                loser.memoryGameScore += (r2 * multiplier);
             }
         }
-    }
-
-    private int getOmokGameTotal() {
-        return omokGameWins + omokGameTies + omokGameLosses;
-    }
-
-    private int getMemoryGameTotal() {
-        return memoryGameWins + memoryGameTies + memoryGameLosses;
     }
 
     private static double computeScoreGain(double r1, double r2, double score, int k) {
