@@ -175,6 +175,23 @@ public final class GameConstants {
         return money;
     }
 
+    public static int getPersonalShopTax(int money) {
+        if (money >= 100_000_000) {
+            return Math.round(money * 0.97f); // 3.00%
+        } else if (money >= 25_000_000) {
+            return Math.round(money * 0.975f); // 2.50%
+        } else if (money >= 10_000_000) {
+            return Math.round(money * 0.98f); // 2.00%
+        } else if (money >= 5_000_000) {
+            return Math.round(money * 0.975f); // 1.50%
+        } else if (money >= 1_000_000) {
+            return Math.round(money * 0.991f); // 0.90%
+        } else if (money >= 100_000) {
+            return Math.round(money * 0.996f); // 0.40%
+        }
+        return money;
+    }
+
     public static int getGuildExpandCost(int memberMax) {
         if (memberMax < 15) {
             return 500_000;

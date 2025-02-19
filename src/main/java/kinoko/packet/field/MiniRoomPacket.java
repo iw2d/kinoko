@@ -314,7 +314,7 @@ public final class MiniRoomPacket {
         }
 
         public static OutPacket moveItemToInventory(int newSize, int itemIndex) {
-            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_AddSoldItem);
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_MoveItemToInventory);
             outPacket.encodeByte(newSize); // nItem
             outPacket.encodeShort(itemIndex);
             return outPacket;
