@@ -452,6 +452,13 @@ public final class UserHandler {
             } else {
                 final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
                 final Inventory secondInventory = im.getInventoryByType(secondInventoryType);
+
+                if (secondInventory.getSize() < newPos) {
+                    // 超出格子范围
+                    user.dispose();
+                    return;
+                }
+
                 final Item secondItem = secondInventory.getItem(newPos);
                 if (secondInventoryType == InventoryType.EQUIPPED) {
                     // Check body part
