@@ -6,10 +6,7 @@ import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Crc32;
 import kinoko.util.Rect;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public final class MapInfo {
     private final int mapId;
@@ -26,6 +23,7 @@ public final class MapInfo {
     private final float mobRate;
     private final String onFirstUserEnter;
     private final String onUserEnter;
+    private final List<Integer> allowedItems;
     private final List<Rect> areas;
     private final List<Foothold> footholds;
     private final List<LadderRope> ladderRope;
@@ -36,7 +34,7 @@ public final class MapInfo {
     private final FootholdNode footholdRoot;
     private final int fieldCrc;
 
-    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean shop, boolean clock, int phase, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Rect> areas, List<Foothold> footholds, List<LadderRope> ladderRope, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
+    public MapInfo(int mapId, boolean town, boolean swim, boolean fly, boolean shop, boolean clock, int phase, int returnMap, int forcedReturn, Set<FieldOption> fieldOptions, FieldType fieldType, float mobRate, String onFirstUserEnter, String onUserEnter, List<Integer> allowedItems, List<Rect> areas, List<Foothold> footholds, List<LadderRope> ladderRope, List<LifeInfo> lifeInfos, List<PortalInfo> portalInfos, List<ReactorInfo> reactorInfos) {
         this.mapId = mapId;
         this.town = town;
         this.swim = swim;
@@ -51,6 +49,7 @@ public final class MapInfo {
         this.mobRate = mobRate;
         this.onFirstUserEnter = onFirstUserEnter;
         this.onUserEnter = onUserEnter;
+        this.allowedItems = allowedItems;
         this.areas = areas;
         this.footholds = footholds;
         this.ladderRope = ladderRope;
@@ -134,6 +133,10 @@ public final class MapInfo {
 
     public String getOnUserEnter() {
         return onUserEnter;
+    }
+
+    public List<Integer> getAllowedItems() {
+        return allowedItems;
     }
 
     public List<Rect> getAreas() {
@@ -222,6 +225,7 @@ public final class MapInfo {
                 ", mobRate=" + mobRate +
                 ", onFirstUserEnter='" + onFirstUserEnter + '\'' +
                 ", onUserEnter='" + onUserEnter + '\'' +
+                ", allowedItems=" + allowedItems +
                 ", areas=" + areas +
                 ", footholds=" + footholds +
                 ", ladderRope=" + ladderRope +
@@ -234,6 +238,12 @@ public final class MapInfo {
     }
 
     public static MapInfo from(int mapId, WzListProperty infoProp, List<Rect> area, List<Foothold> foothold, List<LadderRope> ladderRope, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
+        final List<Integer> allowedItems = new ArrayList<>();
+        if (infoProp.get("allowedItem") instanceof WzListProperty allowedItemList) {
+            for (var entry : allowedItemList.getItems().entrySet()) {
+                allowedItems.add(WzProvider.getInteger(entry.getValue()));
+            }
+        }
         return new MapInfo(
                 mapId,
                 infoProp.getOrDefault("town", 0) != 0,
@@ -249,6 +259,7 @@ public final class MapInfo {
                 infoProp.get("mobRate"),
                 infoProp.get("onFirstUserEnter"),
                 infoProp.get("onUserEnter"),
+                Collections.unmodifiableList(allowedItems),
                 area,
                 foothold,
                 ladderRope,

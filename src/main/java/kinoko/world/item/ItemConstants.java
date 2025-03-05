@@ -91,6 +91,10 @@ public final class ItemConstants {
         return itemId / 10000 == 212;
     }
 
+    public static boolean isMobSummonItem(int itemId) {
+        return itemId / 10000 == 210;
+    }
+
     public static boolean isPortalScrollItem(int itemId) {
         return itemId / 10000 == 203;
     }

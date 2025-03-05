@@ -21,6 +21,7 @@ public final class ItemProvider implements WzProvider {
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
     private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
+    private static final Map<Integer, MobSummonInfo> mobSummonInfos = new HashMap<>();
     private static final Map<Integer, Set<Integer>> petEquips = new HashMap<>(); // petEquipId -> set<petTemplateId>
     private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
     private static final Map<Integer, String> specialItemNames = new HashMap<>();
@@ -80,6 +81,10 @@ public final class ItemProvider implements WzProvider {
         return possibleItemOptions;
     }
 
+    public static Optional<MobSummonInfo> getMobSummonInfo(int itemId) {
+        return Optional.of(mobSummonInfos.get(itemId));
+    }
+
     public static boolean isPetEquipSuitable(int itemId, int templateId) {
         return petEquips.getOrDefault(itemId, Set.of()).contains(templateId);
     }
@@ -136,6 +141,11 @@ public final class ItemProvider implements WzProvider {
                         throw new ProviderError("Failed to resolve item property");
                     }
                     itemInfos.put(itemId, ItemInfo.from(itemId, itemProp));
+                    // Mob summon info
+                    if (!(itemProp.get("mob") instanceof WzListProperty mobSummonList)) {
+                        continue;
+                    }
+                    mobSummonInfos.put(itemId, MobSummonInfo.from(itemId, mobSummonList));
                 }
             }
         }
