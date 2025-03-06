@@ -1,16 +1,24 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.world.MessagePacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.provider.QuestProvider;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.quest.QuestInfo;
+import kinoko.util.Locked;
 import kinoko.util.Rect;
 import kinoko.world.GameConstants;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropEnterType;
 import kinoko.world.field.drop.DropLeaveType;
+import kinoko.world.field.drop.DropOwnType;
+import kinoko.world.item.InventoryManager;
+import kinoko.world.item.InventoryOperation;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
+import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -103,6 +111,82 @@ public final class DropPool extends FieldObjectPool<Drop> {
         }
         field.broadcastPacket(FieldPacket.dropLeaveField(drop, leaveType, pickUpId, petIndex, delay));
         return true;
+    }
+
+    public void pickUpDrop(Locked<User> locked, Drop drop, DropLeaveType leaveType, int petIndex) {
+        final User user = locked.get();
+        // Verify user can pick up drop
+        if (!drop.canPickUp(user)) {
+            return;
+        }
+
+        // Check if drop can be added to inventory
+        final InventoryManager im = user.getInventoryManager();
+        if (drop.isMoney()) {
+            final long newMoney = ((long) im.getMoney()) + drop.getMoney();
+            if (newMoney > GameConstants.MONEY_MAX) {
+                user.write(MessagePacket.unavailableForPickUp());
+                return;
+            }
+        } else {
+            // Inventory full
+            if (!im.canAddItem(drop.getItem())) {
+                user.write(MessagePacket.cannotGetAnymoreItems());
+                return;
+            }
+            // Quest item handling
+            if (drop.isQuest()) {
+                final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
+                if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
+                    user.write(MessagePacket.unavailableForPickUp());
+                    return;
+                }
+                final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
+                if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
+                    user.write(MessagePacket.cannotGetAnymoreItems());
+                    return;
+                }
+            }
+        }
+
+        // Try removing drop from field
+        if (!removeDrop(drop, leaveType, user.getCharacterId(), petIndex, 0)) {
+            return;
+        }
+
+        // Add drop to inventory
+        if (drop.isMoney()) {
+            int money = drop.getMoney();
+            if (drop.getOwnType() == DropOwnType.PARTYOWN) {
+                final List<User> partyMembers = user.getField().getUserPool().getPartyMembers(user.getPartyId());
+                if (!partyMembers.isEmpty()) {
+                    final int split = (int) Math.round(0.8 * money / partyMembers.size());
+                    for (User member : partyMembers) {
+                        if (member.getCharacterId() == user.getCharacterId()) {
+                            continue;
+                        }
+                        try (var lockedMember = member.acquire()) {
+                            if (member.getInventoryManager().addMoney(split)) {
+                                money -= split;
+                                member.write(WvsContext.statChanged(Stat.MONEY, member.getInventoryManager().getMoney(), false));
+                                member.write(MessagePacket.pickUpMoney(split, false));
+                            }
+                        }
+                    }
+                }
+            }
+            if (money <= 0 || !im.addMoney(money)) {
+                throw new IllegalStateException("Could not add money to inventory");
+            }
+            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
+            user.write(MessagePacket.pickUpMoney(money, false));
+        } else {
+            final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
+            if (addItemResult.isPresent()) {
+                user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
+                user.write(MessagePacket.pickUpItem(drop.getItem()));
+            }
+        }
     }
 
     public void expireDrops(Instant now) {

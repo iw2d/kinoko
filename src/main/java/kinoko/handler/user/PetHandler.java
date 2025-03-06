@@ -4,12 +4,9 @@ import kinoko.handler.Handler;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
-import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
-import kinoko.provider.QuestProvider;
 import kinoko.provider.item.PetInteraction;
-import kinoko.provider.quest.QuestInfo;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Util;
@@ -17,17 +14,13 @@ import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.drop.Drop;
 import kinoko.world.field.drop.DropLeaveType;
-import kinoko.world.field.drop.DropOwnType;
 import kinoko.world.field.life.MovePath;
 import kinoko.world.item.*;
 import kinoko.world.job.explorer.Beginner;
-import kinoko.world.quest.QuestRecord;
-import kinoko.world.quest.QuestState;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
-import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -259,83 +252,10 @@ public final class PetHandler {
         if (dropResult.isEmpty()) {
             return;
         }
-        final Drop drop = dropResult.get();
 
-        // Verify user can pick up drop
-        if (!drop.canPickUp(user)) {
-            log.error("Tried to pick up drop not owned by user");
-            user.dispose();
-            return;
-        }
-
+        // Pick up drop
         try (var locked = user.acquire()) {
-            // Check if drop can be added to inventory
-            final InventoryManager im = user.getInventoryManager();
-            if (drop.isMoney()) {
-                final long newMoney = ((long) im.getMoney()) + drop.getMoney();
-                if (newMoney > GameConstants.MONEY_MAX) {
-                    user.write(MessagePacket.unavailableForPickUp());
-                    return;
-                }
-            } else {
-                // Inventory full
-                if (!im.canAddItem(drop.getItem())) {
-                    user.write(MessagePacket.cannotGetAnymoreItems());
-                    return;
-                }
-                // Quest item handling
-                if (drop.isQuest()) {
-                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(drop.getQuestId());
-                    if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
-                        user.write(MessagePacket.unavailableForPickUp());
-                        return;
-                    }
-                    final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(drop.getQuestId());
-                    if (questInfoResult.isPresent() && questInfoResult.get().hasRequiredItem(user, drop.getItem().getItemId())) {
-                        user.write(MessagePacket.cannotGetAnymoreItems());
-                        return;
-                    }
-                }
-            }
-
-            // Try removing drop from field
-            if (!field.getDropPool().removeDrop(drop, DropLeaveType.PICKED_UP_BY_PET, user.getCharacterId(), petIndexResult.get(), 0)) {
-                return;
-            }
-
-            // Add drop to inventory
-            if (drop.isMoney()) {
-                int money = drop.getMoney();
-                if (drop.getOwnType() == DropOwnType.PARTYOWN) {
-                    final List<User> partyMembers = user.getField().getUserPool().getPartyMembers(user.getPartyId());
-                    if (!partyMembers.isEmpty()) {
-                        final int split = money / partyMembers.size();
-                        for (User member : partyMembers) {
-                            if (member.getCharacterId() == user.getCharacterId()) {
-                                continue;
-                            }
-                            try (var lockedMember = member.acquire()) {
-                                if (member.getInventoryManager().addMoney(split)) {
-                                    money -= split;
-                                    member.write(WvsContext.statChanged(Stat.MONEY, member.getInventoryManager().getMoney(), false));
-                                    member.write(MessagePacket.pickUpMoney(split, false));
-                                }
-                            }
-                        }
-                    }
-                }
-                if (money <= 0 || !im.addMoney(money)) {
-                    throw new IllegalStateException("Could not add money to inventory");
-                }
-                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
-                user.write(MessagePacket.pickUpMoney(money, false));
-            } else {
-                final Optional<List<InventoryOperation>> addItemResult = im.addItem(drop.getItem());
-                if (addItemResult.isPresent()) {
-                    user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
-                    user.write(MessagePacket.pickUpItem(drop.getItem()));
-                }
-            }
+            field.getDropPool().pickUpDrop(locked, dropResult.get(), DropLeaveType.PICKED_UP_BY_PET, petIndexResult.get());
         }
     }
 
