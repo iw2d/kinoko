@@ -3,6 +3,7 @@ package kinoko.packet.field;
 import kinoko.server.dialog.miniroom.*;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.GameConstants;
 import kinoko.world.item.Item;
 import kinoko.world.user.User;
 import kinoko.world.user.data.MiniGameRecord;
@@ -21,11 +22,11 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket inviteResult(InviteType inviteType, String targetName) {
+    public static OutPacket inviteResult(MiniRoomInviteType inviteType, String targetName) {
         // CMiniRoomBaseDlg::OnInviteResultStatic
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_InviteResult);
         outPacket.encodeByte(inviteType.getValue());
-        if (inviteType != InviteType.NoCharacter) {
+        if (inviteType != MiniRoomInviteType.NoCharacter) {
             outPacket.encodeString(targetName); // sTargetName
         }
         return outPacket;
@@ -47,7 +48,7 @@ public final class MiniRoomPacket {
         outPacket.encodeByte(miniRoom.getType().getValue()); // nMiniRoomType
         // CMiniRoomBaseDlg::OnEnterResultBase
         outPacket.encodeByte(miniRoom.getMaxUsers()); // nMaxUsers
-        outPacket.encodeByte(miniRoom.getPosition(me)); // nMyPosition
+        outPacket.encodeByte(miniRoom.getUserIndex(me)); // nMyPosition
         miniRoom.getUsers().forEach((i, user) -> {
             outPacket.encodeByte(i);
             user.getCharacterData().getAvatarLook().encode(outPacket); // CMiniRoomBaseDlg::DecodeAvatar
@@ -79,7 +80,7 @@ public final class MiniRoomPacket {
         return chat(userIndex, String.format("%s : %s", characterName, message));
     }
 
-    public static OutPacket gameMessage(GameMessageType messageType, String characterName) {
+    public static OutPacket gameMessage(MiniGameMessageType messageType, String characterName) {
         // CMiniRoomBaseDlg::MakeGameMessage
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_Chat);
         outPacket.encodeByte(MiniRoomProtocol.MRP_GameMessage.getValue());
@@ -88,7 +89,7 @@ public final class MiniRoomPacket {
         return outPacket;
     }
 
-    public static OutPacket leave(int userIndex, LeaveType leaveType) {
+    public static OutPacket leave(int userIndex, MiniRoomLeaveType leaveType) {
         // CMiniRoomBaseDlg::OnEnterBase
         final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MRP_Leave);
         outPacket.encodeByte(userIndex);
@@ -198,14 +199,14 @@ public final class MiniRoomPacket {
             return outPacket;
         }
 
-        public static OutPacket gameResult(GameResultType resultType, MiniGameRoom miniGameRoom, int winnerIndex) {
+        public static OutPacket gameResult(MiniGameResultType resultType, MiniGameRoom miniGameRoom, int winnerIndex) {
             final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.MGRP_GameResult);
             outPacket.encodeByte(resultType.getValue());
-            if (resultType != GameResultType.DRAW) {
+            if (resultType != MiniGameResultType.DRAW) {
                 outPacket.encodeByte(winnerIndex); // nWinnerIdx
             }
-            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getOwner()); // apMGR[0]
-            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getGuest()); // apMGR[1]
+            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getUser(0)); // apMGR[0]
+            encodeMiniGameRecord(outPacket, miniGameRoom.getType(), miniGameRoom.getUser(1)); // apMGR[1]
             return outPacket;
         }
 
@@ -253,5 +254,88 @@ public final class MiniRoomPacket {
             final MiniGameRecord miniGameRecord = user != null ? user.getMiniGameRecord() : new MiniGameRecord();
             miniGameRecord.encode(miniRoomType, outPacket);
         }
+    }
+
+
+    public static class PlayerShop {
+        public static OutPacket enterResult(PersonalShop personalShop, User me) {
+            final OutPacket outPacket = MiniRoomPacket.enterResult(personalShop, me);
+            // CPersonalShopDlg::OnEnterResult
+            outPacket.encodeString(personalShop.getTitle());
+            outPacket.encodeByte(GameConstants.PLAYER_SHOP_SLOT_MAX); // nItemMaxCount
+            // CPersonalShopDlg::OnRefresh
+            outPacket.encodeByte(personalShop.getItems().size());
+            for (PlayerShopItem item : personalShop.getItems()) {
+                outPacket.encodeShort(item.getSetCount()); // nNumber
+                outPacket.encodeShort(item.getSetSize()); // nSet
+                outPacket.encodeInt(item.getPrice()); // nPrice
+                item.getItem().encode(outPacket);
+            }
+            return outPacket;
+        }
+
+        public static OutPacket buyResult(PlayerShopBuyResult buyResult) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_BuyResult);
+            outPacket.encodeByte(buyResult.getValue());
+            return outPacket;
+        }
+
+        public static OutPacket refresh(List<PlayerShopItem> items) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_Refresh);
+            outPacket.encodeByte(items.size()); // nItem
+            for (PlayerShopItem item : items) {
+                outPacket.encodeShort(item.getSetCount()); // nNumber
+                outPacket.encodeShort(item.getSetSize()); // nSet
+                outPacket.encodeInt(item.getPrice()); // nPrice
+                item.getItem().encode(outPacket); // GW_ItemSlotBase::Decode
+            }
+            return outPacket;
+        }
+
+        public static OutPacket refreshEntrustedShop(int money, List<PlayerShopItem> items) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_Refresh);
+            outPacket.encodeInt(money); // nMoney
+            outPacket.encodeByte(items.size()); // nItem
+            for (PlayerShopItem item : items) {
+                outPacket.encodeShort(item.getSetSize()); // nNumber
+                outPacket.encodeShort(item.getSetCount()); // nSet
+                outPacket.encodeInt(item.getPrice()); // nPrice
+                item.getItem().encode(outPacket); // GW_ItemSlotBase::Decode
+            }
+            return outPacket;
+        }
+
+        public static OutPacket addSoldItem(int itemIndex, int quantity, String buyerName) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_AddSoldItem);
+            outPacket.encodeByte(itemIndex);
+            outPacket.encodeShort(quantity);
+            outPacket.encodeString(buyerName);
+            return outPacket;
+        }
+
+        public static OutPacket moveItemToInventory(int newSize, int itemIndex) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.PSP_MoveItemToInventory);
+            outPacket.encodeByte(newSize); // nItem
+            outPacket.encodeShort(itemIndex);
+            return outPacket;
+        }
+
+        public static OutPacket arrangeItem(int money) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.ESP_ArrangeItem);
+            outPacket.encodeInt(money); // nMoney
+            return outPacket;
+        }
+
+        public static OutPacket withdrawAllResult(PlayerShopWithdrawResult withdrawResult) {
+            final OutPacket outPacket = MiniRoomPacket.of(MiniRoomProtocol.ESP_WithdrawAllResult);
+            outPacket.encodeByte(withdrawResult.getValue());
+            return outPacket;
+        }
+
+        public static OutPacket withdrawMoneyResult() {
+            return MiniRoomPacket.of(MiniRoomProtocol.ESP_WithdrawMoneyResult);
+        }
+
+        // TODO : DeliverVisitList, DeliverBlackList
     }
 }

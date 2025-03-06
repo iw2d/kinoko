@@ -5,16 +5,11 @@ import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;
 import kinoko.world.user.User;
 
-public final class OmokGameRoom extends MiniGameRoom {
+public final class OmokRoom extends MiniGameRoom {
     private OmokGame omokGame;
 
-    public OmokGameRoom(String title, String password, int gameSpec, User owner) {
-        super(title, password, gameSpec, owner);
-    }
-
-    @Override
-    public MiniRoomType getType() {
-        return MiniRoomType.OmokRoom;
+    public OmokRoom(String title, String password, int gameSpec) {
+        super(title, password, gameSpec);
     }
 
     @Override
@@ -23,38 +18,47 @@ public final class OmokGameRoom extends MiniGameRoom {
     }
 
     @Override
+    public MiniRoomType getType() {
+        return MiniRoomType.OmokRoom;
+    }
+
+    @Override
     public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
         final User user = locked.get();
-        final User other = isOwner(user) ? getGuest() : getOwner();
+        final User other = getOther(user);
         if (other == null) {
-            log.error("Received omok game room action {} without a guest in the room", mrp);
+            log.error("Received mini room action {} without another player in the omok game room", mrp);
             return;
         }
         switch (mrp) {
             case MGRP_RetreatRequest -> {
-                other.write(MiniRoomPacket.MiniGame.retreatRequest());
+                if (isGameOn()) {
+                    other.write(MiniRoomPacket.MiniGame.retreatRequest());
+                }
             }
             case MGRP_RetreatResult -> {
-                if (inPacket.decodeBoolean()) {
-                    final int count = omokGame.retreat();
-                    if (count % 2 != 0) {
-                        setNextTurn(getNextTurn() == 0 ? 1 : 0);
+                if (isGameOn()) {
+                    if (inPacket.decodeBoolean()) {
+                        final int count = omokGame.retreat();
+                        if (count % 2 != 0) {
+                            setNextTurn(getNextTurn() == 0 ? 1 : 0);
+                        }
+                        broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.UserRetreatSuccess, user.getCharacterName()));
+                        broadcastPacket(MiniRoomPacket.MiniGame.retreatResult(true, count, getNextTurn()));
+                    } else {
+                        other.write(MiniRoomPacket.MiniGame.retreatResult(false, -1, -1));
                     }
-                    broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.UserRetreatSuccess, user.getCharacterName()));
-                    broadcastPacket(MiniRoomPacket.MiniGame.retreatResult(true, count, getNextTurn()));
-                } else {
-                    other.write(MiniRoomPacket.MiniGame.retreatResult(false, -1, -1));
                 }
             }
             case MGRP_Start -> {
-                if (!isOpen() || !isReady() || !isOwner(user)) {
+                if (isGameOn() || !isReady() || !isOwner(user)) {
                     log.error("Tried to start omok game without meeting the requirements");
                     return;
                 }
                 omokGame = new OmokGame();
-                setOpen(false);
+                setGameOn(true);
                 updateBalloon();
-                broadcastPacket(MiniRoomPacket.gameMessage(GameMessageType.GameStart, ""));
+                broadcastPacket(MiniRoomPacket.gameMessage(MiniGameMessageType.GameStart, ""));
                 broadcastPacket(MiniRoomPacket.MiniGame.omokStart(getNextTurn() == 0 ? 1 : 0));
             }
             case ORP_PutStoneChecker -> {
@@ -73,12 +77,10 @@ public final class OmokGameRoom extends MiniGameRoom {
                 }
                 // Place stone and check win
                 omokGame.putStone(x, y, type);
-                setNextTurn(getPosition(other));
+                setNextTurn(getUserIndex(other));
                 broadcastPacket(MiniRoomPacket.MiniGame.putStoneChecker(x, y, type));
                 if (omokGame.checkWin(x, y, type)) {
-                    try (var lockedOther = other.acquire()) {
-                        gameResult(GameResultType.NORMAL, user, other);
-                    }
+                    gameSet(MiniGameResultType.NORMAL, user, other);
                 }
             }
             default -> {

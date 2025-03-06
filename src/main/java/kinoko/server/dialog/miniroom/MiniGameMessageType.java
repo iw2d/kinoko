@@ -1,6 +1,6 @@
 package kinoko.server.dialog.miniroom;
 
-public enum GameMessageType {
+public enum MiniGameMessageType {
     // MiniGame
     UserBan(0),
     UserTurn(1),
@@ -18,7 +18,7 @@ public enum GameMessageType {
 
     private final int value;
 
-    GameMessageType(int value) {
+    MiniGameMessageType(int value) {
         this.value = value;
     }
 
