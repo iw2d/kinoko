@@ -13,7 +13,4 @@ public final class MobAttackInfo {
 
     public boolean isAttack;
     public boolean isSkill;
-    public int skillId;
-    public int slv;
-    public int option;
 }

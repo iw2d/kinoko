@@ -56,14 +56,7 @@ public final class MobPacket {
         outPacket.encodeByte(false); // bNotChangeAction
         outPacket.encodeByte(mai.actionMask);
         outPacket.encodeByte(mai.actionAndDir);
-        // CMob::TARGETINFO
-        if (mai.isSkill) {
-            outPacket.encodeByte(mai.skillId);
-            outPacket.encodeByte(mai.slv);
-            outPacket.encodeByte(mai.option);
-        } else {
-            outPacket.encodeInt(mai.targetInfo);
-        }
+        outPacket.encodeInt(mai.targetInfo);
         // aMultiTargetForBall
         outPacket.encodeInt(mai.multiTargetForBall.size());
         for (var target : mai.multiTargetForBall) {

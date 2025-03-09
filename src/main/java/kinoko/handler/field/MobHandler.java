@@ -275,48 +275,46 @@ public final class MobHandler {
                     mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
             ));
         } else if (mai.isSkill) {
-            mai.skillId = mai.targetInfo & 0xFF;
-            mai.slv = (mai.targetInfo >> 8) & 0xFF;
-            mai.option = (mai.targetInfo >> 16) & 0xFFFF;
+            final int skillId = mai.targetInfo & 0xFF;
+            final int slv = (mai.targetInfo >> 8) & 0xFF;
+            final int option = (mai.targetInfo >> 16) & 0xFFFF;
 
-            final Optional<MobSkill> mobSkillResult = mob.getSkill(mai.skillId);
+            final Optional<MobSkill> mobSkillResult = mob.getSkill(skillId);
             if (mobSkillResult.isEmpty()) {
-                log.error("{} : Could not resolve mob skill with ID {}", mob, mai.skillId);
+                log.error("{} : Could not resolve mob skill with ID {}", mob, skillId);
                 return;
             }
             final MobSkill mobSkill = mobSkillResult.get();
 
-            if (mai.skillId != mobSkill.getSkillId() || mai.slv != mobSkill.getSkillLevel()) {
-                log.error("{} : Mismatching skill ID or level for mob skill ({}, {})", mob, mai.skillId, mai.slv);
+            if (skillId != mobSkill.getSkillId() || slv != mobSkill.getSkillLevel()) {
+                log.error("{} : Mismatching skill ID or level for mob skill ({}, {})", mob, skillId, slv);
                 return;
             }
 
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(mai.skillId);
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
-                log.error("{} : Could not resolve skill info for mob skill : {}", mob, mai.skillId);
+                log.error("{} : Could not resolve skill info for mob skill : {}", mob, skillId);
                 return;
             }
             final SkillInfo si = skillInfoResult.get();
-            if (mob.canUseSkill(mobSkill)) {
-                log.debug("{} : Using mob skill ({}, {})", mob, mai.skillId, mai.slv);
-                final Instant now = Instant.now();
-                mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, mai.slv), 0));
-                mob.setNextSkillUse(now.plus(GameConstants.MOB_SKILL_COOLTIME, ChronoUnit.SECONDS));
-                mob.setSkillOnCooltime(mobSkill, now.plus(si.getValue(SkillStat.interval, mai.slv), ChronoUnit.SECONDS));
-                if (!applyMobSkill(mob, mobSkill, si)) {
-                    log.error("{} : Could not apply mob skill effect for skill {}", mob, mobSkill.getSkillType().name());
-                    return;
-                }
-                mob.setAttackCounter(Util.getRandom(
-                        GameConstants.MOB_ATTACK_COOLTIME_MIN,
-                        mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
-                ));
-            } else {
-                log.error("{} : Mob skill ({}, {}) not available", mob, mai.skillId, mai.slv);
-                mai.skillId = 0;
-                mai.slv = 0;
-                mai.option = 0;
+            if (!mob.canUseSkill(mobSkill)) {
+                log.error("{} : Mob skill ({}, {}) not available", mob, skillId, slv);
+                return;
             }
+
+            log.debug("{} : Using mob skill ({}, {})", mob, skillId, slv);
+            final Instant now = Instant.now();
+            mob.setMp(Math.max(mob.getMp() - si.getValue(SkillStat.mpCon, slv), 0));
+            mob.setNextSkillUse(now.plus(GameConstants.MOB_SKILL_COOLTIME, ChronoUnit.SECONDS));
+            mob.setSkillOnCooltime(mobSkill, now.plus(si.getValue(SkillStat.interval, slv), ChronoUnit.SECONDS));
+            if (!applyMobSkill(mob, mobSkill, si)) {
+                log.error("{} : Could not apply mob skill effect for skill {}", mob, mobSkill.getSkillType().name());
+                return;
+            }
+            mob.setAttackCounter(Util.getRandom(
+                    GameConstants.MOB_ATTACK_COOLTIME_MIN,
+                    mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
+            ));
         }
     }
 
