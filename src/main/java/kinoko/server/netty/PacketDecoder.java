@@ -18,6 +18,14 @@ import java.util.List;
 public final class PacketDecoder extends ByteToMessageDecoder {
     public static final short RECV_VERSION = ServerConstants.GAME_VERSION;
     private static final Logger log = LogManager.getLogger(PacketDecoder.class);
+    private byte[] iv;
+    private int length = -1;
+
+
+    public PacketDecoder(byte[] iv)
+    {
+        this.iv = iv;
+    }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
@@ -25,8 +33,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
         if (c == null) {
             return;
         }
-        final byte[] iv = c.getRecvIv();
-        if (c.getStoredLength() < 0) {
+        if (this.length < 0) {
             if (in.readableBytes() < 4) {
                 return;
             }
@@ -39,16 +46,15 @@ public final class PacketDecoder extends ByteToMessageDecoder {
                 ServerExecutor.submitService(c::close);
                 return;
             }
-            final int length = ((header[0] ^ header[2]) & 0xFF) | (((header[1] ^ header[3]) << 8) & 0xFF00);
-            c.setStoredLength(length);
-        } else if (in.readableBytes() >= c.getStoredLength()) {
-            final byte[] data = new byte[c.getStoredLength()];
+            this.length = ((header[0] ^ header[2]) & 0xFF) | (((header[1] ^ header[3]) << 8) & 0xFF00);
+        } else if (in.readableBytes() >= length) {
+            final byte[] data = new byte[length];
             in.readBytes(data);
-            c.setStoredLength(-1);
+            length = -1;
 
             MapleCrypto.crypt(data, iv);
             ShandaCrypto.decrypt(data);
-            c.setRecvIv(IGCipher.innoHash(iv));
+            this.iv = IGCipher.innoHash(iv);
 
             final InPacket inPacket = new NioBufferInPacket(data);
             out.add(inPacket);
