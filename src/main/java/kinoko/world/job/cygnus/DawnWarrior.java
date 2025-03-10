@@ -48,6 +48,9 @@ public final class DawnWarrior extends SkillProcessor {
             case FINAL_ATTACK:
                 user.setTemporaryStat(CharacterTemporaryStat.SoulMasterFinal, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
+            case SOUL_CHARGE:
+                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+                return;
         }
         log.error("Unhandled skill {}", skill.skillId);
     }
