@@ -148,8 +148,15 @@ public final class SkillInfo {
 
     public int getMpCon(User user, int slv) {
         // CSkillInfo::CheckConsumeForActiveSkill
-        final int incMpCon = 100 + user.getSkillStatValue(SkillConstants.getAmplificationSkill(user.getJob()), SkillStat.x);
-        int mpCon = getValue(SkillStat.mpCon, slv) * incMpCon / 100;
+        int mpCon = getValue(SkillStat.mpCon, slv);
+        // Check element amplification
+        final int amplificationSkill = SkillConstants.getAmplificationSkill(user.getJob());
+        if (amplificationSkill != 0) {
+            final int incMpCon = user.getSkillStatValue(amplificationSkill, SkillStat.x);
+            if (incMpCon > 0) {
+                mpCon = incMpCon * mpCon / 100;
+            }
+        }
         // Check CTS affecting mpCon
         final SecondaryStat ss = user.getSecondaryStat();
         if (ss.hasOption(CharacterTemporaryStat.Infinity)) {
