@@ -27,7 +27,7 @@ public final class Consume extends ScriptHandler {
     @Script("blackBag")
     public static void blackBag(ScriptManager sm) {
         // Black Bag (2430032)
-        sm.spawnMob(9300388, MobAppearType.NORMAL, sm.getUser().getX(), sm.getUser().getY(), false);
+        sm.spawnMob(9300388, MobAppearType.REGEN, sm.getUser().getX(), sm.getUser().getY(), false);
         sm.removeItem(2430032);
     }
 }

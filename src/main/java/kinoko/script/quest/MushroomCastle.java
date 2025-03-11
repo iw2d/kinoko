@@ -348,7 +348,7 @@ public final class MushroomCastle extends ScriptHandler {
         // Mushroom Castle : Entrance to Wedding Hall (106021508)
         // Mushroom Castle : Entrance to Wedding Hall (106021509)
         final int variant = Integer.parseInt(sm.getInstanceVariable("pepeVariant"));
-        sm.spawnMob(3300005 + variant, MobAppearType.NORMAL, 100, -100, true);
+        sm.spawnMob(3300005 + variant, MobAppearType.REGEN, 100, -100, true);
     }
 
     @Script("out_pepeking")
