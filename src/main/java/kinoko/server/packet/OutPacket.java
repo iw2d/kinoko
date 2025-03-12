@@ -63,7 +63,7 @@ public interface OutPacket {
     byte[] getData();
 
     static OutPacket of() {
-        return new NioBufferOutPacket();
+        return new NettyOutPacket();
     }
 
     static OutPacket of(byte[] data) {

@@ -1,51 +1,46 @@
 package kinoko.server.packet;
 
+import io.netty.buffer.ByteBuf;
 import kinoko.util.Util;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
-public final class NioBufferInPacket implements InPacket {
-    private static final Logger log = LogManager.getLogger(InPacket.class);
-    private final ByteBuffer buffer;
+public final class NettyInPacket implements InPacket {
+    private final ByteBuf buffer;
 
-    public NioBufferInPacket(byte[] data) {
-        this.buffer = ByteBuffer.wrap(data);
-        this.buffer.order(ByteOrder.LITTLE_ENDIAN);
+    public NettyInPacket(ByteBuf buffer) {
+        this.buffer = buffer;
     }
 
     @Override
     public byte peekByte() {
-        return buffer.get(buffer.position());
+        return buffer.getByte(buffer.readerIndex());
     }
 
     @Override
     public byte decodeByte() {
-        return buffer.get();
+        return buffer.readByte();
     }
 
     @Override
     public short decodeShort() {
-        return buffer.getShort();
+        return buffer.readShortLE();
     }
 
     @Override
     public int decodeInt() {
-        return buffer.getInt();
+        return buffer.readIntLE();
     }
 
     @Override
     public long decodeLong() {
-        return buffer.getLong();
+        return buffer.readLongLE();
     }
 
     @Override
     public byte[] decodeArray(int length) {
         final byte[] array = new byte[length];
-        buffer.get(array);
+        buffer.readBytes(array);
         return array;
     }
 
@@ -62,23 +57,25 @@ public final class NioBufferInPacket implements InPacket {
 
     @Override
     public byte[] getData() {
-        return buffer.array();
+        final byte[] data = new byte[buffer.capacity()];
+        buffer.getBytes(0, data);
+        return data;
     }
 
     @Override
     public int getRemaining() {
-        return buffer.remaining();
+        return buffer.readableBytes();
     }
 
     @Override
     public String toString() {
-        final byte[] data = new byte[buffer.limit() - 2];
-        buffer.get(2, data);
+        final byte[] data = new byte[buffer.capacity() - 2];
+        buffer.getBytes(2, data);
         return Util.readableByteArray(data);
     }
 
     @Override
     public void release() {
-        // noop
+        buffer.release();
     }
 }

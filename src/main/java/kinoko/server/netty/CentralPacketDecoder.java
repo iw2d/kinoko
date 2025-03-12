@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import kinoko.server.packet.InPacket;
-import kinoko.server.packet.NioBufferInPacket;
+import kinoko.server.packet.NettyInPacket;
 
 import java.util.List;
 
@@ -22,11 +22,12 @@ public final class CentralPacketDecoder extends ByteToMessageDecoder {
             final int length = in.readIntLE();
             c.setStoredLength(length);
         } else if (in.readableBytes() >= c.getStoredLength()) {
-            final byte[] data = new byte[c.getStoredLength()];
-            in.readBytes(data);
+            final int length = c.getStoredLength();
+            final ByteBuf buffer = in.retainedSlice(in.readerIndex(), length);
+            in.readerIndex(in.readerIndex() + length);
             c.setStoredLength(-1);
 
-            final InPacket inPacket = new NioBufferInPacket(data);
+            final InPacket inPacket = new NettyInPacket(buffer);
             out.add(inPacket);
         }
     }
