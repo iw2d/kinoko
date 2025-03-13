@@ -1,5 +1,7 @@
 package kinoko.util.crypto;
 
+import io.netty.buffer.ByteBuf;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
@@ -54,6 +56,33 @@ public final class MapleCrypto {
                     }
                 }
                 data[i] ^= block[(i - c) % BLOCK_SIZE];
+            }
+            c += b;
+            a -= b;
+            b = 0x5B4;
+        }
+    }
+
+    public static void crypt(ByteBuf buffer, byte[] iv, int length) {
+        final byte[] cipher = new byte[BLOCK_SIZE];
+        int a = length;
+        int b = 0x5B0;
+        int c = 0;
+        while (a > 0) {
+            final byte[] block = expandIv(iv);
+            if (a < b) {
+                b = a;
+            }
+            for (int i = c; i < (c + b); i++) {
+                if ((i - c) % BLOCK_SIZE == 0) {
+                    try {
+                        MapleCrypto.cipher.doFinal(block, 0, BLOCK_SIZE, cipher);
+                        System.arraycopy(cipher, 0, block, 0, BLOCK_SIZE);
+                    } catch (IllegalBlockSizeException | BadPaddingException | ShortBufferException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                buffer.setByte(i, buffer.getByte(i) ^ block[(i - c) % BLOCK_SIZE]);
             }
             c += b;
             a -= b;

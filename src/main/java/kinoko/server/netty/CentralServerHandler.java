@@ -58,27 +58,31 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final CentralHeader header = CentralHeader.getByValue(op);
         log.log(Level.TRACE, "[CentralServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         ServerExecutor.submitService(() -> {
-            switch (header) {
-                case InitializeResult -> handleInitializeResult(remoteServerNode, inPacket);
-                case ShutdownResult -> handleShutdownResult(remoteServerNode, inPacket);
-                case OnlineRequest -> handleOnlineRequest(remoteServerNode, inPacket);
-                case MigrateRequest -> handleMigrateRequest(remoteServerNode, inPacket);
-                case TransferRequest -> handleTransferRequest(remoteServerNode, inPacket);
-                case UserConnect -> handleUserConnect(remoteServerNode, inPacket);
-                case UserUpdate -> handleUserUpdate(remoteServerNode, inPacket);
-                case UserDisconnect -> handleUserDisconnect(remoteServerNode, inPacket);
-                case UserPacketRequest -> handleUserPacketRequest(remoteServerNode, inPacket);
-                case UserPacketReceive -> handleUserPacketReceive(remoteServerNode, inPacket);
-                case UserPacketBroadcast -> handleUserPacketBroadcast(remoteServerNode, inPacket);
-                case UserQueryRequest -> handleUserQueryRequest(remoteServerNode, inPacket);
-                case WorldSpeakerRequest -> handleWorldSpeakerRequest(remoteServerNode, inPacket);
-                case ServerPacketBroadcast -> handleServerPacketBroadcast(remoteServerNode, inPacket);
-                case MessengerRequest -> handleMessengerRequest(remoteServerNode, inPacket);
-                case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
-                case GuildRequest -> handleGuildRequest(remoteServerNode, inPacket);
-                case BoardRequest -> handleBoardRequest(remoteServerNode, inPacket);
-                case null -> log.error("Central Server received an unknown opcode : {}", op);
-                default -> log.error("Central Server received an unhandled header : {}", header);
+            try {
+                switch (header) {
+                    case InitializeResult -> handleInitializeResult(remoteServerNode, inPacket);
+                    case ShutdownResult -> handleShutdownResult(remoteServerNode, inPacket);
+                    case OnlineRequest -> handleOnlineRequest(remoteServerNode, inPacket);
+                    case MigrateRequest -> handleMigrateRequest(remoteServerNode, inPacket);
+                    case TransferRequest -> handleTransferRequest(remoteServerNode, inPacket);
+                    case UserConnect -> handleUserConnect(remoteServerNode, inPacket);
+                    case UserUpdate -> handleUserUpdate(remoteServerNode, inPacket);
+                    case UserDisconnect -> handleUserDisconnect(remoteServerNode, inPacket);
+                    case UserPacketRequest -> handleUserPacketRequest(remoteServerNode, inPacket);
+                    case UserPacketReceive -> handleUserPacketReceive(remoteServerNode, inPacket);
+                    case UserPacketBroadcast -> handleUserPacketBroadcast(remoteServerNode, inPacket);
+                    case UserQueryRequest -> handleUserQueryRequest(remoteServerNode, inPacket);
+                    case WorldSpeakerRequest -> handleWorldSpeakerRequest(remoteServerNode, inPacket);
+                    case ServerPacketBroadcast -> handleServerPacketBroadcast(remoteServerNode, inPacket);
+                    case MessengerRequest -> handleMessengerRequest(remoteServerNode, inPacket);
+                    case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
+                    case GuildRequest -> handleGuildRequest(remoteServerNode, inPacket);
+                    case BoardRequest -> handleBoardRequest(remoteServerNode, inPacket);
+                    case null -> log.error("Central Server received an unknown opcode : {}", op);
+                    default -> log.error("Central Server received an unhandled header : {}", header);
+                }
+            } finally {
+                inPacket.release();
             }
         });
     }
