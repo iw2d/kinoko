@@ -63,7 +63,7 @@ public final class MobHandler {
             }
 
             final short mobCtrlSn = inPacket.decodeShort(); // nMobCtrlSN
-            final byte actionMask = inPacket.decodeByte(); // bDirLeft | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
+            final byte actionMask = inPacket.decodeByte(); // bNextAttackPossible | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
             final byte actionAndDir = inPacket.decodeByte(); // nActionAndDir
             final int targetInfo = inPacket.decodeInt(); // CMob::TARGETINFO { short x, short y } || { short nSkillIDandLev, short nDelay }
 
@@ -106,7 +106,7 @@ public final class MobHandler {
             handleMobAttack(mob, mai);
 
             // Update client
-            final boolean nextAttackPossible = mob.getAndDecrementAttackCounter() <= 0 && Util.succeedProp(GameConstants.MOB_ATTACK_CHANCE);
+            final boolean nextAttackPossible = (mai.actionMask & 0x1) != 0;
             final Optional<MobSkill> nextSkillResult = nextAttackPossible ? mob.getNextSkill() : Optional.empty();
             user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, nextSkillResult.orElse(null)));
             field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
@@ -270,10 +270,6 @@ public final class MobHandler {
             final MobAttack mobAttack = mobAttackResult.get();
             log.debug("{} : Using mob attack index {}", mob, attackIndex);
             mob.setMp(Math.max(mob.getMp() - mobAttack.getConMp(), 0));
-            mob.setAttackCounter(Util.getRandom(
-                    GameConstants.MOB_ATTACK_COOLTIME_MIN,
-                    mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
-            ));
         } else if (mai.isSkill) {
             final int skillId = mai.targetInfo & 0xFF;
             final int slv = (mai.targetInfo >> 8) & 0xFF;
@@ -309,12 +305,7 @@ public final class MobHandler {
             mob.setSkillOnCooltime(mobSkill, now.plus(si.getValue(SkillStat.interval, slv), ChronoUnit.SECONDS));
             if (!applyMobSkill(mob, mobSkill, si)) {
                 log.error("{} : Could not apply mob skill effect for skill {}", mob, mobSkill.getSkillType().name());
-                return;
             }
-            mob.setAttackCounter(Util.getRandom(
-                    GameConstants.MOB_ATTACK_COOLTIME_MIN,
-                    mob.isBoss() ? GameConstants.MOB_ATTACK_COOLTIME_MAX_BOSS : GameConstants.MOB_ATTACK_COOLTIME_MAX
-            ));
         }
     }
 

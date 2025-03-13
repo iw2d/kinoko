@@ -91,10 +91,6 @@ public final class GameConstants {
 
     // MOB CONSTANTS ---------------------------------------------------------------------------------------------------
 
-    public static final int MOB_ATTACK_CHANCE = 75;
-    public static final int MOB_ATTACK_COOLTIME_MIN = 3;
-    public static final int MOB_ATTACK_COOLTIME_MAX = 13;
-    public static final int MOB_ATTACK_COOLTIME_MAX_BOSS = 7;
     public static final int MOB_SKILL_COOLTIME = 3;
     public static final int MOB_RECOVER_TIME = 5;
     public static final int MOB_RESPAWN_TIME = 7;

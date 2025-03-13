@@ -39,7 +39,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiPredicate;
@@ -47,7 +46,6 @@ import java.util.function.BiPredicate;
 public final class Mob extends Life implements ControlledObject, Encodable, Lockable<Mob> {
     private final Lock lock = new ReentrantLock();
     private final MobStat mobStat = new MobStat();
-    private final AtomicInteger attackCounter = new AtomicInteger(0);
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
     private final MobTemplate template;
@@ -148,14 +146,6 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     public void setSkillOnCooltime(MobSkill mobSkill, Instant nextAvailableTime) {
         skillCooltimes.put(mobSkill, nextAvailableTime);
-    }
-
-    public int getAndDecrementAttackCounter() {
-        return attackCounter.getAndDecrement();
-    }
-
-    public void setAttackCounter(int value) {
-        attackCounter.set(value);
     }
 
     public boolean canUseSkill(MobSkill mobSkill) {
