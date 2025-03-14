@@ -25,6 +25,7 @@ public final class ItemConstants {
     public static final int MATCH_CARDS = 4080100;
 
     public static final int MIRACLE_CUBE = 5062000;
+    public static final int REGULAR_STORE_PERMIT = 5140000;
     public static final int WHEEL_OF_DESTINY = 5510000;
 
 

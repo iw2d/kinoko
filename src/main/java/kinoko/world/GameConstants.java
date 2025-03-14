@@ -17,6 +17,7 @@ public final class GameConstants {
     public static final int INVENTORY_SLOT_MAX = 96;
     public static final int TRUNK_SLOT_MAX = 48;
     public static final int LOCKER_SLOT_MAX = 500; // avoid reaching packet size limit
+    public static final int PLAYER_SHOP_SLOT_MAX = 16;
 
     public static final int DEFAULT_ITEM_SLOT_MAX = 100; // CItemInfo::GetBundleItemInfoData
     public static final int MONEY_MAX = Integer.MAX_VALUE;
@@ -170,6 +171,23 @@ public final class GameConstants {
             return Math.round(money * 0.982f); // 1.80%
         } else if (money >= 100_000) {
             return Math.round(money * 0.992f); // 0.80%
+        }
+        return money;
+    }
+
+    public static int getPersonalShopTax(int money) {
+        if (money >= 100_000_000) {
+            return Math.round(money * 0.97f); // 3.00%
+        } else if (money >= 25_000_000) {
+            return Math.round(money * 0.975f); // 2.50%
+        } else if (money >= 10_000_000) {
+            return Math.round(money * 0.98f); // 2.00%
+        } else if (money >= 5_000_000) {
+            return Math.round(money * 0.975f); // 1.50%
+        } else if (money >= 1_000_000) {
+            return Math.round(money * 0.991f); // 0.90%
+        } else if (money >= 100_000) {
+            return Math.round(money * 0.996f); // 0.40%
         }
         return money;
     }
