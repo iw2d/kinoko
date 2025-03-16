@@ -465,7 +465,7 @@ public final class ResistanceQuest extends ScriptHandler {
         sm.setJob(Job.BATTLE_MAGE_4);
         sm.addSkill(32120000, 0, 10);
         sm.addSkill(32120001, 0, 10);
-        sm.addSkill(33120009, 0, 10);
+        sm.addSkill(32120009, 0, 10);
         sm.addSkill(32121002, 0, 10);
         sm.addSkill(32121003, 0, 10);
         sm.addSkill(32121004, 0, 10);
