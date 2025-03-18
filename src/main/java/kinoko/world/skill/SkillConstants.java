@@ -271,6 +271,8 @@ public final class SkillConstants {
             // CUserLocal::DoActiveSkill
             case Warrior.RAGE:
             case Warrior.COMBAT_ORDERS:
+            case Warrior.IRON_WILL:
+            case Warrior.HYPER_BODY:
             case Magician.MEDITATION_FP:
             case Magician.MEDITATION_IL:
             case Magician.BLESS:
