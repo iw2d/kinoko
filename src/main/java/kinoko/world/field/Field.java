@@ -236,6 +236,7 @@ public final class Field {
         }
         userPool.updateUsers(now);
         mobPool.updateMobs(now);
+        miniRoomPool.updateMiniRooms(now);
         affectedAreaPool.updateAffectedAreas(now);
         // Handle maple tv
         if (!mapleTvQueue.isEmpty()) {

@@ -3,6 +3,7 @@ package kinoko.packet.field;
 import kinoko.provider.map.FieldType;
 import kinoko.script.common.ScriptMessage;
 import kinoko.server.cashshop.CashItemResultType;
+import kinoko.server.dialog.miniroom.EntrustedShop;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.shop.ShopResultType;
 import kinoko.server.header.OutHeader;
@@ -98,6 +99,50 @@ public final class FieldPacket {
         }
         return outPacket;
     }
+
+
+    // CEmployeePool::OnPacket -----------------------------------------------------------------------------------------
+
+    public static OutPacket employeeEnterField(EntrustedShop shop) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.EmployeeEnterField);
+        outPacket.encodeInt(shop.getEmployerId()); // dwEmployerID
+        outPacket.encodeInt(shop.getTemplateId()); // dwTemplateID
+        // CEmployee::Init
+        outPacket.encodeShort(shop.getX());
+        outPacket.encodeShort(shop.getY());
+        outPacket.encodeShort(shop.getFoothold());
+        outPacket.encodeString(shop.getEmployerName()); // %s's Hired Merchant
+        // CEmployee::SetBalloon
+        outPacket.encodeByte(shop.getType().getValue()); // nMiniRoomType
+        outPacket.encodeInt(shop.getId()); // dwMiniRoomSN
+        outPacket.encodeString(shop.getTitle());
+        outPacket.encodeByte(0); // nGameKind
+        outPacket.encodeByte(shop.getUsers().size()); // nCurUsers
+        outPacket.encodeByte(shop.getMaxUsers()); // nMaxUsers
+        outPacket.encodeByte(shop.isGameOn()); // bGameOn
+        return outPacket;
+    }
+
+    public static OutPacket employeeLeaveField(int employeeId) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.EmployeeLeaveField);
+        outPacket.encodeInt(employeeId);
+        return outPacket;
+    }
+
+    public static OutPacket employeeMiniRoomBalloon(EntrustedShop shop) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.EmployeeLeaveField);
+        outPacket.encodeInt(shop.getEmployerId());
+        // CEmployee::SetBalloon
+        outPacket.encodeByte(shop.getType().getValue()); // nMiniRoomType
+        outPacket.encodeInt(shop.getId()); // dwMiniRoomSN
+        outPacket.encodeString(shop.getTitle());
+        outPacket.encodeByte(0); // nGameKind
+        outPacket.encodeByte(shop.getUsers().size()); // nCurUsers
+        outPacket.encodeByte(shop.getMaxUsers()); // nMaxUsers
+        outPacket.encodeByte(shop.isGameOn()); // bGameOn
+        return outPacket;
+    }
+
 
     // CDropPool::OnPacket ---------------------------------------------------------------------------------------------
 

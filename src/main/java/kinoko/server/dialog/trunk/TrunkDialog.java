@@ -47,6 +47,10 @@ public final class TrunkDialog implements Dialog {
                 case GetItem -> {
                     final InventoryType inventoryType = InventoryType.getByValue(inPacket.decodeByte());
                     final int position = inPacket.decodeByte(); // CTrunkDlg::ITEM->nIdx
+                    if (inventoryType == null || inventoryType == InventoryType.EQUIPPED) {
+                        user.write(TrunkPacket.of(TrunkResultType.GetUnknown));
+                        return;
+                    }
                     // Check if user has enough money
                     final InventoryManager im = user.getInventoryManager();
                     if (im.getMoney() < getTrunkGet()) {

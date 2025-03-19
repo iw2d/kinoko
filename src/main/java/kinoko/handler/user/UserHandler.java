@@ -1323,16 +1323,30 @@ public final class UserHandler {
                 miniGameRoom.handlePacket(locked, mrp, inPacket);
                 return;
             }
+            // PersonalShop Protocol
+            if (mrp.getValue() >= MiniRoomProtocol.PSP_PutItem.getValue() && mrp.getValue() <= MiniRoomProtocol.PSP_DeleteBlackList.getValue()) {
+                if (!(user.getDialog() instanceof PersonalShop personalShop)) {
+                    log.error("Received personal shop action {} outside a personal shop", mrp);
+                    return;
+                }
+                personalShop.handlePacket(locked, mrp, inPacket);
+                return;
+            }
             // Common MiniRoom Protocol
+            final Field field = user.getField();
             switch (mrp) {
                 case MRP_Create -> {
+                    final int type = inPacket.decodeByte();
+                    final MiniRoomType mrt = MiniRoomType.getByValue(type);
                     if (user.getDialog() != null) {
                         log.error("Tried to create mini room with another dialog open");
                         user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                         return;
                     }
-                    final int type = inPacket.decodeByte();
-                    final MiniRoomType mrt = MiniRoomType.getByValue(type);
+                    if (!field.getMiniRoomPool().canAddMiniRoom(mrt, user.getX(), user.getY())) {
+                        user.write(MiniRoomPacket.enterResult(EnterResultType.ExistMiniRoom)); // You can't establish a miniroom right here.
+                        return;
+                    }
                     switch (mrt) {
                         case OmokRoom, MemoryGameRoom -> {
                             // CWvsContext::SendCreateMiniGameRequest
@@ -1356,19 +1370,25 @@ public final class UserHandler {
                             }
                             // Create mini game room
                             final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OmokRoom ?
-                                    new OmokGameRoom(title, password, gameSpec, user) :
-                                    new MemoryGameRoom(title, password, gameSpec, user);
-                            user.getField().getMiniRoomPool().addMiniRoom(miniGameRoom);
-                            user.setDialog(miniGameRoom);
-                            user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
-                            miniGameRoom.updateBalloon();
+                                    new OmokRoom(title, password, gameSpec) :
+                                    new MemoryGameRoom(title, password, gameSpec);
+                            try (var lockedRoom = miniGameRoom.acquire()) {
+                                miniGameRoom.addUser(0, user);
+                                field.getMiniRoomPool().addMiniRoom(miniGameRoom);
+                                user.setDialog(miniGameRoom);
+                                user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
+                                miniGameRoom.updateBalloon();
+                            }
                         }
                         case TradingRoom -> {
                             // CField::SendInviteTradingRoomMsg
-                            final TradingRoom tradingRoom = new TradingRoom(user);
-                            user.getField().getMiniRoomPool().addMiniRoom(tradingRoom);
-                            user.setDialog(tradingRoom);
-                            user.write(MiniRoomPacket.enterResult(tradingRoom, user));
+                            final TradingRoom tradingRoom = new TradingRoom();
+                            try (var lockedRoom = tradingRoom.acquire()) {
+                                tradingRoom.addUser(0, user);
+                                field.getMiniRoomPool().addMiniRoom(tradingRoom);
+                                user.setDialog(tradingRoom);
+                                user.write(MiniRoomPacket.enterResult(tradingRoom, user));
+                            }
                         }
                         case PersonalShop, EntrustedShop -> {
                             // CWvsContext::SendOpenShopRequest
@@ -1376,7 +1396,31 @@ public final class UserHandler {
                             inPacket.decodeByte(); // 0
                             final int position = inPacket.decodeShort(); // nPOS
                             final int itemId = inPacket.decodeInt(); // nItemID
-                            // TODO
+                            // Check field
+                            if (!field.getMapInfo().isShop()) {
+                                log.error("Tried to create player shop outside of the free market");
+                                return;
+                            }
+                            // Check for required item
+                            if (mrt == MiniRoomType.PersonalShop) {
+                                if (itemId != ItemConstants.REGULAR_STORE_PERMIT || !user.getInventoryManager().hasItem(itemId, 1)) {
+                                    log.error("Tried to create personal shop without the required item");
+                                    return;
+                                }
+                                // Create personal shop
+                                final PersonalShop personalShop = new PersonalShop(title);
+                                try (var lockedRoom = personalShop.acquire()) {
+                                    personalShop.addUser(0, user);
+                                    field.getMiniRoomPool().addMiniRoom(personalShop);
+                                    user.setDialog(personalShop);
+                                    user.write(MiniRoomPacket.PlayerShop.enterResult(personalShop, user));
+                                }
+                            } else {
+                                if (itemId / 10000 != 503 || !user.getInventoryManager().hasItem(itemId, 1)) {
+                                    log.error("Tried to create entrusted shop without the required item");
+                                }
+                                // TODO: entrusted shop handling
+                            }
                         }
                         case null -> {
                             log.error("Tried to create unknown mini room type {}", type);
@@ -1388,91 +1432,112 @@ public final class UserHandler {
                 }
                 case MRP_Invite -> {
                     // CField::SendInviteTradingRoomMsg
+                    final int targetId = inPacket.decodeInt();
                     if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
                         log.error("Tried to invite user without a trading room");
                         user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                         return;
                     }
-                    final int targetId = inPacket.decodeInt();
-                    final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
-                    if (targetResult.isEmpty()) {
-                        user.write(MiniRoomPacket.inviteResult(InviteType.NoCharacter, null)); // Unable to find the character.
-                        tradingRoom.cancelTrade(locked, LeaveType.UserRequest);
-                        return;
-                    }
-                    try (var lockedTarget = targetResult.get().acquire()) {
-                        final User target = lockedTarget.get();
-                        if (target.getDialog() != null) {
-                            user.write(MiniRoomPacket.inviteResult(InviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
-                            tradingRoom.cancelTrade(locked, LeaveType.UserRequest);
+                    try (var lockedRoom = tradingRoom.acquire()) {
+                        final Optional<User> targetResult = field.getUserPool().getById(targetId);
+                        if (targetResult.isEmpty()) {
+                            user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.NoCharacter, null)); // Unable to find the character.
+                            tradingRoom.cancelTrade(locked, MiniRoomLeaveType.UserRequest);
                             return;
                         }
-                        target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TradingRoom, user.getCharacterName(), tradingRoom.getId()));
+                        try (var lockedTarget = targetResult.get().acquire()) {
+                            final User target = lockedTarget.get();
+                            if (target.getDialog() != null) {
+                                user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
+                                tradingRoom.cancelTrade(locked, MiniRoomLeaveType.UserRequest);
+                                return;
+                            }
+                            target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TradingRoom, user.getCharacterName(), tradingRoom.getId()));
+                        }
                     }
                 }
                 case MRP_InviteResult -> {
                     // CMiniRoomBaseDlg::SendInviteResult
                     final int miniRoomId = inPacket.decodeInt(); // dwSN
                     final int type = inPacket.decodeByte(); // nErrCode
-                    final InviteType resultType = InviteType.getByValue(type);
+                    final MiniRoomInviteType resultType = MiniRoomInviteType.getByValue(type);
                     if (resultType == null) {
                         log.error("Unknown invite result type {}", type);
                         return;
                     }
                     // Resolve trading room
-                    final Optional<MiniRoom> miniRoomResult = user.getField().getMiniRoomPool().getById(miniRoomId);
+                    final Optional<MiniRoom> miniRoomResult = field.getMiniRoomPool().getById(miniRoomId);
                     if (miniRoomResult.isEmpty() || !(miniRoomResult.get() instanceof TradingRoom tradingRoom)) {
                         return;
                     }
                     // Cancel trade
-                    try (var lockedInviter = tradingRoom.getInviter().acquire()) {
-                        final User inviter = lockedInviter.get();
-                        inviter.write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
-                        tradingRoom.cancelTrade(lockedInviter, LeaveType.UserRequest);
+                    try (var lockedRoom = tradingRoom.acquire()) {
+                        try (var lockedOwner = tradingRoom.getUser(0).acquire()) {
+                            lockedOwner.get().write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
+                            tradingRoom.cancelTrade(lockedOwner, MiniRoomLeaveType.UserRequest);
+                        }
                     }
                 }
                 case MRP_Enter -> {
                     // CMiniRoomBaseDlg::SendInviteResult
                     // CUserLocal::HandleLButtonDblClk
+                    final int miniRoomId = inPacket.decodeInt(); // dwSN
+                    final boolean isPrivate = inPacket.decodeBoolean();
+                    final String password = isPrivate ? inPacket.decodeString() : null;
+                    inPacket.decodeByte(); // 0
                     if (user.getDialog() != null) {
                         log.error("Tried to enter mini room with another dialog open");
                         user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                         return;
                     }
-                    final int miniRoomId = inPacket.decodeInt(); // dwSN
-                    final boolean isPrivate = inPacket.decodeBoolean();
-                    final String password = isPrivate ? inPacket.decodeString() : null;
-                    inPacket.decodeByte(); // 0
                     // Resolve mini room
-                    final Optional<MiniRoom> miniRoomResult = user.getField().getMiniRoomPool().getById(miniRoomId);
+                    final Optional<MiniRoom> miniRoomResult = field.getMiniRoomPool().getById(miniRoomId);
                     if (miniRoomResult.isEmpty()) {
                         user.write(MiniRoomPacket.enterResult(EnterResultType.NoRoom)); // The room is already closed.
                         return;
                     }
-                    final MiniRoom miniRoom = miniRoomResult.get();
-                    // Check password
-                    if (!miniRoom.checkPassword(password)) {
-                        user.write(MiniRoomPacket.enterResult(EnterResultType.InvalidPassword)); // The password is incorrect.
-                        return;
-                    }
-                    // Handle for each mini room type
-                    if (miniRoom instanceof TradingRoom tradingRoom) {
-                        if (!tradingRoom.addUser(user)) {
+                    try (var lockedRoom = miniRoomResult.get().acquire()) {
+                        final MiniRoom miniRoom = lockedRoom.get();
+                        // Check password
+                        if (!miniRoom.checkPassword(password)) {
+                            user.write(MiniRoomPacket.enterResult(EnterResultType.InvalidPassword)); // The password is incorrect.
+                            return;
+                        }
+                        // Handle for each mini room type
+                        if (miniRoom instanceof MiniGameRoom miniGameRoom) {
+                            if (miniGameRoom.getUser(1) != null) {
+                                user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
+                                return;
+                            }
+                            miniGameRoom.broadcastPacket(MiniRoomPacket.MiniGame.enter(1, user, miniGameRoom.getType()));
+                            miniGameRoom.addUser(1, user);
+                            miniGameRoom.updateBalloon();
+                            user.setDialog(miniGameRoom);
+                            user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
+                        } else if (miniRoom instanceof TradingRoom tradingRoom) {
+                            if (tradingRoom.getUser(1) != null) {
+                                user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
+                                return;
+                            }
+                            tradingRoom.broadcastPacket(MiniRoomPacket.enterBase(1, user));
+                            tradingRoom.addUser(1, user);
+                            user.setDialog(tradingRoom);
+                            user.write(MiniRoomPacket.enterResult(tradingRoom, user));
+                        } else if (miniRoom instanceof PersonalShop personalShop) {
+                            final int userIndex = personalShop.getOpenUserIndex();
+                            if (!personalShop.isOpen() || userIndex < 0) {
+                                user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
+                                return;
+                            }
+                            personalShop.broadcastPacket(MiniRoomPacket.enterBase(userIndex, user));
+                            personalShop.addUser(userIndex, user);
+                            personalShop.updateBalloon();
+                            user.setDialog(personalShop);
+                            user.write(MiniRoomPacket.PlayerShop.enterResult(personalShop, user));
+                        } else {
+                            log.error("Tried to enter mini room with unhandled type : {}", miniRoom.getType());
                             user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
-                            return;
                         }
-                        user.setDialog(tradingRoom);
-                        user.write(MiniRoomPacket.enterResult(tradingRoom, user));
-                    } else if (miniRoom instanceof MiniGameRoom miniGameRoom) {
-                        if (!miniGameRoom.addUser(user)) {
-                            user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
-                            return;
-                        }
-                        user.setDialog(miniGameRoom);
-                        user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
-                    } else {
-                        log.error("Tried to enter mini room with unhandled type : {}", miniRoom.getType());
-                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                     }
                 }
                 case MRP_Chat -> {
@@ -1480,27 +1545,44 @@ public final class UserHandler {
                     inPacket.decodeInt(); // update_time
                     final String message = inPacket.decodeString(); // strChatMsg
                     if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
-                        log.error("Received mini room chat without a mini room");
+                        log.error("Received {} without a mini room", mrp);
                         return;
                     }
-                    miniRoom.broadcastPacket(MiniRoomPacket.chat(miniRoom.getPosition(user), user.getCharacterName(), message));
+                    try (var lockedRoom = miniRoom.acquire()) {
+                        final int userIndex = miniRoom.getUserIndex(user);
+                        if (userIndex < 0) {
+                            log.error("Received {} with user index", userIndex);
+                            return;
+                        }
+                        miniRoom.broadcastPacket(MiniRoomPacket.chat(userIndex, user.getCharacterName(), message));
+                    }
                 }
                 case MRP_Leave -> {
                     if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
-                        log.error("Tried to leave from a mini room without a dialog open");
+                        log.error("Received {} without a mini room", mrp);
                         return;
                     }
-                    if (miniRoom instanceof TradingRoom tradingRoom) {
-                        tradingRoom.cancelTradeUnsafe(user);
-                    } else if (miniRoom instanceof MiniGameRoom miniGameRoom) {
-                        miniGameRoom.leaveUnsafe(user);
-                    } else {
-                        log.error("Tried to leave from a mini room with unhandled type {}", miniRoom.getType());
-                        user.setDialog(null);
+                    try (var lockedRoom = miniRoom.acquire()) {
+                        final int userIndex = miniRoom.getUserIndex(user);
+                        if (userIndex < 0) {
+                            log.error("Received {} with user index", userIndex);
+                            return;
+                        }
+                        miniRoom.leaveUnsafe(user);
                     }
                 }
                 case MRP_Balloon -> {
-                    // ignore?
+                    final boolean open = inPacket.decodeBoolean();
+                    if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
+                        log.error("Received {} without a mini room", mrp);
+                        return;
+                    }
+                    if (miniRoom instanceof PersonalShop personalShop) {
+                        personalShop.setOpen(open);
+                        personalShop.updateBalloon();
+                    } else {
+                        log.error("Received {} for unhandled mini room type {}", mrp, miniRoom.getType());
+                    }
                 }
                 default -> {
                     log.error("Unhandled mini room action {}", mrp);

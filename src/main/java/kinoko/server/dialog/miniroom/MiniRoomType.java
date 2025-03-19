@@ -20,6 +20,13 @@ public enum MiniRoomType {
         return value;
     }
 
+    public final boolean isBalloon() {
+        return switch (this) {
+            case OmokRoom, MemoryGameRoom, PersonalShop, EntrustedShop -> true;
+            default -> false;
+        };
+    }
+
     public static MiniRoomType getByValue(int value) {
         for (MiniRoomType type : values()) {
             if (type.getValue() == value) {

@@ -1,6 +1,6 @@
 package kinoko.server.dialog.miniroom;
 
-public enum GameResultType {
+public enum MiniGameResultType {
     // GAME
     NORMAL(0),
     DRAW(1),
@@ -8,7 +8,7 @@ public enum GameResultType {
 
     private final int value;
 
-    GameResultType(int value) {
+    MiniGameResultType(int value) {
         this.value = value;
     }
 

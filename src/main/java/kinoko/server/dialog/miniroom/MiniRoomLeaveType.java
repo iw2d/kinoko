@@ -1,6 +1,6 @@
 package kinoko.server.dialog.miniroom;
 
-public enum LeaveType {
+public enum MiniRoomLeaveType {
     // MRLeave
     UserRequest(0),
     WrongPosition(1),
@@ -31,7 +31,7 @@ public enum LeaveType {
 
     private final int value;
 
-    LeaveType(int value) {
+    MiniRoomLeaveType(int value) {
         this.value = value;
     }
 
