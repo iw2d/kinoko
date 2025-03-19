@@ -140,7 +140,7 @@ public final class PersonalShop extends MiniRoom {
                 }
                 // Resolve price
                 final long totalPrice = ((long) item.getPrice() * setCount);
-                if (totalPrice <= 0 || totalPrice > Integer.MAX_VALUE || !user.getInventoryManager().canAddMoney((int) totalPrice)) {
+                if (totalPrice <= 0 || totalPrice > Integer.MAX_VALUE || !user.getInventoryManager().canAddMoney((int) -totalPrice)) {
                     user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoMoney)); // You do not have enough mesos.
                     user.dispose();
                     return;
