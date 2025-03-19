@@ -323,7 +323,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 }
                 final SkillRecord sr = new SkillRecord(si.getSkillId());
                 sr.setSkillLevel(0);
-                sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
+                sr.setMasterLevel(si.getMasterLevel());
                 sm.addSkill(sr);
                 skillRecords.add(sr);
             }
@@ -395,6 +395,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         final SkillRecord sr = skillRecordResult.get();
         sr.setSkillLevel(0);
         sr.setMasterLevel(0);
+        user.getSkillManager().removeSkill(sr.getSkillId());
         user.updatePassiveSkillData();
         user.validateStat();
         user.write(WvsContext.changeSkillRecordResult(sr, false));

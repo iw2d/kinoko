@@ -743,7 +743,7 @@ public final class AdminCommands {
                     }
                     final SkillRecord sr = new SkillRecord(si.getSkillId());
                     sr.setSkillLevel(0);
-                    sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
+                    sr.setMasterLevel(si.getMasterLevel());
                     sm.addSkill(sr);
                     skillRecords.add(sr);
                 }
