@@ -23,6 +23,7 @@ import kinoko.world.job.Job;
 import kinoko.world.job.RaceSelect;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
@@ -288,11 +289,14 @@ public final class LoginHandler {
 
         // Initialize Skills
         final SkillManager sm = new SkillManager();
-        for (SkillInfo skillInfo : SkillProvider.getSkillsForJob(job)) {
-            if (skillInfo.isInvisible()) {
+        for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+            if (si.isInvisible()) {
                 continue;
             }
-            sm.addSkill(skillInfo.createRecord());
+            final SkillRecord sr = new SkillRecord(si.getSkillId());
+            sr.setSkillLevel(0);
+            sr.setMasterLevel(si.getMaxLevel());
+            sm.addSkill(sr);
         }
         characterData.setSkillManager(sm);
 

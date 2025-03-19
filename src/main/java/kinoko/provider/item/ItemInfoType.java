@@ -97,6 +97,8 @@ public enum ItemInfoType {
     reqJob,
     reqLevel,
     reqSkillLevel,
+    masterLevel,
+    skill,
     reqQuestOnProgress,
     enchantCategory,
     tuc,

@@ -8,13 +8,16 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.MobProvider;
+import kinoko.provider.SkillProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.item.MobSummonInfo;
 import kinoko.provider.map.FieldOption;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobTemplate;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.script.common.ScriptDispatcher;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -25,12 +28,17 @@ import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.item.*;
+import kinoko.world.job.JobConstants;
+import kinoko.world.skill.SkillConstants;
+import kinoko.world.skill.SkillManager;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -263,6 +271,12 @@ public abstract class ItemHandler {
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
 
+        if (!ItemConstants.isScriptRunItem(itemId)) {
+            log.error("Received UserScriptItemUseRequest with an invalid script run item {}", itemId);
+            user.dispose();
+            return;
+        }
+
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
@@ -292,6 +306,90 @@ public abstract class ItemHandler {
         }
         final int speakerId = itemInfo.getSpec(ItemSpecType.npc, 9010000); // Maple Administrator
         ScriptDispatcher.startItemScript(user, scriptName, speakerId);
+    }
+
+    @Handler(InHeader.UserSkillLearnItemUseRequest)
+    public static void handleUserSkillLearnItemUseRequest(User user, InPacket inPacket) {
+        inPacket.decodeInt(); // update_time
+        final int position = inPacket.decodeShort(); // nPOS
+        final int itemId = inPacket.decodeInt();
+
+        final boolean isMasteryBook = ItemConstants.isMasteryBookItem(itemId);
+        if (!ItemConstants.isSkillLearnItem(itemId)) {
+            log.error("Received UserSkillLearnItemUseRequest with an invalid skill learn item {}", itemId);
+            user.dispose();
+            return;
+        }
+
+        // Resolve item
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item ID : {}", itemId);
+            user.dispose();
+            return;
+        }
+        final ItemInfo itemInfo = itemInfoResult.get();
+        final int masterLevel = itemInfo.getInfo(ItemInfoType.masterLevel, 0);
+        final int reqSkillLevel = itemInfo.getInfo(ItemInfoType.reqSkillLevel, 0);
+        final List<Integer> skill = itemInfo.getSkill();
+        if (masterLevel <= 0 || skill.isEmpty()) {
+            log.error("Invalid skill learn item {}", itemId);
+            user.dispose();
+            return;
+        }
+
+        try (var locked = user.acquire()) {
+            // Check requirements
+            final SkillManager sm = locked.get().getSkillManager();
+            final Optional<Integer> skillIdResult = skill.stream()
+                    .filter((skillId) -> {
+                        if (reqSkillLevel > 0) {
+                            final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
+                            if (skillRecordResult.isEmpty()) {
+                                return false;
+                            }
+                            final SkillRecord skillRecord = skillRecordResult.get();
+                            return skillRecord.getSkillLevel() >= reqSkillLevel && skillRecord.getMasterLevel() < masterLevel;
+                        } else {
+                            final int skillRoot = SkillConstants.getSkillRoot(skillId);
+                            return JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot) && sm.getSkill(skillId).isEmpty();
+                        }
+                    })
+                    .findAny();
+            if (skillIdResult.isEmpty()) {
+                user.write(WvsContext.skillLearnItemResult(user.getCharacterId(), isMasteryBook, false, false, true));
+                return;
+            }
+            final int skillId = skillIdResult.get();
+
+            // Resolve skill
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+            if (skillInfoResult.isEmpty()) {
+                log.error("Could not resolve skill info for skill ID : {}", skillId);
+                user.write(WvsContext.skillLearnItemResult(user.getCharacterId(), isMasteryBook, false, false, true));
+                return;
+            }
+
+            // Consume item
+            final Optional<InventoryOperation> consumeItemResult = consumeItem(locked, position, itemId);
+            if (consumeItemResult.isEmpty()) {
+                user.dispose();
+                return;
+            }
+            user.write(WvsContext.inventoryOperation(consumeItemResult.get(), false));
+
+            final boolean success = Util.succeedProp(itemInfo.getInfo(ItemInfoType.success));
+            if (success) {
+                // Update skill record
+                final SkillRecord skillRecord = new SkillRecord(skillId);
+                skillRecord.setSkillLevel(user.getSkillLevel(skillId));
+                skillRecord.setMasterLevel(itemInfo.getInfo(ItemInfoType.masterLevel));
+                sm.addSkill(skillRecord);
+                user.write(WvsContext.changeSkillRecordResult(skillRecord, false));
+            }
+            user.write(WvsContext.skillLearnItemResult(user.getCharacterId(), isMasteryBook, true, success, true));
+            user.getField().broadcastPacket(WvsContext.skillLearnItemResult(user.getCharacterId(), isMasteryBook, true, success, false), user);
+        }
     }
 
     @Handler(InHeader.UserPortalScrollUseRequest)

@@ -36,7 +36,7 @@ public final class QuestSkillAct implements QuestAct {
             if (skillInfoResult.isEmpty()) {
                 return false;
             }
-            final SkillRecord skillRecord = skillInfoResult.get().createRecord();
+            final SkillRecord skillRecord = new SkillRecord(skillInfoResult.get().getSkillId());
             skillRecord.setSkillLevel(qsd.getSkillLevel());
             skillRecord.setMasterLevel(qsd.getMasterLevel());
             user.getSkillManager().addSkill(skillRecord);

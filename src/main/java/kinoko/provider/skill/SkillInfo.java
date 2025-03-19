@@ -172,13 +172,6 @@ public final class SkillInfo {
         return mpCon;
     }
 
-    public SkillRecord createRecord() {
-        final SkillRecord skillRecord = new SkillRecord(getSkillId());
-        skillRecord.setSkillLevel(0);
-        skillRecord.setMasterLevel(getMaxLevel());
-        return skillRecord;
-    }
-
     @Override
     public String toString() {
         return "SkillInfo{" +

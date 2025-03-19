@@ -10,9 +10,7 @@ import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.job.JobConstants;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ItemInfo {
     private final int itemId;
@@ -66,6 +64,15 @@ public final class ItemInfo {
                 rb.getX(),
                 rb.getY()
         );
+    }
+
+    public List<Integer> getSkill() {
+        final List<Integer> skill = new ArrayList<>();
+        final WzListProperty skillList = (WzListProperty) itemInfos.get(ItemInfoType.skill);
+        for (var entry : skillList.getItems().entrySet()) {
+            skill.add(WzProvider.getInteger(entry.getValue()));
+        }
+        return skill;
     }
 
     public boolean isCash() {

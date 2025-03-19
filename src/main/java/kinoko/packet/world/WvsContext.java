@@ -125,6 +125,18 @@ public final class WvsContext {
         return outPacket;
     }
 
+    public static OutPacket skillLearnItemResult(int characterId, boolean masteryBook, boolean used, boolean success, boolean exclRequest) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.SkillLearnItemResult);
+        outPacket.encodeByte(exclRequest); // bOnExclRequest
+        outPacket.encodeInt(characterId); // dwCharacterId
+        outPacket.encodeByte(masteryBook); // bIsMasteryBook
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeByte(used); // bUsed
+        outPacket.encodeByte(success); // bSucceed
+        return outPacket;
+    }
+
     public static OutPacket gatherItemResult(InventoryType inventoryType) {
         final OutPacket outPacket = OutPacket.of(OutHeader.GatherItemResult);
         outPacket.encodeByte(0); // ignored

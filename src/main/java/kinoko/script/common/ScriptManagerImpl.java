@@ -321,7 +321,7 @@ public final class ScriptManagerImpl implements ScriptManager {
                 if (si.isInvisible()) {
                     continue;
                 }
-                final SkillRecord sr = si.createRecord();
+                final SkillRecord sr = new SkillRecord(si.getSkillId());
                 sr.setSkillLevel(0);
                 sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
                 sm.addSkill(sr);
@@ -375,7 +375,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         }
         // Create skill record
         final SkillInfo si = skillInfoResult.get();
-        final SkillRecord sr = si.createRecord();
+        final SkillRecord sr = new SkillRecord(si.getSkillId());
         sr.setSkillLevel(Math.min(skillLevel, si.getMaxLevel()));
         sr.setMasterLevel(masterLevel);
         // Add skill

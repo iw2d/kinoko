@@ -739,7 +739,7 @@ public final class AdminCommands {
                     if (si.isInvisible()) {
                         continue;
                     }
-                    final SkillRecord sr = si.createRecord();
+                    final SkillRecord sr = new SkillRecord(si.getSkillId());
                     sr.setSkillLevel(0);
                     sr.setMasterLevel(SkillConstants.isSkillNeedMasterLevel(si.getSkillId()) ? 0 : si.getMaxLevel());
                     sm.addSkill(sr);
@@ -775,7 +775,7 @@ public final class AdminCommands {
             return;
         }
         final SkillInfo si = skillInfoResult.get();
-        final SkillRecord skillRecord = si.createRecord();
+        final SkillRecord skillRecord = new SkillRecord(si.getSkillId());
         skillRecord.setSkillLevel(Math.min(slv, si.getMaxLevel()));
         skillRecord.setMasterLevel(si.getMaxLevel());
         try (var locked = user.acquire()) {
@@ -1013,7 +1013,7 @@ public final class AdminCommands {
                 }
                 final Job job = Job.getById(skillRoot);
                 for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
-                    final SkillRecord skillRecord = si.createRecord();
+                    final SkillRecord skillRecord = new SkillRecord(si.getSkillId());
                     skillRecord.setSkillLevel(si.getMaxLevel());
                     skillRecord.setMasterLevel(si.getMaxLevel());
                     sm.addSkill(skillRecord);

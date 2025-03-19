@@ -134,6 +134,17 @@ public final class ItemConstants {
         return itemId / 10000 == 243 || itemId == 3994225;
     }
 
+    public static boolean isSkillLearnItem(int itemId) {
+        if (itemId / 10000 == 228) {
+            return true;
+        }
+        return isMasteryBookItem(itemId);
+    }
+
+    public static boolean isMasteryBookItem(int itemId) {
+        return itemId / 10000 == 229 || itemId / 10000 == 562;
+    }
+
     public static boolean isRecoverSlotItem(int itemId) {
         return itemId / 100 == 20490; // clean slate scrolls
     }
