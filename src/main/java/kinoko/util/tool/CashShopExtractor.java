@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class CashShopExtractor {
+final class CashShopExtractor {
     public static final Path CASH_DATA = Path.of(ServerConfig.DATA_DIRECTORY, "cash");
     private static final List<Integer> disabledItems = List.of(
             5062000, // Miracle Cube

@@ -8,7 +8,7 @@ import kinoko.world.field.Field;
 import java.util.Map;
 import java.util.Optional;
 
-public class GoldenTemple extends ScriptHandler {
+public final class GoldenTemple extends ScriptHandler {
     public static final int GOLDEN_TICKET_ID = 4001431;
     public static final int PREMIUM_TICKET_ID = 4001432; // TODO : probably some QR value to track cooltime
     public static final int TIME_LIMIT = 1800; // Map/Map/Map%d/%d/info/timeLimit

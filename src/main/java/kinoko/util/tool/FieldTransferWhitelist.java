@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-public final class FieldTransferWhitelist {
+final class FieldTransferWhitelist {
     public static final Path MAP_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Map.wz");
     public static final Path EFFECT_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Effect.wz");
 
