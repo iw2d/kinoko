@@ -35,6 +35,10 @@ public abstract class ScriptHandler {
         return String.format("#m%d#", mapId);
     }
 
+    protected static String mobName(int mobId) {
+        return String.format("#o%d#", mobId);
+    }
+
     protected static String npcName(int npcId) {
         return String.format("#p%d#", npcId);
     }
