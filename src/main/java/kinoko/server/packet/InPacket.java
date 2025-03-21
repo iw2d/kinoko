@@ -24,4 +24,6 @@ public interface InPacket {
     byte[] getData();
 
     int getRemaining();
+
+    void release();
 }

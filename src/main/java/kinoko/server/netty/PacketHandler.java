@@ -55,6 +55,8 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
             } catch (IllegalAccessException | InvocationTargetException e) {
                 log.error("Exception caught while invoking packet handler", e);
                 e.printStackTrace();
+            } finally {
+                inPacket.release();
             }
         });
     }

@@ -1,5 +1,7 @@
 package kinoko.util.crypto;
 
+import io.netty.buffer.ByteBuf;
+
 public final class ShandaCrypto {
     private static byte rotateLeft(byte x, int y) {
         final int tmp = (x & 0xFF) << (y % 8);
@@ -45,6 +47,27 @@ public final class ShandaCrypto {
             for (int j = 0; j < data.length; j++) {
                 final byte c = rotateLeft((byte) ~(data[j] - 0x48), a);
                 data[j] = rotateRight((byte) ((b ^ c) - a), 3);
+                b = c;
+                a -= 1;
+            }
+        }
+    }
+
+    public static void decrypt(ByteBuf buffer, int length) {
+        for (int i = 0; i < 3; i++) {
+            int a = length;
+            byte b = 0;
+            for (int j = length - 1; j >= 0; j--) {
+                final byte c = (byte) (rotateLeft(buffer.getByte(j), 3) ^ 0x13);
+                buffer.setByte(j, rotateRight((byte) ((b ^ c) - a), 4));
+                b = c;
+                a -= 1;
+            }
+            a = length;
+            b = 0;
+            for (int j = 0; j < length; j++) {
+                final byte c = rotateLeft((byte) ~(buffer.getByte(j) - 0x48), a);
+                buffer.setByte(j, rotateRight((byte) ((b ^ c) - a), 3));
                 b = c;
                 a -= 1;
             }

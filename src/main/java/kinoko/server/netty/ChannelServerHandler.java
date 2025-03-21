@@ -40,33 +40,37 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         final CentralHeader header = CentralHeader.getByValue(op);
         log.log(Level.TRACE, "[ChannelServerNode] | {}({}) {}", header, Util.opToString(op), inPacket);
         ServerExecutor.submitService(() -> {
-            switch (header) {
-                case InitializeRequest -> {
-                    ctx.channel().writeAndFlush(CentralPacket.initializeResult(channelServerNode.getChannelId(), ServerConstants.SERVER_HOST, channelServerNode.getChannelPort()));
-                }
-                case ShutdownRequest -> {
-                    try {
-                        channelServerNode.shutdown();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+            try {
+                switch (header) {
+                    case InitializeRequest -> {
+                        ctx.channel().writeAndFlush(CentralPacket.initializeResult(channelServerNode.getChannelId(), ServerConstants.SERVER_HOST, channelServerNode.getChannelPort()));
+                    }
+                    case ShutdownRequest -> {
+                        try {
+                            channelServerNode.shutdown();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    case MigrateResult -> handleMigrateResult(inPacket);
+                    case TransferResult -> handleTransferResult(inPacket);
+                    case UserPacketReceive -> handleUserPacketReceive(inPacket);
+                    case UserPacketBroadcast -> handleUserPacketBroadcast(inPacket);
+                    case UserQueryResult -> handleUserQueryResult(inPacket);
+                    case WorldSpeakerRequest -> handleWorldSpeakerRequest(inPacket);
+                    case ServerPacketBroadcast -> handleServerPacketBroadcast(inPacket);
+                    case MessengerResult -> handleMessengerResult(inPacket);
+                    case PartyResult -> handlePartyResult(inPacket);
+                    case GuildResult -> handleGuildResult(inPacket);
+                    case null -> {
+                        log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);
+                    }
+                    default -> {
+                        log.error("Central client {} received an unhandled header : {}", channelServerNode.getChannelId() + 1, header);
                     }
                 }
-                case MigrateResult -> handleMigrateResult(inPacket);
-                case TransferResult -> handleTransferResult(inPacket);
-                case UserPacketReceive -> handleUserPacketReceive(inPacket);
-                case UserPacketBroadcast -> handleUserPacketBroadcast(inPacket);
-                case UserQueryResult -> handleUserQueryResult(inPacket);
-                case WorldSpeakerRequest -> handleWorldSpeakerRequest(inPacket);
-                case ServerPacketBroadcast -> handleServerPacketBroadcast(inPacket);
-                case MessengerResult -> handleMessengerResult(inPacket);
-                case PartyResult -> handlePartyResult(inPacket);
-                case GuildResult -> handleGuildResult(inPacket);
-                case null -> {
-                    log.error("Central client {} received an unknown opcode : {}", channelServerNode.getChannelId() + 1, op);
-                }
-                default -> {
-                    log.error("Central client {} received an unhandled header : {}", channelServerNode.getChannelId() + 1, header);
-                }
+            } finally {
+                inPacket.release();
             }
         });
     }
