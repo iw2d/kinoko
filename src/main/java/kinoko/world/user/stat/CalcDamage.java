@@ -1,6 +1,7 @@
 package kinoko.world.user.stat;
 
 import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.mob.DamagedAttribute;
 import kinoko.provider.skill.ElementAttribute;
@@ -557,7 +558,16 @@ public final class CalcDamage {
             return 0;
         }
         final Optional<Item> bulletItemResult = user.getInventoryManager().getConsumeInventory().getItems().values().stream()
-                .filter((item) -> ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), item.getItemId()) && item.getQuantity() >= 1)
+                .filter((item) -> {
+                    if (!ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), item.getItemId())) {
+                        return false;
+                    }
+                    final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+                    if (itemInfoResult.isEmpty() || itemInfoResult.get().getReqLevel() > user.getLevel()) {
+                        return false;
+                    }
+                    return item.getQuantity() >= 1;
+                })
                 .findFirst();
         return bulletItemResult.map(Item::getItemId).orElse(0);
     }

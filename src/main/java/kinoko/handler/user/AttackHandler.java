@@ -384,6 +384,11 @@ public final class AttackHandler {
                 log.error("Tried to attack with incorrect bullet {} using weapon {}", bulletItem != null ? bulletItem.getItemId() : 0, weaponItem != null ? weaponItem.getItemId() : 0);
                 return;
             }
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(bulletItem.getItemId());
+            if (itemInfoResult.isEmpty() || itemInfoResult.get().getReqLevel() > user.getLevel()) {
+                log.error("Tried to attack with bullet {} without meeting level requirements", bulletItem.getItemId());
+                return;
+            }
             attack.bulletItemId = bulletItem.getItemId();
             // Consume bullet for basic attack
             if (attack.skillId == 0) {
@@ -393,7 +398,7 @@ public final class AttackHandler {
                     return;
                 }
                 bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
-                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), false));
             }
         }
 
@@ -441,7 +446,7 @@ public final class AttackHandler {
                     log.error("Tried to use skill {} without required item", itemCon);
                     return;
                 }
-                user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+                user.write(WvsContext.inventoryOperation(removeResult.get(), false));
             }
             final int bulletCon = si.getBulletCon(attack.slv);
             if (bulletCon > 0) {
@@ -462,13 +467,13 @@ public final class AttackHandler {
                         final int slotMax = ItemProvider.getItemInfo(bulletItem.getItemId()).map(ItemInfo::getSlotMax).orElse(0);
                         if (bulletItem.getQuantity() < slotMax) {
                             bulletItem.setQuantity((short) (bulletItem.getQuantity() + 1));
-                            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), false));
                         }
                         user.write(UserLocal.requestExJablin());
                     } else {
                         // Consume bullets
                         bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCount));
-                        user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), true));
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, attack.bulletPosition, bulletItem.getQuantity()), false));
                     }
                 }
             }

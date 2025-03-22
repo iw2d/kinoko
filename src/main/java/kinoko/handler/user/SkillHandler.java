@@ -5,7 +5,9 @@ import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -333,7 +335,7 @@ public final class SkillHandler {
                 log.error("Tried to use skill {} without required item", itemCon);
                 return;
             }
-            user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+            user.write(WvsContext.inventoryOperation(removeResult.get(), false));
         }
         final int bulletCon = si.getBulletCon(skill.slv);
         if (bulletCon > 0) {
@@ -344,7 +346,17 @@ public final class SkillHandler {
                 return;
             }
             final Optional<Map.Entry<Integer, Item>> bulletEntryResult = user.getInventoryManager().getConsumeInventory().getItems().entrySet().stream()
-                    .filter((entry) -> ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), entry.getValue().getItemId()) && entry.getValue().getQuantity() >= bulletCon)
+                    .filter((entry) -> {
+                        final Item bulletItem = entry.getValue();
+                        if (!ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
+                            return false;
+                        }
+                        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(bulletItem.getItemId());
+                        if (itemInfoResult.isEmpty() || itemInfoResult.get().getReqLevel() > user.getLevel()) {
+                            return false;
+                        }
+                        return bulletItem.getQuantity() >= bulletCon;
+                    })
                     .findFirst();
             if (bulletEntryResult.isEmpty()) {
                 log.error("Tried to use skill {} without enough bullets", skill.skillId);
@@ -354,7 +366,7 @@ public final class SkillHandler {
             final Item bulletItem = bulletEntryResult.get().getValue();
             // Consume bullets
             bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCon));
-            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, position, bulletItem.getQuantity()), true));
+            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, position, bulletItem.getQuantity()), false));
         }
 
         // Consume hp/mp
