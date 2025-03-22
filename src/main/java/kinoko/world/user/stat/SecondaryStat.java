@@ -353,6 +353,22 @@ public final class SecondaryStat {
             }
         }
 
+        // Combo Ability - description says Weapon/Magic ATT, but should be PDD, MDD
+        final int comboAbilityBuff = ss.getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption;
+        if (comboAbilityBuff != 0) {
+            final int comboSkillId = SkillConstants.getComboAbilitySkill(bs.getJob());
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(comboSkillId);
+            if (skillInfoResult.isPresent()) {
+                final SkillInfo si = skillInfoResult.get();
+                final int slv = SkillManager.getSkillLevel(ss, sm, comboSkillId);
+                if (slv > 0) {
+                    final int stacks = Math.max(comboAbilityBuff / 10, si.getValue(SkillStat.x, slv));
+                    pdd += stacks * si.getValue(SkillStat.z, slv);
+                    mdd += stacks * si.getValue(SkillStat.z, slv);
+                }
+            }
+        }
+
         // Jaguar Rider
         if (SkillConstants.WILD_HUNTER_JAGUARS.contains(getRidingVehicle())) {
             final int slv = SkillManager.getSkillLevel(ss, sm, WildHunter.JAGUAR_RIDER);
