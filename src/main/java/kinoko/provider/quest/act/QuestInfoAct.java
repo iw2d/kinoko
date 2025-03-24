@@ -1,11 +1,9 @@
 package kinoko.provider.quest.act;
 
-import kinoko.packet.world.MessagePacket;
 import kinoko.util.Locked;
-import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
 
-public class QuestInfoAct implements QuestAct {
+public final class QuestInfoAct implements QuestAct {
     private final int questId;
     private final String info;
 
@@ -21,9 +19,7 @@ public class QuestInfoAct implements QuestAct {
 
     @Override
     public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
-        final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, info);
-        user.write(MessagePacket.questRecord(qr));
+        locked.get().getQuestManager().setQuestInfoEx(questId, info);
         return true;
     }
 }
