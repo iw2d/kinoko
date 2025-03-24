@@ -168,22 +168,16 @@ public final class MigrationHandler {
             // Resolve user field
             final int fieldId = user.getCharacterStat().getPosMap();
             final byte portalId = user.getCharacterStat().getPortal();
-            final Field targetField;
             final Optional<Field> fieldResult = channelServerNode.getFieldById(fieldId);
-            if (fieldResult.isPresent()) {
-                targetField = fieldResult.get();
-            } else {
+            final Field targetField = fieldResult.orElseGet(() -> {
                 log.error("Could not retrieve field ID : {} for character ID : {}, moving to {}", fieldId, user.getCharacterId(), 100000000);
-                targetField = channelServerNode.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
-            }
-            final PortalInfo targetPortal;
+                return channelServerNode.getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
+            });
             final Optional<PortalInfo> portalResult = targetField.getPortalById(portalId);
-            if (portalResult.isPresent()) {
-                targetPortal = portalResult.get();
-            } else {
-                log.error("Could not resolve default portal : {} on field ID : {}", 0, targetField.getFieldId());
-                targetPortal = targetField.getPortalById(0).orElse(PortalInfo.EMPTY);
-            }
+            final PortalInfo targetPortal = portalResult.orElseGet(() -> {
+                log.error("Could not resolve portal : {} on field ID : {}", portalId, targetField.getFieldId());
+                return targetField.getPortalById(0).orElse(PortalInfo.EMPTY);
+            });
 
             // Add user to field
             ServerExecutor.submit(targetField, () -> {

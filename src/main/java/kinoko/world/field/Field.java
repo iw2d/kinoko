@@ -23,6 +23,8 @@ import kinoko.world.field.mob.MobLeaveType;
 import kinoko.world.field.npc.Npc;
 import kinoko.world.field.reactor.Reactor;
 import kinoko.world.user.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -40,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public final class Field {
+    private static final Logger log = LogManager.getLogger(Field.class);
     private static final AtomicInteger fieldCounter = new AtomicInteger(1);
     private final AtomicInteger fieldObjectCounter = new AtomicInteger(1);
     private final AtomicBoolean firstEnterScript = new AtomicBoolean(false);
@@ -262,8 +265,12 @@ public final class Field {
             final Instance instance = instanceFieldStorage.getInstance();
             if (now.isAfter(instance.getExpireTime())) {
                 // Remove instance
-                final Field returnField = instance.getChannelServerNode().getFieldById(instance.getReturnMap()).orElseThrow();
-                final PortalInfo defaultPortal = returnField.getPortalById(0).orElseThrow();
+                final Optional<Field> returnFieldResult = instance.getChannelServerNode().getFieldById(instance.getReturnMap());
+                final Field returnField = returnFieldResult.orElseGet(() -> {
+                    log.error("Could not resolve instance return field {}, moving to {}", instance.getReturnMap(), 100000000);
+                    return instance.getChannelServerNode().getFieldById(100000000).orElseThrow(() -> new IllegalStateException("Could not resolve Field from ChannelServer"));
+                });
+                final PortalInfo defaultPortal = returnField.getPortalById(0).orElse(PortalInfo.EMPTY);
                 userPool.forEach((user) -> {
                     try (var locked = user.acquire()) {
                         final PortalInfo portalInfo = returnField.getRandomStartPoint().orElse(defaultPortal);
