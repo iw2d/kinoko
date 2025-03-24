@@ -155,7 +155,9 @@ public final class QuestInfo {
             }
         }
         // Add quest record and return
-        return Optional.of(locked.get().getQuestManager().forceStartQuest(questId));
+        final QuestManager qm = locked.get().getQuestManager();
+        final Optional<QuestRecord> qrResult = qm.getQuestRecord(questId);
+        return Optional.of(qm.setQuestInfoEx(questId, qrResult.map(QuestRecord::getValue).orElse(null))); // handle info act
     }
 
     public boolean canCompleteQuest(Locked<User> locked) {
@@ -341,6 +343,9 @@ public final class QuestInfo {
                         throw new ProviderError("Failed to resolve quest act sp list");
                     }
                     questActs.add(QuestSpAct.from(spList));
+                }
+                case "info" -> {
+                    questActs.add(new QuestInfoAct(questId, WzProvider.getString(entry.getValue())));
                 }
                 case "skill" -> {
                     if (!(entry.getValue() instanceof WzListProperty skillList)) {
