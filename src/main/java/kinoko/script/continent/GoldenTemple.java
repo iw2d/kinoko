@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public final class GoldenTemple extends ScriptHandler {
     public static final int GOLDEN_TICKET_ID = 4001431;
-    public static final int PREMIUM_TICKET_ID = 4001432; // TODO : probably some QR value to track cooltime
+    public static final int PREMIUM_TICKET_ID = 4001432;
     public static final int TIME_LIMIT = 1800; // Map/Map/Map%d/%d/info/timeLimit
 
     @Script("outGoldenTemple")
@@ -44,7 +44,7 @@ public final class GoldenTemple extends ScriptHandler {
             }
             sm.warpInstance(950100100 + (dungeon * 100), "out00", 950010000, TIME_LIMIT);
         } else if (answer == 1) {
-            sm.sayOk("This is a forest where the monkeys outside of the Golden Temple live. \r\n\r\n1. Benefits of the Monkey Temple \r\n#b- Yields more EXP than other monsters of the same level \r\n- Drops various scrolls#k \r\n\r\n2. How to obtain the Golden Ticket required to enter \r\n- Mr. Yoo's quest can be completed once per day \r\n- Freely enter once per hour if you possess a Premium Golden Ticket.");
+            sm.sayOk("This is a forest where the monkeys outside of the Golden Temple live. \r\n\r\n1. Benefits of the Monkey Temple \r\n#b- Yields more EXP than other monsters of the same level \r\n- Drops various scrolls#k \r\n\r\n2. How to obtain the Golden Ticket required to enter \r\n- Mr. Yoo's quest can be completed once per day \r\n- Freely enter as desired for an hour if you possess a Premium Golden Ticket.");
         }
     }
 
@@ -69,7 +69,7 @@ public final class GoldenTemple extends ScriptHandler {
             }
             sm.warpInstance(950100500 + (dungeon * 100), "out00", 950010000, TIME_LIMIT);
         } else if (answer == 1) {
-            sm.sayOk("This is a Cave where the Goblins outside of the Golden Temple live. \r\n\r\n1. Benefits of the Goblin Cave \r\n#b- Yields more EXP than other monsters of the same level \r\n- Drops Sunburst#k \r\n\r\n2. How to obtain the Golden Ticket required to enter \r\n- Mr. Yoo's quest can be completed once per day \r\n- Freely enter once per hour if you possess a Premium Golden Ticket.");
+            sm.sayOk("This is a Cave where the Goblins outside of the Golden Temple live. \r\n\r\n1. Benefits of the Goblin Cave \r\n#b- Yields more EXP than other monsters of the same level \r\n- Drops Sunburst#k \r\n\r\n2. How to obtain the Golden Ticket required to enter \r\n- Mr. Yoo's quest can be completed once per day \r\n- Freely enter as desired for an hour if you possess a Premium Golden Ticket.");
         }
     }
 
@@ -79,6 +79,7 @@ public final class GoldenTemple extends ScriptHandler {
         //   in00 (1328, 531)
         // Golden Temple : Golden Temple (950100000)
         //   in00 (-827, 532)
+        sm.setSpeakerId(9000080);
         MD_monkey(sm);
     }
 
@@ -88,6 +89,7 @@ public final class GoldenTemple extends ScriptHandler {
         //   in01 (-532, 531)
         // Golden Temple : Golden Temple (950100000)
         //   in01 (977, 532)
+        sm.setSpeakerId(9000075);
         MD_goblin(sm);
     }
 }

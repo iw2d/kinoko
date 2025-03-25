@@ -158,6 +158,14 @@ public class Effect implements Encodable {
         return effect;
     }
 
+    public static Effect lotteryUse(int itemId, String effectPath) {
+        final Effect effect = new Effect(EffectType.LotteryUse);
+        effect.int1 = itemId;
+        effect.bool1 = true; // success
+        effect.string1 = effectPath; // sEffect
+        return effect;
+    }
+
     public static Effect reservedEffect(String effectPath) {
         final Effect effect = new Effect(EffectType.ReservedEffect);
         effect.string1 = effectPath; // sEffect

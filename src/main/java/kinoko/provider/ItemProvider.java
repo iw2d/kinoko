@@ -21,6 +21,7 @@ public final class ItemProvider implements WzProvider {
     public static final List<String> ITEM_TYPES = List.of("Consume", "Install", "Etc", "Cash");
     private static final Map<Integer, ItemInfo> itemInfos = new HashMap<>();
     private static final Map<Integer, ItemOptionInfo> itemOptionInfos = new HashMap<>(); // item option id -> item option info
+    private static final Map<Integer, ItemRewardInfo> itemRewardInfos = new HashMap<>();
     private static final Map<Integer, MobSummonInfo> mobSummonInfos = new HashMap<>();
     private static final Map<Integer, Set<Integer>> petEquips = new HashMap<>(); // petEquipId -> set<petTemplateId>
     private static final Map<Integer, Map<Integer, PetInteraction>> petActions = new HashMap<>(); // petTemplateId -> (action -> PetInteraction)
@@ -79,6 +80,10 @@ public final class ItemProvider implements WzProvider {
             }
         }
         return possibleItemOptions;
+    }
+
+    public static Optional<ItemRewardInfo> getItemRewardInfo(int itemId) {
+        return Optional.of(itemRewardInfos.get(itemId));
     }
 
     public static Optional<MobSummonInfo> getMobSummonInfo(int itemId) {
@@ -141,11 +146,14 @@ public final class ItemProvider implements WzProvider {
                         throw new ProviderError("Failed to resolve item property");
                     }
                     itemInfos.put(itemId, ItemInfo.from(itemId, itemProp));
-                    // Mob summon info
-                    if (!(itemProp.get("mob") instanceof WzListProperty mobSummonList)) {
-                        continue;
+                    // Item reward info
+                    if (itemProp.get("reward") instanceof WzListProperty rewardList) {
+                        itemRewardInfos.put(itemId, ItemRewardInfo.from(itemId, rewardList));
                     }
-                    mobSummonInfos.put(itemId, MobSummonInfo.from(itemId, mobSummonList));
+                    // Mob summon info
+                    if (itemProp.get("mob") instanceof WzListProperty mobSummonList) {
+                        mobSummonInfos.put(itemId, MobSummonInfo.from(itemId, mobSummonList));
+                    }
                 }
             }
         }
