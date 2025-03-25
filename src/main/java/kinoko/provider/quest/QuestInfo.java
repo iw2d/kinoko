@@ -147,6 +147,9 @@ public final class QuestInfo {
                 return Optional.empty();
             }
         }
+        // Remove existing quest record
+        final QuestManager qm = locked.get().getQuestManager();
+        qm.removeQuestRecord(questId);
         // Perform start acts
         for (QuestAct startAct : getStartActs()) {
             if (!startAct.doAct(locked, -1)) {
@@ -154,10 +157,9 @@ public final class QuestInfo {
                 throw new IllegalStateException("Failed to perform quest start act");
             }
         }
-        // Add quest record and return
-        final QuestManager qm = locked.get().getQuestManager();
+        // Use quest record created by start act or create new quest record and return
         final Optional<QuestRecord> qrResult = qm.getQuestRecord(questId);
-        return Optional.of(qm.setQuestInfoEx(questId, qrResult.map(QuestRecord::getValue).orElse(null))); // handle info act
+        return qrResult.or(() -> Optional.of(qm.forceStartQuest(questId)));
     }
 
     public boolean canCompleteQuest(Locked<User> locked) {
