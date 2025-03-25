@@ -44,6 +44,9 @@ public final class ItemRewardInfo {
             if (!(entry.getValue() instanceof WzListProperty rewardProp)) {
                 throw new ProviderError("Failed to resolve reward prop");
             }
+            if (rewardProp.get("item") == null) {
+                continue; // TODO meso sack
+            }
             entries.add(new ItemRewardEntry(
                     WzProvider.getInteger(rewardProp.get("item")),
                     WzProvider.getInteger(rewardProp.get("count")),

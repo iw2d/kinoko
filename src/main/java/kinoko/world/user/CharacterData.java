@@ -382,9 +382,6 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.MONSTERBOOKCARD)) {
             outPacket.encodeByte(0);
             outPacket.encodeShort(0);
-            outPacket.encodeShort(0);
-            outPacket.encodeByte(0);
-            outPacket.encodeByte(0);
         }
         if (flag.hasFlag(DBChar.UNK_0x40000000)) {
             outPacket.encodeInt(0);
