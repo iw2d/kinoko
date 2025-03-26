@@ -452,7 +452,6 @@ public final class UserHandler {
             } else {
                 final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
                 final Inventory secondInventory = im.getInventoryByType(secondInventoryType);
-                final Item secondItem = secondInventory.getItem(newPos);
                 if (secondInventoryType == InventoryType.EQUIPPED) {
                     // Check body part
                     final int absPos = Math.abs(newPos);
@@ -485,9 +484,15 @@ public final class UserHandler {
                         item.addAttribute(ItemAttribute.EQUIP_BINDED);
                         user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.EQUIP, oldPos, item), false));
                     }
+                } else if (secondInventory.getSize() < newPos) {
+                    user.dispose();
+                    return;
                 }
                 // Swap item position and update client
-                inventory.putItem(oldPos, secondItem);
+                final Item secondItem = secondInventory.getItem(newPos);
+                if (secondItem != null) {
+                    inventory.putItem(oldPos, secondItem);
+                }
                 secondInventory.putItem(newPos, item);
                 user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
             }
