@@ -27,6 +27,8 @@ public final class MobTemplate {
     private final int fixedDamage;
     private final int removeAfter;
     private final int dropItemPeriod;
+    private final int hpTagColor;
+    private final int hpTagBgColor;
     private final boolean boss;
     private final boolean noFlip;
     private final boolean pickUpDrop;
@@ -40,12 +42,7 @@ public final class MobTemplate {
     private final List<Integer> revives;
     private final int reviveDelay;
 
-    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int pad, int pdr, int mad, int mdr,
-                       int acc, int eva, int hpRecovery, int mpRecovery, int fixedDamage, int removeAfter,
-                       int dropItemPeriod, boolean boss, boolean noFlip, boolean pickUpDrop, boolean firstAttack, boolean damagedByMob,
-                       boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills,
-                       Map<ElementAttribute, DamagedAttribute> damagedElemAttr, Set<Integer> damagedBySkill,
-                       List<Integer> revives, int reviveDelay) {
+    public MobTemplate(int id, int level, int exp, int maxHp, int maxMp, int pad, int pdr, int mad, int mdr, int acc, int eva, int hpRecovery, int mpRecovery, int fixedDamage, int removeAfter, int dropItemPeriod, int hpTagColor, int hpTagBgColor, boolean boss, boolean noFlip, boolean pickUpDrop, boolean firstAttack, boolean damagedByMob, boolean onlyNormalAttack, Map<Integer, MobAttack> attacks, Map<Integer, MobSkill> skills, Map<ElementAttribute, DamagedAttribute> damagedElemAttr, Set<Integer> damagedBySkill, List<Integer> revives, int reviveDelay) {
         this.id = id;
         this.level = level;
         this.exp = exp;
@@ -62,6 +59,8 @@ public final class MobTemplate {
         this.fixedDamage = fixedDamage;
         this.removeAfter = removeAfter;
         this.dropItemPeriod = dropItemPeriod;
+        this.hpTagColor = hpTagColor;
+        this.hpTagBgColor = hpTagBgColor;
         this.boss = boss;
         this.noFlip = noFlip;
         this.pickUpDrop = pickUpDrop;
@@ -138,6 +137,14 @@ public final class MobTemplate {
 
     public int getDropItemPeriod() {
         return dropItemPeriod;
+    }
+
+    public int getHpTagColor() {
+        return hpTagColor;
+    }
+
+    public int getHpTagBgColor() {
+        return hpTagBgColor;
     }
 
     public boolean isBoss() {
@@ -225,8 +232,12 @@ public final class MobTemplate {
                 ", fixedDamage=" + fixedDamage +
                 ", removeAfter=" + removeAfter +
                 ", dropItemPeriod=" + dropItemPeriod +
+                ", hpTagColor=" + hpTagColor +
+                ", hpTagBgColor=" + hpTagBgColor +
                 ", boss=" + boss +
                 ", noFlip=" + noFlip +
+                ", pickUpDrop=" + pickUpDrop +
+                ", firstAttack=" + firstAttack +
                 ", damagedByMob=" + damagedByMob +
                 ", onlyNormalAttack=" + onlyNormalAttack +
                 ", attacks=" + attacks +
@@ -254,6 +265,8 @@ public final class MobTemplate {
         int fixedDamage = 0;
         int removeAfter = 0;
         int dropItemPeriod = 0;
+        int hpTagColor = 0;
+        int hpTagBgColor = 0;
         boolean boss = false;
         boolean noFlip = false;
         boolean pickUpDrop = false;
@@ -362,6 +375,12 @@ public final class MobTemplate {
                 case "dropItemPeriod" -> {
                     dropItemPeriod = WzProvider.getInteger(infoEntry.getValue());
                 }
+                case "hpTagColor" -> {
+                    hpTagColor = WzProvider.getInteger(infoEntry.getValue());
+                }
+                case "hpTagBgcolor" -> {
+                    hpTagBgColor = WzProvider.getInteger(infoEntry.getValue());
+                }
                 case "boss" -> {
                     boss = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
@@ -460,6 +479,8 @@ public final class MobTemplate {
                 fixedDamage,
                 removeAfter,
                 dropItemPeriod,
+                hpTagColor,
+                hpTagBgColor,
                 boss,
                 noFlip,
                 pickUpDrop,

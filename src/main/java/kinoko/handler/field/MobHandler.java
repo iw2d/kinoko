@@ -168,7 +168,7 @@ public final class MobHandler {
         // Apply damage
         try (var lockedMob = targetMob.acquire()) {
             final int damage = calcMobDamage(attackerMob.getTemplate(), targetMob.getTemplate());
-            targetMob.setHp(targetMob.getHp() - damage);
+            targetMob.updateHp(targetMob.getHp() - damage);
             field.broadcastPacket(MobPacket.mobDamaged(targetMob, damage));
             if (targetMob.getHp() > 0) {
                 targetMob.resetDropItemPeriod();

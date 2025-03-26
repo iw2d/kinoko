@@ -1,5 +1,6 @@
 package kinoko.world.field.mob;
 
+import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.MessagePacket;
@@ -60,6 +61,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     private boolean slowUsed;
     private int swallowCharacterId;
     private Reward stolenReward;
+    private Instant nextSendMobHp;
     private Instant nextSkillUse;
     private Instant nextRecovery;
     private Instant removeAfter;
@@ -78,6 +80,7 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
         this.summonType = MobAppearType.REGEN.getValue();
+        this.nextSendMobHp = Instant.MIN;
         this.nextSkillUse = Instant.MIN;
         this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
         this.removeAfter = template.getRemoveAfter() > 0 ? Instant.now().plus(template.getRemoveAfter(), ChronoUnit.SECONDS) : Instant.MAX;
@@ -242,8 +245,30 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
+    public void updateHp(int hp) {
+        if (hp < 0 || hp > getMaxHp() || hp == getHp()) {
+            return;
+        }
+        setHp(hp);
+        if (template.getHpTagColor() != 0 && template.getHpTagBgColor() != 0) {
+            final Instant now = Instant.now();
+            if (now.isAfter(nextSendMobHp)) {
+                getField().broadcastPacket(FieldEffectPacket.mobHpTag(getTemplateId(), getHp(), getMaxHp(), template.getHpTagColor(), template.getHpTagBgColor()));
+                nextSendMobHp = now.plus(GameConstants.MOB_HP_TAG_INTERVAL, ChronoUnit.MILLIS);
+            }
+        }
+        if (!damageDone.isEmpty()) {
+            final double percentage = (double) getHp() / getMaxHp();
+            final OutPacket hpIndicatorPacket = MobPacket.mobHpIndicator(this, (int) (percentage * 100));
+            for (int attackerId : damageDone.keySet()) {
+                final Optional<User> attackerResult = getField().getUserPool().getById(attackerId);
+                attackerResult.ifPresent(user -> user.write(hpIndicatorPacket));
+            }
+        }
+    }
+
     public void heal(int hp) {
-        setHp(Math.min(getHp() + hp, getMaxHp()));
+        updateHp(Math.min(getHp() + hp, getMaxHp()));
         getField().broadcastPacket(MobPacket.mobDamaged(this, -hp));
     }
 
@@ -340,13 +365,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void burn(int attackerId, int burnDamage) {
-        // Apply damage
+        // Apply damage and show mob hp indicator
         final int actualDamage = Math.min(getHp() - 1, burnDamage);
-        setHp(getHp() - actualDamage);
         damageDone.put(attackerId, damageDone.getOrDefault(attackerId, 0) + actualDamage);
-        // Show mob hp indicator
-        final double percentage = (double) getHp() / getMaxHp();
-        getField().broadcastPacket(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
+        updateHp(getHp() - actualDamage);
     }
 
     public void damage(User attacker, int totalDamage, int delay) {
@@ -354,13 +376,10 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
     }
 
     public void damage(User attacker, int totalDamage, int delay, MobLeaveType leaveType) {
-        // Apply damage
+        // Apply damage and show mob hp indicator
         final int actualDamage = Math.min(getHp(), totalDamage);
-        setHp(getHp() - actualDamage);
         damageDone.put(attacker.getCharacterId(), damageDone.getOrDefault(attacker.getCharacterId(), 0) + actualDamage);
-        // Show mob hp indicator
-        final double percentage = (double) getHp() / getMaxHp();
-        attacker.write(MobPacket.mobHpIndicator(this, (int) (percentage * 100)));
+        updateHp(getHp() - actualDamage);
         // Handle death
         if (getHp() <= 0) {
             if (getController() != null) {
@@ -370,6 +389,9 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
                 distributeExp();
                 dropRewards(attacker, delay);
                 spawnRevives(delay);
+            }
+            if (template.getHpTagColor() != 0 && template.getHpTagBgColor() != 0) {
+                getField().broadcastPacket(FieldEffectPacket.mobHpTag(getId(), 0, getMaxHp(), template.getHpTagColor(), template.getHpTagBgColor()));
             }
             if (spawnPoint != null) {
                 spawnPoint.setNextMobRespawn();
