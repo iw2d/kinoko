@@ -16,6 +16,7 @@ import kinoko.provider.map.PortalInfo;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.script.common.ScriptDispatcher;
+import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.Locked;

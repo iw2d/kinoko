@@ -16,6 +16,8 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.cashshop.Gift;
+import kinoko.server.field.Instance;
+import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
@@ -274,7 +276,7 @@ public final class MigrationHandler {
                         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SoulStone)) {
                             // user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone)); - SecondaryStat cleared on revive
                             user.write(UserLocal.effect(Effect.soulStoneUse())); // You have revived on the current map through the effect of the Spirit Stone.
-                            handleRevive(user, true);
+                            handleRevive(user, currentField, true);
                             return;
                         } else if (user.getInventoryManager().hasItem(ItemConstants.WHEEL_OF_DESTINY, 1)) {
                             if (!currentField.isUpgradeTombUsable()) {
@@ -288,12 +290,12 @@ public final class MigrationHandler {
                             user.write(WvsContext.inventoryOperation(removeResult.get(), false));
                             final int remain = user.getInventoryManager().getItemCount(ItemConstants.WHEEL_OF_DESTINY);
                             user.write(UserLocal.effect(Effect.upgradeTombItemUse(remain))); // You have used 1 Wheel of Destiny in order to revive at the current map. (%d left)
-                            handleRevive(user, true);
+                            handleRevive(user, currentField, true);
                             return;
                         }
                     }
                     // Normal revive
-                    handleRevive(user, false);
+                    handleRevive(user, currentField, false);
                     return;
                 }
                 // Transfer field by client request : ReservedEffect, CField::OBSTACLE, /m <map ID> - TODO: disallow /m command for non-GM
@@ -454,19 +456,21 @@ public final class MigrationHandler {
         user.warp(targetField, targetPortalResult.get(), false, isRevive);
     }
 
-    private static void handleRevive(User user, boolean premium) {
+    private static void handleRevive(User user, Field field, boolean premium) {
         user.getSecondaryStat().clear();
         user.getSummoned().clear();
         user.updatePassiveSkillData();
         user.validateStat();
-        user.setHp(50);
         if (premium) {
             user.setHp(user.getMaxHp());
             user.setMp(user.getMaxMp());
-            handleTransferField(user, user.getField().getFieldId(), GameConstants.DEFAULT_PORTAL_NAME, true, false);
+            handleTransferField(user, field.getFieldId(), GameConstants.DEFAULT_PORTAL_NAME, true, false);
         } else {
+            final int returnMap = field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage ?
+                    instanceFieldStorage.getInstance().getReturnMap() :
+                    field.getReturnMap();
             user.setHp(50);
-            handleTransferField(user, user.getField().getReturnMap(), GameConstants.DEFAULT_PORTAL_NAME, true, true);
+            handleTransferField(user, returnMap, GameConstants.DEFAULT_PORTAL_NAME, true, true);
         }
     }
 

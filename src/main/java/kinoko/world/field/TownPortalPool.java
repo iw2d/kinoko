@@ -1,6 +1,9 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
+import kinoko.packet.world.MessagePacket;
+import kinoko.provider.map.FieldOption;
+import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.user.User;
 
@@ -42,6 +45,10 @@ public final class TownPortalPool extends FieldObjectPool<TownPortal> {
     }
 
     public Optional<TownPortal> createFieldPortal(User user, int skillId, int x, int y, Instant expireTime) {
+        // Check if portal can be created
+        if (field.hasFieldOption(FieldOption.MYSTICDOORLIMIT) || field.getFieldStorage() instanceof InstanceFieldStorage) {
+            return Optional.empty();
+        }
         // Resolve town field
         final Optional<Field> returnMapResult = field.getFieldStorage().getFieldById(field.getReturnMap());
         if (returnMapResult.isEmpty() || returnMapResult.get() == field) {
