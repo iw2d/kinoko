@@ -393,7 +393,7 @@ public abstract class SkillProcessor {
             case Thief.DAGGER_BOOSTER:
             case Thief.KATARA_BOOSTER:
             case Pirate.KNUCKLE_BOOSTER:
-            case Pirate.GUN_MASTERY:
+            case Pirate.GUN_BOOSTER:
             case DawnWarrior.SWORD_BOOSTER:
             case BlazeWizard.SPELL_BOOSTER:
             case WindArcher.BOW_BOOSTER:
