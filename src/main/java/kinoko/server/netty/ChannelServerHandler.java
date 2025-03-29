@@ -113,9 +113,12 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             return;
         }
         // Write to target client
-        try (var locked = targetUserResult.get().acquire()) {
-            locked.get().write(OutPacket.of(packetData));
-        }
+        final User target = targetUserResult.get();
+        ServerExecutor.submit(target, () -> {
+            try (var locked = target.acquire()) {
+                locked.get().write(OutPacket.of(packetData));
+            }
+        });
     }
 
     private void handleUserPacketBroadcast(InPacket inPacket) {
@@ -171,10 +174,13 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             log.error("Could not resolve target user for MessengerResult");
             return;
         }
-        try (var locked = targetUserResult.get().acquire()) {
-            final User user = locked.get();
-            user.setMessengerId(messengerId);
-        }
+        // Set messenger ID
+        final User target = targetUserResult.get();
+        ServerExecutor.submit(target, () -> {
+            try (var locked = target.acquire()) {
+                locked.get().setMessengerId(messengerId);
+            }
+        });
     }
 
     private void handlePartyResult(InPacket inPacket) {
@@ -187,25 +193,28 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             log.error("Could not resolve target user for PartyResult");
             return;
         }
-        try (var locked = targetUserResult.get().acquire()) {
-            final User user = locked.get();
-            // Cancel party aura
-            user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
-            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
-                BattleMage.cancelPartyAura(user, user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
-            }
-            // Set party info and update members
-            user.setPartyInfo(partyInfo);
-            user.getField().getUserPool().forEachPartyMember(user, (member) -> {
-                try (var lockedMember = member.acquire()) {
-                    user.write(UserRemote.receiveHp(lockedMember.get()));
-                    lockedMember.get().write(UserRemote.receiveHp(user));
+        // Update party
+        final User target = targetUserResult.get();
+        ServerExecutor.submit(target, () -> {
+            try (var locked = target.acquire()) {
+                // Cancel party aura
+                target.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+                if (target.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
+                    BattleMage.cancelPartyAura(target, target.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
                 }
-            });
-            if (user.getTownPortal() != null && user.getTownPortal().getTownField() == user.getField()) {
-                user.write(FieldPacket.townPortalRemoved(user, false));
+                // Set party info and update members
+                target.setPartyInfo(partyInfo);
+                target.getField().getUserPool().forEachPartyMember(target, (member) -> {
+                    try (var lockedMember = member.acquire()) {
+                        target.write(UserRemote.receiveHp(member));
+                        member.write(UserRemote.receiveHp(target));
+                    }
+                });
+                if (target.getTownPortal() != null && target.getTownPortal().getTownField() == target.getField()) {
+                    target.write(FieldPacket.townPortalRemoved(target, false));
+                }
             }
-        }
+        });
     }
 
     private void handleGuildResult(InPacket inPacket) {
@@ -218,12 +227,14 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             log.error("Could not resolve target user for GuildResult");
             return;
         }
-        try (var locked = targetUserResult.get().acquire()) {
-            final User user = locked.get();
-            // Set guild info and broadcast
-            user.setGuildInfo(guildInfo);
-            user.getField().broadcastPacket(UserRemote.guildNameChanged(user, guildInfo), user);
-            user.getField().broadcastPacket(UserRemote.guildMarkChanged(user, guildInfo), user);
-        }
+        // Set guild info and broadcast
+        final User target = targetUserResult.get();
+        ServerExecutor.submit(target, () -> {
+            try (var locked = target.acquire()) {
+                target.setGuildInfo(guildInfo);
+                target.getField().broadcastPacket(UserRemote.guildNameChanged(target, guildInfo), target);
+                target.getField().broadcastPacket(UserRemote.guildMarkChanged(target, guildInfo), target);
+            }
+        });
     }
 }
