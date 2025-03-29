@@ -146,7 +146,7 @@ public final class PetHandler {
             log.error("Received PetAction for invalid pet index : {}", petIndex);
             return;
         }
-        user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat), user);
+        user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat, pet.getChatBalloon()), user);
     }
 
     @Handler(InHeader.PetInteractionRequest)
@@ -221,7 +221,7 @@ public final class PetHandler {
             }
 
             // Broadcast pet action
-            user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, false));
+            user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, pet.getChatBalloon()));
         }
     }
 

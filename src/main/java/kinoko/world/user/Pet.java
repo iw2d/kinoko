@@ -5,6 +5,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
+import kinoko.world.item.BodyPart;
 import kinoko.world.item.Item;
 import kinoko.world.item.ItemType;
 
@@ -57,6 +58,19 @@ public final class Pet extends Life implements Encodable {
         return owner.getPetIndex(getItemSn()).orElseThrow();
     }
 
+    public int getPetWear() {
+        final Item petWearItem = owner.getInventoryManager().getEquipped().getItem(BodyPart.getByPetIndex(BodyPart.PETWEAR, getPetIndex()).getValue() + BodyPart.CASH_BASE.getValue());
+        return petWearItem != null ? petWearItem.getItemId() : 0;
+    }
+
+    public boolean getNameTag() {
+        return owner.getInventoryManager().getEquipped().getItem(BodyPart.getByPetIndex(BodyPart.PETRING_LABEL, getPetIndex()).getValue() + BodyPart.CASH_BASE.getValue()) != null;
+    }
+
+    public boolean getChatBalloon() {
+        return owner.getInventoryManager().getEquipped().getItem(BodyPart.getByPetIndex(BodyPart.PETRING_QUOTE, getPetIndex()).getValue() + BodyPart.CASH_BASE.getValue()) != null;
+    }
+
     public void setPosition(Field field, int x, int y) {
         setField(field);
         setX(x);
@@ -74,8 +88,8 @@ public final class Pet extends Life implements Encodable {
         outPacket.encodeShort(getY()); // ptPosPrev.y
         outPacket.encodeByte(getMoveAction()); // nMoveAction
         outPacket.encodeShort(getFoothold()); // Foothold
-        outPacket.encodeByte(false); // bNameTag
-        outPacket.encodeByte(false); // bChatBalloon
+        outPacket.encodeByte(getNameTag()); // bNameTag
+        outPacket.encodeByte(getChatBalloon()); // bChatBalloon
     }
 
     public static Pet from(User user, Item item) {

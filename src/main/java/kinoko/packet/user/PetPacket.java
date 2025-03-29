@@ -44,13 +44,14 @@ public final class PetPacket {
         return outPacket;
     }
 
-    public static OutPacket petAction(User user, int petIndex, int type, int action, String chat) {
+    public static OutPacket petAction(User user, int petIndex, int type, int action, String chat, boolean chatBalloon) {
         final OutPacket outPacket = OutPacket.of(OutHeader.PetAction);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeByte(petIndex);
         outPacket.encodeByte(type);
         outPacket.encodeByte(action);
         outPacket.encodeString(chat);
+        outPacket.encodeByte(chatBalloon);
         return outPacket;
     }
 

@@ -4,7 +4,6 @@ import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.util.Locked;
-import kinoko.util.Triple;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
 
