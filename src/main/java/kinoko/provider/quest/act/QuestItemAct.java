@@ -7,7 +7,6 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.item.*;
 import kinoko.world.user.User;
@@ -34,8 +33,7 @@ public final class QuestItemAct implements QuestAct {
         return choices;
     }
 
-    public void restoreLostItems(Locked<User> locked, List<Integer> lostItems) {
-        final User user = locked.get();
+    public void restoreLostItems(User user, List<Integer> lostItems) {
         final InventoryManager im = user.getInventoryManager();
         final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob()).stream()
                 .filter(itemData -> lostItems.contains(itemData.getItemId()))
@@ -96,8 +94,7 @@ public final class QuestItemAct implements QuestAct {
         }
     }
 
-    public void removeQuestItems(Locked<User> locked) {
-        final User user = locked.get();
+    public void removeQuestItems(User user) {
         final InventoryManager im = user.getInventoryManager();
 
         // Remove quest items
@@ -121,8 +118,7 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean canAct(User user, int rewardIndex) {
         final InventoryManager im = user.getInventoryManager();
         final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 
@@ -178,8 +174,7 @@ public final class QuestItemAct implements QuestAct {
     }
 
     @Override
-    public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean doAct(User user, int rewardIndex) {
         final InventoryManager im = user.getInventoryManager();
         final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
 

@@ -48,17 +48,13 @@ public final class AffectedAreaPool extends FieldObjectPool<AffectedArea> {
             if (affectedArea.getInterval() != 0 && counter % affectedArea.getInterval() == 0) {
                 switch (affectedArea.getType()) {
                     case UserSkill -> field.getMobPool().forEach((mob) -> {
-                        try (var lockedMob = mob.acquire()) {
-                            if (mob.getHp() > 0 && affectedArea.getRect().isInsideRect(mob.getX(), mob.getY())) {
-                                affectedArea.handleMobInside(lockedMob);
-                            }
+                        if (mob.getHp() > 0 && affectedArea.getRect().isInsideRect(mob.getX(), mob.getY())) {
+                            affectedArea.handleMobInside(mob);
                         }
                     });
                     case MobSkill, Buff, BlessedMist -> field.getUserPool().forEach((user) -> {
-                        try (var locked = user.acquire()) {
-                            if (user.getHp() > 0 && affectedArea.getRect().isInsideRect(user.getX(), user.getY())) {
-                                affectedArea.handleUserInside(locked);
-                            }
+                        if (user.getHp() > 0 && affectedArea.getRect().isInsideRect(user.getX(), user.getY())) {
+                            affectedArea.handleUserInside(user);
                         }
                     });
                 }

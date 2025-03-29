@@ -7,7 +7,6 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.InPacket;
-import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.user.User;
@@ -41,8 +40,7 @@ public final class TradingRoom extends MiniRoom {
     }
 
     @Override
-    public void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket) {
-        final User user = locked.get();
+    public void handlePacket(User user, MiniRoomProtocol mrp, InPacket inPacket) {
         final User other = getOther(user);
         if (other == null) {
             log.error("Received mini room action {} without another player in the trading room", mrp);
@@ -83,7 +81,7 @@ public final class TradingRoom extends MiniRoom {
                 }
                 // Complete trade
                 if (!completeTrade(user)) {
-                    cancelTradeUnsafe(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
+                    cancelTrade(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
                 }
             }
             case TRP_ItemCRC -> {
@@ -96,9 +94,8 @@ public final class TradingRoom extends MiniRoom {
     }
 
     @Override
-    public void leaveUnsafe(User user) {
-        assert user.isLocked();
-        cancelTradeUnsafe(user, MiniRoomLeaveType.Closed); // Trade cancelled by the other character.
+    public void leave(User user) {
+        cancelTrade(user, MiniRoomLeaveType.Closed); // Trade cancelled by the other character.
     }
 
     @Override
@@ -109,30 +106,22 @@ public final class TradingRoom extends MiniRoom {
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
 
-    public void cancelTrade(Locked<User> locked, MiniRoomLeaveType leaveType) {
-        cancelTradeUnsafe(locked.get(), leaveType);
-    }
-
-    private void cancelTradeUnsafe(User user, MiniRoomLeaveType leaveType) {
-        assert user.isLocked();
+    public void cancelTrade(User user, MiniRoomLeaveType leaveType) {
         // Return items and update client
         addItemsAndMoney(user, items.getOrDefault(user, Map.of()).values(), money.getOrDefault(user, 0));
         user.write(MiniRoomPacket.leave(0, leaveType));
         user.setDialog(null);
         final User other = getOther(user);
         if (other != null) {
-            try (var lockedOther = other.acquire()) {
-                // Return the other user's items and update their client
-                addItemsAndMoney(other, items.getOrDefault(other, Map.of()).values(), money.getOrDefault(other, 0));
-                other.write(MiniRoomPacket.leave(1, leaveType));
-                other.setDialog(null);
-            }
+            // Return the other user's items and update their client
+            addItemsAndMoney(other, items.getOrDefault(other, Map.of()).values(), money.getOrDefault(other, 0));
+            other.write(MiniRoomPacket.leave(1, leaveType));
+            other.setDialog(null);
         }
         getField().getMiniRoomPool().removeMiniRoom(this);
     }
 
     private boolean putItem(User user, InventoryType inventoryType, int position, int quantity, int index) {
-        assert user.isLocked();
         // Resolve other user
         final User other = getOther(user);
         if (other == null) {
@@ -188,7 +177,6 @@ public final class TradingRoom extends MiniRoom {
     }
 
     private boolean putMoney(User user, int addMoney) {
-        assert user.isLocked();
         // Resolve other user
         final User other = getOther(user);
         if (other == null) {
@@ -215,7 +203,6 @@ public final class TradingRoom extends MiniRoom {
     }
 
     private boolean completeTrade(User user) {
-        assert user.isLocked();
         // Check for confirmations
         if (!confirm.getOrDefault(user, false)) {
             return false;
@@ -224,48 +211,46 @@ public final class TradingRoom extends MiniRoom {
         if (other == null || !confirm.getOrDefault(other, false)) {
             return false;
         }
-        try (var lockedOther = other.acquire()) {
-            // Check that user can add items + money from other's position
-            final Set<Item> itemsForUser = items.getOrDefault(other, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
-            final int moneyForUser = GameConstants.getTradeTax(money.getOrDefault(other, 0));
-            if (!user.getInventoryManager().canAddItems(itemsForUser)) {
-                user.write(MessagePacket.system("You do not have enough inventory space."));
-                other.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
-                return false;
-            }
-            if (!user.getInventoryManager().canAddMoney(moneyForUser)) {
-                user.write(MessagePacket.system("You cannot hold any more mesos."));
-                other.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
-                return false;
-            }
-            // Check that other can add items + money from user's position
-            final Set<Item> itemsForOther = items.getOrDefault(user, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
-            final int moneyForOther = GameConstants.getTradeTax(money.getOrDefault(user, 0));
-            if (!other.getInventoryManager().canAddItems(itemsForOther)) {
-                other.write(MessagePacket.system("You do not have enough inventory space."));
-                user.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
-                return false;
-            }
-            if (!other.getInventoryManager().canAddMoney(moneyForOther)) {
-                other.write(MessagePacket.system("You cannot hold any more mesos."));
-                user.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
-                return false;
-            }
-            // Process items
-            for (Item item : itemsForUser) {
-                item.setPossibleTrading(false);
-            }
-            for (Item item : itemsForOther) {
-                item.setPossibleTrading(false);
-            }
-            // Add all items + money
-            addItemsAndMoney(user, itemsForUser, moneyForUser);
-            addItemsAndMoney(other, itemsForOther, moneyForOther);
-            // Complete trade
-            broadcastPacket(MiniRoomPacket.leave(0, MiniRoomLeaveType.TradeDone)); // Trade successful. Please check the results.
-            user.setDialog(null);
-            other.setDialog(null);
+        // Check that user can add items + money from other's position
+        final Set<Item> itemsForUser = items.getOrDefault(other, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
+        final int moneyForUser = GameConstants.getTradeTax(money.getOrDefault(other, 0));
+        if (!user.getInventoryManager().canAddItems(itemsForUser)) {
+            user.write(MessagePacket.system("You do not have enough inventory space."));
+            other.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
+            return false;
         }
+        if (!user.getInventoryManager().canAddMoney(moneyForUser)) {
+            user.write(MessagePacket.system("You cannot hold any more mesos."));
+            other.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
+            return false;
+        }
+        // Check that other can add items + money from user's position
+        final Set<Item> itemsForOther = items.getOrDefault(user, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
+        final int moneyForOther = GameConstants.getTradeTax(money.getOrDefault(user, 0));
+        if (!other.getInventoryManager().canAddItems(itemsForOther)) {
+            other.write(MessagePacket.system("You do not have enough inventory space."));
+            user.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
+            return false;
+        }
+        if (!other.getInventoryManager().canAddMoney(moneyForOther)) {
+            other.write(MessagePacket.system("You cannot hold any more mesos."));
+            user.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
+            return false;
+        }
+        // Process items
+        for (Item item : itemsForUser) {
+            item.setPossibleTrading(false);
+        }
+        for (Item item : itemsForOther) {
+            item.setPossibleTrading(false);
+        }
+        // Add all items + money
+        addItemsAndMoney(user, itemsForUser, moneyForUser);
+        addItemsAndMoney(other, itemsForOther, moneyForOther);
+        // Complete trade
+        broadcastPacket(MiniRoomPacket.leave(0, MiniRoomLeaveType.TradeDone)); // Trade successful. Please check the results.
+        user.setDialog(null);
+        other.setDialog(null);
         return true;
     }
 

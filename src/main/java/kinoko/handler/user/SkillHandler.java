@@ -14,7 +14,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
 import kinoko.util.BitFlag;
-import kinoko.util.Locked;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.item.*;
@@ -108,46 +107,44 @@ public final class SkillHandler {
         }
         // ignore tDelay
 
-        try (var locked = user.acquire()) {
-            // Check skill root
-            final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
-            if (!JobConstants.isBeginnerJob(skillRoot) && !JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot)) {
-                log.error("Tried to use skill {} as incorrect job : {}", skill.skillId, user.getJob());
-                user.dispose();
-                return;
-            }
-            // Check seal
-            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
-                log.error("Tried to use skill {} while sealed", skill.skillId);
-                user.dispose();
-                return;
-            }
-            // Check morph
-            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Morph)) {
-                final int morphId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Morph).nOption;
-                final Optional<MorphInfo> morphInfoResult = SkillProvider.getMorphInfoById(morphId);
-                if (morphInfoResult.isEmpty()) {
-                    log.error("Could not resolve morph info for morph ID : {}", morphId);
-                    user.dispose();
-                    return;
-                }
-                final MorphInfo morphInfo = morphInfoResult.get();
-                if (!morphInfo.isSuperman() && !morphInfo.isAttackable()) {
-                    log.error("Tried to use skill {} while morphed as morph ID : {}", skill.skillId, morphId);
-                    user.dispose();
-                    return;
-                }
-            }
-            // Mystic Door cooltime to avoid crashes
-            if (skill.skillId == Magician.MYSTIC_DOOR) {
-                if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
-                    user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));
-                    user.dispose();
-                    return;
-                }
-            }
-            handleSkill(locked, skill);
+        // Check skill root
+        final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
+        if (!JobConstants.isBeginnerJob(skillRoot) && !JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot)) {
+            log.error("Tried to use skill {} as incorrect job : {}", skill.skillId, user.getJob());
+            user.dispose();
+            return;
         }
+        // Check seal
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
+            log.error("Tried to use skill {} while sealed", skill.skillId);
+            user.dispose();
+            return;
+        }
+        // Check morph
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Morph)) {
+            final int morphId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Morph).nOption;
+            final Optional<MorphInfo> morphInfoResult = SkillProvider.getMorphInfoById(morphId);
+            if (morphInfoResult.isEmpty()) {
+                log.error("Could not resolve morph info for morph ID : {}", morphId);
+                user.dispose();
+                return;
+            }
+            final MorphInfo morphInfo = morphInfoResult.get();
+            if (!morphInfo.isSuperman() && !morphInfo.isAttackable()) {
+                log.error("Tried to use skill {} while morphed as morph ID : {}", skill.skillId, morphId);
+                user.dispose();
+                return;
+            }
+        }
+        // Mystic Door cooltime to avoid crashes
+        if (skill.skillId == Magician.MYSTIC_DOOR) {
+            if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
+                user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));
+                user.dispose();
+                return;
+            }
+        }
+        handleSkill(user, skill);
     }
 
     @Handler(InHeader.UserSkillCancelRequest)
@@ -156,26 +153,24 @@ public final class SkillHandler {
         if (SkillConstants.isKeydownSkill(skillId)) {
             return;
         }
-        try (var locked = user.acquire()) {
-            // Remove stat matching skill ID
-            final SecondaryStat ss = locked.get().getSecondaryStat();
-            final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.rOption == skillId);
-            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
-            if (!flag.isEmpty()) {
-                user.write(WvsContext.temporaryStatReset(flag));
-                user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, flag), user);
-            }
-            // Additional handling for CTS
-            if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
-                user.removeSummoned((summoned) -> summoned.getSkillId() == Warrior.BEHOLDER);
-            }
-            if (resetStats.contains(CharacterTemporaryStat.Aura)) {
-                user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
-                BattleMage.cancelPartyAura(user, skillId);
-            }
-            if (resetStats.contains(CharacterTemporaryStat.SuperBody)) {
-                user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
-            }
+        // Remove stat matching skill ID
+        final SecondaryStat ss = user.getSecondaryStat();
+        final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.rOption == skillId);
+        final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
+        if (!flag.isEmpty()) {
+            user.write(WvsContext.temporaryStatReset(flag));
+            user.getField().broadcastPacket(UserRemote.temporaryStatReset(user, flag), user);
+        }
+        // Additional handling for CTS
+        if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
+            user.removeSummoned((summoned) -> summoned.getSkillId() == Warrior.BEHOLDER);
+        }
+        if (resetStats.contains(CharacterTemporaryStat.Aura)) {
+            user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+            BattleMage.cancelPartyAura(user, skillId);
+        }
+        if (resetStats.contains(CharacterTemporaryStat.SuperBody)) {
+            user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
         }
     }
 
@@ -193,21 +188,17 @@ public final class SkillHandler {
                 log.error("Could not resolve swallow mob ID : {}", mobId);
                 return;
             }
-            try (var lockedMob = mobResult.get().acquire()) {
-                final Mob mob = lockedMob.get();
-                // Should implement all client-side checks in CUserLocal::FindSwallowMob
-                if (mob.isBoss() || mob.getLevel() > user.getLevel() + 5 || SkillConstants.isNotSwallowableMob(mob.getTemplateId())) {
-                    log.error("Tried to swallow non-swallowable mob ID : {}, template ID : {}", mobId, mob.getTemplateId());
-                    return;
-                }
-                mob.setSwallowCharacterId(user.getCharacterId());
-                try (var locked = user.acquire()) {
-                    locked.get().setTemporaryStat(Map.of(
-                            CharacterTemporaryStat.Swallow_Mob, TemporaryStatOption.of(mobId, skillId, 0),
-                            CharacterTemporaryStat.Swallow_Template, TemporaryStatOption.of(mob.getTemplateId(), skillId, 0)
-                    ));
-                }
+            final Mob mob = mobResult.get();
+            // Should implement all client-side checks in CUserLocal::FindSwallowMob
+            if (mob.isBoss() || mob.getLevel() > user.getLevel() + 5 || SkillConstants.isNotSwallowableMob(mob.getTemplateId())) {
+                log.error("Tried to swallow non-swallowable mob ID : {}, template ID : {}", mobId, mob.getTemplateId());
+                return;
             }
+            mob.setSwallowCharacterId(user.getCharacterId());
+            user.setTemporaryStat(Map.of(
+                    CharacterTemporaryStat.Swallow_Mob, TemporaryStatOption.of(mobId, skillId, 0),
+                    CharacterTemporaryStat.Swallow_Template, TemporaryStatOption.of(mob.getTemplateId(), skillId, 0)
+            ));
         }
         user.getField().broadcastPacket(UserRemote.skillPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
     }
@@ -237,10 +228,8 @@ public final class SkillHandler {
 
             // Not a real skill ID, but client sends this when trying to cancel Mech: Siege Mode (35111004), Mech: Missile Tank (35121005), and Mech: Siege Mode 2 (35121013)
             if (skillId == 35110004 || skillId == 35120005 || skillId == 35120013) {
-                try (var locked = user.acquire()) {
-                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Mechanic)) {
-                        Mechanic.handleMech(user, skillId == 35120013 ? Mechanic.MECH_MISSILE_TANK : Mechanic.MECH_PROTOTYPE);
-                    }
+                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Mechanic)) {
+                    Mechanic.handleMech(user, skillId == 35120013 ? Mechanic.MECH_MISSILE_TANK : Mechanic.MECH_PROTOTYPE);
                 }
             }
         }
@@ -249,14 +238,12 @@ public final class SkillHandler {
 
     @Handler(InHeader.UserCalcDamageStatSetRequest)
     public static void handleUserCalcDamageStatSetRequest(User user, InPacket inPacket) {
-        try (var locked = user.acquire()) {
-            user.updatePassiveSkillData();
-            user.validateStat();
+        user.updatePassiveSkillData();
+        user.validateStat();
 
-            // Handle effects
-            Warrior.handleBerserkEffect(user);
-            Evan.handleDragonFuryEffect(user);
-        }
+        // Handle effects
+        Warrior.handleBerserkEffect(user);
+        Evan.handleDragonFuryEffect(user);
     }
 
     @Handler(InHeader.UserThrowGrenade)
@@ -269,12 +256,10 @@ public final class SkillHandler {
         skill.skillId = inPacket.decodeInt();
         skill.slv = inPacket.decodeInt();
 
-        try (var locked = user.acquire()) {
-            if (skill.skillId != Thief.MONSTER_BOMB) {
-                handleSkill(locked, skill);
-            }
-            user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill), user);
+        if (skill.skillId != Thief.MONSTER_BOMB) {
+            handleSkill(user, skill);
         }
+        user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill), user);
     }
 
     @Handler(InHeader.UserClientTimerEndRequest)
@@ -285,16 +270,12 @@ public final class SkillHandler {
             skillIds[i] = inPacket.decodeInt();
             inPacket.decodeInt();
         }
-        try (var locked = user.acquire()) {
-            for (int skillId : skillIds) {
-                user.resetTemporaryStat(skillId);
-            }
+        for (int skillId : skillIds) {
+            user.resetTemporaryStat(skillId);
         }
     }
 
-    private static void handleSkill(Locked<User> locked, Skill skill) {
-        final User user = locked.get();
-
+    private static void handleSkill(User user, Skill skill) {
         // Resolve skill info
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skill.skillId);
         if (skillInfoResult.isEmpty()) {
@@ -380,18 +361,16 @@ public final class SkillHandler {
         }
 
         // Skill-specific handling
-        SkillProcessor.processSkill(locked, skill);
+        SkillProcessor.processSkill(user, skill);
         user.write(WvsContext.skillUseResult());
 
         // Skill effects and party handling
         final Field field = user.getField();
         field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skill, user.getLevel())), user);
         skill.forEachAffectedMember(user, field, (member) -> {
-            try (var lockedMember = member.acquire()) {
-                SkillProcessor.processSkill(lockedMember, skill);
-                member.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
-                field.broadcastPacket(UserRemote.effect(member, Effect.skillAffected(skill.skillId, skill.slv)), member);
-            }
+            SkillProcessor.processSkill(member, skill);
+            member.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
+            field.broadcastPacket(UserRemote.effect(member, Effect.skillAffected(skill.skillId, skill.slv)), member);
         });
     }
 }
