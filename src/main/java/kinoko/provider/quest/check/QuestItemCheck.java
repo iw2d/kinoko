@@ -2,7 +2,6 @@ package kinoko.provider.quest.check;
 
 import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
@@ -23,8 +22,7 @@ public final class QuestItemCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(Locked<User> locked) {
-        final User user = locked.get();
+    public boolean check(User user) {
         final InventoryManager im = user.getInventoryManager();
         final List<QuestItemData> filteredItems = getFilteredItems(user.getGender(), user.getJob());
         for (QuestItemData itemData : filteredItems) {

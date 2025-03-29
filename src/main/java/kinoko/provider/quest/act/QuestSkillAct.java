@@ -5,7 +5,6 @@ import kinoko.provider.SkillProvider;
 import kinoko.provider.quest.QuestSkillData;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
 
@@ -21,13 +20,12 @@ public final class QuestSkillAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked, int rewardIndex) {
+    public boolean canAct(User user, int rewardIndex) {
         return true;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean doAct(User user, int rewardIndex) {
         for (QuestSkillData qsd : skills) {
             if (!qsd.getJobs().contains(user.getJob())) {
                 continue;

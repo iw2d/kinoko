@@ -16,7 +16,6 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.PortalInfo;
 import kinoko.server.cashshop.Gift;
-import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.InHeader;
@@ -183,53 +182,51 @@ public final class MigrationHandler {
 
             // Add user to field
             ServerExecutor.submit(targetField, () -> {
-                try (var locked = user.acquire()) {
-                    // Set field packet sent here
-                    user.warp(targetField, targetPortal, true, false);
+                // Set field packet sent here
+                user.warp(targetField, targetPortal, true, false);
 
-                    // Initialize func keys and quickslot
-                    final ConfigManager cm = user.getConfigManager();
-                    user.write(WvsContext.macroSysDataInit(cm.getMacroSysData()));
-                    user.write(FieldPacket.funcKeyMappedInit(cm.getFuncKeyMap()));
-                    user.write(FieldPacket.quickslotMappedInit(cm.getQuickslotKeyMap()));
-                    user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
-                    user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
+                // Initialize func keys and quickslot
+                final ConfigManager cm = user.getConfigManager();
+                user.write(WvsContext.macroSysDataInit(cm.getMacroSysData()));
+                user.write(FieldPacket.funcKeyMappedInit(cm.getFuncKeyMap()));
+                user.write(FieldPacket.quickslotMappedInit(cm.getQuickslotKeyMap()));
+                user.write(FieldPacket.petConsumeItemInit(cm.getPetConsumeItem()));
+                user.write(FieldPacket.petConsumeMpItemInit(cm.getPetConsumeMpItem()));
 
-                    // Load messenger from central server
-                    if (user.getMessengerId() != 0) {
-                        channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
-                    }
-
-                    // Load party from central server
-                    final int partyId = user.getCharacterData().getPartyId();
-                    if (partyId != 0) {
-                        channelServerNode.submitPartyRequest(user, PartyRequest.loadParty(partyId));
-                    }
-
-                    // Load guild from central server
-                    final int guildId = user.getCharacterData().getGuildId();
-                    if (guildId != 0) {
-                        channelServerNode.submitGuildRequest(user, GuildRequest.loadGuild(guildId));
-                    }
-
-                    // Load memos
-                    final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
-                    if (!memos.isEmpty()) {
-                        user.write(MemoPacket.load(memos));
-                    }
-
-                    // Load friends
-                    FriendHandler.loadFriends(user, (friendMap) -> {
-                        user.write(FriendPacket.loadFriendDone(friendMap.values()));
-                        final List<Integer> friendIds = friendMap.values().stream()
-                                .filter((friend) -> friend.getStatus() == FriendStatus.NORMAL)
-                                .map(Friend::getFriendId)
-                                .toList();
-                        if (!friendIds.isEmpty()) {
-                            user.getConnectedServer().submitUserPacketBroadcast(friendIds, FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false));
-                        }
-                    });
+                // Load messenger from central server
+                if (user.getMessengerId() != 0) {
+                    channelServerNode.submitMessengerRequest(user, MessengerRequest.migrated());
                 }
+
+                // Load party from central server
+                final int partyId = user.getCharacterData().getPartyId();
+                if (partyId != 0) {
+                    channelServerNode.submitPartyRequest(user, PartyRequest.loadParty(partyId));
+                }
+
+                // Load guild from central server
+                final int guildId = user.getCharacterData().getGuildId();
+                if (guildId != 0) {
+                    channelServerNode.submitGuildRequest(user, GuildRequest.loadGuild(guildId));
+                }
+
+                // Load memos
+                final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
+                if (!memos.isEmpty()) {
+                    user.write(MemoPacket.load(memos));
+                }
+
+                // Load friends
+                FriendHandler.loadFriends(user, (friendMap) -> {
+                    user.write(FriendPacket.loadFriendDone(friendMap.values()));
+                    final List<Integer> friendIds = friendMap.values().stream()
+                            .filter((friend) -> friend.getStatus() == FriendStatus.NORMAL)
+                            .map(Friend::getFriendId)
+                            .toList();
+                    if (!friendIds.isEmpty()) {
+                        user.getConnectedServer().submitUserPacketBroadcast(friendIds, FriendPacket.notify(user.getCharacterId(), user.getChannelId(), false));
+                    }
+                });
             });
         });
     }
@@ -238,12 +235,8 @@ public final class MigrationHandler {
     public static void handleUserTransferFieldRequest(User user, InPacket inPacket) {
         // Returning from CashShop
         if (inPacket.getRemaining() == 0) {
-            try (var locked = user.acquire()) {
-                try (var lockedAccount = user.getAccount().acquire()) {
-                    handleTransferChannel(user, user.getAccount(), user.getAccount().getChannelId());
-                    return;
-                }
-            }
+            handleTransferChannel(user, user.getAccount(), user.getAccount().getChannelId());
+            return;
         }
 
         // Normal transfer field request
@@ -267,54 +260,52 @@ public final class MigrationHandler {
             inPacket.decodeInt(); // nTargetPosition_Y
         }
 
-        try (var locked = user.acquire()) {
-            final Field currentField = user.getField();
-            if (portalName.isEmpty()) {
-                if (user.getHp() <= 0) {
-                    // Premium revive
-                    if (premium) {
-                        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SoulStone)) {
-                            // user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone)); - SecondaryStat cleared on revive
-                            user.write(UserLocal.effect(Effect.soulStoneUse())); // You have revived on the current map through the effect of the Spirit Stone.
-                            handleRevive(user, currentField, true);
-                            return;
-                        } else if (user.getInventoryManager().hasItem(ItemConstants.WHEEL_OF_DESTINY, 1)) {
-                            if (!currentField.isUpgradeTombUsable()) {
-                                log.error("Tried to use wheel of destiny in a restricted field");
-                                return;
-                            }
-                            final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(ItemConstants.WHEEL_OF_DESTINY, 1);
-                            if (removeResult.isEmpty()) {
-                                throw new IllegalStateException("Failed to remove wheel of destiny from inventory");
-                            }
-                            user.write(WvsContext.inventoryOperation(removeResult.get(), false));
-                            final int remain = user.getInventoryManager().getItemCount(ItemConstants.WHEEL_OF_DESTINY);
-                            user.write(UserLocal.effect(Effect.upgradeTombItemUse(remain))); // You have used 1 Wheel of Destiny in order to revive at the current map. (%d left)
-                            handleRevive(user, currentField, true);
+        final Field currentField = user.getField();
+        if (portalName.isEmpty()) {
+            if (user.getHp() <= 0) {
+                // Premium revive
+                if (premium) {
+                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SoulStone)) {
+                        // user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SoulStone)); - SecondaryStat cleared on revive
+                        user.write(UserLocal.effect(Effect.soulStoneUse())); // You have revived on the current map through the effect of the Spirit Stone.
+                        handleRevive(user, currentField, true);
+                        return;
+                    } else if (user.getInventoryManager().hasItem(ItemConstants.WHEEL_OF_DESTINY, 1)) {
+                        if (!currentField.isUpgradeTombUsable()) {
+                            log.error("Tried to use wheel of destiny in a restricted field");
                             return;
                         }
+                        final Optional<List<InventoryOperation>> removeResult = user.getInventoryManager().removeItem(ItemConstants.WHEEL_OF_DESTINY, 1);
+                        if (removeResult.isEmpty()) {
+                            throw new IllegalStateException("Failed to remove wheel of destiny from inventory");
+                        }
+                        user.write(WvsContext.inventoryOperation(removeResult.get(), false));
+                        final int remain = user.getInventoryManager().getItemCount(ItemConstants.WHEEL_OF_DESTINY);
+                        user.write(UserLocal.effect(Effect.upgradeTombItemUse(remain))); // You have used 1 Wheel of Destiny in order to revive at the current map. (%d left)
+                        handleRevive(user, currentField, true);
+                        return;
                     }
-                    // Normal revive
-                    handleRevive(user, currentField, false);
-                    return;
                 }
-                // Transfer field by client request : ReservedEffect, CField::OBSTACLE, /m <map ID> - TODO: disallow /m command for non-GM
-                if (!isWhitelistedTransferField(currentField.getFieldId(), targetFieldId)) {
-                    log.warn("Received non-whitelisted transfer field request from {} to {}", currentField.getFieldId(), targetFieldId);
-                }
-                handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false, false);
+                // Normal revive
+                handleRevive(user, currentField, false);
                 return;
             }
-            // Enter portal to next field
-            final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
-            if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
-                log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
-                user.dispose();
-                return;
+            // Transfer field by client request : ReservedEffect, CField::OBSTACLE, /m <map ID> - TODO: disallow /m command for non-GM
+            if (!isWhitelistedTransferField(currentField.getFieldId(), targetFieldId)) {
+                log.warn("Received non-whitelisted transfer field request from {} to {}", currentField.getFieldId(), targetFieldId);
             }
-            final PortalInfo portal = portalResult.get();
-            handleTransferField(user, portal.getDestinationFieldId(), portal.getDestinationPortalName(), false, false);
+            handleTransferField(user, targetFieldId, GameConstants.DEFAULT_PORTAL_NAME, false, false);
+            return;
         }
+        // Enter portal to next field
+        final Optional<PortalInfo> portalResult = currentField.getPortalByName(portalName);
+        if (portalResult.isEmpty() || !portalResult.get().hasDestinationField()) {
+            log.error("Tried to use portal : {} on field ID : {}", portalName, currentField.getFieldId());
+            user.dispose();
+            return;
+        }
+        final PortalInfo portal = portalResult.get();
+        handleTransferField(user, portal.getDestinationFieldId(), portal.getDestinationPortalName(), false, false);
     }
 
     @Handler(InHeader.UserTransferChannelRequest)
@@ -322,35 +313,26 @@ public final class MigrationHandler {
         final byte channelId = inPacket.decodeByte();
         inPacket.decodeInt(); // update_time
 
-        try (var locked = user.acquire()) {
-            try (var lockedAccount = user.getAccount().acquire()) {
-                handleTransferChannel(user, user.getAccount(), channelId);
-            }
-        }
+        handleTransferChannel(user, user.getAccount(), channelId);
     }
 
     @Handler(InHeader.UserMigrateToCashShopRequest)
     public static void handleUserMigrateToCashShopRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
 
-        try (var locked = user.acquire()) {
-            // Remove user from field
-            user.getField().removeUser(user);
+        // Remove user from field
+        user.getField().removeUser(user);
 
-            // Load gifts
-            final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
+        // Load gifts
+        final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 
-            try (var lockedAccount = user.getAccount().acquire()) {
-                final Account account = lockedAccount.get();
-
-                // Load cash shop
-                user.write(StagePacket.setCashShop(user));
-                user.write(CashShopPacket.loadGiftDone(gifts));
-                user.write(CashShopPacket.loadLockerDone(account));
-                user.write(CashShopPacket.loadWishDone(account.getWishlist()));
-                user.write(CashShopPacket.queryCashResult(account));
-            }
-        }
+        // Load cash shop
+        final Account account = user.getAccount();
+        user.write(StagePacket.setCashShop(user));
+        user.write(CashShopPacket.loadGiftDone(gifts));
+        user.write(CashShopPacket.loadLockerDone(account));
+        user.write(CashShopPacket.loadWishDone(account.getWishlist()));
+        user.write(CashShopPacket.queryCashResult(account));
     }
 
     private static boolean isWhitelistedTransferField(int currentFieldId, int targetFieldId) {

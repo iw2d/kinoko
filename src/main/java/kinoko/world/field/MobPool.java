@@ -69,41 +69,39 @@ public final class MobPool extends FieldObjectPool<Mob> {
 
     public void updateMobs(Instant now) {
         for (Mob mob : getObjects()) {
-            try (var lockedMob = mob.acquire()) {
-                // Handle burn
-                final Set<BurnedInfo> resetBurnedInfos = new HashSet<>();
-                final var iter = mob.getMobStat().getBurnedInfos().values().iterator();
-                while (iter.hasNext()) {
-                    final BurnedInfo burnedInfo = iter.next();
-                    if (now.isBefore(burnedInfo.getNextUpdate())) {
-                        continue;
-                    }
-                    mob.burn(burnedInfo.getCharacterId(), burnedInfo.getDamage());
-                    if (burnedInfo.getDotCount() > 1) {
-                        burnedInfo.setDotCount(burnedInfo.getDotCount() - 1);
-                        burnedInfo.setLastUpdate(now);
-                    } else {
-                        iter.remove();
-                        resetBurnedInfos.add(burnedInfo);
-                    }
+            // Handle burn
+            final Set<BurnedInfo> resetBurnedInfos = new HashSet<>();
+            final var iter = mob.getMobStat().getBurnedInfos().values().iterator();
+            while (iter.hasNext()) {
+                final BurnedInfo burnedInfo = iter.next();
+                if (now.isBefore(burnedInfo.getNextUpdate())) {
+                    continue;
                 }
-                // Expire temporary stat
-                final Set<MobTemporaryStat> resetStats = mob.getMobStat().expireTemporaryStat(now);
-                if (!resetBurnedInfos.isEmpty() && mob.getMobStat().getBurnedInfos().isEmpty()) {
-                    mob.getMobStat().getTemporaryStats().remove(MobTemporaryStat.Burned);
-                    resetStats.add(MobTemporaryStat.Burned);
+                mob.burn(burnedInfo.getCharacterId(), burnedInfo.getDamage());
+                if (burnedInfo.getDotCount() > 1) {
+                    burnedInfo.setDotCount(burnedInfo.getDotCount() - 1);
+                    burnedInfo.setLastUpdate(now);
+                } else {
+                    iter.remove();
+                    resetBurnedInfos.add(burnedInfo);
                 }
-                final BitFlag<MobTemporaryStat> flag = BitFlag.from(resetStats, MobTemporaryStat.FLAG_SIZE);
-                if (!flag.isEmpty()) {
-                    field.broadcastPacket(MobPacket.mobStatReset(mob, flag, resetBurnedInfos));
-                }
-                // Try recovering hp/mp
-                mob.recovery(now);
-                // Try removing mob (removeAfter)
-                mob.remove(now);
-                // Try dropping item (dropItemPeriod)
-                mob.dropItem(now);
             }
+            // Expire temporary stat
+            final Set<MobTemporaryStat> resetStats = mob.getMobStat().expireTemporaryStat(now);
+            if (!resetBurnedInfos.isEmpty() && mob.getMobStat().getBurnedInfos().isEmpty()) {
+                mob.getMobStat().getTemporaryStats().remove(MobTemporaryStat.Burned);
+                resetStats.add(MobTemporaryStat.Burned);
+            }
+            final BitFlag<MobTemporaryStat> flag = BitFlag.from(resetStats, MobTemporaryStat.FLAG_SIZE);
+            if (!flag.isEmpty()) {
+                field.broadcastPacket(MobPacket.mobStatReset(mob, flag, resetBurnedInfos));
+            }
+            // Try recovering hp/mp
+            mob.recovery(now);
+            // Try removing mob (removeAfter)
+            mob.remove(now);
+            // Try dropping item (dropItemPeriod)
+            mob.dropItem(now);
         }
     }
 

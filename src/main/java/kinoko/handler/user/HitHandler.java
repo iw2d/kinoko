@@ -15,7 +15,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.InHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.InPacket;
-import kinoko.util.Locked;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
@@ -85,17 +84,14 @@ public final class HitHandler {
             return;
         }
 
-        try (var locked = user.acquire()) {
-            if (hitInfo.attackIndex >= 0) {
-                handleMobAttack(locked, hitInfo);
-            }
-            handleHit(locked, hitInfo);
+        if (hitInfo.attackIndex >= 0) {
+            handleMobAttack(user, hitInfo);
         }
+        handleHit(user, hitInfo);
     }
 
-    private static void handleMobAttack(Locked<User> locked, HitInfo hitInfo) {
+    private static void handleMobAttack(User user, HitInfo hitInfo) {
         // Resolve mob attack and attack index
-        final User user = locked.get();
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(hitInfo.templateId);
         if (mobTemplateResult.isEmpty()) {
             log.error("Could not resolve mob template ID : {}", hitInfo.templateId);
@@ -163,8 +159,7 @@ public final class HitHandler {
         user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
     }
 
-    private static void handleHit(Locked<User> locked, HitInfo hitInfo) {
-        final User user = locked.get();
+    private static void handleHit(User user, HitInfo hitInfo) {
         final int damage = hitInfo.damage;
 
         // Compute damage reductions
@@ -211,27 +206,23 @@ public final class HitHandler {
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.PowerGuard)) {
             // Power Guard - reflect nPowerGuard %, subtract reflected amount
             final int percentage = user.getSecondaryStat().getOption(CharacterTemporaryStat.PowerGuard).nOption;
-            try (var lockedMob = mobResult.get().acquire()) {
-                final Mob mob = lockedMob.get();
-                final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() * percentage / 100);
-                final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
-                // Process reflect damage and return amount to subtract from hit damage
-                mob.damage(user, finalDamage, 0);
-                return finalDamage;
-            }
+            final Mob mob = mobResult.get();
+            final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() * percentage / 100);
+            final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
+            // Process reflect damage and return amount to subtract from hit damage
+            mob.damage(user, finalDamage, 0);
+            return finalDamage;
         } else if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
             // Mana Reflection - reflect si.getValue(SkillStat.x, nManaReflection) %
             final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ManaReflection);
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
             if (skillInfoResult.isPresent()) {
                 final int percentage = skillInfoResult.get().getValue(SkillStat.x, option.nOption);
-                try (var lockedMob = mobResult.get().acquire()) {
-                    final Mob mob = lockedMob.get();
-                    final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() / 20); // skill description says 20% of max hp, but coded incorrectly in client
-                    final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
-                    mob.damage(user, finalDamage, 0);
-                    // no amount is subtracted from hit damage
-                }
+                final Mob mob = mobResult.get();
+                final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() / 20); // skill description says 20% of max hp, but coded incorrectly in client
+                final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
+                mob.damage(user, finalDamage, 0);
+                // no amount is subtracted from hit damage
             } else {
                 log.error("Could not resolve skill info for mana reflection skill ID : {}", option.rOption);
             }
@@ -344,12 +335,7 @@ public final class HitHandler {
             return;
         }
         final Optional<Mob> knockbackMobResult = user.getField().getMobPool().getById(hitInfo.reflectMobId);
-        if (knockbackMobResult.isPresent()) {
-            // Acquire and stun mob
-            try (var lockedMob = knockbackMobResult.get().acquire()) {
-                lockedMob.get().setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, Warrior.GUARDIAN, stunDuration * 1000), 0);
-            }
-        }
+        knockbackMobResult.ifPresent(mob -> mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, Warrior.GUARDIAN, stunDuration * 1000), 0));
     }
 
     private static void handleDivineShield(User user, HitInfo hitInfo) {
@@ -419,38 +405,36 @@ public final class HitHandler {
         if (mobResult.isEmpty()) {
             return;
         }
-        try (var lockedMob = mobResult.get().acquire()) {
-            final Mob mob = lockedMob.get();
-            if (mob.getHp() <= 0) {
-                return;
-            }
-            // Calculate damage
-            final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-            final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
-            final int mastery = CalcDamage.getWeaponMastery(user, weaponType);
-            final double k = CalcDamage.getMasteryConstByWT(weaponType);
-            final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
-            double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
-            damage = damage + user.getPassiveSkillData().getCr() * damage / 100.0;
-            damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
-            final int skillDamage = si.getValue(SkillStat.damage, slv);
-            if (skillDamage > 0) {
-                damage = skillDamage / 100.0 * damage;
-            }
-            final int damR = user.getPassiveSkillData().getDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
-            damage = damage + damR * damage / 100.0;
-            // Create attack
-            final Attack attack = new Attack(OutHeader.SummonedAttack);
-            attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);
-            final AttackInfo attackInfo = new AttackInfo();
-            attackInfo.mobId = mob.getId();
-            attackInfo.hitAction = MobActionType.HIT1.getValue();
-            attackInfo.damage[0] = (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
-            attack.getAttackInfo().add(attackInfo);
-            // Broadcast packet and process damage
-            user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
-            mob.damage(user, attackInfo.damage[0], 0);
+        final Mob mob = mobResult.get();
+        if (mob.getHp() <= 0) {
+            return;
         }
+        // Calculate damage
+        final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
+        final WeaponType weaponType = WeaponType.getByItemId(weapon != null ? weapon.getItemId() : 0);
+        final int mastery = CalcDamage.getWeaponMastery(user, weaponType);
+        final double k = CalcDamage.getMasteryConstByWT(weaponType);
+        final double damageMax = CalcDamage.calcDamageByWT(weaponType, user.getBasicStat(), CalcDamage.getPad(user), CalcDamage.getMad(user));
+        double damage = CalcDamage.adjustRandomDamage(damageMax, Util.getRandom().nextInt(), k, mastery);
+        damage = damage + user.getPassiveSkillData().getCr() * damage / 100.0;
+        damage = CalcDamage.getDamageAdjustedByElemAttr(user, damage, si, slv, mob.getDamagedElemAttr());
+        final int skillDamage = si.getValue(SkillStat.damage, slv);
+        if (skillDamage > 0) {
+            damage = skillDamage / 100.0 * damage;
+        }
+        final int damR = user.getPassiveSkillData().getDipR() + user.getSecondaryStat().getOption(CharacterTemporaryStat.DamR).nOption;
+        damage = damage + damR * damage / 100.0;
+        // Create attack
+        final Attack attack = new Attack(OutHeader.SummonedAttack);
+        attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);
+        final AttackInfo attackInfo = new AttackInfo();
+        attackInfo.mobId = mob.getId();
+        attackInfo.hitAction = MobActionType.HIT1.getValue();
+        attackInfo.damage[0] = (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX);
+        attack.getAttackInfo().add(attackInfo);
+        // Broadcast packet and process damage
+        user.getField().broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack));
+        mob.damage(user, attackInfo.damage[0], 0);
     }
 
     private static void handleEvasionBoost(User user, HitInfo hitInfo) {
@@ -496,23 +480,21 @@ public final class HitHandler {
             if (mobResult.isEmpty()) {
                 return;
             }
-            try (var lockedMob = mobResult.get().acquire()) {
-                final Mob mob = lockedMob.get();
-                if (mob.getHp() <= 0) {
-                    return;
-                }
-                // Create attack
-                final Attack attack = new Attack(OutHeader.SummonedAttack);
-                attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);
-                final AttackInfo attackInfo = new AttackInfo();
-                attackInfo.mobId = mob.getId();
-                attackInfo.hitAction = MobActionType.HIT1.getValue();
-                attackInfo.damage[0] = Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getMaxHp() / 2);
-                attack.getAttackInfo().add(attackInfo);
-                // Broadcast packet and process damage
-                user.getField().broadcastPacket(SummonedPacket.summonedAttack(member, summoned, attack));
-                mob.damage(user, attackInfo.damage[0], 0);
+            final Mob mob = mobResult.get();
+            if (mob.getHp() <= 0) {
+                return;
             }
+            // Create attack
+            final Attack attack = new Attack(OutHeader.SummonedAttack);
+            attack.actionAndDir = (byte) ((summoned.getMoveAction() & 1) << 7 | SummonedActionType.ATTACK1.getValue() & 0x7F);
+            final AttackInfo attackInfo = new AttackInfo();
+            attackInfo.mobId = mob.getId();
+            attackInfo.hitAction = MobActionType.HIT1.getValue();
+            attackInfo.damage[0] = Math.min((int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX), mob.getMaxHp() / 2);
+            attack.getAttackInfo().add(attackInfo);
+            // Broadcast packet and process damage
+            user.getField().broadcastPacket(SummonedPacket.summonedAttack(member, summoned, attack));
+            mob.damage(user, attackInfo.damage[0], 0);
         });
     }
 

@@ -93,7 +93,6 @@ public final class ScriptDispatcher {
         executor.submit(() -> {
             try {
                 log.debug("Executing {} script : {}", scriptType.name(), scriptName);
-                user.lock();
                 handler.invoke(null, scriptManager);
             } catch (Exception e) {
                 if (!(e.getCause() instanceof ScriptTermination)) {
@@ -101,7 +100,6 @@ public final class ScriptDispatcher {
                     e.printStackTrace();
                 }
             } finally {
-                user.unlock();
                 // Dispose after item scripts, and portal scripts if not warped
                 if (scriptType == ScriptType.ITEM || (scriptType == ScriptType.PORTAL && user.getFieldId() == field.getFieldId())) {
                     user.dispose();

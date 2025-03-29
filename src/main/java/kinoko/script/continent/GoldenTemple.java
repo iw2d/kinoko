@@ -3,10 +3,8 @@ package kinoko.script.continent;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
-import kinoko.world.field.Field;
 
 import java.util.Map;
-import java.util.Optional;
 
 public final class GoldenTemple extends ScriptHandler {
     public static final int GOLDEN_TICKET_ID = 4001431;

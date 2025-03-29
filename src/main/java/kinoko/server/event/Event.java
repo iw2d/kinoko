@@ -68,9 +68,7 @@ public abstract class Event {
             return;
         }
         sourceFieldResult.get().getUserPool().forEach((user) -> {
-            try (var locked = user.acquire()) {
-                locked.get().warp(destinationField, destinationPortal, false, false);
-            }
+            user.warp(destinationField, destinationPortal, false, false);
         });
     }
 
@@ -103,10 +101,8 @@ public abstract class Event {
         // Resolve and change reactor state
         field.getReactorPool().forEach((reactor) -> {
             if (reactor.getTemplateId() == reactorTemplateId) {
-                try (var lockedReactor = reactor.acquire()) {
-                    reactor.setState(newState);
-                    field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
-                }
+                reactor.setState(newState);
+                field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
             }
         });
     }

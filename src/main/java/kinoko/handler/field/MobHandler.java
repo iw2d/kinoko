@@ -56,61 +56,59 @@ public final class MobHandler {
             // log.error("Received MobMove for invalid object with ID : {}", objectId);
             return;
         }
-        try (var lockedMob = mobResult.get().acquire()) {
-            final Mob mob = lockedMob.get();
-            if (mob.getController() != user) {
-                field.getUserPool().setController(mob, user);
-            }
-
-            final short mobCtrlSn = inPacket.decodeShort(); // nMobCtrlSN
-            final byte actionMask = inPacket.decodeByte(); // bNextAttackPossible | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
-            final byte actionAndDir = inPacket.decodeByte(); // nActionAndDir
-            final int targetInfo = inPacket.decodeInt(); // CMob::TARGETINFO { short x, short y } || { short nSkillIDandLev, short nDelay }
-
-            final List<Tuple<Integer, Integer>> multiTargetForBall = new ArrayList<>();
-            final int multiTargetForBallCount = inPacket.decodeInt();
-            for (int i = 0; i < multiTargetForBallCount; i++) {
-                multiTargetForBall.add(Tuple.of(
-                        inPacket.decodeInt(), // aMultiTargetForBall[i].x
-                        inPacket.decodeInt() // aMultiTargetForBall[i].y
-                ));
-            }
-            final List<Integer> randTimeForAreaAttack = new ArrayList<>();
-            final int randTimeForAreaAttackCount = inPacket.decodeInt();
-            for (int i = 0; i < randTimeForAreaAttackCount; i++) {
-                randTimeForAreaAttack.add(inPacket.decodeInt()); // aRandTimeforAreaAttack[i]
-            }
-
-            inPacket.decodeByte(); // (bActive == 0) | (16 * !(CVecCtrlMob::IsCheatMobMoveRand(pvcActive) == 0))
-            inPacket.decodeInt(); // HackedCode
-            inPacket.decodeInt(); // moveCtx.fc.ptTarget->x
-            inPacket.decodeInt(); // moveCtx.fc.ptTarget->y
-            inPacket.decodeInt(); // dwHackedCodeCRC
-
-            final MovePath movePath = MovePath.decode(inPacket);
-            movePath.applyTo(mob);
-
-            inPacket.decodeByte(); // this->bChasing
-            inPacket.decodeByte(); // pTarget != 0
-            inPacket.decodeByte(); // pvcActive->bChasing
-            inPacket.decodeByte(); // pvcActive->bChasingHack
-            inPacket.decodeInt(); // pvcActive->tChaseDuration
-
-            // Handle mob attack / skill
-            final MobAttackInfo mai = new MobAttackInfo();
-            mai.actionMask = actionMask;
-            mai.actionAndDir = actionAndDir;
-            mai.targetInfo = targetInfo;
-            mai.multiTargetForBall = multiTargetForBall;
-            mai.randTimeForAreaAttack = randTimeForAreaAttack;
-            handleMobAttack(mob, mai);
-
-            // Update client
-            final boolean nextAttackPossible = (mai.actionMask & 0x1) != 0;
-            final Optional<MobSkill> nextSkillResult = nextAttackPossible ? mob.getNextSkill() : Optional.empty();
-            user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, nextSkillResult.orElse(null)));
-            field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
+        final Mob mob = mobResult.get();
+        if (mob.getController() != user) {
+            field.getUserPool().setController(mob, user);
         }
+
+        final short mobCtrlSn = inPacket.decodeShort(); // nMobCtrlSN
+        final byte actionMask = inPacket.decodeByte(); // bNextAttackPossible | (4 * (bRushMove | (2 * bRiseByToss | 2 * nMobCtrlState)))
+        final byte actionAndDir = inPacket.decodeByte(); // nActionAndDir
+        final int targetInfo = inPacket.decodeInt(); // CMob::TARGETINFO { short x, short y } || { short nSkillIDandLev, short nDelay }
+
+        final List<Tuple<Integer, Integer>> multiTargetForBall = new ArrayList<>();
+        final int multiTargetForBallCount = inPacket.decodeInt();
+        for (int i = 0; i < multiTargetForBallCount; i++) {
+            multiTargetForBall.add(Tuple.of(
+                    inPacket.decodeInt(), // aMultiTargetForBall[i].x
+                    inPacket.decodeInt() // aMultiTargetForBall[i].y
+            ));
+        }
+        final List<Integer> randTimeForAreaAttack = new ArrayList<>();
+        final int randTimeForAreaAttackCount = inPacket.decodeInt();
+        for (int i = 0; i < randTimeForAreaAttackCount; i++) {
+            randTimeForAreaAttack.add(inPacket.decodeInt()); // aRandTimeforAreaAttack[i]
+        }
+
+        inPacket.decodeByte(); // (bActive == 0) | (16 * !(CVecCtrlMob::IsCheatMobMoveRand(pvcActive) == 0))
+        inPacket.decodeInt(); // HackedCode
+        inPacket.decodeInt(); // moveCtx.fc.ptTarget->x
+        inPacket.decodeInt(); // moveCtx.fc.ptTarget->y
+        inPacket.decodeInt(); // dwHackedCodeCRC
+
+        final MovePath movePath = MovePath.decode(inPacket);
+        movePath.applyTo(mob);
+
+        inPacket.decodeByte(); // this->bChasing
+        inPacket.decodeByte(); // pTarget != 0
+        inPacket.decodeByte(); // pvcActive->bChasing
+        inPacket.decodeByte(); // pvcActive->bChasingHack
+        inPacket.decodeInt(); // pvcActive->tChaseDuration
+
+        // Handle mob attack / skill
+        final MobAttackInfo mai = new MobAttackInfo();
+        mai.actionMask = actionMask;
+        mai.actionAndDir = actionAndDir;
+        mai.targetInfo = targetInfo;
+        mai.multiTargetForBall = multiTargetForBall;
+        mai.randTimeForAreaAttack = randTimeForAreaAttack;
+        handleMobAttack(mob, mai);
+
+        // Update client
+        final boolean nextAttackPossible = (mai.actionMask & 0x1) != 0;
+        final Optional<MobSkill> nextSkillResult = nextAttackPossible ? mob.getNextSkill() : Optional.empty();
+        user.write(MobPacket.mobCtrlAck(mob, mobCtrlSn, nextAttackPossible, nextSkillResult.orElse(null)));
+        field.broadcastPacket(MobPacket.mobMove(mob, mai, movePath), user);
     }
 
     @Handler(InHeader.MobApplyCtrl)
@@ -125,20 +123,18 @@ public final class MobHandler {
             log.error("Received MobApplyCtrl for invalid object with ID : {}", objectId);
             return;
         }
-        try (var lockedMob = mobResult.get().acquire()) {
-            final Mob mob = lockedMob.get();
-            if (!mob.getTemplate().isPickUpDrop() && !mob.getTemplate().isFirstAttack()) {
-                log.error("Received invalid MobApplyCtrl request for mob template ID : {}", mob.getTemplateId());
-            }
-            // Assign controller
-            if (mob.getController() == null) {
+        final Mob mob = mobResult.get();
+        if (!mob.getTemplate().isPickUpDrop() && !mob.getTemplate().isFirstAttack()) {
+            log.error("Received invalid MobApplyCtrl request for mob template ID : {}", mob.getTemplateId());
+        }
+        // Assign controller
+        if (mob.getController() == null) {
+            field.getUserPool().setController(mob, user);
+        } else if (mob.getController() != user) {
+            final double userDistance = Util.distance(mob.getX(), mob.getY(), user.getX(), user.getY());
+            final double controllerDistance = Util.distance(mob.getX(), mob.getY(), mob.getController().getX(), mob.getController().getY());
+            if (userDistance < controllerDistance - 20) {
                 field.getUserPool().setController(mob, user);
-            } else if (mob.getController() != user) {
-                final double userDistance = Util.distance(mob.getX(), mob.getY(), user.getX(), user.getY());
-                final double controllerDistance = Util.distance(mob.getX(), mob.getY(), mob.getController().getX(), mob.getController().getY());
-                if (userDistance < controllerDistance - 20) {
-                    field.getUserPool().setController(mob, user);
-                }
             }
         }
     }
@@ -166,28 +162,26 @@ public final class MobHandler {
         }
 
         // Apply damage
-        try (var lockedMob = targetMob.acquire()) {
-            final int damage = calcMobDamage(attackerMob.getTemplate(), targetMob.getTemplate());
-            targetMob.updateHp(targetMob.getHp() - damage);
-            field.broadcastPacket(MobPacket.mobDamaged(targetMob, damage));
-            if (targetMob.getHp() > 0) {
-                targetMob.resetDropItemPeriod();
-                return;
+        final int damage = calcMobDamage(attackerMob.getTemplate(), targetMob.getTemplate());
+        targetMob.updateHp(targetMob.getHp() - damage);
+        field.broadcastPacket(MobPacket.mobDamaged(targetMob, damage));
+        if (targetMob.getHp() > 0) {
+            targetMob.resetDropItemPeriod();
+            return;
+        }
+        // Process mob death
+        field.getMobPool().removeMob(targetMob, MobLeaveType.ETC);
+        switch (targetMob.getTemplateId()) {
+            case HenesysPQ.MOON_BUNNY -> {
+                field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
             }
-            // Process mob death
-            field.getMobPool().removeMob(targetMob, MobLeaveType.ETC);
-            switch (targetMob.getTemplateId()) {
-                case HenesysPQ.MOON_BUNNY -> {
-                    field.broadcastPacket(BroadcastPacket.noticeWithoutPrefix("The Moon Bunny went home because he was sick."));
-                }
-                case EvanQuest.SAFE_GUARD -> {
-                    final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(22583); // Releasing the Free Spirits
-                    if (questRecordResult.isPresent()) {
-                        final QuestRecord qr = questRecordResult.get();
-                        qr.setValue("001");
-                        user.write(MessagePacket.questRecord(qr));
-                        user.validateStat();
-                    }
+            case EvanQuest.SAFE_GUARD -> {
+                final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(22583); // Releasing the Free Spirits
+                if (questRecordResult.isPresent()) {
+                    final QuestRecord qr = questRecordResult.get();
+                    qr.setValue("001");
+                    user.write(MessagePacket.questRecord(qr));
+                    user.validateStat();
                 }
             }
         }
@@ -211,11 +205,9 @@ public final class MobHandler {
             log.error("Received MobAttackMob for invalid attacked mob ID : {}", attackedMobId);
             return;
         }
-        try (var lockedMob = mobResult.get().acquire()) {
-            final Mob mob = lockedMob.get();
-            mob.damage(user, damage, 0);
-            mob.getField().broadcastPacket(MobPacket.mobDamaged(mob, damage), user);
-        }
+        final Mob mob = mobResult.get();
+        mob.damage(user, damage, 0);
+        mob.getField().broadcastPacket(MobPacket.mobDamaged(mob, damage), user);
     }
 
     @Handler(InHeader.MobTimeBombEnd)
@@ -237,22 +229,18 @@ public final class MobHandler {
         final int x = inPacket.decodeInt(); // user x
         final int y = inPacket.decodeInt(); // user y
 
-        try (var lockedMob = mob.acquire()) {
-            if (!mob.getMobStat().hasOption(MobTemporaryStat.TimeBomb)) {
-                log.error("Received MobTimeBombEnd for mob ID : {} without TimeBomb stat", mob.getId());
-                return;
-            }
-            mob.resetTemporaryStat(Set.of(MobTemporaryStat.TimeBomb));
-            // Damage user if within range
-            if (mob.getRelativeRect(SkillConstants.MONSTER_BOMB_RANGE).isInsideRect(x, y)) {
-                try (var locked = user.acquire()) {
-                    final int damage = (int) Math.min(CalcDamage.calcDamageMax(user), user.getHp() - 100);
-                    user.addHp(-damage);
-                    user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 120, damage));
-                }
-            } else {
-                user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 0, 0));
-            }
+        if (!mob.getMobStat().hasOption(MobTemporaryStat.TimeBomb)) {
+            log.error("Received MobTimeBombEnd for mob ID : {} without TimeBomb stat", mob.getId());
+            return;
+        }
+        mob.resetTemporaryStat(Set.of(MobTemporaryStat.TimeBomb));
+        // Damage user if within range
+        if (mob.getRelativeRect(SkillConstants.MONSTER_BOMB_RANGE).isInsideRect(x, y)) {
+            final int damage = (int) Math.min(CalcDamage.calcDamageMax(user), user.getHp() - 100);
+            user.addHp(-damage);
+            user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 120, damage));
+        } else {
+            user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 0, 0));
         }
     }
 
@@ -328,13 +316,7 @@ public final class MobHandler {
                 if (prop > 0 && !Util.succeedProp(prop)) {
                     continue;
                 }
-                if (mob == targetMob) {
-                    mob.setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)), 0);
-                } else {
-                    try (var lockedTarget = targetMob.acquire()) {
-                        lockedTarget.get().setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)), 0);
-                    }
-                }
+                targetMob.setTemporaryStat(mts, MobStatOption.ofMobSkill(si.getValue(SkillStat.x, slv), skillId, slv, si.getDuration(slv)), 0);
             }
             return true;
         }
@@ -350,19 +332,17 @@ public final class MobHandler {
                 if (prop > 0 && !Util.succeedProp(prop)) {
                     continue;
                 }
-                try (var locked = targetUser.acquire()) {
-                    if ((cts != CharacterTemporaryStat.Stun && cts != CharacterTemporaryStat.Attract) && targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+                if ((cts != CharacterTemporaryStat.Stun && cts != CharacterTemporaryStat.Attract) && targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.Holyshield)) {
+                    continue;
+                }
+                if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {
+                    final DefenseStateStat defenseStateStat = DefenseStateStat.getByValue(targetUser.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState_Stat).nOption);
+                    if (defenseStateStat != null && defenseStateStat.getStat() == cts &&
+                            Util.succeedProp(targetUser.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState).nOption)) {
                         continue;
                     }
-                    if (targetUser.getSecondaryStat().hasOption(CharacterTemporaryStat.DefenseState)) {
-                        final DefenseStateStat defenseStateStat = DefenseStateStat.getByValue(targetUser.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState_Stat).nOption);
-                        if (defenseStateStat != null && defenseStateStat.getStat() == cts &&
-                                Util.succeedProp(targetUser.getSecondaryStat().getOption(CharacterTemporaryStat.DefenseState).nOption)) {
-                            continue;
-                        }
-                    }
-                    targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
                 }
+                targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
             }
             return true;
         }
@@ -379,13 +359,7 @@ public final class MobHandler {
                 final int y = si.getValue(SkillStat.y, slv);
                 for (Mob targetMob : targetMobs) {
                     final int healAmount = x + Util.getRandom(y);
-                    if (mob == targetMob) {
-                        mob.heal(healAmount);
-                    } else {
-                        try (var lockedTarget = targetMob.acquire()) {
-                            lockedTarget.get().heal(healAmount);
-                        }
-                    }
+                    targetMob.heal(healAmount);
                 }
             }
             case DISPEL -> {
@@ -398,9 +372,7 @@ public final class MobHandler {
                     if (prop > 0 && !Util.succeedProp(prop)) {
                         continue;
                     }
-                    try (var locked = targetUser.acquire()) {
-                        locked.get().resetTemporaryStat((stat, option) -> option.rOption / 1000000 > 0); // SecondaryStat::ResetByUserSkill
-                    }
+                    targetUser.resetTemporaryStat((stat, option) -> option.rOption / 1000000 > 0); // SecondaryStat::ResetByUserSkill
                 }
             }
             case AREA_FIRE, AREA_POISON -> {

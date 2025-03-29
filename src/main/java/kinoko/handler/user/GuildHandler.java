@@ -35,118 +35,106 @@ public final class GuildHandler {
             }
             case CheckGuildName -> {
                 final String guildName = inPacket.decodeString(); // sGuildName
-                try (var locked = user.acquire()) {
-                    // Check if in guild HQ map
-                    if (user.getFieldId() != GuildHQ.GUILD_HEADQUARTERS) {
-                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
-                        return;
-                    }
-                    // Check if already in guild
-                    if (user.hasGuild()) {
-                        user.write(GuildPacket.createNewGuildAlreadyJoined()); // Already joined the guild.
-                        return;
-                    }
-                    // Check level requirement
-                    if (user.getLevel() < 101) {
-                        user.write(GuildPacket.createNewGuildBeginner()); // You cannot make a guild due to the limitation of minimum level requirement.
-                        return;
-                    }
-                    // Check for creation cost
-                    final InventoryManager im = user.getInventoryManager();
-                    if (!im.canAddMoney(-GameConstants.CREATE_GUILD_COST)) {
-                        user.write(GuildPacket.serverMsg("You do not have enough mesos to create a guild."));
-                        return;
-                    }
-                    // Check if guild name is available
-                    if (!DatabaseManager.guildAccessor().checkGuildNameAvailable(guildName)) {
-                        user.write(GuildPacket.checkGuildNameAlreadyUsed()); // The name is already in use... Please try other ones....
-                        return;
-                    }
-                    // Resolve new guild ID
-                    final Optional<Integer> guildIdResult = DatabaseManager.idAccessor().nextGuildId();
-                    if (guildIdResult.isEmpty()) {
-                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
-                        return;
-                    }
-                    // Deduct creation cost
-                    if (!im.addMoney(-GameConstants.CREATE_GUILD_COST)) {
-                        throw new IllegalStateException("Could not deduct guild creation cost");
-                    }
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
-                    user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
-                    // Submit guild creation request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.createNewGuild(guildIdResult.get(), guildName));
+                // Check if in guild HQ map
+                if (user.getFieldId() != GuildHQ.GUILD_HEADQUARTERS) {
+                    user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                    return;
                 }
+                // Check if already in guild
+                if (user.hasGuild()) {
+                    user.write(GuildPacket.createNewGuildAlreadyJoined()); // Already joined the guild.
+                    return;
+                }
+                // Check level requirement
+                if (user.getLevel() < 101) {
+                    user.write(GuildPacket.createNewGuildBeginner()); // You cannot make a guild due to the limitation of minimum level requirement.
+                    return;
+                }
+                // Check for creation cost
+                final InventoryManager im = user.getInventoryManager();
+                if (!im.canAddMoney(-GameConstants.CREATE_GUILD_COST)) {
+                    user.write(GuildPacket.serverMsg("You do not have enough mesos to create a guild."));
+                    return;
+                }
+                // Check if guild name is available
+                if (!DatabaseManager.guildAccessor().checkGuildNameAvailable(guildName)) {
+                    user.write(GuildPacket.checkGuildNameAlreadyUsed()); // The name is already in use... Please try other ones....
+                    return;
+                }
+                // Resolve new guild ID
+                final Optional<Integer> guildIdResult = DatabaseManager.idAccessor().nextGuildId();
+                if (guildIdResult.isEmpty()) {
+                    user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                // Deduct creation cost
+                if (!im.addMoney(-GameConstants.CREATE_GUILD_COST)) {
+                    throw new IllegalStateException("Could not deduct guild creation cost");
+                }
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
+                user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
+                // Submit guild creation request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.createNewGuild(guildIdResult.get(), guildName));
             }
             case InviteGuild -> {
                 final String targetName = inPacket.decodeString();
-                try (var locked = user.acquire()) {
-                    // Check if guild master or submaster
-                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
-                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
-                        return;
-                    }
-                    // Submit invite guild request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.inviteGuild(targetName));
+                // Check if guild master or submaster
+                if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                    user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                    return;
                 }
+                // Submit invite guild request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.inviteGuild(targetName));
             }
             case JoinGuild -> {
                 final int inviterId = inPacket.decodeInt();
                 inPacket.decodeInt(); // dwCharacterId
-                try (var locked = user.acquire()) {
-                    // Check if already in guild
-                    if (user.hasGuild()) {
-                        user.write(GuildPacket.joinGuildAlreadyJoined());
-                        return;
-                    }
-                    // Submit join guild request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.joinGuild(inviterId));
+                // Check if already in guild
+                if (user.hasGuild()) {
+                    user.write(GuildPacket.joinGuildAlreadyJoined());
+                    return;
                 }
+                // Submit join guild request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.joinGuild(inviterId));
             }
             case WithdrawGuild -> {
                 inPacket.decodeInt(); // dwCharacterId
                 inPacket.decodeString(); // sCharacterName
-                try (var locked = user.acquire()) {
-                    // Check if user can leave the guild
-                    if (!user.hasGuild()) {
-                        user.write(GuildPacket.withdrawGuildNotJoined()); // You are not in the guild.
-                        return;
-                    }
-                    if (user.getGuildRank() == GuildRank.MASTER) {
-                        user.write(GuildPacket.serverMsg("You cannot quit the guild since you are the master of the guild."));
-                        return;
-                    }
-                    // Submit withdraw guild request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.withdrawGuild(user.getGuildId()));
+                // Check if user can leave the guild
+                if (!user.hasGuild()) {
+                    user.write(GuildPacket.withdrawGuildNotJoined()); // You are not in the guild.
+                    return;
                 }
+                if (user.getGuildRank() == GuildRank.MASTER) {
+                    user.write(GuildPacket.serverMsg("You cannot quit the guild since you are the master of the guild."));
+                    return;
+                }
+                // Submit withdraw guild request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.withdrawGuild(user.getGuildId()));
             }
             case KickGuild -> {
                 final int targetId = inPacket.decodeInt();
                 final String targetName = inPacket.decodeString();
-                try (var locked = user.acquire()) {
-                    // Check if guild master or submaster
-                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
-                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
-                        return;
-                    }
-                    // Submit invite guild request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.kickGuild(targetId, targetName));
+                // Check if guild master or submaster
+                if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                    user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                    return;
                 }
+                // Submit invite guild request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.kickGuild(targetId, targetName));
             }
             case SetGradeName -> {
                 final List<String> gradeNames = new ArrayList<>();
                 for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
                     gradeNames.add(inPacket.decodeString());
                 }
-                try (var locked = user.acquire()) {
-                    // Check if guild master
-                    if (user.getGuildRank() != GuildRank.MASTER) {
-                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
-                        return;
-                    }
-                    // Submit guild grade name request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setGradeName(gradeNames));
+                // Check if guild master
+                if (user.getGuildRank() != GuildRank.MASTER) {
+                    user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                    return;
                 }
+                // Submit guild grade name request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.setGradeName(gradeNames));
             }
             case SetMemberGrade -> {
                 final int targetId = inPacket.decodeInt();
@@ -155,55 +143,49 @@ public final class GuildHandler {
                     user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
                     return;
                 }
-                try (var locked = user.acquire()) {
-                    // Check if guild master or submaster
-                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
-                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
-                        return;
-                    }
-                    // Submit set member grade request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMemberGrade(targetId, guildRank));
+                // Check if guild master or submaster
+                if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                    user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                    return;
                 }
+                // Submit set member grade request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMemberGrade(targetId, guildRank));
             }
             case SetMark -> {
                 final short markBg = inPacket.decodeShort();
                 final byte markBgColor = inPacket.decodeByte();
                 final short mark = inPacket.decodeShort();
                 final byte markColor = inPacket.decodeByte();
-                try (var locked = user.acquire()) {
-                    // Check if in guild HQ map
-                    if (user.getFieldId() != GuildHQ.GUILD_HEADQUARTERS) {
-                        user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
-                        return;
-                    }
-                    // Check if guild master
-                    if (user.getGuildRank() != GuildRank.MASTER) {
-                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
-                        return;
-                    }
-                    // Deduct emblem cost
-                    final InventoryManager im = user.getInventoryManager();
-                    if (!im.canAddMoney(-GameConstants.CREATE_EMBLEM_COST)) {
-                        user.write(GuildPacket.serverMsg("You do not have enough mesos to register a guild emblem."));
-                        return;
-                    }
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
-                    user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
-                    // Submit guild emblem request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMark(markBg, markBgColor, mark, markColor));
+                // Check if in guild HQ map
+                if (user.getFieldId() != GuildHQ.GUILD_HEADQUARTERS) {
+                    user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+                    return;
                 }
+                // Check if guild master
+                if (user.getGuildRank() != GuildRank.MASTER) {
+                    user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                    return;
+                }
+                // Deduct emblem cost
+                final InventoryManager im = user.getInventoryManager();
+                if (!im.canAddMoney(-GameConstants.CREATE_EMBLEM_COST)) {
+                    user.write(GuildPacket.serverMsg("You do not have enough mesos to register a guild emblem."));
+                    return;
+                }
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
+                user.write(MessagePacket.incMoney(-GameConstants.CREATE_GUILD_COST));
+                // Submit guild emblem request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.setMark(markBg, markBgColor, mark, markColor));
             }
             case SetNotice -> {
                 final String notice = inPacket.decodeString();
-                try (var locked = user.acquire()) {
-                    // Check if guild master or submaster
-                    if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
-                        user.write(GuildPacket.serverMsg("You are not the master of the guild."));
-                        return;
-                    }
-                    // Submit guild notice request
-                    user.getConnectedServer().submitGuildRequest(user, GuildRequest.setNotice(notice));
+                // Check if guild master or submaster
+                if (user.getGuildRank() != GuildRank.MASTER && user.getGuildRank() != GuildRank.SUBMASTER) {
+                    user.write(GuildPacket.serverMsg("You are not the master of the guild."));
+                    return;
                 }
+                // Submit guild notice request
+                user.getConnectedServer().submitGuildRequest(user, GuildRequest.setNotice(notice));
             }
             case null -> {
                 log.error("Unknown guild request type : {}", type);

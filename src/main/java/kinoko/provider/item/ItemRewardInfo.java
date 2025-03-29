@@ -3,8 +3,6 @@ package kinoko.provider.item;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
-import kinoko.util.Triple;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
 
@@ -28,8 +26,8 @@ public final class ItemRewardInfo {
         return entries;
     }
 
-    public boolean canAddReward(Locked<User> locked) {
-        final InventoryManager im = locked.get().getInventoryManager();
+    public boolean canAddReward(User user) {
+        final InventoryManager im = user.getInventoryManager();
         for (ItemRewardEntry entry : getEntries()) {
             if (!im.canAddItem(entry.getItemId(), entry.getCount())) {
                 return false;

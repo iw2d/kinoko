@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import kinoko.server.ServerConstants;
+import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.NioBufferInPacket;
@@ -21,12 +22,12 @@ public final class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        final NettyClient c = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        if (c == null) {
+        final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
+        if (client == null) {
             return;
         }
-        final byte[] iv = c.getRecvIv();
-        if (c.getStoredLength() < 0) {
+        final byte[] iv = client.getRecvIv();
+        if (client.getStoredLength() < 0) {
             if (in.readableBytes() < 4) {
                 return;
             }
@@ -36,19 +37,19 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             final int version = ((header[0] ^ iv[2]) & 0xFF) | (((header[1] ^ iv[3]) << 8) & 0xFF00);
             if (version != RECV_VERSION) {
                 log.warn("Incorrect packet seq, dropping client");
-                ServerExecutor.submitService(c::close);
+                ServerExecutor.submit(client, client::close);
                 return;
             }
             final int length = ((header[0] ^ header[2]) & 0xFF) | (((header[1] ^ header[3]) << 8) & 0xFF00);
-            c.setStoredLength(length);
-        } else if (in.readableBytes() >= c.getStoredLength()) {
-            final byte[] data = new byte[c.getStoredLength()];
+            client.setStoredLength(length);
+        } else if (in.readableBytes() >= client.getStoredLength()) {
+            final byte[] data = new byte[client.getStoredLength()];
             in.readBytes(data);
-            c.setStoredLength(-1);
+            client.setStoredLength(-1);
 
             MapleCrypto.crypt(data, iv);
             ShandaCrypto.decrypt(data);
-            c.setRecvIv(IGCipher.innoHash(iv));
+            client.setRecvIv(IGCipher.innoHash(iv));
 
             final InPacket inPacket = new NioBufferInPacket(data);
             out.add(inPacket);

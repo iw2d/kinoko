@@ -48,10 +48,8 @@ public final class FieldHandler {
         }
 
         // Pick up drop
-        try (var locked = user.acquire()) {
-            field.getDropPool().pickUpDrop(locked, dropResult.get(), DropLeaveType.PICKED_UP_BY_USER, 0);
-            user.dispose();
-        }
+        field.getDropPool().pickUpDrop(user, dropResult.get(), DropLeaveType.PICKED_UP_BY_USER, 0);
+        user.dispose();
     }
 
 
@@ -71,19 +69,17 @@ public final class FieldHandler {
             log.error("Received ReactorHit for invalid object with ID : {}", objectId);
             return;
         }
-        try (var lockedReactor = reactorResult.get().acquire()) {
-            // Hit reactor
-            final Reactor reactor = lockedReactor.get();
-            if (reactor.isNotHitable()) {
-                log.error("{} : tried to hit reactor that is not hitable", reactor);
-                return;
-            }
-            if (!reactor.tryHit(skillId)) {
-                log.error("{} : could not hit reactor with skill ID {}", reactor, skillId);
-                return;
-            }
-            field.getReactorPool().hitReactor(user, reactor, delay);
+        // Hit reactor
+        final Reactor reactor = reactorResult.get();
+        if (reactor.isNotHitable()) {
+            log.error("{} : tried to hit reactor that is not hitable", reactor);
+            return;
         }
+        if (!reactor.tryHit(skillId)) {
+            log.error("{} : could not hit reactor with skill ID {}", reactor, skillId);
+            return;
+        }
+        field.getReactorPool().hitReactor(user, reactor, delay);
     }
 
     @Handler(InHeader.ReactorTouch)
@@ -97,16 +93,14 @@ public final class FieldHandler {
             log.error("Received ReactorTouch for invalid object with ID : {}", objectId);
             return;
         }
-        try (var lockedReactor = reactorResult.get().acquire()) {
-            // Hit reactor
-            final Reactor reactor = lockedReactor.get();
-            if (!reactor.isActivateByTouch()) {
-                log.error("{} : tried to hit reactor that is not activated by touch", reactor);
-                return;
-            }
-            // There are no reactors activated by touch in v95
-            log.error(String.format("Unexpected reactor touch received for %s", reactor));
+        // Hit reactor
+        final Reactor reactor = reactorResult.get();
+        if (!reactor.isActivateByTouch()) {
+            log.error("{} : tried to hit reactor that is not activated by touch", reactor);
+            return;
         }
+        // There are no reactors activated by touch in v95
+        log.error(String.format("Unexpected reactor touch received for %s", reactor));
     }
 
     @Handler(InHeader.RequireFieldObstacleStatus)

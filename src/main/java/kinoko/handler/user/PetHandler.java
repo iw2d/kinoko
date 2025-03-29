@@ -36,24 +36,22 @@ public final class PetHandler {
     public static void handleUserDestroyPetItemRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final long petSn = inPacket.decodeLong(); // liCashItemSN
-        try (var locked = user.acquire()) {
-            final InventoryManager im = locked.get().getInventoryManager();
-            final Optional<Map.Entry<Integer, Item>> itemEntryResult = im.getCashInventory().getItems().entrySet().stream()
-                    .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                    .findFirst();
-            if (itemEntryResult.isEmpty()) {
-                log.error("Tried to destroy pet item with sn {} not in inventory", petSn);
-                user.dispose();
-                return;
-            }
-            final int position = itemEntryResult.get().getKey();
-            final Item petItem = itemEntryResult.get().getValue();
-            final Optional<InventoryOperation> removeResult = im.removeItem(position, petItem);
-            if (removeResult.isEmpty()) {
-                throw new IllegalStateException("Could not remove pet item in inventory");
-            }
-            user.write(WvsContext.inventoryOperation(removeResult.get(), true));
+        final InventoryManager im = user.getInventoryManager();
+        final Optional<Map.Entry<Integer, Item>> itemEntryResult = im.getCashInventory().getItems().entrySet().stream()
+                .filter((entry) -> entry.getValue().getItemSn() == petSn)
+                .findFirst();
+        if (itemEntryResult.isEmpty()) {
+            log.error("Tried to destroy pet item with sn {} not in inventory", petSn);
+            user.dispose();
+            return;
         }
+        final int position = itemEntryResult.get().getKey();
+        final Item petItem = itemEntryResult.get().getValue();
+        final Optional<InventoryOperation> removeResult = im.removeItem(position, petItem);
+        if (removeResult.isEmpty()) {
+            throw new IllegalStateException("Could not remove pet item in inventory");
+        }
+        user.write(WvsContext.inventoryOperation(removeResult.get(), true));
     }
 
     @Handler(InHeader.UserActivatePetRequest)
@@ -61,51 +59,49 @@ public final class PetHandler {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final boolean bossPet = inPacket.decodeBoolean(); // bBossPet
-        try (var locked = user.acquire()) {
-            // Resolve pet item in inventory
-            final InventoryManager im = locked.get().getInventoryManager();
-            final Item item = im.getCashInventory().getItem(position);
-            if (item == null || item.getItemType() != ItemType.PET) {
-                log.error("Received UserActivatePetRequest with incorrect position {}", position);
+        // Resolve pet item in inventory
+        final InventoryManager im = user.getInventoryManager();
+        final Item item = im.getCashInventory().getItem(position);
+        if (item == null || item.getItemType() != ItemType.PET) {
+            log.error("Received UserActivatePetRequest with incorrect position {}", position);
+            user.dispose();
+            return;
+        }
+        // Check if pet already activated
+        final long petSn = item.getItemSn();
+        final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
+        if (petIndexResult.isEmpty()) {
+            // Check if max number of pets active
+            final boolean hasFollowTheLead = user.getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
+            if (user.getPets().size() >= (hasFollowTheLead ? GameConstants.PET_COUNT_MAX : 1)) {
+                log.error("Tried to activate pet while having max number of pets active");
                 user.dispose();
                 return;
             }
-            // Check if pet already activated
-            final long petSn = item.getItemSn();
-            final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
-            if (petIndexResult.isEmpty()) {
-                // Check if max number of pets active
-                final boolean hasFollowTheLead = user.getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
-                if (user.getPets().size() >= (hasFollowTheLead ? GameConstants.PET_COUNT_MAX : 1)) {
-                    log.error("Tried to activate pet while having max number of pets active");
-                    user.dispose();
-                    return;
-                }
-                // Create and set pet
-                final Pet pet = Pet.from(user, item);
-                pet.setPosition(user.getField(), user.getX(), user.getY());
-                if (!hasFollowTheLead || bossPet) {
-                    user.setPet(pet, 0, false);
-                } else {
-                    if (!user.addPet(pet, false)) {
-                        log.error("Could not add pet");
-                        user.dispose();
-                        return;
-                    }
-                }
-                // Update client
-                user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
-                user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
+            // Create and set pet
+            final Pet pet = Pet.from(user, item);
+            pet.setPosition(user.getField(), user.getX(), user.getY());
+            if (!hasFollowTheLead || bossPet) {
+                user.setPet(pet, 0, false);
             } else {
-                // Deactivate pet and update client
-                final int petIndex = petIndexResult.get();
-                if (!user.removePet(petIndex)) {
-                    log.error("Could not remove pet at index : {}", petIndex);
+                if (!user.addPet(pet, false)) {
+                    log.error("Could not add pet");
                     user.dispose();
                     return;
                 }
-                user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndex, 0));
             }
+            // Update client
+            user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
+            user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
+        } else {
+            // Deactivate pet and update client
+            final int petIndex = petIndexResult.get();
+            if (!user.removePet(petIndex)) {
+                log.error("Could not remove pet at index : {}", petIndex);
+                user.dispose();
+                return;
+            }
+            user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndex, 0));
         }
     }
 
@@ -160,69 +156,67 @@ public final class PetHandler {
         inPacket.decodeByte(); // bCommandWithName
         final int action = inPacket.decodeByte();
 
-        try (var locked = user.acquire()) {
-            // Resolve pet interaction
-            final int petIndex = petIndexResult.get();
-            final Pet pet = user.getPet(petIndex);
-            if (pet == null) {
-                log.error("Received PetInteractionRequest for invalid pet index : {}", petIndex);
-                return;
-            }
-            final Optional<PetInteraction> interactionResult = ItemProvider.getPetInteraction(pet.getTemplateId(), action);
-            if (interactionResult.isEmpty()) {
-                log.error("Could not resolve pet interaction for template {}, action {}", pet.getTemplateId(), action);
-                return;
-            }
-            final PetInteraction interaction = interactionResult.get();
-
-            // Check interaction and success
-            if (pet.getLevel() < interaction.getLevelMin() || pet.getLevel() > interaction.getLevelMax()) {
-                log.error("Tried to perform pet action {} which is not available for pet {} at level {}", action, pet.getTemplateId(), pet.getLevel());
-                return;
-            }
-            final boolean success = Util.succeedProp(interaction.getProp());
-            if (success) {
-                // Resolve pet item
-                final InventoryManager im = user.getInventoryManager();
-                final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
-                        .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                        .findFirst();
-                if (itemEntry.isEmpty()) {
-                    throw new IllegalStateException("Could not resolve pet item");
-                }
-                final int position = itemEntry.get().getKey();
-                final Item item = itemEntry.get().getValue();
-
-                // Increase tameness (closeness)
-                final PetData petData = item.getPetData();
-                final int newTameness = Math.min(petData.getTameness() + interaction.getIncTameness(), GameConstants.PET_TAMENESS_MAX);
-                petData.setTameness((short) newTameness);
-
-                // Level up
-                boolean levelUp = false;
-                while (petData.getLevel() < GameConstants.PET_LEVEL_MAX &&
-                        newTameness > GameConstants.getNextLevelPetCloseness(petData.getLevel())) {
-                    petData.setLevel((byte) (petData.getLevel() + 1));
-                    levelUp = true;
-                }
-
-                // Update pet item
-                final Optional<InventoryOperation> updateResult = im.updateItem(position, item);
-                if (updateResult.isEmpty()) {
-                    throw new IllegalStateException("Could not update pet item");
-                }
-
-                // Update client
-                user.write(WvsContext.inventoryOperation(updateResult.get(), false));
-                if (levelUp) {
-                    user.write(UserLocal.effect(Effect.petLevelUp(petIndex)));
-                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.petLevelUp(petIndex)), user);
-                }
-            }
-
-            // Broadcast pet action
-            user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, false));
+        // Resolve pet interaction
+        final int petIndex = petIndexResult.get();
+        final Pet pet = user.getPet(petIndex);
+        if (pet == null) {
+            log.error("Received PetInteractionRequest for invalid pet index : {}", petIndex);
+            return;
         }
+        final Optional<PetInteraction> interactionResult = ItemProvider.getPetInteraction(pet.getTemplateId(), action);
+        if (interactionResult.isEmpty()) {
+            log.error("Could not resolve pet interaction for template {}, action {}", pet.getTemplateId(), action);
+            return;
+        }
+        final PetInteraction interaction = interactionResult.get();
+
+        // Check interaction and success
+        if (pet.getLevel() < interaction.getLevelMin() || pet.getLevel() > interaction.getLevelMax()) {
+            log.error("Tried to perform pet action {} which is not available for pet {} at level {}", action, pet.getTemplateId(), pet.getLevel());
+            return;
+        }
+        final boolean success = Util.succeedProp(interaction.getProp());
+        if (success) {
+            // Resolve pet item
+            final InventoryManager im = user.getInventoryManager();
+            final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
+                    .filter((entry) -> entry.getValue().getItemSn() == petSn)
+                    .findFirst();
+            if (itemEntry.isEmpty()) {
+                throw new IllegalStateException("Could not resolve pet item");
+            }
+            final int position = itemEntry.get().getKey();
+            final Item item = itemEntry.get().getValue();
+
+            // Increase tameness (closeness)
+            final PetData petData = item.getPetData();
+            final int newTameness = Math.min(petData.getTameness() + interaction.getIncTameness(), GameConstants.PET_TAMENESS_MAX);
+            petData.setTameness((short) newTameness);
+
+            // Level up
+            boolean levelUp = false;
+            while (petData.getLevel() < GameConstants.PET_LEVEL_MAX &&
+                    newTameness > GameConstants.getNextLevelPetCloseness(petData.getLevel())) {
+                petData.setLevel((byte) (petData.getLevel() + 1));
+                levelUp = true;
+            }
+
+            // Update pet item
+            final Optional<InventoryOperation> updateResult = im.updateItem(position, item);
+            if (updateResult.isEmpty()) {
+                throw new IllegalStateException("Could not update pet item");
+            }
+
+            // Update client
+            user.write(WvsContext.inventoryOperation(updateResult.get(), false));
+            if (levelUp) {
+                user.write(UserLocal.effect(Effect.petLevelUp(petIndex)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.petLevelUp(petIndex)), user);
+            }
+        }
+
+        // Broadcast pet action
+        user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, false));
     }
 
     @Handler(InHeader.PetDropPickUpRequest)
@@ -254,9 +248,7 @@ public final class PetHandler {
         }
 
         // Pick up drop
-        try (var locked = user.acquire()) {
-            field.getDropPool().pickUpDrop(locked, dropResult.get(), DropLeaveType.PICKED_UP_BY_PET, petIndexResult.get());
-        }
+        field.getDropPool().pickUpDrop(user, dropResult.get(), DropLeaveType.PICKED_UP_BY_PET, petIndexResult.get());
     }
 
     @Handler(InHeader.PetUpdateExceptionListRequest)
@@ -267,12 +259,10 @@ public final class PetHandler {
         for (int i = 0; i < count; i++) {
             exceptionList.add(inPacket.decodeInt());
         }
-        try (var locked = user.acquire()) {
-            // Overwrite exception list for all pets
-            locked.get().getConfigManager().setPetExceptionList(exceptionList);
-            for (Pet pet : user.getPets()) {
-                user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), exceptionList));
-            }
+        // Overwrite exception list for all pets
+        user.getConfigManager().setPetExceptionList(exceptionList);
+        for (Pet pet : user.getPets()) {
+            user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), exceptionList));
         }
     }
 }

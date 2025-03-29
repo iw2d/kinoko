@@ -22,7 +22,6 @@ import kinoko.server.node.Client;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.util.BitFlag;
-import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
@@ -49,12 +48,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-public final class User extends Life implements Lockable<User> {
-    private final ReentrantLock lock = new ReentrantLock();
+public final class User extends Life {
     private final Client client;
     private final CharacterData characterData;
 
@@ -270,9 +267,7 @@ public final class User extends Life implements Lockable<User> {
         if (getDialog() instanceof ScriptDialog scriptDialog) {
             scriptDialog.close();
         } else if (getDialog() instanceof MiniRoom miniRoom) {
-            try (var lockedRoom = miniRoom.acquire()) {
-                lockedRoom.get().leaveUnsafe(this);
-            }
+            miniRoom.leave(this);
         } else {
             setDialog(null);
         }
@@ -791,18 +786,6 @@ public final class User extends Life implements Lockable<User> {
         }
     }
 
-    /**
-     * This should be used in unfortunate cases where a method cannot accept a {@link kinoko.util.Locked<User>} to
-     * ensure that the method is called after acquiring the lock. It is preferable to submit a runnable to the
-     * {@link kinoko.server.node.ServerExecutor} to acquire the lock in a separate thread, but sometimes we want our
-     * code to run first - e.g. before saving to database.
-     *
-     * @return true if the current thread has acquired the {@link kinoko.util.Lockable<User>} object.
-     */
-    public boolean isLocked() {
-        return lock.isHeldByCurrentThread();
-    }
-
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
@@ -814,15 +797,5 @@ public final class User extends Life implements Lockable<User> {
     @Override
     public void setId(int id) {
         throw new IllegalStateException("Tried to modify character ID");
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

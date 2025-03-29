@@ -1,7 +1,6 @@
 package kinoko.world.field;
 
 import kinoko.packet.field.FieldPacket;
-import kinoko.packet.world.MessagePacket;
 import kinoko.provider.map.FieldOption;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.packet.OutPacket;

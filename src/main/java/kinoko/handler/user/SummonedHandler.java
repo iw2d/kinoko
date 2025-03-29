@@ -128,25 +128,21 @@ public final class SummonedHandler {
 
         // Process attack
         final Field field = summoned.getField();
-        try (var locked = user.acquire()) {
-            for (AttackInfo ai : attack.getAttackInfo()) {
-                final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
-                if (mobResult.isEmpty()) {
-                    continue;
-                }
-                try (var lockedMob = mobResult.get().acquire()) {
-                    // Skill specific handling
-                    SkillProcessor.processAttack(locked, lockedMob, attack, ai.delay);
-                    // Process damage
-                    final Mob mob = lockedMob.get();
-                    final int totalDamage = Arrays.stream(ai.damage).sum();
-                    mob.damage(user, totalDamage, ai.delay);
-                }
+        for (AttackInfo ai : attack.getAttackInfo()) {
+            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+            if (mobResult.isEmpty()) {
+                continue;
             }
+            final Mob mob = mobResult.get();
+            // Skill specific handling
+            SkillProcessor.processAttack(user, mob, attack, ai.delay);
+            // Process damage
+            final int totalDamage = Arrays.stream(ai.damage).sum();
+            mob.damage(user, totalDamage, ai.delay);
+        }
 
-            if (actionType == SummonedActionType.DIE) {
-                user.removeSummoned(summoned);
-            }
+        if (actionType == SummonedActionType.DIE) {
+            user.removeSummoned(summoned);
         }
 
         field.broadcastPacket(SummonedPacket.summonedAttack(user, summoned, attack), user);
@@ -173,12 +169,10 @@ public final class SummonedHandler {
         }
 
         user.getField().broadcastPacket(SummonedPacket.summonedHit(user, summoned, hitInfo));
-        try (var lockedSummoned = summoned.acquire()) {
-            summoned.setHp(summoned.getHp() - hitInfo.damage);
-            if (summoned.getHp() <= 0) {
-                summoned.setLeaveType(SummonedLeaveType.SUMMONED_DEAD);
-                user.removeSummoned(summoned);
-            }
+        summoned.setHp(summoned.getHp() - hitInfo.damage);
+        if (summoned.getHp() <= 0) {
+            summoned.setLeaveType(SummonedLeaveType.SUMMONED_DEAD);
+            user.removeSummoned(summoned);
         }
     }
 
@@ -210,9 +204,7 @@ public final class SummonedHandler {
         skill.summoned = summoned;
 
         // Skill specific handling
-        try (var locked = user.acquire()) {
-            SkillProcessor.processSkill(locked, skill);
-        }
+        SkillProcessor.processSkill(user, skill);
 
         summoned.getField().broadcastPacket(SummonedPacket.summonedSkill(user, summoned, actionAndDir));
     }
@@ -230,18 +222,16 @@ public final class SummonedHandler {
         final Summoned summoned = summonedResult.get();
 
         // Remove summoned
-        try (var locked = user.acquire()) {
-            locked.get().removeSummoned(summoned);
+        user.removeSummoned(summoned);
 
-            // There is no way to differentiate between the user removing the satellite summon manually and the buff
-            // from Satellite Safety (35121006) removing the summon after absorbing damage.
-            if (summoned.getSkillId() == Mechanic.SATELLITE ||
-                    summoned.getSkillId() == Mechanic.SATELLITE_2 ||
-                    summoned.getSkillId() == Mechanic.SATELLITE_3) {
-                if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SafetyDamage)) {
-                    user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SafetyDamage, CharacterTemporaryStat.SafetyAbsorb));
-                    user.setSkillCooltime(Mechanic.SATELLITE_SAFETY, user.getSkillStatValue(Mechanic.SATELLITE_SAFETY, SkillStat.cooltime));
-                }
+        // There is no way to differentiate between the user removing the satellite summon manually and the buff
+        // from Satellite Safety (35121006) removing the summon after absorbing damage.
+        if (summoned.getSkillId() == Mechanic.SATELLITE ||
+                summoned.getSkillId() == Mechanic.SATELLITE_2 ||
+                summoned.getSkillId() == Mechanic.SATELLITE_3) {
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SafetyDamage)) {
+                user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SafetyDamage, CharacterTemporaryStat.SafetyAbsorb));
+                user.setSkillCooltime(Mechanic.SATELLITE_SAFETY, user.getSkillStatValue(Mechanic.SATELLITE_SAFETY, SkillStat.cooltime));
             }
         }
     }
