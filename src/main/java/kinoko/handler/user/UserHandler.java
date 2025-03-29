@@ -490,9 +490,7 @@ public final class UserHandler {
                 }
                 // Swap item position and update client
                 final Item secondItem = secondInventory.getItem(newPos);
-                if (secondItem != null) {
-                    inventory.putItem(oldPos, secondItem);
-                }
+                inventory.putItem(oldPos, secondItem);
                 secondInventory.putItem(newPos, item);
                 user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
             }
