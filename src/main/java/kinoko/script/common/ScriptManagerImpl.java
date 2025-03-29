@@ -52,7 +52,6 @@ import kinoko.world.user.stat.StatConstants;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public final class ScriptManagerImpl implements ScriptManager {
@@ -642,9 +641,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         final PortalInfo targetPortal = portalResult.get();
         // Warp user and party members in field
         field.getUserPool().forEachPartyMember(user, (member) -> {
-            try (var lockedMember = member.acquire()) {
-                member.warp(targetField, targetPortal, false, false);
-            }
+            member.warp(targetField, targetPortal, false, false);
         });
         user.warp(targetField, targetPortal, false, false);
     }
@@ -686,9 +683,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         final PortalInfo targetPortal = portalResult.get();
         // Warp user and party members in field
         field.getUserPool().forEachPartyMember(user, (member) -> {
-            try (var lockedMember = member.acquire()) {
-                member.warp(targetField, targetPortal, false, false);
-            }
+            member.warp(targetField, targetPortal, false, false);
         });
         user.warp(targetField, targetPortal, false, false);
     }
@@ -810,28 +805,14 @@ public final class ScriptManagerImpl implements ScriptManager {
     public void setReactorState(int templateId, int newState) {
         field.getReactorPool().forEach((reactor) -> {
             if (reactor.getTemplateId() == templateId) {
-                try (var lockedReactor = reactor.acquire()) {
-                    reactor.setState(newState);
-                    field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
-                }
+                reactor.setState(newState);
+                field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
             }
         });
     }
 
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
-
-    @Override
-    public void sleep(long delay, TimeUnit timeUnit) {
-        user.unlock();
-        try {
-            timeUnit.sleep(delay); // Thread.sleep
-        } catch (InterruptedException e) {
-            throw new ScriptError("Interrupted during sleep");
-        } finally {
-            user.lock(); // executes before ScriptError propagates to ScriptDispatcher
-        }
-    }
 
     @Override
     public boolean checkParty(int memberCount, int levelMin) {
@@ -903,9 +884,7 @@ public final class ScriptManagerImpl implements ScriptManager {
         addExp(exp);
         field.getUserPool().forEach((member) -> {
             if (member.getCharacterId() != user.getCharacterId()) {
-                try (var lockedMember = member.acquire()) {
-                    member.addExp(exp);
-                }
+                member.addExp(exp);
             }
         });
     }
@@ -1099,11 +1078,9 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     private ScriptAnswer handleAnswer() {
         // Unlock user while waiting on answer
-        user.unlock();
         answerFuture = new CompletableFuture<>();
         final ScriptAnswer answer = answerFuture.join();
         answerFuture = null;
-        user.lock();
         user.setDialog(null);
         // Handle answer
         if (answer.getAction() == -1 || answer.getAction() == 5) {

@@ -115,9 +115,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         // Write to target client
         final User target = targetUserResult.get();
         ServerExecutor.submit(target, () -> {
-            try (var locked = target.acquire()) {
-                locked.get().write(OutPacket.of(packetData));
-            }
+            target.write(OutPacket.of(packetData));
         });
     }
 
@@ -177,9 +175,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         // Set messenger ID
         final User target = targetUserResult.get();
         ServerExecutor.submit(target, () -> {
-            try (var locked = target.acquire()) {
-                locked.get().setMessengerId(messengerId);
-            }
+            target.setMessengerId(messengerId);
         });
     }
 
@@ -196,23 +192,19 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         // Update party
         final User target = targetUserResult.get();
         ServerExecutor.submit(target, () -> {
-            try (var locked = target.acquire()) {
-                // Cancel party aura
-                target.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
-                if (target.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
-                    BattleMage.cancelPartyAura(target, target.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
-                }
-                // Set party info and update members
-                target.setPartyInfo(partyInfo);
-                target.getField().getUserPool().forEachPartyMember(target, (member) -> {
-                    try (var lockedMember = member.acquire()) {
-                        target.write(UserRemote.receiveHp(member));
-                        member.write(UserRemote.receiveHp(target));
-                    }
-                });
-                if (target.getTownPortal() != null && target.getTownPortal().getTownField() == target.getField()) {
-                    target.write(FieldPacket.townPortalRemoved(target, false));
-                }
+            // Cancel party aura
+            target.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
+            if (target.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
+                BattleMage.cancelPartyAura(target, target.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
+            }
+            // Set party info and update members
+            target.setPartyInfo(partyInfo);
+            target.getField().getUserPool().forEachPartyMember(target, (member) -> {
+                target.write(UserRemote.receiveHp(member));
+                member.write(UserRemote.receiveHp(target));
+            });
+            if (target.getTownPortal() != null && target.getTownPortal().getTownField() == target.getField()) {
+                target.write(FieldPacket.townPortalRemoved(target, false));
             }
         });
     }
@@ -230,11 +222,9 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         // Set guild info and broadcast
         final User target = targetUserResult.get();
         ServerExecutor.submit(target, () -> {
-            try (var locked = target.acquire()) {
-                target.setGuildInfo(guildInfo);
-                target.getField().broadcastPacket(UserRemote.guildNameChanged(target, guildInfo), target);
-                target.getField().broadcastPacket(UserRemote.guildMarkChanged(target, guildInfo), target);
-            }
+            target.setGuildInfo(guildInfo);
+            target.getField().broadcastPacket(UserRemote.guildNameChanged(target, guildInfo), target);
+            target.getField().broadcastPacket(UserRemote.guildMarkChanged(target, guildInfo), target);
         });
     }
 }

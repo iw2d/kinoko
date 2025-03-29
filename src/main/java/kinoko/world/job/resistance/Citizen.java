@@ -65,35 +65,33 @@ public final class Citizen extends SkillProcessor {
                     user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 2))); // Monster cannot be captured.
                     return;
                 }
-                try (var lockedMob = captureResult.get().acquire()) {
-                    final Mob mob = lockedMob.get();
-                    final int templateId = mob.getTemplateId();
-                    // Should implement all client side checks in CUserLocal::DoActiveSkill_MobCapture
-                    final List<Integer> capturedMobs = user.getWildHunterInfo().getCapturedMobs();
-                    if (mob.isBoss() || mob.getLevel() > user.getLevel() || capturedMobs.contains(templateId)) {
-                        user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 2))); // Monster cannot be captured.
-                        return;
-                    }
-                    // Check hp below 50%
-                    final int percentage = (int) ((double) mob.getHp() / mob.getMaxHp() * 100.0);
-                    if (percentage > si.getValue(SkillStat.x, slv)) {
-                        user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 1))); // Capture failed. Monster HP too high.
-                        return;
-                    }
-                    // Capture success
-                    user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 0))); // Monster successfully captured.
-                    field.getMobPool().removeMob(mob, MobLeaveType.ETC);
-                    // Update WildHunterInfo
-                    if (GameConstants.isJaguarMob(templateId)) {
-                        user.getWildHunterInfo().setRidingType((templateId % 10) + 1);
-                    } else {
-                        capturedMobs.add(templateId);
-                        if (capturedMobs.size() > 5) {
-                            capturedMobs.removeFirst();
-                        }
-                    }
-                    user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
+                final Mob capturedMob = captureResult.get();
+                final int templateId = capturedMob.getTemplateId();
+                // Should implement all client side checks in CUserLocal::DoActiveSkill_MobCapture
+                final List<Integer> capturedMobs = user.getWildHunterInfo().getCapturedMobs();
+                if (capturedMob.isBoss() || capturedMob.getLevel() > user.getLevel() || capturedMobs.contains(templateId)) {
+                    user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 2))); // Monster cannot be captured.
+                    return;
                 }
+                // Check hp below 50%
+                final int percentage = (int) ((double) capturedMob.getHp() / capturedMob.getMaxHp() * 100.0);
+                if (percentage > si.getValue(SkillStat.x, slv)) {
+                    user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 1))); // Capture failed. Monster HP too high.
+                    return;
+                }
+                // Capture success
+                user.write(UserLocal.effect(Effect.skillUseInfo(skillId, slv, user.getLevel(), 0))); // Monster successfully captured.
+                field.getMobPool().removeMob(capturedMob, MobLeaveType.ETC);
+                // Update WildHunterInfo
+                if (GameConstants.isJaguarMob(templateId)) {
+                    user.getWildHunterInfo().setRidingType((templateId % 10) + 1);
+                } else {
+                    capturedMobs.add(templateId);
+                    if (capturedMobs.size() > 5) {
+                        capturedMobs.removeFirst();
+                    }
+                }
+                user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
                 return;
             case Citizen.CALL_OF_THE_HUNTER:
                 // Remove from captured mob list and update client

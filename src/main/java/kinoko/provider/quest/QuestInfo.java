@@ -6,7 +6,6 @@ import kinoko.provider.WzProvider;
 import kinoko.provider.quest.act.*;
 import kinoko.provider.quest.check.*;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.quest.QuestManager;
@@ -109,9 +108,8 @@ public final class QuestInfo {
                 '}';
     }
 
-    public void restoreLostItems(Locked<User> locked, List<Integer> lostItems) {
+    public void restoreLostItems(User user, List<Integer> lostItems) {
         // Check that the quest has been started
-        final User user = locked.get();
         final QuestManager qm = user.getQuestManager();
         final Optional<QuestRecord> questRecordResult = qm.getQuestRecord(questId);
         if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
@@ -120,40 +118,40 @@ public final class QuestInfo {
         }
         for (QuestAct questAct : getStartActs()) {
             if (questAct instanceof QuestItemAct questItemAct) {
-                questItemAct.restoreLostItems(locked, lostItems);
+                questItemAct.restoreLostItems(user, lostItems);
             }
         }
     }
 
-    public boolean canStartQuest(Locked<User> locked) {
-        if (locked.get().getQuestManager().hasQuestStarted(questId)) {
+    public boolean canStartQuest(User user) {
+        if (user.getQuestManager().hasQuestStarted(questId)) {
             return false;
         }
         for (QuestCheck startCheck : getStartChecks()) {
-            if (!startCheck.check(locked)) {
+            if (!startCheck.check(user)) {
                 return false;
             }
         }
         return true;
     }
 
-    public Optional<QuestRecord> startQuest(Locked<User> locked) {
+    public Optional<QuestRecord> startQuest(User user) {
         // Check that the quest can be started
-        if (!canStartQuest(locked)) {
+        if (!canStartQuest(user)) {
             return Optional.empty();
         }
         for (QuestAct startAct : getStartActs()) {
-            if (!startAct.canAct(locked, -1)) {
+            if (!startAct.canAct(user, -1)) {
                 return Optional.empty();
             }
         }
         // Remove existing quest record
-        final QuestManager qm = locked.get().getQuestManager();
+        final QuestManager qm = user.getQuestManager();
         qm.removeQuestRecord(questId);
         // Perform start acts
         for (QuestAct startAct : getStartActs()) {
-            if (!startAct.doAct(locked, -1)) {
-                locked.get().write(QuestPacket.failedUnknown());
+            if (!startAct.doAct(user, -1)) {
+                user.write(QuestPacket.failedUnknown());
                 throw new IllegalStateException("Failed to perform quest start act");
             }
         }
@@ -162,42 +160,42 @@ public final class QuestInfo {
         return qrResult.or(() -> Optional.of(qm.forceStartQuest(questId)));
     }
 
-    public boolean canCompleteQuest(Locked<User> locked) {
-        if (!locked.get().getQuestManager().hasQuestStarted(questId)) {
+    public boolean canCompleteQuest(User user) {
+        if (!user.getQuestManager().hasQuestStarted(questId)) {
             return false;
         }
         for (QuestCheck completeCheck : getCompleteChecks()) {
-            if (!completeCheck.check(locked)) {
+            if (!completeCheck.check(user)) {
                 return false;
             }
         }
         return true;
     }
 
-    public Optional<Tuple<QuestRecord, Integer>> completeQuest(Locked<User> locked, int rewardIndex) {
+    public Optional<Tuple<QuestRecord, Integer>> completeQuest(User user, int rewardIndex) {
         // Check that the quest can be completed
-        if (!canCompleteQuest(locked)) {
+        if (!canCompleteQuest(user)) {
             return Optional.empty();
         }
         for (QuestAct completeAct : getCompleteActs()) {
-            if (!completeAct.canAct(locked, rewardIndex)) {
+            if (!completeAct.canAct(user, rewardIndex)) {
                 return Optional.empty();
             }
         }
         // Perform complete acts
         for (QuestAct completeAct : getCompleteActs()) {
-            if (!completeAct.doAct(locked, rewardIndex)) {
-                locked.get().write(QuestPacket.failedUnknown());
+            if (!completeAct.doAct(user, rewardIndex)) {
+                user.write(QuestPacket.failedUnknown());
                 throw new IllegalStateException("Failed to perform quest complete act");
             }
         }
         // Mark as completed and return
-        final QuestRecord qr = locked.get().getQuestManager().forceCompleteQuest(questId);
+        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
         return Optional.of(Tuple.of(qr, getNextQuest()));
     }
 
-    public Optional<QuestRecord> resignQuest(Locked<User> locked) {
-        final QuestManager qm = locked.get().getQuestManager();
+    public Optional<QuestRecord> resignQuest(User user) {
+        final QuestManager qm = user.getQuestManager();
         final Optional<QuestRecord> questRecordResult = qm.getQuestRecord(questId);
         if (questRecordResult.isEmpty() || questRecordResult.get().getState() != QuestState.PERFORM) {
             return Optional.empty();
@@ -208,7 +206,7 @@ public final class QuestInfo {
         }
         for (QuestAct questAct : getStartActs()) {
             if (questAct instanceof QuestItemAct questItemAct) {
-                questItemAct.removeQuestItems(locked);
+                questItemAct.removeQuestItems(user);
             }
         }
         final QuestRecord qr = removeQuestRecordResult.get();

@@ -4,7 +4,6 @@ import kinoko.packet.user.QuestPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.WvsContext;
-import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.InventoryOperation;
@@ -27,8 +26,7 @@ public final class QuestPetAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean canAct(User user, int rewardIndex) {
         if (user.getPet(0) == null) {
             user.write(QuestPacket.failedUnknown()); // there is a clientside check, should not reach here
             return false;
@@ -37,8 +35,7 @@ public final class QuestPetAct implements QuestAct {
     }
 
     @Override
-    public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean doAct(User user, int rewardIndex) {
         final Pet pet = user.getPet(0); // only applied to the lead pet
         if (pet == null) {
             return false;
