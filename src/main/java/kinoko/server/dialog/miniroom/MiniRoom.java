@@ -3,8 +3,6 @@ package kinoko.server.dialog.miniroom;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Lockable;
-import kinoko.util.Locked;
 import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -13,12 +11,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockable<MiniRoom> {
+public abstract class MiniRoom extends FieldObjectImpl implements Dialog {
     protected static final Logger log = LogManager.getLogger(MiniRoom.class);
-    private final Lock lock = new ReentrantLock();
     private final String title;
     private final String password;
     private final int gameSpec;
@@ -38,9 +33,9 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
 
     public abstract int getMaxUsers();
 
-    public abstract void handlePacket(Locked<User> locked, MiniRoomProtocol mrp, InPacket inPacket);
+    public abstract void handlePacket(User user, MiniRoomProtocol mrp, InPacket inPacket);
 
-    public abstract void leaveUnsafe(User user);
+    public abstract void leave(User user);
 
     public abstract void updateBalloon();
 
@@ -132,15 +127,5 @@ public abstract class MiniRoom extends FieldObjectImpl implements Dialog, Lockab
         for (var entry : users.entrySet()) {
             entry.getValue().write(outPacket);
         }
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

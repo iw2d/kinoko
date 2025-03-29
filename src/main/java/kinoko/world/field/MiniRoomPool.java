@@ -42,53 +42,47 @@ public final class MiniRoomPool extends FieldObjectPool<MiniRoom> {
     public void updateMiniRooms(Instant now) {
         final var iter = objects.values().iterator();
         while (iter.hasNext()) {
-            try (var lockedRoom = iter.next().acquire()) {
-                final MiniRoom miniRoom = lockedRoom.get();
-                final Map<User, MiniRoomLeaveType> leaveRequests = miniRoom.getLeaveRequests();
-                if (leaveRequests.isEmpty()) {
-                    continue;
+            final MiniRoom miniRoom = iter.next();
+            final Map<User, MiniRoomLeaveType> leaveRequests = miniRoom.getLeaveRequests();
+            if (leaveRequests.isEmpty()) {
+                continue;
+            }
+            assert miniRoom.getType() != MiniRoomType.TradingRoom;
+            assert miniRoom.getType() != MiniRoomType.PersonalShop;
+            final User owner = miniRoom.getUser(0);
+            if (leaveRequests.containsKey(owner)) {
+                // Close room
+                var userIter = miniRoom.getUsers().entrySet().iterator();
+                while (userIter.hasNext()) {
+                    final var entry = userIter.next();
+                    final int userIndex = entry.getKey();
+                    final User user = entry.getValue();
+                    if (userIndex == 0) {
+                        user.write(MiniRoomPacket.leave(userIndex, leaveRequests.get(user)));
+                    } else {
+                        user.write(MiniRoomPacket.leave(userIndex, MiniRoomLeaveType.HostOut));
+                    }
+                    user.setDialog(null);
+                    userIter.remove();
                 }
-                assert miniRoom.getType() != MiniRoomType.TradingRoom;
-                assert miniRoom.getType() != MiniRoomType.PersonalShop;
-                final User owner = miniRoom.getUser(0);
-                if (leaveRequests.containsKey(owner)) {
-                    // Close room
-                    var userIter = miniRoom.getUsers().entrySet().iterator();
-                    while (userIter.hasNext()) {
-                        final var entry = userIter.next();
-                        final int userIndex = entry.getKey();
-                        try (var locked = entry.getValue().acquire()) {
-                            final User user = locked.get();
-                            if (userIndex == 0) {
-                                user.write(MiniRoomPacket.leave(userIndex, leaveRequests.get(user)));
-                            } else {
-                                user.write(MiniRoomPacket.leave(userIndex, MiniRoomLeaveType.HostOut));
-                            }
-                            user.setDialog(null);
-                            userIter.remove();
-                        }
-                    }
-                    iter.remove();
-                    if (miniRoom.getType().isBalloon()) {
-                        field.broadcastPacket(UserPacket.userMiniRoomBalloonRemove(owner));
-                    }
-                } else {
-                    // Process users leaving
-                    var leaveIter = leaveRequests.entrySet().iterator();
-                    while (leaveIter.hasNext()) {
-                        final var entry = leaveIter.next();
-                        try (var locked = entry.getKey().acquire()) {
-                            final User user = locked.get();
-                            final int userIndex = miniRoom.getUserIndex(user);
-                            miniRoom.broadcastPacket(MiniRoomPacket.leave(userIndex, entry.getValue()));
-                            user.setDialog(null);
-                            miniRoom.removeUser(userIndex);
-                            leaveIter.remove();
-                        }
-                    }
-                    miniRoom.updateBalloon();
+                iter.remove();
+                if (miniRoom.getType().isBalloon()) {
+                    field.broadcastPacket(UserPacket.userMiniRoomBalloonRemove(owner));
+                }
+            } else {
+                // Process users leaving
+                var leaveIter = leaveRequests.entrySet().iterator();
+                while (leaveIter.hasNext()) {
+                    final var entry = leaveIter.next();
+                    final User user = entry.getKey();
+                    final int userIndex = miniRoom.getUserIndex(user);
+                    miniRoom.broadcastPacket(MiniRoomPacket.leave(userIndex, entry.getValue()));
+                    user.setDialog(null);
+                    miniRoom.removeUser(userIndex);
+                    leaveIter.remove();
                 }
             }
+            miniRoom.updateBalloon();
         }
     }
 }

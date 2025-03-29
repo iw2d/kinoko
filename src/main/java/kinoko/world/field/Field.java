@@ -272,10 +272,8 @@ public final class Field {
                 });
                 final PortalInfo defaultPortal = returnField.getPortalById(0).orElse(PortalInfo.EMPTY);
                 userPool.forEach((user) -> {
-                    try (var locked = user.acquire()) {
-                        final PortalInfo portalInfo = returnField.getRandomStartPoint().orElse(defaultPortal);
-                        locked.get().warp(returnField, portalInfo, false, false);
-                    }
+                    final PortalInfo portalInfo = returnField.getRandomStartPoint().orElse(defaultPortal);
+                    user.warp(returnField, portalInfo, false, false);
                 });
                 instance.getChannelServerNode().removeInstance(instance);
             }
