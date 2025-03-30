@@ -706,6 +706,8 @@ public final class ScriptManagerImpl implements ScriptManager {
         return field.getFieldId();
     }
 
+    public FieldObject getSource() { return source; }
+
     @Override
     public void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft) {
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);

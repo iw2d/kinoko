@@ -6,6 +6,7 @@ import kinoko.server.event.EventType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Tuple;
 import kinoko.world.field.Field;
+import kinoko.world.field.FieldObject;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryType;
@@ -181,6 +182,8 @@ public interface ScriptManager {
     Field getField();
 
     int getFieldId();
+
+    FieldObject getSource();
 
     default void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft) {
         spawnMob(templateId, appearType.getValue(), x, y, isLeft);
