@@ -123,7 +123,9 @@ public final class AvatarLook implements Encodable {
                 hairEquip.put(bodyPart, itemId);
             } else if (bodyPart >= BodyPart.CASH_BASE.getValue() && bodyPart < BodyPart.CASH_END.getValue()) {
                 // Cash Equips (overwrite), sorted map gives us entries in ascending order
-                hairEquip.put(bodyPart - BodyPart.CASH_BASE.getValue(), itemId);
+                if (bodyPart != BodyPart.CASH_WEAPON.getValue()) {
+                    hairEquip.put(bodyPart - BodyPart.CASH_BASE.getValue(), itemId);
+                }
             }
         }
         return hairEquip;
