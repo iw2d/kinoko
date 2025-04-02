@@ -5,7 +5,6 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.job.JobConstants;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
@@ -21,8 +20,7 @@ public final class QuestSpAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean canAct(User user, int rewardIndex) {
         if (!JobConstants.getSkillRootFromJob(user.getJob()).contains(job)) {
             user.write(QuestPacket.failedUnknown());
             return false;
@@ -31,8 +29,7 @@ public final class QuestSpAct implements QuestAct {
     }
 
     @Override
-    public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean doAct(User user, int rewardIndex) {
         final CharacterStat cs = user.getCharacterStat();
         if (JobConstants.isExtendSpJob(cs.getJob())) {
             cs.getSp().addSp(JobConstants.getJobLevel(job), sp);

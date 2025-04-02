@@ -3,7 +3,6 @@ package kinoko.provider.quest.check;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.property.WzListProperty;
-import kinoko.util.Locked;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.quest.QuestState;
 import kinoko.world.user.User;
@@ -31,8 +30,8 @@ public final class QuestExCheck implements QuestCheck {
     }
 
     @Override
-    public boolean check(Locked<User> locked) {
-        final Optional<QuestRecord> questRecordResult = locked.get().getQuestManager().getQuestRecord(getQuestId());
+    public boolean check(User user) {
+        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(getQuestId());
         if (questRecordResult.isEmpty()) {
             return false;
         }

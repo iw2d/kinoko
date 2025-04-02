@@ -7,7 +7,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.ServerConfig;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
-import kinoko.util.Locked;
 import kinoko.util.Rect;
 import kinoko.world.field.FieldObject;
 import kinoko.world.field.FieldObjectImpl;
@@ -85,8 +84,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         return expireTime;
     }
 
-    public void handleUserInside(Locked<User> locked) {
-        final User user = locked.get();
+    public void handleUserInside(User user) {
         switch (skillId) {
             case Evan.RECOVERY_AURA -> {
                 final int partyId = ((User) owner).getPartyId();
@@ -105,8 +103,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         }
     }
 
-    public void handleMobInside(Locked<Mob> lockedMob) {
-        final Mob mob = lockedMob.get();
+    public void handleMobInside(Mob mob) {
         switch (skillId) {
             case Magician.POISON_MIST, BlazeWizard.FLAME_GEAR, NightWalker.POISON_BOMB -> {
                 if (mob.getHp() == 1 || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId)) {

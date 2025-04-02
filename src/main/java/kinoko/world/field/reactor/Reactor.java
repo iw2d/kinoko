@@ -5,7 +5,6 @@ import kinoko.provider.reactor.ReactorEvent;
 import kinoko.provider.reactor.ReactorState;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.server.node.ServerExecutor;
-import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 import kinoko.world.field.FieldObjectImpl;
 import kinoko.world.field.drop.Drop;
@@ -14,11 +13,8 @@ import kinoko.world.user.User;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> {
-    private final Lock lock = new ReentrantLock();
+public final class Reactor extends FieldObjectImpl {
     private final ReactorTemplate template;
     private final ReactorInfo reactorInfo;
     private int state;
@@ -112,25 +108,22 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
         }
         // Schedule event to consume drop and trigger event
         ServerExecutor.schedule(getField(), () -> {
-            // Acquire and check state after delay
-            try (var lockedReactor = this.acquire()) {
-                final Reactor reactor = lockedReactor.get();
-                if (reactor.getState() != state) {
-                    return;
-                }
-                // Resolve user for script
-                final Optional<User> userResult = reactor.getField().getUserPool().getNearestUser(reactor); // closest user to reactor
-                if (userResult.isEmpty()) {
-                    return;
-                }
-                // Try removing drop from field
-                if (!reactor.getField().getDropPool().removeDrop(drop, DropLeaveType.TIMEOUT, 0, 0, 0)) {
-                    return;
-                }
-                // Advance state and dispatch reactor script
-                reactor.setState(dropEvent.getNextState());
-                reactor.getField().getReactorPool().hitReactor(userResult.get(), reactor, 0);
+            // Check state after delay
+            if (getState() != state) {
+                return;
             }
+            // Resolve user for script
+            final Optional<User> userResult = getField().getUserPool().getNearestUser(this); // closest user to reactor
+            if (userResult.isEmpty()) {
+                return;
+            }
+            // Try removing drop from field
+            if (!getField().getDropPool().removeDrop(drop, DropLeaveType.TIMEOUT, 0, 0, 0)) {
+                return;
+            }
+            // Advance state and dispatch reactor script
+            setState(dropEvent.getNextState());
+            getField().getReactorPool().hitReactor(userResult.get(), this, 0);
         }, GameConstants.REACTOR_DROP_DELAY, TimeUnit.SECONDS);
     }
 
@@ -143,16 +136,6 @@ public final class Reactor extends FieldObjectImpl implements Lockable<Reactor> 
     @Override
     public String toString() {
         return String.format("Reactor { %d, oid : %d, action : %s, state : %d }", getTemplateId(), getId(), getAction(), getState());
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 
     public static Reactor from(ReactorTemplate template, ReactorInfo reactorInfo) {
