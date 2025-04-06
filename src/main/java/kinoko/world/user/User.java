@@ -2,6 +2,7 @@ package kinoko.world.user;
 
 import kinoko.handler.user.FriendHandler;
 import kinoko.packet.stage.StagePacket;
+import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.FriendPacket;
@@ -663,6 +664,19 @@ public final class User extends Life implements Lockable<User> {
         getPets().remove(petIndex);
         setPetSn(petIndex, 0, false);
         return true;
+    }
+
+    public void updatePets(Instant now) {
+        final var iter = pets.iterator();
+        while (iter.hasNext()) {
+            final Pet pet = iter.next();
+            if (pet.update(now)) {
+                final int petIndex = pet.getPetIndex();
+                setPetSn(petIndex, 0, false);
+                getField().broadcastPacket(PetPacket.petDeactivated(this, petIndex, 1)); // The pet went back home because it's hungry.
+                iter.remove();
+            }
+        }
     }
 
 

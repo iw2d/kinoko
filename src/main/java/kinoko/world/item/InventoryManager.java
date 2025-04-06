@@ -151,6 +151,13 @@ public final class InventoryManager {
         return false;
     }
 
+    public Optional<Tuple<Integer, Item>> getItemBySn(InventoryType inventoryType, long itemSn) {
+        return getInventoryByType(inventoryType).getItems().entrySet().stream()
+                .filter((entry) -> entry.getValue().getItemSn() == itemSn)
+                .map(entry -> Tuple.of(entry.getKey(), entry.getValue()))
+                .findFirst();
+    }
+
     public Optional<InventoryOperation> updateItem(int position, Item item) {
         final InventoryType inventoryType = InventoryType.getByItemId(item.getItemId());
         final Inventory inventory = getInventoryByType(InventoryType.getByPosition(inventoryType, position));

@@ -1,21 +1,30 @@
 package kinoko.world.user;
 
+import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfoType;
 import kinoko.provider.map.Foothold;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.Tuple;
+import kinoko.util.Util;
 import kinoko.world.field.Field;
 import kinoko.world.field.life.Life;
-import kinoko.world.item.BodyPart;
-import kinoko.world.item.Item;
-import kinoko.world.item.ItemType;
+import kinoko.world.item.*;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 public final class Pet extends Life implements Encodable {
     private final User owner;
     private final Item item;
+    private Instant nextFullnessUpdate;
 
     public Pet(User owner, Item item) {
         this.owner = owner;
         this.item = item;
+        this.nextFullnessUpdate = Instant.now().plus(36000, ChronoUnit.MILLIS);
     }
 
     public User getOwner() {
@@ -76,6 +85,35 @@ public final class Pet extends Life implements Encodable {
         setX(x);
         setY(y);
         setFoothold(field.getFootholdBelow(x, y).map(Foothold::getSn).orElse(0));
+    }
+
+    public boolean update(Instant now) {
+        if (now.isBefore(nextFullnessUpdate)) {
+            return false;
+        }
+        // Schedule next update
+        final int hungry = ItemProvider.getItemInfo(item.getItemId())
+                .map((ii) -> ii.getInfo(ItemInfoType.hungry))
+                .orElse(0);
+        final int variance = Math.clamp(36 - 6L * hungry, 0, 36);
+        nextFullnessUpdate = now.plus(Util.getRandom(0, variance) + 60, ChronoUnit.SECONDS);
+        // Resolve pet item
+        final Optional<Tuple<Integer, Item>> itemEntryResult = owner.getInventoryManager().getItemBySn(InventoryType.CASH, getItemSn());
+        if (itemEntryResult.isEmpty()) {
+            return true;
+        }
+        final int position = itemEntryResult.get().getLeft();
+        final Item petItem = itemEntryResult.get().getRight();
+        // Update pet item
+        final PetData petData = petItem.getPetData();
+        petData.setFullness((byte) Math.max(petData.getFullness() - 1, 0));
+        final boolean remove = petData.getFullness() == 0;
+        if (remove) {
+            petData.setFullness((byte) 5);
+            petData.setTameness((short) Math.max(petData.getTameness() - 1, 0));
+        }
+        owner.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.CASH, position, petItem), false));
+        return remove;
     }
 
     @Override
