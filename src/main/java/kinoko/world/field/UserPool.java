@@ -44,24 +44,22 @@ public final class UserPool extends FieldObjectPool<User> {
     public synchronized void addUser(User user) {
         // Update client with existing users in pool
         forEach((existingUser) -> {
-            try (var locked = existingUser.acquire()) {
-                user.write(UserPacket.userEnterField(locked.get()));
-                for (Pet pet : existingUser.getPets()) {
-                    user.write(PetPacket.petActivated(existingUser, pet));
+            user.write(UserPacket.userEnterField(user));
+            for (Pet pet : existingUser.getPets()) {
+                user.write(PetPacket.petActivated(existingUser, pet));
+            }
+            for (List<Summoned> summonedList : existingUser.getSummoned().values()) {
+                for (Summoned summoned : summonedList) {
+                    user.write(SummonedPacket.summonedEnterField(existingUser, summoned));
                 }
-                for (List<Summoned> summonedList : existingUser.getSummoned().values()) {
-                    for (Summoned summoned : summonedList) {
-                        user.write(SummonedPacket.summonedEnterField(existingUser, summoned));
-                    }
-                }
-                if (existingUser.getDragon() != null) {
-                    user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
-                }
-                if (existingUser.getOpenGate() != null) {
-                    user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate(), false));
-                    if (existingUser.getOpenGate().getSecondGate() != null) {
-                        user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate().getSecondGate(), false));
-                    }
+            }
+            if (existingUser.getDragon() != null) {
+                user.write(DragonPacket.dragonEnterField(existingUser, existingUser.getDragon()));
+            }
+            if (existingUser.getOpenGate() != null) {
+                user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate(), false));
+                if (existingUser.getOpenGate().getSecondGate() != null) {
+                    user.write(FieldPacket.openGateCreated(existingUser, existingUser.getOpenGate().getSecondGate(), false));
                 }
             }
         });
@@ -93,10 +91,8 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Update party
         forEachPartyMember(user, (member) -> {
-            try (var lockedMember = member.acquire()) {
-                user.write(UserRemote.receiveHp(lockedMember.get()));
-                lockedMember.get().write(UserRemote.receiveHp(user));
-            }
+            user.write(UserRemote.receiveHp(member));
+            member.write(UserRemote.receiveHp(user));
         });
 
         // Create field objects for user
@@ -208,65 +204,45 @@ public final class UserPool extends FieldObjectPool<User> {
 
     public void updateUsers(Instant now) {
         for (User user : getObjects()) {
-            try (var locked = user.acquire()) {
-                // Handle CTS updates on tick
-                SkillProcessor.processUpdate(locked, now);
-                // Expire temporary stat
-                user.resetTemporaryStat((cts, option) -> now.isAfter(option.getExpireTime()));
-                // Expire skill cooltimes
-                final Set<Integer> resetCooltimes = user.getSkillManager().expireSkillCooltime(now);
-                for (int skillId : resetCooltimes) {
-                    user.write(UserLocal.skillCooltimeSet(skillId, 0));
+            // Handle CTS updates on tick
+            SkillProcessor.processUpdate(user, now);
+            // Expire temporary stat
+            user.resetTemporaryStat((cts, option) -> now.isAfter(option.getExpireTime()));
+            // Expire skill cooltimes
+            final Set<Integer> resetCooltimes = user.getSkillManager().expireSkillCooltime(now);
+            for (int skillId : resetCooltimes) {
+                user.write(UserLocal.skillCooltimeSet(skillId, 0));
+            }
+            // Update pets
+            user.updatePets(now);
+            // Expire summoned
+            user.removeSummoned((summoned) -> now.isAfter(summoned.getExpireTime()));
+            // Expire town portal
+            final TownPortal townPortal = user.getTownPortal();
+            if (townPortal != null) {
+                if (townPortal.getExpireTime().isBefore(now)) {
+                    townPortal.destroy();
+                    user.setTownPortal(null);
+                    user.write(WvsContext.resetTownPortal());
+                    user.write(MessagePacket.skillExpire(townPortal.getSkillId()));
+                    user.getConnectedServer().notifyUserUpdate(user);
                 }
-                // Update pets
-                user.updatePets(now);
-                // Expire summoned
-                user.removeSummoned((summoned) -> now.isAfter(summoned.getExpireTime()));
-                // Expire town portal
-                final TownPortal townPortal = user.getTownPortal();
-                if (townPortal != null) {
-                    if (townPortal.getExpireTime().isBefore(now)) {
-                        townPortal.destroy();
-                        user.setTownPortal(null);
-                        user.write(WvsContext.resetTownPortal());
-                        user.write(MessagePacket.skillExpire(townPortal.getSkillId()));
-                        user.getConnectedServer().notifyUserUpdate(user);
-                    }
+            }
+            // Expire open gate
+            final OpenGate openGate = user.getOpenGate();
+            if (openGate != null) {
+                if (openGate.getExpireTime().isBefore(now)) {
+                    openGate.destroy();
+                    user.setOpenGate(null);
                 }
-                // Expire open gate
-                final OpenGate openGate = user.getOpenGate();
-                if (openGate != null) {
-                    if (openGate.getExpireTime().isBefore(now)) {
-                        openGate.destroy();
-                        user.setOpenGate(null);
-                    }
-                }
-                // Expire items
-                if (now.isAfter(user.getNextCheckItemExpire())) {
-                    user.setNextCheckItemExpire(now.plus(ServerConfig.ITEM_EXPIRE_INTERVAL, ChronoUnit.SECONDS));
-                    boolean itemExpired = false;
-                    final InventoryManager im = user.getInventoryManager();
-                    for (InventoryType inventoryType : List.of(InventoryType.EQUIPPED, InventoryType.EQUIP, InventoryType.CONSUME, InventoryType.INSTALL, InventoryType.ETC)) {
-                        final var iter = im.getInventoryByType(inventoryType).getItems().entrySet().iterator();
-                        while (iter.hasNext()) {
-                            final var entry = iter.next();
-                            final int position = entry.getKey();
-                            final Item item = entry.getValue();
-                            if (item.getDateExpire() == null || now.isBefore(item.getDateExpire())) {
-                                continue;
-                            }
-                            // Remove item from inventory
-                            iter.remove();
-                            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(
-                                    inventoryType == InventoryType.EQUIPPED ? InventoryType.EQUIP : inventoryType,
-                                    inventoryType == InventoryType.EQUIPPED ? -position : position
-                            ), false));
-                            user.write(MessagePacket.generalItemExpire(item.getItemId()));
-                            itemExpired = true;
-                        }
-                    }
-                    // Expire cash items and pets
-                    final var iter = im.getCashInventory().getItems().entrySet().iterator();
+            }
+            // Expire items
+            if (now.isAfter(user.getNextCheckItemExpire())) {
+                user.setNextCheckItemExpire(now.plus(ServerConfig.ITEM_EXPIRE_INTERVAL, ChronoUnit.SECONDS));
+                boolean itemExpired = false;
+                final InventoryManager im = user.getInventoryManager();
+                for (InventoryType inventoryType : List.of(InventoryType.EQUIPPED, InventoryType.EQUIP, InventoryType.CONSUME, InventoryType.INSTALL, InventoryType.ETC)) {
+                    final var iter = im.getInventoryByType(inventoryType).getItems().entrySet().iterator();
                     while (iter.hasNext()) {
                         final var entry = iter.next();
                         final int position = entry.getKey();
@@ -274,27 +250,45 @@ public final class UserPool extends FieldObjectPool<User> {
                         if (item.getDateExpire() == null || now.isBefore(item.getDateExpire())) {
                             continue;
                         }
-                        if (item.getItemType() == ItemType.PET) {
-                            // Set pet as expired - FileTime.DEFAULT_TIME should be encoded to turn them into dolls
-                            item.setDateExpire(null);
-                            user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.CASH, position, item), false));
-                            // Deactivate pet if required
-                            final Optional<Integer> petIndexResult = user.getPetIndex(item.getItemSn());
-                            if (petIndexResult.isPresent() && user.removePet(petIndexResult.get())) {
-                                user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndexResult.get(), 2)); // The pet's magical time has run out and so it has turned back into a doll.
-                            }
-                        } else {
-                            // Remove item from inventory
-                            iter.remove();
-                            user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(InventoryType.CASH, position), false));
-                            user.write(MessagePacket.cashItemExpire(item.getItemId()));
-                        }
+                        // Remove item from inventory
+                        iter.remove();
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(
+                                inventoryType == InventoryType.EQUIPPED ? InventoryType.EQUIP : inventoryType,
+                                inventoryType == InventoryType.EQUIPPED ? -position : position
+                        ), false));
+                        user.write(MessagePacket.generalItemExpire(item.getItemId()));
                         itemExpired = true;
                     }
-                    // Validate stat
-                    if (itemExpired) {
-                        user.validateStat();
+                }
+                // Expire cash items and pets
+                final var iter = im.getCashInventory().getItems().entrySet().iterator();
+                while (iter.hasNext()) {
+                    final var entry = iter.next();
+                    final int position = entry.getKey();
+                    final Item item = entry.getValue();
+                    if (item.getDateExpire() == null || now.isBefore(item.getDateExpire())) {
+                        continue;
                     }
+                    if (item.getItemType() == ItemType.PET) {
+                        // Set pet as expired - FileTime.DEFAULT_TIME should be encoded to turn them into dolls
+                        item.setDateExpire(null);
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.CASH, position, item), false));
+                        // Deactivate pet if required
+                        final Optional<Integer> petIndexResult = user.getPetIndex(item.getItemSn());
+                        if (petIndexResult.isPresent() && user.removePet(petIndexResult.get())) {
+                            user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndexResult.get(), 2)); // The pet's magical time has run out and so it has turned back into a doll.
+                        }
+                    } else {
+                        // Remove item from inventory
+                        iter.remove();
+                        user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(InventoryType.CASH, position), false));
+                        user.write(MessagePacket.cashItemExpire(item.getItemId()));
+                    }
+                    itemExpired = true;
+                }
+                // Validate stat
+                if (itemExpired) {
+                    user.validateStat();
                 }
             }
         }

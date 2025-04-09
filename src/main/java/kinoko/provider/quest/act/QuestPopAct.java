@@ -1,7 +1,6 @@
 package kinoko.provider.quest.act;
 
 import kinoko.packet.world.MessagePacket;
-import kinoko.util.Locked;
 import kinoko.world.user.User;
 
 public final class QuestPopAct implements QuestAct {
@@ -12,13 +11,12 @@ public final class QuestPopAct implements QuestAct {
     }
 
     @Override
-    public boolean canAct(Locked<User> locked, int rewardIndex) {
+    public boolean canAct(User user, int rewardIndex) {
         return true;
     }
 
     @Override
-    public boolean doAct(Locked<User> locked, int rewardIndex) {
-        final User user = locked.get();
+    public boolean doAct(User user, int rewardIndex) {
         user.addPop(pop);
         user.write(MessagePacket.incPop(pop));
         return true;

@@ -8,7 +8,6 @@ import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.header.OutHeader;
-import kinoko.util.Locked;
 import kinoko.util.Rand32;
 import kinoko.world.GameConstants;
 import kinoko.world.field.mob.Mob;
@@ -67,12 +66,10 @@ public final class CalcDamage {
 
     // DAMAGE CALC -----------------------------------------------------------------------------------------------------
 
-    public static void calcPDamage(Locked<User> locked, Locked<Mob> lockedMob, Attack attack, AttackInfo ai) {
+    public static void calcPDamage(User user, Mob mob, Attack attack, AttackInfo ai) {
         // CalcDamage::PDamage
-        final User user = locked.get();
         final SecondaryStat ss = user.getSecondaryStat();
         final PassiveSkillData psd = user.getPassiveSkillData();
-        final Mob mob = lockedMob.get();
         final MobStat ms = mob.getMobStat();
         final int skillId = attack.skillId;
         final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
@@ -208,11 +205,9 @@ public final class CalcDamage {
         user.getCalcDamage().setNextAttackCritical(false);
     }
 
-    public static void calcMDamage(Locked<User> locked, Locked<Mob> lockedMob, Attack attack, AttackInfo ai) {
+    public static void calcMDamage(User user, Mob mob, Attack attack, AttackInfo ai) {
         // CalcDamage::MDamage
-        final User user = locked.get();
         final SecondaryStat ss = user.getSecondaryStat();
-        final Mob mob = lockedMob.get();
         final MobStat ms = mob.getMobStat();
         final int skillId = attack.skillId;
         final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);

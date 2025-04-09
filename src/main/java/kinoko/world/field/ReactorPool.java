@@ -49,12 +49,10 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         if (HenesysPQ.PRIMROSE_REACTORS.contains(reactor.getTemplateId())) {
             final Optional<Reactor> moonReactorResult = getByTemplateId(HenesysPQ.MOON_REACTOR);
             if (moonReactorResult.isPresent()) {
-                try (var lockedReactor = moonReactorResult.get().acquire()) {
-                    final Reactor moonReactor = lockedReactor.get();
-                    if (!moonReactor.isLastState()) {
-                        moonReactor.setState(moonReactor.getState() + 1);
-                        hitReactor(user, moonReactor, 0);
-                    }
+                final Reactor moonReactor = moonReactorResult.get();
+                if (!moonReactor.isLastState()) {
+                    moonReactor.setState(moonReactor.getState() + 1);
+                    hitReactor(user, moonReactor, 0);
                 }
             }
         }
@@ -64,16 +62,14 @@ public final class ReactorPool extends FieldObjectPool<Reactor> {
         final var iter = hitReactors.entrySet().iterator();
         while (iter.hasNext()) {
             final Map.Entry<Reactor, Instant> entry = iter.next();
-            try (var lockedReactor = entry.getKey().acquire()) {
-                final Reactor reactor = lockedReactor.get();
-                // Check reactor time and reset reactor
-                if (now.isBefore(entry.getValue())) {
-                    continue;
-                }
-                iter.remove();
-                reactor.reset(reactor.getX(), reactor.getY(), 0);
-                field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
+            final Reactor reactor = entry.getKey();
+            // Check reactor time and reset reactor
+            if (now.isBefore(entry.getValue())) {
+                continue;
             }
+            iter.remove();
+            reactor.reset(reactor.getX(), reactor.getY(), 0);
+            field.broadcastPacket(FieldPacket.reactorChangeState(reactor, 0, 0, 0));
         }
     }
 }

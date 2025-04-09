@@ -34,7 +34,6 @@ import kinoko.server.memo.MemoRequestType;
 import kinoko.server.memo.MemoType;
 import kinoko.server.messenger.MessengerProtocol;
 import kinoko.server.messenger.MessengerRequest;
-import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
@@ -190,23 +189,18 @@ public final class UserHandler {
             return;
         }
         // Handle trunk / npc shop dialog, lock user
-        try (var locked = user.acquire()) {
-            if (user.hasDialog()) {
-                log.error("Tried to select npc ID {}, while already in a dialog", npc.getTemplateId());
-                return;
-            }
-            if (npc.isTrunk()) {
-                final TrunkDialog trunkDialog = TrunkDialog.from(npc.getTemplate());
-                user.setDialog(trunkDialog);
-                // Lock account to access trunk
-                try (var lockedAccount = user.getAccount().acquire()) {
-                    user.write(TrunkPacket.openTrunkDlg(npc.getTemplateId(), lockedAccount.get().getTrunk()));
-                }
-            } else if (ShopProvider.isShop(npc.getTemplateId())) {
-                final ShopDialog shopDialog = ShopDialog.from(npc.getTemplate());
-                user.setDialog(shopDialog);
-                user.write(FieldPacket.openShopDlg(user, shopDialog));
-            }
+        if (user.hasDialog()) {
+            log.error("Tried to select npc ID {}, while already in a dialog", npc.getTemplateId());
+            return;
+        }
+        if (npc.isTrunk()) {
+            final TrunkDialog trunkDialog = TrunkDialog.from(npc.getTemplate());
+            user.setDialog(trunkDialog);
+            user.write(TrunkPacket.openTrunkDlg(npc.getTemplateId(), user.getAccount().getTrunk()));
+        } else if (ShopProvider.isShop(npc.getTemplateId())) {
+            final ShopDialog shopDialog = ShopDialog.from(npc.getTemplate());
+            user.setDialog(shopDialog);
+            user.write(FieldPacket.openShopDlg(user, shopDialog));
         }
     }
 
@@ -219,66 +213,60 @@ public final class UserHandler {
             log.error("Unknown script message type {}", type);
             return;
         }
-        try (var locked = user.acquire()) {
-            if (!user.hasDialog() || !(user.getDialog() instanceof ScriptDialog scriptDialog)) {
-                log.error("Received UserScriptMessageAnswer without an associated script dialog");
-                return;
+        if (!user.hasDialog() || !(user.getDialog() instanceof ScriptDialog scriptDialog)) {
+            log.error("Received UserScriptMessageAnswer without an associated script dialog");
+            return;
+        }
+        switch (lastMessageType) {
+            case SAY, SAYIMAGE, ASKYESNO, ASKACCEPT -> {
+                scriptDialog.submitAnswer(ScriptAnswer.withAction(action));
             }
-            switch (lastMessageType) {
-                case SAY, SAYIMAGE, ASKYESNO, ASKACCEPT -> {
-                    scriptDialog.submitAnswer(ScriptAnswer.withAction(action));
+            case ASKTEXT, ASKBOXTEXT -> {
+                if (action == 1) {
+                    final String answer = inPacket.decodeString(); // sInputStr_Result
+                    scriptDialog.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
+                } else {
+                    scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
                 }
-                case ASKTEXT, ASKBOXTEXT -> {
-                    if (action == 1) {
-                        final String answer = inPacket.decodeString(); // sInputStr_Result
-                        scriptDialog.submitAnswer(ScriptAnswer.withTextAnswer(action, answer));
-                    } else {
-                        scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
-                    }
+            }
+            case ASKNUMBER, ASKMENU, ASKSLIDEMENU -> {
+                if (action == 1) {
+                    final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
+                    scriptDialog.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                } else {
+                    scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
                 }
-                case ASKNUMBER, ASKMENU, ASKSLIDEMENU -> {
-                    if (action == 1) {
-                        final int answer = inPacket.decodeInt(); // nInputNo_Result | nSelect
-                        scriptDialog.submitAnswer(ScriptAnswer.withAnswer(action, answer));
-                    } else {
-                        scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
-                    }
+            }
+            case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
+                if (action == 1) {
+                    final byte answer = inPacket.decodeByte(); // nAvatarIndex
+                    scriptDialog.submitAnswer(ScriptAnswer.withAnswer(action, answer));
+                } else {
+                    scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
                 }
-                case ASKAVATAR, ASKMEMBERSHOPAVATAR -> {
-                    if (action == 1) {
-                        final byte answer = inPacket.decodeByte(); // nAvatarIndex
-                        scriptDialog.submitAnswer(ScriptAnswer.withAnswer(action, answer));
-                    } else {
-                        scriptDialog.submitAnswer(ScriptAnswer.withAction(-1));
-                    }
-                }
-                default -> {
-                    log.error("Unhandled script message type {}", lastMessageType);
-                }
+            }
+            default -> {
+                log.error("Unhandled script message type {}", lastMessageType);
             }
         }
     }
 
     @Handler(InHeader.UserShopRequest)
     public static void handleUserShopRequest(User user, InPacket inPacket) {
-        try (var locked = user.acquire()) {
-            if (!(user.getDialog() instanceof ShopDialog shopDialog)) {
-                log.error("Received UserShopRequest without associated shop dialog");
-                return;
-            }
-            shopDialog.handlePacket(locked, inPacket);
+        if (!(user.getDialog() instanceof ShopDialog shopDialog)) {
+            log.error("Received UserShopRequest without associated shop dialog");
+            return;
         }
+        shopDialog.handlePacket(user, inPacket);
     }
 
     @Handler(InHeader.UserTrunkRequest)
     public static void handleUserTrunkRequest(User user, InPacket inPacket) {
-        try (var locked = user.acquire()) {
-            if (!(user.getDialog() instanceof TrunkDialog trunkDialog)) {
-                log.error("Received UserTrunkRequest without associated trunk dialog");
-                return;
-            }
-            trunkDialog.handlePacket(locked, inPacket);
+        if (!(user.getDialog() instanceof TrunkDialog trunkDialog)) {
+            log.error("Received UserTrunkRequest without associated trunk dialog");
+            return;
         }
+        trunkDialog.handlePacket(user, inPacket);
     }
 
 
@@ -292,59 +280,57 @@ public final class UserHandler {
             user.dispose();
             return;
         }
-        try (var locked = user.acquire()) {
-            final InventoryManager im = user.getInventoryManager();
-            final Inventory inventory = im.getInventoryByType(inventoryType);
-            // Find stackable items : itemId -> Set<Tuple<position, item>>
-            final Map<Integer, List<Tuple<Integer, Item>>> stackable = new HashMap<>();
-            for (var entry : inventory.getItems().entrySet()) {
-                final int position = entry.getKey();
-                final Item item = entry.getValue();
-                if (item.getItemType() != ItemType.BUNDLE || ItemConstants.isRechargeableItem(item.getItemId())) {
-                    continue;
-                }
-                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
-                if (itemInfoResult.isEmpty() || itemInfoResult.get().getSlotMax() <= 1) {
-                    continue;
-                }
-                if (!stackable.containsKey(item.getItemId())) {
-                    stackable.put(item.getItemId(), new ArrayList<>());
-                }
-                stackable.get(item.getItemId()).add(Tuple.of(position, item));
+        final InventoryManager im = user.getInventoryManager();
+        final Inventory inventory = im.getInventoryByType(inventoryType);
+        // Find stackable items : itemId -> Set<Tuple<position, item>>
+        final Map<Integer, List<Tuple<Integer, Item>>> stackable = new HashMap<>();
+        for (var entry : inventory.getItems().entrySet()) {
+            final int position = entry.getKey();
+            final Item item = entry.getValue();
+            if (item.getItemType() != ItemType.BUNDLE || ItemConstants.isRechargeableItem(item.getItemId())) {
+                continue;
             }
-            // Get required inventory operations
-            final List<InventoryOperation> inventoryOperations = new ArrayList<>();
-            for (var entry : stackable.entrySet()) {
-                if (entry.getValue().size() <= 1) {
-                    continue;
-                }
-                final int slotMax = ItemProvider.getItemInfo(entry.getKey()).map(ItemInfo::getSlotMax).orElse(0);
-                final List<Tuple<Integer, Item>> sortedItems = entry.getValue().stream()
-                        .sorted(Comparator.comparingInt(Tuple::getLeft))
-                        .toList();
-                int total = sortedItems.stream()
-                        .mapToInt((tuple) -> tuple.getRight().getQuantity())
-                        .sum();
-                for (var tuple : sortedItems) {
-                    final int position = tuple.getLeft();
-                    if (total > slotMax) {
-                        inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, position, slotMax));
-                        total -= slotMax;
+            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+            if (itemInfoResult.isEmpty() || itemInfoResult.get().getSlotMax() <= 1) {
+                continue;
+            }
+            if (!stackable.containsKey(item.getItemId())) {
+                stackable.put(item.getItemId(), new ArrayList<>());
+            }
+            stackable.get(item.getItemId()).add(Tuple.of(position, item));
+        }
+        // Get required inventory operations
+        final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+        for (var entry : stackable.entrySet()) {
+            if (entry.getValue().size() <= 1) {
+                continue;
+            }
+            final int slotMax = ItemProvider.getItemInfo(entry.getKey()).map(ItemInfo::getSlotMax).orElse(0);
+            final List<Tuple<Integer, Item>> sortedItems = entry.getValue().stream()
+                    .sorted(Comparator.comparingInt(Tuple::getLeft))
+                    .toList();
+            int total = sortedItems.stream()
+                    .mapToInt((tuple) -> tuple.getRight().getQuantity())
+                    .sum();
+            for (var tuple : sortedItems) {
+                final int position = tuple.getLeft();
+                if (total > slotMax) {
+                    inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, position, slotMax));
+                    total -= slotMax;
+                } else {
+                    if (total > 0) {
+                        inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, position, total));
+                        total = 0;
                     } else {
-                        if (total > 0) {
-                            inventoryOperations.add(InventoryOperation.itemNumber(inventoryType, position, total));
-                            total = 0;
-                        } else {
-                            inventoryOperations.add(InventoryOperation.delItem(inventoryType, position));
-                        }
+                        inventoryOperations.add(InventoryOperation.delItem(inventoryType, position));
                     }
                 }
             }
-            // Apply inventory operations and update client
-            im.applyInventoryOperations(inventoryOperations);
-            user.write(WvsContext.inventoryOperation(inventoryOperations, true));
-            user.write(WvsContext.gatherItemResult(inventoryType));
         }
+        // Apply inventory operations and update client
+        im.applyInventoryOperations(inventoryOperations);
+        user.write(WvsContext.inventoryOperation(inventoryOperations, true));
+        user.write(WvsContext.gatherItemResult(inventoryType));
     }
 
     @Handler(InHeader.UserSortItemRequest)
@@ -355,40 +341,38 @@ public final class UserHandler {
             user.dispose();
             return;
         }
-        try (var locked = user.acquire()) {
-            final InventoryManager im = user.getInventoryManager();
-            // Create array for sorting
-            final Item[] items = new Item[GameConstants.INVENTORY_SLOT_MAX]; // using 0-based indexing for positions (inventory uses 1-based)
-            for (var entry : im.getInventoryByType(inventoryType).getItems().entrySet()) {
-                items[entry.getKey() - 1] = entry.getValue();
-            }
-            // Selection sort to find required swaps
-            final List<InventoryOperation> inventoryOperations = new ArrayList<>();
-            for (int i = 0; i < items.length - 1; i++) {
-                int k = i; // minimum index
-                for (int j = i + 1; j < items.length; j++) {
-                    if (items[j] == null) {
-                        continue;
-                    }
-                    // Consolidate, sorting by ID (increasing) and quantity (decreasing)
-                    if (items[k] == null ||
-                            items[j].getItemId() < items[k].getItemId() ||
-                            (items[j].getItemId() == items[k].getItemId() &&
-                                    items[j].getQuantity() > items[k].getQuantity())) {
-                        k = j;
-                    }
-                }
-                // Perform swap
-                final Item temp = items[k];
-                items[k] = items[i];
-                items[i] = temp;
-                inventoryOperations.add(InventoryOperation.position(inventoryType, k + 1, i + 1)); // again, inventory uses 1-based positions
-            }
-            // Apply inventory operations and update client
-            im.applyInventoryOperations(inventoryOperations);
-            user.write(WvsContext.inventoryOperation(inventoryOperations, true));
-            user.write(WvsContext.sortItemResult(inventoryType));
+        final InventoryManager im = user.getInventoryManager();
+        // Create array for sorting
+        final Item[] items = new Item[GameConstants.INVENTORY_SLOT_MAX]; // using 0-based indexing for positions (inventory uses 1-based)
+        for (var entry : im.getInventoryByType(inventoryType).getItems().entrySet()) {
+            items[entry.getKey() - 1] = entry.getValue();
         }
+        // Selection sort to find required swaps
+        final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+        for (int i = 0; i < items.length - 1; i++) {
+            int k = i; // minimum index
+            for (int j = i + 1; j < items.length; j++) {
+                if (items[j] == null) {
+                    continue;
+                }
+                // Consolidate, sorting by ID (increasing) and quantity (decreasing)
+                if (items[k] == null ||
+                        items[j].getItemId() < items[k].getItemId() ||
+                        (items[j].getItemId() == items[k].getItemId() &&
+                                items[j].getQuantity() > items[k].getQuantity())) {
+                    k = j;
+                }
+            }
+            // Perform swap
+            final Item temp = items[k];
+            items[k] = items[i];
+            items[i] = temp;
+            inventoryOperations.add(InventoryOperation.position(inventoryType, k + 1, i + 1)); // again, inventory uses 1-based positions
+        }
+        // Apply inventory operations and update client
+        im.applyInventoryOperations(inventoryOperations);
+        user.write(WvsContext.inventoryOperation(inventoryOperations, true));
+        user.write(WvsContext.sortItemResult(inventoryType));
     }
 
     @Handler(InHeader.UserChangeSlotPositionRequest)
@@ -404,102 +388,100 @@ public final class UserHandler {
         final short newPos = inPacket.decodeShort(); // nNewPos
         final short count = inPacket.decodeShort(); // nCount
 
-        try (var locked = user.acquire()) {
-            final InventoryManager im = locked.get().getInventoryManager();
-            final Inventory inventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, oldPos));
-            final Item item = inventory.getItem(oldPos);
-            if (item == null) {
-                log.error("Could not find item in {} inventory, position {}", inventoryType.name(), oldPos);
-                return;
-            }
-            final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
-            if (itemInfoResult.isEmpty()) {
-                log.error("Could not resolve item info for item ID : {}, position {}", item.getItemId(), oldPos);
-                return;
-            }
-            final ItemInfo itemInfo = itemInfoResult.get();
-            if (newPos == 0) {
-                // CDraggableItem::ThrowItem - item is deleted if (binded || quest || tradeBlock) && POSSIBLE_TRADING attribute not set
-                final DropEnterType dropEnterType = ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) ?
-                        DropEnterType.FADING_OUT :
-                        DropEnterType.CREATE;
-                if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
-                        item.getQuantity() > count) {
-                    // Update item count
-                    item.setQuantity((short) (item.getQuantity() - count));
-                    user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, oldPos, item.getQuantity()), true));
-                    // Create partial item
-                    final Item partialItem = new Item(item);
-                    partialItem.setItemSn(user.getNextItemSn());
-                    partialItem.setQuantity(count);
-                    partialItem.setPossibleTrading(false);
-                    // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, user.getCharacterId());
-                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
-                } else {
-                    // Full drop
-                    if (!inventory.removeItem(oldPos, item)) {
-                        log.error("Failed to remove item in {} inventory, position {}", inventoryType.name(), oldPos);
-                        return;
-                    }
-                    // Remove item from client inventory
-                    user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
-                    item.setPossibleTrading(false);
-                    // Create drop
-                    final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, user.getCharacterId());
-                    user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
-                }
+        final InventoryManager im = user.getInventoryManager();
+        final Inventory inventory = im.getInventoryByType(InventoryType.getByPosition(inventoryType, oldPos));
+        final Item item = inventory.getItem(oldPos);
+        if (item == null) {
+            log.error("Could not find item in {} inventory, position {}", inventoryType.name(), oldPos);
+            return;
+        }
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(item.getItemId());
+        if (itemInfoResult.isEmpty()) {
+            log.error("Could not resolve item info for item ID : {}, position {}", item.getItemId(), oldPos);
+            return;
+        }
+        final ItemInfo itemInfo = itemInfoResult.get();
+        if (newPos == 0) {
+            // CDraggableItem::ThrowItem - item is deleted if (binded || quest || tradeBlock) && POSSIBLE_TRADING attribute not set
+            final DropEnterType dropEnterType = ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) ?
+                    DropEnterType.FADING_OUT :
+                    DropEnterType.CREATE;
+            if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
+                    item.getQuantity() > count) {
+                // Update item count
+                item.setQuantity((short) (item.getQuantity() - count));
+                user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(inventoryType, oldPos, item.getQuantity()), true));
+                // Create partial item
+                final Item partialItem = new Item(item);
+                partialItem.setItemSn(user.getNextItemSn());
+                partialItem.setQuantity(count);
+                partialItem.setPossibleTrading(false);
+                // Create drop
+                final Drop drop = Drop.item(DropOwnType.NOOWN, user, partialItem, user.getCharacterId());
+                user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
             } else {
-                final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
-                final Inventory secondInventory = im.getInventoryByType(secondInventoryType);
-                if (secondInventoryType == InventoryType.EQUIPPED) {
-                    // Check body part
-                    final int absPos = Math.abs(newPos);
-                    final boolean isCash = absPos >= BodyPart.CASH_BASE.getValue() && absPos < BodyPart.CASH_END.getValue();
-                    final BodyPart bodyPart = BodyPart.getByValue(isCash ? (absPos - BodyPart.CASH_BASE.getValue()) : absPos);
-                    if (bodyPart == null || !ItemConstants.isCorrectBodyPart(item.getItemId(), bodyPart, user.getGender())) {
-                        log.error("Failed to equip item ID {} in position {}", item.getItemId(), absPos);
-                        user.dispose();
-                        return;
-                    }
-                    // Move exclusive body part equip item to inventory
-                    final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId(), isCash);
-                    if (exclusiveBodyPart != null) {
-                        final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue() + (isCash ? BodyPart.CASH_BASE.getValue() : 0));
-                        final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(im.getEquipInventory());
-                        if (availablePositionResult.isEmpty()) {
-                            log.error("No room in inventory remove exclusive equip item body part item ID {} in position {}", exclusiveEquipItem.getItemId(), exclusiveBodyPart);
-                            user.dispose();
-                            return;
-                        }
-                        final int availablePosition = availablePositionResult.get();
-                        if (!secondInventory.removeItem(exclusiveBodyPart.getValue(), exclusiveEquipItem)) {
-                            throw new IllegalStateException("Could not remove exclusive equip item");
-                        }
-                        im.getEquipInventory().putItem(availablePosition, exclusiveEquipItem);
-                        user.write(WvsContext.inventoryOperation(InventoryOperation.position(InventoryType.EQUIP, -exclusiveBodyPart.getValue(), availablePosition), false)); // client uses negative index for equipped
-                    }
-                    // Handle items binded on equip
-                    if (itemInfo.isEquipTradeBlock() && !item.hasAttribute(ItemAttribute.EQUIP_BINDED)) {
-                        item.addAttribute(ItemAttribute.EQUIP_BINDED);
-                        user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.EQUIP, oldPos, item), false));
-                    }
-                } else if (secondInventory.getSize() < newPos) {
+                // Full drop
+                if (!inventory.removeItem(oldPos, item)) {
+                    log.error("Failed to remove item in {} inventory, position {}", inventoryType.name(), oldPos);
+                    return;
+                }
+                // Remove item from client inventory
+                user.write(WvsContext.inventoryOperation(InventoryOperation.delItem(inventoryType, oldPos), true));
+                item.setPossibleTrading(false);
+                // Create drop
+                final Drop drop = Drop.item(DropOwnType.NOOWN, user, item, user.getCharacterId());
+                user.getField().getDropPool().addDrop(drop, dropEnterType, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
+            }
+        } else {
+            final InventoryType secondInventoryType = InventoryType.getByPosition(inventoryType, newPos);
+            final Inventory secondInventory = im.getInventoryByType(secondInventoryType);
+            if (secondInventoryType == InventoryType.EQUIPPED) {
+                // Check body part
+                final int absPos = Math.abs(newPos);
+                final boolean isCash = absPos >= BodyPart.CASH_BASE.getValue() && absPos < BodyPart.CASH_END.getValue();
+                final BodyPart bodyPart = BodyPart.getByValue(isCash ? (absPos - BodyPart.CASH_BASE.getValue()) : absPos);
+                if (bodyPart == null || !ItemConstants.isCorrectBodyPart(item.getItemId(), bodyPart, user.getGender())) {
+                    log.error("Failed to equip item ID {} in position {}", item.getItemId(), absPos);
                     user.dispose();
                     return;
                 }
-                // Swap item position and update client
-                final Item secondItem = secondInventory.getItem(newPos);
-                inventory.putItem(oldPos, secondItem);
-                secondInventory.putItem(newPos, item);
-                user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
+                // Move exclusive body part equip item to inventory
+                final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId(), isCash);
+                if (exclusiveBodyPart != null) {
+                    final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue() + (isCash ? BodyPart.CASH_BASE.getValue() : 0));
+                    final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(im.getEquipInventory());
+                    if (availablePositionResult.isEmpty()) {
+                        log.error("No room in inventory remove exclusive equip item body part item ID {} in position {}", exclusiveEquipItem.getItemId(), exclusiveBodyPart);
+                        user.dispose();
+                        return;
+                    }
+                    final int availablePosition = availablePositionResult.get();
+                    if (!secondInventory.removeItem(exclusiveBodyPart.getValue(), exclusiveEquipItem)) {
+                        throw new IllegalStateException("Could not remove exclusive equip item");
+                    }
+                    im.getEquipInventory().putItem(availablePosition, exclusiveEquipItem);
+                    user.write(WvsContext.inventoryOperation(InventoryOperation.position(InventoryType.EQUIP, -exclusiveBodyPart.getValue(), availablePosition), false)); // client uses negative index for equipped
+                }
+                // Handle items binded on equip
+                if (itemInfo.isEquipTradeBlock() && !item.hasAttribute(ItemAttribute.EQUIP_BINDED)) {
+                    item.addAttribute(ItemAttribute.EQUIP_BINDED);
+                    user.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.EQUIP, oldPos, item), false));
+                }
+            } else if (secondInventory.getSize() < newPos) {
+                user.dispose();
+                return;
             }
-            // Update user
-            if (inventoryType == InventoryType.EQUIP) {
-                user.getCharacterData().getCoupleRecord().reset(im.getEquipped(), im.getEquipInventory());
-                user.validateStat();
-                user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
-            }
+            // Swap item position and update client
+            final Item secondItem = secondInventory.getItem(newPos);
+            inventory.putItem(oldPos, secondItem);
+            secondInventory.putItem(newPos, item);
+            user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
+        }
+        // Update user
+        if (inventoryType == InventoryType.EQUIP) {
+            user.getCharacterData().getCoupleRecord().reset(im.getEquipped(), im.getEquipInventory());
+            user.validateStat();
+            user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
         }
     }
 
@@ -516,27 +498,25 @@ public final class UserHandler {
             user.dispose();
             return;
         }
-        try (var locked = user.acquire()) {
-            // Validate stat
-            final CharacterStat cs = locked.get().getCharacterStat();
-            if (cs.getAp() < 1) {
-                log.error("Tried to add ap with {} remaining ap", cs.getAp());
-                user.dispose();
-                return;
-            }
-            if (!cs.isValidAp(stat, 1)) {
-                log.error("Tried to add ap to stat {}", stat);
-                user.dispose();
-                return;
-            }
-            // Add stat
-            final Map<Stat, Object> addApResult = cs.addAp(stat, user.getBasicStat().getInt());
-            cs.setAp((short) (cs.getAp() - 1));
-            addApResult.put(Stat.AP, cs.getAp());
-            // Update client
-            user.validateStat();
-            user.write(WvsContext.statChanged(addApResult, true));
+        // Validate stat
+        final CharacterStat cs = user.getCharacterStat();
+        if (cs.getAp() < 1) {
+            log.error("Tried to add ap with {} remaining ap", cs.getAp());
+            user.dispose();
+            return;
         }
+        if (!cs.isValidAp(stat, 1)) {
+            log.error("Tried to add ap to stat {}", stat);
+            user.dispose();
+            return;
+        }
+        // Add stat
+        final Map<Stat, Object> addApResult = cs.addAp(stat, user.getBasicStat().getInt());
+        cs.setAp((short) (cs.getAp() - 1));
+        addApResult.put(Stat.AP, cs.getAp());
+        // Update client
+        user.validateStat();
+        user.write(WvsContext.statChanged(addApResult, true));
     }
 
     @Handler(InHeader.UserAbilityMassUpRequest)
@@ -555,39 +535,37 @@ public final class UserHandler {
             }
             stats.put(stat, value);
         }
-        try (var locked = user.acquire()) {
-            // Validate stats
-            final CharacterStat cs = locked.get().getCharacterStat();
-            final int requiredAp = stats.values().stream().mapToInt(Integer::intValue).sum();
-            if (cs.getAp() < requiredAp) {
-                log.error("Tried to add {} ap with {} remaining ap", requiredAp, cs.getAp());
+        // Validate stats
+        final CharacterStat cs = user.getCharacterStat();
+        final int requiredAp = stats.values().stream().mapToInt(Integer::intValue).sum();
+        if (cs.getAp() < requiredAp) {
+            log.error("Tried to add {} ap with {} remaining ap", requiredAp, cs.getAp());
+            user.dispose();
+            return;
+        }
+        for (var entry : stats.entrySet()) {
+            final Stat stat = entry.getKey();
+            final int value = entry.getValue();
+            if (!cs.isValidAp(stat, value)) {
+                log.error("Tried to add {} ap to stat {}", stat, value);
                 user.dispose();
                 return;
             }
-            for (var entry : stats.entrySet()) {
-                final Stat stat = entry.getKey();
-                final int value = entry.getValue();
-                if (!cs.isValidAp(stat, value)) {
-                    log.error("Tried to add {} ap to stat {}", stat, value);
-                    user.dispose();
-                    return;
-                }
-            }
-            // Add stats
-            final Map<Stat, Object> addApResult = new EnumMap<>(Stat.class);
-            for (var entry : stats.entrySet()) {
-                final Stat stat = entry.getKey();
-                final int value = entry.getValue();
-                for (int i = 0; i < value; i++) {
-                    addApResult.putAll(cs.addAp(stat, user.getBasicStat().getInt()));
-                }
-            }
-            cs.setAp((short) (cs.getAp() - requiredAp));
-            addApResult.put(Stat.AP, cs.getAp());
-            // Update client
-            user.validateStat();
-            user.write(WvsContext.statChanged(addApResult, true));
         }
+        // Add stats
+        final Map<Stat, Object> addApResult = new EnumMap<>(Stat.class);
+        for (var entry : stats.entrySet()) {
+            final Stat stat = entry.getKey();
+            final int value = entry.getValue();
+            for (int i = 0; i < value; i++) {
+                addApResult.putAll(cs.addAp(stat, user.getBasicStat().getInt()));
+            }
+        }
+        cs.setAp((short) (cs.getAp() - requiredAp));
+        addApResult.put(Stat.AP, cs.getAp());
+        // Update client
+        user.validateStat();
+        user.write(WvsContext.statChanged(addApResult, true));
     }
 
     @Handler({ InHeader.UserChangeStatRequest, InHeader.UserChangeStatRequestByItemOption })
@@ -601,13 +579,11 @@ public final class UserHandler {
         final int hp = Short.toUnsignedInt(inPacket.decodeShort()); // nHP
         final int mp = Short.toUnsignedInt(inPacket.decodeShort()); // nMP
         // inPacket.decodeByte(); // nOption for UserChangeStatRequest
-        try (var locked = user.acquire()) {
-            if (hp > 0) {
-                user.addHp(hp);
-            }
-            if (mp > 0) {
-                user.addMp(mp);
-            }
+        if (hp > 0) {
+            user.addHp(hp);
+        }
+        if (mp > 0) {
+            user.addMp(mp);
         }
     }
 
@@ -615,67 +591,65 @@ public final class UserHandler {
     public static void handleUserSkillUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int skillId = inPacket.decodeInt(); // nSkillID
-        try (var locked = user.acquire()) {
-            final SkillManager sm = locked.get().getSkillManager();
-            final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
-            if (skillRecordResult.isEmpty()) {
-                log.error("Tried to add a skill {} not owned by user", skillId);
-                user.dispose();
-                return;
-            }
-            final SkillRecord skillRecord = skillRecordResult.get();
-            if (skillRecord.getSkillLevel() >= skillRecord.getMasterLevel()) {
-                log.error("Tried to add a skill {} at master level {}/{}", skillId, skillRecord.getSkillLevel(), skillRecord.getMasterLevel());
-                user.dispose();
-                return;
-            }
-            final int skillRoot = SkillConstants.getSkillRoot(skillId);
-            if (JobConstants.isBeginnerJob(skillRoot)) {
-                // Check if valid beginner skill
-                if (!SkillConstants.isBeginnerSpAddableSkill(skillId)) {
-                    log.error("Tried to add an invalid beginner skill {}", skillId);
-                    user.dispose();
-                    return;
-                }
-                // Compute sp spent on beginner skills
-                final int spentSp = sm.getSkillRecords().stream()
-                        .filter((sr) -> SkillConstants.isBeginnerSpAddableSkill(sr.getSkillId()))
-                        .mapToInt(SkillRecord::getSkillLevel)
-                        .sum();
-                // Beginner sp is calculated by level
-                final int totalSp;
-                if (JobConstants.isResistanceJob(skillRoot)) {
-                    totalSp = Math.min(user.getLevel(), 10) - 1; // max total sp = 9
-                } else {
-                    totalSp = Math.min(user.getLevel(), 7) - 1; // max total sp = 6
-                }
-                // Check if sp can be added
-                if (spentSp >= totalSp) {
-                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
-                    user.dispose();
-                    return;
-                }
-            } else if (JobConstants.isExtendSpJob(skillRoot)) {
-                final int jobLevel = JobConstants.getJobLevel(skillRoot);
-                if (!user.getCharacterStat().getSp().removeSp(jobLevel, 1)) {
-                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
-                    user.dispose();
-                    return;
-                }
-            } else {
-                if (!user.getCharacterStat().getSp().removeNonExtendSp(1)) {
-                    log.error("Tried to add skill {} without having the required amount of sp", skillId);
-                    user.dispose();
-                    return;
-                }
-            }
-            // Add skill point and update client
-            skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
-            user.write(WvsContext.statChanged(Stat.SP, JobConstants.isExtendSpJob(user.getJob()) ? user.getCharacterStat().getSp() : (short) user.getCharacterStat().getSp().getNonExtendSp(), false));
-            user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
-            user.updatePassiveSkillData();
-            user.validateStat();
+        final SkillManager sm = user.getSkillManager();
+        final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
+        if (skillRecordResult.isEmpty()) {
+            log.error("Tried to add a skill {} not owned by user", skillId);
+            user.dispose();
+            return;
         }
+        final SkillRecord skillRecord = skillRecordResult.get();
+        if (skillRecord.getSkillLevel() >= skillRecord.getMasterLevel()) {
+            log.error("Tried to add a skill {} at master level {}/{}", skillId, skillRecord.getSkillLevel(), skillRecord.getMasterLevel());
+            user.dispose();
+            return;
+        }
+        final int skillRoot = SkillConstants.getSkillRoot(skillId);
+        if (JobConstants.isBeginnerJob(skillRoot)) {
+            // Check if valid beginner skill
+            if (!SkillConstants.isBeginnerSpAddableSkill(skillId)) {
+                log.error("Tried to add an invalid beginner skill {}", skillId);
+                user.dispose();
+                return;
+            }
+            // Compute sp spent on beginner skills
+            final int spentSp = sm.getSkillRecords().stream()
+                    .filter((sr) -> SkillConstants.isBeginnerSpAddableSkill(sr.getSkillId()))
+                    .mapToInt(SkillRecord::getSkillLevel)
+                    .sum();
+            // Beginner sp is calculated by level
+            final int totalSp;
+            if (JobConstants.isResistanceJob(skillRoot)) {
+                totalSp = Math.min(user.getLevel(), 10) - 1; // max total sp = 9
+            } else {
+                totalSp = Math.min(user.getLevel(), 7) - 1; // max total sp = 6
+            }
+            // Check if sp can be added
+            if (spentSp >= totalSp) {
+                log.error("Tried to add skill {} without having the required amount of sp", skillId);
+                user.dispose();
+                return;
+            }
+        } else if (JobConstants.isExtendSpJob(skillRoot)) {
+            final int jobLevel = JobConstants.getJobLevel(skillRoot);
+            if (!user.getCharacterStat().getSp().removeSp(jobLevel, 1)) {
+                log.error("Tried to add skill {} without having the required amount of sp", skillId);
+                user.dispose();
+                return;
+            }
+        } else {
+            if (!user.getCharacterStat().getSp().removeNonExtendSp(1)) {
+                log.error("Tried to add skill {} without having the required amount of sp", skillId);
+                user.dispose();
+                return;
+            }
+        }
+        // Add skill point and update client
+        skillRecord.setSkillLevel(skillRecord.getSkillLevel() + 1);
+        user.write(WvsContext.statChanged(Stat.SP, JobConstants.isExtendSpJob(user.getJob()) ? user.getCharacterStat().getSp() : (short) user.getCharacterStat().getSp().getNonExtendSp(), false));
+        user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
+        user.updatePassiveSkillData();
+        user.validateStat();
     }
 
 
@@ -685,16 +659,14 @@ public final class UserHandler {
     public static void handleUserDropMoneyRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
         final int money = inPacket.decodeInt(); // nAmount
-        try (var locked = user.acquire()) {
-            final InventoryManager im = user.getInventoryManager();
-            if (money <= 0 || !im.addMoney(-money)) {
-                user.dispose();
-                return;
-            }
-            final Drop drop = Drop.money(DropOwnType.NOOWN, user, money, user.getCharacterId());
-            user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
-            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+        final InventoryManager im = user.getInventoryManager();
+        if (money <= 0 || !im.addMoney(-money)) {
+            user.dispose();
+            return;
         }
+        final Drop drop = Drop.money(DropOwnType.NOOWN, user, money, user.getCharacterId());
+        user.getField().getDropPool().addDrop(drop, DropEnterType.CREATE, user.getX(), user.getY() - GameConstants.DROP_HEIGHT, 0);
+        user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
     }
 
     @Handler(InHeader.UserCharacterInfoRequest)
@@ -752,27 +724,25 @@ public final class UserHandler {
             return;
         }
         final boolean canTransferContinent = inPacket.decodeBoolean(); // bCanTransferContinent
-        try (var locked = user.acquire()) {
-            final MapTransferInfo mapTransferInfo = locked.get().getMapTransferInfo();
-            if (requestType == MapTransferRequestType.DeleteList) {
-                final int targetField = inPacket.decodeInt(); // dwTargetField
-                if (!mapTransferInfo.delete(targetField, canTransferContinent)) {
-                    log.error("Could not delete field {} from map transfer info", targetField);
-                    return;
-                }
-                user.write(MapTransferPacket.deleteList(mapTransferInfo, canTransferContinent));
-            } else {
-                final Field field = user.getField();
-                if (field.isMapTransferLimit()) {
-                    user.write(MapTransferPacket.registerFail()); // This map is not available to enter for the list.
-                    return;
-                }
-                if (!mapTransferInfo.register(field.getFieldId(), canTransferContinent)) {
-                    log.error("Could not register field {} to map transfer info", field.getFieldId());
-                    return;
-                }
-                user.write(MapTransferPacket.registerList(mapTransferInfo, canTransferContinent));
+        final MapTransferInfo mapTransferInfo = user.getMapTransferInfo();
+        if (requestType == MapTransferRequestType.DeleteList) {
+            final int targetField = inPacket.decodeInt(); // dwTargetField
+            if (!mapTransferInfo.delete(targetField, canTransferContinent)) {
+                log.error("Could not delete field {} from map transfer info", targetField);
+                return;
             }
+            user.write(MapTransferPacket.deleteList(mapTransferInfo, canTransferContinent));
+        } else {
+            final Field field = user.getField();
+            if (field.isMapTransferLimit()) {
+                user.write(MapTransferPacket.registerFail()); // This map is not available to enter for the list.
+                return;
+            }
+            if (!mapTransferInfo.register(field.getFieldId(), canTransferContinent)) {
+                log.error("Could not register field {} to map transfer info", field.getFieldId());
+                return;
+            }
+            user.write(MapTransferPacket.registerList(mapTransferInfo, canTransferContinent));
         }
     }
 
@@ -796,9 +766,7 @@ public final class UserHandler {
                 for (int i = 0; i < size; i++) {
                     lostItems.add(inPacket.decodeInt()); // item id
                 }
-                try (var locked = user.acquire()) {
-                    questInfo.restoreLostItems(locked, lostItems);
-                }
+                questInfo.restoreLostItems(user, lostItems);
             }
             case AcceptQuest -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
@@ -807,17 +775,15 @@ public final class UserHandler {
                     final short x = inPacket.decodeShort(); // ptUserPos.x
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
-                try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> startQuestResult = questInfo.startQuest(locked);
-                    if (startQuestResult.isEmpty()) {
-                        log.error("Failed to accept quest : {}", questId);
-                        user.dispose();
-                        return;
-                    }
-                    user.write(MessagePacket.questRecord(startQuestResult.get()));
-                    user.write(QuestPacket.success(questId, templateId, 0));
-                    user.validateStat();
+                final Optional<QuestRecord> startQuestResult = questInfo.startQuest(user);
+                if (startQuestResult.isEmpty()) {
+                    log.error("Failed to accept quest : {}", questId);
+                    user.dispose();
+                    return;
                 }
+                user.write(MessagePacket.questRecord(startQuestResult.get()));
+                user.write(QuestPacket.success(questId, templateId, 0));
+                user.validateStat();
             }
             case CompleteQuest -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
@@ -827,58 +793,50 @@ public final class UserHandler {
                     final short y = inPacket.decodeShort(); // ptUserPos.y
                 }
                 final int rewardIndex = inPacket.decodeInt(); // nIdx - for selecting reward
-                try (var locked = user.acquire()) {
-                    final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(locked, rewardIndex);
-                    if (questCompleteResult.isEmpty()) {
-                        log.error("Failed to complete quest : {}", questId);
-                        user.dispose();
-                        return;
-                    }
-                    final QuestRecord questRecord = questCompleteResult.get().getLeft();
-                    final int nextQuest = questCompleteResult.get().getRight();
-                    user.write(MessagePacket.questRecord(questRecord));
-                    user.write(QuestPacket.success(questId, templateId, nextQuest));
-                    user.validateStat();
+                final Optional<Tuple<QuestRecord, Integer>> questCompleteResult = questInfo.completeQuest(user, rewardIndex);
+                if (questCompleteResult.isEmpty()) {
+                    log.error("Failed to complete quest : {}", questId);
+                    user.dispose();
+                    return;
                 }
+                final QuestRecord questRecord = questCompleteResult.get().getLeft();
+                final int nextQuest = questCompleteResult.get().getRight();
+                user.write(MessagePacket.questRecord(questRecord));
+                user.write(QuestPacket.success(questId, templateId, nextQuest));
+                user.validateStat();
                 // Quest complete effect
                 user.write(UserLocal.effect(Effect.questComplete()));
                 user.getField().broadcastPacket(UserRemote.effect(user, Effect.questComplete()), user);
             }
             case ResignQuest -> {
-                try (var locked = user.acquire()) {
-                    final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(locked);
-                    if (questRecordResult.isEmpty()) {
-                        log.error("Failed to resign quest : {}", questId);
-                        return;
-                    }
-                    user.write(MessagePacket.questRecord(questRecordResult.get()));
-                    user.write(UserLocal.resignQuestReturn(questId));
-                    user.validateStat();
+                final Optional<QuestRecord> questRecordResult = questInfo.resignQuest(user);
+                if (questRecordResult.isEmpty()) {
+                    log.error("Failed to resign quest : {}", questId);
+                    return;
                 }
+                user.write(MessagePacket.questRecord(questRecordResult.get()));
+                user.write(UserLocal.resignQuestReturn(questId));
+                user.validateStat();
             }
             case OpeningScript -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
-                try (var locked = user.acquire()) {
-                    if (!questInfo.canStartQuest(locked)) {
-                        log.error("Tried to start opening script for quest {} without meeting requirements", questId);
-                        return;
-                    }
-                    ScriptDispatcher.startQuestScript(user, questId, true, templateId);
+                if (!questInfo.canStartQuest(user)) {
+                    log.error("Tried to start opening script for quest {} without meeting requirements", questId);
+                    return;
                 }
+                ScriptDispatcher.startQuestScript(user, questId, true, templateId);
             }
             case CompleteScript -> {
                 final int templateId = inPacket.decodeInt(); // dwNpcTemplateID
                 final short x = inPacket.decodeShort(); // ptUserPos.x
                 final short y = inPacket.decodeShort(); // ptUserPos.y
-                try (var locked = user.acquire()) {
-                    if (!questInfo.canCompleteQuest(locked)) {
-                        log.error("Tried to start complete script for quest {} without meeting requirements", questId);
-                        return;
-                    }
-                    ScriptDispatcher.startQuestScript(user, questId, false, templateId);
+                if (!questInfo.canCompleteQuest(user)) {
+                    log.error("Tried to start complete script for quest {} without meeting requirements", questId);
+                    return;
                 }
+                ScriptDispatcher.startQuestScript(user, questId, false, templateId);
             }
             case null -> {
                 log.error("Unknown quest action type : {}", action);
@@ -897,9 +855,7 @@ public final class UserHandler {
         for (int i = 0; i < size; i++) {
             macroSysData.add(SingleMacro.decode(inPacket));
         }
-        try (var locked = user.acquire()) {
-            locked.get().getConfigManager().updateMacroSysData(macroSysData);
-        }
+        user.getConfigManager().updateMacroSysData(macroSysData);
     }
 
     @Handler(InHeader.UserItemMakeRequest)
@@ -923,131 +879,128 @@ public final class UserHandler {
                     return;
                 }
                 final ItemMakeInfo itemMakeInfo = itemMakeInfoResult.get();
-                try (var locked = user.acquire()) {
-                    // Check requirements and validate
-                    if (!itemMakeInfo.canCreateItem(locked, catalyst, gems)) {
+                // Check requirements and validate
+                if (!itemMakeInfo.canCreateItem(user, catalyst, gems)) {
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                if (!itemMakeInfo.canAddReward(user)) {
+                    user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
+                    return;
+                }
+                // Resolve reward item
+                final int rewardItemId;
+                final int rewardItemCount;
+                if (itemMakeInfo.getRandomReward().isEmpty()) {
+                    rewardItemId = itemMakeInfo.getItemId();
+                    rewardItemCount = 1;
+                } else {
+                    final Optional<Triple<Integer, Integer, Integer>> rewardResult = Util.getRandomFromCollection(itemMakeInfo.getRandomReward(), Triple::getThird);
+                    if (rewardResult.isEmpty()) {
+                        log.error("Could not resolve maker random reward for item ID : {}", itemId);
                         user.write(MakerPacket.unknown());
                         return;
                     }
-                    if (!itemMakeInfo.canAddReward(locked)) {
-                        user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
-                        return;
+                    rewardItemId = rewardResult.get().getFirst();
+                    rewardItemCount = rewardResult.get().getSecond();
+                }
+                final Optional<ItemInfo> rewardItemInfoResult = ItemProvider.getItemInfo(rewardItemId);
+                if (rewardItemInfoResult.isEmpty()) {
+                    log.error("Could not resolve item info for item ID : {}", rewardItemId);
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                // Deduct cost and items
+                final InventoryManager im = user.getInventoryManager();
+                final int totalCost = MakerConstants.getTotalCostToMake(itemMakeInfo.getCost(), catalyst, gems);
+                if (!im.addMoney(-totalCost)) {
+                    throw new IllegalStateException("Could not deduct total price from user");
+                }
+                final List<Tuple<Integer, Integer>> lostItems = new ArrayList<>(itemMakeInfo.getRecipe());
+                if (catalyst) {
+                    lostItems.add(Tuple.of(itemMakeInfo.getCatalyst(), 1));
+                }
+                for (int gemItemId : gems) {
+                    lostItems.add(Tuple.of(gemItemId, 1));
+                }
+                final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+                for (var tuple : lostItems) {
+                    final Optional<List<InventoryOperation>> removeResult = im.removeItem(tuple.getLeft(), tuple.getRight());
+                    if (removeResult.isEmpty()) {
+                        throw new IllegalStateException("Could not remove item from inventory");
                     }
-                    // Resolve reward item
-                    final int rewardItemId;
-                    final int rewardItemCount;
-                    if (itemMakeInfo.getRandomReward().isEmpty()) {
-                        rewardItemId = itemMakeInfo.getItemId();
-                        rewardItemCount = 1;
-                    } else {
-                        final Optional<Triple<Integer, Integer, Integer>> rewardResult = Util.getRandomFromCollection(itemMakeInfo.getRandomReward(), Triple::getThird);
-                        if (rewardResult.isEmpty()) {
-                            log.error("Could not resolve maker random reward for item ID : {}", itemId);
-                            user.write(MakerPacket.unknown());
-                            return;
-                        }
-                        rewardItemId = rewardResult.get().getFirst();
-                        rewardItemCount = rewardResult.get().getSecond();
-                    }
-                    final Optional<ItemInfo> rewardItemInfoResult = ItemProvider.getItemInfo(rewardItemId);
-                    if (rewardItemInfoResult.isEmpty()) {
-                        log.error("Could not resolve item info for item ID : {}", rewardItemId);
-                        user.write(MakerPacket.unknown());
-                        return;
-                    }
-                    // Deduct cost and items
-                    final InventoryManager im = user.getInventoryManager();
-                    final int totalCost = MakerConstants.getTotalCostToMake(itemMakeInfo.getCost(), catalyst, gems);
-                    if (!im.addMoney(-totalCost)) {
-                        throw new IllegalStateException("Could not deduct total price from user");
-                    }
-                    final List<Tuple<Integer, Integer>> lostItems = new ArrayList<>(itemMakeInfo.getRecipe());
-                    if (catalyst) {
-                        lostItems.add(Tuple.of(itemMakeInfo.getCatalyst(), 1));
-                    }
-                    for (int gemItemId : gems) {
-                        lostItems.add(Tuple.of(gemItemId, 1));
-                    }
-                    final List<InventoryOperation> inventoryOperations = new ArrayList<>();
-                    for (var tuple : lostItems) {
-                        final Optional<List<InventoryOperation>> removeResult = im.removeItem(tuple.getLeft(), tuple.getRight());
-                        if (removeResult.isEmpty()) {
-                            throw new IllegalStateException("Could not remove item from inventory");
-                        }
-                        inventoryOperations.addAll(removeResult.get());
-                    }
-                    // Add reward
-                    final boolean success = !catalyst || Util.succeedProp(90);
-                    if (success) {
-                        final Item rewardItem = rewardItemInfoResult.get().createItem(user.getNextItemSn(), rewardItemCount, catalyst ? ItemVariationOption.NORMAL : ItemVariationOption.NONE);
-                        if (rewardItem.getEquipData() != null) {
-                            final EquipData originalEquipData = new EquipData(rewardItem.getEquipData());
-                            for (int gemItemId : gems) {
-                                final Optional<ItemInfo> gemItemInfoResult = ItemProvider.getItemInfo(gemItemId);
-                                if (gemItemInfoResult.isEmpty()) {
-                                    log.error("Could not resolve item info for item ID : {}", gemItemId);
-                                    continue;
+                    inventoryOperations.addAll(removeResult.get());
+                }
+                // Add reward
+                final boolean success = !catalyst || Util.succeedProp(90);
+                if (success) {
+                    final Item rewardItem = rewardItemInfoResult.get().createItem(user.getNextItemSn(), rewardItemCount, catalyst ? ItemVariationOption.NORMAL : ItemVariationOption.NONE);
+                    if (rewardItem.getEquipData() != null) {
+                        final EquipData originalEquipData = new EquipData(rewardItem.getEquipData());
+                        for (int gemItemId : gems) {
+                            final Optional<ItemInfo> gemItemInfoResult = ItemProvider.getItemInfo(gemItemId);
+                            if (gemItemInfoResult.isEmpty()) {
+                                log.error("Could not resolve item info for item ID : {}", gemItemId);
+                                continue;
+                            }
+                            final ItemInfo gemItemInfo = gemItemInfoResult.get();
+                            if (gemItemInfo.getInfo(ItemInfoType.randOption) != 0) {
+                                // Black Crystal
+                                final int randMax = gemItemInfo.getInfo(ItemInfoType.randOption);
+                                final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
+                                if (originalEquipData.getIncPad() > 0) {
+                                    randStats.put(ItemInfoType.incPAD, Util.getRandom(-randMax, randMax));
                                 }
-                                final ItemInfo gemItemInfo = gemItemInfoResult.get();
-                                if (gemItemInfo.getInfo(ItemInfoType.randOption) != 0) {
-                                    // Black Crystal
-                                    final int randMax = gemItemInfo.getInfo(ItemInfoType.randOption);
-                                    final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
-                                    if (originalEquipData.getIncPad() > 0) {
-                                        randStats.put(ItemInfoType.incPAD, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncMad() > 0) {
-                                        randStats.put(ItemInfoType.incMAD, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncSpeed() > 0) {
-                                        randStats.put(ItemInfoType.incSpeed, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncJump() > 0) {
-                                        randStats.put(ItemInfoType.incJump, Util.getRandom(-randMax, randMax));
-                                    }
-                                    rewardItem.getEquipData().applyScrollStats(randStats);
-                                } else if (gemItemInfo.getInfo(ItemInfoType.randStat) != 0) {
-                                    // Dark Crystal
-                                    final int randMax = gemItemInfo.getInfo(ItemInfoType.randStat);
-                                    final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
-                                    if (originalEquipData.getIncStr() > 0) {
-                                        randStats.put(ItemInfoType.incSTR, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncDex() > 0) {
-                                        randStats.put(ItemInfoType.incDEX, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncInt() > 0) {
-                                        randStats.put(ItemInfoType.incINT, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncLuk() > 0) {
-                                        randStats.put(ItemInfoType.incLUK, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncAcc() > 0) {
-                                        randStats.put(ItemInfoType.incACC, Util.getRandom(-randMax, randMax));
-                                    }
-                                    if (originalEquipData.getIncEva() > 0) {
-                                        randStats.put(ItemInfoType.incEVA, Util.getRandom(-randMax, randMax));
-                                    }
-                                    rewardItem.getEquipData().applyScrollStats(randStats);
-                                } else {
-                                    // Other gems
-                                    rewardItem.getEquipData().applyScrollStats(gemItemInfo.getItemInfos());
+                                if (originalEquipData.getIncMad() > 0) {
+                                    randStats.put(ItemInfoType.incMAD, Util.getRandom(-randMax, randMax));
                                 }
+                                if (originalEquipData.getIncSpeed() > 0) {
+                                    randStats.put(ItemInfoType.incSpeed, Util.getRandom(-randMax, randMax));
+                                }
+                                if (originalEquipData.getIncJump() > 0) {
+                                    randStats.put(ItemInfoType.incJump, Util.getRandom(-randMax, randMax));
+                                }
+                                rewardItem.getEquipData().applyScrollStats(randStats);
+                            } else if (gemItemInfo.getInfo(ItemInfoType.randStat) != 0) {
+                                // Dark Crystal
+                                final int randMax = gemItemInfo.getInfo(ItemInfoType.randStat);
+                                final Map<ItemInfoType, Object> randStats = new EnumMap<>(ItemInfoType.class);
+                                if (originalEquipData.getIncStr() > 0) {
+                                    randStats.put(ItemInfoType.incSTR, Util.getRandom(-randMax, randMax));
+                                }
+                                if (originalEquipData.getIncDex() > 0) {
+                                    randStats.put(ItemInfoType.incDEX, Util.getRandom(-randMax, randMax));
+                                }
+                                if (originalEquipData.getIncInt() > 0) {
+                                    randStats.put(ItemInfoType.incINT, Util.getRandom(-randMax, randMax));
+                                }
+                                if (originalEquipData.getIncLuk() > 0) {
+                                    randStats.put(ItemInfoType.incLUK, Util.getRandom(-randMax, randMax));
+                                }
+                                if (originalEquipData.getIncAcc() > 0) {
+                                    randStats.put(ItemInfoType.incACC, Util.getRandom(-randMax, randMax));
+                                }
+                                if (originalEquipData.getIncEva() > 0) {
+                                    randStats.put(ItemInfoType.incEVA, Util.getRandom(-randMax, randMax));
+                                }
+                                rewardItem.getEquipData().applyScrollStats(randStats);
+                            } else {
+                                // Other gems
+                                rewardItem.getEquipData().applyScrollStats(gemItemInfo.getItemInfos());
                             }
                         }
-                        final Optional<List<InventoryOperation>> addResult = im.addItem(rewardItem);
-                        if (addResult.isEmpty()) {
-                            throw new IllegalStateException("Could not add item to inventory");
-                        }
-                        inventoryOperations.addAll(addResult.get());
                     }
-                    // Update client
-                    user.write(WvsContext.inventoryOperation(inventoryOperations, false));
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                    user.write(MakerPacket.normal(success, rewardItemId, rewardItemCount, lostItems, totalCost));
-                    user.write(UserLocal.effect(Effect.itemMaker(success ? MakerResult.SUCCESS : MakerResult.DESTROYED)));
-                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(success ? MakerResult.SUCCESS : MakerResult.DESTROYED)));
+                    final Optional<List<InventoryOperation>> addResult = im.addItem(rewardItem);
+                    if (addResult.isEmpty()) {
+                        throw new IllegalStateException("Could not add item to inventory");
+                    }
+                    inventoryOperations.addAll(addResult.get());
                 }
+                // Update client
+                user.write(WvsContext.inventoryOperation(inventoryOperations, false));
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                user.write(MakerPacket.normal(success, rewardItemId, rewardItemCount, lostItems, totalCost));
+                user.write(UserLocal.effect(Effect.itemMaker(success ? MakerResult.SUCCESS : MakerResult.DESTROYED)));
             }
             case MONSTER_CRYSTAL -> {
                 final int itemId = inPacket.decodeInt(); // aRecipeSlot[0].pItem.p->nItemID
@@ -1063,28 +1016,26 @@ public final class UserHandler {
                     user.write(MakerPacket.unknown());
                     return;
                 }
-                try (var locked = user.acquire()) {
-                    final InventoryManager im = locked.get().getInventoryManager();
-                    if (!im.canAddItem(monsterCrystalId, 1)) {
-                        user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
-                        return;
-                    }
-                    final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemId, 100);
-                    if (removeItemResult.isEmpty()) {
-                        user.write(MakerPacket.unknown());
-                        return;
-                    }
-                    final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), 1);
-                    final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
-                    if (addItemResult.isEmpty()) {
-                        throw new IllegalStateException("Failed to add item to inventory");
-                    }
-                    user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
-                    user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-                    user.write(MakerPacket.monsterCrystal(monsterCrystalId, itemId));
-                    user.write(UserLocal.effect(Effect.itemMaker(MakerResult.SUCCESS)));
-                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(MakerResult.SUCCESS)));
+                final InventoryManager im = user.getInventoryManager();
+                if (!im.canAddItem(monsterCrystalId, 1)) {
+                    user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
+                    return;
                 }
+                final Optional<List<InventoryOperation>> removeItemResult = im.removeItem(itemId, 100);
+                if (removeItemResult.isEmpty()) {
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final Item item = itemInfoResult.get().createItem(user.getNextItemSn(), 1);
+                final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+                if (addItemResult.isEmpty()) {
+                    throw new IllegalStateException("Failed to add item to inventory");
+                }
+                user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+                user.write(MakerPacket.monsterCrystal(monsterCrystalId, itemId));
+                user.write(UserLocal.effect(Effect.itemMaker(MakerResult.SUCCESS)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(MakerResult.SUCCESS)));
             }
             case EQUIP_DISASSEMBLE -> {
                 final int itemId = inPacket.decodeInt(); // aRecipeSlot[0].pItem.p->nItemID
@@ -1108,58 +1059,56 @@ public final class UserHandler {
                     return;
                 }
                 final ItemMakeInfo itemMakeInfo = itemMakeInfoResult.get();
-                try (var locked = user.acquire()) {
-                    final InventoryManager im = locked.get().getInventoryManager();
-                    if (!im.canAddItems(itemMakeInfo.getRecipe())) {
-                        user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
-                        return;
-                    }
-                    final Item item = im.getEquipInventory().getItem(slotPosition);
-                    if (item == null || item.getItemId() != itemId) {
-                        log.error("Could not resolve item ID : {} for disassembly at position : {}", itemId, slotPosition);
-                        user.write(MakerPacket.unknown());
-                        return;
-                    }
-                    final int totalCost = MakerConstants.getTotalCostToDisassemble(itemMakeInfo.getCost(), itemInfo.calcEquipItemQuality(item));
-                    if (!im.canAddMoney(-totalCost)) {
-                        user.write(MakerPacket.unknown());
-                        return;
-                    }
-                    final List<Item> rewardItems = new ArrayList<>();
-                    for (var tuple : itemMakeInfo.getRecipe()) {
-                        final int rewardItemId = tuple.getLeft();
-                        final int rewardItemCount = tuple.getRight() / 2; // TODO : probably incorrect
-                        if (rewardItemId / 10000 != 426 || rewardItemCount <= 0) {
-                            continue;
-                        }
-                        final Optional<ItemInfo> rewardItemInfoResult = ItemProvider.getItemInfo(rewardItemId);
-                        if (rewardItemInfoResult.isEmpty()) {
-                            log.error("Could not resolve item info for item ID : {}", itemId);
-                            user.write(MakerPacket.unknown());
-                            return;
-                        }
-                        rewardItems.add(rewardItemInfoResult.get().createItem(user.getNextItemSn(), rewardItemCount));
-                    }
-                    if (!im.addMoney(-totalCost)) {
-                        throw new IllegalStateException("Could not deduct total price from user");
-                    }
-                    final Optional<InventoryOperation> removeResult = im.removeItem(slotPosition, item);
-                    if (removeResult.isEmpty()) {
-                        throw new IllegalStateException("Failed to remove item from inventory");
-                    }
-                    for (Item rewardItem : rewardItems) {
-                        final Optional<List<InventoryOperation>> addResult = im.addItem(rewardItem);
-                        if (addResult.isEmpty()) {
-                            throw new IllegalStateException("Failed to add item to inventory");
-                        }
-                        user.write(WvsContext.inventoryOperation(addResult.get(), false));
-                    }
-                    user.write(WvsContext.inventoryOperation(removeResult.get(), false));
-                    user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-                    user.write(MakerPacket.equipDisassemble(itemId, rewardItems, totalCost));
-                    user.write(UserLocal.effect(Effect.itemMaker(MakerResult.SUCCESS)));
-                    user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(MakerResult.SUCCESS)));
+                final InventoryManager im = user.getInventoryManager();
+                if (!im.canAddItems(itemMakeInfo.getRecipe())) {
+                    user.write(MakerPacket.emptySlot()); // You don't have enough room in your Inventory.
+                    return;
                 }
+                final Item item = im.getEquipInventory().getItem(slotPosition);
+                if (item == null || item.getItemId() != itemId) {
+                    log.error("Could not resolve item ID : {} for disassembly at position : {}", itemId, slotPosition);
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final int totalCost = MakerConstants.getTotalCostToDisassemble(itemMakeInfo.getCost(), itemInfo.calcEquipItemQuality(item));
+                if (!im.canAddMoney(-totalCost)) {
+                    user.write(MakerPacket.unknown());
+                    return;
+                }
+                final List<Item> rewardItems = new ArrayList<>();
+                for (var tuple : itemMakeInfo.getRecipe()) {
+                    final int rewardItemId = tuple.getLeft();
+                    final int rewardItemCount = tuple.getRight() / 2; // TODO : probably incorrect
+                    if (rewardItemId / 10000 != 426 || rewardItemCount <= 0) {
+                        continue;
+                    }
+                    final Optional<ItemInfo> rewardItemInfoResult = ItemProvider.getItemInfo(rewardItemId);
+                    if (rewardItemInfoResult.isEmpty()) {
+                        log.error("Could not resolve item info for item ID : {}", itemId);
+                        user.write(MakerPacket.unknown());
+                        return;
+                    }
+                    rewardItems.add(rewardItemInfoResult.get().createItem(user.getNextItemSn(), rewardItemCount));
+                }
+                if (!im.addMoney(-totalCost)) {
+                    throw new IllegalStateException("Could not deduct total price from user");
+                }
+                final Optional<InventoryOperation> removeResult = im.removeItem(slotPosition, item);
+                if (removeResult.isEmpty()) {
+                    throw new IllegalStateException("Failed to remove item from inventory");
+                }
+                for (Item rewardItem : rewardItems) {
+                    final Optional<List<InventoryOperation>> addResult = im.addItem(rewardItem);
+                    if (addResult.isEmpty()) {
+                        throw new IllegalStateException("Failed to add item to inventory");
+                    }
+                    user.write(WvsContext.inventoryOperation(addResult.get(), false));
+                }
+                user.write(WvsContext.inventoryOperation(removeResult.get(), false));
+                user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
+                user.write(MakerPacket.equipDisassemble(itemId, rewardItems, totalCost));
+                user.write(UserLocal.effect(Effect.itemMaker(MakerResult.SUCCESS)));
+                user.getField().broadcastPacket(UserRemote.effect(user, Effect.itemMaker(MakerResult.SUCCESS)));
             }
             case null -> {
                 log.error("Unknown recipe class : {}", type);
@@ -1307,289 +1256,268 @@ public final class UserHandler {
             log.error("Unknown mini room action {}", action);
             return;
         }
-        try (var locked = user.acquire()) {
-            // TradingRoom Protocol
-            if (mrp.getValue() >= MiniRoomProtocol.TRP_PutItem.getValue() && mrp.getValue() <= MiniRoomProtocol.TRP_LimitFail.getValue()) {
-                if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
-                    log.error("Received trading room action {} outside a trading room", mrp);
-                    return;
-                }
-                tradingRoom.handlePacket(locked, mrp, inPacket);
+        // TradingRoom Protocol
+        if (mrp.getValue() >= MiniRoomProtocol.TRP_PutItem.getValue() && mrp.getValue() <= MiniRoomProtocol.TRP_LimitFail.getValue()) {
+            if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
+                log.error("Received trading room action {} outside a trading room", mrp);
                 return;
             }
-            // MiniGameRoom Protocol
-            if (mrp.getValue() >= MiniRoomProtocol.MGRP_TieRequest.getValue() && mrp.getValue() <= MiniRoomProtocol.MGP_MatchCard.getValue()) {
-                if (!(user.getDialog() instanceof MiniGameRoom miniGameRoom)) {
-                    log.error("Received mini game room action {} outside a mini game room", mrp);
-                    return;
-                }
-                miniGameRoom.handlePacket(locked, mrp, inPacket);
+            tradingRoom.handlePacket(user, mrp, inPacket);
+            return;
+        }
+        // MiniGameRoom Protocol
+        if (mrp.getValue() >= MiniRoomProtocol.MGRP_TieRequest.getValue() && mrp.getValue() <= MiniRoomProtocol.MGP_MatchCard.getValue()) {
+            if (!(user.getDialog() instanceof MiniGameRoom miniGameRoom)) {
+                log.error("Received mini game room action {} outside a mini game room", mrp);
                 return;
             }
-            // PersonalShop Protocol
-            if (mrp.getValue() >= MiniRoomProtocol.PSP_PutItem.getValue() && mrp.getValue() <= MiniRoomProtocol.PSP_DeleteBlackList.getValue()) {
-                if (!(user.getDialog() instanceof PersonalShop personalShop)) {
-                    log.error("Received personal shop action {} outside a personal shop", mrp);
-                    return;
-                }
-                personalShop.handlePacket(locked, mrp, inPacket);
+            miniGameRoom.handlePacket(user, mrp, inPacket);
+            return;
+        }
+        // PersonalShop Protocol
+        if (mrp.getValue() >= MiniRoomProtocol.PSP_PutItem.getValue() && mrp.getValue() <= MiniRoomProtocol.PSP_DeleteBlackList.getValue()) {
+            if (!(user.getDialog() instanceof PersonalShop personalShop)) {
+                log.error("Received personal shop action {} outside a personal shop", mrp);
                 return;
             }
-            // Common MiniRoom Protocol
-            final Field field = user.getField();
-            switch (mrp) {
-                case MRP_Create -> {
-                    final int type = inPacket.decodeByte();
-                    final MiniRoomType mrt = MiniRoomType.getByValue(type);
-                    if (user.getDialog() != null) {
-                        log.error("Tried to create mini room with another dialog open");
-                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
-                        return;
-                    }
-                    if (!field.getMiniRoomPool().canAddMiniRoom(mrt, user.getX(), user.getY())) {
-                        user.write(MiniRoomPacket.enterResult(EnterResultType.ExistMiniRoom)); // You can't establish a miniroom right here.
-                        return;
-                    }
-                    switch (mrt) {
-                        case OmokRoom, MemoryGameRoom -> {
-                            // CWvsContext::SendCreateMiniGameRequest
-                            final String title = inPacket.decodeString(); // sTitle
-                            final boolean isPrivate = inPacket.decodeBoolean();
-                            final String password = isPrivate ? inPacket.decodeString() : null;
-                            final int gameSpec = inPacket.decodeByte(); // nGameSpec
-                            // Check for required item
-                            if (mrt == MiniRoomType.OmokRoom) {
-                                final int requiredItem = ItemConstants.OMOK_SET_BASE + gameSpec;
-                                if (requiredItem < ItemConstants.OMOK_SET_BASE || requiredItem > ItemConstants.OMOK_SET_END ||
-                                        !user.getInventoryManager().hasItem(requiredItem, 1)) {
-                                    log.error("Tried to create omok game room without the required item");
-                                    return;
-                                }
-                            } else {
-                                if (!user.getInventoryManager().hasItem(ItemConstants.MATCH_CARDS, 1)) {
-                                    log.error("Tried to create memory game room without the required item");
-                                    return;
-                                }
-                            }
-                            // Create mini game room
-                            final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OmokRoom ?
-                                    new OmokRoom(title, password, gameSpec) :
-                                    new MemoryGameRoom(title, password, gameSpec);
-                            try (var lockedRoom = miniGameRoom.acquire()) {
-                                miniGameRoom.addUser(0, user);
-                                field.getMiniRoomPool().addMiniRoom(miniGameRoom);
-                                user.setDialog(miniGameRoom);
-                                user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
-                                miniGameRoom.updateBalloon();
-                            }
-                        }
-                        case TradingRoom -> {
-                            // CField::SendInviteTradingRoomMsg
-                            final TradingRoom tradingRoom = new TradingRoom();
-                            try (var lockedRoom = tradingRoom.acquire()) {
-                                tradingRoom.addUser(0, user);
-                                field.getMiniRoomPool().addMiniRoom(tradingRoom);
-                                user.setDialog(tradingRoom);
-                                user.write(MiniRoomPacket.enterResult(tradingRoom, user));
-                            }
-                        }
-                        case PersonalShop, EntrustedShop -> {
-                            // CWvsContext::SendOpenShopRequest
-                            final String title = inPacket.decodeString(); // sTitle
-                            inPacket.decodeByte(); // 0
-                            final int position = inPacket.decodeShort(); // nPOS
-                            final int itemId = inPacket.decodeInt(); // nItemID
-                            // Check field
-                            if (!field.getMapInfo().isShop()) {
-                                log.error("Tried to create player shop outside of the free market");
+            personalShop.handlePacket(user, mrp, inPacket);
+            return;
+        }
+        // Common MiniRoom Protocol
+        final Field field = user.getField();
+        switch (mrp) {
+            case MRP_Create -> {
+                final int type = inPacket.decodeByte();
+                final MiniRoomType mrt = MiniRoomType.getByValue(type);
+                if (user.getDialog() != null) {
+                    log.error("Tried to create mini room with another dialog open");
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
+                    return;
+                }
+                if (!field.getMiniRoomPool().canAddMiniRoom(mrt, user.getX(), user.getY())) {
+                    user.write(MiniRoomPacket.enterResult(EnterResultType.ExistMiniRoom)); // You can't establish a miniroom right here.
+                    return;
+                }
+                switch (mrt) {
+                    case OmokRoom, MemoryGameRoom -> {
+                        // CWvsContext::SendCreateMiniGameRequest
+                        final String title = inPacket.decodeString(); // sTitle
+                        final boolean isPrivate = inPacket.decodeBoolean();
+                        final String password = isPrivate ? inPacket.decodeString() : null;
+                        final int gameSpec = inPacket.decodeByte(); // nGameSpec
+                        // Check for required item
+                        if (mrt == MiniRoomType.OmokRoom) {
+                            final int requiredItem = ItemConstants.OMOK_SET_BASE + gameSpec;
+                            if (requiredItem < ItemConstants.OMOK_SET_BASE || requiredItem > ItemConstants.OMOK_SET_END ||
+                                    !user.getInventoryManager().hasItem(requiredItem, 1)) {
+                                log.error("Tried to create omok game room without the required item");
                                 return;
                             }
-                            // Check for required item
-                            if (mrt == MiniRoomType.PersonalShop) {
-                                if (itemId != ItemConstants.REGULAR_STORE_PERMIT || !user.getInventoryManager().hasItem(itemId, 1)) {
-                                    log.error("Tried to create personal shop without the required item");
-                                    return;
-                                }
-                                // Create personal shop
-                                final PersonalShop personalShop = new PersonalShop(title);
-                                try (var lockedRoom = personalShop.acquire()) {
-                                    personalShop.addUser(0, user);
-                                    field.getMiniRoomPool().addMiniRoom(personalShop);
-                                    user.setDialog(personalShop);
-                                    user.write(MiniRoomPacket.PlayerShop.enterResult(personalShop, user));
-                                }
-                            } else {
-                                if (itemId / 10000 != 503 || !user.getInventoryManager().hasItem(itemId, 1)) {
-                                    log.error("Tried to create entrusted shop without the required item");
-                                }
-                                // TODO: entrusted shop handling
+                        } else {
+                            if (!user.getInventoryManager().hasItem(ItemConstants.MATCH_CARDS, 1)) {
+                                log.error("Tried to create memory game room without the required item");
+                                return;
                             }
                         }
-                        case null -> {
-                            log.error("Tried to create unknown mini room type {}", type);
-                        }
-                        default -> {
-                            log.error("Tried to create unhandled mini room type {}", mrt);
-                        }
+                        // Create mini game room
+                        final MiniGameRoom miniGameRoom = mrt == MiniRoomType.OmokRoom ?
+                                new OmokRoom(title, password, gameSpec) :
+                                new MemoryGameRoom(title, password, gameSpec);
+                        miniGameRoom.addUser(0, user);
+                        field.getMiniRoomPool().addMiniRoom(miniGameRoom);
+                        user.setDialog(miniGameRoom);
+                        user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
+                        miniGameRoom.updateBalloon();
                     }
-                }
-                case MRP_Invite -> {
-                    // CField::SendInviteTradingRoomMsg
-                    final int targetId = inPacket.decodeInt();
-                    if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
-                        log.error("Tried to invite user without a trading room");
-                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
-                        return;
+                    case TradingRoom -> {
+                        // CField::SendInviteTradingRoomMsg
+                        final TradingRoom tradingRoom = new TradingRoom();
+                        tradingRoom.addUser(0, user);
+                        field.getMiniRoomPool().addMiniRoom(tradingRoom);
+                        user.setDialog(tradingRoom);
+                        user.write(MiniRoomPacket.enterResult(tradingRoom, user));
                     }
-                    try (var lockedRoom = tradingRoom.acquire()) {
-                        final Optional<User> targetResult = field.getUserPool().getById(targetId);
-                        if (targetResult.isEmpty()) {
-                            user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.NoCharacter, null)); // Unable to find the character.
-                            tradingRoom.cancelTrade(locked, MiniRoomLeaveType.UserRequest);
+                    case PersonalShop, EntrustedShop -> {
+                        // CWvsContext::SendOpenShopRequest
+                        final String title = inPacket.decodeString(); // sTitle
+                        inPacket.decodeByte(); // 0
+                        final int position = inPacket.decodeShort(); // nPOS
+                        final int itemId = inPacket.decodeInt(); // nItemID
+                        // Check field
+                        if (!field.getMapInfo().isShop()) {
+                            log.error("Tried to create player shop outside of the free market");
                             return;
                         }
-                        try (var lockedTarget = targetResult.get().acquire()) {
-                            final User target = lockedTarget.get();
-                            if (target.getDialog() != null) {
-                                user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
-                                tradingRoom.cancelTrade(locked, MiniRoomLeaveType.UserRequest);
+                        // Check for required item
+                        if (mrt == MiniRoomType.PersonalShop) {
+                            if (itemId != ItemConstants.REGULAR_STORE_PERMIT || !user.getInventoryManager().hasItem(itemId, 1)) {
+                                log.error("Tried to create personal shop without the required item");
                                 return;
                             }
-                            target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TradingRoom, user.getCharacterName(), tradingRoom.getId()));
-                        }
-                    }
-                }
-                case MRP_InviteResult -> {
-                    // CMiniRoomBaseDlg::SendInviteResult
-                    final int miniRoomId = inPacket.decodeInt(); // dwSN
-                    final int type = inPacket.decodeByte(); // nErrCode
-                    final MiniRoomInviteType resultType = MiniRoomInviteType.getByValue(type);
-                    if (resultType == null) {
-                        log.error("Unknown invite result type {}", type);
-                        return;
-                    }
-                    // Resolve trading room
-                    final Optional<MiniRoom> miniRoomResult = field.getMiniRoomPool().getById(miniRoomId);
-                    if (miniRoomResult.isEmpty() || !(miniRoomResult.get() instanceof TradingRoom tradingRoom)) {
-                        return;
-                    }
-                    // Cancel trade
-                    try (var lockedRoom = tradingRoom.acquire()) {
-                        try (var lockedOwner = tradingRoom.getUser(0).acquire()) {
-                            lockedOwner.get().write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
-                            tradingRoom.cancelTrade(lockedOwner, MiniRoomLeaveType.UserRequest);
-                        }
-                    }
-                }
-                case MRP_Enter -> {
-                    // CMiniRoomBaseDlg::SendInviteResult
-                    // CUserLocal::HandleLButtonDblClk
-                    final int miniRoomId = inPacket.decodeInt(); // dwSN
-                    final boolean isPrivate = inPacket.decodeBoolean();
-                    final String password = isPrivate ? inPacket.decodeString() : null;
-                    inPacket.decodeByte(); // 0
-                    if (user.getDialog() != null) {
-                        log.error("Tried to enter mini room with another dialog open");
-                        user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
-                        return;
-                    }
-                    // Resolve mini room
-                    final Optional<MiniRoom> miniRoomResult = field.getMiniRoomPool().getById(miniRoomId);
-                    if (miniRoomResult.isEmpty()) {
-                        user.write(MiniRoomPacket.enterResult(EnterResultType.NoRoom)); // The room is already closed.
-                        return;
-                    }
-                    try (var lockedRoom = miniRoomResult.get().acquire()) {
-                        final MiniRoom miniRoom = lockedRoom.get();
-                        // Check password
-                        if (!miniRoom.checkPassword(password)) {
-                            user.write(MiniRoomPacket.enterResult(EnterResultType.InvalidPassword)); // The password is incorrect.
-                            return;
-                        }
-                        // Handle for each mini room type
-                        if (miniRoom instanceof MiniGameRoom miniGameRoom) {
-                            if (miniGameRoom.getUser(1) != null) {
-                                user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
-                                return;
-                            }
-                            miniGameRoom.broadcastPacket(MiniRoomPacket.MiniGame.enter(1, user, miniGameRoom.getType()));
-                            miniGameRoom.addUser(1, user);
-                            miniGameRoom.updateBalloon();
-                            user.setDialog(miniGameRoom);
-                            user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
-                        } else if (miniRoom instanceof TradingRoom tradingRoom) {
-                            if (tradingRoom.getUser(1) != null) {
-                                user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
-                                return;
-                            }
-                            tradingRoom.broadcastPacket(MiniRoomPacket.enterBase(1, user));
-                            tradingRoom.addUser(1, user);
-                            user.setDialog(tradingRoom);
-                            user.write(MiniRoomPacket.enterResult(tradingRoom, user));
-                        } else if (miniRoom instanceof PersonalShop personalShop) {
-                            final int userIndex = personalShop.getOpenUserIndex();
-                            if (!personalShop.isOpen() || userIndex < 0) {
-                                user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
-                                return;
-                            }
-                            personalShop.broadcastPacket(MiniRoomPacket.enterBase(userIndex, user));
-                            personalShop.addUser(userIndex, user);
-                            personalShop.updateBalloon();
+                            // Create personal shop
+                            final PersonalShop personalShop = new PersonalShop(title);
+                            personalShop.addUser(0, user);
+                            field.getMiniRoomPool().addMiniRoom(personalShop);
                             user.setDialog(personalShop);
                             user.write(MiniRoomPacket.PlayerShop.enterResult(personalShop, user));
                         } else {
-                            log.error("Tried to enter mini room with unhandled type : {}", miniRoom.getType());
-                            user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
+                            if (itemId / 10000 != 503 || !user.getInventoryManager().hasItem(itemId, 1)) {
+                                log.error("Tried to create entrusted shop without the required item");
+                            }
+                            // TODO: entrusted shop handling
                         }
                     }
+                    case null -> {
+                        log.error("Tried to create unknown mini room type {}", type);
+                    }
+                    default -> {
+                        log.error("Tried to create unhandled mini room type {}", mrt);
+                    }
                 }
-                case MRP_Chat -> {
-                    // CMiniRoomBaseDlg::CheckAndSendChat
-                    inPacket.decodeInt(); // update_time
-                    final String message = inPacket.decodeString(); // strChatMsg
-                    if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
-                        log.error("Received {} without a mini room", mrp);
+            }
+            case MRP_Invite -> {
+                // CField::SendInviteTradingRoomMsg
+                final int targetId = inPacket.decodeInt();
+                if (!(user.getDialog() instanceof TradingRoom tradingRoom)) {
+                    log.error("Tried to invite user without a trading room");
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
+                    return;
+                }
+                final Optional<User> targetResult = field.getUserPool().getById(targetId);
+                if (targetResult.isEmpty()) {
+                    user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.NoCharacter, null)); // Unable to find the character.
+                    tradingRoom.cancelTrade(user, MiniRoomLeaveType.UserRequest);
+                    return;
+                }
+                final User target = targetResult.get();
+                if (target.getDialog() != null) {
+                    user.write(MiniRoomPacket.inviteResult(MiniRoomInviteType.CannotInvite, target.getCharacterName())); // '%s' is doing something else right now.
+                    tradingRoom.cancelTrade(user, MiniRoomLeaveType.UserRequest);
+                    return;
+                }
+                target.write(MiniRoomPacket.inviteStatic(MiniRoomType.TradingRoom, user.getCharacterName(), tradingRoom.getId()));
+            }
+            case MRP_InviteResult -> {
+                // CMiniRoomBaseDlg::SendInviteResult
+                final int miniRoomId = inPacket.decodeInt(); // dwSN
+                final int type = inPacket.decodeByte(); // nErrCode
+                final MiniRoomInviteType resultType = MiniRoomInviteType.getByValue(type);
+                if (resultType == null) {
+                    log.error("Unknown invite result type {}", type);
+                    return;
+                }
+                // Resolve trading room
+                final Optional<MiniRoom> miniRoomResult = field.getMiniRoomPool().getById(miniRoomId);
+                if (miniRoomResult.isEmpty() || !(miniRoomResult.get() instanceof TradingRoom tradingRoom)) {
+                    return;
+                }
+                // Cancel trade
+                final User owner = tradingRoom.getUser(0);
+                owner.write(MiniRoomPacket.inviteResult(resultType, user.getCharacterName()));
+                tradingRoom.cancelTrade(owner, MiniRoomLeaveType.UserRequest);
+            }
+            case MRP_Enter -> {
+                // CMiniRoomBaseDlg::SendInviteResult
+                // CUserLocal::HandleLButtonDblClk
+                final int miniRoomId = inPacket.decodeInt(); // dwSN
+                final boolean isPrivate = inPacket.decodeBoolean();
+                final String password = isPrivate ? inPacket.decodeString() : null;
+                inPacket.decodeByte(); // 0
+                if (user.getDialog() != null) {
+                    log.error("Tried to enter mini room with another dialog open");
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
+                    return;
+                }
+                // Resolve mini room
+                final Optional<MiniRoom> miniRoomResult = field.getMiniRoomPool().getById(miniRoomId);
+                if (miniRoomResult.isEmpty()) {
+                    user.write(MiniRoomPacket.enterResult(EnterResultType.NoRoom)); // The room is already closed.
+                    return;
+                }
+                final MiniRoom miniRoom = miniRoomResult.get();
+                // Check password
+                if (!miniRoom.checkPassword(password)) {
+                    user.write(MiniRoomPacket.enterResult(EnterResultType.InvalidPassword)); // The password is incorrect.
+                    return;
+                }
+                // Handle for each mini room type
+                if (miniRoom instanceof MiniGameRoom miniGameRoom) {
+                    if (miniGameRoom.getUser(1) != null) {
+                        user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
                         return;
                     }
-                    try (var lockedRoom = miniRoom.acquire()) {
-                        final int userIndex = miniRoom.getUserIndex(user);
-                        if (userIndex < 0) {
-                            log.error("Received {} with user index", userIndex);
-                            return;
-                        }
-                        miniRoom.broadcastPacket(MiniRoomPacket.chat(userIndex, user.getCharacterName(), message));
-                    }
-                }
-                case MRP_Leave -> {
-                    if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
-                        log.error("Received {} without a mini room", mrp);
+                    miniGameRoom.broadcastPacket(MiniRoomPacket.MiniGame.enter(1, user, miniGameRoom.getType()));
+                    miniGameRoom.addUser(1, user);
+                    miniGameRoom.updateBalloon();
+                    user.setDialog(miniGameRoom);
+                    user.write(MiniRoomPacket.MiniGame.enterResult(miniGameRoom, user));
+                } else if (miniRoom instanceof TradingRoom tradingRoom) {
+                    if (tradingRoom.getUser(1) != null) {
+                        user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
                         return;
                     }
-                    try (var lockedRoom = miniRoom.acquire()) {
-                        final int userIndex = miniRoom.getUserIndex(user);
-                        if (userIndex < 0) {
-                            log.error("Received {} with user index", userIndex);
-                            return;
-                        }
-                        miniRoom.leaveUnsafe(user);
-                    }
-                }
-                case MRP_Balloon -> {
-                    final boolean open = inPacket.decodeBoolean();
-                    if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
-                        log.error("Received {} without a mini room", mrp);
+                    tradingRoom.broadcastPacket(MiniRoomPacket.enterBase(1, user));
+                    tradingRoom.addUser(1, user);
+                    user.setDialog(tradingRoom);
+                    user.write(MiniRoomPacket.enterResult(tradingRoom, user));
+                } else if (miniRoom instanceof PersonalShop personalShop) {
+                    final int userIndex = personalShop.getOpenUserIndex();
+                    if (!personalShop.isOpen() || userIndex < 0) {
+                        user.write(MiniRoomPacket.enterResult(EnterResultType.Full)); // You can't enter the room due to full capacity.
                         return;
                     }
-                    if (miniRoom instanceof PersonalShop personalShop) {
-                        personalShop.setOpen(open);
-                        personalShop.updateBalloon();
-                    } else {
-                        log.error("Received {} for unhandled mini room type {}", mrp, miniRoom.getType());
-                    }
+                    personalShop.broadcastPacket(MiniRoomPacket.enterBase(userIndex, user));
+                    personalShop.addUser(userIndex, user);
+                    personalShop.updateBalloon();
+                    user.setDialog(personalShop);
+                    user.write(MiniRoomPacket.PlayerShop.enterResult(personalShop, user));
+                } else {
+                    log.error("Tried to enter mini room with unhandled type : {}", miniRoom.getType());
+                    user.write(BroadcastPacket.alert("This request has failed due to an unknown error."));
                 }
-                default -> {
-                    log.error("Unhandled mini room action {}", mrp);
+            }
+            case MRP_Chat -> {
+                // CMiniRoomBaseDlg::CheckAndSendChat
+                inPacket.decodeInt(); // update_time
+                final String message = inPacket.decodeString(); // strChatMsg
+                if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
+                    log.error("Received {} without a mini room", mrp);
+                    return;
                 }
+                final int userIndex = miniRoom.getUserIndex(user);
+                if (userIndex < 0) {
+                    log.error("Received {} with user index", userIndex);
+                    return;
+                }
+                miniRoom.broadcastPacket(MiniRoomPacket.chat(userIndex, user.getCharacterName(), message));
+            }
+            case MRP_Leave -> {
+                if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
+                    log.error("Received {} without a mini room", mrp);
+                    return;
+                }
+                final int userIndex = miniRoom.getUserIndex(user);
+                if (userIndex < 0) {
+                    log.error("Received {} with user index", userIndex);
+                    return;
+                }
+                miniRoom.leave(user);
+            }
+            case MRP_Balloon -> {
+                final boolean open = inPacket.decodeBoolean();
+                if (!(user.getDialog() instanceof MiniRoom miniRoom)) {
+                    log.error("Received {} without a mini room", mrp);
+                    return;
+                }
+                if (miniRoom instanceof PersonalShop personalShop) {
+                    personalShop.setOpen(open);
+                    personalShop.updateBalloon();
+                } else {
+                    log.error("Received {} for unhandled mini room type {}", mrp, miniRoom.getType());
+                }
+            }
+            default -> {
+                log.error("Unhandled mini room action {}", mrp);
             }
         }
     }
@@ -1635,55 +1563,54 @@ public final class UserHandler {
                 final Optional<Tuple<Commodity, List<Commodity>>> packageResult = CashShop.getCashPackage(gift.getCommodityId());
                 final int commodityCount = packageResult.map(tuple -> tuple.getRight().size()).orElse(1);
                 // Receive gift
-                try (var lockedAccount = user.getAccount().acquire()) {
-                    final Locker locker = lockedAccount.get().getLocker();
-                    if (locker.getRemaining() < commodityCount) {
-                        user.write(BroadcastPacket.alert("Could not receive gift as the locker is full."));
-                        return;
-                    }
-                    // Create CashItemInfo(s)
-                    final List<CashItemInfo> cashItemInfos = new ArrayList<>();
-                    if (packageResult.isPresent()) {
-                        // Cash package
-                        for (Commodity commodity : packageResult.get().getRight()) {
-                            final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
-                            if (cashItemInfoResult.isEmpty()) {
-                                log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
-                                user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
-                                return;
-                            }
-                            cashItemInfos.add(cashItemInfoResult.get());
-                        }
-                    } else {
-                        // Normal gift
-                        final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
+                final Locker locker = user.getAccount().getLocker();
+                if (locker.getRemaining() < commodityCount) {
+                    user.write(BroadcastPacket.alert("Could not receive gift as the locker is full."));
+                    return;
+                }
+                // Create CashItemInfo(s)
+                final List<CashItemInfo> cashItemInfos = new ArrayList<>();
+                if (packageResult.isPresent()) {
+                    // Cash package
+                    for (Commodity commodity : packageResult.get().getRight()) {
+                        final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
                         if (cashItemInfoResult.isEmpty()) {
-                            log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
+                            log.error("Failed to create cash item info for gift commodity ID : {}", commodity.getCommodityId());
                             user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                             return;
                         }
-                        final CashItemInfo cashItemInfo = cashItemInfoResult.get();
-                        // Create RingData if pairItemSn was set
-                        if (gift.getPairItemSn() != 0) {
-                            final RingData ringData = new RingData();
-                            ringData.setPairCharacterId(gift.getSenderId());
-                            ringData.setPairCharacterName(gift.getSenderName());
-                            ringData.setPairItemSn(gift.getPairItemSn());
-                            cashItemInfo.getItem().setRingData(ringData);
-                        }
-                        cashItemInfos.add(cashItemInfo);
+                        cashItemInfos.add(cashItemInfoResult.get());
                     }
-                    // Delete gift from DB and add to locker
-                    if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
-                        log.error("Failed to delete gift with sn : {}", gift.getGiftSn());
+                } else {
+                    // Normal gift
+                    final Optional<CashItemInfo> cashItemInfoResult = commodityResult.get().createCashItemInfo(gift.getGiftSn(), user.getAccountId(), user.getCharacterId(), gift.getSenderName());
+                    if (cashItemInfoResult.isEmpty()) {
+                        log.error("Failed to create cash item info for gift commodity ID : {}", gift.getCommodityId());
                         user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         return;
                     }
-                    for (CashItemInfo cashItemInfo : cashItemInfos) {
-                        locker.addCashItem(cashItemInfo);
+                    final CashItemInfo cashItemInfo = cashItemInfoResult.get();
+                    // Create RingData if pairItemSn was set
+                    if (gift.getPairItemSn() != 0) {
+                        final RingData ringData = new RingData();
+                        ringData.setPairCharacterId(gift.getSenderId());
+                        ringData.setPairCharacterName(gift.getSenderName());
+                        ringData.setPairItemSn(gift.getPairItemSn());
+                        cashItemInfo.getItem().setRingData(ringData);
                     }
-                    user.write(CashShopPacket.loadLockerDone(lockedAccount.get()));
+                    cashItemInfos.add(cashItemInfo);
                 }
+                // Delete gift from DB and add to locker
+                if (!DatabaseManager.giftAccessor().deleteGift(gift)) {
+                    log.error("Failed to delete gift with sn : {}", gift.getGiftSn());
+                    user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                    return;
+                }
+                for (CashItemInfo cashItemInfo : cashItemInfos) {
+                    locker.addCashItem(cashItemInfo);
+                }
+                user.write(CashShopPacket.loadLockerDone(user.getAccount()));
+
                 // Resolve receiver
                 final Optional<CharacterInfo> receiverIdResult = DatabaseManager.characterAccessor().getCharacterInfoByName(receiverName);
                 if (receiverIdResult.isEmpty()) {
@@ -1729,19 +1656,15 @@ public final class UserHandler {
                         final int marriageId = inPacket.decodeInt(); // atoi(strMarriageNo)
                         log.error("Unhandled Marriage invitation memo for marriage ID : {}", marriageId);
                     } else if (memoType == MemoType.INCPOP) {
-                        try (var locked = user.acquire()) {
-                            locked.get().addPop(1);
-                            user.write(MessagePacket.incPop(1));
-                        }
+                        user.addPop(1);
+                        user.write(MessagePacket.incPop(1));
                     }
                 }
             }
             case Load -> {
                 // CWvsContext::OnMemoNotify_Receive
-                ServerExecutor.submitService(() -> {
-                    final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
-                    user.write(MemoPacket.load(memos));
-                });
+                final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
+                user.write(MemoPacket.load(memos));
             }
             case null -> {
                 log.error("Unknown memo request type : {}", type);
@@ -1764,20 +1687,10 @@ public final class UserHandler {
         }
         final TownPortal townPortal = townPortalResult.get();
         final int townPortalId = 0x80 | townPortal.getOwner().getTownPortalIndex(); // CUserLocal::Init
-        try (var locked = user.acquire()) {
-            if (townPortal.getTownField() == user.getField()) {
-                user.warp(townPortal.getField(), townPortal.getX(), townPortal.getY(), townPortalId, false, false);
-            } else {
-                final int x, y;
-                final Optional<PortalInfo> portalPointResult = townPortal.getTownPortalPoint();
-                if (portalPointResult.isPresent()) {
-                    x = portalPointResult.get().getX();
-                    y = portalPointResult.get().getY();
-                } else {
-                    x = y = 0;
-                }
-                user.warp(townPortal.getTownField(), x, y, townPortalId, false, false);
-            }
+        if (townPortal.getTownField() == user.getField()) {
+            user.warp(townPortal.getField(), townPortal.getX(), townPortal.getY(), townPortalId, false, false);
+        } else {
+            user.warp(townPortal.getTownField(), townPortal.getTownPortalPoint().orElse(PortalInfo.EMPTY), false, false);
         }
     }
 
@@ -1795,43 +1708,41 @@ public final class UserHandler {
     public static void handleFuncKeyMappedModified(User user, InPacket inPacket) {
         final int type = inPacket.decodeInt();
         final FuncKeyMappedType funcKeyMappedType = FuncKeyMappedType.getByValue(type);
-        try (var locked = user.acquire()) {
-            final ConfigManager cm = locked.get().getConfigManager();
-            switch (funcKeyMappedType) {
-                case KeyModified -> {
-                    final int size = inPacket.decodeInt(); // *(anChangedIdx.a - 1)
-                    final Map<Integer, FuncKeyMapped> updates = new HashMap<>();
-                    for (int i = 0; i < size; i++) {
-                        final int index = inPacket.decodeInt();
+        final ConfigManager cm = user.getConfigManager();
+        switch (funcKeyMappedType) {
+            case KeyModified -> {
+                final int size = inPacket.decodeInt(); // *(anChangedIdx.a - 1)
+                final Map<Integer, FuncKeyMapped> updates = new HashMap<>();
+                for (int i = 0; i < size; i++) {
+                    final int index = inPacket.decodeInt();
 
-                        // FUNCKEY_MAPPED::Encode
-                        final int funcKeyValue = inPacket.decodeByte(); // nType
-                        final int funcKeyId = inPacket.decodeInt(); // nID
-                        // ~FUNCKEY_MAPPED::Encode
+                    // FUNCKEY_MAPPED::Encode
+                    final int funcKeyValue = inPacket.decodeByte(); // nType
+                    final int funcKeyId = inPacket.decodeInt(); // nID
+                    // ~FUNCKEY_MAPPED::Encode
 
-                        final FuncKeyType funcKeyType = FuncKeyType.getByValue(funcKeyValue);
-                        if (funcKeyType == null) {
-                            log.error("Received unknown func key type {}", funcKeyValue);
-                            return;
-                        }
-                        updates.put(index, FuncKeyMapped.of(funcKeyType, funcKeyId));
+                    final FuncKeyType funcKeyType = FuncKeyType.getByValue(funcKeyValue);
+                    if (funcKeyType == null) {
+                        log.error("Received unknown func key type {}", funcKeyValue);
+                        return;
                     }
-                    cm.updateFuncKeyMap(updates);
+                    updates.put(index, FuncKeyMapped.of(funcKeyType, funcKeyId));
                 }
-                case PetConsumeItemModified -> {
-                    final int itemId = inPacket.decodeInt(); // nPetConsumeItemID
-                    cm.setPetConsumeItem(itemId);
-                }
-                case PetConsumeMPItemModified -> {
-                    final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
-                    cm.setPetConsumeMpItem(itemId);
-                }
-                case null -> {
-                    log.error("Received unknown type {} for FuncKeyMappedModified", type);
-                }
-                default -> {
-                    log.error("Unhandled func key mapped type : {}", funcKeyMappedType);
-                }
+                cm.updateFuncKeyMap(updates);
+            }
+            case PetConsumeItemModified -> {
+                final int itemId = inPacket.decodeInt(); // nPetConsumeItemID
+                cm.setPetConsumeItem(itemId);
+            }
+            case PetConsumeMPItemModified -> {
+                final int itemId = inPacket.decodeInt(); // nPetConsumeMPItemID
+                cm.setPetConsumeMpItem(itemId);
+            }
+            case null -> {
+                log.error("Received unknown type {} for FuncKeyMappedModified", type);
+            }
+            default -> {
+                log.error("Unhandled func key mapped type : {}", funcKeyMappedType);
             }
         }
     }
@@ -1867,19 +1778,15 @@ public final class UserHandler {
         for (int i = 0; i < quickslotKeyMap.length; i++) {
             quickslotKeyMap[i] = inPacket.decodeInt();
         }
-        try (var locked = user.acquire()) {
-            final ConfigManager cm = locked.get().getConfigManager();
-            cm.updateQuickslotKeyMap(quickslotKeyMap);
-        }
+        final ConfigManager cm = user.getConfigManager();
+        cm.updateQuickslotKeyMap(quickslotKeyMap);
     }
 
     @Handler(InHeader.PassiveskillInfoUpdate)
     public static void handlePassiveSkillInfoUpdate(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
-        try (var locked = user.acquire()) {
-            user.updatePassiveSkillData();
-            user.validateStat();
-        }
+        user.updatePassiveSkillData();
+        user.validateStat();
     }
 
     @Handler(InHeader.UpdateScreenSetting)

@@ -1,14 +1,10 @@
 package kinoko.world.user;
 
-import kinoko.util.Lockable;
 import kinoko.world.item.Trunk;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public final class Account implements Lockable<Account> {
-    private final Lock lock = new ReentrantLock();
+public final class Account {
     private final int id;
     private final String username;
     private int slotCount;
@@ -123,15 +119,5 @@ public final class Account implements Lockable<Account> {
     public boolean canSelectCharacter(int characterId) {
         return getCharacterList() != null &&
                 getCharacterList().stream().anyMatch(avatarData -> avatarData.getCharacterId() == characterId);
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

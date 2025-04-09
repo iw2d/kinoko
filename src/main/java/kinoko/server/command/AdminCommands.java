@@ -43,7 +43,6 @@ import kinoko.world.quest.QuestState;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
-import kinoko.world.user.Account;
 import kinoko.world.user.Dragon;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
@@ -66,10 +65,8 @@ public final class AdminCommands {
 
     @Command("dispose")
     public static void dispose(User user, String[] args) {
-        try (var locked = user.acquire()) {
-            user.closeDialog();
-            user.dispose();
-        }
+        user.closeDialog();
+        user.dispose();
         user.write(MessagePacket.system("You have been disposed."));
     }
 
@@ -415,9 +412,7 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not resolve portal %s for field ID : %d", portalName, fieldId));
             return;
         }
-        try (var locked = user.acquire()) {
-            user.warp(targetField, portalResult.get(), false, false);
-        }
+        user.warp(targetField, portalResult.get(), false, false);
     }
 
     @Command("reactor")
@@ -444,11 +439,9 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not resolve reactor with template ID : %d", templateId));
             return;
         }
-        try (var lockedReactor = reactorResult.get().acquire()) {
-            final Reactor reactor = lockedReactor.get();
-            reactor.setState(reactor.getState() + 1);
-            field.getReactorPool().hitReactor(user, reactor, 0);
-        }
+        final Reactor reactor = reactorResult.get();
+        reactor.setState(reactor.getState() + 1);
+        field.getReactorPool().hitReactor(user, reactor, 0);
     }
 
     @Command({ "mob", "spawn" })
@@ -511,15 +504,13 @@ public final class AdminCommands {
         final Item item = ii.createItem(user.getNextItemSn(), Math.min(quantity, ii.getSlotMax()), ItemVariationOption.NORMAL);
 
         // Add item
-        try (var locked = user.acquire()) {
-            final InventoryManager im = locked.get().getInventoryManager();
-            final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
-            if (addItemResult.isPresent()) {
-                user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
-                user.write(UserLocal.effect(Effect.gainItem(item)));
-            } else {
-                user.write(MessagePacket.system("Failed to add item ID %d (%d) to inventory", itemId, quantity));
-            }
+        final InventoryManager im = user.getInventoryManager();
+        final Optional<List<InventoryOperation>> addItemResult = im.addItem(item);
+        if (addItemResult.isPresent()) {
+            user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
+            user.write(UserLocal.effect(Effect.gainItem(item)));
+        } else {
+            user.write(MessagePacket.system("Failed to add item ID %d (%d) to inventory", itemId, quantity));
         }
     }
 
@@ -534,68 +525,53 @@ public final class AdminCommands {
             return;
         }
         final InventoryType inventoryType = inventoryTypeResult.get();
-        try (var locked = user.acquire()) {
-            final List<InventoryOperation> removeOperations = new ArrayList<>();
-            final var iter = locked.get().getInventoryManager().getInventoryByType(inventoryType).getItems().entrySet().iterator();
-            while (iter.hasNext()) {
-                final var tuple = iter.next();
-                final int position = tuple.getKey();
-                removeOperations.add(InventoryOperation.delItem(inventoryType, position));
-                iter.remove();
-            }
-            user.write(WvsContext.inventoryOperation(removeOperations, true));
-            user.write(MessagePacket.system("%s inventory cleared!", inventoryType));
+        final List<InventoryOperation> removeOperations = new ArrayList<>();
+        final var iter = user.getInventoryManager().getInventoryByType(inventoryType).getItems().entrySet().iterator();
+        while (iter.hasNext()) {
+            final var tuple = iter.next();
+            final int position = tuple.getKey();
+            removeOperations.add(InventoryOperation.delItem(inventoryType, position));
+            iter.remove();
         }
+        user.write(WvsContext.inventoryOperation(removeOperations, true));
+        user.write(MessagePacket.system("%s inventory cleared!", inventoryType));
     }
 
     @Command("clearlocker")
     public static void clearLocker(User user, String[] args) {
-        try (var locked = user.acquire()) {
-            try (var lockedAccount = user.getAccount().acquire()) {
-                user.getAccount().getLocker().getCashItems().clear();
-                user.write(MessagePacket.system("Locker inventory cleared!"));
-            }
-        }
+        user.getAccount().getLocker().getCashItems().clear();
+        user.write(MessagePacket.system("Locker inventory cleared!"));
     }
 
     @Command({ "meso", "money" })
     @Arguments("amount")
     public static void meso(User user, String[] args) {
         final int money = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            final InventoryManager im = locked.get().getInventoryManager();
-            im.setMoney(money);
-            user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
-        }
+        final InventoryManager im = user.getInventoryManager();
+        im.setMoney(money);
+        user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
     }
 
     @Command("nx")
     @Arguments("amount")
     public static void nx(User user, String[] args) {
         final int nx = Integer.parseInt(args[1]);
-        try (var lockedAccount = user.getAccount().acquire()) {
-            final Account account = lockedAccount.get();
-            account.setNxPrepaid(nx);
-            user.write(MessagePacket.system("Set NX prepaid to %d", nx));
-        }
+        user.getAccount().setNxPrepaid(nx);
+        user.write(MessagePacket.system("Set NX prepaid to %d", nx));
     }
 
     @Command("hp")
     @Arguments("new hp")
     public static void hp(User user, String[] args) {
         final int newHp = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            user.setHp(newHp);
-        }
+        user.setHp(newHp);
     }
 
     @Command("mp")
     @Arguments("new mp")
     public static void mp(User user, String[] args) {
         final int newMp = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            user.setMp(newMp);
-        }
+        user.setMp(newMp);
     }
 
     @Command("stat")
@@ -603,56 +579,54 @@ public final class AdminCommands {
     public static void stat(User user, String[] args) {
         final String stat = args[1].toLowerCase();
         final int value = Integer.parseInt(args[2]);
-        try (var locked = user.acquire()) {
-            final CharacterStat cs = locked.get().getCharacterStat();
-            final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
-            switch (stat) {
-                case "hp" -> {
-                    cs.setMaxHp(value);
-                    statMap.put(Stat.HP, cs.getMaxHp());
-                }
-                case "mp" -> {
-                    cs.setMaxMp(value);
-                    statMap.put(Stat.MP, cs.getMaxMp());
-                }
-                case "str" -> {
-                    cs.setBaseStr((short) value);
-                    statMap.put(Stat.STR, cs.getBaseStr());
-                }
-                case "dex" -> {
-                    cs.setBaseDex((short) value);
-                    statMap.put(Stat.DEX, cs.getBaseDex());
-                }
-                case "int" -> {
-                    cs.setBaseInt((short) value);
-                    statMap.put(Stat.INT, cs.getBaseInt());
-                }
-                case "luk" -> {
-                    cs.setBaseLuk((short) value);
-                    statMap.put(Stat.LUK, cs.getBaseLuk());
-                }
-                case "ap" -> {
-                    cs.setAp((short) value);
-                    statMap.put(Stat.AP, cs.getAp());
-                }
-                case "sp" -> {
-                    if (JobConstants.isExtendSpJob(cs.getJob())) {
-                        cs.getSp().setSp(JobConstants.getJobLevel(cs.getJob()), value);
-                        statMap.put(Stat.SP, cs.getSp());
-                    } else {
-                        cs.getSp().setNonExtendSp(value);
-                        statMap.put(Stat.SP, (short) cs.getSp().getNonExtendSp());
-                    }
-                }
-                default -> {
-                    user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX));
-                    return;
+        final CharacterStat cs = user.getCharacterStat();
+        final Map<Stat, Object> statMap = new EnumMap<>(Stat.class);
+        switch (stat) {
+            case "hp" -> {
+                cs.setMaxHp(value);
+                statMap.put(Stat.HP, cs.getMaxHp());
+            }
+            case "mp" -> {
+                cs.setMaxMp(value);
+                statMap.put(Stat.MP, cs.getMaxMp());
+            }
+            case "str" -> {
+                cs.setBaseStr((short) value);
+                statMap.put(Stat.STR, cs.getBaseStr());
+            }
+            case "dex" -> {
+                cs.setBaseDex((short) value);
+                statMap.put(Stat.DEX, cs.getBaseDex());
+            }
+            case "int" -> {
+                cs.setBaseInt((short) value);
+                statMap.put(Stat.INT, cs.getBaseInt());
+            }
+            case "luk" -> {
+                cs.setBaseLuk((short) value);
+                statMap.put(Stat.LUK, cs.getBaseLuk());
+            }
+            case "ap" -> {
+                cs.setAp((short) value);
+                statMap.put(Stat.AP, cs.getAp());
+            }
+            case "sp" -> {
+                if (JobConstants.isExtendSpJob(cs.getJob())) {
+                    cs.getSp().setSp(JobConstants.getJobLevel(cs.getJob()), value);
+                    statMap.put(Stat.SP, cs.getSp());
+                } else {
+                    cs.getSp().setNonExtendSp(value);
+                    statMap.put(Stat.SP, (short) cs.getSp().getNonExtendSp());
                 }
             }
-            user.validateStat();
-            user.write(WvsContext.statChanged(statMap, true));
-            user.write(MessagePacket.system("Set %s to %d", stat, value));
+            default -> {
+                user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX));
+                return;
+            }
         }
+        user.validateStat();
+        user.write(WvsContext.statChanged(statMap, true));
+        user.write(MessagePacket.system("Set %s to %d", stat, value));
     }
 
     @Command("avatar")
@@ -692,13 +666,11 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not change level to : %d", level));
             return;
         }
-        try (var locked = user.acquire()) {
-            final CharacterStat cs = user.getCharacterStat();
-            cs.setLevel((short) level);
-            user.validateStat();
-            user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
-            user.getConnectedServer().notifyUserUpdate(user);
-        }
+        final CharacterStat cs = user.getCharacterStat();
+        cs.setLevel((short) level);
+        user.validateStat();
+        user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
+        user.getConnectedServer().notifyUserUpdate(user);
     }
 
     @Command("levelup")
@@ -709,10 +681,8 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not level up to : %d", level));
             return;
         }
-        try (var locked = user.acquire()) {
-            while (user.getLevel() < level) {
-                user.addExp(GameConstants.getNextLevelExp(user.getLevel()) - user.getCharacterStat().getExp());
-            }
+        while (user.getLevel() < level) {
+            user.addExp(GameConstants.getNextLevelExp(user.getLevel()) - user.getCharacterStat().getExp());
         }
     }
 
@@ -725,45 +695,43 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not change to unknown job : %d", jobId));
             return;
         }
-        try (var locked = user.acquire()) {
-            // Set job
-            user.getCharacterStat().setJob(job.getJobId());
-            user.write(WvsContext.statChanged(Stat.JOB, job.getJobId(), false));
-            user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
-            // Update skills
-            final SkillManager sm = user.getSkillManager();
-            final List<SkillRecord> skillRecords = new ArrayList<>();
-            for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
-                for (SkillInfo si : SkillProvider.getSkillsForJob(Job.getById(skillRoot))) {
-                    if (sm.getSkill(si.getSkillId()).isPresent()) {
-                        continue;
-                    }
-                    if (si.isInvisible()) {
-                        continue;
-                    }
-                    final SkillRecord sr = new SkillRecord(si.getSkillId());
-                    sr.setSkillLevel(0);
-                    sr.setMasterLevel(si.getMasterLevel());
-                    sm.addSkill(sr);
-                    skillRecords.add(sr);
+        // Set job
+        user.getCharacterStat().setJob(job.getJobId());
+        user.write(WvsContext.statChanged(Stat.JOB, job.getJobId(), false));
+        user.getField().broadcastPacket(UserRemote.effect(user, Effect.jobChanged()), user);
+        // Update skills
+        final SkillManager sm = user.getSkillManager();
+        final List<SkillRecord> skillRecords = new ArrayList<>();
+        for (int skillRoot : JobConstants.getSkillRootFromJob(jobId)) {
+            for (SkillInfo si : SkillProvider.getSkillsForJob(Job.getById(skillRoot))) {
+                if (sm.getSkill(si.getSkillId()).isPresent()) {
+                    continue;
                 }
+                if (si.isInvisible()) {
+                    continue;
+                }
+                final SkillRecord sr = new SkillRecord(si.getSkillId());
+                sr.setSkillLevel(0);
+                sr.setMasterLevel(si.getMasterLevel());
+                sm.addSkill(sr);
+                skillRecords.add(sr);
             }
-            user.updatePassiveSkillData();
-            user.validateStat();
-            user.write(WvsContext.changeSkillRecordResult(skillRecords, true));
-            // Additional handling
-            if (JobConstants.isDragonJob(jobId)) {
-                final Dragon dragon = new Dragon(user.getJob());
-                user.setDragon(dragon);
-                user.getField().broadcastPacket(DragonPacket.dragonEnterField(user, dragon));
-            } else {
-                user.setDragon(null);
-            }
-            if (JobConstants.isWildHunterJob(jobId)) {
-                user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
-            }
-            user.getConnectedServer().notifyUserUpdate(user);
         }
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.write(WvsContext.changeSkillRecordResult(skillRecords, true));
+        // Additional handling
+        if (JobConstants.isDragonJob(jobId)) {
+            final Dragon dragon = new Dragon(user.getJob());
+            user.setDragon(dragon);
+            user.getField().broadcastPacket(DragonPacket.dragonEnterField(user, dragon));
+        } else {
+            user.setDragon(null);
+        }
+        if (JobConstants.isWildHunterJob(jobId)) {
+            user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
+        }
+        user.getConnectedServer().notifyUserUpdate(user);
     }
 
     @Command("skill")
@@ -780,13 +748,11 @@ public final class AdminCommands {
         final SkillRecord skillRecord = new SkillRecord(si.getSkillId());
         skillRecord.setSkillLevel(Math.min(slv, si.getMaxLevel()));
         skillRecord.setMasterLevel(si.getMaxLevel());
-        try (var locked = user.acquire()) {
-            final SkillManager sm = user.getSkillManager();
-            sm.addSkill(skillRecord);
-            user.updatePassiveSkillData();
-            user.validateStat();
-            user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
-        }
+        final SkillManager sm = user.getSkillManager();
+        sm.addSkill(skillRecord);
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
     }
 
     @Command("morph")
@@ -797,13 +763,11 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not resolve morph info for morph ID : %d", morphId));
             return;
         }
-        try (var locked = user.acquire()) {
-            final SecondaryStat ss = locked.get().getSecondaryStat();
-            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.Morph), CharacterTemporaryStat.FLAG_SIZE);
-            ss.getTemporaryStats().put(CharacterTemporaryStat.Morph, TemporaryStatOption.of(morphId, -5300000, 0));
-            user.write(WvsContext.temporaryStatSet(ss, flag));
-            user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
-        }
+        final SecondaryStat ss = user.getSecondaryStat();
+        final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.Morph), CharacterTemporaryStat.FLAG_SIZE);
+        ss.getTemporaryStats().put(CharacterTemporaryStat.Morph, TemporaryStatOption.of(morphId, -5300000, 0));
+        user.write(WvsContext.temporaryStatSet(ss, flag));
+        user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
     }
 
     @Command("ride")
@@ -814,30 +778,26 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not resolve item info for vehicle ID : %d", vehicleId));
             return;
         }
-        try (var locked = user.acquire()) {
-            final SecondaryStat ss = locked.get().getSecondaryStat();
-            final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.RideVehicle), CharacterTemporaryStat.FLAG_SIZE);
-            ss.getTemporaryStats().put(CharacterTemporaryStat.RideVehicle, TwoStateTemporaryStat.ofTwoState(CharacterTemporaryStat.RideVehicle, vehicleId, Beginner.MONSTER_RIDER, 0));
-            user.write(WvsContext.temporaryStatSet(ss, flag));
-            user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
-        }
+        final SecondaryStat ss = user.getSecondaryStat();
+        final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.RideVehicle), CharacterTemporaryStat.FLAG_SIZE);
+        ss.getTemporaryStats().put(CharacterTemporaryStat.RideVehicle, TwoStateTemporaryStat.ofTwoState(CharacterTemporaryStat.RideVehicle, vehicleId, Beginner.MONSTER_RIDER, 0));
+        user.write(WvsContext.temporaryStatSet(ss, flag));
+        user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
     }
 
     @Command("clearquest")
     @Arguments("quest ID")
     public static void clearQuest(User user, String[] args) {
         final int questId = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
-            if (questRecordResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not find quest record : %d", questId));
-                return;
-            }
-            final QuestRecord qr = questRecordResult.get();
-            qr.setState(QuestState.NONE);
-            user.write(MessagePacket.questRecord(qr));
-            user.validateStat();
+        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+        if (questRecordResult.isEmpty()) {
+            user.write(MessagePacket.system("Could not find quest record : %d", questId));
+            return;
         }
+        final QuestRecord qr = questRecordResult.get();
+        qr.setState(QuestState.NONE);
+        user.write(MessagePacket.questRecord(qr));
+        user.validateStat();
     }
 
     @Command("startquest")
@@ -849,22 +809,18 @@ public final class AdminCommands {
             user.write(MessagePacket.system("Could not find quest : %d", questId));
             return;
         }
-        try (var locked = user.acquire()) {
-            final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
-            user.write(MessagePacket.questRecord(qr));
-            user.validateStat();
-        }
+        final QuestRecord qr = user.getQuestManager().forceStartQuest(questId);
+        user.write(MessagePacket.questRecord(qr));
+        user.validateStat();
     }
 
     @Command("completequest")
     @Arguments("quest ID")
     public static void completeQuest(User user, String[] args) {
         final int questId = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
-            user.write(MessagePacket.questRecord(qr));
-            user.validateStat();
-        }
+        final QuestRecord qr = user.getQuestManager().forceCompleteQuest(questId);
+        user.write(MessagePacket.questRecord(qr));
+        user.validateStat();
     }
 
     @Command({ "questex", "qr" })
@@ -877,27 +833,23 @@ public final class AdminCommands {
         } else {
             newValue = null;
         }
-        try (var locked = user.acquire()) {
-            if (newValue == null) {
-                final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
-                final String value = questRecordResult.map(QuestRecord::getValue).orElse("");
-                user.write(MessagePacket.system("Get QR value for quest ID %d : %s", questId, value));
-            } else {
-                final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, newValue);
-                user.write(MessagePacket.questRecord(qr));
-                user.validateStat();
-                user.write(MessagePacket.system("Set QR value for quest ID %d : %s", questId, newValue));
-            }
+        if (newValue == null) {
+            final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
+            final String value = questRecordResult.map(QuestRecord::getValue).orElse("");
+            user.write(MessagePacket.system("Get QR value for quest ID %d : %s", questId, value));
+        } else {
+            final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, newValue);
+            user.write(MessagePacket.questRecord(qr));
+            user.validateStat();
+            user.write(MessagePacket.system("Set QR value for quest ID %d : %s", questId, newValue));
         }
     }
 
     @Command("killmobs")
     public static void killMobs(User user, String[] args) {
         user.getField().getMobPool().forEach((mob) -> {
-            try (var lockedMob = mob.acquire()) {
-                if (mob.getHp() > 0) {
-                    mob.damage(user, mob.getMaxHp(), 0, MobLeaveType.ETC);
-                }
+            if (mob.getHp() > 0) {
+                mob.damage(user, mob.getMaxHp(), 0, MobLeaveType.ETC);
             }
         });
     }
@@ -924,112 +876,100 @@ public final class AdminCommands {
             return;
         }
         final SkillInfo si = skillInfoResult.get();
-        try (var locked = user.acquire()) {
-            locked.get().setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
-        }
+        user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
     }
 
     @Command("combo")
     @Arguments("value")
     public static void combo(User user, String[] args) {
         final int combo = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(combo, Aran.COMBO_ABILITY, 0));
-            user.write(UserLocal.incCombo(combo));
-        }
+        user.setTemporaryStat(CharacterTemporaryStat.ComboAbilityBuff, TemporaryStatOption.of(combo, Aran.COMBO_ABILITY, 0));
+        user.write(UserLocal.incCombo(combo));
     }
 
     @Command({ "battleship", "bship" })
     public static void battleship(User user, String[] args) {
-        try (var locked = user.acquire()) {
-            user.write(MessagePacket.system("Battleship HP : %d", Pirate.getBattleshipDurability(user)));
-        }
+        user.write(MessagePacket.system("Battleship HP : %d", Pirate.getBattleshipDurability(user)));
     }
 
     @Command("jaguar")
     @Arguments("index")
     public static void jaguar(User user, String[] args) {
         final int index = Integer.parseInt(args[1]);
-        try (var locked = user.acquire()) {
-            user.getWildHunterInfo().setRidingType(index);
-            user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
-        }
+        user.getWildHunterInfo().setRidingType(index);
+        user.write(WvsContext.wildHunterInfo(user.getWildHunterInfo()));
     }
 
     @Command("cd")
     public static void cd(User user, String[] args) {
-        try (var locked = user.acquire()) {
-            final var iter = locked.get().getSkillManager().getSkillCooltimes().keySet().iterator();
-            while (iter.hasNext()) {
-                final int skillId = iter.next();
-                user.write(UserLocal.skillCooltimeSet(skillId, 0));
-                iter.remove();
-            }
+        final var iter = user.getSkillManager().getSkillCooltimes().keySet().iterator();
+        while (iter.hasNext()) {
+            final int skillId = iter.next();
+            user.write(UserLocal.skillCooltimeSet(skillId, 0));
+            iter.remove();
         }
     }
 
     @Command("max")
     public static void max(User user, String[] args) {
-        try (var locked = user.acquire()) {
-            // Set stats
-            final CharacterStat cs = user.getCharacterStat();
-            cs.setLevel((short) 200);
+        // Set stats
+        final CharacterStat cs = user.getCharacterStat();
+        cs.setLevel((short) 200);
 //            cs.setBaseStr((short) 10000);
 //            cs.setBaseDex((short) 10000);
 //            cs.setBaseInt((short) 10000);
 //            cs.setBaseLuk((short) 10000);
-            cs.setMaxHp(50000);
-            cs.setMaxMp(50000);
-            cs.setExp(0);
-            user.validateStat();
-            user.write(WvsContext.statChanged(Map.of(
-                    Stat.LEVEL, (byte) cs.getLevel(),
-                    Stat.STR, cs.getBaseStr(),
-                    Stat.DEX, cs.getBaseDex(),
-                    Stat.INT, cs.getBaseInt(),
-                    Stat.LUK, cs.getBaseLuk(),
-                    Stat.MHP, cs.getMaxHp(),
-                    Stat.MMP, cs.getMaxMp(),
-                    Stat.EXP, cs.getExp()
-            ), true));
+        cs.setMaxHp(50000);
+        cs.setMaxMp(50000);
+        cs.setExp(0);
+        user.validateStat();
+        user.write(WvsContext.statChanged(Map.of(
+                Stat.LEVEL, (byte) cs.getLevel(),
+                Stat.STR, cs.getBaseStr(),
+                Stat.DEX, cs.getBaseDex(),
+                Stat.INT, cs.getBaseInt(),
+                Stat.LUK, cs.getBaseLuk(),
+                Stat.MHP, cs.getMaxHp(),
+                Stat.MMP, cs.getMaxMp(),
+                Stat.EXP, cs.getExp()
+        ), true));
 
-            // Reset skills
-            final SkillManager sm = user.getSkillManager();
-            final List<SkillRecord> removedRecords = new ArrayList<>();
-            for (SkillRecord skillRecord : sm.getSkillRecords()) {
-                if (JobConstants.isBeginnerJob(SkillConstants.getSkillRoot(skillRecord.getSkillId()))) {
-                    continue;
-                }
-                skillRecord.setSkillLevel(0);
-                skillRecord.setMasterLevel(0);
-                removedRecords.add(skillRecord);
-                sm.removeSkill(skillRecord.getSkillId());
+        // Reset skills
+        final SkillManager sm = user.getSkillManager();
+        final List<SkillRecord> removedRecords = new ArrayList<>();
+        for (SkillRecord skillRecord : sm.getSkillRecords()) {
+            if (JobConstants.isBeginnerJob(SkillConstants.getSkillRoot(skillRecord.getSkillId()))) {
+                continue;
             }
-            user.write(WvsContext.changeSkillRecordResult(removedRecords, true));
-
-            // Add skills
-            final List<SkillRecord> skillRecords = new ArrayList<>();
-            for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
-                if (JobConstants.isBeginnerJob(skillRoot)) {
-                    continue;
-                }
-                final Job job = Job.getById(skillRoot);
-                for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
-                    final SkillRecord skillRecord = new SkillRecord(si.getSkillId());
-                    skillRecord.setSkillLevel(si.getMaxLevel());
-                    skillRecord.setMasterLevel(si.getMaxLevel());
-                    sm.addSkill(skillRecord);
-                    skillRecords.add(skillRecord);
-                }
-            }
-            user.updatePassiveSkillData();
-            user.validateStat();
-            user.write(WvsContext.changeSkillRecordResult(skillRecords, true));
-
-            // Heal
-            user.setHp(user.getMaxHp());
-            user.setMp(user.getMaxMp());
+            skillRecord.setSkillLevel(0);
+            skillRecord.setMasterLevel(0);
+            removedRecords.add(skillRecord);
+            sm.removeSkill(skillRecord.getSkillId());
         }
+        user.write(WvsContext.changeSkillRecordResult(removedRecords, true));
+
+        // Add skills
+        final List<SkillRecord> skillRecords = new ArrayList<>();
+        for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
+            if (JobConstants.isBeginnerJob(skillRoot)) {
+                continue;
+            }
+            final Job job = Job.getById(skillRoot);
+            for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
+                final SkillRecord skillRecord = new SkillRecord(si.getSkillId());
+                skillRecord.setSkillLevel(si.getMaxLevel());
+                skillRecord.setMasterLevel(si.getMaxLevel());
+                sm.addSkill(skillRecord);
+                skillRecords.add(skillRecord);
+            }
+        }
+        user.updatePassiveSkillData();
+        user.validateStat();
+        user.write(WvsContext.changeSkillRecordResult(skillRecords, true));
+
+        // Heal
+        user.setHp(user.getMaxHp());
+        user.setMp(user.getMaxMp());
     }
 
     @Command("help")

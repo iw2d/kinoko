@@ -70,11 +70,9 @@ public final class Skill {
             if (userResult.isEmpty()) {
                 continue;
             }
-            try (var locked = userResult.get().acquire()) {
-                final User user = locked.get();
-                if (user.getHp() > 0) {
-                    consumer.accept(user);
-                }
+            final User user = userResult.get();
+            if (user.getHp() > 0) {
+                consumer.accept(user);
             }
         }
     }
@@ -88,11 +86,9 @@ public final class Skill {
             if (mobResult.isEmpty()) {
                 continue;
             }
-            try (var lockedMob = mobResult.get().acquire()) {
-                final Mob mob = lockedMob.get();
-                if (mob.getHp() > 0) {
-                    consumer.accept(mob);
-                }
+            final Mob mob = mobResult.get();
+            if (mob.getHp() > 0) {
+                consumer.accept(mob);
             }
         }
     }

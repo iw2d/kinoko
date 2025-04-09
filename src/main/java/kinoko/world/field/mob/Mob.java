@@ -20,7 +20,6 @@ import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
 import kinoko.util.Encodable;
-import kinoko.util.Lockable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.ControlledObject;
@@ -40,12 +39,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiPredicate;
 
-public final class Mob extends Life implements ControlledObject, Encodable, Lockable<Mob> {
-    private final Lock lock = new ReentrantLock();
+public final class Mob extends Life implements ControlledObject, Encodable {
     private final MobStat mobStat = new MobStat();
     private final Map<MobSkill, Instant> skillCooltimes = new HashMap<>();
     private final Map<Integer, Integer> damageDone = new HashMap<>();
@@ -494,52 +490,48 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
             final int exp = entry.getValue();
             final int memberCount = partyMembers.getOrDefault(user.getPartyId(), Set.of()).size();
             final int partyBonus = GameConstants.getPartyBonusExp(exp, memberCount);
-            ServerExecutor.submit(getField(), () -> {
-                try (var locked = user.acquire()) {
-                    // Distribute exp
-                    if (locked.get().getField() != getField()) {
-                        return;
-                    }
-                    int finalExp = exp;
-                    int finalPartyBonus = partyBonus;
-                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.HolySymbol)) {
-                        final int bonus = GameConstants.getHolySymbolBonus(user.getSecondaryStat().getOption(CharacterTemporaryStat.HolySymbol).nOption, memberCount);
-                        final double multiplier = (bonus + 100) / 100.0;
-                        finalExp = (int) (finalExp * multiplier);
-                        finalPartyBonus = (int) (finalPartyBonus * multiplier);
-                    }
-                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ExpBuffRate)) {
-                        final double multiplier = user.getSecondaryStat().getOption(CharacterTemporaryStat.ExpBuffRate).nOption / 100.0;
-                        finalExp = (int) (finalExp * multiplier);
-                        finalPartyBonus = (int) (finalPartyBonus * multiplier);
-                    }
-                    if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Dice)) {
-                        final int expR = user.getSecondaryStat().getOption(CharacterTemporaryStat.Dice).getDiceInfo().getInfoArray()[17];
-                        if (expR > 0) {
-                            final double multiplier = (expR + 100) / 100.0;
-                            finalExp = (int) (finalExp * multiplier);
-                            finalPartyBonus = (int) (finalPartyBonus * multiplier);
-                        }
-                    }
-                    if (finalExp + finalPartyBonus > 0) {
-                        user.addExp(finalExp + finalPartyBonus);
-                        user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
-                    }
-                    // Process mob kill for quest
-                    for (QuestRecord qr : user.getQuestManager().getStartedQuests()) {
-                        final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
-                        if (questInfoResult.isEmpty()) {
-                            continue;
-                        }
-                        final Optional<QuestRecord> questProgressResult = questInfoResult.get().progressQuest(qr, getTemplateId());
-                        if (questProgressResult.isEmpty()) {
-                            continue;
-                        }
-                        user.write(MessagePacket.questRecord(questProgressResult.get()));
-                        user.validateStat();
-                    }
+            // Distribute exp
+            if (user.getField() != getField()) {
+                return;
+            }
+            int finalExp = exp;
+            int finalPartyBonus = partyBonus;
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.HolySymbol)) {
+                final int bonus = GameConstants.getHolySymbolBonus(user.getSecondaryStat().getOption(CharacterTemporaryStat.HolySymbol).nOption, memberCount);
+                final double multiplier = (bonus + 100) / 100.0;
+                finalExp = (int) (finalExp * multiplier);
+                finalPartyBonus = (int) (finalPartyBonus * multiplier);
+            }
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ExpBuffRate)) {
+                final double multiplier = user.getSecondaryStat().getOption(CharacterTemporaryStat.ExpBuffRate).nOption / 100.0;
+                finalExp = (int) (finalExp * multiplier);
+                finalPartyBonus = (int) (finalPartyBonus * multiplier);
+            }
+            if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Dice)) {
+                final int expR = user.getSecondaryStat().getOption(CharacterTemporaryStat.Dice).getDiceInfo().getInfoArray()[17];
+                if (expR > 0) {
+                    final double multiplier = (expR + 100) / 100.0;
+                    finalExp = (int) (finalExp * multiplier);
+                    finalPartyBonus = (int) (finalPartyBonus * multiplier);
                 }
-            });
+            }
+            if (finalExp + finalPartyBonus > 0) {
+                user.addExp(finalExp + finalPartyBonus);
+                user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
+            }
+            // Process mob kill for quest
+            for (QuestRecord qr : user.getQuestManager().getStartedQuests()) {
+                final Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(qr.getQuestId());
+                if (questInfoResult.isEmpty()) {
+                    continue;
+                }
+                final Optional<QuestRecord> questProgressResult = questInfoResult.get().progressQuest(qr, getTemplateId());
+                if (questProgressResult.isEmpty()) {
+                    continue;
+                }
+                user.write(MessagePacket.questRecord(questProgressResult.get()));
+                user.validateStat();
+            }
         }
     }
 
@@ -692,15 +684,5 @@ public final class Mob extends Life implements ControlledObject, Encodable, Lock
         outPacket.encodeByte(0); // nTeamForMCarnival
         outPacket.encodeInt(0); // nEffectItemID
         outPacket.encodeInt(0); // nPhase
-    }
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

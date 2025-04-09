@@ -10,7 +10,6 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Locked;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
 import kinoko.world.job.cygnus.NightWalker;
@@ -34,8 +33,7 @@ public final class ShopDialog implements Dialog {
         this.items = items;
     }
 
-    public void handlePacket(Locked<User> locked, InPacket inPacket) {
-        final User user = locked.get();
+    public void handlePacket(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final ShopRequestType requestType = ShopRequestType.getByValue(type);
         if (requestType == null) {
