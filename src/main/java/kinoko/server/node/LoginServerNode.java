@@ -32,18 +32,8 @@ public final class LoginServerNode extends ServerNode {
     private ChannelFuture loginServerFuture;
     private boolean initialized = false;
 
-
-    public LoginServerNode() {
-        this(ServerConstants.LOGIN_PORT);
-    }
-
     public LoginServerNode(int port) {
         this.port = port;
-    }
-
-    @Override
-    public boolean isInitialized() {
-        return initialized;
     }
 
     public void setInitialized(boolean initialized) {
@@ -99,6 +89,11 @@ public final class LoginServerNode extends ServerNode {
 
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
 
     @Override
     public void initialize() throws InterruptedException, UnknownHostException {

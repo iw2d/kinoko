@@ -33,25 +33,21 @@ import java.util.concurrent.CompletableFuture;
 
 public final class CentralServerNode extends Node {
     private static final Logger log = LogManager.getLogger(CentralServerNode.class);
-    private final int port;
     private final ServerStorage serverStorage = new ServerStorage();
     private final MigrationStorage migrationStorage = new MigrationStorage();
     private final UserStorage userStorage = new UserStorage();
     private final MessengerStorage messengerStorage = new MessengerStorage();
     private final PartyStorage partyStorage = new PartyStorage();
     private final GuildStorage guildStorage = new GuildStorage();
-
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
+    private final int port;
+
     private ChannelFuture centralServerFuture;
 
 
     public CentralServerNode(int port) {
         this.port = port;
-    }
-
-    public CentralServerNode() {
-        this(ServerConstants.CENTRAL_PORT);
     }
 
 
