@@ -23,6 +23,7 @@ import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
 import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceFieldStorage;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Rect;
 import kinoko.util.Tuple;
@@ -1077,10 +1078,13 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     private ScriptAnswer handleAnswer() {
-        // Unlock user while waiting on answer
+        // Unlock while waiting on answer
+        ServerExecutor.unlockExecutor(field);
         answerFuture = new CompletableFuture<>();
         final ScriptAnswer answer = answerFuture.join();
         answerFuture = null;
+        // Lock again after join
+        ServerExecutor.lockExecutor(field);
         user.setDialog(null);
         // Handle answer
         if (answer.getAction() == -1 || answer.getAction() == 5) {

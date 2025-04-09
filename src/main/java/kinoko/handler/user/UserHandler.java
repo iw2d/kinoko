@@ -34,7 +34,6 @@ import kinoko.server.memo.MemoRequestType;
 import kinoko.server.memo.MemoType;
 import kinoko.server.messenger.MessengerProtocol;
 import kinoko.server.messenger.MessengerRequest;
-import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
@@ -1664,10 +1663,8 @@ public final class UserHandler {
             }
             case Load -> {
                 // CWvsContext::OnMemoNotify_Receive
-                ServerExecutor.submitService(() -> {
-                    final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
-                    user.write(MemoPacket.load(memos));
-                });
+                final List<Memo> memos = DatabaseManager.memoAccessor().getMemosByCharacterId(user.getCharacterId());
+                user.write(MemoPacket.load(memos));
             }
             case null -> {
                 log.error("Unknown memo request type : {}", type);

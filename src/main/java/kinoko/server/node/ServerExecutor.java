@@ -14,14 +14,14 @@ import java.util.concurrent.*;
 public final class ServerExecutor {
     private static final Logger log = LogManager.getLogger(ServerExecutor.class);
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private static final List<ExecutorService> gameExecutors;
+    private static final List<GameExecutor> gameExecutors;
     private static final ExecutorService serviceExecutor;
 
     static {
         final int executorCount = Runtime.getRuntime().availableProcessors();
-        final List<ExecutorService> executors = new ArrayList<>();
+        final List<GameExecutor> executors = new ArrayList<>();
         for (int i = 0; i < executorCount; i++) {
-            executors.add(Executors.newSingleThreadExecutor());
+            executors.add(new GameExecutor());
         }
         gameExecutors = Collections.unmodifiableList(executors);
         serviceExecutor = Executors.newFixedThreadPool(executorCount);
@@ -32,7 +32,7 @@ public final class ServerExecutor {
     }
 
     public static void shutdown() {
-        gameExecutors.forEach(ExecutorService::shutdown);
+        gameExecutors.forEach(GameExecutor::shutdown);
         serviceExecutor.shutdown();
     }
 
@@ -56,7 +56,7 @@ public final class ServerExecutor {
     }
 
     public static void submit(Field field, Runnable runnable) {
-        wrapAndSubmit(field, runnable);
+        getExecutor(field).submit(runnable);
     }
 
     public static ScheduledFuture<?> schedule(User user, Runnable runnable, long delay, TimeUnit timeUnit) {
@@ -75,7 +75,14 @@ public final class ServerExecutor {
     // SERVICE EXECUTOR METHODS ----------------------------------------------------------------------------------------
 
     public static void submitService(Runnable runnable) {
-        wrapAndSubmitService(runnable);
+        serviceExecutor.submit(() -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                log.error("Exception caught during service execution : {}", e, e);
+                e.printStackTrace();
+            }
+        });
     }
 
     public static ScheduledFuture<?> scheduleService(Runnable runnable, long delay, TimeUnit timeUnit) {
@@ -89,26 +96,19 @@ public final class ServerExecutor {
 
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
-    private static Runnable wrap(Runnable runnable) {
-        return () -> {
-            try {
-                runnable.run();
-            } catch (Exception e) {
-                log.error("Exception caught during execution : {}", e, e);
-                e.printStackTrace();
-            }
-        };
-    }
-
-    private static void wrapAndSubmit(Field field, Runnable runnable) {
+    public static GameExecutor getExecutor(Field field) {
         if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
-            gameExecutors.get(instanceFieldStorage.getInstance().getInstanceId() % gameExecutors.size()).submit(wrap(runnable));
+            return gameExecutors.get(instanceFieldStorage.getInstance().getInstanceId() % gameExecutors.size());
         } else {
-            gameExecutors.get(field.getExecutorIndex() % gameExecutors.size()).submit(wrap(runnable));
+            return gameExecutors.get(field.getExecutorIndex() % gameExecutors.size());
         }
     }
 
-    private static void wrapAndSubmitService(Runnable runnable) {
-        serviceExecutor.submit(wrap(runnable));
+    public static void lockExecutor(Field field) {
+        getExecutor(field).lock();
+    }
+
+    public static void unlockExecutor(Field field) {
+        getExecutor(field).unlock();
     }
 }
