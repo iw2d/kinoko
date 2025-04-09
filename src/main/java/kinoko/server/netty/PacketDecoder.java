@@ -42,7 +42,8 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             }
             final int length = ((header[0] ^ header[2]) & 0xFF) | (((header[1] ^ header[3]) << 8) & 0xFF00);
             client.setStoredLength(length);
-        } else if (in.readableBytes() >= client.getStoredLength()) {
+        }
+        if (in.readableBytes() >= client.getStoredLength()) {
             final byte[] data = new byte[client.getStoredLength()];
             in.readBytes(data);
             client.setStoredLength(-1);

@@ -37,7 +37,6 @@ import org.apache.logging.log4j.Logger;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public abstract class ItemHandler {
@@ -195,16 +194,14 @@ public abstract class ItemHandler {
 
         // Resolve pet item
         final InventoryManager im = user.getInventoryManager();
-        final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
-                .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                .findFirst();
-        if (itemEntry.isEmpty()) {
+        final Optional<Tuple<Integer, Item>> itemEntryResult = im.getItemBySn(InventoryType.CASH, petSn);
+        if (itemEntryResult.isEmpty()) {
             log.error("Could not resolve pet item : {}", target.getItemSn());
             user.dispose();
             return;
         }
-        final int petPosition = itemEntry.get().getKey();
-        final Item petItem = itemEntry.get().getValue();
+        final int petPosition = itemEntryResult.get().getLeft();
+        final Item petItem = itemEntryResult.get().getRight();
 
         // Consume item
         final Optional<InventoryOperation> consumeItemResult = consumeItem(user, position, itemId);
@@ -252,7 +249,7 @@ public abstract class ItemHandler {
         }
 
         // Broadcast pet action
-        user.getField().broadcastPacket(PetPacket.petActionFeed(user, petIndex, success, false));
+        user.getField().broadcastPacket(PetPacket.petActionFeed(user, petIndex, success, target.getChatBalloon()));
     }
 
     @Handler(InHeader.UserScriptItemUseRequest)

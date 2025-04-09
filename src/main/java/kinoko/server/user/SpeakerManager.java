@@ -28,7 +28,7 @@ public final class SpeakerManager {
 
     public void initialize(ClientStorage clientStorage) {
         this.clientStorage = clientStorage;
-        this.broadcastSchedule = ServerExecutor.scheduleServiceWithFixedDelay(this::update, 1, 1, TimeUnit.SECONDS);
+        this.broadcastSchedule = ServerExecutor.scheduleServiceAtFixedRate(this::update, 1, 1, TimeUnit.SECONDS);
     }
 
     public void shutdown() {

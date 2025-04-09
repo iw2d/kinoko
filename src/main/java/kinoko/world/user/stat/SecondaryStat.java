@@ -213,9 +213,9 @@ public final class SecondaryStat {
                     case SpiritJavelin, RespectPImmune, RespectMImmune, DefenseAtt, DefenseState, MagicShield -> {
                         outPacket.encodeInt(getOption(cts).nOption);
                     }
-                    case WeaponCharge, Stun, Darkness, Seal, Weakness, ShadowPartner, Attract, BanMap, DojangShield,
-                            ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen, SuddenDeath, FinalCut,
-                            Mechanic, DarkAura, BlueAura, YellowAura -> {
+                    case WeaponCharge, Stun, Darkness, Seal, Weakness, Curse, ShadowPartner, Attract, BanMap, Barrier,
+                            DojangShield, ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen,
+                            SuddenDeath, FinalCut, Mechanic, DarkAura, BlueAura, YellowAura -> {
                         outPacket.encodeInt(getOption(cts).rOption);
                     }
                     case Poison -> {

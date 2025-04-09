@@ -9,6 +9,7 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.PetInteraction;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -26,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public final class PetHandler {
@@ -37,16 +37,14 @@ public final class PetHandler {
         inPacket.decodeInt(); // update_time
         final long petSn = inPacket.decodeLong(); // liCashItemSN
         final InventoryManager im = user.getInventoryManager();
-        final Optional<Map.Entry<Integer, Item>> itemEntryResult = im.getCashInventory().getItems().entrySet().stream()
-                .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                .findFirst();
+        final Optional<Tuple<Integer, Item>> itemEntryResult = im.getItemBySn(InventoryType.CASH, petSn);
         if (itemEntryResult.isEmpty()) {
             log.error("Tried to destroy pet item with sn {} not in inventory", petSn);
             user.dispose();
             return;
         }
-        final int position = itemEntryResult.get().getKey();
-        final Item petItem = itemEntryResult.get().getValue();
+        final int position = itemEntryResult.get().getLeft();
+        final Item petItem = itemEntryResult.get().getRight();
         final Optional<InventoryOperation> removeResult = im.removeItem(position, petItem);
         if (removeResult.isEmpty()) {
             throw new IllegalStateException("Could not remove pet item in inventory");
@@ -71,28 +69,33 @@ public final class PetHandler {
         final long petSn = item.getItemSn();
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
-            // Check if max number of pets active
             final boolean hasFollowTheLead = user.getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
-            if (user.getPets().size() >= (hasFollowTheLead ? GameConstants.PET_COUNT_MAX : 1)) {
-                log.error("Tried to activate pet while having max number of pets active");
-                user.dispose();
-                return;
-            }
-            // Create and set pet
-            final Pet pet = Pet.from(user, item);
-            pet.setPosition(user.getField(), user.getX(), user.getY());
-            if (!hasFollowTheLead || bossPet) {
-                user.setPet(pet, 0, false);
-            } else {
+            if (hasFollowTheLead && !bossPet) {
+                // Check if max number of pets active
+                if (user.getPets().size() >= GameConstants.PET_COUNT_MAX) {
+                    log.error("Tried to activate pet while having max number of pets active");
+                    user.dispose();
+                    return;
+                }
+                // Create and add pet
+                final Pet pet = Pet.from(user, item);
                 if (!user.addPet(pet, false)) {
                     log.error("Could not add pet");
                     user.dispose();
                     return;
                 }
+                // Update client
+                user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
+                user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
+            } else {
+                // Create and set pet
+                final Pet pet = Pet.from(user, item);
+                pet.setPosition(user.getField(), user.getX(), user.getY());
+                user.setPet(pet, 0, false);
+                // Update client
+                user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
+                user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
             }
-            // Update client
-            user.getField().broadcastPacket(PetPacket.petActivated(user, pet));
-            user.write(PetPacket.petLoadExceptionList(user, pet.getPetIndex(), pet.getItemSn(), user.getConfigManager().getPetExceptionList()));
         } else {
             // Deactivate pet and update client
             final int petIndex = petIndexResult.get();
@@ -142,7 +145,7 @@ public final class PetHandler {
             log.error("Received PetAction for invalid pet index : {}", petIndex);
             return;
         }
-        user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat), user);
+        user.getField().broadcastPacket(PetPacket.petAction(user, petIndex, type, action, chat, pet.getChatBalloon()), user);
     }
 
     @Handler(InHeader.PetInteractionRequest)
@@ -179,14 +182,12 @@ public final class PetHandler {
         if (success) {
             // Resolve pet item
             final InventoryManager im = user.getInventoryManager();
-            final Optional<Map.Entry<Integer, Item>> itemEntry = im.getCashInventory().getItems().entrySet().stream()
-                    .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                    .findFirst();
-            if (itemEntry.isEmpty()) {
+            final Optional<Tuple<Integer, Item>> itemEntryResult = im.getItemBySn(InventoryType.CASH, petSn);
+            if (itemEntryResult.isEmpty()) {
                 throw new IllegalStateException("Could not resolve pet item");
             }
-            final int position = itemEntry.get().getKey();
-            final Item item = itemEntry.get().getValue();
+            final int position = itemEntryResult.get().getLeft();
+            final Item item = itemEntryResult.get().getRight();
 
             // Increase tameness (closeness)
             final PetData petData = item.getPetData();
@@ -216,7 +217,7 @@ public final class PetHandler {
         }
 
         // Broadcast pet action
-        user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, false));
+        user.getField().broadcastPacket(PetPacket.petActionInteract(user, petIndex, action, success, pet.getChatBalloon()));
     }
 
     @Handler(InHeader.PetDropPickUpRequest)

@@ -213,6 +213,8 @@ public final class UserPool extends FieldObjectPool<User> {
             for (int skillId : resetCooltimes) {
                 user.write(UserLocal.skillCooltimeSet(skillId, 0));
             }
+            // Update pets
+            user.updatePets(now);
             // Expire summoned
             user.removeSummoned((summoned) -> now.isAfter(summoned.getExpireTime()));
             // Expire town portal

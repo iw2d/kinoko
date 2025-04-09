@@ -25,7 +25,7 @@ public final class RankManager {
         // Schedule refresh every 10 minutes
         final LocalDateTime now = LocalDateTime.now();
         final LocalDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(10 - (now.getMinute() % 10));
-        refreshSchedule = ServerExecutor.scheduleServiceWithFixedDelay(RankManager::refresh, now.until(nextStateTime, ChronoUnit.MILLIS), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
+        refreshSchedule = ServerExecutor.scheduleServiceAtFixedRate(RankManager::refresh, now.until(nextStateTime, ChronoUnit.MILLIS), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
     }
 
     public static void refresh() {

@@ -28,6 +28,7 @@ import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.party.PartyRequest;
+import kinoko.util.Tuple;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
 import kinoko.world.item.*;
@@ -45,7 +46,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public final class MigrationHandler {
@@ -131,16 +131,13 @@ public final class MigrationHandler {
             cs.setPetSn2(0);
             cs.setPetSn3(0);
             // Resolve pets
-            final Inventory cashInventory = user.getInventoryManager().getCashInventory();
             for (long petSn : pets) {
-                final Optional<Map.Entry<Integer, Item>> itemEntryResult = cashInventory.getItems().entrySet().stream()
-                        .filter((entry) -> entry.getValue().getItemSn() == petSn)
-                        .findFirst();
+                final Optional<Tuple<Integer, Item>> itemEntryResult = user.getInventoryManager().getItemBySn(InventoryType.CASH, petSn);
                 if (itemEntryResult.isEmpty()) {
                     // Item not found
                     continue;
                 }
-                final Item item = itemEntryResult.get().getValue();
+                final Item item = itemEntryResult.get().getRight();
                 if (item.getItemType() != ItemType.PET || item.getDateExpire().isBefore(Instant.now())) {
                     // Invalid pet or expired
                     continue;

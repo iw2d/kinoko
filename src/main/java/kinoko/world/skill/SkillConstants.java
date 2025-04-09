@@ -538,16 +538,10 @@ public final class SkillConstants {
     }
 
     public static boolean isMagicKeydownSkill(int skillId) {
-        switch (skillId) {
-            case 2121001:
-            case 2221001:
-            case 2321001:
-            case 22121000:
-            case 22151000:
-                return true;
-            default:
-                return false;
-        }
+        return switch (skillId) {
+            case 2121001, 2221001, 2321001, 22121000, 22151001 -> true;
+            default -> false;
+        };
     }
 
     public static boolean isKeydownSkill(int skillId) {

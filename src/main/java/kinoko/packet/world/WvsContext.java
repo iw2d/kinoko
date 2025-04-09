@@ -179,8 +179,7 @@ public final class WvsContext {
             outPacket.encodeShort(pet.getTameness()); // nTameness
             outPacket.encodeByte(pet.getFullness()); // nRepleteness
             outPacket.encodeShort(pet.getPetSkill()); // usPetSkill
-            final Item petWearItem = equipped.getItem(BodyPart.getByPetIndex(BodyPart.PETWEAR, pet.getPetIndex()).getValue() + BodyPart.CASH_BASE.getValue());
-            outPacket.encodeInt(petWearItem != null ? petWearItem.getItemId() : 0); // nItemID
+            outPacket.encodeInt(pet.getPetWear()); // nItemID
         }
         outPacket.encodeByte(false);
         // ~CUIUserInfo::SetMultiPetInfo
