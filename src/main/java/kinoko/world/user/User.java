@@ -20,6 +20,7 @@ import kinoko.server.dialog.miniroom.MiniRoom;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
+import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
 import kinoko.util.BitFlag;
@@ -744,6 +745,16 @@ public final class User extends Life {
         setFoothold(destination.getFootholdBelow(x, y).map(Foothold::getSn).orElse(0));
         getCharacterStat().setPosMap(destination.getFieldId());
         getCharacterStat().setPortal((byte) portalId);
+        if (isMigrate) {
+            completeWarp(destination, true, isRevive);
+        } else {
+            ServerExecutor.submit(destination, () -> {
+                completeWarp(destination, false, isRevive);
+            });
+        }
+    }
+
+    private void completeWarp(Field destination, boolean isMigrate, boolean isRevive) {
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
         getConnectedServer().notifyUserUpdate(this);

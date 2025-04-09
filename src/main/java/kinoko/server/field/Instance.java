@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public final class Instance {
     private final int instanceId;
     private final int returnMap;
-    private final Map<Integer, User> userMap;
-    private final Map<String, String> variables;
+    private final ConcurrentHashMap<Integer, User> userMap;
+    private final ConcurrentHashMap<String, String> variables;
     private final ChannelServerNode channelServerNode;
     private final Instant expireTime;
 
