@@ -14,23 +14,23 @@ public final class PlainPacketDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         while (true) {
-            if (this.length == -1) {
+            if (length == -1) {
                 if (in.readableBytes() < 4) {
                     return;
                 }
 
                 in.readShortLE();
-                this.length = in.readShortLE();
+                length = in.readShortLE();
                 return;
             }
 
-            if (in.readableBytes() < this.length) {
+            if (in.readableBytes() < length) {
                 return;
             }
 
-            final byte[] data = new byte[this.length];
+            final byte[] data = new byte[length];
             in.readBytes(data);
-            this.length = -1;
+            length = -1;
 
             final InPacket inPacket = new NioBufferInPacket(data);
             out.add(inPacket);

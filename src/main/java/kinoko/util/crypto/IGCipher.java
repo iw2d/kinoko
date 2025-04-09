@@ -20,7 +20,7 @@ public final class IGCipher {
             0x84, 0x7F, 0x61, 0x1E, 0xCF, 0xC5, 0xD1, 0x56, 0x3D, 0xCA, 0xF4, 0x05, 0xC6, 0xE5, 0x08, 0x49
     };
 
-    public static byte[] innoHash(byte[] source) {
+    public static void innoHash(byte[] source) {
         final int[] key = new int[]{ 0xF2, 0x53, 0x50, 0xC6 };
         for (int i = 0; i < source.length; i++) {
             final int a = source[i] & 0xFF;
@@ -38,11 +38,9 @@ public final class IGCipher {
             key[2] = (c >>> 16) & 0xFF;
             key[3] = (c >>> 24) & 0xFF;
         }
-        return new byte[]{
-                (byte) key[0],
-                (byte) key[1],
-                (byte) key[2],
-                (byte) key[3]
-        };
+        source[0] = (byte) key[0];
+        source[1] = (byte) key[1];
+        source[2] = (byte) key[2];
+        source[3] = (byte) key[3];
     }
 }

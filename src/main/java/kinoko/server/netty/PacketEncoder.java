@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
     public static final short SEND_VERSION = (short) (0xFFFF - ServerConstants.GAME_VERSION);
     private static final Logger log = LogManager.getLogger(PacketEncoder.class);
-    private byte[] iv;
+    private final byte[] iv;
 
     public PacketEncoder(byte[] iv) {
         this.iv = iv;
@@ -44,7 +44,7 @@ public final class PacketEncoder extends MessageToByteEncoder<OutPacket> {
 
         ShandaCrypto.encrypt(data);
         MapleCrypto.crypt(data, iv);
-        iv = IGCipher.innoHash(iv);
+        IGCipher.innoHash(iv);
 
         out.writeBytes(data);
     }
