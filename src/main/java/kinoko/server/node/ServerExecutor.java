@@ -67,8 +67,8 @@ public final class ServerExecutor {
         return scheduler.schedule(() -> submit(field, runnable), delay, timeUnit);
     }
 
-    public static ScheduledFuture<?> scheduleWithFixedDelay(Field field, Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
-        return scheduler.scheduleWithFixedDelay(() -> submit(field, runnable), initialDelay, delay, timeUnit);
+    public static ScheduledFuture<?> scheduleAtFixedRate(Field field, Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
+        return scheduler.scheduleAtFixedRate(() -> submit(field, runnable), initialDelay, delay, timeUnit);
     }
 
 
@@ -82,8 +82,8 @@ public final class ServerExecutor {
         return scheduler.schedule(() -> submitService(runnable), delay, timeUnit);
     }
 
-    public static ScheduledFuture<?> scheduleServiceWithFixedDelay(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
-        return scheduler.scheduleWithFixedDelay(() -> submitService(runnable), initialDelay, delay, timeUnit);
+    public static ScheduledFuture<?> scheduleServiceAtFixedRate(Runnable runnable, long initialDelay, long delay, TimeUnit timeUnit) {
+        return scheduler.scheduleAtFixedRate(() -> submitService(runnable), initialDelay, delay, timeUnit);
     }
 
 

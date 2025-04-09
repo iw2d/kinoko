@@ -7,6 +7,7 @@ import kinoko.server.ServerConstants;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.NioBufferInPacket;
+import kinoko.util.Util;
 import kinoko.util.crypto.IGCipher;
 import kinoko.util.crypto.MapleCrypto;
 import kinoko.util.crypto.ShandaCrypto;
@@ -41,7 +42,8 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             }
             final int length = ((header[0] ^ header[2]) & 0xFF) | (((header[1] ^ header[3]) << 8) & 0xFF00);
             c.setStoredLength(length);
-        } else if (in.readableBytes() >= c.getStoredLength()) {
+        }
+        if (in.readableBytes() >= c.getStoredLength()) {
             final byte[] data = new byte[c.getStoredLength()];
             in.readBytes(data);
             c.setStoredLength(-1);
