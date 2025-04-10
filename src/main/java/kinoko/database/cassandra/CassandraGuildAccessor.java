@@ -4,7 +4,6 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
-import kinoko.database.DatabaseManager;
 import kinoko.database.GuildAccessor;
 import kinoko.database.cassandra.table.GuildTable;
 import kinoko.server.guild.Guild;
@@ -142,7 +141,7 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                                 GuildTable.MARK_BG_COLOR
                         )
                         .build()
-                        .setExecutionProfileName(DatabaseManager.PROFILE_ONE)
+                        .setExecutionProfileName(CassandraConnector.PROFILE_ONE)
         );
         final List<GuildRanking> guildRankings = new ArrayList<>();
         for (Row row : selectResult) {

@@ -109,7 +109,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .column(columnName)
                         .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
-                        .setExecutionProfileName(DatabaseManager.PROFILE_ONE)
+                        .setExecutionProfileName(CassandraConnector.PROFILE_ONE)
         );
         for (Row row : selectResult) {
             final String hashedPassword = row.getString(columnName);
