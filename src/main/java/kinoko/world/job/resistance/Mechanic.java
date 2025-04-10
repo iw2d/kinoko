@@ -114,7 +114,7 @@ public final class Mechanic extends SkillProcessor {
                 return;
             case MECH_MISSILE_TANK:
                 handleMech(user, skillId);
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(5, ChronoUnit.SECONDS)); // - #u MP every 5 sec
+                user.setSchedule(skillId, Instant.now().plus(5, ChronoUnit.SECONDS)); // - #u MP every 5 sec
                 return;
 
             // BUFFS

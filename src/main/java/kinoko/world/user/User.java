@@ -65,6 +65,7 @@ public final class User extends Life {
 
     private final List<Pet> pets = new ArrayList<>();
     private final Map<Integer, List<Summoned>> summoned = new HashMap<>(); // skill id -> list of summons
+    private final Map<Integer, Instant> schedules = new HashMap<>();
     private final AtomicInteger fieldKey = new AtomicInteger(0);
 
     private int messengerId;
@@ -181,6 +182,18 @@ public final class User extends Life {
 
     public Map<Integer, List<Summoned>> getSummoned() {
         return summoned;
+    }
+
+    public Map<Integer, Instant> getSchedules() {
+        return schedules;
+    }
+
+    public Instant getSchedule(int skillId) {
+        return schedules.getOrDefault(skillId, Instant.MAX);
+    }
+
+    public void setSchedule(int skillId, Instant nextSchedule) {
+        schedules.put(skillId, nextSchedule);
     }
 
     public byte getFieldKey() {
@@ -512,6 +525,28 @@ public final class User extends Life {
         }
         write(UserLocal.skillCooltimeSet(skillId, cooltime));
     }
+
+    public List<Integer> expireSkillCooltime(Instant now) {
+        final List<Integer> resetCooltimes = new ArrayList<>();
+        final var iter = getSkillManager().getSkillCooltimes().entrySet().iterator();
+        while (iter.hasNext()) {
+            final Map.Entry<Integer, Instant> entry = iter.next();
+            final int skillId = entry.getKey();
+            // Battleship durability is stored as cooltime
+            if (skillId == SkillConstants.BATTLESHIP_DURABILITY) {
+                continue;
+            }
+            // Check skill cooltime and remove
+            final Instant nextAvailable = entry.getValue();
+            if (now.isBefore(nextAvailable)) {
+                continue;
+            }
+            iter.remove();
+            resetCooltimes.add(skillId);
+        }
+        return resetCooltimes;
+    }
+
 
     public void setConsumeItemEffect(ItemInfo itemInfo) {
         // Apply recovery and resolve stat ups

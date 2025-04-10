@@ -28,7 +28,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -209,8 +208,7 @@ public final class UserPool extends FieldObjectPool<User> {
             // Expire temporary stat
             user.resetTemporaryStat((cts, option) -> now.isAfter(option.getExpireTime()));
             // Expire skill cooltimes
-            final Set<Integer> resetCooltimes = user.getSkillManager().expireSkillCooltime(now);
-            for (int skillId : resetCooltimes) {
+            for (int skillId : user.expireSkillCooltime(now)) {
                 user.write(UserLocal.skillCooltimeSet(skillId, 0));
             }
             // Update pets

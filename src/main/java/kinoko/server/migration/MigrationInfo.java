@@ -186,7 +186,7 @@ public final class MigrationInfo implements Encodable {
                 user.getClient().getMachineId(),
                 user.getClient().getClientKey(),
                 user.getSecondaryStat().getTemporaryStats(),
-                user.getSkillManager().getSkillSchedules(),
+                user.getSchedules(),
                 summoned,
                 user.getMessengerId(),
                 user.getEffectItemId(),

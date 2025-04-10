@@ -227,7 +227,7 @@ public final class Warrior extends SkillProcessor {
                         CharacterTemporaryStat.DragonBlood, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv))
                 ));
-                user.getSkillManager().setSkillSchedule(skillId, Instant.now().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
+                user.setSchedule(skillId, Instant.now().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
                 return;
             case AURA_OF_THE_BEHOLDER:
                 final int healAmount = si.getValue(SkillStat.hp, slv);

@@ -6,7 +6,10 @@ import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class SkillManager {
     private final Map<Integer, SkillRecord> skillRecords = new HashMap<>();
@@ -45,46 +48,6 @@ public final class SkillManager {
 
     public void setSkillCooltime(int skillId, Instant nextAvailable) {
         skillCooltimes.put(skillId, nextAvailable);
-    }
-
-    public Set<Integer> expireSkillCooltime(Instant now) {
-        final Set<Integer> resetCooltimes = new HashSet<>();
-        final var iter = skillCooltimes.entrySet().iterator();
-        while (iter.hasNext()) {
-            final Map.Entry<Integer, Instant> entry = iter.next();
-            final int skillId = entry.getKey();
-            // Battleship durability is stored as cooltime
-            if (skillId == SkillConstants.BATTLESHIP_DURABILITY) {
-                continue;
-            }
-            // Check skill cooltime and remove
-            final Instant nextAvailable = entry.getValue();
-            if (now.isBefore(nextAvailable)) {
-                continue;
-            }
-            iter.remove();
-            resetCooltimes.add(skillId);
-        }
-        return resetCooltimes;
-    }
-
-
-    // SKILL SCHEDULE METHODS ------------------------------------------------------------------------------------------
-
-    public Map<Integer, Instant> getSkillSchedules() {
-        return skillSchedules;
-    }
-
-    public Instant getSkillSchedule(int skillId) {
-        return skillSchedules.getOrDefault(skillId, Instant.MAX);
-    }
-
-    public boolean hasSkillSchedule(int skillId) {
-        return skillSchedules.containsKey(skillId);
-    }
-
-    public void setSkillSchedule(int skillId, Instant nextSchedule) {
-        skillSchedules.put(skillId, nextSchedule);
     }
 
 

@@ -4,7 +4,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
-import kinoko.server.ServerConstants;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;

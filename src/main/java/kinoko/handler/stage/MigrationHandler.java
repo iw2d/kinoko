@@ -154,7 +154,7 @@ public final class MigrationHandler {
 
             // Initialize user data from MigrationInfo
             user.getSecondaryStat().getTemporaryStats().putAll(migrationInfo.getTemporaryStats());
-            user.getSkillManager().getSkillSchedules().putAll(migrationInfo.getSchedules());
+            user.getSchedules().putAll(migrationInfo.getSchedules());
             user.getSummoned().putAll(migrationInfo.getSummoned());
             user.setEffectItemId(migrationInfo.getEffectItemId());
             user.setAdBoard(migrationInfo.getAdBoard());
