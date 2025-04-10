@@ -5,7 +5,6 @@ import kinoko.server.node.ChannelServerNode;
 import kinoko.world.user.User;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

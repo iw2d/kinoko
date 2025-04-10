@@ -64,7 +64,7 @@ public final class Server {
         log.info("Loaded scripts in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
 
         // Initialize nodes
-        centralServerNode = new CentralServerNode();
+        centralServerNode = new CentralServerNode(ServerConstants.CENTRAL_PORT);
         ServerExecutor.submitService(() -> {
             try {
                 centralServerNode.initialize();
@@ -85,7 +85,7 @@ public final class Server {
             });
         }
         ServerExecutor.submitService(() -> {
-            final LoginServerNode loginServerNode = new LoginServerNode();
+            final LoginServerNode loginServerNode = new LoginServerNode(ServerConstants.LOGIN_PORT);
             try {
                 loginServerNode.initialize();
             } catch (Exception e) {

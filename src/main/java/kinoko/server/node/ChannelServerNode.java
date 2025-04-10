@@ -4,7 +4,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
-import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.event.EventManager;
@@ -259,18 +258,7 @@ public final class ChannelServerNode extends ServerNode {
 
         // Start channel server
         final ChannelServerNode self = this;
-        channelServerFuture = startServer(new ChannelInitializer<>() {
-            @Override
-            protected void initChannel(SocketChannel ch) {
-                ch.pipeline().addLast(new PacketDecoder(), new ChannelPacketHandler(), new PacketEncoder());
-                final Client c = new Client(self, ch);
-                c.setSendIv(getNewIv());
-                c.setRecvIv(getNewIv());
-                c.setClientKey(getNewClientKey());
-                c.write(LoginPacket.connect(c.getRecvIv(), c.getSendIv()));
-                ch.attr(NettyClient.CLIENT_KEY).set(c);
-            }
-        }, channelPort);
+        channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
         channelServerFuture.sync();
         log.info("Channel {} listening on port {}", channelId + 1, channelPort);
 
@@ -307,5 +295,10 @@ public final class ChannelServerNode extends ServerNode {
         centralClientFuture.channel().writeAndFlush(CentralPacket.shutdownResult(channelId, true));
         centralClientFuture.channel().close().sync();
         log.info("Central client {} closed", channelId + 1);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return true;
     }
 }
