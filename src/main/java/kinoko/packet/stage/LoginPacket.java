@@ -122,7 +122,7 @@ public final class LoginPacket {
         for (AvatarData avatarData : account.getCharacterList()) {
             avatarData.encode(outPacket);
             outPacket.encodeByte(false); // m_abOnFamily
-            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData.getCharacterId());
+            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
             if (characterRankResult.isPresent()) {
                 outPacket.encodeByte(true);
                 characterRankResult.get().encode(outPacket); // CLogin::RANK

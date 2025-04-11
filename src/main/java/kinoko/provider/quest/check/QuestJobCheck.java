@@ -19,7 +19,7 @@ public final class QuestJobCheck implements QuestCheck {
     @Override
     public boolean check(User user) {
         final int jobId = user.getJob();
-        if (JobConstants.getJobCategory(jobId) == 9) {
+        if (JobConstants.isAdminJob(jobId)) {
             return true;
         }
         return jobs.contains(jobId);
