@@ -10,6 +10,7 @@ import kinoko.database.cassandra.table.CharacterTable;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
+import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
@@ -277,9 +278,13 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
             final int characterId = row.getInt(CharacterTable.CHARACTER_ID);
             final CharacterStat characterStat = row.get(CharacterTable.CHARACTER_STAT, CharacterStat.class);
             final Instant maxLevelTime = row.getInstant(CharacterTable.MAX_LEVEL_TIME);
+            final int jobId = characterStat.getJob();
+            if (JobConstants.isAdminJob(jobId) || JobConstants.isManagerJob(jobId)) {
+                continue;
+            }
             rankDataList.add(new CharacterRankData(
                     characterId,
-                    JobConstants.getJobCategory(characterStat.getJob()),
+                    JobConstants.getJobCategory(jobId),
                     characterStat.getCumulativeExp(),
                     maxLevelTime
             ));

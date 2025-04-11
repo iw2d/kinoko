@@ -7,6 +7,7 @@ import kinoko.server.node.ChannelInfo;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.rank.CharacterRank;
 import kinoko.server.rank.RankManager;
+import kinoko.world.job.JobConstants;
 import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
@@ -122,7 +123,7 @@ public final class LoginPacket {
         for (AvatarData avatarData : account.getCharacterList()) {
             avatarData.encode(outPacket);
             outPacket.encodeByte(false); // m_abOnFamily
-            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData.getCharacterId());
+            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
             if (characterRankResult.isPresent()) {
                 outPacket.encodeByte(true);
                 characterRankResult.get().encode(outPacket); // CLogin::RANK
