@@ -3,6 +3,8 @@ package kinoko.server.rank;
 import kinoko.database.DatabaseManager;
 import kinoko.server.guild.GuildRanking;
 import kinoko.server.node.ServerExecutor;
+import kinoko.world.job.JobConstants;
+import kinoko.world.user.AvatarData;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -54,8 +56,11 @@ public final class RankManager {
         refreshSchedule.cancel(true);
     }
 
-    public static Optional<CharacterRank> getCharacterRank(int characterId) {
-        return Optional.ofNullable(currentCharacterRanks.get(characterId));
+    public static Optional<CharacterRank> getCharacterRank(AvatarData avatarData) {
+        if (JobConstants.isAdminJob(avatarData.getJob()) || JobConstants.isManagerJob(avatarData.getJob())) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(currentCharacterRanks.get(avatarData.getCharacterId()));
     }
 
     public static List<GuildRanking> getGuildRankings() {

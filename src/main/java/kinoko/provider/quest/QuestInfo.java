@@ -397,10 +397,34 @@ public final class QuestInfo {
                     }
                     questChecks.add(QuestJobCheck.from(jobList));
                 }
+                case "subJobFlags" -> {
+                    final int subJobFlags = WzProvider.getInteger(entry.getValue());
+                    questChecks.add(new QuestSubJobCheck(subJobFlags));
+                }
+                case "morph" -> {
+                    final int morph = WzProvider.getInteger(entry.getValue());
+                    questChecks.add(new QuestMorphCheck(morph));
+                }
                 case "lvmin", "lvmax" -> {
                     final int level = WzProvider.getInteger(entry.getValue());
                     final boolean isMinimum = checkType.equals("lvmin");
                     questChecks.add(new QuestLevelCheck(level, isMinimum));
+                }
+                case "buff", "exceptbuff" -> {
+                    final int buffItemId = WzProvider.getInteger(entry.getValue());
+                    final boolean isExcept = checkType.equals("exceptbuff");
+                    questChecks.add(new QuestBuffCheck(buffItemId, isExcept));
+                }
+                case "start", "end" -> {
+                    final String dateString = WzProvider.getString(entry.getValue());
+                    final boolean isStart = checkType.equals("start");
+                    questChecks.add(QuestDateCheck.from(dateString, isStart));
+                }
+                case "dayOfWeek" -> {
+                    if (!(entry.getValue() instanceof WzListProperty dayOfWeekList)) {
+                        throw new ProviderError("Failed to resolve quest day of week list");
+                    }
+                    questChecks.add(QuestDayOfWeekCheck.from(dayOfWeekList));
                 }
                 case "infoex" -> {
                     final int infoQuestId = WzProvider.getInteger(checkProps.get("infoNumber"), questId);

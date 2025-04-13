@@ -29,6 +29,10 @@ public final class AvatarData implements Encodable {
         return characterStat.getName();
     }
 
+    public int getJob() {
+        return characterStat.getJob();
+    }
+
     public int getLevel() {
         return characterStat.getLevel();
     }
