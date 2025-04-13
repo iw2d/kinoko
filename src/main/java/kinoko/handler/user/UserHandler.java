@@ -103,7 +103,8 @@ public final class UserHandler {
         // CUserLocal::HandleXKeyDown, CWvsContext::SendGetUpFromChairRequest
         final short fieldSeatId = inPacket.decodeShort();
         user.setPortableChairId(0);
-        user.write(UserLocal.sitResult(fieldSeatId != -1, fieldSeatId)); // broadcast not required
+        user.write(UserLocal.sitResult(fieldSeatId != -1, fieldSeatId));
+        user.getField().broadcastPacket(UserRemote.setActivePortableChair(user, 0), user);
     }
 
     @Handler(InHeader.UserPortableChairSitRequest)

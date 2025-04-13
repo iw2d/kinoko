@@ -107,7 +107,7 @@ public final class ItemInfo {
     }
 
     public boolean isTradeBlock() {
-        return getInfo(ItemInfoType.tradeBlock) != 0;
+        return getInfo(ItemInfoType.tradeBlock) != 0 || getInfo(ItemInfoType.accountSharable) != 0;
     }
 
     public boolean isEquipTradeBlock() {

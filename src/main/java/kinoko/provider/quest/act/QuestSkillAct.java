@@ -34,9 +34,10 @@ public final class QuestSkillAct implements QuestAct {
             if (skillInfoResult.isEmpty()) {
                 return false;
             }
+            final SkillInfo sir = skillInfoResult.get();
             final SkillRecord skillRecord = new SkillRecord(skillInfoResult.get().getSkillId());
             skillRecord.setSkillLevel(qsd.getSkillLevel());
-            skillRecord.setMasterLevel(qsd.getMasterLevel());
+            skillRecord.setMasterLevel(sir.getMasterLevel() == sir.getMaxLevel() ? sir.getMaxLevel() : qsd.getMasterLevel());
             user.getSkillManager().addSkill(skillRecord);
             user.updatePassiveSkillData();
             user.validateStat();

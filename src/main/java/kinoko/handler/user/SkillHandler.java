@@ -115,7 +115,7 @@ public final class SkillHandler {
             return;
         }
         // Check seal
-        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal)) {
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal) && skill.skillId != Magician.DISPEL) {
             log.error("Tried to use skill {} while sealed", skill.skillId);
             user.dispose();
             return;
