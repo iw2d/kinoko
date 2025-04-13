@@ -43,7 +43,7 @@ public final class UserPool extends FieldObjectPool<User> {
     public synchronized void addUser(User user) {
         // Update client with existing users in pool
         forEach((existingUser) -> {
-            user.write(UserPacket.userEnterField(user));
+            user.write(UserPacket.userEnterField(existingUser));
             for (Pet pet : existingUser.getPets()) {
                 user.write(PetPacket.petActivated(existingUser, pet));
             }
