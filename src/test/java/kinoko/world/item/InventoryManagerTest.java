@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class InventoryManagerTest {
     public static final int RED_POTION = 2000000;
     public static final int ORANGE_POTION = 2000001;
+    public static final int SUBI_THROWING_STARS = 2070000;
     private static final AtomicLong testItemSnCounter = new AtomicLong(1);
 
     @Test
@@ -129,6 +130,21 @@ public final class InventoryManagerTest {
                 createItem(RED_POTION, 50),
                 createItem(RED_POTION, 100)
         )));
+    }
+
+    @Test
+    public void testRechargeableItems() {
+        final InventoryManager im = new InventoryManager();
+        im.setConsumeInventory(new Inventory(2));
+
+        Assertions.assertTrue(im.canAddItem(createItem(SUBI_THROWING_STARS, 400)));
+        Assertions.assertTrue(im.addItem(createItem(SUBI_THROWING_STARS, 400)).isPresent());
+
+        Assertions.assertTrue(im.canAddItem(createItem(SUBI_THROWING_STARS, 80000)));
+        Assertions.assertTrue(im.addItem(createItem(SUBI_THROWING_STARS, 80000)).isPresent());
+
+        Assertions.assertFalse(im.canAddItem(createItem(SUBI_THROWING_STARS, 400)));
+        Assertions.assertFalse(im.addItem(createItem(SUBI_THROWING_STARS, 400)).isPresent());
     }
 
     @BeforeAll

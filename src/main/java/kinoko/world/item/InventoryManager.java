@@ -291,7 +291,7 @@ public final class InventoryManager {
         // Populate item counter map
         for (var tuple : items) {
             final int itemId = tuple.getLeft();
-            final int count = tuple.getRight();
+            final int count = ItemConstants.isRechargeableItem(itemId) ? 1 : tuple.getRight(); // count rechargeable item as 1
             itemCounter.put(itemId, itemCounter.getOrDefault(itemId, 0) + count);
         }
         // Check if item can be merged into existing stacks
@@ -299,7 +299,7 @@ public final class InventoryManager {
             final InventoryType inventoryType = InventoryType.getByItemId(itemId);
             final Inventory inventory = getInventoryByType(inventoryType);
             int count = itemCounter.get(itemId);
-            final int slotMax = ItemProvider.getItemInfo(itemId).map(ItemInfo::getSlotMax).orElse(0);
+            final int slotMax = ItemConstants.isRechargeableItem(itemId) ? 1 : ItemProvider.getItemInfo(itemId).map(ItemInfo::getSlotMax).orElse(0);
             for (var entry : inventory.getItems().entrySet()) {
                 final Item existingItem = entry.getValue();
                 if (existingItem.getItemId() != itemId) {
