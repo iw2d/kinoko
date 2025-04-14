@@ -122,14 +122,13 @@ public final class InventoryManagerTest {
                 createItem(RED_POTION, 100)
         )));
 
-        Assertions.assertTrue(im.addItem(createItem(RED_POTION, 50)).isPresent());
-        Assertions.assertTrue(im.canAddItems(Set.of(
-                createItem(ORANGE_POTION, 100),
-                createItem(ORANGE_POTION, 100),
-                createItem(ORANGE_POTION, 100),
-                createItem(RED_POTION, 50),
-                createItem(RED_POTION, 100)
-        )));
+        im.getConsumeInventory().getItems().put(1, createItem(ORANGE_POTION, 80));
+        im.getConsumeInventory().getItems().put(2, createItem(ORANGE_POTION, 70));
+        im.getConsumeInventory().getItems().put(3, createItem(ORANGE_POTION, 60));
+        im.getConsumeInventory().getItems().put(4, createItem(ORANGE_POTION, 50));
+        im.getConsumeInventory().getItems().put(5, createItem(ORANGE_POTION, 40));
+        Assertions.assertTrue(im.canAddItem(createItem(ORANGE_POTION, 50)));
+        Assertions.assertTrue(im.addItem(createItem(ORANGE_POTION, 50)).isPresent());
     }
 
     @Test

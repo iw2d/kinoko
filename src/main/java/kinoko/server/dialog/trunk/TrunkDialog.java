@@ -111,7 +111,7 @@ public final class TrunkDialog implements Dialog {
                     return;
                 }
                 // Check if trunk has space for item
-                if (trunk.getRemaining() == 0) {
+                if (!trunk.canAddItem(item, quantity)) {
                     user.write(TrunkPacket.of(TrunkResultType.PutNoSpace));
                     return;
                 }
@@ -128,7 +128,7 @@ public final class TrunkDialog implements Dialog {
                     partialItem.setItemSn(user.getNextItemSn());
                     partialItem.setQuantity((short) quantity);
                     partialItem.setPossibleTrading(false);
-                    trunk.getItems().add(partialItem);
+                    trunk.addItem(partialItem);
                 } else {
                     // Move full item
                     final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item);
@@ -136,8 +136,8 @@ public final class TrunkDialog implements Dialog {
                         throw new IllegalStateException("Could not remove item from inventory");
                     }
                     item.setPossibleTrading(false);
-                    trunk.getItems().add(item);
                     user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                    trunk.addItem(item);
                 }
                 // Update client
                 user.write(TrunkPacket.putSuccess(trunk));
