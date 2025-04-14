@@ -146,7 +146,7 @@ public final class TradingRoom extends MiniRoom {
             return false;
         }
         final ItemInfo itemInfo = itemInfoResult.get();
-        if ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) {
+        if (itemInfo.isTradeBlock(item) || itemInfo.isAccountSharable()) {
             return false;
         }
         if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&

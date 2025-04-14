@@ -401,10 +401,8 @@ public final class UserHandler {
         }
         final ItemInfo itemInfo = itemInfoResult.get();
         if (newPos == 0) {
-            // CDraggableItem::ThrowItem - item is deleted if (binded || quest || tradeBlock) && POSSIBLE_TRADING attribute not set
-            final DropEnterType dropEnterType = ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) ?
-                    DropEnterType.FADING_OUT :
-                    DropEnterType.CREATE;
+            // CDraggableItem::ThrowItem
+            final DropEnterType dropEnterType = (itemInfo.isTradeBlock(item) || itemInfo.isAccountSharable()) ? DropEnterType.FADING_OUT : DropEnterType.CREATE;
             if (item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
                     item.getQuantity() > count) {
                 // Update item count

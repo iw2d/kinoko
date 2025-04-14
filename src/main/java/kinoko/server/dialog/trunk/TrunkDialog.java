@@ -2,6 +2,8 @@ package kinoko.server.dialog.trunk;
 
 import kinoko.packet.field.TrunkPacket;
 import kinoko.packet.world.WvsContext;
+import kinoko.provider.ItemProvider;
+import kinoko.provider.item.ItemInfo;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.packet.InPacket;
@@ -92,6 +94,19 @@ public final class TrunkDialog implements Dialog {
                 final InventoryType inventoryType = InventoryType.getByItemId(itemId);
                 final Item item = im.getInventoryByType(inventoryType).getItem(position);
                 if (item == null || item.getItemId() != itemId || item.getQuantity() < quantity) {
+                    user.write(TrunkPacket.serverMsg("Due to an error, the trade did not happen."));
+                    return;
+                }
+                // Check if item can be stored
+                final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+                if (itemInfoResult.isEmpty()) {
+                    log.error("Could not resolve item info for item ID : {}", itemId);
+                    user.write(TrunkPacket.serverMsg("Due to an error, the trade did not happen."));
+                    return;
+                }
+                final ItemInfo itemInfo = itemInfoResult.get();
+                if (itemInfo.isTradeBlock(item)) {
+                    log.error("Tried to store an untradable item into trunk");
                     user.write(TrunkPacket.serverMsg("Due to an error, the trade did not happen."));
                     return;
                 }
