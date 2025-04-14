@@ -10,12 +10,14 @@ public final class QuestSkillData {
     private final int skillId;
     private final int skillLevel;
     private final int masterLevel;
+    private final boolean onlyMasterLevel;
     private final Set<Integer> jobs;
 
-    public QuestSkillData(int skillId, int skillLevel, int masterLevel, Set<Integer> jobs) {
+    public QuestSkillData(int skillId, int skillLevel, int masterLevel, boolean onlyMasterLevel, Set<Integer> jobs) {
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.masterLevel = masterLevel;
+        this.onlyMasterLevel = onlyMasterLevel;
         this.jobs = jobs;
     }
 
@@ -29,6 +31,10 @@ public final class QuestSkillData {
 
     public int getMasterLevel() {
         return masterLevel;
+    }
+
+    public boolean isOnlyMasterLevel() {
+        return onlyMasterLevel;
     }
 
     public Set<Integer> getJobs() {
@@ -52,6 +58,7 @@ public final class QuestSkillData {
                     WzProvider.getInteger(skillProp.get("id")),
                     WzProvider.getInteger(skillProp.get("skillLevel")),
                     WzProvider.getInteger(skillProp.get("masterLevel")),
+                    WzProvider.getInteger(skillProp.get("onlyMasterLevel"), 0) != 0,
                     Collections.unmodifiableSet(jobs)
             ));
         }

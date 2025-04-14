@@ -106,12 +106,18 @@ public final class ItemInfo {
         return ((getReqLevel() - 1) / 10) + 1;
     }
 
-    public boolean isTradeBlock() {
-        return getInfo(ItemInfoType.tradeBlock) != 0;
+    public boolean isTradeBlock(Item item) {
+        final boolean isTradeBlock = getInfo(ItemInfoType.tradeBlock) != 0; // && getInfo(ItemInfoType.tradBlock) != 0;
+        final boolean isBinded = item.getItemType() == ItemType.EQUIP && item.hasAttribute(ItemAttribute.EQUIP_BINDED);
+        return (isTradeBlock || isBinded || isCash() || isQuest()) && !item.isPossibleTrading();
     }
 
     public boolean isEquipTradeBlock() {
         return getInfo(ItemInfoType.equipTradeBlock) != 0;
+    }
+
+    public boolean isAccountSharable() {
+        return getInfo(ItemInfoType.accountSharable) != 0;
     }
 
     public boolean isAbleToEquip(int gender, int level, int job, int subJob, int totalStr, int totalDex, int totalInt, int totalLuk, int pop, int durability, int weaponId, int petTemplateId) {

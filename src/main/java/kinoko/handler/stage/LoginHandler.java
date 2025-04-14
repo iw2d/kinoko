@@ -295,7 +295,7 @@ public final class LoginHandler {
             }
             final SkillRecord sr = new SkillRecord(si.getSkillId());
             sr.setSkillLevel(0);
-            sr.setMasterLevel(si.getMaxLevel());
+            sr.setMasterLevel(si.getMasterLevel());
             sm.addSkill(sr);
         }
         characterData.setSkillManager(sm);

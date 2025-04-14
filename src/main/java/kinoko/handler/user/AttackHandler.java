@@ -569,6 +569,7 @@ public final class AttackHandler {
         handleAffectedArea(user, attack);
         handleMesoExplosion(user, attack);
         handleFinalCut(user, attack);
+        handleInfiltrate(user);
         if (attack.getMobCount() > 0) {
             handleComboAbility(user, attack);
             handleComboAttack(user, attack);
@@ -932,5 +933,12 @@ public final class AttackHandler {
             return;
         }
         user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.WindWalk).rOption);
+    }
+
+    private static void handleInfiltrate(User user) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Sneak)) {
+            return;
+        }
+        user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.Sneak).rOption);
     }
 }

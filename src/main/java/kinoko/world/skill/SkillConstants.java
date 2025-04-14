@@ -44,6 +44,17 @@ public final class SkillConstants {
     }
 
     public static int getNoviceSkillAsRace(int skillId, int jobId) {
+
+        if (skillId == Beginner.FOLLOW_THE_LEAD) {
+            return switch (JobConstants.getNoviceSkillRootFromJob(jobId)) {
+                case 1000 -> 10000018;
+                case 2000 -> 20000024;
+                case 2001 -> 20011024;
+                case 3000 -> 30001024;
+                default -> Beginner.FOLLOW_THE_LEAD;
+            };
+        }
+
         if (JobConstants.isEvanJob(jobId)) {
             return skillId + 20010000;
         } else {

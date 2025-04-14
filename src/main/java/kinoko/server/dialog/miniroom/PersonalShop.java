@@ -7,7 +7,10 @@ import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.server.packet.InPacket;
 import kinoko.world.GameConstants;
-import kinoko.world.item.*;
+import kinoko.world.item.InventoryManager;
+import kinoko.world.item.InventoryOperation;
+import kinoko.world.item.InventoryType;
+import kinoko.world.item.Item;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 
@@ -95,7 +98,7 @@ public final class PersonalShop extends MiniRoom {
                     return;
                 }
                 final ItemInfo itemInfo = itemInfoResult.get();
-                if ((item.hasAttribute(ItemAttribute.EQUIP_BINDED) || itemInfo.isQuest() || itemInfo.isTradeBlock()) && !item.isPossibleTrading()) {
+                if (itemInfo.isTradeBlock(item) || itemInfo.isAccountSharable()) {
                     log.error("Tried to put an untradable item into personal shop");
                     user.dispose();
                     return;
