@@ -120,13 +120,29 @@ public interface ScriptManager {
 
     void forceCompleteQuest(int questId);
 
-    String getQRValue(QuestRecordType questRecordType);
+    String getQRValue(int questId);
 
-    boolean hasQRValue(QuestRecordType questRecordType, String value);
+    default String getQRValue(QuestRecordType questRecordType) {
+        return getQRValue(questRecordType.getQuestId());
+    }
 
-    void setQRValue(QuestRecordType questRecordType, String value);
+    boolean hasQRValue(int questId, String value);
 
-    void addQRValue(QuestRecordType questRecordType, String value);
+    default boolean hasQRValue(QuestRecordType questRecordType, String value) {
+        return hasQRValue(questRecordType.getQuestId(), value);
+    }
+
+    void setQRValue(int questId, String value);
+
+    default void setQRValue(QuestRecordType questRecordType, String value) {
+        setQRValue(questRecordType.getQuestId(), value);
+    }
+
+    void addQRValue(int questId, String value);
+
+    default void addQRValue(QuestRecordType questRecordType, String value) {
+        addQRValue(questRecordType.getQuestId(), value);
+    }
 
 
     // WARP METHODS ----------------------------------------------------------------------------------------------------
