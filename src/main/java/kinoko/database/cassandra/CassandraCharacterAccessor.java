@@ -75,6 +75,15 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         }
         cd.setQuestManager(qm);
 
+        final PopularityManager pm = new PopularityManager();
+        
+        final Map<Instant, Integer> popularityRecord = row.getMap(CharacterTable.POPULARITY_RECORD, Instant.class, Integer.class);
+        if (popularityRecord != null) {
+            pm.getRecords().putAll(popularityRecord);
+        }
+
+        cd.setPopularityManager(pm);
+
         final ConfigManager cm = row.get(CharacterTable.CONFIG, ConfigManager.class);
         cd.setConfigManager(cm);
 
