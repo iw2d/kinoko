@@ -73,6 +73,12 @@ public final class PopularityManager {
             return PopularityResult.ERROR_USERNAME;
         }
 
+        // Potential packet edit check
+        // TODO: Logging / autoban?
+        if (provider.getCharacterId() == target.getCharacterId()) {
+            return PopularityResult.ERROR_USERNAME;
+        }
+
         if (provider.getLevel() < 15 || target.getLevel() < 15) {
             return PopularityResult.ERROR_LEVEL;
         }
