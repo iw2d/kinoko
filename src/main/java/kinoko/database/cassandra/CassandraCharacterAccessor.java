@@ -244,6 +244,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
                         .setColumn(CharacterTable.MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
+                        .setColumn(CharacterTable.POPULARITY_RECORD, literal(characterData.getPopularityManager().getRecords(), registry))
                         .setColumn(CharacterTable.MAP_TRANSFER_INFO, literal(characterData.getMapTransferInfo(), registry))
                         .setColumn(CharacterTable.WILD_HUNTER_INFO, literal(characterData.getWildHunterInfo(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
