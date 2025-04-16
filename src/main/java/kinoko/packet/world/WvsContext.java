@@ -13,7 +13,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
-import kinoko.world.user.data.PopularityManager.PopularityResult;
+import kinoko.world.user.data.PopularityResult;
 import kinoko.world.user.data.SingleMacro;
 import kinoko.world.user.data.WildHunterInfo;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -104,49 +104,24 @@ public final class WvsContext {
         return outPacket;
     }
 
-    /**
-     * Constructs an error packet indicating the result of a failed fame interaction.
-     *
-     * @param result the specific {@link FAME_RESULT} indicating why the fame request failed
-     * @return an {@link OutPacket} containing the error code for the fame result
-     */
     public static OutPacket givePopularityResultError(byte result) {
         final OutPacket outPacket = OutPacket.of(OutHeader.GivePopularityResult);
         outPacket.encodeByte(result);
         return outPacket;
     }
 
-    /**
-     * Constructs a success packet that is sent to the provider (the user giving fame) on a successful fame request.
-     * This packet indicates that the fame interaction was successful, and provides relevant information about the target user's fame.
-     * 
-     * @param targetCharacterName the name of the target character who received fame.
-     * @param targetPop the new popularity level of the target character after receiving fame.
-     * @param mode the mode of the fame interaction, typically representing the type of fame (e.g., increment or decrement).
-     * @return an {@link OutPacket} containing the success information for the provider.
-     *         The returned packet includes the status code (success), the target's character name, the fame mode, and the target's popularity.
-     */
     public static OutPacket givePopularityResultProvider(String targetCharacterName, int targetPop, byte mode) {
         final OutPacket outPacket = OutPacket.of(OutHeader.GivePopularityResult);
-        outPacket.encodeByte(PopularityResult.OK_PROVIDER.ordinal());
+        outPacket.encodeByte(PopularityResult.Success.getValue());
         outPacket.encodeString(targetCharacterName);
         outPacket.encodeByte(mode);
         outPacket.encodeInt(targetPop);
         return outPacket;
     }
 
-    /**
-     * Constructs a success packet that is sent to the target (the user receiving fame) on a successful fame request.
-     * This packet informs the target user that their fame has been raised or changed, and includes the provider's character name.
-     * 
-     * @param providerCharacterName the name of the provider character who gave the fame.
-     * @param mode the mode of the fame interaction, typically representing the type of fame (e.g., increment or decrement).
-     * @return an {@link OutPacket} containing the success information for the target.
-     *         The returned packet includes the status code (success), the provider's character name, and the fame mode.
-     */
     public static OutPacket givePopularityResultTarget(String providerCharacterName, byte mode) {
         final OutPacket outPacket = OutPacket.of(OutHeader.GivePopularityResult);
-        outPacket.encodeByte(PopularityResult.OK_TARGET.ordinal());
+        outPacket.encodeByte(PopularityResult.Notify.getValue());
         outPacket.encodeString(providerCharacterName);
         outPacket.encodeByte(mode);
         return outPacket;

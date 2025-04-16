@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+
 /**
  * Unit tests for PopularityManager, validating fame/popularity interaction timing rules.
  */
@@ -27,7 +28,7 @@ public class PopularityManagerTest {
 
         Assertions.assertFalse(pm.hasGivenPopularityToday(), "Expected no popularity given today at first.");
 
-        pm.getRecords().put(now, 1);  // Simulate giving popularity to character ID 1 today
+        pm.getRecords().put(1, now);  // Simulate giving popularity to character ID 1 today
 
         Assertions.assertTrue(pm.hasGivenPopularityToday(), "Expected true after adding today's popularity record.");
     }
@@ -46,7 +47,7 @@ public class PopularityManagerTest {
         Instant now = Instant.now(); // Current time
         Instant past = now.minus(25, ChronoUnit.DAYS); // 25 days ago
 
-        pm.getRecords().put(past, 1);  // Popularity given to character ID 1, 25 days ago
+        pm.getRecords().put(1, past);  // Popularity given to character ID 1, 25 days ago
 
         Assertions.assertTrue(pm.hasGivenPopularityTargetDays(1, 30), "Expected match within 30 days.");
         Assertions.assertFalse(pm.hasGivenPopularityTargetDays(1, 5), "Expected no match within 5 days.");

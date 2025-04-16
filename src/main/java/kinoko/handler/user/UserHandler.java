@@ -694,28 +694,27 @@ public final class UserHandler {
 
         int targetId = inPacket.decodeInt();
         byte mode = inPacket.decodeByte();
-        
+
         PopularityManager popularityManager = user.getCharacterData().getPopularityManager();
 
         User targetUser = user.getField().getUserPool().getById(targetId).orElse(null);
-        
-        PopularityManager.PopularityResult result = popularityManager.popularityResult(
-            user, targetUser
-        );
 
-       if (result != null) {
-           user.write(WvsContext.givePopularityResultError((byte)result.ordinal()));
-           return;
-       }
+        PopularityResult result = popularityManager.popularityResult(
+                user, targetUser);
 
-        targetUser.addPop(( 2 * mode) - 1);
+        if (result != null) {
+            user.write(WvsContext.givePopularityResultError((byte) result.getValue()));
+            return;
+        }
+
+        targetUser.addPop((2 * mode) - 1);
 
         popularityManager.record(targetUser.getCharacterId());
-        
+
         targetUser.write(
-            WvsContext.givePopularityResultTarget(user.getCharacterName(), mode)
-        );
-        user.write(WvsContext.givePopularityResultProvider(targetUser.getCharacterName(), targetUser.getBasicStat().getPop(), mode));
+                WvsContext.givePopularityResultTarget(user.getCharacterName(), mode));
+        user.write(WvsContext.givePopularityResultProvider(targetUser.getCharacterName(),
+                targetUser.getBasicStat().getPop(), mode));
     }
 
     @Handler(InHeader.UserCharacterInfoRequest)

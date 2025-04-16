@@ -77,7 +77,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
         final PopularityManager pm = new PopularityManager();
         
-        final Map<Instant, Integer> popularityRecord = row.getMap(CharacterTable.POPULARITY_RECORD, Instant.class, Integer.class);
+        final Map<Integer, Instant> popularityRecord = row.getMap(CharacterTable.POPULARITY_RECORD, Integer.class, Instant.class);
         if (popularityRecord != null) {
             pm.getRecords().putAll(popularityRecord);
         }
