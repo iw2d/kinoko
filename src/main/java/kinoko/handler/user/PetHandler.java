@@ -79,6 +79,7 @@ public final class PetHandler {
                 }
                 // Create and add pet
                 final Pet pet = Pet.from(user, item);
+                pet.setPosition(user.getField(), user.getX(), user.getY());
                 if (!user.addPet(pet, false)) {
                     log.error("Could not add pet");
                     user.dispose();
