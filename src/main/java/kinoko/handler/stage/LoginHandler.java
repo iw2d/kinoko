@@ -308,6 +308,10 @@ public final class LoginHandler {
         final ConfigManager cm = ConfigManager.defaults();
         characterData.setConfigManager(cm);
 
+        // Initialize Popularity manager
+        final PopularityManager pm = new PopularityManager();
+        characterData.setPopularityManager(pm);
+
         // Initialize MiniGame Records
         final MiniGameRecord mgr = new MiniGameRecord();
         characterData.setMiniGameRecord(mgr);
