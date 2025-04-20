@@ -151,6 +151,7 @@ public final class SkillHandler {
     public static void handleUserSkillCancelRequest(User user, InPacket inPacket) {
         final int skillId = inPacket.decodeInt(); // nSkillID
         if (SkillConstants.isKeydownSkill(skillId)) {
+            user.getField().broadcastPacket(UserRemote.skillCancel(user, skillId));
             return;
         }
         // Remove stat matching skill ID
