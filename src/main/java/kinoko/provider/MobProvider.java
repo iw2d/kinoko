@@ -17,7 +17,7 @@ public final class MobProvider implements WzProvider {
     private static final Map<Integer, Set<Integer>> questCountGroups = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(MOB_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(MOB_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadMobTemplates(wzPackage);
             loadQuestCountGroups(wzPackage);

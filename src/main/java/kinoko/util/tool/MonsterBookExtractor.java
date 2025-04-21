@@ -25,7 +25,7 @@ final class MonsterBookExtractor extends RewardExtractor {
         StringProvider.initialize();
 
         // Load monster book rewards
-        try (final WzReader reader = WzReader.build(StringProvider.STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(StringProvider.STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadMonsterBookRewards(wzPackage);
         } catch (IOException | ProviderError e) {

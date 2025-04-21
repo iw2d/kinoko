@@ -3,7 +3,7 @@ package kinoko.provider;
 import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
-import kinoko.provider.wz.WzReader;
+import kinoko.provider.wz.WzArchiveReader;
 import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -23,7 +23,7 @@ public final class ReactorProvider implements WzProvider {
     private static final Map<Integer, ReactorTemplate> reactorTemplates = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadReactorTemplates(wzPackage);
         } catch (IOException | ProviderError e) {

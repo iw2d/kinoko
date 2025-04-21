@@ -22,7 +22,7 @@ public final class MapProvider implements WzProvider {
     private static int crcConstant;
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadPhysics(wzPackage);
             loadMapInfos(wzPackage);

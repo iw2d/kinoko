@@ -6,7 +6,7 @@ import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SummonInfo;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
-import kinoko.provider.wz.WzReader;
+import kinoko.provider.wz.WzArchiveReader;
 import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -28,7 +28,7 @@ public final class SkillProvider implements WzProvider {
 
     public static void initialize() {
         // Skill.wz
-        try (final WzReader reader = WzReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadSkillInfos(wzPackage);
             loadMobSkills(wzPackage);
@@ -36,7 +36,7 @@ public final class SkillProvider implements WzProvider {
             throw new IllegalArgumentException("Exception caught while loading Skill.wz", e);
         }
         // Morph.wz
-        try (final WzReader reader = WzReader.build(MORPH_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(MORPH_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadMorphInfos(wzPackage);
         } catch (IOException | ProviderError e) {

@@ -63,7 +63,7 @@ abstract class RewardExtractor {
 
         // Load reactor actions
         final Map<Integer, String> reactorActions = new HashMap<>();
-        try (final WzReader reader = WzReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             for (var imageEntry : wzPackage.getDirectory().getImages().entrySet()) {
                 final int reactorId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
@@ -189,9 +189,9 @@ abstract class RewardExtractor {
     }
 
     public static WzImage readImage(Path path) {
-        try (final WzReader reader = WzReader.build(path, new WzReaderConfig(WzConstants.WZ_EMPTY_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(path, new WzReaderConfig(WzConstants.WZ_EMPTY_IV, ServerConstants.GAME_VERSION))) {
             final WzImage image = new WzImage(0);
-            if (!(reader.readProperty(image, reader.getBuffer(0)) instanceof WzListProperty listProperty)) {
+            if (!(reader.readProperty(image) instanceof WzListProperty listProperty)) {
                 throw new WzReaderError("Image property is not a list");
             }
             image.setProperty(listProperty);

@@ -18,7 +18,7 @@ public final class QuestProvider implements WzProvider {
     private static final Map<Integer, QuestInfo> questInfos = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadQuestInfos(wzPackage);
         } catch (IOException | ProviderError e) {
