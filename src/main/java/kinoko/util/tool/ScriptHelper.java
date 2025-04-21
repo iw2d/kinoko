@@ -163,7 +163,7 @@ final class ScriptHelper {
 
 
         // Process quest scripts
-        try (final WzReader reader = WzReader.build(QuestProvider.QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(QuestProvider.QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             final WzImage infoImage = wzPackage.getDirectory().getImages().get("QuestInfo.img");
             final WzImage checkImage = wzPackage.getDirectory().getImages().get("Check.img");

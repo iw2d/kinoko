@@ -14,55 +14,83 @@ import java.util.Arrays;
 public final class WzCrypto {
     public static final int BATCH_SIZE = 1024;
     private final Cipher cipher;
-    private byte[] cipherMask;
+    private byte[] cachedKey;
 
     public WzCrypto(Cipher cipher) {
         this.cipher = cipher;
-        this.cipherMask = new byte[]{};
+
+        if(cipher != null) {
+            final int CACHE_SIZE = 4096 * 4;
+            this.cachedKey = new byte[CACHE_SIZE];
+            for (int i = 0; i < CACHE_SIZE; i += 16) {
+                try {
+                    cipher.update(cachedKey, i, 16, cachedKey, i);
+                } catch (ShortBufferException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public void cryptAscii(byte[] data) {
-        ensureSize(data.length);
+        // Crypt
+        crypt(data);
+
+        // Apply mask
         byte mask = (byte) 0xAA;
+
         for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) (data[i] ^ cipherMask[i] ^ mask);
+            data[i] ^= mask;
             mask++;
         }
     }
 
     public void cryptUnicode(byte[] data) {
-        ensureSize(data.length);
+        crypt(data);
+
         short mask = (short) 0xAAAA;
         for (int i = 0; i < data.length; i += 2) {
-            data[i] = (byte) (data[i] ^ cipherMask[i] ^ (mask & 0xFF));
-            data[i + 1] = (byte) (data[i + 1] ^ cipherMask[i + 1] ^ (mask >> 8));
+            data[i] ^= (byte) ((mask & 0xFF));
+            data[i + 1] ^= (byte) ((mask >> 8));
             mask++;
         }
     }
 
-    private synchronized void ensureSize(int size) {
-        final int curSize = cipherMask.length;
-        if (curSize >= size) {
-            return;
-        }
-        final int newSize = ((size / BATCH_SIZE) + 1) * BATCH_SIZE;
-        final byte[] newMask = new byte[newSize];
 
-        if (cipher != null) {
-            System.arraycopy(cipherMask, 0, newMask, 0, curSize);
-            try {
-                final byte[] block = new byte[16];
-                for (int i = curSize; i < newSize; i += 16) {
-                    cipher.update(block, 0, 16, newMask, i);
+    public void crypt(byte[] data) {
+        if(cipher == null)
+            return;
+
+        // Encrypt(xor) with cache first
+        for (int i = 0; i < data.length; i++) {
+            data[i] ^= cachedKey[i];
+        }
+
+        // If data is remaining after cache, encrypt with cipher
+        if (data.length > cachedKey.length) {
+            final int remaining = data.length - cachedKey.length;
+            //grab last 16 bytes of the key
+            var key = new byte[16];
+            System.arraycopy(cachedKey, cachedKey.length - 16, key, 0, 16);
+            for (int i = 0; i < remaining; i++) {
+                if(i % 16 == 0) {
+                    key = nextKey(key);
                 }
-            } catch (ShortBufferException e) {
-                throw new RuntimeException(e);
+                data[i + cachedKey.length] ^= key[i];
             }
         }
-
-        this.cipherMask = newMask;
     }
 
+
+    private byte[] nextKey(byte[] currentKey) {
+        byte[] key = new byte[16];
+        try {
+            cipher.update(currentKey, 0, 16, key, 0);
+        } catch (ShortBufferException e) {
+            throw new RuntimeException(e);
+        }
+        return key;
+    }
     public static WzCrypto fromIv(byte[] iv) {
         // Empty IV
         if (Arrays.equals(iv, WzConstants.WZ_EMPTY_IV)) {

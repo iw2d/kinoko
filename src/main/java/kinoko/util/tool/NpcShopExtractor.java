@@ -167,9 +167,9 @@ final class NpcShopExtractor {
     }
 
     private static WzImage readImage(Path path) {
-        try (final WzReader reader = WzReader.build(path, new WzReaderConfig(WzConstants.WZ_EMPTY_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(path, new WzReaderConfig(WzConstants.WZ_EMPTY_IV, ServerConstants.GAME_VERSION))) {
             final WzImage image = new WzImage(0);
-            if (!(reader.readProperty(image, reader.getBuffer(0)) instanceof WzListProperty listProperty)) {
+            if (!(reader.readProperty(image) instanceof WzListProperty listProperty)) {
                 throw new WzReaderError("Image property is not a list");
             }
             image.setProperty(listProperty);

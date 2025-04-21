@@ -4,7 +4,7 @@ import kinoko.provider.npc.NpcImitateData;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
-import kinoko.provider.wz.WzReader;
+import kinoko.provider.wz.WzArchiveReader;
 import kinoko.provider.wz.WzReaderConfig;
 import kinoko.provider.wz.property.WzListProperty;
 import kinoko.server.ServerConfig;
@@ -26,7 +26,7 @@ public final class NpcProvider implements WzProvider {
     );
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(NPC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(NPC_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadNpcTemplates(wzPackage);
         } catch (IOException | ProviderError e) {
