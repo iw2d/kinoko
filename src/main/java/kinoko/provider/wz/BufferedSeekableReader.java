@@ -40,11 +40,20 @@ public class BufferedSeekableReader implements Closeable {
         }
         // compact unread bytes to front
         buffer.compact();
-        int bytesRead = input.read(buffer);
-        if (bytesRead == -1) {
-            throw new EOFException("Unexpected end of stream");
+
+
+        // Read until buffer has bytesNeeded atleast or more
+        while (buffer.position() < bytesNeeded) {
+            int bytesRead = input.read(buffer);
+            if (bytesRead == -1) {
+                throw new EOFException("Unexpected end of stream");
+            }
         }
+
+        // flip the buffer to prepare for reading
         buffer.flip();
+
+        // Check if we have enough bytes
         if (buffer.remaining() < bytesNeeded) {
             throw new EOFException("Could not read enough bytes, needed "
                     + bytesNeeded + " but only "
