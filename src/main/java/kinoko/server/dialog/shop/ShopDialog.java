@@ -164,7 +164,7 @@ public final class ShopDialog implements Dialog {
                 }
                 // Compute price and check if user has enough money
                 final int delta = slotMax - item.getQuantity();
-                final long totalPrice = (long) (delta * shopitem.getUnitPrice());
+                final long totalPrice = (long) Math.ceil(delta * shopitem.getUnitPrice());
                 if (totalPrice > GameConstants.MONEY_MAX) {
                     user.write(FieldPacket.shopResult(ShopResultType.RechargeNoMoney)); // You do not have enough mesos.
                     return;
