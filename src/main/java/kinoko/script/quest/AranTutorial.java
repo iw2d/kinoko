@@ -290,7 +290,7 @@ public final class AranTutorial extends ScriptHandler {
     public static void talkHelena(ScriptManager sm) {
         // Athena Pierce (1209000)
         //   Black Road : Ready to Leave (914000100)
-        if (sm.getQRValue(QuestRecordType.AranTutorial).equals("1")) {
+        if (!sm.getQRValue(QuestRecordType.AranTutorial).equals("1")) {
             sm.sayNext("Aran, you're awake! How are you feeling? Hm? You want to know what's been going on?");
             sm.sayBoth("We're almost done preparing for the escape. You don't have to worry. Everyone I could possibly find has boarded the ark, and Shinsoo has agreed to guide the way. We'll head to Victoria Island as soon as we finish the remaining preparations.");
             sm.sayBoth("The other heroes? They've left to fight the Black Mage. They're buying us time to scape. What? You want to fight with them? No! You cant! You're hurt. You must leave with us!");
