@@ -689,6 +689,34 @@ public final class UserHandler {
         user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
     }
 
+    @Handler(InHeader.UserGivePopularityRequest)
+    public static void handleUserGivePopularityRequest(User user, InPacket inPacket) {
+
+        int targetId = inPacket.decodeInt();
+        byte mode = inPacket.decodeByte();
+
+        PopularityManager popularityManager = user.getCharacterData().getPopularityManager();
+
+        User targetUser = user.getField().getUserPool().getById(targetId).orElse(null);
+
+        PopularityResult result = popularityManager.popularityResult(
+                user, targetUser);
+
+        if (result != null) {
+            user.write(WvsContext.givePopularityResultError((byte) result.getValue()));
+            return;
+        }
+
+        targetUser.addPop((2 * mode) - 1);
+
+        popularityManager.record(targetUser.getCharacterId());
+
+        targetUser.write(
+                WvsContext.givePopularityResultTarget(user.getCharacterName(), mode));
+        user.write(WvsContext.givePopularityResultProvider(targetUser.getCharacterName(),
+                targetUser.getBasicStat().getPop(), mode));
+    }
+
     @Handler(InHeader.UserCharacterInfoRequest)
     public static void handleUserCharacterInfoRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
