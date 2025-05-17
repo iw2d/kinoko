@@ -22,7 +22,7 @@ public final class StringProvider implements WzProvider {
     private static final Map<Integer, SkillStringInfo> skillStrings = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             final WzPackage wzPackage = reader.readPackage();
             loadItemNames(wzPackage);
             loadMapNames(wzPackage);

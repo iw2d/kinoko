@@ -17,10 +17,10 @@ final class FieldTransferWhitelist {
     public static final Path EFFECT_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Effect.wz");
 
     public static void main(String[] args) throws IOException {
-        try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             parseFieldObstacles(reader.readPackage()); // Map/Obj/%s.img/%s/%s/%d
         }
-        try (final WzReader reader = WzReader.build(EFFECT_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
+        try (final WzArchiveReader reader = WzArchiveReader.build(EFFECT_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
             parseDirections(reader.readPackage());
         }
     }
