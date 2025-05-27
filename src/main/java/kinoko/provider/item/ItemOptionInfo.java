@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.ItemGrade;
 
@@ -96,15 +96,15 @@ public final class ItemOptionInfo {
         return false;
     }
 
-    public static ItemOptionInfo from(int itemOptionId, WzListProperty itemOptionProp) throws ProviderError {
+    public static ItemOptionInfo from(int itemOptionId, WzProperty itemOptionProp) throws ProviderError {
         int reqLevel = 0;
         ItemOptionType optionType = ItemOptionType.ANY_EQUIP;
-        if (itemOptionProp.get("info") instanceof WzListProperty infoProp) {
+        if (itemOptionProp.get("info") instanceof WzProperty infoProp) {
             reqLevel = WzProvider.getInteger(infoProp.get("reqLevel"), 0);
             optionType = ItemOptionType.getByValue(WzProvider.getInteger(infoProp.get("optionType")));
             assert optionType != null;
         }
-        if (!(itemOptionProp.get("level") instanceof WzListProperty levelList)) {
+        if (!(itemOptionProp.get("level") instanceof WzProperty levelList)) {
             throw new ProviderError("Failed to resolve item option level list");
         }
         return new ItemOptionInfo(itemOptionId, reqLevel, optionType, ItemOptionLevelData.resolveLevelData(levelList));

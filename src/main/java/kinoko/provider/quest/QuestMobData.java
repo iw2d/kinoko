@@ -3,7 +3,7 @@ package kinoko.provider.quest;
 import kinoko.provider.MobProvider;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +35,10 @@ public final class QuestMobData {
         return this.mobId == mobId || MobProvider.getQuestCountGroup(this.mobId).contains(mobId);
     }
 
-    public static List<QuestMobData> resolveMobData(WzListProperty mobList) {
+    public static List<QuestMobData> resolveMobData(WzProperty mobList) {
         final List<QuestMobData> mobs = new ArrayList<>();
         for (var mobEntry : mobList.getItems().entrySet()) {
-            if (!(mobEntry.getValue() instanceof WzListProperty mobProp)) {
+            if (!(mobEntry.getValue() instanceof WzProperty mobProp)) {
                 throw new ProviderError("Failed to resolve quest mob list");
             }
             final int order = Integer.parseInt(mobEntry.getKey());

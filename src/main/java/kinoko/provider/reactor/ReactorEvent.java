@@ -2,7 +2,7 @@ package kinoko.provider.reactor;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Rect;
 
 import java.util.Collections;
@@ -42,7 +42,7 @@ public final class ReactorEvent {
         return itemId;
     }
 
-    public static ReactorEvent from(WzListProperty eventProp) throws ProviderError {
+    public static ReactorEvent from(WzProperty eventProp) throws ProviderError {
         final int type = WzProvider.getInteger(eventProp.get("type"));
         final ReactorEventType eventType = ReactorEventType.getByValue(type);
         if (eventType == null) {
@@ -53,7 +53,7 @@ public final class ReactorEvent {
         final ReactorEvent event = new ReactorEvent(eventType, nextState);
         switch (event.getType()) {
             case SKILL -> {
-                if (!(eventProp.get("activeSkillID") instanceof WzListProperty skillList)) {
+                if (!(eventProp.get("activeSkillID") instanceof WzProperty skillList)) {
                     throw new ProviderError("Failed to resolve reactor event activeSKillID");
                 }
                 final Set<Integer> skills = new HashSet<>();

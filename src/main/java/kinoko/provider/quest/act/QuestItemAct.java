@@ -6,7 +6,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.quest.QuestItemData;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Util;
 import kinoko.world.item.*;
 import kinoko.world.user.User;
@@ -265,7 +265,7 @@ public final class QuestItemAct implements QuestAct {
                 .toList();
     }
 
-    public static QuestItemAct from(int questId, WzListProperty itemList) {
+    public static QuestItemAct from(int questId, WzProperty itemList) {
         final List<QuestItemData> items = QuestItemData.resolveItemData(itemList);
         final List<QuestItemData> choices = QuestItemData.resolveChoiceItemData(itemList);
         return new QuestItemAct(

@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Tuple;
 
 import java.util.ArrayList;
@@ -26,10 +26,10 @@ public final class MobSummonInfo {
         return entries;
     }
 
-    public static MobSummonInfo from(int itemId, WzListProperty mobSummonList) throws ProviderError {
+    public static MobSummonInfo from(int itemId, WzProperty mobSummonList) throws ProviderError {
         final List<Tuple<Integer, Integer>> entries = new ArrayList<>();
         for (var entry : mobSummonList.getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty mobSummonProp)) {
+            if (!(entry.getValue() instanceof WzProperty mobSummonProp)) {
                 throw new ProviderError("Could not resolve mob summon info");
             }
             final int mobId = WzProvider.getInteger(mobSummonProp.get("id"));

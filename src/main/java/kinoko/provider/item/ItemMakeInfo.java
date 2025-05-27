@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Triple;
 import kinoko.util.Tuple;
 import kinoko.world.item.InventoryManager;
@@ -169,7 +169,7 @@ public final class ItemMakeInfo {
         return true;
     }
 
-    public static ItemMakeInfo from(int itemId, int reqJob, WzListProperty prop) throws ProviderError {
+    public static ItemMakeInfo from(int itemId, int reqJob, WzProperty prop) throws ProviderError {
         return new ItemMakeInfo(
                 itemId,
                 reqJob,
@@ -186,8 +186,8 @@ public final class ItemMakeInfo {
         );
     }
 
-    private static List<Tuple<Integer, QuestState>> resolveReqQuest(WzListProperty prop) {
-        if (!(prop.get("reqQuest") instanceof WzListProperty questList)) {
+    private static List<Tuple<Integer, QuestState>> resolveReqQuest(WzProperty prop) {
+        if (!(prop.get("reqQuest") instanceof WzProperty questList)) {
             return List.of();
         }
         final List<Tuple<Integer, QuestState>> reqQuest = new ArrayList<>();
@@ -199,13 +199,13 @@ public final class ItemMakeInfo {
         return Collections.unmodifiableList(reqQuest);
     }
 
-    private static List<Tuple<Integer, Integer>> resolveRecipe(WzListProperty prop) {
-        if (!(prop.get("recipe") instanceof WzListProperty recipeList)) {
+    private static List<Tuple<Integer, Integer>> resolveRecipe(WzProperty prop) {
+        if (!(prop.get("recipe") instanceof WzProperty recipeList)) {
             throw new ProviderError("Could not resolve item make recipe");
         }
         final List<Tuple<Integer, Integer>> recipe = new ArrayList<>();
         for (var entry : recipeList.getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty recipeProp)) {
+            if (!(entry.getValue() instanceof WzProperty recipeProp)) {
                 throw new ProviderError("Could not resolve item make recipe");
             }
             final int itemId = WzProvider.getInteger(recipeProp.get("item"), 0);
@@ -217,13 +217,13 @@ public final class ItemMakeInfo {
         return Collections.unmodifiableList(recipe);
     }
 
-    private static List<Triple<Integer, Integer, Integer>> resolveRandomReward(WzListProperty prop) {
-        if (!(prop.get("randomReward") instanceof WzListProperty rewardList)) {
+    private static List<Triple<Integer, Integer, Integer>> resolveRandomReward(WzProperty prop) {
+        if (!(prop.get("randomReward") instanceof WzProperty rewardList)) {
             return List.of();
         }
         final List<Triple<Integer, Integer, Integer>> randomReward = new ArrayList<>();
         for (var entry : rewardList.getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty rewardProp)) {
+            if (!(entry.getValue() instanceof WzProperty rewardProp)) {
                 throw new ProviderError("Could not resolve item make reward");
             }
             randomReward.add(Triple.of(

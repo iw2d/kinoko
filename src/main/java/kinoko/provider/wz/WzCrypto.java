@@ -13,15 +13,10 @@ import java.util.Arrays;
 
 public final class WzCrypto {
     public static final int BATCH_SIZE = 1024;
-    private final Cipher cipher;
-    private byte[] cipherMask;
+    private static final Cipher cipher = getCipher(WzConstants.WZ_GMS_IV);
+    private static byte[] cipherMask = new byte[]{};
 
-    public WzCrypto(Cipher cipher) {
-        this.cipher = cipher;
-        this.cipherMask = new byte[]{};
-    }
-
-    public void cryptAscii(byte[] data) {
+    public static void cryptAscii(byte[] data) {
         ensureSize(data.length);
         byte mask = (byte) 0xAA;
         for (int i = 0; i < data.length; i++) {
@@ -30,7 +25,7 @@ public final class WzCrypto {
         }
     }
 
-    public void cryptUnicode(byte[] data) {
+    public static void cryptUnicode(byte[] data) {
         ensureSize(data.length);
         short mask = (short) 0xAAAA;
         for (int i = 0; i < data.length; i += 2) {
@@ -40,7 +35,7 @@ public final class WzCrypto {
         }
     }
 
-    private synchronized void ensureSize(int size) {
+    private static synchronized void ensureSize(int size) {
         final int curSize = cipherMask.length;
         if (curSize >= size) {
             return;
@@ -59,14 +54,13 @@ public final class WzCrypto {
                 throw new RuntimeException(e);
             }
         }
-
-        this.cipherMask = newMask;
+        cipherMask = newMask;
     }
 
-    public static WzCrypto fromIv(byte[] iv) {
+    private static Cipher getCipher(byte[] iv) {
         // Empty IV
         if (Arrays.equals(iv, WzConstants.WZ_EMPTY_IV)) {
-            return new WzCrypto(null);
+            return null;
         }
 
         // Initialize key
@@ -87,7 +81,7 @@ public final class WzCrypto {
         try {
             final Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, key, ivParam);
-            return new WzCrypto(cipher);
+            return cipher;
         } catch (InvalidAlgorithmParameterException | NoSuchPaddingException |
                  NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);

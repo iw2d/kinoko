@@ -1,7 +1,7 @@
 package kinoko.provider.map;
 
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class LadderRope {
     private final int sn;
@@ -63,7 +63,7 @@ public final class LadderRope {
                 '}';
     }
 
-    public static LadderRope from(int sn, WzListProperty ladderRopeProp) {
+    public static LadderRope from(int sn, WzProperty ladderRopeProp) {
         return new LadderRope(
                 sn,
                 WzProvider.getInteger(ladderRopeProp.get("l")), // bLadder

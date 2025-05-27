@@ -2,7 +2,7 @@ package kinoko.provider.quest;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 import java.util.*;
 
@@ -41,13 +41,13 @@ public final class QuestSkillData {
         return jobs;
     }
 
-    public static List<QuestSkillData> resolveSkillData(WzListProperty skillList) {
+    public static List<QuestSkillData> resolveSkillData(WzProperty skillList) {
         final List<QuestSkillData> skills = new ArrayList<>();
         for (var skillEntry : skillList.getItems().entrySet()) {
-            if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
+            if (!(skillEntry.getValue() instanceof WzProperty skillProp)) {
                 throw new ProviderError("Failed to resolve quest skill list");
             }
-            if (!(skillProp.get("job") instanceof WzListProperty jobList)) {
+            if (!(skillProp.get("job") instanceof WzProperty jobList)) {
                 throw new ProviderError("Failed to resolve quest skill job list");
             }
             final Set<Integer> jobs = new HashSet<>();

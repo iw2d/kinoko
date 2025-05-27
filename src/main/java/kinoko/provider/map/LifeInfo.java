@@ -1,6 +1,6 @@
 package kinoko.provider.map;
 
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class LifeInfo {
     private final LifeType lifeType;
@@ -89,7 +89,7 @@ public final class LifeInfo {
                 "mobTime=" + mobTime + ']';
     }
 
-    public static LifeInfo from(LifeType lifeType, WzListProperty lifeProp) {
+    public static LifeInfo from(LifeType lifeType, WzProperty lifeProp) {
         return new LifeInfo(
                 lifeType,
                 Integer.parseInt(lifeProp.get("id")),

@@ -2,7 +2,7 @@ package kinoko.provider.skill;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public final class SkillStringInfo {
         return hMap;
     }
 
-    public static SkillStringInfo from(WzListProperty stringProp) throws ProviderError {
+    public static SkillStringInfo from(WzProperty stringProp) throws ProviderError {
         final String name = WzProvider.getString(stringProp.get("name"));
         final String desc = WzProvider.getString(stringProp.get("desc"));
         final String h = WzProvider.getString(stringProp.get("h"), "");

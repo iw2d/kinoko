@@ -1,7 +1,7 @@
 package kinoko.provider;
 
-import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzVectorProperty;
+import kinoko.provider.wz.serialize.WzProperty;
+import kinoko.provider.wz.serialize.WzVector;
 import kinoko.util.Rect;
 
 public interface WzProvider {
@@ -67,9 +67,9 @@ public interface WzProvider {
         return defaultValue;
     }
 
-    static Rect getRect(WzListProperty prop) {
-        final WzVectorProperty lt = prop.get("lt");
-        final WzVectorProperty rb = prop.get("rb");
+    static Rect getRect(WzProperty prop) {
+        final WzVector lt = prop.get("lt");
+        final WzVector rb = prop.get("rb");
         return Rect.of(
                 lt.getX(),
                 lt.getY(),

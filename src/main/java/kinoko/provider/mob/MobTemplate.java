@@ -3,9 +3,9 @@ package kinoko.provider.mob;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.skill.ElementAttribute;
-import kinoko.provider.wz.property.WzCanvasProperty;
-import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzUolProperty;
+import kinoko.provider.wz.serialize.WzCanvas;
+import kinoko.provider.wz.serialize.WzProperty;
+import kinoko.provider.wz.serialize.WzUol;
 import kinoko.util.Util;
 
 import java.util.*;
@@ -249,7 +249,7 @@ public final class MobTemplate {
                 '}';
     }
 
-    public static MobTemplate from(int mobId, WzListProperty mobProp, WzListProperty infoProp) throws ProviderError {
+    public static MobTemplate from(int mobId, WzProperty mobProp, WzProperty infoProp) throws ProviderError {
         int level = 0;
         int exp = 0;
         int maxHP = 0;
@@ -282,8 +282,8 @@ public final class MobTemplate {
         for (var entry : mobProp.getItems().entrySet()) {
             if (entry.getKey().startsWith("attack")) {
                 final int attackIndex = Integer.parseInt(entry.getKey().replace("attack", "")) - 1;
-                if (!(entry.getValue() instanceof WzListProperty attackProp) ||
-                        !(attackProp.get("info") instanceof WzListProperty attackInfoProp)) {
+                if (!(entry.getValue() instanceof WzProperty attackProp) ||
+                        !(attackProp.get("info") instanceof WzProperty attackInfoProp)) {
                     throw new ProviderError("Failed to resolve attack info for mob : %d", mobId);
                 }
                 int skillId = 0;
@@ -400,11 +400,11 @@ public final class MobTemplate {
                     onlyNormalAttack = WzProvider.getInteger(infoEntry.getValue()) != 0;
                 }
                 case "skill" -> {
-                    if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
+                    if (!(infoEntry.getValue() instanceof WzProperty skillEntries)) {
                         throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
                     }
                     for (var skillEntry : skillEntries.getItems().entrySet()) {
-                        if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
+                        if (!(skillEntry.getValue() instanceof WzProperty skillProp)) {
                             throw new ProviderError("Failed to resolve mob skills for mob : %d", mobId);
                         }
                         final int skillId = WzProvider.getInteger(skillProp.get("skill"));
@@ -429,7 +429,7 @@ public final class MobTemplate {
                     }
                 }
                 case "damagedBySelectedSkill" -> {
-                    if (!(infoEntry.getValue() instanceof WzListProperty skillEntries)) {
+                    if (!(infoEntry.getValue() instanceof WzProperty skillEntries)) {
                         throw new ProviderError("Failed to resolve damagedBySelectedSkill for mob : %d", mobId);
                     }
                     for (var skillEntry : skillEntries.getItems().entrySet()) {
@@ -438,7 +438,7 @@ public final class MobTemplate {
                     }
                 }
                 case "revive" -> {
-                    if (!(infoEntry.getValue() instanceof WzListProperty reviveList)) {
+                    if (!(infoEntry.getValue() instanceof WzProperty reviveList)) {
                         throw new ProviderError("Failed to resolve revives for mob : %d", mobId);
                     }
                     for (var reviveEntry : reviveList.getItems().entrySet()) {
@@ -457,7 +457,7 @@ public final class MobTemplate {
             // Death animation for leprechaun is broken
             reviveDelay = 1440;
         } else if (!revives.isEmpty()) {
-            if (!(mobProp.get("die1") instanceof WzListProperty dieAnimationProp)) {
+            if (!(mobProp.get("die1") instanceof WzProperty dieAnimationProp)) {
                 throw new ProviderError("Failed to resolve revive delay for mob : %d", mobId);
             }
             reviveDelay += getAnimationDelay(mobId, dieAnimationProp);
@@ -496,7 +496,7 @@ public final class MobTemplate {
         );
     }
 
-    private static int getAnimationDelay(int mobId, WzListProperty animationProp) {
+    private static int getAnimationDelay(int mobId, WzProperty animationProp) {
         // Compute frame delays
         int animationDelay = 0;
         final Map<String, Integer> frameDelays = new HashMap<>();
@@ -506,17 +506,17 @@ public final class MobTemplate {
             if (!Util.isInteger(key)) {
                 continue; // speak
             }
-            if (dieFrameEntry.getValue() instanceof WzUolProperty dieUolProp) {
+            if (dieFrameEntry.getValue() instanceof WzUol dieUolProp) {
                 if (!Util.isInteger(dieUolProp.getUol())) {
                     throw new ProviderError("Found relative UOL while resolving revive delay for mob : %d", mobId); // pain to implement
                 }
                 frameUols.add(dieUolProp.getUol());
                 continue;
             }
-            if (!(dieFrameEntry.getValue() instanceof WzCanvasProperty dieCanvasProp)) {
+            if (!(dieFrameEntry.getValue() instanceof WzCanvas dieCanvasProp)) {
                 throw new ProviderError("Failed to resolve die animation frame for mob : %d", mobId);
             }
-            final int delay = WzProvider.getInteger(dieCanvasProp.getProperties().get("delay"), 0);
+            final int delay = WzProvider.getInteger(dieCanvasProp.getProperty().get("delay"), 0);
             frameDelays.put(key, delay);
             animationDelay += delay;
         }

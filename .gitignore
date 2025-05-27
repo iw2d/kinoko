@@ -41,5 +41,5 @@ build/
 .idea/
 
 ### Project ###
-wz/
-json/
+/wz/
+/json/
