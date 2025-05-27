@@ -1,7 +1,7 @@
 package kinoko.provider.quest.check;
 
 import kinoko.provider.quest.QuestItemData;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
@@ -52,7 +52,7 @@ public final class QuestItemCheck implements QuestCheck {
                 .sum();
     }
 
-    public static QuestItemCheck from(WzListProperty itemList) {
+    public static QuestItemCheck from(WzProperty itemList) {
         final List<QuestItemData> items = QuestItemData.resolveItemData(itemList);
         return new QuestItemCheck(
                 Collections.unmodifiableList(items)

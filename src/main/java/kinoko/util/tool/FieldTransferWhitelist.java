@@ -2,10 +2,10 @@ package kinoko.util.tool;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.WzDirectory;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 import kinoko.util.Tuple;
 
 import java.io.IOException;
@@ -17,19 +17,19 @@ final class FieldTransferWhitelist {
     public static final Path EFFECT_WZ = Path.of(ServerConfig.WZ_DIRECTORY, "Effect.wz");
 
     public static void main(String[] args) throws IOException {
-        try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            parseFieldObstacles(reader.readPackage()); // Map/Obj/%s.img/%s/%s/%d
+        try (final WzPackage source = WzPackage.from(MAP_WZ)) {
+            parseFieldObstacles(source); // Map/Obj/%s.img/%s/%s/%d
         }
-        try (final WzReader reader = WzReader.build(EFFECT_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            parseDirections(reader.readPackage());
+        try (final WzPackage source = WzPackage.from(EFFECT_WZ)) {
+            parseDirections(source);
         }
     }
 
     private static void parseFieldObstacles(WzPackage source) throws ProviderError {
         // Determine which objects are used in which maps
         final Map<Integer, Set<String>> objectMappings = new HashMap<>(); // mapId -> object identifiers ("oS/l0/l1/l2")
-        final Map<Integer, Tuple<Integer, WzListProperty>> linkedMaps = new HashMap<>(); // mapId -> link, info
-        if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
+        final Map<Integer, Tuple<Integer, WzProperty>> linkedMaps = new HashMap<>(); // mapId -> link, info
+        if (!(source.getItem("Map") instanceof WzDirectory mapDirectory)) {
             throw new ProviderError("Could not resolve Map.wz/Map");
         }
         for (var dirEntry : mapDirectory.getDirectories().entrySet()) {
@@ -40,7 +40,7 @@ final class FieldTransferWhitelist {
             for (var mapEntry : dirEntry.getValue().getImages().entrySet()) {
                 final String imageName = mapEntry.getKey();
                 final int mapId = Integer.parseInt(imageName.replace(".img", ""));
-                if (!(mapEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+                if (!(mapEntry.getValue().getItem("info") instanceof WzProperty infoProp)) {
                     throw new ProviderError("Failed to resolve info property");
                 }
                 if (infoProp.getItems().containsKey("link")) {
@@ -49,14 +49,14 @@ final class FieldTransferWhitelist {
                 }
                 final Set<String> objectIds = new HashSet<>();
                 for (int layerId = 0; layerId <= 7; layerId++) {
-                    if (!(mapEntry.getValue().getProperty().get(String.valueOf(layerId)) instanceof WzListProperty layerProp)) {
+                    if (!(mapEntry.getValue().getItem(String.valueOf(layerId)) instanceof WzProperty layerProp)) {
                         throw new ProviderError("Failed to resolve layer ID : %d", layerId);
                     }
-                    if (!(layerProp.get("obj") instanceof WzListProperty objList)) {
+                    if (!(layerProp.get("obj") instanceof WzProperty objList)) {
                         continue;
                     }
                     for (var objEntry : objList.getItems().entrySet()) {
-                        if (!(objEntry.getValue() instanceof WzListProperty objProp)) {
+                        if (!(objEntry.getValue() instanceof WzProperty objProp)) {
                             throw new ProviderError("Failed to resolve object property");
                         }
                         final String objectId = String.format("%s/%s/%s/%s",
@@ -83,25 +83,25 @@ final class FieldTransferWhitelist {
 //        }
         // Parse Obj directory to find obstacle objects with targetField node
         final Map<String, Integer> obstacleWarps = new HashMap<>(); // object id -> targetField ID
-        if (!(source.getDirectory().getDirectories().get("Obj") instanceof WzDirectory objDirectory)) {
+        if (!(source.getItem("Obj") instanceof WzDirectory objDirectory)) {
             throw new ProviderError("Could not resolve Map.wz/Map");
         }
         for (var imageEntry : objDirectory.getImages().entrySet()) {
             final String oS = imageEntry.getKey().replace(".img", "");
             for (var l0Entry : imageEntry.getValue().getProperty().getItems().entrySet()) {
                 final String l0 = l0Entry.getKey();
-                if (!(l0Entry.getValue() instanceof WzListProperty l0Prop)) {
+                if (!(l0Entry.getValue() instanceof WzProperty l0Prop)) {
                     throw new ProviderError("Failed to resolve l0 property");
                 }
                 for (var l1Entry : l0Prop.getItems().entrySet()) {
                     final String l1 = l1Entry.getKey();
-                    if (!(l1Entry.getValue() instanceof WzListProperty l1Prop)) {
+                    if (!(l1Entry.getValue() instanceof WzProperty l1Prop)) {
                         // throw new ProviderError("Failed to resolve l1 property");
                         continue;
                     }
                     for (var l2Entry : l1Prop.getItems().entrySet()) {
                         final String l2 = l2Entry.getKey();
-                        if (!(l2Entry.getValue() instanceof WzListProperty l2Prop)) {
+                        if (!(l2Entry.getValue() instanceof WzProperty l2Prop)) {
                             // throw new ProviderError("Failed to resolve l2 property");
                             continue;
                         }
@@ -143,22 +143,22 @@ final class FieldTransferWhitelist {
             if (!imageName.startsWith("Direction")) {
                 continue;
             }
-            for (var groupEntry : imageEntry.getValue().getProperty().getItems().entrySet()) {
+            for (var groupEntry : imageEntry.getValue().getItems().entrySet()) {
                 final String groupName = groupEntry.getKey();
                 if (groupName.equals("effect") || groupName.equals("sound")) {
                     continue;
                 }
-                if (!(groupEntry.getValue() instanceof WzListProperty sceneList)) {
+                if (!(groupEntry.getValue() instanceof WzProperty sceneList)) {
                     throw new ProviderError("Could not resolve scene list");
                 }
                 for (var sceneEntry : sceneList.getItems().entrySet()) {
                     final String sceneName = sceneEntry.getKey();
-                    if (!(sceneEntry.getValue() instanceof WzListProperty nodeList)) {
+                    if (!(sceneEntry.getValue() instanceof WzProperty nodeList)) {
                         throw new ProviderError("Could not resolve node list");
                     }
                     final String effectPath = String.format("Effect/%s/%s/%s", imageName, groupName, sceneName);
                     for (var nodeEntry : nodeList.getItems().entrySet()) {
-                        if (!(nodeEntry.getValue() instanceof WzListProperty nodeProp)) {
+                        if (!(nodeEntry.getValue() instanceof WzProperty nodeProp)) {
                             throw new ProviderError("Could not resolve node prop");
                         }
                         final int type = WzProvider.getInteger(nodeProp.get("type"));

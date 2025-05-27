@@ -5,7 +5,7 @@ import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.quest.act.*;
 import kinoko.provider.quest.check.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
 import kinoko.world.quest.QuestManager;
@@ -280,7 +280,7 @@ public final class QuestInfo {
         return false;
     }
 
-    public static QuestInfo from(int questId, WzListProperty questInfo, WzListProperty questAct, WzListProperty questCheck) throws ProviderError {
+    public static QuestInfo from(int questId, WzProperty questInfo, WzProperty questAct, WzProperty questCheck) throws ProviderError {
         String questName = "";
         String questParent = "";
         boolean autoStart = false;
@@ -302,7 +302,7 @@ public final class QuestInfo {
             }
         }
         // extract nextQuest from Act.img/%d/1
-        final int nextQuest = WzProvider.getInteger(((WzListProperty) questAct.get("1")).getItems().get("nextQuest"), 0);
+        final int nextQuest = WzProvider.getInteger(((WzProperty) questAct.get("1")).getItems().get("nextQuest"), 0);
         return new QuestInfo(
                 questId,
                 questName,
@@ -318,13 +318,13 @@ public final class QuestInfo {
         );
     }
 
-    private static List<QuestAct> resolveQuestActs(int questId, WzListProperty actProps) {
+    private static List<QuestAct> resolveQuestActs(int questId, WzProperty actProps) {
         final List<QuestAct> questActs = new ArrayList<>();
         for (var entry : actProps.getItems().entrySet()) {
             final String actType = entry.getKey();
             switch (actType) {
                 case "item" -> {
-                    if (!(entry.getValue() instanceof WzListProperty itemList)) {
+                    if (!(entry.getValue() instanceof WzProperty itemList)) {
                         throw new ProviderError("Failed to resolve quest act item list");
                     }
                     questActs.add(QuestItemAct.from(questId, itemList));
@@ -339,7 +339,7 @@ public final class QuestInfo {
                     questActs.add(new QuestPopAct(WzProvider.getInteger(entry.getValue())));
                 }
                 case "sp" -> {
-                    if (!(entry.getValue() instanceof WzListProperty spList)) {
+                    if (!(entry.getValue() instanceof WzProperty spList)) {
                         throw new ProviderError("Failed to resolve quest act sp list");
                     }
                     questActs.add(QuestSpAct.from(spList));
@@ -348,7 +348,7 @@ public final class QuestInfo {
                     questActs.add(new QuestInfoAct(questId, WzProvider.getString(entry.getValue())));
                 }
                 case "skill" -> {
-                    if (!(entry.getValue() instanceof WzListProperty skillList)) {
+                    if (!(entry.getValue() instanceof WzProperty skillList)) {
                         throw new ProviderError("Failed to resolve quest act skill list");
                     }
                     if (questId == 6034) {
@@ -374,25 +374,25 @@ public final class QuestInfo {
         return questActs;
     }
 
-    private static List<QuestCheck> resolveQuestChecks(int questId, WzListProperty checkProps) {
+    private static List<QuestCheck> resolveQuestChecks(int questId, WzProperty checkProps) {
         final List<QuestCheck> questChecks = new ArrayList<>();
         for (var entry : checkProps.getItems().entrySet()) {
             final String checkType = entry.getKey();
             switch (checkType) {
                 case "item" -> {
-                    if (!(entry.getValue() instanceof WzListProperty itemList)) {
+                    if (!(entry.getValue() instanceof WzProperty itemList)) {
                         throw new ProviderError("Failed to resolve quest check item list");
                     }
                     questChecks.add(QuestItemCheck.from(itemList));
                 }
                 case "mob" -> {
-                    if (!(entry.getValue() instanceof WzListProperty mobList)) {
+                    if (!(entry.getValue() instanceof WzProperty mobList)) {
                         throw new ProviderError("Failed to resolve quest check mob list");
                     }
                     questChecks.add(QuestMobCheck.from(questId, mobList));
                 }
                 case "job" -> {
-                    if (!(entry.getValue() instanceof WzListProperty jobList)) {
+                    if (!(entry.getValue() instanceof WzProperty jobList)) {
                         throw new ProviderError("Failed to resolve quest check job list");
                     }
                     questChecks.add(QuestJobCheck.from(jobList));
@@ -421,14 +421,14 @@ public final class QuestInfo {
                     questChecks.add(QuestDateCheck.from(dateString, isStart));
                 }
                 case "dayOfWeek" -> {
-                    if (!(entry.getValue() instanceof WzListProperty dayOfWeekList)) {
+                    if (!(entry.getValue() instanceof WzProperty dayOfWeekList)) {
                         throw new ProviderError("Failed to resolve quest day of week list");
                     }
                     questChecks.add(QuestDayOfWeekCheck.from(dayOfWeekList));
                 }
                 case "infoex" -> {
                     final int infoQuestId = WzProvider.getInteger(checkProps.get("infoNumber"), questId);
-                    if (!(entry.getValue() instanceof WzListProperty exList)) {
+                    if (!(entry.getValue() instanceof WzProperty exList)) {
                         throw new ProviderError("Failed to resolve quest check ex list");
                     }
                     questChecks.add(QuestExCheck.from(infoQuestId, exList));

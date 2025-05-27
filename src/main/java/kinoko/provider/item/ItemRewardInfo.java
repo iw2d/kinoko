@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
 
@@ -36,10 +36,10 @@ public final class ItemRewardInfo {
         return true;
     }
 
-    public static ItemRewardInfo from(int itemId, WzListProperty rewardList) throws ProviderError {
+    public static ItemRewardInfo from(int itemId, WzProperty rewardList) throws ProviderError {
         final List<ItemRewardEntry> entries = new ArrayList<>();
         for (var entry : rewardList.getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty rewardProp)) {
+            if (!(entry.getValue() instanceof WzProperty rewardProp)) {
                 throw new ProviderError("Failed to resolve reward prop");
             }
             entries.add(new ItemRewardEntry(

@@ -2,8 +2,8 @@ package kinoko.provider.skill;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
-import kinoko.provider.wz.property.WzVectorProperty;
+import kinoko.provider.wz.serialize.WzProperty;
+import kinoko.provider.wz.serialize.WzVector;
 import kinoko.util.Rect;
 
 public final class SummonedAttackInfo {
@@ -59,16 +59,16 @@ public final class SummonedAttackInfo {
                 '}';
     }
 
-    public static SummonedAttackInfo from(WzListProperty attackProp) {
+    public static SummonedAttackInfo from(WzProperty attackProp) {
         // CSummonedBase::LoadAttackInfo
-        if (!(attackProp.get("range") instanceof WzListProperty rangeProp)) {
+        if (!(attackProp.get("range") instanceof WzProperty rangeProp)) {
             throw new ProviderError("Could not resolve summoned attack range");
         }
         boolean sp = false;
         int spX = 0;
         int spY = 0;
         int range = 0;
-        if (rangeProp.get("sp") instanceof WzVectorProperty spProp) {
+        if (rangeProp.get("sp") instanceof WzVector spProp) {
             sp = true;
             spX = spProp.getX();
             spY = spProp.getY();

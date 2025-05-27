@@ -1,7 +1,7 @@
 package kinoko.provider.quest.check;
 
 import kinoko.provider.quest.QuestMobData;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.quest.QuestRecord;
 import kinoko.world.user.User;
@@ -41,7 +41,7 @@ public final class QuestMobCheck implements QuestCheck {
         return qrValue.equals(requiredValue);
     }
 
-    public static QuestMobCheck from(int questId, WzListProperty mobList) {
+    public static QuestMobCheck from(int questId, WzProperty mobList) {
         final List<QuestMobData> mobs = QuestMobData.resolveMobData(mobList);
         return new QuestMobCheck(
                 questId,

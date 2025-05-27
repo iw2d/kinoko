@@ -2,7 +2,7 @@ package kinoko.provider.skill;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Crc32;
 import kinoko.util.Rect;
 import kinoko.world.field.summoned.SummonedActionType;
@@ -197,22 +197,22 @@ public final class SkillInfo {
                 '}';
     }
 
-    public static SkillInfo from(int skillId, WzListProperty skillProp) throws ProviderError {
-        if (skillProp.get("level") instanceof WzListProperty) {
+    public static SkillInfo from(int skillId, WzProperty skillProp) throws ProviderError {
+        if (skillProp.get("level") instanceof WzProperty) {
             return fromStatic(skillId, skillProp);
         } else {
             return fromComputed(skillId, skillProp);
         }
     }
 
-    private static SkillInfo fromStatic(int skillId, WzListProperty skillProp) throws ProviderError {
+    private static SkillInfo fromStatic(int skillId, WzProperty skillProp) throws ProviderError {
         final Map<SkillStat, Map<Integer, Integer>> statMap = new EnumMap<>(SkillStat.class);
         final Map<Integer, Rect> rectMap = new HashMap<>();
         ActionType statAction = null;
         int maxLevel = 0;
-        if (skillProp.get("level") instanceof WzListProperty levelProps) {
+        if (skillProp.get("level") instanceof WzProperty levelProps) {
             for (int slv = 1; slv < Integer.MAX_VALUE; slv++) {
-                if (!(levelProps.get(String.valueOf(slv)) instanceof WzListProperty statProp)) {
+                if (!(levelProps.get(String.valueOf(slv)) instanceof WzProperty statProp)) {
                     maxLevel = slv - 1;
                     break;
                 }
@@ -278,12 +278,12 @@ public final class SkillInfo {
         );
     }
 
-    private static SkillInfo fromComputed(int skillId, WzListProperty skillProp) throws ProviderError {
+    private static SkillInfo fromComputed(int skillId, WzProperty skillProp) throws ProviderError {
         final Map<SkillStat, SkillExpression> expressions = new EnumMap<>(SkillStat.class);
         ActionType statAction = null;
         Rect rect = null;
         int maxLevel = 0;
-        if (skillProp.get("common") instanceof WzListProperty commonProps) {
+        if (skillProp.get("common") instanceof WzProperty commonProps) {
             for (var entry : commonProps.getItems().entrySet()) {
                 final SkillStat stat = SkillStat.fromName(entry.getKey());
                 switch (stat) {
@@ -342,9 +342,9 @@ public final class SkillInfo {
                 summonedAttack);
     }
 
-    private static List<Integer> resolvePsdSkills(WzListProperty skillProp) {
+    private static List<Integer> resolvePsdSkills(WzProperty skillProp) {
         final List<Integer> psdSkills = new ArrayList<>();
-        if (skillProp.get("psdSkill") instanceof WzListProperty psdProp) {
+        if (skillProp.get("psdSkill") instanceof WzProperty psdProp) {
             for (var entry : psdProp.getItems().entrySet()) {
                 psdSkills.add(Integer.parseInt(entry.getKey()));
             }
@@ -352,9 +352,9 @@ public final class SkillInfo {
         return psdSkills;
     }
 
-    private static List<ActionType> resolveAction(WzListProperty skillProp) {
+    private static List<ActionType> resolveAction(WzProperty skillProp) {
         final List<ActionType> action = new ArrayList<>();
-        if (skillProp.get("action") instanceof WzListProperty actionProp) {
+        if (skillProp.get("action") instanceof WzProperty actionProp) {
             for (var entry : actionProp.getItems().entrySet()) {
                 action.add(ActionType.getByName(WzProvider.getString(entry.getValue())));
             }
@@ -362,7 +362,7 @@ public final class SkillInfo {
         return action;
     }
 
-    private static ElementAttribute resolveElemAttr(WzListProperty skillProp) throws ProviderError {
+    private static ElementAttribute resolveElemAttr(WzProperty skillProp) throws ProviderError {
         final String elemAttrString = skillProp.get("elemAttr");
         if (elemAttrString != null) {
             if (elemAttrString.length() != 1) {
@@ -374,12 +374,12 @@ public final class SkillInfo {
         }
     }
 
-    private static Map<SummonedActionType, SummonedAttackInfo> resolveSummonedAttack(WzListProperty skillProp) {
+    private static Map<SummonedActionType, SummonedAttackInfo> resolveSummonedAttack(WzProperty skillProp) {
         final Map<SummonedActionType, SummonedAttackInfo> summonedAttack = new EnumMap<>(SummonedActionType.class);
-        if (skillProp.get("summon") instanceof WzListProperty summonProp) {
+        if (skillProp.get("summon") instanceof WzProperty summonProp) {
             for (var summonEntry : summonProp.getItems().entrySet()) {
-                if (!(summonEntry.getValue() instanceof WzListProperty attackProp) ||
-                        !(attackProp.get("info") instanceof WzListProperty infoProp)) {
+                if (!(summonEntry.getValue() instanceof WzProperty attackProp) ||
+                        !(attackProp.get("info") instanceof WzProperty infoProp)) {
                     continue;
                 }
                 final SummonedActionType actionType = SummonedActionType.getByName(summonEntry.getKey());

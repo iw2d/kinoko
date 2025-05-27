@@ -2,7 +2,7 @@ package kinoko.provider.map;
 
 import kinoko.provider.MapProvider;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Crc32;
 import kinoko.util.Rect;
 
@@ -237,9 +237,9 @@ public final class MapInfo {
                 '}';
     }
 
-    public static MapInfo from(int mapId, WzListProperty infoProp, List<Rect> area, List<Foothold> foothold, List<LadderRope> ladderRope, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
+    public static MapInfo from(int mapId, WzProperty infoProp, List<Rect> area, List<Foothold> foothold, List<LadderRope> ladderRope, List<LifeInfo> life, List<PortalInfo> portal, List<ReactorInfo> reactor, boolean clock) {
         final List<Integer> allowedItems = new ArrayList<>();
-        if (infoProp.get("allowedItem") instanceof WzListProperty allowedItemList) {
+        if (infoProp.get("allowedItem") instanceof WzProperty allowedItemList) {
             for (var entry : allowedItemList.getItems().entrySet()) {
                 allowedItems.add(WzProvider.getInteger(entry.getValue()));
             }

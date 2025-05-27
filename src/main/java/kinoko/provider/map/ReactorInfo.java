@@ -1,6 +1,6 @@
 package kinoko.provider.map;
 
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class ReactorInfo {
     private final int templateId;
@@ -54,7 +54,7 @@ public final class ReactorInfo {
                 "reactorTime=" + reactorTime + ']';
     }
 
-    public static ReactorInfo from(WzListProperty reactorProp) {
+    public static ReactorInfo from(WzProperty reactorProp) {
         return new ReactorInfo(
                 Integer.parseInt(reactorProp.get("id")),
                 reactorProp.get("name"),

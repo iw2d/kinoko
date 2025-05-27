@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -20,11 +20,11 @@ public final class ItemOptionLevelData {
         return stats;
     }
 
-    public static Map<Integer, ItemOptionLevelData> resolveLevelData(WzListProperty levelList) throws ProviderError {
+    public static Map<Integer, ItemOptionLevelData> resolveLevelData(WzProperty levelList) throws ProviderError {
         final Map<Integer, ItemOptionLevelData> levelData = new HashMap<>();
         for (var levelEntry : levelList.getItems().entrySet()) {
             final int level = Integer.parseInt(levelEntry.getKey());
-            if (!(levelEntry.getValue() instanceof WzListProperty levelProp)) {
+            if (!(levelEntry.getValue() instanceof WzProperty levelProp)) {
                 throw new ProviderError("Failed to resolve item option level prop");
             }
             levelData.put(level, ItemOptionLevelData.from(levelProp));
@@ -32,7 +32,7 @@ public final class ItemOptionLevelData {
         return Collections.unmodifiableMap(levelData);
     }
 
-    public static ItemOptionLevelData from(WzListProperty levelProp) throws ProviderError {
+    public static ItemOptionLevelData from(WzProperty levelProp) throws ProviderError {
         final Map<ItemOptionStat, Integer> stats = new EnumMap<>(ItemOptionStat.class);
         for (var propEntry : levelProp.getItems().entrySet()) {
             if (ItemOptionStat.isIgnored(propEntry.getKey())) {

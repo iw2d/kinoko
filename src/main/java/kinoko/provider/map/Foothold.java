@@ -1,7 +1,7 @@
 package kinoko.provider.map;
 
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.util.Rect;
 
 import java.util.Objects;
@@ -153,7 +153,7 @@ public final class Foothold {
                 '}';
     }
 
-    public static Foothold from(int layerId, int groupId, int sn, WzListProperty footholdProp) {
+    public static Foothold from(int layerId, int groupId, int sn, WzProperty footholdProp) {
         return new Foothold(
                 layerId,
                 groupId,
