@@ -3,6 +3,7 @@ package kinoko.util.tool;
 import kinoko.provider.*;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.wz.WzArchive;
+import kinoko.provider.wz.WzCrypto;
 import kinoko.provider.wz.WzImage;
 import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
@@ -30,6 +31,7 @@ final class NpcShopExtractor {
         StringProvider.initialize();
 
         // Extract npc shop image
+        WzCrypto.setCipher(null);
         try (final WzArchive archive = WzArchive.from(NPC_SHOP_IMG)) {
             final WzImage npcShopImage = archive.getImage();
             final Map<Integer, List<ShopItem>> npcShopItems = new HashMap<>();

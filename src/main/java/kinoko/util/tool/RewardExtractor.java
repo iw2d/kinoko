@@ -8,6 +8,7 @@ import kinoko.provider.quest.check.QuestCheck;
 import kinoko.provider.quest.check.QuestItemCheck;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.wz.WzArchive;
+import kinoko.provider.wz.WzCrypto;
 import kinoko.provider.wz.WzImage;
 import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.serialize.WzProperty;
@@ -29,6 +30,22 @@ abstract class RewardExtractor {
         QuestProvider.initialize();
         StringProvider.initialize();
 
+        // Load reactor actions
+        final Map<Integer, String> reactorActions = new HashMap<>();
+        try (final WzPackage source = WzPackage.from(REACTOR_WZ)) {
+            for (var imageEntry : source.getDirectory().getImages().entrySet()) {
+                final int reactorId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
+                if (!(imageEntry.getValue().getItem("action") instanceof String reactorAction)) {
+                    System.err.printf("Failed to resolve action for reactor ID : %d%n", reactorId);
+                    continue;
+                }
+                reactorActions.put(reactorId, reactorAction);
+            }
+        } catch (IOException | ProviderError e) {
+            throw new IllegalArgumentException("Exception caught while loading Reactor.wz", e);
+        }
+
+        WzCrypto.setCipher(null);
         try (final WzArchive archive = WzArchive.from(REWARD_IMG)) {
             final WzImage rewardImage = archive.getImage();
 
@@ -61,21 +78,6 @@ abstract class RewardExtractor {
                     }
                     bw.write("\n");
                 }
-            }
-
-            // Load reactor actions
-            final Map<Integer, String> reactorActions = new HashMap<>();
-            try (final WzPackage source = WzPackage.from(REACTOR_WZ)) {
-                for (var imageEntry : source.getDirectory().getImages().entrySet()) {
-                    final int reactorId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
-                    if (!(imageEntry.getValue().getItem("action") instanceof String reactorAction)) {
-                        System.err.printf("Failed to resolve action for reactor ID : %d%n", reactorId);
-                        continue;
-                    }
-                    reactorActions.put(reactorId, reactorAction);
-                }
-            } catch (IOException | ProviderError e) {
-                throw new IllegalArgumentException("Exception caught while loading Reactor.wz", e);
             }
 
             // Extract reactor rewards

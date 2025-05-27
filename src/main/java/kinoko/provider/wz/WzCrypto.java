@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public final class WzCrypto {
     public static final int BATCH_SIZE = 1024;
-    private static final Cipher cipher = getCipher(WzConstants.WZ_GMS_IV);
+    private static Cipher cipher = getCipher(WzConstants.WZ_GMS_IV);
     private static byte[] cipherMask = new byte[]{};
 
     public static void cryptAscii(byte[] data) {
@@ -57,7 +57,7 @@ public final class WzCrypto {
         cipherMask = newMask;
     }
 
-    private static Cipher getCipher(byte[] iv) {
+    public static Cipher getCipher(byte[] iv) {
         // Empty IV
         if (Arrays.equals(iv, WzConstants.WZ_EMPTY_IV)) {
             return null;
@@ -86,5 +86,10 @@ public final class WzCrypto {
                  NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void setCipher(Cipher cipher) {
+        WzCrypto.cipher = cipher;
+        WzCrypto.cipherMask = new byte[]{};
     }
 }

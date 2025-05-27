@@ -4,6 +4,7 @@ import kinoko.provider.*;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.wz.WzArchive;
+import kinoko.provider.wz.WzCrypto;
 import kinoko.provider.wz.WzImage;
 import kinoko.provider.wz.WzPackage;
 import kinoko.provider.wz.serialize.WzProperty;
@@ -33,6 +34,7 @@ final class MonsterBookExtractor extends RewardExtractor {
         }
 
         // Load BMS rewards
+        WzCrypto.setCipher(null);
         try (final WzArchive archive = WzArchive.from(RewardExtractor.REWARD_IMG)) {
             final WzImage rewardImage = archive.getImage();
             final Map<Integer, List<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
