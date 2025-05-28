@@ -1,5 +1,7 @@
 package kinoko.provider.wz;
 
+import kinoko.server.ServerConstants;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +87,7 @@ public final class WzPackage implements WzReadable, Closeable {
         // Check version hash
         buffer.position(start);
         final int versionHeader = Short.toUnsignedInt(buffer.getShort());
-        final int versionHash = computeVersionHash(WzConstants.GAME_VERSION);
+        final int versionHash = computeVersionHash(ServerConstants.GAME_VERSION);
         final int computedHeader = 0xFF
                 ^ ((versionHash >> 24) & 0xFF)
                 ^ ((versionHash >> 16) & 0xFF)
