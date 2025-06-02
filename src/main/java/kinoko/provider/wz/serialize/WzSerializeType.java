@@ -7,6 +7,7 @@ public enum WzSerializeType {
     CANVAS("Canvas"),
     VECTOR("Shape2D#Vector2D"),
     CONVEX("Shape2D#Convex2D"),
+    POLYSHAPE("Shape2D#PolyShape2D"),
     SOUND("Sound_DX8"),
     UOL("UOL");
 

@@ -79,6 +79,9 @@ public final class WzReader {
             case CONVEX -> {
                 return new WzConvex(parent, offset);
             }
+            case POLYSHAPE -> {
+                return new WzPolyShape(parent, offset);
+            }
             case SOUND -> {
                 return new WzSound(parent, offset);
             }
