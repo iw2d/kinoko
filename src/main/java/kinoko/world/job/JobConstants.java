@@ -69,7 +69,7 @@ public final class JobConstants {
         }
         switch (step) {
             case 1 -> {
-                if (race != 0 && getJobCategory(jobId) == 2) {
+                if (race != 1 && getJobCategory(jobId) == 2) {
                     return 8; // explorer magicians
                 }
                 return 10;
@@ -95,6 +95,26 @@ public final class JobConstants {
 
     public static boolean isBeginnerJob(int jobId) {
         return jobId % 1000 == 0 || jobId == 2001;
+    }
+
+    public static boolean isWarriorJob(int jobId) {
+        return jobId / 100 == 1;
+    }
+
+    public static boolean isMagicianJob(int jobId) {
+        return jobId / 100 == 2;
+    }
+
+    public static boolean isBowmanJob(int jobId) {
+        return jobId / 100 == 3;
+    }
+
+    public static boolean isThiefJob(int jobId) {
+        return jobId / 100 == 4;
+    }
+
+    public static boolean isPirateJob(int jobId) {
+        return jobId / 100 == 5;
     }
 
     public static boolean isHeroJob(int jobId) {
