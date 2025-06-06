@@ -69,7 +69,7 @@ public final class JobConstants {
         }
         switch (step) {
             case 1 -> {
-                if (race != 1 && getJobCategory(jobId) == 2) {
+                if (race == 0 && getJobCategory(jobId) == 2) {
                     return 8; // explorer magicians
                 }
                 return 10;
