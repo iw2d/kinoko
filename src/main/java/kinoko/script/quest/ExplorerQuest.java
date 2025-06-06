@@ -7,7 +7,6 @@ import kinoko.script.common.ScriptError;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.world.field.Field;
-import kinoko.world.job.JobConstants;
 
 public final class ExplorerQuest extends ScriptHandler {
 
