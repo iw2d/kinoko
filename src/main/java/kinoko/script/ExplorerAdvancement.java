@@ -24,9 +24,8 @@ public class ExplorerAdvancement extends ScriptHandler {
         // Grendel the Really Old (1032001)
         //   Ellinia : Magic Library (101000003)
         final int playerLevel = sm.getUser().getLevel();
-
         // Beginner -> 1st job Magician handling
-        if (JobConstants.isBeginnerJob(sm.getUser().getJob())) {
+        if (sm.getUser().getJob() == 0) {
             final int jobChangeLevel = JobConstants.getJobChangeLevel(Job.MAGICIAN.getJobId(), 0, 1);
             sm.sayNext("Do you want to be a Magician? You need to meet some requirements in order to do so. You need to be at least #bLevel " + jobChangeLevel + "#k. Let's see if you have what it takes to become a Magician.");
             if (playerLevel < jobChangeLevel) {
@@ -37,7 +36,7 @@ public class ExplorerAdvancement extends ScriptHandler {
                 sm.sayNext("You're now a Magician from here on out! It isn't much, but as the head Magician, I, #p1032001#, will give you a little bit of what I have...");
                 // Only give the Beginner Magician Wand and change the users job if they are a beginner
                 // This check allows the user to press "Next" and "Prev" without exploits
-                if (JobConstants.isBeginnerJob(sm.getUser().getJob())) {
+                if (sm.getUser().getJob() == 0) {
                     if (!sm.canAddItem(BEGINNER_MAGICIANS_WAND, 1)) {
                         sm.sayOk("Please make sure that you have an empty slot in your #rEQP. inventory#k and then talk to me again.");
                         return;
