@@ -274,11 +274,11 @@ public final class Edelstein extends ScriptHandler {
         }
         if (sm.hasQuestStarted(23043) || sm.hasQuestStarted(23044) || sm.hasQuestStarted(23045)) {
             sm.message("Find the missing Job Instructor!");
-            if (JobConstants.isBattleMageJob(sm.getUser().getJob())) {
+            if (JobConstants.isBattleMageJob(sm.getJob())) {
                 sm.warpInstance(List.of(931000300, 931000310, 931000320), "sp", 310050100, 60 * 15);
-            } else if (JobConstants.isWildHunterJob(sm.getUser().getJob())) {
+            } else if (JobConstants.isWildHunterJob(sm.getJob())) {
                 sm.warpInstance(List.of(931000301, 931000311, 931000321), "sp", 310050100, 60 * 15);
-            } else if (JobConstants.isMechanicJob(sm.getUser().getJob())) {
+            } else if (JobConstants.isMechanicJob(sm.getJob())) {
                 sm.warpInstance(List.of(931000302, 931000312, 931000322), "sp", 310050100, 60 * 15);
             }
         }
