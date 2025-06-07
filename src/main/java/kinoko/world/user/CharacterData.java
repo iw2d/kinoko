@@ -30,6 +30,7 @@ public final class CharacterData implements Encodable {
     private SkillManager skillManager;
     private QuestManager questManager;
     private ConfigManager configManager;
+    private PopularityManager popularityManager;
     private MiniGameRecord miniGameRecord;
     private CoupleRecord coupleRecord;
     private MapTransferInfo mapTransferInfo;
@@ -87,6 +88,14 @@ public final class CharacterData implements Encodable {
 
     public void setConfigManager(ConfigManager configManager) {
         this.configManager = configManager;
+    }
+
+    public PopularityManager getPopularityManager() {
+        return popularityManager;
+    }
+
+    public void setPopularityManager(PopularityManager popularityManager) {
+        this.popularityManager = popularityManager;
     }
 
     public MiniGameRecord getMiniGameRecord() {
