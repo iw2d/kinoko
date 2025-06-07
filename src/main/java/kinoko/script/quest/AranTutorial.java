@@ -446,7 +446,7 @@ public final class AranTutorial extends ScriptHandler {
     public static void rienTutor7(ScriptManager sm) {
         // Snow Island : Dangerous Forest (140010000)
         //   west00 (-1332, 84)
-        if (sm.hasQuestCompleted(21014) || sm.getUser().getJob() != 2000) {
+        if (sm.hasQuestCompleted(21014) || sm.getJob() != 2000) {
             sm.playPortalSE();
             sm.warp(140010100, "east00");
         } else {

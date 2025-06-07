@@ -32,7 +32,7 @@ public final class VictoriaIsland extends ScriptHandler {
         //   Kerning City : Kerning City (103000000)
         //   Lith Harbor : Lith Harbor (104000000)
         //   Nautilus : Nautilus Harbor (120000000)
-        final boolean isBeginner = JobConstants.isBeginnerJob(sm.getUser().getJob());
+        final boolean isBeginner = JobConstants.isBeginnerJob(sm.getJob());
         final int price = isBeginner ? 100 : 1000;
         final List<Integer> towns = Stream.of(
                 100000000, // Henesys : Henesys
