@@ -214,6 +214,12 @@ public final class VictoriaIsland extends ScriptHandler {
     public static void enter_VDS(ScriptManager sm) {
         // Sleepywood : Sleepywood (105000000)
         //   east00 (1759, 312)
+        final int playerLevel = sm.getUser().getLevel();
+        if (playerLevel < 50) {
+            sm.scriptProgressMessage("You cannot enter, because you do not meet the level requirement.");
+            sm.message("You must be Lv. 50 or above to enter this area.");
+            return;
+        }
         sm.playPortalSE();
         sm.warp(105010000, "west00"); // Swamp : Silent Swamp
     }
