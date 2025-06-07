@@ -164,6 +164,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public int getJob() {
+        return user.getJob();
+    }
+
+    @Override
     public void addExp(int exp) {
         user.addExp(exp);
         user.write(MessagePacket.incExp(exp, 0, true, true));
