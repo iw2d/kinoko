@@ -48,34 +48,4 @@ public final class ConstantsTest {
         };
         Assertions.assertArrayEquals(expected, GameConstants.EXP_TABLE);
     }
-
-    @Test
-    public void testJobLevel() {
-        for (Job job : Job.values()) {
-            if (job == Job.MANAGER || job == Job.GM || job == Job.SUPER_GM || job == Job.ADDITIONAL_SKILLS) {
-                continue;
-            }
-
-            final int jobLevel = JobConstants.getJobLevel(job.getJobId());
-
-            // System.out.printf("%s %d\n", job, jobLevel);
-        }
-    }
-
-    @Test
-    public void testItemVariation() {
-        final int v = 10;
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        for (int i = 0; i < 20000; i++) {
-            final int r = ItemConstants.getVariation(v, ItemVariationOption.NORMAL);
-            if (r - v > max) {
-                max = r - v;
-            }
-            if (r - v < min) {
-                min = r - v;
-            }
-        }
-        System.out.printf("%d : %d ~ +%d\n", v, min, max);
-    }
 }

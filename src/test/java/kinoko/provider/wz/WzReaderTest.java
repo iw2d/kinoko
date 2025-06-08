@@ -21,16 +21,6 @@ public final class WzReaderTest {
 
     @Test
     public void testTamingMob() {
-//        readWzFile("TamingMob_GMS_75.wz", WzConstants.WZ_GMS_IV);
-//        readWzFile("TamingMob_GMS_87.wz", WzConstants.WZ_GMS_IV);
         readWzFile("TamingMob_GMS_95.wz", WzConstants.WZ_GMS_IV);
-//        readWzFile("TamingMob_GMS_146.wz", WzConstants.WZ_EMPTY_IV);
-//        readWzFile("TamingMob_GMS_176.wz", WzConstants.WZ_EMPTY_IV);
-//        readWzFile("TamingMob_GMS_230.wz", GameConstants.WZ_EMPTY_IV);
-
-//        readWzFile("TamingMob_SEA_135.wz", WzConstants.WZ_EMPTY_IV);
-//        readWzFile("TamingMob_SEA_160.wz", WzConstants.WZ_EMPTY_IV);
-//        readWzFile("TamingMob_SEA_211.wz", GameConstants.WZ_EMPTY_IV);
-//        readWzFile("TamingMob_SEA_212.wz", GameConstants.WZ_EMPTY_IV);
     }
 }

@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Disabled
 public final class InventoryManagerTest {
     public static final int RED_POTION = 2000000;
     public static final int ORANGE_POTION = 2000001;
