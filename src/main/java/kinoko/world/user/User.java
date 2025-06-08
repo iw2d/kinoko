@@ -430,7 +430,7 @@ public final class User extends Life {
     }
 
     public void addPop(int pop) {
-        final short newPop = (short) Math.min(getPop() + pop, Short.MAX_VALUE);
+        final short newPop = (short) Math.clamp(getPop() + pop, Short.MIN_VALUE, Short.MAX_VALUE);
         getCharacterStat().setPop(newPop);
         validateStat();
         write(WvsContext.statChanged(Stat.POP, newPop, true));

@@ -13,6 +13,7 @@ import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.data.PopularityResultType;
 import kinoko.world.user.data.SingleMacro;
 import kinoko.world.user.data.WildHunterInfo;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -100,6 +101,27 @@ public final class WvsContext {
     public static OutPacket skillUseResult() {
         final OutPacket outPacket = OutPacket.of(OutHeader.SkillUseResult);
         outPacket.encodeByte(0); // unused, packet sets bExclRequestSent = 0
+        return outPacket;
+    }
+
+    public static OutPacket givePopularityResult(PopularityResultType resultType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.GivePopularityResult);
+        outPacket.encodeByte(resultType.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket givePopularityResultSuccess(String targetCharacterName, boolean inc, int pop) {
+        final OutPacket outPacket = WvsContext.givePopularityResult(PopularityResultType.Success);
+        outPacket.encodeString(targetCharacterName);
+        outPacket.encodeByte(inc);
+        outPacket.encodeInt(pop); // nPOP
+        return outPacket;
+    }
+
+    public static OutPacket givePopularityResultNotify(String fromCharacterName, boolean inc) {
+        final OutPacket outPacket = WvsContext.givePopularityResult(PopularityResultType.Notify);
+        outPacket.encodeString(fromCharacterName);
+        outPacket.encodeByte(inc);
         return outPacket;
     }
 
