@@ -63,13 +63,13 @@ public final class JobConstants {
     }
 
     public static int getJobChangeLevel(int jobId, int subJob, int step) {
-        final int race = jobId / 1000;
+        final int group = jobId / 1000;
         if (isResistanceJob(jobId) || isEvanJob(jobId)) { // probably extend sp jank
-            return race != 1 ? 200 : 120;
+            return group != 1 ? 200 : 120;
         }
         switch (step) {
             case 1 -> {
-                if (race != 0 && getJobCategory(jobId) == 2) {
+                if (group == 0 && getJobCategory(jobId) == 2) {
                     return 8; // explorer magicians
                 }
                 return 10;
@@ -84,7 +84,7 @@ public final class JobConstants {
                 return 120;
             }
             default -> {
-                return race != 1 ? 200 : 120;
+                return group != 1 ? 200 : 120;
             }
         }
     }
@@ -95,6 +95,26 @@ public final class JobConstants {
 
     public static boolean isBeginnerJob(int jobId) {
         return jobId % 1000 == 0 || jobId == 2001;
+    }
+
+    public static boolean isExplorerWarriorJob(int jobId) {
+        return jobId / 100 == 1;
+    }
+
+    public static boolean isExplorerMagicianJob(int jobId) {
+        return jobId / 100 == 2;
+    }
+
+    public static boolean isExplorerBowmanJob(int jobId) {
+        return jobId / 100 == 3;
+    }
+
+    public static boolean isExplorerThiefJob(int jobId) {
+        return jobId / 100 == 4;
+    }
+
+    public static boolean isExplorerPirateJob(int jobId) {
+        return jobId / 100 == 5;
     }
 
     public static boolean isHeroJob(int jobId) {
