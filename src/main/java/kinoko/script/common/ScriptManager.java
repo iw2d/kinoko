@@ -235,6 +235,8 @@ public interface ScriptManager {
 
     void broadcastSoundEffect(String effectPath);
 
+    void broadcastChangeBgm(String uol);
+
 
     // CONVERSATION METHODS --------------------------------------------------------------------------------------------
 

@@ -924,6 +924,11 @@ public final class ScriptManagerImpl implements ScriptManager {
         field.broadcastPacket(FieldEffectPacket.sound(effectPath));
     }
 
+    @Override
+    public void broadcastChangeBgm(String uol) {
+        field.broadcastPacket(FieldEffectPacket.changeBgm(uol));
+    }
+
 
     // CONVERSATION METHODS --------------------------------------------------------------------------------------------
 

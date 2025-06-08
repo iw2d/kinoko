@@ -333,7 +333,7 @@ public final class WorldTour extends ScriptHandler {
     public static void treeBossSG(ScriptManager sm) {
         // treeBossSG (5411001)
         //   Singapore : Ruins of Krexel II (541020800)
-        sm.soundEffect("Bgm09/TimeAttack");
+        sm.broadcastChangeBgm("Bgm09/TimeAttack");
         sm.spawnMob(9420520, MobAppearType.NORMAL, sm.getSource().getX(), sm.getSource().getY(), true);
         sm.broadcastMessage("As you wish, here comes Krexel.");
     }
