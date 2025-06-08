@@ -52,6 +52,7 @@ import kinoko.world.user.stat.StatConstants;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public final class ScriptManagerImpl implements ScriptManager {
@@ -706,7 +707,9 @@ public final class ScriptManagerImpl implements ScriptManager {
         return field.getFieldId();
     }
 
-    public FieldObject getSource() { return source; }
+    public FieldObject getSource() {
+        return source;
+    }
 
     @Override
     public void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft) {
@@ -822,13 +825,13 @@ public final class ScriptManagerImpl implements ScriptManager {
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean checkParty(int memberCount, int levelMin) {
+    public boolean checkParty(int memberCount, Predicate<User> predicate) {
         final List<User> members = field.getUserPool().getPartyMembers(user.getPartyId());
         if (members.size() < memberCount) {
             return false;
         }
         for (User member : members) {
-            if (member.getLevel() < levelMin) {
+            if (!predicate.test(member)) {
                 return false;
             }
         }

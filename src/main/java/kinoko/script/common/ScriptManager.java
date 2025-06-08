@@ -16,6 +16,7 @@ import kinoko.world.user.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public interface ScriptManager {
     // USER METHODS ----------------------------------------------------------------------------------------------------
@@ -206,7 +207,11 @@ public interface ScriptManager {
 
     // EVENT METHODS ---------------------------------------------------------------------------------------------------
 
-    boolean checkParty(int memberCount, int levelMin);
+    boolean checkParty(int memberCount, Predicate<User> predicate);
+
+    default boolean checkParty(int memberCount, int levelMin) {
+        return checkParty(memberCount, (user) -> user.getLevel() >= levelMin);
+    }
 
     EventState getEventState(EventType eventType);
 

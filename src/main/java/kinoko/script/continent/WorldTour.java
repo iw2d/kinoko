@@ -8,11 +8,14 @@ import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
 import kinoko.util.Tuple;
 import kinoko.util.Util;
+import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.quest.QuestRecordType;
+import kinoko.world.user.User;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public final class WorldTour extends ScriptHandler {
     public static final int TICKET_TO_SINGAPORE = 4031731;
@@ -284,5 +287,54 @@ public final class WorldTour extends ScriptHandler {
                     Tuple.of(550000000, 10000) // Malaysia : Trend Zone Metropolis
             ));
         }
+    }
+
+    @Script("treeboss00")
+    public static void treeboss00(ScriptManager sm) {
+        // Singapore : Ruins of Krexel I (541020700)
+        //   boss00 (81, -1751)
+        final Predicate<User> entryRequirement = (user) -> {
+            if (user.getLevel() < 70) {
+                return false;
+            }
+            // Soul Lantern
+            if (!user.getInventoryManager().hasItem(4000385, 1)) {
+                return false;
+            }
+            // Savior of Ulu City
+            return user.getQuestManager().hasQuestStarted(4530) || user.getQuestManager().hasQuestCompleted(4530);
+        };
+        if (sm.getUser().hasParty()) {
+            if (!sm.getUser().isPartyBoss()) {
+                sm.message("You are not the leader of the party.");
+                return;
+            }
+            if (!sm.checkParty(1, entryRequirement)) {
+                sm.message("One or more members of your party do not meet the requirements to enter.");
+                return;
+            }
+        } else if (!entryRequirement.test(sm.getUser())) {
+            sm.message("You do not meet the requirements to enter.");
+            return;
+        }
+        sm.partyWarpInstance(541020800, "sp", 541020700, 60 * 30);
+    }
+
+    @Script("treeboss01")
+    public static void treeboss01(ScriptManager sm) {
+        // Commando Jim (9270045)
+        //   Singapore : Ruins of Krexel II (541020800)
+        if (sm.askYesNo("Are you sure you want to leave The Ruin of Krexel II? I can take you to the safer place...")) {
+            sm.warp(541020700);
+        }
+    }
+
+    @Script("treeBossSG")
+    public static void treeBossSG(ScriptManager sm) {
+        // treeBossSG (5411001)
+        //   Singapore : Ruins of Krexel II (541020800)
+        sm.soundEffect("Bgm09/TimeAttack");
+        sm.spawnMob(9420520, MobAppearType.NORMAL, sm.getSource().getX(), sm.getSource().getY(), true);
+        sm.broadcastMessage("As you wish, here comes Krexel.");
     }
 }
