@@ -19,3 +19,5 @@ rewards:
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
   - [ 4032498, 1, 1, 1.000000, 22004 ] # Thick Branch
   - [ 4032460, 1, 1, 0.050000, 22529 ] # Refreshing Stump Sap
+  - [ 4032374, 1, 1, 0.035000, 2405 ] # Letter of Commendation - Warrior Adventurer
+  - [ 4032378, 1, 1, 0.035000, 2408 ] # Letter of Commendation - Thief Adventurer

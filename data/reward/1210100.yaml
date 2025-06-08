@@ -21,3 +21,4 @@ rewards:
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
   - [ 4032453, 1, 1, 0.400000, 22503 ] # Pork
+  - [ 4032379, 1, 1, 0.035000, 2409 ] # Letter of Commendation - Pirate Adventurer

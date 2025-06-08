@@ -18,3 +18,4 @@ rewards:
   - [ 4000006, 1, 1, 0.400000 ] # Octopus Leg
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
+  - [ 4032378, 1, 1, 0.035000, 2408 ] # Letter of Commendation - Thief Adventurer

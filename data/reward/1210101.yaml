@@ -21,3 +21,4 @@ rewards:
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 4032377, 1, 1, 0.035000, 2407 ] # Letter of Commendation - Bowman Adventurer

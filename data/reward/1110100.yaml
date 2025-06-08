@@ -33,3 +33,4 @@ rewards:
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
   - [ 4031146, 1, 1, 0.500000, 2065 ] # Animal Fossil
+  - [ 4032379, 1, 1, 0.035000, 2409 ] # Letter of Commendation - Pirate Adventurer
