@@ -1,0 +1,20 @@
+# Blue Ribbon Pig (1210104)
+
+rewards:
+  - [ 0, 20, 31, 0.600000 ]
+  - [ 1002108, 1, 1, 0.000100 ] # Blue Thief Hood
+  - [ 1040039, 1, 1, 0.000100 ] # Red Sergeant
+  - [ 1040007, 1, 1, 0.000100 ] # Green Leather Hoodwear
+  - [ 1050010, 1, 1, 0.000100 ] # Green Plain Robe
+  - [ 1050025, 1, 1, 0.000100 ] # White Doros Robe
+  - [ 1051005, 1, 1, 0.000100 ] # Red Doroness Robe
+  - [ 1061024, 1, 1, 0.000100 ] # Green Shivermail Skirt
+  - [ 1332008, 1, 1, 0.000100 ] # Coconut Knife
+  - [ 1472001, 1, 1, 0.000100 ] # Steel Titans
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4000622, 1, 1, 0.400000 ] # Pig's Blue Ribbon
+  - [ 4000017, 1, 1, 0.010000 ] # Pig's Head
+  - [ 4001370, 1, 1, 0.035000, 28260, 120020300 ] # Ripped Paper 4

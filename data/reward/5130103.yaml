@@ -31,3 +31,4 @@ rewards:
   - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130011, 1, 1, 0.000300 ] # Staff Production Stimulator
+  - [ 4001368, 1, 1, 0.035000, 28258, 103030200 ] # Ripped Paper 2

@@ -34,3 +34,5 @@ rewards:
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
   - [ 4031146, 1, 1, 0.500000, 2065 ] # Animal Fossil
   - [ 4032379, 1, 1, 0.035000, 2409 ] # Letter of Commendation - Pirate Adventurer
+  - [ 4001369, 1, 1, 0.035000, 28259, 104040002 ] # Ripped Paper 3
+  - [ 4001371, 1, 1, 0.035000, 28261, 101010102 ] # Ripped Paper 5
