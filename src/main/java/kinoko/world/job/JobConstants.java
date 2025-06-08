@@ -63,13 +63,13 @@ public final class JobConstants {
     }
 
     public static int getJobChangeLevel(int jobId, int subJob, int step) {
-        final int race = jobId / 1000;
+        final int group = jobId / 1000;
         if (isResistanceJob(jobId) || isEvanJob(jobId)) { // probably extend sp jank
-            return race != 1 ? 200 : 120;
+            return group != 1 ? 200 : 120;
         }
         switch (step) {
             case 1 -> {
-                if (race == 0 && getJobCategory(jobId) == 2) {
+                if (group == 0 && getJobCategory(jobId) == 2) {
                     return 8; // explorer magicians
                 }
                 return 10;
@@ -84,7 +84,7 @@ public final class JobConstants {
                 return 120;
             }
             default -> {
-                return race != 1 ? 200 : 120;
+                return group != 1 ? 200 : 120;
             }
         }
     }
