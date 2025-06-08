@@ -691,30 +691,34 @@ public final class UserHandler {
 
     @Handler(InHeader.UserGivePopularityRequest)
     public static void handleUserGivePopularityRequest(User user, InPacket inPacket) {
+        final int targetId = inPacket.decodeInt();
+        boolean inc = inPacket.decodeBoolean();
 
-        int targetId = inPacket.decodeInt();
-        byte mode = inPacket.decodeByte();
-
-        PopularityManager popularityManager = user.getCharacterData().getPopularityManager();
-
-        User targetUser = user.getField().getUserPool().getById(targetId).orElse(null);
-
-        PopularityResult result = popularityManager.popularityResult(
-                user, targetUser);
-
-        if (result != null) {
-            user.write(WvsContext.givePopularityResultError((byte) result.getValue()));
+        if (user.getLevel() < 15) {
+            user.write(WvsContext.givePopularityResult(PopularityResultType.LevelLow)); // Users under level 15 are unable to toggle with fame.
+            return;
+        }
+        final PopularityRecord pr = user.getCharacterData().getPopularityRecord();
+        if (pr.hasGivenPopularityToday()) {
+            user.write(WvsContext.givePopularityResult(PopularityResultType.AlreadyDoneToday)); // You can't raise or drop a level of fame anymore for today.
+            return;
+        }
+        if (pr.hasGivenPopularityTarget(targetId)) {
+            user.write(WvsContext.givePopularityResult(PopularityResultType.AlreadyDoneTarget)); // You can't raise or drop a level of fame of that character anymore for this month.
             return;
         }
 
-        targetUser.addPop((2 * mode) - 1);
+        final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
+        if (targetResult.isEmpty()) {
+            user.write(MessagePacket.system("Unable to find the character."));
+            return;
+        }
+        final User target = targetResult.get();
+        target.addPop(inc ? 1 : -1);
+        pr.addRecord(targetId, Instant.now());
 
-        popularityManager.record(targetUser.getCharacterId());
-
-        targetUser.write(
-                WvsContext.givePopularityResultTarget(user.getCharacterName(), mode));
-        user.write(WvsContext.givePopularityResultProvider(targetUser.getCharacterName(),
-                targetUser.getBasicStat().getPop(), mode));
+        target.write(WvsContext.givePopularityResultNotify(user.getCharacterName(), inc)); // '%s' have raised/dropped '%s''s level of fame.
+        user.write(WvsContext.givePopularityResultSuccess(target.getCharacterName(), inc, target.getPop())); // You have raised/dropped '%s''s level of fame.
     }
 
     @Handler(InHeader.UserCharacterInfoRequest)

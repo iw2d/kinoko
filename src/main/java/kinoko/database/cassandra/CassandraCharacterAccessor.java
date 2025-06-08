@@ -75,17 +75,15 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         }
         cd.setQuestManager(qm);
 
-        final PopularityManager pm = new PopularityManager();
-        
-        final Map<Integer, Instant> popularityRecord = row.getMap(CharacterTable.POPULARITY_RECORD, Integer.class, Instant.class);
-        if (popularityRecord != null) {
-            pm.getRecords().putAll(popularityRecord);
-        }
-
-        cd.setPopularityManager(pm);
-
         final ConfigManager cm = row.get(CharacterTable.CONFIG, ConfigManager.class);
         cd.setConfigManager(cm);
+
+        final PopularityRecord pr = new PopularityRecord();
+        final Map<Integer, Instant> popularityRecords = row.getMap(CharacterTable.POPULARITY_RECORD, Integer.class, Instant.class);
+        if (popularityRecords != null) {
+            pr.getRecords().putAll(popularityRecords);
+        }
+        cd.setPopularityRecord(pr);
 
         final MiniGameRecord mgr = row.get(CharacterTable.MINIGAME_RECORD, MiniGameRecord.class);
         cd.setMiniGameRecord(mgr);
@@ -243,8 +241,8 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .setColumn(CharacterTable.SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
                         .setColumn(CharacterTable.QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
                         .setColumn(CharacterTable.CONFIG, literal(characterData.getConfigManager(), registry))
+                        .setColumn(CharacterTable.POPULARITY_RECORD, literal(characterData.getPopularityRecord().getRecords(), registry))
                         .setColumn(CharacterTable.MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
-                        .setColumn(CharacterTable.POPULARITY_RECORD, literal(characterData.getPopularityManager().getRecords(), registry))
                         .setColumn(CharacterTable.MAP_TRANSFER_INFO, literal(characterData.getMapTransferInfo(), registry))
                         .setColumn(CharacterTable.WILD_HUNTER_INFO, literal(characterData.getWildHunterInfo(), registry))
                         .setColumn(CharacterTable.ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))

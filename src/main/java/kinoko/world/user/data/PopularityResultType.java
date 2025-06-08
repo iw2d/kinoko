@@ -1,6 +1,6 @@
 package kinoko.world.user.data;
 
-public enum PopularityResult {
+public enum PopularityResultType {
     // GivePopularityRes
     Success(0),
     InvalidCharacterID(1),
@@ -12,11 +12,11 @@ public enum PopularityResult {
 
     private final int value;
 
-    PopularityResult(int value) {
+    PopularityResultType(int value) {
         this.value = value;
     }
 
     public final int getValue() {
-        return this.value;
+        return value;
     }
 }
