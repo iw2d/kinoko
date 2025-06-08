@@ -3,7 +3,8 @@ package kinoko.server.event;
 import kinoko.server.field.ChannelFieldStorage;
 import kinoko.server.node.ServerExecutor;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +33,7 @@ public final class Elevator extends Event {
     @Override
     public void initialize() {
         // Initialize current state
-        final LocalDateTime now = LocalDateTime.now();
+        final ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
         switch (now.getMinute() % 4) {
             case 0 -> handleElevatorGoingDown();
             case 1 -> handleElevator2ndFloor();
@@ -40,7 +41,7 @@ public final class Elevator extends Event {
             default -> handleElevator99thFloor();
         }
         // Schedule event - run every minute
-        final LocalDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
+        final ZonedDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
         eventFuture = ServerExecutor.scheduleServiceAtFixedRate(this::nextState, now.until(nextStateTime, ChronoUnit.MILLIS), 60 * 1000, TimeUnit.MILLISECONDS);
     }
 

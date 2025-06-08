@@ -11,7 +11,8 @@ import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +106,7 @@ public final class Edelstein extends ScriptHandler {
         // Wonny (2159305)
         //   Black Wing Territory : Edelstein (310000000)
         if (sm.hasQuestStarted(23938)) {
-            final LocalDateTime now = LocalDateTime.now();
+            final ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
             if (now.getHour() == 22 && !sm.hasQRValue(QuestRecordType.EdelsteinWonny10PM, "1")) {
                 sm.setQRValue(QuestRecordType.EdelsteinWonny10PM, "1");
                 sm.sayNext("What are you looking at? I'm not standing here because I miss #p2154004#. I just... want to make sure that no thieves get in. Yeah.");
@@ -171,7 +172,7 @@ public final class Edelstein extends ScriptHandler {
         //   in03 (1090, 587)
         sm.playPortalSE();
         if (sm.hasQuestStarted(23940) && !sm.hasQRValue(QuestRecordType.EdelsteinFabioFirebombs, "1")) {
-            final LocalDateTime now = LocalDateTime.now();
+            final ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
             if (now.getHour() == 18) {
                 sm.warpInstance(931010030, "out00", 310000000, 10 * 60);
                 return;

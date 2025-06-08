@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 
@@ -42,7 +40,7 @@ public class PopularityRecordTest {
     @Test
     public void testHasGivenPopularityTarget() {
         final PopularityRecord pr = new PopularityRecord();
-        final ZonedDateTime now = ZonedDateTime.now();
+        final ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
         final ZonedDateTime previousMonth = now.minusMonths(1);
 
         pr.addRecord(1, previousMonth.toInstant());

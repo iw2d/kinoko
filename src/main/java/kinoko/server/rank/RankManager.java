@@ -6,7 +6,8 @@ import kinoko.server.node.ServerExecutor;
 import kinoko.world.job.JobConstants;
 import kinoko.world.user.AvatarData;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,8 @@ public final class RankManager {
         currentCharacterRanks = originalCharacterRanks;
         guildRankings = DatabaseManager.guildAccessor().getGuildRankings();
         // Schedule refresh every 10 minutes
-        final LocalDateTime now = LocalDateTime.now();
-        final LocalDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(10 - (now.getMinute() % 10));
+        final ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
+        final ZonedDateTime nextStateTime = now.truncatedTo(ChronoUnit.MINUTES).plusMinutes(10 - (now.getMinute() % 10));
         refreshSchedule = ServerExecutor.scheduleServiceAtFixedRate(RankManager::refresh, now.until(nextStateTime, ChronoUnit.MILLIS), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
     }
 
