@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 import java.util.*;
 
@@ -23,10 +23,10 @@ public final class SetItemInfo {
         return effect;
     }
 
-    public static SetItemInfo from(WzListProperty setItemProp) throws ProviderError {
+    public static SetItemInfo from(WzProperty setItemProp) throws ProviderError {
         // Items
         final Set<Integer> items = new HashSet<>();
-        if (!(setItemProp.get("ItemID") instanceof WzListProperty itemIdList)) {
+        if (!(setItemProp.get("ItemID") instanceof WzProperty itemIdList)) {
             throw new ProviderError("Could not resolve set item id list");
         }
         for (var itemIdEntry : itemIdList.getItems().entrySet()) {
@@ -35,12 +35,12 @@ public final class SetItemInfo {
         }
         // Effect
         final Map<Integer, Map<ItemInfoType, Integer>> effect = new HashMap<>();
-        if (!(setItemProp.get("Effect") instanceof WzListProperty effectList)) {
+        if (!(setItemProp.get("Effect") instanceof WzProperty effectList)) {
             throw new ProviderError("Could not resolve set item effect list");
         }
         for (var effectEntry : effectList.getItems().entrySet()) {
             final int count = WzProvider.getInteger(effectEntry.getKey());
-            if (!(effectEntry.getValue() instanceof WzListProperty effectProp)) {
+            if (!(effectEntry.getValue() instanceof WzProperty effectProp)) {
                 throw new ProviderError("Could not resolve set item effect prop");
             }
             final Map<ItemInfoType, Integer> stats = new EnumMap<>(ItemInfoType.class);

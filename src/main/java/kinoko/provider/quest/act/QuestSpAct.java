@@ -4,7 +4,7 @@ import kinoko.packet.user.QuestPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.job.JobConstants;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterStat;
@@ -41,11 +41,11 @@ public final class QuestSpAct implements QuestAct {
         return true;
     }
 
-    public static QuestSpAct from(WzListProperty spList) throws ProviderError {
-        if (spList.getItems().size() != 1 || !(spList.get("0") instanceof WzListProperty spProp)) {
+    public static QuestSpAct from(WzProperty spList) throws ProviderError {
+        if (spList.getItems().size() != 1 || !(spList.get("0") instanceof WzProperty spProp)) {
             throw new ProviderError("Failed to resolve quest sp act data");
         }
-        if (!(spProp.get("job") instanceof WzListProperty jobProp) || jobProp.getItems().size() != 1) {
+        if (!(spProp.get("job") instanceof WzProperty jobProp) || jobProp.getItems().size() != 1) {
             throw new ProviderError("Failed to resolve quest sp act data");
         }
         return new QuestSpAct(

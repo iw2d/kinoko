@@ -2,7 +2,7 @@ package kinoko.provider.quest.check;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.user.User;
 
 import java.time.DayOfWeek;
@@ -25,7 +25,7 @@ public final class QuestDayOfWeekCheck implements QuestCheck {
         return allowed.contains(dayOfWeek);
     }
 
-    public static QuestDayOfWeekCheck from(WzListProperty dayOfWeekList) throws ProviderError {
+    public static QuestDayOfWeekCheck from(WzProperty dayOfWeekList) throws ProviderError {
         final Set<DayOfWeek> allowed = new HashSet<>();
         for (var entry : dayOfWeekList.getItems().entrySet()) {
             if (WzProvider.getInteger(entry.getValue()) == 0) {

@@ -1,10 +1,11 @@
 package kinoko.provider;
 
 import kinoko.provider.map.*;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.WzDirectory;
+import kinoko.provider.wz.WzImage;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 import kinoko.util.Crc32;
 import kinoko.util.Rect;
 import kinoko.util.Tuple;
@@ -22,11 +23,10 @@ public final class MapProvider implements WzProvider {
     private static int crcConstant;
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(MAP_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadPhysics(wzPackage);
-            loadMapInfos(wzPackage);
-            loadAreaCodes(wzPackage);
+        try (final WzPackage source = WzPackage.from(MAP_WZ)) {
+            loadPhysics(source);
+            loadMapInfos(source);
+            loadAreaCodes(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Map.wz", e);
         }
@@ -64,15 +64,15 @@ public final class MapProvider implements WzProvider {
     }
 
     private static void loadPhysics(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("Physics.img") instanceof WzImage physicsImage)) {
+        if (!((WzImage) source.getItem("Physics.img") instanceof WzImage physicsImage)) {
             throw new ProviderError("Could not resolve Map.wz/Physics.img");
         }
         crcConstant = Crc32.computeCrcConstant(PhysicsConstants.from(physicsImage.getProperty()));
     }
 
     private static void loadMapInfos(WzPackage source) throws ProviderError {
-        final Map<Integer, Tuple<Integer, WzListProperty>> linkedMaps = new HashMap<>(); // mapId -> link, info
-        if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
+        final Map<Integer, Tuple<Integer, WzProperty>> linkedMaps = new HashMap<>(); // mapId -> link, info
+        if (!(source.getItem("Map") instanceof WzDirectory mapDirectory)) {
             throw new ProviderError("Could not resolve Map.wz/Map");
         }
         for (var dirEntry : mapDirectory.getDirectories().entrySet()) {
@@ -83,7 +83,7 @@ public final class MapProvider implements WzProvider {
             for (var mapEntry : dirEntry.getValue().getImages().entrySet()) {
                 final String imageName = mapEntry.getKey();
                 final int mapId = Integer.parseInt(imageName.replace(".img", ""));
-                if (!(mapEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+                if (!(mapEntry.getValue().getItem("info") instanceof WzProperty infoProp)) {
                     throw new ProviderError("Failed to resolve info property");
                 }
                 if (infoProp.getItems().containsKey("link")) {
@@ -118,7 +118,7 @@ public final class MapProvider implements WzProvider {
         }
     }
 
-    private static MapInfo resolveMapInfo(int mapId, WzImage image, WzListProperty infoProp, boolean clock) throws ProviderError {
+    private static MapInfo resolveMapInfo(int mapId, WzImage image, WzProperty infoProp, boolean clock) throws ProviderError {
         final List<Rect> area = resolveArea(image.getProperty());
         final List<Foothold> foothold = resolveFoothold(image.getProperty());
         final List<LadderRope> ladderRope = resolveLadderRope(image.getProperty());
@@ -128,13 +128,13 @@ public final class MapProvider implements WzProvider {
         return MapInfo.from(mapId, infoProp, area, foothold, ladderRope, life, portal, reactor, clock);
     }
 
-    private static List<Rect> resolveArea(WzListProperty imageProp) throws ProviderError {
-        if (!(imageProp.get("area") instanceof WzListProperty listProp)) {
+    private static List<Rect> resolveArea(WzProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("area") instanceof WzProperty listProp)) {
             return List.of();
         }
         final List<Rect> area = new ArrayList<>();
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
-            if (!(listProp.get(String.valueOf(i)) instanceof WzListProperty areaProp)) {
+            if (!(listProp.get(String.valueOf(i)) instanceof WzProperty areaProp)) {
                 break;
             }
             area.add(Rect.of(
@@ -147,25 +147,25 @@ public final class MapProvider implements WzProvider {
         return area;
     }
 
-    private static List<Foothold> resolveFoothold(WzListProperty imageProp) throws ProviderError {
-        if (!(imageProp.get("foothold") instanceof WzListProperty listProp)) {
+    private static List<Foothold> resolveFoothold(WzProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("foothold") instanceof WzProperty listProp)) {
             return List.of();
         }
         final List<List<Foothold>> footholdGroups = new ArrayList<>();
         for (var layerEntry : listProp.getItems().entrySet()) {
             final int layerId = Integer.parseInt(layerEntry.getKey());
-            if (!(layerEntry.getValue() instanceof WzListProperty groupList)) {
+            if (!(layerEntry.getValue() instanceof WzProperty groupList)) {
                 throw new ProviderError("Failed to resolve foothold property");
             }
             for (var groupEntry : groupList.getItems().entrySet()) {
                 final int groupId = Integer.parseInt(groupEntry.getKey());
-                if (!(groupEntry.getValue() instanceof WzListProperty footholdList)) {
+                if (!(groupEntry.getValue() instanceof WzProperty footholdList)) {
                     throw new ProviderError("Failed to resolve foothold property");
                 }
                 final List<Foothold> group = new ArrayList<>();
                 for (var footholdEntry : footholdList.getItems().entrySet()) {
                     final int sn = Integer.parseInt(footholdEntry.getKey());
-                    if (!(footholdEntry.getValue() instanceof WzListProperty footholdProp)) {
+                    if (!(footholdEntry.getValue() instanceof WzProperty footholdProp)) {
                         throw new ProviderError("Failed to resolve foothold property");
                     }
                     group.add(Foothold.from(layerId, groupId, sn, footholdProp));
@@ -178,14 +178,14 @@ public final class MapProvider implements WzProvider {
                 .toList();
     }
 
-    private static List<LadderRope> resolveLadderRope(WzListProperty imageProp) throws ProviderError {
-        if (!(imageProp.get("ladderRope") instanceof WzListProperty listProp)) {
+    private static List<LadderRope> resolveLadderRope(WzProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("ladderRope") instanceof WzProperty listProp)) {
             return List.of();
         }
         final List<LadderRope> ladderRope = new ArrayList<>();
         for (var entry : listProp.getItems().entrySet()) {
             final int sn = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty ladderRopeProp)) {
+            if (!(entry.getValue() instanceof WzProperty ladderRopeProp)) {
                 throw new ProviderError("Failed to resolve ladder rope property");
             }
             ladderRope.add(LadderRope.from(sn, ladderRopeProp));
@@ -195,13 +195,13 @@ public final class MapProvider implements WzProvider {
                 .toList();
     }
 
-    private static List<LifeInfo> resolveLife(WzListProperty imageProp) throws ProviderError {
-        if (!(imageProp.get("life") instanceof WzListProperty listProp)) {
+    private static List<LifeInfo> resolveLife(WzProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("life") instanceof WzProperty listProp)) {
             return List.of();
         }
         final List<LifeInfo> life = new ArrayList<>();
         for (var lifeEntry : listProp.getItems().entrySet()) {
-            if (!(lifeEntry.getValue() instanceof WzListProperty lifeProp)) {
+            if (!(lifeEntry.getValue() instanceof WzProperty lifeProp)) {
                 throw new ProviderError("Failed to resolve life property");
             }
             final LifeType lifeType = LifeType.fromString(lifeProp.get("type"));
@@ -210,14 +210,14 @@ public final class MapProvider implements WzProvider {
         return Collections.unmodifiableList(life);
     }
 
-    private static List<PortalInfo> resolvePortal(WzListProperty imageProp) throws ProviderError {
-        if (!(imageProp.get("portal") instanceof WzListProperty listProp)) {
+    private static List<PortalInfo> resolvePortal(WzProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("portal") instanceof WzProperty listProp)) {
             return List.of();
         }
         final List<PortalInfo> portal = new ArrayList<>();
         for (var portalEntry : listProp.getItems().entrySet()) {
             final int portalId = Integer.parseInt(portalEntry.getKey());
-            if (!(portalEntry.getValue() instanceof WzListProperty portalProp)) {
+            if (!(portalEntry.getValue() instanceof WzProperty portalProp)) {
                 throw new ProviderError("Failed to resolve portal property");
             }
             final PortalType portalType = PortalType.getByValue(portalProp.get("pt"));
@@ -231,13 +231,13 @@ public final class MapProvider implements WzProvider {
                 .toList();
     }
 
-    private static List<ReactorInfo> resolveReactor(WzListProperty imageProp) throws ProviderError {
-        if (!(imageProp.get("reactor") instanceof WzListProperty listProp)) {
+    private static List<ReactorInfo> resolveReactor(WzProperty imageProp) throws ProviderError {
+        if (!(imageProp.get("reactor") instanceof WzProperty listProp)) {
             return List.of();
         }
         final List<ReactorInfo> reactor = new ArrayList<>();
         for (var reactorEntry : listProp.getItems().entrySet()) {
-            if (!(reactorEntry.getValue() instanceof WzListProperty reactorProp)) {
+            if (!(reactorEntry.getValue() instanceof WzProperty reactorProp)) {
                 throw new ProviderError("Failed to resolve reactor property");
             }
             reactor.add(ReactorInfo.from(reactorProp));
@@ -249,7 +249,7 @@ public final class MapProvider implements WzProvider {
         if (!(source.getDirectory().getDirectories().get("Map") instanceof WzDirectory mapDirectory)) {
             throw new ProviderError("Could not resolve Map.wz/Map");
         }
-        for (var areaEntry : mapDirectory.getImages().get("AreaCode.img").getProperty().getItems().entrySet()) {
+        for (var areaEntry : mapDirectory.getImages().get("AreaCode.img").getItems().entrySet()) {
             final int key = Integer.parseInt(areaEntry.getKey());
             final int category = WzProvider.getInteger(areaEntry.getValue());
             areaCodes.put(key, category);

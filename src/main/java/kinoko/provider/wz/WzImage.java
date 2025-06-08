@@ -1,12 +1,17 @@
 package kinoko.provider.wz;
 
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
-public final class WzImage {
+import java.nio.ByteBuffer;
+import java.util.SequencedMap;
+
+public final class WzImage implements WzReadable {
+    private final WzReadable parent;
     private final int offset;
-    private WzListProperty property;
+    private WzProperty property;
 
-    public WzImage(int offset) {
+    public WzImage(WzReadable parent, int offset) {
+        this.parent = parent;
         this.offset = offset;
     }
 
@@ -14,11 +19,23 @@ public final class WzImage {
         return offset;
     }
 
-    public WzListProperty getProperty() {
+    public WzProperty getProperty() {
+        if (property == null) {
+            property = new WzProperty(this, offset);
+        }
         return property;
     }
 
-    public void setProperty(WzListProperty property) {
-        this.property = property;
+    public Object getItem(String path) {
+        return getProperty().getItem(path);
+    }
+
+    public SequencedMap<String, Object> getItems() {
+        return getProperty().getItems();
+    }
+
+    @Override
+    public ByteBuffer getBuffer(int offset) {
+        return parent.getBuffer(offset);
     }
 }

@@ -2,7 +2,7 @@ package kinoko.provider.quest;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.job.Job;
 
 import java.util.ArrayList;
@@ -88,10 +88,10 @@ public final class QuestItemData {
         return this.gender == 2 || this.gender == gender;
     }
 
-    public static List<QuestItemData> resolveItemData(WzListProperty itemList) throws ProviderError {
+    public static List<QuestItemData> resolveItemData(WzProperty itemList) throws ProviderError {
         final List<QuestItemData> items = new ArrayList<>();
         for (var itemEntry : itemList.getItems().entrySet()) {
-            if (!(itemEntry.getValue() instanceof WzListProperty itemProp)) {
+            if (!(itemEntry.getValue() instanceof WzProperty itemProp)) {
                 throw new ProviderError("Failed to resolve quest item list");
             }
             items.add(QuestItemData.from(itemProp));
@@ -99,10 +99,10 @@ public final class QuestItemData {
         return items;
     }
 
-    public static List<QuestItemData> resolveChoiceItemData(WzListProperty itemList) throws ProviderError {
+    public static List<QuestItemData> resolveChoiceItemData(WzProperty itemList) throws ProviderError {
         final List<QuestItemData> items = new ArrayList<>();
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
-            if (!(itemList.get(String.valueOf(i)) instanceof WzListProperty itemProp)) {
+            if (!(itemList.get(String.valueOf(i)) instanceof WzProperty itemProp)) {
                 break;
             }
             final int prop = WzProvider.getInteger(itemProp.get("prop"), 0);
@@ -117,7 +117,7 @@ public final class QuestItemData {
         return items;
     }
 
-    private static QuestItemData from(WzListProperty itemProp) throws ProviderError {
+    private static QuestItemData from(WzProperty itemProp) throws ProviderError {
         return new QuestItemData(
                 WzProvider.getInteger(itemProp.get("id")),
                 WzProvider.getInteger(itemProp.get("count"), 0),

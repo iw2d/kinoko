@@ -4,13 +4,10 @@ import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SummonInfo;
-import kinoko.provider.wz.WzConstants;
+import kinoko.provider.wz.WzImage;
 import kinoko.provider.wz.WzPackage;
-import kinoko.provider.wz.WzReader;
-import kinoko.provider.wz.WzReaderConfig;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 import kinoko.world.job.Job;
 
 import java.io.IOException;
@@ -28,17 +25,15 @@ public final class SkillProvider implements WzProvider {
 
     public static void initialize() {
         // Skill.wz
-        try (final WzReader reader = WzReader.build(SKILL_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadSkillInfos(wzPackage);
-            loadMobSkills(wzPackage);
+        try (final WzPackage source = WzPackage.from(SKILL_WZ)) {
+            loadSkillInfos(source);
+            loadMobSkills(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Skill.wz", e);
         }
         // Morph.wz
-        try (final WzReader reader = WzReader.build(MORPH_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadMorphInfos(wzPackage);
+        try (final WzPackage source = WzPackage.from(MORPH_WZ)) {
+            loadMorphInfos(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Morph.wz", e);
         }
@@ -66,18 +61,19 @@ public final class SkillProvider implements WzProvider {
 
     private static void loadSkillInfos(WzPackage source) throws ProviderError {
         for (var imageEntry : source.getDirectory().getImages().entrySet()) {
+
             final String imageName = imageEntry.getKey().replace(".img", "");
             if (!imageName.matches("[0-9]+")) {
                 continue;
             }
             final short jobId = Short.parseShort(imageName);
             final Job job = Job.getById(jobId);
-            if (!(imageEntry.getValue().getProperty().get("skill") instanceof WzListProperty skillList)) {
+            if (!(imageEntry.getValue().getItem("skill") instanceof WzProperty skillList)) {
                 throw new ProviderError("Failed to resolve skills for job ID : %d", jobId);
             }
             for (var skillEntry : skillList.getItems().entrySet()) {
                 final int skillId = Integer.parseInt(skillEntry.getKey());
-                if (!(skillEntry.getValue() instanceof WzListProperty skillProp)) {
+                if (!(skillEntry.getValue() instanceof WzProperty skillProp)) {
                     throw new ProviderError("Failed to resolve item property");
                 }
                 final SkillInfo skillInfo = SkillInfo.from(skillId, skillProp);
@@ -92,11 +88,11 @@ public final class SkillProvider implements WzProvider {
     }
 
     private static void loadMobSkills(WzPackage source) throws ProviderError {
-        if (!source.getDirectory().getImages().containsKey("MobSkill.img")) {
+        if (!(source.getItem("MobSkill.img") instanceof WzImage mobSkill)) {
             throw new ProviderError("Failed to resolve MobSkill.img");
         }
-        for (var entry : source.getDirectory().getImages().get("MobSkill.img").getProperty().getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty skillProp)) {
+        for (var entry : mobSkill.getItems().entrySet()) {
+            if (!(entry.getValue() instanceof WzProperty skillProp)) {
                 throw new ProviderError("Failed to resolve mob skill property");
             }
             final int skillId = Integer.parseInt(entry.getKey());
@@ -106,11 +102,11 @@ public final class SkillProvider implements WzProvider {
                 continue;
             }
             // Resolve mob summons
-            if (!(skillProp.get("level") instanceof WzListProperty levelProps)) {
+            if (!(skillProp.get("level") instanceof WzProperty levelProps)) {
                 throw new ProviderError("Failed to resolve mob summons");
             }
             for (int slv = 1; slv <= skillInfo.getMaxLevel(); slv++) {
-                if (!(levelProps.get(String.valueOf(slv)) instanceof WzListProperty summonProp)) {
+                if (!(levelProps.get(String.valueOf(slv)) instanceof WzProperty summonProp)) {
                     throw new ProviderError("Failed to resolve mob summons");
                 }
                 final List<Integer> summons = new ArrayList<>();
@@ -132,7 +128,7 @@ public final class SkillProvider implements WzProvider {
                 continue;
             }
             final int morphId = Integer.parseInt(imageName);
-            if (!(imageEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+            if (!(imageEntry.getValue().getItem("info") instanceof WzProperty infoProp)) {
                 throw new ProviderError("Failed to resolve morph info property");
             }
             morphInfos.put(morphId, MorphInfo.from(morphId, infoProp));

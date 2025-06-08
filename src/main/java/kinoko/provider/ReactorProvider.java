@@ -1,13 +1,9 @@
 package kinoko.provider;
 
 import kinoko.provider.reactor.ReactorTemplate;
-import kinoko.provider.wz.WzConstants;
 import kinoko.provider.wz.WzPackage;
-import kinoko.provider.wz.WzReader;
-import kinoko.provider.wz.WzReaderConfig;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 import kinoko.util.Triple;
 import kinoko.util.Tuple;
 
@@ -23,9 +19,8 @@ public final class ReactorProvider implements WzProvider {
     private static final Map<Integer, ReactorTemplate> reactorTemplates = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadReactorTemplates(wzPackage);
+        try (final WzPackage source = WzPackage.from(REACTOR_WZ)) {
+            loadReactorTemplates(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Reactor.wz", e);
         }
@@ -43,11 +38,11 @@ public final class ReactorProvider implements WzProvider {
         final Map<Integer, Triple<Integer, Tuple<Boolean, Boolean>, String>> linkedReactors = new HashMap<>(); // reactorId -> link, [notHitable, activateByTouch], action
         for (var imageEntry : source.getDirectory().getImages().entrySet()) {
             final int reactorId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
-            final WzListProperty imageProp = imageEntry.getValue().getProperty();
+            final WzProperty imageProp = imageEntry.getValue().getProperty();
             final String action = imageProp.get("action");
             boolean notHitable = false;
             boolean activateByTouch = false;
-            if (imageProp.get("info") instanceof WzListProperty infoProp) {
+            if (imageProp.get("info") instanceof WzProperty infoProp) {
                 notHitable = WzProvider.getInteger(imageProp.get("notHitable"), 0) != 0;
                 activateByTouch = WzProvider.getInteger(imageProp.get("activateByTouch"), 0) != 0;
 

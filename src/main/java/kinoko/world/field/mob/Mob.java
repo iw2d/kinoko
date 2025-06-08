@@ -564,6 +564,10 @@ public final class Mob extends Life implements ControlledObject, Encodable {
     }
 
     private Optional<Drop> createDrop(User owner, Reward reward) {
+        // Field requirement
+        if (reward.isFieldRequirement() && reward.getFieldId() != getField().getFieldId()) {
+            return Optional.empty();
+        }
         // Drop probability
         double probability = reward.getProb();
         if (owner.getSecondaryStat().hasOption(CharacterTemporaryStat.ItemUpByItem)) {

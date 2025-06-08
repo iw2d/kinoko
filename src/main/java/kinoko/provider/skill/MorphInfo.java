@@ -2,7 +2,7 @@ package kinoko.provider.skill;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class MorphInfo {
     private final int id;
@@ -27,7 +27,7 @@ public final class MorphInfo {
         return attackable;
     }
 
-    public static MorphInfo from(int morphId, WzListProperty infoProp) throws ProviderError {
+    public static MorphInfo from(int morphId, WzProperty infoProp) throws ProviderError {
         return new MorphInfo(
                 morphId,
                 WzProvider.getInteger(infoProp.get("superman"), 0) != 0,

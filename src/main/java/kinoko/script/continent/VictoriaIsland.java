@@ -32,7 +32,7 @@ public final class VictoriaIsland extends ScriptHandler {
         //   Kerning City : Kerning City (103000000)
         //   Lith Harbor : Lith Harbor (104000000)
         //   Nautilus : Nautilus Harbor (120000000)
-        final boolean isBeginner = JobConstants.isBeginnerJob(sm.getUser().getJob());
+        final boolean isBeginner = JobConstants.isBeginnerJob(sm.getJob());
         final int price = isBeginner ? 100 : 1000;
         final List<Integer> towns = Stream.of(
                 100000000, // Henesys : Henesys
@@ -214,6 +214,12 @@ public final class VictoriaIsland extends ScriptHandler {
     public static void enter_VDS(ScriptManager sm) {
         // Sleepywood : Sleepywood (105000000)
         //   east00 (1759, 312)
+        final int playerLevel = sm.getUser().getLevel();
+        if (playerLevel < 50) {
+            sm.scriptProgressMessage("You cannot enter, because you do not meet the level requirement.");
+            sm.message("You must be Lv. 50 or above to enter this area.");
+            return;
+        }
         sm.playPortalSE();
         sm.warp(105010000, "west00"); // Swamp : Silent Swamp
     }

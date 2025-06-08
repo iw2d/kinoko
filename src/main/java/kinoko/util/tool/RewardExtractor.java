@@ -7,10 +7,12 @@ import kinoko.provider.quest.QuestItemData;
 import kinoko.provider.quest.check.QuestCheck;
 import kinoko.provider.quest.check.QuestItemCheck;
 import kinoko.provider.reward.Reward;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.WzArchive;
+import kinoko.provider.wz.WzCrypto;
+import kinoko.provider.wz.WzImage;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -28,46 +30,12 @@ abstract class RewardExtractor {
         QuestProvider.initialize();
         StringProvider.initialize();
 
-        final WzImage rewardImage = readImage(REWARD_IMG);
-
-        // Extract mob rewards
-        final Map<Integer, List<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
-        try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "mob_reward.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-            for (var entry : mobRewards.entrySet().stream()
-                    .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
-                final int mobId = entry.getKey();
-                final String mobName = StringProvider.getMobName(mobId);
-                if (mobName == null) {
-                    System.err.printf("Could not resolve name for mob ID : %d%n", mobId);
-                    continue;
-                }
-                bw.write(String.format("# %s%n", mobName));
-                for (Reward r : entry.getValue().stream()
-                        .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
-                    final String itemName;
-                    if (r.isMoney()) {
-                        itemName = "money";
-                    } else {
-                        itemName = StringProvider.getItemName(r.getItemId());
-                        if (itemName == null) {
-                            System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
-                            continue;
-                        }
-                    }
-                    final String line = String.format("%d, %d, %d, %d, %f, %d", mobId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.getQuestId());
-                    bw.write(String.format("%-120s# %s%n", line, itemName));
-                }
-                bw.write("\n");
-            }
-        }
-
         // Load reactor actions
         final Map<Integer, String> reactorActions = new HashMap<>();
-        try (final WzReader reader = WzReader.build(REACTOR_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            for (var imageEntry : wzPackage.getDirectory().getImages().entrySet()) {
+        try (final WzPackage source = WzPackage.from(REACTOR_WZ)) {
+            for (var imageEntry : source.getDirectory().getImages().entrySet()) {
                 final int reactorId = Integer.parseInt(imageEntry.getKey().replace(".img", ""));
-                if (!(imageEntry.getValue().getProperty().get("action") instanceof String reactorAction)) {
+                if (!(imageEntry.getValue().getItem("action") instanceof String reactorAction)) {
                     System.err.printf("Failed to resolve action for reactor ID : %d%n", reactorId);
                     continue;
                 }
@@ -77,41 +45,79 @@ abstract class RewardExtractor {
             throw new IllegalArgumentException("Exception caught while loading Reactor.wz", e);
         }
 
-        // Extract reactor rewards
-        final Map<Integer, List<Reward>> reactorRewards = loadRewards(rewardImage, "r", true);
-        try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "reactor_reward.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-            for (var entry : reactorRewards.entrySet().stream()
-                    .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
-                final int reactorId = entry.getKey();
-                if (!reactorActions.containsKey(reactorId)) {
-                    System.err.printf("Could not resolve reactor action for reactor ID : %d%n", reactorId);
-                    continue;
-                }
-                bw.write(String.format("# %s%n", reactorActions.get(reactorId)));
-                for (Reward r : entry.getValue().stream()
-                        .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
-                    final String itemName;
-                    if (r.isMoney()) {
-                        itemName = "money";
-                    } else {
-                        itemName = StringProvider.getItemName(r.getItemId());
-                        if (itemName == null) {
-                            System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
-                            continue;
-                        }
+        WzCrypto.setCipher(null);
+        try (final WzArchive archive = WzArchive.from(REWARD_IMG)) {
+            final WzImage rewardImage = archive.getImage();
+
+            // Extract mob rewards
+            final Map<Integer, List<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
+            try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "mob_reward.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                for (var entry : mobRewards.entrySet().stream()
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
+                    final int mobId = entry.getKey();
+                    final String mobName = StringProvider.getMobName(mobId);
+                    if (mobName == null) {
+                        System.err.printf("Could not resolve name for mob ID : %d%n", mobId);
+                        continue;
                     }
-                    final String line = String.format("%s, %d, %d, %d, %f, %d", reactorActions.get(reactorId), r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.getQuestId());
-                    bw.write(String.format("%-120s# %s%n", line, itemName));
+                    bw.write(String.format("# %s%n", mobName));
+                    for (Reward r : entry.getValue().stream()
+                            .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
+                        final String itemName;
+                        if (r.isMoney()) {
+                            itemName = "money";
+                        } else {
+                            itemName = StringProvider.getItemName(r.getItemId());
+                            if (itemName == null) {
+                                System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
+                                continue;
+                            }
+                        }
+                        final String line = String.format("%d, %d, %d, %d, %f, %d", mobId, r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.getQuestId());
+                        bw.write(String.format("%-120s# %s%n", line, itemName));
+                    }
+                    bw.write("\n");
                 }
-                bw.write("\n");
             }
+
+            // Extract reactor rewards
+            final Map<Integer, List<Reward>> reactorRewards = loadRewards(rewardImage, "r", true);
+            try (BufferedWriter bw = Files.newBufferedWriter(Path.of(ServerConfig.DATA_DIRECTORY, "reactor_reward.csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                for (var entry : reactorRewards.entrySet().stream()
+                        .sorted(Comparator.comparingInt(Map.Entry::getKey)).toList()) {
+                    final int reactorId = entry.getKey();
+                    if (!reactorActions.containsKey(reactorId)) {
+                        System.err.printf("Could not resolve reactor action for reactor ID : %d%n", reactorId);
+                        continue;
+                    }
+                    bw.write(String.format("# %s%n", reactorActions.get(reactorId)));
+                    for (Reward r : entry.getValue().stream()
+                            .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
+                        final String itemName;
+                        if (r.isMoney()) {
+                            itemName = "money";
+                        } else {
+                            itemName = StringProvider.getItemName(r.getItemId());
+                            if (itemName == null) {
+                                System.err.printf("Could not resolve item name for item ID : %d%n", r.getItemId());
+                                continue;
+                            }
+                        }
+                        final String line = String.format("%s, %d, %d, %d, %f, %d", reactorActions.get(reactorId), r.getItemId(), r.getMin(), r.getMax(), r.getProb(), r.getQuestId());
+                        bw.write(String.format("%-120s# %s%n", line, itemName));
+                    }
+                    bw.write("\n");
+                }
+            }
+        } catch (IOException | ProviderError e) {
+            throw new IllegalArgumentException("Exception caught while loading Reward.img", e);
         }
     }
 
     public static Map<Integer, List<Reward>> loadRewards(WzImage image, String prefix, boolean includeMoney) {
         final Map<Integer, List<Reward>> rewardMap = new HashMap<>();
-        for (var entry : image.getProperty().getItems().entrySet()) {
-            if (!(entry.getValue() instanceof WzListProperty rewardList)) {
+        for (var entry : image.getItems().entrySet()) {
+            if (!(entry.getValue() instanceof WzProperty rewardList)) {
                 throw new ProviderError("Failed to read reward list");
             }
             if (!entry.getKey().startsWith(prefix)) {
@@ -120,7 +126,7 @@ abstract class RewardExtractor {
             final int templateId = Integer.parseInt(entry.getKey().replaceFirst(prefix, ""));
             final List<Reward> rewards = new ArrayList<>();
             for (var rewardEntry : rewardList.getItems().entrySet()) {
-                if (!(rewardEntry.getValue() instanceof WzListProperty rewardProp)) {
+                if (!(rewardEntry.getValue() instanceof WzProperty rewardProp)) {
                     throw new ProviderError("Failed to read reward prop");
                 }
                 if (rewardProp.getItems().containsKey("dateExpire")) {
@@ -186,18 +192,5 @@ abstract class RewardExtractor {
             }
         }
         return rewardMap;
-    }
-
-    public static WzImage readImage(Path path) {
-        try (final WzReader reader = WzReader.build(path, new WzReaderConfig(WzConstants.WZ_EMPTY_IV, ServerConstants.GAME_VERSION))) {
-            final WzImage image = new WzImage(0);
-            if (!(reader.readProperty(image, reader.getBuffer(0)) instanceof WzListProperty listProperty)) {
-                throw new WzReaderError("Image property is not a list");
-            }
-            image.setProperty(listProperty);
-            return image;
-        } catch (IOException | ProviderError e) {
-            throw new IllegalArgumentException("Exception caught while loading Reward.img", e);
-        }
     }
 }

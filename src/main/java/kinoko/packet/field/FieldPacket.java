@@ -281,7 +281,7 @@ public final class FieldPacket {
     }
 
     public static OutPacket reactorLeaveField(Reactor reactor) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.ReactorEnterField);
+        final OutPacket outPacket = OutPacket.of(OutHeader.ReactorLeaveField);
         outPacket.encodeInt(reactor.getId());
         outPacket.encodeByte(reactor.getState()); // nState
         outPacket.encodeShort(reactor.getX()); // ptPos.x

@@ -1,10 +1,10 @@
 package kinoko.provider;
 
 import kinoko.provider.quest.QuestInfo;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.WzImage;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,9 +18,8 @@ public final class QuestProvider implements WzProvider {
     private static final Map<Integer, QuestInfo> questInfos = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadQuestInfos(wzPackage);
+        try (final WzPackage source = WzPackage.from(QUEST_WZ)) {
+            loadQuestInfos(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Quest.wz", e);
         }
@@ -35,19 +34,19 @@ public final class QuestProvider implements WzProvider {
     }
 
     private static void loadQuestInfos(WzPackage source) throws ProviderError {
-        final WzImage infoImage = source.getDirectory().getImages().get("QuestInfo.img");
-        final WzImage actImage = source.getDirectory().getImages().get("Act.img");
-        final WzImage checkImage = source.getDirectory().getImages().get("Check.img");
-        for (var entry : infoImage.getProperty().getItems().entrySet()) {
+        final WzImage infoImage = (WzImage) source.getItem("QuestInfo.img");
+        final WzImage actImage = (WzImage) source.getItem("Act.img");
+        final WzImage checkImage = (WzImage) source.getItem("Check.img");
+        for (var entry : infoImage.getItems().entrySet()) {
             final int questId = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty infoProp)) {
+            if (!(entry.getValue() instanceof WzProperty infoProp)) {
                 throw new ProviderError("Failed to resolve quest info");
             }
             final QuestInfo questInfo = QuestInfo.from(
                     questId,
                     infoProp,
-                    actImage.getProperty().get(entry.getKey()),
-                    checkImage.getProperty().get(entry.getKey())
+                    (WzProperty) actImage.getItem(entry.getKey()),
+                    (WzProperty) checkImage.getItem(entry.getKey())
             );
             questInfos.put(questId, questInfo);
         }

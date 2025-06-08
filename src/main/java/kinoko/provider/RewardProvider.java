@@ -56,7 +56,8 @@ public final class RewardProvider implements DataProvider {
             final int max = ((Number) rewardInfo.get(2)).intValue();
             final double prob = ((Number) rewardInfo.get(3)).doubleValue();
             final int questId = rewardInfo.size() > 4 ? ((Number) rewardInfo.get(4)).intValue() : 0;
-            rewards.add(Reward.item(itemId, min, max, prob, questId));
+            final int fieldId = rewardInfo.size() > 5 ? ((Number) rewardInfo.get(5)).intValue() : 0;
+            rewards.add(Reward.item(itemId, min, max, prob, questId, fieldId));
         }
         mobRewards.put(mobId, Collections.unmodifiableList(rewards));
     }

@@ -2,7 +2,7 @@ package kinoko.provider.item;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class PetInteraction {
     private final int incTameness;
@@ -33,7 +33,7 @@ public final class PetInteraction {
         return prop;
     }
 
-    public static PetInteraction from(WzListProperty interactProp) throws ProviderError {
+    public static PetInteraction from(WzProperty interactProp) throws ProviderError {
         return new PetInteraction(
                 WzProvider.getInteger(interactProp.get("inc")),
                 WzProvider.getInteger(interactProp.get("l0")),

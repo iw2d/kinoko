@@ -1,10 +1,10 @@
 package kinoko.provider;
 
 import kinoko.provider.mob.MobTemplate;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.WzDirectory;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 import kinoko.util.Tuple;
 
 import java.io.IOException;
@@ -17,10 +17,9 @@ public final class MobProvider implements WzProvider {
     private static final Map<Integer, Set<Integer>> questCountGroups = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(MOB_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadMobTemplates(wzPackage);
-            loadQuestCountGroups(wzPackage);
+        try (final WzPackage source = WzPackage.from(MOB_WZ)) {
+            loadMobTemplates(source);
+            loadQuestCountGroups(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading Mob.wz", e);
         }
@@ -35,12 +34,12 @@ public final class MobProvider implements WzProvider {
     }
 
     private static void loadMobTemplates(WzPackage source) throws ProviderError {
-        final Map<Integer, WzListProperty> mobProperties = new HashMap<>(); // mobId -> mobProperty
-        final Map<Integer, Tuple<Integer, WzListProperty>> linkedMobs = new HashMap<>(); // mobId -> link, infoProp
+        final Map<Integer, WzProperty> mobProperties = new HashMap<>(); // mobId -> mobProperty
+        final Map<Integer, Tuple<Integer, WzProperty>> linkedMobs = new HashMap<>(); // mobId -> link, infoProp
         for (var mobEntry : source.getDirectory().getImages().entrySet()) {
             final int mobId = Integer.parseInt(mobEntry.getKey().replace(".img", ""));
-            final WzListProperty mobProperty = mobEntry.getValue().getProperty();
-            if (!(mobEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+            final WzProperty mobProperty = mobEntry.getValue().getProperty();
+            if (!(mobEntry.getValue().getItem("info") instanceof WzProperty infoProp)) {
                 throw new ProviderError("Failed to resolve info property");
             }
             if (infoProp.getItems().containsKey("link")) {
@@ -58,11 +57,11 @@ public final class MobProvider implements WzProvider {
                 // Client seems to be able to resolve recursive links for mobs, but not for other data
                 link = linkedMobs.get(link).getLeft();
             }
-            final WzListProperty linkProp = mobProperties.get(link);
+            final WzProperty linkProp = mobProperties.get(link);
             if (linkProp == null) {
                 throw new ProviderError("Failed to resolve linked mob ID : %d, link : %d", mobId, link);
             }
-            final WzListProperty infoProp = linkEntry.getValue().getRight();
+            final WzProperty infoProp = linkEntry.getValue().getRight();
             mobTemplates.put(mobId, MobTemplate.from(mobId, linkProp, infoProp));
         }
         // Validate mobs
@@ -82,7 +81,7 @@ public final class MobProvider implements WzProvider {
         }
         for (var groupEntry : directory.getImages().entrySet()) {
             final int mobId = Integer.parseInt(groupEntry.getKey().replace(".img", ""));
-            if (!(groupEntry.getValue().getProperty().get("info") instanceof WzListProperty infoProp)) {
+            if (!(groupEntry.getValue().getItem("info") instanceof WzProperty infoProp)) {
                 throw new ProviderError("Failed to resolve info property");
             }
             final Set<Integer> group = new HashSet<>();

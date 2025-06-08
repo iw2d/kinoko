@@ -2,7 +2,7 @@ package kinoko.provider.reactor;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 import java.util.*;
 
@@ -75,20 +75,20 @@ public final class ReactorTemplate {
         return Optional.empty();
     }
 
-    public static ReactorTemplate from(int reactorId, boolean notHitable, boolean activateByTouch, String action, WzListProperty reactorProp) throws ProviderError {
+    public static ReactorTemplate from(int reactorId, boolean notHitable, boolean activateByTouch, String action, WzProperty reactorProp) throws ProviderError {
         // Process states
         final Map<Integer, ReactorState> states = new HashMap<>();
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
-            if (!(reactorProp.get(String.valueOf(i)) instanceof WzListProperty stateProp)) {
+            if (!(reactorProp.get(String.valueOf(i)) instanceof WzProperty stateProp)) {
                 break;
             }
             int timeOut = 0;
             // Process events
             final List<ReactorEvent> events = new ArrayList<>();
-            if (stateProp.get("event") instanceof WzListProperty eventList) {
+            if (stateProp.get("event") instanceof WzProperty eventList) {
                 timeOut = WzProvider.getInteger(eventList.get("timeOut"), 0);
                 for (int j = 0; j < Integer.MAX_VALUE; j++) {
-                    if (!(eventList.get(String.valueOf(j)) instanceof WzListProperty eventProp)) {
+                    if (!(eventList.get(String.valueOf(j)) instanceof WzProperty eventProp)) {
                         break;
                     }
                     events.add(ReactorEvent.from(eventProp));

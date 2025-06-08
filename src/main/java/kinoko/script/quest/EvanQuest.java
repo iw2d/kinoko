@@ -341,7 +341,7 @@ public final class EvanQuest extends ScriptHandler {
     public static void evanEntrance(ScriptManager sm) {
         // Farm Street : Large Forest Trail 2 (100030320)
         //   west00 (-2046, 36)
-        if (sm.getUser().getCharacterStat().getJob() == 2001) {
+        if (sm.getJob() == 2001) {
             sm.message("You are not allowed to leave the farm yet.");
             return;
         }

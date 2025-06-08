@@ -21,3 +21,5 @@ rewards:
   - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
   - [ 4031273, 1, 1, 0.035000, 2104 ] # Red Ball of Yarn
+  - [ 4032376, 1, 1, 0.035000, 2406 ] # Letter of Commendation - Magician Adventurer
+  - [ 4032377, 1, 1, 0.035000, 2407 ] # Letter of Commendation - Bowman Adventurer

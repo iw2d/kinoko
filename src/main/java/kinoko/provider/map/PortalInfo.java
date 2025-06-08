@@ -1,7 +1,7 @@
 package kinoko.provider.map;
 
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.GameConstants;
 
 public final class PortalInfo {
@@ -118,7 +118,7 @@ public final class PortalInfo {
                 '}';
     }
 
-    public static PortalInfo from(PortalType portalType, int portalId, WzListProperty portalProp) {
+    public static PortalInfo from(PortalType portalType, int portalId, WzProperty portalProp) {
         return new PortalInfo(
                 portalType,
                 portalId,

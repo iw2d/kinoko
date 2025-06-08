@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class TrunkTest {

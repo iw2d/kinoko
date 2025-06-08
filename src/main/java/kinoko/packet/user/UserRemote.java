@@ -101,7 +101,7 @@ public final class UserRemote {
     }
 
     public static OutPacket skillCancel(User user, int skillId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.UserSkillPrepare);
+        final OutPacket outPacket = OutPacket.of(OutHeader.UserSkillCancel);
         outPacket.encodeInt(user.getCharacterId());
         outPacket.encodeInt(skillId);
         return outPacket;

@@ -4,7 +4,7 @@ import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.quest.QuestSkillData;
 import kinoko.provider.skill.SkillInfo;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.User;
@@ -60,7 +60,7 @@ public final class QuestSkillAct implements QuestAct {
         return true;
     }
 
-    public static QuestSkillAct from(WzListProperty skillList) {
+    public static QuestSkillAct from(WzProperty skillList) {
         final List<QuestSkillData> skills = QuestSkillData.resolveSkillData(skillList);
         return new QuestSkillAct(
                 Collections.unmodifiableList(skills)

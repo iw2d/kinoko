@@ -3,9 +3,11 @@ package kinoko.util.tool;
 import kinoko.provider.*;
 import kinoko.provider.mob.MobTemplate;
 import kinoko.provider.reward.Reward;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
-import kinoko.server.ServerConstants;
+import kinoko.provider.wz.WzArchive;
+import kinoko.provider.wz.WzCrypto;
+import kinoko.provider.wz.WzImage;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.item.ItemConstants;
 
 import java.io.BufferedWriter;
@@ -25,80 +27,82 @@ final class MonsterBookExtractor extends RewardExtractor {
         StringProvider.initialize();
 
         // Load monster book rewards
-        try (final WzReader reader = WzReader.build(StringProvider.STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadMonsterBookRewards(wzPackage);
+        try (final WzPackage source = WzPackage.from(StringProvider.STRING_WZ)) {
+            loadMonsterBookRewards(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading String.wz", e);
         }
 
         // Load BMS rewards
-        final WzImage rewardImage = readImage(RewardExtractor.REWARD_IMG);
-        final Map<Integer, List<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
+        WzCrypto.setCipher(null);
+        try (final WzArchive archive = WzArchive.from(RewardExtractor.REWARD_IMG)) {
+            final WzImage rewardImage = archive.getImage();
+            final Map<Integer, List<Reward>> mobRewards = loadRewards(rewardImage, "m", false);
 
-        // Create YAML
-        for (var entry : monsterBookRewards.entrySet()) {
-            final int mobId = entry.getKey();
+            // Create YAML
+            for (var entry : monsterBookRewards.entrySet()) {
+                final int mobId = entry.getKey();
 
-            final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
-            if (mobTemplateResult.isEmpty()) {
-                throw new IllegalStateException("Could not resolve mob template for mob ID : " + mobId);
-            }
-            final MobTemplate mobTemplate = mobTemplateResult.get();
-
-            final List<Reward> bmsRewards = mobRewards.getOrDefault(mobId, List.of());
-            final Path filePath = Path.of(RewardProvider.REWARD_DATA.toString(), String.format("%d.yaml", mobId));
-            if (filePath.toFile().exists()) {
-                continue;
-            }
-            try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                bw.write(String.format("# %s (%d)\n\n", StringProvider.getMobName(mobId), mobId));
-                bw.write("rewards:\n");
-                for (int itemId : entry.getValue().stream()
-                        .sorted(Comparator.comparingInt(Integer::intValue)).toList()) {
-                    bw.write(formatReward(itemId, mobTemplate.isBoss()));
+                final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
+                if (mobTemplateResult.isEmpty()) {
+                    throw new IllegalStateException("Could not resolve mob template for mob ID : " + mobId);
                 }
-                for (Reward reward : bmsRewards) {
-                    if (reward.isQuest()) {
-                        bw.write(String.format("  - [ %d, %d, %d, %f, %d ] # %s\n", reward.getItemId(), reward.getMin(), reward.getMax(), reward.getProb(), reward.getQuestId(), StringProvider.getItemName(reward.getItemId())));
+                final MobTemplate mobTemplate = mobTemplateResult.get();
+
+                final List<Reward> bmsRewards = mobRewards.getOrDefault(mobId, List.of());
+                final Path filePath = Path.of(RewardProvider.REWARD_DATA.toString(), String.format("%d.yaml", mobId));
+                if (filePath.toFile().exists()) {
+                    continue;
+                }
+                try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                    bw.write(String.format("# %s (%d)\n\n", StringProvider.getMobName(mobId), mobId));
+                    bw.write("rewards:\n");
+                    for (int itemId : entry.getValue().stream()
+                            .sorted(Comparator.comparingInt(Integer::intValue)).toList()) {
+                        bw.write(formatReward(itemId, mobTemplate.isBoss()));
+                    }
+                    for (Reward reward : bmsRewards) {
+                        if (reward.isQuest()) {
+                            bw.write(String.format("  - [ %d, %d, %d, %f, %d ] # %s\n", reward.getItemId(), reward.getMin(), reward.getMax(), reward.getProb(), reward.getQuestId(), StringProvider.getItemName(reward.getItemId())));
+                        }
                     }
                 }
             }
-        }
 
-        // Check missing mobs from BMS
-        for (var entry : mobRewards.entrySet()) {
-            final int mobId = entry.getKey();
-            if (monsterBookRewards.containsKey(mobId)) {
-                continue;
-            }
-            if (mobId == 9300018) {
-                // Tutorial sentinel - BMS has a different item ID
-                continue;
-            }
-            final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
-            if (mobTemplateResult.isEmpty()) {
-                System.err.println("Could not resolve mob template for mob ID : " + mobId);
-                continue;
-            }
-            final MobTemplate mobTemplate = mobTemplateResult.get();
-            final Path filePath = Path.of(RewardProvider.REWARD_DATA.toString(), String.format("%d.yaml", mobId));
-            if (filePath.toFile().exists()) {
-                continue;
-            }
-            try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                bw.write(String.format("# %s (%d)\n\n", StringProvider.getMobName(mobId), mobId));
-                bw.write("rewards:\n");
-                for (Reward reward : entry.getValue().stream()
-                        .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
-                    if (reward.isQuest()) {
-                        bw.write(String.format("  - [ %d, %d, %d, %f, %d ] # %s\n", reward.getItemId(), reward.getMin(), reward.getMax(), reward.getProb(), reward.getQuestId(), StringProvider.getItemName(reward.getItemId())));
-                    } else {
-                        if ((mobId >= 9000000 && mobId < 9100000) || (mobId >= 9300000 && mobId < 9400000)) {
-                            // event - pq mobs
-                            bw.write(String.format("  - [ %d, %d, %d, %f ] # %s\n", reward.getItemId(), reward.getMin(), reward.getMax(), reward.getProb(), StringProvider.getItemName(reward.getItemId())));
+            // Check missing mobs from BMS
+            for (var entry : mobRewards.entrySet()) {
+                final int mobId = entry.getKey();
+                if (monsterBookRewards.containsKey(mobId)) {
+                    continue;
+                }
+                if (mobId == 9300018) {
+                    // Tutorial sentinel - BMS has a different item ID
+                    continue;
+                }
+                final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
+                if (mobTemplateResult.isEmpty()) {
+                    System.err.println("Could not resolve mob template for mob ID : " + mobId);
+                    continue;
+                }
+                final MobTemplate mobTemplate = mobTemplateResult.get();
+                final Path filePath = Path.of(RewardProvider.REWARD_DATA.toString(), String.format("%d.yaml", mobId));
+                if (filePath.toFile().exists()) {
+                    continue;
+                }
+                try (BufferedWriter bw = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                    bw.write(String.format("# %s (%d)\n\n", StringProvider.getMobName(mobId), mobId));
+                    bw.write("rewards:\n");
+                    for (Reward reward : entry.getValue().stream()
+                            .sorted(Comparator.comparingInt(Reward::getItemId)).toList()) {
+                        if (reward.isQuest()) {
+                            bw.write(String.format("  - [ %d, %d, %d, %f, %d ] # %s\n", reward.getItemId(), reward.getMin(), reward.getMax(), reward.getProb(), reward.getQuestId(), StringProvider.getItemName(reward.getItemId())));
                         } else {
-                            bw.write(formatReward(reward.getItemId(), mobTemplate.isBoss()));
+                            if ((mobId >= 9000000 && mobId < 9100000) || (mobId >= 9300000 && mobId < 9400000)) {
+                                // event - pq mobs
+                                bw.write(String.format("  - [ %d, %d, %d, %f ] # %s\n", reward.getItemId(), reward.getMin(), reward.getMax(), reward.getProb(), StringProvider.getItemName(reward.getItemId())));
+                            } else {
+                                bw.write(formatReward(reward.getItemId(), mobTemplate.isBoss()));
+                            }
                         }
                     }
                 }
@@ -107,13 +111,13 @@ final class MonsterBookExtractor extends RewardExtractor {
     }
 
     private static void loadMonsterBookRewards(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("MonsterBook.img") instanceof WzImage monsterBookImage)) {
+        if (!((WzImage) source.getItem("MonsterBook.img") instanceof WzImage monsterBookImage)) {
             throw new ProviderError("Could not resolve String.wz/MonsterBook.img");
         }
-        for (var entry : monsterBookImage.getProperty().getItems().entrySet()) {
+        for (var entry : monsterBookImage.getItems().entrySet()) {
             final int mobId = WzProvider.getInteger(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty entryProp) ||
-                    !(entryProp.get("reward") instanceof WzListProperty rewardProp)) {
+            if (!(entry.getValue() instanceof WzProperty entryProp) ||
+                    !(entryProp.get("reward") instanceof WzProperty rewardProp)) {
                 throw new ProviderError("Could not resolve monster book info");
             }
             final List<Integer> rewards = new ArrayList<>();

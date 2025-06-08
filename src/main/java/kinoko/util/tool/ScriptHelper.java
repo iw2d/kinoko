@@ -6,9 +6,9 @@ import kinoko.provider.map.MapInfo;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.npc.NpcTemplate;
 import kinoko.provider.reactor.ReactorTemplate;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
-import kinoko.server.ServerConstants;
+import kinoko.provider.wz.WzImage;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -163,18 +163,17 @@ final class ScriptHelper {
 
 
         // Process quest scripts
-        try (final WzReader reader = WzReader.build(QuestProvider.QUEST_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            final WzImage infoImage = wzPackage.getDirectory().getImages().get("QuestInfo.img");
-            final WzImage checkImage = wzPackage.getDirectory().getImages().get("Check.img");
-            for (var entry : checkImage.getProperty().getItems().entrySet()) {
+        try (final WzPackage source = WzPackage.from(QuestProvider.QUEST_WZ)) {
+            final WzImage infoImage = (WzImage) source.getItem("QuestInfo.img");
+            final WzImage checkImage = (WzImage) source.getItem("Check.img");
+            for (var entry : checkImage.getItems().entrySet()) {
                 final int questId = WzProvider.getInteger(entry.getKey());
-                if (!(entry.getValue() instanceof WzListProperty questCheck) ||
-                        !(questCheck.get("0") instanceof WzListProperty startCheck) ||
-                        !(questCheck.get("1") instanceof WzListProperty endCheck)) {
+                if (!(entry.getValue() instanceof WzProperty questCheck) ||
+                        !(questCheck.get("0") instanceof WzProperty startCheck) ||
+                        !(questCheck.get("1") instanceof WzProperty endCheck)) {
                     throw new ProviderError("Could not resolve quest check");
                 }
-                if (!(infoImage.getProperty().get(entry.getKey()) instanceof WzListProperty questInfo)) {
+                if (!(infoImage.getItem(entry.getKey()) instanceof WzProperty questInfo)) {
                     throw new ProviderError("Could not resolve quest check");
                 }
                 final String questName = WzProvider.getString(questInfo.get("name"));

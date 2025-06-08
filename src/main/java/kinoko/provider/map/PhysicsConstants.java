@@ -2,7 +2,7 @@ package kinoko.provider.map;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class PhysicsConstants {
     private final double walkForce;
@@ -148,7 +148,7 @@ public final class PhysicsConstants {
                 '}';
     }
 
-    public static PhysicsConstants from(WzListProperty physicsProp) throws ProviderError {
+    public static PhysicsConstants from(WzProperty physicsProp) throws ProviderError {
         return new PhysicsConstants(
                 WzProvider.getDouble(physicsProp.get("walkForce")),
                 WzProvider.getDouble(physicsProp.get("walkSpeed")),

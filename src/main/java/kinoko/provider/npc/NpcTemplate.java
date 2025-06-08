@@ -2,7 +2,7 @@ package kinoko.provider.npc;
 
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.serialize.WzProperty;
 
 public final class NpcTemplate {
     private final int id;
@@ -72,7 +72,7 @@ public final class NpcTemplate {
                 '}';
     }
 
-    public static NpcTemplate from(int npcId, boolean move, WzListProperty infoProp) throws ProviderError {
+    public static NpcTemplate from(int npcId, boolean move, WzProperty infoProp) throws ProviderError {
         String script = null;
         int trunkPut = 0;
         int trunkGet = 0;
@@ -81,7 +81,7 @@ public final class NpcTemplate {
         for (var entry : infoProp.getItems().entrySet()) {
             switch (entry.getKey()) {
                 case "script" -> {
-                    if (!(entry.getValue() instanceof WzListProperty scriptProp)) {
+                    if (!(entry.getValue() instanceof WzProperty scriptProp)) {
                         throw new ProviderError("Failed to resolve script property");
                     }
                     if (scriptProp.getItems().size() > 1) {
@@ -89,7 +89,7 @@ public final class NpcTemplate {
                     }
                     if ((scriptProp.get("script")) instanceof String) {
                         script = scriptProp.get("script");
-                    } else if (scriptProp.get("0") instanceof WzListProperty scriptList) {
+                    } else if (scriptProp.get("0") instanceof WzProperty scriptList) {
                         script = scriptList.get("script");
                     } else {
                         throw new ProviderError("Could not resolve script for npc %d", npcId);

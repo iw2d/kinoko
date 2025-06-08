@@ -41,7 +41,6 @@ import kinoko.world.item.*;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestRecord;
-import kinoko.world.quest.QuestRecordType;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.Dragon;
@@ -162,6 +161,11 @@ public final class ScriptManagerImpl implements ScriptManager {
     @Override
     public int getLevel() {
         return user.getLevel();
+    }
+
+    @Override
+    public int getJob() {
+        return user.getJob();
     }
 
     @Override
@@ -553,30 +557,30 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public String getQRValue(QuestRecordType questRecordType) {
-        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questRecordType.getQuestId());
+    public String getQRValue(int questId) {
+        final Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
         return questRecordResult.map(QuestRecord::getValue).orElse("");
     }
 
     @Override
-    public boolean hasQRValue(QuestRecordType questRecordType, String value) {
-        return Arrays.asList(getQRValue(questRecordType).split(";")).contains(value);
+    public boolean hasQRValue(int questId, String value) {
+        return Arrays.asList(getQRValue(questId).split(";")).contains(value);
     }
 
     @Override
-    public void setQRValue(QuestRecordType questRecordType, String value) {
-        final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questRecordType.getQuestId(), value);
+    public void setQRValue(int questId, String value) {
+        final QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, value);
         user.write(MessagePacket.questRecord(qr));
         user.validateStat();
     }
 
     @Override
-    public void addQRValue(QuestRecordType questRecordType, String value) {
-        final String existingValue = getQRValue(questRecordType);
+    public void addQRValue(int questId, String value) {
+        final String existingValue = getQRValue(questId);
         if (existingValue == null || existingValue.isEmpty()) {
-            setQRValue(questRecordType, value);
+            setQRValue(questId, value);
         } else {
-            setQRValue(questRecordType, String.format("%s;%s", existingValue, value));
+            setQRValue(questId, String.format("%s;%s", existingValue, value));
         }
     }
 

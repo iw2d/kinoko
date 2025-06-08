@@ -1,10 +1,10 @@
 package kinoko.provider;
 
 import kinoko.provider.skill.SkillStringInfo;
-import kinoko.provider.wz.*;
-import kinoko.provider.wz.property.WzListProperty;
+import kinoko.provider.wz.WzImage;
+import kinoko.provider.wz.WzPackage;
+import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.server.ServerConfig;
-import kinoko.server.ServerConstants;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -22,13 +22,12 @@ public final class StringProvider implements WzProvider {
     private static final Map<Integer, SkillStringInfo> skillStrings = new HashMap<>();
 
     public static void initialize() {
-        try (final WzReader reader = WzReader.build(STRING_WZ, new WzReaderConfig(WzConstants.WZ_GMS_IV, ServerConstants.GAME_VERSION))) {
-            final WzPackage wzPackage = reader.readPackage();
-            loadItemNames(wzPackage);
-            loadMapNames(wzPackage);
-            loadMobNames(wzPackage);
-            loadNpcNames(wzPackage);
-            loadSkillStrings(wzPackage);
+        try (final WzPackage source = WzPackage.from(STRING_WZ)) {
+            loadItemNames(source);
+            loadMapNames(source);
+            loadMobNames(source);
+            loadNpcNames(source);
+            loadSkillStrings(source);
         } catch (IOException | ProviderError e) {
             throw new IllegalArgumentException("Exception caught while loading String.wz", e);
         }
@@ -80,17 +79,17 @@ public final class StringProvider implements WzProvider {
 
     private static void loadItemNames(WzPackage source) throws ProviderError {
         // Eqp.img
-        if (!(source.getDirectory().getImages().get("Eqp.img") instanceof WzImage equipImage) ||
-                !(equipImage.getProperty().get("Eqp") instanceof WzListProperty equipTypes)) {
+
+        if (!(source.getItem("Eqp.img/Eqp") instanceof WzProperty equipTypes)) {
             throw new ProviderError("Could not resolve String.wz/Eqp.img/Eqp");
         }
         for (String type : EQUIP_TYPES) {
-            if (!(equipTypes.get(type) instanceof WzListProperty equipList)) {
+            if (!(equipTypes.get(type) instanceof WzProperty equipList)) {
                 throw new ProviderError("Could not resolve String.wz/Eqp.img/Eqp/%s", type);
             }
             for (var entry : equipList.getItems().entrySet()) {
                 final int itemId = Integer.parseInt(entry.getKey());
-                if (!(entry.getValue() instanceof WzListProperty prop) ||
+                if (!(entry.getValue() instanceof WzProperty prop) ||
                         !(prop.getItems().get("name") instanceof String name)) {
                     continue;
                 }
@@ -98,13 +97,12 @@ public final class StringProvider implements WzProvider {
             }
         }
         // Etc.img
-        if (!(source.getDirectory().getImages().get("Etc.img") instanceof WzImage etcImage) ||
-                !(etcImage.getProperty().get("Etc") instanceof WzListProperty etcList)) {
+        if (!(source.getItem("Etc.img/Etc") instanceof WzProperty etcList)) {
             throw new ProviderError("Could not resolve String.wz/Etc.img/Etc");
         }
         for (var entry : etcList.getItems().entrySet()) {
             final int itemId = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty prop) ||
+            if (!(entry.getValue() instanceof WzProperty prop) ||
                     !(prop.getItems().get("name") instanceof String name)) {
                 continue;
             }
@@ -112,12 +110,12 @@ public final class StringProvider implements WzProvider {
         }
         // Other types
         for (String imageName : List.of("Consume.img", "Ins.img", "Cash.img", "Pet.img")) {
-            if (!(source.getDirectory().getImages().get(imageName) instanceof WzImage itemImage)) {
+            if (!((WzImage) source.getItem(imageName) instanceof WzImage itemImage)) {
                 throw new ProviderError("Could not resolve String.wz/%s", imageName);
             }
-            for (var entry : itemImage.getProperty().getItems().entrySet()) {
+            for (var entry : itemImage.getItems().entrySet()) {
                 final int itemId = Integer.parseInt(entry.getKey());
-                if (!(entry.getValue() instanceof WzListProperty itemProp) ||
+                if (!(entry.getValue() instanceof WzProperty itemProp) ||
                         !(itemProp.getItems().get("name") instanceof String itemName)) {
                     continue;
                 }
@@ -127,16 +125,16 @@ public final class StringProvider implements WzProvider {
     }
 
     private static void loadMapNames(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("Map.img") instanceof WzImage image)) {
+        if (!((WzImage) source.getItem("Map.img") instanceof WzImage image)) {
             throw new ProviderError("Could not resolve String.wz/Map.img");
         }
-        for (var typeEntry : image.getProperty().getItems().entrySet()) {
-            if (!(typeEntry.getValue() instanceof WzListProperty mapList)) {
+        for (var typeEntry : image.getItems().entrySet()) {
+            if (!(typeEntry.getValue() instanceof WzProperty mapList)) {
                 throw new ProviderError("Failed to resolve String.wz/Map.img");
             }
             for (var mapEntry : mapList.getItems().entrySet()) {
                 final int mapId = Integer.parseInt(mapEntry.getKey());
-                if (!(mapEntry.getValue() instanceof WzListProperty prop)) {
+                if (!(mapEntry.getValue() instanceof WzProperty prop)) {
                     continue;
                 }
                 final String streetName = WzProvider.getString(prop.getItems().get("streetName"), "");
@@ -147,12 +145,12 @@ public final class StringProvider implements WzProvider {
     }
 
     private static void loadMobNames(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("Mob.img") instanceof WzImage image)) {
+        if (!((WzImage) source.getItem("Mob.img") instanceof WzImage image)) {
             throw new ProviderError("Could not resolve String.wz/Mob.img");
         }
-        for (var entry : image.getProperty().getItems().entrySet()) {
+        for (var entry : image.getItems().entrySet()) {
             final int mobId = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty prop) ||
+            if (!(entry.getValue() instanceof WzProperty prop) ||
                     !(prop.getItems().get("name") instanceof String name)) {
                 continue;
             }
@@ -161,12 +159,12 @@ public final class StringProvider implements WzProvider {
     }
 
     private static void loadNpcNames(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("Npc.img") instanceof WzImage image)) {
+        if (!((WzImage) source.getItem("Npc.img") instanceof WzImage image)) {
             throw new ProviderError("Could not resolve String.wz/Npc.img");
         }
-        for (var entry : image.getProperty().getItems().entrySet()) {
+        for (var entry : image.getItems().entrySet()) {
             final int npcId = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty prop) ||
+            if (!(entry.getValue() instanceof WzProperty prop) ||
                     !(prop.getItems().get("name") instanceof String name)) {
                 continue;
             }
@@ -179,15 +177,15 @@ public final class StringProvider implements WzProvider {
     }
 
     private static void loadSkillStrings(WzPackage source) throws ProviderError {
-        if (!(source.getDirectory().getImages().get("Skill.img") instanceof WzImage image)) {
+        if (!((WzImage) source.getItem("Skill.img") instanceof WzImage image)) {
             throw new ProviderError("Could not resolve String.wz/Skill.img");
         }
-        for (var entry : image.getProperty().getItems().entrySet()) {
+        for (var entry : image.getItems().entrySet()) {
             if (entry.getKey().length() < 7) {
                 continue;
             }
             final int skillId = Integer.parseInt(entry.getKey());
-            if (!(entry.getValue() instanceof WzListProperty prop)) {
+            if (!(entry.getValue() instanceof WzProperty prop)) {
                 continue;
             }
             skillStrings.put(skillId, SkillStringInfo.from(prop));
