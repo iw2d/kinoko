@@ -97,23 +97,23 @@ public final class JobConstants {
         return jobId % 1000 == 0 || jobId == 2001;
     }
 
-    public static boolean isWarriorJob(int jobId) {
+    public static boolean isExplorerWarriorJob(int jobId) {
         return jobId / 100 == 1;
     }
 
-    public static boolean isMagicianJob(int jobId) {
+    public static boolean isExplorerMagicianJob(int jobId) {
         return jobId / 100 == 2;
     }
 
-    public static boolean isBowmanJob(int jobId) {
+    public static boolean isExplorerBowmanJob(int jobId) {
         return jobId / 100 == 3;
     }
 
-    public static boolean isThiefJob(int jobId) {
+    public static boolean isExplorerThiefJob(int jobId) {
         return jobId / 100 == 4;
     }
 
-    public static boolean isPirateJob(int jobId) {
+    public static boolean isExplorerPirateJob(int jobId) {
         return jobId / 100 == 5;
     }
 
