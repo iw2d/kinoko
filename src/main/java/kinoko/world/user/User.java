@@ -701,10 +701,17 @@ public final class User extends Life {
         final var iter = pets.iterator();
         while (iter.hasNext()) {
             final Pet pet = iter.next();
-            if (pet.update(now)) {
+            int reason = 0;
+            if (pet.updateFullness(now)) {
+                reason = 1; // The pet went back home because it's hungry.
+            } else if (pet.updateRemainLife(now)) {
+                reason = 2; // The pet's magical time has run out and so it has turned back into a doll.
+            }
+            // Deactivate pet
+            if (reason != 0) {
                 final int petIndex = pet.getPetIndex();
                 setPetSn(petIndex, 0, false);
-                getField().broadcastPacket(PetPacket.petDeactivated(this, petIndex, 1)); // The pet went back home because it's hungry.
+                getField().broadcastPacket(PetPacket.petDeactivated(this, petIndex, reason));
                 iter.remove();
             }
         }
