@@ -30,7 +30,7 @@ public final class PetPacket {
         outPacket.encodeByte(false); // activate
         outPacket.encodeByte(reason);
         // 1 : The pet went back home because it's hungry.
-        // 2 : The pet's magical time has run out%2C and so it has turned back into a doll.
+        // 2 : The pet's magical time has run out and so it has turned back into a doll.
         // 3 : You cannot use a pet in this location.
         // 4 : Cannot summon pet while Following.
         return outPacket;

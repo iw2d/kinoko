@@ -20,11 +20,13 @@ public final class Pet extends Life implements Encodable {
     private final User owner;
     private final Item item;
     private Instant nextFullnessUpdate;
+    private Instant nextRemainLifeUpdate;
 
     public Pet(User owner, Item item) {
         this.owner = owner;
         this.item = item;
         this.nextFullnessUpdate = Instant.now().plus(36000, ChronoUnit.MILLIS);
+        this.nextRemainLifeUpdate = item.getPetData().getRemainLife() > 0 ? Instant.now().plus(60, ChronoUnit.SECONDS) : Instant.MAX;
     }
 
     public User getOwner() {
@@ -87,7 +89,7 @@ public final class Pet extends Life implements Encodable {
         setFoothold(field.getFootholdBelow(x, y).map(Foothold::getSn).orElse(0));
     }
 
-    public boolean update(Instant now) {
+    public boolean updateFullness(Instant now) {
         if (now.isBefore(nextFullnessUpdate)) {
             return false;
         }
@@ -112,6 +114,27 @@ public final class Pet extends Life implements Encodable {
             petData.setFullness((byte) 5);
             petData.setTameness((short) Math.max(petData.getTameness() - 1, 0));
         }
+        owner.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.CASH, position, petItem), false));
+        return remove;
+    }
+
+    public boolean updateRemainLife(Instant now) {
+        if (now.isBefore(nextRemainLifeUpdate)) {
+            return false;
+        }
+        // Schedule next update
+        nextRemainLifeUpdate = now.plus(60, ChronoUnit.SECONDS);
+        // Resolve pet item
+        final Optional<Tuple<Integer, Item>> itemEntryResult = owner.getInventoryManager().getItemBySn(InventoryType.CASH, getItemSn());
+        if (itemEntryResult.isEmpty()) {
+            return true;
+        }
+        final int position = itemEntryResult.get().getLeft();
+        final Item petItem = itemEntryResult.get().getRight();
+        // Update pet item
+        final PetData petData = petItem.getPetData();
+        petData.setRemainLife(Math.max(petData.getRemainLife() - 60, 0));
+        final boolean remove = petData.getRemainLife() == 0;
         owner.write(WvsContext.inventoryOperation(InventoryOperation.newItem(InventoryType.CASH, position, petItem), false));
         return remove;
     }

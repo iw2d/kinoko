@@ -483,6 +483,32 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
+    public boolean addItemWithExpiration(int itemId, int expirationInSeconds) {
+        if (!canAddItem(itemId, 1)) {
+            return false;
+        }
+        // Create item
+        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
+        if (itemInfoResult.isEmpty()) {
+            throw new ScriptError("Could not resolve item info for item ID : %d", itemId);
+        }
+        final ItemInfo itemInfo = itemInfoResult.get();
+        final Item item = itemInfo.createItem(user.getNextItemSn());
+        // Create pet data
+        final PetData petData = PetData.from(itemInfo);
+        petData.setRemainLife(expirationInSeconds);
+        item.setPetData(petData);
+        // Add item to inventory
+        final Optional<List<InventoryOperation>> addItemResult = user.getInventoryManager().addItem(item);
+        if (addItemResult.isEmpty()) {
+            throw new IllegalStateException("Failed to add item to inventory");
+        }
+        user.write(WvsContext.inventoryOperation(addItemResult.get(), false));
+        user.write(UserLocal.effect(Effect.gainItem(item)));
+        return true;
+    }
+
+    @Override
     public boolean canAddItems(List<Tuple<Integer, Integer>> items) {
         return user.getInventoryManager().canAddItems(items);
     }
