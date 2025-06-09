@@ -1,14 +1,21 @@
 # Fairy (3000001)
 
 rewards:
-  - [ 0, 20, 31, 0.600000 ]
-  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
-  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 0, 20, 30, 0.600000 ]
+  - [ 1002105, 1, 1, 0.000100 ] # Dark Moon Conehat
+  - [ 1002119, 1, 1, 0.000100 ] # Green Robin Hat
+  - [ 1002613, 1, 1, 0.000100 ] # Brown Lagger Cap
+  - [ 1050006, 1, 1, 0.000100 ] # Red Kendo Robe (Male)
+  - [ 1060032, 1, 1, 0.000100 ] # Red Pao Bottom (Male)
+  - [ 1061040, 1, 1, 0.000100 ] # Red Qi Pao Skirt (Female)
+  - [ 1402000, 1, 1, 0.000100 ] # Two-Handed Sword
+  - [ 1462001, 1, 1, 0.000100 ] # Crossbow
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
   - [ 2050000, 1, 1, 0.010000 ] # Antidote
   - [ 2050001, 1, 1, 0.010000 ] # Eyedrop
   - [ 2050002, 1, 1, 0.010000 ] # Tonic
   - [ 2050003, 1, 1, 0.010000 ] # Holy Water
-  - [ 2050004, 1, 1, 0.010000 ] # All Cure Potion
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000068, 1, 1, 0.400000 ] # Fairy's Tentacle
-  - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
-  - [ 4020004, 1, 1, 0.002000 ] # Opal Ore
