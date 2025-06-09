@@ -49,7 +49,7 @@ public final class ExplorerQuest extends ScriptHandler {
             return;
         }
         final int targetFieldId = sm.askMenu("#e#b[Notice]#n#k\r\nAdventurers!\r\nThis is a training center for " + reqJobName + " under Lv. 20. While you can always train on your own, training with others will allow you to become stronger in a faster time. Select the room you would like to train in.#b", options);
-        sm.warp(targetFieldId, "out00");
+        sm.warp(targetFieldId);
     }
 
     @Script("enter_warrior")
