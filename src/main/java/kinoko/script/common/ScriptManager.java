@@ -85,7 +85,7 @@ public interface ScriptManager {
 
     boolean addItems(List<Tuple<Integer, Integer>> items);
 
-    boolean addItemWithExpiration(int itemId, int quantity, int expirationInSeconds);
+    boolean addItemWithExpiration(int itemId, int expirationInSeconds);
 
     default boolean canAddItem(int itemId, int quantity) {
         return canAddItems(List.of(Tuple.of(itemId, quantity)));

@@ -416,7 +416,7 @@ public final class VictoriaIsland extends ScriptHandler {
             return;
         }
         if (sm.canAddItem(5000054, 1) && sm.removeItem(4032086)) {
-            sm.addItemWithExpiration(5000054, 1, 5 * 60 * 60); // 5 hour duration
+            sm.addItemWithExpiration(5000054, 5 * 60 * 60); // 5 hour duration
             sm.forceCompleteQuest(2230);
             sm.sayNext("This snail will only be alive for #b5 hours#k. Shower it with love. Your love will be reciprocated in the end.");
         } else {

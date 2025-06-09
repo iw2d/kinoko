@@ -1,8 +1,5 @@
 package kinoko.script.common;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-
 import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.NpcPacket;
@@ -486,7 +483,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public boolean addItemWithExpiration(int itemId, int quantity, int expirationInSeconds) {
+    public boolean addItemWithExpiration(int itemId, int expirationInSeconds) {
         if (!canAddItem(itemId, 1)) {
             return false;
         }
@@ -496,7 +493,7 @@ public final class ScriptManagerImpl implements ScriptManager {
             throw new ScriptError("Could not resolve item info for item ID : %d", itemId);
         }
         final ItemInfo itemInfo = itemInfoResult.get();
-        final Item item = itemInfo.createItem(user.getNextItemSn(), Math.min(quantity, itemInfo.getSlotMax()));
+        final Item item = itemInfo.createItem(user.getNextItemSn());
         // Create pet data
         final PetData petData = PetData.from(itemInfo);
         petData.setRemainLife(expirationInSeconds);
