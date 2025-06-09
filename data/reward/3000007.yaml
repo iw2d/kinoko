@@ -1,0 +1,11 @@
+# Royal Fairy (3000007)
+
+rewards:
+  - [ 0, 22, 32, 0.600000 ]
+  - [ 1002051, 1, 1, 0.000100 ] # Bronze Full Helm
+  - [ 1002059, 1, 1, 0.000100 ] # Bronze Viking Helm
+  - [ 1041017, 1, 1, 0.000100 ] # Purple Arianne (Female)
+  - [ 1050007, 1, 1, 0.000100 ] # White Kendo Robe (Male)
+  - [ 1060032, 1, 1, 0.000100 ] # Red Pao Bottom (Male)
+  - [ 1082021, 1, 1, 0.000100 ] # Green Morrican
+  - [ 4000620, 1, 1, 0.400000 ] # Royal Fairy Wing
