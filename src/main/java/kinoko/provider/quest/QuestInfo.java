@@ -401,6 +401,12 @@ public final class QuestInfo {
                     final int subJobFlags = WzProvider.getInteger(entry.getValue());
                     questChecks.add(new QuestSubJobCheck(subJobFlags));
                 }
+                case "skill" -> {
+                    if (!(entry.getValue() instanceof WzProperty skillList)) {
+                        throw new ProviderError("Failed to resolve quest check skill list");
+                    }
+                    questChecks.add(QuestSkillCheck.from(skillList));
+                }
                 case "morph" -> {
                     final int morph = WzProvider.getInteger(entry.getValue());
                     questChecks.add(new QuestMorphCheck(morph));
