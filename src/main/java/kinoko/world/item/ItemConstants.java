@@ -191,7 +191,7 @@ public final class ItemConstants {
         }
         final int upgradeItemType = (upgradeItemId - 2040000) / 100;
         final int equipItemType = equipItemId / 10000 % 100;
-        if (isAccUpgradeItem(upgradeItemType)) {
+        if (isAccUpgradeItem(upgradeItemId)) {
             return equipItemType >= 11 && equipItemType <= 13; // ring, pendant, belt
         }
         if (isNewUpgradeItem(upgradeItemId) || isDurabilityUpgradeItem(upgradeItemId)) {
