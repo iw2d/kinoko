@@ -1,7 +1,5 @@
 package kinoko.world;
 
-import kinoko.world.item.ItemConstants;
-import kinoko.world.item.ItemVariationOption;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
 import kinoko.world.user.stat.StatConstants;

@@ -104,8 +104,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
 
     private void handleUserPacketReceive(InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
-        final int packetLength = inPacket.decodeInt();
-        final byte[] packetData = inPacket.decodeArray(packetLength);
+        final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
         // Resolve target user
         final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
         if (targetUserResult.isEmpty()) {
@@ -115,7 +114,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         // Write to target client
         final User target = targetUserResult.get();
         ServerExecutor.submit(target, () -> {
-            target.write(OutPacket.of(packetData));
+            target.write(remotePacket);
         });
     }
 
@@ -125,9 +124,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         for (int i = 0; i < size; i++) {
             characterIds.add(inPacket.decodeInt());
         }
-        final int packetLength = inPacket.decodeInt();
-        final byte[] packetData = inPacket.decodeArray(packetLength);
-        final OutPacket outPacket = OutPacket.of(packetData);
+        final OutPacket outPacket = OutPacket.decodeRemotePacket(inPacket);
         for (int characterId : characterIds) {
             final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
             if (targetUserResult.isEmpty()) {
@@ -150,17 +147,13 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
     private void handleWorldSpeakerRequest(InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
         final boolean avatar = inPacket.decodeBoolean();
-        final int packetLength = inPacket.decodeInt();
-        final byte[] packetData = inPacket.decodeArray(packetLength);
-        final OutPacket outPacket = OutPacket.of(packetData);
-        channelServerNode.completeWorldSpeakerRequest(characterId, avatar, outPacket);
+        final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
+        channelServerNode.completeWorldSpeakerRequest(characterId, avatar, remotePacket);
     }
 
     private void handleServerPacketBroadcast(InPacket inPacket) {
-        final int packetLength = inPacket.decodeInt();
-        final byte[] packetData = inPacket.decodeArray(packetLength);
-        final OutPacket outPacket = OutPacket.of(packetData);
-        channelServerNode.submitChannelPacketBroadcast(outPacket);
+        final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
+        channelServerNode.submitChannelPacketBroadcast(remotePacket);
     }
 
     private void handleMessengerResult(InPacket inPacket) {
@@ -183,6 +176,8 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final boolean hasParty = inPacket.decodeBoolean();
         final PartyInfo partyInfo = hasParty ? PartyInfo.decode(inPacket) : null;
+        final boolean hasPacket = inPacket.decodeBoolean();
+        final OutPacket remotePacket = hasPacket ? OutPacket.decodeRemotePacket(inPacket) : null;
         // Resolve target user
         final Optional<User> targetUserResult = channelServerNode.getUserByCharacterId(characterId);
         if (targetUserResult.isEmpty()) {
@@ -205,6 +200,10 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             });
             if (target.getTownPortal() != null && target.getTownPortal().getTownField() == target.getField()) {
                 target.write(FieldPacket.townPortalRemoved(target, false));
+            }
+            // Optional PartyResult packet
+            if (remotePacket != null) {
+                target.write(remotePacket);
             }
         });
     }

@@ -125,18 +125,14 @@ public final class CentralPacket {
     public static OutPacket userPacketRequest(String characterName, OutPacket remotePacket) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.UserPacketRequest);
         outPacket.encodeString(characterName);
-        final byte[] packetData = remotePacket.getData();
-        outPacket.encodeInt(packetData.length);
-        outPacket.encodeArray(packetData);
+        outPacket.encodeRemotePacket(remotePacket);
         return outPacket;
     }
 
     public static OutPacket userPacketReceive(int characterId, OutPacket remotePacket) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.UserPacketReceive);
         outPacket.encodeInt(characterId);
-        final byte[] packetData = remotePacket.getData();
-        outPacket.encodeInt(packetData.length);
-        outPacket.encodeArray(packetData);
+        outPacket.encodeRemotePacket(remotePacket);
         return outPacket;
     }
 
@@ -146,9 +142,7 @@ public final class CentralPacket {
         for (int characterId : characterIds) {
             outPacket.encodeInt(characterId);
         }
-        final byte[] packetData = remotePacket.getData();
-        outPacket.encodeInt(packetData.length);
-        outPacket.encodeArray(packetData);
+        outPacket.encodeRemotePacket(remotePacket);
         return outPacket;
     }
 
@@ -183,17 +177,13 @@ public final class CentralPacket {
         final OutPacket outPacket = OutPacket.of(CentralHeader.WorldSpeakerRequest);
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(avatar);
-        final byte[] packetData = remotePacket.getData();
-        outPacket.encodeInt(packetData.length);
-        outPacket.encodeArray(packetData);
+        outPacket.encodeRemotePacket(remotePacket);
         return outPacket;
     }
 
     public static OutPacket serverPacketBroadcast(OutPacket remotePacket) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.ServerPacketBroadcast);
-        final byte[] packetData = remotePacket.getData();
-        outPacket.encodeInt(packetData.length);
-        outPacket.encodeArray(packetData);
+        outPacket.encodeRemotePacket(remotePacket);
         return outPacket;
     }
 
@@ -218,12 +208,16 @@ public final class CentralPacket {
         return outPacket;
     }
 
-    public static OutPacket partyResult(int characterId, PartyInfo partyInfo) {
+    public static OutPacket partyResult(int characterId, PartyInfo partyInfo, OutPacket remotePacket) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.PartyResult);
         outPacket.encodeInt(characterId);
         outPacket.encodeByte(partyInfo != null);
         if (partyInfo != null) {
             partyInfo.encode(outPacket);
+        }
+        outPacket.encodeByte(remotePacket != null);
+        if (remotePacket != null) {
+            outPacket.encodeRemotePacket(remotePacket);
         }
         return outPacket;
     }

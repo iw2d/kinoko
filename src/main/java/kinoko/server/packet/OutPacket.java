@@ -89,4 +89,16 @@ public interface OutPacket {
         outPacket.encodeShort(op.getValue());
         return outPacket;
     }
+
+    default void encodeRemotePacket(OutPacket remotePacket) {
+        final byte[] packetData = remotePacket.getData();
+        encodeInt(packetData.length);
+        encodeArray(packetData);
+    }
+
+    static OutPacket decodeRemotePacket(InPacket inPacket) {
+        final int packetLength = inPacket.decodeInt();
+        final byte[] packetData = inPacket.decodeArray(packetLength);
+        return OutPacket.of(packetData);
+    }
 }
