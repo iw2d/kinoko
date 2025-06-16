@@ -170,7 +170,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
         centralServerNode.addUser(remoteUser);
         updateMessengerUser(remoteUser);
-        updatePartyMember(remoteUser);
+        updatePartyMember(remoteUser, false);
         updateGuildMember(remoteUser, false);
     }
 
@@ -178,7 +178,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
         centralServerNode.updateUser(remoteUser);
         updateMessengerUser(remoteUser);
-        updatePartyMember(remoteUser);
+        updatePartyMember(remoteUser, true);
         updateGuildMember(remoteUser, true);
     }
 
@@ -194,7 +194,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         // Update party and guild
         remoteUser.setChannelId(GameConstants.CHANNEL_OFFLINE);
         remoteUser.setFieldId(GameConstants.UNDEFINED_FIELD_ID);
-        updatePartyMember(remoteUser);
+        updatePartyMember(remoteUser, false);
         updateGuildMember(remoteUser, false);
     }
 
@@ -1220,7 +1220,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         }
     }
 
-    private void updatePartyMember(RemoteUser remoteUser) {
+    private void updatePartyMember(RemoteUser remoteUser, boolean isUserUpdate) {
         final Optional<Party> partyResult = centralServerNode.getPartyById(remoteUser.getPartyId());
         if (partyResult.isEmpty()) {
             return;
@@ -1236,6 +1236,9 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             party.updateMember(remoteUser);
             final OutPacket outPacket = PartyPacket.loadPartyDone(party);
             forEachPartyMember(party, (member, node) -> {
+                if (!isUserUpdate && remoteUser.getCharacterId() == member.getCharacterId()) {
+                    return;
+                }
                 node.write(CentralPacket.userPacketReceive(member.getCharacterId(), outPacket));
             });
         }
