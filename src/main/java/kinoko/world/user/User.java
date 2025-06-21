@@ -376,7 +376,7 @@ public final class User extends Life {
 
     public void setHp(int hp) {
         getCharacterStat().setHp(Math.clamp(hp, 0, getMaxHp()));
-        write(WvsContext.statChanged(Stat.HP, getHp(), true));
+        write(WvsContext.statChanged(Stat.HP, getHp(), false));
         // Update party
         getField().getUserPool().forEachPartyMember(this, (member) -> {
             member.write(UserRemote.receiveHp(this));
@@ -393,7 +393,7 @@ public final class User extends Life {
 
     public void setMp(int mp) {
         getCharacterStat().setMp(Math.clamp(mp, 0, getMaxMp()));
-        write(WvsContext.statChanged(Stat.MP, getMp(), true));
+        write(WvsContext.statChanged(Stat.MP, getMp(), false));
     }
 
     public void addMp(int mp) {
@@ -410,7 +410,7 @@ public final class User extends Life {
 
     public void addExp(int exp) {
         final Map<Stat, Object> addExpResult = getCharacterStat().addExp(exp, getBasicStat().getInt());
-        write(WvsContext.statChanged(addExpResult, true));
+        write(WvsContext.statChanged(addExpResult, false));
         // Level up
         if (addExpResult.containsKey(Stat.LEVEL)) {
             getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
@@ -433,7 +433,7 @@ public final class User extends Life {
         final short newPop = (short) Math.clamp(getPop() + pop, Short.MIN_VALUE, Short.MAX_VALUE);
         getCharacterStat().setPop(newPop);
         validateStat();
-        write(WvsContext.statChanged(Stat.POP, newPop, true));
+        write(WvsContext.statChanged(Stat.POP, newPop, false));
     }
 
     public int getSkillLevel(int skillId) {
@@ -661,17 +661,17 @@ public final class User extends Life {
         if (petIndex == 0) {
             getCharacterStat().setPetSn1(petSn);
             if (!isMigrate) {
-                write(WvsContext.statChanged(Stat.PETSN, petSn, true));
+                write(WvsContext.statChanged(Stat.PETSN, petSn, false));
             }
         } else if (petIndex == 1) {
             getCharacterStat().setPetSn2(petSn);
             if (!isMigrate) {
-                write(WvsContext.statChanged(Stat.PETSN2, petSn, true));
+                write(WvsContext.statChanged(Stat.PETSN2, petSn, false));
             }
         } else if (petIndex == 2) {
             getCharacterStat().setPetSn3(petSn);
             if (!isMigrate) {
-                write(WvsContext.statChanged(Stat.PETSN3, petSn, true));
+                write(WvsContext.statChanged(Stat.PETSN3, petSn, false));
             }
         }
     }

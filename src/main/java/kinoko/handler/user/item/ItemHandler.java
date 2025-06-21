@@ -209,7 +209,7 @@ public abstract class ItemHandler {
             user.dispose();
             return;
         }
-        user.write(WvsContext.inventoryOperation(consumeItemResult.get(), true));
+        user.write(WvsContext.inventoryOperation(consumeItemResult.get(), false));
 
         // Increase fullness
         final PetData petData = petItem.getPetData();
@@ -242,7 +242,7 @@ public abstract class ItemHandler {
         }
 
         // Update client
-        user.write(WvsContext.inventoryOperation(updateResult.get(), false));
+        user.write(WvsContext.inventoryOperation(updateResult.get(), true));
         if (levelUp) {
             user.write(UserLocal.effect(Effect.petLevelUp(petIndex)));
             user.getField().broadcastPacket(UserRemote.effect(user, Effect.petLevelUp(petIndex)), user);

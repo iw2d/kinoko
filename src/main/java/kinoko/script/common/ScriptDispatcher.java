@@ -78,13 +78,16 @@ public final class ScriptDispatcher {
     }
 
     private static void startScript(ScriptType scriptType, String scriptName, User user, FieldObject source, int speakerId) {
+        // Check for existing dialog
+        if (user.hasDialog()) {
+            disposeScript(scriptType, user, source);
+            return;
+        }
         // Resolve script handler
         final Method handler = scriptMap.get(scriptName);
         if (handler == null) {
             log.error("Could not resolve {} script with name : {}", scriptType, scriptName);
-            if (scriptType == ScriptType.ITEM || scriptType == ScriptType.PORTAL) {
-                user.dispose();
-            }
+            disposeScript(scriptType, user, source);
             return;
         }
         // Execute script handler
@@ -102,12 +105,16 @@ public final class ScriptDispatcher {
                 }
             } finally {
                 ServerExecutor.unlockExecutor(field);
-                // Dispose after item scripts, and portal scripts if not warped
-                if (scriptType == ScriptType.ITEM || (scriptType == ScriptType.PORTAL && user.getFieldId() == field.getFieldId())) {
-                    user.dispose();
-                }
+                disposeScript(scriptType, user, source);
             }
         });
+    }
+
+    private static void disposeScript(ScriptType scriptType, User user, FieldObject source) {
+        // Dispose item scripts and portal scripts if not warped
+        if (scriptType == ScriptType.ITEM || (scriptType == ScriptType.PORTAL && user.getField() == source.getField())) {
+            user.dispose();
+        }
     }
 }
 

@@ -59,6 +59,10 @@ public final class ServerExecutor {
         getExecutor(field).submit(runnable);
     }
 
+    public static ScheduledFuture<?> schedule(Client client, Runnable runnable, long delay, TimeUnit timeUnit) {
+        return scheduler.schedule(() -> submit(client, runnable), delay, timeUnit);
+    }
+
     public static ScheduledFuture<?> schedule(User user, Runnable runnable, long delay, TimeUnit timeUnit) {
         return scheduler.schedule(() -> submit(user, runnable), delay, timeUnit);
     }
