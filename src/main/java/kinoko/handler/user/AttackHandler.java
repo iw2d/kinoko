@@ -295,10 +295,14 @@ public final class AttackHandler {
     }
 
     private static void handleAttack(User user, Attack attack) {
-        final Field field = user.getField();
         // Assign attack random
         for (AttackInfo ai : attack.getAttackInfo()) {
             ai.random = user.getCalcDamage().getNextAttackRandom();
+        }
+
+        if (user.getHp() <= 0) {
+            log.error("Tried to use attack {} while dead", attack.skillId);
+            return;
         }
 
         // Set skill level
@@ -481,7 +485,7 @@ public final class AttackHandler {
         int hpGain = 0;
         int mpGain = 0;
         for (AttackInfo ai : attack.getAttackInfo()) {
-            final Optional<Mob> mobResult = field.getMobPool().getById(ai.mobId);
+            final Optional<Mob> mobResult = user.getField().getMobPool().getById(ai.mobId);
             if (mobResult.isEmpty()) {
                 continue;
             }
@@ -547,7 +551,7 @@ public final class AttackHandler {
         }
 
         // Broadcast packet
-        field.broadcastPacket(UserRemote.attack(user, attack), user);
+        user.getField().broadcastPacket(UserRemote.attack(user, attack), user);
 
         // Process hp/mp gains
         if (hpGain > 0) {
@@ -559,7 +563,7 @@ public final class AttackHandler {
             final int skillId = SkillConstants.getMpEaterSkill(user.getJob());
             final int slv = user.getSkillLevel(skillId);
             user.write(UserLocal.effect(Effect.skillUse(skillId, slv, user.getLevel())));
-            field.broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
+            user.getField().broadcastPacket(UserRemote.effect(user, Effect.skillUse(skillId, slv, user.getLevel())), user);
         }
         if (attack.exJablin != 0) {
             user.getCalcDamage().setNextAttackCritical(true);

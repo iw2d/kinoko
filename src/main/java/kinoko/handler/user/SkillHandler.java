@@ -277,6 +277,12 @@ public final class SkillHandler {
     }
 
     private static void handleSkill(User user, Skill skill) {
+        if (skill.skillId == WildHunter.JAGUAR_OSHI_DIGESTED && user.getHp() <= 0) {
+            log.error("Tried to use skill {} while dead", skill.skillId);
+            user.dispose();
+            return;
+        }
+
         // Resolve skill info
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skill.skillId);
         if (skillInfoResult.isEmpty()) {

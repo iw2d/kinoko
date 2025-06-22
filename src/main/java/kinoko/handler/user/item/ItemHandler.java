@@ -48,6 +48,11 @@ public abstract class ItemHandler {
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
 
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
+
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
@@ -79,6 +84,10 @@ public abstract class ItemHandler {
     @Handler(InHeader.UserStatChangeItemCancelRequest)
     public static void handleUserStatChangeItemCancelRequest(User user, InPacket inPacket) {
         final int itemId = inPacket.decodeInt(); // sign inverted
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
         user.resetTemporaryStat(itemId);
     }
 
@@ -92,6 +101,11 @@ public abstract class ItemHandler {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
+
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
 
         // Check item
         if (!ItemConstants.isMobSummonItem(itemId)) {
@@ -153,6 +167,11 @@ public abstract class ItemHandler {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
+
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
 
         // Check item
         if (!ItemConstants.isPetFoodItem(itemId)) {
@@ -258,6 +277,11 @@ public abstract class ItemHandler {
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
 
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
+
         if (!ItemConstants.isScriptRunItem(itemId)) {
             log.error("Received UserScriptItemUseRequest with an invalid script run item {}", itemId);
             user.dispose();
@@ -298,6 +322,11 @@ public abstract class ItemHandler {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt();
+
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
 
         final boolean isMasteryBook = ItemConstants.isMasteryBookItem(itemId);
         if (!ItemConstants.isSkillLearnItem(itemId)) {
@@ -381,6 +410,11 @@ public abstract class ItemHandler {
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt();
 
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
+
         // Resolve item
         final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
@@ -438,6 +472,11 @@ public abstract class ItemHandler {
     public static void handleUserLotteryItemUseRequest(User user, InPacket inPacket) {
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt();
+
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
 
         // Resolve reward info
         final Optional<ItemRewardInfo> itemRewardInfoResult = ItemProvider.getItemRewardInfo(itemId);
@@ -497,6 +536,11 @@ public abstract class ItemHandler {
         inPacket.decodeInt(); // update_time
         final int position = inPacket.decodeShort(); // nPOS
         final int itemId = inPacket.decodeInt(); // nItemID
+
+        if (user.getHp() <= 0) {
+            user.dispose();
+            return;
+        }
 
         // Resolve pet
         if (user.getPetIndex(petSn).isEmpty()) {
