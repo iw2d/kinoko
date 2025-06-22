@@ -107,6 +107,7 @@ public final class PetHandler {
             }
             user.getField().broadcastPacket(PetPacket.petDeactivated(user, petIndex, 0));
         }
+        user.dispose();
     }
 
     @Handler(InHeader.PetMove)
