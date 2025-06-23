@@ -198,9 +198,21 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
                 target.write(UserRemote.receiveHp(member));
                 member.write(UserRemote.receiveHp(target));
             });
-            if (target.getTownPortal() != null && target.getTownPortal().getTownField() == target.getField()) {
-                target.write(FieldPacket.townPortalRemoved(target, false));
-            }
+            // Update town portal
+            target.getField().getTownPortalPool().forEach((townPortal) -> {
+                final User owner = townPortal.getOwner();
+                if (owner.getCharacterId() == target.getCharacterId()) {
+                    if (townPortal.getTownField() == target.getField()) {
+                        target.write(FieldPacket.townPortalRemoved(townPortal, false));
+                    }
+                    return;
+                }
+                if (owner.hasParty() && owner.getPartyId() == target.getPartyId()) {
+                    target.write(FieldPacket.townPortalCreated(townPortal, false));
+                } else {
+                    target.write(FieldPacket.townPortalRemoved(townPortal, false));
+                }
+            });
             // Optional PartyResult packet
             if (remotePacket != null) {
                 target.write(remotePacket);

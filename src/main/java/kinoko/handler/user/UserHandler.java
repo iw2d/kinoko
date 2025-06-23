@@ -1742,7 +1742,8 @@ public final class UserHandler {
         if (townPortal.getTownField() == user.getField()) {
             user.warp(townPortal.getField(), townPortal.getX(), townPortal.getY(), townPortalId, false, false);
         } else {
-            user.warp(townPortal.getTownField(), townPortal.getTownPortalPoint().orElse(PortalInfo.EMPTY), false, false);
+            final PortalInfo portalInfo = townPortal.getTownPortalPoint().orElse(PortalInfo.EMPTY);
+            user.warp(townPortal.getTownField(), portalInfo.getX(), portalInfo.getY(), townPortalId, false, false);
         }
     }
 

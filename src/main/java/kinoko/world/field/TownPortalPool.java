@@ -25,7 +25,7 @@ public final class TownPortalPool extends FieldObjectPool<TownPortal> {
             return;
         }
         final Optional<User> ownerInField = field.getUserPool().getById(townPortal.getOwner().getCharacterId());
-        final OutPacket outPacket = FieldPacket.townPortalCreated(townPortal.getOwner(), townPortal.getX(), townPortal.getY(), true);
+        final OutPacket outPacket = FieldPacket.townPortalCreated(townPortal, true);
         ownerInField.ifPresent(owner -> owner.write(outPacket));
         field.getUserPool().forEachPartyMember(townPortal.getOwner(), (member) -> {
             member.write(outPacket);
@@ -35,7 +35,7 @@ public final class TownPortalPool extends FieldObjectPool<TownPortal> {
     public void removeTownPortal(TownPortal townPortal) {
         // Remove portal and update clients
         removeObject(townPortal);
-        final OutPacket outPacket = FieldPacket.townPortalRemoved(townPortal.getOwner(), true);
+        final OutPacket outPacket = FieldPacket.townPortalRemoved(townPortal, true);
         final Optional<User> ownerInField = field.getUserPool().getById(townPortal.getOwner().getCharacterId());
         ownerInField.ifPresent(owner -> owner.write(outPacket));
         field.getUserPool().forEachPartyMember(townPortal.getOwner(), (member) -> {

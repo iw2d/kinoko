@@ -178,7 +178,6 @@ public final class MapInfo {
     public List<PortalInfo> getTownPortalPoints() {
         return portalInfos.stream()
                 .filter(pi -> pi.getPortalType().equals(PortalType.TOWNPORTAL_POINT))
-                .sorted(Comparator.comparingInt(PortalInfo::getPortalId))
                 .toList();
     }
 
