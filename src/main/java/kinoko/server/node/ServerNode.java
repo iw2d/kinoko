@@ -21,10 +21,12 @@ public abstract class ServerNode extends Node {
         return clientStorage.isConnected(account);
     }
 
-
     public final void addClient(Client client) {
         if (isShutdown()) {
             throw new IllegalStateException("Tried to add client after shutdown");
+        }
+        if (!client.getSocketChannel().isActive()) {
+            throw new IllegalStateException("Tried to add client with inactive socket");
         }
         clientStorage.addClient(client);
     }

@@ -57,7 +57,11 @@ public final class LoginServerNode extends ServerNode {
 
     public void submitOnlineRequest(Account account, Consumer<Boolean> consumer) {
         final CompletableFuture<Boolean> onlineRequestFuture = new CompletableFuture<>();
-        onlineRequestFuture.thenAccept(consumer);
+        onlineRequestFuture.thenAccept(consumer).exceptionally((e) -> {
+            log.error("Exception caught while processing online request", e);
+            e.printStackTrace();
+            return null;
+        });
         final int requestId = getNewRequestId();
         requestFutures.put(requestId, onlineRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.onlineRequest(requestId, account.getId()));
@@ -73,7 +77,11 @@ public final class LoginServerNode extends ServerNode {
 
     public void submitLoginRequest(MigrationInfo migrationInfo, Consumer<Optional<TransferInfo>> consumer) {
         final CompletableFuture<Optional<TransferInfo>> transferRequestFuture = new CompletableFuture<>();
-        transferRequestFuture.thenAccept(consumer);
+        transferRequestFuture.thenAccept(consumer).exceptionally((e) -> {
+            log.error("Exception caught while processing login request", e);
+            e.printStackTrace();
+            return null;
+        });
         final int requestId = getNewRequestId();
         requestFutures.put(requestId, transferRequestFuture);
         centralClientFuture.channel().writeAndFlush(CentralPacket.transferRequest(requestId, migrationInfo));

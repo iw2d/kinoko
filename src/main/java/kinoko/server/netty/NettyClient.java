@@ -19,6 +19,10 @@ public abstract class NettyClient {
         return serverNode;
     }
 
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
+    }
+
     public final void write(OutPacket outPacket) {
         socketChannel.writeAndFlush(outPacket);
     }
