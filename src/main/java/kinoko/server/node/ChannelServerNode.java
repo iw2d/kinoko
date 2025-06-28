@@ -31,7 +31,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -110,7 +109,7 @@ public final class ChannelServerNode extends ServerNode {
         return clientStorage.isConnected(user);
     }
 
-    public Set<User> getConnectedUsers() {
+    public List<User> getConnectedUsers() {
         return clientStorage.getConnectedUsers();
     }
 
