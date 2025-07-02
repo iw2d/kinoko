@@ -187,7 +187,7 @@ public final class UserHandler {
             user.write(GuildPacket.showGuildRanking(RankManager.getGuildRankings()));
             return;
         }
-        // Handle trunk / npc shop dialog, lock user
+        // Handle trunk / npc shop dialog
         if (user.hasDialog()) {
             log.error("Tried to select npc ID {}, while already in a dialog", npc.getTemplateId());
             return;
@@ -400,6 +400,7 @@ public final class UserHandler {
             return;
         }
         final ItemInfo itemInfo = itemInfoResult.get();
+
         if (newPos == 0) {
             // CDraggableItem::ThrowItem
             final DropEnterType dropEnterType = (itemInfo.isTradeBlock(item) || itemInfo.isAccountSharable()) ? DropEnterType.FADING_OUT : DropEnterType.CREATE;
@@ -468,11 +469,38 @@ public final class UserHandler {
                 user.dispose();
                 return;
             }
-            // Swap item position and update client
+
             final Item secondItem = secondInventory.getItem(newPos);
-            inventory.putItem(oldPos, secondItem);
-            secondInventory.putItem(newPos, item);
-            user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
+            if (secondItem != null && secondItem.getItemId() == item.getItemId() &&
+                    item.getItemType() == ItemType.BUNDLE && !ItemConstants.isRechargeableItem(item.getItemId()) &&
+                    item.getQuantity() < itemInfo.getSlotMax() && secondItem.getQuantity() < itemInfo.getSlotMax()) {
+                // Merge bundles : item -> secondItem
+                final int combinedQuantity = item.getQuantity() + secondItem.getQuantity();
+                if (combinedQuantity <= itemInfo.getSlotMax()) {
+                    if (!inventory.removeItem(oldPos, item)) {
+                        throw new IllegalStateException("Could not remove old item");
+                    }
+                    secondItem.setQuantity((short) combinedQuantity);
+                    user.write(WvsContext.inventoryOperation(List.of(
+                            InventoryOperation.position(inventoryType, oldPos, newPos), // move nLatestGetItemPos frame
+                            InventoryOperation.delItem(inventoryType, oldPos),
+                            InventoryOperation.itemNumber(secondInventoryType, newPos, secondItem.getQuantity())
+                    ), true));
+                } else {
+                    item.setQuantity((short) (combinedQuantity - itemInfo.getSlotMax()));
+                    secondItem.setQuantity((short) itemInfo.getSlotMax());
+                    user.write(WvsContext.inventoryOperation(List.of(
+                            InventoryOperation.position(inventoryType, oldPos, newPos), // move nLatestGetItemPos frame
+                            InventoryOperation.itemNumber(inventoryType, oldPos, item.getQuantity()),
+                            InventoryOperation.itemNumber(secondInventoryType, newPos, secondItem.getQuantity())
+                    ), true));
+                }
+            } else {
+                // Swap item position and update client
+                inventory.putItem(oldPos, secondItem);
+                secondInventory.putItem(newPos, item);
+                user.write(WvsContext.inventoryOperation(InventoryOperation.position(inventoryType, oldPos, newPos), true));
+            }
         }
         // Update user
         if (inventoryType == InventoryType.EQUIP) {
