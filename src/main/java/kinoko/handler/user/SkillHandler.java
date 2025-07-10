@@ -257,7 +257,7 @@ public final class SkillHandler {
         skill.skillId = inPacket.decodeInt();
         skill.slv = inPacket.decodeInt();
 
-        if (skill.skillId != Thief.MONSTER_BOMB) {
+        if (skill.skillId != Thief.FLASHBANG && skill.skillId != Thief.MONSTER_BOMB) {
             handleSkill(user, skill);
         }
         user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill), user);
