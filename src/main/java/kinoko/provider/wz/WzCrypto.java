@@ -1,9 +1,6 @@
 package kinoko.provider.wz;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.ShortBufferException;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidAlgorithmParameterException;
@@ -42,15 +39,10 @@ public final class WzCrypto {
         }
         final int newSize = ((size / BATCH_SIZE) + 1) * BATCH_SIZE;
         final byte[] newMask = new byte[newSize];
-
         if (cipher != null) {
-            System.arraycopy(cipherMask, 0, newMask, 0, curSize);
             try {
-                final byte[] block = new byte[16];
-                for (int i = curSize; i < newSize; i += 16) {
-                    cipher.update(block, 0, 16, newMask, i);
-                }
-            } catch (ShortBufferException e) {
+                cipher.doFinal(newMask, 0, newSize, newMask, 0);
+            } catch (IllegalBlockSizeException | BadPaddingException | ShortBufferException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -68,14 +60,14 @@ public final class WzCrypto {
         for (int i = 0; i < 128; i += 16) {
             trimmedKey[i / 4] = WzConstants.AES_USER_KEY[i];
         }
-        SecretKey key = new SecretKeySpec(trimmedKey, "AES");
+        final SecretKey key = new SecretKeySpec(trimmedKey, "AES");
 
         // Initialize IV
         final byte[] expandedIv = new byte[16];
         for (int i = 0; i < expandedIv.length; i += iv.length) {
             System.arraycopy(iv, 0, expandedIv, i, iv.length);
         }
-        IvParameterSpec ivParam = new IvParameterSpec(expandedIv);
+        final IvParameterSpec ivParam = new IvParameterSpec(expandedIv);
 
         // Create cipher and return WzCrypto object
         try {
