@@ -209,9 +209,9 @@ public final class WvsContext {
         // CUIUserInfo::SetTamingMobInfo (bool -> int, int, int)
         outPacket.encodeByte(false);
 
-        // aWishItem (byte * int), itemId = 0 becomes Brown Flight Headgear for some reason
+        // aWishItem (byte * int), nCommSN = 0 becomes Brown Flight Headgear for some reason
         final List<Integer> wishlist = user.getAccount().getWishlist().stream()
-                .filter((itemId) -> itemId != 0)
+                .filter((commodityId) -> commodityId != 0)
                 .toList();
         outPacket.encodeByte(wishlist.size());
         wishlist.forEach(outPacket::encodeInt);

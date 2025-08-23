@@ -83,10 +83,11 @@ public final class MobStat {
         }
         if (flag.hasFlag(MobTemporaryStat.PCounter)) {
             outPacket.encodeInt(0); // wPCounter
-            outPacket.encodeInt(100); // nCounterProb
         }
         if (flag.hasFlag(MobTemporaryStat.MCounter)) {
             outPacket.encodeInt(0); // wMCounter
+        }
+        if (flag.hasFlag(MobTemporaryStat.PCounter) || flag.hasFlag(MobTemporaryStat.MCounter)) {
             outPacket.encodeInt(100); // nCounterProb
         }
         if (flag.hasFlag(MobTemporaryStat.Disable)) {
