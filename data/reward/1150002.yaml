@@ -1,0 +1,19 @@
+# Serpent (1150002)
+
+# bc.hidden-street.net suggests these should drop: Red Potion, Orange Potion, White Potion, Blue Potion,
+#   Ice Jeans, Studded Polearm, Yellow Arianne (F), Dark Nightshift (M)
+#   NOTE: hidden-street doesn't include serpent tail as an etc drop, but it seems obvious that it should be.
+#   See the item detail page for before chaos hidden-street, it appropriately shows the associated quests:
+#   https://bc.hidden-street.net/items/leftover/serpent-tail
+
+rewards:
+  - [ 0, 22, 33, 0.600000 ] # Copypasta from Strange Sign (1150001)
+  - [ 1062000, 1, 1, 0.000100 ] # Ice Jeans
+  - [ 1442007, 1, 1, 0.000100 ] # Studded Polearm
+  - [ 1041026, 1, 1, 0.000100 ] # Yellow Arianne
+  - [ 1040034, 1, 1, 0.000100 ] # Dark Nightshift
+  - [ 2000000, 1, 1, 0.010000 ] # Red Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 4000600, 1, 1, 0.400000 ] # Serpent Tail
