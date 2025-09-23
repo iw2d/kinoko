@@ -12,6 +12,8 @@ import kinoko.world.user.User;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import kinoko.server.Server;
 import kinoko.server.alliance.Alliance;
 
 public final class GuildHQ extends ScriptHandler {
@@ -177,21 +179,27 @@ public final class GuildHQ extends ScriptHandler {
                 sm.sayNext("Only the Guild Union Master can expand the number of guilds in the Union.");
             }
             
-            final int currentCapacity = sm.getUser().getGuildInfo().getAllianceMemberMax();
-            if (currentCapacity >= GameConstants.UNION_CAPACITY_MAX) {
-                sm.sayNext("Your alliance already reached the maximum capacity for guilds.");
-                return;
+            Optional<Alliance> alliance = Server.getCentralServerNode().getAllianceById(sm.getUser().getAllianceId());
+            if(!alliance.isEmpty()) {
+            	final int currentCapacity = alliance.get().getMemberMax();
+                if (currentCapacity >= GameConstants.UNION_CAPACITY_MAX) {
+                    sm.sayNext("Your alliance already reached the maximum capacity for guilds.");
+                    return;
+                }
+                final int expandCost = GameConstants.getUnionExpandCost(currentCapacity);
+                if (!sm.askYesNo(String.format("Do you want to increase your Alliance by #rone guild#k slot? The fee for this procedure is #r%,d mesos#k.", expandCost))) {
+                    return;
+                }
+                if (!sm.addMoney(-expandCost)) {
+                    sm.sayNext("You don't have enough mesos for this request.");
+                    return;
+                }
+                
+                //TODO alliance submit request
+            } else {
+            	sm.sayNext("Your alliance is nonexistent.");
+            	return;
             }
-            final int expandCost = GameConstants.getUnionExpandCost(currentCapacity);
-            if (!sm.askYesNo(String.format("Do you want to increase your Alliance by #rone guild#k slot? The fee for this procedure is #r%,d mesos#k.", expandCost))) {
-                return;
-            }
-            if (!sm.addMoney(-expandCost)) {
-                sm.sayNext("You don't have enough mesos for this request.");
-                return;
-            }
-            
-            //TODO alliance submit request
         } else if (answer == 4) {
             if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
                 sm.sayNext("Only the Guild Union Master may disband the Guild Union.");
