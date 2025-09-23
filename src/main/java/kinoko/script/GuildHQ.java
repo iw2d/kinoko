@@ -42,7 +42,7 @@ public final class GuildHQ extends ScriptHandler {
                     return;
                 }
                 if (sm.getLevel() < 101) {
-                    sm.sayNext("Hey, you level is a bit low to be a guild leader. You need to be at least level 101 to create a guild.");
+                    sm.sayNext("Hey, your level is a bit low to be a guild leader. You need to be at least level 101 to create a guild.");
                     return;
                 }
                 if (!sm.canAddMoney(-GameConstants.CREATE_GUILD_COST)) {
