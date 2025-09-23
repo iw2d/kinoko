@@ -8,8 +8,14 @@ Basic configuration is available via environment variables - the names and defau
 are defined in [ServerConstants.java](src/main/java/kinoko/server/ServerConstants.java)
 and [ServerConfig.java](src/main/java/kinoko/server/ServerConfig.java).
 
+### Client Downloads
+[GMS V95 Client Setup](https://mega.nz/file/dWIgyR4I#6cDN_ycLLiFtad07Eby3UfjdY3TqGI65g6X-xEqlmds)  
+[GMS v95.1 Localhost](https://mega.nz/file/dWIgyR4I#6cDN_ycLLiFtad07Eby3UfjdY3TqGI65g6X-xEqlmds)
+
+
+
 > [!NOTE]
-> Client WZ files are expected to be present in the `wz/` directory in order for the provider classes to extract the
+> Client .WZ files are expected to be present in the `wz/` directory in order for the provider classes to extract the
 > required data. The required files are as follows:
 > ```
 > Character.wz
@@ -24,6 +30,7 @@ and [ServerConfig.java](src/main/java/kinoko/server/ServerConfig.java).
 > String.wz
 > Etc.wz
 > ```
+
 
 #### Java setup
 
