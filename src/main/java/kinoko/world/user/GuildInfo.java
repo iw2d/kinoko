@@ -18,6 +18,7 @@ public final class GuildInfo implements Encodable {
     private final byte markColor;
     private final int allianceId;
     private final String allianceName;
+    private final int allianceMemberMax;
 
     public GuildInfo(int guildId, String guildName, GuildRank guildRank, int memberMax, short markBg, byte markBgColor, short mark, byte markColor, int allianceId, String allianceName) {
         this.guildId = guildId;
@@ -70,6 +71,10 @@ public final class GuildInfo implements Encodable {
 
     public String getAllianceName() {
         return allianceName;
+    }
+    
+    public int getAllianceMemberMax() {
+        return allianceMemberMax;
     }
 
     @Override

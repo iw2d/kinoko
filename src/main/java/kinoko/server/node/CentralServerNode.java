@@ -4,6 +4,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
+import kinoko.server.alliance.Alliance;
+import kinoko.server.alliance.AllianceStorage;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;
@@ -38,6 +40,7 @@ public final class CentralServerNode extends Node {
     private final MessengerStorage messengerStorage = new MessengerStorage();
     private final PartyStorage partyStorage = new PartyStorage();
     private final GuildStorage guildStorage = new GuildStorage();
+    private final AllianceStorage allianceStorage = new AllianceStorage();
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
     private final int port;
@@ -190,6 +193,26 @@ public final class CentralServerNode extends Node {
         return guildStorage.getGuildById(guildId);
     }
 
+    // ALLIANCE METHODS ---------------------------------------------------------------------------------------------------
+
+    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, RemoteUser remoteUser) {
+        final Alliance alliance = new Alliance(allianceId, allianceName);
+        if (!allianceStorage.addAlliance(alliance)) {
+            return Optional.empty();
+        }
+        return Optional.of(alliance);
+    }
+
+    public boolean removeAlliance(Alliance alliance) {
+        return allianceStorage.removeAlliance(alliance);
+    }
+
+    public Optional<Alliance> getAllianceById(int allianceId) {
+        if (allianceId == 0) {
+            return Optional.empty();
+        }
+        return allianceStorage.getAllianceById(allianceId);
+    }
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
