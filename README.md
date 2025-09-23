@@ -9,7 +9,7 @@ are defined in [ServerConstants.java](src/main/java/kinoko/server/ServerConstant
 and [ServerConfig.java](src/main/java/kinoko/server/ServerConfig.java).
 
 ### Client Downloads
-[GMS V95 Client Setup](https://mega.nz/file/dWIgyR4I#6cDN_ycLLiFtad07Eby3UfjdY3TqGI65g6X-xEqlmds)  
+[GMS V95 Client Setup](https://ia600809.us.archive.org/19/items/GMSSetup93-133/GMS0095/GMSSetupv95.exe)  
 [GMS v95.1 Localhost](https://mega.nz/file/dWIgyR4I#6cDN_ycLLiFtad07Eby3UfjdY3TqGI65g6X-xEqlmds)
 
 
