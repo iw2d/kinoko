@@ -10,6 +10,9 @@ import kinoko.world.GameConstants;
 import kinoko.world.user.User;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+import kinoko.server.alliance.Alliance;
 
 public final class GuildHQ extends ScriptHandler {
     public static final int GUILD_HEADQUARTERS = 200000301;
@@ -155,18 +158,45 @@ public final class GuildHQ extends ScriptHandler {
                 sm.sayNext("Only the party leader can form a Guild Union.");
                 return;
             }
-            sm.sayNext("You can create a Guild Union if your party consists of two people.");
-            // TODO
+            if (!sm.checkParty(2, (user) -> {return user.getGuildRank() == GuildRank.MASTER;})) {
+                sm.sayNext("You can create a Guild Union if your party consists of two people.");
+            }
+            
+            if (!sm.askYesNo("Oh, are you interested in forming a Guild Union? The current fee for this operation is #r%,d mesos#k.", GameConstants.CREATE_ALLIANCE_COST)) {
+                sm.sayNext("You're not ready yet? Come back to me when you want to create an alliance.");
+                return;
+            }
+            if (!sm.addMoney(-GameConstants.CREATE_ALLIANCE_COST)) {
+                sm.sayNext("You don't have enough mesos for this request.");
+                return;
+            }
+            
+            //TODO alliance submit request
         } else if (answer == 3) {
             if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
                 sm.sayNext("Only the Guild Union Master can expand the number of guilds in the Union.");
             }
-            // TODO
+            
+            final int currentCapacity = sm.getUser().getGuildInfo().getAllianceMemberMax();
+            if (currentCapacity >= GameConstants.UNION_CAPACITY_MAX) {
+                sm.sayNext("Your alliance already reached the maximum capacity for guilds.");
+                return;
+            }
+            final int expandCost = GameConstants.getUnionExpandCost(currentCapacity);
+            if (!sm.askYesNo(String.format("Do you want to increase your Alliance by #rone guild#k slot? The fee for this procedure is #r%,d mesos#k.", expandCost))) {
+                return;
+            }
+            if (!sm.addMoney(-expandCost)) {
+                sm.sayNext("You don't have enough mesos for this request.");
+                return;
+            }
+            
+            //TODO alliance submit request
         } else if (answer == 4) {
             if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
                 sm.sayNext("Only the Guild Union Master may disband the Guild Union.");
             }
-            // TODO
+            //TODO alliance submit request
         }
     }
 }

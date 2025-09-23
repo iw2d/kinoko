@@ -64,6 +64,9 @@ public final class GameConstants {
     public static final int CREATE_EMBLEM_COST = 500_000;
     public static final int DELETE_EMBLEM_COST = 1_000_000;
     public static final int CREATE_UNION_COST = 5_000_000;
+    public static final int UNION_GRADE_MAX = GUILD_GRADE_NAMES.size();
+    public static final int UNION_CAPACITY_MIN = 2;
+    public static final int UNION_CAPACITY_MAX = 5;
 
     public static final int MACRO_SYS_DATA_SIZE = 5;
     public static final int MACRO_SKILL_COUNT = 3;
@@ -204,6 +207,16 @@ public final class GameConstants {
             return 3_500_000;
         } else if (memberMax < 35) {
             return 4_500_000;
+        } else {
+            return 5_000_000;
+        }
+    }
+    
+    public static int getUnionExpandCost(int memberMax) {
+        if (memberMax < 3) {
+            return 500_000;
+        } else if (memberMax < 4) {
+            return 1_500_000;
         } else {
             return 5_000_000;
         }

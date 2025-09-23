@@ -24,6 +24,10 @@ public final class DatabaseManager {
     public static GuildAccessor guildAccessor() {
         return connector.getGuildAccessor();
     }
+    
+    public static AllianceAccessor allianceAccessor() {
+        return connector.getAllianceAccessor();
+    }
 
     public static GiftAccessor giftAccessor() {
         return connector.getGiftAccessor();
