@@ -66,13 +66,13 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
                 .toList();
     }
     
-    public List<Integer> getMemberIds() {
-        return getAllianceMembers().keySet().stream().toList();
+    public List<GuildMember> getMemberIds() {
+        return getAllianceMembers().stream().toList();
     }
 
-    public List<Integer> getMemberIds(int exceptId) {
-        return getAllianceMembers().keySet().stream()
-                .filter((id) -> id != exceptId)
+    public List<GuildMember> getMemberIds(int exceptId) {
+        return getAllianceMembers().stream()
+                .filter((member) -> member.getCharacterId() != exceptId)
                 .toList();
     }
 

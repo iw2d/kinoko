@@ -162,11 +162,11 @@ public final class GuildHQ extends ScriptHandler {
                 sm.sayNext("You can create a Guild Union if your party consists of two people.");
             }
             
-            if (!sm.askYesNo("Oh, are you interested in forming a Guild Union? The current fee for this operation is #r%,d mesos#k.", GameConstants.CREATE_ALLIANCE_COST)) {
+            if (!sm.askYesNo(String.format("Oh, are you interested in forming a Guild Union? The current fee for this operation is #r%,d mesos#k.", GameConstants.CREATE_UNION_COST))) {
                 sm.sayNext("You're not ready yet? Come back to me when you want to create an alliance.");
                 return;
             }
-            if (!sm.addMoney(-GameConstants.CREATE_ALLIANCE_COST)) {
+            if (!sm.addMoney(-GameConstants.CREATE_UNION_COST)) {
                 sm.sayNext("You don't have enough mesos for this request.");
                 return;
             }
