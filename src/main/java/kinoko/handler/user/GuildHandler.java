@@ -220,7 +220,27 @@ public final class GuildHandler {
     public static void handleAllianceRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final AllianceRequestType requestType = AllianceRequestType.getByValue(type);
-        // TODO
+        
+        if (!user.hasGuild() || user.hasAlliance()) {
+    		user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+    		return;
+    	}
+        
+        if (requestType == AllianceRequestType.Create) {
+        	// send CreateDone
+        } else if (requestType == AllianceRequestType.Invite) {
+        	// send Invite_Done
+        } else if (requestType == AllianceRequestType.Join) {
+        	if (user.hasAlliance() || user.getGuildInfo().getGuildRank() != GuildRank.MASTER || !user.hasGuild()) {
+        		// send InviteGuild_BlockedByOpt
+                return;
+            }
+        	
+        	if () {
+        		// send InviteGuild_AlreadyInvited
+                return;
+            }
+        }
     }
 
     @Handler(InHeader.AllianceResult)
