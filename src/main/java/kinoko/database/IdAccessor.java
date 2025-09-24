@@ -10,6 +10,8 @@ public interface IdAccessor {
     Optional<Integer> nextPartyId();
 
     Optional<Integer> nextGuildId();
+    
+    Optional<Integer> nextAllianceId();
 
     Optional<Integer> nextMemoId();
 }

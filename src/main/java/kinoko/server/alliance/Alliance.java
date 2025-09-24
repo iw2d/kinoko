@@ -22,6 +22,7 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     
     private final int allianceId;
     private final String allianceName;
+    private final int allianceLordId;
     private final List<String> gradeNames;
     private int memberMax;
     
@@ -30,13 +31,14 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     
     private final Lock lock = new ReentrantLock();
     
-    public Alliance(int allianceId, String allianceName) {
+    public Alliance(int allianceId, String allianceName, int allianceLordId) {
         this.allianceId = allianceId;
         this.allianceName = allianceName;
+        this.allianceLordId = allianceLordId;
         this.gradeNames = new ArrayList<>(GameConstants.GUILD_GRADE_NAMES);
         this.guildInvites = new HashMap<>();
         this.guilds = new HashMap<>();
-        this.memberMax = GameConstants.GUILD_CAPACITY_MIN;
+        this.memberMax = GameConstants.UNION_CAPACITY_MIN;
     }
     
     public int getMemberMax() {
@@ -53,6 +55,10 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
 
     public String getAllianceName() {
         return allianceName;
+    }
+    
+    public int getLordId() {
+        return allianceLordId;
     }
     
     public List<GuildMember> getAllianceMembers() {
