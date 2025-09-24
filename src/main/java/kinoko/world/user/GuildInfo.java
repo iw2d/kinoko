@@ -1,5 +1,7 @@
 package kinoko.world.user;
 
+import kinoko.server.Server;
+import kinoko.server.alliance.Alliance;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.packet.InPacket;
@@ -71,7 +73,7 @@ public final class GuildInfo implements Encodable {
     public String getAllianceName() {
         return allianceName;
     }
-
+    
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(guildId);

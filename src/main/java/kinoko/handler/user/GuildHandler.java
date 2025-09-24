@@ -6,11 +6,15 @@ import kinoko.packet.world.GuildPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.script.GuildHQ;
+import kinoko.server.Server;
+import kinoko.server.alliance.Alliance;
 import kinoko.server.alliance.AllianceRequestType;
 import kinoko.server.alliance.AllianceResultType;
+import kinoko.server.alliance.AllianceStorage;
 import kinoko.server.guild.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
+import kinoko.server.user.RemoteUser;
 import kinoko.world.GameConstants;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.user.User;
@@ -227,27 +231,77 @@ public final class GuildHandler {
     	}
         
         if (requestType == AllianceRequestType.Create) {
-        	// send CreateDone
-        } else if (requestType == AllianceRequestType.Invite) {
-        	// send Invite_Done
+        	// send CreateDone to alliance members
+        } else if (requestType == AllianceRequestType.Withdraw) {
+        	// send Withdraw_Done to guild members
+    	} else if (requestType == AllianceRequestType.Invite) {
+    		if (user.getGuildRank() != GuildRank.MASTER) {
+                user.write(GuildPacket.serverMsg("You cannot invite other guilds since you are not the master of the guild."));
+                return;
+    		}
+    		
+    		if (false) {
+        		// send InviteGuild_AlreadyInvited
+                return;
+            }
         } else if (requestType == AllianceRequestType.Join) {
         	if (user.hasAlliance() || user.getGuildInfo().getGuildRank() != GuildRank.MASTER || !user.hasGuild()) {
         		// send InviteGuild_BlockedByOpt
                 return;
             }
         	
-        	if () {
-        		// send InviteGuild_AlreadyInvited
-                return;
-            }
+        	// send Invite_Done
         }
     }
+    
+    // --- Alliance CRUD ---
+    
+    private static void create(String allianceName, User user) {
+    	// Resolve new alliance ID
+        final Optional<Integer> allianceIdResult = DatabaseManager.idAccessor().nextGuildId();
+        if (allianceIdResult.isEmpty()) {
+            user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+            return;
+        }
+        
+        int allianceId = allianceIdResult.get();
+    	Optional<Alliance> alliance = Server.getCentralServerNode().createNewAlliance(allianceId, allianceName, user);
+    	if (alliance.isEmpty()) {
+    		user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+            return;
+    	}
+    }
+    
+    private static void addGuild(Alliance alliance, Guild guild) {
+    	alliance.lock();
+    	try {
+    		alliance.addGuild(guild);
+    	} finally {
+    		alliance.unlock();
+    	}
+    }
+    
+    private static void removeGuild(Alliance alliance, Guild guild) {
+    	alliance.lock();
+    	try {
+    		alliance.removeGuild(guild);
+    	} finally {
+    		alliance.unlock();
+    	}
+    }
+    
+    private static void destroy(Alliance alliance) {
+    	Server.getCentralServerNode().removeAlliance(alliance);
+    }
+    
+    // ---------------------
 
     @Handler(InHeader.AllianceResult)
     public static void handleAllianceResult(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final AllianceResultType resultType = AllianceResultType.getByValue(type);
-        // TODO
+        
+        //TODO
     }
 
     @Handler(InHeader.GuildBBS)

@@ -23,6 +23,7 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -195,8 +196,8 @@ public final class CentralServerNode extends Node {
 
     // ALLIANCE METHODS ---------------------------------------------------------------------------------------------------
 
-    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, RemoteUser remoteUser) {
-        final Alliance alliance = new Alliance(allianceId, allianceName);
+    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, User user) {
+        final Alliance alliance = new Alliance(allianceId, allianceName, user.getCharacterId());
         if (!allianceStorage.addAlliance(alliance)) {
             return Optional.empty();
         }
