@@ -1,7 +1,5 @@
 package kinoko.world.user;
 
-import kinoko.server.Server;
-import kinoko.server.alliance.Alliance;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.packet.InPacket;
@@ -9,7 +7,7 @@ import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
 public final class GuildInfo implements Encodable {
-    public static final GuildInfo EMPTY = new GuildInfo(0, "", GuildRank.NONE, 0, (short) 0, (byte) 0, (short) 0, (byte) 0, 0, "");
+    public static final GuildInfo EMPTY = new GuildInfo(0, "", GuildRank.NONE, 0, (short) 0, (byte) 0, (short) 0, (byte) 0, 0, "", GuildRank.NONE);
     private final int guildId;
     private final String guildName;
     private final GuildRank guildRank;
@@ -20,8 +18,9 @@ public final class GuildInfo implements Encodable {
     private final byte markColor;
     private final int allianceId;
     private final String allianceName;
+    private final GuildRank allianceRank;
     
-    public GuildInfo(int guildId, String guildName, GuildRank guildRank, int memberMax, short markBg, byte markBgColor, short mark, byte markColor, int allianceId, String allianceName) {
+    public GuildInfo(int guildId, String guildName, GuildRank guildRank, int memberMax, short markBg, byte markBgColor, short mark, byte markColor, int allianceId, String allianceName, GuildRank allianceRank) {
         this.guildId = guildId;
         this.guildName = guildName;
         this.guildRank = guildRank;
@@ -32,6 +31,7 @@ public final class GuildInfo implements Encodable {
         this.markColor = markColor;
         this.allianceId = allianceId;
         this.allianceName = allianceName;
+        this.allianceRank = allianceRank;
     }
 
     public int getGuildId() {
@@ -74,6 +74,10 @@ public final class GuildInfo implements Encodable {
         return allianceName;
     }
     
+    public GuildRank getAllianceRank() {
+        return allianceRank;
+    }
+    
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(guildId);
@@ -99,7 +103,7 @@ public final class GuildInfo implements Encodable {
         final byte markColor = inPacket.decodeByte();
         final int allianceId = inPacket.decodeInt();
         final String allianceName = inPacket.decodeString();
-        return new GuildInfo(guildId, guildName, guildRank, memberMax, markBg, markBgColor, mark, markColor, allianceId, allianceName);
+        return new GuildInfo(guildId, guildName, guildRank, memberMax, markBg, markBgColor, mark, markColor, allianceId, allianceName, GuildRank.NONE);
     }
 
     public static GuildInfo from(Guild guild, int characterId) {
@@ -113,7 +117,8 @@ public final class GuildInfo implements Encodable {
                 guild.getMark(),
                 guild.getMarkColor(),
                 guild.getAllianceId(),
-                guild.getAllianceName()
+                guild.getAllianceName(),
+                guild.getMember(characterId).getAllianceRank()
         );
     }
 }
