@@ -6,6 +6,7 @@ import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.server.alliance.AllianceRequest;
 import kinoko.server.event.EventManager;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
@@ -215,6 +216,10 @@ public final class ChannelServerNode extends ServerNode {
 
     public void submitGuildRequest(User user, GuildRequest guildRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.guildRequest(user.getCharacterId(), guildRequest));
+    }
+    
+    public void submitAllianceRequest(User user, AllianceRequest allianceRequest) {
+        centralClientFuture.channel().writeAndFlush(CentralPacket.allianceRequest(user.getCharacterId(), allianceRequest));
     }
 
     public void submitBoardRequest(User user, GuildBoardRequest boardRequest) {

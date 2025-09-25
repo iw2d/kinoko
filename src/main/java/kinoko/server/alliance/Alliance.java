@@ -125,15 +125,25 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     }
     
     public boolean addGuild(Guild guild) {
-        if (!canAddGuild(guild.getGuildId())) {
-            return false;
-        }
-        guilds.put(guild.getGuildId(), guild);
-        return true;
+    	this.lock();
+    	try {
+    		if (!canAddGuild(guild.getGuildId())) {
+                return false;
+            }
+            guilds.put(guild.getGuildId(), guild);
+            return true;
+    	} finally {
+    		this.unlock();
+    	}
     }
 
     public void removeGuild(Guild guild) {
-        guilds.remove(guild.getGuildId());
+    	this.lock();
+    	try {
+    		guilds.remove(guild.getGuildId());
+    	} finally {
+    		this.unlock();
+    	}
     }
 
     public String getGradeNames(int rank) {

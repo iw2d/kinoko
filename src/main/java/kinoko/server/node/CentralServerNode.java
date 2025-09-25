@@ -196,12 +196,24 @@ public final class CentralServerNode extends Node {
 
     // ALLIANCE METHODS ---------------------------------------------------------------------------------------------------
 
-    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, User user) {
-        final Alliance alliance = new Alliance(allianceId, allianceName, user.getCharacterId());
-        if (!allianceStorage.addAlliance(alliance)) {
-            return Optional.empty();
+    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, RemoteUser remoteUser) {
+        final Alliance alliance = new Alliance(allianceId, allianceName, remoteUser.getCharacterId());
+        
+        final GuildMember member = GuildMember.from(remoteUser);
+        member.setGuildRank(GuildRank.MASTER);
+        
+        Optional<Guild> guild = guildStorage.getGuildById(remoteUser.getGuildId());
+        if (!guild.isEmpty()) {
+        	if (!alliance.addGuild(guild.get())) {
+                throw new IllegalStateException("Could not add guild to alliance");
+            }
+        	
+        	if (allianceStorage.addAlliance(alliance)) {
+                return Optional.of(alliance);
+            }
         }
-        return Optional.of(alliance);
+        
+        return Optional.empty();
     }
 
     public boolean removeAlliance(Alliance alliance) {
