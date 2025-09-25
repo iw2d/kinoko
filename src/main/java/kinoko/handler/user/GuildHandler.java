@@ -261,6 +261,7 @@ public final class GuildHandler {
         final Optional<Integer> allianceIdResult = DatabaseManager.idAccessor().nextGuildId();
         if (allianceIdResult.isEmpty()) {
             user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+            log.error("Database error: allianceId");
             return;
         }
         
@@ -268,6 +269,7 @@ public final class GuildHandler {
     	Optional<Alliance> alliance = Server.getCentralServerNode().createNewAlliance(allianceId, allianceName, user);
     	if (alliance.isEmpty()) {
     		user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+    		log.error("Could not create alliance '{}' for user '{}'", allianceName, user.getCharacterName());
             return;
     	}
     }
