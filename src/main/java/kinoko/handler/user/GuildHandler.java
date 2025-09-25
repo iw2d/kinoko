@@ -7,10 +7,7 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.script.GuildHQ;
 import kinoko.server.Server;
-import kinoko.server.alliance.Alliance;
-import kinoko.server.alliance.AllianceRequestType;
-import kinoko.server.alliance.AllianceResultType;
-import kinoko.server.alliance.AllianceStorage;
+import kinoko.server.alliance.*;
 import kinoko.server.guild.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -231,8 +228,11 @@ public final class GuildHandler {
     	}
         
         if (requestType == AllianceRequestType.Create) {
+        	String allianceName = "";
+        	user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.createNewAlliance(allianceName));
         	// send CreateDone to alliance members
         } else if (requestType == AllianceRequestType.Withdraw) {
+        	user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.removeAlliance(user.getAllianceId()));
         	// send Withdraw_Done to guild members
     	} else if (requestType == AllianceRequestType.Invite) {
     		if (user.getGuildRank() != GuildRank.MASTER) {
@@ -250,53 +250,17 @@ public final class GuildHandler {
                 return;
             }
         	
+        	user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.joinAlliance(user.getAllianceId()));
         	// send Invite_Done
+        } else if (requestType == AllianceRequestType.Destroy) {
+        	if (!user.hasAlliance() || user.getGuildInfo().getGuildRank() != GuildRank.MASTER) {
+        		user.write(GuildPacket.serverMsg("You cannot destroy in alliance since you are not the master of the alliance."));
+                return;
+        	}
+        	
+        	user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.removeAlliance(user.getAllianceId()));
         }
     }
-    
-    // --- Alliance CRUD ---
-    
-    private static void create(String allianceName, User user) {
-    	// Resolve new alliance ID
-        final Optional<Integer> allianceIdResult = DatabaseManager.idAccessor().nextGuildId();
-        if (allianceIdResult.isEmpty()) {
-            user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
-            log.error("Database error: allianceId");
-            return;
-        }
-        
-        int allianceId = allianceIdResult.get();
-    	Optional<Alliance> alliance = Server.getCentralServerNode().createNewAlliance(allianceId, allianceName, user);
-    	if (alliance.isEmpty()) {
-    		user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
-    		log.error("Could not create alliance '{}' for user '{}'", allianceName, user.getCharacterName());
-            return;
-    	}
-    }
-    
-    private static void addGuild(Alliance alliance, Guild guild) {
-    	alliance.lock();
-    	try {
-    		alliance.addGuild(guild);
-    	} finally {
-    		alliance.unlock();
-    	}
-    }
-    
-    private static void removeGuild(Alliance alliance, Guild guild) {
-    	alliance.lock();
-    	try {
-    		alliance.removeGuild(guild);
-    	} finally {
-    		alliance.unlock();
-    	}
-    }
-    
-    private static void destroy(Alliance alliance) {
-    	Server.getCentralServerNode().removeAlliance(alliance);
-    }
-    
-    // ---------------------
 
     @Handler(InHeader.AllianceResult)
     public static void handleAllianceResult(User user, InPacket inPacket) {
