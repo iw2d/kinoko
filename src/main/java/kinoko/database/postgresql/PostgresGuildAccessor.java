@@ -10,7 +10,6 @@ import kinoko.server.guild.GuildRank;
 
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class PostgresGuildAccessor extends PostgresAccessor implements GuildAccessor {
 

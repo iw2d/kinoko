@@ -1,6 +1,5 @@
 package kinoko.world;
 
-import kinoko.database.DatabaseManager;
 import kinoko.server.ServerConfig;
 import kinoko.util.Tuple;
 import kinoko.world.job.Job;

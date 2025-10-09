@@ -2,9 +2,7 @@ package kinoko.database;
 
 import kinoko.database.postgresql.PostgresConnector;
 import kinoko.database.cassandra.CassandraConnector;
-import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
-import kinoko.world.GameConstants;
 
 import java.util.List;
 import java.util.Objects;
