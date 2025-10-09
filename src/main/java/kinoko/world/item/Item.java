@@ -36,6 +36,37 @@ public final class Item implements Encodable {
         this.ringData = item.ringData != null ? new RingData(item.ringData) : null;
     }
 
+    public Item(int itemId, short quantity) {
+        this(ItemType.getByItemId(itemId));
+        this.itemId = itemId;
+        this.quantity = quantity;
+    }
+
+    public Item(
+            int itemId,
+            short quantity,
+            long itemSn,
+            boolean cash,
+            short attribute,
+            String title,
+            Instant dateExpire,
+            EquipData equipData,
+            PetData petData,
+            RingData ringData
+    ) {
+        this(ItemType.getByItemId(itemId));
+        this.itemId = itemId;
+        this.quantity = quantity;
+        this.itemSn = itemSn;
+        this.cash = cash;
+        this.attribute = attribute;
+        this.title = title;
+        this.dateExpire = dateExpire;
+        this.equipData = equipData;
+        this.petData = petData;
+        this.ringData = ringData;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(getItemType().getValue()); // nType

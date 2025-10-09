@@ -12,6 +12,14 @@ public final class QuestRecord {
         this.questId = questId;
     }
 
+    public QuestRecord(int questId, QuestState state, String value, Instant completedTime) {
+        this.questId = questId;
+        this.state = state;
+        this.value = value;
+        this.completedTime = completedTime;
+    }
+
+
     public int getQuestId() {
         return questId;
     }

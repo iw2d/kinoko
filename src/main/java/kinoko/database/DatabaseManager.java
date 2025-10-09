@@ -1,8 +1,15 @@
 package kinoko.database;
 
+import kinoko.database.postgresql.PostgresConnector;
 import kinoko.database.cassandra.CassandraConnector;
+import kinoko.server.ServerConfig;
+import kinoko.server.ServerConstants;
+import kinoko.world.GameConstants;
+
+import java.util.Objects;
 
 public final class DatabaseManager {
+
     private static DatabaseConnector connector;
 
     public static IdAccessor idAccessor() {
@@ -33,8 +40,28 @@ public final class DatabaseManager {
         return connector.getMemoAccessor();
     }
 
+
+    public static boolean isRelational() {
+        // Get whether the database connection is a relational database.
+        if (connector != null){
+            return connector instanceof PostgresConnector;
+        }
+        return false;
+    };
+
+
     public static void initialize() {
-        connector = new CassandraConnector();
+        // Prod Environment
+        if (Objects.equals(ServerConstants.DATABASE_HOST, "cassandra_kinoko")) {
+            connector = new CassandraConnector();
+        }
+        else if (Objects.equals(ServerConstants.DATABASE_HOST, "postgres_kinoko")){
+            connector = new PostgresConnector();
+        }
+        else {  // Your choice, likely in a dev environment.
+//            connector = new CassandraConnector();
+            connector = new PostgresConnector();
+        }
         connector.initialize();
     }
 

@@ -7,6 +7,7 @@ import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class CharacterStat implements Encodable {
@@ -36,6 +37,45 @@ public final class CharacterStat implements Encodable {
     private long petSn1;
     private long petSn2;
     private long petSn3;
+
+    public CharacterStat(){
+
+    }
+
+    public CharacterStat(int id, String name, byte gender, byte skin, int face, int hair,
+                         short level, short job, short subJob,
+                         short baseStr, short baseDex, short baseInt, short baseLuk,
+                         int hp, int maxHp, int mp, int maxMp, short ap,
+                         int exp, short pop, int posMap, byte portal,
+                         long petSn1, long petSn2, long petSn3) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.skin = skin;
+        this.face = face;
+        this.hair = hair;
+        this.level = level;
+        this.job = job;
+        this.subJob = subJob;
+        this.baseStr = baseStr;
+        this.baseDex = baseDex;
+        this.baseInt = baseInt;
+        this.baseLuk = baseLuk;
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.mp = mp;
+        this.maxMp = maxMp;
+        this.ap = ap;
+        this.exp = exp;
+        this.pop = pop;
+        this.posMap = posMap;
+        this.portal = portal;
+        this.petSn1 = petSn1;
+        this.petSn2 = petSn2;
+        this.petSn3 = petSn3;
+        // TODO: give this a legit value.
+        this.sp = new ExtendSp(new HashMap<>());
+    }
 
     public int getId() {
         return id;

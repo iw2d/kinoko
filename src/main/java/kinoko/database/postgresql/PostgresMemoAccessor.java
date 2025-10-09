@@ -1,94 +1,90 @@
-package kinoko.database.cassandra;
+package kinoko.database.postgresql;
 
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
-import com.datastax.oss.driver.api.core.cql.Row;
+import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.MemoAccessor;
-import kinoko.database.cassandra.table.MemoTable;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoType;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
+public final class PostgresMemoAccessor extends PostgresAccessor implements MemoAccessor {
 
-public final class CassandraMemoAccessor extends CassandraAccessor implements MemoAccessor {
-    public CassandraMemoAccessor(CqlSession session, String keyspace) {
-        super(session, keyspace);
+    public PostgresMemoAccessor(HikariDataSource dataSource) {
+        super(dataSource);
     }
 
     @Override
     public List<Memo> getMemosByCharacterId(int characterId) {
-        final List<Memo> memos = new ArrayList<>();
-        final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), MemoTable.getTableName())
-                        .columns(
-                                MemoTable.MEMO_ID,
-                                MemoTable.MEMO_TYPE,
-                                MemoTable.MEMO_CONTENT,
-                                MemoTable.SENDER_NAME,
-                                MemoTable.DATE_SENT
-                        )
-                        .whereColumn(MemoTable.RECEIVER_ID).isEqualTo(literal(characterId))
-                        .build()
-        );
-        for (Row row : selectResult) {
-            final MemoType type = MemoType.getByValue(row.getInt(MemoTable.MEMO_TYPE));
-            final Memo memo = new Memo(
-                    type != null ? type : MemoType.DEFAULT,
-                    row.getInt(MemoTable.MEMO_ID),
-                    row.getString(MemoTable.SENDER_NAME),
-                    row.getString(MemoTable.MEMO_CONTENT),
-                    row.getInstant(MemoTable.DATE_SENT)
-            );
-            memos.add(memo);
+        List<Memo> memos = new ArrayList<>();
+        String sql = "SELECT id, memo_type, memo_content, sender_name, date_sent " +
+                "FROM memo.memo WHERE receiver_id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MemoType type = MemoType.getByValue(rs.getInt("memo_type"));
+                    Memo memo = new Memo(
+                            type != null ? type : MemoType.DEFAULT,
+                            rs.getInt("id"),
+                            rs.getString("sender_name"),
+                            rs.getString("memo_content"),
+                            rs.getTimestamp("date_sent").toInstant()
+                    );
+                    memos.add(memo);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return memos;
     }
 
     @Override
     public boolean hasMemo(int characterId) {
-        final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), MemoTable.getTableName())
-                        .columns(
-                                MemoTable.RECEIVER_ID
-                        )
-                        .whereColumn(MemoTable.RECEIVER_ID).isEqualTo(literal(characterId))
-                        .build()
-        );
-        for (Row row : selectResult) {
-            final int receiverId = row.getInt(MemoTable.RECEIVER_ID);
-            if (receiverId == characterId) {
-                return true;
+        String sql = "SELECT 1 FROM memo.memo WHERE receiver_id = ? LIMIT 1";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
     @Override
     public boolean newMemo(Memo memo, int receiverId) {
-        final ResultSet updateResult = getSession().execute(
-                insertInto(getKeyspace(), MemoTable.getTableName())
-                        .value(MemoTable.MEMO_ID, literal(memo.getMemoId()))
-                        .value(MemoTable.RECEIVER_ID, literal(receiverId))
-                        .value(MemoTable.MEMO_TYPE, literal(memo.getType().getValue()))
-                        .value(MemoTable.MEMO_CONTENT, literal(memo.getContent()))
-                        .value(MemoTable.SENDER_NAME, literal(memo.getSender()))
-                        .value(MemoTable.DATE_SENT, literal(memo.getDateSent()))
-                        .ifNotExists()
-                        .build()
-        );
-        return updateResult.wasApplied();
+        // `id` is SERIAL, no need to provide it manually
+        String sql = "INSERT INTO memo.memo (receiver_id, memo_type, memo_content, sender_name, date_sent) " +
+                "VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, receiverId);
+            stmt.setInt(2, memo.getType().getValue());
+            stmt.setString(3, memo.getContent());
+            stmt.setString(4, memo.getSender());
+            stmt.setTimestamp(5, memo.getDateSent() != null ? Timestamp.from(memo.getDateSent()) : Timestamp.from(java.time.Instant.now()));
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public boolean deleteMemo(int memoId, int receiverId) {
-        final ResultSet updateResult = getSession().execute(
-                deleteFrom(getKeyspace(), MemoTable.getTableName())
-                        .whereColumn(MemoTable.MEMO_ID).isEqualTo(literal(memoId))
-                        .build()
-        );
-        return updateResult.wasApplied();
+        String sql = "DELETE FROM memo.memo WHERE id = ? AND receiver_id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, memoId);
+            stmt.setInt(2, receiverId);
+            int affected = stmt.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

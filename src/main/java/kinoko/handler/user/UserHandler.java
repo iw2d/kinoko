@@ -124,7 +124,7 @@ public final class UserHandler {
         inPacket.decodeInt(); // update_time
         final String text = inPacket.decodeString(); // sText
         final boolean onlyBalloon = inPacket.decodeBoolean(); // bOnlyBalloon
-        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && text.length() > 1) {
+        if (text.startsWith(ServerConfig.PLAYER_COMMAND_PREFIX) && text.length() > 1) {
             CommandProcessor.tryProcessCommand(user, text);
             return;
         }
@@ -1217,7 +1217,7 @@ public final class UserHandler {
             targetIds.add(inPacket.decodeInt());
         }
         final String text = inPacket.decodeString(); // sText
-        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && text.length() > 1) {
+        if (text.startsWith(ServerConfig.PLAYER_COMMAND_PREFIX) && text.length() > 1) {
             CommandProcessor.tryProcessCommand(user, text);
             return;
         }

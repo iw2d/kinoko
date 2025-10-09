@@ -39,6 +39,10 @@ public final class Inventory {
         }
     }
 
+    public void addItem(int position, Item item) {
+        putItem(position, item);
+    }
+
     public Item removeItem(int position) {
         return items.remove(Math.abs(position));
     }
