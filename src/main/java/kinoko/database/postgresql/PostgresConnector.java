@@ -4,7 +4,6 @@ import kinoko.database.*;
 import java.util.TimeZone;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 
 public final class PostgresConnector implements DatabaseConnector {

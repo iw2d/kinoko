@@ -17,8 +17,6 @@ import kinoko.database.*;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
-import kinoko.server.Server;
-import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.server.guild.GuildBoardComment;

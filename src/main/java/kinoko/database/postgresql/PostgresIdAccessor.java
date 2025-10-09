@@ -3,10 +3,6 @@ package kinoko.database.postgresql;
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.IdAccessor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 public final class PostgresIdAccessor extends PostgresAccessor implements IdAccessor {
