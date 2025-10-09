@@ -213,4 +213,17 @@ public final class Item implements Encodable {
             removeAttribute(ItemAttribute.getPossibleTradingAttribute(getItemType()));
         }
     }
+
+    /**
+     * Checks whether this Item has a valid item serial number (SN).
+
+     * Useful in relational databases where item SNs are automatically generated.
+     * Returns true if the item has no SN and therefore needs to be inserted
+     * into the database to obtain one.
+     *
+     * @return true if the item SN is zero or negative, false otherwise
+     */
+    public boolean hasNoSN() {
+        return getItemSn() <= 0;
+    }
 }

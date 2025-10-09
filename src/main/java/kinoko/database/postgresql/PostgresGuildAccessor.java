@@ -52,7 +52,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
     @Override
     public Optional<Guild> getGuildById(int guildId) {
         String sql = "SELECT * FROM guild.guilds WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -69,7 +70,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
     private List<String> loadGrades(int guildId) throws SQLException {
         List<String> grades = new ArrayList<>();
         String sql = "SELECT grade_name FROM guild.grade WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -94,7 +96,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
         WHERE m.guild_id = ?
         """;
 
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -134,7 +137,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
         List<GuildBoardEntry> entries = new ArrayList<>();
         String sql = "SELECT entry_id, character_id, title, message, timestamp, 0 AS emoticon " +
                 "FROM guild.board_entry WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -156,7 +160,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
 
     private GuildBoardEntry loadBoardNotice(int guildId) {
         String sql = "SELECT entry_id FROM guild.notice WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -193,7 +198,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
     @Override
     public boolean checkGuildNameAvailable(String name) {
         String sql = "SELECT 1 FROM guild.guilds WHERE LOWER(guild_name) = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name.toLowerCase());
             try (ResultSet rs = stmt.executeQuery()) {
                 return !rs.next();
@@ -229,7 +235,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
                 "points = EXCLUDED.points, " +
                 "level = EXCLUDED.level, " +
                 "board_entry_counter = EXCLUDED.board_entry_counter";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guild.getGuildId());
             stmt.setString(2, guild.getGuildName());
             stmt.setArray(3, getConnection().createArrayOf("text", guild.getGradeNames().toArray()));
@@ -257,13 +264,15 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
 
     private void saveMembers(Guild guild) throws SQLException {
         String deleteSql = "DELETE FROM guild.member WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(deleteSql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
             stmt.setInt(1, guild.getGuildId());
             stmt.executeUpdate();
         }
 
         String insertSql = "INSERT INTO guild.member (guild_id, character_id, grade) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = getConnection().prepareStatement(insertSql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(insertSql)) {
             for (GuildMember member : guild.getGuildMembers()) {
                 stmt.setInt(1, guild.getGuildId());
                 stmt.setInt(2, member.getCharacterId());
@@ -276,13 +285,15 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
 
     private void saveBoardEntries(Guild guild) throws SQLException {
         String deleteSql = "DELETE FROM guild.board_entry WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(deleteSql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
             stmt.setInt(1, guild.getGuildId());
             stmt.executeUpdate();
         }
 
         String insertSql = "INSERT INTO guild.board_entry (entry_id, guild_id, character_id, title, message, timestamp, emoticon) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = getConnection().prepareStatement(insertSql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(insertSql)) {
             for (GuildBoardEntry entry : guild.getBoardEntries()) {
                 stmt.setInt(1, entry.getEntryId());
                 stmt.setInt(2, guild.getGuildId());
@@ -300,7 +311,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
     private void saveBoardNotice(Guild guild) throws SQLException {
         String sql = "INSERT INTO guild.notice (guild_id, entry_id) VALUES (?, ?) " +
                 "ON CONFLICT (guild_id) DO UPDATE SET entry_id = EXCLUDED.entry_id";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             GuildBoardEntry notice = guild.getBoardNoticeEntry();
             if (notice != null) {
                 stmt.setInt(1, guild.getGuildId());
@@ -316,7 +328,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
     @Override
     public boolean deleteGuild(int guildId) {
         String sql = "DELETE FROM guild.guilds WHERE guild_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {

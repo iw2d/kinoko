@@ -1,14 +1,25 @@
 package kinoko.world.item;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 public final class Inventory {
     private final SortedMap<Integer, Item> items = new TreeMap<>();
     private int size;
+    private InventoryType type;
 
     public Inventory(int size) {
         this.size = size;
+    }
+
+    public Inventory(int size, InventoryType type) {
+        this.size = size;
+        this.type = type;
+    }
+
+    public Optional<InventoryType> getType(){
+        return Optional.ofNullable(type);
     }
 
     public SortedMap<Integer, Item> getItems() {
@@ -49,5 +60,11 @@ public final class Inventory {
 
     public boolean removeItem(int position, Item item) {
         return items.remove(Math.abs(position), item);
+    }
+
+    public Collection<InventoryEntry> asInventoryEntries(InventoryType type) {
+        return items.entrySet().stream()
+                .map(entry -> new InventoryEntry(entry.getKey(), entry.getValue(), type))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

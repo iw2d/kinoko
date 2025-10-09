@@ -3,6 +3,7 @@ package kinoko.database.postgresql;
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
+import kinoko.database.postgresql.type.InventoryDao;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
@@ -1154,109 +1155,7 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
 
 
     private void saveCharacterInventory(Connection conn, CharacterData characterData) throws SQLException {
-        String sqlInventory = """
-        INSERT INTO player.inventory (character_id, inventory_type, slot, item_sn)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT (character_id, item_sn)
-        DO UPDATE SET slot = EXCLUDED.slot, inventory_type = EXCLUDED.inventory_type
-    """;
-
-        String sqlItems = """
-        INSERT INTO item.items (item_sn, item_id, quantity, attribute, title, date_expire)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """;
-
-        try (PreparedStatement stmtInventory = conn.prepareStatement(sqlInventory);
-             PreparedStatement stmtItems = conn.prepareStatement(sqlItems)) {
-
-            InventoryManager inv = characterData.getInventoryManager();
-
-            saveInventoryBatch(conn, stmtItems, stmtInventory, characterData.getCharacterId(), InventoryType.EQUIPPED, inv.getEquipped().getItems());
-            saveInventoryBatch(conn, stmtItems, stmtInventory, characterData.getCharacterId(), InventoryType.EQUIP, inv.getEquipInventory().getItems());
-            saveInventoryBatch(conn, stmtItems, stmtInventory, characterData.getCharacterId(), InventoryType.CONSUME, inv.getConsumeInventory().getItems());
-            saveInventoryBatch(conn, stmtItems, stmtInventory, characterData.getCharacterId(), InventoryType.INSTALL, inv.getInstallInventory().getItems());
-            saveInventoryBatch(conn, stmtItems, stmtInventory, characterData.getCharacterId(), InventoryType.ETC, inv.getEtcInventory().getItems());
-            saveInventoryBatch(conn, stmtItems, stmtInventory, characterData.getCharacterId(), InventoryType.CASH, inv.getCashInventory().getItems());
-
-            stmtItems.executeBatch();
-            stmtInventory.executeBatch();
-        }
-    }
-
-
-
-    private void saveInventoryBatch(
-            Connection conn,
-            PreparedStatement stmtItems,
-            PreparedStatement stmtInventory,
-            int charId,
-            InventoryType type,
-            Map<Integer, Item> items
-    ) throws SQLException {
-
-        PGobject enumValue = new PGobject();
-        enumValue.setType("inventory_type_enum");
-        enumValue.setValue(type.name());
-
-        // --- Delete inventory items that no longer exist ---
-        if (!items.isEmpty()) {
-            Long[] itemSnArray = items.values().stream()
-                    .map(Item::getItemSn)
-                    .toArray(Long[]::new);
-
-            try (PreparedStatement deleteStmt = conn.prepareStatement("DELETE FROM player.inventory WHERE character_id = ? AND item_sn <> ALL (?)")) {
-                deleteStmt.setInt(1, charId);
-                Array sqlArray = conn.createArrayOf("bigint", itemSnArray);
-                deleteStmt.setArray(2, sqlArray);
-                deleteStmt.executeUpdate();
-            }
-        } else {  // delete all items.
-            try (PreparedStatement deleteStmt = conn.prepareStatement(
-                    "DELETE FROM player.inventory WHERE character_id = ?")) {
-                deleteStmt.setInt(1, charId);
-                deleteStmt.executeUpdate();
-            }
-        }
-
-        // --- Insert/update items ---
-        for (var entry : items.entrySet()) {
-            Item item = entry.getValue();
-            long itemSn = item.getItemSn();
-
-            if (itemSn <= 0) {  // DNE
-                try (PreparedStatement seqStmt = conn.prepareStatement(
-                        "SELECT nextval(pg_get_serial_sequence('item.items', 'item_sn'))");
-                     ResultSet rs = seqStmt.executeQuery()) {
-                    rs.next();
-                    itemSn = rs.getLong(1);
-                    item.setItemSn(itemSn);
-                }
-
-                stmtItems.setLong(1, itemSn);
-                stmtItems.setInt(2, item.getItemId());
-                stmtItems.setInt(3, item.getQuantity());
-                stmtItems.setShort(4, item.getAttribute());
-                stmtItems.setString(5, item.getTitle());
-                stmtItems.setTimestamp(6, item.getDateExpire() != null ? Timestamp.from(item.getDateExpire()) : null);
-                stmtItems.addBatch();
-            } else {
-                try (PreparedStatement updateStmt = conn.prepareStatement(
-                        "UPDATE item.items SET quantity = ?, attribute = ?, title = ?, date_expire = ? WHERE item_sn = ?")) {
-                    updateStmt.setInt(1, item.getQuantity());
-                    updateStmt.setShort(2, item.getAttribute());
-                    updateStmt.setString(3, item.getTitle());
-                    updateStmt.setTimestamp(4, item.getDateExpire() != null ? Timestamp.from(item.getDateExpire()) : null);
-                    updateStmt.setLong(5, itemSn);
-                    updateStmt.executeUpdate();
-                }
-            }
-
-            stmtInventory.setInt(1, charId);
-            stmtInventory.setObject(2, enumValue);
-            stmtInventory.setInt(3, entry.getKey());
-            stmtInventory.setLong(4, itemSn);
-            stmtInventory.addBatch();
-        }
+        InventoryDao.saveCharacter(conn, characterData);
     }
 
     @Override
