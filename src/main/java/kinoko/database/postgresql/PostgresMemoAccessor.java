@@ -20,7 +20,8 @@ public final class PostgresMemoAccessor extends PostgresAccessor implements Memo
         List<Memo> memos = new ArrayList<>();
         String sql = "SELECT id, memo_type, memo_content, sender_name, date_sent " +
                 "FROM memo.memo WHERE receiver_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, characterId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -44,7 +45,8 @@ public final class PostgresMemoAccessor extends PostgresAccessor implements Memo
     @Override
     public boolean hasMemo(int characterId) {
         String sql = "SELECT 1 FROM memo.memo WHERE receiver_id = ? LIMIT 1";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, characterId);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -60,7 +62,8 @@ public final class PostgresMemoAccessor extends PostgresAccessor implements Memo
         // `id` is SERIAL, no need to provide it manually
         String sql = "INSERT INTO memo.memo (receiver_id, memo_type, memo_content, sender_name, date_sent) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, receiverId);
             stmt.setInt(2, memo.getType().getValue());
             stmt.setString(3, memo.getContent());
@@ -77,7 +80,8 @@ public final class PostgresMemoAccessor extends PostgresAccessor implements Memo
     @Override
     public boolean deleteMemo(int memoId, int receiverId) {
         String sql = "DELETE FROM memo.memo WHERE id = ? AND receiver_id = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, memoId);
             stmt.setInt(2, receiverId);
             int affected = stmt.executeUpdate();
