@@ -620,7 +620,7 @@ public final class AdminCommands {
                 }
             }
             default -> {
-                user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.COMMAND_PREFIX));
+                user.write(MessagePacket.system("Syntax : %sstat hp/mp/str/dex/int/luk/ap/sp <new value>", ServerConfig.PLAYER_COMMAND_PREFIX));
                 return;
             }
         }

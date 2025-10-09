@@ -56,14 +56,23 @@ public final class LoginHandler {
         final byte[] partnerCode = inPacket.decodeArray(4);
 
         // Resolve account
-        final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
+        Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
         if (accountResult.isEmpty()) {
             if (ServerConfig.AUTO_CREATE_ACCOUNT) {
                 DatabaseManager.accountAccessor().newAccount(username, password);
+                // allow an instant login
+                accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
             }
+            else {
+                c.write(LoginPacket.checkPasswordResultFail(LoginResultType.NotRegistered));
+                return;
+            }
+        }
+        if (accountResult.isEmpty()){  // final check for ID being registered.
             c.write(LoginPacket.checkPasswordResultFail(LoginResultType.NotRegistered));
             return;
         }
+
         final Account account = accountResult.get();
 
         // Check if logged in
@@ -212,6 +221,9 @@ public final class LoginHandler {
             c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.Timeout));
             return;
         }
+
+
+
         final CharacterData characterData = new CharacterData(c.getAccount().getId());
         characterData.setItemSnCounter(new AtomicInteger(1));
         characterData.setCreationTime(Instant.now());
@@ -221,7 +233,10 @@ public final class LoginHandler {
         final int hp = StatConstants.getMinHp(level, job.getJobId());
         final int mp = StatConstants.getMinMp(level, job.getJobId());
         final CharacterStat cs = new CharacterStat();
-        cs.setId(characterIdResult.get());
+        if (characterIdResult.get() != -1) {
+            // let non-relational databases handle IDs here.
+            cs.setId(characterIdResult.get());
+        }
         cs.setName(name);
         cs.setGender(gender);
         cs.setSkin((byte) selectedAL[3]);

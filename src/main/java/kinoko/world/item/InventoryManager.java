@@ -20,6 +20,17 @@ public final class InventoryManager {
     private int money;
     private Instant extSlotExpire;
 
+    public InventoryManager() {
+        this.equipped = new Inventory(24);
+        this.equipInventory = new Inventory(96);
+        this.consumeInventory = new Inventory(96);
+        this.installInventory = new Inventory(96);
+        this.etcInventory = new Inventory(96);
+        this.cashInventory = new Inventory(96);
+        this.money = 0;
+        this.extSlotExpire = null;
+    }
+
     public Inventory getEquipped() {
         return equipped;
     }

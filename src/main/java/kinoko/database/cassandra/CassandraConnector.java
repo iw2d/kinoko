@@ -17,6 +17,8 @@ import kinoko.database.*;
 import kinoko.database.cassandra.codec.*;
 import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
+import kinoko.server.Server;
+import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.server.guild.GuildBoardComment;
@@ -38,9 +40,9 @@ import java.util.function.Function;
 
 public final class CassandraConnector implements DatabaseConnector {
     public static final InetSocketAddress DATABASE_ADDRESS = new InetSocketAddress(ServerConstants.DATABASE_HOST, ServerConstants.DATABASE_PORT);
-    public static final String DATABASE_DATACENTER = "datacenter1";
-    public static final String DATABASE_KEYSPACE = "kinoko";
-    public static final String PROFILE_ONE = "profile_one";
+    public static final String DATABASE_DATACENTER = ServerConstants.DATABASE_DATACENTER;
+    public static final String DATABASE_KEYSPACE = ServerConstants.DATABASE_NAME;
+    public static final String PROFILE_ONE = ServerConstants.DATABASE_PROFILE;
     private CqlSession cqlSession;
     private IdAccessor idAccessor;
     private AccountAccessor accountAccessor;

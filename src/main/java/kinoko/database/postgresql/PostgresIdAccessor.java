@@ -1,67 +1,45 @@
-package kinoko.database.cassandra;
+package kinoko.database.postgresql;
 
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
-import com.datastax.oss.driver.api.core.cql.Row;
+import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.IdAccessor;
-import kinoko.database.cassandra.table.IdTable;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
-import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
+public final class PostgresIdAccessor extends PostgresAccessor implements IdAccessor {
 
-public final class CassandraIdAccessor extends CassandraAccessor implements IdAccessor {
-    public CassandraIdAccessor(CqlSession session, String keyspace) {
-        super(session, keyspace);
+    public PostgresIdAccessor(HikariDataSource dataSource) {
+        super(dataSource);
     }
 
     private Optional<Integer> getNextId(String type) {
-        final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), IdTable.getTableName()).all()
-                        .whereColumn(IdTable.ID_TYPE).isEqualTo(literal(type))
-                        .build()
-        );
-        for (Row selectRow : selectResult) {
-            final int nextId = selectRow.getInt(IdTable.NEXT_ID);
-            final ResultSet updateResult = getSession().execute(
-                    update(getKeyspace(), IdTable.getTableName())
-                            .setColumn(IdTable.NEXT_ID, literal(nextId + 1)) // increment ID
-                            .whereColumn(IdTable.ID_TYPE).isEqualTo(literal(type))
-                            .ifColumn(IdTable.NEXT_ID).isEqualTo(literal(nextId)) // if not already updated
-                            .build()
-            );
-            if (updateResult.wasApplied()) {
-                return Optional.of(nextId);
-            } else {
-                // retry
-                return getNextId(type);
-            }
-        }
-        return Optional.empty();
+        return Optional.of(-1); // Postgres auto-generates IDs, so we return -1 as a placeholder
     }
-
     @Override
     public synchronized Optional<Integer> nextAccountId() {
-        return getNextId(IdTable.ACCOUNT_ID);
+        return getNextId("account_id");
     }
 
     @Override
     public synchronized Optional<Integer> nextCharacterId() {
-        return getNextId(IdTable.CHARACTER_ID);
+        return getNextId("character_id");
     }
 
     @Override
     public synchronized Optional<Integer> nextPartyId() {
-        return getNextId(IdTable.PARTY_ID);
+        return getNextId("party_id");
     }
 
     @Override
     public synchronized Optional<Integer> nextGuildId() {
-        return getNextId(IdTable.GUILD_ID);
+        return getNextId("guild_id");
     }
 
     @Override
     public synchronized Optional<Integer> nextMemoId() {
-        return getNextId(IdTable.MEMO_ID);
+        return getNextId("memo_id");
     }
 }

@@ -1,24 +1,28 @@
-package kinoko.database.cassandra;
+package kinoko.database.postgresql;
 
-import com.datastax.oss.driver.api.core.CqlSession;
+import com.zaxxer.hikari.HikariDataSource;
 
-public abstract class CassandraAccessor {
-    private final CqlSession session;
-    private final String keyspace;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-    public CassandraAccessor(CqlSession session, String keyspace) {
-        this.session = session;
-        this.keyspace = keyspace;
+public abstract class PostgresAccessor {
+    private final HikariDataSource dataSource;
+
+    public PostgresAccessor(HikariDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public final CqlSession getSession() {
-        return session;
+    /**
+     * Get a connection from the pool for a single operation.
+     * Use try-with-resources when calling this!
+     */
+    protected final Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
-    public final String getKeyspace() {
-        return keyspace;
-    }
-
+    /**
+     * Helper to lowercase strings (like usernames)
+     */
     protected final String lowerName(String name) {
         return name.toLowerCase();
     }

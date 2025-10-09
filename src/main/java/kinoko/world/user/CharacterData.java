@@ -1,5 +1,6 @@
 package kinoko.world.user;
 
+import kinoko.database.DatabaseManager;
 import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -16,6 +17,7 @@ import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
+import javax.xml.crypto.Data;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -131,11 +133,11 @@ public final class CharacterData implements Encodable {
     }
 
     public AtomicInteger getItemSnCounter() {
-        return itemSnCounter;
+        return DatabaseManager.isRelational() ? new AtomicInteger(-1) : itemSnCounter;
     }
 
     public void setItemSnCounter(AtomicInteger itemSnCounter) {
-        this.itemSnCounter = itemSnCounter;
+        this.itemSnCounter = DatabaseManager.isRelational() ? new AtomicInteger(-1) : itemSnCounter;
     }
 
     public int getFriendMax() {
@@ -179,6 +181,11 @@ public final class CharacterData implements Encodable {
     }
 
     public long getNextItemSn() {
+        if (DatabaseManager.isRelational()) {
+            // Let the relational database handle SN generation; return placeholder
+            return -1;
+        }
+
         return ((long) itemSnCounter.getAndIncrement()) | (((long) getCharacterId()) << 32);
     }
 

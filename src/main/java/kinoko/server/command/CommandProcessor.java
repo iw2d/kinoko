@@ -44,11 +44,11 @@ public final class CommandProcessor {
         final Arguments arguments = method.getAnnotation(Arguments.class);
         final String commandString = String.join("|", command.value());
         final List<String> argumentString = Arrays.stream(arguments != null ? arguments.value() : new String[]{}).map((value) -> String.format("<%s>", value)).toList();
-        return String.format("%s%s %s", ServerConfig.COMMAND_PREFIX, commandString, String.join(" ", argumentString));
+        return String.format("%s%s %s", ServerConfig.PLAYER_COMMAND_PREFIX, commandString, String.join(" ", argumentString));
     }
 
     public static void tryProcessCommand(User user, String text) {
-        final String[] arguments = text.replaceFirst(ServerConfig.COMMAND_PREFIX, "").split(" ");
+        final String[] arguments = text.replaceFirst(ServerConfig.PLAYER_COMMAND_PREFIX, "").split(" ");
         final String commandName = arguments[0].toLowerCase();
         final Optional<Method> commandResult = getCommand(commandName);
         if (commandResult.isEmpty()) {
