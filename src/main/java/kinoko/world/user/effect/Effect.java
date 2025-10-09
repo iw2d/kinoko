@@ -13,6 +13,7 @@ public class Effect implements Encodable {
     private boolean bool1;
     private int int1;
     private int int2;
+    private int int3;
     private String string1;
 
     Effect(EffectType type) {
@@ -42,11 +43,10 @@ public class Effect implements Encodable {
                 outPacket.encodeByte(int2); // pet index
             }
             case ProtectOnDieItemUse -> {
-                outPacket.encodeByte(bool1); // is safety charm
-                if (bool1) {
-                    outPacket.encodeByte(int1); // times left
-                    outPacket.encodeByte(int2); // days left
-                } else {
+                outPacket.encodeByte(int1 == 5130000); // is safety charm
+                outPacket.encodeByte(int2); // times left
+                outPacket.encodeByte(int3); // days left
+                if (int1 != 5130000) {
                     outPacket.encodeInt(int1); // nItemID
                 }
             }
@@ -125,6 +125,14 @@ public class Effect implements Encodable {
         final Effect effect = new Effect(EffectType.Pet);
         effect.int1 = PetEffectType.LevelUp.getValue(); // nType
         effect.int2 = petIndex;
+        return effect;
+    }
+
+    public static Effect protectOnDieItemUse(int itemId, int remainCount, int remainDays) {
+        final Effect effect = new Effect(EffectType.ProtectOnDieItemUse);
+        effect.int1 = itemId;
+        effect.int2 = remainCount;
+        effect.int3 = remainDays;
         return effect;
     }
 
