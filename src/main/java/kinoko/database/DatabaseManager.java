@@ -6,6 +6,7 @@ import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.world.GameConstants;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class DatabaseManager {
@@ -51,16 +52,17 @@ public final class DatabaseManager {
 
 
     public static void initialize() {
-        // Prod Environment
-        if (Objects.equals(ServerConstants.DATABASE_HOST, "cassandra_kinoko")) {
+        if (Objects.equals(ServerConstants.DATABASE_HOST, "cassandra_kinoko")
+                || Objects.equals(ServerConstants.DATABASE_TYPE, "cassandra")) {
             connector = new CassandraConnector();
         }
-        else if (Objects.equals(ServerConstants.DATABASE_HOST, "postgres_kinoko")){
+        else if (Objects.equals(ServerConstants.DATABASE_HOST, "postgres_kinoko")
+                || (List.of("psql", "postgres", "postgresql").contains(ServerConstants.DATABASE_TYPE))){
             connector = new PostgresConnector();
         }
-        else {  // Your choice, likely in a dev environment.
-//            connector = new CassandraConnector();
-            connector = new PostgresConnector();
+        else {  // Your choice, defaulting to cassandra.
+            connector = new CassandraConnector();
+//            connector = new PostgresConnector();
         }
         connector.initialize();
     }

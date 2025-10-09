@@ -20,6 +20,7 @@ public final class ServerConstants {
     // It is advised to set these variables in the .env file.
 
     // General
+    public static final String DATABASE_TYPE = Util.getEnv("DB_TYPE","cassandra").toLowerCase();
     public static final String DATABASE_HOST = Util.getEnv("DB_HOST", "127.0.0.1");
     public static final int DATABASE_PORT = Util.getEnv("DB_PORT", 9042);  // Defaulting to Cassandra port
     public static final String DATABASE_NAME = Util.getEnv("DB_NAME", "kinoko");  // Cassandra KeySpace, Postgres DB Name
@@ -31,5 +32,6 @@ public final class ServerConstants {
     // Cassandra Specific
     public static final String DATABASE_DATACENTER = Util.getEnv("DB_DATACENTER","datacenter1");
     public static final String DATABASE_PROFILE = Util.getEnv("DB_PROFILE_ONE","profile_one");
+
 }
 
