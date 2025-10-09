@@ -44,14 +44,13 @@ $ mvn clean package
 #### Environment setup
 Before doing any Docker or Database Setup
 You should:
-1. Make a copy of `.env.example` and rename it to `.env`.
+1. Make a copy of `.env.example` and rename it to `.env`
 2. Adjust the ENV Variables to the database server you will be using.
 
 
 #### Database setup
 
 It is possible to use either CassandraDB, ScyllaDB, or Postgres.
-
 
 
 ```bash
@@ -68,7 +67,8 @@ $ docker-compose up -d postgres
 # OR (CHANGE THE PASSWORD)
 $ docker run -d --name postgres_kinoko -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=admin -e POSTGRES_INITDB_ARGS="--auth-host=scram-sha-256 --auth-local=scram-sha-256" -e POSTGRES_DB=kinoko -p 5432:5432 -v "${PWD}\src\main\java\kinoko\database\postgresql\setup\init.sql:/docker-entrypoint-initdb.d/init.sql:ro" postgres:16
 
-Important: If you are using PostgreSQL on a local machine (not using a dockerized server), make sure that you have any undockerized postgresql server offline. This can cause conflicts. 
+Important: If you are using PostgreSQL on a local machine (not using a dockerized server), 
+make sure that you have any undockerized postgresql server offline. This can cause conflicts. 
 
 ```
 
