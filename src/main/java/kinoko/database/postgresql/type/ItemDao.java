@@ -7,32 +7,9 @@ import kinoko.world.item.PetData;
 import kinoko.world.item.RingData;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class ItemDao {
-
-    // Save an item: insert if not exists, update quantity if exists
-    public void saveItemToAccount(Connection conn, int accountId, Item item) throws SQLException {
-        String sql = """
-            INSERT INTO account.items (account_id, item_sn, item_id, quantity)
-            VALUES (?, ?, ?, ?)
-            ON CONFLICT (account_id, item_sn)
-            DO UPDATE SET quantity = EXCLUDED.quantity
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            if (item.getItemSn() <= 0){
-                item.setItemSn(createNewItem(conn, item));
-            }
-            stmt.setInt(1, accountId);
-            stmt.setLong(2, item.getItemSn());
-            stmt.setInt(3, item.getItemId());
-            stmt.setInt(4, item.getQuantity());
-            stmt.executeUpdate();
-        }
-    }
 
     /**
      * Inserts a new item into the `item.items` table and returns its generated item_sn.
