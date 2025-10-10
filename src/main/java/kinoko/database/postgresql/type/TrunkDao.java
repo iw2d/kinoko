@@ -1,7 +1,6 @@
 package kinoko.database.postgresql.type;
 
 
-import kinoko.provider.item.ItemInfo;
 import kinoko.server.ServerConfig;
 import kinoko.world.item.*;
 

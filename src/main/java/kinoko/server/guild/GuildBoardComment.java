@@ -6,7 +6,7 @@ import kinoko.util.Encodable;
 import java.time.Instant;
 
 public final class GuildBoardComment implements Encodable {
-    private final int commentSn;
+    private int commentSn;
     private final int characterId;
     private String text;
     private Instant date;
@@ -20,6 +20,10 @@ public final class GuildBoardComment implements Encodable {
 
     public int getCommentSn() {
         return commentSn;
+    }
+
+    public void setCommentSn(int newCommentSn) {
+        this.commentSn = newCommentSn;
     }
 
     public int getCharacterId() {
@@ -49,5 +53,18 @@ public final class GuildBoardComment implements Encodable {
         outPacket.encodeInt(characterId); // nCharacterID
         outPacket.encodeFT(date); // ftDate
         outPacket.encodeString(text); // sComment
+    }
+
+    /**
+     * Checks whether this GuildBoardComment has a valid comment serial number (SN).
+     *
+     * In relational databases, comment SNs are typically automatically generated.
+     * Returns true if the comment has no SN and therefore needs to be inserted
+     * into the database to obtain one.
+     *
+     * @return true if the comment SN is zero or negative, false otherwise
+     */
+    public boolean hasNoSN() {
+        return getCommentSn() <= 0;
     }
 }

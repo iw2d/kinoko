@@ -89,4 +89,44 @@ public class LockerDao {
             }
         }
     }
+
+    /**
+     * Loads the Locker for a specific account.
+     *
+     * Retrieves all locker items joined with the item table. Constructs CashItemInfo
+     * objects and adds them to a Locker. The resulting Locker contains all saved items.
+     *
+     * @param conn      the active database connection
+     * @param accountId the ID of the account whose locker should be loaded
+     * @return the Locker with all items for the account
+     * @throws SQLException if a database error occurs
+     */
+    public static Locker load(Connection conn, int accountId) throws SQLException {
+        Locker locker = new Locker();
+        String sql = """
+            SELECT li.slot, li.item_sn, li.commodity_id, i.item_id, i.quantity
+            FROM account.locker_item li
+            JOIN item.items i ON li.item_sn = i.item_sn
+            WHERE li.account_id = ? ORDER BY li.slot
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Item item = new Item(rs.getInt("item_id"), (short) rs.getInt("quantity"));
+                    CashItemInfo info = new CashItemInfo(
+                            item,
+                            rs.getInt("commodity_id"),
+                            accountId, // account owner
+                            -1,        // character owner unknown at this point
+                            null
+                    );
+                    locker.addCashItem(info);
+                }
+            }
+        }
+
+        return locker;
+    }
 }

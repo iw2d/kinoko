@@ -1,5 +1,6 @@
 package kinoko.server.guild;
 
+import kinoko.database.DatabaseManager;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Encodable;
@@ -215,6 +216,11 @@ public final class Guild implements Encodable, Lockable<Guild> {
     }
 
     public int getNextBoardEntryId() {
+        if (DatabaseManager.isRelational()) {
+            // Let the relational database handle SN generation; return placeholder
+            return -1;
+        }
+
         return boardEntryCounter.getAndIncrement();
     }
 
