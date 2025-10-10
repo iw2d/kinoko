@@ -1,6 +1,8 @@
 package kinoko.database.postgresql;
 
 import kinoko.database.*;
+
+import java.sql.Connection;
 import java.util.TimeZone;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -31,15 +33,14 @@ public final class PostgresConnector implements DatabaseConnector {
             config.setJdbcUrl(DATABASE_URL);
             config.setUsername(ServerConstants.DATABASE_USER);
             config.setPassword(ServerConstants.DATABASE_PASSWORD);
-            config.setMaximumPoolSize(50); // Adjust as needed
+            config.setMaximumPoolSize(10); // Adjust as needed
             config.setConnectionTimeout(5000); // 5s
             config.setIdleTimeout(60000); // 60s
             config.setMaxLifetime(1800000); // 30min
-            config.setLeakDetectionThreshold(5000);
+            config.setLeakDetectionThreshold(5000L);
 
             dataSource = new HikariDataSource(config);
 
-            // Run init.sql if needed
 //            Path initPath = Path.of("src/main/java/kinoko/database/postgresql/setup/init.sql");
 //            if (Files.exists(initPath)) {
 //                String sql = Files.readString(initPath);
