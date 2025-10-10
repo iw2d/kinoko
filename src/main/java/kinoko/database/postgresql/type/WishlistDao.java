@@ -1,6 +1,8 @@
 package kinoko.database.postgresql.type;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -71,5 +73,37 @@ public class WishlistDao {
                 deleteStmt.executeUpdate();
             }
         }
+    }
+
+    /**
+     * Loads the wishlist for the given account.
+     *
+     * Retrieves item IDs from the database ordered by slot.
+     * If the wishlist has fewer than 10 items, zeros are appended to fill it.
+     *
+     * @param conn      the active database connection
+     * @param accountId the ID of the account whose wishlist should be loaded
+     * @return an unmodifiable list of item IDs (size will always be at least 10)
+     * @throws SQLException if a database error occurs
+     */
+    public static List<Integer> load(Connection conn, int accountId) throws SQLException {
+        List<Integer> wishlist = new ArrayList<>();
+        String sql = "SELECT w.item_id FROM account.wishlist w WHERE w.account_id = ? ORDER BY w.slot";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    wishlist.add(rs.getInt("item_id"));
+                }
+            }
+        }
+
+        // Pad with zeros to always return 10 items
+        while (wishlist.size() < 10) {
+            wishlist.add(0);
+        }
+
+        return Collections.unmodifiableList(wishlist);
     }
 }

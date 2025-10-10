@@ -407,22 +407,29 @@ CREATE TABLE IF NOT EXISTS guild.member (
     PRIMARY KEY (guild_id, character_id)
 );
 
+
 CREATE TABLE IF NOT EXISTS guild.board_entry (
+    id SERIAL PRIMARY KEY,
     guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
-    entry_id SERIAL PRIMARY KEY,
-    poster_id INT NOT NULL,
-    poster_name TEXT,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    title TEXT,
     message TEXT NOT NULL,
-    timestamp TIMESTAMP NOT NULL
+    emoticon INT,
+    timestamp TIMESTAMP NOT NULL DEFAULT UTC_NOW(),
+    notice boolean DEFAULT false
 );
 
-CREATE TABLE IF NOT EXISTS guild.notice (
-    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
-    poster_id INT NOT NULL,
-    poster_name TEXT,
-    message TEXT NOT NULL,
-    timestamp TIMESTAMP NOT NULL,
-    PRIMARY KEY (guild_id)
+-- enforce only one TRUE notice per guild
+CREATE UNIQUE INDEX IF NOT EXISTS unique_guild_notice
+ON guild.board_entry(guild_id)
+WHERE notice = TRUE;
+
+CREATE TABLE IF NOT EXISTS guild.board_entry_comment (
+    id SERIAL PRIMARY KEY,
+    entry_id INT NOT NULL REFERENCES guild.board_entry(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    text TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT UTC_NOW()
 );
 
 

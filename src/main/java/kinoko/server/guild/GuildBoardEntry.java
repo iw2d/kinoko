@@ -1,5 +1,6 @@
 package kinoko.server.guild;
 
+import kinoko.database.DatabaseManager;
 import kinoko.server.packet.OutPacket;
 
 import java.time.Instant;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class GuildBoardEntry {
-    private final int entryId;
+    private int entryId;
     private final int characterId;
     private String title;
     private String text;
@@ -31,6 +32,10 @@ public final class GuildBoardEntry {
 
     public int getEntryId() {
         return entryId;
+    }
+
+    public void setEntryId(int newEntryId) {
+        this.entryId = newEntryId;
     }
 
     public int getCharacterId() {
@@ -89,6 +94,11 @@ public final class GuildBoardEntry {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public int getNextCommentSn() {
+        if (DatabaseManager.isRelational()) {
+            // Let the relational database handle SN generation; return placeholder
+            return -1;
+        }
+
         return commentSnCounter.getAndIncrement();
     }
 
@@ -131,5 +141,18 @@ public final class GuildBoardEntry {
         for (GuildBoardComment comment : comments) {
             comment.encode(outPacket); // CUIGuildBBS::COMMENT
         }
+    }
+
+    /**
+     * Checks whether this GuildBoardEntry has a valid entry ID.
+     *
+     * In relational databases, entry IDs are typically automatically generated.
+     * Returns true if the entry has no ID and therefore needs to be inserted
+     * into the database to obtain one.
+     *
+     * @return true if the entry ID is zero or negative, false otherwise
+     */
+    public boolean hasNoSN() {
+        return getEntryId() <= 0;
     }
 }
