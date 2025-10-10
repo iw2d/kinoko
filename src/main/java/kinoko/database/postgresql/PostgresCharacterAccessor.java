@@ -80,14 +80,22 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
         );
         cd.setCharacterStat(cs);
 
-        InventoryManager im = loadInventory(characterID);
-        cd.setInventoryManager(im);
-        im.setMoney(rs.getInt("money"));
+        try (Connection conn = dataSource.getConnection()) {
+            InventoryManager im = InventoryDao.loadInventoryManager(conn, characterID);
+
+            cd.setInventoryManager(im);
+            im.setMoney(rs.getInt("money"));
 
 
-        Timestamp extSlotExpireTs = rs.getTimestamp("ext_slot_expire");
-        im.setExtSlotExpire(extSlotExpireTs != null ? extSlotExpireTs.toInstant() : null);
-        cd.setInventoryManager(im);
+            Timestamp extSlotExpireTs = rs.getTimestamp("ext_slot_expire");
+            im.setExtSlotExpire(extSlotExpireTs != null ? extSlotExpireTs.toInstant() : null);
+            cd.setInventoryManager(im);
+
+            cd.setCoupleRecord(CoupleRecord.from(
+                    im.getEquipped(), im.getEquipInventory()
+            ));
+        }
+
 
         SkillManager sm = loadSkillCooltimesAndRecords(characterID);
 
@@ -105,11 +113,6 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
 
         MiniGameRecord mgr = loadMiniGameRecord(characterID);
         cd.setMiniGameRecord(mgr);
-
-
-        cd.setCoupleRecord(CoupleRecord.from(
-                im.getEquipped(), im.getEquipInventory()
-        ));
 
         MapTransferInfo mto = loadMapTransferInfo(characterID);
         cd.setMapTransferInfo(mto);
@@ -392,123 +395,6 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
         return false;
     }
 
-    private InventoryManager loadInventory(int characterId) throws SQLException {
-        InventoryManager im = new InventoryManager();
-
-        String sql = """
-        SELECT inv.inventory_type, inv.slot, fi.*
-        FROM player.inventory inv
-        JOIN item.full_item fi ON inv.item_sn = fi.item_sn
-        WHERE inv.character_id = ?
-        ORDER BY inv.inventory_type, inv.slot
-    """;
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                long itemSn = rs.getLong("item_sn");
-                int slot = rs.getInt("slot");
-                int itemId = rs.getInt("item_id");
-                short quantity = rs.getShort("quantity");
-                short attribute = rs.getShort("attribute");
-                String title = rs.getString("title");
-                Timestamp dateExpireTs = rs.getTimestamp("date_expire");
-
-                // EquipData
-                EquipData equipData; // declare once
-                if (rs.getObject("inc_str") != null) {
-                    equipData = new EquipData(
-                            rs.getShort("inc_str"),
-                            rs.getShort("inc_dex"),
-                            rs.getShort("inc_int"),
-                            rs.getShort("inc_luk"),
-                            rs.getShort("inc_max_hp"),
-                            rs.getShort("inc_max_mp"),
-                            rs.getShort("inc_pad"),
-                            rs.getShort("inc_mad"),
-                            rs.getShort("inc_pdd"),
-                            rs.getShort("inc_mdd"),
-                            rs.getShort("inc_acc"),
-                            rs.getShort("inc_eva"),
-                            rs.getShort("inc_craft"),
-                            rs.getShort("inc_speed"),
-                            rs.getShort("inc_jump"),
-                            rs.getByte("ruc"),
-                            rs.getByte("cuc"),
-                            rs.getInt("iuc"),
-                            rs.getByte("chuc"),
-                            rs.getByte("grade"),
-                            rs.getShort("option_1"),
-                            rs.getShort("option_2"),
-                            rs.getShort("option_3"),
-                            rs.getShort("socket_1"),
-                            rs.getShort("socket_2"),
-                            rs.getByte("level_up_type"),
-                            rs.getByte("level"),
-                            rs.getInt("exp"),
-                            rs.getInt("durability")
-                    );
-                }
-                else{
-                    equipData = new EquipData();
-                }
-
-                // PetData
-                PetData petData = null;
-                if (rs.getObject("pet_name") != null) {
-                    petData = new PetData(
-                            rs.getString("pet_name"),
-                            rs.getByte("pet_level"),
-                            rs.getByte("fullness"),
-                            rs.getShort("tameness"),
-                            rs.getShort("pet_skill"),
-                            rs.getShort("pet_attribute"),
-                            rs.getInt("remain_life")
-                    );
-                }
-
-                // RingData
-                RingData ringData = null;
-                if (rs.getObject("pair_character_id") != null) {
-                    ringData = new RingData(
-                            rs.getInt("pair_character_id"),
-                            rs.getString("pair_character_name"),
-                            rs.getLong("pair_item_sn")
-                    );
-                }
-
-                Item item = new Item(
-                        itemId,
-                        quantity,
-                        itemSn,
-                        false, // cash flag
-                        attribute,
-                        title,
-                        dateExpireTs != null ? dateExpireTs.toInstant() : null,
-                        equipData,
-                        petData,
-                        ringData
-                );
-
-                String invType = rs.getString("inventory_type");
-                switch (invType.toUpperCase()) {
-                    case "EQUIPPED" -> im.getEquipped().addItem(slot, item);
-                    case "EQUIP" -> im.getEquipInventory().addItem(slot, item);
-                    case "CONSUME" -> im.getConsumeInventory().addItem(slot, item);
-                    case "INSTALL" -> im.getInstallInventory().addItem(slot, item);
-                    case "ETC" -> im.getEtcInventory().addItem(slot, item);
-                    case "CASH" -> im.getCashInventory().addItem(slot, item);
-                    default -> throw new IllegalArgumentException("Unknown inventory type: " + invType);
-                }
-            }
-        }
-
-        return im;
-    }
-
 
     @Override
     public Optional<CharacterData> getCharacterById(int characterId) {
@@ -663,7 +549,7 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
     }
 
     private Inventory loadEquippedInventory(int characterId) throws SQLException {
-        Inventory equipped = new Inventory(24); // default equipped size
+        Inventory equipped = new Inventory(24, InventoryType.EQUIPPED); // default equipped size
 
         String sql = """
         SELECT f.*, i.slot

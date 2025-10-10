@@ -353,25 +353,25 @@ CREATE INDEX IF NOT EXISTS idx_friend_friend_id
 ---------------GIFT TABLES----------------
 ------------------------------------------
 
-CREATE TABLE IF NOT EXISTS gift.gift (
-    id BIGSERIAL PRIMARY KEY,               -- auto-increment unique ID for the gift
-    receiver_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS gift.gifts (
     item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE,
+    receiver_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
     commodity_id INT,
     sender_id INT,
     sender_name TEXT,
-    sender_message TEXT
+    sender_message TEXT,
+    PRIMARY KEY (item_sn)
 );
 
 CREATE INDEX IF NOT EXISTS idx_gift_item_sn
-    ON gift.gift(item_sn);
+    ON gift.gifts(item_sn);
 
 
 CREATE INDEX IF NOT EXISTS idx_gift_receiver
-    ON gift.gift(receiver_id);
+    ON gift.gifts(receiver_id);
 
 CREATE INDEX IF NOT EXISTS idx_gift_receiver_item
-    ON gift.gift(receiver_id, item_sn);
+    ON gift.gifts(receiver_id, item_sn);
 
 
 ------------------------------------------

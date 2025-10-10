@@ -263,12 +263,12 @@ public final class LoginHandler {
 
         // Initialize inventory and add starting equips
         final InventoryManager im = new InventoryManager();
-        im.setEquipped(new Inventory(Short.MAX_VALUE));
-        im.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS));
+        im.setEquipped(new Inventory(Short.MAX_VALUE, InventoryType.EQUIPPED));
+        im.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.EQUIP));
+        im.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.CONSUME));
+        im.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.INSTALL));
+        im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.ETC));
+        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS, InventoryType.CASH));
         im.setMoney(0);
         im.setExtSlotExpire(Instant.now());
         characterData.setInventoryManager(im);

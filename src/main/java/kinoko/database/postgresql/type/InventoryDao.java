@@ -1,10 +1,7 @@
 package kinoko.database.postgresql.type;
 
 
-import kinoko.world.item.InventoryEntry;
-import kinoko.world.item.InventoryManager;
-import kinoko.world.item.InventoryType;
-import kinoko.world.item.Item;
+import kinoko.world.item.*;
 import kinoko.world.user.CharacterData;
 import org.postgresql.util.PGobject;
 
@@ -117,6 +114,7 @@ public class InventoryDao {
 
             try (PreparedStatement deleteStmt = conn.prepareStatement(
                     "DELETE FROM player.inventory WHERE character_id = ? AND item_sn <> ALL (?)")) {
+                System.out.println("DELETING INVENTORY");
                 deleteStmt.setInt(1, charId);
                 Array sqlArray = conn.createArrayOf("bigint", itemSnArray);
                 deleteStmt.setArray(2, sqlArray);
@@ -130,5 +128,39 @@ public class InventoryDao {
                 deleteStmt.executeUpdate();
             }
         }
+    }
+
+    public static InventoryManager loadInventoryManager(Connection conn, int characterId) throws SQLException {
+        InventoryManager im = new InventoryManager();
+
+        String sql = """
+        SELECT inv.inventory_type, inv.slot, fi.*
+        FROM player.inventory inv
+        JOIN item.full_item fi ON inv.item_sn = fi.item_sn
+        WHERE inv.character_id = ?
+        ORDER BY inv.inventory_type, inv.slot
+    """;
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int slot = rs.getInt("slot");
+                Item item = ItemDao.from(rs);
+
+                String invType = rs.getString("inventory_type");
+                switch (invType.toUpperCase()) {
+                    case "EQUIPPED" -> im.getEquipped().addItem(slot, item);
+                    case "EQUIP" -> im.getEquipInventory().addItem(slot, item);
+                    case "CONSUME" -> im.getConsumeInventory().addItem(slot, item);
+                    case "INSTALL" -> im.getInstallInventory().addItem(slot, item);
+                    case "ETC" -> im.getEtcInventory().addItem(slot, item);
+                    case "CASH" -> im.getCashInventory().addItem(slot, item);
+                    default -> throw new IllegalArgumentException("Unknown inventory type: " + invType);
+                }
+            }
+        }
+
+        return im;
     }
 }
