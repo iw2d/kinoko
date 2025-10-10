@@ -57,6 +57,8 @@ public final class PostgresConnector implements DatabaseConnector {
             giftAccessor = new PostgresGiftAccessor(dataSource);
             memoAccessor = new PostgresMemoAccessor(dataSource);
 
+
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize PostgresConnector", e);
