@@ -160,13 +160,14 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
         String column = secondary ? "secondary_password" : "password";
         String sqlSelect = "SELECT " + column + " FROM account.accounts WHERE id = ?";
         String sqlUpdate = "UPDATE account.accounts SET " + column + " = ? WHERE id = ?";
-        try (PreparedStatement selectStmt = getConnection().prepareStatement(sqlSelect)) {
+        try (Connection conn = getConnection();
+             PreparedStatement selectStmt = conn.prepareStatement(sqlSelect)) {
             selectStmt.setInt(1, account.getId());
             try (ResultSet rs = selectStmt.executeQuery()) {
                 if (rs.next()) {
                     String hashedOld = rs.getString(column);
                     if (hashedOld == null || checkHashedPassword(oldPassword, hashedOld)) {
-                        try (PreparedStatement updateStmt = getConnection().prepareStatement(sqlUpdate)) {
+                        try (PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate)) {
                             updateStmt.setString(1, hashPassword(newPassword));
                             updateStmt.setInt(2, account.getId());
                             return updateStmt.executeUpdate() > 0;
@@ -210,6 +211,7 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
                 }
             }
 
+            // WARNING CODED AS A LEAK RN
             // Initialize a base trunk, locker, wishlist
 //            for (int i = 0; i < ServerConfig.TRUNK_BASE_SLOTS; i++) {
 //                try (PreparedStatement tStmt = getConnection().prepareStatement(
@@ -220,7 +222,7 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
 //                    tStmt.executeUpdate();
 //                }
 //            }
-
+// WARNING CODED AS A LEAK RN
 //            for (int i = 0; i < 10; i++) {
 //                try (PreparedStatement wStmt = getConnection().prepareStatement(
 //                        "INSERT INTO account.wishlist (account_id, slot, item_sn) VALUES (?, ?, ?)")) {

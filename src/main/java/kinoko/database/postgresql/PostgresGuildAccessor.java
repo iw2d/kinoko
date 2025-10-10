@@ -345,7 +345,8 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
     public List<GuildRanking> getGuildRankings() {
         List<GuildRanking> rankings = new ArrayList<>();
         String sql = "SELECT name, points, mark, mark_color, mark_bg, mark_bg_color FROM guild.guilds ORDER BY points DESC";
-        try (Statement stmt = getConnection().createStatement();
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 rankings.add(new GuildRanking(

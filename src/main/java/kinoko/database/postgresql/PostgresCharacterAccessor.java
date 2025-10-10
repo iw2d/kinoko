@@ -169,9 +169,9 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
     private MapTransferInfo loadMapTransferInfo(int characterId) throws SQLException {
         MapTransferInfo mti = new MapTransferInfo();
 
-        // Query the new table for this character
         String sql = "SELECT map_id, old_map_id FROM player.map_transfer WHERE character_id = ?";
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, characterId);
             try (ResultSet mapRs = stmt.executeQuery()) {
                 if (mapRs.next()) {

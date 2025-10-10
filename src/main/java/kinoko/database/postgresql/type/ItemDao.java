@@ -43,6 +43,7 @@ public class ItemDao {
                 if (rs.next()) {
                     long generatedSn = rs.getLong("item_sn");
                     item.setItemSn(generatedSn); // store it in the item object
+                    EquipDataDao.upsertEquipData(conn, generatedSn, item.getEquipData());
                     return generatedSn;
                 } else {
                     throw new SQLException("Failed to generate item_sn for new item");
@@ -113,6 +114,8 @@ public class ItemDao {
 
             // Execute all insert batches
             stmtInsert.executeBatch();
+            // Update all EquipData
+            EquipDataDao.saveEquipDataBatch(conn, items);
         }
     }
 

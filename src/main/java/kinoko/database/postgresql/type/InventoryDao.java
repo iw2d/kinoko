@@ -114,7 +114,6 @@ public class InventoryDao {
 
             try (PreparedStatement deleteStmt = conn.prepareStatement(
                     "DELETE FROM player.inventory WHERE character_id = ? AND item_sn <> ALL (?)")) {
-                System.out.println("DELETING INVENTORY");
                 deleteStmt.setInt(1, charId);
                 Array sqlArray = conn.createArrayOf("bigint", itemSnArray);
                 deleteStmt.setArray(2, sqlArray);

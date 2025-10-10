@@ -42,7 +42,7 @@ public final class InventoryManagerTest {
     @Test
     public void testItemCount() {
         final InventoryManager im = new InventoryManager();
-        im.setConsumeInventory(new Inventory(5));
+        im.setConsumeInventory(new Inventory(5, InventoryType.CONSUME));
 
         Assertions.assertEquals(0, im.getItemCount(RED_POTION));
 
@@ -62,7 +62,7 @@ public final class InventoryManagerTest {
     @Test
     public void testRemoveItem() {
         final InventoryManager im = new InventoryManager();
-        im.setConsumeInventory(new Inventory(5));
+        im.setConsumeInventory(new Inventory(5, InventoryType.CONSUME));
         im.getConsumeInventory().putItem(1, createItem(RED_POTION, 5));
 
         Assertions.assertEquals(5, im.getItemCount(RED_POTION));
@@ -83,7 +83,7 @@ public final class InventoryManagerTest {
     @Test
     public void testAddItem() {
         final InventoryManager im = new InventoryManager();
-        im.setConsumeInventory(new Inventory(3));
+        im.setConsumeInventory(new Inventory(3, InventoryType.CONSUME));
 
         Assertions.assertTrue(im.addItem(createItem(RED_POTION, 5)).isPresent());
         Assertions.assertNotNull(im.getConsumeInventory().getItem(1));
@@ -106,7 +106,7 @@ public final class InventoryManagerTest {
     @Test
     public void testCanAddItems() {
         final InventoryManager im = new InventoryManager();
-        im.setConsumeInventory(new Inventory(5));
+        im.setConsumeInventory(new Inventory(5, InventoryType.CONSUME));
 
         Assertions.assertTrue(im.canAddItem(createItem(RED_POTION, 5)));
         Assertions.assertTrue(im.canAddItems(Set.of(createItem(RED_POTION, 5), createItem(ORANGE_POTION, 5))));
@@ -132,7 +132,7 @@ public final class InventoryManagerTest {
     @Test
     public void testRechargeableItems() {
         final InventoryManager im = new InventoryManager();
-        im.setConsumeInventory(new Inventory(2));
+        im.setConsumeInventory(new Inventory(2, InventoryType.CONSUME));
 
         Assertions.assertTrue(im.canAddItem(createItem(SUBI_THROWING_STARS, 400)));
         Assertions.assertTrue(im.addItem(createItem(SUBI_THROWING_STARS, 400)).isPresent());
