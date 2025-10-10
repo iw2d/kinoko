@@ -415,6 +415,11 @@ public final class AdminCommands {
         user.warp(targetField, portalResult.get(), false, false);
     }
 
+    @Command("whereami")
+    public static void whereAmI(User user, String[] args) {
+        user.write(MessagePacket.system("You are in map: %d", user.getField().getFieldId()));
+    }
+
     @Command("reactor")
     @Arguments("reactor template ID")
     public static void reactor(User user, String[] args) {
