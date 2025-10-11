@@ -257,8 +257,14 @@ public final class ChannelServerNode extends ServerNode {
 
         // Start channel server
         final ChannelServerNode self = this;
-        channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
-        channelServerFuture.sync();
+        try {
+            channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
+            channelServerFuture.sync();
+        }
+        catch(Exception e){
+            log.error("Channel {} failed to bind to port {}", channelId + 1, channelPort);
+            throw e;
+        }
         log.info("Channel {} listening on port {}", channelId + 1, channelPort);
 
         // Start central client
