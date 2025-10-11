@@ -1,5 +1,6 @@
 package kinoko.database.postgresql.type;
 
+import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildBoardComment;
 import kinoko.server.guild.GuildBoardEntry;
 
@@ -20,16 +21,16 @@ public class BoardEntryCommentDao {
      * @param entry the board entry whose comments should be synchronized
      * @throws SQLException if a database access error occurs
      */
-    public static void saveComments(Connection conn, GuildBoardEntry entry) throws SQLException {
+    public static void saveComments(Connection conn, GuildBoardEntry entry, Guild guild) throws SQLException {
         List<GuildBoardComment> comments = entry.getComments();
 
         if (comments == null || comments.isEmpty()) {
-            deleteAllComments(conn, entry.getEntryId());
+            deleteAllComments(conn, entry.getEntryId(), guild.getGuildId());
             return;
         }
 
-        deleteRemovedComments(conn, entry, comments);
-        insertNewComments(conn, entry, comments);
+        deleteRemovedComments(conn, entry, comments, guild.getGuildId());
+        insertNewComments(conn, entry, comments, guild.getGuildId());
     }
 
     /**
@@ -42,10 +43,11 @@ public class BoardEntryCommentDao {
      * @param entryId the ID of the board entry whose comments should be deleted
      * @throws SQLException if a database access error occurs
      */
-    private static void deleteAllComments(Connection conn, int entryId) throws SQLException {
+    private static void deleteAllComments(Connection conn, int entryId, int guildId) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(
-                "DELETE FROM guild.board_entry_comment WHERE entry_id = ?")) {
+                "DELETE FROM guild.board_entry_comment WHERE entry_id = ? AND guild_id = ?")) {
             stmt.setInt(1, entryId);
+            stmt.setInt(2, guildId);
             stmt.executeUpdate();
         }
     }
@@ -59,7 +61,7 @@ public class BoardEntryCommentDao {
      * @param comments the current list of comments that should remain
      * @throws SQLException if a database access error occurs
      */
-    private static void deleteRemovedComments(Connection conn, GuildBoardEntry entry, List<GuildBoardComment> comments) throws SQLException {
+    private static void deleteRemovedComments(Connection conn, GuildBoardEntry entry, List<GuildBoardComment> comments, int guildId) throws SQLException {
         List<Integer> currentIds = comments.stream()
                 .filter(c -> !c.hasNoSN())
                 .map(GuildBoardComment::getCommentSn)
@@ -68,10 +70,11 @@ public class BoardEntryCommentDao {
         if (currentIds.isEmpty()) return;
 
         String placeholders = currentIds.stream().map(id -> "?").collect(Collectors.joining(","));
-        String sql = "DELETE FROM guild.board_entry_comment WHERE entry_id = ? AND id NOT IN (" + placeholders + ")";
+        String sql = "DELETE FROM guild.board_entry_comment WHERE entry_id = ? AND guild_id = ? AND id NOT IN (" + placeholders + ")";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int idx = 1;
             stmt.setInt(idx++, entry.getEntryId());
+            stmt.setInt(idx++, guildId);
             for (Integer id : currentIds) stmt.setInt(idx++, id);
             stmt.executeUpdate();
         }
@@ -89,19 +92,20 @@ public class BoardEntryCommentDao {
      * @throws SQLException if a database access error occurs or
      *                      the generated keys cannot be retrieved
      */
-    private static void insertNewComments(Connection conn, GuildBoardEntry entry, List<GuildBoardComment> comments) throws SQLException {
+    private static void insertNewComments(Connection conn, GuildBoardEntry entry, List<GuildBoardComment> comments, int guildId) throws SQLException {
         String insertSql = """
-                INSERT INTO guild.board_entry_comment (entry_id, character_id, text, timestamp)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO guild.board_entry_comment (entry_id, guild_id, character_id, text, timestamp)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         try (PreparedStatement stmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
             List<GuildBoardComment> newComments = comments.stream().filter(GuildBoardComment::hasNoSN).toList();
             for (GuildBoardComment comment : newComments) {
                 stmt.setInt(1, entry.getEntryId());
-                stmt.setInt(2, comment.getCharacterId());
-                stmt.setString(3, comment.getText());
-                stmt.setTimestamp(4, Timestamp.from(comment.getDate()));
+                stmt.setInt(2, guildId);
+                stmt.setInt(3, comment.getCharacterId());
+                stmt.setString(4, comment.getText());
+                stmt.setTimestamp(5, Timestamp.from(comment.getDate()));
                 stmt.addBatch();
             }
 
@@ -115,6 +119,44 @@ public class BoardEntryCommentDao {
                         throw new SQLException("Failed to retrieve generated commentSn for a new comment.");
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Loads all comments for a given guild from the database, grouped by board entry.
+     *
+     * @param conn    the active SQL connection
+     * @param guildId the ID of the guild whose comments should be loaded
+     * @return a mapping from entryId to a list of GuildBoardComment objects
+     * @throws SQLException if a database access error occurs
+     */
+    public static java.util.Map<Integer, java.util.List<GuildBoardComment>> loadComments(Connection conn, int guildId) throws SQLException {
+        String sql = """
+                SELECT id, entry_id, guild_id, character_id, text, timestamp
+                FROM guild.board_entry_comment
+                WHERE guild_id = ?
+                ORDER BY entry_id ASC, timestamp ASC
+                """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, guildId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                java.util.Map<Integer, java.util.List<GuildBoardComment>> commentsByEntry = new java.util.HashMap<>();
+
+                while (rs.next()) {
+                    int entryId = rs.getInt("entry_id");
+                    GuildBoardComment comment = new GuildBoardComment(
+                            rs.getInt("id"),
+                            rs.getInt("character_id"),
+                            rs.getString("text"),
+                            rs.getTimestamp("timestamp").toInstant()
+                    );
+
+                    commentsByEntry.computeIfAbsent(entryId, k -> new java.util.ArrayList<>()).add(comment);
+                }
+
+                return commentsByEntry;
             }
         }
     }

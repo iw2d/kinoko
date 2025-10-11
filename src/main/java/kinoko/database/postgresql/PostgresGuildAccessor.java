@@ -2,8 +2,11 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.GuildAccessor;
+import kinoko.database.postgresql.type.BoardEntryDao;
+import kinoko.database.postgresql.type.BoardNoticeDao;
 import kinoko.database.postgresql.type.GuildDao;
 import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildBoardEntry;
 import kinoko.server.guild.GuildRanking;
 
 import java.sql.*;
@@ -28,7 +31,7 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
      */
     @Override
     public Optional<Guild> getGuildById(int guildId) {
-        String sql = "SELECT * FROM guild.guilds WHERE guild_id = ?";
+        String sql = "SELECT * FROM guild.guilds WHERE id = ?";
         try (Connection conn = getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);

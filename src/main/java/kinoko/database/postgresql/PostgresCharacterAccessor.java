@@ -399,9 +399,10 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
     @Override
     public Optional<CharacterData> getCharacterById(int characterId) {
         String sql = """
-        SELECT c.*, s.*
+        SELECT c.*, s.*, m.guild_id, m.grade
         FROM player.characters c
         LEFT JOIN player.stats s ON c.id = s.character_id
+        LEFT JOIN guild.member m ON m.character_id = c.id
         WHERE c.id = ?
     """;
         try (Connection conn = dataSource.getConnection();

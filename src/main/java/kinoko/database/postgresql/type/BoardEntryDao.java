@@ -1,9 +1,11 @@
 package kinoko.database.postgresql.type;
 
 import kinoko.server.guild.Guild;
+import kinoko.server.guild.GuildBoardComment;
 import kinoko.server.guild.GuildBoardEntry;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,24 +35,12 @@ public class BoardEntryDao {
         // Delete board entries that have been removed.
         deleteRemovedBoardEntries(conn, guild, entries);
 
-        // Split entries into new inserts and existing updates
-        List<GuildBoardEntry> newEntries = entries.stream()
-                .filter(GuildBoardEntry::hasNoSN)
-                .toList();
-
-        List<GuildBoardEntry> existingEntries = entries.stream()
-                .filter(entry -> !entry.hasNoSN())
-                .toList();
-
-        // Insert new entries and assign generated SNs
-        insertBoardEntries(conn, guild.getGuildId(), newEntries);
-
         // Update existing entries
-        updateBoardEntries(conn, guild.getGuildId(), existingEntries);
+        upsertBoardEntries(conn, guild.getGuildId(), entries);
 
         // Synchronize comments for each entry
         for (GuildBoardEntry entry : entries) {
-            BoardEntryCommentDao.saveComments(conn, entry);
+            BoardEntryCommentDao.saveComments(conn, entry, guild);
         }
     }
 
@@ -107,67 +97,41 @@ public class BoardEntryDao {
     }
 
     /**
-     * Inserts new board entries into the database and sets their generated IDs.
+     * Inserts or updates guild board entries in the database.
      *
-     * @param conn      the SQL connection
-     * @param guildId   the guild ID
-     * @param newEntries list of entries to insert
+     * If a board entry with the same guild_id and id already exists, this method updates
+     * its character_id, title, message, and emoticon fields. Otherwise, a new row is inserted.
+     *
+     * Because id is a per-guild serial, callers should ensure that new entries have a valid
+     * or newly assigned id value before invoking this method.
+     *
+     * @param conn     the SQL connection
+     * @param guildId  the guild ID associated with the board entries
+     * @param entries  list of board entries to insert or update
      * @throws SQLException if a database error occurs
      */
-    private static void insertBoardEntries(Connection conn, int guildId, List<GuildBoardEntry> newEntries) throws SQLException {
-        if (newEntries.isEmpty()) return;
+    private static void upsertBoardEntries(Connection conn, int guildId, List<GuildBoardEntry> entries) throws SQLException {
+        if (entries.isEmpty()) return;
 
         String sql = """
-                INSERT INTO guild.board_entry (guild_id, character_id, title, message, emoticon)
-                VALUES (?, ?, ?, ?, ?)
-                """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            for (GuildBoardEntry entry : newEntries) {
-                stmt.setInt(1, guildId);
-                stmt.setInt(2, entry.getCharacterId());
-                stmt.setString(3, entry.getTitle());
-                stmt.setString(4, entry.getText());
-                stmt.setInt(5, entry.getEmoticon());
-                stmt.addBatch();
-            }
-
-            stmt.executeBatch();
-
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                int i = 0;
-                while (rs.next()) {
-                    newEntries.get(i++).setEntryId(rs.getInt(1));
-                }
-            }
-        }
-    }
-
-    /**
-     * Updates existing board entries in the database.
-     *
-     * @param conn           the SQL connection
-     * @param guildId        the guild ID
-     * @param existingEntries list of entries to update
-     * @throws SQLException if a database error occurs
-     */
-    private static void updateBoardEntries(Connection conn, int guildId, List<GuildBoardEntry> existingEntries) throws SQLException {
-        if (existingEntries.isEmpty()) return;
-
-        String sql = """
-                UPDATE guild.board_entry
-                SET character_id = ?, title = ?, message = ?, emoticon = ?
-                WHERE guild_id = ? AND id = ?
+                INSERT INTO guild.board_entry (guild_id, id, character_id, title, message, emoticon)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT (guild_id, id)
+                DO UPDATE SET
+                    character_id = EXCLUDED.character_id,
+                    title = EXCLUDED.title,
+                    message = EXCLUDED.message,
+                    emoticon = EXCLUDED.emoticon
                 """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (GuildBoardEntry entry : existingEntries) {
-                stmt.setInt(1, entry.getCharacterId());
-                stmt.setString(2, entry.getTitle());
-                stmt.setString(3, entry.getText());
-                stmt.setInt(4, entry.getEmoticon());
-                stmt.setInt(5, guildId);
-                stmt.setInt(6, entry.getEntryId());
+            for (GuildBoardEntry entry : entries) {
+                stmt.setInt(1, guildId);
+                stmt.setInt(2, entry.getEntryId());     // must already be set or generated
+                stmt.setInt(3, entry.getCharacterId());
+                stmt.setString(4, entry.getTitle());
+                stmt.setString(5, entry.getText());
+                stmt.setInt(6, entry.getEmoticon());
                 stmt.addBatch();
             }
             stmt.executeBatch();
@@ -185,7 +149,7 @@ public class BoardEntryDao {
     public static List<GuildBoardEntry> loadBoardEntries(Connection conn, int guildId) throws SQLException {
         List<GuildBoardEntry> entries = new ArrayList<>();
         String sql = "SELECT id, character_id, title, message, timestamp, emoticon, notice " +
-                "FROM guild.board_entry WHERE guild_id = ?";
+                "FROM guild.board_entry WHERE guild_id = ? AND notice IS FALSE";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
@@ -200,6 +164,19 @@ public class BoardEntryDao {
                             rs.getInt("emoticon")
                     );
                     entries.add(entry);
+                }
+            }
+        }
+
+
+        java.util.Map<Integer, java.util.List<GuildBoardComment>> entryComments = BoardEntryCommentDao.loadComments(conn, guildId);
+
+        // Attach comments to the corresponding entries
+        for (GuildBoardEntry entry : entries) {
+            List<GuildBoardComment> comments = entryComments.get(entry.getEntryId());
+            if (comments != null) {
+                for (GuildBoardComment comment : comments) {
+                    entry.addComment(comment);
                 }
             }
         }

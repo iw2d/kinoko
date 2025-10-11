@@ -36,31 +36,25 @@ public class BoardNoticeDao {
         if (notice == null) return;
 
         String sql = """
-                INSERT INTO guild.board_entry (guild_id, character_id, title, message, emoticon, notice)
-                VALUES (?, ?, ?, ?, ?, TRUE)
-                ON CONFLICT (guild_id) WHERE notice = TRUE DO UPDATE SET
+                INSERT INTO guild.board_entry (guild_id, id, character_id, title, message, emoticon, notice)
+                VALUES (?, ?, ?, ?, ?, ?, TRUE)
+                ON CONFLICT (guild_id, id)
+                DO UPDATE SET
                     character_id = EXCLUDED.character_id,
                     title = EXCLUDED.title,
                     message = EXCLUDED.message,
                     emoticon = EXCLUDED.emoticon,
                     notice = TRUE
-                RETURNING id
                 """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guild.getGuildId());
-            stmt.setInt(2, notice.getCharacterId());
-            stmt.setString(3, notice.getTitle());
-            stmt.setString(4, notice.getText());
-            stmt.setInt(5, notice.getEmoticon());
-
-            try (var rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    notice.setEntryId(rs.getInt("id"));
-                } else {
-                    throw new SQLException("Failed to retrieve generated entry_id for guild notice.");
-                }
-            }
+            stmt.setInt(2, notice.getEntryId());
+            stmt.setInt(3, notice.getCharacterId());
+            stmt.setString(4, notice.getTitle());
+            stmt.setString(5, notice.getText());
+            stmt.setInt(6, notice.getEmoticon());
+            stmt.executeUpdate();
         }
     }
 
@@ -79,7 +73,7 @@ public class BoardNoticeDao {
         String sql = """
             SELECT id, character_id, title, message, timestamp, emoticon
             FROM guild.board_entry
-            WHERE guild_id = ? AND notice = TRUE
+            WHERE guild_id = ? AND notice IS TRUE
             LIMIT 1
             """;
 
