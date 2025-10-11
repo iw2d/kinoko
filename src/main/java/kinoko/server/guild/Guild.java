@@ -21,7 +21,7 @@ public final class Guild implements Encodable, Lockable<Guild> {
             .thenComparing(Comparator.comparing(GuildMember::getLevel).reversed());
 
     private final Lock lock = new ReentrantLock();
-    private final int guildId;
+    private int guildId;
     private final String guildName;
     private final List<String> gradeNames;
     private final Map<Integer, GuildMember> guildMembers; // character ID -> guild member
@@ -58,6 +58,10 @@ public final class Guild implements Encodable, Lockable<Guild> {
 
     public int getGuildId() {
         return guildId;
+    }
+
+    public void setGuildId(int newGuildId) {
+        this.guildId = newGuildId;
     }
 
     public String getGuildName() {
@@ -216,11 +220,7 @@ public final class Guild implements Encodable, Lockable<Guild> {
     }
 
     public int getNextBoardEntryId() {
-        if (DatabaseManager.isRelational()) {
-            // Let the relational database handle SN generation; return placeholder
-            return -1;
-        }
-
+        //  Board Entries SN are composite keys with Guild IDs, so we don't need to return -1 for Relational DBs.
         return boardEntryCounter.getAndIncrement();
     }
 

@@ -102,7 +102,7 @@ public class GuildMemberDao {
         String sql = """
                 INSERT INTO guild.member (guild_id, character_id, grade)
                 VALUES (?, ?, ?)
-                ON CONFLICT (guild_id, character_id) DO UPDATE SET grade = EXCLUDED.grade
+                ON CONFLICT (character_id) DO UPDATE SET grade = EXCLUDED.grade
                 """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -130,11 +130,11 @@ public class GuildMemberDao {
     public static List<GuildMember> loadMembers(Connection conn, int guildId) throws SQLException {
         List<GuildMember> members = new ArrayList<>();
         String sql = """
-        SELECT c.character_id, c.character_name, s.job, s.level,
+        SELECT c.id, c.name, s.job, s.level,
                m.grade AS guildRank, NULL AS allianceRank, c.online
         FROM guild.member m
-        JOIN player.characters c ON c.character_id = m.character_id
-        JOIN character.stats s ON s.character_id = c.character_id
+        JOIN player.characters c ON c.id = m.character_id
+        JOIN player.stats s ON s.character_id = c.id
         WHERE m.guild_id = ?
     """;
 
@@ -142,8 +142,8 @@ public class GuildMemberDao {
             stmt.setInt(1, guildId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    int charId = rs.getInt("character_id");
-                    String charName = rs.getString("character_name");
+                    int charId = rs.getInt("id");
+                    String charName = rs.getString("name");
                     int job = rs.getInt("job");
                     int level = rs.getInt("level");
                     boolean online = rs.getBoolean("online");
@@ -157,7 +157,7 @@ public class GuildMemberDao {
                             level,
                             online,
                             GuildRank.getByValue(guildRankInt),
-                            allianceRankInt != null ? GuildRank.getByValue(allianceRankInt) : null
+                            allianceRankInt != null ? GuildRank.getByValue(allianceRankInt) : GuildRank.NONE
                     ));
                 }
             }

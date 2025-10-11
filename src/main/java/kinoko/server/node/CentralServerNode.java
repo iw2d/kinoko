@@ -3,6 +3,7 @@ package kinoko.server.node;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import kinoko.database.DatabaseManager;
 import kinoko.packet.CentralPacket;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
@@ -221,6 +222,9 @@ public final class CentralServerNode extends Node {
 
     @Override
     public void shutdown() throws InterruptedException {
+        // Save All Guilds
+        DatabaseManager.guildAccessor().saveAll(guildStorage.getAllGuilds());
+
         // Shutdown login server node
         final Instant start = Instant.now();
         serverStorage.getLoginServerNode().ifPresent((serverNode) -> serverNode.write(CentralPacket.shutdownRequest()));

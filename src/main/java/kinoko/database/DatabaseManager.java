@@ -3,6 +3,7 @@ package kinoko.database;
 import kinoko.database.postgresql.PostgresConnector;
 import kinoko.database.cassandra.CassandraConnector;
 import kinoko.server.ServerConstants;
+import kinoko.server.guild.GuildStorage;
 
 import java.util.List;
 import java.util.Objects;
@@ -63,6 +64,12 @@ public final class DatabaseManager {
 //            connector = new PostgresConnector();
         }
         connector.initialize();
+    }
+
+    public static void saveAll() {
+        if (connector != null) {
+
+        }
     }
 
     public static void shutdown() {

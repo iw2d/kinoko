@@ -402,21 +402,22 @@ CREATE TABLE IF NOT EXISTS guild.member (
     guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
     character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
     grade SMALLINT NOT NULL,
-    join_date TIMESTAMP NOT NULL,
+    join_date TIMESTAMP NOT NULL DEFAULT UTC_NOW(),
     last_login TIMESTAMP,
-    PRIMARY KEY (guild_id, character_id)
+    PRIMARY KEY (character_id)
 );
 
 
 CREATE TABLE IF NOT EXISTS guild.board_entry (
-    id SERIAL PRIMARY KEY,
+    id INT NOT NULL,
     guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
     character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
     title TEXT,
     message TEXT NOT NULL,
     emoticon INT,
     timestamp TIMESTAMP NOT NULL DEFAULT UTC_NOW(),
-    notice boolean DEFAULT false
+    notice boolean DEFAULT false,
+    PRIMARY KEY (guild_id, id)
 );
 
 -- enforce only one TRUE notice per guild
@@ -426,7 +427,8 @@ WHERE notice = TRUE;
 
 CREATE TABLE IF NOT EXISTS guild.board_entry_comment (
     id SERIAL PRIMARY KEY,
-    entry_id INT NOT NULL REFERENCES guild.board_entry(id) ON DELETE CASCADE,
+    entry_id INT NOT NULL,
+    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
     character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
     text TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT UTC_NOW()

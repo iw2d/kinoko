@@ -6,6 +6,7 @@ import kinoko.server.guild.GuildMember;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GuildDao {
@@ -45,26 +46,35 @@ public class GuildDao {
     public static synchronized boolean insertGuild(Connection conn, Guild guild) throws SQLException {
         if (!checkGuildNameAvailable(conn, guild.getGuildName())) return false;
 
-        String sql = "INSERT INTO guild.guilds (name, grade_names, member_max, mark_bg, mark_bg_color, mark, mark_color, notice, points, level, board_entry_counter) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO guild.guilds (name, member_max, mark_bg, mark_bg_color, mark, mark_color, notice, points, level) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+                "RETURNING id";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, guild.getGuildName());
-            stmt.setArray(2, conn.createArrayOf("text", guild.getGradeNames().toArray()));
-            stmt.setInt(3, guild.getMemberMax());
-            stmt.setShort(4, guild.getMarkBg());
-            stmt.setByte(5, guild.getMarkBgColor());
-            stmt.setShort(6, guild.getMark());
-            stmt.setByte(7, guild.getMarkColor());
-            stmt.setString(8, guild.getNotice());
-            stmt.setInt(9, guild.getPoints());
-            stmt.setByte(10, guild.getLevel());
-            stmt.setInt(11, guild.getBoardEntryCounter().get());
+            stmt.setInt(2, guild.getMemberMax());
+            stmt.setShort(3, guild.getMarkBg());
+            stmt.setByte(4, guild.getMarkBgColor());
+            stmt.setShort(5, guild.getMark());
+            stmt.setByte(6, guild.getMarkColor());
+            stmt.setString(7, guild.getNotice());
+            stmt.setInt(8, guild.getPoints());
+            stmt.setByte(9, guild.getLevel());
 
-            stmt.executeUpdate();
+            try (ResultSet rs = stmt.executeQuery()) { // executeQuery because RETURNING returns a result set
+                if (rs.next()) {
+                    int guildId = rs.getInt(1); // get the generated id
+                    guild.setGuildId(guildId);
+                }
+            }
+
 
             GuildMemberDao.saveMembers(conn, guild);
-            BoardEntryDao.saveBoardEntries(conn, guild);
-            BoardNoticeDao.saveBoardNotice(conn, guild);
+            BoardEntryDao.saveBoardEntries(conn, guild);  // none should exist, but maybe we added some to the guild object.
+            BoardNoticeDao.saveBoardNotice(conn, guild);  // it shouldn't exist, but maybe we added it to the guild object.
+
+            List<String> defaultGrades = Arrays.asList("Master", "Jr.Master", "Test1", "test2", "Member");
+            guild.setGradeNames(defaultGrades);
+            upsertGrades(conn, guild.getGuildId(), defaultGrades);
             return true;
         }
     }
@@ -83,7 +93,6 @@ public class GuildDao {
     public static boolean updateGuild(Connection conn, Guild guild) throws SQLException {
         String sql = "UPDATE guild.guilds SET " +
                 "name = ?, " +
-                "grade_names = ?, " +
                 "member_max = ?, " +
                 "mark_bg = ?, " +
                 "mark_bg_color = ?, " +
@@ -91,29 +100,27 @@ public class GuildDao {
                 "mark_color = ?, " +
                 "notice = ?, " +
                 "points = ?, " +
-                "level = ?, " +
-                "board_entry_counter = ? " +
+                "level = ? " +
                 "WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, guild.getGuildName());
-            stmt.setArray(2, conn.createArrayOf("text", guild.getGradeNames().toArray()));
-            stmt.setInt(3, guild.getMemberMax());
-            stmt.setShort(4, guild.getMarkBg());
-            stmt.setByte(5, guild.getMarkBgColor());
-            stmt.setShort(6, guild.getMark());
-            stmt.setByte(7, guild.getMarkColor());
-            stmt.setString(8, guild.getNotice());
-            stmt.setInt(9, guild.getPoints());
-            stmt.setByte(10, guild.getLevel());
-            stmt.setInt(11, guild.getBoardEntryCounter().get());
-            stmt.setInt(12, guild.getGuildId());
+            stmt.setInt(2, guild.getMemberMax());
+            stmt.setShort(3, guild.getMarkBg());
+            stmt.setByte(4, guild.getMarkBgColor());
+            stmt.setShort(5, guild.getMark());
+            stmt.setByte(6, guild.getMarkColor());
+            stmt.setString(7, guild.getNotice());
+            stmt.setInt(8, guild.getPoints());
+            stmt.setByte(9, guild.getLevel());
+            stmt.setInt(10, guild.getGuildId());
 
             int rows = stmt.executeUpdate();
 
             GuildMemberDao.saveMembers(conn, guild);
             BoardEntryDao.saveBoardEntries(conn, guild);
             BoardNoticeDao.saveBoardNotice(conn, guild);
+            upsertGrades(conn, guild.getGuildId(), guild.getGradeNames());
 
             return rows > 0;
         }
@@ -177,10 +184,41 @@ public class GuildDao {
      * @throws SQLException if a database access error occurs
      */
     public static boolean deleteGuild(Connection conn, int guildId) throws SQLException {
-        String sql = "DELETE FROM guild.guilds WHERE guild_id = ?";
+        String sql = "DELETE FROM guild.guilds WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, guildId);
             return stmt.executeUpdate() > 0;
+        }
+    }
+
+    /**
+     * Upsert a list of grades for a specific guild into the database.
+     *
+     * Each grade in the list is inserted with its corresponding index in the list.
+     * If a grade with the same guild_id and grade_index already exists, it will
+     * be replaced with the new grade_name.
+     *
+     * @param conn    the active SQL connection to use
+     * @param guildId the ID of the guild for which grades should be inserted
+     * @param grades  the list of grade names to insert
+     * @throws SQLException if a database access error occurs
+     */
+    private static void upsertGrades(Connection conn, int guildId, List<String> grades) throws SQLException {
+        String sql = """
+        INSERT INTO guild.grade (guild_id, grade_index, grade_name)
+        VALUES (?, ?, ?)
+        ON CONFLICT (guild_id, grade_index) DO UPDATE
+        SET grade_name = EXCLUDED.grade_name
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 0; i < grades.size(); i++) {
+                stmt.setInt(1, guildId);
+                stmt.setInt(2, i); // grade_index corresponds to the list index
+                stmt.setString(3, grades.get(i));
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
         }
     }
 
