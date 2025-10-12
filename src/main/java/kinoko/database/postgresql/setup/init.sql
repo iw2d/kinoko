@@ -177,8 +177,7 @@ CREATE TABLE IF NOT EXISTS player.characters (
     party_id INT,
     guild_id INT,
     creation_time TIMESTAMP NOT NULL DEFAULT UTC_NOW(),
-    max_level_time TIMESTAMP,
-    online BOOLEAN NOT NULL DEFAULT FALSE
+    max_level_time TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS player.stats (
@@ -234,7 +233,7 @@ CREATE TABLE IF NOT EXISTS player.inventory (
     item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE,
     inventory_type inventory_type_enum NOT NULL,
     slot INT NOT NULL,
-    PRIMARY KEY (character_id, item_sn)
+    PRIMARY KEY (item_sn)
 );
 
 CREATE INDEX IF NOT EXISTS idx_inventory_item_sn
@@ -403,7 +402,6 @@ CREATE TABLE IF NOT EXISTS guild.member (
     character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
     grade SMALLINT NOT NULL,
     join_date TIMESTAMP NOT NULL DEFAULT UTC_NOW(),
-    last_login TIMESTAMP,
     PRIMARY KEY (character_id)
 );
 

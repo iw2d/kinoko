@@ -1,5 +1,6 @@
 package kinoko.world.item;
 
+import kinoko.database.DatabaseManager;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
@@ -225,5 +226,22 @@ public final class Item implements Encodable {
      */
     public boolean hasNoSN() {
         return getItemSn() <= 0;
+    }
+
+    /**
+     * Resets the item's serial number (SN) to -1.
+     *
+     * If checkIfRelational is true, the SN is reset only if the underlying
+     * database is relational. If false, the SN is always reset regardless of database type.
+     *
+     * This can be used to mark the item as needing a new SN before inserting it into
+     * a database. Especially useful when dropping/trading items in bulk that split an item.
+     *
+     * @param checkIfRelational whether to check if the database is relational before resetting
+     */
+    public void resetSN(boolean checkIfRelational) {
+        if (!checkIfRelational || DatabaseManager.isRelational()) {
+            setItemSn(-1);
+        }
     }
 }
