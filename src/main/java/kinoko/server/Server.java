@@ -25,6 +25,10 @@ public final class Server {
         Server.initialize();
     }
 
+    public static CentralServerNode getCentralServerNode() {
+        return centralServerNode;
+    }
+
     private static void initialize() throws Exception {
         // Initialize providers
         Instant start = Instant.now();

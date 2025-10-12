@@ -30,8 +30,8 @@ public class InventoryDao {
         String sqlInventory = """
         INSERT INTO player.inventory (character_id, inventory_type, slot, item_sn)
         VALUES (?, ?, ?, ?)
-        ON CONFLICT (character_id, item_sn)
-        DO UPDATE SET slot = EXCLUDED.slot, inventory_type = EXCLUDED.inventory_type
+        ON CONFLICT (item_sn)
+        DO UPDATE SET slot = EXCLUDED.slot, inventory_type = EXCLUDED.inventory_type, character_id = EXCLUDED.character_id
     """;
 
             int characterId = characterData.getCharacterId();

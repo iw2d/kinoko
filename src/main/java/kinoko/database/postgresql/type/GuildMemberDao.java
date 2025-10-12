@@ -131,7 +131,7 @@ public class GuildMemberDao {
         List<GuildMember> members = new ArrayList<>();
         String sql = """
         SELECT c.id, c.name, s.job, s.level,
-               m.grade AS guildRank, NULL AS allianceRank, c.online
+               m.grade AS guildRank, NULL AS allianceRank  -- waiting to implement alliances
         FROM guild.member m
         JOIN player.characters c ON c.id = m.character_id
         JOIN player.stats s ON s.character_id = c.id
@@ -146,7 +146,6 @@ public class GuildMemberDao {
                     String charName = rs.getString("name");
                     int job = rs.getInt("job");
                     int level = rs.getInt("level");
-                    boolean online = rs.getBoolean("online");
                     int guildRankInt = rs.getInt("guildRank");
                     Integer allianceRankInt = null; // no alliance rank yet
 
@@ -155,7 +154,7 @@ public class GuildMemberDao {
                             charName,
                             job,
                             level,
-                            online,
+                            false,  // CentralServerHandler will deal with this value.
                             GuildRank.getByValue(guildRankInt),
                             allianceRankInt != null ? GuildRank.getByValue(allianceRankInt) : GuildRank.NONE
                     ));
