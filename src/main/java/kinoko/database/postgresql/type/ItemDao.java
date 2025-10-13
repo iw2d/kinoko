@@ -44,6 +44,8 @@ public class ItemDao {
                     long generatedSn = rs.getLong("item_sn");
                     item.setItemSn(generatedSn); // store it in the item object
                     EquipDataDao.upsertEquipData(conn, generatedSn, item.getEquipData());
+                    PetDataDao.upsertPetData(conn, generatedSn, item.getPetData());
+                    RingDataDao.upsertRingData(conn, generatedSn, item.getRingData());
                     return generatedSn;
                 } else {
                     throw new SQLException("Failed to generate item_sn for new item");
@@ -69,13 +71,13 @@ public class ItemDao {
         if (items.isEmpty()) return;
 
         String sqlInsert = """
-                    INSERT INTO item.items (item_sn, item_id, quantity, attribute, title, date_expire)
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO item.items (item_sn, item_id, cash, quantity, attribute, title, date_expire)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
         String sqlUpdate = """
                     UPDATE item.items
-                    SET quantity = ?, attribute = ?, title = ?, date_expire = ?
+                    SET cash = ?, quantity = ?, attribute = ?, title = ?, date_expire = ?
                     WHERE item_sn = ?
                 """;
 
@@ -95,18 +97,20 @@ public class ItemDao {
 
                     stmtInsert.setLong(1, itemSn);
                     stmtInsert.setInt(2, item.getItemId());
-                    stmtInsert.setInt(3, item.getQuantity());
-                    stmtInsert.setShort(4, item.getAttribute());
-                    stmtInsert.setString(5, item.getTitle());
-                    stmtInsert.setTimestamp(6, item.getDateExpire() != null ? Timestamp.from(item.getDateExpire()) : null);
+                    stmtInsert.setBoolean(3, item.isCash());
+                    stmtInsert.setInt(4, item.getQuantity());
+                    stmtInsert.setShort(5, item.getAttribute());
+                    stmtInsert.setString(6, item.getTitle());
+                    stmtInsert.setTimestamp(7, item.getDateExpire() != null ? Timestamp.from(item.getDateExpire()) : null);
                     stmtInsert.addBatch();
                 } else {
                     try (PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate)) {
-                        stmtUpdate.setInt(1, item.getQuantity());
-                        stmtUpdate.setShort(2, item.getAttribute());
-                        stmtUpdate.setString(3, item.getTitle());
-                        stmtUpdate.setTimestamp(4, item.getDateExpire() != null ? Timestamp.from(item.getDateExpire()) : null);
-                        stmtUpdate.setLong(5, itemSn);
+                        stmtUpdate.setBoolean(1, item.isCash());
+                        stmtUpdate.setInt(2, item.getQuantity());
+                        stmtUpdate.setShort(3, item.getAttribute());
+                        stmtUpdate.setString(4, item.getTitle());
+                        stmtUpdate.setTimestamp(5, item.getDateExpire() != null ? Timestamp.from(item.getDateExpire()) : null);
+                        stmtUpdate.setLong(6, itemSn);
                         stmtUpdate.executeUpdate();
                     }
                 }
@@ -122,6 +126,7 @@ public class ItemDao {
     public static Item from(ResultSet rs) throws SQLException {
         long itemSn = rs.getLong("item_sn");
         int itemId = rs.getInt("item_id");
+        boolean isCashItem = rs.getBoolean("cash");
         short quantity = rs.getShort("quantity");
         short attribute = rs.getShort("attribute");
         String title = rs.getString("title");
@@ -186,7 +191,7 @@ public class ItemDao {
                 itemId,
                 quantity,
                 itemSn,
-                false, // cash flag
+                isCashItem,
                 attribute,
                 title,
                 dateExpireTs != null ? dateExpireTs.toInstant() : null,

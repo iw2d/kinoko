@@ -68,6 +68,7 @@ public final class User extends Life {
     private final Map<Integer, Instant> schedules = new HashMap<>();
     private final AtomicInteger fieldKey = new AtomicInteger(0);
 
+
     private int messengerId;
     private PartyInfo partyInfo;
     private GuildInfo guildInfo;
@@ -78,6 +79,7 @@ public final class User extends Life {
     private OpenGate openGate;
     private int effectItemId;
     private int portableChairId;
+    private boolean inCashShop = false;
     private String adBoard;
     private boolean inTransfer;
     private Instant nextCheckItemExpire;
@@ -807,7 +809,8 @@ public final class User extends Life {
     }
 
     public void dispose() {
-        write(WvsContext.statChanged(Map.of(), true));
+        OutPacket outpacket = WvsContext.statChanged(Map.of(), true);
+        write(outpacket);
     }
 
     public void logout(boolean disconnect) {
@@ -851,6 +854,14 @@ public final class User extends Life {
                 }
             });
         }
+    }
+
+    public boolean isInCashShop() {
+        return inCashShop;
+    }
+
+    public void setInCashShop(boolean inCashShop) {
+        this.inCashShop = inCashShop;
     }
 
 

@@ -320,6 +320,7 @@ public final class MigrationHandler {
         // Remove user from field
         user.getField().removeUser(user);
 
+
         // Load gifts
         final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 
@@ -330,6 +331,7 @@ public final class MigrationHandler {
         user.write(CashShopPacket.loadLockerDone(account));
         user.write(CashShopPacket.loadWishDone(account.getWishlist()));
         user.write(CashShopPacket.queryCashResult(account));
+        user.setInCashShop(true);
     }
 
     private static boolean isWhitelistedTransferField(int currentFieldId, int targetFieldId) {

@@ -7,6 +7,10 @@ import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class CharacterStat implements Encodable {
@@ -72,6 +76,7 @@ public final class CharacterStat implements Encodable {
         this.petSn1 = petSn1;
         this.petSn2 = petSn2;
         this.petSn3 = petSn3;
+        this.sp = ExtendSp.from(new HashMap<>()); // empty on init.
     }
 
     public int getId() {

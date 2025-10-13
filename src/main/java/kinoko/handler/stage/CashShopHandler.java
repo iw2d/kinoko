@@ -91,10 +91,19 @@ public final class CashShopHandler {
                     throw new IllegalStateException("Could not deduct price for cash item");
                 }
 
+                // Generate an item SN for the locker item - (Relational DBs) - Safe for NoSQL DBs.
+                if (!DatabaseManager.idAccessor().generateItemSn(cashItemInfo.getItem())){
+                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                    log.error("Could not generate SN for Item ID: {}", cashItemInfo.getItem().getItemId());
+                    return;
+                }
+
                 // Add to locker and update client
                 account.getLocker().addCashItem(cashItemInfo);
                 user.write(CashShopPacket.queryCashResult(account));
                 user.write(CashShopPacket.buyDone(cashItemInfo));
+
+
             }
             case Gift, GiftPackage -> {
                 // CCashShop::SendGiftsPacket

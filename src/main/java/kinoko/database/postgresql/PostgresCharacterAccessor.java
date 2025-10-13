@@ -3,7 +3,9 @@ package kinoko.database.postgresql;
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
+import kinoko.database.postgresql.type.ExtendSpDao;
 import kinoko.database.postgresql.type.InventoryDao;
+import kinoko.database.postgresql.type.SkillMacrosDao;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.GameConstants;
 import kinoko.world.item.*;
@@ -17,6 +19,7 @@ import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
+import kinoko.world.user.stat.ExtendSp;
 import org.postgresql.util.PGobject;
 
 import java.io.*;
@@ -78,9 +81,13 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
                 rs.getLong("pet_2"),
                 rs.getLong("pet_3")
         );
+
         cd.setCharacterStat(cs);
 
         try (Connection conn = dataSource.getConnection()) {
+            cs.setSp(ExtendSpDao.loadExtendSp(conn, characterID));  // TODO: put this in a proper connection block.
+
+
             InventoryManager im = InventoryDao.loadInventoryManager(conn, characterID);
 
             cd.setInventoryManager(im);
@@ -301,7 +308,9 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
                     quickslotKeyMap = Arrays.copyOf(GameConstants.DEFAULT_QUICKSLOT_KEY_MAP, GameConstants.QUICKSLOT_KEY_MAP_SIZE);
                 }
 
-                return new ConfigManager(petConsumeItem, petConsumeMpItem, petExceptionList, funcKeyMap, quickslotKeyMap);
+                ConfigManager cm = new ConfigManager(petConsumeItem, petConsumeMpItem, petExceptionList, funcKeyMap, quickslotKeyMap);
+                cm.updateMacroSysData(SkillMacrosDao.loadMacros(conn, characterId));
+                return cm;
             }
         }
     }
@@ -538,6 +547,7 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
 
                     // For inventory, query normalized player.inventory table separately
                     Inventory equipped = loadEquippedInventory(cs.getId());
+//                    Inventory cash = loadCashInventory(cs.getId());
 
                     list.add(AvatarData.from(cs, equipped));
                 }
@@ -549,8 +559,8 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
         return list;
     }
 
-    private Inventory loadEquippedInventory(int characterId) throws SQLException {
-        Inventory equipped = new Inventory(24, InventoryType.EQUIPPED); // default equipped size
+    private Inventory loadCashInventory(int characterId) throws SQLException {
+        Inventory equipped = new Inventory(24, InventoryType.CASH); // default cash size
 
         String sql = """
         SELECT f.*, i.slot
@@ -558,6 +568,117 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
         JOIN item.full_item f ON i.item_sn = f.item_sn
         WHERE i.character_id = ? AND i.inventory_type = ?
     """;
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+
+            PGobject enumValue = new PGobject();
+            enumValue.setType("inventory_type_enum");
+            enumValue.setValue(InventoryType.CASH.name());
+            stmt.setObject(2, enumValue);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    long itemSn = rs.getLong("item_sn");
+                    int slot = rs.getInt("slot");
+                    int itemId = rs.getInt("item_id");
+                    short quantity = rs.getShort("quantity");
+                    short attribute = rs.getShort("attribute");
+                    String title = rs.getString("title");
+                    Timestamp dateExpireTs = rs.getTimestamp("date_expire");
+
+                    // Build EquipData if applicable
+                    EquipData equipData = null;
+                    if (rs.getObject("inc_str") != null) {
+                        equipData = new EquipData(
+                                rs.getShort("inc_str"),
+                                rs.getShort("inc_dex"),
+                                rs.getShort("inc_int"),
+                                rs.getShort("inc_luk"),
+                                rs.getShort("inc_max_hp"),
+                                rs.getShort("inc_max_mp"),
+                                rs.getShort("inc_pad"),
+                                rs.getShort("inc_mad"),
+                                rs.getShort("inc_pdd"),
+                                rs.getShort("inc_mdd"),
+                                rs.getShort("inc_acc"),
+                                rs.getShort("inc_eva"),
+                                rs.getShort("inc_craft"),
+                                rs.getShort("inc_speed"),
+                                rs.getShort("inc_jump"),
+                                rs.getByte("ruc"),
+                                rs.getByte("cuc"),
+                                rs.getInt("iuc"),
+                                rs.getByte("chuc"),
+                                rs.getByte("grade"),
+                                rs.getShort("option_1"),
+                                rs.getShort("option_2"),
+                                rs.getShort("option_3"),
+                                rs.getShort("socket_1"),
+                                rs.getShort("socket_2"),
+                                rs.getByte("level_up_type"),
+                                rs.getByte("level"),
+                                rs.getInt("exp"),
+                                rs.getInt("durability")
+                        );
+                    }
+
+                    // Build PetData if applicable
+                    PetData petData = null;
+                    if (rs.getObject("pet_name") != null) {
+                        petData = new PetData(
+                                rs.getString("pet_name"),
+                                rs.getByte("pet_level"),
+                                rs.getByte("fullness"),
+                                rs.getShort("tameness"),
+                                rs.getShort("pet_skill"),
+                                rs.getShort("pet_attribute"),
+                                rs.getInt("remain_life")
+                        );
+                    }
+
+                    // Build RingData if applicable
+                    RingData ringData = null;
+                    if (rs.getObject("pair_character_id") != null) {
+                        ringData = new RingData(
+                                rs.getInt("pair_character_id"),
+                                rs.getString("pair_character_name"),
+                                rs.getLong("pair_item_sn")
+                        );
+                    }
+
+                    Item item = new Item(
+                            itemId,
+                            quantity,
+                            itemSn,
+                            false, // cash flag, adjust if you have it
+                            attribute,
+                            title,
+                            dateExpireTs != null ? dateExpireTs.toInstant() : null,
+                            equipData,
+                            petData,
+                            ringData
+                    );
+
+                    equipped.putItem(slot, item);
+                }
+            }
+        }
+
+        return equipped;
+    }
+
+
+    private Inventory loadEquippedInventory(int characterId) throws SQLException {
+        Inventory equipped = new Inventory(24, InventoryType.EQUIPPED); // default equipped size
+
+        String sql = """
+                    SELECT f.*, i.slot
+                    FROM player.inventory i
+                    JOIN item.full_item f ON i.item_sn = f.item_sn
+                    WHERE i.character_id = ? AND i.inventory_type = ?
+                """;
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -705,8 +826,8 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
             saveCharacterSkills(conn, characterData);
             saveCharacterQuests(conn, characterData);
             saveCharacterConfig(conn, characterData);
-            saveCharacterMacros(conn, characterData);
             saveCharacterPopularity(conn, characterData);
+            ExtendSpDao.upsertExtendSp(conn, characterData.getCharacterId(), characterData.getCharacterStat().getSp());
 
             conn.commit();
             success = true;
@@ -776,42 +897,9 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
 
             stmt.executeUpdate();
         }
+        // save skill macros
+        SkillMacrosDao.upsertMacros(conn, characterData.getCharacterId(), config.getMacroSysData());
     }
-
-
-
-    private void saveCharacterMacros(Connection conn, CharacterData characterData) throws SQLException {
-        List<SingleMacro> macros = characterData.getConfigManager().getMacroSysData();
-
-        String sql = """
-        INSERT INTO player.character_macro 
-        (character_id, macro_index, name, mute, skills)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT (character_id, macro_index) DO UPDATE
-        SET name = EXCLUDED.name,
-            mute = EXCLUDED.mute,
-            skills = EXCLUDED.skills
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (int i = 0; i < macros.size(); i++) {
-                SingleMacro macro = macros.get(i);
-                stmt.setInt(1, characterData.getCharacterId());
-                stmt.setInt(2, i); // macro_index
-                stmt.setString(3, macro.getName());
-                stmt.setBoolean(4, macro.isMute());
-
-                // skills array -> Integer[]
-                int[] skills = macro.getSkills();
-                Integer[] skillArray = Arrays.stream(skills).boxed().toArray(Integer[]::new);
-                stmt.setArray(5, conn.createArrayOf("INT", skillArray));
-
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-        }
-    }
-
 
     private void saveCharacterPopularity(Connection conn, CharacterData characterData) throws SQLException {
         String sql = """
@@ -851,11 +939,7 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
                 stmt.setInt(1, characterData.getCharacterId());
                 stmt.setInt(2, sr.getSkillId());
                 stmt.setInt(3, sr.getSkillLevel());
-                if (sr.getMasterLevel() > 0) {
                     stmt.setInt(4, sr.getMasterLevel());
-                } else {
-                    stmt.setNull(4, java.sql.Types.INTEGER);
-                }
                 stmt.addBatch();
             }
             stmt.executeBatch();
@@ -946,8 +1030,8 @@ public final class PostgresCharacterAccessor implements CharacterAccessor {
             saveCharacterSkills(conn, characterData);
             saveCharacterQuests(conn, characterData);
             saveCharacterConfig(conn, characterData);
-            saveCharacterMacros(conn, characterData);
             saveCharacterPopularity(conn, characterData);
+            ExtendSpDao.upsertExtendSp(conn, characterData.getCharacterId(), characterData.getCharacterStat().getSp());
 
             conn.commit();
             return true;
