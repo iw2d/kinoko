@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.AccountAccessor;
 import kinoko.database.DatabaseManager;
 import kinoko.database.postgresql.type.AccountDao;
+import kinoko.database.postgresql.type.LockerDao;
 import kinoko.server.ServerConfig;
 import kinoko.world.user.Account;
 import org.mindrot.jbcrypt.BCrypt;

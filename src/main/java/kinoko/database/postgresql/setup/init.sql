@@ -28,6 +28,7 @@ $function$;
 CREATE TABLE item.items (
     item_sn BIGSERIAL PRIMARY KEY,  -- auto-increment unique ID for every item instance
     item_id INT NOT NULL,
+    cash BOOLEAN NOT NULL DEFAULT FALSE,
     quantity INT NOT NULL DEFAULT 1,
     attribute SMALLINT DEFAULT 0,
     title TEXT DEFAULT '',
@@ -41,7 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_items_date_expire
     ON item.items(date_expire);
 
 CREATE TABLE IF NOT EXISTS item.equip_data (
-    item_sn BIGINT PRIMARY KEY REFERENCES item.items(item_sn) ON DELETE CASCADE,  -- unique for every equip item instance
+    item_sn BIGINT PRIMARY KEY REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE,  -- unique for every equip item instance
     inc_str SMALLINT DEFAULT 0,
     inc_dex SMALLINT DEFAULT 0,
     inc_int SMALLINT DEFAULT 0,
@@ -78,7 +79,7 @@ CREATE INDEX IF NOT EXISTS idx_equip_data_item_sn
 
 
 CREATE TABLE IF NOT EXISTS item.pet_data (
-    item_sn BIGINT PRIMARY KEY REFERENCES item.items(item_sn) ON DELETE CASCADE,
+    item_sn BIGINT PRIMARY KEY REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE ,
     pet_name TEXT,
     level SMALLINT DEFAULT 0,
     fullness SMALLINT DEFAULT 0,
@@ -93,7 +94,7 @@ CREATE INDEX IF NOT EXISTS idx_pet_data_item_sn
 
 
 CREATE TABLE IF NOT EXISTS item.ring_data (
-    item_sn BIGINT PRIMARY KEY REFERENCES item.items(item_sn) ON DELETE CASCADE,
+    item_sn BIGINT PRIMARY KEY REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE ,
     pair_character_id INT,
     pair_character_name TEXT,
     pair_item_sn BIGINT
@@ -121,8 +122,8 @@ CREATE TABLE IF NOT EXISTS account.accounts (
 );
 
 CREATE TABLE IF NOT EXISTS account.trunk_item (
-    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE,
-    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE ,
     slot INT NOT NULL,
     PRIMARY KEY (account_id, slot)
 );
@@ -135,8 +136,8 @@ CREATE INDEX IF NOT EXISTS idx_trunk_item_account_item
 
 
 CREATE TABLE IF NOT EXISTS account.locker_item (
-    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE,
-    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE ,
     slot INT NOT NULL,
     commodity_id INT,
     PRIMARY KEY (account_id, slot)
@@ -150,7 +151,7 @@ CREATE INDEX IF NOT EXISTS idx_locker_item_account_item
 
 
 CREATE TABLE IF NOT EXISTS account.wishlist (
-    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     item_id BIGINT NOT NULL,
     slot INT NOT NULL,
     PRIMARY KEY (account_id, slot)
@@ -169,7 +170,7 @@ CREATE INDEX IF NOT EXISTS idx_wishlist_account_item
 
 CREATE TABLE IF NOT EXISTS player.characters (
     id SERIAL PRIMARY KEY,
-    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES account.accounts(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     name TEXT NOT NULL,
     money INT NOT NULL DEFAULT 0,
     ext_slot_expire TIMESTAMP,
@@ -181,7 +182,7 @@ CREATE TABLE IF NOT EXISTS player.characters (
 );
 
 CREATE TABLE IF NOT EXISTS player.stats (
-    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     gender SMALLINT NOT NULL,
     skin SMALLINT NOT NULL,
     face INT NOT NULL,
@@ -207,11 +208,11 @@ CREATE TABLE IF NOT EXISTS player.stats (
     pet_3 BIGINT
 );
 
-CREATE TABLE IF NOT EXISTS player.skill_points (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
-    skill_id INT NOT NULL,
-    points INT NOT NULL DEFAULT 0,
-    PRIMARY KEY (character_id, skill_id)
+CREATE TABLE IF NOT EXISTS player.extend_sp (
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    job_level SMALLINT NOT NULL,
+    sp SMALLINT DEFAULT 0,
+    PRIMARY KEY (character_id, job_level)
 );
 
 DO $$
@@ -229,8 +230,8 @@ BEGIN
 END$$;
 
 CREATE TABLE IF NOT EXISTS player.inventory (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
-    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE ,
     inventory_type inventory_type_enum NOT NULL,
     slot INT NOT NULL,
     PRIMARY KEY (item_sn)
@@ -244,7 +245,7 @@ CREATE INDEX IF NOT EXISTS idx_inventory_char_item
 
 
 CREATE TABLE IF NOT EXISTS player.skill_cooltime (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     skill_id INT NOT NULL,
     cooldown_end TIMESTAMP NOT NULL,
     PRIMARY KEY (character_id, skill_id)
@@ -252,7 +253,7 @@ CREATE TABLE IF NOT EXISTS player.skill_cooltime (
 
 
 CREATE TABLE IF NOT EXISTS player.skill_record (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     skill_id INT NOT NULL,
     level INT NOT NULL,
     master_level INT,
@@ -260,7 +261,7 @@ CREATE TABLE IF NOT EXISTS player.skill_record (
 );
 
 CREATE TABLE IF NOT EXISTS player.quest_record (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     quest_id INT NOT NULL,
     status INT NOT NULL,
     progress TEXT,
@@ -269,7 +270,7 @@ CREATE TABLE IF NOT EXISTS player.quest_record (
 );
 
 CREATE TABLE IF NOT EXISTS player.config (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     pet_consume_item INT NOT NULL DEFAULT 0,
     pet_consume_mp_item INT NOT NULL DEFAULT 0,
     pet_exception_list INT[] NOT NULL DEFAULT '{}',
@@ -279,8 +280,18 @@ CREATE TABLE IF NOT EXISTS player.config (
     PRIMARY KEY (character_id)
 );
 
+CREATE TABLE IF NOT EXISTS player.skill_macros (
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    macro_index SMALLINT NOT NULL,  -- 0–4
+    name TEXT NOT NULL,
+    mute BOOLEAN NOT NULL DEFAULT FALSE,
+    skills INT[] NOT NULL,
+    PRIMARY KEY (character_id, macro_index)
+);
+
+
 CREATE TABLE IF NOT EXISTS player.character_macro (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     macro_index INT NOT NULL,            -- index/order of the macro
     name TEXT NOT NULL,
     mute BOOLEAN NOT NULL DEFAULT FALSE,
@@ -289,14 +300,14 @@ CREATE TABLE IF NOT EXISTS player.character_macro (
 );
 
 CREATE TABLE IF NOT EXISTS player.popularity (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     other_character_id INT NOT NULL,
     timestamp TIMESTAMP NOT NULL,
     PRIMARY KEY (character_id, other_character_id)
 );
 
 CREATE TABLE IF NOT EXISTS player.minigame (
-    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     omok_wins INT NOT NULL DEFAULT 0,
     omok_ties INT NOT NULL DEFAULT 0,
     omok_losses INT NOT NULL DEFAULT 0,
@@ -308,24 +319,24 @@ CREATE TABLE IF NOT EXISTS player.minigame (
 );
 
 CREATE TABLE IF NOT EXISTS player.map_transfer (
-    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     map_id INT NOT NULL,
     old_map_id INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS player.wild_hunter (
-    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     riding_type INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS player.wild_hunter_mob (
-    character_id INT REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     mob_id INT NOT NULL,
     PRIMARY KEY (character_id, mob_id)
 );
 
 CREATE TABLE IF NOT EXISTS player.config (
-    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     config_key TEXT NOT NULL,
     config_value TEXT
 );
@@ -336,8 +347,8 @@ CREATE TABLE IF NOT EXISTS player.config (
 ------------------------------------------
 
 CREATE TABLE IF NOT EXISTS friend.friends (
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
-    friend_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    friend_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     friend_name TEXT NOT NULL,
     friend_group TEXT,
     friend_status INT NOT NULL DEFAULT 0,
@@ -353,8 +364,8 @@ CREATE INDEX IF NOT EXISTS idx_friend_friend_id
 ------------------------------------------
 
 CREATE TABLE IF NOT EXISTS gift.gifts (
-    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE,
-    receiver_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    item_sn BIGINT NOT NULL REFERENCES item.items(item_sn) ON DELETE CASCADE ON UPDATE CASCADE ,
+    receiver_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     commodity_id INT,
     sender_id INT,
     sender_name TEXT,
@@ -391,15 +402,15 @@ CREATE TABLE IF NOT EXISTS guild.guilds (
 );
 
 CREATE TABLE IF NOT EXISTS guild.grade (
-    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
+    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     grade_index INT NOT NULL,
     grade_name TEXT NOT NULL,
     PRIMARY KEY (guild_id, grade_index)
 );
 
 CREATE TABLE IF NOT EXISTS guild.member (
-    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     grade SMALLINT NOT NULL,
     join_date TIMESTAMP NOT NULL DEFAULT UTC_NOW(),
     PRIMARY KEY (character_id)
@@ -408,8 +419,8 @@ CREATE TABLE IF NOT EXISTS guild.member (
 
 CREATE TABLE IF NOT EXISTS guild.board_entry (
     id INT NOT NULL,
-    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     title TEXT,
     message TEXT NOT NULL,
     emoticon INT,
@@ -426,8 +437,8 @@ WHERE notice = TRUE;
 CREATE TABLE IF NOT EXISTS guild.board_entry_comment (
     id SERIAL PRIMARY KEY,
     entry_id INT NOT NULL,
-    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE,
-    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    guild_id INT NOT NULL REFERENCES guild.guilds(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    character_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     text TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT UTC_NOW()
 );
@@ -439,7 +450,7 @@ CREATE TABLE IF NOT EXISTS guild.board_entry_comment (
 
 CREATE TABLE IF NOT EXISTS memo.memo (
     id SERIAL PRIMARY KEY,
-    receiver_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE,
+    receiver_id INT NOT NULL REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
     memo_type INT NOT NULL,
     memo_content TEXT NOT NULL,
     sender_name TEXT,
@@ -457,6 +468,7 @@ CREATE OR REPLACE VIEW item.full_item AS
 SELECT
     i.item_sn,
     i.item_id,
+    i.cash,
     i.quantity,
     i.attribute,
     i.title,
