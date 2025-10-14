@@ -2,12 +2,8 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.AccountAccessor;
-import kinoko.database.DatabaseManager;
 import kinoko.database.postgresql.type.AccountDao;
-import kinoko.database.postgresql.type.LockerDao;
-import kinoko.server.ServerConfig;
 import kinoko.world.user.Account;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 
@@ -19,124 +15,101 @@ public final class PostgresAccountAccessor extends PostgresAccessor implements A
         super(dataSource);
     }
 
-    private String lowerUsername(String username) {
-        return username.toLowerCase();
-    }
-
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
-    private boolean checkHashedPassword(String password, String hashedPassword) {
-        return BCrypt.checkpw(password, hashedPassword);
-    }
-
+    /**
+     * Retrieves an account by its unique ID.
+     * Opens a database connection and delegates the loading logic to AccountDao.
+     *
+     * @param accountId the ID of the account to retrieve
+     * @return an Optional containing the Account if found, otherwise empty
+     */
     @Override
     public Optional<Account> getAccountById(int accountId) {
-        String sql = "SELECT * FROM account.accounts WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, accountId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(AccountDao.load(conn, rs));
-                }
-            }
-
+        try (Connection conn = getConnection()) {
+            return AccountDao.getAccountById(conn, accountId);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
+    /**
+     * Retrieves an account by its username.
+     * The username is normalized and passed to AccountDao for lookup.
+     *
+     * @param username the username to look up
+     * @return an Optional containing the Account if found, otherwise empty
+     */
     @Override
     public Optional<Account> getAccountByUsername(String username) {
-        String sql = "SELECT * FROM account.accounts WHERE username = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, lowerUsername(username));
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(AccountDao.load(conn, rs));
-                }
-            }
-
+        try (Connection conn = getConnection()) {
+            return AccountDao.getAccountByUsername(conn, username);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
+    /**
+     * Checks whether the provided password matches the stored hash for the account.
+     * Uses AccountDao to retrieve the hashed password and perform verification.
+     *
+     * @param account the account being authenticated
+     * @param password the plaintext password to verify
+     * @param secondary true if verifying the secondary password, false for the primary
+     * @return true if the password matches, false otherwise
+     */
     @Override
     public boolean checkPassword(Account account, String password, boolean secondary) {
-        try (Connection conn = getConnection()) {
+        return withTransaction(conn -> {
             String hashed = AccountDao.getHashedPassword(conn, account, secondary);
-            return hashed != null && checkHashedPassword(password, hashed);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+            return hashed != null && AccountDao.checkHashedPassword(password, hashed);
+        });
     }
 
+    /**
+     * Updates the account's password if the provided old password matches the stored hash.
+     * The method handles both primary and secondary password updates through AccountDao.
+     *
+     * @param account the account whose password is being updated
+     * @param oldPassword the current plaintext password
+     * @param newPassword the new plaintext password to set
+     * @param secondary true if updating the secondary password, false for the primary
+     * @return true if the password was successfully updated, false otherwise
+     */
     @Override
     public boolean savePassword(Account account, String oldPassword, String newPassword, boolean secondary) {
-        String sqlUpdate = "UPDATE account.accounts SET " +
-                (secondary ? "secondary_password" : "password") +
-                " = ? WHERE id = ?";
-        try (Connection conn = getConnection()) {
+        return withTransaction(conn -> {
             String hashedOld = AccountDao.getHashedPassword(conn, account, secondary);
-            if (hashedOld == null || checkHashedPassword(oldPassword, hashedOld)) {
-                try (PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate)) {
-                    updateStmt.setString(1, hashPassword(newPassword));
-                    updateStmt.setInt(2, account.getId());
-                    return updateStmt.executeUpdate() > 0;
-                }
+            if (hashedOld == null || AccountDao.checkHashedPassword(oldPassword, hashedOld)) {
+                return AccountDao.updatePassword(conn, account, newPassword, secondary);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+            return false;
+        });
     }
 
+    /**
+     * Creates a new account with the provided username and password.
+     * Executes all SQL operations inside a transaction for safety.
+     *
+     * @param username the desired username for the new account
+     * @param password the plaintext password for the new account
+     * @return true if the account was successfully created, false otherwise
+     */
     @Override
     public synchronized boolean newAccount(String username, String password) {
-        Optional<Integer> accountIdOpt = DatabaseManager.idAccessor().nextAccountId();  // should be -1
-        if (accountIdOpt.isEmpty() || getAccountByUsername(username).isPresent()) {
-            return false;
-        }
-        int accountId;
-
-        String sql = "INSERT INTO account.accounts (username, password, character_slots, nx_credit, nx_prepaid, maple_point, trunk_size, trunk_money) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)" +
-                "RETURNING ID";
-        try (Connection conn = getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, lowerUsername(username));
-            stmt.setString(2, hashPassword(password));
-            stmt.setInt(3, ServerConfig.CHARACTER_BASE_SLOTS);
-            stmt.setInt(4, 0);
-            stmt.setInt(5, 0);
-            stmt.setInt(6, 0);
-            stmt.setInt(7, ServerConfig.TRUNK_BASE_SLOTS);
-            stmt.setInt(8, 0);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    accountId = rs.getInt("id");
-                } else {
-                    throw new SQLException("Failed to retrieve account ID after insert.");
+        return withTransaction(conn -> {
+            return AccountDao.createAccount(conn, username, password);
                 }
-            }
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        );
     }
 
+    /**
+     * Saves all changes made to the given account, including its related data.
+     * Uses a transaction to ensure atomic updates across all tables.
+     *
+     * @param account the account containing updated data to persist
+     * @return true if the account was successfully saved, false otherwise
+     */
     @Override
     public boolean saveAccount(Account account) {
         try {
