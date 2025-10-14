@@ -2,125 +2,77 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.GiftAccessor;
-import kinoko.database.postgresql.type.ItemDao;
+import kinoko.database.postgresql.type.GiftDao;
 import kinoko.server.cashshop.Gift;
-import kinoko.world.item.Item;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public final class PostgresGiftAccessor implements GiftAccessor {
-    private final HikariDataSource dataSource;
-
+public final class PostgresGiftAccessor extends PostgresAccessor implements GiftAccessor {
     public PostgresGiftAccessor(HikariDataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
     }
 
-    private Gift loadGift(ResultSet rs) throws SQLException {
-        return new Gift(
-                rs.getLong("item_sn"),
-                rs.getInt("item_id"),
-                rs.getInt("commodity_id"),
-                rs.getInt("sender_id"),
-                rs.getString("sender_name"),
-                rs.getString("sender_message"),
-                rs.getLong("pair_gift_sn")
-        );
-    }
 
+    /**
+     * Retrieves all gifts received by a specific character.
+     *
+     * @param characterId the ID of the character
+     * @return a list of gifts for the given character, or an empty list if none exist or an error occurs
+     */
     @Override
     public List<Gift> getGiftsByCharacterId(int characterId) {
-        List<Gift> gifts = new ArrayList<>();
-        String sql = """
-        SELECT g.item_sn, fi.item_id, g.commodity_id, g.sender_id,
-            g.sender_name, g.sender_message, g.pair_gift_sn 
-        FROM gift.gifts g
-        JOIN item.full_item fi ON fi.item_sn = g.item_sn
-        WHERE g.receiver_id = ?
-        """;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                gifts.add(loadGift(rs));
-            }
+        try (Connection conn = getConnection()) {
+            return GiftDao.getGiftsByReceiverId(conn, characterId);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Collections.emptyList();
         }
-        return gifts;
     }
 
+    /**
+     * Retrieves a gift by its item serial number.
+     *
+     * @param itemSn the item serial number of the gift
+     * @return an Optional containing the gift if found, or Optional.empty() if not found or an error occurs
+     */
     @Override
     public Optional<Gift> getGiftByItemSn(long itemSn) {
-        String sql = """
-        SELECT g.item_sn, fi.item_id, g.commodity_id, g.sender_id,
-            g.sender_name, g.sender_message, g.pair_gift_sn FROM gift.gifts g
-        JOIN item.full_item fi ON fi.item_sn = g.item_sn
-        WHERE g.item_sn = ?
-        """;
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, itemSn);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(loadGift(rs));
-            }
+        try (Connection conn = getConnection()) {
+            return GiftDao.getGiftByItemSn(conn, itemSn);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
-
+    /**
+     * Creates a new gift for a specified receiver.
+     * If the gift requires a new item to be created, it will be handled within the same transaction.
+     *
+     * @param gift the gift to be created
+     * @param receiverId the ID of the receiver
+     * @return true if the gift was successfully created, false otherwise
+     */
     @Override
     public boolean newGift(Gift gift, int receiverId) {
-        String sql = """
-        INSERT INTO gift.gifts (item_sn, receiver_id, commodity_id, sender_id, sender_name, sender_message, pair_gift_sn)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT (item_sn) DO NOTHING
-        """;
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            long itemSN = gift.getGiftSn();
-            if (itemSN <= 0) {
-                // We need a new item created.
-                Item basicItem = new Item(gift.getItemId(), (short) 1);
-                ItemDao.createNewItem(conn, basicItem);
-                itemSN = basicItem.getItemSn();
-            }
-
-            stmt.setLong(1, itemSN);          // item_sn is now the primary key
-            stmt.setInt(2, receiverId);
-            stmt.setInt(3, gift.getCommodityId());
-            stmt.setInt(4, gift.getSenderId());
-            stmt.setString(5, gift.getSenderName());
-            stmt.setString(6, gift.getSenderMessage());
-            stmt.setLong(7, gift.getPairItemSn());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return withTransaction(conn -> {
+            return GiftDao.insertGift(conn, gift, receiverId);
+        });
     }
 
+    /**
+     * Deletes a specific gift from the database.
+     *
+     * @param gift the gift to delete
+     * @return true if the gift was successfully deleted, false otherwise
+     */
     @Override
     public boolean deleteGift(Gift gift) {
-        String sql = "DELETE FROM gift.gifts WHERE item_sn = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, gift.getGiftSn());
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return withTransaction(conn -> {
+            return GiftDao.deleteGift(conn, gift);
+        });
     }
 }

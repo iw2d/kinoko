@@ -129,6 +129,22 @@ public class InventoryDao {
         }
     }
 
+    /**
+     * Loads a character's complete inventory data from the database and constructs an {@link InventoryManager}.
+     *
+     * This method queries all inventory slots belonging to the given character, joins them with the corresponding
+     * item data from {@code item.full_item}, and populates the proper inventory categories such as EQUIPPED,
+     * EQUIP, CONSUME, INSTALL, ETC, and CASH.
+     *
+     * Each item is deserialized using {@link ItemDao#from(ResultSet)} and inserted into its respective inventory
+     * container in the {@link InventoryManager}.
+     *
+     * @param conn         the active database connection
+     * @param characterId  the character ID whose inventory will be loaded
+     * @return a fully populated {@link InventoryManager} containing all of the character's items
+     * @throws SQLException if a database access error occurs or the query fails
+     * @throws IllegalArgumentException if an unknown inventory type is encountered
+     */
     public static InventoryManager loadInventoryManager(Connection conn, int characterId) throws SQLException {
         InventoryManager im = new InventoryManager();
 
@@ -162,4 +178,121 @@ public class InventoryDao {
 
         return im;
     }
+
+    /**
+     * Loads a character's equipped inventory.
+     *
+     * This includes all equipped items, along with their EquipData, PetData, and RingData if present.
+     *
+     * @param conn        the database connection
+     * @param characterId the ID of the character
+     * @return an Inventory object populated with all equipped items
+     * @throws SQLException if a database access error occurs
+     */
+    public static Inventory loadEquippedInventory(Connection conn, int characterId) throws SQLException {
+        Inventory equipped = new Inventory(24, InventoryType.EQUIPPED); // default equipped size
+
+        String sql = """
+            SELECT f.*, i.slot
+            FROM player.inventory i
+            JOIN item.full_item f ON i.item_sn = f.item_sn
+            WHERE i.character_id = ? AND i.inventory_type = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+
+            PGobject enumValue = new PGobject();
+            enumValue.setType("inventory_type_enum");
+            enumValue.setValue(InventoryType.EQUIPPED.name());
+            stmt.setObject(2, enumValue);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    long itemSn = rs.getLong("item_sn");
+                    int slot = rs.getInt("slot");
+                    int itemId = rs.getInt("item_id");
+                    short quantity = rs.getShort("quantity");
+                    short attribute = rs.getShort("attribute");
+                    String title = rs.getString("title");
+                    Timestamp dateExpireTs = rs.getTimestamp("date_expire");
+
+                    EquipData equipData = null;
+                    if (rs.getObject("inc_str") != null) {
+                        equipData = new EquipData(
+                                rs.getShort("inc_str"),
+                                rs.getShort("inc_dex"),
+                                rs.getShort("inc_int"),
+                                rs.getShort("inc_luk"),
+                                rs.getShort("inc_max_hp"),
+                                rs.getShort("inc_max_mp"),
+                                rs.getShort("inc_pad"),
+                                rs.getShort("inc_mad"),
+                                rs.getShort("inc_pdd"),
+                                rs.getShort("inc_mdd"),
+                                rs.getShort("inc_acc"),
+                                rs.getShort("inc_eva"),
+                                rs.getShort("inc_craft"),
+                                rs.getShort("inc_speed"),
+                                rs.getShort("inc_jump"),
+                                rs.getByte("ruc"),
+                                rs.getByte("cuc"),
+                                rs.getInt("iuc"),
+                                rs.getByte("chuc"),
+                                rs.getByte("grade"),
+                                rs.getShort("option_1"),
+                                rs.getShort("option_2"),
+                                rs.getShort("option_3"),
+                                rs.getShort("socket_1"),
+                                rs.getShort("socket_2"),
+                                rs.getByte("level_up_type"),
+                                rs.getByte("level"),
+                                rs.getInt("exp"),
+                                rs.getInt("durability")
+                        );
+                    }
+
+                    PetData petData = null;
+                    if (rs.getObject("pet_name") != null) {
+                        petData = new PetData(
+                                rs.getString("pet_name"),
+                                rs.getByte("pet_level"),
+                                rs.getByte("fullness"),
+                                rs.getShort("tameness"),
+                                rs.getShort("pet_skill"),
+                                rs.getShort("pet_attribute"),
+                                rs.getInt("remain_life")
+                        );
+                    }
+
+                    RingData ringData = null;
+                    if (rs.getObject("pair_character_id") != null) {
+                        ringData = new RingData(
+                                rs.getInt("pair_character_id"),
+                                rs.getString("pair_character_name"),
+                                rs.getLong("pair_item_sn")
+                        );
+                    }
+
+                    Item item = new Item(
+                            itemId,
+                            quantity,
+                            itemSn,
+                            false, // cash flag, will get set on save.
+                            attribute,
+                            title,
+                            dateExpireTs != null ? dateExpireTs.toInstant() : null,
+                            equipData,
+                            petData,
+                            ringData
+                    );
+
+                    equipped.putItem(slot, item);
+                }
+            }
+        }
+
+        return equipped;
+    }
+
 }

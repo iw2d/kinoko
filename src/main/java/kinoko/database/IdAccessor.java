@@ -40,7 +40,7 @@ public interface IdAccessor {
         return Optional.of(-1);
     }
 
-    default boolean generateItemId(Item item){
+    default boolean generateItemSn(Item item){
         if (DatabaseManager.isRelational()){
             throw new UnsupportedOperationException("generateItemSn() needs to be implemented for this database.");
         }

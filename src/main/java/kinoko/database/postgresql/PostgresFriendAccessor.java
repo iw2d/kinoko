@@ -2,100 +2,75 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.FriendAccessor;
+import kinoko.database.postgresql.type.FriendDao;
 import kinoko.world.user.friend.Friend;
-import kinoko.world.user.friend.FriendStatus;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public final class PostgresFriendAccessor implements FriendAccessor {
-    private final HikariDataSource dataSource;
-
+public final class PostgresFriendAccessor extends PostgresAccessor implements FriendAccessor {
     public PostgresFriendAccessor(HikariDataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
     }
 
-    private Friend loadFriend(ResultSet rs) throws SQLException {
-        int characterId = rs.getInt("character_id");
-        int friendId = rs.getInt("friend_id");
-        String friendName = rs.getString("friend_name");
-        String friendGroup = rs.getString("friend_group");
-        FriendStatus status = FriendStatus.getByValue(rs.getInt("friend_status"));
-        return new Friend(characterId, friendId, friendName, friendGroup, status);
-    }
-
+    /**
+     * Retrieves all friends for a given character ID.
+     *
+     * @param characterId the ID of the character
+     * @return a list of Friend objects; empty list if none found or on error
+     */
     @Override
     public List<Friend> getFriendsByCharacterId(int characterId) {
-        List<Friend> friends = new ArrayList<>();
-        String sql = "SELECT * FROM friend.friends WHERE character_id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                friends.add(loadFriend(rs));
-            }
+        try (Connection conn = getConnection()) {
+            return FriendDao.getFriendsByCharacterId(conn, characterId);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Collections.emptyList();
         }
-        return friends;
     }
 
+    /**
+     * Retrieves all friends where the given ID appears as the friend.
+     *
+     * @param friendId the ID of the friend
+     * @return a list of Friend objects; empty list if none found or on error
+     */
     @Override
     public List<Friend> getFriendsByFriendId(int friendId) {
-        List<Friend> friends = new ArrayList<>();
-        String sql = "SELECT * FROM friend.friends WHERE friend_id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, friendId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                friends.add(loadFriend(rs));
-            }
+        try (Connection conn = getConnection()) {
+            return FriendDao.getFriendsByFriendId(conn, friendId);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Collections.emptyList();
         }
-        return friends;
     }
 
-    @Override
+    /**
+     * Saves a friend record to the database.
+     * If 'force' is true, existing records will be updated.
+     *
+     * @param friend the Friend object to save
+     * @param force whether to overwrite existing records
+     * @return true if the save operation succeeded, false otherwise
+     */
     public boolean saveFriend(Friend friend, boolean force) {
-        String sql;
-        if (force) {
-            sql = "INSERT INTO friend.friends (character_id, friend_id, friend_name, friend_group, friend_status) " +
-                    "VALUES (?, ?, ?, ?, ?) " +
-                    "ON CONFLICT (character_id, friend_id) DO UPDATE SET friend_name = EXCLUDED.friend_name, " +
-                    "friend_group = EXCLUDED.friend_group, friend_status = EXCLUDED.friend_status";
-        } else {
-            sql = "INSERT INTO friend.friends (character_id, friend_id, friend_name, friend_group, friend_status) " +
-                    "VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING";
-        }
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, friend.getCharacterId());
-            stmt.setInt(2, friend.getFriendId());
-            stmt.setString(3, friend.getFriendName());
-            stmt.setString(4, friend.getFriendGroup());
-            stmt.setInt(5, friend.getStatus().getValue());
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return withTransaction(conn -> {
+            return FriendDao.saveFriend(conn, friend, force);
+        });
     }
 
+    /**
+     * Deletes a friend record from the database.
+     *
+     * @param characterId the ID of the character
+     * @param friendId the ID of the friend to delete
+     * @return true if the deletion succeeded, false otherwise
+     */
     @Override
     public boolean deleteFriend(int characterId, int friendId) {
-        String sql = "DELETE FROM friend.friends WHERE character_id = ? AND friend_id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterId);
-            stmt.setInt(2, friendId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return withTransaction(conn -> {
+           return FriendDao.deleteFriend(conn, characterId, friendId);
+        });
     }
 }

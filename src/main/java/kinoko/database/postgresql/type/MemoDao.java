@@ -4,9 +4,7 @@ import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoType;
 
 import java.sql.*;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 

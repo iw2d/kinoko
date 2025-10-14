@@ -3,11 +3,13 @@ package kinoko.database.postgresql.type;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildBoardEntry;
 import kinoko.server.guild.GuildMember;
+import kinoko.server.guild.GuildRanking;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class GuildDao {
 
@@ -85,7 +87,7 @@ public class GuildDao {
      * Modifies all relevant guild fields such as name, grade names, emblems, notice, points, and level.
      * Also updates related members, board entries, and board notice after the main record update.
      *
-     * @param conn the active SQL connection to use for the update
+     * @param conn  the active SQL connection to use for the update
      * @param guild the guild object containing updated data
      * @return true if the update affected at least one row; false otherwise
      * @throws SQLException if a database error occurs during the update
@@ -205,11 +207,11 @@ public class GuildDao {
      */
     private static void upsertGrades(Connection conn, int guildId, List<String> grades) throws SQLException {
         String sql = """
-        INSERT INTO guild.grade (guild_id, grade_index, grade_name)
-        VALUES (?, ?, ?)
-        ON CONFLICT (guild_id, grade_index) DO UPDATE
-        SET grade_name = EXCLUDED.grade_name
-        """;
+                INSERT INTO guild.grade (guild_id, grade_index, grade_name)
+                VALUES (?, ?, ?)
+                ON CONFLICT (guild_id, grade_index) DO UPDATE
+                SET grade_name = EXCLUDED.grade_name
+                """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             for (int i = 0; i < grades.size(); i++) {
@@ -246,5 +248,58 @@ public class GuildDao {
             }
         }
         return grades;
+    }
+
+    /**
+     * Retrieves a list of guild rankings from the database.
+     *
+     * Guilds are ordered by their points in descending order, so the guild with the highest points appears first.
+     * Each GuildRanking object contains the guild's name, points, and visual mark information (mark, mark color, background, background color).
+     *
+     * @param conn the active SQL connection to use for the query
+     * @return a list of GuildRanking objects representing all guilds ordered by points
+     * @throws SQLException if a database access error occurs
+     */
+    public static List<GuildRanking> getGuildRankings(Connection conn) throws SQLException {
+        List<GuildRanking> rankings = new ArrayList<>();
+        String sql = "SELECT name, points, mark, mark_color, mark_bg, mark_bg_color FROM guild.guilds ORDER BY points DESC";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                rankings.add(new GuildRanking(
+                        rs.getString("name"),
+                        rs.getInt("points"),
+                        rs.getShort("mark"),
+                        rs.getByte("mark_color"),
+                        rs.getShort("mark_bg"),
+                        rs.getByte("mark_bg_color")
+                ));
+            }
+        }
+        return rankings;
+    }
+
+    /**
+     * Retrieves a guild from the database by its ID.
+     *
+     * Executes a query to fetch the guild record corresponding to the provided guild ID.
+     * If a matching guild is found, it is loaded into a Guild object using GuildDao.loadGuild.
+     *
+     * @param conn the active SQL connection to use for the query
+     * @param guildId the ID of the guild to retrieve
+     * @return an Optional containing the guild if found, or Optional.empty() if no guild exists with the given ID
+     * @throws SQLException if a database access error occurs
+     */
+    public static Optional<Guild> getGuildById(Connection conn, int guildId) throws SQLException {
+        String sql = "SELECT * FROM guild.guilds WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, guildId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(loadGuild(conn, rs));
+                }
+            }
+        }
+        return Optional.empty();
     }
 }
