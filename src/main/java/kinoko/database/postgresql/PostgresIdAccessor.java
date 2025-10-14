@@ -2,13 +2,10 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.IdAccessor;
-import kinoko.database.postgresql.type.AccountDao;
 import kinoko.database.postgresql.type.ItemDao;
 import kinoko.world.item.Item;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Optional;
 
 public final class PostgresIdAccessor extends PostgresAccessor implements IdAccessor {
 
@@ -16,36 +13,16 @@ public final class PostgresIdAccessor extends PostgresAccessor implements IdAcce
         super(dataSource);
     }
 
-    private Optional<Integer> getNextId(String type) {
-        return Optional.of(-1); // Postgres auto-generates IDs, so we return -1 as a placeholder
-    }
+    /**
+     * Generates a new item SN for the given item if it does not already have one.
+     * If the item already has a serial number, this method returns true immediately.
+     * Otherwise, it creates a new item entry in the database and assigns the generated ID.
+     *
+     * @param item the item for which to generate an ID
+     * @return true if the item already had an ID or was successfully assigned one, false if an error occurred
+     */
     @Override
-    public synchronized Optional<Integer> nextAccountId() {
-        return getNextId("account_id");
-    }
-
-    @Override
-    public synchronized Optional<Integer> nextCharacterId() {
-        return getNextId("character_id");
-    }
-
-    @Override
-    public synchronized Optional<Integer> nextPartyId() {
-        return getNextId("party_id");
-    }
-
-    @Override
-    public synchronized Optional<Integer> nextGuildId() {
-        return getNextId("guild_id");
-    }
-
-    @Override
-    public synchronized Optional<Integer> nextMemoId() {
-        return getNextId("memo_id");
-    }
-
-    @Override
-    public boolean generateItemId(Item item) {
+    public boolean generateItemSn(Item item) {
         if (!item.hasNoSN()){
             return true;
         }

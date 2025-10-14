@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class AccountDao {
 
@@ -41,6 +42,16 @@ public class AccountDao {
         LockerDao.save(conn, accountId, account.getLocker());
     }
 
+    /**
+     * Retrieves the hashed password (either primary or secondary) for the given account from the database.
+     * Determines which password column to query based on the {@code secondary} flag.
+     *
+     * @param conn the active database connection used to execute the query
+     * @param account the account whose password is being retrieved
+     * @param secondary true to fetch the secondary password, false to fetch the primary password
+     * @return the hashed password string if found, or null if no password exists for the account
+     * @throws SQLException if a database access error occurs
+     */
     public static String getHashedPassword(Connection conn, Account account, boolean secondary) throws SQLException {
         String column = secondary ? "secondary_password" : "password";
         String sql = "SELECT " + column + " FROM account.accounts WHERE id = ?";
@@ -55,6 +66,16 @@ public class AccountDao {
         return null;
     }
 
+    /**
+     * Loads an Account object and its related data from the database using the provided ResultSet and connection.
+     * Builds the Account instance from base fields such as ID, username, and secondary password,
+     * then loads associated data including the trunk, locker, and wishlist within the same connection.
+     *
+     * @param conn the active database connection used to load related account data
+     * @param rs the ResultSet containing the account information (positioned at a valid row)
+     * @return a fully initialized Account object
+     * @throws SQLException if a database access error occurs
+     */
     public static Account load(Connection conn, ResultSet rs) throws SQLException {
         final int accountId = rs.getInt("id");
         final String username = rs.getString("username");
@@ -72,5 +93,27 @@ public class AccountDao {
         account.setWishlist(WishlistDao.load(conn, accountId));
 
         return account;
+    }
+
+
+    /**
+     * Retrieves the account ID for the given character ID.
+     *
+     * @param conn        the database connection to use
+     * @param characterId the ID of the character
+     * @return Optional containing the account ID if found, otherwise empty
+     * @throws SQLException if a database access error occurs
+     */
+    public static Optional<Integer> getAccountIdByCharacterId(Connection conn, int characterId) throws SQLException {
+        String sql = "SELECT account_id FROM player.characters WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(rs.getInt("account_id"));
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

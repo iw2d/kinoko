@@ -93,7 +93,7 @@ public final class CashShopHandler {
                 }
 
                 // Generate an item SN for the locker item - (Relational DBs) - Safe for NoSQL DBs.
-                if (!DatabaseManager.idAccessor().generateItemId(cashItemInfo.getItem())){
+                if (!DatabaseManager.idAccessor().generateItemSn(cashItemInfo.getItem())){
                     user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                     log.error("Could not generate SN for Item ID: {}", cashItemInfo.getItem().getItemId());
                     return;
@@ -594,7 +594,7 @@ public final class CashShopHandler {
                     selfItemSn = cashItemInfo.getItem().getItemSn();
                     Item pairItem = new Item(cashItemInfo.getItem());
                     pairItem.resetSN(false);
-                    if (!DatabaseManager.idAccessor().generateItemId(pairItem)){
+                    if (!DatabaseManager.idAccessor().generateItemSn(pairItem)){
                         user.write(CashShopPacket.fail(CashItemResultType.Couple_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
                         log.error("Could not generate SN for Item ID: {}", cashItemInfo.getItem().getItemId());
                         return;

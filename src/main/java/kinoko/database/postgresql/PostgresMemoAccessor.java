@@ -4,10 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.MemoAccessor;
 import kinoko.database.postgresql.type.MemoDao;
 import kinoko.server.memo.Memo;
-import kinoko.server.memo.MemoType;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

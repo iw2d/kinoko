@@ -2,11 +2,8 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.GuildAccessor;
-import kinoko.database.postgresql.type.BoardEntryDao;
-import kinoko.database.postgresql.type.BoardNoticeDao;
 import kinoko.database.postgresql.type.GuildDao;
 import kinoko.server.guild.Guild;
-import kinoko.server.guild.GuildBoardEntry;
 import kinoko.server.guild.GuildRanking;
 
 import java.sql.*;
@@ -31,19 +28,12 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
      */
     @Override
     public Optional<Guild> getGuildById(int guildId) {
-        String sql = "SELECT * FROM guild.guilds WHERE id = ?";
-        try (Connection conn = getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, guildId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(GuildDao.loadGuild(conn, rs));
-                }
-            }
+        try (Connection conn = getConnection()) {
+            return GuildDao.getGuildById(conn, guildId);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     /**
@@ -113,6 +103,7 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
         });
     }
 
+
     /**
      * Retrieves a list of guild rankings from the database.
      *
@@ -126,24 +117,11 @@ public final class PostgresGuildAccessor extends PostgresAccessor implements Gui
      */
     @Override
     public List<GuildRanking> getGuildRankings() {
-        List<GuildRanking> rankings = new ArrayList<>();
-        String sql = "SELECT name, points, mark, mark_color, mark_bg, mark_bg_color FROM guild.guilds ORDER BY points DESC";
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                rankings.add(new GuildRanking(
-                        rs.getString("name"),
-                        rs.getInt("points"),
-                        rs.getShort("mark"),
-                        rs.getByte("mark_color"),
-                        rs.getShort("mark_bg"),
-                        rs.getByte("mark_bg_color")
-                ));
-            }
+        try (Connection conn = getConnection()) {
+            return GuildDao.getGuildRankings(conn);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Collections.emptyList();
         }
-        return rankings;
     }
 }

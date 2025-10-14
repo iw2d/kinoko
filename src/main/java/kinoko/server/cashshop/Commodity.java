@@ -84,7 +84,7 @@ public final class Commodity {
         }
 
         // Generate an item SN for the cash item - (Relational DBs) - Safe for NoSQL DBs.
-        DatabaseManager.idAccessor().generateItemId(item);
+        DatabaseManager.idAccessor().generateItemSn(item);
 
         final CashItemInfo cashItemInfo = new CashItemInfo(
                 item,
