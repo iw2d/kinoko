@@ -1,19 +1,13 @@
 package kinoko.database.postgresql.type;
 
-import kinoko.world.GameConstants;
 import kinoko.world.item.InventoryManager;
-import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.quest.QuestManager;
-import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.sql.*;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -218,10 +212,13 @@ public class CharacterDataDao {
         // Save all dependent data using the same connection
         saveCharacterStats(conn, characterData);
         InventoryDao.saveCharacter(conn, characterData);
-        saveCharacterSkills(conn, characterData);
-        saveCharacterQuests(conn, characterData);
-        saveCharacterConfig(conn, characterData);
-        saveCharacterPopularity(conn, characterData);
+        SkillManagerDao.saveCharacterSkills(conn, characterData);
+        QuestManagerDao.saveCharacterQuests(conn, characterData);
+        ConfigManagerDao.saveCharacterConfig(conn, characterData);
+        PopularityRecordDao.saveCharacterPopularity(conn, characterData);
+        MapTransferInfoDao.saveMapTransferInfo(conn, characterData);
+        MiniGameRecordDao.saveMiniGameRecord(conn, characterData);
+        WildHunterInfoDao.saveWildHunterInfo(conn, characterData);
         ExtendSpDao.upsertExtendSp(conn, characterData.getCharacterId(), characterData.getCharacterStat().getSp());
 
         return true;
@@ -326,184 +323,6 @@ public class CharacterDataDao {
     }
 
     /**
-     * Saves or updates a character’s configuration data, including pet settings, key mappings,
-     * quickslot layout, and skill macros.
-     * Uses UPSERT logic to maintain up-to-date configuration for the given character.
-     *
-     * @param conn the active database connection
-     * @param characterData the character whose configuration should be saved
-     * @throws SQLException if a database access error occurs
-     */
-    private static void saveCharacterConfig(Connection conn, CharacterData characterData) throws SQLException {
-        ConfigManager config = characterData.getConfigManager();
-
-        String sql = """
-    INSERT INTO player.config 
-    (character_id, pet_consume_item, pet_consume_mp_item, pet_exception_list, func_key_types, func_key_ids, quickslot_key_map)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (character_id) DO UPDATE 
-    SET pet_consume_item = EXCLUDED.pet_consume_item,
-        pet_consume_mp_item = EXCLUDED.pet_consume_mp_item,
-        pet_exception_list = EXCLUDED.pet_exception_list,
-        func_key_types = EXCLUDED.func_key_types,
-        func_key_ids = EXCLUDED.func_key_ids,
-        quickslot_key_map = EXCLUDED.quickslot_key_map
-    """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterData.getCharacterId());
-            stmt.setInt(2, config.getPetConsumeItem());
-            stmt.setInt(3, config.getPetConsumeMpItem());
-
-            // pet_exception_list -> List<Integer> -> Integer[]
-            List<Integer> exceptionList = config.getPetExceptionList();
-            Integer[] exceptionArray = exceptionList != null ? exceptionList.toArray(new Integer[0]) : new Integer[0];
-            stmt.setArray(4, conn.createArrayOf("integer", exceptionArray));
-
-            // func_key_types & func_key_ids from FuncKeyMapped[]
-            FuncKeyMapped[] funcKeyMap = config.getFuncKeyMap();
-            if (funcKeyMap == null) {
-                funcKeyMap = Arrays.copyOf(GameConstants.DEFAULT_FUNC_KEY_MAP, GameConstants.FUNC_KEY_MAP_SIZE);
-            }
-
-            Short[] funcTypes = Arrays.stream(funcKeyMap)
-                    .map(f -> (short) f.getType().getValue())
-                    .toArray(Short[]::new);
-            Integer[] funcIds = Arrays.stream(funcKeyMap)
-                    .map(FuncKeyMapped::getId)
-                    .toArray(Integer[]::new);
-
-            stmt.setArray(5, conn.createArrayOf("smallint", funcTypes)); // func_key_types
-            stmt.setArray(6, conn.createArrayOf("integer", funcIds));   // func_key_ids
-
-            // quickslot_key_map -> int[] -> Integer[]
-            int[] quickslot = config.getQuickslotKeyMap();
-            Integer[] quickslotKeys = quickslot != null
-                    ? Arrays.stream(quickslot).boxed().toArray(Integer[]::new)
-                    : new Integer[0];
-            stmt.setArray(7, conn.createArrayOf("integer", quickslotKeys));
-
-            stmt.executeUpdate();
-        }
-        // save skill macros
-        SkillMacrosDao.upsertMacros(conn, characterData.getCharacterId(), config.getMacroSysData());
-    }
-
-    /**
-     * Saves the character’s popularity (fame) relationships to other characters.
-     * Each entry represents a character that has received or given popularity points.
-     * Uses UPSERT logic to ensure timestamps are updated for existing records.
-     *
-     * @param conn the active database connection
-     * @param characterData the character whose popularity data should be saved
-     * @throws SQLException if a database access error occurs
-     */
-    private static void saveCharacterPopularity(Connection conn, CharacterData characterData) throws SQLException {
-        String sql = """
-        INSERT INTO player.popularity (character_id, other_character_id, timestamp)
-        VALUES (?, ?, ?)
-        ON CONFLICT (character_id, other_character_id)
-        DO UPDATE SET timestamp = EXCLUDED.timestamp
-    """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            PopularityRecord pr = characterData.getPopularityRecord();
-            int charId = characterData.getCharacterId();
-
-            for (var entry : pr.getRecords().entrySet()) {
-                stmt.setInt(1, charId);
-                stmt.setInt(2, entry.getKey());
-                stmt.setTimestamp(3, Timestamp.from(entry.getValue()));
-                stmt.addBatch();
-            }
-
-            stmt.executeBatch();
-        }
-    }
-
-
-    /**
-     * Saves or updates all skill-related data for the given character, including:
-     * - Skill levels and master levels
-     * - Active skill cooldowns
-     * Uses UPSERT logic to maintain consistency between client and server skill data.
-     *
-     * @param conn the active database connection
-     * @param characterData the character whose skills should be saved
-     * @throws SQLException if a database access error occurs
-     */
-    private static void saveCharacterSkills(Connection conn, CharacterData characterData) throws SQLException {
-        String skillRecordSql = """
-        INSERT INTO player.skill_record (character_id, skill_id, level, master_level)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT (character_id, skill_id) 
-        DO UPDATE SET level = EXCLUDED.level, master_level = EXCLUDED.master_level
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(skillRecordSql)) {
-            for (SkillRecord sr : characterData.getSkillManager().getSkillRecords()) {
-                stmt.setInt(1, characterData.getCharacterId());
-                stmt.setInt(2, sr.getSkillId());
-                stmt.setInt(3, sr.getSkillLevel());
-                stmt.setInt(4, sr.getMasterLevel());
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-        }
-
-        // Save skill cooltimes
-        String skillCooltimeSql = """
-        INSERT INTO player.skill_cooltime (character_id, skill_id, cooldown_end)
-        VALUES (?, ?, ?)
-        ON CONFLICT (character_id, skill_id)
-        DO UPDATE SET cooldown_end = EXCLUDED.cooldown_end
-        """;
-        try (PreparedStatement stmt = conn.prepareStatement(skillCooltimeSql)) {
-            for (var entry : characterData.getSkillManager().getSkillCooltimes().entrySet()) {
-                int skillId = entry.getKey();
-                Instant endTime = entry.getValue();
-                stmt.setInt(1, characterData.getCharacterId());
-                stmt.setInt(2, skillId);
-                stmt.setTimestamp(3, Timestamp.from(endTime));
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-        }
-    }
-
-    /**
-     * Saves or updates the character’s quest progress records.
-     * Each entry includes the quest ID, its current state, progress string, and completion timestamp.
-     * Uses UPSERT logic to handle both new and existing quest records efficiently.
-     *
-     * @param conn the active database connection
-     * @param characterData the character whose quest data should be saved
-     * @throws SQLException if a database access error occurs
-     */
-    private static void saveCharacterQuests(Connection conn, CharacterData characterData) throws SQLException {
-        String sql = """
-        INSERT INTO player.quest_record (character_id, quest_id, status, progress, completed_time)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT (character_id, quest_id)
-        DO UPDATE SET status = EXCLUDED.status,
-                      progress = EXCLUDED.progress,
-                      completed_time = EXCLUDED.completed_time
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (QuestRecord qr : characterData.getQuestManager().getQuestRecords()) {
-                stmt.setInt(1, characterData.getCharacterId());
-                stmt.setInt(2, qr.getQuestId());
-                stmt.setInt(3, qr.getState().getValue());
-                stmt.setString(4, qr.getValue());
-                stmt.setTimestamp(5, qr.getCompletedTime() != null ? Timestamp.from(qr.getCompletedTime()) : null);
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-        }
-    }
-
-    /**
      * Saves/updates a CharacterData object to the database.
      *
      * Updates the main character row and all dependent tables (stats, inventory, skills,
@@ -543,10 +362,13 @@ public class CharacterDataDao {
         // Save dependent tables using the same connection
         saveCharacterStats(conn, characterData);
         InventoryDao.saveCharacter(conn, characterData);
-        saveCharacterSkills(conn, characterData);
-        saveCharacterQuests(conn, characterData);
-        saveCharacterConfig(conn, characterData);
-        saveCharacterPopularity(conn, characterData);
+        SkillManagerDao.saveCharacterSkills(conn, characterData);
+        QuestManagerDao.saveCharacterQuests(conn, characterData);
+        ConfigManagerDao.saveCharacterConfig(conn, characterData);
+        PopularityRecordDao.saveCharacterPopularity(conn, characterData);
+        MapTransferInfoDao.saveMapTransferInfo(conn, characterData);
+        MiniGameRecordDao.saveMiniGameRecord(conn, characterData);
+        WildHunterInfoDao.saveWildHunterInfo(conn, characterData);
         ExtendSpDao.upsertExtendSp(conn, characterData.getCharacterId(), characterData.getCharacterStat().getSp());
 
         return true;

@@ -1,5 +1,6 @@
 package kinoko.database.postgresql.type;
 
+import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.PopularityRecord;
 
 import java.sql.Connection;
@@ -41,4 +42,37 @@ public final class PopularityRecordDao {
 
         return pr;
     }
+
+    /**
+     * Saves the character’s popularity (fame) relationships to other characters.
+     * Each entry represents a character that has received or given popularity points.
+     * Uses UPSERT logic to ensure timestamps are updated for existing records.
+     *
+     * @param conn the active database connection
+     * @param characterData the character whose popularity data should be saved
+     * @throws SQLException if a database access error occurs
+     */
+    public static void saveCharacterPopularity(Connection conn, CharacterData characterData) throws SQLException {
+        String sql = """
+        INSERT INTO player.popularity (character_id, other_character_id, timestamp)
+        VALUES (?, ?, ?)
+        ON CONFLICT (character_id, other_character_id)
+        DO UPDATE SET timestamp = EXCLUDED.timestamp
+    """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PopularityRecord pr = characterData.getPopularityRecord();
+            int charId = characterData.getCharacterId();
+
+            for (var entry : pr.getRecords().entrySet()) {
+                stmt.setInt(1, charId);
+                stmt.setInt(2, entry.getKey());
+                stmt.setTimestamp(3, Timestamp.from(entry.getValue()));
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+        }
+    }
+
 }

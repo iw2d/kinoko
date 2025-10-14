@@ -25,13 +25,6 @@ public abstract class PostgresAccessor {
     }
 
     /**
-     * Helper to lowercase strings (like usernames)
-     */
-    protected final String lowerName(String name) {
-        return name.toLowerCase();
-    }
-
-    /**
      * Executes the given action within a database transaction using a connection from the instance's data source.
      * Sets auto-commit to false, runs the action, commits the transaction if successful, and rolls back if a SQLException occurs.
      * Finally, restores auto-commit to true and closes the connection.
@@ -109,20 +102,21 @@ public abstract class PostgresAccessor {
                 try {
                     conn.setAutoCommit(true);
                     conn.close();
-                } catch (SQLException ignored) {
-                    ignored.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
 
     /**
-     * Executes the given action within a database transaction using a connection from the instance's data source.
-     * Sets auto-commit to false, runs the action, commits the transaction if successful, and rolls back if a SQLException occurs.
-     * Finally, restores auto-commit to true and closes the connection.
+     * Executes a database operation within a managed transaction using a connection from the data source.
+     * Auto-commit is disabled before execution and restored afterward.
+     * The provided action determines logical success; if it returns false or throws an exception, the transaction is rolled back.
+     * If successful, the transaction is committed before closing the connection.
      *
-     * @param action The action to execute inside the transaction. Can throw SQLException.
-     * @return true if the transaction committed successfully; false if an exception occurred and rollback was performed.
+     * @param action the action to execute inside the transaction; may throw SQLException
+     * @return true if the transaction was committed successfully, false if an exception occurred or rollback was performed
      */
     public boolean withTransaction(SQLBooleanAction action) {
         Connection conn = null;
@@ -157,8 +151,8 @@ public abstract class PostgresAccessor {
                     conn.setAutoCommit(true);
                     conn.close();
                 } catch
-                (SQLException ignored) {
-                    ignored.printStackTrace();
+                (SQLException e) {
+                    e.printStackTrace();
                 }
             }
         }

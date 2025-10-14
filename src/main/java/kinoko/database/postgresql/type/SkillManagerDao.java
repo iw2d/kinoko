@@ -3,8 +3,10 @@ package kinoko.database.postgresql.type;
 
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
+import kinoko.world.user.CharacterData;
 
 import java.sql.*;
+import java.time.Instant;
 
 public final class SkillManagerDao {
 
@@ -53,5 +55,54 @@ public final class SkillManagerDao {
         }
 
         return sm;
+    }
+
+    /**
+     * Saves or updates all skill-related data for the given character, including:
+     * - Skill levels and master levels
+     * - Active skill cooldowns
+     * Uses UPSERT logic to maintain consistency between client and server skill data.
+     *
+     * @param conn the active database connection
+     * @param characterData the character whose skills should be saved
+     * @throws SQLException if a database access error occurs
+     */
+    public static void saveCharacterSkills(Connection conn, CharacterData characterData) throws SQLException {
+        String skillRecordSql = """
+        INSERT INTO player.skill_record (character_id, skill_id, level, master_level)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT (character_id, skill_id) 
+        DO UPDATE SET level = EXCLUDED.level, master_level = EXCLUDED.master_level
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(skillRecordSql)) {
+            for (SkillRecord sr : characterData.getSkillManager().getSkillRecords()) {
+                stmt.setInt(1, characterData.getCharacterId());
+                stmt.setInt(2, sr.getSkillId());
+                stmt.setInt(3, sr.getSkillLevel());
+                stmt.setInt(4, sr.getMasterLevel());
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+        }
+
+        // Save skill cooltimes
+        String skillCooltimeSql = """
+        INSERT INTO player.skill_cooltime (character_id, skill_id, cooldown_end)
+        VALUES (?, ?, ?)
+        ON CONFLICT (character_id, skill_id)
+        DO UPDATE SET cooldown_end = EXCLUDED.cooldown_end
+        """;
+        try (PreparedStatement stmt = conn.prepareStatement(skillCooltimeSql)) {
+            for (var entry : characterData.getSkillManager().getSkillCooltimes().entrySet()) {
+                int skillId = entry.getKey();
+                Instant endTime = entry.getValue();
+                stmt.setInt(1, characterData.getCharacterId());
+                stmt.setInt(2, skillId);
+                stmt.setTimestamp(3, Timestamp.from(endTime));
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+        }
     }
 }

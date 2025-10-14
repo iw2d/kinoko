@@ -2,6 +2,7 @@ package kinoko.database.postgresql.type;
 
 
 import kinoko.world.GameConstants;
+import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.ConfigManager;
 import kinoko.world.user.data.FuncKeyMapped;
 import kinoko.world.user.data.FuncKeyType;
@@ -88,5 +89,70 @@ public final class ConfigManagerDao {
                 return cm;
             }
         }
+    }
+
+
+    /**
+     * Saves or updates a character’s configuration data, including pet settings, key mappings,
+     * quickslot layout, and skill macros.
+     * Uses UPSERT logic to maintain up-to-date configuration for the given character.
+     *
+     * @param conn the active database connection
+     * @param characterData the character whose configuration should be saved
+     * @throws SQLException if a database access error occurs
+     */
+    public static void saveCharacterConfig(Connection conn, CharacterData characterData) throws SQLException {
+        ConfigManager config = characterData.getConfigManager();
+
+        String sql = """
+    INSERT INTO player.config 
+    (character_id, pet_consume_item, pet_consume_mp_item, pet_exception_list, func_key_types, func_key_ids, quickslot_key_map)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (character_id) DO UPDATE 
+    SET pet_consume_item = EXCLUDED.pet_consume_item,
+        pet_consume_mp_item = EXCLUDED.pet_consume_mp_item,
+        pet_exception_list = EXCLUDED.pet_exception_list,
+        func_key_types = EXCLUDED.func_key_types,
+        func_key_ids = EXCLUDED.func_key_ids,
+        quickslot_key_map = EXCLUDED.quickslot_key_map
+    """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, characterData.getCharacterId());
+            stmt.setInt(2, config.getPetConsumeItem());
+            stmt.setInt(3, config.getPetConsumeMpItem());
+
+            // pet_exception_list -> List<Integer> -> Integer[]
+            List<Integer> exceptionList = config.getPetExceptionList();
+            Integer[] exceptionArray = exceptionList != null ? exceptionList.toArray(new Integer[0]) : new Integer[0];
+            stmt.setArray(4, conn.createArrayOf("integer", exceptionArray));
+
+            // func_key_types & func_key_ids from FuncKeyMapped[]
+            FuncKeyMapped[] funcKeyMap = config.getFuncKeyMap();
+            if (funcKeyMap == null) {
+                funcKeyMap = Arrays.copyOf(GameConstants.DEFAULT_FUNC_KEY_MAP, GameConstants.FUNC_KEY_MAP_SIZE);
+            }
+
+            Short[] funcTypes = Arrays.stream(funcKeyMap)
+                    .map(f -> (short) f.getType().getValue())
+                    .toArray(Short[]::new);
+            Integer[] funcIds = Arrays.stream(funcKeyMap)
+                    .map(FuncKeyMapped::getId)
+                    .toArray(Integer[]::new);
+
+            stmt.setArray(5, conn.createArrayOf("smallint", funcTypes)); // func_key_types
+            stmt.setArray(6, conn.createArrayOf("integer", funcIds));   // func_key_ids
+
+            // quickslot_key_map -> int[] -> Integer[]
+            int[] quickslot = config.getQuickslotKeyMap();
+            Integer[] quickslotKeys = quickslot != null
+                    ? Arrays.stream(quickslot).boxed().toArray(Integer[]::new)
+                    : new Integer[0];
+            stmt.setArray(7, conn.createArrayOf("integer", quickslotKeys));
+
+            stmt.executeUpdate();
+        }
+        // save skill macros
+        SkillMacrosDao.upsertMacros(conn, characterData.getCharacterId(), config.getMacroSysData());
     }
 }
