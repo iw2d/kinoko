@@ -9,7 +9,15 @@ import java.util.Map;
 
 public final class ExtendSpDao {
     /**
-     * Upserts all entries from ExtendSp into player.extend_sp.
+     * Inserts or updates extended SP data for a character in the database.
+     * If an entry with the same character ID and job level already exists, the SP value is updated.
+     * Otherwise, a new record is inserted.
+     * Skips execution if the provided ExtendSp object is null or empty.
+     *
+     * @param conn the active database connection
+     * @param characterId the ID of the character whose SP data is being stored
+     * @param extendSp the ExtendSp object containing job-level-to-SP mappings
+     * @throws SQLException if a database access error occurs
      */
     public static void upsertExtendSp(Connection conn, int characterId, ExtendSp extendSp) throws SQLException {
         if (extendSp == null || extendSp.getMap().isEmpty()) {
@@ -35,7 +43,14 @@ public final class ExtendSpDao {
     }
 
     /**
-     * Loads ExtendSp for a given character.
+     * Loads a character's extended SP data from the database.
+     * Retrieves all job level–SP pairs associated with the given character ID and constructs an ExtendSp object from them.
+     * If no records are found, an empty ExtendSp instance is returned.
+     *
+     * @param conn the active database connection
+     * @param characterId the ID of the character whose extended SP data is being loaded
+     * @return an ExtendSp object containing the character's job-level-to-SP mappings, or empty if none exist
+     * @throws SQLException if a database access error occurs
      */
     public static ExtendSp loadExtendSp(Connection conn, int characterId) throws SQLException {
         String sql = """

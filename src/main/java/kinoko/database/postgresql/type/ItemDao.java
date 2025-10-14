@@ -15,7 +15,7 @@ public class ItemDao {
 
     /**
      * Inserts a new item into the `item.items` table and returns its generated item_sn.
-     * <p>
+     *
      * If the insertion is successful, the auto-generated item_sn is also set in the provided Item object.
      * This method is useful when creating a new item that does not yet have an item_sn.
      *
@@ -56,11 +56,11 @@ public class ItemDao {
 
     /**
      * Saves a collection of items to the database in batch.
-     * <p>
+     *
      * For each item, this method checks if it already has an item_sn:
      * - If the item_sn is missing (<=0), a new one is generated and the item is inserted.
      * - If the item_sn exists, the item is updated with the latest quantity, attributes, title, and expiration date.
-     * <p>
+     *
      * This approach ensures efficient batch inserts for new items while keeping existing items up to date.
      *
      * @param conn  the active database connection
@@ -127,6 +127,15 @@ public class ItemDao {
         }
     }
 
+    /**
+     * Constructs an Item instance from the provided ResultSet.
+     * Extracts all relevant item data, including equipment, pet, and ring information if applicable.
+     * Converts nullable SQL fields (e.g., timestamps or optional data groups) into corresponding Java objects.
+     *
+     * @param rs the ResultSet containing item data retrieved from the database
+     * @return a fully populated Item object built from the ResultSet data
+     * @throws SQLException if a database access error occurs or a column value cannot be retrieved
+     */
     public static Item from(ResultSet rs) throws SQLException {
         long itemSn = rs.getLong("item_sn");
         int itemId = rs.getInt("item_id");
@@ -208,12 +217,12 @@ public class ItemDao {
 
     /**
      * Cleans up invalid items from the database that no longer have valid references.
-     * <p>
+     *
      * In the PostgreSQL implementation, all items are stored in {@code item.Items}, regardless of
      * whether they are currently held by a player (inventory, trunk, locker, wishlist, gifted)
      * or not. This can lead to orphaned item records when items are dropped, since dropped
      * items are not tracked by the database.
-     * <p>
+     *
      * This method queries and removes items that are not referenced anywhere else, ensuring
      * synchronization between the in-game state and the persistent database state. This function
      * typically called during server initialization, when no dropped items exist.

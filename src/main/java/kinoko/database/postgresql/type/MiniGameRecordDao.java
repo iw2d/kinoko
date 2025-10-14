@@ -1,5 +1,6 @@
 package kinoko.database.postgresql.type;
 
+import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.MiniGameRecord;
 
 import java.sql.Connection;
@@ -47,5 +48,51 @@ public final class MiniGameRecordDao {
         }
 
         return record;
+    }
+
+    /**
+     * Saves MiniGameRecord for the specified character.
+     *
+     * Updates the Omok and Memory game statistics in the database.
+     * If a record for the character does not exist, it inserts a new one.
+     *
+     * @param conn the database connection to use
+     * @param characterData CharacterData object
+     * @throws SQLException if a database access error occurs
+     */
+    public static void saveMiniGameRecord(Connection conn, CharacterData characterData) throws SQLException {
+        int characterId = characterData.getCharacterId();
+        MiniGameRecord record = characterData.getMiniGameRecord();
+
+        String sql = """
+        INSERT INTO player.minigame 
+            (character_id, omok_wins, omok_ties, omok_losses, omok_score,
+             memory_wins, memory_ties, memory_losses, memory_score)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (character_id)
+        DO UPDATE SET 
+            omok_wins = EXCLUDED.omok_wins,
+            omok_ties = EXCLUDED.omok_ties,
+            omok_losses = EXCLUDED.omok_losses,
+            omok_score = EXCLUDED.omok_score,
+            memory_wins = EXCLUDED.memory_wins,
+            memory_ties = EXCLUDED.memory_ties,
+            memory_losses = EXCLUDED.memory_losses,
+            memory_score = EXCLUDED.memory_score
+    """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, characterId);
+            stmt.setInt(2, record.getOmokGameWins());
+            stmt.setInt(3, record.getOmokGameTies());
+            stmt.setInt(4, record.getOmokGameLosses());
+            stmt.setDouble(5, record.getOmokGameScore());
+            stmt.setInt(6, record.getMemoryGameWins());
+            stmt.setInt(7, record.getMemoryGameTies());
+            stmt.setInt(8, record.getMemoryGameLosses());
+            stmt.setDouble(9, record.getMemoryGameScore());
+
+            stmt.executeUpdate();
+        }
     }
 }

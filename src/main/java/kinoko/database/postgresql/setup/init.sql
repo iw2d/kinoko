@@ -319,9 +319,9 @@ CREATE TABLE IF NOT EXISTS player.minigame (
 );
 
 CREATE TABLE IF NOT EXISTS player.map_transfer (
-    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE ,
-    map_id INT NOT NULL,
-    old_map_id INT NOT NULL
+    character_id INT PRIMARY KEY REFERENCES player.characters(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    map_ids INT[] NOT NULL,
+    old_map_ids INT[] NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS player.wild_hunter (
