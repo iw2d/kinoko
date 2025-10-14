@@ -370,6 +370,7 @@ CREATE TABLE IF NOT EXISTS gift.gifts (
     sender_id INT,
     sender_name TEXT,
     sender_message TEXT,
+    pair_gift_sn BIGINT,
     PRIMARY KEY (item_sn)
 );
 

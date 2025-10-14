@@ -26,7 +26,7 @@ public final class PostgresGiftAccessor implements GiftAccessor {
                 rs.getInt("sender_id"),
                 rs.getString("sender_name"),
                 rs.getString("sender_message"),
-                rs.getLong("pair_item_sn")
+                rs.getLong("pair_gift_sn")
         );
     }
 
@@ -35,7 +35,7 @@ public final class PostgresGiftAccessor implements GiftAccessor {
         List<Gift> gifts = new ArrayList<>();
         String sql = """
         SELECT g.item_sn, fi.item_id, g.commodity_id, g.sender_id,
-            g.sender_name, g.sender_message, fi.pair_item_sn 
+            g.sender_name, g.sender_message, g.pair_gift_sn 
         FROM gift.gifts g
         JOIN item.full_item fi ON fi.item_sn = g.item_sn
         WHERE g.receiver_id = ?
@@ -57,7 +57,7 @@ public final class PostgresGiftAccessor implements GiftAccessor {
     public Optional<Gift> getGiftByItemSn(long itemSn) {
         String sql = """
         SELECT g.item_sn, fi.item_id, g.commodity_id, g.sender_id,
-            g.sender_name, g.sender_message, fi.pair_item_sn FROM gift.gifts g
+            g.sender_name, g.sender_message, g.pair_gift_sn FROM gift.gifts g
         JOIN item.full_item fi ON fi.item_sn = g.item_sn
         WHERE g.item_sn = ?
         """;
@@ -79,24 +79,29 @@ public final class PostgresGiftAccessor implements GiftAccessor {
     @Override
     public boolean newGift(Gift gift, int receiverId) {
         String sql = """
-        INSERT INTO gift.gifts (item_sn, receiver_id, commodity_id, sender_id, sender_name, sender_message)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO gift.gifts (item_sn, receiver_id, commodity_id, sender_id, sender_name, sender_message, pair_gift_sn)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (item_sn) DO NOTHING
         """;
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // We need a new item created.
-            Item basicItem = new Item(gift.getItemId(), (short) 1);
-            ItemDao.createNewItem(conn, basicItem);
+            long itemSN = gift.getGiftSn();
+            if (itemSN <= 0) {
+                // We need a new item created.
+                Item basicItem = new Item(gift.getItemId(), (short) 1);
+                ItemDao.createNewItem(conn, basicItem);
+                itemSN = basicItem.getItemSn();
+            }
 
-            stmt.setLong(1, basicItem.getItemSn());          // item_sn is now the primary key
+            stmt.setLong(1, itemSN);          // item_sn is now the primary key
             stmt.setInt(2, receiverId);
             stmt.setInt(3, gift.getCommodityId());
             stmt.setInt(4, gift.getSenderId());
             stmt.setString(5, gift.getSenderName());
             stmt.setString(6, gift.getSenderMessage());
+            stmt.setLong(7, gift.getPairItemSn());
 
             return stmt.executeUpdate() > 0;
 

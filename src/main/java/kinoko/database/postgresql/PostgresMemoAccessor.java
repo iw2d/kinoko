@@ -2,11 +2,13 @@ package kinoko.database.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import kinoko.database.MemoAccessor;
+import kinoko.database.postgresql.type.MemoDao;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoType;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class PostgresMemoAccessor extends PostgresAccessor implements MemoAccessor {
@@ -15,80 +17,64 @@ public final class PostgresMemoAccessor extends PostgresAccessor implements Memo
         super(dataSource);
     }
 
+    /**
+     * Retrieves all memos for a given character ID.
+     *
+     * @param characterId the ID of the character
+     * @return list of memos for the character
+     */
     @Override
     public List<Memo> getMemosByCharacterId(int characterId) {
-        List<Memo> memos = new ArrayList<>();
-        String sql = "SELECT id, memo_type, memo_content, sender_name, date_sent " +
-                "FROM memo.memo WHERE receiver_id = ?";
-        try (Connection conn = getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    MemoType type = MemoType.getByValue(rs.getInt("memo_type"));
-                    Memo memo = new Memo(
-                            type != null ? type : MemoType.DEFAULT,
-                            rs.getInt("id"),
-                            rs.getString("sender_name"),
-                            rs.getString("memo_content"),
-                            rs.getTimestamp("date_sent").toInstant()
-                    );
-                    memos.add(memo);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try (Connection conn = getConnection()) {
+            return MemoDao.getMemosByReceiverId(conn, characterId);
         }
-        return memos;
+        catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList(); // fallback
+        }
     }
 
+    /**
+     * Checks if a character has any memos.
+     *
+     * @param characterId the ID of the character
+     * @return true if the character has at least one memo, false otherwise
+     */
     @Override
     public boolean hasMemo(int characterId) {
-        String sql = "SELECT 1 FROM memo.memo WHERE receiver_id = ? LIMIT 1";
-        try (Connection conn = getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, characterId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
-            }
+        try (Connection conn = getConnection()) {
+            return MemoDao.hasMemo(conn, characterId);
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;  // fallback
         }
-        return false;
     }
 
+    /**
+     * Creates a new memo for the given receiver.
+     *
+     * @param memo       the memo to be created
+     * @param receiverId the ID of the receiver
+     * @return true if the memo was successfully created, false otherwise
+     */
     @Override
     public boolean newMemo(Memo memo, int receiverId) {
-        // `id` is SERIAL, no need to provide it manually
-        String sql = "INSERT INTO memo.memo (receiver_id, memo_type, memo_content, sender_name, date_sent) " +
-                "VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, receiverId);
-            stmt.setInt(2, memo.getType().getValue());
-            stmt.setString(3, memo.getContent());
-            stmt.setString(4, memo.getSender());
-            stmt.setTimestamp(5, memo.getDateSent() != null ? Timestamp.from(memo.getDateSent()) : Timestamp.from(java.time.Instant.now()));
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return withTransaction(conn -> {
+            return MemoDao.insertMemo(conn, memo, receiverId);
+        });
     }
 
+    /**
+     * Deletes a memo by its ID and receiver ID.
+     *
+     * @param memoId     the ID of the memo
+     * @param receiverId the ID of the receiver
+     * @return true if the memo was successfully deleted, false otherwise
+     */
     @Override
     public boolean deleteMemo(int memoId, int receiverId) {
-        String sql = "DELETE FROM memo.memo WHERE id = ? AND receiver_id = ?";
-        try (Connection conn = getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, memoId);
-            stmt.setInt(2, receiverId);
-            int affected = stmt.executeUpdate();
-            return affected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return withTransaction(conn -> {
+            return MemoDao.deleteMemo(conn, memoId, receiverId);
+        });
     }
 }
