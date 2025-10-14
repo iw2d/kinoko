@@ -120,6 +120,10 @@ public class ItemDao {
             stmtInsert.executeBatch();
             // Update all EquipData
             EquipDataDao.saveEquipDataBatch(conn, items);
+            // Update all PetData
+            PetDataDao.upsertPetDataBatch(conn, items);
+            // Update all RingData
+            RingDataDao.upsertRingDataBatch(conn, items);
         }
     }
 

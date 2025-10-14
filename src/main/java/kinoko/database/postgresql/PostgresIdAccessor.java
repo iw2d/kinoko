@@ -14,12 +14,6 @@ public final class PostgresIdAccessor extends PostgresAccessor implements IdAcce
 
     public PostgresIdAccessor(HikariDataSource dataSource) {
         super(dataSource);
-
-        try (Connection conn = getConnection()){
-            ItemDao.cleanupInvalidItems(conn);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     private Optional<Integer> getNextId(String type) {
@@ -51,7 +45,7 @@ public final class PostgresIdAccessor extends PostgresAccessor implements IdAcce
     }
 
     @Override
-    public boolean generateItemSn(Item item) {
+    public boolean generateItemId(Item item) {
         if (!item.hasNoSN()){
             return true;
         }

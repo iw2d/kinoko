@@ -17,6 +17,7 @@ public final class PostgresConnector implements DatabaseConnector {
     private GuildAccessor guildAccessor;
     private GiftAccessor giftAccessor;
     private MemoAccessor memoAccessor;
+    private ItemAccessor itemAccessor;
 
     @Override
     public void initialize() {
@@ -57,6 +58,7 @@ public final class PostgresConnector implements DatabaseConnector {
             guildAccessor = new PostgresGuildAccessor(dataSource);
             giftAccessor = new PostgresGiftAccessor(dataSource);
             memoAccessor = new PostgresMemoAccessor(dataSource);
+            itemAccessor = new PostgresItemAccessor(dataSource);
 
 
 
@@ -81,4 +83,5 @@ public final class PostgresConnector implements DatabaseConnector {
     @Override public GuildAccessor getGuildAccessor() { return guildAccessor; }
     @Override public GiftAccessor getGiftAccessor() { return giftAccessor; }
     @Override public MemoAccessor getMemoAccessor() { return memoAccessor; }
+    @Override public ItemAccessor getItemAccessor() {return itemAccessor; }
 }

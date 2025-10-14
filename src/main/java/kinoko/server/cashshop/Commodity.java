@@ -1,5 +1,6 @@
 package kinoko.server.cashshop;
 
+import kinoko.database.DatabaseManager;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
@@ -81,6 +82,10 @@ public final class Commodity {
                 item.setDateExpire(Instant.now().plus(getPeriod(), ChronoUnit.DAYS));
             }
         }
+
+        // Generate an item SN for the cash item - (Relational DBs) - Safe for NoSQL DBs.
+        DatabaseManager.idAccessor().generateItemId(item);
+
         final CashItemInfo cashItemInfo = new CashItemInfo(
                 item,
                 getCommodityId(),
