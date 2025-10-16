@@ -407,7 +407,7 @@ public final class SecondaryStat {
                     getStatFromSkill(ss, sm, Aran.POLEARM_MASTERY);
                     getStatFromSkill(ss, sm, Aran.HIGH_MASTERY);
                 } else {
-                    getStatFromSkill(ss, sm, Warrior.WEAPON_BOOSTER_DRK);
+                    getStatFromSkill(ss, sm, Warrior.WEAPON_MASTERY_DRK);
                 }
             }
             case BOW -> {
