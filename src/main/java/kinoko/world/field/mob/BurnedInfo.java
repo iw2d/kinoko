@@ -102,7 +102,7 @@ public final class BurnedInfo implements Encodable {
         final int duration = si.getValue(SkillStat.dotTime, slv) * 1000;
         return new BurnedInfo(
                 user.getCharacterId(),
-                si.getSkillId(),
+                si.getSkillId().getId(),
                 (int) Math.clamp(damage, 1.0, GameConstants.DAMAGE_MAX),
                 interval,
                 duration / interval

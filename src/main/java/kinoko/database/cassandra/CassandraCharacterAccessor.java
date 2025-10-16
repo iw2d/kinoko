@@ -56,7 +56,8 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         final SkillManager sm = new SkillManager();
         final Map<Integer, Instant> skillCooltimes = row.getMap(CharacterTable.SKILL_COOLTIMES, Integer.class, Instant.class);
         if (skillCooltimes != null) {
-            sm.getSkillCooltimes().putAll(skillCooltimes);
+            // Figure out stream
+            //TODO sm.getSkillCooltimes().putAll(skillCooltimes);
         }
         final List<SkillRecord> skillRecords = row.getList(CharacterTable.SKILL_RECORDS, SkillRecord.class);
         if (skillRecords != null) {

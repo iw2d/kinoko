@@ -1,5 +1,6 @@
 package kinoko.server.dialog.shop;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
@@ -217,16 +218,16 @@ public final class ShopDialog implements Dialog {
     }
 
     private static int getIncSlotMax(User user, int itemId) {
-        int skillId = 0;
+        SkillId skillId = SkillId.NONE;
         if (ItemConstants.isJavelinItem(itemId)) {
-            if (user.getSkillLevel(Thief.CLAW_MASTERY) > 0) {
-                skillId = Thief.CLAW_MASTERY;
-            } else if (user.getSkillLevel(NightWalker.CLAW_MASTERY) > 0) {
-                skillId = NightWalker.CLAW_MASTERY;
+            if (user.getSkillLevel(SkillId.ASSASSIN_CLAW_MASTERY) > 0) {
+                skillId = SkillId.ASSASSIN_CLAW_MASTERY;
+            } else if (user.getSkillLevel(SkillId.NW2_CLAW_MASTERY) > 0) {
+                skillId = SkillId.NW2_CLAW_MASTERY;
             }
         } else if (ItemConstants.isPelletItem(itemId)) {
-            if (user.getSkillLevel(Pirate.GUN_MASTERY) > 0) {
-                skillId = Pirate.GUN_MASTERY;
+            if (user.getSkillLevel(SkillId.GUNSLINGER_GUN_MASTERY) > 0) {
+                skillId = SkillId.GUNSLINGER_GUN_MASTERY;
             }
         }
         return user.getSkillStatValue(skillId, SkillStat.y);

@@ -1,5 +1,6 @@
 package kinoko.script.quest;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.QuestPacket;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
@@ -226,8 +227,8 @@ public final class ResistanceQuest extends ScriptHandler {
                 return;
             }
             sm.setJob(Job.WILD_HUNTER_1);
-            sm.addSkill(30001061, 1, 0);
-            sm.addSkill(30001062, 1, 0);
+            sm.addSkill(SkillId.CITIZEN_CAPTURE, 1, 0);
+            sm.addSkill(SkillId.CITIZEN_CALL_OF_THE_HUNTER, 1, 0);
             sm.forceCompleteQuest(23012);
             sm.sayNext("Well, well! Congratulations! You're now an official member of the Resistance and a Wild Hunter. Hop on your mount, move like the wind, and slay all enemies who get in your way!");
             sm.sayPrev("Now, a warning. Don't lure the Black Wings' attention to you by telling people you're a Wild Hunter. I'll be your \"teacher\" from now on. This IS a school after all, right? I'll give you special lessons to turn you into the best Wild Hunter ever!");
@@ -246,7 +247,7 @@ public final class ResistanceQuest extends ScriptHandler {
                 return;
             }
             sm.setJob(Job.MECHANIC_1);
-            sm.addSkill(30001068, 1, 0);
+            sm.addSkill(SkillId.CITIZEN_MECHANIC_DASH, 1, 0);
             sm.forceCompleteQuest(23013);
             sm.sayNext("Welcome to the Resistance. From now on, you are a Mechanic. As one who works with machines, use every method available to defeat the enemies before you!");
             sm.sayBoth("We have to be careful that our identity is not revealed to the Black Wings. So from now on, refer to me as teacher. You will pretend to be a student who is coming here for extracurricular lessons. It's during these lessons that I will teach you to become a strong Mechanic.");
@@ -463,7 +464,8 @@ public final class ResistanceQuest extends ScriptHandler {
             return;
         }
         sm.setJob(Job.BATTLE_MAGE_4);
-        sm.addSkill(32120000, 0, 10);
+        //TODO
+        /*sm.addSkill(32120000, 0, 10);
         sm.addSkill(32120001, 0, 10);
         sm.addSkill(32120009, 0, 10);
         sm.addSkill(32121002, 0, 10);
@@ -471,7 +473,7 @@ public final class ResistanceQuest extends ScriptHandler {
         sm.addSkill(32121004, 0, 10);
         sm.addSkill(32121005, 0, 10);
         sm.addSkill(32121006, 0, 10);
-        sm.addSkill(32121007, 0, 10);
+        sm.addSkill(32121007, 0, 10);*/
         sm.forceCompleteQuest(23052);
         sm.sayNext("I've advanced you. I've also given you some sills that I know of but haven't mastered yet. I have a hunch that you'll be able to master them. After all, you are the most skilled member of the Resistance now!");
         sm.sayBoth("Could this be my last lesson with you? Nah, can't be. You may be stronger, but I'm still smarter. I'm sure there's plenty more you can learn from me. So I'll see you at your next lesson... whenever that is...");
@@ -493,7 +495,7 @@ public final class ResistanceQuest extends ScriptHandler {
             return;
         }
         sm.setJob(Job.WILD_HUNTER_4);
-        sm.addSkill(33120000, 0, 10);
+        /*sm.addSkill(33120000, 0, 10);
         sm.addSkill(33120010, 0, 10);
         sm.addSkill(33121001, 0, 10);
         sm.addSkill(33121002, 0, 10);
@@ -501,7 +503,8 @@ public final class ResistanceQuest extends ScriptHandler {
         sm.addSkill(33121005, 0, 10);
         sm.addSkill(33121006, 0, 10);
         sm.addSkill(33121007, 0, 10);
-        sm.addSkill(33121009, 0, 10);
+        sm.addSkill(33121009, 0, 10);*/
+        //TODO
         sm.forceCompleteQuest(23053);
         sm.sayNext("I've advanced you. I've also given you some sills that I know of but haven't mastered yet. I have a hunch that you'll be able to master them. After all, you are the most skilled member of the Resistance now!");
         sm.sayBoth("And with that, my lessons have... NOT come to an end. I can still be pretty useful, you know. There's more I can teach you. Plus, we're friends, right? So I'll see you at your next lesson... Whenever that might be...");
@@ -523,7 +526,7 @@ public final class ResistanceQuest extends ScriptHandler {
             return;
         }
         sm.setJob(Job.MECHANIC_4);
-        sm.addSkill(35120000, 0, 30);
+        /*sm.addSkill(35120000, 0, 30);
         sm.addSkill(35120001, 0, 15);
         sm.addSkill(35121003, 0, 10);
         sm.addSkill(35121005, 0, 10);
@@ -531,7 +534,8 @@ public final class ResistanceQuest extends ScriptHandler {
         sm.addSkill(35121007, 0, 10);
         sm.addSkill(35121009, 0, 10);
         sm.addSkill(35121010, 0, 10);
-        sm.addSkill(35121012, 0, 10);
+        sm.addSkill(35121012, 0, 10);*/
+        //TODO
         sm.forceCompleteQuest(23054);
         sm.sayNext("I've advanced you. I've also given you some sills that I know of but haven't mastered yet. I have a hunch that you'll be able to master them. After all, you are the most skilled member of the Resistance now.");
         sm.sayBoth("With this, the end of my lessons has... neared. Though you are stronger than I am, there are a lot of things you can still learn from me. I will see you at our next lesson... Whenever that may be...");

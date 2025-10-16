@@ -1,5 +1,6 @@
 package kinoko.world.user.stat;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
 import kinoko.provider.item.ItemInfoType;
@@ -71,10 +72,10 @@ public final class CalcDamage {
         final SecondaryStat ss = user.getSecondaryStat();
         final PassiveSkillData psd = user.getPassiveSkillData();
         final MobStat ms = mob.getMobStat();
-        final int skillId = attack.skillId;
-        final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
-        final int criticalRate = getCriticalRate(user, attack) + psd.getAdditionCr(skillId);
-        final int damagePerMob = skillId == Thief.MESO_EXPLOSION ? ai.attackCount : attack.getDamagePerMob();
+        final SkillId skillId = attack.skillId;
+        final int noviceSkill = Math.max(skillId.getId() - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
+        final int criticalRate = getCriticalRate(user, attack) + psd.getAdditionCr(skillId.getId());
+        final int damagePerMob = skillId == SkillId.CHIEFBANDIT_MESO_EXPLOSION ? ai.attackCount : attack.getDamagePerMob();
         // Process attack info
         int counter = 0;
         for (int i = 0; i < damagePerMob; i++) {
@@ -95,12 +96,12 @@ public final class CalcDamage {
                     assertDamage(1, ai.damage[i]);
                     continue;
                 }
-                if (skillId == Aran.COMBO_TEMPEST) {
+                if (skillId == SkillId.ARAN4_COMBO_TEMPEST) {
                     if (!mob.isBoss()) {
                         continue;
                     }
                 }
-                if (skillId == Bowman.SNIPE) { // 33121003 does not exist
+                if (skillId == SkillId.MARKSMAN_SNIPE) { // 33121003 does not exist
                     if (!mob.isBoss()) {
                         final int fixDamage = (int) (999_999.0 - getRand(ai.random[counter++ % 7], 10000.0, 0.0));
                         assertDamage(fixDamage, ai.damage[i]);
@@ -109,7 +110,7 @@ public final class CalcDamage {
                     }
                     continue;
                 }
-                if (skillId == Thief.NINJA_STORM || skillId == Aran.ROLLING_SPIN) {
+                if (skillId == SkillId.NIGHTLORD_NINJA_STORM || skillId == SkillId.ARAN3_ROLLING_SPIN) {
                     final double rand = getRand(ai.random[counter % 7], 100.0, 0.0);
                     final int prop = user.getSkillStatValue(skillId, SkillStat.prop);
                     if (prop <= rand) {
@@ -118,8 +119,8 @@ public final class CalcDamage {
                     }
                 }
                 counter++;
-                if ((ms.hasOption(MobTemporaryStat.Freeze) && skillId == Bowman.STRAFE_MM && attack.isShootAttack() && i == 0 && !mob.isBoss()) ||
-                        (skillId == Thief.OWL_SPIRIT && i == 0 && !mob.isBoss())) {
+                if ((ms.hasOption(MobTemporaryStat.Freeze) && skillId == SkillId.SNIPER_STRAFE && attack.isShootAttack() && i == 0 && !mob.isBoss()) ||
+                        (skillId == SkillId.DB4_OWL_SPIRIT && i == 0 && !mob.isBoss())) {
                     final double rand = getRand(ai.random[counter++ % 7], 0.0, 100.0);
                     final int prop = user.getSkillStatValue(skillId, SkillStat.prop);
                     if (rand < prop) {
@@ -127,7 +128,7 @@ public final class CalcDamage {
                         continue;
                     }
                 }
-                if (attack.getHeaderType() != OutHeader.UserBodyAttack && skillId != 0 && ss.hasOption(CharacterTemporaryStat.Seal)) {
+                if (attack.getHeaderType() != OutHeader.UserBodyAttack && !skillId.isNone() && ss.hasOption(CharacterTemporaryStat.Seal)) {
                     continue;
                 }
                 final int mobEva = Math.clamp(mob.getTemplate().getEva() + mob.getMobStat().getOption(MobTemporaryStat.EVA).nOption, 0, 9999);
@@ -139,8 +140,8 @@ public final class CalcDamage {
                         continue;
                     }
                 }
-                if (skillId != 0) {
-                    if (skillId == Warrior.HEAVENS_HAMMER) {
+                if (!skillId.isNone()) {
+                    if (skillId == SkillId.PALADIN_HEAVENS_HAMMER) {
                         continue;
                     }
                     final int fixDamage = user.getSkillStatValue(skillId, SkillStat.fixdamage);
@@ -161,20 +162,20 @@ public final class CalcDamage {
                     assertDamage(mob.getMaxHp(), mob.getMaxHp());
                     continue;
                 }
-                if (skillId == Warrior.RUSH_HERO ||
-                        skillId == Warrior.RUSH_PALADIN ||
-                        skillId == Warrior.RUSH_DRK ||
-                        skillId == Thief.TORNADO_SPIN_ATTACK ||
-                        skillId == Warrior.BLAST ||
-                        skillId == Thief.FLYING_ASSAULTER ||
-                        skillId == Thief.SLASH_STORM ||
-                        skillId == Thief.BLOODY_STORM) {
+                if (skillId == SkillId.HERO_RUSH ||
+                        skillId == SkillId.PALADIN_RUSH ||
+                        skillId == SkillId.DRK_RUSH ||
+                        skillId == SkillId.DB3_TORNADO_SPIN_ATTACK ||
+                        skillId == SkillId.PALADIN_BLAST ||
+                        skillId == SkillId.DB4_FLYING_ASSAULTER ||
+                        skillId == SkillId.DB2_SLASH_STORM ||
+                        skillId == SkillId.DB4_BLOODY_STORM) {
                     counter++;
                 }
                 // Adjust Random Damage
                 counter++;
                 // Check Critical
-                if (attack.skillId != Thief.ASSASSINATE || attack.getAction() != ActionType.ASSASSINATIONS.getValue()) {
+                if (attack.skillId != SkillId.SHADOWER_ASSASSINATE || attack.getAction() != ActionType.ASSASSINATIONS.getValue()) {
                     if (user.getCalcDamage().isNextAttackCritical() || (criticalRate > 0 &&
                             criticalRate > getRand(ai.random[counter++ % 7], 0.0, 100.0))) {
                         ai.critical[i] = 1;
@@ -184,7 +185,7 @@ public final class CalcDamage {
                 }
                 if (attack.isShadowPartner() && ss.hasOption(CharacterTemporaryStat.ShadowPartner) &&
                         ss.getOption(CharacterTemporaryStat.ShadowPartner).rOption != Thief.MIRROR_IMAGE) {
-                    if (skillId != Thief.TAUNT_NL && skillId != Thief.TAUNT_SHAD && i >= damagePerMob / 2) {
+                    if (skillId != SkillId.NIGHTLORD_TAUNT && skillId != SkillId.SHADOWER_TAUNT && i >= damagePerMob / 2) {
                         ai.critical[i] = ai.critical[i - damagePerMob / 2];
                     }
                 }
@@ -192,7 +193,7 @@ public final class CalcDamage {
                     counter++; // cd->boss.nProb
                 }
                 if (!ms.hasOption(MobTemporaryStat.HardSkin) || ai.critical[i] != 0) {
-                    if (skillId == Thief.SHADOW_MESO) {
+                    if (skillId == SkillId.HERMIT_SHADOW_MESO) {
                         counter++; // nMoneyCon
                         counter++; // nProp
                     }
@@ -209,8 +210,8 @@ public final class CalcDamage {
         // CalcDamage::MDamage
         final SecondaryStat ss = user.getSecondaryStat();
         final MobStat ms = mob.getMobStat();
-        final int skillId = attack.skillId;
-        final int noviceSkill = Math.max(skillId - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
+        final SkillId skillId = attack.skillId;
+        final int noviceSkill = Math.max(skillId.getId() - (JobConstants.getNoviceSkillRootFromJob(user.getJob()) * 1000), 0);
         final int criticalRate = getCriticalRate(user, attack);
         final int damagePerMob = attack.getDamagePerMob();
         // Process attack info
@@ -238,7 +239,7 @@ public final class CalcDamage {
                 assertDamage(0, ai.damage[i]);
                 continue;
             }
-            if (skillId != 0) {
+            if (!skillId.isNone()) {
                 final int fixDamage = user.getSkillStatValue(skillId, SkillStat.fixdamage);
                 if (noviceSkill == 1066 || noviceSkill == 1067 || fixDamage != 0) {
                     assertDamage(fixDamage, ai.damage[i]);
@@ -320,59 +321,59 @@ public final class CalcDamage {
         // ignore cd->critical.nProb
         final int comboCount = user.getSecondaryStat().getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption;
         if (comboCount > 0) {
-            final int comboCriticalSkillId = user.getJob() != 2000 ? Aran.COMBO_CRITICAL : 20000018;
+            final SkillId comboCriticalSkillId = user.getJob() != 2000 ? SkillId.ARAN3_COMBO_CRITICAL : SkillId.LEGEND_TUTORIAL_SKILL_4;
             final int stacks = Math.min(comboCount / 10, user.getSkillStatValue(comboCriticalSkillId, SkillStat.x));
             criticalRate += stacks * user.getSkillStatValue(comboCriticalSkillId, SkillStat.y);
         }
         criticalRate += user.getSecondaryStat().getItemCriR();
         criticalRate += user.getPassiveSkillData().getCr();
         if (SkillConstants.WILD_HUNTER_JAGUARS.contains(user.getSecondaryStat().getRidingVehicle())) {
-            criticalRate += user.getSkillStatValue(WildHunter.JAGUAR_RIDER, SkillStat.w);
+            criticalRate += user.getSkillStatValue(SkillId.WH1_JAGUAR_RIDER, SkillStat.w);
         }
         if (JobConstants.isEvanJob(user.getJob())) {
-            criticalRate += user.getSkillStatValue(Evan.CRITICAL_MAGIC, SkillStat.prop);
+            criticalRate += user.getSkillStatValue(SkillId.EVAN6_CRITICAL_MAGIC, SkillStat.prop);
         }
         return criticalRate;
     }
 
-    private static int getCriticalSkillId(User user, Attack attack) {
+    private static SkillId getCriticalSkillId(User user, Attack attack) {
         // get_critical_skill_level
         if (attack.getAction() == ActionType.ASSASSINATIONS.getValue()) {
-            return Thief.ASSASSINATE;
+            return SkillId.SHADOWER_ASSASSINATE;
         }
         if (JobConstants.isResistanceJob(user.getJob())) {
-            return Citizen.DEADLY_CRITS;
+            return SkillId.CITIZEN_DEADLY_CRITS;
         }
         final Item weapon = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
         if (weapon == null) {
-            return 0;
+            return SkillId.NONE;
         }
         switch (WeaponType.getByItemId(weapon.getItemId())) {
             case BOW, CROSSBOW -> {
                 if (!attack.isShootAttack()) {
-                    return 0;
+                    return SkillId.NONE;
                 }
                 if (JobConstants.isCygnusJob(user.getJob())) {
-                    return WindArcher.CRITICAL_SHOT;
+                    return SkillId.WA1_CRITICAL_SHOT;
                 } else {
-                    return Bowman.CRITICAL_SHOT;
+                    return SkillId.BOWMAN_CRITICAL_SHOT;
                 }
             }
             case THROWINGGLOVE -> {
                 if (!attack.isShootAttack()) {
-                    return 0;
+                    return SkillId.NONE;
                 }
                 if (JobConstants.isCygnusJob(user.getJob())) {
-                    return NightWalker.CRITICAL_THROW;
+                    return SkillId.NW2_CRITICAL_THROW;
                 } else {
-                    return Thief.CRITICAL_THROW;
+                    return SkillId.ASSASSIN_CRITICAL_THROW;
                 }
             }
             case KNUCKLE -> {
-                return Pirate.CRITICAL_PUNCH;
+                return SkillId.TB3_CRITICAL_PUNCH;
             }
         }
-        return 0;
+        return SkillId.NONE;
     }
 
 
@@ -463,7 +464,7 @@ public final class CalcDamage {
         // nComboAbilityBuff
         final int comboAbilityBuff = ss.getOption(CharacterTemporaryStat.ComboAbilityBuff).nOption;
         if (comboAbilityBuff != 0) {
-            final int comboSkillId = SkillConstants.getComboAbilitySkill(user.getJob()); // tutorial skill?
+            final SkillId comboSkillId = SkillConstants.getComboAbilitySkill(user.getJob()); // tutorial skill?
             final int maxStacks = user.getSkillStatValue(comboSkillId, SkillStat.x);
             final int stacks = Math.max(comboAbilityBuff / 10, maxStacks);
             pad += stacks * user.getSkillStatValue(comboSkillId, SkillStat.y);
@@ -487,7 +488,7 @@ public final class CalcDamage {
         // nMAD + incMAD + nPsdMADX
         int mad = ss.getMad() + ss.getOption(CharacterTemporaryStat.MAD).nOption + psd.getMadX();
         // Apply madR
-        final int dragonFury = Evan.isDragonFury(user) ? user.getSkillStatValue(Evan.DRAGON_FURY, SkillStat.damage) : 0;
+        final int dragonFury = Evan.isDragonFury(user) ? user.getSkillStatValue(SkillId.DK_DRAGON_FURY, SkillStat.damage) : 0;
         final int statMadR = ss.getOption(CharacterTemporaryStat.MaxLevelBuff).nOption +
                 ss.getOption(CharacterTemporaryStat.DarkAura).nOption +
                 ss.getOption(CharacterTemporaryStat.SwallowAttackDamage).nOption +
@@ -574,103 +575,103 @@ public final class CalcDamage {
         // get_weapon_mastery
         switch (weaponType) {
             case OH_SWORD, TH_SWORD -> {
-                int mastery = getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO);
+                int mastery = getMasteryFromSkill(user, SkillId.FIGHTER_WEAPON_MASTERY);
                 if (mastery > 0) {
                     return mastery;
                 }
-                mastery = getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_PALADIN);
+                mastery = getMasteryFromSkill(user, SkillId.PAGE_WEAPON_MASTERY);
                 if (mastery > 0) {
                     if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.WeaponCharge)) {
-                        final int masteryFromCharge = getMasteryFromSkill(user, Warrior.ADVANCED_CHARGE);
+                        final int masteryFromCharge = getMasteryFromSkill(user, SkillId.PALADIN_ADVANCED_CHARGE);
                         if (masteryFromCharge > 0) {
                             return masteryFromCharge;
                         }
                     }
                     return mastery;
                 }
-                return getMasteryFromSkill(user, DawnWarrior.SWORD_MASTERY);
+                return getMasteryFromSkill(user, SkillId.DW2_SWORD_MASTERY);
             }
             case OH_AXE, TH_AXE -> {
-                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_HERO);
+                return getMasteryFromSkill(user, SkillId.FIGHTER_WEAPON_MASTERY);
             }
             case OH_MACE, TH_MACE -> {
-                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_PALADIN);
+                return getMasteryFromSkill(user, SkillId.PAGE_WEAPON_MASTERY);
             }
             case DAGGER -> {
                 final Item shield = user.getInventoryManager().getEquipped().getItem(BodyPart.SHIELD.getValue());
                 if (shield != null && WeaponType.getByItemId(shield.getItemId()) == WeaponType.SUB_DAGGER) {
-                    return getMasteryFromSkill(user, Thief.KATARA_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.DB1_KATARA_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Thief.DAGGER_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.BANDIT_DAGGER_MASTERY);
                 }
             }
             case WAND, STAFF -> {
                 // get_magic_mastery
                 if (JobConstants.isEvanJob(user.getJob())) {
-                    return getMasteryFromSkill(user, Evan.MAGIC_MASTERY, Evan.SPELL_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.EVAN9_MAGIC_MASTERY, SkillId.EVAN4_SPELL_MASTERY);
                 } else if (JobConstants.isBattleMageJob(user.getJob())) {
-                    return getMasteryFromSkill(user, BattleMage.STAFF_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.STAFF_MASTERY);
                 } else if (JobConstants.isBlazeWizardJob(user.getJob())) {
-                    return getMasteryFromSkill(user, BlazeWizard.SPELL_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.BW2_SPELL_MASTERY);
                 } else if (JobConstants.isFirePoisonJob(user.getJob())) {
-                    return getMasteryFromSkill(user, Magician.SPELL_MASTERY_FP);
+                    return getMasteryFromSkill(user, SkillId.FP1_SPELL_MASTERY);
                 } else if (JobConstants.isIceLightningJob(user.getJob())) {
-                    return getMasteryFromSkill(user, Magician.SPELL_MASTERY_IL);
+                    return getMasteryFromSkill(user, SkillId.IL1_SPELL_MASTERY);
                 } else if (JobConstants.isBishopJob(user.getJob())) {
-                    return getMasteryFromSkill(user, Magician.SPELL_MASTERY_BISH);
+                    return getMasteryFromSkill(user, SkillId.CLERIC_SPELL_MASTERY);
                 }
             }
             case SPEAR -> {
-                return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_DRK) + user.getSecondaryStat().getOption(CharacterTemporaryStat.Beholder).nOption;
+                return getMasteryFromSkill(user, SkillId.SPEARNMAN_WEAPON_MASTERY) + user.getSecondaryStat().getOption(CharacterTemporaryStat.Beholder).nOption;
             }
             case POLEARM -> {
                 if (JobConstants.isAranJob(user.getJob())) {
-                    return getMasteryFromSkill(user, Aran.HIGH_MASTERY, Aran.POLEARM_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.ARAN4_HIGH_MASTERY, SkillId.ARAN2_POLEARM_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Warrior.WEAPON_MASTERY_DRK) + user.getSecondaryStat().getOption(CharacterTemporaryStat.Beholder).nOption;
+                    return getMasteryFromSkill(user, SkillId.SPEARNMAN_WEAPON_MASTERY) + user.getSecondaryStat().getOption(CharacterTemporaryStat.Beholder).nOption;
                 }
             }
             case BOW -> {
                 if (JobConstants.isCygnusJob(user.getJob())) {
-                    return getMasteryFromSkill(user, WindArcher.BOW_EXPERT, WindArcher.BOW_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.WA3_BOW_EXPERT, SkillId.WA2_BOW_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Bowman.BOW_EXPERT, Bowman.BOW_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.BOWMASTER_BOW_EXPERT, SkillId.HUNTER_BOW_MASTERY);
                 }
             }
             case CROSSBOW -> {
                 if (JobConstants.isWildHunterJob(user.getJob())) {
-                    return getMasteryFromSkill(user, WildHunter.CROSSBOW_EXPERT, WildHunter.CROSSBOW_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.WH4_CROSSBOW_EXPERT, SkillId.WH2_CROSSBOW_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Bowman.MARKSMAN_BOOST, Bowman.CROSSBOW_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.MARKSMAN_MARKSMAN_BOOST, SkillId.CROSSBOWMAN_CROSSBOW_MASTERY);
                 }
             }
             case THROWINGGLOVE -> {
                 if (JobConstants.isCygnusJob(user.getJob())) {
-                    return getMasteryFromSkill(user, NightWalker.CLAW_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.NW2_CLAW_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Thief.CLAW_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.ASSASSIN_CLAW_MASTERY);
                 }
             }
             case KNUCKLE -> {
                 if (JobConstants.isCygnusJob(user.getJob())) {
-                    return getMasteryFromSkill(user, ThunderBreaker.KNUCKLE_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.TB2_KNUCKLE_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Pirate.KNUCKLE_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.BRAWLER_KNUCKLE_MASTERY);
                 }
             }
             case GUN -> {
                 if (JobConstants.isMechanicJob(user.getJob())) {
-                    return getMasteryFromSkill(user, Mechanic.EXTREME_MECH, Mechanic.MECHANIC_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.MECH4_EXTREME_MECH, SkillId.MECH2_MECHANIC_MASTERY);
                 } else {
-                    return getMasteryFromSkill(user, Pirate.GUN_MASTERY);
+                    return getMasteryFromSkill(user, SkillId.GUNSLINGER_GUN_MASTERY);
                 }
             }
         }
         return 0;
     }
 
-    private static int getMasteryFromSkill(User user, int... skillIds) {
-        for (int skillId : skillIds) {
+    private static int getMasteryFromSkill(User user, SkillId... skillIds) {
+        for (SkillId skillId : skillIds) {
             final int mastery = user.getSkillStatValue(skillId, SkillStat.mastery);
             if (mastery > 0) {
                 return mastery;
@@ -700,14 +701,14 @@ public final class CalcDamage {
         // get_damage_adjusted_by_elemAttr
         final double adjust = 1.0 - user.getSecondaryStat().getOption(CharacterTemporaryStat.ElementalReset).nOption / 100.0;
         final double boost = 0.0; // only available through item info.addition.elemBoost, ignore
-        final int skillId = si.getSkillId();
-        if (skillId == Bowman.INFERNO || skillId == Bowman.BLIZZARD) {
+        final SkillId skillId = si.getSkillId();
+        if (skillId == SkillId.RANGER_INFERNO || skillId == SkillId.SNIPER_BLIZZARD) {
             return getDamageAdjustedByElemAttr(damage, damagedElemAttr.getOrDefault(si.getElemAttr(), DamagedAttribute.NONE), si.getValue(SkillStat.x, slv) / 100.0, boost);
-        } else if (skillId == Magician.ELEMENT_COMPOSITION_FP) {
+        } else if (skillId == SkillId.FP2_ELEMENT_COMPOSITION) {
             final double half = damage * 0.5; // only poison attr gets boost
             return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.FIRE, DamagedAttribute.NONE), 1.0, 0.0) +
                     getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.POISON, DamagedAttribute.NONE), 1.0, boost);
-        } else if (skillId == Magician.ELEMENT_COMPOSITION_IL) {
+        } else if (skillId == SkillId.IL2_ELEMENT_COMPOSITION) {
             final double half = damage * 0.5; // only light attr gets boost
             return getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.ICE, DamagedAttribute.NONE), 1.0, 0.0) +
                     getDamageAdjustedByElemAttr(half, damagedElemAttr.getOrDefault(ElementAttribute.LIGHT, DamagedAttribute.NONE), 1.0, boost);
@@ -720,7 +721,7 @@ public final class CalcDamage {
         if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.WeaponCharge)) {
             return damage;
         }
-        final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge).rOption;
+        final SkillId skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.WeaponCharge).getSkillId();
         final ElementAttribute elemAttr = SkillConstants.getElementByWeaponChargeSkill(skillId);
         if (elemAttr == ElementAttribute.PHYSICAL) {
             return damage;
@@ -735,7 +736,7 @@ public final class CalcDamage {
         if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.AssistCharge)) {
             return damage;
         }
-        final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.AssistCharge).rOption;
+        final SkillId skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.AssistCharge).getSkillId();
         final ElementAttribute elemAttr = SkillConstants.getElementByWeaponChargeSkill(skillId);
         if (elemAttr == ElementAttribute.PHYSICAL) {
             return damage;

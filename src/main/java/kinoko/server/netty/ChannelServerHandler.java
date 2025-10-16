@@ -190,7 +190,7 @@ public final class ChannelServerHandler extends SimpleChannelInboundHandler<InPa
             // Cancel party aura
             target.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
             if (target.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
-                BattleMage.cancelPartyAura(target, target.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
+                BattleMage.cancelPartyAura(target, target.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).getSkillId());
             }
             // Set party info and update members
             target.setPartyInfo(partyInfo);

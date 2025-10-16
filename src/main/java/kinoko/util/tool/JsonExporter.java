@@ -115,7 +115,7 @@ final class JsonExporter {
                     JSONObject skillObject = new JSONObject();
                     skillObject.put("id", si.getSkillId());
 
-                    final SkillStringInfo skillStringInfo = StringProvider.getSkillString(si.getSkillId());
+                    final SkillStringInfo skillStringInfo = StringProvider.getSkillString(si.getSkillId().getId());
                     if (skillStringInfo != null) {
                         skillObject.put("name", skillStringInfo.getName());
                         skillObject.put("desc", skillStringInfo.getDesc());

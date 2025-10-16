@@ -1,5 +1,6 @@
 package kinoko.provider.skill;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.serialize.WzProperty;
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public final class SkillInfo {
-    private final int skillId;
+    private final SkillId skillId;
     private final int maxLevel;
     private final int masterLevel;
     private final boolean invisible;
@@ -36,7 +37,7 @@ public final class SkillInfo {
     private final int skillEntryCrc;
     private final List<Integer> levelDataCrc;
 
-    public SkillInfo(int skillId, int maxLevel, int masterLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, List<ActionType> action, ActionType statAction, Map<SkillStat, List<Integer>> stats, List<Rect> rects, ElementAttribute elemAttr, Map<SummonedActionType, SummonedAttackInfo> summonedAttack) {
+    public SkillInfo(SkillId skillId, int maxLevel, int masterLevel, boolean invisible, boolean combatOrders, boolean psd, List<Integer> psdSkills, List<ActionType> action, ActionType statAction, Map<SkillStat, List<Integer>> stats, List<Rect> rects, ElementAttribute elemAttr, Map<SummonedActionType, SummonedAttackInfo> summonedAttack) {
         this.skillId = skillId;
         this.maxLevel = maxLevel;
         this.masterLevel = masterLevel;
@@ -59,7 +60,7 @@ public final class SkillInfo {
                 .toList();
     }
 
-    public int getSkillId() {
+    public SkillId getSkillId() {
         return skillId;
     }
 
@@ -141,10 +142,10 @@ public final class SkillInfo {
     }
 
     public int getHpCon(User user, int slv, int keyDown) {
-        final int skillId = getSkillId();
-        if (skillId == Warrior.SACRIFICE || skillId == Warrior.DRAGON_ROAR || skillId == Pirate.MP_RECOVERY) {
+        final SkillId skillId = getSkillId();
+        if (skillId == SkillId.DK_SACRIFICE || skillId == SkillId.DK_DRAGON_ROAR || skillId == SkillId.BRAWLER_MP_RECOVERY) {
             return user.getMaxHp() * getValue(SkillStat.x, slv) / 100;
-        } else if (skillId == Thief.FINAL_CUT) {
+        } else if (skillId == SkillId.DB5_FINAL_CUT) {
             final int percentage = getValue(SkillStat.x, slv) * keyDown / SkillConstants.getMaxGaugeTime(skillId);
             return user.getMaxHp() * percentage / 100;
         }
@@ -155,8 +156,8 @@ public final class SkillInfo {
         // CSkillInfo::CheckConsumeForActiveSkill
         int mpCon = getValue(SkillStat.mpCon, slv);
         // Check element amplification
-        final int amplificationSkill = SkillConstants.getAmplificationSkill(user.getJob());
-        if (amplificationSkill != 0) {
+        final SkillId amplificationSkill = SkillConstants.getAmplificationSkill(user.getJob());
+        if (!amplificationSkill.isNone()) {
             final int incMpCon = user.getSkillStatValue(amplificationSkill, SkillStat.x);
             if (incMpCon > 0) {
                 mpCon = incMpCon * mpCon / 100;
@@ -262,7 +263,7 @@ public final class SkillInfo {
         final ElementAttribute elemAttr = resolveElemAttr(skillProp);
         final Map<SummonedActionType, SummonedAttackInfo> summonedAttack = resolveSummonedAttack(skillProp);
         return new SkillInfo(
-                skillId,
+                SkillId.fromValue(skillId),
                 maxLevel,
                 WzProvider.getInteger(skillProp.get("masterLevel"), 0),
                 WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,
@@ -327,7 +328,7 @@ public final class SkillInfo {
         final ElementAttribute elemAttr = resolveElemAttr(skillProp);
         final Map<SummonedActionType, SummonedAttackInfo> summonedAttack = resolveSummonedAttack(skillProp);
         return new SkillInfo(
-                skillId,
+                SkillId.fromValue(skillId),
                 maxLevel,
                 WzProvider.getInteger(skillProp.get("masterLevel"), 0),
                 WzProvider.getInteger(skillProp.get("invisible"), 0) != 0,

@@ -1,5 +1,6 @@
 package kinoko.world.field.summoned;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.util.Rect;
@@ -126,9 +127,9 @@ public final class Summoned extends Life {
         return Summoned.from(si.getSkillId(), slv, moveAbility, assistType, Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
     }
 
-    public static Summoned from(int skillId, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
+    public static Summoned from(SkillId skillId, int slv, SummonedMoveAbility moveAbility, SummonedAssistType assistType, Instant expireTime) {
         return new Summoned(
-                skillId,
+                skillId.getId(),
                 slv,
                 moveAbility,
                 assistType,

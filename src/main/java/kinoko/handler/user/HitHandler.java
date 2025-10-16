@@ -1,6 +1,7 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.user.SummonedPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -215,7 +216,7 @@ public final class HitHandler {
         } else if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
             // Mana Reflection - reflect si.getValue(SkillStat.x, nManaReflection) %
             final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.ManaReflection);
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.rOption);
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(option.getSkillId());
             if (skillInfoResult.isPresent()) {
                 final int percentage = skillInfoResult.get().getValue(SkillStat.x, option.nOption);
                 final Mob mob = mobResult.get();
@@ -238,8 +239,8 @@ public final class HitHandler {
             return 0;
         }
         // Calculate reduction rate
-        final int mesoGuardRate = Math.clamp(50 + user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.v), 50, 100); // hard coded 50
-        final int mesoRequiredRate = Math.max(0, user.getSkillStatValue(Thief.MESO_GUARD, SkillStat.x) - user.getSkillStatValue(Thief.MESO_MASTERY, SkillStat.w));
+        final int mesoGuardRate = Math.clamp(50 + user.getSkillStatValue(SkillId.SHADOWER_MESO_MASTERY, SkillStat.v), 50, 100); // hard coded 50
+        final int mesoRequiredRate = Math.max(0, user.getSkillStatValue(SkillId.CHIEFBANDIT_MESO_GUARD, SkillStat.x) - user.getSkillStatValue(SkillId.SHADOWER_MESO_MASTERY, SkillStat.w));
         // Calculate damage reduction
         final int realDamage = Math.clamp(hitInfo.damage, 1, GameConstants.DAMAGE_MAX);
         final int mesoGuardReduce = realDamage * mesoGuardRate / 100;
@@ -264,14 +265,14 @@ public final class HitHandler {
 
     private static int getAchillesReduce(User user, int damage) {
         // CUserLocal::GetAchillesReduce
-        final int skillId = switch (user.getJob()) {
-            case 112 -> Warrior.ACHILLES_HERO;
-            case 122 -> Warrior.ACHILLES_PALADIN;
-            case 132 -> Warrior.ACHILLES_DRK;
-            case 2112 -> Aran.HIGH_DEFENSE;
-            default -> 0;
+        final SkillId skillId = switch (user.getJob()) {
+            case 112 -> SkillId.HERO_ACHILLES;
+            case 122 -> SkillId.PALADIN_ACHILLES;
+            case 132 -> SkillId.DRK_ACHILLES;
+            case 2112 -> SkillId.ARAN4_HIGH_DEFENSE;
+            default -> SkillId.NONE;
         };
-        if (skillId == 0) {
+        if (skillId.isNone()) {
             return 0;
         }
         final int x = user.getSkillStatValue(skillId, SkillStat.x);
@@ -314,7 +315,7 @@ public final class HitHandler {
             return 0;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.BlueAura);
-        final int skillId = option.rOption;
+        final SkillId skillId = option.getSkillId();
         final int slv = option.nOption;
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
@@ -330,12 +331,12 @@ public final class HitHandler {
         if (hitInfo.knockback <= 1) {
             return;
         }
-        final int stunDuration = user.getSkillStatValue(Warrior.GUARDIAN, SkillStat.time);
+        final int stunDuration = user.getSkillStatValue(SkillId.PALADIN_GUARDIAN, SkillStat.time);
         if (stunDuration == 0) {
             return;
         }
         final Optional<Mob> knockbackMobResult = user.getField().getMobPool().getById(hitInfo.reflectMobId);
-        knockbackMobResult.ifPresent(mob -> mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, Warrior.GUARDIAN, stunDuration * 1000), 0));
+        knockbackMobResult.ifPresent(mob -> mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, SkillId.PALADIN_GUARDIAN.getId(), stunDuration * 1000), 0));
     }
 
     private static void handleDivineShield(User user, HitInfo hitInfo) {
@@ -343,7 +344,7 @@ public final class HitHandler {
             return;
         }
         // Resolve skill
-        final int skillId = Warrior.DIVINE_SHIELD;
+        final SkillId skillId = SkillId.PALADIN_DIVINE_SHIELD;
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
             log.error("Could not resolve skill info for divine shield skill ID : {}", skillId);
@@ -363,7 +364,7 @@ public final class HitHandler {
                         CharacterTemporaryStat.BlessingArmorIncPAD, ss.getOption(CharacterTemporaryStat.BlessingArmorIncPAD) // required for TemporaryStatSet
                 ));
             } else {
-                user.resetTemporaryStat(skillId);
+                user.resetTemporaryStat(skillId.getId());
                 user.setSkillCooltime(skillId, si.getValue(SkillStat.cooltime, slv));
             }
         } else {
@@ -383,13 +384,13 @@ public final class HitHandler {
             return;
         }
         // Resolve summoned
-        final Optional<Summoned> summonedResult = user.getSummonedBySkillId(Warrior.BEHOLDER);
+        final Optional<Summoned> summonedResult = user.getSummonedBySkillId(SkillId.DRK_BEHOLDER);
         if (summonedResult.isEmpty()) {
             return;
         }
         final Summoned summoned = summonedResult.get();
         // Resolve skill info
-        final int skillId = Warrior.HEX_OF_THE_BEHOLDER_COUNTER;
+        final SkillId skillId = SkillId.DRK_HEX_OF_THE_BEHOLDER;
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
@@ -441,7 +442,7 @@ public final class HitHandler {
         if (hitInfo.damage > 0) {
             return;
         }
-        if (user.getSkillLevel(Bowman.EVASION_BOOST_BM) > 0 || user.getSkillLevel(Bowman.EVASION_BOOST_MM) > 0) {
+        if (user.getSkillLevel(SkillId.SNIPER_EVASION_BOOST) > 0 || user.getSkillLevel(SkillId.RANGER_EVASION_BOOST) > 0) {
             user.getCalcDamage().setNextAttackCritical(true);
         }
     }
@@ -450,7 +451,7 @@ public final class HitHandler {
         if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
             return;
         }
-        final int prop = user.getSkillStatValue(Bowman.VENGEANCE, SkillStat.prop);
+        final int prop = user.getSkillStatValue(SkillId.BOWMASTER_VENGEANCE, SkillStat.prop);
         if (prop != 0 && Util.succeedProp(prop)) {
             user.write(UserLocal.requestVengeance());
         }
@@ -468,7 +469,7 @@ public final class HitHandler {
                 return;
             }
             // Resolve skill info
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(summoned.getSkillId());
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(SkillId.fromValue(summoned.getSkillId()));
             if (skillInfoResult.isEmpty()) {
                 log.error("Could not resolve skill info for dark flare skill ID : {}", summoned.getSkillId());
                 return;
@@ -502,7 +503,7 @@ public final class HitHandler {
         if (hitInfo.attackIndex <= AttackIndex.Counter.getValue()) {
             return;
         }
-        final int skillId = SkillConstants.getPiratesRevengeSkill(user.getJob());
+        final SkillId skillId = SkillConstants.getPiratesRevengeSkill(user.getJob());
         if (user.getSkillManager().hasSkillCooltime(skillId)) {
             return;
         }
@@ -534,9 +535,9 @@ public final class HitHandler {
         if (newDurability > 0) {
             Pirate.setBattleshipDurability(user, newDurability);
         } else {
-            user.getSkillManager().getSkillCooltimes().remove(SkillConstants.BATTLESHIP_DURABILITY);
+            user.getSkillManager().getSkillCooltimes().remove(SkillId.CORSAIR_BATTLESHIP_DURABILITY);
             user.resetTemporaryStat(option.rOption);
-            user.setSkillCooltime(option.rOption, user.getSkillStatValue(option.rOption, SkillStat.cooltime));
+            user.setSkillCooltime(option.getSkillId(), user.getSkillStatValue(option.getSkillId(), SkillStat.cooltime));
         }
     }
 }

@@ -1,5 +1,6 @@
 package kinoko.world.job.explorer;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -89,11 +90,11 @@ public final class Bowman extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case ARROW_BOMB:
             case SILVER_HAWK:
             case GOLDEN_EAGLE:
@@ -120,11 +121,11 @@ public final class Bowman extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case SILVER_HAWK:
             case GOLDEN_EAGLE:
             case PHOENIX:

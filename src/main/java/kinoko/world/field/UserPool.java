@@ -1,5 +1,6 @@
 package kinoko.world.field;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.field.NpcPacket;
@@ -178,7 +179,7 @@ public final class UserPool extends FieldObjectPool<User> {
                 field.getSummonedPool().removeSummoned(user, summoned);
             }
             // Remove from user
-            if (!SkillConstants.isSummonMigrateSkill(entry.getKey())) {
+            if (!SkillConstants.isSummonMigrateSkill(SkillId.fromValue(entry.getKey()))) {
                 iter.remove();
             }
         }
@@ -195,7 +196,7 @@ public final class UserPool extends FieldObjectPool<User> {
         // Remove party aura
         user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
         if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Aura)) {
-            BattleMage.cancelPartyAura(user, user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).rOption);
+            BattleMage.cancelPartyAura(user, user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura).getSkillId());
         }
         return true;
     }
@@ -207,7 +208,7 @@ public final class UserPool extends FieldObjectPool<User> {
             // Expire temporary stat
             user.resetTemporaryStat((cts, option) -> now.isAfter(option.getExpireTime()));
             // Expire skill cooltimes
-            for (int skillId : user.expireSkillCooltime(now)) {
+            for (SkillId skillId : user.expireSkillCooltime(now)) {
                 user.write(UserLocal.skillCooltimeSet(skillId, 0));
             }
             // Update pets

@@ -1,5 +1,6 @@
 package kinoko.server.command;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.DragonPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -308,7 +309,7 @@ public final class AdminCommands {
                     }
                 }
             }
-            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+            final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(SkillId.fromValue(skillId));
             if (skillInfoResult.isEmpty()) {
                 user.write(MessagePacket.system("Could not find skill with %s : %s", isNumber ? "ID" : "name", query));
                 return;
@@ -737,7 +738,7 @@ public final class AdminCommands {
     @Command("skill")
     @Arguments({ "skill ID", "skill level" })
     public static void skill(User user, String[] args) {
-        final int skillId = Integer.parseInt(args[1]);
+        final SkillId skillId = SkillId.fromValue(Integer.parseInt(args[1]));
         final int slv = Integer.parseInt(args[2]);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
@@ -904,7 +905,7 @@ public final class AdminCommands {
     public static void cd(User user, String[] args) {
         final var iter = user.getSkillManager().getSkillCooltimes().keySet().iterator();
         while (iter.hasNext()) {
-            final int skillId = iter.next();
+            final SkillId skillId = iter.next();
             user.write(UserLocal.skillCooltimeSet(skillId, 0));
             iter.remove();
         }
@@ -938,7 +939,7 @@ public final class AdminCommands {
         final SkillManager sm = user.getSkillManager();
         final List<SkillRecord> removedRecords = new ArrayList<>();
         for (SkillRecord skillRecord : sm.getSkillRecords()) {
-            if (JobConstants.isBeginnerJob(SkillConstants.getSkillRoot(skillRecord.getSkillId()))) {
+            if (JobConstants.isBeginnerJob(skillRecord.getSkillId().getRoot())) {
                 continue;
             }
             skillRecord.setSkillLevel(0);

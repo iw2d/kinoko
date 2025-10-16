@@ -1,5 +1,6 @@
 package kinoko.world.user.effect;
 
+import kinoko.meta.SkillId;
 import kinoko.server.packet.OutPacket;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.explorer.Warrior;
@@ -7,7 +8,7 @@ import kinoko.world.job.legend.Evan;
 import kinoko.world.job.resistance.Citizen;
 
 public final class SkillEffect extends Effect {
-    public int skillId;
+    public SkillId skillId;
     public int skillLevel;
     public int charLevel;
     public boolean enable;
@@ -25,42 +26,42 @@ public final class SkillEffect extends Effect {
         outPacket.encodeByte(type.getValue());
         switch (type) {
             case SkillUse -> {
-                outPacket.encodeInt(skillId); // nSkillID
+                outPacket.encodeSkillId(skillId); // nSkillID
                 outPacket.encodeByte(charLevel); // nCharLevel
                 outPacket.encodeByte(skillLevel); // nSLV
                 switch (skillId) {
-                    case Warrior.BERSERK, Evan.DRAGON_FURY -> {
+                    case SkillId.DRK_BERSERK, SkillId.EVAN8_DRAGON_FURY -> {
                         outPacket.encodeByte(enable); // bool -> CUser::LoadDarkForceEffect | CDragon::CreateEffect(1)
                     }
-                    case Thief.CHAINS_OF_HELL -> {
+                    case SkillId.DB5_CHAINS_OF_HELL -> {
                         outPacket.encodeByte(left); // bLeft
                         outPacket.encodeInt(info); // dwMobID
                     }
-                    case Citizen.CALL_OF_THE_HUNTER -> {
+                    case SkillId.CITIZEN_CALL_OF_THE_HUNTER -> {
                         outPacket.encodeByte(left); // bLeft
                         outPacket.encodeShort(positionX); // ptOffset.x
                         outPacket.encodeShort(positionY); // ptOffset.y
                     }
-                    case Citizen.CAPTURE -> {
+                    case SkillId.CITIZEN_CAPTURE -> {
                         outPacket.encodeByte(info); // 0 : monster successfully captured, 1 : capture failed monster hp too high, 2 : monster cannot be captured
                     }
                 }
-                if (skillId / 10000000 == 9) { // is_unregistered_skill
+                if (skillId.getId() / 10000000 == 9) { // is_unregistered_skill
                     outPacket.encodeByte(left); // bLeft
                 }
             }
             case SkillAffected, SkillSpecialAffected -> {
-                outPacket.encodeInt(skillId); // nSkillID
+                outPacket.encodeSkillId(skillId); // nSkillID
                 outPacket.encodeByte(skillLevel); // nSLV
             }
             case SkillAffected_Select -> {
                 outPacket.encodeInt(info); // nSelect
-                outPacket.encodeInt(skillId); // nSkillID
+                outPacket.encodeSkillId(skillId); // nSkillID
                 outPacket.encodeByte(skillLevel); // nSLV
             }
             case SkillSpecial -> {
-                outPacket.encodeInt(skillId); // nSkillID
-                if (skillId == Thief.MONSTER_BOMB) {
+                outPacket.encodeSkillId(skillId); // nSkillID
+                if (skillId == SkillId.DB5_MONSTER_BOMB) {
                     outPacket.encodeInt(positionX); // nTimeBombX
                     outPacket.encodeInt(positionY); // nTimeBombY
                     outPacket.encodeInt(skillLevel); // nSLV

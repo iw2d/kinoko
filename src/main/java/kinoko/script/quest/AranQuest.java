@@ -1,5 +1,6 @@
 package kinoko.script.quest;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.UserLocal;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
@@ -134,7 +135,7 @@ public final class AranQuest extends ScriptHandler {
             sm.sayNext("Are you reluctant to leave your instructor? *Sniff sniff* I'm so moved, but you can't stop here. You are destined for bigger and better things!");
             return;
         }
-        sm.addSkill(21000000, 0, 10); // Combo Ability
+        sm.addSkill(SkillId.ARAN1_COMBO_ABILITY, 0, 10); // Combo Ability
         sm.addExp(2000);
         sm.forceCompleteQuest(21703);
         sm.sayNext("(You remembered the #bCombo Ability#k skill! You were skeptical of the training at first, since the old man suffers from Alzheimer's and all, but boy, was it effective!)", ScriptMessageParam.PLAYER_AS_SPEAKER);

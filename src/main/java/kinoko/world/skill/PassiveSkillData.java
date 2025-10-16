@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -176,9 +177,9 @@ public final class PassiveSkillData {
                 continue;
             }
             final SkillInfo si = skillInfoResult.get();
-            if (si.isPsd() && (si.getSkillId() != Mechanic.PERFECT_ARMOR || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
-                if (si.getSkillId() == Mechanic.MECH_SIEGE_MODE_2) {
-                    addPassiveSkillData(si, SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE));
+            if (si.isPsd() && (si.getSkillId() != SkillId.MECH2_PERFECT_ARMOR || ss.getRidingVehicle() == SkillConstants.MECHANIC_VEHICLE)) {
+                if (si.getSkillId() == SkillId.MECH4_MECH_SIEGE_MODE) {
+                    addPassiveSkillData(si, SkillManager.getSkillLevel(ss, sm, SkillId.MECH3_MECH_SIEGE_MODE));
                 } else if (skillRecord.getSkillLevel() > 0) {
                     addPassiveSkillData(si, skillRecord.getSkillLevel());
                 }
@@ -187,9 +188,9 @@ public final class PassiveSkillData {
 
         // Special handling for Mech: Siege Mode
         if (JobConstants.isMechanicJob(bs.getJob())) {
-            if (SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE) > 0) {
-                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(Mechanic.MECH_SIEGE_MODE_2);
-                skillInfoResult.ifPresent(skillInfo -> addPassiveSkillData(skillInfo, SkillManager.getSkillLevel(ss, sm, Mechanic.MECH_SIEGE_MODE)));
+            if (SkillManager.getSkillLevel(ss, sm, SkillId.MECH3_MECH_SIEGE_MODE) > 0) {
+                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(SkillId.MECH4_MECH_SIEGE_MODE);
+                skillInfoResult.ifPresent(skillInfo -> addPassiveSkillData(skillInfo, SkillManager.getSkillLevel(ss, sm, SkillId.MECH3_MECH_SIEGE_MODE)));
             }
         }
 

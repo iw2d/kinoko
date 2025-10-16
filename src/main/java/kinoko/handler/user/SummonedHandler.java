@@ -1,6 +1,7 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.user.SummonedPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
@@ -61,7 +62,7 @@ public final class SummonedHandler {
         }
         final Summoned summoned = summonedResult.get();
         final Attack attack = new Attack(OutHeader.SummonedAttack);
-        attack.skillId = summoned.getSkillId();
+        attack.skillId = SkillId.fromValue(summoned.getSkillId());
 
         inPacket.decodeInt(); // ~drInfo.dr0
         inPacket.decodeInt(); // ~drInfo.dr1
@@ -116,7 +117,7 @@ public final class SummonedHandler {
         attack.crc = inPacket.decodeInt(); // Crc
 
         // Check CRC
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(summoned.getSkillId());
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(SkillId.fromValue(summoned.getSkillId()));
         if (skillInfoResult.isEmpty()) {
             log.error("Could not to resolve skill info for summoned attack for {}", summoned);
             return;
@@ -189,14 +190,14 @@ public final class SummonedHandler {
         final Summoned summoned = summonedResult.get();
 
         final Skill skill = new Skill();
-        skill.skillId = inPacket.decodeInt(); // nSkillID
+        skill.skillId = inPacket.decodeSkillId(); // nSkillID
         final byte actionAndDir = inPacket.decodeByte(); // (nMoveAction << 7) | (nAttackAction & 0x7F)
-        if (skill.skillId == Warrior.HEX_OF_THE_BEHOLDER) {
+        if (skill.skillId == SkillId.DRK_HEX_OF_THE_BEHOLDER) {
             skill.summonBuffType = inPacket.decodeByte();
         }
 
         // Resolve skill level
-        if (skill.skillId == summoned.getSkillId()) {
+        if (skill.skillId.getId() == summoned.getSkillId()) {
             skill.slv = summoned.getSkillLevel();
         } else {
             skill.slv = user.getSkillLevel(skill.skillId);
@@ -231,7 +232,7 @@ public final class SummonedHandler {
                 summoned.getSkillId() == Mechanic.SATELLITE_3) {
             if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.SafetyDamage)) {
                 user.resetTemporaryStat(Set.of(CharacterTemporaryStat.SafetyDamage, CharacterTemporaryStat.SafetyAbsorb));
-                user.setSkillCooltime(Mechanic.SATELLITE_SAFETY, user.getSkillStatValue(Mechanic.SATELLITE_SAFETY, SkillStat.cooltime));
+                user.setSkillCooltime(SkillId.MECH4_SATELLITE_SAFETY, user.getSkillStatValue(SkillId.MECH4_SATELLITE_SAFETY, SkillStat.cooltime));
             }
         }
     }

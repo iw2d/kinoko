@@ -3,6 +3,7 @@ package kinoko.handler.user;
 import kinoko.database.CharacterInfo;
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.field.*;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.user.*;
@@ -615,7 +616,7 @@ public final class UserHandler {
     @Handler(InHeader.UserSkillUpRequest)
     public static void handleUserSkillUpRequest(User user, InPacket inPacket) {
         inPacket.decodeInt(); // update_time
-        final int skillId = inPacket.decodeInt(); // nSkillID
+        final SkillId skillId = inPacket.decodeSkillId(); // nSkillID
 
         // Resolve skill info
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
@@ -651,7 +652,7 @@ public final class UserHandler {
             }
         }
 
-        final int skillRoot = SkillConstants.getSkillRoot(skillId);
+        final int skillRoot = skillId.getRoot();
         if (JobConstants.isBeginnerJob(skillRoot)) {
             // Check if valid beginner skill
             if (!SkillConstants.isBeginnerSpAddableSkill(skillId)) {

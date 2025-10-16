@@ -1,6 +1,7 @@
 package kinoko.handler.field;
 
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.BroadcastPacket;
@@ -238,9 +239,9 @@ public final class MobHandler {
         if (mob.getRelativeRect(SkillConstants.MONSTER_BOMB_RANGE).isInsideRect(x, y)) {
             final int damage = (int) Math.min(CalcDamage.calcDamageMax(user), user.getHp() - 100);
             user.addHp(-damage);
-            user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 120, damage));
+            user.write(UserLocal.timeBombAttack(SkillId.DB5_MONSTER_BOMB, mob.getX(), mob.getY(), 120, damage));
         } else {
-            user.write(UserLocal.timeBombAttack(Thief.MONSTER_BOMB, mob.getX(), mob.getY(), 0, 0));
+            user.write(UserLocal.timeBombAttack(SkillId.DB5_MONSTER_BOMB, mob.getX(), mob.getY(), 0, 0));
         }
     }
 

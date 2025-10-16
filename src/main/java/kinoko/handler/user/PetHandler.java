@@ -1,6 +1,7 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -69,7 +70,7 @@ public final class PetHandler {
         final long petSn = item.getItemSn();
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);
         if (petIndexResult.isEmpty()) {
-            final boolean hasFollowTheLead = user.getSkillLevel(SkillConstants.getNoviceSkillAsRace(Beginner.FOLLOW_THE_LEAD, user.getJob())) > 0;
+            final boolean hasFollowTheLead = user.getSkillLevel(SkillConstants.getNoviceSkillAsRace(SkillId.BEGINNER_FOLLOW_THE_LEAD, user.getJob())) > 0;
             if (hasFollowTheLead && !bossPet) {
                 // Check if max number of pets active
                 if (user.getPets().size() >= GameConstants.PET_COUNT_MAX) {

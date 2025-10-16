@@ -1,6 +1,7 @@
 package kinoko.world.job.resistance;
 
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.world.WvsContext;
@@ -48,11 +49,11 @@ public final class Citizen extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case Citizen.INFILTRATE:
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),

@@ -1,5 +1,6 @@
 package kinoko.world.job.explorer;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.MobPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -100,46 +101,46 @@ public final class Pirate extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
         switch (skillId) {
-            case BACKSPIN_BLOW:
-            case DOUBLE_UPPERCUT:
-            case SNATCH:
-            case BLANK_SHOT:
+            case SkillId.BRAWLER_BACKSPIN_BLOW:
+            case SkillId.BRAWLER_DOUBLE_UPPERCUT:
+            case SkillId.BUCCANEER_SNATCH:
+            case SkillId.GUNSLINGER_BLANK_SHOT:
                 if (!mob.isBoss()) {
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                 }
                 break;
-            case ENERGY_BLAST:
+            case SkillId.MARAUDER_ENERGY_BLAST:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                 }
                 break;
-            case GRENADE:
+            case SkillId.GUNSLINGER_GRENADE:
                 mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 break;
-            case GAVIOTA:
-                user.removeSummoned((summoned) -> summoned.getSkillId() == skillId);
+            case SkillId.OUTLAW_GAVIOTA:
+                user.removeSummoned((summoned) -> summoned.getSkillId() == skillId.getId());
                 break;
-            case FLAMETHROWER:
-                final int dot = si.getValue(SkillStat.dot, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.x);
+            case SkillId.OUTLAW_FLAMETHROWER:
+                final int dot = si.getValue(SkillStat.dot, slv) + user.getSkillStatValue(SkillId.CORSAIR_ELEMENTAL_BOOST, SkillStat.x);
                 mob.setBurnedInfo(BurnedInfo.from(user, si, slv, dot, mob), delay);
                 break;
-            case ICE_SPLITTER:
-                final int time = si.getValue(SkillStat.time, slv) + user.getSkillStatValue(ELEMENTAL_BOOST, SkillStat.y);
+            case SkillId.OUTLAW_ICE_SPLITTER:
+                final int time = si.getValue(SkillStat.time, slv) + user.getSkillStatValue(SkillId.CORSAIR_ELEMENTAL_BOOST, SkillStat.y);
                 mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, time * 1000), delay);
                 break;
-            case HOMING_BEACON:
-            case BULLSEYE:
+            case SkillId.OUTLAW_HOMING_BEACON:
+            case SkillId.CORSAIR_BULLSEYE:
                 if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
                     user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
                 }
-                user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, skillId == BULLSEYE ? si.getValue(SkillStat.x, slv) : 1, skillId, mob.getId()));
+                user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, skillId == SkillId.CORSAIR_BULLSEYE ? si.getValue(SkillStat.x, slv) : 1, skillId.getId(), mob.getId()));
                 break;
-            case HYPNOTIZE:
+            case SkillId.CORSAIR_HYPNOTIZE:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.setTemporaryStat(MobTemporaryStat.Dazzle, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                     if (mob.getController() != user) {
@@ -154,36 +155,36 @@ public final class Pirate extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
-            case ROLL_OF_THE_DICE_BUCC:
-            case ROLL_OF_THE_DICE_SAIR:
+            case SkillId.OUTLAW_ROLL_OF_THE_DICE:
+            case SkillId.MARAUDER_ROLL_OF_THE_DICE:
                 final int roll = Util.getRandom(1, 6);
                 user.write(UserLocal.effect(Effect.skillAffectedSelect(roll, skillId, slv)));
                 field.broadcastPacket(UserRemote.effect(user, Effect.skillAffectedSelect(roll, skillId, slv)), user);
                 if (roll != 1) {
                     final DiceInfo diceInfo = DiceInfo.from(roll, si, slv);
-                    user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId, si.getDuration(slv), diceInfo));
+                    user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId.getId(), si.getDuration(slv), diceInfo));
                 }
                 return;
 
             // BUCC
-            case MP_RECOVERY:
+            case SkillId.BRAWLER_MP_RECOVERY:
                 final int hp = user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100;
                 user.addMp(hp * si.getValue(SkillStat.y, slv) / 100);
                 return;
-            case OAK_BARREL:
+            case SkillId.BRAWLER_OAK_BARREL:
                 user.setTemporaryStat(CharacterTemporaryStat.Morph, TemporaryStatOption.of(si.getValue(SkillStat.morph, slv), skillId, si.getDuration(slv)));
                 return;
-            case TIME_LEAP:
+            case SkillId.BUCCANEER_TIME_LEAP:
                 final var iter = user.getSkillManager().getSkillCooltimes().keySet().iterator();
                 while (iter.hasNext()) {
-                    final int toReset = iter.next();
-                    if (toReset != TIME_LEAP) {
+                    final SkillId toReset = iter.next();
+                    if (toReset != SkillId.BUCCANEER_TIME_LEAP) {
                         user.write(UserLocal.skillCooltimeSet(toReset, 0));
                         iter.remove();
                     }
@@ -191,23 +192,23 @@ public final class Pirate extends SkillProcessor {
                 return;
 
             // SAIR
-            case GRENADE:
+            case SkillId.GUNSLINGER_GRENADE:
                 // Handled in attack
                 return;
-            case OCTOPUS:
-            case WRATH_OF_THE_OCTOPI:
+            case SkillId.OUTLAW_OCTOPUS:
+            case SkillId.CORSAIR_WRATH_OF_THE_OCTOPI:
                 final Summoned octopus = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK);
                 octopus.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(octopus);
                 return;
-            case GAVIOTA:
+            case SkillId.OUTLAW_GAVIOTA:
                 final Summoned gaviota = Summoned.from(si, slv, SummonedMoveAbility.FLY, SummonedAssistType.ATTACK);
                 gaviota.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 user.addSummoned(gaviota);
                 return;
-            case BATTLESHIP:
+            case SkillId.CORSAIR_BATTLESHIP:
                 user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.BATTLESHIP_VEHICLE, skillId, 0),
+                        CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.BATTLESHIP_VEHICLE, skillId.getId(), 0),
                         CharacterTemporaryStat.EPAD, TemporaryStatOption.of(si.getValue(SkillStat.epad, slv), skillId, 0),
                         CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
                         CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
@@ -221,18 +222,18 @@ public final class Pirate extends SkillProcessor {
     }
 
     public static int getBattleshipDurability(User user) {
-        final Instant cooltime = user.getSkillManager().getSkillCooltimes().get(SkillConstants.BATTLESHIP_DURABILITY);
+        final Instant cooltime = user.getSkillManager().getSkillCooltimes().get(SkillId.CORSAIR_BATTLESHIP_DURABILITY);
         if (cooltime != null) {
             return (int) cooltime.getEpochSecond();
         } else {
             // get_max_durability_of_vehicle
-            return 300 * user.getLevel() + 500 * (user.getSkillLevel(BATTLESHIP) - 72);
+            return 300 * user.getLevel() + 500 * (user.getSkillLevel(SkillId.CORSAIR_BATTLESHIP) - 72);
         }
     }
 
     public static void setBattleshipDurability(User user, int durability) {
         final Instant cooltime = Instant.ofEpochSecond(durability);
-        user.getSkillManager().getSkillCooltimes().put(SkillConstants.BATTLESHIP_DURABILITY, cooltime);
-        user.write(UserLocal.skillCooltimeSet(SkillConstants.BATTLESHIP_DURABILITY, durability));
+        user.getSkillManager().getSkillCooltimes().put(SkillId.CORSAIR_BATTLESHIP_DURABILITY, cooltime);
+        user.write(UserLocal.skillCooltimeSet(SkillId.CORSAIR_BATTLESHIP_DURABILITY, durability));
     }
 }

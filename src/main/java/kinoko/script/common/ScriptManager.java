@@ -1,5 +1,6 @@
 package kinoko.script.common;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.reward.Reward;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
@@ -62,9 +63,9 @@ public interface ScriptManager {
 
     void setAvatar(int look);
 
-    void addSkill(int skillId, int skillLevel, int masterLevel);
+    void addSkill(SkillId skillId, int skillLevel, int masterLevel);
 
-    void removeSkill(int skillId);
+    void removeSkill(SkillId skillId);
 
     void addSp(int jobLevel, int skillPoint);
 

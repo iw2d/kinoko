@@ -1,5 +1,6 @@
 package kinoko.server.packet;
 
+import kinoko.meta.SkillId;
 import kinoko.server.header.OutHeader;
 import kinoko.util.Util;
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,11 @@ public final class NioBufferOutPacket implements OutPacket {
     public void encodeInt(int value) {
         ensureSize(4);
         getBuffer().putInt(value);
+    }
+
+    @Override
+    public void encodeSkillId(SkillId skillId) {
+        this.encodeInt(skillId.getId());
     }
 
     @Override

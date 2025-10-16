@@ -1,5 +1,6 @@
 package kinoko.world.job.resistance;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserPacket;
@@ -78,11 +79,11 @@ public final class Mechanic extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case ATOMIC_HAMMER:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
@@ -98,19 +99,19 @@ public final class Mechanic extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final int summonDuration = getSummonDuration(user, si.getDuration(slv));
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             // MECH
             case MECH_PROTOTYPE:
                 handleMech(user, skillId);
                 return;
             case MECH_SIEGE_MODE:
-                final int mechanicMode = user.getSecondaryStat().getOption(CharacterTemporaryStat.Mechanic).rOption;
-                handleMech(user, mechanicMode == MECH_MISSILE_TANK ? MECH_SIEGE_MODE_2 : MECH_SIEGE_MODE);
+                final SkillId mechanicMode = user.getSecondaryStat().getOption(CharacterTemporaryStat.Mechanic).getSkillId();
+                handleMech(user, mechanicMode == SkillId.MECH4_MECH_MISSILE_TANK ? SkillId.MECH4_MECH_SIEGE_MODE : SkillId.MECH3_MECH_SIEGE_MODE);
                 return;
             case MECH_MISSILE_TANK:
                 handleMech(user, skillId);
@@ -120,7 +121,7 @@ public final class Mechanic extends SkillProcessor {
             // BUFFS
             case PERFECT_ARMOR:
                 if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.ManaReflection)) {
-                    user.resetTemporaryStat(skillId);
+                    user.resetTemporaryStat(skillId.getId());
                 } else {
                     user.setTemporaryStat(CharacterTemporaryStat.ManaReflection, TemporaryStatOption.of(slv, skillId, 0));
                 }
@@ -131,7 +132,7 @@ public final class Mechanic extends SkillProcessor {
                 field.broadcastPacket(UserRemote.effect(user, Effect.skillAffectedSelect(roll, skillId, slv)), user);
                 if (roll != 1) {
                     final DiceInfo diceInfo = DiceInfo.from(roll, si, slv);
-                    user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId, si.getDuration(slv), diceInfo));
+                    user.setTemporaryStat(CharacterTemporaryStat.Dice, TemporaryStatOption.ofDice(roll, skillId.getId(), si.getDuration(slv), diceInfo));
                 }
                 return;
             case SATELLITE_SAFETY:
@@ -233,7 +234,7 @@ public final class Mechanic extends SkillProcessor {
             case BOTS_N_TOTS:
                 if (skill.isSummonedSkill()) {
                     // Create sub-summon
-                    final Summoned botsAndTotsSummon = Summoned.from(BOTS_N_TOTS_SUMMON, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, Instant.now().plus(getSummonDuration(user, 5000), ChronoUnit.MILLIS)); // 5 second base duration
+                    final Summoned botsAndTotsSummon = Summoned.from(SkillId.MECH4_BOTS_N_TOTS, slv, SummonedMoveAbility.WALK_RANDOM, SummonedAssistType.ATTACK, Instant.now().plus(getSummonDuration(user, 5000), ChronoUnit.MILLIS)); // 5 second base duration
                     botsAndTotsSummon.setPosition(field, skill.summoned.getX(), skill.summoned.getY(), skill.summoned.isLeft());
                     user.addSummoned(botsAndTotsSummon);
                 } else {
@@ -257,8 +258,8 @@ public final class Mechanic extends SkillProcessor {
         log.error("Unhandled skill {}", skill.skillId);
     }
 
-    public static void handleMech(User user, int skillId) {
-        final int statSkillId = user.getSkillLevel(EXTREME_MECH) > 0 ? EXTREME_MECH : MECH_PROTOTYPE;
+    public static void handleMech(User user, SkillId skillId) {
+        final SkillId statSkillId = user.getSkillLevel(SkillId.MECH4_EXTREME_MECH) > 0 ? SkillId.MECH4_EXTREME_MECH : SkillId.MECH1_MECH_PROTOTYPE;
         final int slv = user.getSkillLevel(statSkillId);
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(statSkillId);
         if (skillInfoResult.isEmpty()) {
@@ -267,7 +268,7 @@ public final class Mechanic extends SkillProcessor {
         }
         final SkillInfo si = skillInfoResult.get();
         user.setTemporaryStat(Map.of(
-                CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.MECHANIC_VEHICLE, skillId, 0),
+                CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, SkillConstants.MECHANIC_VEHICLE, skillId.getId(), 0),
                 CharacterTemporaryStat.Mechanic, TemporaryStatOption.of(slv, skillId, 0),
                 CharacterTemporaryStat.EMHP, TemporaryStatOption.of(si.getValue(SkillStat.emhp, slv), skillId, 0),
                 CharacterTemporaryStat.EMMP, TemporaryStatOption.of(si.getValue(SkillStat.emmp, slv), skillId, 0),
@@ -288,8 +289,8 @@ public final class Mechanic extends SkillProcessor {
 
     private static int getSummonDuration(User user, int duration) {
         // Increased duration from Robot Mastery + tick interval for self-destruct
-        if (user.getSkillLevel(ROBOT_MASTERY) > 0) {
-            return duration + (user.getSkillStatValue(ROBOT_MASTERY, SkillStat.y) * 1000) + ServerConfig.FIELD_TICK_INTERVAL;
+        if (user.getSkillLevel(SkillId.MECH4_ROBOT_MASTERY) > 0) {
+            return duration + (user.getSkillStatValue(SkillId.MECH4_ROBOT_MASTERY, SkillStat.y) * 1000) + ServerConfig.FIELD_TICK_INTERVAL;
         }
         return duration + ServerConfig.FIELD_TICK_INTERVAL;
     }

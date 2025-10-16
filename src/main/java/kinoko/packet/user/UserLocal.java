@@ -1,5 +1,6 @@
 package kinoko.packet.user;
 
+import kinoko.meta.SkillId;
 import kinoko.server.dialog.UIType;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
@@ -113,9 +114,9 @@ public final class UserLocal {
         return outPacket;
     }
 
-    public static OutPacket timeBombAttack(int skillId, int x, int y, int impactDegree, int damage) {
+    public static OutPacket timeBombAttack(SkillId skillId, int x, int y, int impactDegree, int damage) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UserTimeBombAttack);
-        outPacket.encodeInt(skillId); // nSkillID
+        outPacket.encodeSkillId(skillId); // nSkillID
         outPacket.encodeInt(x); // nTimeBombX
         outPacket.encodeInt(y); // nTimeBombY
         outPacket.encodeInt(impactDegree); // nUserImpactDeg
@@ -133,9 +134,9 @@ public final class UserLocal {
         return OutPacket.of(OutHeader.UserRequestExJablin);
     }
 
-    public static OutPacket skillCooltimeSet(int skillId, int remainSeconds) {
+    public static OutPacket skillCooltimeSet(SkillId skillId, int remainSeconds) {
         final OutPacket outPacket = OutPacket.of(OutHeader.SkillCooltimeSet);
-        outPacket.encodeInt(skillId);
+        outPacket.encodeSkillId(skillId);
         outPacket.encodeShort(remainSeconds); // usRemainSec
         return outPacket;
     }

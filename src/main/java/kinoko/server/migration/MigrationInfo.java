@@ -1,5 +1,6 @@
 package kinoko.server.migration;
 
+import kinoko.meta.SkillId;
 import kinoko.server.ServerConfig;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
@@ -175,7 +176,7 @@ public final class MigrationInfo implements Encodable {
         // Filter summoned
         final Map<Integer, List<Summoned>> summoned = new HashMap<>();
         for (var entry : user.getSummoned().entrySet()) {
-            if (SkillConstants.isSummonMigrateSkill(entry.getKey())) {
+            if (SkillConstants.isSummonMigrateSkill(SkillId.fromValue(entry.getKey()))) {
                 summoned.put(entry.getKey(), entry.getValue());
             }
         }

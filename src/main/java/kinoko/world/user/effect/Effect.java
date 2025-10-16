@@ -1,5 +1,6 @@
 package kinoko.world.user.effect;
 
+import kinoko.meta.SkillId;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.item.Item;
@@ -204,7 +205,7 @@ public class Effect implements Encodable {
         return effect;
     }
 
-    public static SkillEffect skillUse(int skillId, int skillLevel, int charLevel) {
+    public static SkillEffect skillUse(SkillId skillId, int skillLevel, int charLevel) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
@@ -217,13 +218,13 @@ public class Effect implements Encodable {
         effect.skillId = skill.skillId;
         effect.skillLevel = skill.slv;
         switch (skill.skillId) {
-            case Thief.CHAINS_OF_HELL -> {
+            case SkillId.DB5_CHAINS_OF_HELL -> {
                 effect.left = skill.left; // bLeft
                 if (skill.targetIds != null && skill.targetIds.length > 0) {
                     effect.info = skill.targetIds[0]; // dwMobID
                 }
             }
-            case Citizen.CALL_OF_THE_HUNTER -> {
+            case SkillId.CITIZEN_CALL_OF_THE_HUNTER -> {
                 effect.left = skill.left; // bLeft
                 effect.positionX = skill.positionX; // ptOffset.x
                 effect.positionY = skill.positionY; // ptOffset.x
@@ -233,7 +234,7 @@ public class Effect implements Encodable {
         return effect;
     }
 
-    public static SkillEffect skillUseEnable(int skillId, int skillLevel, int charLevel, boolean enable) {
+    public static SkillEffect skillUseEnable(SkillId skillId, int skillLevel, int charLevel, boolean enable) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
@@ -242,7 +243,7 @@ public class Effect implements Encodable {
         return effect;
     }
 
-    public static SkillEffect skillUseInfo(int skillId, int skillLevel, int charLevel, int info) {
+    public static SkillEffect skillUseInfo(SkillId skillId, int skillLevel, int charLevel, int info) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillUse);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
@@ -251,14 +252,14 @@ public class Effect implements Encodable {
         return effect;
     }
 
-    public static SkillEffect skillAffected(int skillId, int skillLevel) {
+    public static SkillEffect skillAffected(SkillId skillId, int skillLevel) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillAffected);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;
         return effect;
     }
 
-    public static SkillEffect skillAffectedSelect(int select, int skillId, int skillLevel) {
+    public static SkillEffect skillAffectedSelect(int select, SkillId skillId, int skillLevel) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillAffected_Select);
         effect.info = select;
         effect.skillId = skillId;
@@ -266,7 +267,7 @@ public class Effect implements Encodable {
         return effect;
     }
 
-    public static SkillEffect skillSpecial(int skillId, int skillLevel, int positionX, int positionY) {
+    public static SkillEffect skillSpecial(SkillId skillId, int skillLevel, int positionX, int positionY) {
         final SkillEffect effect = new SkillEffect(EffectType.SkillAffected_Select);
         effect.skillId = skillId;
         effect.skillLevel = skillLevel;

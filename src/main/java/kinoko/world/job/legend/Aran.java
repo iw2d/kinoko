@@ -1,5 +1,6 @@
 package kinoko.world.job.legend;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -66,11 +67,11 @@ public final class Aran extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case BODY_PRESSURE:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.setTemporaryStat(Map.of(
@@ -94,11 +95,11 @@ public final class Aran extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case COMBO_DRAIN:
                 user.setTemporaryStat(CharacterTemporaryStat.ComboDrain, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;

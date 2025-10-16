@@ -1,5 +1,6 @@
 package kinoko.provider;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.mob.MobSkillType;
 import kinoko.provider.skill.MorphInfo;
 import kinoko.provider.skill.SkillInfo;
@@ -43,8 +44,8 @@ public final class SkillProvider implements WzProvider {
         return jobSkills.getOrDefault(job, List.of());
     }
 
-    public static Optional<SkillInfo> getSkillInfoById(int skillId) {
-        return Optional.ofNullable(skillInfos.get(skillId));
+    public static Optional<SkillInfo> getSkillInfoById(SkillId skillId) {
+        return Optional.ofNullable(skillInfos.get(skillId.getId()));
     }
 
     public static Optional<SkillInfo> getMobSkillInfoById(int skillId) {

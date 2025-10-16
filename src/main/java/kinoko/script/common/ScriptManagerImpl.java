@@ -1,5 +1,6 @@
 package kinoko.script.common;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.FieldEffectPacket;
 import kinoko.packet.field.FieldPacket;
 import kinoko.packet.field.NpcPacket;
@@ -372,7 +373,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void addSkill(int skillId, int skillLevel, int masterLevel) {
+    public void addSkill(SkillId skillId, int skillLevel, int masterLevel) {
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
             throw new ScriptError("Could not resolve skill info for skill ID : %d", skillId);
@@ -390,7 +391,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void removeSkill(int skillId) {
+    public void removeSkill(SkillId skillId) {
         final Optional<SkillRecord> skillRecordResult = user.getSkillManager().getSkill(skillId);
         if (skillRecordResult.isEmpty()) {
             return;

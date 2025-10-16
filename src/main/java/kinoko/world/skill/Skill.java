@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.meta.SkillId;
 import kinoko.world.field.Field;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.summoned.Summoned;
@@ -10,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class Skill {
-    public int skillId;
+    public SkillId skillId;
     public int slv;
 
     public int positionX;

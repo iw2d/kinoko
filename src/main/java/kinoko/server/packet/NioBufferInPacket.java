@@ -1,5 +1,6 @@
 package kinoko.server.packet;
 
+import kinoko.meta.SkillId;
 import kinoko.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,11 @@ public final class NioBufferInPacket implements InPacket {
     @Override
     public int decodeInt() {
         return buffer.getInt();
+    }
+
+    @Override
+    public SkillId decodeSkillId() {
+        return SkillId.fromValue(this.decodeInt());
     }
 
     @Override

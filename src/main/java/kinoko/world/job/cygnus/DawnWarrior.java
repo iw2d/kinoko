@@ -1,5 +1,6 @@
 package kinoko.world.job.cygnus;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.world.field.Field;
@@ -40,16 +41,16 @@ public final class DawnWarrior extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
         switch (skillId) {
-            case FINAL_ATTACK:
-                user.setTemporaryStat(CharacterTemporaryStat.SoulMasterFinal, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+            case SkillId.DW2_FINAL_ATTACK:
+                user.setTemporaryStat(CharacterTemporaryStat.SoulMasterFinal, TemporaryStatOption.of(1, skillId.getId(), si.getDuration(slv)));
                 return;
-            case SOUL_CHARGE:
-                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
+            case SkillId.DW3_SOUL_CHARGE:
+                user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(1, skillId.getId(), si.getDuration(slv)));
                 return;
         }
         log.error("Unhandled skill {}", skill.skillId);

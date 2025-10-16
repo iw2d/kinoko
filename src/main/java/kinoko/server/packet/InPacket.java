@@ -1,5 +1,7 @@
 package kinoko.server.packet;
 
+import kinoko.meta.SkillId;
+
 public interface InPacket {
     byte peekByte();
 
@@ -12,6 +14,8 @@ public interface InPacket {
     short decodeShort();
 
     int decodeInt();
+
+    SkillId decodeSkillId();
 
     long decodeLong();
 

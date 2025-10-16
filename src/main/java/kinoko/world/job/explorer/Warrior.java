@@ -1,5 +1,6 @@
 package kinoko.world.job.explorer;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class Warrior extends SkillProcessor {
+
     // WARRIOR
     public static final int HP_BOOST = 1000006;
     public static final int IRON_BODY = 1001003;
@@ -121,23 +123,21 @@ public final class Warrior extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         switch (skillId) {
-            case MONSTER_MAGNET_HERO:
-            case MONSTER_MAGNET_DRK:
+            case SkillId.HERO_MONSTER_MAGNET, SkillId.DRK_MONSTER_MAGNET:
                 if (!mob.isBoss()) {
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                 }
                 return;
-            case SHOUT:
-            case CHARGED_BLOW:
+            case SkillId.CRUSADER_SHOUT, SkillId.WK_CHARGED_BLOW:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                 }
                 break;
-            case BLAST:
+            case SkillId.PALADIN_BLAST:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.damage(user, mob.getHp(), delay);
                 }
@@ -147,40 +147,35 @@ public final class Warrior extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
         switch (skillId) {
             // COMMON
-            case POWER_GUARD_HERO:
-            case POWER_GUARD_PALADIN:
+            case SkillId.FIGHTER_POWER_GUARD, SkillId.PAGE_POWER_GUARD:
                 user.setTemporaryStat(CharacterTemporaryStat.PowerGuard, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
-            case MAGIC_CRASH_HERO:
-            case MAGIC_CRASH_PALADIN:
-            case MAGIC_CRASH_DRK:
+            case SkillId.CRUSADER_MAGIC_CRASH, SkillId.WK_MAGIC_CRASH, SkillId.DK_MAGIC_CRASH:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                         mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)), 0);
                     }
                 });
                 return;
-            case POWER_STANCE_HERO:
-            case POWER_STANCE_PALADIN:
-            case POWER_STANCE_DRK:
+            case SkillId.HERO_POWER_STANCE, SkillId.PALADIN_POWER_STANCE, SkillId.DRK_POWER_STANCE:
                 user.setTemporaryStat(CharacterTemporaryStat.Stance, TemporaryStatOption.of(si.getValue(SkillStat.prop, slv), skillId, si.getDuration(slv)));
                 return;
 
             // HERO
-            case ENRAGE:
+            case SkillId.HERO_ENRAGE:
                 final int nEnrage = si.getValue(SkillStat.x, slv) * 100 + si.getValue(SkillStat.mobCount, slv); // damR = n / 100, nCount = n % 100
                 user.setTemporaryStat(CharacterTemporaryStat.Enrage, TemporaryStatOption.of(nEnrage, skillId, si.getDuration(slv)));
                 resetComboCounter(user);
                 return;
 
             // PALADIN
-            case THREATEN:
+            case SkillId.PAGE_THREATEN:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isBoss()) {
                         mob.setTemporaryStat(Map.of(
@@ -191,52 +186,50 @@ public final class Warrior extends SkillProcessor {
                     }
                 });
                 return;
-            case HP_RECOVERY:
+            case SkillId.WK_HP_RECOVERY:
                 final int hpRecovery = user.getMaxHp() * si.getValue(SkillStat.x, slv) / 100;
                 user.addHp(hpRecovery);
                 user.write(UserLocal.effect(Effect.incDecHpEffect(hpRecovery)));
                 field.broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(hpRecovery)), user);
                 return;
-            case COMBAT_ORDERS:
+            case SkillId.WK_COMBAT_ORDERS:
                 user.setTemporaryStat(CharacterTemporaryStat.CombatOrders, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
-            case FIRE_CHARGE:
-            case ICE_CHARGE:
-            case DIVINE_CHARGE:
+            case SkillId.WK_FIRE_CHARGE, SkillId.WK_ICE_CHARGE, SkillId.PALADIN_DIVINE_CHARGE:
                 user.setTemporaryStat(CharacterTemporaryStat.WeaponCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
-            case LIGHTNING_CHARGE:
+            case SkillId.WK_LIGHTNING_CHARGE:
                 user.setTemporaryStat(CharacterTemporaryStat.AssistCharge, TemporaryStatOption.of(1, skillId, si.getDuration(slv)));
                 return;
 
             // DARK KNIGHT
-            case IRON_WILL:
+            case SkillId.SPEARNMAN_IRON_WILL:
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.PDD, TemporaryStatOption.of(si.getValue(SkillStat.pdd, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.MDD, TemporaryStatOption.of(si.getValue(SkillStat.mdd, slv), skillId, si.getDuration(slv))
                 ));
                 return;
-            case HYPER_BODY:
+            case SkillId.SPEARNMAN_HYPER_BODY:
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.MaxHP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.MaxMP, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv))
                 ));
                 return;
-            case DRAGON_BLOOD:
+            case SkillId.DK_DRAGON_BLOOD:
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.DragonBlood, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.PAD, TemporaryStatOption.of(si.getValue(SkillStat.pad, slv), skillId, si.getDuration(slv))
                 ));
                 user.setSchedule(skillId, Instant.now().plus(1, ChronoUnit.SECONDS)); // -x HP every sec
                 return;
-            case AURA_OF_THE_BEHOLDER:
+            case SkillId.DRK_AURA_OF_THE_BEHOLDER:
                 final int healAmount = si.getValue(SkillStat.hp, slv);
                 user.addHp(healAmount);
                 user.write(UserLocal.effect(Effect.incDecHpEffect(healAmount)));
                 field.broadcastPacket(UserRemote.effect(user, Effect.incDecHpEffect(healAmount)), user);
                 handleBeholderEffect(user);
                 return;
-            case HEX_OF_THE_BEHOLDER:
+            case SkillId.DRK_HEX_OF_THE_BEHOLDER:
                 switch (skill.summonBuffType) {
                     case 0 -> {
                         user.setTemporaryStat(CharacterTemporaryStat.EPDD, TemporaryStatOption.of(si.getValue(SkillStat.epdd, slv), skillId, si.getDuration(slv))); // BUFF_PDD
@@ -260,7 +253,7 @@ public final class Warrior extends SkillProcessor {
                 }
                 handleBeholderEffect(user);
                 return;
-            case BEHOLDER:
+            case SkillId.DRK_BEHOLDER:
                 final int beholderDuration = si.getValue(SkillStat.x, slv) * 60 * 1000; // x min
                 final Summoned beholder = Summoned.from(skillId, slv, SummonedMoveAbility.WALK, SummonedAssistType.HEAL, Instant.now().plus(beholderDuration, ChronoUnit.MILLIS));
                 beholder.setPosition(user.getField(), skill.positionX, skill.positionY, skill.summonLeft);
@@ -279,7 +272,7 @@ public final class Warrior extends SkillProcessor {
     }
 
     public static void handleBerserkEffect(User user) {
-        final int skillId = Warrior.BERSERK;
+        final SkillId skillId = SkillId.DRK_BERSERK;
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
@@ -290,7 +283,7 @@ public final class Warrior extends SkillProcessor {
     }
 
     public static boolean isBerserkEffect(User user) {
-        final int skillId = Warrior.BERSERK;
+        final SkillId skillId = SkillId.DRK_BERSERK;
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return false;
@@ -306,7 +299,7 @@ public final class Warrior extends SkillProcessor {
     }
 
     public static void handleBeholderEffect(User user) {
-        final int skillId = Warrior.BEHOLDER;
+        final SkillId skillId = SkillId.DRK_BEHOLDER;
         final Effect beholderEffect = Effect.skillAffected(skillId, user.getSkillLevel(skillId));
         user.write(UserLocal.effect(beholderEffect));
         user.getField().broadcastPacket(UserRemote.effect(user, beholderEffect), user);
