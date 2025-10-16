@@ -1,15 +1,17 @@
 package kinoko.world.skill;
 
+import kinoko.meta.SkillId;
+
 public final class SkillRecord {
-    private final int skillId;
+    private final SkillId skillId;
     private int skillLevel;
     private int masterLevel;
 
-    public SkillRecord(int skillId) {
+    public SkillRecord(SkillId skillId) {
         this.skillId = skillId;
     }
 
-    public int getSkillId() {
+    public SkillId getSkillId() {
         return skillId;
     }
 

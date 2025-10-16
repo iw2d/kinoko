@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.meta.SkillId;
 import kinoko.server.header.OutHeader;
 import kinoko.world.job.resistance.BattleMage;
 
@@ -13,7 +14,7 @@ public final class Attack {
 
     public byte mask;
     public byte flag;
-    public int skillId;
+    public SkillId skillId;
     public int slv;
     public byte combatOrders;
     public int keyDown;
@@ -102,8 +103,8 @@ public final class Attack {
     }
 
     public boolean isMagicAttack() {
-        switch (skillId) {
-            case BattleMage.TRIPLE_BLOW:
+        /*
+                    case BattleMage.TRIPLE_BLOW:
             case BattleMage.QUAD_BLOW:
             case BattleMage.QUINTUPLE_BLOW:
             case BattleMage.FINISHING_BLOW:
@@ -112,9 +113,14 @@ public final class Attack {
             case BattleMage.THE_FINISHER_QUAD_BLOW:
             case BattleMage.THE_FINISHER_QUINTUPLE_BLOW:
             case BattleMage.THE_FINISHER_FINISHING_BLOW:
-                return true;
-        }
-        return getHeaderType() == OutHeader.UserMagicAttack;
+         */
+
+        //TODO
+        return switch (skillId) {
+            case SkillId.TRIPLE_BLOW, SkillId.QUAD_BLOW, SkillId.QUINTUPLE_BLOW, SkillId.FINISHING_BLOW,
+                 SkillId.THE_FINISHER -> true;
+            default -> getHeaderType() == OutHeader.UserMagicAttack;
+        };
     }
 
     @Override

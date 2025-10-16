@@ -1,6 +1,7 @@
 package kinoko.handler.user;
 
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.MessagePacket;
@@ -51,10 +52,10 @@ public final class SkillHandler {
         inPacket.decodeInt(); // update_time
 
         final Skill skill = new Skill();
-        skill.skillId = inPacket.decodeInt(); // nSkillID
+        skill.skillId = inPacket.decodeSkillId(); // nSkillID
         skill.slv = inPacket.decodeByte(); // nSLV
 
-        if (skill.skillId == Mechanic.ROCK_N_SHOCK) {
+        if (skill.skillId == SkillId.MECH3_ROCK_N_SHOCK) {
             // CUserLocal::DoActiveSkill_Summon
             skill.rockAndShockCount = inPacket.decodeByte();
             if (skill.rockAndShockCount == 2) {
@@ -62,11 +63,11 @@ public final class SkillHandler {
                 skill.rockAndShock2 = inPacket.decodeInt();
             }
         }
-        if (skill.skillId == Citizen.CAPTURE) {
+        if (skill.skillId == SkillId.CITIZEN_CAPTURE) {
             // CUserLocal::DoActiveSkill_MobCapture
             skill.captureTargetMobId = inPacket.decodeInt();
         }
-        if (skill.skillId == Citizen.CALL_OF_THE_HUNTER) {
+        if (skill.skillId == SkillId.CITIZEN_CALL_OF_THE_HUNTER) {
             // CUserLocal::DoActiveSkill_SummonMonster
             skill.randomCapturedMobId = inPacket.decodeInt();
         }
@@ -78,14 +79,14 @@ public final class SkillHandler {
                 skill.summonLeft = inPacket.decodeBoolean();
             }
         }
-        if (skill.skillId == Thief.SHADOW_STARS) {
+        if (skill.skillId == SkillId.NIGHTLORD_SHADOW_STARS) {
             // CUserLocal::SendSkillUseRequest
             skill.spiritJavelinItemId = inPacket.decodeInt(); // nSpiritJavelinItemID
         }
         if (SkillConstants.isPartySkill(skill.skillId) && inPacket.getRemaining() > 2) {
             // CUserLocal::SendSkillUseRequest
             skill.affectedMemberBitMap = inPacket.decodeByte();
-            if (skill.skillId == Magician.DISPEL) {
+            if (skill.skillId == SkillId.PRIEST_DISPEL) {
                 inPacket.decodeShort(); // tDelay
             }
         }
@@ -95,27 +96,27 @@ public final class SkillHandler {
             skill.targetIds = new int[targetCount];
             for (int i = 0; i < targetCount; i++) {
                 skill.targetIds[i] = inPacket.decodeInt();
-                if (skill.skillId == Thief.CHAINS_OF_HELL) {
+                if (skill.skillId == SkillId.DB5_CHAINS_OF_HELL) {
                     // CUserLocal::TryDoingMonsterMagnet
                     inPacket.decodeByte(); // anMobMove[k] == 3 || anMobMove[k] == 4
                 }
             }
         }
-        if (skill.skillId == Thief.CHAINS_OF_HELL || skill.skillId == Citizen.CALL_OF_THE_HUNTER || SkillConstants.isSummonSkill(skill.skillId)) {
+        if (skill.skillId == SkillId.DB5_CHAINS_OF_HELL || skill.skillId == SkillId.CITIZEN_CALL_OF_THE_HUNTER || SkillConstants.isSummonSkill(skill.skillId)) {
             // CUserLocal::TryDoingMonsterMagnet || CUserLocal::DoActiveSkill_SummonMonster || CUserLocal::DoActiveSkill_Summon
             skill.left = inPacket.decodeBoolean(); // nMoveAction & 1
         }
         // ignore tDelay
 
         // Check skill root
-        final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
+        final int skillRoot = skill.skillId.getRoot();
         if (!JobConstants.isBeginnerJob(skillRoot) && !JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot)) {
             log.error("Tried to use skill {} as incorrect job : {}", skill.skillId, user.getJob());
             user.dispose();
             return;
         }
         // Check seal
-        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal) && skill.skillId != Magician.DISPEL) {
+        if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Seal) && skill.skillId != SkillId.PRIEST_DISPEL) {
             log.error("Tried to use skill {} while sealed", skill.skillId);
             user.dispose();
             return;
@@ -137,7 +138,7 @@ public final class SkillHandler {
             }
         }
         // Mystic Door cooltime to avoid crashes
-        if (skill.skillId == Magician.MYSTIC_DOOR) {
+        if (skill.skillId == SkillId.PRIEST_MYSTIC_DOOR) {
             if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
                 user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));
                 user.dispose();
@@ -149,14 +150,14 @@ public final class SkillHandler {
 
     @Handler(InHeader.UserSkillCancelRequest)
     public static void handleUserSkillCancelRequest(User user, InPacket inPacket) {
-        final int skillId = inPacket.decodeInt(); // nSkillID
+        final SkillId skillId = inPacket.decodeSkillId(); // nSkillID
         if (SkillConstants.isKeydownSkill(skillId)) {
-            user.getField().broadcastPacket(UserRemote.skillCancel(user, skillId));
+            user.getField().broadcastPacket(UserRemote.skillCancel(user, skillId.getId()));
             return;
         }
         // Remove stat matching skill ID
         final SecondaryStat ss = user.getSecondaryStat();
-        final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.rOption == skillId);
+        final Set<CharacterTemporaryStat> resetStats = ss.resetTemporaryStat((cts, option) -> option.getSkillId() == skillId);
         final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(resetStats, CharacterTemporaryStat.FLAG_SIZE);
         if (!flag.isEmpty()) {
             user.write(WvsContext.temporaryStatReset(flag));
@@ -164,7 +165,7 @@ public final class SkillHandler {
         }
         // Additional handling for CTS
         if (resetStats.contains(CharacterTemporaryStat.Beholder)) {
-            user.removeSummoned((summoned) -> summoned.getSkillId() == Warrior.BEHOLDER);
+            user.removeSummoned((summoned) -> summoned.getSkillId() == SkillId.DRK_BEHOLDER.getId());
         }
         if (resetStats.contains(CharacterTemporaryStat.Aura)) {
             user.resetTemporaryStat(CharacterTemporaryStat.AURA_STAT);
@@ -206,7 +207,7 @@ public final class SkillHandler {
 
     @Handler(InHeader.UserMovingShootAttackPrepare)
     public static void handleMovingShootAttackPrepare(User user, InPacket inPacket) {
-        final int skillId = inPacket.decodeInt(); // nSkillID
+        final SkillId skillId = inPacket.decodeSkillId(); // nSkillID
         final short actionAndDir = inPacket.decodeShort(); // (nMoveAction & 1) << 15 | random_shoot_attack_action & 0x7FFF
         final byte attackSpeed = inPacket.decodeByte(); // nActionSpeed
         final int slv = user.getSkillLevel(skillId);
@@ -214,12 +215,12 @@ public final class SkillHandler {
             log.error("Received UserMovingShootAttackPrepare for skill {}, but skill level is 0", skillId);
             return;
         }
-        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId, slv, actionAndDir, attackSpeed), user);
+        user.getField().broadcastPacket(UserRemote.movingShootAttackPrepare(user, skillId.getId(), slv, actionAndDir, attackSpeed), user);
     }
 
     @Handler(InHeader.UserEffectLocal)
     public static void handleUserEffectLocal(User user, InPacket inPacket) {
-        final int skillId = inPacket.decodeInt();
+        final SkillId skillId = inPacket.decodeSkillId();
         final int slv = inPacket.decodeByte();
         final boolean sendLocal = inPacket.decodeBoolean();
 
@@ -227,10 +228,11 @@ public final class SkillHandler {
         if (sendLocal) {
             user.write(UserLocal.effect(effect));
 
+            //TODO
             // Not a real skill ID, but client sends this when trying to cancel Mech: Siege Mode (35111004), Mech: Missile Tank (35121005), and Mech: Siege Mode 2 (35121013)
-            if (skillId == 35110004 || skillId == 35120005 || skillId == 35120013) {
+            if (skillId.getId() == 35110004 || skillId.getId() == 35120005 || skillId.getId() == 35120013) {
                 if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.Mechanic)) {
-                    Mechanic.handleMech(user, skillId == 35120013 ? Mechanic.MECH_MISSILE_TANK : Mechanic.MECH_PROTOTYPE);
+                    Mechanic.handleMech(user, skillId.getId() == 35120013 ? SkillId.MECH4_MECH_MISSILE_TANK : SkillId.MECH1_MECH_PROTOTYPE);
                 }
             }
         }
@@ -254,10 +256,10 @@ public final class SkillHandler {
         skill.positionY = inPacket.decodeInt();
         inPacket.decodeInt();
         skill.keyDown = inPacket.decodeInt();
-        skill.skillId = inPacket.decodeInt();
+        skill.skillId = inPacket.decodeSkillId();
         skill.slv = inPacket.decodeInt();
 
-        if (skill.skillId != Thief.FLASHBANG && skill.skillId != Thief.MONSTER_BOMB) {
+        if (skill.skillId != SkillId.DB3_FLASHBANG && skill.skillId != SkillId.DB5_MONSTER_BOMB) {
             handleSkill(user, skill);
         }
         user.getField().broadcastPacket(UserRemote.throwGrenade(user, skill), user);
@@ -277,7 +279,7 @@ public final class SkillHandler {
     }
 
     private static void handleSkill(User user, Skill skill) {
-        if (skill.skillId == WildHunter.JAGUAR_OSHI_DIGESTED && user.getHp() <= 0) {
+        if (skill.skillId == SkillId.WH2_JAGUAROSHI_1 && user.getHp() <= 0) {
             log.error("Tried to use skill {} while dead", skill.skillId);
             user.dispose();
             return;

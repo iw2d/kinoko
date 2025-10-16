@@ -1,6 +1,7 @@
 package kinoko.world.user;
 
 import kinoko.handler.user.FriendHandler;
+import kinoko.meta.SkillId;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
@@ -188,12 +189,12 @@ public final class User extends Life {
         return schedules;
     }
 
-    public Instant getSchedule(int skillId) {
-        return schedules.getOrDefault(skillId, Instant.MAX);
+    public Instant getSchedule(SkillId skillId) {
+        return schedules.getOrDefault(skillId.getId(), Instant.MAX);
     }
 
-    public void setSchedule(int skillId, Instant nextSchedule) {
-        schedules.put(skillId, nextSchedule);
+    public void setSchedule(SkillId skillId, Instant nextSchedule) {
+        schedules.put(skillId.getId(), nextSchedule);
     }
 
     public byte getFieldKey() {
@@ -436,11 +437,11 @@ public final class User extends Life {
         write(WvsContext.statChanged(Stat.POP, newPop, false));
     }
 
-    public int getSkillLevel(int skillId) {
+    public int getSkillLevel(SkillId skillId) {
         return SkillManager.getSkillLevel(getSecondaryStat(), getSkillManager(), skillId);
     }
 
-    public int getSkillStatValue(int skillId, SkillStat stat) {
+    public int getSkillStatValue(SkillId skillId, SkillStat stat) {
         final int slv = getSkillLevel(skillId);
         if (slv == 0) {
             return 0;
@@ -517,7 +518,7 @@ public final class User extends Life {
         }
     }
 
-    public void setSkillCooltime(int skillId, int cooltime) {
+    public void setSkillCooltime(SkillId skillId, int cooltime) {
         if (cooltime > 0) {
             getSkillManager().setSkillCooltime(skillId, Instant.now().plus(cooltime, ChronoUnit.SECONDS));
         } else {
@@ -526,14 +527,14 @@ public final class User extends Life {
         write(UserLocal.skillCooltimeSet(skillId, cooltime));
     }
 
-    public List<Integer> expireSkillCooltime(Instant now) {
-        final List<Integer> resetCooltimes = new ArrayList<>();
+    public List<SkillId> expireSkillCooltime(Instant now) {
+        final List<SkillId> resetCooltimes = new ArrayList<>();
         final var iter = getSkillManager().getSkillCooltimes().entrySet().iterator();
         while (iter.hasNext()) {
-            final Map.Entry<Integer, Instant> entry = iter.next();
-            final int skillId = entry.getKey();
+            final Map.Entry<SkillId, Instant> entry = iter.next();
+            final SkillId skillId = entry.getKey();
             // Battleship durability is stored as cooltime
-            if (skillId == SkillConstants.BATTLESHIP_DURABILITY) {
+            if (skillId == SkillId.CORSAIR_BATTLESHIP_DURABILITY) {
                 continue;
             }
             // Check skill cooltime and remove
@@ -721,8 +722,8 @@ public final class User extends Life {
     // SUMMONED METHODS ------------------------------------------------------------------------------------------------
 
     public void addSummoned(Summoned summoned) {
-        final int skillId = summoned.getSkillId();
-        final List<Summoned> summonedList = getSummoned().computeIfAbsent(skillId, (key) -> new ArrayList<>());
+        final SkillId skillId = SkillId.fromValue(summoned.getSkillId());
+        final List<Summoned> summonedList = getSummoned().computeIfAbsent(skillId.getId(), (key) -> new ArrayList<>());
         if (!SkillConstants.isSummonMultipleSkill(skillId) && !summonedList.isEmpty()) {
             for (Summoned existing : summonedList) {
                 existing.setLeaveType(SummonedLeaveType.NOT_ABLE_MULTIPLE);
@@ -755,8 +756,8 @@ public final class User extends Life {
         }
     }
 
-    public Optional<Summoned> getSummonedBySkillId(int skillId) {
-        final List<Summoned> summonedList = getSummoned().getOrDefault(skillId, List.of());
+    public Optional<Summoned> getSummonedBySkillId(SkillId skillId) {
+        final List<Summoned> summonedList = getSummoned().getOrDefault(skillId.getId(), List.of());
         if (summonedList.isEmpty()) {
             return Optional.empty();
         }

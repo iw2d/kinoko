@@ -1,5 +1,6 @@
 package kinoko.world.job.explorer;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.field.MobPacket;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
@@ -129,11 +130,11 @@ public final class Thief extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case SHADOW_MESO:
                 if (!mob.isBoss()) {
                     mob.resetTemporaryStat(Set.of(MobTemporaryStat.PGuardUp, MobTemporaryStat.MGuardUp));
@@ -180,11 +181,11 @@ public final class Thief extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case DARK_FLARE_NL:
             case DARK_FLARE_SHAD:
                 final Summoned darkFlare = Summoned.from(si, slv, SummonedMoveAbility.STOP, SummonedAssistType.ATTACK_COUNTER);
@@ -197,7 +198,7 @@ public final class Thief extends SkillProcessor {
                 final int damage = (int) Math.clamp(CalcDamage.calcDamageMax(user) * si.getValue(SkillStat.damage, slv) / 100, 1.0, GameConstants.DAMAGE_MAX);
                 final int dotCount = si.getValue(SkillStat.time, slv); // duration / interval
                 skill.forEachAffectedMob(field, (mob) -> {
-                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId, damage, 1000, dotCount), 0);
+                    mob.setBurnedInfo(new BurnedInfo(user.getCharacterId(), skillId.getId(), damage, 1000, dotCount), 0);
                 });
                 return;
 
@@ -227,10 +228,10 @@ public final class Thief extends SkillProcessor {
 
             // DB
             case TORNADO_SPIN:
-                user.setTemporaryStat(CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId.getId(), si.getDuration(slv)));
                 return;
             case MIRRORED_TARGET:
-                final Summoned summoned = new Summoned(skillId, slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
+                final Summoned summoned = new Summoned(skillId.getId(), slv, SummonedMoveAbility.STOP, SummonedAssistType.NONE, user.getCharacterData().getAvatarLook(), Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS));
                 summoned.setPosition(field, skill.positionX, skill.positionY, skill.summonLeft);
                 summoned.setHp(si.getValue(SkillStat.x, slv));
                 user.addSummoned(summoned);
@@ -242,7 +243,7 @@ public final class Thief extends SkillProcessor {
                 return;
             case MONSTER_BOMB:
                 skill.forEachAffectedMob(field, (mob) -> {
-                    field.broadcastPacket(MobPacket.mobAffected(mob, skillId, 0));
+                    field.broadcastPacket(MobPacket.mobAffected(mob, skillId.getId(), 0));
                     mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL), 0); // for MobTimeBombEnd check
                 });
                 return;

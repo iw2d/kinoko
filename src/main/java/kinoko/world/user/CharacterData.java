@@ -1,5 +1,6 @@
 package kinoko.world.user;
 
+import kinoko.meta.SkillId;
 import kinoko.server.dialog.miniroom.MiniRoomType;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -295,7 +296,7 @@ public final class CharacterData implements Encodable {
         if (flag.hasFlag(DBChar.SKILLRECORD)) {
             outPacket.encodeShort(skillManager.getSkillRecords().size());
             for (SkillRecord sr : skillManager.getSkillRecords()) {
-                outPacket.encodeInt(sr.getSkillId());
+                outPacket.encodeSkillId(sr.getSkillId());
                 outPacket.encodeInt(sr.getSkillLevel());
                 outPacket.encodeFT(FileTime.DEFAULT_TIME); // mSkillExpired
                 if (SkillConstants.isSkillNeedMasterLevel(sr.getSkillId())) {
@@ -308,18 +309,18 @@ public final class CharacterData implements Encodable {
             final Instant now = Instant.now();
             final var iter = skillManager.getSkillCooltimes().entrySet().iterator();
             while (iter.hasNext()) {
-                final Map.Entry<Integer, Instant> entry = iter.next();
-                final int skillId = entry.getKey();
+                final Map.Entry<SkillId, Instant> entry = iter.next();
+                final SkillId skillId = entry.getKey();
                 final Instant end = entry.getValue();
                 // Battleship durability is stored as cooltime
-                if (skillId == SkillConstants.BATTLESHIP_DURABILITY) {
-                    cooltimes.put(skillId, end.getEpochSecond());
+                if (skillId == SkillId.CORSAIR_BATTLESHIP_DURABILITY) {
+                    cooltimes.put(skillId.getId(), end.getEpochSecond());
                 } else {
                     if (now.isAfter(end)) {
                         iter.remove();
                         continue;
                     }
-                    cooltimes.put(skillId, Duration.between(now, end).getSeconds());
+                    cooltimes.put(skillId.getId(), Duration.between(now, end).getSeconds());
                 }
 
             }

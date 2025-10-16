@@ -1,5 +1,6 @@
 package kinoko.world.skill;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
@@ -47,7 +48,8 @@ public abstract class SkillProcessor {
 
     public static void processAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        //TODO
+        final int skillId = attack.skillId.getId();
         final int slv = attack.slv;
 
         final Field field = user.getField();
@@ -91,18 +93,21 @@ public abstract class SkillProcessor {
                 return;
         }
 
-        final int skillRoot = SkillConstants.getSkillRoot(attack.skillId);
+        final int skillRoot = attack.skillId.getRoot();
         switch (Job.getById(skillRoot)) {
-            case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
+            case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT,
+                 DARK_KNIGHT -> {
                 Warrior.handleAttack(user, mob, attack, delay);
             }
-            case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST, BISHOP -> {
+            case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST,
+                 BISHOP -> {
                 Magician.handleAttack(user, mob, attack, delay);
             }
             case ARCHER, HUNTER, RANGER, BOWMASTER, CROSSBOWMAN, SNIPER, MARKSMAN -> {
                 Bowman.handleAttack(user, mob, attack, delay);
             }
-            case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
+            case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE,
+                 BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
                 Thief.handleAttack(user, mob, attack, delay);
             }
             case PIRATE, BRAWLER, MARAUDER, BUCCANEER, GUNSLINGER, OUTLAW, CORSAIR -> {
@@ -146,11 +151,11 @@ public abstract class SkillProcessor {
 
     public static void processSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             // BEGINNER SKILLS -----------------------------------------------------------------------------------------
             case Beginner.RECOVERY:
             case Noblesse.RECOVERY:
@@ -174,7 +179,7 @@ public abstract class SkillProcessor {
                     log.error("Tried to use Monster Rider skill without a taming mob");
                     return;
                 }
-                user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, tamingMobItem.getItemId(), skillId, 0));
+                user.setTemporaryStat(CharacterTemporaryStat.RideVehicle, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.RideVehicle, tamingMobItem.getItemId(), skillId.getId(), 0));
                 return;
             case Beginner.SOARING:
             case Noblesse.SOARING:
@@ -298,7 +303,7 @@ public abstract class SkillProcessor {
             case Thief.DARK_SIGHT:
             case NightWalker.DARK_SIGHT:
             case WindArcher.WIND_WALK:
-                final CharacterTemporaryStat darkSightStat = skillId == WindArcher.WIND_WALK ?
+                final CharacterTemporaryStat darkSightStat = skillId == SkillId.WA2_WIND_WALK ?
                         CharacterTemporaryStat.WindWalk :
                         CharacterTemporaryStat.DarkSight;
                 if (slv == si.getMaxLevel()) {
@@ -336,8 +341,8 @@ public abstract class SkillProcessor {
             case Pirate.DASH:
             case ThunderBreaker.DASH:
                 user.setTemporaryStat(Map.of(
-                        CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)),
-                        CharacterTemporaryStat.Dash_Jump, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Jump, si.getValue(SkillStat.y, slv), skillId, si.getDuration(slv))
+                        CharacterTemporaryStat.Dash_Speed, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Speed, si.getValue(SkillStat.x, slv), skillId.getId(), si.getDuration(slv)),
+                        CharacterTemporaryStat.Dash_Jump, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.Dash_Jump, si.getValue(SkillStat.y, slv), skillId.getId(), si.getDuration(slv))
                 ));
                 return;
             case Pirate.TRANSFORMATION:
@@ -355,7 +360,7 @@ public abstract class SkillProcessor {
                 return;
             case Pirate.SPEED_INFUSION:
             case ThunderBreaker.SPEED_INFUSION:
-                user.setTemporaryStat(CharacterTemporaryStat.PartyBooster, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.PartyBooster, si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.PartyBooster, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.PartyBooster, si.getValue(SkillStat.x, slv), skillId.getId(), si.getDuration(slv)));
                 return;
 
             // COMMON SKILLS -------------------------------------------------------------------------------------------
@@ -455,21 +460,24 @@ public abstract class SkillProcessor {
         }
 
         // CLASS SPECIFIC SKILLS ---------------------------------------------------------------------------------------
-        final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
+        final int skillRoot = skill.skillId.getRoot();
         switch (Job.getById(skillRoot)) {
             case CITIZEN -> {
                 Citizen.handleSkill(user, skill);
             }
-            case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT, DARK_KNIGHT -> {
+            case WARRIOR, FIGHTER, CRUSADER, HERO, PAGE, WHITE_KNIGHT, PALADIN, SPEARMAN, DRAGON_KNIGHT,
+                 DARK_KNIGHT -> {
                 Warrior.handleSkill(user, skill);
             }
-            case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST, BISHOP -> {
+            case MAGICIAN, WIZARD_FP, MAGE_FP, ARCH_MAGE_FP, WIZARD_IL, MAGE_IL, ARCH_MAGE_IL, CLERIC, PRIEST,
+                 BISHOP -> {
                 Magician.handleSkill(user, skill);
             }
             case ARCHER, HUNTER, RANGER, BOWMASTER, CROSSBOWMAN, SNIPER, MARKSMAN -> {
                 Bowman.handleSkill(user, skill);
             }
-            case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE, BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
+            case ROGUE, ASSASSIN, HERMIT, NIGHT_LORD, BANDIT, CHIEF_BANDIT, SHADOWER, BLADE_RECRUIT, BLADE_ACOLYTE,
+                 BLADE_SPECIALIST, BLADE_LORD, BLADE_MASTER -> {
                 Thief.handleSkill(user, skill);
             }
             case PIRATE, BRAWLER, MARAUDER, BUCCANEER, GUNSLINGER, OUTLAW, CORSAIR -> {
@@ -512,7 +520,7 @@ public abstract class SkillProcessor {
     }
 
     protected static int getBuffedDuration(User user, int duration) {
-        final int skillId = SkillConstants.getBuffMasterySkill(user.getJob());
+        final SkillId skillId = SkillConstants.getBuffMasterySkill(user.getJob());
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return duration;
@@ -540,7 +548,7 @@ public abstract class SkillProcessor {
             return;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Regen);
-        final int skillId = option.rOption;
+        final SkillId skillId = option.getSkillId();
         if (now.isAfter(user.getSchedule(skillId))) {
             final int hpRecovery = option.nOption;
             user.addHp(hpRecovery);
@@ -555,12 +563,12 @@ public abstract class SkillProcessor {
             return;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.DragonBlood);
-        final int skillId = option.rOption;
+        final SkillId skillId = option.getSkillId();
         if (now.isAfter(user.getSchedule(skillId))) {
             final int hpConsume = option.nOption;
             if (user.getHp() < hpConsume * 4) {
                 // Skill is canceled when you don't have enough HP to be consumed in the next 4 seconds
-                user.resetTemporaryStat(skillId);
+                user.resetTemporaryStat(skillId.getId());
                 return;
             }
             user.addHp(-hpConsume);
@@ -573,7 +581,7 @@ public abstract class SkillProcessor {
             return;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Infinity);
-        final int skillId = option.rOption;
+        final SkillId skillId = option.getSkillId();
         if (now.isAfter(user.getSchedule(skillId))) {
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
@@ -598,9 +606,9 @@ public abstract class SkillProcessor {
             return;
         }
         final TemporaryStatOption option = user.getSecondaryStat().getOption(CharacterTemporaryStat.Aura);
-        final int skillId = BattleMage.getAdvancedAuraSkill(user, option.rOption);
+        final SkillId skillId = BattleMage.getAdvancedAuraSkill(user, option.getSkillId());
         final int slv = user.getSkillLevel(skillId);
-        if (now.isAfter(user.getSchedule(option.rOption))) {
+        if (now.isAfter(user.getSchedule(option.getSkillId()))) {
             final CharacterTemporaryStat cts = SkillConstants.getStatByAuraSkill(skillId);
             if (cts == null) {
                 log.error("Could not resolve CTS for aura skill ID : {}", skillId);
@@ -631,7 +639,7 @@ public abstract class SkillProcessor {
                 }
             });
             // Set next schedule
-            user.setSchedule(option.rOption, now.plus(1, ChronoUnit.SECONDS));
+            user.setSchedule(option.getSkillId(), now.plus(1, ChronoUnit.SECONDS));
         }
     }
 
@@ -639,8 +647,8 @@ public abstract class SkillProcessor {
         if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Mechanic)) {
             return;
         }
-        final int skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Mechanic).rOption;
-        if (skillId != Mechanic.MECH_MISSILE_TANK) {
+        final SkillId skillId = user.getSecondaryStat().getOption(CharacterTemporaryStat.Mechanic).getSkillId();
+        if (skillId != SkillId.MECH4_MECH_MISSILE_TANK) {
             return;
         }
         if (now.isAfter(user.getSchedule(skillId))) {

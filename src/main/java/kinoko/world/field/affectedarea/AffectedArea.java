@@ -1,5 +1,6 @@
 package kinoko.world.field.affectedarea;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
@@ -22,13 +23,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class AffectedArea extends FieldObjectImpl implements Encodable {
     private static final Logger log = LogManager.getLogger(AffectedArea.class);
     private final AffectedAreaType type;
     private final FieldObject owner;
-    private final int skillId;
+    private final SkillId skillId;
     private final int skillLevel;
     private final int delay;
     private final int interval;
@@ -36,7 +38,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     private final ElementAttribute elemAttr;
     private final Instant expireTime;
 
-    public AffectedArea(AffectedAreaType type, FieldObject owner, int skillId, int skillLevel, int delay, int interval, Rect rect, ElementAttribute elemAttr, Instant expireTime) {
+    public AffectedArea(AffectedAreaType type, FieldObject owner, SkillId skillId, int skillLevel, int delay, int interval, Rect rect, ElementAttribute elemAttr, Instant expireTime) {
         this.type = type;
         this.owner = owner;
         this.skillId = skillId;
@@ -56,7 +58,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         return owner;
     }
 
-    public int getSkillId() {
+    public SkillId getSkillId() {
         return skillId;
     }
 
@@ -85,28 +87,26 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     }
 
     public void handleUserInside(User user) {
-        switch (skillId) {
-            case Evan.RECOVERY_AURA -> {
-                final int partyId = ((User) owner).getPartyId();
-                if (user.getCharacterId() == owner.getId() || (partyId != 0 && user.getPartyId() == partyId)) {
-                    final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
-                    if (skillInfoResult.isEmpty()) {
-                        log.error("Failed to resolve skill info for affected area : {}", skillId);
-                        return;
-                    }
-                    final SkillInfo si = skillInfoResult.get();
-                    double recoveryRate = si.getValue(SkillStat.x, skillLevel) / 100.0;
-                    recoveryRate = recoveryRate * (interval * ServerConfig.FIELD_TICK_INTERVAL) / si.getDuration(skillLevel);
-                    user.addMp((int) (recoveryRate * user.getMaxMp()));
+        if (Objects.requireNonNull(skillId) == SkillId.EVAN8_RECOVERY_AURA) {
+            final int partyId = ((User) owner).getPartyId();
+            if (user.getCharacterId() == owner.getId() || (partyId != 0 && user.getPartyId() == partyId)) {
+                final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
+                if (skillInfoResult.isEmpty()) {
+                    log.error("Failed to resolve skill info for affected area : {}", skillId);
+                    return;
                 }
+                final SkillInfo si = skillInfoResult.get();
+                double recoveryRate = si.getValue(SkillStat.x, skillLevel) / 100.0;
+                recoveryRate = recoveryRate * (interval * ServerConfig.FIELD_TICK_INTERVAL) / si.getDuration(skillLevel);
+                user.addMp((int) (recoveryRate * user.getMaxMp()));
             }
         }
     }
 
     public void handleMobInside(Mob mob) {
         switch (skillId) {
-            case Magician.POISON_MIST, BlazeWizard.FLAME_GEAR, NightWalker.POISON_BOMB -> {
-                if (mob.getHp() == 1 || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId)) {
+            case SkillId.FP2_POISON_MIST, SkillId.BW3_FLAME_GEAR, SkillId.NW3_POISON_BOMB -> {
+                if (mob.getHp() == 1 || mob.getMobStat().hasBurnedInfo(owner.getId(), skillId.getId())) {
                     return;
                 }
                 final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
@@ -124,7 +124,7 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
         outPacket.encodeInt(getId()); // dwID
         outPacket.encodeInt(type.getValue()); // nType
         outPacket.encodeInt(owner.getId()); // dwOwnerID
-        outPacket.encodeInt(skillId); // nSkillID
+        outPacket.encodeSkillId(skillId); // nSkillID
         outPacket.encodeByte(skillLevel); // nSLV
         outPacket.encodeShort(delay); // tStart = get_update_time() + 100 * delay
         outPacket.encodeInt(rect.getLeft()); // rcArea->left
@@ -146,7 +146,8 @@ public final class AffectedArea extends FieldObjectImpl implements Encodable {
     }
 
     public static AffectedArea buff(User owner, int itemId, Rect rect, Instant expireTime) {
-        return new AffectedArea(AffectedAreaType.Buff, owner, itemId, 0, 0, 0, owner.getRelativeRect(rect), ElementAttribute.PHYSICAL, expireTime);
+        //TODO fix skill id
+        return new AffectedArea(AffectedAreaType.Buff, owner, SkillId.NONE, 0, 0, 0, owner.getRelativeRect(rect), ElementAttribute.PHYSICAL, expireTime);
     }
 
     public static AffectedArea from(AffectedAreaType affectedAreaType, User owner, SkillInfo si, int slv, int delay, int interval, int x, int y) {

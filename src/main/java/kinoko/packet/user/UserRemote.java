@@ -1,5 +1,6 @@
 package kinoko.packet.user;
 
+import kinoko.meta.SkillId;
 import kinoko.server.header.OutHeader;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -32,9 +33,9 @@ public final class UserRemote {
         outPacket.encodeByte(user.getLevel()); // nLevel
         outPacket.encodeByte(attack.slv);
         if (attack.slv != 0) {
-            outPacket.encodeInt(attack.skillId);
+            outPacket.encodeSkillId(attack.skillId);
         }
-        if (attack.skillId == Bowman.STRAFE_MM) {
+        if (attack.skillId == SkillId.SNIPER_STRAFE) {
             outPacket.encodeByte(attack.passiveSlv); // nPassiveSLV
             if (attack.passiveSlv != 0) {
                 outPacket.encodeInt(attack.passiveSkillId); // nSkillID
@@ -52,7 +53,7 @@ public final class UserRemote {
                     continue;
                 }
                 outPacket.encodeByte(ai.actionAndDir);
-                if (attack.skillId == Thief.MESO_EXPLOSION) {
+                if (attack.skillId == SkillId.CHIEFBANDIT_MESO_EXPLOSION) {
                     outPacket.encodeByte(ai.attackCount);
                     for (int i = 0; i < ai.attackCount; i++) {
                         outPacket.encodeInt(ai.damage[i]);
@@ -70,7 +71,7 @@ public final class UserRemote {
             }
             if (SkillConstants.isMagicKeydownSkill(attack.skillId)) {
                 outPacket.encodeInt(attack.keyDown); // tKeyDown
-            } else if (attack.skillId == WildHunter.JAGUAR_OSHI_ATTACK) {
+            } else if (attack.skillId == SkillId.WH2_JAGUAROSHI_2) {
                 outPacket.encodeInt(attack.swallowMobTemplateId); // dwSwallowMobTemplateID
             }
         }
@@ -232,7 +233,7 @@ public final class UserRemote {
         outPacket.encodeInt(skill.positionX);
         outPacket.encodeInt(skill.positionY);
         outPacket.encodeInt(skill.keyDown); // tKeyDown
-        outPacket.encodeInt(skill.skillId); // nSkillID
+        outPacket.encodeSkillId(skill.skillId); // nSkillID
         outPacket.encodeInt(skill.slv); // nSLV
         return outPacket;
     }

@@ -1,5 +1,6 @@
 package kinoko.provider.quest;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.serialize.WzProperty;
@@ -7,13 +8,13 @@ import kinoko.provider.wz.serialize.WzProperty;
 import java.util.*;
 
 public final class QuestSkillData {
-    private final int skillId;
+    private final SkillId skillId;
     private final int skillLevel;
     private final int masterLevel;
     private final boolean onlyMasterLevel;
     private final Set<Integer> jobs;
 
-    public QuestSkillData(int skillId, int skillLevel, int masterLevel, boolean onlyMasterLevel, Set<Integer> jobs) {
+    public QuestSkillData(SkillId skillId, int skillLevel, int masterLevel, boolean onlyMasterLevel, Set<Integer> jobs) {
         this.skillId = skillId;
         this.skillLevel = skillLevel;
         this.masterLevel = masterLevel;
@@ -21,7 +22,7 @@ public final class QuestSkillData {
         this.jobs = jobs;
     }
 
-    public int getSkillId() {
+    public SkillId getSkillId() {
         return skillId;
     }
 
@@ -55,7 +56,7 @@ public final class QuestSkillData {
                 jobs.add(WzProvider.getInteger(jobEntry.getValue()));
             }
             skills.add(new QuestSkillData(
-                    WzProvider.getInteger(skillProp.get("id")),
+                    SkillId.fromValue(WzProvider.getInteger(skillProp.get("id"))),
                     WzProvider.getInteger(skillProp.get("skillLevel")),
                     WzProvider.getInteger(skillProp.get("masterLevel")),
                     WzProvider.getInteger(skillProp.get("onlyMasterLevel"), 0) != 0,

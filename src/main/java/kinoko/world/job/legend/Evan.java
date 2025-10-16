@@ -1,5 +1,6 @@
 package kinoko.world.job.legend;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.provider.SkillProvider;
@@ -81,11 +82,11 @@ public final class Evan extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case ICE_BREATH:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
                     mob.setTemporaryStat(MobTemporaryStat.Freeze, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
@@ -101,7 +102,7 @@ public final class Evan extends SkillProcessor {
                 if (user.getSecondaryStat().hasOption(CharacterTemporaryStat.GuidedBullet)) {
                     user.resetTemporaryStat(Set.of(CharacterTemporaryStat.GuidedBullet));
                 }
-                user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, 1, skillId, mob.getId()));
+                user.setTemporaryStat(CharacterTemporaryStat.GuidedBullet, TemporaryStatOption.ofTwoState(CharacterTemporaryStat.GuidedBullet, 1, skillId.getId(), mob.getId()));
                 break;
             case PHANTOM_IMPRINT:
                 mob.setTemporaryStat(MobTemporaryStat.Weakness, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), delay);
@@ -111,11 +112,11 @@ public final class Evan extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skill.skillId) {
+        switch (skill.skillId.getId()) {
             case MAGIC_SHIELD:
                 user.setTemporaryStat(CharacterTemporaryStat.MagicShield, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
@@ -145,7 +146,7 @@ public final class Evan extends SkillProcessor {
     }
 
     public static void handleDragonFuryEffect(User user) {
-        final int skillId = Evan.DRAGON_FURY;
+        final SkillId skillId = SkillId.EVAN8_DRAGON_FURY;
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return;
@@ -156,7 +157,7 @@ public final class Evan extends SkillProcessor {
     }
 
     public static boolean isDragonFury(User user) {
-        final int skillId = Evan.DRAGON_FURY;
+        final SkillId skillId = SkillId.EVAN8_DRAGON_FURY;
         final int slv = user.getSkillLevel(skillId);
         if (slv == 0) {
             return false;

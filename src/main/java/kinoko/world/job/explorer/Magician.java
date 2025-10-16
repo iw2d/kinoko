@@ -1,5 +1,6 @@
 package kinoko.world.job.explorer;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
@@ -126,11 +127,11 @@ public final class Magician extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case THUNDER_SPEAR:
             case SHINING_RAY:
                 if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
@@ -166,12 +167,12 @@ public final class Magician extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final int buffedDuration = getBuffedDuration(user, si.getDuration(slv));
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             // COMMON
             case MANA_REFLECTION_FP:
             case MANA_REFLECTION_IL:
@@ -242,7 +243,7 @@ public final class Magician extends SkillProcessor {
             case MYSTIC_DOOR:
                 final Optional<TownPortal> townPortalResult = field.getTownPortalPool().createFieldPortal(
                         user,
-                        skillId,
+                        skillId.getId(),
                         skill.positionX,
                         skill.positionY,
                         Instant.now().plus(si.getDuration(slv), ChronoUnit.MILLIS)

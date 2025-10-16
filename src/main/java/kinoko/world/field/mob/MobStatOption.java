@@ -1,5 +1,6 @@
 package kinoko.world.field.mob;
 
+import kinoko.meta.SkillId;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
@@ -38,6 +39,10 @@ public final class MobStatOption implements Encodable {
 
     public static MobStatOption of(int nOption, int rOption, int tOption) {
         return new MobStatOption(nOption, rOption, tOption);
+    }
+
+    public static MobStatOption of(int nOption, SkillId skillId, int tOption) {
+        return MobStatOption.of(nOption, skillId.getId(), tOption);
     }
 
     public static MobStatOption ofMobSkill(int nOption, int skillId, int slv, int tOption) {

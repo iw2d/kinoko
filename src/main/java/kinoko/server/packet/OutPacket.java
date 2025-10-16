@@ -1,5 +1,6 @@
 package kinoko.server.packet;
 
+import kinoko.meta.SkillId;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.header.OutHeader;
 import kinoko.util.FileTime;
@@ -28,6 +29,8 @@ public interface OutPacket {
     }
 
     void encodeInt(int value);
+
+    void encodeSkillId(SkillId skillId);
 
     default void encodeInt(long value) {
         encodeInt((int) value);

@@ -1,5 +1,6 @@
 package kinoko.provider.quest.act;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.quest.QuestSkillData;
@@ -44,7 +45,7 @@ public final class QuestSkillAct implements QuestAct {
             if (!qsd.getJobs().contains(user.getJob())) {
                 continue;
             }
-            final int skillId = qsd.getSkillId();
+            final SkillId skillId = qsd.getSkillId();
             final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
                 return false;

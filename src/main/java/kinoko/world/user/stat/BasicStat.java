@@ -1,5 +1,6 @@
 package kinoko.world.user.stat;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
@@ -213,12 +214,12 @@ public final class BasicStat {
         if (!SkillConstants.WILD_HUNTER_JAGUARS.contains(ss.getRidingVehicle())) {
             return 0;
         }
-        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(WildHunter.JAGUAR_RIDER);
+        final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(SkillId.WH1_JAGUAR_RIDER);
         if (skillInfoResult.isEmpty()) {
             return 0;
         }
         final SkillInfo si = skillInfoResult.get();
-        final int slv = SkillManager.getSkillLevel(ss, sm, WildHunter.JAGUAR_RIDER);
+        final int slv = SkillManager.getSkillLevel(ss, sm, SkillId.WH1_JAGUAR_RIDER);
         return si.getValue(SkillStat.z, slv);
     }
 

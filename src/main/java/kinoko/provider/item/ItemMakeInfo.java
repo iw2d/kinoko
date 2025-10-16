@@ -1,5 +1,6 @@
 package kinoko.provider.item;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.ProviderError;
 import kinoko.provider.WzProvider;
 import kinoko.provider.wz.serialize.WzProperty;
@@ -98,7 +99,7 @@ public final class ItemMakeInfo {
 
     public boolean canCreateItem(User user, boolean catalyst, List<Integer> gems) {
         final InventoryManager im = user.getInventoryManager();
-        final int makerSkillId = SkillConstants.getNoviceSkillAsRace(Beginner.MAKER, user.getJob());
+        final SkillId makerSkillId = SkillConstants.getNoviceSkillAsRace(SkillId.BEGINNER_MAKER, user.getJob());
         if (getReqSkillLevel() != 0 && user.getSkillLevel(makerSkillId) < getReqSkillLevel()) {
             return false;
         }

@@ -1,5 +1,6 @@
 package kinoko.script.quest;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.user.UserLocal;
 import kinoko.provider.reward.Reward;
 import kinoko.script.common.Script;
@@ -201,8 +202,8 @@ public final class AranTutorial extends ScriptHandler {
         if (!sm.hasQuestStarted(21000)) {
             sm.message("You can only exit after you accept the quest from Athena Pierce, who is to your right.");
         } else {
-            sm.addSkill(20000017, 1, 1);
-            sm.addSkill(20000018, 1, 1);
+            sm.addSkill(SkillId.LEGEND_TUTORIAL_SKILL_3, 1, 1);
+            sm.addSkill(SkillId.LEGEND_TUTORIAL_SKILL_4, 1, 1);
             sm.playPortalSE();
             sm.warp(914000200, "east00");
         }
@@ -212,8 +213,8 @@ public final class AranTutorial extends ScriptHandler {
     public static void aranTutorOut2(ScriptManager sm) {
         // Black Road : Burning Forest 1 (914000200)
         //   west00 (1305, -1)
-        sm.addSkill(20000014, 1, 1);
-        sm.addSkill(20000015, 1, 1);
+        sm.addSkill(SkillId.LEGEND_TUTORIAL_SKILL, 1, 1);
+        sm.addSkill(SkillId.LEGEND_TUTORIAL_SKILL_1, 1, 1);
         sm.playPortalSE();
         sm.warp(914000210, "east00");
     }
@@ -222,7 +223,7 @@ public final class AranTutorial extends ScriptHandler {
     public static void aranTutorOut3(ScriptManager sm) {
         // Black Road : Burning Forest 2 (914000210)
         //   west00 (-133, 0)
-        sm.addSkill(20000016, 1, 1);
+        sm.addSkill(SkillId.LEGEND_TUTORIAL_SKILL_2, 1, 1);
         sm.playPortalSE();
         sm.warp(914000220, "east00");
     }
@@ -372,11 +373,11 @@ public final class AranTutorial extends ScriptHandler {
     @Script("iceCave")
     public static void iceCave(ScriptManager sm) {
         // Snow Island : Ice Cave (140090000)
-        sm.removeSkill(20000014);
-        sm.removeSkill(20000015);
-        sm.removeSkill(20000016);
-        sm.removeSkill(20000017);
-        sm.removeSkill(20000018);
+        sm.removeSkill(SkillId.LEGEND_TUTORIAL_SKILL);
+        sm.removeSkill(SkillId.LEGEND_TUTORIAL_SKILL_1);
+        sm.removeSkill(SkillId.LEGEND_TUTORIAL_SKILL_2);
+        sm.removeSkill(SkillId.LEGEND_TUTORIAL_SKILL_3);
+        sm.removeSkill(SkillId.LEGEND_TUTORIAL_SKILL_4);
         sm.reservedEffect("Effect/Direction1.img/aranTutorial/ClickLilin");
     }
 

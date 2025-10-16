@@ -1,5 +1,6 @@
 package kinoko.script.quest;
 
+import kinoko.meta.SkillId;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.reward.Reward;
 import kinoko.script.common.Script;
@@ -590,7 +591,7 @@ public final class EvanQuest extends ScriptHandler {
         sm.forceCompleteQuest(22102);
         sm.setJob(Job.EVAN_3);
         //sm.addSkill(22111001, 0, 5); // Magic Guard GMS-like, NX Mastery Books are fucking memes
-        sm.addSkill(22111001, 0, 20); // Magic Guard
+        sm.addSkill(SkillId.EVAN3_MAGIC_GUARD, 0, 20); // Magic Guard
         sm.addInventorySlots(InventoryType.EQUIP, 4);
         sm.addInventorySlots(InventoryType.ETC, 4);
     }
@@ -614,8 +615,8 @@ public final class EvanQuest extends ScriptHandler {
         // Dragon Master 6th Job Advancement (22105 - start)
         sm.forceCompleteQuest(22105);
         sm.setJob(Job.EVAN_6);
-        sm.addSkill(22140000, 0, 15); // Critical Magic
-        sm.addSkill(22141002, 0, 20); // Magic Booster
+        sm.addSkill(SkillId.EVAN6_CRITICAL_MAGIC, 0, 15); // Critical Magic
+        sm.addSkill(SkillId.EVAN6_MAGIC_BOOSTER, 0, 20); // Magic Booster
         //sm.addSkill(22140000, 0, 5); // Critical Magic GMS-like, NX Mastery Books are fucking memes
         //sm.addSkill(22140002, 0, 5); // Magic Booster GMS-like, NX Mastery Books are fucking memes
     }
@@ -641,10 +642,10 @@ public final class EvanQuest extends ScriptHandler {
         // Dragon Master 9th Job Advancement (22108 - start)
         sm.forceCompleteQuest(22108);
         sm.setJob(Job.EVAN_9);
-        sm.addSkill(22170001, 0, 30); // Magic Mastery
-        sm.addSkill(22171003, 0, 30); // Flame Wheel
-        sm.addSkill(22171000, 0, 30); // Maple Warrior
-        sm.addSkill(22171002, 0, 30); // Illusion
+        sm.addSkill(SkillId.EVAN9_MAGIC_MASTERY, 0, 30); // Magic Mastery
+        sm.addSkill(SkillId.EVAN9_FLAME_WHEEL, 0, 30); // Flame Wheel
+        sm.addSkill(SkillId.EVAN9_MAPLE_WARRIOR, 0, 30); // Maple Warrior
+        sm.addSkill(SkillId.EVAN9_ILLUSION, 0, 30); // Illusion
         //sm.addSkill(22171000, 0, 10); // Maple Warrior
         //sm.addSkill(22171002, 0, 10); // Illusion
         sm.addInventorySlots(InventoryType.EQUIP, 4);
@@ -656,12 +657,12 @@ public final class EvanQuest extends ScriptHandler {
         // Dragon Master 10th Job Advancement (22109 - start)
         sm.forceCompleteQuest(22109);
         sm.setJob(Job.EVAN_10);
-        sm.addSkill(22181000, 0, 30); // Blessing of the Onyx
-        sm.addSkill(22181001, 0, 30); // Blaze
+        sm.addSkill(SkillId.EVAN10_BLESSING_OF_THE_ONYX, 0, 30); // Blessing of the Onyx
+        sm.addSkill(SkillId.EVAN10_BLAZE, 0, 30); // Blaze
         //sm.addSkill(22181000, 0, 10); // Blessing of the Onyx
         //sm.addSkill(22181001, 0, 10); // Blaze
-        sm.addSkill(22181002, 0, 30); // Dark Fog
-        sm.addSkill(22181003, 0, 20); // Soul Stone
+        sm.addSkill(SkillId.EVAN10_DARK_FOG, 0, 30); // Dark Fog
+        sm.addSkill(SkillId.EVAN10_SOUL_STONE, 0, 20); // Soul Stone
     }
 
     @Script("q2344s")

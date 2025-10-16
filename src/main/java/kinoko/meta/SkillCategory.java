@@ -1,0 +1,31 @@
+package kinoko.meta;
+
+public enum SkillCategory {
+    BoundJump,
+    CombatStep,
+    DamageMeter,
+    Flying,
+    Heal,
+    HookAndHit,
+    MagicAttack,
+    MeleeAttack,
+    MesoExplosion,
+    MobCapture,
+    NotPrepareBomb,
+    OpenGate,
+    Prepare,
+    RecoveryAura,
+    RepeatSkill,
+    RocketBooster,
+    ShootAttack,
+    SmokeShell,
+    StatChange,
+    StatChangeAdmin,
+    Summon,
+    SummonMonster,
+    Teleport,
+    TownPortal,
+    VehicleShootAttack,
+    WeaponBooster,
+    None;
+}

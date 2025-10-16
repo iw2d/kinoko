@@ -1,6 +1,7 @@
 package kinoko.handler.user.item;
 
 import kinoko.handler.Handler;
+import kinoko.meta.SkillId;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
@@ -354,7 +355,8 @@ public abstract class ItemHandler {
 
         // Check requirements
         final SkillManager sm = user.getSkillManager();
-        final Optional<Integer> skillIdResult = skill.stream()
+        final Optional<SkillId> skillIdResult = skill.stream()
+                .map(SkillId::fromValue)
                 .filter((skillId) -> {
                     if (reqSkillLevel > 0) {
                         final Optional<SkillRecord> skillRecordResult = sm.getSkill(skillId);
@@ -364,7 +366,7 @@ public abstract class ItemHandler {
                         final SkillRecord skillRecord = skillRecordResult.get();
                         return skillRecord.getSkillLevel() >= reqSkillLevel && skillRecord.getMasterLevel() < masterLevel;
                     } else {
-                        final int skillRoot = SkillConstants.getSkillRoot(skillId);
+                        final int skillRoot = skillId.getRoot();
                         return JobConstants.isCorrectJobForSkillRoot(user.getJob(), skillRoot) && sm.getSkill(skillId).isEmpty();
                     }
                 })
@@ -373,7 +375,7 @@ public abstract class ItemHandler {
             user.write(WvsContext.skillLearnItemResult(user.getCharacterId(), isMasteryBook, false, false, true));
             return;
         }
-        final int skillId = skillIdResult.get();
+        final SkillId skillId = skillIdResult.get();
 
         // Resolve skill
         final Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);

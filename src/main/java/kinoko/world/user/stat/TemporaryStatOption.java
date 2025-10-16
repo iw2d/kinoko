@@ -1,5 +1,6 @@
 package kinoko.world.user.stat;
 
+import kinoko.meta.SkillId;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
@@ -45,6 +46,12 @@ public class TemporaryStatOption implements Encodable {
         );
     }
 
+    public final SkillId getSkillId() {
+        //TODO set to none if fails for items and such
+        return SkillId.fromValue(this.rOption);
+    }
+
+
     public final DiceInfo getDiceInfo() {
         return diceInfo;
     }
@@ -66,6 +73,10 @@ public class TemporaryStatOption implements Encodable {
 
     public static TemporaryStatOption of(int nOption, int rOption, int tOption) {
         return new TemporaryStatOption(nOption, rOption, tOption);
+    }
+
+    public static TemporaryStatOption of(int nOption, SkillId rOption, int tOption) {
+        return TemporaryStatOption.of(nOption, rOption.getId(), tOption);
     }
 
     public static TemporaryStatOption ofMobSkill(int nOption, int skillId, int slv, int tOption) {

@@ -89,7 +89,7 @@ public final class WvsContext {
         outPacket.encodeByte(exclRequest); // bool -> bExclRequestSent = 0
         outPacket.encodeShort(skillRecords.size());
         for (SkillRecord sr : skillRecords) {
-            outPacket.encodeInt(sr.getSkillId()); // nSkillID
+            outPacket.encodeSkillId(sr.getSkillId()); // nSkillID
             outPacket.encodeInt(sr.getSkillLevel());
             outPacket.encodeInt(sr.getMasterLevel());
             outPacket.encodeFT(FileTime.DEFAULT_TIME); // dateExpire

@@ -1,5 +1,6 @@
 package kinoko.world.job.resistance;
 
+import kinoko.meta.SkillId;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
@@ -68,7 +69,7 @@ public final class BattleMage extends SkillProcessor {
 
     public static void handleAttack(User user, Mob mob, Attack attack, int delay) {
         final SkillInfo si = SkillProvider.getSkillInfoById(attack.skillId).orElseThrow();
-        final int skillId = attack.skillId;
+        final SkillId skillId = attack.skillId;
         final int slv = attack.slv;
 
         final Field field = user.getField();
@@ -89,11 +90,11 @@ public final class BattleMage extends SkillProcessor {
 
     public static void handleSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
-        final int skillId = skill.skillId;
+        final SkillId skillId = skill.skillId;
         final int slv = skill.slv;
 
         final Field field = user.getField();
-        switch (skillId) {
+        switch (skillId.getId()) {
             case DARK_AURA:
             case YELLOW_AURA:
             case BLUE_AURA:
@@ -147,11 +148,11 @@ public final class BattleMage extends SkillProcessor {
         log.error("Unhandled skill {}", skill.skillId);
     }
 
-    public static int getAdvancedAuraSkill(User user, int skillId) {
-        final int advancedAuraSkill = switch (skillId) {
-            case DARK_AURA -> ADVANCED_DARK_AURA;
-            case BLUE_AURA -> ADVANCED_BLUE_AURA;
-            case YELLOW_AURA -> ADVANCED_YELLOW_AURA;
+    public static SkillId getAdvancedAuraSkill(User user, SkillId skillId) {
+        final SkillId advancedAuraSkill = switch (skillId) {
+            case SkillId.DARK_AURA -> SkillId.ADVANCED_DARK_AURA;
+            case SkillId.BLUE_AURA -> SkillId.ADVANCED_BLUE_AURA;
+            case SkillId.YELLOW_AURA -> SkillId.ADVANCED_YELLOW_AURA;
             default -> skillId;
         };
         if (user.getSkillLevel(advancedAuraSkill) > 0) {
@@ -160,7 +161,7 @@ public final class BattleMage extends SkillProcessor {
         return skillId;
     }
 
-    public static void cancelPartyAura(User user, int skillId) {
+    public static void cancelPartyAura(User user, SkillId skillId) {
         final CharacterTemporaryStat cts = SkillConstants.getStatByAuraSkill(skillId);
         if (cts == null) {
             log.error("Could not resolve CTS while trying to cancel aura skill ID : {}", skillId);
