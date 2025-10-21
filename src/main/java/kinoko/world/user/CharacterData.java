@@ -39,6 +39,7 @@ public final class CharacterData implements Encodable {
     private int friendMax;
     private int partyId;
     private int guildId;
+    private int allianceId;
     private Instant creationTime;
     private Instant maxLevelTime;
 
@@ -160,6 +161,14 @@ public final class CharacterData implements Encodable {
 
     public void setGuildId(int guildId) {
         this.guildId = guildId;
+    }
+    
+    public int getAllianceId() {
+        return guildId;
+    }
+
+    public void setAllianceId(int allianceId) {
+        this.allianceId = allianceId;
     }
 
     public Instant getCreationTime() {

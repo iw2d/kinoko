@@ -86,7 +86,6 @@ public final class GuildPacket {
         return GuildPacket.of(GuildResultType.CreateNewGuild_Beginner);
     }
 
-
     public static OutPacket createNewGuildUnknown() {
         return GuildPacket.of(GuildResultType.CreateNewGuild_Unknown);
     }

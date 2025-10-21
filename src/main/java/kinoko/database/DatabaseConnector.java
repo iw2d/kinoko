@@ -10,6 +10,8 @@ public interface DatabaseConnector {
     FriendAccessor getFriendAccessor();
 
     GuildAccessor getGuildAccessor();
+    
+    AllianceAccessor getAllianceAccessor();
 
     GiftAccessor getGiftAccessor();
 

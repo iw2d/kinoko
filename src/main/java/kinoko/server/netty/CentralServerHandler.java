@@ -8,6 +8,7 @@ import kinoko.packet.field.MessengerPacket;
 import kinoko.packet.world.BroadcastPacket;
 import kinoko.packet.world.GuildPacket;
 import kinoko.packet.world.PartyPacket;
+import kinoko.server.alliance.*;
 import kinoko.server.guild.*;
 import kinoko.server.header.CentralHeader;
 import kinoko.server.memo.Memo;
@@ -29,6 +30,7 @@ import kinoko.server.user.RemoteUser;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.user.GuildInfo;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,6 +78,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 case MessengerRequest -> handleMessengerRequest(remoteServerNode, inPacket);
                 case PartyRequest -> handlePartyRequest(remoteServerNode, inPacket);
                 case GuildRequest -> handleGuildRequest(remoteServerNode, inPacket);
+                case AllianceRequest -> handleAllianceRequest(remoteServerNode, inPacket);
                 case BoardRequest -> handleBoardRequest(remoteServerNode, inPacket);
                 case null -> log.error("Central Server received an unknown opcode : {}", op);
                 default -> log.error("Central Server received an unhandled header : {}", header);
@@ -1046,6 +1049,120 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     // Save to database
                     DatabaseManager.guildAccessor().saveGuild(guild);
                 }
+            }
+        }
+    }
+    
+    private void handleAllianceRequest(RemoteServerNode remoteServerNode, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final AllianceRequest allianceRequest = AllianceRequest.decode(inPacket);
+        // Resolve requester user
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        if (remoteUserResult.isEmpty()) {
+            log.error("Failed to resolve user with character ID : {} for AllianceRequest", characterId);
+            return;
+        }
+        String allianceName = allianceRequest.getAllianceName();
+        final RemoteUser remoteUser = remoteUserResult.get();
+        switch (allianceRequest.getRequestType()) {
+            case Create -> {
+            	// Check if alliance name is available
+                if (!DatabaseManager.allianceAccessor().checkAllianceNameAvailable(allianceName)) {
+                    // TODO The name is already in use... Please try other ones....
+                    return;
+                }
+            	
+            	// Resolve new alliance ID
+                final Optional<Integer> allianceIdResult = DatabaseManager.idAccessor().nextAllianceId();
+                if (allianceIdResult.isEmpty()) {
+                	OutPacket outPacket = GuildPacket.serverMsg(null); // The guild request has not been accepted due to unknown reason.
+                	remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), outPacket));
+                    log.error("Database error: allianceId");
+                    return;
+                }
+                
+                int allianceId = allianceIdResult.get();
+            	Optional<Alliance> alliance = centralServerNode.createNewAlliance(allianceId, allianceName, remoteUser);
+            	if (alliance.isEmpty()) {
+            		OutPacket outPacket = GuildPacket.serverMsg(null); // The guild request has not been accepted due to unknown reason.
+                	remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), outPacket));
+                	
+            		log.error("Could not create alliance '{}' for user '{}'", allianceName, remoteUser.getCharacterName());
+                    return;
+            	}
+            	
+            	// Save to database
+                DatabaseManager.allianceAccessor().saveAlliance(alliance.get());
+            }
+            case Invite -> {
+            	
+            }
+            case Join -> {
+            	Optional<Alliance> allianceOpt = centralServerNode.getAllianceById(allianceRequest.getAllianceId());
+            	if (!allianceOpt.isEmpty()) {
+            		Optional<RemoteUser> target = centralServerNode.getUserByCharacterId(allianceRequest.getTargetId());
+            		if (!target.isEmpty()) {
+            			Optional<Guild> guild = centralServerNode.getGuildById(target.get().getGuildId());
+            			if (!guild.isEmpty()) {
+            				Alliance alliance = allianceOpt.get();
+                    		alliance.lock();
+                        	try {
+                        		alliance.addGuild(guild.get());
+                        	} finally {
+                        		alliance.unlock();
+                        	}
+                        	
+                        	// Save to database
+                            DatabaseManager.allianceAccessor().saveAlliance(alliance);
+            			}
+            		}
+            	}
+            }
+            case Withdraw, Kick -> {
+            	Optional<Alliance> allianceOpt = centralServerNode.getAllianceById(allianceRequest.getAllianceId());
+            	if (!allianceOpt.isEmpty()) {
+            		Optional<RemoteUser> target = centralServerNode.getUserByCharacterId(allianceRequest.getTargetId());
+            		if (!target.isEmpty()) {
+            			Optional<Guild> guild = centralServerNode.getGuildById(target.get().getGuildId());
+            			if (!guild.isEmpty()) {
+            				Alliance alliance = allianceOpt.get();
+            				alliance.lock();
+			            	try {
+			            		alliance.removeGuild(guild.get());
+			            	} finally {
+			            		alliance.unlock();
+			            	}
+			            	
+			            	// Save to database
+			                DatabaseManager.allianceAccessor().saveAlliance(alliance);
+            			}
+            		}
+            	}
+            }
+            case Destroy -> {
+            	Optional<Alliance> allianceOpt = centralServerNode.getAllianceById(allianceRequest.getAllianceId());
+            	if (!allianceOpt.isEmpty()) {
+            		Alliance alliance = allianceOpt.get();
+	                alliance.lock();
+	            	try {
+	            		centralServerNode.removeAlliance(alliance);
+	            	} finally {
+	            		alliance.unlock();
+	            	}
+            	}
+            }
+            case UpdateMemberCountMax -> {
+                
+            }
+            case SetGradeName -> {
+                
+            }
+            case ChangeGrade -> {
+                
+            }
+            
+            case SetNotice -> {
+                
             }
         }
     }
