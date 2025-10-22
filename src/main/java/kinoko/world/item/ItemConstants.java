@@ -151,7 +151,7 @@ public final class ItemConstants {
     }
 
     public static boolean isBlackUpgradeItem(int itemId) {
-        return itemId / 100 == 20491; // chaos scrolls
+        return itemId / 100 == 20491 && (itemId < 2049105 || itemId > 2049110); // chaos scrolls, 5 dark scrolls bugged in client
     }
 
     public static boolean isAccUpgradeItem(int itemId) {

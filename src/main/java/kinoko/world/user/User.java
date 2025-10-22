@@ -114,6 +114,10 @@ public final class User extends Life {
         return characterData.getCharacterId();
     }
 
+    public AdminLevel getAdminLevel(){
+        return characterData.getCharacterStat().getAdminLevel();
+    }
+
     public String getCharacterName() {
         return characterData.getCharacterName();
     }

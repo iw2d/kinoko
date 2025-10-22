@@ -40,6 +40,7 @@ public final class CharacterStat implements Encodable {
     private long petSn1;
     private long petSn2;
     private long petSn3;
+    private AdminLevel adminLevel = AdminLevel.PLAYER;
 
     public CharacterStat(){
 
@@ -50,7 +51,7 @@ public final class CharacterStat implements Encodable {
                          short baseStr, short baseDex, short baseInt, short baseLuk,
                          int hp, int maxHp, int mp, int maxMp, short ap,
                          int exp, short pop, int posMap, byte portal,
-                         long petSn1, long petSn2, long petSn3) {
+                         long petSn1, long petSn2, long petSn3, AdminLevel adminLevel) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -77,10 +78,20 @@ public final class CharacterStat implements Encodable {
         this.petSn2 = petSn2;
         this.petSn3 = petSn3;
         this.sp = ExtendSp.from(new HashMap<>()); // empty on init.
+
+        this.adminLevel = adminLevel == null ? AdminLevel.PLAYER : adminLevel;
     }
 
     public int getId() {
         return id;
+    }
+
+    public AdminLevel getAdminLevel() {
+        return adminLevel;
+    }
+
+    public void setAdminLevel(AdminLevel adminLevel) {
+        this.adminLevel = adminLevel;
     }
 
     public void setId(int id) {

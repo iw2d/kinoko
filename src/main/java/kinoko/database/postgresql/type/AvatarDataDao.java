@@ -2,6 +2,7 @@ package kinoko.database.postgresql.type;
 
 import kinoko.world.item.Inventory;
 import kinoko.world.user.AvatarData;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.sql.*;
@@ -48,7 +49,8 @@ public final class AvatarDataDao {
                    s.portal,
                    s.pet_1,
                    s.pet_2,
-                   s.pet_3
+                   s.pet_3,
+                   s.admin_level
             FROM player.characters c
             JOIN player.stats s ON c.id = s.character_id
             WHERE c.account_id = ?
@@ -83,7 +85,8 @@ public final class AvatarDataDao {
                             rs.getByte("portal"),
                             rs.getLong("pet_1"),
                             rs.getLong("pet_2"),
-                            rs.getLong("pet_3")
+                            rs.getLong("pet_3"),
+                            AdminLevel.fromValue(rs.getShort("admin_level"))
                     );
 
                     Inventory equipped = InventoryDao.loadEquippedInventory(conn, cs.getId());
