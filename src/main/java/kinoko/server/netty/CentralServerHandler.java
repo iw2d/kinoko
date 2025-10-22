@@ -515,6 +515,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 final int inviterId = partyRequest.getCharacterId();
                 final Optional<RemoteUser> inviterResult = centralServerNode.getUserByCharacterId(inviterId);
                 if (inviterResult.isEmpty()) {
+                    // The inviter is not online.
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                     return;
                 }

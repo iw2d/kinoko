@@ -3,7 +3,10 @@ package kinoko.server;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 
+
 public final class ServerConfig {
+    public static final boolean TESPIA = Util.getEnv("TESPIA", true);  // DEV ENV
+
     public static final int WORLD_ID = Util.getEnv("WORLD_ID", 0);
     public static final String WORLD_NAME = Util.getEnv("WORLD_NAME", "Kinoko");
     public static final int CHANNELS_PER_WORLD = Util.getEnv("CHANNEL_COUNT", 5);
@@ -25,7 +28,8 @@ public final class ServerConfig {
     public static final int ITEM_EXPIRE_INTERVAL = 60; // 180 seconds in BMS
     public static final int WORLD_SPEAKER_COOLTIME = 60;
 
-    public static final String COMMAND_PREFIX = Util.getEnv("COMMAND_PREFIX", "!");
+    public static final String PLAYER_COMMAND_PREFIX = Util.getEnv("PLAYER_COMMAND_PREFIX", "@");
+    public static final String STAFF_COMMAND_PREFIX = Util.getEnv("STAFF_COMMAND_PREFIX", "!");
     public static final boolean DEBUG_MODE = Util.getEnv("DEBUG_MODE", true);
     public static final boolean PLAIN_TRAFFIC = Util.getEnv("PLAIN_TRAFFIC", false);
 }

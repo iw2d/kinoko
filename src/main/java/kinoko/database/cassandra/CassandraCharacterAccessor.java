@@ -7,6 +7,7 @@ import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
 import kinoko.database.cassandra.table.CharacterTable;
+import kinoko.database.types.CharacterRankData;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
@@ -297,12 +298,12 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
             ));
         }
         // Sort and process rank data
-        rankDataList.sort(Comparator.comparing(CharacterRankData::getCumulativeExp).reversed().thenComparing(CharacterRankData::getMaxLevelTime));
+        rankDataList.sort(Comparator.comparing(CharacterRankData::cumulativeExp).reversed().thenComparing(CharacterRankData::maxLevelTime));
         final Map<Integer, Integer> jobRanks = new HashMap<>(); // job rank counter
         final Map<Integer, CharacterRank> characterRanks = new HashMap<>(); // character id -> character rank
         for (CharacterRankData rankData : rankDataList) {
-            final int characterId = rankData.getCharacterId();
-            final int jobCategory = rankData.getJobCategory();
+            final int characterId = rankData.characterId();
+            final int jobCategory = rankData.jobCategory();
             final int worldRank = characterRanks.size() + 1;
             final int jobRank = jobRanks.getOrDefault(jobCategory, 0) + 1;
             jobRanks.put(jobCategory, jobRank);
@@ -315,33 +316,4 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         return characterRanks;
     }
 
-    private static class CharacterRankData {
-        private final int characterId;
-        private final int jobCategory;
-        private final long cumulativeExp;
-        private final Instant maxLevelTime;
-
-        private CharacterRankData(int characterId, int jobCategory, long cumulativeExp, Instant maxLevelTime) {
-            this.characterId = characterId;
-            this.jobCategory = jobCategory;
-            this.cumulativeExp = cumulativeExp;
-            this.maxLevelTime = maxLevelTime;
-        }
-
-        public int getCharacterId() {
-            return characterId;
-        }
-
-        public int getJobCategory() {
-            return jobCategory;
-        }
-
-        public long getCumulativeExp() {
-            return cumulativeExp;
-        }
-
-        public Instant getMaxLevelTime() {
-            return maxLevelTime != null ? maxLevelTime : Instant.MAX;
-        }
-    }
 }

@@ -81,6 +81,48 @@ public final class EquipData {
         this.durability = equipData.durability;
     }
 
+    public EquipData(
+            short incStr, short incDex, short incInt, short incLuk,
+            short incMaxHp, short incMaxMp, short incPad, short incMad,
+            short incPdd, short incMdd, short incAcc, short incEva,
+            short incCraft, short incSpeed, short incJump,
+            byte ruc, byte cuc, int iuc, byte chuc, byte grade,
+            short option1, short option2, short option3,
+            short socket1, short socket2,
+            byte levelUpType, byte level,
+            int exp, int durability
+    ) {
+        this.incStr = incStr;
+        this.incDex = incDex;
+        this.incInt = incInt;
+        this.incLuk = incLuk;
+        this.incMaxHp = incMaxHp;
+        this.incMaxMp = incMaxMp;
+        this.incPad = incPad;
+        this.incMad = incMad;
+        this.incPdd = incPdd;
+        this.incMdd = incMdd;
+        this.incAcc = incAcc;
+        this.incEva = incEva;
+        this.incCraft = incCraft;
+        this.incSpeed = incSpeed;
+        this.incJump = incJump;
+        this.ruc = ruc;
+        this.cuc = cuc;
+        this.iuc = iuc;
+        this.chuc = chuc;
+        this.grade = grade;
+        this.option1 = option1;
+        this.option2 = option2;
+        this.option3 = option3;
+        this.socket1 = socket1;
+        this.socket2 = socket2;
+        this.levelUpType = levelUpType;
+        this.level = level;
+        this.exp = exp;
+        this.durability = durability;
+    }
+
     public void encode(OutPacket outPacket, Item item) {
         outPacket.encodeByte(getRuc()); // nRUC
         outPacket.encodeByte(getCuc()); // nCUC
