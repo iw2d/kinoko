@@ -205,7 +205,8 @@ CREATE TABLE IF NOT EXISTS player.stats (
     portal SMALLINT NOT NULL DEFAULT 0,
     pet_1 BIGINT,
     pet_2 BIGINT,
-    pet_3 BIGINT
+    pet_3 BIGINT,
+    admin_level SMALLINT
 );
 
 CREATE TABLE IF NOT EXISTS player.extend_sp (
@@ -498,9 +499,9 @@ VALUES (
     '$2a$10$LGtpvyti5yVVdWxN8L5sH.UiioiRweGw84mFaWJlfasSFDJ8.QPaW', -- bcrypt hash of "admin"
     NULL,
     3,
-    0,
-    0,
-    0,
+    999999,
+    999999,
+    999999,
     24,
     0
 );

@@ -117,6 +117,10 @@ public final class ChannelServerNode extends ServerNode {
         return clientStorage.getUserByCharacterId(characterId);
     }
 
+    public Optional<User> getUserByCharacterName(String characterName) {
+        return clientStorage.getUserByCharacterName(characterName);
+    }
+
     public void notifyUserConnect(User user) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userConnect(RemoteUser.from(user)));
     }

@@ -5,6 +5,7 @@ import kinoko.world.skill.SkillManager;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.*;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.sql.*;
@@ -57,7 +58,8 @@ public class CharacterDataDao {
                 rs.getByte("portal"),
                 rs.getLong("pet_1"),
                 rs.getLong("pet_2"),
-                rs.getLong("pet_3")
+                rs.getLong("pet_3"),
+                AdminLevel.fromValue(rs.getShort("admin_level"))
         );
         cd.setCharacterStat(cs);
 
@@ -153,7 +155,13 @@ public class CharacterDataDao {
      * @throws SQLException if a database access error occurs
      */
     public static Optional<CharacterData> getCharacterByName(Connection conn, String name) throws SQLException {
-        String sql = "SELECT * FROM player.characters WHERE name ILIKE ?";
+        String sql = """
+            SELECT c.*, s.*, m.guild_id, m.grade
+            FROM player.characters c
+            LEFT JOIN player.stats s ON c.id = s.character_id
+            LEFT JOIN guild.member m ON m.character_id = c.id
+            WHERE c.name ILIKE ?
+        """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name.toLowerCase());
@@ -261,9 +269,9 @@ public class CharacterDataDao {
         INSERT INTO player.stats (
             character_id, gender, skin, face, hair, level, job, sub_job,
             base_str, base_dex, base_int, base_luk, hp, max_hp, mp, max_mp,
-            ap, exp, pop, pos_map, portal, pet_1, pet_2, pet_3
+            ap, exp, pop, pos_map, portal, pet_1, pet_2, pet_3, admin_level
         ) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         )
         ON CONFLICT (character_id) DO UPDATE SET
             gender = EXCLUDED.gender,
@@ -289,6 +297,7 @@ public class CharacterDataDao {
             pet_1 = EXCLUDED.pet_1,
             pet_2 = EXCLUDED.pet_2,
             pet_3 = EXCLUDED.pet_3
+            admin_level = EXCLUDED.admin_level
         """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -317,6 +326,7 @@ public class CharacterDataDao {
             stmt.setLong(22, cs.getPetSn1());
             stmt.setLong(23, cs.getPetSn2());
             stmt.setLong(24, cs.getPetSn3());
+            stmt.setShort(25, cs.getAdminLevel().getValue());
 
             stmt.executeUpdate();
         }

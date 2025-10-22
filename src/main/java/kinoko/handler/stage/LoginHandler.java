@@ -28,6 +28,7 @@ import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.*;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.StatConstants;
@@ -259,6 +260,10 @@ public final class LoginHandler {
         cs.setPop((short) 0);
         cs.setPosMap(GameConstants.getStartingMap(job, selectedSubJob));
         cs.setPortal((byte) 0);
+        if (ServerConfig.TESPIA) {
+            cs.setAdminLevel(AdminLevel.ADMIN);
+        }
+
         characterData.setCharacterStat(cs);
 
         // Initialize inventory and add starting equips
