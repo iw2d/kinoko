@@ -29,7 +29,7 @@ import kinoko.provider.skill.SkillStringInfo;
  */
 public final class FindCommand {
 
-    @Command({ "find", "lookup" })
+    @Command({ "find", "lookup", "search"})
     @Arguments({ "item/map/mob/npc/skill/quest/commodity", "id or query" })
     public static void find(User user, String[] args) {
         if (args.length < 2) {
