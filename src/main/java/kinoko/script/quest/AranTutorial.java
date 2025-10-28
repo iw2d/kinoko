@@ -671,6 +671,60 @@ public final class AranTutorial extends ScriptHandler {
         sm.write(UserLocal.tutorMsg(19, 4000));
     }
 
+    @Script("q21014s")
+    public static void q21014s(ScriptManager sm) {
+        // Lilin's Account (21014 - start)
+        // NPC 1201000 - Lilin
+        sm.sayNext("You must be confused in more ways than one. It's totally understandable, seeing that you just recently awoke inside the ice cave with no recollection of your past. Add to that my calling you a hero, and...I totally understand. I'll explain to you in detail exactly what happened.");
+        sm.sayBoth("A few hundred years ago, the whole world was under the reign of the evil Black Mage. Using his tremendous power, the Black Mage led Maple World closer and closer to destruction, and he almost succeeded.");
+        sm.sayBoth("Many people valiantly tried to keep the Black Mage from ruining their lives, but they were not strong enough. It reached the point where the whole world was on the verge of utter destruction, and that's when a few brave souls made a pivotal decision. They would battle the Black Mage head-on, all by themselves, to buy the rest of us time to find refuge in places far, far away.");
+        sm.sayBoth("No one knows the details of the battle, only the results: The Black Mage was sealed away while the heroes made the ultimate sacrifice and disappeared. Thanks to them, Maple World finally found peace and...that was that. Sadly, it didn't take long for people to forget the heroes.");
+        sm.sayBoth("A lot of time passed, then a Book of Prophecy appeared out of nowhere. According to that book, the Black Mage had cast one final curse on the heroes before he lost his powers. That final curse wiped the heroes of all their memories and abilities, and trapped them in ice for hundreds of years.");
+        sm.sayBoth("Everyone thought the book was a bunch of garbage, but one race thought otherwise and began conducting research on the Book of Prophecy. I am the last remaining member of the race, and that's why I've been waiting on this island, knowing that one day, the heroes would reawaken.");
+        sm.sayBoth("And here you are! One of the very heroes that the Book of Prophecy mentions. One of the heroes that saved Maple World, only to be tragically forgotten by Maplers over the years. And I am certain that you're the hero that will save us once more. Do you get it now?");
+        if (!sm.askYesNo("Are you sure? Because you look a bit dazed. Hmmm, just to make sure you really processed everything I just said, I'm going to give you a pop quiz about it. Tell me when you're ready to start.")) {
+            sm.sayNext("You must be a bit overwhelmed with everything that I threw at you just now. If you didn't catch it all, I'm more than happy to tell you the story once more. Tell me when you're ready.");
+            return;
+        }
+        sm.forceStartQuest(21014);
+    }
+
+    @Script("q21014e")
+    public static void q21014e(ScriptManager sm) {
+        // Lilin's Account (21014 - end) - Quiz
+        final int answer1 = sm.askMenu("Okay, first question. What was the name of the wizard that held Maple World in his evil hands?", Map.of(
+                0, "White Mage",
+                1, "Black Mage",
+                2, "Pale Mage",
+                3, "Brown Mage"
+        ));
+        if (answer1 != 1) {
+            sm.sayNext("That's incorrect. The correct answer is the Black Mage!");
+            return;
+        }
+
+        final int answer2 = sm.askMenu("Second question. The heroes, including you, decided to battle the Black Mage to buy everyone else time to find refuge somewhere far away. The result of this final battle was mentioned in the Book of Prophecy. What was the result?", Map.of(
+                0, "Defeated the Black Mage",
+                1, "Made peace with the Black Mage",
+                2, "Sealed away the Black Mage",
+                3, "Became lovers with the Black Mage"
+        ));
+        if (answer2 != 2) {
+            sm.sayNext("That's incorrect. The Black Mage was sealed away!");
+            return;
+        }
+
+        final int answer3 = sm.askMenu("Here's the last question. Maple World may look peaceful on the surface, but it's really on the verge of chaos. That's because there's a rumor circulating about the Black Mage's impending resurrection. If that rumor turns out to be true, the Black Mage will make sure that he is successful this time, and the Maple World will not stand a chance. What should you do when this happens?", Map.of(
+                0, "Defeat the Black Mage and save the world"
+        ));
+
+        sm.sayNext("I see that you've been paying attention to everything that I've been telling you! You may have lost your memory and abilities, but…you're still a hero to all of us.");
+        sm.sayBoth("The Book of Prophecy also states that the heroes will one day revive and defeat the Black Mage once and for all. You will fight the Black Mage again some day, with the fate of the whole world on your shoulder…");
+        sm.sayBoth("I'm sorry to catch you off-guard with all this talk. Let's make this simple. Your job now is to train hard to ensure that you can defeat the Black Mage when he makes his inevitable return. What do you say? Pretty simple, eh?");
+        sm.addExp(140);
+        sm.forceCompleteQuest(21014);
+    }
+
     @Script("q21015s")
     public static void q21015s(ScriptManager sm) {
         // Basic Fitness Training 1 (21015 - start)

@@ -135,6 +135,127 @@ public final class Edelstein extends ScriptHandler {
         sm.forceCompleteQuest(23905);
     }
 
+    @Script("talk2152012")
+    public static void talk2152012(ScriptManager sm) {
+        // Checky (2152012)
+        //   Black Wing Territory : Edelstein (310000000)
+        // Trade Pet Food for Recyclable Rue Battery (quest 23914)
+        if (sm.hasItem(4032750)) {
+            sm.sayOk("Hello. Please line up in the back if you want a balloon from Checky. What? You want a Recyclable Rue Battery? Why are you asking for another one when you already have one?");
+            return;
+        }
+        if (!sm.hasQuestStarted(23914)) {
+            sm.sayOk("Please line up in the back if you want a balloon from Checky.");
+            return;
+        }
+        sm.sayNext("Hello. Stand in line to get a balloon from Checky. Hmm, you seem a little old to still want a balloon, but if you do a good job standing in a straight line, maybe Checky will give you a balloon, too.");
+        if (!sm.askYesNo("You don't want a balloon? So what do you need? A used Rue Battery? Oh I know, you want to recycle them! Okay, but I can't give them to you for free. I'll give them to you in exchange for Pet Foods.")) {
+            sm.sayNext("Huh? So you don't need batteries for recycling? You are foolish to ignore the importance of recycling.");
+            return;
+        }
+        if (!sm.hasItem(2120000) || !sm.canAddItem(4032750, 1)) {
+            sm.sayOk("Do you have the Pet Foods? How about emptying some slots in your Etc tab?");
+            return;
+        }
+        sm.removeItem(2120000, 1);
+        sm.addItem(4032750, 1);
+        sm.sayOk("Now go reduce, reuse, and recycle.");
+    }
+
+    @Script("talk2152013")
+    public static void talk2152013(ScriptManager sm) {
+        // Cutie (2152013)
+        //   Black Wing Territory : Edelstein (310000000)
+        // Trade Morning Glory for Recyclable Rue Battery (quest 23914)
+        if (sm.hasItem(4032750)) {
+            sm.sayOk("Please make good use of the Recyclable Rue Battery!");
+            return;
+        }
+        if (!sm.hasQuestStarted(23914)) {
+            sm.sayOk("Just looking at a balloon makes me happy. l feel like l could float into the air, too! Hehe.");
+            return;
+        }
+        sm.sayNext("I'm so happy I got a balloon! If I get another one, I'll be sure to give it to you. Huh? You don't want a balloon? So what do you want?");
+        if (!sm.askYesNo("Oh. You're collecting Recyclable Batteries. I have one... Okay, how about this! I will give you the battery if you bring me one Morning Glory. What do you think?")) {
+            sm.sayNext("I guess you have a better way of obtaining a Recyclable Rue Battery.");
+            return;
+        }
+        if (!sm.hasItem(4000596) || !sm.canAddItem(4032750, 1)) {
+            sm.sayOk("Talk to me again with one Morning Glory in your possession and at least one slot available in the Etc tab of your inventory.");
+            return;
+        }
+        sm.removeItem(4000596, 1);
+        sm.addItem(4032750, 1);
+        sm.sayOk("Doesn't recycling make you feel good?");
+    }
+
+    @Script("talk2152014")
+    public static void talk2152014(ScriptManager sm) {
+        // Mystery (2152014)
+        //   Black Wing Territory : Edelstein (310000000)
+        // Trade Cork Stopper for Recyclable Rue Battery (quest 23914)
+        if (sm.hasItem(4032750)) {
+            sm.sayOk("I see that you already have a Recyclable Rue Battery...");
+            return;
+        }
+        if (!sm.hasQuestStarted(23914)) {
+            sm.sayOk("I'm so hot, I'm probably blinding you. l also like balloons. And now, I won't share my balloons with you, so don't even ask.");
+            return;
+        }
+        sm.sayNext("I'm so hot. I'm probably blinding you. I also like balloons. And now, l won't share my balloons with you, so don't even ask. What? You don't want any balloons? So what do you need then?");
+        if (!sm.askYesNo("You need Recyclable Batteries? Hmm, I do have one. l can give it to you, but of course you have to give me something in return. I'll give you my battery if you bring me one Cork Stopper.")) {
+            sm.sayNext("You know nothing about the art of negotiation. Hmph.");
+            return;
+        }
+        if (!sm.hasItem(4000597) || !sm.canAddItem(4032750, 1)) {
+            sm.sayOk("I will give you a battery if you bring me a Cork Stopper. And don't be a moron. Make sure to have at least one free Etc slot in your inventory.");
+            return;
+        }
+        sm.removeItem(4000597, 1);
+        sm.addItem(4032750, 1);
+        sm.sayOk("Ah, I can see you understand, yes, TRULY understand, the art of recycling. Just like l do...");
+    }
+
+    @Script("talk2152015")
+    public static void talk2152015(ScriptManager sm) {
+        // Fatty (2152015)
+        //   Black Wing Territory : Edelstein (310000000)
+        sm.sayOk("Chomp, chomp... Please don't bother me, I'm busy eating. Gulp!");
+    }
+
+    @Script("talk2153002")
+    public static void talk2153002(ScriptManager sm) {
+        // Bunny : Large Black Wing Gatekeeper (2153002)
+        //   Dry Road : Mine Entrance (310040200)
+        final Item equippedCap = sm.getUser().getInventoryManager().getEquipped().getItem(BodyPart.CAP.getValue());
+        final boolean hasBlackWingsHat = equippedCap != null && equippedCap.getItemId() == 1003134;
+
+        if (hasBlackWingsHat) {
+            sm.sayOk("Member of the Black Wing indeed. Take the portal to the right to enter.");
+        } else {
+            sm.sayOk("The Verne Mine is currently being used by the Black Wings. You can't enter unless you are a member of the Black Wings. Bring something to prove that you are a member. Something with the Black Wings logo on it... Something sort of like my hat, for instance.");
+        }
+    }
+
+    @Script("talk2154003")
+    public static void talk2154003(ScriptManager sm) {
+        // Android (2154003)
+        //   Verne Mine : Power Plant Security (310050100)
+        // Quest 23949 - Crime Prevention System Inspection
+        if (sm.hasQuestCompleted(23949)) {
+            sm.sayOk("Crime Prevention Systems inspection complete. All systems functioning within normal parameters.");
+            return;
+        }
+
+
+        if (!sm.hasQuestStarted(23949)) {
+            sm.sayOk("System status: Normal. All Crime Prevention Systems operational. Please proceed to your designated area.");
+            return;
+        }
+
+        sm.sayOk("Crime Prevention System inspection in progress. Proceed to #bIntruder Search Warrant 3#k and complete your assigned task.");
+    }
+
     @Script("edelItem0")
     public static void reactorTree(ScriptManager sm) {
         // edelItem0 (3102000)
@@ -157,6 +278,36 @@ public final class Edelstein extends ScriptHandler {
         sm.dropRewards(List.of(
                 Reward.item(4032752, 1, 1, 1, 23919)
         ));
+    }
+
+    @Script("edelItem2")
+    public static void reactorCream(ScriptManager sm) {
+        // edelItem2 (3102002)
+        //   Edelstein : Ulrica's Base (931010020)
+        // Drops: 4032760 - Fluffy Fresh Cream (at reactor state 4)
+        sm.dropRewards(List.of(
+                Reward.item(4032760, 1, 1, 1.0)
+        ));
+    }
+
+    @Script("edelItem3")
+    public static void reactorOre(ScriptManager sm) {
+        // edelItem3 (3102003)
+        //   Hidden Street : Hidden Laboratory (931020031)
+        // Drops: 4032775 - Small Ore Edo (at reactor state 12)
+        sm.dropRewards(List.of(
+                Reward.item(4032775, 1, 1, 1.0)
+        ));
+    }
+
+    @Script("edelItem4")
+    public static void reactorSurlWater(ScriptManager sm) {
+        // edelItem4 (3109000)
+        //   Edelstein : Surl's Water Cellar (931000410)
+        // Triggers quest 23130 when reactor reaches state 10
+        if (sm.hasQuestStarted(23120)) {
+            sm.forceStartQuest(23130);
+        }
     }
 
     @Script("enterResiTR")
