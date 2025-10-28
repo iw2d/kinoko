@@ -260,9 +260,8 @@ public final class LoginHandler {
         cs.setPop((short) 0);
         cs.setPosMap(GameConstants.getStartingMap(job, selectedSubJob));
         cs.setPortal((byte) 0);
-        if (ServerConfig.TESPIA) {
-            cs.setAdminLevel(AdminLevel.ADMIN);
-        }
+        cs.setAdminLevel(ServerConfig.TESPIA ? AdminLevel.ADMIN : AdminLevel.PLAYER);
+
 
         characterData.setCharacterStat(cs);
 
