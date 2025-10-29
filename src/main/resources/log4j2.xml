@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration shutdownHook="disable" packages="kinoko.util">
     <Appenders>
+<!--        <Console name="ConsoleLogger" target="SYSTEM_OUT">-->
+<!--            <LoggerLayout/>-->
+<!--        </Console>-->
         <Console name="ConsoleLogger" target="SYSTEM_OUT">
-            <LoggerLayout/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n%throwable"/>
         </Console>
     </Appenders>
 
@@ -12,6 +15,10 @@
         </Logger>
 
         <Logger name="io.netty, com.datastax" level="error">
+            <AppenderRef ref="ConsoleLogger"/>
+        </Logger>
+
+        <Logger name="com.zaxxer.hikari" level="warn" additivity="false">
             <AppenderRef ref="ConsoleLogger"/>
         </Logger>
 

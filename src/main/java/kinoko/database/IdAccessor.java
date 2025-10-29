@@ -1,15 +1,49 @@
 package kinoko.database;
 
+import kinoko.world.item.Item;
+
 import java.util.Optional;
 
 public interface IdAccessor {
-    Optional<Integer> nextAccountId();
+    default Optional<Integer> nextAccountId(){
+        if (!DatabaseManager.isRelational()){
+            throw new UnsupportedOperationException("nextAccountId needs to be implemented for this database.");
+        }
+        return Optional.of(-1);
+    }
 
-    Optional<Integer> nextCharacterId();
+    default Optional<Integer> nextCharacterId(){
+        if (!DatabaseManager.isRelational()){
+            throw new UnsupportedOperationException("nextCharacterId needs to be implemented for this database.");
+        }
+        return Optional.of(-1);
+    }
 
-    Optional<Integer> nextPartyId();
+    default Optional<Integer> nextPartyId(){
+        if (!DatabaseManager.isRelational()){
+            throw new UnsupportedOperationException("nextPartyId needs to be implemented for this database.");
+        }
+        return Optional.of(-1);
+    }
 
-    Optional<Integer> nextGuildId();
+    default Optional<Integer> nextGuildId(){
+        if (!DatabaseManager.isRelational()){
+            throw new UnsupportedOperationException("nextGuildId needs to be implemented for this database.");
+        }
+        return Optional.of(-1);
+    }
 
-    Optional<Integer> nextMemoId();
+    default Optional<Integer> nextMemoId(){
+        if (!DatabaseManager.isRelational()){
+            throw new UnsupportedOperationException("nextMemoId needs to be implemented for this database.");
+        }
+        return Optional.of(-1);
+    }
+
+    default boolean generateItemSn(Item item){
+        if (DatabaseManager.isRelational()){
+            throw new UnsupportedOperationException("generateItemSn() needs to be implemented for this database.");
+        }
+        return true;
+    }
 }

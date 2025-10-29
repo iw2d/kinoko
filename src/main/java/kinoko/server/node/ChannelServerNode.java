@@ -117,6 +117,10 @@ public final class ChannelServerNode extends ServerNode {
         return clientStorage.getUserByCharacterId(characterId);
     }
 
+    public Optional<User> getUserByCharacterName(String characterName) {
+        return clientStorage.getUserByCharacterName(characterName);
+    }
+
     public void notifyUserConnect(User user) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.userConnect(RemoteUser.from(user)));
     }
@@ -257,8 +261,14 @@ public final class ChannelServerNode extends ServerNode {
 
         // Start channel server
         final ChannelServerNode self = this;
-        channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
-        channelServerFuture.sync();
+        try {
+            channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
+            channelServerFuture.sync();
+        }
+        catch(Exception e){
+            log.error("Channel {} failed to bind to port {}", channelId + 1, channelPort);
+            throw e;
+        }
         log.info("Channel {} listening on port {}", channelId + 1, channelPort);
 
         // Start central client

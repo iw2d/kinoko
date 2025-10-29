@@ -1,5 +1,6 @@
 package kinoko.world.item;
 
+import kinoko.database.DatabaseManager;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 
@@ -34,6 +35,37 @@ public final class Item implements Encodable {
         this.equipData = item.equipData != null ? new EquipData(item.equipData) : null;
         this.petData = item.petData != null ? new PetData(item.petData) : null;
         this.ringData = item.ringData != null ? new RingData(item.ringData) : null;
+    }
+
+    public Item(int itemId, short quantity) {
+        this(ItemType.getByItemId(itemId));
+        this.itemId = itemId;
+        this.quantity = quantity;
+    }
+
+    public Item(
+            int itemId,
+            short quantity,
+            long itemSn,
+            boolean cash,
+            short attribute,
+            String title,
+            Instant dateExpire,
+            EquipData equipData,
+            PetData petData,
+            RingData ringData
+    ) {
+        this(ItemType.getByItemId(itemId));
+        this.itemId = itemId;
+        this.quantity = quantity;
+        this.itemSn = itemSn;
+        this.cash = cash;
+        this.attribute = attribute;
+        this.title = title;
+        this.dateExpire = dateExpire;
+        this.equipData = equipData;
+        this.petData = petData;
+        this.ringData = ringData;
     }
 
     @Override
@@ -180,6 +212,36 @@ public final class Item implements Encodable {
             addAttribute(ItemAttribute.getPossibleTradingAttribute(getItemType()));
         } else {
             removeAttribute(ItemAttribute.getPossibleTradingAttribute(getItemType()));
+        }
+    }
+
+    /**
+     * Checks whether this Item has a valid item serial number (SN).
+
+     * Useful in relational databases where item SNs are automatically generated.
+     * Returns true if the item has no SN and therefore needs to be inserted
+     * into the database to obtain one.
+     *
+     * @return true if the item SN is zero or negative, false otherwise
+     */
+    public boolean hasNoSN() {
+        return getItemSn() <= 0;
+    }
+
+    /**
+     * Resets the item's serial number (SN) to -1.
+     *
+     * If checkIfRelational is true, the SN is reset only if the underlying
+     * database is relational. If false, the SN is always reset regardless of database type.
+     *
+     * This can be used to mark the item as needing a new SN before inserting it into
+     * a database. Especially useful when dropping/trading items in bulk that split an item.
+     *
+     * @param checkIfRelational whether to check if the database is relational before resetting
+     */
+    public void resetSN(boolean checkIfRelational) {
+        if (!checkIfRelational || DatabaseManager.isRelational()) {
+            setItemSn(-1);
         }
     }
 }

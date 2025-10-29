@@ -14,6 +14,17 @@ public final class RingData {
         this.pairItemSn = ringData.pairItemSn;
     }
 
+    public RingData(
+            int pairCharacterId,
+            String pairCharacterName,
+            long pairItemSn
+    ) {
+        this.pairCharacterId = pairCharacterId;
+        this.pairCharacterName = pairCharacterName;
+        this.pairItemSn = pairItemSn;
+    }
+
+
     public int getPairCharacterId() {
         return pairCharacterId;
     }

@@ -1,5 +1,7 @@
 package kinoko.util;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
@@ -13,19 +15,37 @@ public final class Util {
     private static final HexFormat hexFormat = HexFormat.ofDelimiter(" ").withUpperCase();
     private static final Random random = new SecureRandom();
 
+
+    private static final Dotenv dotenv = Dotenv.configure()
+            .ignoreIfMissing() // doesn't fail if .env is missing
+            .load();
+
     public static String getEnv(String name, String defaultValue) {
-        final String value = System.getenv(name);
-        return value != null ? value : defaultValue;
+        String value = System.getenv(name);           // check system env
+        if (value != null) return value;
+
+        value = dotenv.get(name);                     // check .env file
+        if (value != null) return value;
+
+        return defaultValue;                          // fallback to the default
     }
 
     public static int getEnv(String name, int defaultValue) {
-        final String value = System.getenv(name);
-        return value != null ? Integer.parseInt(value) : defaultValue;
+        String value = getEnv(name, null);
+        if (value != null) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException ignored) {}
+        }
+        return defaultValue;
     }
 
     public static boolean getEnv(String name, boolean defaultValue) {
-        final String value = System.getenv(name);
-        return value != null ? Boolean.parseBoolean(value) : defaultValue;
+        String value = getEnv(name, null);
+        if (value != null) {
+            return Boolean.parseBoolean(value);
+        }
+        return defaultValue;
     }
 
     public static byte[] getHost(String name) {
