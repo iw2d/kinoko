@@ -194,7 +194,7 @@ public class Zakum extends ScriptHandler {
                     sm.forceCompleteQuest(100202);
                     sm.sayOk("Here it is. You will now be able to enter the alter of the Zakum Dungeon when the door on the left is open.. You'll need\\r\\n#b#t4001017##k with you in order to go through the door and enter the stage. Now, let's see how many can enter this place ...?");
                 }
-                else if (sm.hasQuestCompleted(3)) {
+                else if (sm.hasQuestCompleted(100202)) {
                     if (!sm.askYesNo("Hmmm ... aren't you the one who refined #b#t4001017##k before? Then what can I do for you? Are you interested in mixing #b#t4031061##k with #b#t4031062##k again to create #b#t4001017##k?")) {
                         sm.sayOk("I see ... but please be aware that you won't be able to see the boss of Zakum Dungeon without the #b#t4001017##k.");
                         return;
