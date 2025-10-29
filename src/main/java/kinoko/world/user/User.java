@@ -17,6 +17,7 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
+import kinoko.server.event.EventType;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
@@ -68,7 +69,6 @@ public final class User extends Life {
     private final Map<Integer, Instant> schedules = new HashMap<>();
     private final AtomicInteger fieldKey = new AtomicInteger(0);
 
-
     private int messengerId;
     private PartyInfo partyInfo;
     private GuildInfo guildInfo;
@@ -81,7 +81,9 @@ public final class User extends Life {
     private int portableChairId;
     private boolean inCashShop = false;
     private String adBoard;
+    private int dojoEnergy;
     private boolean inTransfer;
+    private List<EventCoolDown> cooldowns = new ArrayList<>();
     private Instant nextCheckItemExpire;
 
     public User(Client client, CharacterData characterData) {
@@ -96,6 +98,10 @@ public final class User extends Life {
 
     public Account getAccount() {
         return client.getAccount();
+    }
+
+    public boolean isGM() {
+        return getAdminLevel().isAtLeast(AdminLevel.JR_GM);
     }
 
     public ChannelServerNode getConnectedServer() {
@@ -310,6 +316,46 @@ public final class User extends Life {
         this.townPortal = townPortal;
     }
 
+    public int getDojoEnergy() {
+        return dojoEnergy;
+    }
+
+    public void setDojoEnergy(int newEnergy) {
+        this.dojoEnergy = newEnergy;
+    }
+
+    public void resetDojoEnergy() {
+        this.dojoEnergy = 0;
+    }
+    public EventCoolDown getCoolDownByType(EventType eventType) {
+        return this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).toList().getFirst();
+    }
+
+    public void addCoolDown(EventType eventType, long time) {
+        addCoolDown(eventType, 1, System.currentTimeMillis() + time);
+    }
+
+    public void addCoolDown(EventType eventType, int amountDone, long nextReset) {
+        EventCoolDown cd = this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).findFirst().orElse(null);
+        if (cd == null) {
+            cd = new EventCoolDown(eventType, amountDone, nextReset);
+            this.cooldowns.add(cd);
+        } else {
+            cd.setNextResetTime(nextReset);
+            cd.setAmountDone(amountDone);
+        }
+    }
+
+    public int getEventAmountDone(EventType eventType) {
+        EventCoolDown cd = this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).findFirst().orElse(null);
+        if (cd == null) {
+            return 0;
+        }
+        if (System.currentTimeMillis() > cd.getNextResetTime()) {
+            cd.setAmountDone(0);
+        }
+        return cd.getAmountDone();
+    }
     public int getTownPortalIndex() {
         return hasParty() ? getPartyMemberIndex() - 1 : 0;
     }
@@ -370,6 +416,10 @@ public final class User extends Life {
 
     public int getJob() {
         return getCharacterStat().getJob();
+    }
+
+    public boolean is4thJob() {
+        return getCharacterStat().getJob() % 10 == 2;
     }
 
     public int getLevel() {
@@ -813,8 +863,7 @@ public final class User extends Life {
     }
 
     public void dispose() {
-        OutPacket outpacket = WvsContext.statChanged(Map.of(), true);
-        write(outpacket);
+        write(WvsContext.statChanged(Map.of(), true));
     }
 
     public void logout(boolean disconnect) {
@@ -867,7 +916,6 @@ public final class User extends Life {
     public void setInCashShop(boolean inCashShop) {
         this.inCashShop = inCashShop;
     }
-
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 

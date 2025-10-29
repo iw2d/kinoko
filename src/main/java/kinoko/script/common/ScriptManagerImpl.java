@@ -780,7 +780,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     public boolean partyHasCoolDown(EventType eventType, int runsPerDay) {
         final List<User> members = field.getUserPool().getPartyMembers(user.getPartyId());
         for (User member : members) {
-            if (member.getAccount().isGM()) {
+            if (member.isGM()) {
                 return false;
             }
             if (member.getEventAmountDone(eventType) >= runsPerDay) {
