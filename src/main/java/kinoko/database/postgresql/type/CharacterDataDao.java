@@ -296,7 +296,7 @@ public class CharacterDataDao {
             portal = EXCLUDED.portal,
             pet_1 = EXCLUDED.pet_1,
             pet_2 = EXCLUDED.pet_2,
-            pet_3 = EXCLUDED.pet_3
+            pet_3 = EXCLUDED.pet_3,
             admin_level = EXCLUDED.admin_level
         """;
 
