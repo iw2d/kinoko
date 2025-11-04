@@ -506,10 +506,6 @@ VALUES (
     0
 );
 
-COMMIT TRANSACTION;
-
-
-
 
 ---------------------------------
 --SCHEMA UPDATES AND VERSIONING--
@@ -575,3 +571,7 @@ BEGIN
     RETURN new_version;
 END;
 $$ LANGUAGE plpgsql;
+
+
+COMMIT TRANSACTION;
+
