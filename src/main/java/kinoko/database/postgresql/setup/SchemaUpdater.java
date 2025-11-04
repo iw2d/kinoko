@@ -10,7 +10,7 @@ public class SchemaUpdater {
     public static void run(Connection connection) throws SQLException, IOException {
         long startTime = System.nanoTime(); // start timing
 
-        // Step 1: get current version
+        // get current version
         int currentVersion = getSchemaVersion(connection);
 
         System.out.println("Current schema version: " + currentVersion);
@@ -29,13 +29,13 @@ public class SchemaUpdater {
             String sql = Files.readString(nextFile);
 
             try {
-                // Step 2: execute migration
+                // execute migration
                 connection.setAutoCommit(false);
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute(sql);
                 }
 
-                // Step 3: increment schema version (inside same transaction)
+                // increment schema version (inside same transaction)
                 try (PreparedStatement ps = connection.prepareStatement(
                         "SELECT versioning.increment_schema_version(?)")) {
                     ps.setInt(1, currentVersion);
