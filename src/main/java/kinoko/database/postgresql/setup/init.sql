@@ -507,3 +507,71 @@ VALUES (
 );
 
 COMMIT TRANSACTION;
+
+
+
+
+---------------------------------
+--SCHEMA UPDATES AND VERSIONING--
+---------------------------------
+-- Create schema for version tracking
+CREATE SCHEMA IF NOT EXISTS versioning;
+
+-- Create the version tracking table
+CREATE TABLE IF NOT EXISTS versioning.schema_version (
+    version     INTEGER PRIMARY KEY,
+    applied_at  TIMESTAMP NOT NULL DEFAULT UTC_NOW()
+);
+
+-- Function to get current schema version
+CREATE OR REPLACE FUNCTION versioning.get_schema_version()
+RETURNS INTEGER AS $$
+DECLARE
+    v INTEGER;
+BEGIN
+    SELECT version INTO v
+    FROM versioning.schema_version
+    ORDER BY version DESC
+    LIMIT 1;
+
+    IF v IS NULL THEN
+        RETURN 0;
+    END IF;
+
+    RETURN v;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Function to increment schema version
+CREATE OR REPLACE FUNCTION versioning.increment_schema_version(expected_current_version INTEGER)
+RETURNS INTEGER AS $$
+DECLARE
+    current_version INTEGER;
+    new_version INTEGER;
+BEGIN
+    -- Get current version, or default to 0 if none exists
+    SELECT COALESCE(
+        (SELECT version
+         FROM versioning.schema_version
+         ORDER BY version DESC
+         LIMIT 1),
+        0
+    ) INTO current_version;
+
+    -- Ensure it matches the expected value
+    IF current_version IS DISTINCT FROM expected_current_version THEN
+        RAISE EXCEPTION
+            'Schema version mismatch. Expected %, but current version is %.',
+            expected_current_version, current_version;
+    END IF;
+
+    -- Increment and insert the new version
+    new_version := current_version + 1;
+
+    INSERT INTO versioning.schema_version (version)
+    VALUES (new_version);
+
+    RETURN new_version;
+END;
+$$ LANGUAGE plpgsql;

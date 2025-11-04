@@ -2,9 +2,11 @@ package kinoko.database.postgresql;
 
 import kinoko.database.*;
 
+import java.sql.Connection;
 import java.util.TimeZone;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import kinoko.database.postgresql.setup.SchemaUpdater;
 import kinoko.server.ServerConstants;
 
 public final class PostgresConnector implements DatabaseConnector {
@@ -49,6 +51,9 @@ public final class PostgresConnector implements DatabaseConnector {
 //                    stmt.execute(sql);
 //                }
 //            }
+            try (Connection connection = dataSource.getConnection()) {
+                SchemaUpdater.run(connection);
+            }
 
             // Create Accessors
             idAccessor = new PostgresIdAccessor(dataSource);
