@@ -25,11 +25,16 @@ import kinoko.provider.skill.SkillStringInfo;
 
 
 /**
- * Fully detailed FindCommand with helpers for item/map/mob/npc/skill/quest/commodity.
+ * Fully detailed SearchCommand with helpers for item/map/mob/npc/skill/quest/commodity.
  */
-public final class FindCommand {
-
-    @Command({ "find", "lookup", "search"})
+public final class SearchCommand {
+    /**
+     * Searches for items, maps, mobs, NPCs, skills, quests, or commodities.
+     * Usage: !search <item/map/mob/npc/skill/quest/commodity> <id or query>
+     *        !lookup <item/map/mob/npc/skill/quest/commodity> <id or query>
+     *        !find <item/map/mob/npc/skill/quest/commodity> <id or query>
+     */
+    @Command({ "search", "find", "lookup"})
     @Arguments({ "item/map/mob/npc/skill/quest/commodity", "id or query" })
     public static void find(User user, String[] args) {
         if (args.length < 2) {

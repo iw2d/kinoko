@@ -16,7 +16,7 @@ public final class UnBanCommand {
      * Unbans a player's account by character username.
      * Usage: !unban <username>
      */
-    @Command("unban")
+    @Command({"unban", "liftban"})
     @Arguments("character username")
     public static void unban(User user, String[] args) {
         if (args.length < 2) {
