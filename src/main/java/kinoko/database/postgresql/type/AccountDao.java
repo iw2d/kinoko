@@ -2,12 +2,15 @@ package kinoko.database.postgresql.type;
 
 import kinoko.database.DatabaseManager;
 import kinoko.world.user.Account;
+import kinoko.world.user.BanInfo;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 public class AccountDao {
@@ -42,6 +45,7 @@ public class AccountDao {
         TrunkDao.save(conn, accountId, account.getTrunk());
         WishlistDao.save(conn, accountId, account.getWishlist());
         LockerDao.save(conn, accountId, account.getLocker());
+        BanInfoDao.save(conn, accountId, account.getBanInfo());
     }
 
     /**
@@ -93,6 +97,7 @@ public class AccountDao {
         account.setTrunk(TrunkDao.load(conn, accountId));
         account.setLocker(LockerDao.load(conn, accountId));
         account.setWishlist(WishlistDao.load(conn, accountId));
+        account.setBanInfo(BanInfoDao.load(conn, accountId));
 
         return account;
     }
