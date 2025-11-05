@@ -256,17 +256,17 @@ public final class KerningPQ extends ScriptHandler {
                 }
                 // Introduction
                 if (!sm.getInstanceVariable("stage4_intro").equals("1")) {
-                    sm.sayNext("TODO"); // TODO
+                    sm.sayNext("Hello, welcome to First Companion <Checkpoint 4>. Walk around the map to find some monsters. #bDefeat all the Curse Eyes#k in the map and talk to me again to open the portal to the next stage.");
                     sm.setInstanceVariable("stage4_intro", "1");
                     return;
                 }
                 // Check mob count
                 if (field.getMobPool().getByTemplateId(9300002).isPresent()) {
-                    sm.sayNext("TODO"); // TODO
+                    sm.sayNext("There are still some #bCurse Eyes#k remaining in the map. Please defeat all of them before we can proceed to the next stage.");
                     return;
                 }
                 // Stage clear
-                sm.sayNext("TODO"); // TODO
+                sm.sayNext("Great job! You have defeated all the Curse Eyes. The portal to the next area has been opened. Please hurry!");
                 sm.addExpAll(100);
                 sm.setInstanceVariable("stage4_gate", "1");
                 sm.broadcastPacket(FieldPacket.setObjectState("gate", 0));
@@ -277,17 +277,17 @@ public final class KerningPQ extends ScriptHandler {
                 }
                 // Introduction
                 if (!sm.getInstanceVariable("stage5_intro").equals("1")) {
-                    sm.sayNext("TODO"); // TODO
+                    sm.sayNext("Hello, welcome to First Companion <Final Checkpoint>. This is the final stage. Defeat the #bKing Slime#k in the map to enter the reward stage. Good luck!");
                     sm.setInstanceVariable("stage5_intro", "1");
                     return;
                 }
                 // Check mob count
                 if (field.getMobPool().getByTemplateId(9300003).isPresent()) {
-                    sm.sayNext("TODO"); // TODO
+                    sm.sayNext("The #bKing Slime#k is still alive! Keep fighting and defeat it to complete this Party Quest!");
                     return;
                 }
                 // Stage clear
-                sm.sayNext("TODO"); // TODO
+                sm.sayNext("Congratulations on completing all challenges! You have defeated King Slime! Please proceed through the portal to the final reward stage.");
                 sm.addExpAll(100);
                 sm.setInstanceVariable("stage5_gate", "1");
                 sm.broadcastPacket(FieldPacket.setObjectState("gate", 0));
@@ -317,7 +317,43 @@ public final class KerningPQ extends ScriptHandler {
         //   Hidden Street : First Time Together <Last Stage> (910340501)
         //   Hidden Street : First Time Together <Bonus> (910340600)
         //   Hidden Street : First Time Together <Bonus> (910340601)
-        sm.sayNext("TODO"); // TODO - exit stage, sell 4001454
+
+        final int mapId = sm.getFieldId();
+
+        // Check if in bonus stage
+        if (mapId == BONUS) {
+            if (!sm.askYesNo("Are you sure you want to leave the bonus stage and exit the Party Quest?")) {
+                return;
+            }
+            // Remove PQ items
+            sm.removeItem(COUPON); // 4001007 - Coupons
+            sm.removeItem(4001008); // Passes
+
+            // Warp to exit
+            sm.warp(EXIT, "sp");
+            return;
+        }
+
+        // Check if in exit map
+        if (mapId == EXIT) {
+            if (!sm.askYesNo("Are you sure you want to return to the lobby?")) {
+                return;
+            }
+            sm.warp(910340700, "sp"); // Return to lobby
+            return;
+        }
+
+        // Regular stage exit
+        if (!sm.askYesNo("Are you sure you want to leave this Party Quest? You will forfeit all progress.")) {
+            return;
+        }
+
+        // Remove PQ items
+        sm.removeItem(COUPON); // 4001007 - Coupons
+        sm.removeItem(4001008); // Passes
+
+        // Warp to exit
+        sm.warp(EXIT, "sp");
     }
 
     @Script("StageMsg_together")

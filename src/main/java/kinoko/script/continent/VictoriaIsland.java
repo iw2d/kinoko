@@ -423,4 +423,197 @@ public final class VictoriaIsland extends ScriptHandler {
             sm.sayOk("I need you to have a CASH slot available to reward you properly!");
         }
     }
+
+    // DUAL BLADE PORTAL SCRIPTS ---------------------------------------------------------------------
+
+    @Script("dual_secret")
+    public static void dual_secret(ScriptManager sm) {
+        // Portal: Secret hideout entrance for Dual Blade quest 2369
+        // Map: Kerning City Secret Hideout (103000003) -> Former Dark Lord's Room (910350100)
+        if (!sm.hasQuestStarted(2369)) {
+            sm.message("You cannot access this area.");
+            return;
+        }
+
+        // Warp to instance map
+        sm.playPortalSE();
+        sm.warp(910350100, "out00");
+    }
+
+    @Script("Dual_moveGate")
+    public static void Dual_moveGate(ScriptManager sm) {
+        // Portal: Dual Blade hideout exit
+        // Map: Various Dual Blade maps -> Kerning City Construction Site B1 (103050000)
+        sm.playPortalSE();
+        sm.warp(103050000, "out00");
+    }
+
+    // DUAL BLADE NPC SCRIPTS -------------------------------------------------------------------------
+
+    @Script("hong-a")
+    public static void hong_a(ScriptManager sm) {
+        // Ryden (1057001) - Dual Blade Selection NPC
+        // Map: Kerning City (103000000) and tutorial map (10000)
+
+        // Check if player is already a Dual Blade
+        if (sm.getUser().getCharacterStat().getSubJob() == 1) {
+            sm.sayOk("I will contact you when I need you.");
+            return;
+        }
+
+        // Only show selection during tutorial (map 10000, level 1)
+        if (sm.getFieldId() != 10000 || sm.getLevel() > 1) {
+            sm.sayOk("Huh...is something wrong?");
+            return;
+        }
+
+        final int answer = sm.askMenu("Hey! That little guy over there, are you interested in joining my organization and becoming a member of the Dual Blade? I've been waiting for you here for a long time and found that you have great potential. Do you want to join?",
+            Map.of(
+                0, "I will continue to play Adventurer",
+                1, "I want to be a Dual Blade"
+            ));
+
+        if (answer == 0) {
+            sm.sayOk("If you leave here, it's impossible to become a Dual Blade. You'd better think about it carefully.");
+        } else {
+            // Set player as Dual Blade (SubJob = 1)
+            sm.getUser().getCharacterStat().setSubJob((short) 1);
+            sm.sayOk("You have chosen the path of the Dual Blade! Your journey begins now. Train hard and we will contact you soon.");
+        }
+    }
+
+    @Script("dual_blueAlcohol")
+    public static void dual_blueAlcohol(ScriptManager sm) {
+        // Blue Bottle/Alcohol Object - Quest 2358 "Fifth Mission: Fabrication"
+        // Map: Kerning City Jazz Bar (103000003)
+        // Player clicks on blue bottle to plant bomb for Dual Blade quest
+
+        // Check if player has quest 2358 started
+        if (!sm.hasQuestStarted(2358)) {
+            // Not on the quest
+            return;
+        }
+
+        // Get current progress value
+        final String infoValue = sm.getQRValue(2358);
+
+        // Check if bomb is already planted
+        if ("211".equals(infoValue)) {
+            sm.sayOk("You've already planted the bomb. Get out of here before someone notices!");
+            return;
+        }
+
+        sm.sayNext("This looks like the perfect spot behind the blue bottle to plant the bomb.");
+        sm.sayBoth("You carefully place the bomb behind the blue bottle at the counter. The timer starts ticking...");
+
+        // Set quest progress to 211 (bomb planted)
+        sm.setQRValue(2358, "211");
+
+        sm.sayOk("The bomb has been planted. You should leave before anyone gets suspicious!");
+    }
+
+    @Script("dual_ballRoom")
+    public static void dual_ballRoom(ScriptManager sm) {
+        // Portal: Marble Room entrance for quest 2363 "Dual Blade: Time for the Awakening"
+        // Warps to Marble Room (910350000)
+        // Player needs to have quest 2363 started to enter
+
+        if (!sm.hasQuestStarted(2363)) {
+            sm.message("The door is locked.");
+            return;
+        }
+
+        sm.playPortalSE();
+        sm.warp(910350000); // Marble Room - click on marbles to get Mirror of Insight
+    }
+
+    @Script("dual_lv20")
+    public static void dual_lv20(ScriptManager sm) {
+        // Portal: Level 20 check for Blade Recruit job advancement
+        // Ensures player is level 20+ before allowing access
+
+        if (sm.getLevel() < 20) {
+            sm.message("You must be at least level 20 to enter.");
+            return;
+        }
+
+        sm.playPortalSE();
+        sm.warp(103050310); // Dual Blade training area for level 20+
+    }
+
+    @Script("dual_lv25")
+    public static void dual_lv25(ScriptManager sm) {
+        // Portal: Level 25 check for training areas
+        // Ensures player is level 25+ before allowing access
+
+        if (sm.getLevel() < 25) {
+            sm.message("You must be at least level 25 to enter.");
+            return;
+        }
+
+        sm.playPortalSE();
+        sm.warp(103050340); // Dual Blade training area for level 25+
+    }
+
+    @Script("dual_lv30")
+    public static void dual_lv30(ScriptManager sm) {
+        // Portal: Level 30 check for Blade Acolyte job advancement
+        // Ensures player is level 30+ before allowing access
+
+        if (sm.getLevel() < 30) {
+            sm.message("You must be at least level 30 to enter.");
+            return;
+        }
+
+        sm.playPortalSE();
+        sm.warp(103050370); // Dual Blade training area for level 30+
+    }
+
+    @Script("dual_Diary")
+    public static void dual_Diary(ScriptManager sm) {
+        // Former Dark Lord's Diary Object/NPC - Quest 2369
+        // Located in Jazz Bar secret room (map 910350100)
+        // Gives Former Dark Lord's Diary (item 4032617)
+
+        if (!sm.hasQuestStarted(2369)) {
+            sm.sayOk("This appears to be an old diary...");
+            return;
+        }
+
+        if (sm.hasItem(4032617, 1)) {
+            sm.sayOk("You already have the Former Dark Lord's Diary.");
+            return;
+        }
+
+        sm.sayNext("You found an old leather-bound diary covered in dust. This must be the Former Dark Lord's Diary that Lady Syl mentioned...");
+
+        if (!sm.canAddItem(4032617, 1)) {
+            sm.sayOk("Your inventory is full. Make some space and try again.");
+            return;
+        }
+
+        sm.addItem(4032617, 1); // Former Dark Lord's Diary
+        sm.sayOk("You obtained the #bFormer Dark Lord's Diary#k! Take it to Lady Syl once you reach Level 30.");
+    }
+
+    // AQUA ROAD NPC SCRIPTS --------------------------------------------------------------------------
+
+    @Script("crack")
+    public static void crack(ScriptManager sm) {
+        // NPC 2060100 - Cracked Dimension entry (solo version)
+        //   Aqua Road : Deep Sea Gorge III (230040001)
+        if (!sm.hasItem(4000175, 1)) {
+            sm.sayOk("You can only open the distorted dimension if you have found #b#z4000175##k.");
+            return;
+        }
+
+        // Check if dimension is occupied
+        if (sm.getField().getFieldStorage().getFieldById(923000000).map(f -> f.getUserPool().getCount() > 0).orElse(Boolean.FALSE)) {
+            sm.sayOk("Someone is already inside the Cracked Dimension. Please wait.");
+            return;
+        }
+
+        sm.removeItem(4000175, 1);
+        sm.warpInstance(923000000, "sp", 230040001, 60 * 20);
+    }
 }
