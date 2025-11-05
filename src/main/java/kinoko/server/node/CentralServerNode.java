@@ -137,7 +137,7 @@ public final class CentralServerNode extends Node {
         return getRemoteUserByCharacterName(characterName)
                 .flatMap(remoteUser -> serverStorage
                         .getChannelServerNodeById(remoteUser.getChannelId())
-                        .flatMap(channelNode -> channelNode.getUserByCharacterName(characterName))
+                        .flatMap(channelNode -> channelNode.getUserByCharacterId(remoteUser.getCharacterId()))
                 );
     }
 
