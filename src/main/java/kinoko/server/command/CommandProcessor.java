@@ -160,7 +160,7 @@ public final class CommandProcessor {
 
         // no registered command found.
         if (commandResult.isEmpty()) {
-            user.write(MessagePacket.system("Unknown command : %s", text));
+            user.systemMessage("Unknown command : %s", text);
             return;
         }
 
@@ -171,7 +171,7 @@ public final class CommandProcessor {
         if (method.isAnnotationPresent(Arguments.class)) {
             final Arguments annotation = method.getAnnotation(Arguments.class);
             if (arguments.length < annotation.value().length + 1) {
-                user.write(MessagePacket.system("Syntax : %s", getHelpString(method)));
+                user.systemMessage("Syntax : %s", getHelpString(method));
                 return;
             }
         }
@@ -180,7 +180,7 @@ public final class CommandProcessor {
         AdminLevel requiredLevel = methodLevelMap.getOrDefault(method, AdminLevel.PLAYER);
         if (!user.getAdminLevel().isAtLeast(requiredLevel)) {
             if (ServerConfig.TESPIA) {
-                user.write(MessagePacket.system("You do not have permission to use this command."));  // We don't want to show this message to a normal player.
+                user.systemMessage("You do not have permission to use this command.");  // We don't want to show this message to a normal player.
             }
             return;
         }
@@ -191,7 +191,7 @@ public final class CommandProcessor {
             method.invoke(null, user, arguments);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("Exception caught while processing command {}", text, e);
-            user.write(MessagePacket.system("Failed to process command : %s", text));
+            user.systemMessage("Failed to process command : %s", text);
             e.printStackTrace();
         }
     }

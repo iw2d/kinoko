@@ -21,7 +21,7 @@ public final class CompleteQuestCommand {
             user.write(MessagePacket.questRecord(qr));
             user.validateStat();
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !completequest <quest ID>"));
+            user.systemMessage("Usage: !completequest <quest ID>");
         }
     }
 }

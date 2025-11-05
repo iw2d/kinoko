@@ -17,7 +17,7 @@ public final class MapCommand {
 
     @Command("whereami")
     public static void whereAmI(User user, String[] args) {
-        user.write(MessagePacket.system("You are in map: %d", user.getField().getFieldId()));
+        user.systemMessage("You are in map: %d", user.getField().getFieldId());
     }
 
     @Command({ "map", "warp" })
@@ -33,7 +33,7 @@ public final class MapCommand {
             // Get the field
             final Optional<Field> fieldResult = user.getConnectedServer().getFieldById(fieldId);
             if (fieldResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve field ID: %d", fieldId));
+                user.systemMessage("Could not resolve field ID: %d", fieldId);
                 return;
             }
             final Field targetField = fieldResult.get();
@@ -41,7 +41,7 @@ public final class MapCommand {
             // Get the portal by name
             final Optional<PortalInfo> portalResult = targetField.getPortalByName(portalName);
             if (portalResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve portal '%s' for field ID: %d", portalName, fieldId));
+                user.systemMessage("Could not resolve portal '%s' for field ID: %d", portalName, fieldId);
                 return;
             }
 
@@ -49,7 +49,7 @@ public final class MapCommand {
             user.warp(targetField, portalResult.get(), false, false);
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !map <field ID> [portal name]"));
+            user.systemMessage("Usage: !map <field ID> [portal name]");
         }
     }
 

@@ -12,6 +12,6 @@ public final class ClearLockerCommand {
     @Command("clearlocker")
     public static void clearLocker(User user, String[] args) {
         user.getAccount().getLocker().getCashItems().clear();
-        user.write(MessagePacket.system("Locker inventory cleared!"));
+        user.systemMessage("Locker inventory cleared!");
     }
 }

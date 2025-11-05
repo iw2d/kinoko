@@ -18,9 +18,9 @@ public final class ReloadShopsCommand {
     public static void reloadShops(User user, String[] args) {
         try {
             ShopProvider.initialize();
-            user.write(MessagePacket.system("Shops reloaded successfully."));
+            user.systemMessage("Shops reloaded successfully.");
         } catch (Exception e) {
-            user.write(MessagePacket.system("Failed to reload shops: %s", e.getMessage()));
+            user.systemMessage("Failed to reload shops: %s", e.getMessage());
         }
     }
 }

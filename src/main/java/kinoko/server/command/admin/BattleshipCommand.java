@@ -13,6 +13,6 @@ public final class BattleshipCommand {
 
     @Command({ "battleship", "bship" })
     public static void battleship(User user, String[] args) {
-        user.write(MessagePacket.system("Battleship HP : %d", Pirate.getBattleshipDurability(user)));
+        user.systemMessage("Battleship HP : %d", Pirate.getBattleshipDurability(user));
     }
 }

@@ -27,8 +27,8 @@ public final class ClearInventoryCommand {
                     .findFirst();
 
             if (inventoryTypeResult.isEmpty()) {
-                user.write(MessagePacket.system(
-                        "Please specify a valid inventory type: EQUIP | CONSUME | INSTALL | ETC | CASH"));
+                user.systemMessage(
+                        "Please specify a valid inventory type: EQUIP | CONSUME | INSTALL | ETC | CASH");
                 return;
             }
 
@@ -44,10 +44,10 @@ public final class ClearInventoryCommand {
             }
 
             user.write(WvsContext.inventoryOperation(removeOperations, true));
-            user.write(MessagePacket.system("%s inventory cleared!", inventoryType));
+            user.systemMessage("%s inventory cleared!", inventoryType);
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !clearinventory <inventory type>"));
+            user.systemMessage("Usage: !clearinventory <inventory type>");
         }
     }
 }

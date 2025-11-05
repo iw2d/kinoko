@@ -757,7 +757,7 @@ public final class UserHandler {
 
         final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
         if (targetResult.isEmpty()) {
-            user.write(MessagePacket.system("Unable to find the character."));
+            user.systemMessage("Unable to find the character.");
             return;
         }
         final User target = targetResult.get();

@@ -86,7 +86,7 @@ public final class MaxCommand {
             user.setMp(user.getMaxMp());
 
         } catch (Exception e) {
-            user.write(MessagePacket.system("Failed to max your character: %s", e.getMessage()));
+            user.systemMessage("Failed to max your character: %s", e.getMessage());
             e.printStackTrace();
         }
     }

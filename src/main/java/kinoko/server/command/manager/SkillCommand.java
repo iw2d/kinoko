@@ -27,7 +27,7 @@ public final class SkillCommand {
 
             Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not find skill : %d", skillId));
+                user.systemMessage("Could not find skill : %d", skillId);
                 return;
             }
 
@@ -42,7 +42,7 @@ public final class SkillCommand {
             user.validateStat();
             user.write(WvsContext.changeSkillRecordResult(skillRecord, true));
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !skill <skill ID> <skill level>"));
+            user.systemMessage("Usage: !skill <skill ID> <skill level>");
         }
     }
 }

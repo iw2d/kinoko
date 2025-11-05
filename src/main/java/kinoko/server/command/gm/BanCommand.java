@@ -28,7 +28,7 @@ public final class BanCommand {
     @Arguments({"player name", "reason"})
     public static void ban(User user, String[] args) {
         if (args.length < 3) {
-            user.write(MessagePacket.system("Usage: !ban <player name> <reason>"));
+            user.systemMessage("Usage: !ban <player name> <reason>");
             return;
         }
 
@@ -41,7 +41,7 @@ public final class BanCommand {
                 .findFirst();
 
         if (targetUserResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find player '%s' on this channel.", targetName));
+            user.systemMessage("Could not find player '%s' on this channel.", targetName);
             return;
         }
 
@@ -50,20 +50,20 @@ public final class BanCommand {
 
         // Prevent self-ban
         if (targetUser.getCharacterId() == user.getCharacterId()) {
-            user.write(MessagePacket.system("You cannot ban yourself!"));
+            user.systemMessage("You cannot ban yourself!");
             return;
         }
 
         // Prevent banning a GM with a higher status than you. Banning same-level GMs is allowed.
         if (!user.getAdminLevel().isAtLeast(targetUser.getAdminLevel())) {
-            user.write(MessagePacket.system("You cannot ban any GM with a higher status than you."));
+            user.systemMessage("You cannot ban any GM with a higher status than you.");
             return;
         }
 
         // Check if already banned
         BanInfo banInfo = targetAccount.getBanInfo();
         if (banInfo.isBanned()) {
-            user.write(MessagePacket.system("Player '%s' is already banned.", targetName));
+            user.systemMessage("Player '%s' is already banned.", targetName);
             return;
         }
 
@@ -78,9 +78,9 @@ public final class BanCommand {
         DatabaseManager.accountAccessor().saveAccount(targetAccount);
 
         // Notify the player and the GM
-        targetUser.write(MessagePacket.system("You have been banned by GM %s.", user.getCharacterName()));
-        targetUser.write(MessagePacket.system("Reason: %s", reason));
-        user.write(MessagePacket.system("Banned player '%s' (Account ID: %d).", targetName, targetAccount.getId()));
+        targetUser.systemMessage("You have been banned by GM %s.", user.getCharacterName());
+        targetUser.systemMessage("Reason: %s", reason);
+        user.systemMessage("Banned player '%s' (Account ID: %d).", targetName, targetAccount.getId());
 
         // Disconnect after 5 seconds
         scheduler.schedule(() -> {

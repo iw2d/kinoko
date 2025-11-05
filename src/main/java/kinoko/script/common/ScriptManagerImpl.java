@@ -105,7 +105,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public void message(String message) {
-        user.write(MessagePacket.system(message));
+        user.systemMessage(message);
     }
 
     @Override
@@ -864,7 +864,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean originalField) {
         final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
         if (reactorTemplateResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not resolve reactor template ID : %d", templateId));
+            user.systemMessage("Could not resolve reactor template ID : %d", templateId);
             return;
         }
         final Field targetField = originalField ? field : user.getField();

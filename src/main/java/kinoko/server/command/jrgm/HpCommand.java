@@ -16,9 +16,9 @@ public final class HpCommand {
         try {
             int newHp = Integer.parseInt(args[1]);
             user.setHp(newHp);
-            user.write(MessagePacket.system("HP set to %d", newHp));
+            user.systemMessage("HP set to %d", newHp);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !hp <new HP>"));
+            user.systemMessage("Usage: !hp <new HP>");
         }
     }
 }

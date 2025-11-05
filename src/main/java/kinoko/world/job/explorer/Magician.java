@@ -253,7 +253,7 @@ public final class Magician extends SkillProcessor {
                     user.write(WvsContext.townPortal(townPortal));
                     user.getConnectedServer().notifyUserUpdate(user);
                 } else {
-                    user.write(MessagePacket.system("You cannot use the Mystic Door skill here."));
+                    user.systemMessage("You cannot use the Mystic Door skill here.");
                 }
                 return;
         }

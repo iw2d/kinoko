@@ -20,6 +20,6 @@ public final class HealMapCommand {
             healedCount++;
         }
 
-        user.write(MessagePacket.system("Healed %d player(s) in the current map.", healedCount));
+        user.systemMessage("Healed %d player(s) in the current map.", healedCount);
     }
 }

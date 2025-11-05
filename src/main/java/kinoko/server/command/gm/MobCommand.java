@@ -24,7 +24,7 @@ public final class MobCommand {
             final int templateId = Integer.parseInt(args[1]);
             final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
             if (mobTemplateResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve mob template ID: %d", templateId));
+                user.systemMessage("Could not resolve mob template ID: %d", templateId);
                 return;
             }
 
@@ -43,7 +43,7 @@ public final class MobCommand {
                 field.getMobPool().addMob(mob);
             }
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !mob <mob template ID> [count]"));
+            user.systemMessage("Usage: !mob <mob template ID> [count]");
         }
     }
 }

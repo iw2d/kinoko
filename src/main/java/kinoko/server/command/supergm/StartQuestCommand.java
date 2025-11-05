@@ -23,7 +23,7 @@ public final class StartQuestCommand {
             int questId = Integer.parseInt(args[1]);
             Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
             if (questInfoResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not find quest : %d", questId));
+                user.systemMessage("Could not find quest : %d", questId);
                 return;
             }
 
@@ -31,7 +31,7 @@ public final class StartQuestCommand {
             user.write(MessagePacket.questRecord(qr));
             user.validateStat();
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !startquest <quest ID>"));
+            user.systemMessage("Usage: !startquest <quest ID>");
         }
     }
 }

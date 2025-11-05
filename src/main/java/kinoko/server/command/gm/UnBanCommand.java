@@ -20,7 +20,7 @@ public final class UnBanCommand {
     @Arguments("character username")
     public static void unban(User user, String[] args) {
         if (args.length < 2) {
-            user.write(MessagePacket.system("Usage: !unban <character username>"));
+            user.systemMessage("Usage: !unban <character username>");
             return;
         }
 
@@ -30,7 +30,7 @@ public final class UnBanCommand {
         final Optional<CharacterData> targetCharacterResult = DatabaseManager.characterAccessor().getCharacterByName(targetUsername);
 
         if (targetCharacterResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find character with username '%s'.", targetUsername));
+            user.systemMessage("Could not find character with username '%s'.", targetUsername);
             return;
         }
 
@@ -38,7 +38,7 @@ public final class UnBanCommand {
         final Optional<Account> targetAccountResult = DatabaseManager.accountAccessor().getAccountById(targetCharacterData.getAccountId());
 
         if (targetAccountResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find account with character username '%s'.", targetUsername));
+            user.systemMessage("Could not find account with character username '%s'.", targetUsername);
             return;
         }
 
@@ -46,7 +46,7 @@ public final class UnBanCommand {
 
         BanInfo banInfo = targetAccount.getBanInfo();
         if (!banInfo.isBanned()) {
-            user.write(MessagePacket.system("Account '%s' is not banned.", targetUsername));
+            user.systemMessage("Account '%s' is not banned.", targetUsername);
             return;
         }
 
@@ -55,6 +55,6 @@ public final class UnBanCommand {
         targetAccount.setBanInfo(banInfo);
         DatabaseManager.accountAccessor().saveAccount(targetAccount);
 
-        user.write(MessagePacket.system("Unbanned account '%s' (Account ID: %d).", targetUsername, targetAccount.getId()));
+        user.systemMessage("Unbanned account '%s' (Account ID: %d).", targetUsername, targetAccount.getId());
     }
 }

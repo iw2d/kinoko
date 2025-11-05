@@ -26,7 +26,7 @@ public final class MorphCommand {
         try {
             int morphId = Integer.parseInt(args[1]);
             if (SkillProvider.getMorphInfoById(morphId).isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve morph info for morph ID : %d", morphId));
+                user.systemMessage("Could not resolve morph info for morph ID : %d", morphId);
                 return;
             }
 
@@ -36,7 +36,7 @@ public final class MorphCommand {
             user.write(WvsContext.temporaryStatSet(ss, flag));
             user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !morph <morph ID>"));
+            user.systemMessage("Usage: !morph <morph ID>");
         }
     }
 }

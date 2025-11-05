@@ -16,9 +16,9 @@ public final class NxCommand {
         try {
             int nx = Integer.parseInt(args[1]);
             user.getAccount().setNxPrepaid(nx);
-            user.write(MessagePacket.system("Set NX prepaid to %d", nx));
+            user.systemMessage("Set NX prepaid to %d", nx);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !nx <amount>"));
+            user.systemMessage("Usage: !nx <amount>");
         }
     }
 }

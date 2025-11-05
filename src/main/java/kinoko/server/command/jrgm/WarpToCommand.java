@@ -23,7 +23,7 @@ public final class WarpToCommand {
         Optional<RemoteUser> targetRemoteUser = Server.getCentralServerNode().getRemoteUserByCharacterName(targetName);
 
         if (targetRemoteUser.isEmpty()) {
-            user.write(MessagePacket.system("Could not find player '%s'.", targetName));
+            user.systemMessage("Could not find player '%s'.", targetName);
             return;
         }
 
