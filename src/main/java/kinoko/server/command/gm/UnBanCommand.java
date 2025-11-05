@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public final class UnBanCommand {
     /**
-     * Unbans a player's account by username.
+     * Unbans a player's account by character username.
      * Usage: !unban <username>
      */
     @Command("unban")
