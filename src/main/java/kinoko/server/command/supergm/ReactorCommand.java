@@ -25,7 +25,7 @@ public final class ReactorCommand {
             final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
 
             if (reactorTemplateResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve reactor template ID: %d", templateId));
+                user.systemMessage("Could not resolve reactor template ID: %d", templateId);
                 return;
             }
 
@@ -34,7 +34,7 @@ public final class ReactorCommand {
             field.getReactorPool().addReactor(Reactor.from(reactorTemplateResult.get(), reactorInfo));
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !reactor <reactor template ID>"));
+            user.systemMessage("Usage: !reactor <reactor template ID>");
         }
     }
 
@@ -47,7 +47,7 @@ public final class ReactorCommand {
             final Optional<Reactor> reactorResult = field.getReactorPool().getByTemplateId(templateId);
 
             if (reactorResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve reactor with template ID: %d", templateId));
+                user.systemMessage("Could not resolve reactor with template ID: %d", templateId);
                 return;
             }
 
@@ -56,7 +56,7 @@ public final class ReactorCommand {
             field.getReactorPool().hitReactor(user, reactor, 0);
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !hitreactor <reactor template ID>"));
+            user.systemMessage("Usage: !hitreactor <reactor template ID>");
         }
     }
 }

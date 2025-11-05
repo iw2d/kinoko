@@ -115,4 +115,8 @@ public final class Server {
         DatabaseManager.shutdown();
         LogManager.shutdown();
     }
+
+    public static CentralServerNode getCentralServerNode() {
+        return centralServerNode;
+    }
 }

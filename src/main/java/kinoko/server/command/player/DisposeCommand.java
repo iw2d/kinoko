@@ -12,6 +12,6 @@ public class DisposeCommand {
     public static void dispose(User user, String[] args) {
         user.closeDialog();
         user.dispose();
-        user.write(MessagePacket.system("You have been disposed."));
+        user.systemMessage("You have been disposed.");
     }
 }

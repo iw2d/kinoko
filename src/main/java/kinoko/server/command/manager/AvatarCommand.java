@@ -28,7 +28,7 @@ public final class AvatarCommand {
                 user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
             } else if (look >= GameConstants.FACE_MIN && look <= GameConstants.FACE_MAX) {
                 if (StringProvider.getItemName(look) == null) {
-                    user.write(MessagePacket.system("Tried to change face with invalid ID : %d", look));
+                    user.systemMessage("Tried to change face with invalid ID : %d", look);
                     return;
                 }
                 user.getCharacterStat().setFace(look);
@@ -36,18 +36,18 @@ public final class AvatarCommand {
                 user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
             } else if (look >= GameConstants.HAIR_MIN && look <= GameConstants.HAIR_MAX) {
                 if (StringProvider.getItemName(look) == null) {
-                    user.write(MessagePacket.system("Tried to change hair with invalid ID : %d", look));
+                    user.systemMessage("Tried to change hair with invalid ID : %d", look);
                     return;
                 }
                 user.getCharacterStat().setHair(look);
                 user.write(WvsContext.statChanged(Stat.HAIR, user.getCharacterStat().getHair(), false));
                 user.getField().broadcastPacket(UserRemote.avatarModified(user), user);
             } else {
-                user.write(MessagePacket.system("Tried to change avatar with invalid ID : %d", look));
+                user.systemMessage("Tried to change avatar with invalid ID : %d", look);
             }
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !avatar <new look>"));
+            user.systemMessage("Usage: !avatar <new look>");
         }
     }
 }

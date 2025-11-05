@@ -426,13 +426,13 @@ public abstract class ItemHandler {
         // Check portal scroll can be used
         final Field field = user.getField();
         if (field.hasFieldOption(FieldOption.PORTALSCROLLLIMIT)) {
-            user.write(MessagePacket.system("You can't use it here in this map."));
+            user.systemMessage("You can't use it here in this map.");
             user.dispose();
             return;
         }
         final int moveTo = itemInfoResult.get().getSpec(ItemSpecType.moveTo);
         if (moveTo != GameConstants.UNDEFINED_FIELD_ID && field.isConnected(moveTo)) {
-            user.write(MessagePacket.system("You cannot go to that place."));
+            user.systemMessage("You cannot go to that place.");
             user.dispose();
             return;
         }
@@ -442,7 +442,7 @@ public abstract class ItemHandler {
         final Optional<Field> destinationFieldResult = user.getConnectedServer().getFieldById(destinationFieldId);
         if (destinationFieldResult.isEmpty()) {
             log.error("Could not resolve field ID : {}", destinationFieldId);
-            user.write(MessagePacket.system("You cannot go to that place."));
+            user.systemMessage("You cannot go to that place.");
             user.dispose();
             return;
         }
@@ -450,7 +450,7 @@ public abstract class ItemHandler {
         final Optional<PortalInfo> destinationPortalResult = destinationField.getRandomStartPoint();
         if (destinationPortalResult.isEmpty()) {
             log.error("Could not resolve start point portal for field ID : {}", destinationFieldId);
-            user.write(MessagePacket.system("You cannot go to that place."));
+            user.systemMessage("You cannot go to that place.");
             user.dispose();
             return;
         }
@@ -489,7 +489,7 @@ public abstract class ItemHandler {
 
         // Resolve reward
         if (!itemRewardInfo.canAddReward(user)) {
-            user.write(MessagePacket.system("You do not have enough inventory space."));
+            user.systemMessage("You do not have enough inventory space.");
             user.dispose();
             return;
         }

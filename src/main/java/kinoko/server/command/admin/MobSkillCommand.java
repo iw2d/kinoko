@@ -28,19 +28,19 @@ public final class MobSkillCommand {
 
             MobSkillType skillType = MobSkillType.getByValue(skillId);
             if (skillType == null) {
-                user.write(MessagePacket.system("Could not resolve mob skill %d", skillId));
+                user.systemMessage("Could not resolve mob skill %d", skillId);
                 return;
             }
 
             CharacterTemporaryStat cts = skillType.getCharacterTemporaryStat();
             if (cts == null) {
-                user.write(MessagePacket.system("Mob skill %s does not apply a CTS", skillType));
+                user.systemMessage("Mob skill %s does not apply a CTS", skillType);
                 return;
             }
 
             Optional<SkillInfo> skillInfoResult = SkillProvider.getMobSkillInfoById(skillId);
             if (skillInfoResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve mob skill info %d", skillId));
+                user.systemMessage("Could not resolve mob skill info %d", skillId);
                 return;
             }
 
@@ -50,7 +50,7 @@ public final class MobSkillCommand {
 
             user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(value, skillId, slv, duration));
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !mobskill <skill ID> <skill level>"));
+            user.systemMessage("Usage: !mobskill <skill ID> <skill level>");
         }
     }
 }

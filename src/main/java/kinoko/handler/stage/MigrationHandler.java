@@ -455,7 +455,7 @@ public final class MigrationHandler {
         }
     }
 
-    private static void handleTransferChannel(User user, Account account, int targetChannelId) {
+    public static void handleTransferChannel(User user, Account account, int targetChannelId) {
         // Submit transfer request
         final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
         user.getConnectedServer().submitTransferRequest(migrationInfo, (transferResult) -> {

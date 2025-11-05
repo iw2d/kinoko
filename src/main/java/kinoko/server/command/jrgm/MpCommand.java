@@ -16,9 +16,9 @@ public final class MpCommand {
         try {
             int newMp = Integer.parseInt(args[1]);
             user.setMp(newMp);
-            user.write(MessagePacket.system("MP set to %d", newMp));
+            user.systemMessage("MP set to %d", newMp);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !mp <new MP>"));
+            user.systemMessage("Usage: !mp <new MP>");
         }
     }
 }

@@ -403,7 +403,7 @@ public final class UpgradeItemHandler extends ItemHandler {
         if (enchantSkill) {
             user.write(UserPacket.userItemUpgradeEffectEnchantError(user));
         } else {
-            user.write(MessagePacket.system("That scroll cannot be used on this item."));
+            user.systemMessage("That scroll cannot be used on this item.");
         }
         user.dispose();
     }

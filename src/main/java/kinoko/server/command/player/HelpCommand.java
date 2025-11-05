@@ -28,7 +28,7 @@ public final class HelpCommand {
 
         // If just "!help" or "@help" -> list all accessible commands
         if (args.length == 1) {
-            user.write(MessagePacket.system("Available Commands:"));
+            user.systemMessage("Available Commands:");
 
             // Use a set to avoid duplicate methods caused by multiple aliases
             Set<Method> uniqueMethods = new HashSet<>(CommandProcessor.getCommandMap().values());
@@ -37,7 +37,7 @@ public final class HelpCommand {
                 AdminLevel requiredLevel = CommandProcessor.getRequiredLevel(method);
                 if (!userLevel.isAtLeast(requiredLevel)) continue;
 
-                user.write(MessagePacket.system("%s", CommandProcessor.getHelpString(method)));
+                user.systemMessage("%s", CommandProcessor.getHelpString(method));
             }
         }
         // "!help <command>" -> show syntax only
@@ -46,18 +46,18 @@ public final class HelpCommand {
             Optional<Method> commandResult = CommandProcessor.getCommand(commandName);
 
             if (commandResult.isEmpty()) {
-                user.write(MessagePacket.system("Unknown command: %s", commandName));
+                user.systemMessage("Unknown command: %s", commandName);
                 return;
             }
 
             Method method = commandResult.get();
             AdminLevel requiredLevel = CommandProcessor.getRequiredLevel(method);
             if (!userLevel.isAtLeast(requiredLevel)) {
-                user.write(MessagePacket.system("Unknown command: %s", commandName));
+                user.systemMessage("Unknown command: %s", commandName);
                 return;
             }
 
-            user.write(MessagePacket.system("Syntax: %s", CommandProcessor.getHelpString(method)));
+            user.systemMessage("Syntax: %s", CommandProcessor.getHelpString(method));
         }
     }
 }

@@ -12,9 +12,9 @@ public class TestCommand {
     @Command("test")
     public static void test(User user, String[] args) {
         user.getConnectedServer().submitUserQueryRequestAll(queryResult -> {
-            user.write(MessagePacket.system("Users in world: %d", queryResult.size()));
-            user.write(MessagePacket.system("Users in field : %d", user.getField().getUserPool().getCount()));
-            user.write(MessagePacket.system("Party ID : %d (%d)", user.getPartyId(), user.getCharacterData().getPartyId()));
+            user.systemMessage("Users in world: %d", queryResult.size());
+            user.systemMessage("Users in field : %d", user.getField().getUserPool().getCount());
+            user.systemMessage("Party ID : %d (%d)", user.getPartyId(), user.getCharacterData().getPartyId());
 
             // Apply item effect (throws if item not found)
             user.setConsumeItemEffect(ItemProvider.getItemInfo(2022181).orElseThrow());

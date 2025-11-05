@@ -28,7 +28,7 @@ public final class MesoCommand {
             im.setMoney(money);
             user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !meso <amount>"));
+            user.systemMessage("Usage: !meso <amount>");
         }
     }
 }

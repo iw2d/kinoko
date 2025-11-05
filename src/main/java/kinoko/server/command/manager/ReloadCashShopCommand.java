@@ -18,9 +18,9 @@ public final class ReloadCashShopCommand {
     public static void reloadCashShop(User user, String[] args) {
         try {
             CashShop.initialize();
-            user.write(MessagePacket.system("Cash shop reloaded successfully."));
+            user.systemMessage("Cash shop reloaded successfully.");
         } catch (Exception e) {
-            user.write(MessagePacket.system("Failed to reload cash shop: %s", e.getMessage()));
+            user.systemMessage("Failed to reload cash shop: %s", e.getMessage());
         }
     }
 }

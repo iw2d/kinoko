@@ -23,7 +23,7 @@ public class SetGmLevelCommand {
     @Arguments({ "Character Name", "Admin Level" })
     public static void setGMLevel(User user, String[] args) {
         if (args.length < 3) {
-            user.write(MessagePacket.system("Usage: !setadmin <username> <level 0-6>"));
+            user.systemMessage("Usage: !setadmin <username> <level 0-6>");
             return;
         }
 
@@ -34,18 +34,18 @@ public class SetGmLevelCommand {
         try {
             level = Integer.parseInt(levelStr);
         } catch (NumberFormatException e) {
-            user.write(MessagePacket.system("Invalid level: %s", levelStr));
+            user.systemMessage("Invalid level: %s", levelStr);
             return;
         }
 
         if (level < 0 || level > 6) {
-            user.write(MessagePacket.system("Admin level must be between 0 (Admin) and 6 (Player)."));
+            user.systemMessage("Admin level must be between 0 (Admin) and 6 (Player).");
             return;
         }
 
         Optional<User> target = user.getConnectedServer().getUserByCharacterName(targetName);
         if (target.isEmpty()) {
-            user.write(MessagePacket.system("User not found: %s", targetName));
+            user.systemMessage("User not found: %s", targetName);
             return;
         }
 
@@ -54,7 +54,7 @@ public class SetGmLevelCommand {
         AdminLevel adminLevel = AdminLevel.fromValue((short) level);
         targetUser.getCharacterStat().setAdminLevel(adminLevel);
 
-        user.write(MessagePacket.system("Set admin level of %s to %s (%d)", targetName, adminLevel.name(), level));
-        targetUser.write(MessagePacket.system("Your admin level has been set to %s by %s", adminLevel.name(), user.getCharacterName()));
+        user.systemMessage("Set admin level of %s to %s (%d)", targetName, adminLevel.name(), level);
+        targetUser.systemMessage("Your admin level has been set to %s by %s", adminLevel.name(), user.getCharacterName());
     }
 }

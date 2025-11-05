@@ -23,21 +23,21 @@ public final class NpcCommand {
             final Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(templateId);
 
             if (npcTemplateResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve npc ID: %d", templateId));
+                user.systemMessage("Could not resolve npc ID: %d", templateId);
                 return;
             }
 
             final String scriptName = npcTemplateResult.get().getScript();
             if (scriptName == null || scriptName.isEmpty()) {
-                user.write(MessagePacket.system("Could not find script for npc ID: %d", templateId));
+                user.systemMessage("Could not find script for npc ID: %d", templateId);
                 return;
             }
 
-            user.write(MessagePacket.system("Starting script for npc ID: %d, script: %s", templateId, scriptName));
+            user.systemMessage("Starting script for npc ID: %d, script: %s", templateId, scriptName);
             ScriptDispatcher.startNpcScript(user, user, scriptName, templateId);
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !npc <npc template ID>"));
+            user.systemMessage("Usage: !npc <npc template ID>");
         }
     }
 }

@@ -18,9 +18,9 @@ public final class ReloadDropsCommand {
     public static void reloadDrops(User user, String[] args) {
         try {
             RewardProvider.initialize();
-            user.write(MessagePacket.system("Drops reloaded successfully."));
+            user.systemMessage("Drops reloaded successfully.");
         } catch (Exception e) {
-            user.write(MessagePacket.system("Failed to reload drops: %s", e.getMessage()));
+            user.systemMessage("Failed to reload drops: %s", e.getMessage());
         }
     }
 }

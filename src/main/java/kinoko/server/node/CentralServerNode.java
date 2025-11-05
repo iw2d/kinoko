@@ -22,11 +22,13 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -60,6 +62,10 @@ public final class CentralServerNode extends Node {
         }
     }
 
+    public synchronized void addChannelServerNode(ChannelServerNode serverNode){
+        serverStorage.addChannelServerNode(serverNode);
+    }
+
     public synchronized void removeServerNode(int channelId) {
         serverStorage.removeServerNode(channelId);
         if (serverStorage.isEmpty()) {
@@ -68,10 +74,14 @@ public final class CentralServerNode extends Node {
     }
 
     public Optional<RemoteServerNode> getChannelServerNodeById(int channelId) {
-        return serverStorage.getChannelServerNodeById(channelId);
+        return serverStorage.getRemoteChannelServerNodeById(channelId);
     }
 
-    public List<RemoteServerNode> getChannelServerNodes() {
+    public List<RemoteServerNode> getRemoteChannelServerNodes() {
+        return serverStorage.getRemoteChannelServerNodes();
+    }
+
+    public List<ChannelServerNode> getChannelServerNodes() {
         return serverStorage.getChannelServerNodes();
     }
 
@@ -94,35 +104,75 @@ public final class CentralServerNode extends Node {
         return migrationStorage.completeMigrationRequest(channelId, accountId, characterId, machineId, clientKey);
     }
 
-
     // USER METHODS ----------------------------------------------------------------------------------------------------
 
-    public List<RemoteUser> getUsers() {
+    /**
+     * Returns a list of all users currently connected across all channel servers.
+     */
+    public List<User> getUsers() {
+        List<User> allUsers = new ArrayList<>();
+        for (ChannelServerNode channelNode : getChannelServerNodes()) {
+            allUsers.addAll(channelNode.getConnectedUsers());
+        }
+        return allUsers;
+    }
+
+    /**
+     * Returns the actual User object for a character ID, if connected.
+     * Looks up the RemoteUser by ID, finds their channel server, then fetches the User from that channel.
+     */
+    public Optional<User> getUserByCharacterId(int characterId) {
+        return getRemoteUserByCharacterId(characterId)
+                .flatMap(remoteUser -> serverStorage
+                        .getChannelServerNodeById(remoteUser.getChannelId())
+                        .flatMap(channelNode -> channelNode.getUserByCharacterId(characterId))
+                );
+    }
+
+    /**
+     * Returns the actual User object for a character name, if connected.
+     * Looks up the RemoteUser by name, finds their channel server, then fetches the User from that channel.
+     */
+    public Optional<User> getUserByCharacterName(String characterName) {
+        return getRemoteUserByCharacterName(characterName)
+                .flatMap(remoteUser -> serverStorage
+                        .getChannelServerNodeById(remoteUser.getChannelId())
+                        .flatMap(channelNode -> channelNode.getUserByCharacterId(remoteUser.getCharacterId()))
+                );
+    }
+
+
+    // REMOTE USER METHODS ----------------------------------------------------------------------------------------------------
+
+    public List<RemoteUser> getRemoteUsers() {
         return userStorage.getUsers();
     }
 
-    public Optional<RemoteUser> getUserByCharacterId(int characterId) {
+    public Optional<RemoteUser> getRemoteUserByCharacterId(int characterId) {
         return userStorage.getByCharacterId(characterId);
     }
 
-    public Optional<RemoteUser> getUserByCharacterName(String characterName) {
+    public Optional<RemoteUser> getRemoteUserByCharacterName(String characterName) {
         return userStorage.getByCharacterName(characterName);
     }
 
-    public void addUser(RemoteUser remoteUser) {
+    public void addRemoteUser(RemoteUser remoteUser) {
         userStorage.putUser(remoteUser);
         getChannelServerNodeById(remoteUser.getChannelId()).ifPresent(RemoteServerNode::incrementUserCount);
     }
 
-    public void updateUser(RemoteUser remoteUser) {
+    public void updateRemoteUser(RemoteUser remoteUser) {
         userStorage.putUser(remoteUser);
     }
 
-    public void removeUser(RemoteUser remoteUser) {
+    public void removeRemoteUser(RemoteUser remoteUser) {
         userStorage.removeUser(remoteUser);
         getChannelServerNodeById(remoteUser.getChannelId()).ifPresent(RemoteServerNode::decrementUserCount);
     }
 
+    public int getRemoteUserCount() {
+        return userStorage.getUserCount();
+    }
 
     // MESSENGER METHODS -----------------------------------------------------------------------------------------------
 
@@ -217,7 +267,7 @@ public final class CentralServerNode extends Node {
 
         // Complete initialization for login server node
         final RemoteServerNode loginServerNode = serverStorage.getLoginServerNode().orElseThrow();
-        loginServerNode.write(CentralPacket.initializeComplete(serverStorage.getChannelServerNodes()));
+        loginServerNode.write(CentralPacket.initializeComplete(serverStorage.getRemoteChannelServerNodes()));
     }
 
     @Override
@@ -230,7 +280,7 @@ public final class CentralServerNode extends Node {
         serverStorage.getLoginServerNode().ifPresent((serverNode) -> serverNode.write(CentralPacket.shutdownRequest()));
 
         // Shutdown channel server nodes
-        for (RemoteServerNode serverNode : serverStorage.getChannelServerNodes()) {
+        for (RemoteServerNode serverNode : serverStorage.getRemoteChannelServerNodes()) {
             serverNode.write(CentralPacket.shutdownRequest());
         }
         shutdownFuture.join();
