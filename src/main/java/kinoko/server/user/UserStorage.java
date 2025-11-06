@@ -74,4 +74,16 @@ public final class UserStorage {
     private static String normalizeName(String name) {
         return name.toLowerCase();
     }
+
+    /**
+     * Returns the number of online users.
+     */
+    public int getUserCount() {
+        lock.lock();
+        try {
+            return mapByAccountId.size();
+        } finally {
+            lock.unlock();
+        }
+    }
 }

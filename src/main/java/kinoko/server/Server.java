@@ -25,6 +25,7 @@ public final class Server {
         Server.initialize();
     }
 
+
     private static void initialize() throws Exception {
         // Initialize providers
         Instant start = Instant.now();
@@ -113,5 +114,9 @@ public final class Server {
         ServerExecutor.shutdown();
         DatabaseManager.shutdown();
         LogManager.shutdown();
+    }
+
+    public static CentralServerNode getCentralServerNode() {
+        return centralServerNode;
     }
 }

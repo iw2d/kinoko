@@ -215,12 +215,12 @@ public final class TradingRoom extends MiniRoom {
         final Set<Item> itemsForUser = items.getOrDefault(other, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
         final int moneyForUser = GameConstants.getTradeTax(money.getOrDefault(other, 0));
         if (!user.getInventoryManager().canAddItems(itemsForUser)) {
-            user.write(MessagePacket.system("You do not have enough inventory space."));
+            user.systemMessage("You do not have enough inventory space.");
             other.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
             return false;
         }
         if (!user.getInventoryManager().canAddMoney(moneyForUser)) {
-            user.write(MessagePacket.system("You cannot hold any more mesos."));
+            user.systemMessage("You cannot hold any more mesos.");
             other.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
             return false;
         }
@@ -229,12 +229,12 @@ public final class TradingRoom extends MiniRoom {
         final int moneyForOther = GameConstants.getTradeTax(money.getOrDefault(user, 0));
         if (!other.getInventoryManager().canAddItems(itemsForOther)) {
             other.write(MessagePacket.system("You do not have enough inventory space."));
-            user.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
+            user.systemMessage(user.getCharacterName() + " does not have enough inventory space.");
             return false;
         }
         if (!other.getInventoryManager().canAddMoney(moneyForOther)) {
             other.write(MessagePacket.system("You cannot hold any more mesos."));
-            user.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
+            user.systemMessage(user.getCharacterName() + " cannot hold any more mesos.");
             return false;
         }
         // Process items

@@ -14,6 +14,7 @@ public final class Account {
     private Trunk trunk;
     private Locker locker;
     private List<Integer> wishlist;
+    private BanInfo banInfo;
 
     // TRANSIENT
     private int channelId = -1;
@@ -89,6 +90,13 @@ public final class Account {
         this.wishlist = wishlist;
     }
 
+    public void setBanInfo(BanInfo banInfo){
+        this.banInfo = banInfo;
+    }
+
+    public BanInfo getBanInfo(){
+        return banInfo;
+    }
 
     // TRANSIENT -------------------------------------------------------------------------------------------------------
 

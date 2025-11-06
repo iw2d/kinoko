@@ -1,11 +1,13 @@
 package kinoko.world.user;
 
+import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.FriendHandler;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
 import kinoko.packet.user.UserRemote;
 import kinoko.packet.world.FriendPacket;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.WzProvider;
@@ -17,12 +19,14 @@ import kinoko.provider.skill.SkillStat;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
+import kinoko.server.event.EventType;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
+import kinoko.server.user.RemoteUser;
 import kinoko.util.BitFlag;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -45,6 +49,8 @@ import kinoko.world.user.effect.Effect;
 import kinoko.world.user.friend.Friend;
 import kinoko.world.user.friend.FriendStatus;
 import kinoko.world.user.stat.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -54,6 +60,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public final class User extends Life {
+    private static final Logger log = LoggerFactory.getLogger(User.class);
     private final Client client;
     private final CharacterData characterData;
 
@@ -78,8 +85,11 @@ public final class User extends Life {
     private OpenGate openGate;
     private int effectItemId;
     private int portableChairId;
+    private boolean inCashShop = false;
     private String adBoard;
+    private int dojoEnergy;
     private boolean inTransfer;
+    private List<EventCoolDown> cooldowns = new ArrayList<>();
     private Instant nextCheckItemExpire;
 
     public User(Client client, CharacterData characterData) {
@@ -96,8 +106,20 @@ public final class User extends Life {
         return client.getAccount();
     }
 
+    public boolean isGM() {
+        return getAdminLevel().isAtLeast(AdminLevel.JR_GM);
+    }
+
     public ChannelServerNode getConnectedServer() {
         return (ChannelServerNode) client.getServerNode();
+    }
+
+    public void changeChannels(int channelID){
+        if (channelID == getConnectedServer().getChannelId()){
+            return;
+        }
+
+        MigrationHandler.handleTransferChannel(this, this.getAccount(), channelID);
     }
 
     public int getChannelId() {
@@ -110,6 +132,10 @@ public final class User extends Life {
 
     public int getCharacterId() {
         return characterData.getCharacterId();
+    }
+
+    public AdminLevel getAdminLevel(){
+        return characterData.getCharacterStat().getAdminLevel();
     }
 
     public String getCharacterName() {
@@ -304,6 +330,46 @@ public final class User extends Life {
         this.townPortal = townPortal;
     }
 
+    public int getDojoEnergy() {
+        return dojoEnergy;
+    }
+
+    public void setDojoEnergy(int newEnergy) {
+        this.dojoEnergy = newEnergy;
+    }
+
+    public void resetDojoEnergy() {
+        this.dojoEnergy = 0;
+    }
+    public EventCoolDown getCoolDownByType(EventType eventType) {
+        return this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).toList().getFirst();
+    }
+
+    public void addCoolDown(EventType eventType, long time) {
+        addCoolDown(eventType, 1, System.currentTimeMillis() + time);
+    }
+
+    public void addCoolDown(EventType eventType, int amountDone, long nextReset) {
+        EventCoolDown cd = this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).findFirst().orElse(null);
+        if (cd == null) {
+            cd = new EventCoolDown(eventType, amountDone, nextReset);
+            this.cooldowns.add(cd);
+        } else {
+            cd.setNextResetTime(nextReset);
+            cd.setAmountDone(amountDone);
+        }
+    }
+
+    public int getEventAmountDone(EventType eventType) {
+        EventCoolDown cd = this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).findFirst().orElse(null);
+        if (cd == null) {
+            return 0;
+        }
+        if (System.currentTimeMillis() > cd.getNextResetTime()) {
+            cd.setAmountDone(0);
+        }
+        return cd.getAmountDone();
+    }
     public int getTownPortalIndex() {
         return hasParty() ? getPartyMemberIndex() - 1 : 0;
     }
@@ -366,6 +432,10 @@ public final class User extends Life {
         return getCharacterStat().getJob();
     }
 
+    public boolean is4thJob() {
+        return getCharacterStat().getJob() % 10 == 2;
+    }
+
     public int getLevel() {
         return getCharacterStat().getLevel();
     }
@@ -381,6 +451,15 @@ public final class User extends Life {
         getField().getUserPool().forEachPartyMember(this, (member) -> {
             member.write(UserRemote.receiveHp(this));
         });
+    }
+
+    public void heal(){
+        setHp(getMaxHp());
+        setMp(getMaxMp());
+    }
+
+    public void kill() {
+        setHp(0);
     }
 
     public void addHp(int hp) {
@@ -796,6 +875,43 @@ public final class User extends Life {
         }
     }
 
+    public void warp(int newFieldId, boolean isMigrate, boolean isRevive) {
+        if (getFieldId() == newFieldId){
+            return;
+        }
+
+        final Optional<Field> fieldResult = getConnectedServer().getFieldById(newFieldId);
+        if (fieldResult.isEmpty()) {
+            systemMessage("A system error has occurred when changing maps.");
+            log.error("Field with ID {} does not exist.", newFieldId);
+            return;
+        }
+
+        final Field targetField = fieldResult.get();
+
+        // get the default portal
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(GameConstants.DEFAULT_PORTAL_NAME);
+        if (portalResult.isEmpty()) {
+            systemMessage("A system error has occurred when deciding the entry portal.");
+            log.error("Portal {} does not exist in Field {}", GameConstants.DEFAULT_PORTAL_NAME, newFieldId);
+            return;
+        }
+
+        final PortalInfo targetPortalInfo = portalResult.get();
+
+        this.warp(targetField, targetPortalInfo, isMigrate, isRevive);
+    }
+
+    public void warpTo(User user){
+        changeChannels(user.getChannelId());
+        warp(user.getField(), user.getX(), user.getY(), 0, false, false);
+    }
+
+    public void warpTo(RemoteUser user){
+        changeChannels(user.getChannelId());
+        warp(user.getFieldId(), false, false);
+    }
+
     private void completeWarp(Field destination, boolean isMigrate, boolean isRevive) {
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
@@ -853,6 +969,13 @@ public final class User extends Life {
         }
     }
 
+    public boolean isInCashShop() {
+        return inCashShop;
+    }
+
+    public void setInCashShop(boolean inCashShop) {
+        this.inCashShop = inCashShop;
+    }
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
@@ -864,5 +987,11 @@ public final class User extends Life {
     @Override
     public void setId(int id) {
         throw new IllegalStateException("Tried to modify character ID");
+    }
+
+
+    // UTILITY ---------------------------------------------------------------------------------------------------------
+    public void systemMessage(String text, Object... args){
+        write(MessagePacket.system(text, args));
     }
 }

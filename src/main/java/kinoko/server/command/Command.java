@@ -1,5 +1,6 @@
 package kinoko.server.command;
 
+
 import java.lang.annotation.*;
 
 /**

@@ -1,0 +1,11 @@
+-- Migration template for schema version n
+-- Replace N with the version you are incrementing to (old version + 1)
+-- Example: if current schema is 2, this file should be 3.sql
+
+BEGIN;
+
+-- Your SQL updates here
+-- Example:
+-- ALTER TABLE users ADD COLUMN last_login TIMESTAMPTZ;
+
+COMMIT;

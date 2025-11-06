@@ -139,7 +139,7 @@ public final class SkillHandler {
         // Mystic Door cooltime to avoid crashes
         if (skill.skillId == Magician.MYSTIC_DOOR) {
             if (user.getTownPortal() != null && user.getTownPortal().getWaitTime().isAfter(Instant.now())) {
-                user.write(MessagePacket.system("Please wait 5 seconds before casting Mystic Door again."));
+                user.systemMessage("Please wait 5 seconds before casting Mystic Door again.");
                 user.dispose();
                 return;
             }

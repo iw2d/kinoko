@@ -49,7 +49,7 @@ public final class HenesysPQ extends ScriptHandler {
                     1, "Learn about Primrose Hill"
             ));
             if (answer == 0) {
-                if (!sm.getUser().isPartyBoss()) {
+                if (!sm.getUser().getPartyInfo().isBoss()) {
                     sm.sayOk("If you'd like to enter here, the leader of your party will have to talk to me. Talk to your party leader about this.");
                     return;
                 }
@@ -100,7 +100,7 @@ public final class HenesysPQ extends ScriptHandler {
         //   Hidden Street : Primrose Hill (910010000)
         //   Hidden Street : Primrose Hill (910010001)
         if (sm.getInstanceVariable("clear").equals("1")) {
-            if (sm.getUser().isPartyBoss()) {
+            if (sm.getUser().getPartyInfo().isBoss()) {
                 sm.sayNext("Mmmm... this is delicious. Please come see me next time for more #b#t4001101##k, Have a good trip!");
                 sm.partyWarp(910010100, "st00"); // Hidden Street : Shortcut
             } else {
@@ -110,7 +110,7 @@ public final class HenesysPQ extends ScriptHandler {
         }
         final Map<Integer, String> options = new HashMap<>();
         options.put(0, "Please tell me what this place is all about.");
-        if (sm.getUser().isPartyBoss()) {
+        if (sm.getUser().getPartyInfo().isBoss()) {
             options.put(1, "I have brought Moon Bunny's Rice Cake.");
         }
         options.put(2, "I would like to leave this place.");
@@ -157,7 +157,7 @@ public final class HenesysPQ extends ScriptHandler {
         if (sm.getFieldId() == 910010100) {
             // Hidden Street : Shortcut
             sm.sayNext("Hello, there! I'm Tommy. There's a Pig Town nearby where we're standing. The pigs there are rowdy and uncontrollable to the point where they have stolen numerous weapons from travelers. They were kicked out from their towns, and are currently hiding out at the Pig Town.");
-            if (sm.getUser().isPartyBoss()) {
+            if (sm.getUser().getPartyInfo().isBoss()) {
                 if (sm.askMenu("What do you think about making your way there with your party members and teach those rowdy pigs a lesson?", Map.of(0, "Yeah, that sounds good! Take me there!")) == 0) {
                     sm.partyWarpInstance(910010200, "sp", 910010400, 300);
                 }

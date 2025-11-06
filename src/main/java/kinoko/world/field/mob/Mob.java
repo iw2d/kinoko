@@ -53,6 +53,7 @@ public final class Mob extends Life implements ControlledObject, Encodable {
     private int hp;
     private int mp;
     private int summonType;
+    private int mobType;
     private int itemDropCount;
     private boolean slowUsed;
     private int swallowCharacterId;
@@ -76,6 +77,7 @@ public final class Mob extends Life implements ControlledObject, Encodable {
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
         this.summonType = MobAppearType.REGEN.getValue();
+        this.mobType = MobType.NORMAL.getValue();
         this.nextSendMobHp = Instant.MIN;
         this.nextSkillUse = Instant.MIN;
         this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
@@ -198,6 +200,14 @@ public final class Mob extends Life implements ControlledObject, Encodable {
 
     public void setSummonType(int summonType) {
         this.summonType = summonType;
+    }
+
+    public int getMobType() {
+        return mobType;
+    }
+
+    public void setMobType(int mobType) {
+        this.mobType = mobType;
     }
 
     public int getExp() {

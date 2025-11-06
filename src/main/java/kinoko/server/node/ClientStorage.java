@@ -43,6 +43,19 @@ public final class ClientStorage {
         }
     }
 
+    public Optional<User> getUserByCharacterName(String characterName) {
+        lock.lock();
+        try {
+            return mapByCharacterId.values().stream()
+                    .map(Client::getUser)
+                    .filter(Objects::nonNull)
+                    .filter(user -> user.getCharacterName().equalsIgnoreCase(characterName))
+                    .findFirst();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public void addClient(Client client) {
         lock.lock();
         try {

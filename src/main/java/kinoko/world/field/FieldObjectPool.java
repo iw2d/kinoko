@@ -48,6 +48,18 @@ public abstract class FieldObjectPool<T extends FieldObject> {
         objects.forEachValue(Long.MAX_VALUE, consumer);
     }
 
+    public void forEachExcept(T except, Consumer<T> action) {
+        forEach(user -> {
+            if (!user.equals(except)) {
+                action.accept(user);
+            }
+        });
+    }
+
+    public final java.util.Collection<T> values() {
+        return objects.values();
+    }
+
     public final boolean isEmpty() {
         return objects.isEmpty();
     }
