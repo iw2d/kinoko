@@ -1,0 +1,17 @@
+# Big Boulder Muncher (3150002)
+
+# Proud Blossoms - didn't add check
+
+rewards:
+  - [ 0, 84, 126, 0.600000 ]
+  - [ 4000607, 1, 1, 0.400000 ] # Boulder Fragment
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2040300, 1, 1, 0.001000 ] # Scroll for Earring for INT 100%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 1322015, 1, 1, 0.000100 ] # Heavy Hammer
+  - [ 1002098, 1, 1, 0.000200 ] # Gold Nordic Helm
+  - [ 1472015, 1, 1, 0.000100 ] # Blood Avarice
+  - [ 1072107, 1, 1, 0.000200 ] # Black Red-Lined Shoes
+  - [ 1060052, 1, 1, 0.000100 ] # Black Knucklevest Pants

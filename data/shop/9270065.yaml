@@ -1,0 +1,26 @@
+# Ali : Local Specialities (9270065) - Malaysia : Kampung Village (551000000)
+
+items:
+  - [ 2022476, 4200, 1, 100 ] # Chicken Kapitan
+  - [ 2022477, 9200, 1, 100 ] # Mee Siam
+  - [ 2022478, 3200, 1, 100 ] # Rojak
+  - [ 2022479, 3800, 1, 100 ] # Kangkung belacan
+  - [ 2022480, 12000, 1, 100 ] # Kuih
+  - [ 2022203, 800, 1, 100 ] # Laksa
+  - [ 2022204, 1200, 1, 100 ] # Hokkien Mee
+  - [ 2022205, 1800, 1, 100 ] # Carrot Cake
+  - [ 2022206, 2200, 1, 100 ] # Chicken Rice
+  - [ 2022207, 2600, 1, 100 ] # Satay
+  - [ 2022208, 1000, 1, 100 ] # Guava
+  - [ 2022209, 1600, 1, 100 ] # Rambutan
+  - [ 2022210, 3200, 1, 100 ] # Dragon Fruit
+  - [ 2022211, 6400, 1, 100 ] # Durian
+  - [ 2022214, 3200, 1, 100 ] # Pepper Crab
+  - [ 2022215, 6800, 1, 100 ] # Chili Crab
+  - [ 2020000, 200, 1, 100 ] # Antidote
+  - [ 2020001, 200, 1, 100 ] # Eyedrop
+  - [ 2020002, 300, 1, 100 ] # Tonic
+  - [ 2020003, 500, 1, 100 ] # Holy Water
+  - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow

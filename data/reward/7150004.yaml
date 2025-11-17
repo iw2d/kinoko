@@ -1,0 +1,27 @@
+# Guard Robot L (7150004)
+
+# Equip Enhancement Scroll - not added check
+# Potential Scroll - not added check
+
+rewards:
+  - [ 0, 413, 612, 0.600000 ]
+  - [ 4000613, 1, 1, 0.400000 ] # Guard Robot L's Electric Racket
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 1322020, 1, 1, 0.000100 ] # Bent Judgement
+  - [ 1432010, 1, 1, 0.000100 ] # Omega Spear
+  - [ 1402004, 1, 1, 0.000100 ] # Blue Screamer
+  - [ 1072159, 1, 1, 0.000100 ] # Brown Lapiz Sandals
+  - [ 1051065, 1, 1, 0.000200 ] # Dark Lineros
+  - [ 1462010, 1, 1, 0.000100 ] # Marine Raven
+  - [ 1002278, 1, 1, 0.000100 ] # Dark Falcon
+  - [ 1342006, 1, 1, 0.002500 ] # Blazing Dragon Katara
+  - [ 1082118, 1, 1, 0.000100 ] # Green Larceny
+  - [ 1061104, 1, 1, 0.000100 ] # Green Pirate Skirt
+  - [ 1492010, 1, 1, 0.000100 ] # Infinity's Wrath
+  - [ 1642000, 1, 1, 0.000100 ] # Bronze Body Frame

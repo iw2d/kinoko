@@ -1,0 +1,27 @@
+# AF Android (8105003)
+
+# Mystery Mastery Book - didn't add check
+# Advanced Luck Pill II Recipe - didn't add check
+
+rewards:
+  - [ 0, 588, 833, 0.600000 ]
+  - [ 4000617, 1, 1, 0.400000 ] # Android Bulb
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2020012, 1, 1, 0.000750 ] # Melting Cheese
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2044412, 1, 1, 0.010000 ] # Scroll for Pole-Arm for Accuracy 60%s
+  - [ 2044212, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for Accuracy 60%
+  - [ 1442020, 1, 1, 0.000100 ] # Hellslayer
+  - [ 1322029, 1, 1, 0.000100 ] # Ruin Hammer
+  - [ 1041124, 1, 1, 0.000100 ] # Dark Lucida
+  - [ 1051101, 1, 1, 0.000100 ] # Green Bazura
+  - [ 1072207, 1, 1, 0.000100 ] # Green Neli Shoes
+  - [ 1382035, 1, 1, 0.000100 ] # Blue Marine
+  - [ 1462015, 1, 1, 0.000100 ] # White Neschere
+  - [ 1072215, 1, 1, 0.000100 ] # Red Katina Boots
+  - [ 1082143, 1, 1, 0.000100 ] # Purple Mystra

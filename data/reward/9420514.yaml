@@ -1,0 +1,30 @@
+# Berserkie (9420514)
+
+# Dark Battle Road - didn't add check
+
+rewards:
+  - [ 0, 477, 700, 0.600000 ]
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2043802, 1, 1, 0.010000 ] # Scroll for Staff for Magic Attack 10%
+  - [ 2044702, 1, 1, 0.000100 ] # Scroll for Claw for ATT 10%
+  - [ 2290099, 1, 1, 0.002500 ] # [Mastery Book] Energy Orb
+  - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
+  - [ 4000429, 1, 1, 0.400000 ] # Sweat Bead
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 1002330, 1, 1, 0.000100 ] # Dark Pireta Hat
+  - [ 1002640, 1, 1, 0.000100 ] # Blue Sun Boat Hat
+  - [ 1052125, 1, 1, 0.000100 ] # White Pioneer
+  - [ 1072185, 1, 1, 0.000100 ] # Dark Wing Boots
+  - [ 1082119, 1, 1, 0.000100 ] # Purple Larceny
+  - [ 1082207, 1, 1, 0.000100 ] # Blue Halfglove
+  - [ 1092027, 1, 1, 0.000100 ] # Silver Kalkan
+  - [ 1402011, 1, 1, 0.000200 ] # Sparta
+  - [ 1332052, 1, 1, 0.000100 ] # Blood Dagger
+  - [ 1372010, 1, 1, 0.000100 ] # Dimon Wand
+  - [ 1432010, 1, 1, 0.000100 ] # Omega Spear
+  - [ 1452015, 1, 1, 0.000200 ] # Dark Arund
+  - [ 1462013, 1, 1, 0.000100 ] # Dark Raven
