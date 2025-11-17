@@ -1,0 +1,18 @@
+# Trucker (9420507)
+
+rewards:
+  - [ 0, 130, 200, 0.600000 ]
+  - [ 4000374, 1, 1, 0.400000 ] # Headlight
+  - [ 4000376, 1, 1, 0.200000 ] # Batteries
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2043201, 1, 1, 0.010000 ] # Scroll for One-Handed BW for ATT 60%
+  - [ 1302016, 1, 1, 0.000100 ] # Yellow Umbrella
+  - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
+  - [ 1060078, 1, 1, 0.000100 ] # Umber Shouldermail Pants
+  - [ 1051032, 1, 1, 0.000200 ] # Blue Calaf
+  - [ 1002242, 1, 1, 0.000100 ] # Red Seraphis
+  - [ 1002243, 1, 1, 0.000100 ] # Blue Seraphis
+  - [ 1002253, 1, 1, 0.000100 ] # Blue Infinium Circlet
+  - [ 1050054, 1, 1, 0.000100 ] # Red Anakamoon
+  - [ 1050053, 1, 1, 0.000100 ] # Blue Anakamoon
+  - [ 1002214, 1, 1, 0.000100 ] # Black Maro

@@ -1,0 +1,19 @@
+# Racoco (7150000)
+
+rewards:
+  - [ 0, 280, 490, 0.600000 ]
+  - [ 4000609, 1, 1, 0.400000 ] # Racoco's Shovel
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2070001, 1, 1, 0.000400 ] # Wolbi Throwing-Stars
+  - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
+  - [ 1432007, 1, 1, 0.000100 ] # Redemption
+  - [ 1082086, 1, 1, 0.000100 ] # Steel Manute
+  - [ 1051042, 1, 1, 0.000100 ] # Blue Choro
+  - [ 1060093, 1, 1, 0.000100 ] # Brown Studded Pants
+  - [ 1002281, 1, 1, 0.000100 ] # Brown Nightfox
+  - [ 1472029, 1, 1, 0.000100 ] # Black Scarab
+  - [ 1652001, 1, 1, 0.000100 ] # Bronze Transistor
+  - [ 1492008, 1, 1, 0.000100 ] # Burning Hell

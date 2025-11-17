@@ -1,0 +1,19 @@
+# Enhanced Security System (8105002)
+
+# Very Special Sundae - didn't add check
+# Mana Boost Potion - didn't add check
+
+rewards:
+  - [ 0, 499, 714, 0.600000 ]
+  - [ 4000616, 1, 1, 0.400000 ] # Vent Pipe
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 1312015, 1, 1, 0.000100 ] # Vifennis
+  - [ 1402015, 1, 1, 0.000100 ] # Heaven's Gate
+  - [ 1452017, 1, 1, 0.000200 ] # Metus
+  - [ 1051069, 1, 1, 0.000100 ] # Dark Pria
+  - [ 1060098, 1, 1, 0.000100 ] # Red Pirate Pants
+  - [ 1472031, 1, 1, 0.000100 ] # Black Mamba
+  - [ 1472033, 1, 1, 0.000200 ] # Casters
+  - [ 1002323, 1, 1, 0.000100 ] # Green Osfa Hat
+  - [ 1072193, 1, 1, 0.000100 ] # Brown Osfa Boots
+  - [ 1482010, 1, 1, 0.000100 ] # Steelno

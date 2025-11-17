@@ -1,41 +1,7 @@
-# Silver Slime (7120104)
+# Mob 7120104 - Silver Slime (Year 2021)
+# Drops items for quests 3720, 3721, and 3722
 
 rewards:
-  - [ 0, 636, 954, 0.600000 ]
-  - [ 1002095, 1, 1, 0.000100 ] # Mithril Planet
-  - [ 1002246, 1, 1, 0.000100 ] # Dark Seraphis
-  - [ 1032014, 1, 1, 0.000100 ] # Pink-Flowered Earrings
-  - [ 1032016, 1, 1, 0.000100 ] # Metal Heart Earrings
-  - [ 1041095, 1, 1, 0.000100 ] # Bloody Mantis
-  - [ 1041102, 1, 1, 0.000100 ] # Pink Mystique
-  - [ 1050069, 1, 1, 0.000100 ] # Brown Requiem
-  - [ 1050070, 1, 1, 0.000100 ] # Dark Requiem
-  - [ 1051054, 1, 1, 0.000100 ] # Brown Requierre
-  - [ 1061094, 1, 1, 0.000100 ] # Bloody Mantis Pants
-  - [ 1061101, 1, 1, 0.000100 ] # Pink Mystique Pants
-  - [ 1072146, 1, 1, 0.000100 ] # Green Gore Boots
-  - [ 1072165, 1, 1, 0.000100 ] # Baige Elf Shoes
-  - [ 1082105, 1, 1, 0.000100 ] # Dark Husk
-  - [ 1082108, 1, 1, 0.000100 ] # Dark Eyes
-  - [ 1312009, 1, 1, 0.000100 ] # Hawkhead
-  - [ 1332015, 1, 1, 0.000100 ] # Deadly Fin
-  - [ 1372015, 1, 1, 0.000100 ] # Angel Wings
-  - [ 1372016, 1, 1, 0.000100 ] # Phoenix Wand
-  - [ 1402011, 1, 1, 0.000100 ] # Sparta
-  - [ 1492009, 1, 1, 0.000100 ] # Abyss Shooter
-  - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
-  - [ 2040618, 1, 1, 0.000100 ] # Scroll for Bottomwear for Jump 60%
-  - [ 2041021, 1, 1, 0.000100 ] # Scroll for Cape for LUK 100%
-  - [ 2044301, 1, 1, 0.000100 ] # Scroll for Spear for ATT 60%
-  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
-  - [ 2050000, 1, 1, 0.010000 ] # Antidote
-  - [ 2384059, 1, 1, 0.020000 ] # Silver Slime Card
-  - [ 4000546, 1, 1, 0.400000 ] # Silver Squishy Liquid
-  - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
-  - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)
-  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
-  - [ 4020007, 1, 1, 0.002000 ] # Diamond Ore
-  - [ 4130002, 1, 1, 0.000300 ] # One-Handed Sword Forging Stimulator
-  - [ 4130003, 1, 1, 0.000300 ] # One-Handed Axe Forging Stimulator
-  - [ 4130021, 1, 1, 0.000300 ] # Overall Production Stimulator
+  - [ 4032512, 1, 1, 0.2, 3720 ] # Scribbled Paper - Quest 3720 (20% drop when quest active)
+  - [ 4000546, 1, 1, 1.0, 3721 ] # Silver Slime Sample - Quest 3721 (100% drop when quest active)
+  - [ 4032513, 1, 1, 1.0, 3722 ] # Sketchbook Page - Quest 3722 (100% drop when quest active)

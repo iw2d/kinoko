@@ -1,0 +1,18 @@
+# Pac Pinky (9420509)
+
+rewards:
+  - [ 0, 300, 450, 0.600000 ]
+  - [ 4000380, 1, 1, 0.400000 ] # Pink Essence
+  - [ 4001005, 1, 1, 0.200000 ] # Ancient Scroll
+  - [ 1051001, 1, 1, 0.000100 ] # Emerald Fitted Mail
+  - [ 1402007, 1, 1, 0.000100 ] # Zard
+  - [ 1050048, 1, 1, 0.000100 ] # White Calas
+  - [ 1050037, 1, 1, 0.000100 ] # Green Starlight
+  - [ 1050059, 1, 1, 0.000100 ] # Blue Tai
+  - [ 1060098, 1, 1, 0.000100 ] # Red Pirate Pants
+  - [ 1061094, 1, 1, 0.000100 ] # Bloody Mantis Pants
+  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
+  - [ 2000004, 1, 1, 0.010000 ] # Elixir
+  - [ 2020028, 1, 1, 0.010000 ] # Chocolate
+  - [ 2070004, 1, 1, 0.000400 ] # Tobi Throwing-Stars
+  - [ 2044201, 1, 1, 0.000100 ] # Scroll for Two-Handed BW for ATT 60%

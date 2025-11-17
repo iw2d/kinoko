@@ -1,0 +1,28 @@
+# Freezer [2] (9420501)
+
+rewards:
+  - [ 0, 102, 155, 0.600000 ]
+  - [ 4000372, 1, 1, 0.400000 ] # Fire Extinguisher
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010005, 1, 1, 0.002000 ] # Orihalcon Ore
+  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4030012, 1, 1, 0.020000 ] # Monster Card
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2040800, 1, 1, 0.000100 ] # Scroll For Gloves For DEX 100%
+  - [ 2043200, 1, 1, 0.000100 ] # Scroll for One-Handed BW for ATT 10%
+  - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 1032008, 1, 1, 0.000100 ] # Cat's Eye
+  - [ 1040099, 1, 1, 0.000100 ] # Ocher Scorpio
+  - [ 1050011, 1, 1, 0.000100 ] # Black Dragon Robe
+  - [ 1050058, 1, 1, 0.000100 ] # Orange Tai
+  - [ 1060088, 1, 1, 0.000100 ] # Ocher Scorpio Pants
+  - [ 1072103, 1, 1, 0.000100 ] # Red Silky Boots
+  - [ 1302017, 1, 1, 0.000100 ] # Sky Blue Umbrella
+  - [ 1332010, 1, 1, 0.000100 ] # Iron Dagger
+  - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
+  - [ 1382002, 1, 1, 0.000200 ] # Wizard Staff
+  - [ 1432002, 1, 1, 0.000100 ] # Forked Spear
+  - [ 1452005, 1, 1, 0.002000 ] # Ryden
+  - [ 1472011, 1, 1, 0.000100 ] # Bronze Guardian

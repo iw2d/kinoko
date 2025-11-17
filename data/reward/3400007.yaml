@@ -1,0 +1,7 @@
+# Transformed Doll Claw Game (3400007) [1]
+
+rewards:
+  - [ 0, 86, 125, 0.600000 ]
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 4032508, 1, 1, 1.000000, 2273 ] # Secret Recipe | The Secret Recipe
