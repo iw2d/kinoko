@@ -1,0 +1,63 @@
+# Lumi : Weapon/Armour Seller (1055000) - Victoria Road : The Secret Garden Basement (103050300)
+
+items:
+  - [ 1302007, 3000 ] # Long Sword
+  - [ 1332000, 4000 ] # Triangular Zamadar
+  - [ 1332006, 7000 ] # Field Dagger
+  - [ 1332002, 8000 ] # Triple-Tipped Zamadar
+  - [ 1332008, 10000 ] # Coconut Knife
+  - [ 1332013, 15000 ] # Stinger
+  - [ 1332010, 22000 ] # Iron Dagger
+  - [ 1332004, 38000 ] # Forked Dagger
+  - [ 1342001, 42000 ] # Guardian Katara
+  - [ 1332012, 40000 ] # Reef Claw
+  - [ 1332009, 44500 ] # Cass
+  - [ 1322009, 20000 ] # Plunger
+  - [ 1402001, 3000 ] # Wooden Sword
+  - [ 1412001, 3000 ] # Metal Axe
+  - [ 1422000, 3000 ] # Wooden Mallet
+  - [ 1432000, 3000 ] # Spear
+  - [ 1432001, 7000 ] # Fork on a Stick
+  - [ 1442000, 3000 ] # Pole Arm
+  - [ 1472000, 3000 ] # Garnier
+  - [ 1342000, 10000 ] # Champion Katara
+  - [ 1342001, 42000 ] # Guardian Katara
+  - [ 1002125, 900 ] # Black Ghetto Beanie
+  - [ 1002001, 3000 ] # Metal Gear
+  - [ 1002110, 4000 ] # Black Thief Hood
+  - [ 1002130, 12000 ] # Black Loosecap
+  - [ 1002097, 7400 ] # Yellow Starry Bandana
+  - [ 1002150, 20000 ] # Dark Tiberian
+  - [ 1002175, 30000 ] # Dark Guise
+  - [ 1040033, 3000 ] # Black Cloth Vest
+  - [ 1040034, 5000 ] # Dark Nightshift
+  - [ 1040044, 9000 ] # Black Pao
+  - [ 1040050, 16000 ] # Black Sneak
+  - [ 1040057, 45000 ] # Dark Brown Stealer
+  - [ 1040058, 45000 ] # Dark Silver Stealer
+  - [ 1040033, 3000 ] # Black Cloth Vest
+  - [ 1041044, 5000 ] # Red Nightshift
+  - [ 1041045, 5000 ] # Brown Nightshift
+  - [ 1041040, 9000 ] # Blue Qi Pao
+  - [ 1041057, 18000 ] # Dark Sneak
+  - [ 1041060, 18000 ] # Gold Sneak
+  - [ 1041050, 45000 ] # Purple Steal
+  - [ 1060023, 2800 ] # Black Cloth Pants
+  - [ 1060024, 4800 ] # Dark Nightshift Pants
+  - [ 1060025, 4800 ] # Blue Nightshift Pants
+  - [ 1060033, 8000 ] # Black Pao Bottom
+  - [ 1060039, 19000 ] # Black Sneak Pants
+  - [ 1060043, 40000 ] # Dark Brown Stealer Pants
+  - [ 1060044, 40000 ] # Dark Silver Stealer Pants
+  - [ 1060023, 2800 ] # Black Cloth Pants
+  - [ 1061037, 4800 ] # Red Nightshift Pants
+  - [ 1061038, 4800 ] # Brown Nightshift Pants
+  - [ 1061033, 8000 ] # Blue Qi Pao Pants
+  - [ 1061042, 12000 ] # Blue Qi Pao Skirt
+  - [ 1061053, 18000 ] # Dark Sneak Pants
+  - [ 1061056, 18000 ] # Gold Sneak Pants
+  - [ 1061046, 40000 ] # Purple Steal Pants
+  - [ 1072043, 2000 ] # Smelly Gomushin
+  - [ 1072028, 4500 ] # White Ninja Sandals
+  - [ 1072031, 4500 ] # Red Ninja Sandals
+  - [ 1072066, 9000 ] # Blue Enamel Boots

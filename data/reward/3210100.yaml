@@ -34,3 +34,4 @@ rewards:
   - [ 4130016, 1, 1, 0.000300 ] # Knuckler Production Stimulator
   - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
   - [ 4130022, 1, 1, 0.000300 ] # Shield Production Stimulator
+  - [ 4032629, 1, 1, 0.200000, 2371 ] # Tulip (Quest 2371 - Yun)

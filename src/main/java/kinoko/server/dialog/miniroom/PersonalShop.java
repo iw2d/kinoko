@@ -103,12 +103,14 @@ public final class PersonalShop extends MiniRoom {
                     user.dispose();
                     return;
                 }
+
+                int originalInventoryQuantity = item.getQuantity();
                 // Move item from inventory to shop
-                final Optional<InventoryOperation> removeItemResult = user.getInventoryManager().removeItem(targetPosition, item, totalCount);
+                final Optional<InventoryOperation> removeItemResult = user.getInventoryManager().removeItem(targetPosition, item, totalCount);  // updates player inventory item quantity
                 if (removeItemResult.isEmpty()) {
                     throw new IllegalStateException("Could not remove item from inventory");
                 }
-                if (item.getQuantity() > totalCount) {
+                if (originalInventoryQuantity > totalCount) {
                     final Item partialItem = new Item(item);
                     partialItem.setItemSn(user.getNextItemSn());
                     partialItem.setQuantity((short) totalCount);

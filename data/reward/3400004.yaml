@@ -1,0 +1,21 @@
+# Yeti Doll (3400004)
+
+# Equip Enhancement Scroll - not added check
+# Potential Scroll - not added check
+
+rewards:
+  - [ 0, 81, 122, 0.600000 ]
+  - [ 4000542, 1, 1, 0.400000 ] # Yeti Keychain
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1050022, 1, 1, 0.000100 ] # Dark Crusader Chainmail
+  - [ 1082036, 1, 1, 0.000100 ] # Dark Briggon
+  - [ 1452006, 1, 1, 0.000100 ] # Red Viper
+  - [ 1060065, 1, 1, 0.000100 ] # Brown Legolier Pants
+  - [ 1060063, 1, 1, 0.000100 ] # Green Legolier Pants
+  - [ 1002625, 1, 1, 0.000100 ] # Blue Den Marine
+  - [ 1052110, 1, 1, 0.000100 ] # Blue Brace Look

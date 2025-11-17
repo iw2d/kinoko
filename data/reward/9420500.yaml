@@ -1,0 +1,19 @@
+# Stopnow (9420500)
+
+rewards:
+  - [ 0, 64, 98, 0.600000 ]
+  - [ 4000369, 1, 1, 0.400000 ] # Stop Sign
+  - [ 4000370, 1, 1, 0.200000 ] # Metal pole
+  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2002002, 1, 1, 0.010000 ] # Magic Potion
+  - [ 2002003, 1, 1, 0.010000 ] # Wizard Potion
+  - [ 2044002, 1, 1, 0.000100 ] # Scroll for Two-handed Sword for ATT 10%
+  - [ 1002141, 1, 1, 0.000100 ] # Red Matty
+  - [ 1002178, 1, 1, 0.000100 ] # Green Burgler
+  - [ 1051007, 1, 1, 0.000200 ] # Red Avenger
+  - [ 1051009, 1, 1, 0.000100 ] # Purple Avenger
+  - [ 1060052, 1, 1, 0.000100 ] # Black Knucklevest Pants
+  - [ 1092007, 1, 1, 0.000100 ] # Battle Shield
+  - [ 1332001, 1, 1, 0.000100 ] # Halfmoon Zamadar

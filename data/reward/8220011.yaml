@@ -3,3 +3,4 @@
 rewards:
   - [ 0, 702, 1053, 0.600000 ]
   - [ 2388078, 1, 1, 0.020000 ] # Aufheben Card
+  - [ 4032517, 1, 1, 1.0, 3740 ] # Time Sand - Quest 3740 (100% drop when quest active)

@@ -24,7 +24,7 @@ rewards:
   - [ 2041022, 1, 1, 0.000100 ] # Scroll for Cape for LUK 60%
   - [ 2043301, 1, 1, 0.000100 ] # Scroll for Dagger for ATT 60%
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000144, 1, 1, 0.400000 ] # Free Spirit
+  - [ 4000144, 1, 1, 0.400000, 3445 ] # Soul Teddy's Spirit (quest 3445 only)
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)

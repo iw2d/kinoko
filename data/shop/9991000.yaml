@@ -1,0 +1,28 @@
+# Alpha VIP Seller (9991000)
+
+items:
+  - [ 4322000, 100000, 1, 1 ] # Fast Travel Ticket
+  - [ 2340000, 9999999, 1, 1 ] # White Scroll
+  - [ 5072000, 2000000, 1, 1 ] # Super Megaphone
+  - [ 5073000, 1000000, 1, 1 ] # Heart Megaphone
+  - [ 5074000, 1000000, 1, 1 ] # Skull Megaphone
+  - [ 5076000, 2200000, 1, 1 ] # Item Megaphone
+  - [ 5077000, 2200000, 1, 1 ] # Triple Megaphone
+  - [ 1302147, 600000, 1, 1 ] # VIP One-Handed Sword
+  - [ 1312062, 600000, 1, 1 ] # VIP One-Handed Axe
+  - [ 1322090, 600000, 1, 1 ] # VIP One-Handed BW
+  - [ 1332120, 600000, 1, 1 ] # VIP Dagger (LUK)
+  - [ 1332125, 600000, 1, 1 ] # VIP Dagger (STR)
+  - [ 1342033, 600000, 1, 1 ] # VIP Katara
+  - [ 1372078, 600000, 1, 1 ] # VIP Wand
+  - [ 1382099, 600000, 1, 1 ] # VIP Staff
+  - [ 1402090, 600000, 1, 1 ] # VIP Two-handed Sword
+  - [ 1412062, 600000, 1, 1 ] # VIP Two-handed Axe
+  - [ 1422063, 600000, 1, 1 ] # VIP Two-handed BW
+  - [ 1432081, 600000, 1, 1 ] # VIP Spear
+  - [ 1442111, 600000, 1, 1 ] # VIP Polearm
+  - [ 1452106, 600000, 1, 1 ] # VIP Bow
+  - [ 1462091, 600000, 1, 1 ] # VIP Crossbow
+  - [ 1472117, 600000, 1, 1 ] # VIP Claw
+  - [ 1482079, 600000, 1, 1 ] # VIP Knuckle
+  - [ 1492079, 600000, 1, 1 ] # VIP Gun

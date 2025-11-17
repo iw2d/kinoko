@@ -1,0 +1,12 @@
+# Baby Boulder Muncher (3150001)
+
+rewards:
+  - [ 0, 32, 48, 0.600000 ]
+  - [ 2000001, 1, 1, 0.015000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.015000 ] # White Potion
+  - [ 2000003, 1, 1, 0.015000 ] # Blue Potion
+  - [ 2000006, 1, 1, 0.005000 ] # Mana Elixir
+  - [ 4032765, 1, 1, 0.500000, 23943 ] # Rock Shield (only drops with quest 23943)
+  - [ 4032764, 1, 1, 0.100000, 23941 ] # Rue Battery (only drops with quest 23941)
+  - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
+  - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

@@ -1,0 +1,25 @@
+# Veetron (9420515)
+
+rewards:
+  - [ 0, 522, 750, 0.600000 ]
+  - [ 4000430, 1, 1, 0.400000 ] # Veetron Horn
+  - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
+  - [ 4020001, 1, 1, 0.002000 ] # Amethyst Ore
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2040901, 1, 1, 0.010000 ] # Scroll for Shield for DEF 60%
+  - [ 2048004, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 60%
+  - [ 1002328, 1, 1, 0.000100 ] # Green Pireta Hat
+  - [ 1032023, 1, 1, 0.000100 ] # Strawberry Earrings
+  - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top
+  - [ 1061105, 1, 1, 0.000100 ] # Red Pirate Skirt
+  - [ 1072179, 1, 1, 0.000100 ] # Dark Enigma Shoes
+  - [ 1082117, 1, 1, 0.000100 ] # Dark Emperor
+  - [ 1312030, 1, 1, 0.000200 ] # Tomahawk
+  - [ 1382008, 1, 1, 0.000100 ] # Kage
+  - [ 1402035, 1, 1, 0.000200 ] # The Beheader
+  - [ 1452014, 1, 1, 0.000100 ] # Golden Arund
+  - [ 1472053, 1, 1, 0.000100 ] # Red Craven

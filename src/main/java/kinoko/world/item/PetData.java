@@ -26,6 +26,25 @@ public final class PetData {
         this.remainLife = petData.remainLife;
     }
 
+    public PetData(
+            String petName,
+            byte level,
+            byte fullness,
+            short tameness,
+            short petSkill,
+            short petAttribute,
+            int remainLife
+    ) {
+        this.petName = petName;
+        this.level = level;
+        this.fullness = fullness;
+        this.tameness = tameness;
+        this.petSkill = petSkill;
+        this.petAttribute = petAttribute;
+        this.remainLife = remainLife;
+    }
+
+
     public void encode(OutPacket outPacket, Item item) {
         outPacket.encodeString(getPetName(), 13); // sPetName
         outPacket.encodeByte(getLevel()); // nLevel

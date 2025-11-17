@@ -27,3 +27,4 @@ rewards:
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore
+  - [ 4032621, 1, 1, 0.500000, 2378 ] # Bubbling's Dual Blade Seal (Quest 2378 - Sixth Mission: Destroying the Evidence 2)

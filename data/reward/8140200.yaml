@@ -31,6 +31,7 @@ rewards:
   - [ 2040802, 1, 1, 0.000100 ] # Scroll for Gloves for DEX 10%
   - [ 2040925, 1, 1, 0.000100 ] # Scroll for Shield for LUK 10%
   - [ 4000145, 1, 1, 0.400000 ] # Sealed-up Grandpa Clock
+  - [ 4000460, 1, 1, 0.500000, 3250 ] # Springy Worm (quest 3250 only)
   - [ 4004003, 1, 1, 0.001000 ] # LUK Crystal Ore
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)

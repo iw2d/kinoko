@@ -1,0 +1,9 @@
+# Baroq (9001009) - Master of Disguise Boss (3rd Job Advancement)
+# Drops quest-specific items based on which Cygnus class you are
+
+rewards:
+  - [ 4032101, 1, 1, 1.000000, 20301 ] # Shinsoo's Teardrop (Dawn Warrior) - Quest 20301
+  - [ 4032102, 1, 1, 1.000000, 20302 ] # Shinsoo's Teardrop (Blaze Wizard) - Quest 20302
+  - [ 4032103, 1, 1, 1.000000, 20303 ] # Shinsoo's Teardrop (Wind Archer) - Quest 20303
+  - [ 4032104, 1, 1, 1.000000, 20304 ] # Shinsoo's Teardrop (Night Walker) - Quest 20304
+  - [ 4032105, 1, 1, 1.000000, 20305 ] # Shinsoo's Teardrop (Thunder Breaker) - Quest 20305

@@ -22,7 +22,7 @@ rewards:
   - [ 2041005, 1, 1, 0.000100 ] # Scroll for Cape for Weapon DEF 10%
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
-  - [ 4000117, 1, 1, 0.400000 ] # Space Food
+  - [ 4000117, 1, 1, 0.400000, 3204 ] # Space Food (Quest 3204)
   - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
   - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
   - [ 4007005, 1, 1, 0.000300 ] # Magic Powder (Purple)

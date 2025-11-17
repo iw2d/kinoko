@@ -168,7 +168,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
 
     private void handleUserConnect(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
-        centralServerNode.addUser(remoteUser);
+        centralServerNode.addRemoteUser(remoteUser);
         updateMessengerUser(remoteUser);
         updatePartyMember(remoteUser, false);
         updateGuildMember(remoteUser, false);
@@ -176,7 +176,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
 
     private void handleUserUpdate(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
-        centralServerNode.updateUser(remoteUser);
+        centralServerNode.updateRemoteUser(remoteUser);
         updateMessengerUser(remoteUser);
         updatePartyMember(remoteUser, true);
         updateGuildMember(remoteUser, true);
@@ -184,7 +184,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
 
     private void handleUserDisconnect(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final RemoteUser remoteUser = RemoteUser.decode(inPacket);
-        centralServerNode.removeUser(remoteUser);
+        centralServerNode.removeRemoteUser(remoteUser);
         // Check if transfer
         if (centralServerNode.isMigrating(remoteUser.getAccountId())) {
             return;
@@ -202,7 +202,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final String characterName = inPacket.decodeString();
         final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
         // Resolve target user
-        final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterName(characterName);
+        final Optional<RemoteUser> targetResult = centralServerNode.getRemoteUserByCharacterName(characterName);
         if (targetResult.isEmpty()) {
             return;
         }
@@ -221,7 +221,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
         // Resolve target user
-        final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(characterId);
+        final Optional<RemoteUser> targetResult = centralServerNode.getRemoteUserByCharacterId(characterId);
         if (targetResult.isEmpty()) {
             return;
         }
@@ -243,7 +243,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             characterIds.add(inPacket.decodeInt());
         }
         final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
-        for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
+        for (RemoteServerNode serverNode : centralServerNode.getRemoteChannelServerNodes()) {
             serverNode.write(CentralPacket.userPacketBroadcast(characterIds, remotePacket));
         }
     }
@@ -254,12 +254,12 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int size = inPacket.decodeInt();
         final List<RemoteUser> remoteUsers;
         if (size < 0) {
-            remoteUsers = centralServerNode.getUsers(); // Get all connected users
+            remoteUsers = centralServerNode.getRemoteUsers(); // Get all connected users
         } else {
             remoteUsers = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 final String characterName = inPacket.decodeString();
-                centralServerNode.getUserByCharacterName(characterName).ifPresent(remoteUsers::add);
+                centralServerNode.getRemoteUserByCharacterName(characterName).ifPresent(remoteUsers::add);
             }
         }
         // Reply with queried remote users
@@ -270,14 +270,14 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final boolean avatar = inPacket.decodeBoolean();
         final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
-        for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
+        for (RemoteServerNode serverNode : centralServerNode.getRemoteChannelServerNodes()) {
             serverNode.write(CentralPacket.worldSpeakerRequest(characterId, avatar, remotePacket));
         }
     }
 
     private void handleServerPacketBroadcast(RemoteServerNode remoteServerNode, InPacket inPacket) {
         final OutPacket remotePacket = OutPacket.decodeRemotePacket(inPacket);
-        for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
+        for (RemoteServerNode serverNode : centralServerNode.getRemoteChannelServerNodes()) {
             serverNode.write(CentralPacket.serverPacketBroadcast(remotePacket));
         }
     }
@@ -286,7 +286,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final MessengerRequest messengerRequest = MessengerRequest.decode(inPacket);
         // Resolve requester user
-        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getRemoteUserByCharacterId(characterId);
         if (remoteUserResult.isEmpty()) {
             log.error("Failed to resolve user with character ID : {} for MessengerRequest", characterId);
             return;
@@ -422,7 +422,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final PartyRequest partyRequest = PartyRequest.decode(inPacket);
         // Resolve requester user
-        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getRemoteUserByCharacterId(characterId);
         if (remoteUserResult.isEmpty()) {
             log.error("Failed to resolve user with character ID : {} for PartyRequest", characterId);
             return;
@@ -513,8 +513,9 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 // Resolve inviter
                 final int inviterId = partyRequest.getCharacterId();
-                final Optional<RemoteUser> inviterResult = centralServerNode.getUserByCharacterId(inviterId);
+                final Optional<RemoteUser> inviterResult = centralServerNode.getRemoteUserByCharacterId(inviterId);
                 if (inviterResult.isEmpty()) {
+                    // The inviter is not online.
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.of(PartyResultType.JoinParty_Unknown))); // Your request for a party didn't work due to an unexpected error.
                     return;
                 }
@@ -567,7 +568,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 // Resolve target
                 final String targetName = partyRequest.getCharacterName();
-                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterName(targetName); // target name
+                final Optional<RemoteUser> targetResult = centralServerNode.getRemoteUserByCharacterName(targetName); // target name
                 if (targetResult.isEmpty()) {
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), PartyPacket.serverMsg(String.format("Unable to find '%s'", targetName))));
                     return;
@@ -653,7 +654,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final GuildRequest guildRequest = GuildRequest.decode(inPacket);
         // Resolve requester user
-        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getRemoteUserByCharacterId(characterId);
         if (remoteUserResult.isEmpty()) {
             log.error("Failed to resolve user with character ID : {} for GuildRequest", characterId);
             return;
@@ -708,7 +709,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
                 // Resolve target
                 final String targetName = guildRequest.getTargetName();
-                final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterName(targetName); // target name
+                final Optional<RemoteUser> targetResult = centralServerNode.getRemoteUserByCharacterName(targetName); // target name
                 if (targetResult.isEmpty()) {
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.serverMsg(String.format("Unable to find '%s'", targetName))));
                     return;
@@ -746,7 +747,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             case JoinGuild -> {
                 // Resolve inviter
                 final int inviterId = guildRequest.getInviterId();
-                final Optional<RemoteUser> inviterResult = centralServerNode.getUserByCharacterId(inviterId);
+                final Optional<RemoteUser> inviterResult = centralServerNode.getRemoteUserByCharacterId(inviterId);
                 if (inviterResult.isEmpty()) {
                     remoteServerNode.write(CentralPacket.userPacketReceive(remoteUser.getCharacterId(), GuildPacket.joinGuildUnknown())); // The guild request has not been accepted due to unknown reason.
                     return;
@@ -857,7 +858,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                     // Save to database
                     DatabaseManager.guildAccessor().saveGuild(guild);
                     // Resolve target
-                    final Optional<RemoteUser> targetResult = centralServerNode.getUserByCharacterId(guildRequest.getTargetId());
+                    final Optional<RemoteUser> targetResult = centralServerNode.getRemoteUserByCharacterId(guildRequest.getTargetId());
                     if (targetResult.isPresent()) {
                         final RemoteUser targetUser = targetResult.get();
                         targetUser.setGuildId(0);
@@ -1054,7 +1055,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
         final int characterId = inPacket.decodeInt();
         final GuildBoardRequest boardRequest = GuildBoardRequest.decode(inPacket);
         // Resolve requester user
-        final Optional<RemoteUser> remoteUserResult = centralServerNode.getUserByCharacterId(characterId);
+        final Optional<RemoteUser> remoteUserResult = centralServerNode.getRemoteUserByCharacterId(characterId);
         if (remoteUserResult.isEmpty()) {
             log.error("Failed to resolve user with character ID : {} for GuildBoardRequest", characterId);
             return;
@@ -1267,7 +1268,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
             final OutPacket outPacket = isUserUpdate ?
                     GuildPacket.changeLevelOrJob(guild.getGuildId(), remoteUser.getCharacterId(), remoteUser.getLevel(), remoteUser.getJob()) :
                     GuildPacket.notifyLoginOrLogout(guild.getGuildId(), remoteUser.getCharacterId(), isOnline);
-            for (RemoteServerNode serverNode : centralServerNode.getChannelServerNodes()) {
+            for (RemoteServerNode serverNode : centralServerNode.getRemoteChannelServerNodes()) {
                 serverNode.write(CentralPacket.userPacketBroadcast(guildMemberIds, outPacket));
             }
         }
@@ -1295,7 +1296,7 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
 
     private void forEachGuildMember(Guild guild, BiConsumer<RemoteUser, RemoteServerNode> biConsumer) {
         for (int memberId : guild.getMemberIds()) {
-            final Optional<RemoteUser> remoteMemberResult = centralServerNode.getUserByCharacterId(memberId);
+            final Optional<RemoteUser> remoteMemberResult = centralServerNode.getRemoteUserByCharacterId(memberId);
             if (remoteMemberResult.isEmpty()) {
                 continue;
             }

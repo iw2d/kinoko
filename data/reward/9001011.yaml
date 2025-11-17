@@ -1,0 +1,9 @@
+# Mimis (9001011) - 2nd Job Advancement Exam
+# Drops quest-specific items based on which Cygnus class you are
+
+rewards:
+  - [ 4032096, 1, 1, 1.000000, 20201 ] # Proof of Test (Dawn Warrior) - Quest 20201
+  - [ 4032097, 1, 1, 1.000000, 20202 ] # Proof of Test (Blaze Wizard) - Quest 20202
+  - [ 4032098, 1, 1, 1.000000, 20203 ] # Proof of Test (Wind Archer) - Quest 20203
+  - [ 4032099, 1, 1, 1.000000, 20204 ] # Proof of Test (Night Walker) - Quest 20204
+  - [ 4032100, 1, 1, 1.000000, 20205 ] # Proof of Test (Thunder Breaker) - Quest 20205

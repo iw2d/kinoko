@@ -4,6 +4,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
+import kinoko.packet.world.BroadcastPacket;
+import kinoko.server.Server;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
 import kinoko.server.event.EventManager;
@@ -49,6 +51,7 @@ public final class ChannelServerNode extends ServerNode {
     public ChannelServerNode(int channelId, int channelPort) {
         this.channelId = channelId;
         this.channelPort = channelPort;
+        Server.getCentralServerNode().addChannelServerNode(this);
     }
 
     public int getChannelId() {
@@ -115,6 +118,10 @@ public final class ChannelServerNode extends ServerNode {
 
     public Optional<User> getUserByCharacterId(int characterId) {
         return clientStorage.getUserByCharacterId(characterId);
+    }
+
+    public Optional<User> getUserByCharacterName(String characterName) {
+        return clientStorage.getUserByCharacterName(characterName);
     }
 
     public void notifyUserConnect(User user) {
@@ -257,8 +264,14 @@ public final class ChannelServerNode extends ServerNode {
 
         // Start channel server
         final ChannelServerNode self = this;
-        channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
-        channelServerFuture.sync();
+        try {
+            channelServerFuture = startServer(new PacketChannelInitializer(new ChannelPacketHandler(), self), channelPort);
+            channelServerFuture.sync();
+        }
+        catch(Exception e){
+            log.error("Channel {} failed to bind to port {}", channelId + 1, channelPort);
+            throw e;
+        }
         log.info("Channel {} listening on port {}", channelId + 1, channelPort);
 
         // Start central client
@@ -299,5 +312,24 @@ public final class ChannelServerNode extends ServerNode {
     @Override
     public boolean isInitialized() {
         return true;
+    }
+
+    // Utility Functions -----------------------------------------------------------------------------------------------
+    public void broadcastServerAlert(String message){
+        OutPacket packet = BroadcastPacket.alert(message);
+        submitServerPacketBroadcast(packet);
+    }
+
+    public void broadcastServerNoticeWithoutPrefix(String message){
+        OutPacket packet = BroadcastPacket.noticeWithoutPrefix(message);
+        submitServerPacketBroadcast(packet);
+    }
+
+    public int getServerOnline(){
+        return clientStorage.getConnectedUsers().size();
+    }
+
+    public int getChannelOnline(){
+        return getConnectedUsers().size();
     }
 }

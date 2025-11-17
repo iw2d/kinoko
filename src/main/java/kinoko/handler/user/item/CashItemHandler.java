@@ -598,7 +598,7 @@ public final class CashItemHandler extends ItemHandler {
                 final ItemRewardInfo itemRewardInfo = itemRewardInfoResult.get();
                 // Resolve reward
                 if (!itemRewardInfo.canAddReward(user)) {
-                    user.write(MessagePacket.system("You do not have enough inventory space."));
+                    user.systemMessage("You do not have enough inventory space.");
                     user.dispose();
                     return;
                 }

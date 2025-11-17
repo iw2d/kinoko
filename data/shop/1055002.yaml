@@ -1,0 +1,43 @@
+# Taeha : Merchant (1055002) - Victoria Road : The Secret Garden Basement (103050300)
+
+recharge: true
+items:
+  - [ 2000000, 50, 1, 100 ] # Red Potion
+  - [ 2000001, 160, 1, 100 ] # Orange Potion
+  - [ 2000002, 320, 1, 100 ] # White Potion
+  - [ 2000003, 200, 1, 100 ] # Blue Potion
+  - [ 2000006, 620, 1, 100 ] # Mana Elixir
+  - [ 2001000, 3200, 1, 100 ] # Watermelon
+  - [ 2001001, 2300, 1, 100 ] # Ice Cream Pop
+  - [ 2001002, 4000, 1, 100 ] # Red Bean Sundae
+  - [ 2002016, 5000, 1, 100 ] # Thief Elixir
+  - [ 2002017, 5000, 1, 100 ] # Warrior Elixir
+  - [ 2002018, 5000, 1, 100 ] # Wizard Elixir
+  - [ 2002019, 5000, 1, 100 ] # Archer Elixir
+  - [ 2002020, 2800, 1, 150 ] # Mana Bull
+  - [ 2002021, 2800, 1, 150 ] # Honster
+  - [ 2002022, 2100, 1, 100 ] # Ginseng Root
+  - [ 2002023, 3800, 1, 100 ] # Ginger Ale
+  - [ 2002024, 1500, 1, 150 ] # Sorcerer Elixir
+  - [ 2002025, 1500, 1, 150 ] # Barbarian Elixir
+  - [ 2010000, 30, 1, 100 ] # Apple
+  - [ 2010001, 106, 1, 100 ] # Meat
+  - [ 2010002, 50, 1, 100 ] # Egg
+  - [ 2010003, 100, 1, 100 ] # Orange
+  - [ 2010004, 310, 1, 100 ] # Lemon
+  - [ 2020012, 4500, 1, 100 ] # Melting Cheese
+  - [ 2020013, 5600, 1, 100 ] # Reindeer Milk
+  - [ 2020014, 8100, 1, 100 ] # Sunrise Dew
+  - [ 2020015, 10200, 1, 100 ] # Sunset Dew
+  - [ 2022000, 1650, 1, 100 ] # Pure Water
+  - [ 2022003, 1100, 1, 100 ] # Unagi
+  - [ 2022189, 1000, 1, 100 ] # Grilled Cheese
+  - [ 2022190, 3000, 1, 100 ] # Cherry Pie
+  - [ 2022191, 1000, 1, 100 ] # Supreme Pizza
+  - [ 2022192, 600, 1, 100 ] # Waffle
+  - [ 2022195, 15000, 1, 150 ] # Mapleade
+  - [ 2030000, 400, 1, 100 ] # Return Scroll - Nearest Town
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2061000, 1, 1, 2000 ] # Arrow for Crossbow
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
+  - [ 2330000, 500, 500, 500 ] # Bullet

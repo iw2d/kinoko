@@ -27,3 +27,5 @@ rewards:
   - [ 4003004, 1, 1, 0.040000 ] # Stiff Feather
   - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
   - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4032620, 1, 1, 0.500000, 2357 ] # Secret Map (Quest 2357 - Falsified Remnant)
+  - [ 4032623, 1, 1, 0.500000, 2379 ] # Stirge's Dual Blade Seal (Quest 2379 - Sixth Mission: Destroying the Evidence 3)

@@ -29,6 +29,7 @@ public final class CharacterStatUDT {
     public static final String PET_1 = "pet_1";
     public static final String PET_2 = "pet_2";
     public static final String PET_3 = "pet_3";
+    public static final String ADMIN_LEVEL = "admin_level";
 
     private static final String typeName = "character_stat_type";
 

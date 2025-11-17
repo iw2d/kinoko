@@ -20,7 +20,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 4000021, 1, 1, 0.040000 ] # Leather
-  - [ 4000095, 1, 1, 0.400000 ] # Rat Trap
+  - [ 4000095, 1, 1, 0.400000, 3209 ] # Rat Trap (Quest 3209)
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)
   - [ 4007007, 1, 1, 0.000300 ] # Magic Powder (Black)

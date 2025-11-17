@@ -1,7 +1,7 @@
 # Sid : Weapon Seller (11000) - Rainbow Street : Amherst Weapon Store (1000001)
 
 items:
-  - [ 1302000, 50 ] # Sword
-  - [ 1312004, 50 ] # Hand Axe
-  - [ 1322005, 50 ] # Wooden Club
-  - [ 1332005, 500 ] # Razor
+  - [ 1302000, 50 ]
+  - [ 1312004, 50 ]
+  - [ 1322005, 50 ]
+  - [ 1332005, 500 ]
