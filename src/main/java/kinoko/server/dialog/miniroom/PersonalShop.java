@@ -155,21 +155,44 @@ public final class PersonalShop extends MiniRoom {
                     user.dispose();
                     return;
                 }
-                // Do transaction
-                item.getItem().setQuantity((short) (item.getItem().getQuantity() - totalCount));
+                // Do transaction (ACID-compliant order: validate, execute reversible ops, commit)
+                // Save original quantity for rollback
+                final int originalQuantity = item.getItem().getQuantity();
+
+                // Create buy item (no state modification yet)
                 final Item buyItem = new Item(item.getItem());
                 buyItem.setItemSn(owner.getNextItemSn());
                 buyItem.setQuantity((short) totalCount);
+
+                // Step 1: Deduct buyer's money (reversible)
                 if (!im.addMoney((int) -totalPrice)) {
-                    throw new IllegalStateException("Could not deduct total price from user");
+                    user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoMoney));
+                    user.dispose();
+                    return;
                 }
+
+                // Step 2: Add item to buyer (reversible)
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(buyItem);
                 if (addItemResult.isEmpty()) {
-                    throw new IllegalStateException("Could not add bought item to inventory");
+                    // Rollback: Return money to buyer
+                    im.addMoney((int) totalPrice);
+                    user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoSlot));
+                    user.dispose();
+                    return;
                 }
+
+                // Step 3: Add money to seller (reversible)
                 if (!owner.getInventoryManager().addMoney(moneyForOwner)) {
-                    throw new IllegalStateException("Could not add money to personal shop owner");
+                    // Rollback: Remove item from buyer, return money
+                    im.removeItem(buyItem.getItemId(), totalCount);
+                    im.addMoney((int) totalPrice);
+                    user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.OverPrice));
+                    user.dispose();
+                    return;
                 }
+
+                // Step 4: FINALLY modify shop quantity (commit point - no rollback after this)
+                item.getItem().setQuantity((short) (originalQuantity - totalCount));
                 // Update clients
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));

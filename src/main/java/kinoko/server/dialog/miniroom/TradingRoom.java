@@ -13,12 +13,13 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public final class TradingRoom extends MiniRoom {
-    private final Map<User, Map<Integer, Item>> items = new HashMap<>(); // user -> slot, items
-    private final Map<User, Integer> money = new HashMap<>(); // user -> offered money
-    private final Map<User, Boolean> confirm = new HashMap<>(); // user -> trade confirmation
+    private final Map<User, Map<Integer, Item>> items = new ConcurrentHashMap<>(); // user -> slot, items
+    private final Map<User, Integer> money = new ConcurrentHashMap<>(); // user -> offered money
+    private final Map<User, Boolean> confirm = new ConcurrentHashMap<>(); // user -> trade confirmation
 
 
     public TradingRoom() {
@@ -73,15 +74,17 @@ public final class TradingRoom extends MiniRoom {
             }
             case TRP_Trade -> {
                 // CTradingRoomDlg::Trade
-                confirm.put(user, true);
-                // Update other
-                if (!confirm.getOrDefault(other, false)) {
-                    other.write(MiniRoomPacket.TradingRoom.trade());
-                    return;
-                }
-                // Complete trade
-                if (!completeTrade(user)) {
-                    cancelTrade(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
+                synchronized (confirm) {
+                    confirm.put(user, true);
+                    // Update other
+                    if (!confirm.getOrDefault(other, false)) {
+                        other.write(MiniRoomPacket.TradingRoom.trade());
+                        return;
+                    }
+                    // Complete trade
+                    if (!completeTrade(user)) {
+                        cancelTrade(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
+                    }
                 }
             }
             case TRP_ItemCRC -> {
