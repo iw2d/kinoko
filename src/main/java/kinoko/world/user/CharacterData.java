@@ -181,13 +181,8 @@ public final class CharacterData implements Encodable {
 
     public long getNextItemSn() {
         if (DatabaseManager.isRelational()) {
-            // Generate temporary unique SN for PostgreSQL using timestamp + random bits
-            // This prevents in-memory collisions before database save
-            // Database will replace with actual sequence value during save
-            long timestamp = System.currentTimeMillis();
-            long random = (long) (Math.random() * 1048576); // 20 bits of randomness
-            long counter = itemSnCounter.getAndIncrement() & 0x3; // 2 bits of counter
-            return -(timestamp << 22 | random << 2 | counter); // Negative to distinguish from real SNs
+            // Let the relational database handle SN generation; return placeholder
+            return -1;
         }
 
         return ((long) itemSnCounter.getAndIncrement()) | (((long) getCharacterId()) << 32);
