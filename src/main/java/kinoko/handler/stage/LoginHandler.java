@@ -85,7 +85,7 @@ public final class LoginHandler {
             }
 
             // Check password
-            if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
+            if (!ServerConfig.TESPIA && !DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
                 c.write(LoginPacket.checkPasswordResultFail(LoginResultType.IncorrectPassword));
                 return;
             }

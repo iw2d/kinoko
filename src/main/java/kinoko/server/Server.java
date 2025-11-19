@@ -66,6 +66,12 @@ public final class Server {
 
         // Initialize nodes
         centralServerNode = new CentralServerNode(ServerConstants.CENTRAL_PORT);
+
+        start = Instant.now();
+        centralServerNode.createAllFamilies();
+        log.info("Loaded families in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+
+
         ServerExecutor.submitService(() -> {
             try {
                 centralServerNode.initialize();

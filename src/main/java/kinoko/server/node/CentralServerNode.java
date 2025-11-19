@@ -5,6 +5,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.CentralPacket;
+import kinoko.server.family.FamilyStorage;
+import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;
@@ -22,6 +24,7 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
+import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,14 +32,17 @@ import org.apache.logging.log4j.Logger;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class CentralServerNode extends Node {
     private static final Logger log = LogManager.getLogger(CentralServerNode.class);
     private final ServerStorage serverStorage = new ServerStorage();
     private final MigrationStorage migrationStorage = new MigrationStorage();
+    private final FamilyStorage familyStorage = new FamilyStorage();
     private final UserStorage userStorage = new UserStorage();
     private final MessengerStorage messengerStorage = new MessengerStorage();
     private final PartyStorage partyStorage = new PartyStorage();
@@ -87,6 +93,7 @@ public final class CentralServerNode extends Node {
 
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
+
 
     public boolean isOnline(int accountId) {
         return migrationStorage.isMigrating(accountId) || userStorage.getByAccountId(accountId).isPresent();
@@ -241,6 +248,77 @@ public final class CentralServerNode extends Node {
         return guildStorage.getGuildById(guildId);
     }
 
+
+    // FAMILY METHODS --------------------------------------------------------------------------------------------------
+
+    public ReentrantLock getGlobalFamilyLock(){
+        return familyStorage.getGlobalLock();
+    }
+
+    /**
+     * Loads all family trees from the database and adds them to the FamilyStorage.
+     * Each family tree is stored in memory and keyed by its leader ID.
+     */
+    public void createAllFamilies() {
+        Collection<FamilyTree> families = DatabaseManager.familyAccessor().getAllFamilies();
+
+        for (FamilyTree tree : families) {
+            familyStorage.addFamily(tree);
+        }
+    }
+
+    /**
+     * Retrieves a FamilyMember for the given character ID.
+     * Returns FamilyMember.EMPTY if the character is not part of any family.
+     *
+     * @param characterId the ID of the character to look up
+     * @return the FamilyMember instance or FamilyMember.EMPTY if not found
+     */
+    public FamilyMember getFamilyInfo(int characterId) {
+        return familyStorage.getFamilyMember(characterId).orElse(FamilyMember.EMPTY);
+    }
+
+    /**
+     * Retrieves the FamilyTree that contains the specified character.
+     *
+     * @param characterId the character ID whose family tree is being requested
+     * @return an Optional containing the FamilyTree if found, otherwise empty
+     */
+    public Optional<FamilyTree> getFamilyTree(int characterId) {
+        return familyStorage.getTreeByMemberId(characterId);
+    }
+
+    /**
+     * Registers a new FamilyTree in storage, making it available for
+     * lookups and relationship tracking.
+     *
+     * @param tree the FamilyTree to add
+     */
+    public void addFamilyTree(FamilyTree tree) {
+        familyStorage.addFamily(tree);
+    }
+
+    /**
+     * Updates the internal lookup mappings for all members in the given family tree.
+     * Note: this method currently calls itself recursively and should be replaced
+     * with the correct implementation (e.g., updating member lookup entries).
+     *
+     * @param family the FamilyTree whose member mappings should be refreshed
+     */
+    public void updateFamilyTree(FamilyTree family) {
+        familyStorage.updateFamilyTree(family); // This is recursive and likely unintended.
+    }
+
+    /**
+     * Removes a member from their family by delegating to the underlying FamilyStorage.
+     * This will remove the member from their FamilyTree and clean up the lookup mapping.
+     * Perfect for separation when the user has no juniors and is separating from their senior.
+     *
+     * @param characterId the ID of the member to remove
+     */
+    public void removeMemberFromFamily(int characterId) {
+        familyStorage.removeMemberFromFamily(characterId);
+    }
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 

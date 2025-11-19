@@ -78,6 +78,7 @@ public final class User extends Life {
     private int messengerId;
     private PartyInfo partyInfo;
     private GuildInfo guildInfo;
+    private FamilyMember familyInfo;
 
     private Dialog dialog;
     private Dragon dragon;
@@ -993,5 +994,16 @@ public final class User extends Life {
     // UTILITY ---------------------------------------------------------------------------------------------------------
     public void systemMessage(String text, Object... args){
         write(MessagePacket.system(text, args));
+    }
+
+    public FamilyMember getFamilyInfo() {
+        return familyInfo;
+    }
+
+    public void setFamilyInfo(FamilyMember familyInfo) {
+        this.familyInfo = familyInfo;
+        if (this.familyInfo != null){
+            this.familyInfo.updateLastLogin();
+        }
     }
 }

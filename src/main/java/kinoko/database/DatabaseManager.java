@@ -40,6 +40,10 @@ public final class DatabaseManager {
         return connector.getMemoAccessor();
     }
 
+    public static FamilyAccessor familyAccessor() {
+        return connector.getFamilyAccessor();
+    }
+
 
     public static boolean isRelational() {
         // Get whether the database connection is a relational database.

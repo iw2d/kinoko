@@ -15,6 +15,7 @@ import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.PortalInfo;
+import kinoko.server.Server;
 import kinoko.server.cashshop.Gift;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.guild.GuildRequest;
@@ -112,6 +113,8 @@ public final class MigrationHandler {
 
             // Initialize User
             final User user = new User(c, characterData);
+            user.setFamilyInfo(Server.getCentralServerNode().getFamilyInfo(user.getId()));
+
             user.setMessengerId(migrationInfo.getMessengerId()); // this is required before user connect
             if (channelServerNode.isConnected(user)) {
                 log.error("Tried to connect to channel server while already connected");
