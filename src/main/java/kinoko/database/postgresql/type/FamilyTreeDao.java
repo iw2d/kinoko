@@ -73,4 +73,16 @@ public final class FamilyTreeDao {
 
         return familyTrees;
     }
+
+    public static void saveFamilyTree(Connection conn, FamilyTree familyTree) throws SQLException {
+        for (FamilyMember member : familyTree.getAllMembers()) {
+            FamilyMemberDao.saveFamilyMember(conn, member);
+        }
+    }
+
+    public static void saveAllFamilies(Connection conn, Collection<FamilyTree> families) throws SQLException {
+        for (FamilyTree familyTree : families) {
+            saveFamilyTree(conn, familyTree);
+        }
+    }
 }

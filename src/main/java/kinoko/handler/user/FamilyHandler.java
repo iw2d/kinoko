@@ -10,6 +10,7 @@ import kinoko.server.header.InHeader;
 import kinoko.server.node.CentralServerNode;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
+import kinoko.world.GameConstants;
 import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -22,36 +23,70 @@ public final class FamilyHandler {
     private static final Logger log = LogManager.getLogger(FamilyHandler.class);
 
     // FAMILY HANDLERS -------------------------------------------------------------------------------------------------
+
+    /**
+     * Handles a client's request for their family information.
+     *
+     * This method sends the user's FamilyMember information back to the client
+     * by encoding it into a FamilyInfoResult packet. No global family lock is required
+     * here because the user already holds a snapshot of their FamilyMember.
+     *
+     * Since this snapshot is local to the user and not shared mutable state,
+     * reading it and sending the packet is thread-safe without acquiring any locks.
+     *
+     * @param user the user requesting their family information
+     * @param inPacket the incoming packet containing the request (unused)
+     */
     @Handler(InHeader.FamilyInfoRequest)
     public static void handleFamilyInfoRequest(User user, InPacket inPacket) {
         user.write(FamilyPacket.userFamilyInfo(user));
     }
 
+    /**
+     * Handles a client's request for their family chart.
+     *
+     * This method generates a FamilyChart packet for the user by reading shared
+     * family data. The global family lock is acquired only while constructing
+     * the packet to ensure thread-safe access to shared FamilyTree and FamilyMember
+     * objects. Once the packet is created, the lock is released before sending
+     * it to the user, since writing the packet does not require access to shared data.
+     *
+     * If the user is not part of a family or the packet cannot be created,
+     * no packet is sent.
+     *
+     * @param user the user requesting their family chart
+     * @param inPacket the incoming packet containing the request (unused)
+     */
     @Handler(InHeader.FamilyChartRequest)
     public static void handleFamilyChartRequest(User user, InPacket inPacket) {
-        OutPacket outPacket = FamilyPacket.userFamilyChart(user);
-        if (outPacket == null){
-            return;
+        CentralServerNode centralServerNode = Server.getCentralServerNode();
+        ReentrantLock lock = centralServerNode.getGlobalFamilyLock();
+        lock.lock();
+
+        OutPacket outPacket;
+        try {
+            outPacket = FamilyPacket.userFamilyChart(user);
+            if (outPacket == null){
+                return;
+            }
         }
+        finally {
+            lock.unlock();
+        }
+
         user.write(outPacket);
-        System.out.println("Handled Family Chart Request");
     }
 
     /**
-     * Handles the result of a family join request when a target user responds
-     * to an invitation from a senior (inviter) to become their junior.
+     * Handles a family join response when a user accepts or rejects an invitation
+     * to become a junior of a senior.
      *
-     * This method performs the following steps:
-     * 1. Decodes the inviter ID, inviter name, and whether the invite was accepted from the packet.
-     * 2. Validates that the inviter exists and is online.
-     * 3. Initializes or retrieves FamilyMember objects for both the user and the senior.
-     * 4. Checks if the user is already a junior of another member; if so, the request is rejected.
-     * 5. Checks if the senior already has the maximum allowed number of juniors (2); if so, the request is rejected.
-     * 6. Sets the parent ID of the user to the inviter ID to link the hierarchy.
-     * 7. Ensures the senior has a FamilyTree in the central server node; if not, creates one.
-     * 8. Moves the user (or their existing subtree) under the senior in the FamilyTree.
-     * 9. Updates the central server's lookup for faster FamilyTree access.
-     * 10. Sends the appropriate response packets to both the senior and the user.
+     * This method:
+     * - Validates that the inviter exists and both users are eligible.
+     * - Locks the global family structure to safely update FamilyMember objects
+     *   and FamilyTrees.
+     * - Updates parent/child relationships and moves any subtrees as needed.
+     * - Prepares response packets inside the lock, then sends them after unlocking.
      *
      * @param user the user responding to the family join request
      * @param inPacket the packet containing the join result data from the client
@@ -72,98 +107,108 @@ public final class FamilyHandler {
 
         User seniorUser = inviterUserOpt.get();
 
-        FamilyMember userMember;
-        if (user.getFamilyInfo().isDefault()){
-            userMember = new FamilyMember(
-                    user.getCharacterId(),
-                    user.getCharacterName(),
-                    user.getLevel(),
-                    user.getJob(),
-                    0,
-                    0,
-                    0,
-                    0,
-                    inviterID,
-                    Collections.emptyMap()
-            );
-        }
-        else {
-            userMember = user.getFamilyInfo();
-            if (userMember.getParentId() != null){
-                user.write(FamilyPacket.of(FamilyResultType.AlreadyJuniorOfAnother, 0));
+        // Packets to send after unlocking
+        OutPacket outToUser;
+        OutPacket outToSenior;
+
+        ReentrantLock lock = centralServerNode.getGlobalFamilyLock();
+        lock.lock();
+        try {
+            FamilyMember userMember;
+
+            if (user.getFamilyInfo().isDefault()) {
+                userMember = new FamilyMember(
+                        user.getCharacterId(),
+                        user.getCharacterName(),
+                        user.getLevel(),
+                        user.getJob(),
+                        0,
+                        0,
+                        0,
+                        0,
+                        inviterID,
+                        Collections.emptyMap()
+                );
+            } else {
+                userMember = user.getFamilyInfo();
+                if (userMember.getParentId() != null) {
+                    user.write(FamilyPacket.of(FamilyResultType.AlreadyJuniorOfAnother, 0));
+                    return;
+                }
+            }
+
+            FamilyMember seniorMember;
+            if (seniorUser.getFamilyInfo().isDefault()) {
+                seniorMember = new FamilyMember(
+                        seniorUser.getCharacterId(),
+                        seniorUser.getCharacterName(),
+                        seniorUser.getLevel(),
+                        seniorUser.getJob(),
+                        0,
+                        0,
+                        0,
+                        0,
+                        null,
+                        Collections.emptyMap()
+                );
+            } else {
+                seniorMember = seniorUser.getFamilyInfo();
+            }
+
+            if (seniorMember.getChildrenCount() >= GameConstants.MAX_FAMILY_CHILDREN_COUNT) {
+                user.write(FamilyPacket.of(FamilyResultType.CannotAddJunior, 0));
                 return;
             }
-        }
 
-        FamilyMember seniorMember;
-        if (seniorUser.getFamilyInfo().isDefault()){
-            seniorMember = new FamilyMember(
-                    seniorUser.getCharacterId(),
-                    seniorUser.getCharacterName(),
-                    seniorUser.getLevel(),
-                    seniorUser.getJob(),
-                    0,
-                    0,
-                    0,
-                    0,
-                    null,
-                    Collections.emptyMap()
-            );
-        }
-        else {
-            seniorMember = seniorUser.getFamilyInfo();
-        }
+            userMember.setParentId(inviterID);
 
-        if (seniorMember.getChildrenCount() >= 2){
-            user.write(FamilyPacket.of(FamilyResultType.CannotAddJunior, 0));
-            return;
-        }
+            seniorUser.setFamilyInfo(seniorMember);
+            user.setFamilyInfo(userMember);
 
-        userMember.setParentId(inviterID);
+            // Trees
+            Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
+            Optional<FamilyTree> seniorTreeOpt = centralServerNode.getFamilyTree(seniorUser.getCharacterId());
 
-        seniorUser.setFamilyInfo(seniorMember);
-        user.setFamilyInfo(userMember);
+            FamilyTree seniorTree = seniorTreeOpt.orElseGet(() -> {
+                FamilyTree newTree = new FamilyTree(seniorMember);
+                centralServerNode.addFamilyTree(newTree);
+                return newTree;
+            });
 
-        // Trees
-        Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
-        Optional<FamilyTree> seniorTreeOpt = centralServerNode.getFamilyTree(seniorUser.getCharacterId());
-
-
-        FamilyTree seniorTree = seniorTreeOpt.orElseGet(() -> {
-                    FamilyTree newTree = new FamilyTree(seniorMember);
-                    centralServerNode.addFamilyTree(newTree);
-                    return newTree;
-                });
-
-        // Move the user (or their subtree) under the senior
-        if (!seniorTree.hasMember(userMember.getCharacterId())) {
-            if (userTreeOpt.isPresent()) {
-                // User has their own subtree
-                seniorTree.addSubTree(userTreeOpt.get(), inviterID);
-            } else {
-                // User is a single member
-                seniorTree.addMember(userMember, inviterID);
+            // Move the user (or their subtree) under the senior
+            if (!seniorTree.hasMember(userMember.getCharacterId())) {
+                if (userTreeOpt.isPresent()) {
+                    seniorTree.addSubTree(userTreeOpt.get(), inviterID);  // has their own subtree
+                } else {
+                    seniorTree.addMember(userMember, inviterID);  // single member
+                }
             }
+
+            centralServerNode.updateFamilyTree(seniorTree);  // update lookups
+
+            // prepare packets
+            outToSenior = FamilyPacket.createFamilyJoinRequestResult(user.getCharacterName(), accepted);
+            outToUser = FamilyPacket.createFamilyJoinAccepted(inviterName);
+        }
+        finally {
+            lock.unlock();
         }
 
-        centralServerNode.updateFamilyTree(seniorTree);  // update lookups
+        // send packets outside of lock
+        user.write(outToUser);
+        seniorUser.write(outToSenior);
 
-        seniorUser.write(FamilyPacket.createFamilyJoinRequestResult(user.getCharacterName(), accepted));
-        user.write(FamilyPacket.createFamilyJoinAccepted(inviterName));
+        updateFamilyDisplay(user);
+        updateFamilyDisplay(seniorUser);  // not necessary, but is smoother if they have the dialog open.
     }
 
     /**
-     * Handles a request from a user to register another user as their junior in the family system.
+     * Handles a request to register another user as the sender's junior in the family system.
      *
-     * This method performs several validations before sending an invite:
-     * 1. Checks that the target user exists and is online.
-     * 2. Ensures both users are at least level 10.
-     * 3. Validates that the level difference between the inviter and target is no more than 50.
-     * 4. Confirms that the target user is not already a junior of another user.
-     * 5. Ensures that the inviter and target are not already in the same family.
-     *
-     * If all checks pass, the target user receives a family invite packet from the inviter.
-     * Otherwise, an appropriate FamilyResultType error is sent to the inviter.
+     * Validates that the target exists, meets level requirements, is not already a junior,
+     * and is not in the same family. Uses a global family lock to ensure thread-safe access
+     * to the family tree during validation and invite creation. If all checks pass, sends a
+     * family invite to the target. Otherwise, sends an appropriate error to the sender.
      *
      * @param user the user sending the junior registration request
      * @param inPacket the packet containing the target username
@@ -173,6 +218,7 @@ public final class FamilyHandler {
         String targetUsername = inPacket.decodeString();
 
         CentralServerNode centralServerNode = Server.getCentralServerNode();
+
         Optional<User> targetUserOpt = centralServerNode.getUserByCharacterName(targetUsername);
 
         if (targetUserOpt.isEmpty()){
@@ -183,14 +229,14 @@ public final class FamilyHandler {
         User targetUser = targetUserOpt.get();
 
         // Both users must be at least level 10
-        if (user.getLevel() < 10 || targetUser.getLevel() < 10) {
+        if (user.getLevel() < GameConstants.MIN_FAMILY_LEVEL || targetUser.getLevel() < GameConstants.MIN_FAMILY_LEVEL) {
             user.write(FamilyPacket.of(FamilyResultType.JuniorMustBeOverLevel10, 0));
             return;
         }
 
-        // Level gap check (must be within 50 levels)
+        // Level gap check (must be within x levels)
         int levelGap = Math.abs(user.getLevel() - targetUser.getLevel());
-        if (levelGap > 50) {
+        if (levelGap > GameConstants.MAX_LEVEL_GAP_FOR_FAMILY) {
             user.write(FamilyPacket.of(FamilyResultType.LevelGapTooHigh, 0));
             return;
         }
@@ -200,15 +246,35 @@ public final class FamilyHandler {
             return;
         }
 
-        // make sure both are not in the same family
-        Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
-        Optional<FamilyTree> targetTreeOpt = centralServerNode.getFamilyTree(targetUser.getCharacterId());
-        if (userTreeOpt.isPresent() && targetTreeOpt.isPresent() && userTreeOpt.get() == targetTreeOpt.get()) {
-            user.write(FamilyPacket.of(FamilyResultType.SameFamily, 0));
-            return;
+        OutPacket userPacket = null;
+        OutPacket targetPacket = null;
+
+        ReentrantLock lock = centralServerNode.getGlobalFamilyLock();
+        lock.lock();
+        try {
+            // make sure both are not in the same family
+            Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
+            Optional<FamilyTree> targetTreeOpt = centralServerNode.getFamilyTree(targetUser.getCharacterId());
+            if (userTreeOpt.isPresent() && targetTreeOpt.isPresent() && userTreeOpt.get() == targetTreeOpt.get()) {
+                userPacket = FamilyPacket.of(FamilyResultType.SameFamily, 0);  // cannot invite.
+            }
+            else {
+                targetPacket = FamilyPacket.createFamilyInvite(user, targetUser);  // can invite
+            }
+        }
+        finally {
+            lock.unlock();
         }
 
-        targetUser.write(FamilyPacket.createFamilyInvite(user, targetUser));
+        // send outside the lock
+        if (userPacket != null){
+            user.write(userPacket);
+            updateFamilyDisplay(user);
+        }
+        if (targetPacket != null) {
+            targetUser.write(targetPacket);
+            updateFamilyDisplay(targetUser);  // not necessary, but is smoother if they have the dialog open.
+        }
     }
 
 
@@ -223,15 +289,31 @@ public final class FamilyHandler {
         System.out.println("Handled FamilySummonResult");
     }
 
+    /**
+     * Handles a request to unregister a junior from the user's family.
+     *
+     * The global family lock is used while validating the user and junior,
+     * and while modifying the family trees to ensure thread-safe updates.
+     * Once packets are prepared, the lock is released before sending them
+     * to the user and junior, as writing packets does not require locking.
+     *
+     * If the junior is invalid, not a child of the user, or offline, the
+     * user receives an "IncorrectOrOffline" packet.
+     *
+     * @param user the user requesting to unregister a junior
+     * @param inPacket the incoming packet containing the junior ID
+     */
     @Handler(InHeader.FamilyUnregisterJunior)
     public static void handleFamilyUnregisterJunior(User user, InPacket inPacket) {
         int juniorID = inPacket.decodeInt();
 
         CentralServerNode centralServerNode = Server.getCentralServerNode();
 
+        OutPacket userResultPacket;
+        Optional<User> juniorUser = Optional.empty();
+
         ReentrantLock lock = centralServerNode.getGlobalFamilyLock();
         lock.lock();
-
         try {
 
             Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
@@ -241,28 +323,36 @@ public final class FamilyHandler {
                 FamilyTree userTree = userTreeOpt.get();
                 FamilyTree juniorTree = juniorTreeOpt.get();
                 FamilyMember juniorMember = juniorTree.getMember(juniorID);
-                if (juniorMember.getParentId() != user.getCharacterId()) {
-                    user.write(FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0));
-                    return;
+                Integer parentId = juniorMember.getParentId();
+                if (parentId != null && !parentId.equals(user.getCharacterId())) {
+                    userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
                 }
+                else {
+                    // unregister junior and extract subtree
+                    FamilyTree juniorSubTree = userTree.extractAndRemoveSubTree(juniorID);
+                    centralServerNode.addFamilyTree(juniorSubTree);
 
-                // unregister junior and extract subtree
-                FamilyTree juniorSubTree = userTree.extractAndRemoveSubTree(juniorID);
-                centralServerNode.addFamilyTree(juniorSubTree);
-
-                // todo: test with bigger trees
-                // todo: write to the target user if they're online.
-                user.write(FamilyPacket.unregisterJunior(juniorID));
-
+                    userResultPacket = FamilyPacket.unregisterJunior(juniorID);
+                    juniorUser = centralServerNode.getUserByCharacterId(juniorID);
+                }
             } else {  // something went wrong
-                user.write(FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0));
-                return;
+                userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
             }
         }
         finally {
             lock.unlock();
         }
 
+        user.write(userResultPacket);
+
+        // Update Family Pedigrees and Information to the user and ex-junior client (if they are online).
+        updateFamilyDisplay(user);
+
+        juniorUser.ifPresent(targetUser -> {
+            // let the user know they are no longer a junior 😢
+            targetUser.systemMessage("You have been kicked out of your family by %s.", user.getCharacterName());
+            updateFamilyDisplay(targetUser);  // not necessary, but is smoother if they have the dialog open.
+        });
     }
 
     @Handler({InHeader.FamilyUnregisterParent})
@@ -275,109 +365,16 @@ public final class FamilyHandler {
         System.out.println("Handled FamilyUsePrivilege");
     }
 
-//
-//    @Handler(InHeader.PartyRequest)
-//    public static void handlePartyRequest(User user, InPacket inPacket) {
-//        final int type = inPacket.decodeByte();
-//        final PartyRequestType requestType = PartyRequestType.getByValue(type);
-//        switch (requestType) {
-//            case CreateNewParty -> {
-//                // CField::SendCreateNewPartyMsg
-//                if (user.hasParty()) {
-//                    user.write(PartyPacket.of(PartyResultType.CreateNewParty_AlreadyJoined));
-//                    return;
-//                }
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.createNewParty());
-//            }
-//            case WithdrawParty -> {
-//                // CField::SendWithdrawPartyMsg
-//                if (!user.hasParty()) {
-//                    user.write(PartyPacket.of(PartyResultType.WithdrawParty_NotJoined));
-//                    return;
-//                }
-//                inPacket.decodeByte(); // hardcoded 0
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.withdrawParty());
-//            }
-//            case JoinParty -> {
-//                // CWvsContext::OnPartyResult
-//                if (user.hasParty()) {
-//                    user.write(PartyPacket.of(PartyResultType.JoinParty_AlreadyJoined));
-//                    return;
-//                }
-//                final int inviterId = inPacket.decodeInt();
-//                inPacket.decodeByte(); // unknown byte from InviteParty
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.joinParty(inviterId));
-//            }
-//            case InviteParty -> {
-//                // CField::SendJoinPartyMsg
-//                if (user.hasParty() && !user.isPartyBoss()) {
-//                    user.write(PartyPacket.serverMsg("You are not the leader of the party."));
-//                    return;
-//                }
-//                final String targetName = inPacket.decodeString();
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.invite(targetName));
-//            }
-//            case KickParty -> {
-//                // CField::SendKickPartyMsg
-//                if (!user.isPartyBoss()) {
-//                    user.write(PartyPacket.serverMsg("You are not the leader of the party."));
-//                    return;
-//                }
-//                final int targetId = inPacket.decodeInt();
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.kickParty(targetId));
-//            }
-//            case ChangePartyBoss -> {
-//                // CField::SendChangePartyBossMsg
-//                if (!user.isPartyBoss()) {
-//                    user.write(PartyPacket.serverMsg("You are not the leader of the party."));
-//                    return;
-//                }
-//                final int targetId = inPacket.decodeInt();
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.changePartyBoss(targetId, false));
-//            }
-//            case null -> {
-//                log.error("Unknown party request type : {}", type);
-//            }
-//            default -> {
-//                log.error("Unhandled party request type : {}", requestType);
-//            }
-//        }
-//    }
-//
-//    @Handler(InHeader.PartyResult)
-//    public static void handlePartyResult(User user, InPacket inPacket) {
-//        final int type = inPacket.decodeByte();
-//        final PartyResultType resultType = PartyResultType.getByValue(type);
-//        switch (resultType) {
-//            case InviteParty_Sent, InviteParty_BlockedUser, InviteParty_AlreadyInvited,
-//                    InviteParty_AlreadyInvitedByInviter, InviteParty_Rejected -> {
-//                final int inviterId = inPacket.decodeInt();
-//                final String message = switch (resultType) {
-//                    // These messages are from the client string pool, but are not used (except for InviteParty_Sent)
-//                    case InviteParty_Sent, InviteParty_BlockedUser ->
-//                            String.format("You have invited '%s' to your party.", user.getCharacterName());
-//                    case InviteParty_AlreadyInvited ->
-//                            String.format("'%s' is taking care of another invitation.", user.getCharacterName());
-//                    case InviteParty_AlreadyInvitedByInviter ->
-//                            String.format("You have already invited '%s' to your party.", user.getCharacterName());
-//                    case InviteParty_Rejected ->
-//                            String.format("'%s' has declined the party request.", user.getCharacterName());
-//                    default -> {
-//                        throw new IllegalStateException("Unexpected party result type");
-//                    }
-//                };
-//                user.getConnectedServer().submitUserPacketReceive(inviterId, PartyPacket.serverMsg(message));
-//            }
-//            case InviteParty_Accepted -> {
-//                final int inviterId = inPacket.decodeInt();
-//                user.getConnectedServer().submitPartyRequest(user, PartyRequest.joinParty(inviterId));
-//            }
-//            case null -> {
-//                log.error("Unknown party result type : {}", type);
-//            }
-//            default -> {
-//                log.error("Unhandled party result type : {}", resultType);
-//            }
-//        }
-//    }
+    /**
+     * Sends the latest family chart and family information to the specified user.
+     *
+     * This is a convenience method to avoid repeatedly calling
+     * handleFamilyChartRequest() and handleFamilyInfoRequest() together.
+     *
+     * @param user the user whose family data should be refreshed
+     */
+    private static void updateFamilyDisplay(User user) {
+        handleFamilyChartRequest(user, null);
+        handleFamilyInfoRequest(user, null);
+    }
 }

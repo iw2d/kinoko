@@ -4,6 +4,9 @@ import kinoko.server.Server;
 import kinoko.server.family.FamilyTree;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
+import kinoko.util.exceptions.DumbDeveloperFound;
+import kinoko.world.GameConstants;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -97,10 +100,20 @@ public final class FamilyMember implements Encodable {
     // Family tree operations
     // ------------------------------------------------------------
 
-    public void addChild(int childId) {
-        if (!children.contains(childId)) {
-            children.add(childId);
+    public void addChild(int childId) throws DumbDeveloperFound{
+        if (children.contains(childId)) {
+            return; // Already a child, nothing to do
         }
+
+        if (getChildrenCount() >= GameConstants.MAX_FAMILY_CHILDREN_COUNT) {
+            // Cannot add more children, fail fast before modifying state
+            throw new DumbDeveloperFound(
+                    "FamilyMember " + getCharacterId() + " exceeded max juniors: "
+                            + GameConstants.MAX_FAMILY_CHILDREN_COUNT + " (attempted to add child " + childId + ")"
+            );
+        }
+
+        children.add(childId);
     }
 
     public void removeChild(int childId) {

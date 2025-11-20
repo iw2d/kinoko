@@ -2,7 +2,6 @@ package kinoko.server.family;
 
 public enum FamilyResultType {
     // Generic messages
-    EmptyFamily(0),
     EntitlementError(2),        // Level too low, not eligible, etc.
 
     // Success operations

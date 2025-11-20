@@ -1,23 +1,21 @@
 package kinoko.server.family;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.util.Lockable;
+import kinoko.util.exceptions.DumbDeveloperFound;
 import kinoko.world.user.FamilyMember;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
- * In-memory family tree for a single leader, managing parent-child relationships.
- * Supports adding/removing members, pedigree building, DFS traversal, and encoding
- * family data for client packets.
+ * Represents an in-memory family tree rooted at a single leader, managing
+ * parent-child relationships. Supports adding and removing members, building
+ * pedigrees, performing DFS traversal, and encoding family data for client packets.
+ *
+ * Thread-safety: Individual FamilyTree instances do not require locks, as all
+ * modifications are protected by the global family lock in FamilyStorage.
  */
-public final class FamilyTree implements Lockable<FamilyTree> {
-
-    private final Lock lock = new ReentrantLock();
-
+public final class FamilyTree {
     /** characterId → FamilyMember map */
     private final Map<Integer, FamilyMember> members = new HashMap<>();
 
@@ -45,6 +43,20 @@ public final class FamilyTree implements Lockable<FamilyTree> {
         return members.get(characterId);
     }
 
+    /**
+     * Returns an unmodifiable collection of all members in this FamilyTree.
+     *
+     * The returned collection contains every FamilyMember in the tree,
+     * including the leader, seniors, juniors, and super-juniors.
+     * Attempts to modify the returned collection will throw
+     * an UnsupportedOperationException.
+     *
+     * @return an unmodifiable Collection of all FamilyMember instances in the tree
+     */
+    public Collection<FamilyMember> getAllMembers() {
+        return Collections.unmodifiableCollection(members.values());
+    }
+
     public int getLeaderId() {
         return leaderId;
     }
@@ -64,28 +76,25 @@ public final class FamilyTree implements Lockable<FamilyTree> {
      * Adds a new member as a child of the specified parent in this FamilyTree.
      *
      * If the parent does not exist in the tree or the member is already present,
-     * the method returns false. The member is added to the parent's list of children
-     * (duplicates are ignored) and to this tree's internal members map.
+     * the method returns false. Otherwise, the member is added to the parent's
+     * list of children (duplicates are ignored) and to this tree's internal members map.
      *
-     * Thread-safety: The method acquires a lock to prevent concurrent modifications.
+     * Note: If adding the child would exceed the maximum allowed children for the parent,
+     * a {@link kinoko.util.exceptions.DumbDeveloperFound} runtime exception is thrown.
      *
      * @param junior the FamilyMember to add
      * @param parentId the character ID of the parent under whom the member should be added
      * @return true if the member was successfully added, false otherwise
+     * @throws DumbDeveloperFound if internal family constraints are violated
      */
-    public boolean addMember(FamilyMember junior, int parentId) {
-        lock();
-        try {
-            if (!members.containsKey(parentId)) return false;
-            if (members.containsKey(junior.getCharacterId())) return false;
+    public boolean addMember(FamilyMember junior, int parentId) throws DumbDeveloperFound {
+        if (!members.containsKey(parentId)) return false;
+        if (members.containsKey(junior.getCharacterId())) return false;
 
-            FamilyMember parent = members.get(parentId);
-            parent.addChild(junior.getCharacterId());  // duplicates ignored.
-            members.put(junior.getCharacterId(), junior);
-            return true;
-        } finally {
-            unlock();
-        }
+        FamilyMember parent = members.get(parentId);
+        parent.addChild(junior.getCharacterId());  // duplicates ignored, may throw DumbDeveloperFound
+        members.put(junior.getCharacterId(), junior);
+        return true;
     }
 
     /**
@@ -95,31 +104,24 @@ public final class FamilyTree implements Lockable<FamilyTree> {
      * The member is first removed from their parent's list of children (if any),
      * then the member and all their descendants are removed from the tree.
      *
-     * Thread-safety: The method acquires a lock to prevent concurrent modifications.
-     *
      * @param characterId the character ID of the member to remove
      * @return true if the member was successfully removed, false otherwise
      */
     public boolean removeMember(int characterId) {
-        lock();
-        try {
-            if (!members.containsKey(characterId)) return false;
-            if (characterId == leaderId) return false;
+        if (!members.containsKey(characterId)) return false;
+        if (characterId == leaderId) return false;
 
-            FamilyMember member = members.get(characterId);
-            FamilyMember parent = members.get(member.getParentId());
+        FamilyMember member = members.get(characterId);
+        FamilyMember parent = members.get(member.getParentId());
 
-            if (parent != null) {
-                parent.removeChild(characterId);
-            }
-
-            member.setParentId(null);
-
-            removeSubtree(characterId);
-            return true;
-        } finally {
-            unlock();
+        if (parent != null) {
+            parent.removeChild(characterId);
         }
+
+        member.setParentId(null);
+
+        removeSubtree(characterId);
+        return true;
     }
 
 
@@ -131,44 +133,34 @@ public final class FamilyTree implements Lockable<FamilyTree> {
      * descendants are added recursively. The member map of this tree is updated to
      * include all members from the subtree.
      *
-     * Thread-safety: This method locks the tree during the operation to prevent
-     * concurrent modifications.
-     *
      * @param tree the FamilyTree containing the subtree to add
      * @param parentId the character ID of the parent in this tree under which the subtree
      *                 should be attached
      * @throws IllegalArgumentException if the specified parent does not exist in this tree
      */
-    public void addSubTree(FamilyTree tree, int parentId) {
-        lock();
-        try {
-            FamilyMember parent = getMember(parentId);
-            if (parent == null) {
-                throw new IllegalArgumentException("Parent not found in this tree: " + parentId);
+    public void addSubTree(FamilyTree tree, int parentId) throws IllegalArgumentException{
+        FamilyMember parent = getMember(parentId);
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent not found in this tree: " + parentId);
+        }
+
+        FamilyMember subtreeRoot = tree.getLeader();
+        addMember(subtreeRoot, parentId);
+
+        // marge all members of the subtree into this tree's member map
+        tree.forEach(member -> {
+            if (member != subtreeRoot) {
+                addMember(member, member.getParentId());
             }
-
-            FamilyMember subtreeRoot = tree.getLeader();
-            addMember(subtreeRoot, parentId);
-
-            // marge all members of the subtree into this tree's member map
-            tree.forEach(member -> {
-                System.out.println(member.getCharacterId());
-                if (member != subtreeRoot) {
-                    addMember(member, member.getParentId());
-                }
-            });
-        }
-        finally {
-            unlock();
-        }
+        });
     }
 
     /**
      * Recursively removes a subtree from this FamilyTree starting at the specified member.
      *
      * All descendants of the given member are removed first, then the member itself
-     * is removed from the members map. This method does not update any external lookups;
-     * it only affects this tree's internal member mapping.
+     * is removed from the members map. This method only affects this tree's internal
+     * member mapping and does not update any external lookups.
      *
      * @param characterId the character ID of the root member of the subtree to remove
      */
@@ -184,67 +176,52 @@ public final class FamilyTree implements Lockable<FamilyTree> {
      * Creates a new FamilyTree rooted at the given character ID from this tree,
      * including the member and all of its descendants.
      *
-     * This is useful for isolating a subtree before removing it or moving it elsewhere.
-     * If moving it somewhere else, please reference extractAndRemoveSubTree to be concurrency safe.
+     * Useful for isolating a subtree before removing it or moving it elsewhere.
+     * This method does not modify this tree; it only constructs a new FamilyTree
+     * containing the specified root and its descendants.
      *
      * @param rootId the character ID of the new subtree root
      * @return a new FamilyTree containing the root member and all descendants
      * @throws IllegalArgumentException if rootId does not exist in this tree
      */
     public FamilyTree createSubTree(int rootId) {
-        lock();
-        try {
-            FamilyMember rootMember = getMember(rootId);
-            if (rootMember == null) {
-                throw new IllegalArgumentException("Character ID not found in this tree: " + rootId);
-            }
-
-            FamilyTree subTree = new FamilyTree(rootMember);
-            addChildrenToSubTree(rootMember, subTree);
-            return subTree;
-        } finally {
-            unlock();
+        FamilyMember rootMember = getMember(rootId);
+        if (rootMember == null) {
+            throw new IllegalArgumentException("Character ID not found in this tree: " + rootId);
         }
+
+        FamilyTree subTree = new FamilyTree(rootMember);
+        addChildrenToSubTree(rootMember, subTree);
+        return subTree;
     }
 
     /**
-     * Atomically extracts and removes an entire subtree rooted at the given member ID.
+     * Extracts and removes an entire subtree rooted at the given member ID.
      *
-     * This operation is fully thread-safe and performed under a single tree-wide lock.
-     * Unlike calling createSubTree() and removeMember() separately, this method ensures
-     * both actions occur without any other modifications in between.
-     *
-     * Behavior details:
-     *  - Validates that the rootId exists (via createSubTree(), which throws if not).
-     *  - Builds a new FamilyTree containing the root member and all of its descendants.
-     *  - Removes the root member—and thus its entire hierarchy—from this tree.
-     *  - Returns the detached subtree, which can be moved or modified independently.
-     *
-     * Concurrency note:
-     *  Although createSubTree() has its own locking, this method acquires the lock first,
-     *  ensuring that both subtree creation and removal occur under the same lock scope.
-     *  This prevents races where other threads could mutate the tree between the two steps.
+     * This method creates a new FamilyTree containing the root member and all
+     * of its descendants, and then removes the root member (and its entire
+     * hierarchy) from this tree. The detached subtree can then be moved or
+     * modified independently.
      *
      * @param rootId the character ID at the root of the subtree to extract
      * @return a new FamilyTree containing the extracted subtree
      * @throws IllegalArgumentException if rootId does not exist in this tree
      */
     public FamilyTree extractAndRemoveSubTree(int rootId) {
-        lock(); // lock the whole tree
-        try {
-            FamilyTree subTree = createSubTree(rootId);
-            removeMember(rootId);
-            return subTree;
-        } finally {
-            unlock();
-        }
+        FamilyTree subTree = createSubTree(rootId);
+        removeMember(rootId);
+        return subTree;
     }
 
     /**
-     * Recursively adds children of a member to the given subtree.
+     * Recursively adds the children of a given member to the specified subtree.
      *
-     * @param member the parent member whose children should be added
-     * @param subTree the FamilyTree to populate
+     * This method traverses the hierarchy starting from the given parent member,
+     * adding each child (and their descendants) to the provided FamilyTree.
+     * It preserves parent-child relationships within the new subtree.
+     *
+     * @param member the parent member whose children (and their descendants) should be added
+     * @param subTree the FamilyTree to populate with the subtree members
      */
     private void addChildrenToSubTree(FamilyMember member, FamilyTree subTree) {
         for (int childId : member.getChildren()) {
@@ -260,34 +237,33 @@ public final class FamilyTree implements Lockable<FamilyTree> {
     // Charts / Pedigrees
     // -------------------------------------------------------------------------
     /**
-     * Builds a pedigree list for the given viewee, representing their family hierarchy
+     * Builds a pedigree list for the given member, representing their family hierarchy
      * and immediate relatives in the format expected by the client.
      *
      * The returned list contains members in the following order:
      * 1. The family leader (root of the family tree)
-     * 2. All senior members (ancestors) of the viewee, from the leader down to the
-     *    direct parent
+     * 2. All senior members (ancestors) of the viewee, from the leader down to the direct parent
      * 3. The viewee themselves
      * 4. The viewee's siblings (other children of the same parent)
      * 5. The viewee's juniors (direct children) and super-juniors (grandchildren),
      *    up to two layers deep
      *
-     * This list is primarily used for encoding the family chart for the client.
+     * This is used primarily for encoding the family chart for the client.
      *
      * @param vieweeId the character ID of the member whose pedigree is being built
-     * @return a list of FamilyMember objects representing the viewee's family hierarchy,
-     *         including the viewee, ancestors, siblings, and descendants up to two levels
+     * @return a list of FamilyMember objects representing the viewee's hierarchy,
+     *         including ancestors, siblings, and descendants up to two levels
      */
     public List<FamilyMember> buildPedigree(int vieweeId) {
         List<FamilyMember> pedigree = new ArrayList<>();
         FamilyMember viewee = getMember(vieweeId);
         if (viewee == null) return pedigree;
 
-        // 1. Leader
+        // Leader
         FamilyMember leader = getMember(getLeaderId());
         pedigree.add(leader);
 
-        // 2. Seniors (walk up)
+        // Seniors (walk up)
         List<FamilyMember> seniors = new ArrayList<>();
         FamilyMember current = viewee;
         while (current.getParentId() != null) {
@@ -301,7 +277,7 @@ public final class FamilyTree implements Lockable<FamilyTree> {
         }
         pedigree.addAll(seniors);
 
-        // 3. Viewee
+        // Viewee
         pedigree.add(viewee);
 
         Integer parentId = viewee.getParentId();
@@ -318,7 +294,7 @@ public final class FamilyTree implements Lockable<FamilyTree> {
         }
 
 
-        // 5. Juniors / super-juniors (two layers deep max)
+        // Juniors / super-juniors (two layers deep max)
         List<FamilyMember> superJuniors = new ArrayList<>();
         for (int childId : viewee.getChildren()) {
             FamilyMember junior = getMember(childId);
@@ -336,10 +312,10 @@ public final class FamilyTree implements Lockable<FamilyTree> {
     }
 
     /**
-     * Returns the total number of seniors (ancestors) for a given viewee.
+     * Returns the total number of senior members (ancestors) above the specified member.
      *
-     * @param vieweeId The character ID of the viewee.
-     * @return The total number of seniors above the viewee.
+     * @param vieweeId the character ID of the member
+     * @return the number of ancestors above the member in the family tree
      */
     public int getTotalSeniors(int vieweeId) {
         int count = 0;
@@ -361,8 +337,11 @@ public final class FamilyTree implements Lockable<FamilyTree> {
     // -------------------------------------------------------------------------
 
     /**
-     * Returns ordered children (left/right) by rule:
-     * lower character ID = left child
+     * Returns the children of the specified parent in a deterministic order.
+     * Ordering rule: lower character ID comes first (left child), higher ID comes second (right child).
+     *
+     * @param parentId the character ID of the parent
+     * @return a list of child character IDs, sorted by ID
      */
     public List<Integer> getOrderedChildren(int parentId) {
         FamilyMember parent = members.get(parentId);
@@ -373,17 +352,16 @@ public final class FamilyTree implements Lockable<FamilyTree> {
 
     /**
      * Performs a depth-first traversal of the family tree, starting from the leader,
-     * and applies the given Consumer to each FamilyMember.
+     * applying the given Consumer to each FamilyMember in hierarchical order.
      *
      * Traversal order:
-     * - Starts at the root (leader)
-     * - Visits each member before recursively visiting their children
-     * - Children are visited in the order returned by getOrderedChildren()
+     * 1. Leader (root)
+     * 2. Seniors → viewee → juniors → super-juniors
+     * 3. Children are visited in the order returned by getOrderedChildren()
      *
-     * This is useful for iterating over all members of the tree in a predictable
-     * hierarchical order (root → seniors → juniors → super-juniors).
+     * Useful for iterating over all members in a predictable tree order.
      *
-     * @param consumer a Consumer function that will be called for each FamilyMember
+     * @param consumer a Consumer function applied to each FamilyMember
      */
     public void forEach(Consumer<FamilyMember> consumer) {
         traverse(leaderId, consumer);
@@ -391,7 +369,7 @@ public final class FamilyTree implements Lockable<FamilyTree> {
 
 
     /**
-     * Recursive helper for depth-first traversal.
+     * Helper method for recursive depth-first traversal.
      *
      * @param characterId the ID of the current member being visited
      * @param c the Consumer to apply to each FamilyMember
@@ -413,15 +391,15 @@ public final class FamilyTree implements Lockable<FamilyTree> {
      *
      * This method serializes the following components in order:
      * 1. The viewee's character ID.
-     * 2. The list of family members in the pedigree (leader, seniors, siblings, juniors, and super-juniors),
+     * 2. The list of family members in the pedigree (leader, seniors, siblings, juniors, super-juniors),
      *    with each member encoded via `addPedigreeEntry`.
-     * 3. The statistics block (v83-like) containing key-value pairs such as total members, total seniors,
-     *    and junior counts for super-juniors.
-     * 4. The privilege/entitlements block from the viewee's FamilyMember (key-value pairs of entitlements).
+     * 3. The statistics block containing total members, total seniors, and grandchild counts.
+     * 4. The privilege/entitlements block from the viewee's FamilyMember.
      * 5. A final short indicating whether the "Add Junior" button should be enabled
      *    (enabled if the viewee has fewer than 2 children, disabled otherwise).
      *
-     * Note: This method assumes the FamilyTree structure is thread-safe or externally synchronized.
+     * Note: This method assumes that the FamilyTree is externally synchronized if
+     * concurrent access is possible.
      *
      * @param out the OutPacket to write the encoded family chart into
      * @param vieweeId the character ID of the player viewing the chart
@@ -429,18 +407,18 @@ public final class FamilyTree implements Lockable<FamilyTree> {
     public void encodeChart(OutPacket out, int vieweeId) {
         List<FamilyMember> pedigree = buildPedigree(vieweeId);
 
-        // Part 1: Viewee ID
+        // Viewee ID
         out.encodeInt(vieweeId);
 
-        // Part 2: The list of all family members in the chart
+        // The list of all family members in the chart
         out.encodeInt(pedigree.size());
         for (FamilyMember member : pedigree) {
             addPedigreeEntry(out, member); // Call the new, correct method
         }
 
-        // Part 3: The "Statistics" block. This is the v83-like block.
-        // Based on the disassembly, it reads a count, then key-value pairs.
-        // Let's replicate the common v83 structure for this.
+        // The "Statistics" block. This is the v83-like block.
+        // Based on the v95 disassembly, it reads a count, then key-value pairs.
+        // Let's replicate the common v83 structure for this from HeavenMS.
         Map<Integer, Integer> stats = buildStatsMap(vieweeId, pedigree);
         out.encodeInt(stats.size());
         for (Map.Entry<Integer, Integer> entry : stats.entrySet()) {
@@ -448,7 +426,7 @@ public final class FamilyTree implements Lockable<FamilyTree> {
             out.encodeInt(entry.getValue());
         }
 
-        // Part 4: The "Privilege" block (Entitlements).
+        // The "Privilege" block (Entitlements).
         // Assuming you have an entitlements map on the viewee's FamilyMember object.
         FamilyMember viewee = getMember(vieweeId);
         Map<Integer, Integer> entitlements = viewee != null ? viewee.getEntitlements() : Collections.emptyMap();
@@ -458,7 +436,7 @@ public final class FamilyTree implements Lockable<FamilyTree> {
             out.encodeInt(entry.getValue());
         }
 
-        // Part 5: The final short for enabling the "Add Junior" button.
+        // The final short for enabling the "Add Junior" button.
         if (viewee != null) {
             out.encodeShort(viewee.getChildren().size() >= 2 ? 0 : 2);
         } else {
@@ -467,25 +445,14 @@ public final class FamilyTree implements Lockable<FamilyTree> {
     }
 
     /**
-     * Encodes a single FamilyMember's information into the given OutPacket,
-     * ensuring it matches the client's expected Decode format.
+     * Encodes a single FamilyMember into the packet in the format expected by the client.
      *
-     * The encoded data includes:
-     * 1. Character ID
-     * 2. Parent ID (0 if none)
-     * 3. Job (short)
-     * 4. Level (byte)
-     * 5. Online status (1 = online, 0 = offline, byte)
-     * 6. Reputation
-     * 7. Total reputation
-     * 8. Reputation needed to become a senior
-     * 9. Today's grandparent points (currently sent as 0)
-     * 10. Channel ID (-1 if offline)
-     * 11. Minutes online
-     * 12. Character name (String)
+     * Fields include character ID, parent ID, job, level, online status, reputation,
+     * total reputation, reputation to senior, grandparent points, channel, minutes online,
+     * and character name.
      *
-     * @param out the OutPacket to write the encoded character data into
-     * @param member the FamilyMember whose data is being encoded
+     * @param out the OutPacket to write into
+     * @param member the FamilyMember to encode
      */
     private void addPedigreeEntry(OutPacket out, FamilyMember member) {
         out.encodeInt(member.getCharacterId());
@@ -503,19 +470,17 @@ public final class FamilyTree implements Lockable<FamilyTree> {
     }
 
     /**
-     * Builds a statistics map for a given viewee to be sent in the family chart packet.
+     * Builds a statistics map for a viewee, containing:
+     *  - Key -1: Total members in the family
+     *  - Key 0: Total seniors above the viewee
+     *  - Super-juniors (grandchildren): Key = characterId, Value = number of children
      *
-     * The map contains key-value pairs representing various family statistics:
-     *  - Key -1: Total number of members in the family.
-     *  - Key 0: Total number of seniors (ancestors) above the viewee.
-     *  - Keys of super-juniors (grandchildren of the viewee): Number of children each has.
-     *
-     * This map is used in the packet encoding to provide the client with summary
-     * statistics about the viewee's position and relationships within the family.
+     * This map is used in the family chart packet to provide summary info about
+     * the viewee's position in the family.
      *
      * @param vieweeId the character ID of the viewee
-     * @param pedigree the pre-built pedigree list of FamilyMember objects
-     * @return a LinkedHashMap preserving insertion order with the computed statistics
+     * @param pedigree pre-built list of FamilyMember objects in the pedigree
+     * @return LinkedHashMap preserving insertion order with computed statistics
      */
     private Map<Integer, Integer> buildStatsMap(int vieweeId, List<FamilyMember> pedigree) {
         Map<Integer, Integer> stats = new LinkedHashMap<>(); // Use LinkedHashMap to preserve order
@@ -538,19 +503,5 @@ public final class FamilyTree implements Lockable<FamilyTree> {
             }
         }
         return stats;
-    }
-
-    // -------------------------------------------------------------------------
-    // Locking
-    // -------------------------------------------------------------------------
-
-    @Override
-    public void lock() {
-        lock.lock();
-    }
-
-    @Override
-    public void unlock() {
-        lock.unlock();
     }
 }

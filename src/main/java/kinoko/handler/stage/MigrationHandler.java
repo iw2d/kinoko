@@ -10,6 +10,7 @@ import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.world.FamilyPacket;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
@@ -24,6 +25,7 @@ import kinoko.server.memo.Memo;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
+import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
@@ -48,6 +50,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class MigrationHandler {
     private static final Logger log = LogManager.getLogger(MigrationHandler.class);
@@ -113,7 +116,11 @@ public final class MigrationHandler {
 
             // Initialize User
             final User user = new User(c, characterData);
-            user.setFamilyInfo(Server.getCentralServerNode().getFamilyInfo(user.getId()));
+
+            // Set User's Family Info and broadcast initial family packet.
+            CentralServerNode centralServerNode = Server.getCentralServerNode();
+            user.setFamilyInfo(centralServerNode.getFamilyInfo(user.getId()));  // under a lock
+            user.write(FamilyPacket.userFamilyInfo(user));  // no lock needed
 
             user.setMessengerId(migrationInfo.getMessengerId()); // this is required before user connect
             if (channelServerNode.isConnected(user)) {
