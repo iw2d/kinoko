@@ -1,6 +1,7 @@
 package kinoko.packet.world;
 
 import kinoko.server.Server;
+import kinoko.server.family.FamilyEntitlement;
 import kinoko.server.family.FamilyResultType;
 import kinoko.server.family.FamilyTree;
 import kinoko.server.header.OutHeader;
@@ -11,16 +12,6 @@ import kinoko.world.user.User;
 import java.util.Optional;
 
 public final class FamilyPacket {
-    // CWvsContext::OnFamilyResult -------------------------------------------------------------------------------------
-    public static OutPacket registerJuniorSuccess(User leader, User junior) {
-        final OutPacket outPacket = FamilyPacket.of(FamilyResultType.RegisterJunior_Success, 0);
-        outPacket.encodeInt(junior.getCharacterId());
-        outPacket.encodeString(junior.getCharacterName());
-        outPacket.encodeInt(junior.getLevel());
-        outPacket.encodeInt(junior.getJob());
-        return outPacket;
-    }
-
     /**
      * CWvsContext::OnFamilyJoinRequest
      * Builds a Family Join Request / Invite packet.
@@ -37,10 +28,9 @@ public final class FamilyPacket {
      *   String requesterName
      *
      * @param senior       The user sending the invite (senior)
-     * @param targetUser    The user being invited (junior)
      * @return The encoded packet to send to the client
      */
-    public static OutPacket createFamilyInvite(User senior, User targetUser) {
+    public static OutPacket createFamilyInvite(User senior) {
         final OutPacket outPacket = OutPacket.of(OutHeader.FamilyJoinRequest);
 
         outPacket.encodeInt(senior.getCharacterId());
@@ -80,25 +70,33 @@ public final class FamilyPacket {
         return outPacket;
     }
 
+    /**
+     * Creates a packet notifying the client that a junior has been unregistered
+     * (removed) from their Family.
+     *
+     * This packet encodes the {@link FamilyResultType#UnregisterJunior} result
+     * followed by the character ID of the junior being removed. The client uses
+     * this to update the Family UI and internal Family state.
+     *
+     * @param juniorId the character ID of the junior to unregister
+     * @return an {@link OutPacket} ready to be sent to the client
+     */
     public static OutPacket unregisterJunior(int juniorId) {
         final OutPacket outPacket = FamilyPacket.of(FamilyResultType.UnregisterJunior, 0);
         outPacket.encodeInt(juniorId);
         return outPacket;
     }
 
-    public static OutPacket summonJunior(User leader, User junior) {
-        final OutPacket outPacket = FamilyPacket.of(FamilyResultType.SummonJunior, 0);
-        outPacket.encodeInt(junior.getCharacterId());
-        outPacket.encodeString(junior.getCharacterName());
-        return outPacket;
-    }
-
-    public static OutPacket entitlementError(String message) {
-        final OutPacket outPacket = FamilyPacket.of(FamilyResultType.EntitlementError, 0);
-        outPacket.encodeString(message != null ? message : "");
-        return outPacket;
-    }
-
+    /**
+     * Creates a packet containing the calling user's current Family information.
+     *
+     * If the user has no associated {@link FamilyMember} data, a default
+     * {@link FamilyMember#EMPTY} instance is encoded instead. This packet is sent
+     * to the client to update its Family UI and internal Family state.
+     *
+     * @param user the user whose Family information should be encoded
+     * @return an {@link OutPacket} containing the user's Family info
+     */
     public static OutPacket userFamilyInfo(User user) {
         FamilyMember familyInfo = user.getFamilyInfo();
         if (familyInfo == null){
@@ -109,6 +107,19 @@ public final class FamilyPacket {
         return outPacket;
     }
 
+    /**
+     * Creates a packet containing the Family Chart (pedigree) information
+     * for the specified user.
+     *
+     * If the user belongs to a FamilyTree, this method encodes the user's
+     * position and related family structure using
+     * {@link FamilyTree#encodeChart(OutPacket, int)}.
+     * If the user is not part of any FamilyTree, this method returns {@code null}.
+     *
+     * @param user the user whose Family Chart should be encoded
+     * @return an {@link OutPacket} with the encoded family chart, or {@code null}
+     *         if the user is not in a family
+     */
     public static OutPacket userFamilyChart(User user) {
         Optional<FamilyTree> optionalTree = Server.getCentralServerNode().getFamilyTree(user.getCharacterId());
         final OutPacket outPacket = OutPacket.of(OutHeader.FamilyChartResult);
@@ -121,6 +132,33 @@ public final class FamilyPacket {
         else {
             return null;
         }
+        return outPacket;
+    }
+
+    /**
+     * CWvsContext::OnFamilyPrivilegeList
+     * Creates a packet containing all family entitlements and their details.
+     *
+     * This packet is used to send entitlement information to the client, including:
+     * - type: whether the entitlement affects the player individually (1) or the whole family (2)
+     * - repCost: reputation points required to use the entitlement
+     * - usageLimit: maximum number of times the entitlement can be used
+     * - name: display name of the entitlement
+     * - description: detailed effect description
+     *
+     * @return an OutPacket containing all encoded FamilyEntitlement data
+     */
+    public static OutPacket loadFamilyEntitlements() {
+        final OutPacket outPacket = OutPacket.of(OutHeader.FamilyPrivilegeList);
+        outPacket.encodeInt(FamilyEntitlement.values().length);
+        for (FamilyEntitlement entitlement : FamilyEntitlement.values()) {
+            outPacket.encodeByte(entitlement.getType());
+            outPacket.encodeInt(entitlement.getRepCost());
+            outPacket.encodeInt(entitlement.getUsageLimit());
+            outPacket.encodeString(entitlement.getName());
+            outPacket.encodeString(entitlement.getDescription());
+        }
+
         return outPacket;
     }
 

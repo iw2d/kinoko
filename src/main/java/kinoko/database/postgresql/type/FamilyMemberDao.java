@@ -58,8 +58,7 @@ public final class FamilyMemberDao {
                         totalReputation,
                         0,
                         repsToSenior,
-                        parentId,
-                        Collections.emptyMap()
+                        parentId
                 );
 
                 members.add(member);

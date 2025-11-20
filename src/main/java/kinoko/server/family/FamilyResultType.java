@@ -1,14 +1,8 @@
 package kinoko.server.family;
 
 public enum FamilyResultType {
-    // Generic messages
-    EntitlementError(2),        // Level too low, not eligible, etc.
-
     // Success operations
-
     UnregisterJunior(1),       // Junior removed / family ties severed
-    RegisterJunior_Success(10), // Successfully registered a junior
-    SummonJunior(12),           // Summoning a junior
 
     // Error / warning messages
     CannotAddJunior(64),         // 0x40

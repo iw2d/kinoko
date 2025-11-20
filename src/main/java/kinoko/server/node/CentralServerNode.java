@@ -5,6 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.CentralPacket;
+import kinoko.server.Server;
 import kinoko.server.family.FamilyStorage;
 import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.Guild;
@@ -37,6 +38,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static kinoko.util.Timing.logDuration;
 
 /**
  * Represents the central server node responsible for coordinating all channel servers,
@@ -451,7 +454,7 @@ public final class CentralServerNode extends Node {
         log.info("Central server listening on port {}", port);
 
         // Wait for child node connections
-        logDuration("Connecting All Servers", initializeFuture::join);
+        logDuration("Connecting All Servers", initializeFuture::join, log);
 
         // Complete initialization for login server node
         final RemoteServerNode loginServerNode = serverStorage.getLoginServerNode().orElseThrow();
@@ -460,15 +463,14 @@ public final class CentralServerNode extends Node {
 
     @Override
     public void shutdown() throws InterruptedException {
-        final Instant start = Instant.now();
         logDuration("Saving all guilds", () -> {
                     DatabaseManager.guildAccessor().saveAll(guildStorage.getAllGuilds());
-                }
+                }, log
         );
 
         logDuration("Saving all families", () -> {
             DatabaseManager.familyAccessor().saveAll(familyStorage.getAllFamilyTrees());
-        });
+        }, log);
 
         logDuration("Disconnecting All Servers", () -> {
             // Shutdown login server node
@@ -479,30 +481,10 @@ public final class CentralServerNode extends Node {
                 serverNode.write(CentralPacket.shutdownRequest());
             }
             shutdownFuture.join();
-        });
+        }, log);
 
         // Close central server
         centralServerFuture.channel().close().sync();
         log.info("Central server closed");
-    }
-
-    /**
-     * Executes the given action and logs the time it took to complete.
-     *
-     * This is a utility method to measure and report the duration of a specific task.
-     * The elapsed time is calculated in milliseconds from the start to the end of the action.
-     * The action itself is executed synchronously in the current thread.
-     *
-     * Example usage:
-     *   logDuration("Saving all guilds", () -> guildAccessor.saveAll(guilds));
-     *
-     * @param taskName a descriptive name for the task being measured; used in the log message
-     * @param action a Runnable representing the code block whose duration is to be measured
-     */
-    public void logDuration(String taskName, Runnable action) {
-        Instant start = Instant.now();
-        action.run();
-        long millis = Duration.between(start, Instant.now()).toMillis();
-        log.info("{} completed in {} milliseconds", taskName, millis);
     }
 }

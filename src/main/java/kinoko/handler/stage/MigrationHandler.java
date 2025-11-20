@@ -121,6 +121,7 @@ public final class MigrationHandler {
             CentralServerNode centralServerNode = Server.getCentralServerNode();
             user.setFamilyInfo(centralServerNode.getFamilyInfo(user.getId()));  // under a lock
             user.write(FamilyPacket.userFamilyInfo(user));  // no lock needed
+            user.write(FamilyPacket.loadFamilyEntitlements());
 
             user.setMessengerId(migrationInfo.getMessengerId()); // this is required before user connect
             if (channelServerNode.isConnected(user)) {

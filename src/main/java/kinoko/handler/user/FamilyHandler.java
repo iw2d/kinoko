@@ -126,8 +126,7 @@ public final class FamilyHandler {
                         0,
                         0,
                         0,
-                        inviterID,
-                        Collections.emptyMap()
+                        inviterID
                 );
             } else {
                 userMember = user.getFamilyInfo();
@@ -148,8 +147,7 @@ public final class FamilyHandler {
                         0,
                         0,
                         0,
-                        null,
-                        Collections.emptyMap()
+                        null
                 );
             } else {
                 seniorMember = seniorUser.getFamilyInfo();
@@ -259,7 +257,7 @@ public final class FamilyHandler {
                 userPacket = FamilyPacket.of(FamilyResultType.SameFamily, 0);  // cannot invite.
             }
             else {
-                targetPacket = FamilyPacket.createFamilyInvite(user, targetUser);  // can invite
+                targetPacket = FamilyPacket.createFamilyInvite(user);  // can invite
             }
         }
         finally {
@@ -349,15 +347,108 @@ public final class FamilyHandler {
         updateFamilyDisplay(user);
 
         juniorUser.ifPresent(targetUser -> {
-            // let the user know they are no longer a junior 😢
+            // let the user know they are an orphan 😢
             targetUser.systemMessage("You have been kicked out of your family by %s.", user.getCharacterName());
             updateFamilyDisplay(targetUser);  // not necessary, but is smoother if they have the dialog open.
         });
     }
 
+    /**
+     * Handles a request from a user to unregister themselves from their parent (senior) in the family system.
+     *
+     * The client triggers this handler using the {@link InHeader#FamilyUnregisterParent} packet.
+     * This request removes the user from their parent's family tree and creates a separate family tree
+     * for the user if necessary.
+     *
+     * Thread safety is ensured using the global family lock while validating the user and parent,
+     * and while modifying the family trees.
+     *
+     * Key behaviors:
+     *  - If the user has no parent or their parent tree cannot be found, the user receives an
+     *    {@link FamilyResultType#IncorrectOrOffline} response.
+     *  - If successful, the user's subtree is extracted from the parent's tree and added as a new tree.
+     *  - The user receives a success packet notifying them they have been removed from the parent's family.
+     *  - If the parent is online, they are notified via a system message that the user has left their family.
+     *
+     * Note: The incoming packet contains no additional data beyond the header. The server
+     * determines the parent to unregister by looking up the user's current family tree.
+     *
+     * @param user the user requesting to unregister from their parent
+     * @param inPacket the incoming packet (header only; no payload is used)
+     */
     @Handler({InHeader.FamilyUnregisterParent})
     public static void handleFamilyUnregisterParent(User user, InPacket inPacket) {
-        System.out.println("Handled FamilyUnregisterParent");
+        CentralServerNode centralServerNode = Server.getCentralServerNode();
+
+        OutPacket userResultPacket;
+        Optional<User> parentUser;
+
+        Integer parentId = null;
+        ReentrantLock lock = centralServerNode.getGlobalFamilyLock();
+        lock.lock();
+        try {
+            Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
+
+            if (userTreeOpt.isPresent()) {
+                FamilyTree userTree = userTreeOpt.get();
+                FamilyMember userMember = userTree.getMember(user.getCharacterId());
+                parentId = userMember.getParentId();
+
+                if (parentId == null) {
+                    userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
+                }
+                else {
+                    Optional<FamilyTree> parentTreeOpt = centralServerNode.getFamilyTree(parentId);
+
+                    if (parentTreeOpt.isPresent()) {
+                        FamilyTree parentTree = parentTreeOpt.get();
+
+                        if (parentTree != userTree){
+                            // Should never occur if coded correctly, identical to DumbDeveloperFoundException.
+                            log.error(
+                                    "Family tree mismatch detected: user [{}] (ID: {}) parent (ID: {}) " +
+                                            "trees do not match. UserTree={}, ParentTree={}",
+                                    user.getCharacterName(),
+                                    user.getCharacterId(),
+                                    parentId,
+                                    userTree.getLeaderId(),
+                                    parentTree.getLeaderId()
+                            );
+                            userResultPacket = FamilyPacket.of(FamilyResultType.DifferentFamily, 0);
+                        }
+                        else {
+                            // the junior's current tree becomes a new, separate family tree
+                            FamilyTree userNewTree = parentTree.extractAndRemoveSubTree(user.getCharacterId());
+                            centralServerNode.addFamilyTree(userNewTree);
+
+                            // notify the user of the success
+                            userResultPacket = FamilyPacket.unregisterJunior(user.getCharacterId());
+                        }
+                    } else {
+                        // data inconsistency, parent's tree not found
+                        userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
+                    }
+                }
+            } else { // user's own tree not found, something is wrong
+                userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
+            }
+        } finally {
+            lock.unlock();
+        }
+
+        user.write(userResultPacket);
+
+        // Update the family pedigree and info for the user who just left.
+        updateFamilyDisplay(user);
+
+        if (parentId != null) {  // let the senior know.
+            parentUser = centralServerNode.getUserByCharacterId(parentId);
+
+            parentUser.ifPresent(targetUser -> {
+                targetUser.systemMessage("%s has left your family.", user.getCharacterName());
+                updateFamilyDisplay(targetUser);  // not necessary, but is smoother if they have the dialog open.
+            });
+        }
     }
 
     @Handler({InHeader.FamilyUsePrivilege})

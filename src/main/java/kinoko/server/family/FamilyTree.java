@@ -1,7 +1,7 @@
 package kinoko.server.family;
 
 import kinoko.server.packet.OutPacket;
-import kinoko.util.exceptions.DumbDeveloperFound;
+import kinoko.util.exceptions.DumbDeveloperFoundException;
 import kinoko.world.user.FamilyMember;
 
 import java.util.*;
@@ -80,14 +80,14 @@ public final class FamilyTree {
      * list of children (duplicates are ignored) and to this tree's internal members map.
      *
      * Note: If adding the child would exceed the maximum allowed children for the parent,
-     * a {@link kinoko.util.exceptions.DumbDeveloperFound} runtime exception is thrown.
+     * a {@link DumbDeveloperFoundException} runtime exception is thrown.
      *
      * @param junior the FamilyMember to add
      * @param parentId the character ID of the parent under whom the member should be added
      * @return true if the member was successfully added, false otherwise
-     * @throws DumbDeveloperFound if internal family constraints are violated
+     * @throws DumbDeveloperFoundException if internal family constraints are violated
      */
-    public boolean addMember(FamilyMember junior, int parentId) throws DumbDeveloperFound {
+    public boolean addMember(FamilyMember junior, int parentId) throws DumbDeveloperFoundException {
         if (!members.containsKey(parentId)) return false;
         if (members.containsKey(junior.getCharacterId())) return false;
 
@@ -427,13 +427,11 @@ public final class FamilyTree {
         }
 
         // The "Privilege" block (Entitlements).
-        // Assuming you have an entitlements map on the viewee's FamilyMember object.
         FamilyMember viewee = getMember(vieweeId);
-        Map<Integer, Integer> entitlements = viewee != null ? viewee.getEntitlements() : Collections.emptyMap();
-        out.encodeInt(entitlements.size());
-        for (Map.Entry<Integer, Integer> entry : entitlements.entrySet()) {
-            out.encodeInt(entry.getKey());
-            out.encodeInt(entry.getValue());
+        if (viewee != null) {
+            viewee.encodeEntitlements(out, true);
+        } else {
+            out.encodeInt(0);  // If viewee is null, encode 0 entitlements
         }
 
         // The final short for enabling the "Add Junior" button.
