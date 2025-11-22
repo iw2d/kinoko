@@ -6,6 +6,7 @@ import kinoko.packet.world.GuildPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.script.GuildHQ;
+import kinoko.server.alliance.AllianceRequest;
 import kinoko.server.alliance.AllianceRequestType;
 import kinoko.server.alliance.AllianceResultType;
 import kinoko.server.guild.*;
@@ -220,14 +221,52 @@ public final class GuildHandler {
     public static void handleAllianceRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final AllianceRequestType requestType = AllianceRequestType.getByValue(type);
-        // TODO
+
+        if (!user.hasGuild() || user.hasAlliance()) {
+            user.write(GuildPacket.serverMsg(null)); // The guild request has not been accepted due to unknown reason.
+            return;
+        }
+
+        if (requestType == AllianceRequestType.Create) {
+            String allianceName = "";
+            user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.createNewAlliance(allianceName));
+            // send CreateDone to alliance members
+        } else if (requestType == AllianceRequestType.Withdraw) {
+            user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.removeAlliance(user.getAllianceId()));
+            // send Withdraw_Done to guild members
+        } else if (requestType == AllianceRequestType.Invite) {
+            if (user.getGuildRank() != GuildRank.MASTER) {
+                user.write(GuildPacket.serverMsg("You cannot invite other guilds since you are not the master of the guild."));
+                return;
+            }
+
+            if (false) {
+                // send InviteGuild_AlreadyInvited
+            }
+        } else if (requestType == AllianceRequestType.Join) {
+            if (user.hasAlliance() || user.getGuildInfo().getGuildRank() != GuildRank.MASTER || !user.hasGuild()) {
+                // send InviteGuild_BlockedByOpt
+                return;
+            }
+
+            user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.joinAlliance(user.getAllianceId()));
+            // send Invite_Done
+        } else if (requestType == AllianceRequestType.Destroy) {
+            if (!user.hasAlliance() || user.getGuildInfo().getGuildRank() != GuildRank.MASTER) {
+                user.write(GuildPacket.serverMsg("You cannot destroy in alliance since you are not the master of the alliance."));
+                return;
+            }
+
+            user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.removeAlliance(user.getAllianceId()));
+        }
     }
 
     @Handler(InHeader.AllianceResult)
     public static void handleAllianceResult(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final AllianceResultType resultType = AllianceResultType.getByValue(type);
-        // TODO
+
+        //TODO
     }
 
     @Handler(InHeader.GuildBBS)

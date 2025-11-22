@@ -11,6 +11,8 @@ public interface DatabaseConnector {
 
     GuildAccessor getGuildAccessor();
 
+    AllianceAccessor getAllianceAccessor();
+
     GiftAccessor getGiftAccessor();
 
     MemoAccessor getMemoAccessor();

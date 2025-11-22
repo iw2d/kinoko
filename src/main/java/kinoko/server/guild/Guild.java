@@ -78,6 +78,10 @@ public final class Guild implements Encodable, Lockable<Guild> {
                 .toList();
     }
 
+    public List<GuildMember> getGuildMembersUnsorted() {
+        return guildMembers.values().stream().toList();
+    }
+
     public List<GuildBoardEntry> getBoardEntries() {
         return boardEntries;
     }

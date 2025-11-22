@@ -11,5 +11,7 @@ public interface IdAccessor {
 
     Optional<Integer> nextGuildId();
 
+    Optional<Integer> nextAllianceId();
+
     Optional<Integer> nextMemoId();
 }
