@@ -102,7 +102,7 @@ public final class CassandraConnector implements DatabaseConnector {
     public GuildAccessor getGuildAccessor() {
         return guildAccessor;
     }
-    
+
     @Override
     public AllianceAccessor getAllianceAccessor() {
         return allianceAccessor;

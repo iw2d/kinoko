@@ -1,37 +1,39 @@
 package kinoko.server.alliance;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import kinoko.server.guild.Guild;
-import static kinoko.server.guild.Guild.EMPTY_MEMBER;
-import static kinoko.server.guild.Guild.MEMBER_COMPARATOR;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static kinoko.server.guild.Guild.EMPTY_MEMBER;
+import static kinoko.server.guild.Guild.MEMBER_COMPARATOR;
+
 /**
  * Alliance instance managed by CentralServerNode.
  */
 public final class Alliance implements Encodable, Lockable<Alliance> {
-    
+
     private final int allianceId;
     private final String allianceName;
     private int allianceLordId;
     private final List<String> gradeNames;
     private int memberMax;
     private String notice;
-    
+
     private final Map<Integer, Integer> guildInvites; // invitee ID -> inviter ID
     private final Map<Integer, Guild> guilds; // guild ID -> guild
-    
+
     private final Lock lock = new ReentrantLock();
-    
+
     public Alliance(int allianceId, String allianceName, int allianceLordId) {
         this.allianceId = allianceId;
         this.allianceName = allianceName;
@@ -42,7 +44,7 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
         this.memberMax = GameConstants.UNION_CAPACITY_MIN;
         this.notice = "";
     }
-    
+
     public int getMemberMax() {
         return memberMax;
     }
@@ -58,26 +60,26 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     public String getAllianceName() {
         return allianceName;
     }
-    
+
     public int getLordId() {
         return allianceLordId;
     }
-    
+
     public void setLordId(int characterId) {
         allianceLordId = characterId;
     }
-    
+
     public List<GuildMember> getAllianceMembers() {
         List<GuildMember> list = new ArrayList<>(100);
-        
+
         for (Guild guild : guilds.values()) {
             list.addAll(guild.getGuildMembersUnsorted());
         }
-        
+
         return list.stream().sorted(MEMBER_COMPARATOR) // sort by rank, then level
                 .toList();
     }
-    
+
     public List<GuildMember> getMemberIds() {
         return getAllianceMembers().stream().toList();
     }
@@ -94,7 +96,7 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -105,10 +107,10 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
                 return member;
             }
         }
-        
+
         return EMPTY_MEMBER;
     }
-    
+
     public boolean hasGuild(int guildId) {
         return guilds.containsKey(guildId);
     }
@@ -123,45 +125,45 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
         }
         return !guilds.containsKey(guildId);
     }
-    
+
     public boolean addGuild(Guild guild) {
-    	this.lock();
-    	try {
-    		if (!canAddGuild(guild.getGuildId())) {
+        this.lock();
+        try {
+            if (!canAddGuild(guild.getGuildId())) {
                 return false;
             }
             guilds.put(guild.getGuildId(), guild);
             return true;
-    	} finally {
-    		this.unlock();
-    	}
+        } finally {
+            this.unlock();
+        }
     }
 
     public void removeGuild(Guild guild) {
-    	this.lock();
-    	try {
-    		guilds.remove(guild.getGuildId());
-    	} finally {
-    		this.unlock();
-    	}
+        this.lock();
+        try {
+            guilds.remove(guild.getGuildId());
+        } finally {
+            this.unlock();
+        }
     }
 
     public String getGradeNames(int rank) {
         return gradeNames.get(rank - 1);
     }
-    
+
     public String setGradeName(int rank, String name) {
         return gradeNames.set(rank - 1, name);
     }
-    
+
     public String getNotice() {
         return notice;
     }
-    
+
     public void setNotice(String str) {
         notice = str;
     }
-    
+
     @Override
     public void encode(OutPacket outPacket) {
         // TODO
@@ -176,5 +178,5 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     public void unlock() {
         lock.unlock();
     }
-    
+
 }

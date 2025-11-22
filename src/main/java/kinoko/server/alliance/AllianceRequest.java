@@ -16,12 +16,12 @@ public final class AllianceRequest implements Encodable {
     private String allianceNotice;
     private List<String> gradeNames;
     private int memberMax;
-    
+
     private int inviterId;
     private int targetId;
     private String targetName;
     private GuildRank allianceRank;
-    
+
     public AllianceRequest(AllianceRequestType requestType) {
         this.requestType = requestType;
     }

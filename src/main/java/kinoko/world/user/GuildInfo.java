@@ -19,7 +19,7 @@ public final class GuildInfo implements Encodable {
     private final int allianceId;
     private final String allianceName;
     private final GuildRank allianceRank;
-    
+
     public GuildInfo(int guildId, String guildName, GuildRank guildRank, int memberMax, short markBg, byte markBgColor, short mark, byte markColor, int allianceId, String allianceName, GuildRank allianceRank) {
         this.guildId = guildId;
         this.guildName = guildName;
@@ -73,11 +73,11 @@ public final class GuildInfo implements Encodable {
     public String getAllianceName() {
         return allianceName;
     }
-    
+
     public GuildRank getAllianceRank() {
         return allianceRank;
     }
-    
+
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeInt(guildId);

@@ -211,7 +211,7 @@ public final class GameConstants {
             return 5_000_000;
         }
     }
-    
+
     public static int getUnionExpandCost(int memberMax) {
         if (memberMax < 3) {
             return 500_000;

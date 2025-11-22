@@ -239,7 +239,7 @@ public final class CentralPacket {
         }
         return outPacket;
     }
-    
+
     public static OutPacket allianceRequest(int characterId, AllianceRequest allianceRequest) {
         final OutPacket outPacket = OutPacket.of(CentralHeader.AllianceRequest);
         outPacket.encodeInt(characterId);

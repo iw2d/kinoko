@@ -217,7 +217,7 @@ public final class ChannelServerNode extends ServerNode {
     public void submitGuildRequest(User user, GuildRequest guildRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.guildRequest(user.getCharacterId(), guildRequest));
     }
-    
+
     public void submitAllianceRequest(User user, AllianceRequest allianceRequest) {
         centralClientFuture.channel().writeAndFlush(CentralPacket.allianceRequest(user.getCharacterId(), allianceRequest));
     }

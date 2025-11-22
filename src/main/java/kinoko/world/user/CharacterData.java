@@ -162,7 +162,7 @@ public final class CharacterData implements Encodable {
     public void setGuildId(int guildId) {
         this.guildId = guildId;
     }
-    
+
     public int getAllianceId() {
         return guildId;
     }

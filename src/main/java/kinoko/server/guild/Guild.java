@@ -77,7 +77,7 @@ public final class Guild implements Encodable, Lockable<Guild> {
         return guildMembers.values().stream().sorted(MEMBER_COMPARATOR) // sort by rank, then level
                 .toList();
     }
-    
+
     public List<GuildMember> getGuildMembersUnsorted() {
         return guildMembers.values().stream().toList();
     }
