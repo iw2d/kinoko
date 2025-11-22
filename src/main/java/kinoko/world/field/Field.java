@@ -5,6 +5,7 @@ import kinoko.packet.field.MapleTvPacket;
 import kinoko.provider.MapProvider;
 import kinoko.provider.NpcProvider;
 import kinoko.provider.ReactorProvider;
+import kinoko.provider.StringProvider;
 import kinoko.provider.map.*;
 import kinoko.provider.npc.NpcImitateData;
 import kinoko.provider.npc.NpcTemplate;
@@ -130,6 +131,10 @@ public final class Field {
         final List<PortalInfo> startPoints = mapInfo.getPortalInfos().stream().filter((pi) -> pi.getPortalType() == PortalType.STARTPOINT).toList();
         final Optional<PortalInfo> randomStartPoint = Util.getRandomFromCollection(startPoints);
         return randomStartPoint.or(() -> getPortalById(0));
+    }
+
+    public String getName(){
+        return StringProvider.getMapName(this.getFieldId());
     }
 
     public Optional<PortalInfo> getNearestStartPoint(int x, int y) {

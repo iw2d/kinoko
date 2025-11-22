@@ -7,6 +7,7 @@ import java.time.Instant;
 
 public final class Timing {
     private static final Logger log = LogManager.getLogger(Timing.class);
+    public static final long DAY_SECONDS = 86400;
 
     private Timing() {
         // prevent instantiation
@@ -19,18 +20,6 @@ public final class Timing {
      */
     public static long nowSeconds() {
         return Instant.now().getEpochSecond();
-    }
-
-    /**
-     * Returns the number of seconds in one day (24 hours).
-     *
-     * This is a convenience method for time calculations, such as
-     * tracking entitlement usage or other daily limits.
-     *
-     * @return the number of seconds in 24 hours (86400)
-     */
-    public static long daySeconds() {
-        return 86400;
     }
 
     /**

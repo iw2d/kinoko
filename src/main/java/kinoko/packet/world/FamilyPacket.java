@@ -1,5 +1,6 @@
 package kinoko.packet.world;
 
+import kinoko.provider.StringProvider;
 import kinoko.server.Server;
 import kinoko.server.family.FamilyEntitlement;
 import kinoko.server.family.FamilyResultType;
@@ -9,6 +10,8 @@ import kinoko.server.packet.OutPacket;
 import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 public final class FamilyPacket {
@@ -37,6 +40,33 @@ public final class FamilyPacket {
         outPacket.encodeInt(senior.getLevel());
         outPacket.encodeInt(senior.getJob());
         outPacket.encodeString(senior.getCharacterName());
+
+        return outPacket;
+    }
+
+
+    /**
+     * CWvsContext::OnFamilySummonRequest
+     * Builds a Family Join Request / Invite packet.
+     *
+     * This packet prompts the client with a yes/no dialog asking
+     * the target player to accept a family invitation.
+     *
+     * Packet Structure (v95):
+     *   byte   OutHeader.FamilyResult (we reuse FamilyResult for simplicity)
+     *   int    FamilyResultType (use a dedicated type like RegisterJunior_Invite)
+     *   int    leaderCharacterId
+     *   int    leaderJob
+     *   String leaderName
+     *   String requesterName
+     *
+     * @param senior       The user sending the invite (senior)
+     * @return The encoded packet to send to the client
+     */
+    public static OutPacket createSummonRequest(User requestor) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.FamilySummonRequest);
+        outPacket.encodeString(requestor.getCharacterName());
+        outPacket.encodeString(requestor.getField().getName());
 
         return outPacket;
     }
@@ -146,12 +176,17 @@ public final class FamilyPacket {
      * - name: display name of the entitlement
      * - description: detailed effect description
      *
+     * If the `empty` parameter is true, the packet will indicate that there are
+     * zero entitlements and no entitlement details will be included. This is
+     * useful for cases where the client should see an empty entitlement list (user has no family).
+     *
+     * @param empty if true, sends an empty entitlement list; if false, includes all FamilyEntitlement values
      * @return an OutPacket containing all encoded FamilyEntitlement data
      */
-    public static OutPacket loadFamilyEntitlements() {
+    public static OutPacket loadFamilyEntitlements(boolean empty) {
         final OutPacket outPacket = OutPacket.of(OutHeader.FamilyPrivilegeList);
-        outPacket.encodeInt(FamilyEntitlement.values().length);
-        for (FamilyEntitlement entitlement : FamilyEntitlement.values()) {
+        outPacket.encodeInt(empty ? 0 : FamilyEntitlement.values().length);
+        for (FamilyEntitlement entitlement : empty ? Collections.<FamilyEntitlement>emptyList() : Arrays.asList(FamilyEntitlement.values())) {
             outPacket.encodeByte(entitlement.getType());
             outPacket.encodeInt(entitlement.getRepCost());
             outPacket.encodeInt(entitlement.getUsageLimit());

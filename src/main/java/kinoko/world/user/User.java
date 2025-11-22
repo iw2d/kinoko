@@ -16,11 +16,14 @@ import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.Server;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
 import kinoko.server.event.EventType;
+import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.GuildRank;
+import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
@@ -998,6 +1001,59 @@ public final class User extends Life {
 
     public FamilyMember getFamilyInfo() {
         return familyInfo;
+    }
+
+    public Optional<FamilyTree> getFamilyTree() {
+        return Server.getCentralServerNode().getFamilyTree(this.getCharacterId());
+    }
+
+    /**
+     * Calculates the effective drop rate modifier for the user, taking into account
+     * both their personal family drop modifier and the modifiers from their family tree.
+     *
+     * The method ensures that the returned modifier is never less than 1.0.
+     *
+     * @return the highest applicable drop modifier between personal and family values,
+     *         with a minimum of 1.0
+     */
+    public double getFamilyDropModifier() {
+        double personalModifier = 1.0;
+        double familyModifier = 1.0;
+        if (this.familyInfo != null && this.familyInfo.hasFamily()){
+            personalModifier = this.familyInfo.getDropModifier();
+        }
+
+        Optional<FamilyTree> userTreeOpt = getFamilyTree();
+        if (userTreeOpt.isPresent()) {
+            familyModifier = userTreeOpt.get().getDropModifier();
+        }
+
+        return Math.max(1.0, Math.max(personalModifier, familyModifier));
+    }
+
+    /**
+     * Calculates the effective experience (EXP) modifier for the user, considering
+     * both their personal family EXP modifier and any modifiers from their family tree.
+     *
+     * The method ensures that the returned modifier is never less than 1.0.
+     *
+     * @return the highest applicable EXP modifier between personal and family values,
+     *         with a minimum of 1.0
+     */
+    public double getFamilyEXPModifier() {
+        double personalModifier = 1.0;
+        double familyModifier = 1.0;
+
+        if (this.familyInfo != null && this.familyInfo.hasFamily()) {
+            personalModifier = this.familyInfo.getExpModifier();
+        }
+
+        Optional<FamilyTree> userTreeOpt = getFamilyTree();
+        if (userTreeOpt.isPresent()) {
+            familyModifier = userTreeOpt.get().getExpModifier();
+        }
+
+        return Math.max(1.0, Math.max(personalModifier, familyModifier));
     }
 
     public void setFamilyInfo(FamilyMember familyInfo) {

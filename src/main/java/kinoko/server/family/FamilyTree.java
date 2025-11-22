@@ -1,6 +1,7 @@
 package kinoko.server.family;
 
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Timing;
 import kinoko.util.exceptions.DumbDeveloperFoundException;
 import kinoko.world.user.FamilyMember;
 
@@ -18,6 +19,10 @@ import java.util.function.Consumer;
 public final class FamilyTree {
     /** characterId → FamilyMember map */
     private final Map<Integer, FamilyMember> members = new HashMap<>();
+
+    private final Map<FamilyEntitlement, Long> activeEntitlements = new HashMap<>();
+
+    private String familyMessage;
 
     /** Root leader (parentId = null) */
     private int leaderId;
@@ -65,6 +70,98 @@ public final class FamilyTree {
         return members.get(leaderId);
     }
 
+    public String getFamilyMessage() {
+        return familyMessage;
+    }
+
+    /**
+     * Sets the family tree's message and broadcasts it to all members.
+     *
+     * Updates the tree-level message (`familyMessage`) and then propagates
+     * it to each member in the tree so everyone sees the updated message.
+     *
+     * @param message the new family message to set
+     */
+    public void setFamilyMessage(String message){
+        familyMessage = message;
+        broadcastFamilyMessage();
+    }
+
+    /**
+     * Sets the family message for the entire family tree.
+     *
+     * Iterates over all members and updates each member's local message
+     * as well as the tree's global family message.
+     *
+     */
+    private void broadcastFamilyMessage() {
+        forEach(member -> member.setFamilyMessage(familyMessage)); // Update each member
+    }
+
+    /**
+     * Activates a given family entitlement for the user.
+     *
+     * The entitlement will be active for its defined duration in minutes, converted to seconds.
+     * The expiration time is stored in the activeEntitlements map.
+     *
+     * @param ent the FamilyEntitlement to activate
+     */
+    public void activateEntitlement(FamilyEntitlement ent) {
+        long expiresMinutes = ent.getExpiresAfterMinutes();
+        long expireAt = Timing.nowSeconds() + expiresMinutes * 60;
+
+        activeEntitlements.put(ent, expireAt);
+    }
+
+    /**
+     * Checks if a given family entitlement is currently active for the user.
+     *
+     * If the entitlement has expired (based on seconds), it is automatically removed from
+     * the activeEntitlements map.
+     *
+     * @param ent the FamilyEntitlement to check
+     * @return true if the entitlement is active and not expired, false otherwise
+     */
+    public boolean isEntitlementActive(FamilyEntitlement ent) {
+        Long expireAt = activeEntitlements.get(ent);
+        if (expireAt == null) return false;
+
+        if (expireAt < Timing.nowSeconds()) {
+            activeEntitlements.remove(ent);  // expired
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Retrieves the active family experience (EXP) modifier for this user.
+     *
+     * Checks if the FAMILY_EXP entitlement is active. If it is, returns its modifier (e.g., 1.2),
+     * otherwise returns the default value of 1.0.
+     *
+     * @return the current active family EXP modifier, with 1.0 as the default
+     */
+    public double getExpModifier() {
+        return isEntitlementActive(FamilyEntitlement.FAMILY_EXP)
+                ? FamilyEntitlement.FAMILY_EXP.getModifier()
+                : 1.0;
+    }
+
+    /**
+     * Retrieves the active family drop rate modifier for this user.
+     *
+     * Checks if the FAMILY_DROP entitlement is active. If it is, returns its modifier (e.g., 1.2),
+     * otherwise returns the default value of 1.0.
+     *
+     * @return the current active family drop modifier, with 1.0 as the default
+     */
+    public double getDropModifier() {
+        return isEntitlementActive(FamilyEntitlement.FAMILY_DROP)
+                ? FamilyEntitlement.FAMILY_DROP.getModifier()
+                : 1.0;
+    }
+
     // -------------------------------------------------------------------------
     // Add / remove members
     // -------------------------------------------------------------------------
@@ -94,6 +191,10 @@ public final class FamilyTree {
         FamilyMember parent = members.get(parentId);
         parent.addChild(junior.getCharacterId());  // duplicates ignored, may throw DumbDeveloperFound
         members.put(junior.getCharacterId(), junior);
+
+        if (familyMessage != null){
+            junior.setFamilyMessage(familyMessage);
+        }
         return true;
     }
 
@@ -118,6 +219,7 @@ public final class FamilyTree {
             parent.removeChild(characterId);
         }
 
+        member.setFamilyMessage(null);
         member.setParentId(null);
 
         removeSubtree(characterId);

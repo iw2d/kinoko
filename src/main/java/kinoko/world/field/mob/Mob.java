@@ -16,6 +16,9 @@ import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.script.party.HenesysPQ;
+import kinoko.server.ServerConfig;
+import kinoko.server.family.Family;
+import kinoko.server.family.FamilyTree;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -211,11 +214,15 @@ public final class Mob extends Life implements ControlledObject, Encodable {
     }
 
     public int getExp() {
+        int baseExp = template.getExp();
+
         if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
             final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
-            return (int) (template.getExp() * multiplier);
+            baseExp  = (int) (baseExp  * multiplier);
         }
-        return template.getExp();
+        baseExp *= ServerConfig.EXP_RATE;
+
+        return baseExp;
     }
 
     public boolean isSlowUsed() {
@@ -525,6 +532,12 @@ public final class Mob extends Life implements ControlledObject, Encodable {
                     finalPartyBonus = (int) (finalPartyBonus * multiplier);
                 }
             }
+            // Family EXP modifier
+            final double familyMultiplier = user.getFamilyEXPModifier();
+            finalExp = (int) (finalExp * familyMultiplier);
+            finalPartyBonus = (int) (finalPartyBonus * familyMultiplier);
+
+            // give exp
             if (finalExp + finalPartyBonus > 0) {
                 user.addExp(finalExp + finalPartyBonus);
                 user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
@@ -588,6 +601,11 @@ public final class Mob extends Life implements ControlledObject, Encodable {
             final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
             probability = probability * multiplier;
         }
+
+        probability *= owner.getFamilyDropModifier();
+
+        probability = Math.min(probability * ServerConfig.DROP_RATE, 1.0);
+
         if (!Util.succeedDouble(probability)) {
             return Optional.empty();
         }
@@ -609,6 +627,9 @@ public final class Mob extends Life implements ControlledObject, Encodable {
                 final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUpByItem).nOption + 100) / 100.0;
                 money = (int) (money * multiplier);
             }
+
+            money = Math.max(money * ServerConfig.MESO_RATE, 1);
+
             return Optional.of(owner.hasParty() ?
                     Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId()) :
                     Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId())
