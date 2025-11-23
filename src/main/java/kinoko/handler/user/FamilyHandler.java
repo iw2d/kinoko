@@ -657,11 +657,7 @@ public final class FamilyHandler {
      * @return The reputation points the senior loses
      */
     private static int getSeniorRepLoss(int juniorLevel) {
-        int repCost = juniorLevel / 20; // integer division
-        repCost += 10;
-        repCost *= juniorLevel;
-        repCost *= 2;
-        return repCost;
+        return (juniorLevel / 20 + 10) * juniorLevel * 2;
     }
 
     /**
