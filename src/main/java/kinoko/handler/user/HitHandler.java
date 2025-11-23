@@ -207,7 +207,7 @@ public final class HitHandler {
             // Power Guard - reflect nPowerGuard %, subtract reflected amount
             final int percentage = user.getSecondaryStat().getOption(CharacterTemporaryStat.PowerGuard).nOption;
             final Mob mob = mobResult.get();
-            final int damage = Math.min(hitInfo.damage * percentage / 100, mob.getMaxHp() * percentage / 100);
+            final int damage = Math.min(hitInfo.damage * percentage / 100, (int) (mob.getMaxHp() * (percentage / 100.)));
             final int finalDamage = mob.getFixedDamage() > 0 ? mob.getFixedDamage() : damage;
             // Process reflect damage and return amount to subtract from hit damage
             mob.damage(user, finalDamage, 0);
@@ -271,10 +271,10 @@ public final class HitHandler {
             case 2112 -> Aran.HIGH_DEFENSE;
             default -> 0;
         };
-        if (skillId == 0) {
+        final int x = user.getSkillStatValue(skillId, SkillStat.x);
+        if (x == 0) {
             return 0;
         }
-        final int x = user.getSkillStatValue(skillId, SkillStat.x);
         return damage * (1000 - x) / 1000;
     }
 
