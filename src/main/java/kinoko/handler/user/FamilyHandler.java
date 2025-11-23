@@ -2,6 +2,7 @@ package kinoko.handler.user;
 
 import kinoko.handler.Handler;
 import kinoko.packet.world.FamilyPacket;
+import kinoko.packet.world.WvsContext;
 import kinoko.server.Server;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -14,11 +15,13 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.exceptions.InvalidInputException;
 import kinoko.world.GameConstants;
+import kinoko.world.item.InventoryManager;
 import kinoko.world.job.staff.GM;
 import kinoko.world.skill.Skill;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.Stat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -432,101 +435,42 @@ public final class FamilyHandler {
     }
 
     /**
-     * Handles a request from a user to unregister themselves from their parent (senior) in the family system.
+     * Handles a user's request to leave their parent's family.
      *
-     * The client triggers this handler using the {@link InHeader#FamilyUnregisterParent} packet.
-     * This request removes the user from their parent's family tree and creates a separate family tree
-     * for the user if necessary.
+     * This removes the user from their parent's family tree and creates a separate tree
+     * if necessary. Costs (mesos for the junior, reputation loss for senior/grand-senior)
+     * are applied before separation. Thread safety is ensured via the global family lock.
      *
-     * Thread safety is ensured using the global family lock while validating the user and parent,
-     * and while modifying the family trees.
+     * If the user has no parent, or the parent tree is invalid, an error packet is sent.
+     * On success, the junior is notified, and the parent (if online) is informed.
      *
-     * Key behaviors:
-     *  - If the user has no parent or their parent tree cannot be found, the user receives an
-     *    {@link FamilyResultType#IncorrectOrOffline} response.
-     *  - If successful, the user's subtree is extracted from the parent's tree and added as a new tree.
-     *  - The user receives a success packet notifying them they have been removed from the parent's family.
-     *  - If the parent is online, they are notified via a system message that the user has left their family.
-     *
-     * Note: The incoming packet contains no additional data beyond the header. The server
-     * determines the parent to unregister by looking up the user's current family tree.
-     *
-     * @param user the user requesting to unregister from their parent
-     * @param inPacket the incoming packet (header only; no payload is used)
+     * @param user     The user requesting to unregister from their parent
+     * @param inPacket The incoming packet (header only; no payload)
      */
     @Handler({InHeader.FamilyUnregisterParent})
     public static void handleFamilyUnregisterParent(User user, InPacket inPacket) {
         CentralServerNode centralServerNode = Server.getCentralServerNode();
+        FamilyUnregisterResult result;
 
-        OutPacket userResultPacket;
-        Optional<User> parentUser;
-
-        Integer parentId = null;
         ReentrantLock lock = centralServerNode.getGlobalFamilyLock();
         lock.lock();
         try {
-            Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
-            if (userTreeOpt.isPresent()) {
-                FamilyTree userTree = userTreeOpt.get();
-                FamilyMember userMember = userTree.getMember(user.getCharacterId());
-                parentId = userMember.getParentId();
-
-                if (parentId == null) {
-                    userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
-                }
-                else {
-                    Optional<FamilyTree> parentTreeOpt = centralServerNode.getFamilyTree(parentId);
-
-                    if (parentTreeOpt.isPresent()) {
-                        FamilyTree parentTree = parentTreeOpt.get();
-
-                        if (parentTree != userTree){
-                            // Should never occur if coded correctly, identical to DumbDeveloperFoundException.
-                            log.error(
-                                    "Family tree mismatch detected: user [{}] (ID: {}) parent (ID: {}) " +
-                                            "trees do not match. UserTree={}, ParentTree={}",
-                                    user.getCharacterName(),
-                                    user.getCharacterId(),
-                                    parentId,
-                                    userTree.getLeaderId(),
-                                    parentTree.getLeaderId()
-                            );
-                            userResultPacket = FamilyPacket.of(FamilyResultType.DifferentFamily, 0);
-                        }
-                        else {
-                            // the junior's current tree becomes a new, separate family tree
-                            FamilyTree userNewTree = parentTree.extractAndRemoveSubTree(user.getCharacterId());
-                            centralServerNode.addFamilyTree(userNewTree);
-
-                            // notify the user of the success
-                            userResultPacket = FamilyPacket.unregisterJunior(user.getCharacterId());
-                        }
-                    } else {
-                        // data inconsistency, parent's tree not found
-                        userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
-                    }
-                }
-            } else { // user's own tree not found, something is wrong
-                userResultPacket = FamilyPacket.of(FamilyResultType.IncorrectOrOffline, 0);
-            }
+            result = processFamilyUnregister(user, centralServerNode);
         } finally {
             lock.unlock();
         }
 
-        user.write(userResultPacket);
-        // update the entitlements the user sees.
+        user.write(result.resultPacket());
         user.write(FamilyPacket.loadFamilyEntitlements(!user.getFamilyInfo().hasFamily()));
-
-        // Update the family pedigree and info for the user who just left.
         updateFamilyDisplay(user);
 
-        if (parentId != null) {  // let the senior know.
-            parentUser = centralServerNode.getUserByCharacterId(parentId);
-
-            parentUser.ifPresent(targetUser -> {
-                targetUser.systemMessage("%s has left your family.", user.getCharacterName());
-                updateFamilyDisplay(targetUser);  // not necessary, but is smoother if they have the dialog open.
-            });
+        Integer parentId = result.parentId();
+        if (parentId != null) {
+            centralServerNode.getUserByCharacterId(parentId)
+                    .ifPresent(parentUser -> {
+                        parentUser.systemMessage("%s has left your family.", user.getCharacterName());
+                        updateFamilyDisplay(parentUser);
+                    });
         }
     }
 
@@ -684,6 +628,9 @@ public final class FamilyHandler {
                 }
             }
         });
+        if (success) {
+            updateFamilyDisplay(user);  // to update the rep amount.
+        }
     }
 
     /**
@@ -697,5 +644,158 @@ public final class FamilyHandler {
     private static void updateFamilyDisplay(User user) {
         handleFamilyChartRequest(user, null);
         handleFamilyInfoRequest(user, null);
+    }
+
+    /**
+     * Calculates the mesos a junior must pay to leave their family.
+     *
+     * @param juniorLevel Level of the junior leaving the family
+     * @param seniorLevel Level of the senior the junior is leaving
+     * @return The total mesos cost required for separation
+     */
+    private static int getFamilySeparationMeso(int juniorLevel, int seniorLevel) {
+        int levelDiff = Math.abs(juniorLevel - seniorLevel);
+        return 2500 * levelDiff + levelDiff * levelDiff;
+    }
+
+    /**
+     * Calculates the reputation loss for the senior (direct parent)
+     * when a junior leaves the family.
+     *
+     * @param juniorLevel Level of the junior leaving
+     * @return The reputation points the senior loses
+     */
+    private static int getSeniorRepLoss(int juniorLevel) {
+        int repCost = juniorLevel / 20; // integer division
+        repCost += 10;
+        repCost *= juniorLevel;
+        repCost *= 2;
+        return repCost;
+    }
+
+    /**
+     * Calculates the reputation loss for the senior's senior (grandparent)
+     * when a junior leaves the family. This is half of the direct senior's loss.
+     *
+     * @param juniorLevel Level of the junior leaving
+     * @return The reputation points the grand-senior loses
+     */
+    private static int getGrandSeniorRepLoss(int juniorLevel) {
+        return getSeniorRepLoss(juniorLevel) / 2;
+    }
+
+    /**
+     * Applies all separation costs when a junior leaves their senior.
+     *
+     * This deducts mesos from the junior and applies reputation penalties to both
+     * the senior and (if applicable) the senior's parent. If the junior cannot
+     * afford the meso cost, no changes are applied.
+     *
+     * @param user       The junior who is leaving the family.
+     * @param parentUser The senior being separated from.
+     * @return An Optional containing the meso cost if the junior could not afford it,
+     *         or Optional.empty() on successful cost application.
+     */
+    private static Optional<Integer> applySeparation(User user, User parentUser) {
+        CentralServerNode centralServerNode = Server.getCentralServerNode();
+        int juniorLevel = user.getLevel();
+        int seniorRepLoss = getSeniorRepLoss(juniorLevel);
+        int grandSeniorRepLoss = getGrandSeniorRepLoss(juniorLevel);
+
+        int seniorLevel = parentUser.getLevel();
+        int mesoCost = getFamilySeparationMeso(juniorLevel, seniorLevel);
+
+        InventoryManager inventoryManager = user.getInventoryManager();
+        boolean success = inventoryManager.addMoney(-mesoCost);
+
+        if (!success) {
+            return Optional.of(mesoCost);
+        }
+
+        // exceptional case where we send a packet to a user while in the family lock.
+        user.write(WvsContext.statChanged(Stat.MONEY, inventoryManager.getMoney(), false));
+
+        Integer grandSeniorParentId = parentUser.getFamilyInfo().getParentId();
+        if (grandSeniorParentId != null) {
+            FamilyMember grandSeniorMember = centralServerNode.getFamilyInfo(grandSeniorParentId);
+            grandSeniorMember.useRep(grandSeniorRepLoss);
+        }
+
+        parentUser.getFamilyInfo().useRep(seniorRepLoss);
+        return Optional.empty();
+    }
+
+    record FamilyUnregisterResult(
+            OutPacket resultPacket,
+            Integer parentId
+    ) {}
+
+    private static FamilyUnregisterResult result(FamilyResultType type, int arg, Integer parentId) {
+        return new FamilyUnregisterResult(FamilyPacket.of(type, arg), parentId);
+    }
+
+    private static FamilyUnregisterResult success(Integer parentId, int userId) {
+        return new FamilyUnregisterResult(FamilyPacket.unregisterJunior(userId), parentId);
+    }
+
+    private static FamilyUnregisterResult processFamilyUnregister(
+            User user,
+            CentralServerNode centralServerNode
+    ) {
+        final int userId = user.getCharacterId();
+
+        FamilyTree userTree = centralServerNode.getFamilyTree(userId).orElse(null);
+        if (userTree == null) {
+            return result(FamilyResultType.IncorrectOrOffline, 0, null);
+        }
+
+        FamilyMember userMember = userTree.getMember(userId);
+        Integer parentId = userMember.getParentId();
+        if (parentId == null) {
+            return result(FamilyResultType.IncorrectOrOffline, 0, null);
+        }
+
+        FamilyTree parentTree = centralServerNode.getFamilyTree(parentId).orElse(null);
+        if (parentTree == null) {
+            return result(FamilyResultType.IncorrectOrOffline, 0, parentId);
+        }
+
+        if (parentTree != userTree) {
+            log.error(
+                    "Family tree mismatch detected: user [{}] (ID: {}) parent (ID: {}) " +
+                            "trees do not match. UserTree={}, ParentTree={}",
+                    user.getCharacterName(),
+                    userId,
+                    parentId,
+                    userTree.getLeaderId(),
+                    parentTree.getLeaderId()
+            );
+            return result(FamilyResultType.DifferentFamily, 0, parentId);
+        }
+
+        Optional<User> parentUserOpt = centralServerNode.getUserByCharacterId(parentId);
+
+        // applySeparation returns Optional<Integer> where:
+        // - present = NOT ENOUGH mesos (cost)
+        // - empty = success
+        // but .orElse(Optional.of(-1)) introduces a special error case
+        Optional<Integer> mesoCostOpt = parentUserOpt
+                .map(parentUser -> applySeparation(user, parentUser))
+                .orElse(Optional.of(-1));
+
+        if (mesoCostOpt.isPresent()) {
+            int cost = mesoCostOpt.get();
+
+            if (cost == -1) {
+                return result(FamilyResultType.IncorrectOrOffline, 0, parentId);
+            }
+            return result(FamilyResultType.SeparationNotEnoughMesos1, cost, parentId);
+        }
+
+        // Perform the actual extraction
+        FamilyTree newTree = parentTree.extractAndRemoveSubTree(userId);
+        centralServerNode.addFamilyTree(newTree);
+
+        return success(parentId, userId);
     }
 }

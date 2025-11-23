@@ -148,6 +148,31 @@ public final class FamilyMember implements Encodable {
     }
 
     /**
+     * Modifies the reputation of this user.
+     *
+     * @param amount       The amount of reputation to add (can be negative to reduce reputation)
+     * @param increaseTotal If true, also increases the total and today's reputation counters
+     *
+     */
+    public void addRep(int amount, boolean increaseTotal) {
+        currentReputation = Math.max(currentReputation + amount, 0);
+        if (increaseTotal){
+            totalReputation += amount;
+            todaysReputation += amount;
+        }
+    }
+
+    /**
+     * Reduces the current reputation of this user by a specified amount.
+     *
+     * @param amount The amount of reputation to subtract
+     */
+    public void useRep(int amount) {
+        currentReputation = Math.max(currentReputation - amount, 0);
+    }
+
+
+    /**
      * Attempts to use a Family Entitlement optimistically, running the given action,
      * and rolls back the usage if the action fails.
      *
@@ -168,13 +193,19 @@ public final class FamilyMember implements Encodable {
      *         false if the action failed and the usage was rolled back.
      */
     public boolean tryUseEntitlementWithRollback(FamilyEntitlement entitlement, Runnable action) {
-        // TODO: use rep points
+        boolean success = false;
+
+        if (currentReputation < entitlement.getRepCost()){
+            return success;
+        }
+
+
         long now = Timing.nowSeconds();
         usedEntitlements.put(entitlement, now);
         entitlementUsageLog.computeIfAbsent(entitlement, k -> new ArrayList<>()).add(now);
 
-        boolean success = false;
         try {
+            currentReputation -= entitlement.getRepCost();
             action.run(); // whatever the entitlement is supposed to do
             success = true;
         }
@@ -182,6 +213,7 @@ public final class FamilyMember implements Encodable {
         finally {
             if (!success) {
                 // undo usage
+                currentReputation += entitlement.getRepCost();
                 rollbackEntitlementUsage(entitlement, now);
                 usedEntitlements.remove(entitlement);
                 List<Long> list = entitlementUsageLog.get(entitlement);
@@ -329,7 +361,7 @@ public final class FamilyMember implements Encodable {
         out.encodeShort((short) getChildrenCount());
         out.encodeShort(GameConstants.MAX_FAMILY_CHILDREN_COUNT); // max juniors
         out.encodeShort(0); // unknown, wTotalChildCount
-        out.encodeInt(parentId == null ? getCharacterId() : parentId);
+        out.encodeInt(hasFamily() ? (parentId != null ? parentId : getCharacterId()) : -1);
         out.encodeString(
                 isDefault()
                         ? null

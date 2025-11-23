@@ -9,9 +9,6 @@ import kinoko.world.job.JobConstants;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class CharacterStat implements Encodable {
     private int id;

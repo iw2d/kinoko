@@ -25,7 +25,6 @@ import kinoko.server.dialog.miniroom.MiniRoom;
 import kinoko.server.event.EventType;
 import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.GuildRank;
-import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
