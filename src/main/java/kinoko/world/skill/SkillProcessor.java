@@ -541,9 +541,6 @@ public abstract class SkillProcessor {
             case MECHANIC_1, MECHANIC_2, MECHANIC_3, MECHANIC_4 -> {
                 Mechanic.handleSkill(user, skill);
             }
-//            case GM ->  {
-//                GM.handleSKill(user, skill);
-//            }
             case SUPER_GM -> {
                 SuperGM.handleSkill(user, skill);
             }

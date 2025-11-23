@@ -32,7 +32,7 @@ public enum FamilyEntitlement {
     FAMILY_HASTE(1, 500, "Quicker Together",
             "[Target] All Family Members\n[Effect] All family members, regardless of map, " +
                     "are blessed with Family Haste.",
-            Timing.DAY_MINUTES, (byte) 2, null, null),
+            Timing.DAY_MINUTES, (byte) 2, null, 15),
 
     FAMILY_EXP(1, 5000, "A Better Experience",
             "[Target] All Family Members\n[Effect] For 15 minutes, all family members receive 1.2x experience, " +

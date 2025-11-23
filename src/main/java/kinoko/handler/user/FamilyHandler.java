@@ -14,6 +14,9 @@ import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.exceptions.InvalidInputException;
 import kinoko.world.GameConstants;
+import kinoko.world.job.staff.GM;
+import kinoko.world.skill.Skill;
+import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -463,7 +466,6 @@ public final class FamilyHandler {
         lock.lock();
         try {
             Optional<FamilyTree> userTreeOpt = centralServerNode.getFamilyTree(user.getCharacterId());
-
             if (userTreeOpt.isPresent()) {
                 FamilyTree userTree = userTreeOpt.get();
                 FamilyMember userMember = userTree.getMember(user.getCharacterId());
@@ -612,8 +614,27 @@ public final class FamilyHandler {
             else {  // Type 2 cases
                 switch (entitlement) {
                     case FAMILY_HASTE:
-                        System.out.println("Applying FAMILY_HASTE to all family members");
-                        // TODO: apply haste buff
+                        // Note: Avoid using a field buff, we don't want to give the buff to non-family.
+                        final int hasteSkillId = GM.HASTE_NORMAL;
+                        final int slv = 1;
+                        Skill hasteSkill = new Skill();
+                        hasteSkill.skillId = hasteSkillId;
+                        hasteSkill.slv = slv;
+
+                        familyTree.forEach(familyUserToBuff -> {
+                            Server.getCentralServerNode()
+                                    .getUserByCharacterId(familyUserToBuff.getCharacterId())
+                                    .ifPresent(userToBuff -> {
+                                        SkillProcessor.processSkill(userToBuff, hasteSkill);
+                                    });
+                        });
+                        familyTree.broadcastSystemMessage(
+                                "%s has activated the %s buff for %d minutes.",
+                                user.getCharacterName(),
+                                FamilyEntitlement.FAMILY_HASTE.getName(),
+                                FamilyEntitlement.FAMILY_HASTE.getModifier(),
+                                FamilyEntitlement.FAMILY_HASTE.getExpiresAfterMinutes()
+                        );
                         break;
 
                     case FAMILY_EXP:
